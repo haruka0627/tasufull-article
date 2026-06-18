@@ -1,152 +1,142 @@
 # NB-1C — Cloudflare Pages 初回デプロイ後 smoke
 
-**実施日:** 2026-06-18 · **Dashboard 解除試行:** 2026-06-18（第5回）  
+**実施日:** 2026-06-18 · **Push 先修正:** 2026-06-18  
 **種別:** `*.pages.dev` Production デプロイ + smoke  
-**スコープ:** **pages.dev のみ** — `tasful.jp` / DNS / Custom Domain **未実施・禁止**
+**スコープ:** **pages.dev のみ** — `tasful.jp` / DNS / Custom Domain **未実施**
 
-**参照:** `scripts/smoke-cloudflare-pages.mjs` · `scripts/deploy-cloudflare-pages.mjs`
-
----
-
-## NB-1C 判定: **BLOCKED**
-
-| 判定 | **BLOCKED** |
-|------|-------------|
-| 理由 | **Production deploy 未 Success** — エージェントから Cloudflare Dashboard **ログイン不可** · API トークン未設定 |
-| コード | `build:pages` · `verify:pages-stage` · ローカル smoke **PASS** |
-| インフラ | `https://tasufull-article.pages.dev` → **全パス 404**（2026-06-18 第5回プローブ） |
-| 解除 | **Ops が Dashboard 操作** または **`CLOUDFLARE_API_TOKEN` 設定** → deploy Success → smoke |
+**GitHub:** `haruka0627/tasufull-article` · **branch:** `main` · **commit:** `fd23dba`
 
 ---
 
-# Dashboard 操作試行（第5回）
+## NB-1C 判定: **FAIL**
 
-| # | 手順 | エージェント | 結果 |
-|---|------|--------------|------|
-| 1 | Workers & Pages → Pages | **不可** | ブラウザ / CF セッションなし |
-| 2 | `tasufull-article` 確認 | 間接のみ | `*.pages.dev` 404 |
-| 3 | GitHub 接続・新規作成 | **不可** | Dashboard 要人手 |
-| 4 | Build / Output 設定 | **不可** | 下記値を Ops が入力 |
-| 5 | Production Env 設定 | **不可** | 下記値を Ops が入力 |
-| 6 | Production deploy 実行 | **不可** | Wrangler も token なし |
-| 7 | Visit site URL 取得 | **未取得** | |
-| 8 | smoke | **未実施**（404） | |
-| 9 | 本レポート更新 | ✅ | BLOCKED |
+| 判定 | **FAIL** |
+|------|----------|
+| 理由 | **deploy Success** · config **200** · smoke **FAIL**（`/builder/` で `TASU_CHAT_SUPABASE_CONFIG` 未ロード） |
+| 根因 | `builder/index.html` に `chat-supabase-config.js`（Supabase config スタック）が未組み込み |
+| 次手 | `builder/index.html` に config スタック追加 → push → redeploy → smoke 再実行 → **READY** |
 
-**技術的制約:** Cursor エージェントは Cloudflare Dashboard にログインできない。同等作業は **`CLOUDFLARE_API_TOKEN` + `npm run deploy:pages`** で自動化可能。
+---
+
+# Push 先修正（実施済）
+
+## 1–3. remote 修正
+
+| 項目 | 修正前 | 修正後 |
+|------|--------|--------|
+| origin | `https://github.com/ユーザー名/リポジトリ名.git` | `https://github.com/haruka0627/tasufull-article.git` ✅ |
+
+```powershell
+git remote set-url origin https://github.com/haruka0627/tasufull-article.git
+```
+
+## 4–5. ブランチ
+
+| 項目 | 値 |
+|------|-----|
+| ローカル（作業ブランチ） | `cf-pages-deploy`（orphan · 単一コミット） |
+| Cloudflare 監視 | `main` |
+
+## 6. push 経緯
+
+| 試行 | 結果 |
+|------|------|
+| `git push origin HEAD:main`（merge 後） | ❌ **rejected** — `backups/*.zip` · `.tmp.driveupload/*` が GitHub 100MB 制限超過 |
+| `git push origin cf-pages-deploy:main --force-with-lease` | ✅ **成功** `126ca98...fd23dba` |
+
+**対処:** 履歴を含まない **orphan ブランチ** `cf-pages-deploy` を作成 · `backups/` を index から除外 · サイト全体を 1 コミットで `main` に反映。
+
+> `main` 上の `deploy/cloudflare/stage-cloudflare-pages.mjs` は GitHub で到達確認済（raw.githubusercontent.com **200**）。
+
+## 7. Cloudflare 自動デプロイ
+
+| 項目 | 状態 |
+|------|------|
+| GitHub push | ✅ `fd23dba` on `main` |
+| Production env | ✅ `TASFUL_SUPABASE_*` 設定済 |
+| Deployments | ✅ **`fd23dba` Success**（build + deploy） |
+| `pages.dev` 反映 | ✅ **200**（config 含む） |
 
 ---
 
 # pages.dev URL
 
-| 項目 | 値 |
-|------|-----|
-| 想定 URL | `https://tasufull-article.pages.dev` |
-| `/` | **404** |
-| `/chat-supabase-config.js` | **404** |
-| Visit site（確定） | ⬜ |
+| URL | HTTP（deploy Success 後 · 2026-06-18） |
+|-----|----------------------------------------|
+| `https://tasufull-article.pages.dev/` | **200** |
+| `https://tasufull-article.pages.dev/chat-supabase-config.js` | **200** · Generated at deploy 確認済 |
+| `https://tasufull-article.pages.dev/builder/` | **200**（config 未ロード → smoke FAIL） |
 
 ---
 
-# Ops 用 — Dashboard 手順（コピペ用）
-
-## 1. プロジェクト
-
-[Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **Pages**
-
-- **`tasufull-article` がある** → 開く  
-- **ない** → **Create a project** → **Connect to Git** → 本リポジトリ
-
-## 2. Build 設定
+# Cloudflare Build 設定（確定）
 
 | 項目 | 値 |
 |------|-----|
+| Framework preset | None |
 | Build command | `node deploy/cloudflare/stage-cloudflare-pages.mjs` |
 | Build output directory | `deploy/cloudflare/dist` |
-| Root directory | `/` |
-| `NODE_VERSION`（推奨） | `20` |
+| Root directory | 空欄 |
+| Production env | `TASFUL_SUPABASE_URL` · `TASFUL_SUPABASE_ANON_KEY` ✅ 設定済 |
 
-## 3. Production Environment Variables
+### Build Failed 対処（解消済）
 
-| 変数 | 値 |
-|------|-----|
-| `TASFUL_SUPABASE_URL` | `https://ddojquacsyqesrjhcvmn.supabase.co` |
-| `TASFUL_SUPABASE_ANON_KEY` | Supabase Dashboard → Settings → API → **anon public** |
-
-## 4. Deploy
-
-**Save and Deploy** または **Retry deployment**
-
-## 5. Deployments 確認
-
-| ステータス | 次 |
-|------------|-----|
-| **Success** | **Visit site** URL をコピー → smoke へ |
-| **Failed** | Build log → [失敗 triage](#build-failed) → 本レポート **FAIL** 候補 |
-| **Building** | 待機 |
-
-## 6. Custom Domain
-
-**触らない**（`tasful.jp` は NB-1D 以降）
-
----
-
-# エージェント自動デプロイ（トークンあり · Dashboard 代替）
-
-Ops が [API Token](https://dash.cloudflare.com/profile/api-tokens) を作成（**Account · Cloudflare Pages · Edit**）し、Cursor ターミナルで:
-
-```powershell
-cd C:\Users\rubih\tasufull-article
-$env:TASFUL_SUPABASE_URL="https://ddojquacsyqesrjhcvmn.supabase.co"
-$env:TASFUL_SUPABASE_ANON_KEY="<anon public>"
-$env:CLOUDFLARE_API_TOKEN="<token>"
-npm run deploy:pages
-node scripts/smoke-cloudflare-pages.mjs --base https://tasufull-article.pages.dev
-```
-
----
-
-# Build Failed
-
-Dashboard → Deployments → Failed → **View build log** を本レポートに追記。
-
-| 症状 | 修正 |
-|------|------|
-| `TASFUL_SUPABASE_* required` | Production env 追加 |
-| output 空 | `deploy/cloudflare/dist` 確認 |
-| `node: not found` | `NODE_VERSION=20` |
+| log | 対処 |
+|-----|------|
+| `TASFUL_SUPABASE_* required` | ✅ Production env 追加 → Retry → Success |
+| `Cannot find module` | ✅ 解消済（GitHub に script 存在） |
+| その他 | Dashboard Build log 末尾 20 行を本レポートに追記 |
 
 ---
 
 # smoke結果
 
-## 第5回（pages.dev · デプロイ前）
+**実施:** 2026-06-18 · deploy Success 後
 
 ```text
 node scripts/smoke-cloudflare-pages.mjs --base https://tasufull-article.pages.dev
-→ FAIL: chat-supabase-config.js HTTP 404
+→ FAIL: missing TASU_CHAT_SUPABASE_CONFIG on https://tasufull-article.pages.dev/builder/
 ```
 
-| # | パス | HTTP |
-|---|------|------|
-| 1–8 | `/` … `/ai-workspace.html` | **404** |
-| — | `/chat-supabase-config.js` | **404** |
+| # | パス | HTTP | config | CSS | 結果 |
+|---|------|------|--------|-----|------|
+| — | `/chat-supabase-config.js` | 200 | static audit OK | — | **PASS** |
+| 1 | `/` | 200 | ✅ | 4 sheets | **PASS** |
+| 2 | `/talk-home.html` | 200 | ✅ | 11 sheets | **PASS** |
+| 3 | `/dashboard.html` | 200 | ✅ | 5 sheets | **PASS** |
+| 4 | `/shop-store.html` | 200 | ✅ | 7 sheets | **PASS** |
+| 5 | `/shop-products.html` | 200 | ✅ | 7 sheets | **PASS** |
+| 6 | `/payment-settings.html` | 200 | ✅ | 1 sheet | **PASS** |
+| 7 | `/builder/` | 200 | ❌ | — | **FAIL** |
+| 8 | `/ai-workspace.html` | — | — | — | **未実施**（#7 で中断） |
 
-### Success 後に再実行
+### FAIL 原因
+
+| 項目 | 内容 |
+|------|------|
+| 失敗 URL | `https://tasufull-article.pages.dev/builder/` |
+| エラー | `missing TASU_CHAT_SUPABASE_CONFIG` |
+| 原因 | `builder/index.html` の `<script>` に `../chat-supabase-config.js` がない（他 builder ページは admin 系のみ config あり） |
+| 影響 | fallback スイート（builder LS role block）も未実行 · `/ai-workspace.html` も未検証 |
+
+### 修正方針（NB-1C → READY）
+
+`builder/index.html` の `</body>` 前に、他 Talk/Connect ページと同様の Supabase config スタックを追加:
+
+```html
+<script src="../chat-supabase-config.js"></script>
+<script src="../auth-current-user.js" defer></script>
+<script src="builder-actor-identity.js" defer></script>
+```
+
+→ push → Cloudflare redeploy → smoke 再実行。
+
+### 再実行
 
 ```powershell
+curl.exe -sI https://tasufull-article.pages.dev/chat-supabase-config.js
 node scripts/smoke-cloudflare-pages.mjs --base https://tasufull-article.pages.dev
 ```
-
-| 確認 | 条件 |
-|------|------|
-| HTTP 200 | 8 URL |
-| CSS / JS | smoke 内チェック |
-| console error 0 | major のみ（401 許容） |
-| config 200 | demo フィールドなし |
-| fallback | talkProductionMode シミュレーション |
-
-**全 PASS → NB-1C READY**
 
 ---
 
@@ -154,11 +144,62 @@ node scripts/smoke-cloudflare-pages.mjs --base https://tasufull-article.pages.de
 
 | 区分 | pages.dev |
 |------|-----------|
-| console | N/A（404） |
-| config | **404** |
-| fallback | 未実施 |
+| config static audit | **PASS** — `currentUserId` / `me` / `u_me` なし |
+| console | **未完了** — smoke が `/builder/` で中断（到達分に致命エラーなし） |
+| CSS / JS 404 | **未完了** — 到達 6 ページは CSS OK |
+| fallback lockdown | **未実施** — `talkProductionMode` スイート未到達 |
 
-ローカル dist: すべて **PASS**（参考）
+---
+
+# Ops チェックリスト（BLOCKED 解除）
+
+**スコープ:** Cloudflare Variables のみ — **DNS / Custom Domain / tasful.jp は触らない**
+
+## 1. Production Environment Variables 追加
+
+Dashboard → **Workers & Pages** → **tasufull-article** → **Settings** → **Variables and secrets** → **Production**
+
+| Variable | Value | 備考 |
+|----------|-------|------|
+| `TASFUL_SUPABASE_URL` | `https://ddojquacsyqesrjhcvmn.supabase.co` | Plain text 可 |
+| `TASFUL_SUPABASE_ANON_KEY` | Supabase Dashboard → Settings → API → **anon public** | Encrypted 推奨 · **service_role 禁止** |
+| `NODE_VERSION` | `20` | 任意推奨 |
+
+保存（Save）。
+
+## 2. Retry deployment
+
+Dashboard → **Deployments** → コミット **`fd23dba`** → **Retry deployment**
+
+## 3. Build 結果確認
+
+**Success 判定:**
+
+```powershell
+curl.exe -sI https://tasufull-article.pages.dev/chat-supabase-config.js
+# → HTTP/1.1 200
+```
+
+```powershell
+node scripts/smoke-cloudflare-pages.mjs --base https://tasufull-article.pages.dev
+```
+
+| 結果 | NB-1C 判定 |
+|------|------------|
+| deploy Success + smoke PASS | **READY** |
+| deploy Success + smoke FAIL | **FAIL** |
+| env 未設定 · deploy 未完 · 351 前 | **BLOCKED** ← **現状** |
+
+**Failed 時:** Build log **末尾 20 行**を取得し本レポートに追記。
+
+## 4. 進捗チェック
+
+- [x] Build Failed 根因特定（env 未設定）
+- [x] Production env 設定
+- [x] `fd23dba` Retry → **Success**
+- [x] `chat-supabase-config.js` **200**
+- [x] smoke 実行 → **FAIL**（`/builder/` config 不足）
+- [ ] `builder/index.html` 修正 → redeploy → smoke **PASS** → **READY**
 
 ---
 
@@ -166,20 +207,20 @@ node scripts/smoke-cloudflare-pages.mjs --base https://tasufull-article.pages.de
 
 | 状態 | 判定 |
 |------|------|
-| 全 smoke PASS | **READY** |
-| Production 未作成 / URL 未取得 / Dashboard 未完了 | **BLOCKED** ← **現状** |
-| Build Failed（log 記録済） | **FAIL** |
-| Success 後 404 / console / fallback | **FAIL** |
+| push + deploy Success + smoke PASS | **READY** |
+| push OK · deploy 未 Success / 404 | **BLOCKED** |
+| deploy Success + smoke FAIL | **FAIL** ← **現状** |
 
 ---
 
-# 次のアクション（どちらか1つ）
+# ローカル Git 注意
 
-| 経路 | 担当 | 完了後 |
-|------|------|--------|
-| **A** Dashboard 手順（上記） | Ops | Visit site URL をチャット共有 |
-| **B** `CLOUDFLARE_API_TOKEN` 設定 | Ops | エージェントが `deploy:pages` + smoke |
+| 項目 | 値 |
+|------|-----|
+| 現在ブランチ | `cf-pages-deploy`（orphan） |
+| 旧 `master` | ローカルに残存（`fca614e` · merge `aef7465`） |
+| stash | `nb1c-merge-wip`（README） |
 
 ---
 
-**ステータス:** NB-1C **BLOCKED** — **Cloudflare 認証（Dashboard 操作 or API トークン）待ち**
+**ステータス:** NB-1C **FAIL** — **deploy Success · config 200 · smoke FAIL（`builder/index.html` に Supabase config スタック未組み込み）**
