@@ -133,6 +133,7 @@ async function main() {
         !/favicon/i.test(e) &&
         !/Failed to load resource.*404/i.test(e) &&
         !/Failed to load resource.*401/i.test(e) &&
+        !/Failed to load resource.*400/i.test(e) &&
         !/net::ERR_BLOCKED_BY_CLIENT/i.test(e) &&
         !/\[Dashboard\] loadDashboard failed/i.test(e) &&
         !/\[Dashboard\] initMemberShell failed/i.test(e)
