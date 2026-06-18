@@ -1,0 +1,295 @@
+/**
+ * job-top.html — スマホ専用 UI（max-width: 768px）
+ * PC（769px以上）・detail-job.html には影響しない
+ */
+@media (max-width: 768px) {
+  .job-top-page .job-top-container {
+    width: min(100% - 20px, 1760px);
+    padding: 0.5rem 0 0.75rem;
+  }
+
+  .job-top-page .job-top-main-wrap,
+  .job-top-page .job-top-main {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  .job-top-page .job-list-mobile {
+    margin-bottom: 0;
+  }
+
+  /* ── 上部検索フォーム：縦幅圧縮 ── */
+  .job-top-page .job-top-search,
+  .job-top-page .job-search-card {
+    padding: 0.65rem 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .job-top-page .job-top-search__form {
+    gap: 0.5rem;
+  }
+
+  .job-top-page .job-top-search__field {
+    margin-bottom: 0;
+  }
+
+  .job-top-page .job-top-search__field label {
+    margin-bottom: 0.3rem;
+    font-size: 0.8125rem;
+  }
+
+  .job-top-page .job-top-search__field input,
+  .job-top-page .job-top-search__field select {
+    min-height: 44px;
+    height: 44px;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.9375rem;
+  }
+
+  .job-top-page .job-top-search__submit {
+    min-height: 44px;
+    margin-top: 0.15rem;
+    font-size: 0.9375rem;
+  }
+
+  .job-top-page .job-top-search__tags {
+    margin-top: 0.55rem;
+    padding-top: 0.5rem;
+    gap: 0.35rem;
+  }
+
+  .job-top-page .job-top-search__tags-label {
+    font-size: 0.6875rem;
+  }
+
+  .job-top-page .job-top-search__tag {
+    padding: 0.25rem 0.65rem;
+    font-size: 0.6875rem;
+  }
+
+  /* ── PR求人下 → 絞り込みボタン上の余白を縮小 ── */
+  .job-top-page .job-top-pr {
+    margin-bottom: 0.5rem;
+  }
+
+  .job-top-page .job-top-layout {
+    margin-top: 0.75rem;
+    gap: 0.75rem;
+  }
+
+  /* ── 絞り込みパネル：縦幅圧縮 ── */
+  .job-top-page .job-top-filter {
+    margin-top: 0;
+    padding: 0.5rem 0.75rem 0.75rem;
+    border-radius: 14px;
+  }
+
+  .job-top-page .job-top-filter__toggle {
+    min-height: 42px;
+    margin-bottom: 0.45rem;
+    font-size: 0.8125rem;
+  }
+
+  .job-top-page .job-top-filter__title {
+    margin: 0 0 0.45rem;
+    padding-bottom: 0.4rem;
+    font-size: 0.875rem;
+  }
+
+  .job-top-page .job-top-filter__group {
+    margin: 0 0 0.55rem;
+    padding-top: 0.15rem;
+    padding-bottom: 0.1rem;
+  }
+
+  .job-top-page .job-top-filter__group legend {
+    margin-bottom: 0.3rem;
+    font-size: 0.8125rem;
+  }
+
+  .job-top-page .job-top-filter__group input,
+  .job-top-page .job-top-filter__group select {
+    min-height: 44px;
+    height: 44px;
+    padding: 0.35rem 0.55rem;
+    font-size: 0.9375rem;
+  }
+
+  .job-top-page .job-top-filter__checks {
+    gap: 0.4rem;
+  }
+
+  .job-top-page .job-top-filter__check {
+    gap: 0.45rem;
+    font-size: 0.8125rem;
+    line-height: 1.3;
+  }
+
+  .job-top-page .job-top-filter__check input {
+    width: 16px;
+    height: 16px;
+  }
+
+  .job-top-page .job-top-filter__actions {
+    margin-top: 0.55rem;
+    gap: 0.4rem;
+  }
+
+  .job-top-page .job-top-filter__apply {
+    min-height: 44px;
+    font-size: 0.875rem;
+  }
+
+  .job-top-page .job-top-filter__clear {
+    min-height: 34px;
+    font-size: 0.8125rem;
+  }
+
+  /* ── 求人カード：コンパクト化 ── */
+  .job-top-page .job-list-mobile {
+    gap: 0.55rem;
+  }
+
+  .job-top-page .job-list-mobile-card {
+    padding: 0.9rem 0.95rem;
+    border-radius: 14px;
+  }
+
+  .job-top-page .job-list-mobile-card__top {
+    gap: 0.55rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .job-top-page .job-list-mobile-card .company-name {
+    margin: 0 0 0.1rem;
+    font-size: 0.6875rem;
+  }
+
+  .job-top-page .job-list-mobile-card .job-title {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.35;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .job-top-page .job-list-mobile-card .job-title a {
+    white-space: normal;
+  }
+
+  /* タグ：折り返し最適化 */
+  .job-top-page .job-list-mobile-card .job-list-row__tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 0.45rem;
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .job-top-page .job-list-mobile-card .job-tag {
+    font-size: 0.6875rem;
+    line-height: 1.2;
+    padding: 4px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .job-top-page .job-list-mobile-card__dl {
+    gap: 0.28rem;
+    margin: 0.45rem 0;
+    font-size: 0.8125rem;
+  }
+
+  .job-top-page .job-list-mobile-card__dl div {
+    gap: 0.35rem;
+  }
+
+  .job-top-page .job-list-mobile-card__salary,
+  .job-top-page .job-list-mobile-card .job-salary {
+    font-size: 0.875rem;
+  }
+
+  .job-top-page .job-list-mobile-card__actions {
+    margin-top: 0.5rem;
+    gap: 6px;
+  }
+
+  .job-top-page .job-list-mobile-card__actions .job-detail-btn,
+  .job-top-page .job-list-mobile-card__actions .job-apply-btn {
+    min-height: 44px;
+    height: 44px;
+    font-size: 0.8125rem;
+  }
+
+  .job-top-page .job-list-mobile-card__actions .job-favorite-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+
+  /* ── ページネーション：スマホは「もっと見る」 ── */
+  .job-top-page .job-top-pagination-bar {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    padding: 0;
+    gap: 0.35rem;
+    justify-content: center;
+    align-items: stretch;
+  }
+
+  .job-top-page .job-top-pagination {
+    width: 100%;
+  }
+
+  .job-top-page .job-top-pagination--mobile-load-more {
+    display: block;
+  }
+
+  .job-top-page .job-top-pagination__load-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 46px;
+    height: 46px;
+    margin: 0;
+    padding: 0 1rem;
+    border: 1px solid rgba(150, 118, 34, 0.28);
+    border-radius: 999px;
+    background: #fff;
+    color: #7a5710;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(26, 26, 26, 0.05);
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      filter 0.15s ease;
+  }
+
+  .job-top-page .job-top-pagination__load-more:hover {
+    background: #fffdf8;
+    border-color: rgba(150, 118, 34, 0.45);
+  }
+
+  .job-top-page .job-top-pagination__load-more:active {
+    filter: brightness(0.98);
+  }
+
+  .job-top-page .job-top-pagination__range {
+    width: 100%;
+    margin-top: 0.15rem;
+    margin-bottom: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #4a4a4a;
+  }
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>カート | TASFUL 店舗・販売</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-cart.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+  <link rel="stylesheet" href="shop-vendors-brand.css">
+  <link rel="stylesheet" href="shop-store-flow.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+</head>
+<body class="shop-store-flow-page shop-store-list-page tasful-shop-mall-brand" data-page="shop_store_cart">
+
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットフォームへようこそ　
+      <a href="shop-vendors.html" class="link">店舗・販売一覧</a>　｜　
+      <a href="index.html" class="link accent">一覧トップ</a>
+    </div>
+  </div>
+
+  <header class="shop-market-header shop-store-market-header" data-shop-store-market-header aria-label="サイトヘッダー">
+    <div class="shop-market-header__inner">
+      <a href="shop-vendors.html" class="tasful-ai-logo shop-market-header__logo" aria-label="TASFUL 店舗・販売 TOP">
+        <img src="images/tasful-globe-logo.png" alt="TASFUL" class="tasful-ai-logo-icon">
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">店舗・販売</span>
+        </div>
+      </a>
+      <div class="shop-market-header__center">
+        <form class="shop-market-header__search" role="search" action="shop-vendors.html" method="get">
+          <span class="shop-market-header__search-icon" aria-hidden="true">🔍</span>
+          <input type="search" name="keyword" class="shop-market-header__search-input" placeholder="店舗・商品を検索" aria-label="店舗・商品を検索">
+        </form>
+      </div>
+      <div class="shop-market-header__actions">
+        <a href="shop-store-cart.html" class="shop-market-header__action shop-market-header__action--cart" aria-label="カート">
+          <span class="shop-market-header__action-icon" aria-hidden="true">🛒</span>
+          <span class="shop-market-header__action-label">カート</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shop-store-flow-main tasful-market-cart-main" aria-label="カート">
+    <h1 class="shop-store-flow-main__title tasful-market-cart-main__title">ショッピングカート</h1>
+    <p class="shop-store-flow-main__lead tasful-market-cart-main__count" data-shop-store-cart-summary>カートは空です</p>
+    <div class="tasful-market-cart-main__empty" data-shop-store-cart-empty hidden>
+      <p class="tasful-market-cart-main__empty-text">カートに商品がありません</p>
+      <a href="shop-vendors.html" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--outline shop-store-flow-btn shop-store-flow-btn--outline">商品を探す</a>
+    </div>
+    <div class="shop-store-flow-layout shop-store-flow-layout--cart tasful-market-cart-layout">
+      <div class="tasful-market-cart-layout__main">
+        <div class="tasful-market-cart-main__items" data-shop-store-cart-items hidden></div>
+      </div>
+      <aside class="tasful-market-cart-layout__aside" data-shop-store-cart-aside hidden>
+        <div class="tasful-market-cart-summary">
+          <h2 class="tasful-market-cart-summary__title">注文内容</h2>
+          <p class="tasful-market-cart-summary__row"><span>小計（税込）</span><strong data-shop-store-cart-subtotal>¥0</strong></p>
+          <p class="tasful-market-cart-summary__row"><span>商品点数</span><strong data-shop-store-cart-line-count>0点</strong></p>
+          <p class="tasful-market-cart-summary__total"><span>合計（税込）</span><strong data-shop-store-cart-total>¥0</strong></p>
+          <a href="shop-store-checkout.html?mode=cart" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--checkout shop-store-flow-btn shop-store-flow-btn--primary" data-shop-store-cart-checkout-aside hidden>注文確認へ進む</a>
+          <a href="shop-vendors.html" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--outline shop-store-flow-btn shop-store-flow-btn--outline">買い物を続ける</a>
+        </div>
+      </aside>
+    </div>
+    <div class="tasful-market-cart-main__actions tasful-market-cart-main__actions--mobile">
+      <a href="shop-store-checkout.html?mode=cart" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--checkout shop-store-flow-btn shop-store-flow-btn--primary" data-shop-store-cart-checkout hidden>注文確認へ進む</a>
+      <a href="shop-vendors.html" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--outline shop-store-flow-btn shop-store-flow-btn--outline">買い物を続ける</a>
+    </div>
+  </main>
+
+  <footer class="tasful-market-footer tasful-shop-mall-footer" aria-label="フッター">
+    <div class="tasful-market-footer__inner">
+      <p class="tasful-market-footer__copy">© TASFUL 店舗・販売</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-products-config.js"></script>
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-store-product-resolve.js"></script>
+  <script src="shop-store-cart.js"></script>
+</body>
+</html>

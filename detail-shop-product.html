@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>商品詳細 | TASFUL市場</title>
+  <!-- ローカル確認: npm run dev → http://localhost:5173/detail-shop-product.html?shopId=...&productId=... -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-search.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+  <link rel="stylesheet" href="shop-market-product-detail.css">
+  <link rel="stylesheet" href="shop-vendors-brand.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body class="tasful-market-page tasful-market-product-page tasful-shop-mall-brand" data-page="shop_market_product">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input
+            type="search"
+            name="keyword"
+            class="tasful-market-mall-header__search-input"
+            data-tasful-market-search-input
+            placeholder="商品名・キーワードで検索"
+            aria-label="商品名・キーワードで検索"
+          >
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索">
+            <span aria-hidden="true">🔍</span>
+          </button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <div class="tasful-market-product-shell tasful-market-product-shell--flat">
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+    <p class="tasful-market-product-status" data-tasful-product-status hidden></p>
+
+    <main class="tasful-market-product-main" data-tasful-product-main hidden aria-label="商品詳細">
+      <div class="tasful-market-product-page-grid">
+        <div class="tasful-market-product-page-col">
+      <section class="tasful-market-product-hero" aria-label="商品情報">
+        <div class="tasful-market-product-hero__layout">
+          <div class="tasful-market-product-hero__media" data-tasful-product-gallery>
+            <figure class="tasful-market-product-hero__figure">
+              <img data-tasful-product-image src="" alt="" width="390" height="390" decoding="async" onerror="window.__tasfulMarketDetailMainImgError?.(this)">
+            </figure>
+            <div class="tasful-market-product-thumbs" data-tasful-product-thumbs aria-label="商品画像サムネイル"></div>
+            <p class="tasful-market-product-thumbs__caption" data-tasful-product-thumb-caption hidden></p>
+            <button type="button" class="tasful-market-product-hero__btn tasful-market-product-hero__btn--fav tasful-market-product-hero__btn--fav-gallery" data-tasful-product-favorite aria-pressed="false">
+              ♡ お気に入り
+            </button>
+          </div>
+
+          <div class="tasful-market-product-hero__info tasful-market-product-info">
+            <p class="tasful-market-product-hero__brand" data-tasful-product-brand></p>
+            <h1 class="tasful-market-product-hero__title tasful-market-product-title" data-tasful-product-title>商品</h1>
+            <span class="tasful-market-product-hero__condition" data-tasful-product-condition>新品</span>
+            <p class="tasful-market-product-hero__rating" data-tasful-product-rating></p>
+            <div class="tasful-market-product-hero__trust tasful-market-product-trust" data-tasful-product-trust aria-label="出品者信用情報"></div>
+
+            <div class="tasful-market-product-hero__center-commerce" data-tasful-product-center-commerce>
+              <p class="tasful-market-product-hero__price tasful-market-product-hero__price--center" data-tasful-product-price></p>
+              <p class="tasful-market-product-hero__ship-free" data-tasful-product-ship-free>送料無料</p>
+              <p class="tasful-market-product-hero__ship-days" data-tasful-product-ship-days></p>
+              <p class="tasful-market-product-hero__ship-deadline" data-tasful-product-ship-deadline hidden></p>
+            </div>
+
+            <div class="tasful-market-product-hero__about" id="product-about" data-tasful-product-about-inline aria-label="商品について">
+              <h2 class="tasful-market-product-hero__about-title">この商品について</h2>
+              <ul class="tasful-market-product-hero__about-list" data-tasful-product-about-inline-list></ul>
+            </div>
+
+            <div class="tasful-market-product-hero__mobile-commerce" data-tasful-product-mobile-commerce>
+              <p class="tasful-market-product-hero__price tasful-market-product-hero__price--mobile" data-tasful-product-price-mobile></p>
+              <p class="tasful-market-product-hero__ship-free tasful-market-product-hero__ship-free--mobile" data-tasful-product-ship-free-mobile>送料無料</p>
+              <p class="tasful-market-product-hero__ship-days tasful-market-product-hero__ship-days--mobile" data-tasful-product-ship-days-mobile></p>
+              <p class="tasful-market-product-hero__stock" data-tasful-product-stock>在庫あり</p>
+              <div class="tasful-market-product-hero__qty">
+                <label for="tasfulProductQty">数量</label>
+                <select id="tasfulProductQty" class="tasful-market-product-hero__qty-select" data-tasful-product-qty aria-label="数量">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                </select>
+              </div>
+              <div class="tasful-market-product-hero__actions">
+                <button type="button" class="tasful-market-product-hero__btn tasful-market-product-hero__btn--cart" data-tasful-product-add-cart>
+                  カートに入れる
+                </button>
+                <button type="button" class="tasful-market-product-hero__btn tasful-market-product-hero__btn--buy" data-tasful-product-buy-now>
+                  今すぐ購入
+                </button>
+              </div>
+            </div>
+
+            <div class="tasful-market-product-specs-mini" data-tasful-product-specs-mini aria-label="商品仕様"></div>
+
+            <section class="tasful-market-product-points tasful-market-product-points--mobile" aria-label="おすすめポイント">
+              <h2 class="tasful-market-product-points__title">おすすめポイント</h2>
+              <ul class="tasful-market-product-points__list" data-tasful-product-points></ul>
+            </section>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="tasful-market-product-seller tasful-market-product-seller--mobile" aria-label="出品者情報" data-tasful-product-seller-card>
+        <h2 class="tasful-market-product-seller__heading">出品者</h2>
+        <p class="tasful-market-product-seller__name" data-tasful-product-seller-name></p>
+        <dl class="tasful-market-product-seller__stats">
+          <div class="tasful-market-product-seller__stat">
+            <dt>評価</dt>
+            <dd data-tasful-product-seller-rating></dd>
+          </div>
+          <div class="tasful-market-product-seller__stat">
+            <dt>レビュー</dt>
+            <dd data-tasful-product-seller-reviews></dd>
+          </div>
+          <div class="tasful-market-product-seller__stat">
+            <dt>販売実績</dt>
+            <dd data-tasful-product-seller-sales></dd>
+          </div>
+        </dl>
+        <ul class="tasful-market-product-seller__badges" data-tasful-product-seller-badges></ul>
+        <div class="tasful-market-product-seller__actions">
+          <a class="tasful-market-product-seller__btn tasful-market-product-seller__btn--view" data-tasful-product-seller-store-top href="#">店舗TOPを見る</a>
+          <a class="tasful-market-product-seller__btn tasful-market-product-seller__btn--view" data-tasful-product-seller-products href="#">店舗の商品一覧</a>
+          <a class="tasful-market-product-seller__btn tasful-market-product-seller__btn--view" data-tasful-product-seller-reviews-link href="#">店舗レビュー</a>
+          <button type="button" class="tasful-market-product-seller__btn tasful-market-product-seller__btn--follow" data-tasful-product-seller-follow>フォローする</button>
+        </div>
+        <ul class="tasful-market-product-trust__list">
+          <li>返品・キャンセル: 未使用品に限り到着後7日以内</li>
+          <li>配送について: 国内配送 · 追跡番号付き（一部地域除く）</li>
+          <li>支払い保護: TASFUL市場の安心決済で保護されます</li>
+        </ul>
+      </section>
+
+      <section class="tasful-market-product-about tasful-market-product-about--mobile" aria-label="この商品について">
+        <h2 class="tasful-market-product-about__title">この商品について</h2>
+        <ul class="tasful-market-product-about__list" data-tasful-product-about-list></ul>
+      </section>
+
+      <section class="tasful-market-product-bundle" id="product-bundle" data-tasful-product-frequently-bought aria-label="よく一緒に購入されている商品">
+        <h2 class="tasful-market-product-bundle__title">よく一緒に購入されている商品</h2>
+        <div class="tasful-market-product-bundle__body" data-tasful-product-bundle-body></div>
+      </section>
+
+      <nav class="tasful-market-product-section-nav" data-tasful-product-section-nav aria-label="商品詳細タブ">
+        <div class="tasful-market-product-section-nav__inner">
+          <ul class="tasful-market-product-section-nav__list" role="tablist">
+            <li role="presentation"><button type="button" class="tasful-market-product-section-nav__link" data-tasful-section-link="product-description" role="tab" aria-controls="product-description">商品説明</button></li>
+            <li role="presentation"><button type="button" class="tasful-market-product-section-nav__link" data-tasful-section-link="product-reviews" role="tab" aria-controls="product-reviews" data-tasful-product-reviews-tab>レビュー</button></li>
+            <li role="presentation"><button type="button" class="tasful-market-product-section-nav__link" data-tasful-section-link="product-shipping" role="tab" aria-controls="product-shipping">配送・返品</button></li>
+            <li role="presentation"><button type="button" class="tasful-market-product-section-nav__link" data-tasful-section-link="product-info" role="tab" aria-controls="product-info">商品情報</button></li>
+          </ul>
+        </div>
+      </nav>
+
+      <section class="tasful-market-product-description" id="product-description" data-tasful-product-description aria-label="商品の説明">
+        <h2 class="tasful-market-product-description__title">商品の説明</h2>
+        <div class="tasful-market-product-description__sections" data-tasful-product-description-sections></div>
+      </section>
+
+      <section class="tasful-market-product-shipping" id="product-shipping" data-tasful-product-shipping aria-label="配送について">
+        <h2 class="tasful-market-product-shipping__title">配送について</h2>
+        <div class="tasful-market-product-shipping__body" data-tasful-product-shipping-body></div>
+      </section>
+
+      <section class="tasful-market-product-specs" id="product-info" aria-label="商品情報">
+        <h2 class="tasful-market-product-specs__title">商品情報</h2>
+        <div data-tasful-product-specs></div>
+      </section>
+
+      <section class="tasful-market-product-reviews" id="product-reviews" aria-label="レビュー">
+        <h2 class="tasful-market-product-reviews__title">カスタマーレビュー</h2>
+        <div class="tasful-market-product-reviews__layout">
+          <div class="tasful-market-product-reviews__main" aria-label="レビュー詳細">
+            <div class="tasful-market-product-reviews__overview" data-tasful-product-reviews-overview></div>
+            <h3 class="tasful-market-product-reviews__top-title">日本からのトップレビュー</h3>
+            <div class="tasful-market-product-reviews__list" data-tasful-product-reviews-list></div>
+            <button type="button" class="tasful-market-product-reviews__more" data-tasful-product-reviews-more>
+              レビューをもっと見る
+            </button>
+          </div>
+
+          <aside class="tasful-market-product-reviews__sidebar" aria-label="レビューを書く">
+            <div class="tasful-market-product-reviews__write-cta">
+              <h3 class="tasful-market-product-reviews__write-title">この商品をレビュー</h3>
+              <p class="tasful-market-product-reviews__write-lead">他のお客様にも意見を伝えましょう</p>
+              <button type="button" class="tasful-market-product-reviews__compose-open" data-tasful-product-review-open hidden>レビューを書く</button>
+            </div>
+            <div
+              class="tasful-market-product-reviews__compose"
+              id="tasful-product-review-compose"
+              data-tasful-product-review-compose
+              hidden
+            >
+              <h3 class="tasful-market-product-reviews__compose-title">レビューを書く</h3>
+              <p class="tasful-market-product-reviews__compose-lead" data-tasful-product-review-compose-lead></p>
+              <div class="tasful-market-product-reviews__compose-stars" data-tasful-product-review-stars role="radiogroup" aria-label="評価">
+                <button type="button" class="tasful-market-product-reviews__star-btn" data-tasful-product-review-star="1" aria-label="1つ星">★</button>
+                <button type="button" class="tasful-market-product-reviews__star-btn" data-tasful-product-review-star="2" aria-label="2つ星">★</button>
+                <button type="button" class="tasful-market-product-reviews__star-btn" data-tasful-product-review-star="3" aria-label="3つ星">★</button>
+                <button type="button" class="tasful-market-product-reviews__star-btn" data-tasful-product-review-star="4" aria-label="4つ星">★</button>
+                <button type="button" class="tasful-market-product-reviews__star-btn" data-tasful-product-review-star="5" aria-label="5つ星">★</button>
+              </div>
+              <label class="tasful-market-product-reviews__compose-field">
+                <span class="tasful-market-product-reviews__compose-label">タイトル</span>
+                <input type="text" class="tasful-market-product-reviews__compose-input" data-tasful-product-review-title maxlength="80" placeholder="例：期待以上でした" />
+              </label>
+              <label class="tasful-market-product-reviews__compose-field">
+                <span class="tasful-market-product-reviews__compose-label">レビュー本文</span>
+                <textarea class="tasful-market-product-reviews__compose-textarea" data-tasful-product-review-body rows="4" maxlength="500" placeholder="商品の感想を入力してください"></textarea>
+              </label>
+              <button type="button" class="tasful-market-product-reviews__compose-submit" data-tasful-product-review-submit>レビューを投稿する</button>
+              <p class="tasful-market-product-reviews__compose-done" data-tasful-product-review-done hidden>レビューを受け付けました。ありがとうございます。</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="tasful-market-product-related" id="product-related" aria-label="この商品に関連する商品">
+        <div class="tasful-market-product-related__head">
+          <h2 class="tasful-market-product-related__title">この商品に関連する商品</h2>
+        </div>
+        <div class="tasful-market-product-related__grid" data-tasful-product-shelf-related></div>
+        <button type="button" class="tasful-market-product-related__more" data-tasful-product-related-more hidden>
+          もっと見る
+        </button>
+      </section>
+
+      <section class="tasful-market-search-shelf tasful-market-product-shelf--mobile" aria-label="よく一緒に見られている商品">
+        <div class="tasful-market-search-shelf__head">
+          <h2 class="tasful-market-search-shelf__title">よく一緒に見られている商品</h2>
+        </div>
+        <div class="tasful-market-search-shelf__scroll" data-tasful-product-shelf-browsed></div>
+      </section>
+
+      <section class="tasful-market-search-shelf tasful-market-product-shelf--mobile" aria-label="最近見た商品">
+        <div class="tasful-market-search-shelf__head">
+          <h2 class="tasful-market-search-shelf__title">最近見た商品</h2>
+        </div>
+        <div class="tasful-market-search-shelf__scroll" data-tasful-product-shelf-recent></div>
+      </section>
+        </div>
+
+        <aside class="tasful-market-product-buybox" data-tasful-product-buybox aria-label="購入ボックス">
+          <div class="tasful-market-product-buybox__inner">
+            <p class="tasful-market-product-buybox__price" data-tasful-product-buybox-price></p>
+            <p class="tasful-market-product-buybox__ship" data-tasful-product-buybox-ship></p>
+            <p class="tasful-market-product-buybox__stock" data-tasful-product-buybox-stock></p>
+            <div class="tasful-market-product-buybox__qty">
+              <label for="tasfulProductQtyPc">数量</label>
+              <select id="tasfulProductQtyPc" class="tasful-market-product-hero__qty-select" data-tasful-product-qty-pc aria-label="数量">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </div>
+            <div class="tasful-market-product-buybox__trust" data-tasful-product-buybox-trust aria-label="出品者の信頼情報"></div>
+            <div class="tasful-market-product-buybox__actions">
+              <button type="button" class="tasful-market-product-hero__btn tasful-market-product-hero__btn--cart" data-tasful-product-add-cart-pc>
+                カートに入れる
+              </button>
+              <button type="button" class="tasful-market-product-hero__btn tasful-market-product-hero__btn--buy" data-tasful-product-buy-now-pc>
+                今すぐ購入
+              </button>
+            </div>
+            <a class="tasful-market-product-buybox__cart-link" href="shop-market-cart.html" data-tasful-product-view-cart>カートを見る</a>
+            <ul class="tasful-market-product-buybox__safety" data-tasful-product-safety-note>
+              <li>返品・キャンセル: 未使用品に限り到着後7日以内</li>
+              <li>支払い保護: TASFUL市場の安心決済で保護されます</li>
+            </ul>
+            <section class="tasful-market-product-buybox__store" data-tasful-product-buybox-store aria-label="店舗情報"></section>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="tasful-market-footer tasful-market-footer--product" aria-label="TASFUL市場フッター">
+      <div class="tasful-market-footer__inner">
+      <div class="tasful-market-footer__brand-block">
+        <p class="tasful-market-footer__brand">TASFUL市場</p>
+        <p class="tasful-market-footer__lead">安心して売買できる</p>
+        <p class="tasful-market-footer__sub">TASFULのショッピングマーケット</p>
+      </div>
+
+      <nav class="tasful-market-footer__block" aria-labelledby="tasful-market-product-footer-guide">
+        <h2 class="tasful-market-footer__heading" id="tasful-market-product-footer-guide">ご利用ガイド</h2>
+        <ul class="tasful-market-footer__links">
+          <li><a href="index-top.html">配送について</a></li>
+          <li><a href="index-top.html">返品・キャンセル</a></li>
+          <li><a href="ai-workspace.html">よくある質問</a></li>
+          <li><a href="index-top.html">お問い合わせ</a></li>
+        </ul>
+      </nav>
+
+      <nav class="tasful-market-footer__block" aria-labelledby="tasful-market-product-footer-seller">
+        <h2 class="tasful-market-footer__heading" id="tasful-market-product-footer-seller">出品する</h2>
+        <ul class="tasful-market-footer__links">
+          <li><a href="post.html?scope=business">出店ガイド</a></li>
+          <li><a href="builder/mvp-partner-register.html">Connect認証について</a></li>
+        </ul>
+      </nav>
+
+      <p class="tasful-market-footer__copy">© TASFUL</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="shop-products-config.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-checkout.js"></script>
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-product-detail.js"></script>
+</body>
+</html>

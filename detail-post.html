@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>掲載詳細へ移動中 | TASFUL</title>
+</head>
+<body>
+  <p>掲載詳細ページへ移動しています…</p>
+  <script src="listing-local-store.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="listings-db.js"></script>
+  <script>
+    (async function () {
+      const params = new URLSearchParams(window.location.search);
+      const id = String(params.get("listingId") || params.get("id") || "").trim();
+      if (!id) {
+        window.location.replace("my-listings.html");
+        return;
+      }
+      const enc = encodeURIComponent(id);
+
+      const local = window.TasuListingLocalStore?.fetchById?.(id);
+      if (local) {
+        const url = window.TasuListingLocalStore.buildDetailPageUrl(local);
+        if (url && url !== "#") {
+          window.location.replace(url);
+          return;
+        }
+      }
+
+      try {
+        const business = await window.TasuBusinessListings?.fetchBusinessListingById?.(id);
+        if (business) {
+          const bt = String(business.business_type || "").trim();
+          const cat = String(business.business_category || "").trim();
+          const shop = bt === "shop_store" || cat === "shop_store";
+          window.location.replace(
+            (shop ? "detail-shop.html" : "detail-business-service.html") + "?id=" + enc
+          );
+          return;
+        }
+        const listing = await window.TasuListingStore?.fetchListingById?.(id);
+        if (listing) {
+          const type = String(listing.listing_type || "skill").trim();
+          const map = {
+            product: "detail-product.html",
+            skill: "detail-skill.html",
+            job: "detail-job.html",
+            worker: "detail-worker.html",
+            general: "detail-general.html",
+          };
+          window.location.replace((map[type] || "detail-general.html") + "?id=" + enc);
+          return;
+        }
+      } catch (err) {
+        console.error("[detail-post] redirect failed:", err);
+      }
+      window.location.replace("detail-general.html?id=" + enc);
+    })();
+  </script>
+</body>
+</html>

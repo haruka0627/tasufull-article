@@ -1,0 +1,44 @@
+# NB-1A draft — Cloudflare Pages _headers
+# 配置先: ビルド出力ルート (deploy/cloudflare/dist/)
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Auth / 境界ロジック — デプロイ直後に最新を配信（Phase A-6）
+/auth-current-user.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/auth-ops-guard.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/connect-state.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/market-identity.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/builder/builder-actor-identity.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+/chat-supabase-config.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# HTML — MPA。長期キャッシュしない
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/builder/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# 画像・アイコン（ファイル名にハッシュなし — 更新時はパージ or TTL 短め）
+/images/*
+  Cache-Control: public, max-age=86400, immutable
+
+# その他静的アセット（初回は控えめ）
+/*.css
+  Cache-Control: public, max-age=3600
+
+/*.js
+  Cache-Control: public, max-age=300

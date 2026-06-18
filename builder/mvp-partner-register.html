@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>協力会社登録 | Builder MVP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-mvp-partner-register">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">協力会社登録（MVP）</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">協力会社登録</h1>
+          <p class="builder-header__sub">demoData / localStorage 保存</p>
+        </div>
+
+        <div class="builder-role" data-builder-role></div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-panel" aria-label="登録フォーム">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">新規登録</h2>
+          <span class="builder-kpi" data-builder-mvp-kpi>—</span>
+        </div>
+
+        <form class="builder-form" data-builder-mvp-partner-form>
+          <label class="builder-field">
+            <span class="builder-field__label">会社名 / 屋号</span>
+            <input class="builder-input" type="text" name="display_name" placeholder="例: 株式会社オレンジ建装" data-builder-mvp-partner-name />
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">工種（カンマ区切り）</span>
+            <input class="builder-input" type="text" name="trades" placeholder="例: 内装, 大工" data-builder-mvp-partner-trades />
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">エリア（カンマ区切り）</span>
+            <input class="builder-input" type="text" name="areas" placeholder="例: 東京, 神奈川" data-builder-mvp-partner-areas />
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">稼働</span>
+            <select class="builder-select" name="availability" data-builder-mvp-partner-availability>
+              <option value="available">空きあり</option>
+              <option value="limited">一部可</option>
+              <option value="busy">満枠</option>
+            </select>
+          </label>
+
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">一言</span>
+            <textarea class="builder-textarea" name="headline" rows="3" placeholder="例: 夜間対応可。短工期得意。" data-builder-mvp-partner-headline></textarea>
+          </label>
+
+          <div class="builder-form__actions">
+            <button type="submit" class="builder-btn builder-btn--primary" data-builder-mvp-partner-save>登録</button>
+            <a class="builder-btn builder-btn--ghost" href="mvp-projects.html">案件一覧へ</a>
+          </div>
+        </form>
+      </section>
+
+      <section class="builder-panel" aria-label="登録済み協力会社">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">登録済み</h2>
+          <span class="builder-kpi" data-builder-mvp-partner-count>—</span>
+        </div>
+        <ul class="builder-list" data-builder-mvp-partner-list></ul>
+      </section>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved.</p></footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

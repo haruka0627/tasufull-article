@@ -1,0 +1,317 @@
+﻿{
+  "historyRoot": "C:\\Users\\rubih\\AppData\\Roaming\\Cursor\\User\\History",
+  "branches": [
+    "* master"
+  ],
+  "stash": "(empty)",
+  "report": [
+    {
+      "file": "shop-store.html",
+      "exists": true,
+      "bytes": 14826,
+      "ufffd": 71,
+      "eMoj": 33,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: business.html, index.html"
+      ]
+    },
+    {
+      "file": "detail-shop.html",
+      "exists": true,
+      "bytes": 19650,
+      "ufffd": 107,
+      "eMoj": 28,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: detail-business.html"
+      ]
+    },
+    {
+      "file": "detail-shop-product.html",
+      "exists": true,
+      "bytes": 4166,
+      "ufffd": 22,
+      "eMoj": 5,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": "detail-shop-product.css",
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: detail-product.html"
+      ]
+    },
+    {
+      "file": "detail-business-service.html",
+      "exists": true,
+      "bytes": 26996,
+      "ufffd": 162,
+      "eMoj": 45,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": "detail-business-service.js",
+        "css": "detail-business-service.css",
+        "jsUfffd": 0
+      },
+      "regenNotes": [
+        "paired JS exists: detail-business-service.js (U+FFFD=0)",
+        "similar tracked: detail-business.html"
+      ]
+    },
+    {
+      "file": "business-portal.html",
+      "exists": true,
+      "bytes": 5866,
+      "ufffd": 52,
+      "eMoj": 9,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": "business-portal.css",
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: business.html, index-top.html"
+      ]
+    },
+    {
+      "file": "job-top.html",
+      "exists": true,
+      "bytes": 12113,
+      "ufffd": 34,
+      "eMoj": 17,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": "job-top.css",
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: job.html, index-top.html"
+      ]
+    },
+    {
+      "file": "ai-top.html",
+      "exists": true,
+      "bytes": 10922,
+      "ufffd": 229,
+      "eMoj": 44,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": "ai-top.css",
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: index-top.html"
+      ]
+    },
+    {
+      "file": "ai-workspace.html",
+      "exists": true,
+      "bytes": 9023,
+      "ufffd": 84,
+      "eMoj": 14,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": "ai-workspace.css",
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: gen-ai-workspace.html"
+      ]
+    },
+    {
+      "file": "gen-ai-workspace.html",
+      "exists": true,
+      "bytes": 28812,
+      "ufffd": 136,
+      "eMoj": 29,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": "gen-ai-workspace.js",
+        "css": "gen-ai-workspace.css",
+        "jsUfffd": 0
+      },
+      "regenNotes": [
+        "paired JS exists: gen-ai-workspace.js (U+FFFD=0)",
+        "many test scripts assert data-* selectors in HTML"
+      ]
+    },
+    {
+      "file": "checkout.html",
+      "exists": true,
+      "bytes": 2767,
+      "ufffd": 15,
+      "eMoj": 12,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: post.html"
+      ]
+    },
+    {
+      "file": "order-complete.html",
+      "exists": true,
+      "bytes": 2654,
+      "ufffd": 26,
+      "eMoj": 13,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: checkout.html"
+      ]
+    },
+    {
+      "file": "service-fee-pay.html",
+      "exists": true,
+      "bytes": 2536,
+      "ufffd": 31,
+      "eMoj": 9,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": "service-fee-pay.js",
+        "css": null,
+        "jsUfffd": 0
+      },
+      "regenNotes": [
+        "paired JS exists: service-fee-pay.js (U+FFFD=0)",
+        "similar tracked: checkout.html"
+      ]
+    },
+    {
+      "file": "business-ui-preview.html",
+      "exists": true,
+      "bytes": 11606,
+      "ufffd": 94,
+      "eMoj": 8,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: business.html"
+      ]
+    },
+    {
+      "file": "legacy-job.html",
+      "exists": true,
+      "bytes": 3417,
+      "ufffd": 19,
+      "eMoj": 10,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: job.html"
+      ]
+    },
+    {
+      "file": "scripts/_ranking-sections.html",
+      "exists": true,
+      "bytes": 26058,
+      "ufffd": 160,
+      "eMoj": 77,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: index-top.html"
+      ]
+    },
+    {
+      "file": "dist/index.html",
+      "exists": true,
+      "bytes": 20973,
+      "ufffd": 139,
+      "eMoj": 62,
+      "gitHistory": "never committed",
+      "cursorHistoryBuckets": 0,
+      "cleanHistorySnapshots": 0,
+      "bestCleanSnapshot": null,
+      "siblings": {
+        "js": null,
+        "css": null,
+        "jsUfffd": null
+      },
+      "regenNotes": [
+        "similar tracked: index.html, index-top.html",
+        "vite build artifact 窶・rebuild from index.html"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>友達メモ | TASFUL TALK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="talk-home.css">
+  <link rel="stylesheet" href="talk-sub-page.css">
+</head>
+<body class="talk-sub-page" data-page="talk-memo">
+  <header class="talk-sub-page__header">
+    <a class="talk-sub-page__back" href="talk-home.html?tab=chat" data-talk-sub-back>← チャットに戻る</a>
+    <h1 class="talk-sub-page__title">友達メモ</h1>
+    <p class="talk-sub-page__sub" data-talk-memo-subtitle>自分だけが見えるメモです。相手には表示されません。</p>
+  </header>
+  <main class="talk-sub-page__main">
+    <div class="talk-sub-page__panel">
+      <p class="talk-friend-panel__hint" data-talk-memo-peer></p>
+      <label class="talk-friend-panel__field">
+        <span class="talk-friend-panel__label">メモ</span>
+        <textarea class="talk-friend-panel__input talk-friend-panel__textarea" data-talk-memo-input rows="8" placeholder="紹介者・注意事項・現場名・取引履歴メモなど"></textarea>
+      </label>
+      <div class="talk-sub-page__actions">
+        <button type="button" class="talk-ai-action talk-ai-action--primary" data-talk-memo-save>保存</button>
+        <a class="talk-ai-action talk-ai-action--muted" data-talk-sub-back-link href="talk-home.html?tab=chat">キャンセル</a>
+      </div>
+    </div>
+  </main>
+  <script src="talk-friend-memo-store.js" defer></script>
+  <script src="talk-sub-nav.js" defer></script>
+  <script src="talk-memo.js" defer></script>
+</body>
+</html>

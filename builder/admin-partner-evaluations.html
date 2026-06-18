@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>パートナー評価 | Builder Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-admin-partner-evaluations">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder Admin ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="../builder-admin/admin-index.html" aria-label="Builder Admin">
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder Admin</span>
+              <span class="builder-brand__sub">パートナー評価</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="../builder-admin/admin-index.html">‹ 運営ダッシュボード</a>
+        </div>
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">パートナー実績評価</h1>
+          <p class="builder-header__sub">期日遵守・クレームなしの2軸のみ。ドタキャンは候補から非表示（管理者確認必須）。</p>
+        </div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main" data-builder-partner-eval-root>
+      <section class="builder-panel" aria-label="評価入力">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">自然文で評価追加</h2>
+        </div>
+        <form class="builder-form" data-builder-eval-form>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">入力（例: 関東外装 期日+1 クレーム+1 / 〇〇建設 ドタキャン 非表示）</span>
+            <input class="builder-input" type="text" data-builder-eval-input placeholder="パートナー名 期日+1 クレーム+1" />
+          </label>
+          <label class="builder-field">
+            <span class="builder-field__label">案件ID（任意・重複防止）</span>
+            <input class="builder-input" type="text" data-builder-eval-project-id placeholder="demo-project-001" />
+          </label>
+          <div class="builder-form__actions">
+            <button type="submit" class="builder-btn builder-btn--primary" data-builder-eval-submit>追加</button>
+          </div>
+          <p class="builder-form-hint" data-builder-eval-message hidden aria-live="polite"></p>
+        </form>
+      </section>
+
+      <div class="builder-admin-eval-layout">
+        <section class="builder-panel" aria-label="評価スコア一覧">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">評価一覧</h2>
+            <span class="builder-kpi" data-builder-eval-score-count>0 件</span>
+          </div>
+          <ul class="builder-list" data-builder-eval-score-list></ul>
+        </section>
+
+        <section class="builder-panel" aria-label="評価履歴">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">評価履歴</h2>
+          </div>
+          <ul class="builder-list builder-eval-history" data-builder-eval-history-list></ul>
+        </section>
+
+        <section class="builder-panel" id="hidden-partners" aria-label="非表示パートナー">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">非表示パートナー</h2>
+            <span class="builder-kpi" data-builder-eval-hidden-count>0 件</span>
+          </div>
+          <ul class="builder-list" data-builder-eval-hidden-list></ul>
+        </section>
+      </div>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL inc. Builder Admin — パートナー評価</p></footer>
+    </main>
+  </div>
+
+  <div class="builder-eval-modal" data-builder-eval-modal hidden role="dialog" aria-modal="true" aria-labelledby="builderEvalModalTitle">
+    <div class="builder-eval-modal__backdrop" data-builder-eval-modal-cancel></div>
+    <div class="builder-eval-modal__panel">
+      <h2 id="builderEvalModalTitle">非表示の確認</h2>
+      <p data-builder-eval-modal-text>このパートナーを候補表示から外します。自動BANは行いません。</p>
+      <div class="builder-eval-modal__actions">
+        <button type="button" class="builder-btn builder-btn--ghost" data-builder-eval-modal-cancel>キャンセル</button>
+        <button type="button" class="builder-btn builder-btn--primary" data-builder-eval-modal-confirm>非表示にする</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <link rel="stylesheet" href="../supabase-ops-data-source.css" />
+  <script src="../supabase-ops-primary-config.js"></script>
+  <script src="../supabase-ops-primary-cache.js"></script>
+  <script src="../supabase-ops-read-config.js"></script>
+  <script src="../supabase-ops-read-adapter.js"></script>
+  <script src="../supabase-ops-read-bootstrap.js"></script>
+  <script src="../supabase-ops-data-source-ui.js"></script>
+  <script src="../supabase-ops-write-config.js"></script>
+  <script src="../supabase-ops-write-adapter.js"></script>
+  <script src="builder-partner-evaluation-parse.js"></script>
+  <script src="builder-partner-evaluation-store.js"></script>
+  <script src="builder-partner-evaluation-admin.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

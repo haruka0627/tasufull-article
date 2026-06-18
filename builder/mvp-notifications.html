@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>通知 | Builder MVP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-mvp-notifications">
+  <div class="builder-app builder-mvp-notifications" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18" />
+                <path d="M7 21V7l8-4v18" />
+                <path d="M17 21V11l-6-4" />
+                <path d="M9 9v.01" />
+                <path d="M9 12v.01" />
+                <path d="M9 15v.01" />
+                <path d="M9 18v.01" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">通知（MVP）</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="index.html" data-builder-page-back aria-label="Builderダッシュボードへ">‹ Builderダッシュボード</a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">通知</h1>
+          <p class="builder-header__sub" data-builder-mvp-notif-sub>案件・やりとり・運営からのお知らせ</p>
+        </div>
+
+        <div class="builder-role" data-builder-role></div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-panel" aria-label="通知一覧">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">一覧</h2>
+          <span class="builder-kpi" data-builder-mvp-notif-kpi>—</span>
+        </div>
+
+        <div class="builder-notification-actions">
+          <span class="builder-kpi" data-builder-mvp-notif-unread-kpi>—</span>
+          <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-notif-mark-all>すべて既読</button>
+        </div>
+
+        <ul class="builder-notification-list" data-builder-mvp-notif-list></ul>
+      </section>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved.</p></footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../builder-bench-embed.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

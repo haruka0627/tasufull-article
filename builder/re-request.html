@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>再依頼 | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-re-request">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">再依頼</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">再依頼</h1>
+          <p class="builder-header__sub">過去案件 / テンプレから再作成（demo）</p>
+        </div>
+
+        <button type="button" class="builder-account" data-builder-account aria-label="アカウントメニュー">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <div class="mvp-dark-layout" aria-label="再依頼レイアウト">
+        <section class="builder-panel mvp-dark-main" aria-label="再依頼条件">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">再依頼条件</h2>
+            <span class="builder-kpi" data-builder-re-request-kpi>—</span>
+          </div>
+
+          <div data-builder-re-summary aria-live="polite"></div>
+
+          <form class="builder-form" data-builder-re-request-form>
+          <label class="builder-field">
+            <span class="builder-field__label">投稿先</span>
+            <select class="builder-select" name="target_kind" data-builder-re-target-kind>
+              <option value="tasful_managed">TASFUL案件管理</option>
+              <option value="builder_board">Builder掲示板</option>
+            </select>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">公開範囲</span>
+            <select class="builder-select" name="visibility" data-builder-re-visibility>
+              <option value="public">公開（全体）</option>
+              <option value="private">非公開（自分だけ）</option>
+              <option value="partner_only">パートナー限定</option>
+              <option value="team_only">チーム限定</option>
+            </select>
+            <span class="builder-field__hint" data-builder-visibility-hint>—</span>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">連絡ポリシー</span>
+            <select class="builder-select" name="contact_policy" data-builder-re-contact-policy>
+              <option value="tasful_talk_only">TASFUL Talkのみ（推奨）</option>
+              <option value="owner_allowed">オーナー判断で共有可</option>
+              <option value="admin_only">管理者のみ共有可</option>
+            </select>
+            <span class="builder-field__hint" data-builder-contact-policy-hint>—</span>
+          </label>
+
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">再依頼メモ（demo）</span>
+            <div class="mvp-dark-textarea">
+              <div class="mvp-dark-textarea__toolbar" aria-hidden="true">
+                <button type="button" class="mvp-dark-textarea__tool">B</button>
+                <button type="button" class="mvp-dark-textarea__tool">I</button>
+                <button type="button" class="mvp-dark-textarea__tool">U</button>
+                <span class="mvp-dark-textarea__sep"></span>
+                <button type="button" class="mvp-dark-textarea__tool">🔗</button>
+                <button type="button" class="mvp-dark-textarea__tool">•</button>
+                <button type="button" class="mvp-dark-textarea__tool">1.</button>
+              </div>
+              <textarea class="builder-textarea" name="note" rows="4" placeholder="依頼背景・追加条件…" data-builder-re-note></textarea>
+            </div>
+          </label>
+
+          <div class="builder-form__actions builder-rerequest-actions">
+            <button type="button" class="builder-btn builder-btn--primary mvp-dark-btnPrimary" data-builder-re-create-project>
+              この内容で案件作成
+            </button>
+            <a class="builder-btn builder-btn--ghost" href="index.html">戻る</a>
+          </div>
+          </form>
+        </section>
+
+        <aside class="mvp-dark-side" aria-label="補足情報">
+          <div class="mvp-dark-side__stack">
+            <div class="builder-callouts" data-builder-re-callouts></div>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+{
+  "ok": false,
+  "benchUrl": "http://localhost:5173/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0&liveFlowReset=1",
+  "idleMinutes": 3,
+  "sampleSec": 30,
+  "limits": {
+    "rssLimitMb": 1024,
+    "growthLimitMb": 80
+  },
+  "preProcesses": [
+    {
+      "Id": 26832,
+      "WS_MB": 6,
+      "StartTime": "/Date(1780802891234)/"
+    },
+    {
+      "Id": 27540,
+      "WS_MB": 8.8,
+      "StartTime": "/Date(1780802891173)/"
+    },
+    {
+      "Id": 35504,
+      "WS_MB": 3.8,
+      "StartTime": "/Date(1780802891223)/"
+    }
+  ],
+  "postProcesses": [
+    {
+      "Id": 49584,
+      "WS_MB": 101.6,
+      "StartTime": "/Date(1781037587435)/"
+    },
+    {
+      "Id": 52376,
+      "WS_MB": 104.1,
+      "StartTime": "/Date(1781037587492)/"
+    },
+    {
+      "Id": 52432,
+      "WS_MB": 1148.1,
+      "StartTime": "/Date(1781037587513)/"
+    },
+    {
+      "Id": 54856,
+      "WS_MB": 112.8,
+      "StartTime": "/Date(1781037587503)/"
+    }
+  ],
+  "ourMaxProcMb": 1186.9,
+  "growthMb": 0,
+  "samples": [
+    {
+      "atSec": 0,
+      "sessionTotalMb": 1131,
+      "maxProcMb": 954.4,
+      "procCount": 4,
+      "heap": {
+        "notifyDeliveries": 3,
+        "postMessageEvents": 0,
+        "ngBulkCopyLen": 3338,
+        "stageVerdicts": true,
+        "frames": [
+          {
+            "id": "frame-a-notify",
+            "src": "http://localhost:5173/talk-home.html?tab=notify&userId=u_product&talkDev=1&revie",
+            "blank": false
+          },
+          {
+            "id": "frame-a-chat",
+            "src": "http://localhost:5173/chat-detail.html?thread=chat-1781037415376-65zfpu&userId=u",
+            "blank": false
+          },
+          {
+            "id": "frame-b-notify",
+            "src": "http://localhost:5173/talk-home.html?tab=notify&userId=u_hiro&talkDev=1&review=c",
+            "blank": false
+          },
+          {
+            "id": "frame-b-chat",
+            "src": "http://localhost:5173/platform-chat-bench-buyer-wait.html?talkDev=1&review=chat-",
+            "blank": false
+          }
+        ],
+        "iframeReloads": {
+          "frame-a-notify": 2,
+          "frame-a-chat": 2,
+          "frame-b-notify": 2,
+          "frame-b-chat": 2
+        },
+        "pollSuspended": false,
+        "idlePollStreak": 0,
+        "wallIdleMs": 43
+      }
+    },
+    {
+      "atSec": 31,
+      "sessionTotalMb": 1362.2,
+      "maxProcMb": 1186.9,
+      "procCount": 4,
+      "heap": {
+        "notifyDeliveries": 3,
+        "postMessageEvents": 0,
+        "ngBulkCopyLen": 2763,
+        "stageVerdicts": true,
+        "frames": [
+          {
+            "id": "frame-a-notify",
+            "src": "http://localhost:5173/talk-home.html?tab=notify&userId=u_product&talkDev=1&revie",
+            "blank": false
+          },
+          {
+            "id": "frame-a-chat",
+            "src": "http://localhost:5173/chat-detail.html?thread=chat-1781037415376-65zfpu&userId=u",
+            "blank": false
+          },
+          {
+            "id": "frame-b-notify",
+            "src": "http://localhost:5173/talk-home.html?tab=notify&userId=u_hiro&talkDev=1&review=c",
+            "blank": false
+          },
+          {
+            "id": "frame-b-chat",
+            "src": "http://localhost:5173/platform-chat-bench-buyer-wait.html?talkDev=1&review=chat-",
+            "blank": false
+          }
+        ],
+        "iframeReloads": {
+          "frame-a-notify": 2,
+          "frame-a-chat": 2,
+          "frame-b-notify": 2,
+          "frame-b-chat": 2
+        },
+        "pollSuspended": false,
+        "idlePollStreak": 0,
+        "wallIdleMs": 43
+      }
+    },
+    {
+      "atSec": 64,
+      "sessionTotalMb": 556.4,
+      "maxProcMb": 389.4,
+      "procCount": 4,
+      "heap": {
+        "notifyDeliveries": 3,
+        "postMessageEvents": 0,
+        "ngBulkCopyLen": 7978,
+        "stageVerdicts": true,
+        "frames": [
+          {
+            "id": "frame-a-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-a-chat",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-chat",
+            "src": "about:blank",
+            "blank": true
+          }
+        ],
+        "iframeReloads": {
+          "frame-a-notify": 2,
+          "frame-a-chat": 2,
+          "frame-b-notify": 2,
+          "frame-b-chat": 3
+        },
+        "pollSuspended": true,
+        "idlePollStreak": 0,
+        "wallIdleMs": 4462
+      }
+    },
+    {
+      "atSec": 94,
+      "sessionTotalMb": 553.8,
+      "maxProcMb": 386.9,
+      "procCount": 4,
+      "heap": {
+        "notifyDeliveries": 3,
+        "postMessageEvents": 0,
+        "ngBulkCopyLen": 7978,
+        "stageVerdicts": true,
+        "frames": [
+          {
+            "id": "frame-a-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-a-chat",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-chat",
+            "src": "about:blank",
+            "blank": true
+          }
+        ],
+        "iframeReloads": {
+          "frame-a-notify": 2,
+          "frame-a-chat": 2,
+          "frame-b-notify": 2,
+          "frame-b-chat": 3
+        },
+        "pollSuspended": true,
+        "idlePollStreak": 0,
+        "wallIdleMs": 4462
+      }
+    },
+    {
+      "atSec": 125,
+      "sessionTotalMb": 553.9,
+      "maxProcMb": 386.9,
+      "procCount": 4,
+      "heap": {
+        "notifyDeliveries": 3,
+        "postMessageEvents": 0,
+        "ngBulkCopyLen": 7978,
+        "stageVerdicts": true,
+        "frames": [
+          {
+            "id": "frame-a-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-a-chat",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-chat",
+            "src": "about:blank",
+            "blank": true
+          }
+        ],
+        "iframeReloads": {
+          "frame-a-notify": 2,
+          "frame-a-chat": 2,
+          "frame-b-notify": 2,
+          "frame-b-chat": 3
+        },
+        "pollSuspended": true,
+        "idlePollStreak": 0,
+        "wallIdleMs": 4462
+      }
+    },
+    {
+      "atSec": 155,
+      "sessionTotalMb": 553.9,
+      "maxProcMb": 387,
+      "procCount": 4,
+      "heap": {
+        "notifyDeliveries": 3,
+        "postMessageEvents": 0,
+        "ngBulkCopyLen": 7978,
+        "stageVerdicts": true,
+        "frames": [
+          {
+            "id": "frame-a-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-a-chat",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-notify",
+            "src": "about:blank",
+            "blank": true
+          },
+          {
+            "id": "frame-b-chat",
+            "src": "about:blank",
+            "blank": true
+          }
+        ],
+        "iframeReloads": {
+          "frame-a-notify": 2,
+          "frame-a-chat": 2,
+          "frame-b-notify": 2,
+          "frame-b-chat": 3
+        },
+        "pollSuspended": true,
+        "idlePollStreak": 0,
+        "wallIdleMs": 4462
+      }
+    }
+  ],
+  "errors": [
+    "peakMaxProcMb=1186.9 exceeds limit 1024 (before suspend)"
+  ]
+}

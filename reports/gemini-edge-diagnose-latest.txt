@@ -1,0 +1,63 @@
+﻿node : (node:39148) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to se
+curity vulnerabilities, as the arguments are not escaped, only concatenated.
+発生場所 C:\Users\rubih\AppData\Local\Temp\ps-script-1c6c4e4f-2b06-44e1-9aa3-a0a0520d5911.ps1:111 文字:1
++ node scripts/diagnose-gemini-edge.mjs 2>&1 | Out-File -FilePath repor ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:39148) [D...y concatenated.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-deprecation ...` to show where the warning was created)
+# Gemini Edge 險ｺ譁ｭ繝ｬ繝昴・繝・
+螳滓命: 2026-06-12T10:45:03.074Z
+
+## 1. Edge 縺悟盾辣ｧ縺吶ｋ GEMINI_API_KEY・亥・鬆ｭ縺ｮ縺ｿ・・
+- configured: true
+- prefix (蜈磯ｭ8譁・ｭ・: `AIzaSyAB`
+- length: 39
+- suffix (譛ｫ蟆ｾ4譁・ｭ・: `78IY`
+
+**辣ｧ蜷・** Google AI Studio 縺ｧ隱ｲ驥台ｸｭ繧ｭ繝ｼ縺ｮ蜈磯ｭ8譁・ｭ励・譛ｫ蟆ｾ4譁・ｭ励→荳閾ｴ縺吶ｋ縺狗｢ｺ隱阪＠縺ｦ縺上□縺輔＞縲・
+## 2. Supabase Secret 繝繧､繧ｸ繧ｧ繧ｹ繝・
+- GEMINI_API_KEY digest: `b8980cd3c321d28c3b81ab3b0c6aa9282f38ec2e66c547791419157d0f57b9ab`
+- 繧ｭ繝ｼ繧・Studio 縺ｧ蜀咲匱陦後・譖ｴ譁ｰ縺励◆蝣ｴ蜷医√％縺薙′螟峨ｏ縺｣縺ｦ縺・↑縺代ｌ縺ｰ **蜿､縺・く繝ｼ縺・Edge 縺ｫ谿九▲縺ｦ縺・ｋ** 蜿ｯ閭ｽ諤ｧ縺後≠繧翫∪縺吶・
+## 3. 菴ｿ逕ｨ繝｢繝・Ν
+
+- diagnose edge: `gemini-2.5-flash`
+- gemini-chat 繧ｽ繝ｼ繧ｹ: `gemini-2.5-flash`・・gemini-2.5-pro` 縺ｧ縺ｯ縺ｪ縺・ｼ・
+## 4. API 蜻ｼ縺ｳ蜃ｺ縺怜・ URL
+
+```
+https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=***REDACTED***
+```
+
+## 5. Google Gemini API 逕溘Ξ繧ｹ繝昴Φ繧ｹ・・iagnose 1蝗・ping・・
+- HTTP: 429
+- x-goog-request-id: 窶・
+```json
+{
+  "error": {
+    "code": 429,
+    "message": "Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ",
+    "status": "RESOURCE_EXHAUSTED"
+  }
+}
+```
+
+## 6. gemini-chat Edge 蠢懃ｭ泌・譁・ｼ亥撫縺・粋繧上○譁・・繝ｭ繝ｳ繝励ヨ・・
+- Edge HTTP: 429
+
+```json
+{
+  "reply": "",
+  "usedGemini": false,
+  "error": "Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ",
+  "retryCount": 2,
+  "intent": "work"
+}
+```
+
+## 隗｣驥医Γ繝｢
+
+- 429 繝｡繝・そ繝ｼ繧ｸ縺ｫ `prepayment credits` 縺ｨ蜃ｺ縺ｦ繧ゅ・*蛻･繝励Ο繧ｸ繧ｧ繧ｯ繝医・繧ｭ繝ｼ**繧・*蜿､縺・く繝ｼ**縺ｮ蝣ｴ蜷医′縺ゅｊ縺ｾ縺吶・- 荳願ｨ・`prefix` / `suffix` 縺ｧ Studio 縺ｮ隱ｲ驥台ｸｭ繧ｭ繝ｼ縺ｨ荳閾ｴ縺吶ｋ縺九ｒ蜈医↓遒ｺ隱阪＠縺ｦ縺上□縺輔＞縲・
+
+Wrote reports/gemini-edge-diagnose.md

@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>出品する | TasuFull</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="listing-ai-badge.css">
+  <link rel="stylesheet" href="post.css">
+  <link rel="stylesheet" href="post-field-service-ui.css">
+  <link rel="stylesheet" href="listing-featured.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body data-post-form-type="skill" data-post-scope="general">
+
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットへようこそ　
+      <a href="/post" class="link">今月システム利用料5％！</a>　
+      ｜　
+      <a href="ai-workspace.html" class="link accent">AI無料キャンペーン中</a>　
+      ｜　
+      <span style="color: #94a3b8;"></span>
+    </div>
+  </div>
+
+  <div class="post-page">
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+    <header class="post-header">
+      <a class="post-header__back" href="index.html">← 一覧に戻る</a>
+      <h1 class="post-header__title">掲載フォーム</h1>
+      <p class="post-header__lead">一般掲載（スキル・商品・求人・ワーカー）と法人・業者掲載を分けて登録できます。カテゴリに応じて入力項目が切り替わります。</p>
+      <p class="post-edit-banner" data-post-edit-banner hidden role="status"></p>
+    </header>
+
+    <section class="post-agent" data-agent-panel aria-labelledby="postAgentTitle">
+      <header class="post-agent__head">
+        <h2 id="postAgentTitle" class="post-agent__title">TASFUL AI 下書き作成</h2>
+        <p class="post-agent__lead">サービス情報を入力し、下書きを生成してフォームへ反映します（投稿は内容確認後に行ってください）。</p>
+      </header>
+      <div class="post-agent__body post-section__body--grid post-section__body--grid-2">
+        <p class="post-field post-field--full">
+          <label for="agentBriefTitle">タイトル（任意）</label>
+          <input type="text" id="agentBriefTitle" data-agent-brief="title" placeholder="例：外壁塗装パッケージ">
+        </p>
+        <p class="post-field">
+          <label for="agentBriefCategory">カテゴリ</label>
+          <select id="agentBriefCategory" data-agent-brief="category" class="post-select">
+            <option value="建築・修理">建築・修理</option>
+            <option value="清掃">清掃</option>
+            <option value="IT">IT</option>
+            <option value="店舗・販売">店舗・販売</option>
+            <option value="スキル">スキル</option>
+          </select>
+        </p>
+        <p class="post-field">
+          <label for="agentBriefPrice">料金（円）</label>
+          <input type="number" id="agentBriefPrice" data-agent-brief="price" min="0" step="1" placeholder="120000">
+        </p>
+        <p class="post-field post-field--full">
+          <label for="agentBriefDescription">詳細説明（任意）</label>
+          <textarea id="agentBriefDescription" data-agent-brief="description" rows="3" placeholder="サービス内容・強み・対応範囲"></textarea>
+        </p>
+        <p class="post-field post-field--full">
+          <label for="agentBriefImages">画像URL（1行1件・複数可）</label>
+          <textarea id="agentBriefImages" data-agent-brief="images" rows="2" placeholder="https://example.com/main.jpg"></textarea>
+        </p>
+        <p class="post-field post-field--full">
+          <label for="agentBriefOptions">オプション（任意）</label>
+          <input type="text" id="agentBriefOptions" data-agent-brief="options" placeholder="例：防水加工 / 夜間対応">
+        </p>
+        <p class="post-field post-field--full">
+          <label for="agentBriefTags">タグ（カンマ区切り）</label>
+          <input type="text" id="agentBriefTags" data-agent-brief="tags" placeholder="外壁, 塗装, 防水">
+        </p>
+      </div>
+      <div class="post-agent__actions">
+        <button type="button" class="post-btn post-btn--primary" data-agent-generate>下書きを生成して反映</button>
+        <button type="button" class="post-btn post-btn--ghost" data-agent-restore>保存済み下書きを復元</button>
+      </div>
+      <p class="post-agent__status" data-agent-status hidden role="status"></p>
+    </section>
+
+    <form id="listingForm" class="post-form" action="#" method="post" novalidate data-post-form>
+      <input type="hidden" name="postScope" value="general" data-post-scope>
+      <input type="hidden" name="listing_type" value="skill" data-listing-type-value>
+      <input type="hidden" name="business_category" value="" data-business-category-hidden>
+      <input type="hidden" name="business_type" value="" data-business-type-value>
+
+      <!-- 掲載区分・カテゴリ -->
+      <section class="post-category-hub" aria-labelledby="categoryHubTitle">
+        <header class="post-category-hub__head">
+          <h2 id="categoryHubTitle" class="post-category-hub__title">掲載区分・カテゴリ</h2>
+          <p class="post-category-hub__lead">一般ユーザー向けと法人・業者向けは別枠です。いずれか一方のカテゴリを選択してください。</p>
+        </header>
+
+        <div class="post-category-hub__block" data-post-scope-block="general">
+          <h3 class="post-category-hub__subtitle">
+            <span class="post-category-hub__subtitle-icon" aria-hidden="true">◇</span>
+            一般カテゴリ
+          </h3>
+          <div class="post-category-pick post-category-pick--general" role="radiogroup" aria-label="一般カテゴリ">
+            <label class="post-category-pick__item" data-general-type="skill">
+              <input type="radio" name="generalCategory" value="skill" data-general-category checked>
+              <span class="post-category-pick__label">スキル</span>
+              <span class="post-category-pick__hint">制作・代行・専門スキル</span>
+            </label>
+            <label class="post-category-pick__item" data-general-type="product">
+              <input type="radio" name="generalCategory" value="product" data-general-category>
+              <span class="post-category-pick__label">商品</span>
+              <span class="post-category-pick__hint">物販・フリマ出品</span>
+            </label>
+            <label class="post-category-pick__item" data-general-type="job">
+              <input type="radio" name="generalCategory" value="job" data-general-category>
+              <span class="post-category-pick__label">求人</span>
+              <span class="post-category-pick__hint">採用・業務委託の募集</span>
+            </label>
+            <label class="post-category-pick__item" data-general-type="worker">
+              <input type="radio" name="generalCategory" value="worker" data-general-category>
+              <span class="post-category-pick__label">ワーカー</span>
+              <span class="post-category-pick__hint">地域対応・代行・軽作業</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="post-category-hub__block post-category-hub__block--business" data-post-scope-block="business">
+          <h3 class="post-category-hub__subtitle">
+            <span class="post-category-hub__subtitle-icon post-category-hub__subtitle-icon--biz" aria-hidden="true">◆</span>
+            法人・業者専用カテゴリ
+          </h3>
+          
+          <div class="post-category-pick post-category-pick--biz-mode post-type-cards" role="group" aria-label="法人・業者掲載種別">
+            <button type="button" class="post-type-card" data-post-type="shop-store" aria-pressed="false">
+              <strong>店舗・販売</strong>
+              <span>商品・物販・飲食・雑貨など</span>
+            </button>
+            <button type="button" class="post-type-card" data-post-type="business-service" aria-pressed="false">
+              <strong>業務サービス</strong>
+              <span>見積・相談・業務依頼向けサービス</span>
+            </button>
+          </div>
+          <div class="visually-hidden" aria-hidden="true">
+            <input type="radio" name="businessModePick" value="shop_store" data-business-mode-pick id="bizModeShopStore">
+            <input type="radio" name="businessModePick" value="field_service" data-business-mode-pick id="bizModeFieldService">
+          </div>
+
+          <div class="post-category-pick post-category-pick--business" role="radiogroup" aria-label="業務サービスカテゴリ" data-business-category-pick-group hidden aria-hidden="true" style="display:none">
+            <label class="post-category-pick__item" data-category="transport">
+              <input type="radio" name="businessCategoryPick" value="transport" data-business-category-pick data-category="transport">
+              <span class="post-category-pick__label">送迎・運搬</span>
+            </label>
+            <label class="post-category-pick__item" data-category="construction">
+              <input type="radio" name="businessCategoryPick" value="construction" data-business-category-pick data-category="construction">
+              <span class="post-category-pick__label">建設・工事</span>
+            </label>
+            <label class="post-category-pick__item" data-category="repair_maintenance">
+              <input type="radio" name="businessCategoryPick" value="repair_maintenance" data-business-category-pick data-category="repair_maintenance">
+              <span class="post-category-pick__label">修理・メンテナンス</span>
+            </label>
+            <label class="post-category-pick__item" data-category="cleaning">
+              <input type="radio" name="businessCategoryPick" value="cleaning" data-business-category-pick data-category="cleaning">
+              <span class="post-category-pick__label">清掃・片付け</span>
+            </label>
+            <label class="post-category-pick__item" data-category="beauty_wellness">
+              <input type="radio" name="businessCategoryPick" value="beauty_wellness" data-business-category-pick data-category="beauty_wellness">
+              <span class="post-category-pick__label">美容・リラク</span>
+            </label>
+            <label class="post-category-pick__item" data-category="education">
+              <input type="radio" name="businessCategoryPick" value="education" data-business-category-pick data-category="education">
+              <span class="post-category-pick__label">スクール・教室</span>
+            </label>
+            <label class="post-category-pick__item" data-category="onsite_service">
+              <input type="radio" name="businessCategoryPick" value="onsite_service" data-business-category-pick data-category="onsite_service">
+              <span class="post-category-pick__label">出張サービス</span>
+            </label>
+            <label class="post-category-pick__item" data-category="life_support">
+              <input type="radio" name="businessCategoryPick" value="life_support" data-business-category-pick data-category="life_support">
+              <span class="post-category-pick__label">暮らしサポート</span>
+            </label>
+            <label class="post-category-pick__item" data-category="it_web">
+              <input type="radio" name="businessCategoryPick" value="it_web" data-business-category-pick data-category="it_web">
+              <span class="post-category-pick__label">IT・Web制作</span>
+            </label>
+            <label class="post-category-pick__item" data-category="sales_agency">
+              <input type="radio" name="businessCategoryPick" value="sales_agency" data-business-category-pick data-category="sales_agency">
+              <span class="post-category-pick__label">営業・代行</span>
+            </label>
+            <label class="post-category-pick__item" data-category="corporate_support">
+              <input type="radio" name="businessCategoryPick" value="corporate_support" data-business-category-pick data-category="corporate_support">
+              <span class="post-category-pick__label">法人サポート</span>
+            </label>
+            <label class="post-category-pick__item" data-category="other_business">
+              <input type="radio" name="businessCategoryPick" value="other_business" data-business-category-pick data-category="other_business">
+              <span class="post-category-pick__label">その他業務</span>
+            </label>
+          </div>
+
+          <div class="post-category-pick post-category-pick--business" role="radiogroup" aria-label="店舗・販売カテゴリ" data-shop-store-category-pick-group hidden aria-hidden="true" style="display:none">
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="restaurant">
+              <input type="radio" name="shopStoreCategoryPick" value="restaurant" data-shop-store-category-pick>
+              <span class="post-category-pick__label">飲食・カフェ</span>
+            </label>
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="retail">
+              <input type="radio" name="shopStoreCategoryPick" value="retail" data-shop-store-category-pick>
+              <span class="post-category-pick__label">小売・物販</span>
+            </label>
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="vintage_brand">
+              <input type="radio" name="shopStoreCategoryPick" value="vintage_brand" data-shop-store-category-pick>
+              <span class="post-category-pick__label">古着・ブランド</span>
+            </label>
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="goods_interior">
+              <input type="radio" name="shopStoreCategoryPick" value="goods_interior" data-shop-store-category-pick>
+              <span class="post-category-pick__label">雑貨・インテリア</span>
+            </label>
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="food_retail">
+              <input type="radio" name="shopStoreCategoryPick" value="food_retail" data-shop-store-category-pick>
+              <span class="post-category-pick__label">食品販売</span>
+            </label>
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="hobby_anime">
+              <input type="radio" name="shopStoreCategoryPick" value="hobby_anime" data-shop-store-category-pick>
+              <span class="post-category-pick__label">ホビー・アニメ・トレカ</span>
+            </label>
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="pet">
+              <input type="radio" name="shopStoreCategoryPick" value="pet" data-shop-store-category-pick>
+              <span class="post-category-pick__label">ペット用品</span>
+            </label>
+            <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="other_shop">
+              <input type="radio" name="shopStoreCategoryPick" value="other_shop" data-shop-store-category-pick>
+              <span class="post-category-pick__label">その他</span>
+            </label>
+          </div>
+
+          <p class="post-field post-field--full" data-business-subcategory-wrap hidden aria-hidden="true">
+            <label for="businessSubcategory">サブカテゴリ</label>
+            <select id="businessSubcategory" name="business_subcategory" class="post-select" data-business-subcategory disabled></select>
+          </p>
+
+          <aside class="post-notice post-notice--business" data-business-notice hidden>
+            <h4 class="post-notice__title">掲載上の注意（必読）</h4>
+            <ul class="post-notice__list">
+              <li><strong>禁止：</strong>白タク、無資格工事、違法募集、医療・治療行為の宣伝・紹介</li>
+              <li>許可・資格が必要な業種は、届出番号・資格名を正確に記載してください</li>
+              <li>虚偽の対応可能表示・誇大広告は掲載停止の対象となります</li>
+            </ul>
+            <p class="post-notice__disclaimer">
+              TasuFull は<strong>施工管理・工事保証・業者手配・派遣・エスクロー決済</strong>を行いません。
+              掲載は情報提供のみで、契約・施工・支払いは利用者と事業者の直接協議となります。
+            </p>
+          </aside>
+        </div>
+      </section>
+
+      <!-- 掲載種別（一般カテゴリ選択時のみ表示） -->
+      <div class="post-type-bar" data-post-type-bar data-general-only hidden>
+        <p class="post-type-bar__label">掲載種別</p>
+        <div class="post-type-bar__select-wrap post-field" style="margin:0">
+          <label class="visually-hidden" for="listingType">掲載種別</label>
+          <select id="listingType" class="post-select" data-listing-type aria-controls="listingForm">
+            <option value="skill" selected>スキル</option>
+            <option value="product">商品</option>
+            <option value="job">求人</option>
+            <option value="shop-store">店舗・販売</option>
+            <option value="business-service">業務サービス</option>
+            <option value="worker">ワーカー</option>
+          </select>
+        </div>
+        <span class="post-type-badge" data-type-badge data-type="skill">スキル</span>
+      </div>
+      <!-- 店舗・販売専用フロー -->
+      <div class="post-shop-store-flow" data-shop-store-flow data-business-only data-business-form-key="shopFlow" hidden aria-hidden="true">
+        <section class="post-shop-store-card" aria-labelledby="shopStoreBasicTitle">
+          <header class="post-shop-store-card__head">
+            <h2 id="shopStoreBasicTitle" class="post-shop-store-card__title">掲載基本情報</h2>
+            <p class="post-shop-store-card__desc">一覧・詳細に表示する店舗の基本情報です</p>
+          </header>
+          <div class="post-shop-store-card__body post-shop-store-card__body--grid" data-shop-mount="basic"></div>
+        </section>
+        <section class="post-shop-store-card" aria-labelledby="shopStoreContactTitle">
+          <header class="post-shop-store-card__head">
+            <h2 id="shopStoreContactTitle" class="post-shop-store-card__title">店舗情報・連絡先</h2>
+            <p class="post-shop-store-card__desc">住所・アクセス・連絡先など</p>
+          </header>
+          <div class="post-shop-store-card__body post-shop-store-card__body--grid" data-shop-mount="contact"></div>
+        </section>
+        <section class="post-shop-store-card" aria-labelledby="shopStoreSalesTitle">
+          <header class="post-shop-store-card__head">
+            <h2 id="shopStoreSalesTitle" class="post-shop-store-card__title">販売・買取オプション</h2>
+            <p class="post-shop-store-card__desc">対応可能な販売・買取内容</p>
+          </header>
+          <div class="post-shop-store-card__body post-shop-store-card__body--grid" data-shop-mount="sales"></div>
+        </section>
+        <section class="post-shop-store-card" aria-labelledby="shopStoreProductsTitle">
+          <header class="post-shop-store-card__head">
+            <h2 id="shopStoreProductsTitle" class="post-shop-store-card__title">掲載商品</h2>
+            <p class="post-shop-store-card__desc">商品・メニューを登録（最大12件）</p>
+          </header>
+          <div class="post-shop-store-card__body" data-shop-mount="products"></div>
+        </section>
+        <section class="post-shop-store-card" aria-labelledby="shopStoreImagesTitle">
+          <header class="post-shop-store-card__head">
+            <h2 id="shopStoreImagesTitle" class="post-shop-store-card__title">店舗画像</h2>
+            <p class="post-shop-store-card__desc">メイン画像・ギャラリー</p>
+          </header>
+          <div class="post-shop-store-card__body" data-shop-mount="images"></div>
+        </section>
+        <section class="post-shop-store-card" aria-labelledby="shopStoreOptionsTitle">
+          <header class="post-shop-store-card__head">
+            <h2 id="shopStoreOptionsTitle" class="post-shop-store-card__title">PR・公開設定</h2>
+          </header>
+          <div class="post-shop-store-card__body post-shop-store-card__body--grid" data-shop-mount="options"></div>
+        </section>
+      </div>
+
+      <!-- 業務サービス専用フロー -->
+      <div class="post-field-service-flow" data-field-service-flow data-business-only data-business-form-key="fieldServiceFlow" hidden aria-hidden="true">
+        <div data-fs-mount="basic"></div>
+        <div data-fs-mount="hero"></div>
+        <div data-fs-mount="features"></div>
+        <div data-fs-mount="overview"></div>
+        <div data-fs-mount="license"></div>
+        <div data-fs-mount="flow"></div>
+        <div data-fs-mount="company"></div>
+        <div data-fs-mount="area"></div>
+        <div data-fs-mount="materials"></div>
+        <div data-fs-mount="images"></div>
+        <div data-fs-mount="menu"></div>
+        <div data-fs-mount="cases"></div>
+        <div data-fs-mount="contact"></div>
+        <div data-fs-mount="ads"></div>
+      </div>
+
+
+      <!-- ========== 共通 ========== -->
+      <section class="post-section" aria-labelledby="commonSectionTitle">
+        <header class="post-section__head">
+          <h2 id="commonSectionTitle" class="post-section__title">
+            <span class="post-section__icon" aria-hidden="true">✦</span>
+            基本情報
+          </h2>
+          <p class="post-section__desc">すべての掲載タイプで共通の項目です</p>
+        </header>
+        <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+
+          <p class="post-field post-field--full">
+            <label for="title">タイトル<span class="post-field__required">必須</span></label>
+            <input type="text" id="title" name="title" required maxlength="120" placeholder="例：スマートウォッチ Pro / Live2D制作 / 動画編集スタッフ募集">
+          </p>
+
+          <p class="post-field">
+            <label for="category">カテゴリ</label>
+            <select id="category" name="agentCategory" class="post-select" data-agent-category-ref>
+              <option value="">選択してください</option>
+              <option value="建築・修理">建築・修理</option>
+              <option value="清掃">清掃</option>
+              <option value="IT">IT</option>
+              <option value="スキル">スキル</option>
+            </select>
+          </p>
+
+          <p class="post-field">
+            <label for="price">料金（円）</label>
+            <input type="number" id="price" name="agentPrice" min="0" step="1" data-agent-price-ref placeholder="120000">
+          </p>
+
+          <p class="post-field post-field--full" data-common-description-field>
+            <label for="description">説明<span class="post-field__required">必須</span></label>
+            <textarea id="description" name="description" required placeholder="掲載の概要・魅力・依頼内容をわかりやすく記載してください"></textarea>
+          </p>
+
+          <p class="post-field post-field--full">
+            <label for="tags" data-tags-label>タグ</label>
+            <input type="text" id="tags" name="tags" data-tags-input placeholder="例：家電, 送料無料, リモート（カンマ区切り）">
+            <span class="post-field__hint" data-tags-hint>最大12個まで。一覧・検索で使われます。</span>
+            <div class="post-tags-preview" data-tags-preview hidden></div>
+          </p>
+
+          <p class="post-field post-field--full" data-agent-images-url-field>
+            <label for="images">画像URL（AI / 外部URL）</label>
+            <textarea id="images" name="agentImages" rows="3" data-agent-images-input placeholder="1行に1URL（最大6件）"></textarea>
+            <ul class="post-agent-images-preview" data-agent-images-preview hidden aria-label="画像URLプレビュー"></ul>
+          </p>
+
+          <div class="post-images-block post-field--full" data-listing-images-block>
+            <h3 class="post-images-block__shop-title" data-shop-store-images-heading hidden aria-hidden="true">店舗サブ画像</h3>
+            <div class="post-field post-field--full post-main-upload" data-main-upload>
+              <label for="listingMainImage">メイン画像</label>
+
+              <div
+                class="post-main-upload__dropzone"
+                data-main-dropzone
+                role="button"
+                tabindex="0"
+                aria-label="メイン画像をドロップまたは選択"
+              >
+                <input
+                  type="file"
+                  id="listingMainImage"
+                  name="mainImage"
+                  class="post-main-upload__input"
+                  data-listing-main-image
+                  accept="image/jpeg,image/png,image/webp,image/gif,image/*"
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                <span class="post-main-upload__title">クリックまたはドラッグ&amp;ドロップ</span>
+                <span class="post-main-upload__name" data-main-file-name data-file-default="JPG / PNG / WebP · 1枚">JPG / PNG / WebP · 1枚</span>
+                <button type="button" class="post-main-upload__browse" data-main-browse>画像を選択</button>
+              </div>
+
+              <div class="post-main-upload__preview" data-main-preview hidden aria-label="選択済みメイン画像"></div>
+
+              <span class="post-field__hint">一覧カード・詳細のメイン表示に使用（<code>image_url</code> / <code>thumbnail_url</code>）。1枚のみ。新しく選ぶと置き換わります。</span>
+            </div>
+
+            <div class="post-field post-field--full post-gallery-upload" data-gallery-upload>
+              <label for="listingGalleryImages">サブ画像（ギャラリー）</label>
+
+              <div
+                class="post-gallery-upload__dropzone"
+                data-gallery-dropzone
+                role="button"
+                tabindex="0"
+                aria-label="ギャラリー画像をドロップまたは選択"
+              >
+                <input
+                  type="file"
+                  id="listingGalleryImages"
+                  name="images"
+                  class="post-gallery-upload__input"
+                  data-listing-gallery-images
+                  accept="image/jpeg,image/png,image/webp,image/gif,image/*"
+                  multiple
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                <span class="post-gallery-upload__title">クリックまたはドラッグ&amp;ドロップ</span>
+                <span class="post-gallery-upload__name" data-gallery-file-name data-file-default="複数選択可 · 最大6枚">複数選択可 · 最大6枚</span>
+                <button type="button" class="post-gallery-upload__browse" data-gallery-browse>画像を追加</button>
+              </div>
+
+              <p class="post-gallery-upload__status" data-gallery-status>0 / 6 枚</p>
+
+              <ul class="post-gallery-upload__preview" data-gallery-preview hidden aria-label="選択済みサブ画像"></ul>
+
+              <span class="post-field__hint">詳細ページのギャラリーに表示（<code>form_data.images</code> 配列）。追加選択で追記でき、合計最大6枚まで。</span>
+            </div>
+
+            <section
+              class="post-section post-section--service-menu post-service-menu-editor"
+              data-service-menu-section
+              data-business-only
+              hidden
+              aria-hidden="true"
+              aria-labelledby="bizServiceMenuTitle"
+            >
+              <header class="post-section__head">
+                <h2 id="bizServiceMenuTitle" class="post-section__title">
+                  <span class="post-section__icon" aria-hidden="true">🛠</span>
+                  対応メニュー
+                </h2>
+                <p class="post-section__desc" data-service-menu-section-desc>
+                  対応可能なサービス内容と料金目安を登録します（最大6件）。詳細ページの「対応メニュー」に表示されます。
+                </p>
+              </header>
+              <div class="post-section__body">
+                <div class="post-service-menu-list" data-service-menu-list></div>
+                <button type="button" class="post-service-menu-add" data-service-menu-add>+ メニューを追加</button>
+                <span class="post-field__hint">メニュー名・料金・説明を入力してください（例：水漏れ修理 / 8,000円〜 / キッチン・洗面・トイレ対応）。</span>
+              </div>
+            </section>
+
+            <section
+              class="post-section post-section--work-cases post-work-cases-editor"
+              data-work-cases-section
+              data-business-only
+              hidden
+              aria-hidden="true"
+              aria-labelledby="bizWorkCasesTitle"
+            >
+              <header class="post-section__head">
+                <h2 id="bizWorkCasesTitle" class="post-section__title">
+                  <span class="post-section__icon" aria-hidden="true">📋</span>
+                  実績・事例
+                </h2>
+                <p class="post-section__desc" data-work-cases-section-desc>施工・修理の事例テキストを登録します（最大3件）。写真は上の「実績・事例画像」から登録してください。</p>
+              </header>
+              <div class="post-section__body">
+                <div class="post-work-cases-list" data-work-cases-list></div>
+                <button type="button" class="post-work-cases-add" data-work-cases-add>+ 事例を追加</button>
+                <span class="post-field__hint">タイトル・対応内容・地域・工期（または対応日）・費用・補足を入力します（最大3件）。1枚目の写真→事例1、2枚目→事例2…の順で詳細に表示されます。</span>
+              </div>
+            </section>
+          </div>
+
+          <fieldset class="post-field post-field--full">
+            <legend class="post-field__legend">公開設定</legend>
+            <div class="post-publish-options">
+              <label class="post-publish-option">
+                <input type="radio" name="publishStatus" value="draft">
+                <span class="post-publish-option__text">
+                  <strong>下書き</strong>
+                  <span>あとから編集・公開できます</span>
+                </span>
+              </label>
+              <label class="post-publish-option">
+                <input type="radio" name="publishStatus" value="public" checked>
+                <span class="post-publish-option__text">
+                  <strong>公開</strong>
+                  <span>審査後すぐに一覧へ表示</span>
+                </span>
+              </label>
+              <label class="post-publish-option">
+                <input type="radio" name="publishStatus" value="scheduled">
+                <span class="post-publish-option__text">
+                  <strong>予約公開</strong>
+                  <span>指定日時に自動公開</span>
+                </span>
+              </label>
+            </div>
+            <p class="post-field" style="margin-top:0.75rem">
+              <label for="publishAt">予約日時（予約公開時）</label>
+              <input type="datetime-local" id="publishAt" name="publishAt">
+            </p>
+          </fieldset>
+
+        </div>
+      </section>
+
+      <div data-general-only>
+
+      <!-- ========== 商品 ========== -->
+      <div class="post-form-panel" data-form-type="product" hidden>
+
+        <section class="post-section" aria-labelledby="productSectionTitle">
+          <header class="post-section__head">
+            <h2 id="productSectionTitle" class="post-section__title">
+              <span class="post-section__icon" aria-hidden="true">🛍</span>
+              商品情報
+            </h2>
+            <p class="post-section__desc">価格・配送・在庫など商品固有の項目</p>
+          </header>
+          <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+
+            <div class="post-field post-field--full post-category-block" data-category-block="product">
+              <span class="post-field__legend">カテゴリ<span class="post-field__required">必須</span></span>
+              <div class="post-category-grid">
+                <p class="post-field">
+                  <label for="productCategory">カテゴリ</label>
+                  <select id="productCategory" name="productCategory" class="post-select" required data-product-category>
+                    <option value="">選択してください</option>
+                    <option value="家電">家電</option>
+                    <option value="スマホ">スマホ</option>
+                    <option value="PC">PC</option>
+                    <option value="ゲーム">ゲーム</option>
+                    <option value="ファッション">ファッション</option>
+                    <option value="家具">家具</option>
+                    <option value="インテリア">インテリア</option>
+                    <option value="工具">工具</option>
+                    <option value="車・バイク">車・バイク</option>
+                    <option value="スポーツ">スポーツ</option>
+                    <option value="アウトドア">アウトドア</option>
+                    <option value="ホビー">ホビー</option>
+                    <option value="本">本</option>
+                    <option value="音楽">音楽</option>
+                    <option value="ハンドメイド">ハンドメイド</option>
+                    <option value="美容">美容</option>
+                    <option value="食品">食品</option>
+                    <option value="ペット">ペット</option>
+                    <option value="ベビー">ベビー</option>
+                    <option value="その他">その他</option>
+                  </select>
+                </p>
+                <p class="post-field">
+                  <label for="productSubCategory">サブカテゴリ</label>
+                  <select id="productSubCategory" name="productSubCategory" class="post-select" required data-product-subcategory>
+                    <option value="">選択してください</option>
+                  </select>
+                </p>
+              </div>
+            </div>
+
+            <p class="post-field">
+              <label for="productName">商品名<span class="post-field__required">必須</span></label>
+              <input type="text" id="productName" name="productName" placeholder="例：スマートウォッチ Pro">
+            </p>
+
+            <p class="post-field">
+              <label for="productPrice">価格（円）<span class="post-field__required">必須</span></label>
+              <input type="number" id="productPrice" name="price" min="0" step="1" placeholder="34800">
+            </p>
+
+            <p class="post-field">
+              <label for="productCondition">状態</label>
+              <select id="productCondition" name="condition" class="post-select">
+                <option value="new">新品</option>
+                <option value="like-new">未使用に近い</option>
+                <option value="good">美品</option>
+                <option value="used">中古</option>
+              </select>
+            </p>
+
+            <p class="post-field">
+              <label for="productShipping">配送方法</label>
+              <select id="productShipping" name="shipping">
+                <option value="standard">通常配送</option>
+                <option value="free">送料無料</option>
+                <option value="pickup">手渡し・受取</option>
+              </select>
+            </p>
+
+            <p class="post-field">
+              <label for="productStock">在庫数</label>
+              <input type="number" id="productStock" name="stock" min="0" step="1" placeholder="1">
+            </p>
+
+            <p class="post-field">
+              <label for="productDeliveryDays">発送目安</label>
+              <input type="text" id="productDeliveryDays" name="deliveryDays" placeholder="例：3〜5営業日">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="productSpec">仕様</label>
+              <textarea id="productSpec" name="productSpec" placeholder="サイズ・素材・付属品など" rows="3"></textarea>
+            </p>
+
+            <p class="post-field post-field--full" data-product-description-field>
+              <label for="productDescription">商品説明<span class="post-field__required">必須</span></label>
+              <textarea id="productDescription" name="productDescription" placeholder="仕様・付属品・注意事項など" rows="6"></textarea>
+            </p>
+
+          </div>
+        </section>
+
+        <section class="post-section post-section--business-pr" data-post-order="80" data-business-section="pr" aria-labelledby="businessPrSectionTitle">
+          <header class="post-section__head">
+            <h2 id="businessPrSectionTitle" class="post-section__title">
+              <span class="post-section__icon" aria-hidden="true">★</span>
+              PR設定
+            </h2>
+            <p class="post-section__desc">上位表示・PR掲載の希望（任意）</p>
+          </header>
+          <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+            <p class="post-field">
+              <label for="bizPrPlan">PR掲載希望</label>
+              <select id="bizPrPlan" name="bizPrPlan" class="post-select" data-business-field>
+                <option value="none">希望しない</option>
+                <option value="considering">検討中（担当から連絡可）</option>
+                <option value="apply">申し込み希望</option>
+              </select>
+            </p>
+
+            <p class="post-field">
+              <label for="bizFeaturedPlan">上位掲載希望</label>
+              <select id="bizFeaturedPlan" name="bizFeaturedPlan" class="post-select" data-business-field>
+                <option value="none">希望しない</option>
+                <option value="considering">検討中（担当から連絡可）</option>
+                <option value="apply">申し込み希望</option>
+              </select>
+            </p>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ========== スキル ========== -->
+      <div class="post-form-panel" data-form-type="skill" hidden>
+
+        <section class="post-section" aria-labelledby="skillSectionTitle">
+          <header class="post-section__head">
+            <h2 id="skillSectionTitle" class="post-section__title">
+              <span class="post-section__icon" aria-hidden="true">✨</span>
+              スキル・サービス情報
+            </h2>
+            <p class="post-section__desc">料金・納期・対応範囲など</p>
+          </header>
+          <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+
+            <p class="post-field post-field--full post-category-block" data-category-block="skill">
+              <label for="skillCategory">スキルカテゴリ<span class="post-field__required">必須</span></label>
+              <select id="skillCategory" name="skillCategory" class="post-select" required data-skill-category>
+                <option value="">選択してください</option>
+                <option value="AI">AI</option>
+                <option value="動画編集">動画編集</option>
+                <option value="デザイン">デザイン</option>
+                <option value="イラスト">イラスト</option>
+                <option value="Live2D">Live2D</option>
+                <option value="プログラミング">プログラミング</option>
+                <option value="ライティング">ライティング</option>
+                <option value="SNS運用">SNS運用</option>
+                <option value="マーケティング">マーケティング</option>
+                <option value="音楽">音楽</option>
+                <option value="占い">占い</option>
+                <option value="相談">相談</option>
+                <option value="ビジネス">ビジネス</option>
+                <option value="翻訳">翻訳</option>
+                <option value="事務">事務</option>
+                <option value="その他">その他</option>
+              </select>
+            </p>
+
+            <p class="post-field">
+              <label for="serviceName">サービス名<span class="post-field__required">必須</span></label>
+              <input type="text" id="serviceName" name="serviceName" placeholder="例：高品質Live2Dモデル制作">
+            </p>
+
+            <p class="post-field">
+              <label for="skillBasePrice">基本料金（円）<span class="post-field__required">必須</span></label>
+              <input type="number" id="skillBasePrice" name="basePrice" min="0" step="1" placeholder="80000">
+            </p>
+
+            <p class="post-field">
+              <label for="skillDelivery">納期目安</label>
+              <input type="text" id="skillDelivery" name="deliveryTime" placeholder="例：14〜21営業日">
+            </p>
+
+            <p class="post-field">
+              <label for="portfolioUrl">ポートフォリオURL</label>
+              <input type="url" id="portfolioUrl" name="portfolioUrl" placeholder="https://">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="skillScope">対応範囲</label>
+              <textarea id="skillScope" name="scope" placeholder="できること・対応不可・進行方法など"></textarea>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="skillAchievements">実績</label>
+              <textarea id="skillAchievements" name="achievements" placeholder="取引実績・制作事例・受賞歴など"></textarea>
+            </p>
+
+            <fieldset class="post-field post-field--full">
+              <legend class="post-field__legend">対応可否タグ</legend>
+              <div class="post-checkgroup">
+                <label class="post-check"><input type="checkbox" name="skillTags" value="remote"> リモートOK</label>
+                <label class="post-check"><input type="checkbox" name="skillTags" value="rush"> お急ぎ対応</label>
+                <label class="post-check"><input type="checkbox" name="skillTags" value="consult"> 見積相談可</label>
+                <label class="post-check"><input type="checkbox" name="skillTags" value="commercial"> 商用利用OK</label>
+                <label class="post-check"><input type="checkbox" name="skillTags" value="revision"> 修正無制限</label>
+              </div>
+            </fieldset>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ========== 求人 ========== -->
+      <div class="post-form-panel" data-form-type="job" hidden>
+
+        <section class="post-section" aria-labelledby="jobSectionTitle">
+          <header class="post-section__head">
+            <h2 id="jobSectionTitle" class="post-section__title">
+              <span class="post-section__icon" aria-hidden="true">💼</span>
+              求人情報
+            </h2>
+            <p class="post-section__desc">給与・勤務条件・仕事内容</p>
+          </header>
+          <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+
+            <p class="post-field post-field--full post-category-block" data-category-block="job">
+              <label for="jobCategory">職種カテゴリ<span class="post-field__required">必須</span></label>
+              <select id="jobCategory" name="jobCategory" class="post-select" required data-job-category>
+                <option value="">選択してください</option>
+                <option value="エンジニア">エンジニア</option>
+                <option value="AI">AI</option>
+                <option value="動画編集">動画編集</option>
+                <option value="デザイン">デザイン</option>
+                <option value="営業">営業</option>
+                <option value="事務">事務</option>
+                <option value="建設">建設</option>
+                <option value="配送">配送</option>
+                <option value="飲食">飲食</option>
+                <option value="美容">美容</option>
+                <option value="接客">接客</option>
+                <option value="マーケティング">マーケティング</option>
+                <option value="SNS運用">SNS運用</option>
+                <option value="ライター">ライター</option>
+                <option value="その他">その他</option>
+              </select>
+            </p>
+
+            <p class="post-field">
+              <label for="jobTitle">募集タイトル<span class="post-field__required">必須</span></label>
+              <input type="text" id="jobTitle" name="jobTitle" placeholder="例：動画編集スタッフ募集">
+            </p>
+
+            <p class="post-field">
+              <label for="salary_amount">給与・報酬<span class="post-field__required">必須</span></label>
+              <input type="text" id="salary_amount" name="salary_amount" placeholder="例：月30万円〜 / 年収600万〜">
+            </p>
+
+            <p class="post-field">
+              <label for="employment_type">雇用形態</label>
+              <select id="employment_type" name="employment_type" class="post-select">
+                <option value="">選択してください</option>
+                <option value="業務委託">業務委託</option>
+                <option value="正社員">正社員</option>
+                <option value="アルバイト・パート">アルバイト・パート</option>
+                <option value="フリーランス">フリーランス</option>
+              </select>
+            </p>
+
+            <p class="post-field">
+              <label for="job_location">勤務地</label>
+              <input type="text" id="job_location" name="job_location" placeholder="例：東京都渋谷区 / フルリモート">
+            </p>
+
+            <p class="post-field">
+              <label for="work_style">勤務形態</label>
+              <select id="work_style" name="work_style" class="post-select">
+                <option value="">選択してください</option>
+                <option value="リモートOK">リモートOK</option>
+                <option value="ハイブリッド">ハイブリッド</option>
+                <option value="出社">出社</option>
+              </select>
+            </p>
+
+            <p class="post-field">
+              <label for="working_hours">勤務時間</label>
+              <input type="text" id="working_hours" name="working_hours" placeholder="例：週20時間〜 / フレックス">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label class="post-check" style="padding:0;border:none;background:transparent">
+                <input type="checkbox" name="urgent" value="yes">
+                急募として表示する
+              </label>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="jobWorkContent">仕事内容</label>
+              <textarea id="jobWorkContent" name="job_work_content" placeholder="業務内容・チーム体制・期待する成果"></textarea>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="required_skills">応募条件</label>
+              <textarea id="required_skills" name="required_skills" placeholder="必須スキル・経験・資格など"></textarea>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="welcome_skills">歓迎スキル</label>
+              <textarea id="welcome_skills" name="welcome_skills" placeholder="歓迎するスキル・経験・人物像など"></textarea>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="job_benefits">福利厚生・待遇</label>
+              <textarea id="job_benefits" name="job_benefits" placeholder="社会保険、リモート手当、有給、研修制度、副業可 など"></textarea>
+            </p>
+
+            <p class="post-field">
+              <label for="recruitment_count">募集人数</label>
+              <input type="number" id="recruitment_count" name="recruitment_count" min="0" step="1" placeholder="例：2">
+            </p>
+
+            <p class="post-field">
+              <label for="application_deadline">応募締切</label>
+              <input type="date" id="application_deadline" name="application_deadline">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="application_method">応募方法</label>
+              <textarea id="application_method" name="application_method" placeholder="例：本ページの「応募する」ボタンよりご連絡ください / 履歴書をメール添付"></textarea>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="contract_terms">契約条件</label>
+              <textarea id="contract_terms" name="contract_terms" placeholder="報酬・支払い・契約期間・試用期間など"></textarea>
+            </p>
+
+          </div>
+        </section>
+
+        <section class="post-section" aria-labelledby="companySectionTitle">
+          <header class="post-section__head">
+            <h2 id="companySectionTitle" class="post-section__title">
+              <span class="post-section__icon" aria-hidden="true">🏢</span>
+              企業情報
+            </h2>
+            <p class="post-section__desc">募集者・採用担当の情報</p>
+          </header>
+          <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+
+            <p class="post-field">
+              <label for="companyName">企業名<span class="post-field__required">必須</span></label>
+              <input type="text" id="companyName" name="companyName" placeholder="例：MediaCraft Inc.">
+            </p>
+
+            <p class="post-field">
+              <label for="companyContact">採用担当者</label>
+              <input type="text" id="companyContact" name="companyContact" placeholder="例：田中 美咲（マーケティング部）">
+            </p>
+
+            <p class="post-field">
+              <label for="companyEmail">連絡先メール</label>
+              <input type="email" id="companyEmail" name="companyEmail" placeholder="hr@example.com">
+            </p>
+
+            <p class="post-field">
+              <label for="companyPhone">電話番号</label>
+              <input type="tel" id="companyPhone" name="companyPhone" placeholder="03-0000-0000">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="companyAbout">企業紹介</label>
+              <textarea id="companyAbout" name="companyAbout" placeholder="事業内容・チームの雰囲気・会社の特徴など"></textarea>
+            </p>
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- ========== ワーカー ========== -->
+      <div class="post-form-panel" data-form-type="worker" hidden>
+
+        <section class="post-section post-section--worker" aria-labelledby="workerSectionTitle">
+          <header class="post-section__head">
+            <h2 id="workerSectionTitle" class="post-section__title">
+              <span class="post-section__icon" aria-hidden="true">🧰</span>
+              ワーカーサービス
+            </h2>
+            <p class="post-section__desc">地域対応・代行・軽作業など「この作業を頼む」形式の出品</p>
+          </header>
+          <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+
+            <p class="post-field post-field--full post-category-block" data-category-block="worker">
+              <label for="workerCategory">ワーカーカテゴリ<span class="post-field__required">必須</span></label>
+              <select id="workerCategory" name="workerCategory" class="post-select worker-category-select" required data-worker-category>
+                <option value="">選択してください</option>
+                <option value="デリバリー・買い物代行">デリバリー・買い物代行</option>
+                <option value="代行・何でも屋">代行・何でも屋</option>
+                <option value="日常トラブル対応">日常トラブル対応</option>
+                <option value="軽作業・引越し">軽作業・引越し</option>
+                <option value="介護・生活支援">介護・生活支援</option>
+                <option value="IT・Web・クリエイティブ">IT・Web・クリエイティブ</option>
+                <option value="事務・データ入力">事務・データ入力</option>
+                <option value="翻訳・ライティング">翻訳・ライティング</option>
+                <option value="営業・テレアポ">営業・テレアポ</option>
+                <option value="動画・撮影">動画・撮影</option>
+                <option value="清掃・片付け">清掃・片付け</option>
+                <option value="送迎・運転">送迎・運転</option>
+                <option value="ペットサポート">ペットサポート</option>
+                <option value="イベントスタッフ">イベントスタッフ</option>
+                <option value="その他">その他</option>
+              </select>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="workerServiceName">サービス名<span class="post-field__required">必須</span></label>
+              <input type="text" id="workerServiceName" name="workerServiceName" data-worker-service-name placeholder="例：渋谷エリア買い物代行・即日対応">
+              <input type="hidden" name="worker_area" id="workerAreaHidden" value="">
+            </p>
+
+            <div class="post-field post-field--full">
+              <span class="post-field__legend">対応地域<span class="post-field__required">必須</span></span>
+              <div class="post-category-grid post-worker-region-grid">
+                <p class="post-field">
+                  <label for="workerPrefecture">都道府県</label>
+                  <select id="workerPrefecture" name="workerPrefecture" class="post-select" required>
+                    <option value="">都道府県を選択</option>
+                    <option value="北海道">北海道</option>
+                    <option value="青森県">青森県</option>
+                    <option value="岩手県">岩手県</option>
+                    <option value="宮城県">宮城県</option>
+                    <option value="秋田県">秋田県</option>
+                    <option value="山形県">山形県</option>
+                    <option value="福島県">福島県</option>
+                    <option value="茨城県">茨城県</option>
+                    <option value="栃木県">栃木県</option>
+                    <option value="群馬県">群馬県</option>
+                    <option value="埼玉県">埼玉県</option>
+                    <option value="千葉県">千葉県</option>
+                    <option value="東京都">東京都</option>
+                    <option value="神奈川県">神奈川県</option>
+                    <option value="新潟県">新潟県</option>
+                    <option value="富山県">富山県</option>
+                    <option value="石川県">石川県</option>
+                    <option value="福井県">福井県</option>
+                    <option value="山梨県">山梨県</option>
+                    <option value="長野県">長野県</option>
+                    <option value="岐阜県">岐阜県</option>
+                    <option value="静岡県">静岡県</option>
+                    <option value="愛知県">愛知県</option>
+                    <option value="三重県">三重県</option>
+                    <option value="滋賀県">滋賀県</option>
+                    <option value="京都府">京都府</option>
+                    <option value="大阪府">大阪府</option>
+                    <option value="兵庫県">兵庫県</option>
+                    <option value="奈良県">奈良県</option>
+                    <option value="和歌山県">和歌山県</option>
+                    <option value="鳥取県">鳥取県</option>
+                    <option value="島根県">島根県</option>
+                    <option value="岡山県">岡山県</option>
+                    <option value="広島県">広島県</option>
+                    <option value="山口県">山口県</option>
+                    <option value="徳島県">徳島県</option>
+                    <option value="香川県">香川県</option>
+                    <option value="愛媛県">愛媛県</option>
+                    <option value="高知県">高知県</option>
+                    <option value="福岡県">福岡県</option>
+                    <option value="佐賀県">佐賀県</option>
+                    <option value="長崎県">長崎県</option>
+                    <option value="熊本県">熊本県</option>
+                    <option value="大分県">大分県</option>
+                    <option value="宮崎県">宮崎県</option>
+                    <option value="鹿児島県">鹿児島県</option>
+                    <option value="沖縄県">沖縄県</option>
+                  </select>
+                </p>
+                <p class="post-field">
+                  <label for="workerCity">市区町村</label>
+                  <input type="text" id="workerCity" name="workerCity" required placeholder="例：渋谷区・新宿区">
+                </p>
+                <p class="post-field post-field--span-full">
+                  <label for="workerTravel">出張対応</label>
+                  <select id="workerTravel" name="workerTravel" class="post-select">
+                    <option value="">選択してください</option>
+                    <option value="近隣のみ">近隣のみ</option>
+                    <option value="県内対応">県内対応</option>
+                    <option value="全国対応">全国対応</option>
+                  </select>
+                </p>
+              </div>
+            </div>
+
+            <div class="post-field post-field--full">
+              <span class="post-field__legend">料金<span class="post-field__required">必須</span></span>
+              <div class="post-category-grid">
+                <p class="post-field">
+                  <label for="workerPriceType">料金体系</label>
+                  <select id="workerPriceType" name="worker_price_type" class="post-select" required>
+                    <option value="時給">時給</option>
+                    <option value="日給">日給</option>
+                    <option value="固定料金">固定料金</option>
+                  </select>
+                </p>
+                <p class="post-field">
+                  <label for="workerPrice">金額</label>
+                  <input type="text" id="workerPrice" name="worker_price_amount" required placeholder="例：2500" inputmode="numeric">
+                </p>
+              </div>
+            </div>
+
+            <p class="post-field post-field--full">
+              <label for="workerHours">稼働時間</label>
+              <input type="text" id="workerHours" name="worker_availability" placeholder="例：平日10:00〜20:00 / 土日応相談">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="worker_experience">経験年数</label>
+              <input type="text" id="worker_experience" name="worker_experience" placeholder="例：3年 / 5年以上">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="worker_certifications">資格・認証</label>
+              <textarea id="worker_certifications" name="worker_certifications" rows="2" placeholder="例：普通自動車免許、買い物代行士"></textarea>
+            </p>
+
+            <fieldset class="post-field post-field--full post-worker-flags">
+              <legend class="post-field__legend">対応タグ</legend>
+              <div class="post-checkgroup worker-tags">
+                <label class="post-check post-check--worker"><input type="checkbox" name="workerSameDay" value="yes"> 即日対応</label>
+                <label class="post-check post-check--worker"><input type="checkbox" name="workerNight" value="yes"> 深夜対応</label>
+                <label class="post-check post-check--worker"><input type="checkbox" name="workerHasCar" value="yes"> 車あり</label>
+                <label class="post-check post-check--worker"><input type="checkbox" name="workerFemale" value="yes"> 女性対応可</label>
+                <label class="post-check post-check--worker"><input type="checkbox" name="workerCorporate" value="yes"> 法人対応</label>
+                <label class="post-check post-check--worker"><input type="checkbox" name="workerReceipt" value="yes"> 領収書対応</label>
+                <label class="post-check post-check--worker"><input type="checkbox" name="worker24h" value="yes"> 24時間対応</label>
+                <label class="post-check post-check--worker"><input type="checkbox" name="workerWeekend" value="yes"> 土日対応</label>
+              </div>
+            </fieldset>
+
+            <div class="post-card worker-verify-card">
+              <h3 class="post-card__title">本人確認</h3>
+              <label class="post-checkbox-row">
+                <input type="checkbox" name="verified" value="yes">
+                <span>本人確認済みとして申請する</span>
+              </label>
+              <p class="post-help">
+                運営確認後、プロフィールに「本人確認済み」が表示されます。
+              </p>
+            </div>
+
+            <p class="post-field post-field--full">
+              <label for="workerScope">対応内容<span class="post-field__required">必須</span></label>
+              <textarea id="workerScope" name="worker_services" placeholder="例：スーパー・ドラッグストアの買い物代行、荷物の受取・配送、簡単な組立など"></textarea>
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="workerNotes">注意事項</label>
+              <textarea id="workerNotes" name="worker_notes" placeholder="例：現金払い不可・大型家具不可・雨天時の対応など"></textarea>
+            </p>
+
+          </div>
+        </section>
+
+      </div>
+
+      </div><!-- /data-general-only -->
+
+      <!-- 一般：支払い（チャット「支払う」連携・法人とは別管理） -->
+      <section
+        class="post-section post-section--general-payment"
+        aria-labelledby="generalPaymentTitle"
+        data-general-only
+        data-general-payment-section
+      >
+        <header class="post-section__head post-section__head--compact">
+          <h2 id="generalPaymentTitle" class="post-section__title post-section__title--sm">
+            <span class="post-section__icon" aria-hidden="true">💳</span>
+            支払い方法
+          </h2>
+          <p class="post-section__desc">任意。チャットの「支払う」から誘導・表示されます（法人掲載とは別設定）</p>
+        </header>
+        <div class="post-section__body post-general-payment">
+          <p class="post-field post-field--full">
+            <label for="genPaymentUrl">決済URL</label>
+            <input
+              type="url"
+              id="genPaymentUrl"
+              name="general_payment_url"
+              data-general-payment-field
+              placeholder="https://pay.example.com/..."
+              inputmode="url"
+            >
+          </p>
+          <p class="post-field post-field--full">
+            <label for="genBankTransferInfo">振込先情報</label>
+            <textarea
+              id="genBankTransferInfo"
+              name="general_bank_transfer_info"
+              data-general-payment-field
+              rows="2"
+              placeholder="銀行名・支店・口座・名義（任意）"
+            ></textarea>
+          </p>
+          <div class="post-general-payment__flags">
+            <label class="post-general-payment__flag">
+              <input type="checkbox" name="general_onsite_payment" value="yes" data-general-payment-field data-onsite-payment>
+              <span>現地払い対応</span>
+            </label>
+            <p class="post-field post-general-payment__invoice">
+              <label for="genInvoiceSupport">請求書対応</label>
+              <select id="genInvoiceSupport" name="general_invoice_support" class="post-select post-select--compact" data-general-payment-field data-invoice-support>
+                <option value="no">—</option>
+                <option value="yes">対応可</option>
+                <option value="negotiable">要相談</option>
+              </select>
+            </p>
+          </div>
+          <div class="post-general-payment__preview" data-general-payment-badges hidden aria-live="polite"></div>
+        </div>
+      </section>
+
+      <!-- ========== 法人・業者 ========== -->
+      <div class="post-form-panel" data-form-type="business" hidden>
+
+        <section class="post-section post-section--business" aria-labelledby="businessSectionTitle">
+          <header class="post-section__head">
+            <h2 id="businessSectionTitle" class="post-section__title">
+              <span class="post-section__icon" aria-hidden="true">🏢</span>
+              法人・業者情報
+            </h2>
+            <p class="post-section__desc">業者ページ・AI検索・今対応可能検索・PR掲載連携用の登録項目です</p>
+          </header>
+          <div class="post-section__body post-section__body--grid post-section__body--grid-2">
+
+            
+            <p class="post-field post-field--full">
+              <label for="bizExtraShopStoreCategory">商品カテゴリ</label>
+              <input type="text" id="bizExtraShopStoreCategory" name="biz_extra_shop_store_category" data-category-extra-key="shop_store" data-business-extra-field="store_type" data-business-field placeholder="例：工具・機材・中古販売・買取">
+            </p>
+            <p class="post-field post-field--full">
+              <label for="bizExtraShopStoreCatchCopy">キャッチコピー<span class="post-field__required">必須</span></label>
+              <input type="text" id="bizExtraShopStoreCatchCopy" name="biz_extra_shop_store_catch_copy" maxlength="120" data-category-extra-key="shop_store" data-business-extra-field="catch_copy" data-business-field placeholder="例：工具の買取強化中｜即日査定・法人対応">
+            </p>
+            <p class="post-field post-field--full">
+              <label for="bizExtraShopStoreDesc">店舗説明<span class="post-field__required">必須</span></label>
+              <textarea id="bizExtraShopStoreDesc" name="biz_extra_shop_store_desc" rows="4" data-category-extra-key="shop_store" data-business-extra-field="shop_description" data-business-field placeholder="店舗の特徴・取扱商品・強みを記載"></textarea>
+            </p>
+            <p class="post-field post-field--full">
+              <label for="bizExtraShopStoreAddress">住所<span class="post-field__required">必須</span></label>
+              <input type="text" id="bizExtraShopStoreAddress" name="biz_extra_shop_store_address" data-category-extra-key="shop_store" data-business-extra-field="address" data-business-field placeholder="例：大阪府大阪市北区…">
+            </p>
+            <p class="post-field">
+              <label for="bizExtraShopStoreHours">営業時間<span class="post-field__required">必須</span></label>
+              <input type="text" id="bizExtraShopStoreHours" name="biz_extra_shop_store_hours" data-category-extra-key="shop_store" data-business-extra-field="business_hours" data-business-field placeholder="例：10:00〜19:00">
+            </p>
+            <p class="post-field">
+              <label for="bizExtraShopStoreClosed">定休日<span class="post-field__required">必須</span></label>
+              <input type="text" id="bizExtraShopStoreClosed" name="biz_extra_shop_store_closed" data-category-extra-key="shop_store" data-business-extra-field="closed_day" data-business-field placeholder="例：水曜定休">
+            </p>
+            <p class="post-field">
+              <label for="bizExtraShopStoreStation">最寄駅</label>
+              <input type="text" id="bizExtraShopStoreStation" name="biz_extra_shop_store_station" data-category-extra-key="shop_store" data-business-extra-field="access" data-business-field placeholder="例：JR大阪駅 徒歩5分">
+            </p>
+            <p class="post-field post-field--full">
+              <label for="bizExtraShopStoreParking">駐車場<span class="post-field__required">必須</span></label>
+              <select id="bizExtraShopStoreParking" name="biz_extra_shop_store_parking" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="parking" data-business-field>
+                <option value="">選択してください</option>
+                <option value="yes">あり</option>
+                <option value="no">なし</option>
+                <option value="nearby">近隣あり</option>
+              </select>
+            </p>
+            <p class="post-field post-field--full">
+              <label for="bizExtraShopStoreServices">取扱サービス<span class="post-field__required">必須</span></label>
+              <textarea id="bizExtraShopStoreServices" name="biz_extra_shop_store_services" rows="2" data-category-extra-key="shop_store" data-business-extra-field="services" data-business-field placeholder="例：新品販売, 中古買取, 出張査定"></textarea>
+            </p>
+            <p class="post-field">
+  <label for="bizExtraShopSales">販売対応</label>
+  <select id="bizExtraShopSales" name="biz_extra_shop_sales" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="sales_support" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopBuyback">買取対応</label>
+  <select id="bizExtraShopBuyback" name="biz_extra_shop_buyback" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="buyback_support" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopUsed">中古販売</label>
+  <select id="bizExtraShopUsed" name="biz_extra_shop_used" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="used_sales" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopNew">新品販売</label>
+  <select id="bizExtraShopNew" name="biz_extra_shop_new" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="new_sales" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopVisitBuy">出張買取</label>
+  <select id="bizExtraShopVisitBuy" name="biz_extra_shop_visit_buy" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="visit_buyback" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopFreeAssessment">査定無料対応</label>
+  <select id="bizExtraShopFreeAssessment" name="biz_extra_shop_free_assessment" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="shop_store_free_assessment" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopFastShip">即日発送</label>
+  <select id="bizExtraShopFastShip" name="biz_extra_shop_fast_ship" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="fast_shipping" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopCredit">クレジット対応</label>
+  <select id="bizExtraShopCredit" name="biz_extra_shop_credit" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="credit_support" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+  <label for="bizExtraShopCorporate">法人対応</label>
+  <select id="bizExtraShopCorporate" name="biz_extra_shop_corporate" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="corporate_contract" data-business-field>
+    <option value="">選択してください</option>
+    <option value="yes">対応可能</option>
+    <option value="no">対応不可</option>
+    <option value="consult">相談可能</option>
+  </select>
+</p>
+            <p class="post-field">
+              <label for="bizExtraShopShowEstimate">見積表示</label>
+              <select id="bizExtraShopShowEstimate" name="biz_extra_shop_show_estimate" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="show_estimate" data-business-field>
+                <option value="">未設定</option>
+                <option value="yes">表示する</option>
+                <option value="no">表示しない</option>
+              </select>
+            </p>
+            <p class="post-field">
+              <label for="bizExtraShopShowPhone">問い合わせ可否</label>
+              <select id="bizExtraShopShowPhone" name="biz_extra_shop_show_phone" class="post-select" data-category-extra-key="shop_store" data-business-extra-field="show_phone" data-business-field>
+                <option value="">未設定</option>
+                <option value="yes">電話相談可</option>
+                <option value="no">非表示</option>
+              </select>
+            </p>
+            <input type="hidden" id="bizExtraShopStoreFaqs" name="biz_extra_shop_store_faqs" data-category-extra-key="shop_store" data-business-extra-field="faqs" value="[]">
+            <p class="post-field post-field--full" data-fs-catch-copy-field>
+              <label for="fsCatchCopy">キャッチコピー</label>
+              <input type="text" id="fsCatchCopy" name="fs_catch_copy" maxlength="120" data-category-extra-key="field_service" data-business-extra-field="catch_copy" data-business-field placeholder="例：即日対応・見積無料">
+            </p>
+            <p class="post-field post-field--full" data-fs-service-desc-field>
+              <label for="bizExtraFieldServiceDesc">サービス説明<span class="post-field__required">必須</span></label>
+              <textarea id="bizExtraFieldServiceDesc" name="biz_extra_field_service_desc" rows="4" data-category-extra-key="field_service" data-business-extra-field="service_description" data-business-field placeholder="提供サービス内容・強み・対応範囲"></textarea>
+            </p>
+<p class="post-field post-field--full">
+              <label for="bizCompanyName">会社名<span class="post-field__required">必須</span></label>
+              <input type="text" id="bizCompanyName" name="bizCompanyName" data-business-field placeholder="例：株式会社〇〇サービス" autocomplete="organization">
+            </p>
+
+            <p class="post-field">
+              <label for="bizHpUrl">HP URL</label>
+              <input type="url" id="bizHpUrl" name="bizHpUrl" data-business-field placeholder="https://example.co.jp" inputmode="url">
+            </p>
+
+            <p class="post-field">
+              <label for="bizGoogleMapUrl">GoogleMap URL</label>
+              <input type="url" id="bizGoogleMapUrl" name="bizGoogleMapUrl" data-business-field placeholder="https://maps.google.com/..." inputmode="url">
+            </p>
+
+            <p class="post-field">
+              <label for="bizPhone">電話番号<span class="post-field__required">必須</span></label>
+              <input type="tel" id="bizPhone" name="bizPhone" data-business-field placeholder="03-0000-0000" autocomplete="tel">
+            </p>
+
+            <p class="post-field">
+              <label for="bizBusinessHours">営業時間</label>
+              <input type="text" id="bizBusinessHours" name="bizBusinessHours" data-business-field placeholder="例：平日 9:00〜18:00 / 土日祝休み">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="bizServiceArea" data-biz-service-area-label>対応地域<span class="post-field__required">必須</span></label>
+              <input type="text" id="bizServiceArea" name="bizServiceArea" data-business-field placeholder="例：東京都23区・神奈川県横浜市">
+            </p>
+
+            <p class="post-field post-field--full">
+              <label for="bizAchievements">実績</label>
+              <textarea id="bizAchievements" name="bizAchievements" data-business-field placeholder="施工実績・導入件数・受賞歴など"></textarea>
+            </p>
+
+            <fieldset class="post-field post-field--full">
+              <legend class="post-field__legend">対応可能状態<span class="post-field__required">必須</span></legend>
+              <div class="post-status-pick" role="radiogroup" aria-label="対応可能状態">
+                <label class="post-status-pick__item post-status-pick__item--available">
+                  <input type="radio" name="bizStatus" value="available" data-business-field checked>
+                  <span>対応可能</span>
+                </label>
+                <label class="post-status-pick__item post-status-pick__item--busy">
+                  <input type="radio" name="bizStatus" value="busy" data-business-field>
+                  <span>忙しい</span>
+                </label>
+                <label class="post-status-pick__item post-status-pick__item--closed">
+                  <input type="radio" name="bizStatus" value="closed" data-business-field>
+                  <span>休み</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <p class="post-field post-field--full">
+              <label for="bizLicenseInfo">許可 / 資格情報</label>
+              <textarea id="bizLicenseInfo" name="bizLicenseInfo" data-business-field placeholder="例：建設業許可（般-1）第〇〇号 / 第二種運転免許"></textarea>
+            </p>
+
+
+          </div>
+        </section>
+
+      </div>
+
+      <!-- 追加オプション（商品・スキル・ワーカー） -->
+      <section class="post-section" aria-labelledby="sharedOptionsTitle" data-options-section data-general-only>
+        <header class="post-section__head">
+          <h2 id="sharedOptionsTitle" class="post-section__title">
+            <span class="post-section__icon" aria-hidden="true">＋</span>
+            <span data-options-heading>追加オプション</span>
+          </h2>
+          <p class="post-section__desc" data-options-desc>購入時・依頼時に選べるオプションを追加できます（求人のみ非表示）</p>
+        </header>
+        <div class="post-section__body">
+          <div class="post-options" data-options-block>
+            <p class="post-options__desc" data-options-desc-text>購入時・依頼時に選べるオプションを追加できます。</p>
+            <div class="listing-options-builder" data-options-builder></div>
+            <button type="button" class="post-options__add" data-options-add>＋ オプションを追加</button>
+            <input type="hidden" name="options" data-options-json value="[]">
+            <details class="post-json-preview">
+              <summary>保存される JSON をプレビュー</summary>
+              <pre id="optionsJsonPreview">[]</pre>
+            </details>
+          </div>
+        </div>
+      </section>
+      <!-- 法人・業者：決済情報 -->
+      <section
+        class="post-section post-section--business-payment"
+        data-business-payment-section
+        data-business-only
+        data-business-form-key="payment"
+        data-post-order="95"
+        data-business-hide-for-taxi
+        hidden
+        aria-hidden="true"
+        aria-labelledby="businessPaymentTitle"
+      >
+        <header class="post-section__head post-section__head--compact">
+          <h2 id="businessPaymentTitle" class="post-section__title post-section__title--sm">
+            <span class="post-section__icon" aria-hidden="true">💳</span>
+            決済情報
+          </h2>
+          <p class="post-section__desc">任意。チャット「支払う」連携・振込先・請求書対応</p>
+        </header>
+        <div class="post-section__body post-general-payment">
+          <p class="post-field post-field--full">
+            <label for="bizPaymentUrl">決済URL</label>
+            <input
+              type="url"
+              id="bizPaymentUrl"
+              name="payment_url"
+              data-business-field
+              placeholder="https://pay.example.com/..."
+              inputmode="url"
+            >
+          </p>
+          <p class="post-field post-field--full">
+            <label for="bizBankTransferInfo">振込先情報</label>
+            <textarea
+              id="bizBankTransferInfo"
+              name="bank_transfer_info"
+              data-business-field
+              rows="2"
+              placeholder="銀行名・支店・口座・名義（任意）"
+            ></textarea>
+          </p>
+          <div class="post-general-payment__flags">
+            <label class="post-general-payment__flag">
+              <input
+                type="checkbox"
+                id="bizOnsitePayment"
+                name="accepts_cash_payment"
+                value="yes"
+                data-business-field
+                data-biz-onsite-payment
+              >
+              <span>現地払い対応</span>
+            </label>
+            <p class="post-field post-general-payment__invoice">
+              <label for="bizInvoiceSupport">請求書対応</label>
+              <select
+                id="bizInvoiceSupport"
+                name="invoice_support"
+                class="post-select post-select--compact"
+                data-business-field
+                data-invoice-support
+              >
+                <option value="">—</option>
+                <option value="yes">対応可</option>
+                <option value="negotiable">条件付きで対応</option>
+                <option value="no">非対応</option>
+              </select>
+            </p>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- 規約・禁止事項・免責 -->
+      <section
+        class="post-section post-section--legal"
+        data-terms-agreement-section
+        data-business-form-key="legal"
+        data-post-order="110"
+        aria-labelledby="legalSectionTitle">
+        <header class="post-section__head">
+          <h2 id="legalSectionTitle" class="post-section__title">
+            <span class="post-section__icon" aria-hidden="true">§</span>
+            掲載前の確認
+          </h2>
+        </header>
+        <div class="post-section__body">
+          <div class="post-terms-card" data-post-terms-section data-terms-block>
+            <div class="post-warning-box">
+              <strong>禁止事項</strong>
+              <ul class="post-warning-box__list">
+                <li>違法行為</li>
+                <li>無資格が必要な業務の募集 / 請負</li>
+                <li>白タク行為</li>
+                <li>医療・法律など資格が必要な助言</li>
+                <li>虚偽情報</li>
+                <li>外部誘導のみを目的とした投稿</li>
+                <li>迷惑行為</li>
+              </ul>
+            </div>
+
+            <p class="post-terms-lead">
+              TasuFullは掲載・検索・メッセージ機能を提供する場であり、取引内容、支払い、施工、納品、返金、保証、トラブル対応を代行・保証するものではありません。
+            </p>
+
+            <label class="post-terms-check">
+              <input type="checkbox" id="postTermsAgree" name="terms_agreed" data-terms-agree value="yes" required>
+              <span>掲載ルール・利用規約・注意事項を確認し、内容に同意します。</span>
+            </label>
+
+            <p class="post-terms-note">
+              禁止事項、虚偽掲載、外部誘導、無資格サービス、危険作業、法令違反に該当する投稿は掲載できません。
+            </p>
+
+            <p class="post-terms-note" data-business-terms-note hidden aria-hidden="true">
+              TASUFULは情報提供の場であり、契約・施工・支払いは利用者と事業者の直接協議となります。
+            </p>
+
+            <span class="post-field__error" data-terms-error hidden role="alert">掲載ルール・利用規約・注意事項への同意が必要です。</span>
+          </div>
+</div>
+      </section>
+
+    </form>
+
+    <!-- 確認モーダル（保存前） -->
+    <div class="post-modal" data-confirm-modal hidden aria-hidden="true">
+      <div class="post-modal__backdrop" data-confirm-close tabindex="-1"></div>
+      <div class="post-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <header class="post-modal__head">
+          <h2 id="confirmModalTitle" class="post-modal__title">掲載内容の確認</h2>
+          <p class="post-modal__lead">内容をご確認のうえ、問題なければ掲載してください。まだデータベースには保存されません。</p>
+        </header>
+        <div class="post-modal__body" data-confirm-summary></div>
+        <footer class="post-modal__foot">
+          <button type="button" class="post-btn post-btn--ghost" data-confirm-back>修正する</button>
+          <button type="button" class="post-btn post-btn--primary" data-confirm-publish>この内容で掲載する</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- 完了モーダル（保存成功後のみ） -->
+    <div class="post-modal" data-success-modal hidden aria-hidden="true">
+      <div class="post-modal__backdrop" data-success-stay tabindex="-1"></div>
+      <div class="post-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
+        <header class="post-modal__head">
+          <h2 id="successModalTitle" class="post-modal__title">掲載が完了しました</h2>
+          <p class="post-modal__lead" data-success-message>掲載が完了しました。詳細ページを見に行みますか？</p>
+        </header>
+        <div class="post-modal__body" data-featured-upsell hidden></div>
+        <footer class="post-modal__foot">
+          <button type="button" class="post-btn post-btn--ghost" data-success-stay>このまま閉じる</button>
+          <button type="button" class="post-btn post-btn--primary" data-success-go-detail>詳細ページを見る</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Sticky action bar -->
+    <div class="post-action-bar" role="region" aria-label="フォーム操作">
+      <div class="post-action-bar__inner">
+        <p class="post-action-bar__note" data-submit-note>「掲載内容を確認」で入力チェック → 確認画面 →「この内容で掲載する」で保存します。</p>
+        <button type="button" class="post-btn post-btn--ghost" data-save-draft>下書き保存</button>
+        <button type="button" class="post-btn post-btn--primary" data-open-confirm>掲載内容を確認</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="listing-options.js"></script>
+  <script src="listing-images.js"></script>
+  <script src="post-main-upload.js"></script>
+  <script src="post-gallery-upload.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="stripe-featured-config.js"></script>
+  <script src="listing-featured.js"></script>
+  <script src="listings-db.js"></script>
+  <script src="worker-listing-fields.js"></script>
+  
+  <script src="post-image-upload-slot.js"></script>
+  <script src="post-shop-store-layout.js"></script>
+  <script src="post-field-service-layout.js"></script>
+  <script src="post-field-service-form.js"></script>
+  <script src="shop-store-delivery-info.js"></script>
+  <script src="post-shop-products.js"></script>
+  <script src="post-shop-product-upload.js"></script>
+  <script src="post-service-menu-upload.js"></script>
+  <script src="post-work-case-upload.js"></script>
+  <script src="business-service-data.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="post-draft-agent.js"></script>
+  <script src="talk-ai-drafts-store.js"></script>
+  <script src="talk-ai-draft-apply.js"></script>
+  <script src="post.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>

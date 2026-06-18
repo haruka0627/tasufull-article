@@ -1,0 +1,104 @@
+/* business.html — マーケットヘッダー（index.html / index-top と同系ブランド） */
+
+.business-board-page {
+  --shop-header-height: 90px;
+  --biz-header-navy: #071733;
+  --biz-header-gold: #d4af37;
+  --biz-header-gold-light: #e8c96a;
+  --biz-header-cta-text: #001b3d;
+}
+
+.business-board-page header.shop-market-header[data-business-market-header] {
+  background: var(--biz-header-navy) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.2) !important;
+  min-height: var(--shop-header-height) !important;
+}
+
+.business-board-page .shop-market-header__inner {
+  min-height: var(--shop-header-height);
+  height: var(--shop-header-height);
+  padding: 0.75rem 24px;
+  box-sizing: border-box;
+}
+
+.business-board-page .shop-market-header__nav-link,
+.business-board-page .shop-market-header__nav-link--ai {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 600;
+  font-size: 0.9375rem;
+}
+
+.business-board-page .shop-market-header__nav-link:hover,
+.business-board-page .shop-market-header__nav-link--ai:hover {
+  color: var(--biz-header-gold-light);
+}
+
+.business-board-page .shop-market-header__cta {
+  min-height: 44px;
+  padding: 12px 22px;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  color: var(--biz-header-cta-text);
+  background: linear-gradient(135deg, var(--biz-header-gold-light), var(--biz-header-gold));
+  border: none;
+  box-shadow:
+    0 4px 18px rgba(212, 175, 55, 0.45),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: filter 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.business-board-page .shop-market-header__cta:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 24px rgba(212, 175, 55, 0.55),
+    0 3px 8px rgba(0, 0, 0, 0.14);
+}
+
+.business-board-page .shop-market-header__util {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.65rem 1rem;
+}
+
+.business-board-page .shop-market-header__util-link {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #555;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.business-board-page .shop-market-header__util-link:hover {
+  color: #0f172a;
+}
+
+.business-board-page .shop-market-header__util-link.is-active {
+  color: #7a5e10;
+  font-weight: 800;
+}
+
+.business-board-page .tasu-banner {
+  display: none !important;
+}
+
+@media (max-width: 1024px) {
+  .business-board-page header.shop-market-header[data-business-market-header] {
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  .business-board-page .shop-market-header__inner {
+    height: auto;
+    min-height: var(--shop-header-height);
+  }
+}
+
+@media (max-width: 720px) {
+  .business-board-page .shop-market-header__util-link {
+    font-size: 0.75rem;
+  }
+}

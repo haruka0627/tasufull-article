@@ -1,0 +1,491 @@
+{
+  "key": "product-prepaid",
+  "url": "http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0&liveFlowReset=1",
+  "checkpoints": [
+    {
+      "id": "01-start",
+      "label": "開始直後",
+      "aButton": {
+        "visible": true,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 2,
+        "domTitles": [
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082022242-13l17u"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 1,
+        "domTitles": [
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082022242-13l17u"
+          }
+        ]
+      },
+      "statusA": "",
+      "statusB": "出品者の発送をお待ちください。",
+      "aShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "bShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "shippingCarrier": "",
+      "trackingNumber": "",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082022242-13l17u",
+        "paymentMethod": "prepaid",
+        "productShipped": false,
+        "shippingCarrier": "",
+        "trackingNumber": "",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": false,
+        "paymentConfirmed": false,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 2719,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "02-after-ship",
+      "label": "A発送後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": true,
+        "text": "商品を受け取りました",
+        "mode": "purchase_receive"
+      },
+      "notifyA": {
+        "domCards": 2,
+        "domTitles": [
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082022242-13l17u"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 2,
+        "domTitles": [
+          "商品が発送されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082022242-13l17u"
+          }
+        ]
+      },
+      "statusA": "商品を発送しました。購入者の受取確認をお待ちください。",
+      "statusB": "商品が発送されました。到着後に受取確認を行ってください。",
+      "aShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-22421317-4820"
+      },
+      "bShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-22421317-4820"
+      },
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-22421317-4820",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082022242-13l17u",
+        "paymentMethod": "prepaid",
+        "productShipped": true,
+        "shippingCarrier": "ヤマト運輸",
+        "trackingNumber": "3591-22421317-4820",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": false,
+        "paymentConfirmed": false,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 4014,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "03-after-receive",
+      "label": "B受取/完了後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 4,
+        "domTitles": [
+          "取引が完了しました",
+          "購入者が商品を受け取りました",
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "購入者が商品を受け取りました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_received_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "購入者が商品を受け取りました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_received_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082022242-13l17u"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 3,
+        "domTitles": [
+          "取引が完了しました",
+          "商品が発送されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082022242-13l17u"
+          }
+        ]
+      },
+      "statusA": "取引が完了しました",
+      "statusB": "取引が完了しました",
+      "aShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-22421317-4820"
+      },
+      "bShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-22421317-4820"
+      },
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-22421317-4820",
+      "reviewA": true,
+      "reviewB": true,
+      "thread": {
+        "id": "chat-1781082022242-13l17u",
+        "paymentMethod": "prepaid",
+        "productShipped": true,
+        "shippingCarrier": "ヤマト運輸",
+        "trackingNumber": "3591-22421317-4820",
+        "productReceived": true,
+        "shippingReady": false,
+        "bankTransferReported": false,
+        "paymentConfirmed": false,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": true
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 5405,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    }
+  ],
+  "ngBulkCopy": "=== ベンチ診断 NG一覧 ===\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0\n\ntimestamp:\n2026-06-10T09:01:42.643Z\n\ncategory:\nConnectなし購入\n\nstage:\ncompleted\n\nNG count:\n4\n\n--------------------\n1.\nngType:\nchat_diag_ok_but_composer_missing_dom\n\ncause:\n診断はOKだが、実DOMではNG\n\n原因:\n診断はOKだが、実DOMではNG\n\nexpected:\naChatLoadReady=true かつ composer DOM 存在\n\nactual:\ncomposerDomExists=undefined\n\ndiff:\ndiag.aChatLoadReady=true vs dom.actualComposerDomExists=false\n\nfixTargetFile:\nchat-detail.js\n\nfixTargetFunction:\napplyRoomComposerState() / bindComposerInput()\n\n修正対象:\nchat-detail.js\n\n修正関数:\napplyRoomComposerState() / bindComposerInput()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0\n\ntimestamp:\n2026-06-10T09:01:42.645Z\n\n完了条件:\n—\n\nrelatedValues:\nsectionKey: diag_dom\ndetail: 診断はOKだが、実DOMではNG: diag.aChatLoadReady=true vs dom.actualComposerDomExists=false\nisDomConsistency: true\nactorAId: u_product\nactorBId: u_hiro\nthreadId: chat-1781082022242-13l17u\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\ndiagAChatLoadReady: true\ndiagNotifyRowsCount: 4\nactualNotifyRowDomCount: 4\nactualNotifyErrorVisible: false\nactualNotifyEmptyTextVisible: false\n\n--------------------\n\n2.\nngType:\nproduct_receive_confirm_ui_missing\n\ncause:\nproduct_receive_ui_blocked_by_frozen_iframe\n\n原因:\nproduct_receive_ui_blocked_by_frozen_iframe\n\nexpected:\nBチャットに「受け取り完了申請」等の受取確認ボタンが表示、A側には出ない\n\nactual:\nB visible=false btn=\"none\" A visible=false btn=\"none\" bUser=u_hiro frozen=true\n\ndiff:\nNG product_receive_ui_blocked_by_frozen_iframe\n\nfixTargetFile:\nchat-dual-window-demo.html\n\nfixTargetFunction:\nreloadBenchChatRoomState() / openBenchFrameNavigate()\n\n修正対象:\nchat-dual-window-demo.html\n\n修正関数:\nreloadBenchChatRoomState() / openBenchFrameNavigate()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0\n\ntimestamp:\n2026-06-10T09:01:42.645Z\n\n完了条件:\n—\n\nrelatedValues:\nrecipientUserId: u_hiro\nsellerUserId: u_product\nside: B\nthreadId: chat-1781082022242-13l17u\nproductShipped: true\nbChatOpened: true\nbCompletionButtonVisible: false\nbCompletionButtonText: none\naCompletionButtonVisible: false\naCompletionButtonText: none\nbCurrentUserId: u_hiro\nbResolvedThreadId: chat-1781082022242-13l17u\nbChatFrameFrozen: true\nsectionKey: notify_display_load\ndetail: B側: 発送通知後の受取確認UIなし (product_receive_ui_blocked_by_frozen_iframe)\nisDomConsistency: false\nactorAId: u_product\nactorBId: u_hiro\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\n\n--------------------\n\n3.\nngType:\nnotification_missing\n\ncause:\nnotification_store_not_written\n\n原因:\nnotification_store_not_written\n\nexpected:\nB送信後、A通知に「新しいメッセージが届きました」\n\nactual:\nlocalStorage=false storeApi=false iframeRows=0 postMessage=false\n\ndiff:\nNG notification_store_not_written\n\nfixTargetFile:\nplatform-chat-dual-window-notify.js\n\nfixTargetFunction:\nnotifyDemoChatMessage() / notifyPlatformChatMessage()\n\n修正対象:\nplatform-chat-dual-window-notify.js\n\n修正関数:\nnotifyDemoChatMessage() / notifyPlatformChatMessage()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0\n\ntimestamp:\n2026-06-10T09:01:42.645Z\n\n完了条件:\n- 購入後 A/B 双方に「やりとりが開始されました」が通知 iframe に visible\n- A/B 送信後、相手側に「新しいメッセージが届きました」が visible\n- localStorage / store / iframe DOM が一致\n\nrelatedValues:\nrecipientUserId: u_product\nside: A\nthreadId: chat-1781082022242-13l17u\nnotifyKind: message\nsenderSide: B\nlocalStorageMatched: 0\nstoreApiMatched: 0\niframeDomRows: 0\nbenchPostMessageReceived: false\nlatestTitle: 取引が完了しました\nsectionKey: notify_display_load\ndetail: A側: B送信後メッセージ通知なし (notification_store_not_written)\nisDomConsistency: false\nactorAId: u_product\nactorBId: u_hiro\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\n\n--------------------\n\n4.\nngType:\nproduct_shipping_notification_missing\n\ncause:\nproduct_shipping_postmessage_missing\n\n原因:\nproduct_shipping_postmessage_missing\n\nexpected:\nA発送申請後、B通知に「商品が発送されました」系が表示\n\nactual:\nlocalStorage=true storeApi=true iframeRows=1 postMessage=false sellerHasNotify=false\n\ndiff:\nNG product_shipping_postmessage_missing\n\nfixTargetFile:\nplatform-chat-dual-window-notify.js\n\nfixTargetFunction:\nnotifyBenchParentRuntimeNotification()\n\n修正対象:\nplatform-chat-dual-window-notify.js\n\n修正関数:\nnotifyBenchParentRuntimeNotification()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0\n\ntimestamp:\n2026-06-10T09:01:42.645Z\n\n完了条件:\n—\n\nrelatedValues:\nrecipientUserId: u_hiro\nsellerUserId: u_product\nside: B\nthreadId: chat-1781082022242-13l17u\nnotifyKind: product_shipped\nproductShipped: true\nlocalStorageMatched: 1\nstoreApiMatched: 1\niframeDomRows: 1\nbenchPostMessageReceived: false\nlatestTitle: 商品が発送されました\nsellerNotifyMatched: 0\nsectionKey: notify_display_load\ndetail: B側: 発送申請後の購入者通知なし (product_shipping_postmessage_missing)\nisDomConsistency: false\nactorAId: u_product\nactorBId: u_hiro\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\n\n--------------------",
+  "ok": true,
+  "errors": [],
+  "final": {
+    "thread": {
+      "id": "chat-1781082022242-13l17u",
+      "paymentMethod": "prepaid",
+      "productShipped": true,
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-22421317-4820",
+      "productReceived": true,
+      "shippingReady": false,
+      "bankTransferReported": false,
+      "paymentConfirmed": false,
+      "codPaymentReported": false,
+      "cashOnDeliveryConfirmed": false,
+      "completed": true
+    },
+    "ngCount": 0,
+    "ngCodes": [],
+    "diagnosticNgCount": 3,
+    "diagnosticNgCodes": [
+      "notification_missing:notification_store_not_written",
+      "product_shipping_notification_missing:product_shipping_postmessage_missing",
+      "product_receive_confirm_ui_missing:product_receive_ui_blocked_by_frozen_iframe"
+    ],
+    "reviewA": true,
+    "reviewB": true,
+    "diagPanel": {
+      "verdictFoldOpen": true,
+      "panelInitialized": true,
+      "panelStillBooting": false,
+      "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+      "ngBulkCopyLen": 5405,
+      "ngBulkHasCause": true,
+      "receiveUiNgCodes": []
+    },
+    "bShippingCard": true,
+    "statusB": "取引が完了しました"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "investigatedAt": "2026-06-10",
+  "findings": {
+    "playwrightLifecycle": {
+      "verifyProductShopPayment": "page/context/browser close in finally — OK",
+      "withPlaywrightSession": "shared helper with finally close — OK",
+      "captureProductShopFinalReview": "finally close — OK",
+      "legacyScripts": "一部 _probe / verify-* は try/finally なし（例外時に browser 残留リスク）"
+    },
+    "benchLogs": {
+      "benchRuntimeNotifyLog": "上限 100 (BENCH_NOTIFY_LOG_MAX)",
+      "benchPostMessageLog": "上限 50 (BENCH_POSTMESSAGE_LOG_MAX)",
+      "benchEventLog": "上限 50、idle hygiene で 8 に縮小",
+      "logRows": "上限 50",
+      "ngHistory": "BENCH_NG_HISTORY_MAX=32 (platform-chat-bench-flow-diag.js)",
+      "ngBulkCopy": "BENCH_NG_BULK_COPY_MAX=24000"
+    },
+    "rootCause": [
+      "bench poll が 1.2s/5s で永続実行され iframe 4枚 + reconcile が継続",
+      "localStorage 全文スナップショットが親ページに保持されていた",
+      "storage/visibility イベントで poll suspend が解除されていた",
+      "Vite HMR (@vite/client) が headless でも接続しメモリ増加",
+      "古い chrome-headless-shell プロセスが未終了で RSS 合算に含まれる"
+    ],
+    "fixesApplied": [
+      "storage 指紋比較（全文保持廃止）",
+      "45s 経過で iframe about:blank + poll 永久停止（pointerdown/storage まで）",
+      "idle hygiene で診断キャッシュ / NG コピー / ログ上限 enforcement",
+      "playwright HEADLESS_LAUNCH_ARGS に --renderer-process-limit=4",
+      "probe-bench-memory-idle.mjs でセッション PID のみ計測"
+    ],
+    "probeAfterFix": {
+      "stablePlateauMaxProcMb": 387,
+      "suspendAtSec": 64,
+      "blankFrames": 4,
+      "postSuspendSpikes": "proc 4→8 の一時スパイクあり（Chrome renderer 再生成）",
+      "reportPath": "reports/bench-memory-idle/report.json"
+    }
+  },
+  "recommendations": [
+    "検証後は Get-Process chrome-headless-shell で孤児を確認し手動終了",
+    "長時間 bench は 45s 放置で iframe 自動 unload（実装済み）",
+    "新規 Playwright スクリプトは withPlaywrightSession を使用",
+    "本番相当計測は vite dev ではなく preview 静的配信推奨"
+  ]
+}

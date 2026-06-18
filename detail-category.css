@@ -1,0 +1,1879 @@
+/* Category-specific overrides for premium detail pages */
+
+
+
+body[data-detail-type="worker"] .skill-cta-panel__price {
+
+  display: none;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-cta-panel__secondary,
+
+body[data-detail-type="job"] .skill-cta-panel__secondary {
+
+  display: flex;
+
+}
+
+
+
+/* ==========================================================================
+
+   product: 高密度プレミアムヒーロー
+
+   ========================================================================== */
+
+
+
+body[data-detail-type="product"] .skill-hero-premium__grid {
+
+  padding: 1.15rem 1.2rem;
+
+  gap: 1.1rem;
+
+}
+
+
+
+@media (min-width: 1024px) {
+
+  body[data-detail-type="product"] .skill-hero-premium__grid {
+
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr) minmax(228px, 248px);
+
+    align-items: stretch;
+
+    gap: 1.15rem 1.1rem;
+
+    padding: 1.2rem 1.25rem;
+
+  }
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-premium__center {
+
+  gap: 0.5rem;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-hero-premium__title {
+
+  margin-bottom: 0.05rem;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-summary {
+
+  margin: 0;
+
+  font-size: 0.8125rem;
+
+  line-height: 1.55;
+
+  color: #475569;
+
+  white-space: pre-line;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-tags {
+
+  margin-top: 0.1rem;
+
+}
+
+
+
+body[data-detail-type="product"] .product-tag-pill {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 0.28rem 0.62rem;
+
+  border-radius: 999px;
+
+  border: 1px solid rgba(193, 168, 88, 0.34);
+
+  background: #fff;
+
+  font-size: 0.6875rem;
+
+  font-weight: 600;
+
+  color: #1e293b;
+
+  line-height: 1.25;
+
+  transition:
+
+    border-color 0.2s ease,
+
+    box-shadow 0.2s ease,
+
+    background-color 0.2s ease;
+
+}
+
+
+
+body[data-detail-type="product"] .product-tag-pill:hover {
+
+  border-color: rgba(193, 168, 88, 0.55);
+
+  background: #fffdf8;
+
+  box-shadow: 0 2px 8px rgba(193, 168, 88, 0.12);
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-features {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.45rem 0.85rem;
+
+  margin: 0.15rem 0 0.05rem;
+
+  padding: 0;
+
+  list-style: none;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-feature {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.3rem;
+
+  font-size: 0.6875rem;
+
+  font-weight: 600;
+
+  color: #7a5710;
+
+  line-height: 1.2;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-feature__icon {
+
+  width: 0.875rem;
+
+  height: 0.875rem;
+
+  flex-shrink: 0;
+
+  color: #c1a858;
+
+}
+
+
+
+/* 出品者ミニカード（ヒーロー）— レイアウトのみ。ランク色は seller-rank-plate.css */
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card, body[data-detail-type="job"] .product-hero-seller-card {
+
+  --product-seller-label: #94a3b8;
+
+  --product-seller-handle: #8b7d66;
+
+  --product-seller-stat: #d8a72f;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 0.75rem;
+
+  margin-top: 0.25rem;
+
+  overflow: visible;
+
+  padding: 0.75rem 0.85rem;
+
+  border-radius: 0.75rem;
+
+  border: 1px solid rgba(214, 179, 91, 0.35);
+
+  background:
+
+    radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.06), transparent 28%),
+
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+
+  box-shadow:
+
+    0 12px 30px rgba(180, 140, 60, 0.08),
+
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  text-decoration: none;
+
+  color: inherit;
+
+  transition: all 0.25s ease;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card, body[data-detail-type="job"] .product-hero-seller-card:hover {
+
+  border-color: rgba(212, 180, 120, 0.5);
+
+  box-shadow:
+
+    0 14px 34px rgba(180, 140, 60, 0.12),
+
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  transform: translateY(-2px);
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend {
+
+  background:
+
+    radial-gradient(circle at 8% 18%, rgba(124, 58, 237, 0.1), transparent 32%),
+
+    radial-gradient(circle at 92% 82%, rgba(56, 189, 248, 0.07), transparent 28%),
+
+    linear-gradient(135deg, rgba(255, 252, 248, 0.98), rgba(255, 255, 255, 0.98));
+
+  border-color: rgba(196, 181, 253, 0.42);
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card, body[data-detail-type="job"] .product-hero-seller-card.rank-platinum {
+
+  background:
+
+    radial-gradient(circle at 12% 22%, rgba(148, 163, 184, 0.08), transparent 30%),
+
+    linear-gradient(135deg, rgba(252, 252, 254, 0.98), rgba(255, 255, 255, 0.98));
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card, body[data-detail-type="job"] .product-hero-seller-card.rank-gold {
+
+  background:
+
+    radial-gradient(circle at 10% 20%, rgba(244, 208, 111, 0.12), transparent 30%),
+
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card, body[data-detail-type="job"] .product-hero-seller-card.rank-new {
+
+  background:
+
+    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.07), transparent 28%),
+
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__avatar-wrap, body[data-detail-type="job"] .product-hero-seller-card__avatar-wrap {
+
+  position: relative;
+
+  flex-shrink: 0;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__avatar, body[data-detail-type="job"] .product-hero-seller-card__avatar,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .profile-avatar,
+body[data-detail-type="job"] .product-hero-seller-card .profile-avatar {
+
+  flex-shrink: 0;
+
+  width: 3.25rem;
+
+  height: 3.25rem;
+
+  border-radius: 999px;
+
+  object-fit: cover;
+
+  box-sizing: border-box;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__main, body[data-detail-type="job"] .product-hero-seller-card__main {
+
+  flex: 1;
+
+  min-width: 0;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__head, body[data-detail-type="job"] .product-hero-seller-card__head {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  gap: 0.35rem;
+
+  margin-bottom: 0.2rem;
+
+  padding-top: 0.1rem;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-card__head {
+
+  padding-top: 0.35rem;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-card__avatar.profile-avatar.rank-legend,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .profile-avatar.rank-legend {
+
+  border-width: 3px;
+
+  box-shadow:
+
+    0 0 12px rgba(124, 58, 237, 0.35),
+
+    0 0 22px rgba(56, 189, 248, 0.2),
+
+    0 0 0 1px rgba(196, 181, 253, 0.35);
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .seller-rank-chip,
+body[data-detail-type="job"] .product-hero-seller-card .seller-rank-chip {
+
+  max-width: 6.5rem;
+
+  padding: 0.24rem 0.62rem 0.22rem;
+
+  font-size: 0.59375rem;
+
+  letter-spacing: 0.1em;
+
+  overflow: visible;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .seller-rank-chip.rank-legend {
+
+  border-radius: 999px;
+
+  box-shadow:
+
+    0 0 16px rgba(124, 58, 237, 0.32),
+
+    0 0 8px rgba(99, 102, 241, 0.22),
+
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .skill-seller-badge,
+body[data-detail-type="job"] .product-hero-seller-card .skill-seller-badge {
+
+  height: auto;
+
+  min-height: 0;
+
+  padding: 0.12rem 0.45rem;
+
+  font-size: 0.5625rem;
+
+  line-height: 1.2;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-card__name,
+body[data-detail-type="job"] .product-hero-seller-card .product-hero-seller-card__name,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-name,
+body[data-detail-type="job"] .product-hero-seller-card .product-hero-seller-name {
+
+  margin: 0;
+
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+
+  line-height: 1.15;
+
+  letter-spacing: -0.02em;
+
+  max-width: 100%;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-name-wrap,
+body[data-detail-type="job"] .product-hero-seller-card .product-hero-seller-name-wrap {
+
+  display: block;
+
+  max-width: 100%;
+
+  min-width: 0;
+
+}
+
+
+
+/* LEGEND 出品者名 — ヒーローミニカードのみ */
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-name-wrap {
+
+  position: relative;
+
+  display: inline-block;
+
+  max-width: 100%;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-name-wrap::after {
+
+  content: "";
+
+  position: absolute;
+
+  left: 4%;
+
+  right: 4%;
+
+  bottom: -4px;
+
+  height: 2px;
+
+  border-radius: 999px;
+
+  background: linear-gradient(
+
+    90deg,
+
+    transparent,
+
+    rgba(124, 58, 237, 0.45),
+
+    rgba(56, 189, 248, 0.35),
+
+    transparent
+
+  );
+
+  filter: blur(0.3px);
+
+  opacity: 0.75;
+
+  pointer-events: none;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-name,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-card__name.seller-name.rank-legend {
+
+  font-weight: 900;
+
+  font-size: clamp(1.25rem, 1.8vw, 1.9rem);
+
+  line-height: 1.08;
+
+  letter-spacing: -0.03em;
+
+  background: linear-gradient(
+
+    110deg,
+
+    #2563eb 0%,
+
+    #7c3aed 24%,
+
+    #ec4899 48%,
+
+    #38bdf8 72%,
+
+    #8b5cf6 100%
+
+  );
+
+  background-size: 260% 100%;
+
+  background-position: 0% 50%;
+
+  -webkit-background-clip: text;
+
+  background-clip: text;
+
+  color: transparent;
+
+  -webkit-text-fill-color: transparent;
+
+  animation: legendNameAurora 9s ease-in-out infinite alternate;
+
+  text-shadow:
+
+    0 0 10px rgba(124, 58, 237, 0.22),
+
+    0 0 18px rgba(56, 189, 248, 0.12);
+
+  filter: none;
+
+  opacity: 1;
+
+  will-change: background-position, filter;
+
+}
+
+
+
+@keyframes legendNameAurora {
+
+  0% {
+
+    background-position: 0% 50%;
+
+    filter: brightness(1);
+
+  }
+
+  50% {
+
+    background-position: 100% 50%;
+
+    filter: brightness(1.08);
+
+  }
+
+  100% {
+
+    background-position: 0% 50%;
+
+    filter: brightness(1);
+
+  }
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__handle, body[data-detail-type="job"] .product-hero-seller-card__handle {
+
+  margin: 0.05rem 0 0.35rem;
+
+  font-size: 0.6875rem;
+
+  color: var(--product-seller-handle);
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stats, body[data-detail-type="job"] .product-hero-seller-card__stats {
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.35rem 0.65rem;
+
+}
+
+
+
+@media (min-width: 640px) {
+
+  body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stats, body[data-detail-type="job"] .product-hero-seller-card__stats {
+
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  }
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-label, body[data-detail-type="job"] .product-hero-seller-card__stat-label {
+
+  display: block;
+
+  font-size: 0.5625rem;
+
+  font-weight: 600;
+
+  color: var(--product-seller-label);
+
+  letter-spacing: 0.04em;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-value:not(.product-hero-seller-card__stat-value--status), body[data-detail-type="job"] .product-hero-seller-card__stat-value:not(.product-hero-seller-card__stat-value--status) {
+
+  display: block;
+
+  font-size: 0.8125rem;
+
+  font-weight: 800;
+
+  color: var(--product-seller-stat);
+
+  line-height: 1.2;
+
+  text-shadow: 0 1px 8px rgba(216, 167, 47, 0.22);
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-sub, body[data-detail-type="job"] .product-hero-seller-card__stat-sub {
+
+  margin-left: 0.15rem;
+
+  font-size: 0.625rem;
+
+  font-weight: 700;
+
+  color: #c49228;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-value--status:not(.product-hero-seller-online), body[data-detail-type="job"] .product-hero-seller-card__stat-value--status:not(.product-hero-seller-online) {
+
+  display: inline-block;
+
+  width: fit-content;
+
+  padding: 0;
+
+  border-radius: 0;
+
+  font-size: 0.6875rem;
+
+  font-weight: 600;
+
+  color: #8b7d66;
+
+  background: none;
+
+  border: none;
+
+  box-shadow: none;
+
+  text-shadow: none;
+
+}
+
+
+
+body[data-detail-type="product"] .product-hero-seller-online, body[data-detail-type="job"] .product-hero-seller-online {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.375rem;
+
+  padding: 0;
+
+  border: none;
+
+  border-radius: 0;
+
+  background: transparent;
+
+  color: #16a34a;
+
+  font-size: 0.6875rem;
+
+  font-weight: 700;
+
+  line-height: 1.2;
+
+  box-shadow: none;
+
+  text-shadow: 0 0 8px rgba(22, 163, 74, 0.25);
+
+}
+
+
+
+body[data-detail-type="product"] .product-hero-seller-online, body[data-detail-type="job"] .product-hero-seller-online::before {
+
+  content: "";
+
+  flex-shrink: 0;
+
+  width: 0.5625rem;
+
+  height: 0.5625rem;
+
+  border-radius: 999px;
+
+  background: #22c55e;
+
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+
+  body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-name,
+  body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card.rank-legend, body[data-detail-type="job"] .product-hero-seller-card.rank-legend .product-hero-seller-card__name.seller-name.rank-legend {
+
+    animation: none;
+
+    background-position: 0% 50%;
+
+    filter: none;
+
+  }
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-value--status.is-offline, body[data-detail-type="job"] .product-hero-seller-card__stat-value--status.is-offline,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-value--status.is-busy, body[data-detail-type="job"] .product-hero-seller-card__stat-value--status.is-busy,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-value--status.is-away, body[data-detail-type="job"] .product-hero-seller-card__stat-value--status.is-away {
+
+  color: #9a8550;
+
+  background: none;
+
+}
+
+
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__login, body[data-detail-type="job"] .product-hero-seller-card__login {
+
+  margin: 0.35rem 0 0;
+
+  font-size: 0.625rem;
+
+  color: var(--product-seller-label);
+
+}
+
+
+
+/* --- product: CTA --- */
+
+body[data-detail-type="product"] .product-hero-premium__cta {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+
+body[data-detail-type="product"] .product-cta-panel {
+
+  flex: 1;
+
+  justify-content: flex-start;
+
+  gap: 0.55rem;
+
+  padding: 0.95rem 0.95rem 0.85rem;
+
+}
+
+
+
+body[data-detail-type="product"] .product-cta-panel__price {
+
+  flex-wrap: wrap;
+
+  align-items: baseline;
+
+  font-size: 1.75rem;
+
+  line-height: 1.05;
+
+  margin-bottom: 0;
+
+}
+
+
+
+body[data-detail-type="product"] .product-cta-panel__suffix {
+
+  font-size: 1.35rem;
+
+  font-weight: 800;
+
+  color: #b8860b;
+
+}
+
+
+
+body[data-detail-type="product"] .product-cta-panel__hints {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.2rem;
+
+  margin: 0;
+
+  padding: 0;
+
+  list-style: none;
+
+}
+
+
+
+body[data-detail-type="product"] .product-cta-panel__hints li {
+
+  position: relative;
+
+  padding-left: 0.75rem;
+
+  font-size: 0.6875rem;
+
+  font-weight: 600;
+
+  color: #64748b;
+
+  line-height: 1.35;
+
+}
+
+
+
+body[data-detail-type="product"] .product-cta-panel__hints li::before {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 0.45em;
+
+  width: 0.3rem;
+
+  height: 0.3rem;
+
+  border-radius: 999px;
+
+  background: #c1a858;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-cta-panel__primary {
+
+  min-height: 46px;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-cta-panel__secondary {
+
+  min-height: 44px;
+
+  margin-top: 0;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-cta-panel__favorite {
+
+  min-height: 42px;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-cta-panel__note {
+
+  display: none;
+
+}
+
+
+
+/* --- product: 商品詳細セクション余白 --- */
+
+body[data-detail-type="product"] .skill-details-premium__head {
+
+  padding: 0.85rem 1.15rem;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-details-premium__body {
+
+  padding: 0.15rem 1.15rem 0.95rem;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-details-block {
+
+  padding: 0.7rem 0;
+
+  border-bottom-color: rgba(0, 0, 0, 0.045);
+
+}
+
+
+
+body[data-detail-type="product"] .skill-details-block:last-child {
+
+  padding-bottom: 0.35rem;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-details-block__title {
+
+  margin-bottom: 0.35rem;
+
+  font-size: 0.78125rem;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-details-block__content {
+
+  line-height: 1.6;
+
+}
+
+
+
+body[data-detail-type="product"] .skill-section-spaced.skill-details-premium {
+
+  margin-bottom: 0.85rem;
+
+}
+
+
+
+.skill-cta-panel__secondary {
+
+  display: none;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 0.5rem;
+
+  width: 100%;
+
+  min-height: 48px;
+
+  margin-top: 0.5rem;
+
+  border-radius: 0.5rem;
+
+  border: 1px solid rgba(212, 166, 58, 0.45);
+
+  background: #fff;
+
+  color: #7a5710;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+
+}
+
+
+
+.skill-cta-panel__secondary:hover {
+
+  background: #fffbeb;
+
+  border-color: #d4a63a;
+
+}
+
+
+
+.detail-page-hidden {
+
+  display: none !important;
+
+}
+
+
+
+.detail-reviews.detail-reviews--empty .detail-reviews__body {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  min-height: 12rem;
+
+  padding: 2.5rem 1.25rem 2.75rem;
+
+}
+
+
+
+.detail-reviews__empty-state {
+
+  width: 100%;
+
+  max-width: 28rem;
+
+  margin: 0 auto;
+
+  padding: 2rem 1.5rem;
+
+  text-align: center;
+
+  background: linear-gradient(
+
+    180deg,
+
+    rgba(255, 255, 255, 0.98) 0%,
+
+    rgba(250, 248, 243, 0.95) 100%
+
+  );
+
+  border: 1px solid rgba(212, 166, 58, 0.22);
+
+  border-radius: 0.75rem;
+
+  box-shadow:
+
+    0 8px 32px rgba(15, 23, 42, 0.06),
+
+    0 0 0 1px rgba(15, 35, 66, 0.04) inset;
+
+}
+
+
+
+.detail-reviews__empty-message {
+
+  margin: 0;
+
+  font-size: 0.9375rem;
+
+  font-weight: 500;
+
+  letter-spacing: 0.06em;
+
+  color: #64748b;
+
+}
+
+
+
+/* ==========================================================================
+
+   job: 高密度プレミアムヒーロー（product 構造の横展開）
+
+   ========================================================================== */
+
+
+
+body[data-detail-type="job"] .skill-hero-premium__grid {
+
+  padding: 1.15rem 1.2rem;
+
+  gap: 1.1rem;
+
+}
+
+
+
+@media (min-width: 1024px) {
+
+  body[data-detail-type="job"] .skill-hero-premium__grid {
+
+    grid-template-columns: minmax(0, 300px) minmax(0, 1fr) minmax(228px, 248px);
+
+    align-items: stretch;
+
+    gap: 1.15rem 1.1rem;
+
+    padding: 1.2rem 1.25rem;
+
+  }
+
+}
+
+
+
+body[data-detail-type="job"] .job-hero-premium__center {
+
+  gap: 0.5rem;
+
+}
+
+
+
+body[data-detail-type="job"] .skill-hero-premium__title {
+
+  margin-bottom: 0.05rem;
+
+}
+
+
+
+body[data-detail-type="job"] .job-hero-summary {
+
+  margin: 0;
+
+  font-size: 0.8125rem;
+
+  line-height: 1.55;
+
+  color: #475569;
+
+  white-space: pre-line;
+
+}
+
+
+
+body[data-detail-type="job"] .job-hero-tags {
+
+  margin-top: 0.1rem;
+
+}
+
+
+
+body[data-detail-type="job"] .job-tag-pill {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  padding: 0.28rem 0.62rem;
+
+  border-radius: 999px;
+
+  border: 1px solid rgba(30, 58, 95, 0.22);
+
+  background: #fff;
+
+  font-size: 0.6875rem;
+
+  font-weight: 600;
+
+  color: #1e293b;
+
+  line-height: 1.25;
+
+  transition:
+
+    border-color 0.2s ease,
+
+    box-shadow 0.2s ease,
+
+    background-color 0.2s ease;
+
+}
+
+
+
+body[data-detail-type="job"] .job-tag-pill:hover {
+
+  border-color: rgba(30, 58, 95, 0.38);
+
+  background: #f8fafc;
+
+  box-shadow: 0 2px 8px rgba(15, 35, 66, 0.1);
+
+}
+
+
+
+body[data-detail-type="job"] .job-hero-features {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.45rem 0.85rem;
+
+  margin: 0.15rem 0 0.05rem;
+
+  padding: 0;
+
+  list-style: none;
+
+}
+
+
+
+body[data-detail-type="job"] .job-hero-feature {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 0.3rem;
+
+  font-size: 0.6875rem;
+
+  font-weight: 600;
+
+  color: #1e3a5f;
+
+  line-height: 1.2;
+
+}
+
+
+
+body[data-detail-type="job"] .job-hero-feature__icon {
+
+  width: 0.875rem;
+
+  height: 0.875rem;
+
+  flex-shrink: 0;
+
+  color: #c1a858;
+
+}
+
+
+
+body[data-detail-type="job"] .job-hero-premium__cta {
+
+  display: flex;
+
+  flex-direction: column;
+
+}
+
+
+
+body[data-detail-type="job"] .job-cta-panel {
+
+  flex: 1;
+
+  justify-content: flex-start;
+
+  gap: 0.55rem;
+
+  padding: 0.95rem 0.95rem 0.85rem;
+
+  border-color: rgba(30, 58, 95, 0.12);
+
+  box-shadow:
+
+    0 12px 32px rgba(15, 35, 66, 0.1),
+
+    0 0 0 1px rgba(255, 255, 255, 0.7) inset;
+
+}
+
+
+
+body[data-detail-type="job"] .job-cta-panel__price {
+
+  flex-wrap: wrap;
+
+  align-items: baseline;
+
+  font-size: 1.75rem;
+
+  line-height: 1.05;
+
+  margin-bottom: 0;
+
+  color: #0f2342;
+
+}
+
+
+
+body[data-detail-type="job"] .job-cta-panel__hints {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.2rem;
+
+  margin: 0;
+
+  padding: 0;
+
+  list-style: none;
+
+}
+
+
+
+body[data-detail-type="job"] .job-cta-panel__hints li {
+
+  position: relative;
+
+  padding-left: 0.75rem;
+
+  font-size: 0.6875rem;
+
+  font-weight: 600;
+
+  color: #64748b;
+
+  line-height: 1.35;
+
+}
+
+
+
+body[data-detail-type="job"] .job-cta-panel__hints li::before {
+
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+
+  top: 0.45em;
+
+  width: 0.3rem;
+
+  height: 0.3rem;
+
+  border-radius: 999px;
+
+  background: #1e3a5f;
+
+}
+
+
+
+/* ヒーロー「応募する」— hero-apply-btn のみ（skill-cta-panel__primary は使わない） */
+body[data-detail-type="job"] .job-hero-premium__cta .hero-apply-btn {
+  display: inline-flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.25;
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, #0f2b57, #193b74);
+  border: 1px solid rgba(25, 59, 116, 0.85);
+  box-shadow: 0 8px 22px rgba(15, 43, 87, 0.35);
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+body[data-detail-type="job"] .job-hero-premium__cta .hero-apply-btn:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #0c2449, #1a4485);
+  box-shadow: 0 10px 26px rgba(15, 43, 87, 0.42);
+  transform: translateY(-1px);
+}
+
+body[data-detail-type="job"] .job-hero-premium__cta .skill-cta-panel__secondary {
+  min-height: 44px;
+  margin-top: 0;
+}
+
+body[data-detail-type="job"] .job-hero-premium__cta .skill-cta-panel__favorite {
+  min-height: 42px;
+}
+
+body[data-detail-type="job"] .job-hero-premium__cta .skill-cta-panel__note {
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
+
+
+body[data-detail-type="job"] .job-cta-panel__tax,
+body[data-detail-type="job"] .skill-cta-panel__tax {
+
+  display: none !important;
+
+}
+
+
+
+body[data-detail-type="job"] [data-listing-payment] {
+
+  display: none !important;
+
+}
+
+
+
+body[data-detail-type="job"] .skill-details-premium__head {
+
+  padding: 0.85rem 1.15rem;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-premium__body {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1rem;
+
+  padding: 0.35rem 1.15rem 1rem;
+
+}
+
+
+
+body[data-detail-type="job"] .job-description-card {
+
+  padding: 1.15rem 1.2rem;
+
+  border-radius: 14px;
+
+  background: linear-gradient(180deg, #fffefb 0%, #fff 100%);
+
+  border: 1px solid rgba(193, 168, 88, 0.22);
+
+  box-shadow: 0 8px 24px rgba(15, 35, 66, 0.05);
+
+}
+
+
+
+body[data-detail-type="job"] .job-description-card__title {
+
+  margin: 0 0 0.65rem;
+
+  font-size: 0.8125rem;
+
+  font-weight: 800;
+
+  letter-spacing: 0.06em;
+
+  color: #8a7340;
+
+  text-transform: uppercase;
+
+}
+
+
+
+body[data-detail-type="job"] .job-description-card__body {
+
+  font-size: 0.9375rem;
+
+  line-height: 1.75;
+
+  color: #1f2937;
+
+}
+
+
+
+body[data-detail-type="job"] .job-description-card__body p {
+
+  margin: 0 0 0.65rem;
+
+}
+
+
+
+body[data-detail-type="job"] .job-description-card__body p:last-child {
+
+  margin-bottom: 0;
+
+}
+
+
+
+body[data-detail-type="job"] .job-info-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 0.65rem;
+
+}
+
+
+
+body[data-detail-type="job"] .job-info-card {
+
+  margin: 0;
+
+  padding: 0.75rem 0.85rem;
+
+  border-radius: 12px;
+
+  background: #fff;
+
+  border: 1px solid rgba(15, 35, 66, 0.08);
+
+  box-shadow: 0 2px 8px rgba(15, 35, 66, 0.04);
+
+}
+
+
+
+body[data-detail-type="job"] .job-info-card__label {
+
+  margin: 0 0 0.25rem;
+
+  font-size: 0.6875rem;
+
+  font-weight: 700;
+
+  letter-spacing: 0.04em;
+
+  color: #94a3b8;
+
+}
+
+
+
+body[data-detail-type="job"] .job-info-card__value {
+
+  margin: 0;
+
+  font-size: 0.875rem;
+
+  font-weight: 700;
+
+  line-height: 1.45;
+
+  color: #0f2342;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordions {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.5rem;
+
+  min-width: 0;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordion {
+
+  border-radius: 12px;
+
+  background: #fff;
+
+  border: 1px solid rgba(15, 35, 66, 0.08);
+
+  overflow: hidden;
+
+  min-width: 0;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordion__summary {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 0.65rem;
+
+  padding: 0.8rem 0.9rem;
+
+  font-size: 0.8125rem;
+
+  font-weight: 700;
+
+  color: #0f2342;
+
+  cursor: pointer;
+
+  list-style: none;
+
+  user-select: none;
+
+  -webkit-tap-highlight-color: transparent;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordion__title {
+
+  flex: 1;
+
+  min-width: 0;
+
+  line-height: 1.4;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordion__summary::-webkit-details-marker {
+
+  display: none;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordion__summary::after {
+
+  content: "＋";
+
+  font-size: 0.875rem;
+
+  font-weight: 700;
+
+  color: #94a3b8;
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordion[open] .job-details-accordion__summary::after {
+
+  content: "－";
+
+}
+
+
+
+body[data-detail-type="job"] .job-details-accordion__body {
+
+  box-sizing: border-box;
+
+  max-width: 100%;
+
+  padding: 0 0.9rem 0.9rem;
+
+  font-size: 0.8125rem;
+
+  line-height: 1.7;
+
+  color: #475569;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+
+  overflow-wrap: anywhere;
+
+}
+
+
+
+@media (max-width: 640px) {
+
+  body[data-detail-type="job"] .job-info-grid {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+
+
+body[data-detail-type="job"] .skill-section-spaced.skill-details-premium {
+
+  margin-bottom: 0.85rem;
+
+}
+
+
+
+/* 会社カード右CTA — seller-*-btn のみ（ヒーロー hero-apply-btn とは別クラス） */
+body[data-detail-type="job"] #section-seller .seller-apply-btn,
+body[data-detail-type="job"] #section-seller .seller-follow-btn,
+body[data-detail-type="job"] #section-seller .seller-more-jobs-btn {
+  display: inline-flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+body[data-detail-type="job"] #section-seller .seller-btn__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+body[data-detail-type="job"] #section-seller .seller-apply-btn {
+  font-weight: 800;
+  color: #1b1b1b;
+  background: linear-gradient(135deg, #d4a93a, #f5d97a);
+  border: 1px solid rgba(212, 169, 58, 0.45);
+  box-shadow: 0 8px 24px rgba(212, 169, 58, 0.25);
+}
+
+body[data-detail-type="job"] #section-seller .seller-apply-btn:hover {
+  color: #1b1b1b;
+  background: linear-gradient(135deg, #e0b84a, #fce88a);
+  border-color: rgba(212, 169, 58, 0.65);
+  box-shadow: 0 10px 28px rgba(212, 169, 58, 0.32);
+  transform: translateY(-1px);
+}
+
+body[data-detail-type="job"] #section-seller .seller-follow-btn {
+  font-weight: 700;
+  color: #8a7340;
+  background: #fff;
+  border: 1.5px solid rgba(193, 168, 88, 0.55);
+  box-shadow: none;
+}
+
+body[data-detail-type="job"] #section-seller .seller-follow-btn:hover {
+  color: #6f5c32;
+  background: #fff;
+  border-color: rgba(193, 168, 88, 0.75);
+}
+
+body[data-detail-type="job"] #section-seller .seller-more-jobs-btn {
+  font-weight: 600;
+  color: #4b5563;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: none;
+}
+
+body[data-detail-type="job"] #section-seller .seller-more-jobs-btn:hover {
+  color: #374151;
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.2);
+}
+
+body[data-detail-type="job"] #section-seller .seller-more-jobs-btn span {
+  color: inherit;
+}
+
+
+

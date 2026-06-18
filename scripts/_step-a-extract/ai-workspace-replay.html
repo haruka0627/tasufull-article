@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Workspace | TASFUL</title>
+  <meta name="description" content="TASFUL AI Workspace — 相場チェック・文章作成・画像解析など、AI相談をはじめる">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="shop-store-cards.css">
+  <link rel="stylesheet" href="ai-workspace.css">
+  <link rel="stylesheet" href="ai-workspace-chat.css">
+  <link rel="stylesheet" href="tasful-ai-brand.css?v=1">
+</head>
+<body class="ai-workspace-page shop-store-list-page" data-page="ai_workspace">
+  <header class="shop-market-header shop-store-market-header" data-shop-store-market-header aria-label="サイトヘッダー">
+    <div class="shop-market-header__inner">
+      <a href="index-top.html" class="tasful-ai-brand tasful-ai-brand--dark shop-market-header__logo" aria-label="TASFUL プラットフォームTOP">
+        <span class="tasful-ai-globe" aria-hidden="true">
+          <span class="tasful-ai-globe-v tasful-ai-globe-v1"></span>
+          <span class="tasful-ai-globe-v tasful-ai-globe-v2"></span>
+          <span class="tasful-ai-globe-h tasful-ai-globe-h1"></span>
+          <span class="tasful-ai-globe-h tasful-ai-globe-h2"></span>
+        </span>
+        <span class="tasful-ai-brand-main">TASFUL</span>
+        <span class="tasful-ai-brand-sub">プラットフォーム</span>
+      </a>
+      <div class="shop-market-header__center">
+        <form class="shop-market-header__search" role="search" action="shop-store.html" method="get">
+          <span class="shop-market-header__search-icon" aria-hidden="true">🔍</span>
+          <input type="search" name="keyword" class="shop-market-header__search-input" placeholder="店舗・商品を検索" aria-label="店舗・商品を検索">
+        </form>
+        <nav class="shop-market-header__nav" aria-label="メインメニュー">
+          <a href="shop-store.html" class="shop-market-header__nav-link">カテゴリから探す</a>
+          <a href="shop-store.html#shop-store-area" class="shop-market-header__nav-link">エリアから探す</a>
+          <a href="index-top.html" class="shop-market-header__nav-link">特集一覧</a>
+          <a href="ai-top.html" class="shop-market-header__nav-link shop-market-header__nav-link--ai">AI相談とは</a>
+        </nav>
+      </div>
+      <div class="shop-market-header__actions">
+        <a href="index.html" class="shop-market-header__action" aria-label="お気に入り">
+          <span class="shop-market-header__action-icon" aria-hidden="true">♡</span>
+          <span class="shop-market-header__action-label">お気に入り</span>
+        </a>
+        <a href="dashboard.html" class="shop-market-header__action" aria-label="通知">
+          <span class="shop-market-header__action-icon" aria-hidden="true">🔔</span>
+          <span class="shop-market-header__action-label">通知</span>
+        </a>
+        <a href="post.html?scope=business" class="shop-market-header__cta">店舗を掲載する</a>
+        <a href="dashboard.html" class="shop-market-header__action shop-market-header__action--primary" aria-label="マイページ">
+          <span class="shop-market-header__action-icon" aria-hidden="true">👤</span>
+          <span class="shop-market-header__action-label">マイページ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="ai-workspace-main" aria-label="AI Workspace">
+    <p class="ai-workspace-back">
+      <a href="ai-top.html">← AI TOPに戻る</a>
+    </p>
+    <section class="ai-workspace-hero ai-workspace-hero--compact">
+      <p class="ai-workspace-hero__eyebrow">TASFUL AI WORKSPACE</p>
+      <h1 class="ai-workspace-hero__title">AI相談・作成・サポート</h1>
+      <p class="ai-workspace-hero__lead">
+        使い方・掲載サポートに加え、業者・商品・求人などのAIマッチング（ST以上）もご利用いただけます。
+        <a href="gen-ai-workspace.html">生成AIワークスペース</a>（文章作成・キャラ会話）もご利用ください。
+      </p>
+    </section>
+
+    <section class="ai-workspace-chat-section" aria-label="AIチャット">
+      <div class="ai-workspace-chat-section__intro">
+        <h2>モードを選んで相談</h2>
+        <p>用途に合わせてAIモードを切り替えられます</p>
+      </div>
+
+      <div class="ai-workspace-app">
+        <div class="ai-mode-tabs-host" data-ai-mode-tabs-host aria-label="AIモード一覧"></div>
+
+        <div class="ai-workspace-body">
+          <div class="ai-chat" data-ai-workspace-chat data-mode="tasful-guide">
+            <div class="ai-chat__head">
+              <div class="ai-chat__head-text">
+                <h3 data-ai-chat-mode-title>TASFUL使い方AI</h3>
+                <p data-ai-chat-mode-desc>会員登録・掲載・検索・料金・問い合わせの案内</p>
+              </div>
+              <button type="button" class="ai-chat__reset" data-ai-chat-reset>会話をリセット</button>
+            </div>
+            <div class="ai-chat__messages" data-ai-chat-messages role="log" aria-live="polite" aria-relevant="additions"></div>
+            <form class="ai-chat__form" data-ai-chat-form>
+              <input
+                type="text"
+                class="ai-chat__input"
+                data-ai-chat-input
+                placeholder="質問を入力…"
+                autocomplete="off"
+                maxlength="2000"
+                required
+              >
+              <button type="submit" class="ai-chat__send" data-ai-chat-send>送信</button>
+            </form>
+          </div>
+
+          <aside class="ai-concierge-panel" data-ai-concierge-panel hidden aria-label="AIキャラクター">
+            <div id="character-stage" class="ai-character-stage" data-ai-character-stage>
+              <div class="ai-character-stage__visual">
+                <img
+                  class="ai-character-stage__img"
+                  data-ai-character-img
+                  src="images/ai-character.webp"
+                  alt="AIキャラクター"
+                  width="240"
+                  height="320"
+                  decoding="async"
+                >
+              </div>
+              <p class="ai-character-stage__hint" data-ai-character-stage-hint>AIと音声で会話できます</p>
+            </div>
+            <div class="ai-voice-control" data-ai-voice-control>
+              <label class="ai-voice-control__label">
+                <input type="checkbox" class="ai-voice-control__toggle" data-ai-voice-toggle checked>
+                <span class="ai-voice-control__text">音声読み上げ</span>
+              </label>
+              <p class="ai-voice-control__note">Web Speech API（ブラウザ標準）</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <div class="ai-workspace-features ai-workspace-legacy" aria-label="主な機能">
+      <article class="ai-workspace-feature">
+        <strong>相場・見積の相談</strong>
+        <p>作業内容から目安を整理し、依頼前の判断を支援します。</p>
+      </article>
+      <article class="ai-workspace-feature">
+        <strong>文章・資料作成</strong>
+        <p>掲載文、返信文、説明文のたたき台を素早く作成できます。</p>
+      </article>
+      <article class="ai-workspace-feature">
+        <strong>画像の読み取り</strong>
+        <p>写真や資料から要点を抽出し、次のアクションを提案します。</p>
+      </article>
+    </div>
+
+    <p class="ai-workspace-back ai-workspace-back--footer">
+      <a href="chat-list.html">取引チャット一覧</a>
+      <span aria-hidden="true"> · </span>
+      <a href="/contact">お問い合わせ</a>
+    </p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js" defer></script>
+  <script src="tasu-supabase-client.js" defer></script>
+  <script src="listing-tags.js" defer></script>
+  <script src="product-listing-fields.js" defer></script>
+  <script src="job-listing-fields.js" defer></script>
+  <script src="worker-listing-fields.js" defer></script>
+  <script src="listings-db.js" defer></script>
+  <script src="business-categories.js" defer></script>
+  <script src="business-wording.js" defer></script>
+  <script src="listing-renderer.js" defer></script>
+  <script src="business-listings-db.js" defer></script>
+  <script src="shop-store-products-db.js" defer></script>
+  <script src="ai-modes.js" defer></script>
+  <script src="ai-search.js" defer></script>
+  <script src="ai-concierge.js" defer></script>
+  <script src="ai-workspace-chat.js" defer></script>
+</body>
+</html>

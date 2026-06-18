@@ -1,0 +1,2653 @@
+﻿{
+  "scannedFiles": 315,
+  "headCommit": "78db29d before stripe featured",
+  "summary": {
+    "filesWithCorruptionPatterns": 83,
+    "htmlParseFailures": 0,
+    "htmlStructuralWarnings": 36,
+    "htmlHeavyQuestionMarks": 0,
+    "largeGitDiffs": 18,
+    "untrackedHtml": 21
+  },
+  "htmlParseFailures": [],
+  "htmlStructuralWarnings": [
+    {
+      "rel": "_worker_shared_sections.html",
+      "issues": [
+        "tag_count_skew open=157 close=113",
+        "missing_doctype_or_html"
+      ]
+    },
+    {
+      "rel": "account-settings.html",
+      "issues": [
+        "tag_count_skew open=78 close=66",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "ai-top.html",
+      "issues": [
+        "tag_count_skew open=122 close=63",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "ai-workspace.html",
+      "issues": [
+        "tag_count_skew open=108 close=78",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "business-portal.html",
+      "issues": [
+        "tag_count_skew open=73 close=50",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "business-ui-preview.html",
+      "issues": [
+        "tag_count_skew open=137 close=124",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "business.html",
+      "issues": [
+        "tag_count_skew open=228 close=155",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "chat-detail.html",
+      "issues": [
+        "tag_count_skew open=126 close=98",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "chat-list.html",
+      "issues": [
+        "tag_count_skew open=41 close=28",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "checkout.html",
+      "issues": [
+        "tag_count_skew open=56 close=36"
+      ]
+    },
+    {
+      "rel": "dashboard.html",
+      "issues": [
+        "tag_count_skew open=79 close=67",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "detail-business-service.html",
+      "issues": [
+        "tag_count_skew open=269 close=206",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "detail-business.html",
+      "issues": [
+        "tag_count_skew open=268 close=218",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "detail-job.html",
+      "issues": [
+        "tag_count_skew open=232 close=175",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "detail-product.html",
+      "issues": [
+        "tag_count_skew open=234 close=167",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "detail-shop-product.html",
+      "issues": [
+        "tag_count_skew open=57 close=41"
+      ]
+    },
+    {
+      "rel": "detail-shop.html",
+      "issues": [
+        "tag_count_skew open=222 close=167",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "detail-skill.html",
+      "issues": [
+        "tag_count_skew open=343 close=237",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "detail-worker.html",
+      "issues": [
+        "tag_count_skew open=209 close=155",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "favorites-list.html",
+      "issues": [
+        "tag_count_skew open=32 close=25",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "gen-ai-workspace.html",
+      "issues": [
+        "tag_count_skew open=241 close=177",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "index-top.html",
+      "issues": [
+        "tag_count_skew open=830 close=721",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "index.html",
+      "issues": [
+        "tag_count_skew open=273 close=184",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "job-top.html",
+      "issues": [
+        "tag_count_skew open=163 close=122",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "legacy-job.html",
+      "issues": [
+        "tag_count_skew open=53 close=34",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "order-complete.html",
+      "issues": [
+        "tag_count_skew open=50 close=29"
+      ]
+    },
+    {
+      "rel": "post.html",
+      "issues": [
+        "tag_count_skew open=989 close=879",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "product.html",
+      "issues": [
+        "tag_count_skew open=53 close=35",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "profile-settings.html",
+      "issues": [
+        "tag_count_skew open=77 close=63",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "scripts\\_ranking-sections.html",
+      "issues": [
+        "tag_count_skew open=276 close=199",
+        "missing_doctype_or_html",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "service-fee-pay.html",
+      "issues": [
+        "tag_count_skew open=42 close=26"
+      ]
+    },
+    {
+      "rel": "shop-products.html",
+      "issues": [
+        "tag_count_skew open=112 close=81",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "shop-store.html",
+      "issues": [
+        "tag_count_skew open=184 close=119",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "signup.html",
+      "issues": [
+        "tag_count_skew open=139 close=103",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "skill.html",
+      "issues": [
+        "tag_count_skew open=51 close=34",
+        "head_tag_mismatch"
+      ]
+    },
+    {
+      "rel": "worker.html",
+      "issues": [
+        "tag_count_skew open=51 close=34",
+        "head_tag_mismatch"
+      ]
+    }
+  ],
+  "htmlHeavyQuestionMarks": [],
+  "corruptionByFile": {
+    "_worker_shared_sections.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 1,
+        "sample": "・ｽE・ｽ繧ｹ繧ｭ繝ｫ隧ｳ邏ｰ縺ｨ蜷檎ｳｻUI・ｽE・ｽE--> <section id=\"section-options\" class=\"section-anchor"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 5,
+        "sample": "span> 霑ｽ蜉繧ｪ繝励す繝ｧ繝ｳ </h2> <p class=\"mt-1 text-xs text-gray-500\">"
+      },
+      {
+        "pattern": "/button>",
+        "line": 98,
+        "sample": "/button> <a href=\"#section-related\" class=\"inline-flex h-[54px] w-f"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 1,
+        "sample": "・ｽE・ｽ繧ｹ繧ｭ繝ｫ隧ｳ邏ｰ縺ｨ蜷檎ｳｻUI・ｽE・ｽE--> <section id=\"section-options\" class=\"section-anchor"
+      }
+    ],
+    "account-settings.html": [
+      {
+        "pattern": "bare span>",
+        "line": 33,
+        "sample": "span> <span class=\"dash-header-link__badge\" data-dash-msg-badge hi"
+      },
+      {
+        "pattern": "/button>",
+        "line": 27,
+        "sample": "/button> <h1 class=\"dash-header__title\">謾ｯ謇輔＞繝ｻ蜿｣蠎ｧ邂｡逅・/h1> </di"
+      }
+    ],
+    "ai-top.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ縺ｯ | TASFUL</title> <meta name=\"description\" content=\"TASFUL AI逶ｸ隲・ E蠎暦ｿｽE謗｢縺暦ｿｽE讌ｭ閠・
+      },
+      {
+        "pattern": "bare span>",
+        "line": 25,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ縺ｯ | TASFUL</title> <meta name=\"description\" content=\"TASFUL AI逶ｸ隲・ E蠎暦ｿｽE謗｢縺暦ｿｽE讌ｭ"
+      }
+    ],
+    "ai-workspace.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 7,
+        "sample": "・ｽ・ｽ繝ｻ譁・・ｽ・ｽ菴懶ｿｽE繝ｻ逕ｻ蜒剰ｧ｣譫舌↑縺ｩ縲、I逶ｸ隲・・ｽ・ｽ縺ｯ縺倥ａ繧・> <link rel=\"preconnect\" href=\"https://fonts.goo"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 124,
+        "sample": "label> <p class=\"ai-voice-control__note\">Web Speech API・ｽE・ｽ繝悶Λ繧ｦ繧ｶ讓呎ｺ厄ｼ・"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 27,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 88,
+        "sample": "/button> </div> <div class=\"ai-chat__messages\" data-ai-c"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 7,
+        "sample": "E・ｽ・ｽ繝ｻ譁・・ｽ・ｽ菴懶ｿｽE繝ｻ逕ｻ蜒剰ｧ｣譫舌↑縺ｩ縲、I逶ｸ隲・・ｽ・ｽ縺ｯ縺倥ａ繧・> <link rel=\"preconnect\" href=\"https://fonts.go"
+      }
+    ],
+    "business-board-page.js": [
+      {
+        "pattern": "bare span>",
+        "line": 300,
+        "sample": "span> <strong class=\"biz-board-count__num\">${from}窶・{to}</strong> <span class=\"b"
+      }
+    ],
+    "business-board-renderer.js": [
+      {
+        "pattern": "bare span>",
+        "line": 153,
+        "sample": "span>` ) .join(\"\")}</div>`; } function buildCompanyColumnS"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 395,
+        "sample": "</button>`; } function buildRowActions(listing, detailUrl, options = {})"
+      },
+      {
+        "pattern": "/button>",
+        "line": 395,
+        "sample": "/button>`; } function buildRowActions(listing, detailUrl, options = {})"
+      }
+    ],
+    "business-portal.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽE繝ｻ雋ｩ螢ｲ | TasuFull</title> <meta name=\"description\" content=\"豕穂ｺｺ繝ｻ讌ｭ蜍吶し繝ｼ繝薙せ縺ｨ蠎暦ｿｽE繝ｻ雋ｩ螢ｲ縺ｮ縺ｩ縺｡"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 18,
+        "sample": "span> <p class=\"top-pr-banner__text\"> <strong>AI逶ｸ隲・・ｽ・ｽ莉翫□縺托ｿｽE蝗樒┌譁呻ｼ・/st"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "・ｽE繝ｻ雋ｩ螢ｲ | TasuFull</title> <meta name=\"description\" content=\"豕穂ｺｺ繝ｻ讌ｭ蜍吶し繝ｼ繝薙せ縺ｨ蠎暦ｿｽE繝ｻ雋ｩ螢ｲ縺ｮ縺ｩ縺｡"
+      }
+    ],
+    "business-service-chat-ui.js": [
+      {
+        "pattern": "bare span>",
+        "line": 125,
+        "sample": "span>` : \"\" } </div> <p class=\"bsf-p"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 112,
+        "sample": "</button> ${ showComplete ? `<button type"
+      },
+      {
+        "pattern": "/button>",
+        "line": 112,
+        "sample": "/button> ${ showComplete ? `<button type="
+      }
+    ],
+    "business-ui-preview.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 188,
+        "sample": "・ｽ・ｽ繝ｪ蛻・・ｽ・ｽ縺・繝輔ぃ繧､繝ｫ縺ｫ髮・・ｽ・ｽE・ｽ・ｽ繧後※縺・・ｽ・ｽ縺溘ａ縲∝推UI繧堤ｴ譌ｩ縺冗｢ｺ隱阪〒縺阪ｋ繝ｪ繝ｳ繧ｯ髮・・ｽ・ｽ縺吶・ 縺吶∋縺ｦ <strong>繝・・ｽ・ｽID<"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 200,
+        "sample": "span> </div> <p class=\"desc\">蝠・・ｽ・ｽ繝ｻ繧ｮ繝｣繝ｩ繝ｪ繝ｼ繝ｻ蠎暦ｿｽE諠・・ｽ・ｽ繝ｻ繧ｷ繝ｧ繝・・ｽE蠎暮Κ繧ｻ繧ｯ繧ｷ繝ｧ繝ｳ縺ｮ"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 188,
+        "sample": "E・ｽ・ｽ繝ｪ蛻・・ｽ・ｽ縺・繝輔ぃ繧､繝ｫ縺ｫ髮・・ｽ・ｽE・ｽ・ｽ繧後※縺・・ｽ・ｽ縺溘ａ縲∝推UI繧堤ｴ譌ｩ縺冗｢ｺ隱阪〒縺阪ｋ繝ｪ繝ｳ繧ｯ髮・・ｽ・ｽ縺吶・ 縺吶∋縺ｦ <strong>繝・・ｽ・ｽID"
+      }
+    ],
+    "business-wording.js": [
+      {
+        "pattern": "bare span>",
+        "line": 909,
+        "sample": "span>'; const genreHref = `business.html?business_category=shop_store`;"
+      }
+    ],
+    "business.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽE蠎暦ｿｽE縺ｮ繧ｵ繝ｼ繝薙せ謗ｲ霈我ｸ隕ｧ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts."
+      },
+      {
+        "pattern": "bare label>",
+        "line": 87,
+        "sample": "label> <input type=\"search\" id=\"bizSearchKeyword\" data-biz-board-ke"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 32,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>"
+      },
+      {
+        "pattern": "bare legend>",
+        "line": 123,
+        "sample": "legend>繧ｫ繝・・ｽ・ｽ繝ｪ</legend> <select name=\"industry\">"
+      },
+      {
+        "pattern": "bare fieldset>",
+        "line": 134,
+        "sample": "fieldset> <fieldset class=\"biz-board-filter__group\">"
+      },
+      {
+        "pattern": "/button>",
+        "line": 111,
+        "sample": "/button> </form> <ul class=\"biz-board-tags\" data-biz-board-pop"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽE蠎暦ｿｽE縺ｮ繧ｵ繝ｼ繝薙せ謗ｲ霈我ｸ隕ｧ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts"
+      }
+    ],
+    "chat-detail.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis.c"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 74,
+        "sample": "label> <textarea id=\"chatReviewComment\" class=\"chat-report-detail\""
+      },
+      {
+        "pattern": "bare span>",
+        "line": 19,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽE/a>"
+      },
+      {
+        "pattern": "bare fieldset>",
+        "line": 102,
+        "sample": "fieldset> <label class=\"chat-report-detail-label\" for=\"chatReportDe"
+      },
+      {
+        "pattern": "/button>",
+        "line": 57,
+        "sample": "/button> </div> </div> <div id=\"chatReviewModal\""
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis."
+      }
+    ],
+    "chat-detail.js": [
+      {
+        "pattern": "bare label>",
+        "line": 722,
+        "sample": "label>` ) .join(\"\"); fieldset.dataset.built = \"1\"; }"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 721,
+        "sample": "span>${escapeHtml(r.label)}</span> </label>` ) .join(\"\");"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 246,
+        "sample": "</button>` : \"\"; return ` <div class=\"chat-msg-menu\">"
+      },
+      {
+        "pattern": "/button>",
+        "line": 246,
+        "sample": "/button>` : \"\"; return ` <div class=\"chat-msg-menu\">"
+      }
+    ],
+    "chat-list.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ荳隕ｧ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 18,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽE/a>"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ荳隕ｧ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapi"
+      }
+    ],
+    "chat-list.js": [
+      {
+        "pattern": "bare span>",
+        "line": 34,
+        "sample": "span>`; } const label = unreadCount > 99 ? \"99+\" : String(unreadCount)"
+      }
+    ],
+    "checkout.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽE縺頑髪謇輔＞ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 18,
+        "sample": "span> E螳会ｿｽE縺ｪ豎ｺ貂茨ｼ・tripe・ｽE・ｽE </div> </div> <main class=\"shop-checkout\">"
+      },
+      {
+        "pattern": "/button>",
+        "line": 42,
+        "sample": "/button> <a class=\"shop-checkout__btn shop-checkout__btn--secondary\" da"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽE縺頑髪謇輔＞ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapi"
+      }
+    ],
+    "dashboard.html": [
+      {
+        "pattern": "bare span>",
+        "line": 33,
+        "sample": "span> <span class=\"dash-header-link__badge\" data-dash-msg-badge hi"
+      },
+      {
+        "pattern": "/button>",
+        "line": 27,
+        "sample": "/button> <h1 class=\"dash-header__title\">莨壼藤繝壹・繧ｸ</h1> </div>"
+      }
+    ],
+    "dashboard.js": [
+      {
+        "pattern": "bare span>",
+        "line": 126,
+        "sample": "span>` : \"\"; return `<a class=\"dash-nav-link${isActive"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 220,
+        "sample": "</button>`; host.innerHTML = ` <div class=\"dash-fee-panel\">"
+      },
+      {
+        "pattern": "/button>",
+        "line": 220,
+        "sample": "/button>`; host.innerHTML = ` <div class=\"dash-fee-panel\">"
+      }
+    ],
+    "detail-business-service-loader.js": [
+      {
+        "pattern": "bare span>",
+        "line": 459,
+        "sample": "span><span><span class=\"bsd-hero__quick-label\">${escapeHtml(r.label)}</span>${es"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 520,
+        "sample": "</button>` ) .join(\"\") + (overflow > 0 ? `<spa"
+      },
+      {
+        "pattern": "/button>",
+        "line": 520,
+        "sample": "/button>` ) .join(\"\") + (overflow > 0 ? `<span"
+      }
+    ],
+    "detail-business-service-sticky-nav.js": [
+      {
+        "pattern": "stray </button>",
+        "line": 150,
+        "sample": "</button> <button type=\"button\" class=\"shop-sticky-action-nav__btn shop-s"
+      },
+      {
+        "pattern": "/button>",
+        "line": 150,
+        "sample": "/button> <button type=\"button\" class=\"shop-sticky-action-nav__btn shop-st"
+      }
+    ],
+    "detail-business-service.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 46,
+        "sample": "・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"business.html\" class=\"link\">豕穂ｺｺ繝ｻ讌ｭ閠・・ｽ・ｽ隕ｧ</a> ・ｽE・ｽ"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 249,
+        "sample": "label></span><p data-biz-detail-sidebar-price></p></div> </div>"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 46,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"business.html\" class=\"link\">豕穂ｺｺ繝ｻ讌ｭ閠・・ｽ・ｽ隕ｧ</a> ・ｽE"
+      },
+      {
+        "pattern": "/button>",
+        "line": 90,
+        "sample": "/button> <button type=\"button\" class=\"biz-detail-gallery-nav"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 46,
+        "sample": "E・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"business.html\" class=\"link\">豕穂ｺｺ繝ｻ讌ｭ閠・・ｽ・ｽ隕ｧ</a> ・ｽE・ｽ"
+      }
+    ],
+    "detail-business-service.js": [
+      {
+        "pattern": "bare span>",
+        "line": 96,
+        "sample": "span><span class=\"bsd-feature-pill__label\">${escapeHtml(label)}</span></span>`;"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 711,
+        "sample": "</button>` ); } if (ctaEnabled(cta, \"inquiry_enabled\", cta.show"
+      },
+      {
+        "pattern": "/button>",
+        "line": 711,
+        "sample": "/button>` ); } if (ctaEnabled(cta, \"inquiry_enabled\", cta.show_"
+      }
+    ],
+    "detail-business.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽE蠎暦ｿｽE 繧ｵ繝ｼ繝薙せ隧ｳ邏ｰ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.go"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 142,
+        "sample": "label>譁呻ｿｽ・ｽ逶ｮ螳・/span> <p class=\"biz-detail-fv-taxi-price-route\" data-b"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 22,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"business.html\" class=\"link\">豕穂ｺｺ繝ｻ讌ｭ閠・・ｽ・ｽ隕ｧ</a> ・ｽE・ｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 87,
+        "sample": "/button> <button type=\"button\" class=\"biz-detail-gallery-nav biz-deta"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽE蠎暦ｿｽE 繧ｵ繝ｼ繝薙せ隧ｳ邏ｰ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.g"
+      }
+    ],
+    "detail-business.js": [
+      {
+        "pattern": "bare span>",
+        "line": 801,
+        "sample": "span>`; } /** * 繧ｿ繧ｯ繧ｷ繝ｼ蜿嶺ｻ倡憾諷具ｼ医ヲ繝ｼ繝ｭ繝ｼ蟾ｦ繝ｻ繧ｿ繧､繝医Ν荳奇ｼ峨ゅち繧ｰ蛻励→縺ｯ蛻･陦ｨ遉ｺ縲・* state: open |"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 2284,
+        "sample": "</button>` ); return parts.join(\"\"); } async function renderFi"
+      },
+      {
+        "pattern": "/button>",
+        "line": 2284,
+        "sample": "/button>` ); return parts.join(\"\"); } async function renderFie"
+      }
+    ],
+    "detail-job.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 40,
+        "sample": "・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽE/a> ・ｽE・ｽ <a"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 213,
+        "sample": "label> E/strong></div> </div> </div> </div>"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 40,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽE/a> ・ｽE・ｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 95,
+        "sample": "/button> <p class=\"skill-cta-panel__note\" data-listing-cta-note>蠢懷供"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 40,
+        "sample": "E・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽE/a> ・ｽE・ｽ <"
+      }
+    ],
+    "detail-product.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ隧ｳ邏ｰ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis."
+      },
+      {
+        "pattern": "bare label>",
+        "line": 227,
+        "sample": "label> E/strong></div> </div> </div> </div>"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 43,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽE/a> ・ｽE・ｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 101,
+        "sample": "/button> <p class=\"skill-cta-panel__note\" data-listing-cta-note>蝨ｨ蠎ｫ"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ隧ｳ邏ｰ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis"
+      }
+    ],
+    "detail-shop-product-page.js": [
+      {
+        "pattern": "bare span>",
+        "line": 142,
+        "sample": "span>`; } function renderProduct() { const p = state.product;"
+      }
+    ],
+    "detail-shop-product.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ隧ｳ邏ｰ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis.c"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 44,
+        "sample": "label> <div class=\"shop-product-detail__qty-control\"> <b"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 19,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"shop-store.html\" class=\"link\">蠎暦ｿｽE繝ｻ雋ｩ螢ｲ荳隕ｧ</a>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 46,
+        "sample": "/button> <input type=\"number\" id=\"shopProductQty\" data-shop-product"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ隧ｳ邏ｰ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis."
+      }
+    ],
+    "detail-shop-store-bottom.js": [
+      {
+        "pattern": "bare span>",
+        "line": 673,
+        "sample": "span> <a href=\"shop-store.html\">${esc(catLabel)}</a> <span aria-hi"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 994,
+        "sample": "</button> </div> `; } function renderRetailPoints(listing, c"
+      },
+      {
+        "pattern": "/button>",
+        "line": 994,
+        "sample": "/button> </div> `; } function renderRetailPoints(listing, cf"
+      }
+    ],
+    "detail-shop.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽE隧ｳ邏ｰ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis.c"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 28,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"business.html\" class=\"link\">豕穂ｺｺ繝ｻ讌ｭ閠・・ｽ・ｽ隕ｧ</a> ・ｽE・ｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 147,
+        "sample": "/button> </div> </aside> </section> <div class=\"sh"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "・ｽE隧ｳ邏ｰ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis.c"
+      }
+    ],
+    "detail-skill.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ蛻ｶ菴懊＠縺ｾ縺・| TasuFull 繧ｹ繧ｭ繝ｫ</title> <link rel=\"preconnect\" href=\"https://fonts.goog"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 295,
+        "sample": "label> E/strong> </div> </div> </div>"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 45,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽE/a>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 127,
+        "sample": "/button> <p class=\"skill-cta-panel__note\" data-listing-cta-note>縺皮嶌"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ蛻ｶ菴懊＠縺ｾ縺・| TasuFull 繧ｹ繧ｭ繝ｫ</title> <link rel=\"preconnect\" href=\"https://fonts.goo"
+      }
+    ],
+    "detail-trust-score.js": [
+      {
+        "pattern": "bare span>",
+        "line": 158,
+        "sample": "span><span class=\"tasu-trust-score__value\">${display.average}・・{display.total}莉ｶ・・
+      }
+    ],
+    "detail-worker.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 43,
+        "sample": "・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"signup.html\" class=\"link accent\">莨壼藤逋ｻ骭ｲ</a>縺ｧ500蜀・・ｽE繝昴う繝ｳ繝茨ｿｽE繝ｬ繧ｼ繝ｳ繝井ｸｭ・ｽE・ｽ"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 192,
+        "sample": "label> E/strong></div> </div> </div> </div>"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 43,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"signup.html\" class=\"link accent\">莨壼藤逋ｻ骭ｲ</a>縺ｧ500蜀・・ｽE繝昴う繝ｳ繝茨ｿｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 86,
+        "sample": "/button> <p class=\"skill-cta-panel__note\" data-listing-cta-note>縺皮嶌"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 43,
+        "sample": "E・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"signup.html\" class=\"link accent\">莨壼藤逋ｻ骭ｲ</a>縺ｧ500蜀・・ｽE繝昴う繝ｳ繝茨ｿｽE繝ｬ繧ｼ繝ｳ繝井ｸｭ・ｽE"
+      }
+    ],
+    "detail.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ隧ｳ邏ｰ縺ｸ遘ｻ蜍穂ｸｭ | TasuFull</title> <script> window.location.replace(\"detail-pro"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ隧ｳ邏ｰ縺ｸ遘ｻ蜍穂ｸｭ | TasuFull</title> <script> window.location.replace(\"detail-pr"
+      }
+    ],
+    "detail.js": [
+      {
+        "pattern": "bare span>",
+        "line": 117,
+        "sample": "span>`; } else if (elements.price) { elements.price.textContent = da"
+      }
+    ],
+    "favorites-list.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 14,
+        "sample": "・ｽ・ｽ縺ｸ繧医≧縺薙◎ </div> </div> <div class=\"page\" style=\"max-width:960px;margin:0"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 14,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ </div> </div> <div class=\"page\" style=\"max-width:960px"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 14,
+        "sample": "E・ｽ・ｽ縺ｸ繧医≧縺薙◎ </div> </div> <div class=\"page\" style=\"max-width:960px;margin:"
+      }
+    ],
+    "favorites-list.js": [
+      {
+        "pattern": "/button>",
+        "line": 330,
+        "sample": "/button> </article> `; targetList.appendChild(li); }"
+      }
+    ],
+    "gen-ai-workspace.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽEAI繝ｯ繝ｼ繧ｯ繧ｹ繝夲ｿｽE繧ｹ | TASFUL</title> <meta name=\"description\" content=\"TASFUL 逕滂ｿｽEAI繝ｯ繝ｼ"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 67,
+        "sample": "label> <select id=\"genAiCharacterSelect\" class=\"chat-area__character"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 26,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 34,
+        "sample": "/button> </div> <span class=\"gen-ai-usage-status__detail\" da"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "・ｽEAI繝ｯ繝ｼ繧ｯ繧ｹ繝夲ｿｽE繧ｹ | TASFUL</title> <meta name=\"description\" content=\"TASFUL 逕滂ｿｽEAI繝ｯ繝ｼ"
+      }
+    ],
+    "gen-ai-workspace.js": [
+      {
+        "pattern": "bare span>",
+        "line": 1639,
+        "sample": "span>${label}:</span> ${escapeHtml(v)}</p>`); }; push(\"taskId\", data.tas"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 4160,
+        "sample": "</button>` } </article>`; }), ].join(\"\"); cards"
+      },
+      {
+        "pattern": "/button>",
+        "line": 4160,
+        "sample": "/button>` } </article>`; }), ].join(\"\"); cardsH"
+      }
+    ],
+    "index-home.js": [
+      {
+        "pattern": "bare span>",
+        "line": 477,
+        "sample": "span>`; } function resolvePrimaryImageUrl(row) { try { const"
+      },
+      {
+        "pattern": "/button>",
+        "line": 927,
+        "sample": "/button> <span class=\"featured-badge\">PR</span> <div class=\"fe"
+      }
+    ],
+    "index-top.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 7,
+        "sample": "・ｽ・ｽ・ｽk・ｽE・ｽf・ｽﾚ厄ｿｽ・ｽ・ｽ・ｽE・ｽ瘟ｿ・ｽi・ｽB・ｽﾖ暦ｿｽ・ｽﾅ、・ｽ・ｽ・ｽ・ｽ・ｽn・ｽﾟゑｿｽ・ｽ・ｽ}・ｽ[・ｽP・ｽb・ｽg・ｽv・ｽ・ｽ・ｽC・ｽX・ｽB\"> <link rel=\"preconn"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 252,
+        "sample": "label> <input id=\"heroSearch\" class=\"top-search__input\" type=\"search"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 20,
+        "sample": "span> <p class=\"top-pr-banner__text\"> <strong>AI・ｽ・ｽ・ｽk・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽ・ｽｳ暦ｿｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 256,
+        "sample": "/button> </form> <div class=\"top-search__tags\">"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 7,
+        "sample": "・ｽE・ｽf・ｽﾚ厄ｿｽ・ｽ・ｽ・ｽE・ｽ瘟ｿ・ｽi・ｽB・ｽﾖ暦ｿｽ・ｽﾅ、・ｽ・ｽ・ｽ・ｽ・ｽn・ｽﾟゑｿｽ・ｽ・ｽ}・ｽ[・ｽP・ｽb・ｽg・ｽv・ｽ・ｽ・ｽC・ｽX・ｽB\"> <link rel=\"preconnect\""
+      }
+    ],
+    "index.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 7,
+        "sample": "・ｽ・ｽ繝ｻ繧ｹ繧ｭ繝ｫ繝ｻ豎ゆｺｺ繝ｻ繝ｯ繝ｼ繧ｫ繝ｼ縺瑚ｦ九▽縺九ｋ繝橸ｿｽE繧ｱ繝・・ｽ・ｽ繝励Ξ繧､繧ｹ縲・> <link rel=\"preconnect\" href=\"https://fonts."
+      },
+      {
+        "pattern": "bare label>",
+        "line": 147,
+        "sample": "label> <button type=\"submit\" class=\"latest-search-form__btn\" dat"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 27,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 68,
+        "sample": "/button> </form> <div class=\"home-tags\" data-home-popular ar"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 7,
+        "sample": "E・ｽ・ｽ繝ｻ繧ｹ繧ｭ繝ｫ繝ｻ豎ゆｺｺ繝ｻ繝ｯ繝ｼ繧ｫ繝ｼ縺瑚ｦ九▽縺九ｋ繝橸ｿｽE繧ｱ繝・・ｽ・ｽ繝励Ξ繧､繧ｹ縲・> <link rel=\"preconnect\" href=\"https://fonts"
+      }
+    ],
+    "job-top-renderer.js": [
+      {
+        "pattern": "bare span>",
+        "line": 63,
+        "sample": "span>`; } return `<span class=\"job-list-avatar\" style=\"--job-avatar-bg"
+      },
+      {
+        "pattern": "/button>",
+        "line": 194,
+        "sample": "/button> </div>`; } function buildTableRowElement(item) { cons"
+      }
+    ],
+    "job-top.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 16,
+        "sample": "・ｽE繝・・ｽ・ｽ繝ｼ\"> <div class=\"job-top-header__inner\"> <div class=\"job-top-he"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 64,
+        "sample": "label> <input type=\"search\" id=\"jobTopKeyword\" name=\"keyword\" data-"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 26,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>"
+      },
+      {
+        "pattern": "bare legend>",
+        "line": 112,
+        "sample": "legend>蟇ｾ蠢懊お繝ｪ繧｢</legend> <input type=\"text\" name=\"area\" placeholde"
+      },
+      {
+        "pattern": "bare fieldset>",
+        "line": 114,
+        "sample": "fieldset> <fieldset class=\"job-top-filter__group\">"
+      },
+      {
+        "pattern": "/button>",
+        "line": 87,
+        "sample": "/button> </form> <div class=\"job-top-search__tags\">"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 16,
+        "sample": "・ｽE繝・・ｽ・ｽ繝ｼ\"> <div class=\"job-top-header__inner\"> <div class=\"job-top-he"
+      }
+    ],
+    "job.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 13,
+        "sample": "・ｽ・ｽ縺吶・a href=\"job-top.html\">job-top.html</a> 繧帝幕縺・・ｽ・ｽ縺上□縺輔＞縲・/p> </body> </html>"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 13,
+        "sample": "E・ｽ・ｽ縺吶・a href=\"job-top.html\">job-top.html</a> 繧帝幕縺・・ｽ・ｽ縺上□縺輔＞縲・/p> </body> </html>"
+      }
+    ],
+    "legacy-job.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽE・ｽ譌ｧ繧ｫ繝ｼ繝牙梛繝ｻ騾驕ｿ・ｽE・ｽE| TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts."
+      },
+      {
+        "pattern": "bare label>",
+        "line": 39,
+        "sample": "label> <select id=\"categorySort\" class=\"category-list-toolbar__sele"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 20,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "・ｽE・ｽ譌ｧ繧ｫ繝ｼ繝牙梛繝ｻ騾驕ｿ・ｽE・ｽE| TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts."
+      }
+    ],
+    "listing-detail-loader.js": [
+      {
+        "pattern": "bare span>",
+        "line": 694,
+        "sample": "span>`) .join(\"\"); host.hidden = false; } function renderWorkerDe"
+      }
+    ],
+    "listing-featured.js": [
+      {
+        "pattern": "bare span>",
+        "line": 347,
+        "sample": "span>\" + '<p class=\"listing-featured-status__text\">' + escapeHtml("
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 383,
+        "sample": "</button>\" + \"</div>\" ); } function buildModalPlanButtonsHtm"
+      },
+      {
+        "pattern": "/button>",
+        "line": 383,
+        "sample": "/button>\" + \"</div>\" ); } function buildModalPlanButtonsHtml"
+      }
+    ],
+    "listing-options.js": [
+      {
+        "pattern": "bare label>",
+        "line": 297,
+        "sample": "label> <label class=\"listing-option-field listing-option-field--wide\">"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 118,
+        "sample": "span> <h2 id=\"paidOptionsTitle\" class=\"paid-options-title\">譛画侭繧ｪ繝励す繝ｧ繝ｳ</"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 306,
+        "sample": "</button> `; row.querySelector(\"[data-option-remove]\")?.addEventListener"
+      },
+      {
+        "pattern": "/button>",
+        "line": 306,
+        "sample": "/button> `; row.querySelector(\"[data-option-remove]\")?.addEventListener("
+      }
+    ],
+    "listing-renderer.js": [
+      {
+        "pattern": "bare label>",
+        "line": 1597,
+        "sample": "label>窶・/span> </div> </div> <div class=\"premium-listi"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 236,
+        "sample": "span>${escapeHtml(stat.text)}</span>`; } function resolveCardDescription(li"
+      }
+    ],
+    "listing-seller-profile.js": [
+      {
+        "pattern": "bare span>",
+        "line": 785,
+        "sample": "span>'; return; } host.innerHTML = badges .map( (b)"
+      }
+    ],
+    "listing-top-spotlight.js": [
+      {
+        "pattern": "bare span>",
+        "line": 98,
+        "sample": "span> <span class=\"top-spotlight-ribbon__text\">${ribbonLabel}</span>"
+      }
+    ],
+    "order-complete.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ莠・| TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis.co"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 18,
+        "sample": "span> E縺疲ｳｨ譁・・ｽ・ｽ繧翫′縺ｨ縺・・ｽ・ｽ縺悶＞縺ｾ縺・ </div> </div> <main class=\"shop-checkout"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ莠・| TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis.c"
+      }
+    ],
+    "post-field-service-form.js": [
+      {
+        "pattern": "bare label>",
+        "line": 100,
+        "sample": "label> </div>`; } function buildFsCtaSwitchListHtml() { return"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 72,
+        "sample": "span><span>${escapeHtml(label)}</span></button>`; } function fsRemoveBtn"
+      },
+      {
+        "pattern": "bare legend>",
+        "line": 338,
+        "sample": "legend> <div class=\"post-fs-preset-tags\" data-fs-feature-presets></"
+      },
+      {
+        "pattern": "bare fieldset>",
+        "line": 337,
+        "sample": "fieldset> <legend class=\"post-field__legend\">繧医￥菴ｿ縺・音蠕ｴ・医け繝ｪ繝・け縺ｧ驕ｸ謚橸ｼ・/legen"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 72,
+        "sample": "</button>`; } function fsRemoveBtn(dataAttr, label = \"蜑企勁\") { return"
+      },
+      {
+        "pattern": "/button>",
+        "line": 72,
+        "sample": "/button>`; } function fsRemoveBtn(dataAttr, label = \"蜑企勁\") { return"
+      }
+    ],
+    "post-image-upload-slot.js": [
+      {
+        "pattern": "bare span>",
+        "line": 52,
+        "sample": "span> <p class=\"post-fs-field-hint\">${escapeHtml(hint)}</p> <d"
+      },
+      {
+        "pattern": "/button>",
+        "line": 67,
+        "sample": "/button> </div> <div class=\"post-main-upload__preview\" ${o"
+      }
+    ],
+    "post-shop-products.js": [
+      {
+        "pattern": "bare label>",
+        "line": 82,
+        "sample": "label> <label class=\"post-work-case__field\"> <span>蝠・刀繧ｫ繝・ざ"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 50,
+        "sample": "span></span> <span class=\"post-work-case__upload-hint\">逕ｻ蜒上ｒ驕ｸ謚槭＠縺ｦ繧｢繝・・繝ｭ繝ｼ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 46,
+        "sample": "/button> </header> <div class=\"post-work-case__grid\">"
+      }
+    ],
+    "post.html": [
+      {
+        "pattern": "bare label>",
+        "line": 59,
+        "sample": "label> <label class=\"post-category-pick__item\" data-general-type=\"p"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 20,
+        "sample": "span>繝励Λ繝・ヨ縺ｸ繧医≧縺薙◎ <a href=\"/post\" class=\"link\">莉頑怦繧ｷ繧ｹ繝・Β蛻ｩ逕ｨ譁・・・ｼ・/a> ・・
+      },
+      {
+        "pattern": "bare legend>",
+        "line": 426,
+        "sample": "legend> <div class=\"post-publish-options\"> <label cl"
+      },
+      {
+        "pattern": "bare fieldset>",
+        "line": 454,
+        "sample": "fieldset> </div> </section> <div data-general-only>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 88,
+        "sample": "/button> <button type=\"button\" class=\"post-type-card\" data-post-type"
+      }
+    ],
+    "post.js": [
+      {
+        "pattern": "bare label>",
+        "line": 1571,
+        "sample": "label> <label class=\"post-work-case__field post-work-case__field--full"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 1569,
+        "sample": "span>莠倶ｾ九ち繧､繝医Ν</span> <input type=\"text\" data-work-case-title maxlength"
+      },
+      {
+        "pattern": "/button>",
+        "line": 1565,
+        "sample": "/button> <h3 class=\"post-fs-repeater-block__label\">莠倶ｾ・${count + 1}</h3>"
+      }
+    ],
+    "product.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ荳隕ｧ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis."
+      },
+      {
+        "pattern": "bare label>",
+        "line": 39,
+        "sample": "label> <select id=\"categorySort\" class=\"category-list-toolbar__selec"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 21,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <a"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ荳隕ｧ | TasuFull</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis"
+      }
+    ],
+    "profile-settings.html": [
+      {
+        "pattern": "bare label>",
+        "line": 65,
+        "sample": "label> <input class=\"dash-field__input\" id=\"profileNickname\" typ"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 33,
+        "sample": "span> <span class=\"dash-header-link__badge\" data-dash-msg-badge hi"
+      },
+      {
+        "pattern": "/button>",
+        "line": 27,
+        "sample": "/button> <h1 class=\"dash-header__title\">繝励Ο繝輔ぅ繝ｼ繝ｫ險ｭ螳・/h1> </di"
+      }
+    ],
+    "scripts\\_ranking-sections.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 8,
+        "sample": "・ｽE謗ｲ霈・>窶ｹ</button> <div class=\"top-ranking__track ranking-slider\" data-r"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 12,
+        "sample": "span> <span class=\"top-rank-card__tag ranking-tag\">繧ｹ繧ｭ繝ｫ</span>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 8,
+        "sample": "/button> <div class=\"top-ranking__track ranking-slider\" data-ranking-t"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 8,
+        "sample": "・ｽE謗ｲ霈・>窶ｹ</button> <div class=\"top-ranking__track ranking-slider\" data-r"
+      }
+    ],
+    "scripts\\build-detail-premium-pages.mjs": [
+      {
+        "pattern": "bare label>",
+        "line": 201,
+        "sample": "label>窶・/strong></div> </div> </div> </div>"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 85,
+        "sample": "span> <span class=\"skill-cta-panel__tax\">・育ｨ手ｾｼ・・/span>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 119,
+        "sample": "/button> <p class=\"skill-cta-panel__note\" data-listing-cta-note>${"
+      }
+    ],
+    "scripts\\build-ranking-html.mjs": [
+      {
+        "pattern": "bare span>",
+        "line": 3,
+        "sample": "span>` : \"\"; return ` <a href=\"${href}\" class=\"top-rank-card rankin"
+      },
+      {
+        "pattern": "/button>",
+        "line": 62,
+        "sample": "/button> <div class=\"top-ranking__track ranking-slider\" data-ranking-t"
+      }
+    ],
+    "scripts\\merge-post-latest-flows.mjs": [
+      {
+        "pattern": "bare label>",
+        "line": 38,
+        "sample": "label> <select id=\"${id}\" name=\"${name}\" class=\"post-select\" data-category-ext"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 53,
+        "sample": "span>蝠・刀繝ｻ迚ｩ雋ｩ繝ｻ鬟ｲ鬟溘・髮題ｲｨ縺ｪ縺ｩ</span> </button> <button type=\"button"
+      },
+      {
+        "pattern": "/button>",
+        "line": 54,
+        "sample": "/button> <button type=\"button\" class=\"post-type-card\" data-post-type"
+      }
+    ],
+    "scripts\\patch-post-fs-sections-terms.mjs": [
+      {
+        "pattern": "bare label>",
+        "line": 76,
+        "sample": "label>${nl} <select id=\"bizPrPlan\" name=\"bizPrPlan\" class=\"post-sel"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 26,
+        "sample": "span> 蟇ｾ蠢懊Γ繝九Η繝ｼ </h2> <p class=\"p"
+      },
+      {
+        "pattern": "/button>",
+        "line": 35,
+        "sample": "/button> <span class=\"post-field__hint\">繝｡繝九Η繝ｼ蜷阪・譁咎≡繝ｻ隱ｬ譏弱ｒ蜈･蜉帙＠縺ｦ縺上□縺輔＞・井ｾ具ｼ壽ｰｴ"
+      }
+    ],
+    "scripts\\patch-post-payment-terms.mjs": [
+      {
+        "pattern": "bare label>",
+        "line": 32,
+        "sample": "label> <input type=\"url\" id=\"bizPaymentU"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 25,
+        "sample": "span> 豎ｺ貂域ュ蝣ｱ </h2> <p class=\"post-section__desc\">莉ｻ"
+      }
+    ],
+    "scripts\\repair-post-html.mjs": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 12,
+        "sample": "・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽ\", \"莉頑怦繧ｷ繧ｹ繝・Β蛻ｩ逕ｨ譁兔"], [\"AI辟｡譁吶く繝｣繝ｳ繝夲ｿｽE繝ｳ荳ｭ\", \"AI辟｡譁吶く繝｣繝ｳ繝壹・繝ｳ荳ｭ\"], [\"繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎\""
+      },
+      {
+        "pattern": "bare label>",
+        "line": 236,
+        "sample": "label>/gi, \"E/label>\"], [/E\\/p>/gi, \"E/p>\"], [/E\\/span>/gi, \"E/span>\"],"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 193,
+        "sample": "span>/g, \"蠢・・/span>\"); out = out.replace(/笳・\\/span>/g, \"笳・/span>\"); out = o"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 12,
+        "sample": "E・ｽ・ｽ蛻ｩ逕ｨ譁・・ｽE・ｽE・ｽ・ｽ\", \"莉頑怦繧ｷ繧ｹ繝・Β蛻ｩ逕ｨ譁兔"], [\"AI辟｡譁吶く繝｣繝ｳ繝夲ｿｽE繝ｳ荳ｭ\", \"AI辟｡譁吶く繝｣繝ｳ繝壹・繝ｳ荳ｭ\"], [\"繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎"
+      }
+    ],
+    "scripts\\restore-dashboard.mjs": [
+      {
+        "pattern": "bare span>",
+        "line": 40,
+        "sample": "span> <span class=\"dash-header-link__badge\" data-dash-msg-badge hi"
+      },
+      {
+        "pattern": "/button>",
+        "line": 34,
+        "sample": "/button> <h1 class=\"dash-header__title\">\\u4F1A\\u54E1\\u30DA\\u30FC\\u30"
+      }
+    ],
+    "scripts\\restore-member-settings-pages.mjs": [
+      {
+        "pattern": "bare label>",
+        "line": 104,
+        "sample": "label> <input class=\"dash-field__input\" id=\"profileNickname\" typ"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 56,
+        "sample": "span> <span class=\"dash-header-link__badge\" data-dash-msg-badge hi"
+      },
+      {
+        "pattern": "/button>",
+        "line": 50,
+        "sample": "/button> <h1 class=\"dash-header__title\">${headerTitle}</h1>"
+      }
+    ],
+    "scripts\\restore-signup.mjs": [
+      {
+        "pattern": "bare label>",
+        "line": 102,
+        "sample": "label><input class=\"signup-field__input\" type=\"email\" id=\"signup-email\" name=\"em"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 25,
+        "sample": "span> <span class=\"sub\">\\u30D7\\u30E9\\u30C3\\u30C8\\u30D5\\u30A9\\u30FC\\u30"
+      },
+      {
+        "pattern": "/button>",
+        "line": 96,
+        "sample": "/button> <button type=\"button\" class=\"signup-tabs__btn\" role=\"tab\" i"
+      }
+    ],
+    "scripts\\site-wide-diagnostic.mjs": [
+      {
+        "pattern": "?????",
+        "line": 26,
+        "sample": "?????\" }, { id: \"replacement_char\", re: /\\uFFFD|・ｽ/, label: \"U+FFFD / ・ｽ\" }, {"
+      },
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 27,
+        "sample": "・ｽ/, label: \"U+FFFD / ・ｽ\" }, { id: \"broken_label\", re: /(?<![<\\w])label>/, label"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 28,
+        "sample": "label>/, label: \"bare label>\" }, { id: \"broken_span\", re: /(?<![<\\w])span>/, l"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 29,
+        "sample": "span>/, label: \"bare span>\" }, { id: \"broken_legend\", re: /(?<![<\\w])legend>/,"
+      },
+      {
+        "pattern": "bare legend>",
+        "line": 30,
+        "sample": "legend>/, label: \"bare legend>\" }, { id: \"broken_fieldset\", re: /(?<![<\\w])fie"
+      },
+      {
+        "pattern": "bare fieldset>",
+        "line": 31,
+        "sample": "fieldset>/, label: \"bare fieldset>\" }, { id: \"broken_close_button\", re: /<\\/bu"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 32,
+        "sample": "</button>\" }, { id: \"broken_slash_button\", re: /\\/button>/, label: \"/button>\""
+      },
+      {
+        "pattern": "/button>",
+        "line": 32,
+        "sample": "/button>(?!\\s*<)/, label: \"stray </button>\" }, { id: \"broken_slash_button\", re"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 34,
+        "sample": "E・ｽ|・ｽE|ﾃポﾃ・ﾃ｣|ﾃｯﾂｿﾂｽ/, label: \"encoding mojibake fragments\" }, ]; function walk(dir,"
+      }
+    ],
+    "scripts\\update-tasful-logo.mjs": [
+      {
+        "pattern": "bare span>",
+        "line": 16,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>`; c"
+      }
+    ],
+    "scripts\\validate-post-html.mjs": [
+      {
+        "pattern": "bare label>",
+        "line": 14,
+        "sample": "label>\", \"E/p>\", \"E/span>\", \"\\uFFFD\", \"E/option\", \"蟇ｾ蠢―", \"逶ｸ隲―", ]; for"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 16,
+        "sample": "span>\", \"\\uFFFD\", \"E/option\", \"蟇ｾ蠢―", \"逶ｸ隲―", ]; for (const p of patterns) {"
+      }
+    ],
+    "scripts\\wrap-ranking-cards.mjs": [
+      {
+        "pattern": "bare span>",
+        "line": 15,
+        "sample": "span>)\\s*<span class=\"top-mini-rank__title\">/g, '$1<span class=\"ranking-body\""
+      }
+    ],
+    "service-fee-pay.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ謨ｰ譁呻ｿｽE縺頑髪謇輔＞</title> <link rel=\"stylesheet\" href=\"style.css\"> <link rel=\"sty"
+      },
+      {
+        "pattern": "/button>",
+        "line": 37,
+        "sample": "/button> </div> <div class=\"bsf-payment__block\" style=\"margin-to"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ謨ｰ譁呻ｿｽE縺頑髪謇輔＞</title> <link rel=\"stylesheet\" href=\"style.css\"> <link rel=\"st"
+      }
+    ],
+    "shop-products-page.js": [
+      {
+        "pattern": "bare label>",
+        "line": 462,
+        "sample": "label>` ) .join(\"\"); } function renderSidebarFilters() {"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 385,
+        "sample": "span> <a href=\"${escAttr(buildDetailUrl(shop.id))}\">${esc(name)}</a>"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 444,
+        "sample": "</button> <span class=\"shop-products-favorite-count\" aria-label=\"縺頑ｰ励↓蜈･繧・"
+      },
+      {
+        "pattern": "/button>",
+        "line": 444,
+        "sample": "/button> <span class=\"shop-products-favorite-count\" aria-label=\"縺頑ｰ励↓蜈･繧・{"
+      }
+    ],
+    "shop-products.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽ・ｽ荳隕ｧ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis.c"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 20,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"shop-store.html\" class=\"link\">蠎暦ｿｽE繝ｻ雋ｩ螢ｲ荳隕ｧ</a> ・ｽE・ｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 86,
+        "sample": "/button> </div> <h2 class=\"shop-products-sidebar__title\""
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "E・ｽ・ｽ荳隕ｧ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.googleapis."
+      }
+    ],
+    "shop-store-page.js": [
+      {
+        "pattern": "bare span>",
+        "line": 673,
+        "sample": "span>`) .join(\"\"); return `<article class=\"shop-store-card shop-st"
+      },
+      {
+        "pattern": "stray </button>",
+        "line": 688,
+        "sample": "</button> ${detailDisabled ? \"\" : buildHeroOverlayThumbsHtml(listing, d"
+      },
+      {
+        "pattern": "/button>",
+        "line": 688,
+        "sample": "/button> ${detailDisabled ? \"\" : buildHeroOverlayThumbsHtml(listing, de"
+      }
+    ],
+    "shop-store.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 6,
+        "sample": "・ｽE繝ｻ雋ｩ螢ｲ・ｽE・ｽ蟆る摩蠎暦ｼ我ｸ隕ｧ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.go"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 115,
+        "sample": "label> <input type=\"search\" id=\"shopStoreKeyword\" name=\"keyword\" pl"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 19,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"business.html\" class=\"link\">豕穂ｺｺ繝ｻ讌ｭ閠・・ｽ・ｽ隕ｧ</a> ・ｽE・ｽ"
+      },
+      {
+        "pattern": "/button>",
+        "line": 136,
+        "sample": "/button> </form> <div class=\"shop-store-quicktags\" aria-label="
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 6,
+        "sample": "・ｽE繝ｻ雋ｩ螢ｲ・ｽE・ｽ蟆る摩蠎暦ｼ我ｸ隕ｧ | TASFUL</title> <link rel=\"preconnect\" href=\"https://fonts.go"
+      }
+    ],
+    "signup.html": [
+      {
+        "pattern": "bare label>",
+        "line": 97,
+        "sample": "label><input class=\"signup-field__input\" type=\"email\" id=\"signup-email\" name=\"em"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 20,
+        "sample": "span> <span class=\"sub\">繝励Λ繝・ヨ繝輔か繝ｼ繝</span> </div> </a>"
+      },
+      {
+        "pattern": "/button>",
+        "line": 91,
+        "sample": "/button> <button type=\"button\" class=\"signup-tabs__btn\" role=\"tab\" i"
+      }
+    ],
+    "skill.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 20,
+        "sample": "・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <a href=\"ind"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 38,
+        "sample": "label> <select id=\"categorySort\" class=\"category-list-toolbar__selec"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 20,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <a"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 20,
+        "sample": "E・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <a href=\"in"
+      }
+    ],
+    "worker-card.js": [
+      {
+        "pattern": "bare span>",
+        "line": 26,
+        "sample": "span>' : \"\"; const categoriesHtml = (data.categories ?? [])"
+      },
+      {
+        "pattern": "/button>",
+        "line": 55,
+        "sample": "/button> <article class=\"worker-card\" data-category=\"wo"
+      }
+    ],
+    "worker.html": [
+      {
+        "pattern": "U+FFFD / ・ｽ",
+        "line": 20,
+        "sample": "・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <a href=\"i"
+      },
+      {
+        "pattern": "bare label>",
+        "line": 38,
+        "sample": "label> <select id=\"categorySort\" class=\"category-list-toolbar__sele"
+      },
+      {
+        "pattern": "bare span>",
+        "line": 20,
+        "sample": "span>繝励Λ繝・・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <"
+      },
+      {
+        "pattern": "encoding mojibake fragments",
+        "line": 20,
+        "sample": "E・ｽ・ｽ縺ｸ繧医≧縺薙◎ <a href=\"post.html\" class=\"link\">謗ｲ霈峨☆繧・/a> ・ｽE・ｽ <a href=\""
+      }
+    ]
+  },
+  "largeGitDiffs": [
+    {
+      "rel": "top.css",
+      "added": 3511,
+      "deleted": 1706,
+      "changed": true,
+      "total": 5217
+    },
+    {
+      "rel": "post.js",
+      "added": 3477,
+      "deleted": 181,
+      "changed": true,
+      "total": 3658
+    },
+    {
+      "rel": "index-top.html",
+      "added": 649,
+      "deleted": 911,
+      "changed": true,
+      "total": 1560
+    },
+    {
+      "rel": "post.css",
+      "added": 1054,
+      "deleted": 23,
+      "changed": true,
+      "total": 1077
+    },
+    {
+      "rel": "listing-renderer.js",
+      "added": 990,
+      "deleted": 71,
+      "changed": true,
+      "total": 1061
+    },
+    {
+      "rel": "index.html",
+      "added": 324,
+      "deleted": 712,
+      "changed": true,
+      "total": 1036
+    },
+    {
+      "rel": "business-listings-db.js",
+      "added": 967,
+      "deleted": 52,
+      "changed": true,
+      "total": 1019
+    },
+    {
+      "rel": "detail-job.css",
+      "added": 881,
+      "deleted": 0,
+      "changed": true,
+      "total": 881
+    },
+    {
+      "rel": "post.html",
+      "added": 511,
+      "deleted": 82,
+      "changed": true,
+      "total": 593
+    },
+    {
+      "rel": "listing-featured.js",
+      "added": 377,
+      "deleted": 187,
+      "changed": true,
+      "total": 564
+    },
+    {
+      "rel": "listing-detail-loader.js",
+      "added": 477,
+      "deleted": 53,
+      "changed": true,
+      "total": 530
+    },
+    {
+      "rel": "listing-list-card.css",
+      "added": 373,
+      "deleted": 35,
+      "changed": true,
+      "total": 408
+    },
+    {
+      "rel": "detail-business.html",
+      "added": 381,
+      "deleted": 18,
+      "changed": true,
+      "total": 399
+    },
+    {
+      "rel": "listing-featured.css",
+      "added": 190,
+      "deleted": 127,
+      "changed": true,
+      "total": 317
+    },
+    {
+      "rel": "chat-supabase.js",
+      "added": 293,
+      "deleted": 0,
+      "changed": true,
+      "total": 293
+    },
+    {
+      "rel": "business.html",
+      "added": 245,
+      "deleted": 42,
+      "changed": true,
+      "total": 287
+    },
+    {
+      "rel": "detail-skill.html",
+      "added": 115,
+      "deleted": 117,
+      "changed": true,
+      "total": 232
+    },
+    {
+      "rel": "detail-job.js",
+      "added": 64,
+      "deleted": 150,
+      "changed": true,
+      "total": 214
+    }
+  ],
+  "topSuspectFiles": [
+    {
+      "rel": "index-top.html",
+      "score": 121.2,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=830 close=721",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 1560
+    },
+    {
+      "rel": "business.html",
+      "score": 115.74,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "bare legend>",
+        "bare fieldset>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=228 close=155",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 287
+    },
+    {
+      "rel": "index.html",
+      "score": 110.72,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=273 close=184",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 1036
+    },
+    {
+      "rel": "job-top.html",
+      "score": 110,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "bare legend>",
+        "bare fieldset>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=163 close=122",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "post.html",
+      "score": 101.86,
+      "inGitHead": true,
+      "patterns": [
+        "bare label>",
+        "bare span>",
+        "bare legend>",
+        "bare fieldset>",
+        "/button>"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=989 close=879",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 593
+    },
+    {
+      "rel": "chat-detail.html",
+      "score": 100,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "bare fieldset>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=126 close=98",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "detail-business.html",
+      "score": 97.98,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=268 close=218",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 399
+    },
+    {
+      "rel": "detail-skill.html",
+      "score": 94.64,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=343 close=237",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 232
+    },
+    {
+      "rel": "ai-workspace.html",
+      "score": 90,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=108 close=78",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "detail-business-service.html",
+      "score": 90,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=269 close=206",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "detail-job.html",
+      "score": 90,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=232 close=175",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "detail-product.html",
+      "score": 90,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=234 close=167",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "detail-shop-product.html",
+      "score": 90,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=57 close=41"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "detail-worker.html",
+      "score": 90,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=209 close=155",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "gen-ai-workspace.html",
+      "score": 90,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=241 close=177",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "scripts\\site-wide-diagnostic.mjs",
+      "score": 90,
+      "inGitHead": false,
+      "patterns": [
+        "?????",
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "bare legend>",
+        "bare fieldset>",
+        "stray </button>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "diffLines": 0
+    },
+    {
+      "rel": "shop-store.html",
+      "score": 90,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=184 close=119",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "_worker_shared_sections.html",
+      "score": 80,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=157 close=113",
+        "missing_doctype_or_html"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "checkout.html",
+      "score": 80,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=56 close=36"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "detail-shop.html",
+      "score": 80,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=222 close=167",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "legacy-job.html",
+      "score": 80,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=53 close=34",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "post.js",
+      "score": 80,
+      "inGitHead": true,
+      "patterns": [
+        "bare label>",
+        "bare span>",
+        "/button>"
+      ],
+      "parseFail": false,
+      "diffLines": 3658
+    },
+    {
+      "rel": "product.html",
+      "score": 80,
+      "inGitHead": true,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=53 close=35",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "scripts\\_ranking-sections.html",
+      "score": 80,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=276 close=199",
+        "missing_doctype_or_html",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    },
+    {
+      "rel": "shop-products.html",
+      "score": 80,
+      "inGitHead": false,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "parseFail": false,
+      "structural": [
+        "tag_count_skew open=112 close=81",
+        "head_tag_mismatch"
+      ],
+      "diffLines": 0
+    }
+  ],
+  "restoreFromGitHead": [
+    {
+      "rel": "index-top.html",
+      "score": 121.2,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "business.html",
+      "score": 115.74,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "bare legend>",
+        "bare fieldset>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "index.html",
+      "score": 110.72,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "post.html",
+      "score": 101.86,
+      "patterns": [
+        "bare label>",
+        "bare span>",
+        "bare legend>",
+        "bare fieldset>",
+        "/button>"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "chat-detail.html",
+      "score": 100,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "bare fieldset>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "detail-business.html",
+      "score": 97.98,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "detail-skill.html",
+      "score": 94.64,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "detail-job.html",
+      "score": 90,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "detail-product.html",
+      "score": 90,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "detail-worker.html",
+      "score": 90,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "_worker_shared_sections.html",
+      "score": 80,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "/button>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "product.html",
+      "score": 80,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "skill.html",
+      "score": 80,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "worker.html",
+      "score": 80,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare label>",
+        "bare span>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "chat-list.html",
+      "score": 70,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    },
+    {
+      "rel": "favorites-list.html",
+      "score": 70,
+      "patterns": [
+        "U+FFFD / ・ｽ",
+        "bare span>",
+        "encoding mojibake fragments"
+      ],
+      "reason": "High corruption score + tracked in HEAD 窶・restore then re-apply patches"
+    }
+  ],
+  "handFixMaybe": [
+    {
+      "rel": "post.css",
+      "score": 21.54
+    },
+    {
+      "rel": "listing-detail-loader.js",
+      "score": 20.6
+    },
+    {
+      "rel": "business-listings-db.js",
+      "score": 20.38
+    },
+    {
+      "rel": "detail-business-service-sticky-nav.js",
+      "score": 20
+    },
+    {
+      "rel": "detail.html",
+      "score": 20
+    },
+    {
+      "rel": "index-home.js",
+      "score": 20
+    },
+    {
+      "rel": "job-top-renderer.js",
+      "score": 20
+    },
+    {
+      "rel": "job.html",
+      "score": 20
+    },
+    {
+      "rel": "post-image-upload-slot.js",
+      "score": 20
+    },
+    {
+      "rel": "scripts\\build-ranking-html.mjs",
+      "score": 20
+    },
+    {
+      "rel": "scripts\\patch-post-payment-terms.mjs",
+      "score": 20
+    },
+    {
+      "rel": "scripts\\restore-dashboard.mjs",
+      "score": 20
+    },
+    {
+      "rel": "scripts\\validate-post-html.mjs",
+      "score": 20
+    },
+    {
+      "rel": "worker-card.js",
+      "score": 20
+    },
+    {
+      "rel": "detail-job.css",
+      "score": 17.62
+    },
+    {
+      "rel": "business-board-page.js",
+      "score": 10
+    },
+    {
+      "rel": "business-wording.js",
+      "score": 10
+    },
+    {
+      "rel": "chat-list.js",
+      "score": 10
+    },
+    {
+      "rel": "detail-shop-product-page.js",
+      "score": 10
+    },
+    {
+      "rel": "detail-trust-score.js",
+      "score": 10
+    }
+  ],
+  "untrackedHtml": [
+    "account-settings.html",
+    "ai-top.html",
+    "ai-workspace.html",
+    "business-portal.html",
+    "business-ui-preview.html",
+    "checkout.html",
+    "dashboard.html",
+    "detail-business-service.html",
+    "detail-shop-product.html",
+    "detail-shop.html",
+    "dist/index.html",
+    "gen-ai-workspace.html",
+    "job-top.html",
+    "legacy-job.html",
+    "order-complete.html",
+    "profile-settings.html",
+    "scripts/_ranking-sections.html",
+    "service-fee-pay.html",
+    "shop-products.html",
+    "shop-store.html",
+    "signup.html"
+  ],
+  "missingDirs": {
+    "assets/js": false,
+    "css": false,
+    "styles": false
+  }
+}

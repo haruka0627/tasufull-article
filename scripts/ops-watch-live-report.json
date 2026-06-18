@@ -1,0 +1,392 @@
+{
+  "deployed": true,
+  "runs": [
+    {
+      "category": "openai",
+      "ok": true,
+      "search": {
+        "used": true,
+        "failed": false,
+        "query": "OpenAI API pricing model release announcement 2025 2026",
+        "resultCount": 5,
+        "message": "",
+        "fallback_used": false
+      },
+      "notify": {
+        "skipped": false,
+        "notificationId": "talk-n-1780571130558-08mdvdu",
+        "created": true
+      },
+      "card": {
+        "id": "ops-watch-1780571130557-hqv6xa",
+        "categoryId": "openai",
+        "categoryLabel": "OpenAI",
+        "headline": "OpenAI: API Pricing - OpenAI",
+        "summary": "Web検索で 5 件を取得。Explore OpenAI API pricing for GPT-5.5, multimodal models, and tools ... Starting March 31, 2026: 1 GB for $0.03 / 64GB for $1.92 per 20-minute session ...",
+        "importance": "medium",
+        "tasfulImpact": "AIワークスペース・TALK AI下書き・検索オーケストレータのモデル連携。変更点は公式一次情報で突合してください。",
+        "recommendedAction": "変更点を週次レビューに載せ、コスト・規約差分を確認。",
+        "introductionProposal": "【導入提案】March が検索スニペットで複数回検出されました。TASFULの OpenAI 連携（AIワークスペース・TALK AI下書き・検索オーケストレータのモデル連携）で POC 検討を推奨します。",
+        "isNewService": true,
+        "newServiceName": "March",
+        "searchQuery": "OpenAI API pricing model release announcement 2025 2026",
+        "searchUsed": true,
+        "searchResultCount": 5,
+        "sources": [
+          {
+            "title": "API Pricing - OpenAI",
+            "url": "https://openai.com/api/pricing/",
+            "snippet": "Explore OpenAI API pricing for GPT-5.5, multimodal models, and tools ... Starting March 31, 2026: 1 GB for $0.03 / 64GB for $1.92 per 20-minute session ..."
+          },
+          {
+            "title": "Pricing | OpenAI API",
+            "url": "https://developers.openai.com/api/docs/pricing",
+            "snippet": "Regional processing (data residency) endpoints are charged a 10% uplift for models released on or after March 5, 2026, that are eligible for data residency."
+          },
+          {
+            "title": "OpenAI API Pricing (Updated 2026) – All Models & Token Costs",
+            "url": "https://pricepertoken.com/pricing-page/provider/openai",
+            "snippet": "Model Release Timeline 15 releases o3 Deep Research Oct 2025 o3 Deep Research $10.00 / $40.00. GPT-5.5 Pro $5.00 releases Oct 2025→Apr. Compare pricing for all ..."
+          },
+          {
+            "title": "OpenAI API prices fall before Mar 14, 2026? - Metaculus",
+            "url": "https://www.metaculus.com/questions/41336/openai-api-prices-fall-before-mar-14-2026/",
+            "snippet": "OpenAI API token prices will drop before March 14, 2026. the new model has not yet been updated to Open AI's developer API pricing table. 5 API ..."
+          },
+          {
+            "title": "OpenAI API Pricing 2026: GPT-5.5, o4-mini, o3 Cost Guide | metacto",
+            "url": "https://www.metacto.com/blogs/unlocking-the-true-cost-of-openai-api-a-deep-dive-into-usage-integration-and-maintenance",
+            "snippet": "OpenAI API pricing May 2026: GPT-5.5 at $5/$30, GPT-5.4 at $2.50/$15, o4-mini at $0.55/$2.20 per 1M tokens. Complete cost breakdown with ..."
+          }
+        ],
+        "fingerprint": "fp-openai-1p9r101",
+        "notificationId": "",
+        "notifiedAt": null,
+        "createdAt": "2026-06-04T11:05:30.557Z",
+        "analyzerProvider": "template",
+        "analysisSource": "template",
+        "searchFailed": false
+      }
+    },
+    {
+      "category": "stripe",
+      "ok": true,
+      "search": {
+        "used": true,
+        "failed": false,
+        "query": "Stripe payments API fee policy update announcement 2025 2026",
+        "resultCount": 5,
+        "message": "",
+        "fallback_used": false
+      },
+      "notify": {
+        "skipped": false,
+        "notificationId": "talk-n-1780571143916-i1vv4b9",
+        "created": true
+      },
+      "card": {
+        "id": "ops-watch-1780571143915-ohvvya",
+        "categoryId": "stripe",
+        "categoryLabel": "Stripe",
+        "headline": "Stripe: Our top product updates from Session",
+        "summary": "Web検索で 5 件を取得。This post recaps the top announcements and product releases. For a more detailed list of what's new since Sessions last year, see our changelog.",
+        "importance": "medium",
+        "tasfulImpact": "決済手数料・Checkout・プラットフォーム収益。変更点は公式一次情報で突合してください。",
+        "recommendedAction": "変更点を週次レビューに載せ、コスト・規約差分を確認。",
+        "introductionProposal": "【導入提案】For が検索スニペットで複数回検出されました。TASFULの Stripe 連携（決済手数料・Checkout・プラットフォーム収益）で POC 検討を推奨します。",
+        "isNewService": true,
+        "newServiceName": "For",
+        "searchQuery": "Stripe payments API fee policy update announcement 2025 2026",
+        "searchUsed": true,
+        "searchResultCount": 5,
+        "sources": [
+          {
+            "title": "Our top product updates from Sessions 2025 - Stripe",
+            "url": "https://stripe.com/blog/top-product-updates-sessions-2025",
+            "snippet": "This post recaps the top announcements and product releases. For a more detailed list of what's new since Sessions last year, see our changelog."
+          },
+          {
+            "title": "Stripe User Terms Update - November 18, 2025",
+            "url": "https://support.stripe.com/questions/stripe-user-terms-update-november-18-2025",
+            "snippet": "For most existing Stripe users, the updated terms will take effect on March 1, 2026. Exception: If your notification specified that the terms ..."
+          },
+          {
+            "title": "August 2025 Subscription Pricing Updates for Revenue Recognition",
+            "url": "https://support.stripe.com/questions/august-2025-subscription-pricing-updates-for-revenue-recognition",
+            "snippet": "Your continued use of Stripe services after August 19, 2026, is subject to these fee changes. Any termination rights you have under your ..."
+          },
+          {
+            "title": "Pricing & Fees - Stripe",
+            "url": "https://stripe.com/pricing",
+            "snippet": "Find Stripe fees and pricing information. Find our processing fees for credit cards, pricing models and pay-as-you-go fees for businesses."
+          },
+          {
+            "title": "Guide to Stripe Fees & Rates For 2025 - SwipeSum",
+            "url": "https://www.swipesum.com/insights/guide-to-stripe-fees-rates-for-2025",
+            "snippet": "As of October 2025, Stripe charges 2.9% + 30¢ for domestic card transactions, 3.1% + 30¢ for international cards, plus a 1.5% cross-border fee."
+          }
+        ],
+        "fingerprint": "fp-stripe-65kf5i",
+        "notificationId": "",
+        "notifiedAt": null,
+        "createdAt": "2026-06-04T11:05:43.915Z",
+        "analyzerProvider": "template",
+        "analysisSource": "template",
+        "searchFailed": false
+      }
+    },
+    {
+      "category": "cursor",
+      "ok": true,
+      "search": {
+        "used": true,
+        "failed": false,
+        "query": "Cursor IDE pricing feature release announcement 2025 2026",
+        "resultCount": 5,
+        "message": "",
+        "fallback_used": false
+      },
+      "notify": {
+        "skipped": false,
+        "notificationId": "talk-n-1780571154688-8i5a77v",
+        "created": true
+      },
+      "card": {
+        "id": "ops-watch-1780571154688-3fii5x",
+        "categoryId": "cursor",
+        "categoryLabel": "Cursor",
+        "headline": "Cursor、2025年6月に価格モデルを使用量ベースへ移行。チーム向けエージェント機能を強化。",
+        "summary": "AIを活用したIDEであるCursorは、2025年6月に価格モデルをリクエストベースから使用量ベースへと変更しました。これにより、APIの実際の利用量に応じて費用が発生する形となり、特にProプランのユーザーに影響があります。チームプランでは、集約型請求管理に加え、エージェントを活用したコード生成機能が提供されており、開発生産性向上が期待されます。この価格変更は、既存の年間契約者には2026年6月まで適用されない場合があります。",
+        "importance": "high",
+        "tasfulImpact": "TASFULの開発生産性向上に寄与するAI-IDEの動向として重要です。特に、Cursorの「Agentic code」機能は、TASFULのAI検索・Builder開発における効率化のヒントになり得ます。また、使用量ベースの課金モデルは、TASFULが将来的にエージェントサービスを提供する際のコスト設計や、開発ツールとしてのCursor導入時の費用シミュレーションに直接影響します。エージェント運用コストの最適化を検討する上で注目すべき変更です。",
+        "recommendedAction": "1. CursorのTeamプランにおける「Agentic code」機能の詳細を調査し、TASFULのBuilder機能やAIエージェント開発への応用可能性を検討してください。\n2. 使用量ベースの課金モデルの詳細を分析し、TASFULのエージェントサービスにおけるコストモデル検討の参考にしてください。\n3. 開発チームに本情報を共有し、Cursorの試用や既存開発プロセスへの導入可能性について意見交換を行ってください。",
+        "introductionProposal": "",
+        "isNewService": false,
+        "newServiceName": "",
+        "searchQuery": "Cursor IDE pricing feature release announcement 2025 2026",
+        "searchUsed": true,
+        "searchResultCount": 5,
+        "sources": [
+          {
+            "title": "The complete guide to Cursor pricing in 2026 [+ How to Clone ...",
+            "url": "https://flexprice.io/blog/cursor-pricing-guide",
+            "snippet": "Cursor's pricing has gone through multiple changes, most notably in June 2025 when it moved from request-based to usage-based billing. That ..."
+          },
+          {
+            "title": "Cursor Pricing Explained 2026 - Vantage",
+            "url": "https://www.vantage.sh/blog/cursor-pricing-explained",
+            "snippet": "In June 2025, Cursor overhauled its pricing model, replacing fixed “fast request” allotments with usage-based credit pools tied to actual API ..."
+          },
+          {
+            "title": "Cursor · Pricing",
+            "url": "https://cursor.com/pricing",
+            "snippet": "Everything on Individual, plus: ✓ Centralized team billing and administration; ✓ Team marketplace for internal rules, skills, and plugins; ✓ Agentic code ..."
+          },
+          {
+            "title": "Update to Teams and Auto Pricing - Cursor - Community Forum",
+            "url": "https://forum.cursor.com/t/update-to-teams-and-auto-pricing/128952",
+            "snippet": "For example, if you bought a yearly subscription at June 2025, these changes would only take effect at June 2026. Cursor. Updates to Teams and ..."
+          },
+          {
+            "title": "Cursor's new pricing structure explained - Tessl",
+            "url": "https://tessl.io/blog/cursor-new-pricing-structure-explained/",
+            "snippet": "The main change relates specifically to Cursor Pro, which switched from a $20/month plan offering 500 fast requests plus unlimited slower ones, ..."
+          }
+        ],
+        "fingerprint": "fp-cursor-dsf68f",
+        "notificationId": "",
+        "notifiedAt": null,
+        "createdAt": "2026-06-04T11:05:54.688Z",
+        "analyzerProvider": "ai",
+        "analysisSource": "ai",
+        "searchFailed": false
+      }
+    }
+  ],
+  "samples": [
+    {
+      "category": "openai",
+      "card": {
+        "id": "ops-watch-1780571131258-575t7o",
+        "categoryId": "openai",
+        "categoryLabel": "OpenAI",
+        "headline": "OpenAI: API Pricing - OpenAI",
+        "summary": "Web検索で 5 件を取得。Explore OpenAI API pricing for GPT-5.5, multimodal models, and tools ... Starting March 31, 2026: 1 GB for $0.03 / 64GB for $1.92 per 20-minute session ...",
+        "importance": "medium",
+        "tasfulImpact": "AIワークスペース・TALK AI下書き・検索オーケストレータのモデル連携。変更点は公式一次情報で突合してください。",
+        "recommendedAction": "変更点を週次レビューに載せ、コスト・規約差分を確認。",
+        "introductionProposal": "",
+        "isNewService": false,
+        "newServiceName": "",
+        "searchQuery": "OpenAI API pricing model release announcement 2025 2026",
+        "searchUsed": true,
+        "searchResultCount": 5,
+        "sources": [
+          {
+            "title": "API Pricing - OpenAI",
+            "url": "https://openai.com/api/pricing/",
+            "snippet": "Explore OpenAI API pricing for GPT-5.5, multimodal models, and tools ... Starting March 31, 2026: 1 GB for $0.03 / 64GB for $1.92 per 20-minute session ..."
+          },
+          {
+            "title": "OpenAI API Pricing (Updated 2026) – All Models & Token Costs",
+            "url": "https://pricepertoken.com/pricing-page/provider/openai",
+            "snippet": "Apr 2026. GPT-5.5 Pro. $5.00 / $30.00. Spacing represents time between releases. Oct 2025→Apr 2026. All OpenAI Models. Compare pricing for all 54 OpenAI models."
+          },
+          {
+            "title": "Deprecations | OpenAI API",
+            "url": "https://developers.openai.com/api/docs/deprecations",
+            "snippet": "On November 14th, 2025, we notified developers using DALL·E model snapshots of their deprecation and removal from the API on May 12, 2026. Shutdown date, Model ..."
+          },
+          {
+            "title": "OpenAI API prices fall before Mar 14, 2026? - Metaculus",
+            "url": "https://www.metaculus.com/questions/41336/openai-api-prices-fall-before-mar-14-2026/",
+            "snippet": "I think it's possible but not very likely that OpenAI API token prices will drop before March 14, 2026. Most of the factors that usually push ..."
+          },
+          {
+            "title": "LLM API Pricing Comparison (2025): OpenAI, Gemini, Claude",
+            "url": "https://intuitionlabs.ai/articles/llm-api-pricing-comparison-2025",
+            "snippet": "A complete LLM API pricing comparison for 2025. Analyze token-based costs for OpenAI (GPT-5), Google Gemini, Anthropic Claude, Grok, and DeepSeek models."
+          }
+        ],
+        "fingerprint": "fp-openai-1m6bmwi",
+        "notificationId": "talk-n-1780571131258-wxg5gdm",
+        "notifiedAt": "2026-06-04T11:05:31.258Z",
+        "createdAt": "2026-06-04T11:05:31.258Z",
+        "analyzerProvider": "template",
+        "analysisSource": "template",
+        "searchFailed": false
+      },
+      "notification": {
+        "id": "talk-n-1780571131258-wxg5gdm",
+        "title": "OpenAI: API Pricing - OpenAI",
+        "body": "【OPS WATCH · 重要度: 中】OpenAI\nanalysis: template fallback\n\n■要約\nWeb検索で 5 件を取得。Explore OpenAI API pricing for GPT-5.5, multimodal models, and tools ... Starting March 31, 2026: 1 GB for $0.03 / 64GB for $1.92 per 20-minute session ...\n\n■TASFULへの影響\nAIワークスペース・TALK AI下書き・検索オーケストレータのモデル連携。変更点は公式一次情報で突合してください。\n\n■推奨アクション\n変更点を週次レビューに載せ、コスト・規約差分を確認。\n\n■参照 (5件)\n1. API Pricing - OpenAI https://openai.com/api/pricing/\n2. OpenAI API Pricing (Updated 2026) – All Models & Token Costs https://pricepertoken.com/pricing-page/provider/openai\n3. Deprecations | OpenAI API https://developers.openai.com/api/docs/deprecations",
+        "priority": "important"
+      }
+    },
+    {
+      "category": "stripe",
+      "card": {
+        "id": "ops-watch-1780571143915-ohvvya",
+        "categoryId": "stripe",
+        "categoryLabel": "Stripe",
+        "headline": "Stripe: Our top product updates from Session",
+        "summary": "Web検索で 5 件を取得。This post recaps the top announcements and product releases. For a more detailed list of what's new since Sessions last year, see our changelog.",
+        "importance": "medium",
+        "tasfulImpact": "決済手数料・Checkout・プラットフォーム収益。変更点は公式一次情報で突合してください。",
+        "recommendedAction": "変更点を週次レビューに載せ、コスト・規約差分を確認。",
+        "introductionProposal": "【導入提案】For が検索スニペットで複数回検出されました。TASFULの Stripe 連携（決済手数料・Checkout・プラットフォーム収益）で POC 検討を推奨します。",
+        "isNewService": true,
+        "newServiceName": "For",
+        "searchQuery": "Stripe payments API fee policy update announcement 2025 2026",
+        "searchUsed": true,
+        "searchResultCount": 5,
+        "sources": [
+          {
+            "title": "Our top product updates from Sessions 2025 - Stripe",
+            "url": "https://stripe.com/blog/top-product-updates-sessions-2025",
+            "snippet": "This post recaps the top announcements and product releases. For a more detailed list of what's new since Sessions last year, see our changelog."
+          },
+          {
+            "title": "Stripe User Terms Update - November 18, 2025",
+            "url": "https://support.stripe.com/questions/stripe-user-terms-update-november-18-2025",
+            "snippet": "For most existing Stripe users, the updated terms will take effect on March 1, 2026. Exception: If your notification specified that the terms ..."
+          },
+          {
+            "title": "August 2025 Subscription Pricing Updates for Revenue Recognition",
+            "url": "https://support.stripe.com/questions/august-2025-subscription-pricing-updates-for-revenue-recognition",
+            "snippet": "Your continued use of Stripe services after August 19, 2026, is subject to these fee changes. Any termination rights you have under your ..."
+          },
+          {
+            "title": "Pricing & Fees - Stripe",
+            "url": "https://stripe.com/pricing",
+            "snippet": "Find Stripe fees and pricing information. Find our processing fees for credit cards, pricing models and pay-as-you-go fees for businesses."
+          },
+          {
+            "title": "Guide to Stripe Fees & Rates For 2025 - SwipeSum",
+            "url": "https://www.swipesum.com/insights/guide-to-stripe-fees-rates-for-2025",
+            "snippet": "As of October 2025, Stripe charges 2.9% + 30¢ for domestic card transactions, 3.1% + 30¢ for international cards, plus a 1.5% cross-border fee."
+          }
+        ],
+        "fingerprint": "fp-stripe-65kf5i",
+        "notificationId": "talk-n-1780571143916-i1vv4b9",
+        "notifiedAt": "2026-06-04T11:05:43.916Z",
+        "createdAt": "2026-06-04T11:05:43.915Z",
+        "analyzerProvider": "template",
+        "analysisSource": "template",
+        "searchFailed": false
+      },
+      "notification": {
+        "id": "talk-n-1780571143916-i1vv4b9",
+        "title": "【新規】Stripe: Our top product updates from Session",
+        "body": "【OPS WATCH · 重要度: 中】Stripe\nanalysis: template fallback\n\n■要約\nWeb検索で 5 件を取得。This post recaps the top announcements and product releases. For a more detailed list of what's new since Sessions last year, see our changelog.\n\n■TASFULへの影響\n決済手数料・Checkout・プラットフォーム収益。変更点は公式一次情報で突合してください。\n\n■推奨アクション\n変更点を週次レビューに載せ、コスト・規約差分を確認。\n\n■導入提案\n【導入提案】For が検索スニペットで複数回検出されました。TASFULの Stripe 連携（決済手数料・Checkout・プラットフォーム収益）で POC 検討を推奨します。\n\n■参照 (5件)\n1. Our top product updates from Sessions 2025 - Stripe https://stripe.com/blog/top-product-updates-sessions-2025\n2. Stripe User Terms Update - November 18, 2025 https://support.stripe.com/questions/stripe-user-terms-update-november-18-2025\n3. August 2025 Subscription Pricing Updates for Revenue Recognition https://support.stripe.com/questions/august-2025-subscription-pricing-updates-for-revenue-recognition",
+        "priority": "important"
+      }
+    },
+    {
+      "category": "cursor",
+      "card": {
+        "id": "ops-watch-1780571154688-3fii5x",
+        "categoryId": "cursor",
+        "categoryLabel": "Cursor",
+        "headline": "Cursor、2025年6月に価格モデルを使用量ベースへ移行。チーム向けエージェント機能を強化。",
+        "summary": "AIを活用したIDEであるCursorは、2025年6月に価格モデルをリクエストベースから使用量ベースへと変更しました。これにより、APIの実際の利用量に応じて費用が発生する形となり、特にProプランのユーザーに影響があります。チームプランでは、集約型請求管理に加え、エージェントを活用したコード生成機能が提供されており、開発生産性向上が期待されます。この価格変更は、既存の年間契約者には2026年6月まで適用されない場合があります。",
+        "importance": "high",
+        "tasfulImpact": "TASFULの開発生産性向上に寄与するAI-IDEの動向として重要です。特に、Cursorの「Agentic code」機能は、TASFULのAI検索・Builder開発における効率化のヒントになり得ます。また、使用量ベースの課金モデルは、TASFULが将来的にエージェントサービスを提供する際のコスト設計や、開発ツールとしてのCursor導入時の費用シミュレーションに直接影響します。エージェント運用コストの最適化を検討する上で注目すべき変更です。",
+        "recommendedAction": "1. CursorのTeamプランにおける「Agentic code」機能の詳細を調査し、TASFULのBuilder機能やAIエージェント開発への応用可能性を検討してください。\n2. 使用量ベースの課金モデルの詳細を分析し、TASFULのエージェントサービスにおけるコストモデル検討の参考にしてください。\n3. 開発チームに本情報を共有し、Cursorの試用や既存開発プロセスへの導入可能性について意見交換を行ってください。",
+        "introductionProposal": "",
+        "isNewService": false,
+        "newServiceName": "",
+        "searchQuery": "Cursor IDE pricing feature release announcement 2025 2026",
+        "searchUsed": true,
+        "searchResultCount": 5,
+        "sources": [
+          {
+            "title": "The complete guide to Cursor pricing in 2026 [+ How to Clone ...",
+            "url": "https://flexprice.io/blog/cursor-pricing-guide",
+            "snippet": "Cursor's pricing has gone through multiple changes, most notably in June 2025 when it moved from request-based to usage-based billing. That ..."
+          },
+          {
+            "title": "Cursor Pricing Explained 2026 - Vantage",
+            "url": "https://www.vantage.sh/blog/cursor-pricing-explained",
+            "snippet": "In June 2025, Cursor overhauled its pricing model, replacing fixed “fast request” allotments with usage-based credit pools tied to actual API ..."
+          },
+          {
+            "title": "Cursor · Pricing",
+            "url": "https://cursor.com/pricing",
+            "snippet": "Everything on Individual, plus: ✓ Centralized team billing and administration; ✓ Team marketplace for internal rules, skills, and plugins; ✓ Agentic code ..."
+          },
+          {
+            "title": "Update to Teams and Auto Pricing - Cursor - Community Forum",
+            "url": "https://forum.cursor.com/t/update-to-teams-and-auto-pricing/128952",
+            "snippet": "For example, if you bought a yearly subscription at June 2025, these changes would only take effect at June 2026. Cursor. Updates to Teams and ..."
+          },
+          {
+            "title": "Cursor's new pricing structure explained - Tessl",
+            "url": "https://tessl.io/blog/cursor-new-pricing-structure-explained/",
+            "snippet": "The main change relates specifically to Cursor Pro, which switched from a $20/month plan offering 500 fast requests plus unlimited slower ones, ..."
+          }
+        ],
+        "fingerprint": "fp-cursor-dsf68f",
+        "notificationId": "talk-n-1780571154688-8i5a77v",
+        "notifiedAt": "2026-06-04T11:05:54.688Z",
+        "createdAt": "2026-06-04T11:05:54.688Z",
+        "analyzerProvider": "ai",
+        "analysisSource": "ai",
+        "searchFailed": false
+      },
+      "notification": {
+        "id": "talk-n-1780571154688-8i5a77v",
+        "title": "【重要】Cursor、2025年6月に価格モデルを使用量ベースへ移行。チーム向けエージェント機能を強化。",
+        "body": "【OPS WATCH · 重要度: 高】Cursor\nanalysis: AI\n\n■要約\nAIを活用したIDEであるCursorは、2025年6月に価格モデルをリクエストベースから使用量ベースへと変更しました。これにより、APIの実際の利用量に応じて費用が発生する形となり、特にProプランのユーザーに影響があります。チームプランでは、集約型請求管理に加え、エージェントを活用したコード生成機能が提供されており、開発生産性向上が期待されます。この価格変更は、既存の年間契約者には2026年6月まで適用されない場合があります。\n\n■TASFULへの影響\nTASFULの開発生産性向上に寄与するAI-IDEの動向として重要です。特に、Cursorの「Agentic code」機能は、TASFULのAI検索・Builder開発における効率化のヒントになり得ます。また、使用量ベースの課金モデルは、TASFULが将来的にエージェントサービスを提供する際のコスト設計や、開発ツールとしてのCursor導入時の費用シミュレーションに直接影響します。エージェント運用コストの最適化を検討する上で注目すべき変更です。\n\n■推奨アクション\n1. CursorのTeamプランにおける「Agentic code」機能の詳細を調査し、TASFULのBuilder機能やAIエージェント開発への応用可能性を検討してください。\n2. 使用量ベースの課金モデルの詳細を分析し、TASFULのエージェントサービスにおけるコストモデル検討の参考にしてください。\n3. 開発チームに本情報を共有し、Cursorの試用や既存開発プロセスへの導入可能性について意見交換を行ってください。\n\n■参照 (5件)\n1. The complete guide to Cursor pricing in 2026 [+ How to Clone ... https://flexprice.io/blog/cursor-pricing-guide\n2. Cursor Pricing Explained 2026 - Vantage https://www.vantage.sh/blog/cursor-pricing-explained\n3. Cursor · Pricing https://cursor.com/pricing",
+        "priority": "important"
+      }
+    }
+  ],
+  "errors": [],
+  "openaiVerify": {
+    "searchFailed": false,
+    "searchUsed": true,
+    "notificationCreated": true,
+    "notificationId": "talk-n-1780571130558-08mdvdu"
+  }
+}

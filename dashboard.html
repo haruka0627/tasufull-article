@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>会員ページ | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="anpi-line-admin.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+</head>
+<body class="dash-body" data-page="dashboard" data-breadcrumb-page-label="ダッシュボード">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img
+            src="images/tasful-ai-globe.png?v=4"
+            alt=""
+            class="tasful-ai-logo-icon"
+          >
+          <div class="tasful-ai-logo-text">
+            <span class="main">TASFUL</span>
+          </div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ"></nav>
+    </aside>
+
+    <div class="dash-main">
+      <header class="dash-header dash-header--member">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="dash-header__intro">
+              <h1 class="dash-header__title">会員ダッシュボード</h1>
+              <p class="dash-header__sub">取引・掲載・売上を管理</p>
+            </div>
+          </div>
+          <div class="dash-header__actions">
+            <a href="talk-home.html?tab=chat" class="dash-header-link" aria-label="メッセージ">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="dash-header-link__label">メッセージ</span>
+              <span class="dash-header-link__badge" data-dash-msg-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="talk-home.html?tab=notify" class="dash-header-link" aria-label="通知">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="dash-header-link__label">通知</span>
+              <span class="dash-header-link__badge" data-dash-notice-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="profile-settings.html" class="dash-profile" aria-label="プロフィール">
+              <img class="dash-profile__avatar" data-dash-avatar src="https://placehold.co/64x64/f3ead4/967622?text=ME" width="40" height="40" alt="">
+              <span class="dash-profile__text">
+                <span class="dash-profile__name" data-dash-user-name>会員</span>
+                <span class="dash-profile__sub">個人・事業者</span>
+              </span>
+              <svg class="dash-profile__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="dash-content dash-shell" id="dashContent">
+        <div class="dash-connect-banner" data-connect-member-banner hidden role="status"></div>
+
+        <div class="tasu-mobile-home tasu-mobile-home--hidden" data-tasu-mobile-home aria-label="TASFUL ホーム（スマホ）"></div>
+
+        <nav class="dash-sp-nav" data-dash-sidebar-nav aria-label="主要メニュー（スマホ）">
+          <div class="dash-sp-nav__track">
+            <a class="dash-sp-nav__chip" href="post.html">掲載する</a>
+            <a class="dash-sp-nav__chip" href="my-listings.html">マイ掲載</a>
+            <a class="dash-sp-nav__chip" href="talk-home.html">TALK</a>
+            <a class="dash-sp-nav__chip" href="chat-list.html">チャット</a>
+            <a class="dash-sp-nav__chip" href="ai-workspace.html">AI相談</a>
+            <a class="dash-sp-nav__chip" href="listing-management.html">掲載管理</a>
+          </div>
+        </nav>
+
+        <p class="dash-welcome" data-dash-welcome>読み込み中…</p>
+
+        <section class="dash-stats" id="dashStats" aria-label="サマリー"></section>
+
+        <div class="dash-anpi-admin-hosts" data-dash-anpi-admin-hosts aria-live="polite">
+          <div data-dash-anpi-line-mode hidden></div>
+          <div data-dash-anpi-urgent-host hidden></div>
+          <div data-dash-anpi-line-fail-host hidden></div>
+          <div data-dash-anpi-line-admin hidden></div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="dash-grid__primary">
+            <section class="dash-card" id="dash-ongoing" aria-labelledby="dashOngoingTitle">
+              <div class="dash-card__head">
+                <h2 class="dash-card__title" id="dashOngoingTitle">進行中の取引</h2>
+                <a class="dash-card__link" href="#dash-ongoing">一覧を見る →</a>
+              </div>
+              <div class="dash-card__body" data-dash-ongoing-list></div>
+            </section>
+
+            <p class="dash-disclaimer">
+              TASFULは取引代金を預かりません。支払い・返金・受け渡しは掛載者と依頼者の間で行ってください。成約後のTASFUL手数料は掛載者様よりお支払いいただきます。
+            </p>
+          </div>
+
+          <div class="dash-grid__secondary">
+            <section class="dash-card" id="dash-notices" aria-labelledby="dashNoticesTitle">
+              <div class="dash-card__head">
+                <h2 class="dash-card__title" id="dashNoticesTitle">お知らせ・最新情報</h2>
+              </div>
+              <div class="dash-card__body" data-dash-notices></div>
+            </section>
+
+            <section class="dash-card" id="dash-fees" aria-labelledby="dashFeesTitle">
+              <div class="dash-card__head">
+                <h2 class="dash-card__title" id="dashFeesTitle">TASFUL手数料について</h2>
+              </div>
+              <div class="dash-card__body dash-card__body--padded" data-dash-fee-panel></div>
+            </section>
+          </div>
+        </div>
+
+        <nav class="tasu-app-tabbar" data-tasu-app-tabbar aria-label="アプリメニュー">
+          <a class="tasu-app-tabbar__item is-active" href="dashboard.html" data-tasu-app-tab="home">
+            <span class="tasu-app-tabbar__icon" aria-hidden="true">🏠</span>
+            <span class="tasu-app-tabbar__label">ホーム</span>
+          </a>
+          <a class="tasu-app-tabbar__item" href="talk-home.html?tab=chat" data-tasu-app-tab="chat">
+            <span class="tasu-app-tabbar__icon" aria-hidden="true">💬</span>
+            <span class="tasu-app-tabbar__label">TALK</span>
+          </a>
+          <a class="tasu-app-tabbar__item" href="ai-workspace.html" data-tasu-app-tab="ai">
+            <span class="tasu-app-tabbar__icon" aria-hidden="true">✨</span>
+            <span class="tasu-app-tabbar__label">AI</span>
+          </a>
+          <a class="tasu-app-tabbar__item" href="profile-settings.html" data-tasu-app-tab="mypage">
+            <span class="tasu-app-tabbar__icon" aria-hidden="true">👤</span>
+            <span class="tasu-app-tabbar__label">マイページ</span>
+          </a>
+        </nav>
+
+        <div class="tasu-friend-add-modal" data-tasu-friend-add-modal hidden aria-hidden="true">
+          <div class="tasu-friend-add-modal__backdrop" data-tasu-friend-add-close tabindex="-1" aria-hidden="true"></div>
+          <div class="tasu-friend-add-modal__panel" role="dialog" aria-modal="true" aria-labelledby="tasuFriendAddTitle">
+            <header class="tasu-friend-add-modal__head">
+              <h2 id="tasuFriendAddTitle" class="tasu-friend-add-modal__title">友達追加</h2>
+              <button type="button" class="tasu-friend-add-modal__close" data-tasu-friend-add-close aria-label="閉じる">✕</button>
+            </header>
+            <div class="tasu-friend-add-modal__body">
+              <div class="tasu-friend-add-modal__tabs" role="tablist" aria-label="追加方法">
+                <button type="button" class="tasu-friend-add-modal__tab is-active" data-future-feature="friend_invite" disabled>招待</button>
+                <button type="button" class="tasu-friend-add-modal__tab" data-future-feature="friend_qr" disabled>QRコード</button>
+                <button type="button" class="tasu-friend-add-modal__tab" data-future-feature="friend_search" disabled>検索</button>
+              </div>
+              <ul class="tasu-friend-add-modal__list">
+                <li><button type="button" class="tasu-friend-add-modal__row" disabled data-future-feature="friend_auto_add">友達自動追加</button></li>
+                <li><button type="button" class="tasu-friend-add-modal__row" disabled data-future-feature="friend_group_create">グループ作成</button></li>
+                <li><button type="button" class="tasu-friend-add-modal__row" disabled data-future-feature="friend_profile_share">自分のプロフィール共有</button></li>
+              </ul>
+              <p class="tasu-friend-add-modal__section-title">おすすめ</p>
+              <ul class="tasu-friend-add-modal__people" data-tasu-friend-suggestions>
+                <li><button type="button" class="tasu-friend-add-modal__person" disabled data-future-feature="friend_recommended"><span class="tasu-friend-add-modal__person-avatar" aria-hidden="true">👤</span><span class="tasu-friend-add-modal__person-name">おすすめユーザー（準備中）</span></button></li>
+                <li><button type="button" class="tasu-friend-add-modal__person" disabled data-future-feature="friend_recent"><span class="tasu-friend-add-modal__person-avatar" aria-hidden="true">💬</span><span class="tasu-friend-add-modal__person-name">最近やり取りした人（準備中）</span></button></li>
+                <li><button type="button" class="tasu-friend-add-modal__person" disabled data-future-feature="friend_partner"><span class="tasu-friend-add-modal__person-avatar" aria-hidden="true">🤝</span><span class="tasu-friend-add-modal__person-name">パートナー候補（準備中）</span></button></li>
+              </ul>
+            </div>
+            <footer class="tasu-friend-add-modal__foot">
+              <button type="button" class="tasu-friend-add-modal__cancel" data-tasu-friend-add-close>閉じる</button>
+            </footer>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    window.__TASU_DASHBOARD_HTML_BOOT__ = {
+      href: location.href,
+      origin: location.origin,
+      port: location.port || "(default)",
+      protocol: location.protocol,
+      expectedDashboardJs: "dashboard.js?v=2026-06-15-sidebar-mega",
+      loadedAt: new Date().toISOString(),
+    };
+    console.log("[Dashboard] dashboard.html boot", window.__TASU_DASHBOARD_HTML_BOOT__);
+  </script>
+  <script src="dashboard-guard.js"></script>
+  <script src="talk-runtime.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="service-deals-db.js"></script>
+  <script src="favorites-db.js"></script>
+  <script src="business-service-data.js"></script>
+  <script src="listing-route-resolver.js"></script>
+
+  <script src="listing-demo-catalog.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="dashboard-data.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="demo-deals-data.js"></script>
+  <script src="anpi-identity.js"></script>
+  <script src="anpi-rls.js"></script>
+  <script src="anpi-user-context-supabase.js"></script>
+  <script src="anpi-user-context.js"></script>
+  <script src="anpi-notification-log-supabase.js"></script>
+  <script src="anpi-notification-log.js"></script>
+  <script src="anpi-notification-badge.js"></script>
+  <script src="anpi-line-healthcheck.js"></script>
+  <script src="anpi-line-admin.js"></script>
+  <script src="talk-home-data.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="platform-chat-connect-chat-flow.js"></script>
+  <script src="connect-member-ui.js"></script>
+  <script src="dashboard-mobile-home.js"></script>
+  <script src="tasful-app-mobile.js"></script>
+  <script src="tasful-friend-add.js"></script>
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="dashboard.js?v=2026-06-15-sidebar-mega"></script>
+</body>
+</html>

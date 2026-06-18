@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Builder Bench Bridge</title>
+</head>
+<body data-page="builder-mvp-thread">
+  <script src="../talk-notifications-store.js"></script>
+  <script src="../talk-platform-notify.js"></script>
+  <script src="builder-board-feed.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js"></script>
+  <script>
+    (function () {
+      const api = () => window.TasuBuilderBenchBridge;
+      window.addEventListener("message", (ev) => {
+        const data = ev.data;
+        if (!data || data.type !== "tasu-builder-bench-api") return;
+        const bridge = api();
+        let result = { ok: false, error: "no_bridge" };
+        try {
+          const fn = bridge?.[data.method];
+          if (typeof fn === "function") {
+            result = fn.apply(bridge, Array.isArray(data.args) ? data.args : []);
+          } else {
+            result = { ok: false, error: "method_not_found", method: data.method };
+          }
+        } catch (err) {
+          result = { ok: false, error: String(err?.message || err) };
+        }
+        ev.source?.postMessage?.(
+          { type: "tasu-builder-bench-api-result", id: data.id, result },
+          "*"
+        );
+      });
+      window.parent?.postMessage?.({ type: "tasu-builder-bench-bridge-ready" }, "*");
+    })();
+  </script>
+</body>
+</html>

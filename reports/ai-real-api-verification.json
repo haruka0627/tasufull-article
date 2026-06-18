@@ -1,0 +1,101 @@
+{
+  "prompt": "草刈り業者への問い合わせ文を作って",
+  "scope": "ChatGPT + Claude only (Gemini paused)",
+  "capturedAt": "2026-06-12T13:10:14.258Z",
+  "edgeProbes": [
+    {
+      "edge": "openai-chat",
+      "httpStatus": 200,
+      "ok": true,
+      "error": "",
+      "replyPreview": "件名: 草刈りサービスについてのお問い合わせ\n\n株式会社〇〇様\n\nお世話になっております。〇〇（あなたの名前）と申します。\n\n自宅の庭や周辺の草刈りを検討しており、貴社のサービスについてお伺いしたくご連絡させていただきました。\n\n以下の点について教えていただけますでしょうか。\n\n1. 草刈りの料金体系や見積もりについて\n2. サービスの提供エリア\n3. 作業の所要時間\n4. 予約の流れやキャンセルポリシー\n5. その他、特別なサービスやオプションがあれば教えてください\n\nお忙しいところ恐縮ですが、何卒よろしくお願い申し上げます。\n\n敬具\n\n〇〇（あなたの",
+      "elapsedMs": 4991
+    },
+    {
+      "edge": "claude-chat",
+      "httpStatus": 200,
+      "ok": true,
+      "error": "",
+      "replyPreview": "# 草刈り業者への問い合わせ文\n\n---\n\nいつもお世話になっております。\n\nこの度は、貴社への草刈りサービスのご依頼についてお問い合わせさせていただきたく、ご連絡させていただきました。\n\n**【ご質問内容】**\n\n以下の内容につきまして、お見積りおよびサービスのご案内をいただきたくお願いいたします。\n\n- **施工場所：** 〇〇県〇〇市〇〇町\n- **施工面積：** 約〇〇㎡\n- **雑草の状況：** 背丈のある雑草が多数生茂った状態\n- **ご希望の時期：** 〇月〇日頃\n\n**【確認事項】**\n\n1. 見積りの提出は可能でしょうか？またその際の費",
+      "elapsedMs": 4313
+    }
+  ],
+  "uiCaptures": [
+    {
+      "model": "ChatGPT",
+      "modelId": "gpt",
+      "file": "chatgpt-real-api.png",
+      "badge": "ChatGPT",
+      "text": "ChatGPTコピー検索元: TASFUL内AI検索結果以下のような問い合わせ文を作成しました。必要に応じて、日付や具体的な情報を追加してください。---件名: 草刈りサービスの問い合わせ[業者名] 様お世話になっております。あなたと申します。現在、私の自宅周辺の草が生い茂っており、草刈りのサービスをお願いしたくご連絡いたしました。以下の内容についてお伺いできればと思います。草刈りサービスの料金体系について作業可能な日程（特に今月中での対応が可能か）作業に必要な時間の目安その他、必要な準備や注意点があれば教えてくださいお忙しいところ恐れ入りますが、何卒よろしくお願いいたします。あなた[あなたの連絡先][あなたの住所（必要に応じて）]---この文を参考にして、必要な情報を追加してください。次にできることTASFUL TALKへ送る",
+      "isApiError": false,
+      "hasCopy": true,
+      "hasNextActions": true,
+      "hasNextActionsLabel": true,
+      "hasContextCta": true,
+      "contextCtaLabels": [
+        "TASFUL TALKへ送る"
+      ],
+      "hasMarkdownArtifacts": false,
+      "domUserName": "はるかまん",
+      "hasNamePlaceholder": false,
+      "hasContactPlaceholder": true,
+      "placeholdersOk": true,
+      "modelBarVisible": true
+    },
+    {
+      "model": "Claude",
+      "modelId": "claude",
+      "file": "claude-real-api.png",
+      "badge": "Claude",
+      "text": "Claudeコピー検索元: TASFUL内AI検索結果草刈り業者への問い合わせ文（テンプレート）---件名: 草刈りのお見積もり・ご相談[業者名] 様いつもお世話になっております。この度は、草刈りサービスについてお問い合わせさせていただきたくご連絡いたしました。【ご質問内容】施工内容について我が家の庭（およそ〇坪）の草刈りをお願いしたいのですが、対応していただけますでしょうか？料金について草刈りの料金体系を教えていただけますか？（坪数単価、出張費など）概算見積もりをいただくことは可能でしょうか？施工日程について〇月〇日（〇曜日）から〇月〇日（〇曜日）の間で対応いただける日はございますでしょうか？通常、どの程度の期間で施工いただけますか？その他刈った草の処分はお任せできますか？特に確認しておくべき注意点があれば、教えていただきたいです。お手数をおかけいたしますが、ご回答をいただければ幸いです。よろしくお願いいたします。[あなたのお名前][電話番号][メールアドレス]---必要に応じて、数字や日付をご自身の情報に置き換えてご利用ください。次にできることTASFUL TALKへ送る",
+      "isApiError": false,
+      "hasCopy": true,
+      "hasNextActions": true,
+      "hasNextActionsLabel": true,
+      "hasContextCta": true,
+      "contextCtaLabels": [
+        "TASFUL TALKへ送る"
+      ],
+      "hasMarkdownArtifacts": false,
+      "domUserName": "はるかまん",
+      "hasNamePlaceholder": false,
+      "hasContactPlaceholder": false,
+      "placeholdersOk": true,
+      "modelBarVisible": true
+    }
+  ],
+  "checks": {
+    "historySaved": true,
+    "historyPersistsAfterReload": true,
+    "badgesPresent": true,
+    "modelSwitch": true,
+    "responsesDifferent": true
+  },
+  "storageAfter": {
+    "count": 4,
+    "modelLabels": [
+      "ChatGPT",
+      "Claude"
+    ],
+    "hasUserPrompt": true
+  },
+  "storageAfterReload": {
+    "count": 4,
+    "modelLabels": [
+      "ChatGPT",
+      "Claude"
+    ],
+    "hasUserPrompt": true
+  },
+  "domAfterReload": {
+    "userBubbles": 2,
+    "assistantRows": 2,
+    "badges": [
+      "ChatGPT",
+      "Claude"
+    ],
+    "activeModel": "claude"
+  },
+  "errors": [],
+  "passed": true
+}

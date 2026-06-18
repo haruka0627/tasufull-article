@@ -1,0 +1,51 @@
+{
+  "capturedAt": "2026-06-12T12:54:28.727Z",
+  "steps": [
+    {
+      "id": "inquiry-generated",
+      "hasSubject": true,
+      "hasBody": true,
+      "hasCopy": true,
+      "hasTalk": true,
+      "hasEdit": true,
+      "modelBadge": "ChatGPT",
+      "draftId": "talk-inq-1781268877631-erohsn3",
+      "pass": true
+    },
+    {
+      "id": "talk-draft-card",
+      "hasCard": true,
+      "hasSubject": true,
+      "hasBody": true,
+      "hasEdit": true,
+      "hasApply": true,
+      "applyLabel": "チャットへ反映",
+      "hasBack": false,
+      "pass": true
+    },
+    {
+      "id": "chat-input-prefilled",
+      "hasThread": true,
+      "threadId": "chat-1781268879058-v0jifm",
+      "inputPrefilled": true,
+      "inputMatchesDraft": true,
+      "hasBanner": true,
+      "bannerWarnsNotSent": true,
+      "bannerMentionsSendButton": true,
+      "pendingCleared": true,
+      "messageCount": 1,
+      "composerEnabled": true,
+      "pass": true
+    },
+    {
+      "id": "manual-send",
+      "messageCountBefore": 1,
+      "messageCountAfter": 2,
+      "messageSent": true,
+      "inputCleared": true,
+      "pass": true
+    }
+  ],
+  "passed": true,
+  "modelBadge": "ChatGPT"
+}

@@ -1,0 +1,830 @@
+{
+  "url": "http://127.0.0.1:5173/detail-shop.html?id=demo-shop-reworks",
+  "viewport": {
+    "w": 390,
+    "h": 844
+  },
+  "bodyClasses": [
+    "biz-detail-page",
+    "shop-detail-page",
+    "biz-detail-page--store-shop",
+    "detail-shop-page",
+    "tasu-app-mobile-page",
+    "shop-detail-page--action-nav",
+    "shop-detail-page--native-mobile",
+    "shop-detail-page--buyback-mobile"
+  ],
+  "bodyDataAttrs": {
+    "page": null,
+    "shopCategory": "tools_equipment",
+    "profile": "goods_interior",
+    "mvis": "1"
+  },
+  "nativeMobile": true,
+  "mobileCssLoaded": true,
+  "mobileCssLink": [
+    "http://127.0.0.1:5173/detail-shop-mobile.css"
+  ],
+  "allStylesheets": [
+    "detail-shop-beauty.css",
+    "detail-shop-relax.css",
+    "detail-shop-retail.css",
+    "tasful-ai-logo.css?v=4",
+    "tasful-app-mobile.css",
+    "tasful-app-mobile-detail.css",
+    "tasful-mobile-detail-template.css",
+    "detail-shop-mobile.css"
+  ],
+  "sheetRulesSample": [
+    "@media (max-width: 960px) {\n  body.shop-detail-page--native-mobile .tasu-mobile-detail-shell, body.shop-detail-page--nat",
+    "@media (min-width: 961px) {\n  .shop-detail-sp-only { display: none !important; }\n}"
+  ],
+  "productsSection": {
+    "found": true,
+    "tag": "section",
+    "id": "section-products",
+    "classes": [
+      "shop-card",
+      "shop-mobile-products-section"
+    ],
+    "dataAttrs": [
+      "data-shop-section=\"products\""
+    ],
+    "rect": {
+      "x": 12,
+      "y": 1191,
+      "w": 366,
+      "h": 312
+    },
+    "offsetW": 366,
+    "scrollW": 364,
+    "clientW": 364,
+    "display": "block",
+    "position": "static",
+    "width": "366px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "12px",
+    "margin": "0px 0px 12px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "prodGrid": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "retail-prod-grid",
+      "shop-mobile-prod-grid"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 1241,
+      "w": 340,
+      "h": 248
+    },
+    "offsetW": 340,
+    "scrollW": 630,
+    "clientW": 340,
+    "display": "flex",
+    "position": "static",
+    "width": "340px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "auto",
+    "overflowY": "hidden",
+    "gridTemplateColumns": "none",
+    "padding": "0px 0px 8px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "prodChain": [
+    {
+      "tag": "div",
+      "id": null,
+      "classes": [
+        "retail-prod-grid",
+        "shop-mobile-prod-grid"
+      ],
+      "overflowX": "auto",
+      "width": "340px",
+      "maxWidth": "none",
+      "display": "flex",
+      "offsetW": 340,
+      "scrollW": 630
+    },
+    {
+      "tag": "div",
+      "id": null,
+      "classes": [
+        "shop-mobile-products-rail"
+      ],
+      "overflowX": "visible",
+      "width": "340px",
+      "maxWidth": "none",
+      "display": "block",
+      "offsetW": 340,
+      "scrollW": 340
+    },
+    {
+      "tag": "section",
+      "id": "section-products",
+      "classes": [
+        "shop-card",
+        "shop-mobile-products-section"
+      ],
+      "overflowX": "visible",
+      "width": "366px",
+      "maxWidth": "none",
+      "display": "block",
+      "offsetW": 366,
+      "scrollW": 364
+    },
+    {
+      "tag": "div",
+      "id": "shop-sections-root",
+      "classes": [],
+      "overflowX": "visible",
+      "width": "366px",
+      "maxWidth": "none",
+      "display": "flex",
+      "offsetW": 366,
+      "scrollW": 366
+    },
+    {
+      "tag": "div",
+      "id": null,
+      "classes": [
+        "shop-restaurant-main"
+      ],
+      "overflowX": "visible",
+      "width": "366px",
+      "maxWidth": "none",
+      "display": "block",
+      "offsetW": 366,
+      "scrollW": 366
+    },
+    {
+      "tag": "div",
+      "id": null,
+      "classes": [
+        "shop-restaurant-body"
+      ],
+      "overflowX": "visible",
+      "width": "366px",
+      "maxWidth": "none",
+      "display": "block",
+      "offsetW": 366,
+      "scrollW": 366
+    }
+  ],
+  "prodCard0": {
+    "found": true,
+    "tag": "article",
+    "id": null,
+    "classes": [
+      "retail-prod-card"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 1241,
+      "w": 150,
+      "h": 240
+    },
+    "offsetW": 150,
+    "scrollW": 148,
+    "clientW": 148,
+    "display": "block",
+    "position": "relative",
+    "width": "150px",
+    "maxWidth": "150px",
+    "minWidth": "150px",
+    "flex": "0 0 150px",
+    "flexBasis": "150px",
+    "overflowX": "hidden",
+    "overflowY": "hidden",
+    "gridTemplateColumns": "none",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "0px",
+    "top": "0px",
+    "zIndex": "auto"
+  },
+  "prodCard1": {
+    "found": true,
+    "tag": "article",
+    "id": null,
+    "classes": [
+      "retail-prod-card"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 185,
+      "y": 1241,
+      "w": 150,
+      "h": 240
+    },
+    "offsetW": 150,
+    "scrollW": 148,
+    "clientW": 148,
+    "display": "block",
+    "position": "relative",
+    "width": "150px",
+    "maxWidth": "150px",
+    "minWidth": "150px",
+    "flex": "0 0 150px",
+    "flexBasis": "150px",
+    "overflowX": "hidden",
+    "overflowY": "hidden",
+    "gridTemplateColumns": "none",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "0px",
+    "top": "0px",
+    "zIndex": "auto"
+  },
+  "card1Clipped": false,
+  "hitAtCard2": null,
+  "buybackMain": {
+    "found": true,
+    "tag": "article",
+    "id": "shop-sp-buyback-main",
+    "classes": [
+      "shop-mobile-feature",
+      "shop-mobile-feature--block",
+      "shop-detail-sp-only"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 1540,
+      "w": 340,
+      "h": 133
+    },
+    "offsetW": 340,
+    "scrollW": 338,
+    "clientW": 338,
+    "display": "block",
+    "position": "static",
+    "width": "340px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "14px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "buybackVisit": {
+    "found": true,
+    "tag": "article",
+    "id": "shop-sp-buyback-visit",
+    "classes": [
+      "shop-mobile-feature",
+      "shop-mobile-feature--block"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 1723,
+      "w": 340,
+      "h": 122
+    },
+    "offsetW": 340,
+    "scrollW": 338,
+    "clientW": 338,
+    "display": "block",
+    "position": "static",
+    "width": "340px",
+    "maxWidth": "none",
+    "minWidth": "auto",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "14px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "buybackStack": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "shop-mobile-buyback-list",
+      "shop-detail-sp-only"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 1723,
+      "w": 340,
+      "h": 432
+    },
+    "offsetW": 340,
+    "scrollW": 340,
+    "clientW": 340,
+    "display": "grid",
+    "position": "static",
+    "width": "340px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "340px",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "casesSection": {
+    "found": true,
+    "tag": "section",
+    "id": "section-shop-cases",
+    "classes": [
+      "shop-card"
+    ],
+    "dataAttrs": [
+      "data-shop-section=\"cases\""
+    ],
+    "rect": {
+      "x": 12,
+      "y": 1527,
+      "w": 366,
+      "h": 159
+    },
+    "offsetW": 366,
+    "scrollW": 364,
+    "clientW": 364,
+    "display": "block",
+    "position": "static",
+    "width": "366px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "12px",
+    "margin": "0px 0px 12px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "highlightsSection": {
+    "found": true,
+    "tag": "section",
+    "id": "section-shop-highlights",
+    "classes": [
+      "shop-card"
+    ],
+    "dataAttrs": [
+      "data-shop-section=\"highlights\""
+    ],
+    "rect": {
+      "x": 12,
+      "y": 1710,
+      "w": 366,
+      "h": 458
+    },
+    "offsetW": 366,
+    "scrollW": 364,
+    "clientW": 364,
+    "display": "block",
+    "position": "static",
+    "width": "366px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "12px",
+    "margin": "0px 0px 12px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "accessSection": {
+    "found": true,
+    "tag": "section",
+    "id": "section-shop-info",
+    "classes": [
+      "beauty-info-card",
+      "shop-mobile-access-section"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 2204,
+      "w": 340,
+      "h": 421
+    },
+    "offsetW": 340,
+    "scrollW": 340,
+    "clientW": 340,
+    "display": "block",
+    "position": "static",
+    "width": "340px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "accessList": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "shop-mobile-access-list",
+      "shop-detail-sp-only"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 2242,
+      "w": 340,
+      "h": 384
+    },
+    "offsetW": 340,
+    "scrollW": 340,
+    "clientW": 340,
+    "display": "grid",
+    "position": "static",
+    "width": "340px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "340px",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "accessItem": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "shop-mobile-access-item"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 25,
+      "y": 2242,
+      "w": 340,
+      "h": 107
+    },
+    "offsetW": 340,
+    "scrollW": 338,
+    "clientW": 338,
+    "display": "block",
+    "position": "static",
+    "width": "340px",
+    "maxWidth": "none",
+    "minWidth": "auto",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "14px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "accessVal": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "shop-mobile-access-value"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 40,
+      "y": 2285,
+      "w": 310,
+      "h": 50
+    },
+    "offsetW": 310,
+    "scrollW": 310,
+    "clientW": 310,
+    "display": "block",
+    "position": "static",
+    "width": "310px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto",
+    "text": "大阪府大阪市北区梅田1-1-1 Re:WORKSビル 1F",
+    "charsPerLine": 29
+  },
+  "beautyTableVisible": false,
+  "beautyTable": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "beauty-info-table",
+      "shop-detail-pc-only"
+    ],
+    "dataAttrs": [],
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "offsetW": 0,
+    "scrollW": 0,
+    "clientW": 0,
+    "display": "none",
+    "position": "static",
+    "width": "100%",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "hidden",
+    "overflowY": "hidden",
+    "gridTemplateColumns": "none",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "stickyNav": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "shop-sticky-action-nav",
+      "shop-mobile-sticky-nav"
+    ],
+    "dataAttrs": [
+      "data-shop-sticky-action-nav=\"\"",
+      "data-shop-sticky-nav-bound=\"1\""
+    ],
+    "rect": {
+      "x": 12,
+      "y": 1125,
+      "w": 366,
+      "h": 54
+    },
+    "offsetW": 366,
+    "scrollW": 364,
+    "clientW": 364,
+    "display": "flex",
+    "position": "sticky",
+    "width": "366px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "8px 10px",
+    "margin": "0px 0px 12px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "60px",
+    "zIndex": "30"
+  },
+  "stickySpacer": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "shop-sticky-action-nav-spacer"
+    ],
+    "dataAttrs": [
+      "data-shop-sticky-action-spacer=\"\""
+    ],
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "offsetW": 0,
+    "scrollW": 0,
+    "clientW": 0,
+    "display": "none",
+    "position": "static",
+    "width": "auto",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "auto",
+    "top": "auto",
+    "zIndex": "auto"
+  },
+  "hitBelowNav": null,
+  "bottomCta": {
+    "found": true,
+    "tag": "div",
+    "id": null,
+    "classes": [
+      "biz-detail-sticky-bar"
+    ],
+    "dataAttrs": [
+      "data-biz-detail-sticky-bar=\"\""
+    ],
+    "rect": {
+      "x": 0,
+      "y": 0,
+      "w": 0,
+      "h": 0
+    },
+    "offsetW": 0,
+    "scrollW": 0,
+    "clientW": 0,
+    "display": "none",
+    "position": "fixed",
+    "width": "auto",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "8px 0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "0px",
+    "top": "auto",
+    "zIndex": "50"
+  },
+  "tabbar": {
+    "found": true,
+    "tag": "nav",
+    "id": null,
+    "classes": [
+      "tasu-app-tabbar"
+    ],
+    "dataAttrs": [
+      "data-tasu-app-tabbar=\"\"",
+      "data-tasu-app-tabbar-injected=\"\""
+    ],
+    "rect": {
+      "x": 0,
+      "y": 791,
+      "w": 390,
+      "h": 53
+    },
+    "offsetW": 390,
+    "scrollW": 390,
+    "clientW": 390,
+    "display": "flex",
+    "position": "fixed",
+    "width": "390px",
+    "maxWidth": "none",
+    "minWidth": "0px",
+    "flex": "0 1 auto",
+    "flexBasis": "auto",
+    "overflowX": "visible",
+    "overflowY": "visible",
+    "gridTemplateColumns": "none",
+    "padding": "0px",
+    "margin": "0px",
+    "writingMode": "horizontal-tb",
+    "whiteSpace": "normal",
+    "bottom": "0px",
+    "top": "791px",
+    "zIndex": "40"
+  },
+  "bodyPb": "192px",
+  "hasShopMobileProdGrid": true,
+  "hasShopMobileAccessList": true,
+  "sectionIds": [
+    {
+      "id": "section-products",
+      "classes": [
+        "shop-card",
+        "shop-mobile-products-section"
+      ]
+    },
+    {
+      "id": "section-shop-cases",
+      "classes": [
+        "shop-card"
+      ]
+    },
+    {
+      "id": "section-shop-highlights",
+      "classes": [
+        "shop-card"
+      ]
+    },
+    {
+      "id": "section-shop-bottom",
+      "classes": [
+        "shop-card"
+      ]
+    },
+    {
+      "id": "section-reviews",
+      "classes": [
+        "is-hidden",
+        "shop-section--empty",
+        "shop-card"
+      ]
+    },
+    {
+      "id": "section-faq",
+      "classes": [
+        "shop-card",
+        "is-hidden",
+        "shop-section--empty"
+      ]
+    }
+  ]
+}

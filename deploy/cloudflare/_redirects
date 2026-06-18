@@ -1,0 +1,12 @@
+# NB-1A draft — Cloudflare Pages _redirects
+# 配置先: ビルド出力ルート (deploy/cloudflare/dist/) にコピーされる
+#
+# 注意: www → apex はホスト名単位のため、ゾーン Redirect Rule を第一推奨（計画書参照）。
+# 以下はパス単位の補助ルールのみ。
+
+# 末尾スラッシュ正規化（ディレクトリ以外）
+/talk-home.html/   /talk-home.html   301
+/chat-detail.html/ /chat-detail.html 301
+
+# builder ディレクトリ（trailing slash なしアクセス）
+/builder            /builder/         301

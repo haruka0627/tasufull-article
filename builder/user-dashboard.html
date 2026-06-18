@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>Builder 一般ダッシュボード | TASFUL</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body builder-body--user-dash" data-page="builder-user-dashboard">
+  <div class="builder-app" data-builder-root>
+    <div class="builder-dash-shell__layout builder-partner-layout">
+      <aside class="builder-dash-shell__sidebar builder-partner-sidebar" data-builder-partner-sidebar aria-label="メニュー">
+        <div class="builder-partner-sidebar__brand">
+          <span class="builder-partner-sidebar__logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18" /><path d="M7 21V7l8-4v18" /><path d="M17 21V11l-6-4" />
+            </svg>
+          </span>
+          <span class="builder-partner-sidebar__brandText">
+            <span class="builder-partner-sidebar__brandMain">Builder</span>
+            <span class="builder-partner-sidebar__brandSub">TASFUL 一般</span>
+          </span>
+        </div>
+        <div class="builder-partner-sidebar__profile">
+          <img class="builder-partner-sidebar__avatar" data-dash-avatar src="https://placehold.co/64x64/e0f2fe/0369a1?text=U" width="44" height="44" alt="" />
+          <div>
+            <p class="builder-partner-sidebar__name" data-dash-user-name>田中 花子</p>
+            <p class="builder-partner-sidebar__role">一般ユーザー（依頼者）</p>
+          </div>
+        </div>
+        <nav class="builder-partner-sidebar__nav" aria-label="一般ユーザーメニュー">
+          <a class="builder-partner-sidebar__link is-active" href="user-dashboard.html">ダッシュボード</a>
+          <a class="builder-partner-sidebar__link" href="board-projects.html">依頼中の案件</a>
+          <a class="builder-partner-sidebar__link" href="../public-board.html">応募・相談中</a>
+          <a class="builder-partner-sidebar__link" href="mvp-threads.html?role=user">やりとり <span class="builder-partner-sidebar__badge is-cyan">6</span></a>
+          <a class="builder-partner-sidebar__link" href="mvp-notifications.html?role=user">通知 <span class="builder-partner-sidebar__badge is-purple">2</span></a>
+          <span class="builder-partner-sidebar__sep" aria-hidden="true"></span>
+          <a class="builder-partner-sidebar__link" href="favorites.html">お気に入り</a>
+          <a class="builder-partner-sidebar__link" href="../sales-fees.html">支払い・請求</a>
+          <a class="builder-partner-sidebar__link" href="../job-review.html">レビュー</a>
+          <a class="builder-partner-sidebar__link" href="../profile-settings.html">プロフィール</a>
+          <a class="builder-partner-sidebar__link" href="settings.html">設定</a>
+          <button type="button" class="builder-partner-sidebar__link builder-partner-sidebar__link--muted" data-builder-user-logout data-builder-dash-logout>ログアウト</button>
+        </nav>
+      </aside>
+
+      <div class="builder-dash-shell__content builder-partner-content">
+        <header class="builder-header" aria-label="Builder ヘッダー">
+          <div class="builder-shell builder-header__inner">
+            <div class="builder-brandWrap">
+              <a class="builder-brand" href="user-dashboard.html" aria-label="一般ダッシュボードへ">
+                <span class="builder-brand__mark" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 21h18" /><path d="M7 21V7l8-4v18" /><path d="M17 21V11l-6-4" />
+                  </svg>
+                </span>
+                <span class="builder-brand__text">
+                  <span class="builder-brand__main">Builder</span>
+                  <span class="builder-brand__sub">一般ダッシュボード</span>
+                </span>
+              </a>
+            </div>
+
+            <button type="button" class="builder-dash-shell__menu-toggle builder-partner-menu-toggle" data-builder-sidebar-toggle aria-label="メニューを開く" aria-expanded="false">
+              <span></span><span></span><span></span>
+            </button>
+
+            <div class="builder-header__center">
+              <h1 class="builder-header__title">一般ダッシュボード</h1>
+              <p class="builder-header__sub">依頼・相談・やりとり・支払いのサマリー</p>
+            </div>
+
+            <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+              <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/e0f2fe/0369a1?text=U" width="40" height="40" alt="" />
+              <span class="builder-account__text">
+                <span class="builder-account__name" data-dash-user-name>田中 花子</span>
+                <span class="builder-account__sub" data-builder-member-type>一般ユーザー</span>
+              </span>
+              <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
+            </a>
+          </div>
+        </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main" data-builder-main>
+          <section class="builder-stat-grid" aria-label="サマリー">
+            <article class="builder-stat-card" data-builder-stat-card>
+              <div class="builder-stat-card__icon builder-stat-card__icon--slate" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 7h18" /><path d="M4 7l2 14h12l2-14" /><path d="M9 7V5a3 3 0 0 1 6 0v2" />
+                </svg>
+              </div>
+              <div class="builder-stat-card__body">
+                <span class="builder-stat-card__label">進行中の依頼</span>
+                <strong class="builder-stat-card__value" data-builder-user-stat-value="activeRequests">—</strong>
+                <span class="builder-stat-card__desc">手配・施工中の依頼</span>
+              </div>
+              <a class="builder-stat-card__action" href="board-projects.html">依頼を見る ›</a>
+            </article>
+
+            <article class="builder-stat-card" data-builder-stat-card>
+              <div class="builder-stat-card__icon builder-stat-card__icon--orange" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+                </svg>
+              </div>
+              <div class="builder-stat-card__body">
+                <span class="builder-stat-card__label">未読メッセージ</span>
+                <strong class="builder-stat-card__value" data-builder-user-stat-value="unreadMessages">—</strong>
+                <span class="builder-stat-card__desc">やりとりの未読</span>
+              </div>
+              <a class="builder-stat-card__action" href="mvp-threads.html?role=user">やりとりへ ›</a>
+            </article>
+
+            <article class="builder-stat-card" data-builder-stat-card>
+              <div class="builder-stat-card__icon builder-stat-card__icon--amber" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                </svg>
+              </div>
+              <div class="builder-stat-card__body">
+                <span class="builder-stat-card__label">未対応通知</span>
+                <strong class="builder-stat-card__value" data-builder-user-stat-value="unreadNotifications">—</strong>
+                <span class="builder-stat-card__desc">要確認のお知らせ</span>
+              </div>
+              <a class="builder-stat-card__action" href="mvp-notifications.html?role=user">通知を見る ›</a>
+            </article>
+
+            <article class="builder-stat-card" data-builder-stat-card>
+              <div class="builder-stat-card__icon builder-stat-card__icon--orange" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1v22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </div>
+              <div class="builder-stat-card__body">
+                <span class="builder-stat-card__label">支払い待ち</span>
+                <strong class="builder-stat-card__value" data-builder-user-stat-value="paymentPending">—</strong>
+                <span class="builder-stat-card__desc">未決済の請求</span>
+              </div>
+              <a class="builder-stat-card__action" href="../sales-fees.html">支払いへ ›</a>
+            </article>
+
+            <article class="builder-stat-card builder-stat-card--review-pending" data-builder-stat-card data-builder-user-stat-review>
+              <div class="builder-stat-card__icon builder-stat-card__icon--amber" aria-hidden="true">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" />
+                </svg>
+              </div>
+              <div class="builder-stat-card__body">
+                <span class="builder-stat-card__stars" aria-hidden="true">★★★★★</span>
+                <span class="builder-stat-card__label">レビュー待ち</span>
+                <strong class="builder-stat-card__value" data-builder-user-stat-value="reviewPending">—</strong>
+                <span class="builder-stat-card__desc">取引完了済みの案件があります</span>
+              </div>
+              <a class="builder-stat-card__action" href="../job-review.html">レビューを書く ›</a>
+            </article>
+          </section>
+
+          <section class="builder-panel builder-recent-section" aria-labelledby="builderUserRecentTitle">
+            <div class="builder-recent-section__head">
+              <h2 id="builderUserRecentTitle" class="builder-section-title">最近の案件</h2>
+              <a class="builder-section-link" href="board-projects.html">すべて見る ›</a>
+            </div>
+            <ul class="builder-recent-grid" data-builder-user-recent-list></ul>
+          </section>
+
+          <section class="builder-panel builder-user-chat-section" aria-labelledby="builderUserChatTitle">
+            <div class="builder-recent-section__head">
+              <h2 id="builderUserChatTitle" class="builder-section-title">最近やり取りした相手</h2>
+              <a class="builder-section-link" href="mvp-threads.html?role=user">すべて見る ›</a>
+            </div>
+            <ul class="builder-user-chat-list" data-builder-user-chat-list></ul>
+          </section>
+
+          <section class="builder-quick-section" aria-label="メインメニュー">
+            <h2 class="builder-section-title builder-quick-section__title">メインメニュー</h2>
+            <nav class="builder-quick-grid">
+              <a class="builder-quick-card" href="mvp-project-new.html">
+                <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>案件を依頼</strong><span>新規依頼を作成</span></span>
+              </a>
+              <a class="builder-quick-card" href="board-projects.html">
+                <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" /><rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>依頼中の案件</strong><span>進行状況を確認</span></span>
+              </a>
+              <a class="builder-quick-card builder-quick-card--chat-featured" href="mvp-threads.html?role=user">
+                <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>やりとり</strong><span>メッセージ一覧</span></span>
+              </a>
+              <a class="builder-quick-card" href="mvp-notifications.html?role=user">
+                <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>通知</strong><span>未読・既読の確認</span></span>
+              </a>
+              <a class="builder-quick-card" href="favorites.html">
+                <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27z" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>お気に入り</strong><span>保存した協力会社</span></span>
+              </a>
+              <a class="builder-quick-card" href="../sales-fees.html">
+                <span class="builder-quick-card__icon builder-quick-card__icon--slate" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22" /><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>支払い・請求</strong><span>決済・請求履歴</span></span>
+              </a>
+              <a class="builder-quick-card" href="../profile-settings.html">
+                <span class="builder-quick-card__icon builder-quick-card__icon--slate" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>プロフィール</strong><span>アカウント設定</span></span>
+              </a>
+              <a class="builder-quick-card" href="settings.html">
+                <span class="builder-quick-card__icon builder-quick-card__icon--amber" aria-hidden="true">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" /><path d="M19.4 15a7.6 7.6 0 0 0 .1-1 7.6 7.6 0 0 0-.1-1l2-1.5-2-3.5-2.3 1a8 8 0 0 0-1.7-1L15 3h-6l-.4 2.9a8 8 0 0 0-1.7 1l-2.3-1-2 3.5L4.6 12a7.6 7.6 0 0 0-.1 1 7.6 7.6 0 0 0 .1 1l-2 1.5 2 3.5 2.3-1a8 8 0 0 0 1.7 1L9 21h6l.4-2.9a8 8 0 0 0 1.7-1l2.3 1 2-3.5-2-1.6z" /></svg>
+                </span>
+                <span class="builder-quick-card__text"><strong>設定</strong><span>通知・表示設定</span></span>
+              </a>
+            </nav>
+          </section>
+
+          <p class="builder-dash-shell__roleNote">
+            このページは一般ユーザー専用です。認定パートナーは <a href="index.html">builder/index.html</a> をご利用ください。
+          </p>
+
+          <footer class="builder-footer" aria-label="フッター">
+            <p>© 2024 TASFUL inc. All rights reserved. Version 1.2</p>
+          </footer>
+        </main>
+      </div>
+    </div>
+    <div class="builder-dash-shell__backdrop builder-partner-sidebar-backdrop" data-builder-sidebar-backdrop hidden></div>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

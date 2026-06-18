@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>評価・レビュー | TASFUL</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <style>
+    body.job-review-page {
+      margin: 0;
+      background: #f8fafc;
+      min-height: 100dvh;
+    }
+    .job-review-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+    }
+    .job-review-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    .job-review-card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 1.25rem 1rem 1rem;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+    .job-review-card__title {
+      margin: 0 0 0.35rem;
+      font-size: 1.15rem;
+    }
+    .job-review-card__sub,
+    .job-review-card__target,
+    .job-review-card__listing {
+      margin: 0 0 0.75rem;
+      color: #64748b;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .job-review-card__listing {
+      color: #0f172a;
+      font-weight: 600;
+    }
+    .job-review-done {
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .job-review-done__title {
+      margin: 0 0 0.5rem;
+      font-size: 1.1rem;
+    }
+    .job-review-done__sub {
+      margin: 0 0 1rem;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+    .job-review-done__link {
+      display: inline-block;
+      padding: 0.65rem 1rem;
+      border-radius: 999px;
+      background: #111827;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body class="job-review-page" data-page="job_review">
+  <main class="job-review-shell">
+    <a class="job-review-back" id="jobReviewBack" href="talk-home.html?tab=notify&talkDev=1">← 戻る</a>
+
+    <section id="jobReviewFormPanel" class="job-review-card" aria-labelledby="jobReviewTitle">
+      <h1 id="jobReviewTitle" class="job-review-card__title">掲載者を評価</h1>
+      <p id="jobReviewSub" class="job-review-card__sub">やりとりお疲れさまでした。評価は任意です。</p>
+      <p id="jobReviewListing" class="job-review-card__listing"></p>
+      <p id="jobReviewTarget" class="job-review-card__target"></p>
+
+      <div id="jobReviewStars" class="chat-review-stars" role="radiogroup" aria-label="評価（1〜5）">
+        <button type="button" class="chat-review-star" data-star="1" aria-label="1つ星">★</button>
+        <button type="button" class="chat-review-star" data-star="2" aria-label="2つ星">★</button>
+        <button type="button" class="chat-review-star" data-star="3" aria-label="3つ星">★</button>
+        <button type="button" class="chat-review-star" data-star="4" aria-label="4つ星">★</button>
+        <button type="button" class="chat-review-star" data-star="5" aria-label="5つ星">★</button>
+      </div>
+
+      <label class="chat-report-detail-label" for="jobReviewComment">コメント（任意）</label>
+      <textarea id="jobReviewComment" class="chat-report-detail" rows="3" placeholder="よかった点があれば一言"></textarea>
+
+      <div class="chat-report-modal__actions chat-review-modal__actions">
+        <button type="button" id="jobReviewSkip" class="chat-report-btn chat-report-btn--ghost">スキップして完了</button>
+        <button type="button" id="jobReviewSubmit" class="chat-report-btn chat-report-btn--primary">評価を送る</button>
+      </div>
+      <p id="jobReviewError" class="chat-alert" style="display:none;margin-top:0.75rem;" aria-live="polite"></p>
+    </section>
+
+    <section id="jobReviewDonePanel" class="job-review-card job-review-done" hidden>
+      <h2 class="job-review-done__title">レビューを送信しました</h2>
+      <p class="job-review-done__sub">求人やりとりは終了しました。お疲れさまでした。</p>
+      <a class="job-review-done__link" id="jobReviewDoneLink" href="talk-home.html?tab=chat&talkDev=1">TASFUL TALK へ</a>
+    </section>
+  </main>
+
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="chat-reviews.js"></script>
+  <script src="chat-room-status.js"></script>
+  <script src="platform-chat-fee.js"></script>
+  <script src="platform-chat-category-flow.js"></script>
+  <script src="platform-chat-completion-flow.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="platform-notify-action-labels.js"></script>
+  <script src="platform-chat-review-flow.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="platform-chat-job-flow.js"></script>
+  <script src="job-review.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+</body>
+</html>

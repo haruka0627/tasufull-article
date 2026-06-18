@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>カート | TASFUL市場</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-search.css">
+  <link rel="stylesheet" href="shop-market-cart.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-cart-page" data-page="shop_market_cart">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <main class="tasful-market-cart-main" aria-label="カート">
+    <h1 class="tasful-market-cart-main__title">ショッピングカート</h1>
+    <p class="tasful-market-cart-main__count" data-tasful-market-cart-summary>カートは空です</p>
+    <div class="tasful-market-cart-main__empty" data-tasful-market-cart-empty hidden>
+      <p class="tasful-market-cart-main__empty-text">カートに商品がありません</p>
+      <a href="shop-store.html" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--outline">商品を探す</a>
+    </div>
+    <div class="tasful-market-cart-layout">
+      <div class="tasful-market-cart-layout__main">
+        <div class="tasful-market-cart-main__items" data-tasful-market-cart-items hidden></div>
+      </div>
+      <aside class="tasful-market-cart-layout__aside" data-tasful-market-cart-aside hidden>
+        <div class="tasful-market-cart-summary">
+          <h2 class="tasful-market-cart-summary__title">注文内容</h2>
+          <p class="tasful-market-cart-summary__row"><span>小計（税込）</span><strong data-tasful-cart-subtotal>¥0</strong></p>
+          <p class="tasful-market-cart-summary__row"><span>商品点数</span><strong data-tasful-cart-line-count>0点</strong></p>
+          <p class="tasful-market-cart-summary__total"><span>合計（税込）</span><strong data-tasful-cart-total>¥0</strong></p>
+          <a href="shop-market-checkout.html?mode=cart" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--checkout" data-tasful-market-cart-checkout-aside hidden>注文確認へ進む</a>
+          <a href="shop-store.html" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--outline">買い物を続ける</a>
+        </div>
+      </aside>
+    </div>
+    <div class="tasful-market-cart-main__actions tasful-market-cart-main__actions--mobile">
+      <a href="shop-market-checkout.html?mode=cart" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--checkout" data-tasful-market-cart-checkout hidden>注文確認へ進む</a>
+      <a href="shop-store.html" class="tasful-market-cart-main__btn tasful-market-cart-main__btn--outline">買い物を続ける</a>
+    </div>
+
+    <section class="tasful-market-cart-cross-sell" data-tasful-market-cart-cross-sell hidden aria-label="カートの商品と一緒に見られている商品">
+      <h2 class="tasful-market-cart-cross-sell__title">カートの商品と一緒に見られている商品</h2>
+      <div class="tasful-market-search-shelf__scroll tasful-market-cart-cross-sell__scroll" data-tasful-market-cart-cross-sell-scroll></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-cart.js"></script>
+</body>
+</html>

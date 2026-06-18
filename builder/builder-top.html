@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>Builder | TASFUL</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-top">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-top-header" aria-label="Builder ヘッダー" data-builder-top-header>
+      <div class="builder-shell builder-top-header__inner">
+        <a class="builder-brand builder-brand--top" href="builder-top.html" aria-label="Builder TOP">
+          <span class="builder-brand__mark" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18" /><path d="M7 21V7l8-4v18" /><path d="M17 21V11l-6-4" />
+            </svg>
+          </span>
+          <span class="builder-brand__text">
+            <span class="builder-brand__sub">IWASHO × TASFUL</span>
+            <span class="builder-brand__main">Builder</span>
+          </span>
+        </a>
+
+        <nav class="builder-top-nav" aria-label="グローバルナビ">
+          <a class="builder-top-nav__link" href="../public-board.html">案件を探す</a>
+          <a class="builder-top-nav__link" href="mvp-project-new.html">案件を投稿する</a>
+          <a class="builder-top-nav__link" href="mvp-partner-register.html">協力会社登録</a>
+          <a class="builder-top-nav__btn" href="#" onclick="alert('demo: ログインは未実装です'); return false;">ログイン</a>
+        </nav>
+
+        <div class="builder-top-navMobile" aria-label="モバイルナビ">
+          <button
+            type="button"
+            class="builder-top-navMobile__toggle"
+            aria-label="メニューを開く"
+            aria-expanded="false"
+            data-builder-top-menu-toggle
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="builder-top-drawer" data-builder-top-drawer aria-hidden="true">
+        <button type="button" class="builder-top-drawer__backdrop" aria-label="メニューを閉じる" data-builder-top-drawer-close></button>
+        <aside class="builder-top-drawer__panel" role="dialog" aria-modal="true" aria-label="メニュー">
+          <div class="builder-top-drawer__head">
+            <div class="builder-top-drawer__brand">
+              <span class="builder-top-drawer__brandKicker">IWASHO × TASFUL</span>
+              <span class="builder-top-drawer__brandMain">Builder</span>
+            </div>
+            <button type="button" class="builder-top-drawer__close" aria-label="閉じる" data-builder-top-drawer-close>×</button>
+          </div>
+          <nav class="builder-top-drawer__nav" aria-label="メニューリンク">
+            <a class="builder-top-drawer__link builder-top-drawer__link--accent" href="#" onclick="alert('demo: ログインは未実装です'); return false;">ログイン</a>
+            <a class="builder-top-drawer__link" href="../public-board.html">案件を探す</a>
+            <a class="builder-top-drawer__link" href="mvp-project-new.html">案件を投稿する</a>
+            <a class="builder-top-drawer__link" href="mvp-partner-register.html">協力会社登録</a>
+          </nav>
+        </aside>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-main builder-top-main">
+      <section
+        class="builder-top-hero"
+        aria-label="ヒーロー"
+        style="--builder-hero-image: url('assets/builder-top-hero.png');"
+      >
+        <div class="builder-top-hero__bg" aria-hidden="true"></div>
+        <div class="builder-top-hero__overlay" aria-hidden="true"></div>
+
+        <div class="builder-shell builder-top-hero__inner">
+          <p class="builder-top-hero__kicker">IWASHO × TASFUL</p>
+          <h1 class="builder-top-hero__title">Builder</h1>
+          <p class="builder-top-hero__subtitle">建設業界専用ネットワーク</p>
+
+          <div class="builder-top-hero__desc">
+            <p class="builder-top-hero__tags">
+              <span>協力会社募集</span>
+              <span>応援募集</span>
+              <span>職人募集</span>
+              <span>案件管理</span>
+            </p>
+            <p class="builder-top-hero__lead">すべてを<span class="builder-top-hero__accent">一つ</span>に。</p>
+          </div>
+
+          <div class="builder-top-hero__cta" aria-label="主要導線">
+            <a class="builder-top-btn builder-top-btn--primary" href="../public-board.html">案件を探す</a>
+            <a class="builder-top-btn builder-top-btn--dark" href="mvp-project-new.html">案件を投稿する</a>
+            <a class="builder-top-btn builder-top-btn--outline" href="mvp-partner-register.html">協力会社登録</a>
+          </div>
+
+          <div class="builder-top-stats" aria-label="統計">
+            <div class="builder-top-stats__card">
+              <p class="builder-top-stats__label">協力会社数</p>
+              <p class="builder-top-stats__value"><span>18</span>社</p>
+              <p class="builder-top-stats__sub">登録済みの協力会社</p>
+            </div>
+            <div class="builder-top-stats__card">
+              <p class="builder-top-stats__label">公開案件数</p>
+              <p class="builder-top-stats__value"><span>42</span>件</p>
+              <p class="builder-top-stats__sub">募集中の案件</p>
+            </div>
+            <div class="builder-top-stats__card">
+              <p class="builder-top-stats__label">応募者数</p>
+              <p class="builder-top-stats__value"><span>126</span>名</p>
+              <p class="builder-top-stats__sub">直近30日の応募者</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="builder-shell">
+      <section class="builder-top-section builder-top-section--frame" aria-label="最新の案件">
+        <div class="builder-top-section__head">
+          <div class="builder-top-section__title">
+            <h2 class="builder-top-h2">最新の案件</h2>
+            <p class="builder-top-hint">直近で公開された案件からピックアップ</p>
+          </div>
+          <div class="builder-top-section__actions">
+            <a class="builder-top-link" href="../public-board.html">案件を見る</a>
+          </div>
+        </div>
+        <div class="builder-top-projects" data-builder-top-projects>
+          <div class="builder-top-skeleton">読み込み中…</div>
+        </div>
+      </section>
+
+      <section class="builder-top-section builder-top-section--frame" aria-label="Builderでできること">
+        <div class="builder-top-section__head">
+          <div class="builder-top-section__title">
+            <h2 class="builder-top-h2">Builderでできること</h2>
+            <p class="builder-top-hint">募集・管理・報告まで、現場の流れをひとつに</p>
+          </div>
+        </div>
+        <div class="builder-top-feature-grid">
+          <article class="builder-top-card builder-top-card--hover">
+            <div class="builder-top-card__icon" aria-hidden="true">🤝</div>
+            <h3 class="builder-top-h3">協力会社募集</h3>
+            <p class="builder-top-p">案件の条件に合う協力会社へ募集・選定。</p>
+          </article>
+          <article class="builder-top-card builder-top-card--hover">
+            <div class="builder-top-card__icon" aria-hidden="true">📣</div>
+            <h3 class="builder-top-h3">応援募集</h3>
+            <p class="builder-top-p">繁忙期のスポット増員をスムーズに。</p>
+          </article>
+          <article class="builder-top-card builder-top-card--hover">
+            <div class="builder-top-card__icon" aria-hidden="true">🧰</div>
+            <h3 class="builder-top-h3">職人募集</h3>
+            <p class="builder-top-p">現場に必要な職人を募集してマッチング。</p>
+          </article>
+          <article class="builder-top-card builder-top-card--hover">
+            <div class="builder-top-card__icon" aria-hidden="true">💬</div>
+            <h3 class="builder-top-h3">TASFUL Talk</h3>
+            <p class="builder-top-p">連絡先交換なしで、案件単位のやり取り。</p>
+          </article>
+          <article class="builder-top-card builder-top-card--hover">
+            <div class="builder-top-card__icon" aria-hidden="true">🗓️</div>
+            <h3 class="builder-top-h3">入退場管理</h3>
+            <p class="builder-top-p">入場/退場の履歴をタイムラインで可視化。</p>
+          </article>
+          <article class="builder-top-card builder-top-card--hover">
+            <div class="builder-top-card__icon" aria-hidden="true">📄</div>
+            <h3 class="builder-top-h3">完了報告・写真・PDF</h3>
+            <p class="builder-top-p">報告書プレビュー、PDF生成履歴まで。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="builder-top-section builder-top-section--frame" aria-label="ご利用者別導線">
+        <div class="builder-top-section__head">
+          <div class="builder-top-section__title">
+            <h2 class="builder-top-h2">ご利用者別導線</h2>
+            <p class="builder-top-hint">目的に合わせて最短でスタート</p>
+          </div>
+        </div>
+        <div class="builder-top-route-grid">
+          <article class="builder-top-route builder-top-route--orange">
+            <div class="builder-top-route__icon" aria-hidden="true">🏗️</div>
+            <h3 class="builder-top-h3">仕事を依頼したい会社</h3>
+            <p class="builder-top-p">一般ダッシュボードから依頼・相談を管理します。</p>
+            <a class="builder-top-route__btn" href="user-dashboard.html">一般ダッシュボードへ</a>
+          </article>
+          <article class="builder-top-route builder-top-route--blue">
+            <div class="builder-top-route__icon" aria-hidden="true">🧑‍🔧</div>
+            <h3 class="builder-top-h3">協力会社・職人の方</h3>
+            <p class="builder-top-p">案件一覧から応募して、Talkで条件確認。</p>
+            <a class="builder-top-route__btn" href="../public-board.html">案件を見る</a>
+          </article>
+          <article class="builder-top-route builder-top-route--purple">
+            <div class="builder-top-route__icon" aria-hidden="true">🧭</div>
+            <h3 class="builder-top-h3">TASFULパートナー</h3>
+            <p class="builder-top-p">認定パートナー向けダッシュボードで案件を管理。</p>
+            <a class="builder-top-route__btn builder-top-route__btn--ghost" href="index.html">パートナーダッシュボードへ</a>
+          </article>
+        </div>
+      </section>
+
+      </div>
+
+      <footer class="builder-top-footer" aria-label="フッター">
+        <div class="builder-shell">
+        <div class="builder-top-footer__grid">
+          <div class="builder-top-footer__col builder-top-footer__col--brand">
+            <div class="builder-top-footer__brandRow" aria-label="ブランド">
+              <span class="builder-top-footer__logo" aria-hidden="true">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M3 21h18" /><path d="M7 21V7l8-4v18" /><path d="M17 21V11l-6-4" />
+                </svg>
+              </span>
+              <div class="builder-top-footer__brandText">
+                <div class="builder-top-footer__brandKicker">IWASHO × TASFUL</div>
+                <div class="builder-top-footer__brandMain">Builder</div>
+              </div>
+            </div>
+
+            <p class="builder-top-footer__desc">協力会社募集・案件管理をひとつに。現場に寄り添う建設プラットフォーム。</p>
+
+            <div class="builder-top-footer__miniStats" aria-label="統計">
+              <div class="builder-top-footer__miniCard">
+                <div class="builder-top-footer__miniNum">18</div>
+                <div class="builder-top-footer__miniLabel">協力会社数</div>
+              </div>
+              <div class="builder-top-footer__miniCard">
+                <div class="builder-top-footer__miniNum">42</div>
+                <div class="builder-top-footer__miniLabel">公開案件数</div>
+              </div>
+              <div class="builder-top-footer__miniCard">
+                <div class="builder-top-footer__miniNum">126</div>
+                <div class="builder-top-footer__miniLabel">応募者数</div>
+              </div>
+            </div>
+
+            <div class="builder-top-footer__sns" aria-label="SNS">
+              <a class="builder-top-footer__snsBtn" href="#" onclick="alert('demo'); return false;" aria-label="Facebook">f</a>
+              <a class="builder-top-footer__snsBtn" href="#" onclick="alert('demo'); return false;" aria-label="X">X</a>
+              <a class="builder-top-footer__snsBtn" href="#" onclick="alert('demo'); return false;" aria-label="Mail">@</a>
+            </div>
+          </div>
+
+          <div class="builder-top-footer__col">
+            <p class="builder-top-footer__title builder-top-footer__title--bar">サービス</p>
+            <a class="builder-top-footer__link" href="../public-board.html">案件一覧</a>
+            <a class="builder-top-footer__link" href="mvp-project-new.html">案件を投稿する</a>
+            <a class="builder-top-footer__link" href="mvp-partner-register.html">協力会社登録</a>
+            <a class="builder-top-footer__link" href="user-dashboard.html">一般ダッシュボード</a>
+            <a class="builder-top-footer__link" href="index.html">パートナーダッシュボード</a>
+          </div>
+
+          <div class="builder-top-footer__col">
+            <p class="builder-top-footer__title builder-top-footer__title--bar">サポート / 会社情報</p>
+            <a class="builder-top-footer__link" href="/contact">お問い合わせ</a>
+            <a class="builder-top-footer__link" href="/contact">会社概要</a>
+            <a class="builder-top-footer__link" href="/contact">利用規約</a>
+            <a class="builder-top-footer__link" href="/contact">プライバシーポリシー</a>
+            <a class="builder-top-footer__link" href="/contact">よくある質問</a>
+            <a class="builder-top-footer__link" href="/contact">使い方ガイド</a>
+          </div>
+
+          <div class="builder-top-footer__col">
+            <p class="builder-top-footer__title builder-top-footer__title--bar">その他</p>
+            <a class="builder-top-footer__link" href="#" onclick="alert('demo'); return false;">お知らせ</a>
+            <a class="builder-top-footer__link" href="#" onclick="alert('demo'); return false;">運営会社</a>
+            <a class="builder-top-footer__link" href="#" onclick="alert('demo'); return false;">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+        <div class="builder-top-footer__divider" aria-hidden="true"></div>
+        <nav class="builder-top-footer__legal" aria-label="法務リンク">
+          <a href="/contact">利用規約</a>
+          <a href="/contact">プライバシーポリシー</a>
+          <a href="/contact">会社概要</a>
+          <a href="/contact">お問い合わせ</a>
+        </nav>
+        <p class="builder-top-footer__copy">© 2026 TASFUL inc. All rights reserved.</p>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script>
+    (function () {
+      const header = document.querySelector("[data-builder-top-header]");
+      if (!header) return;
+      const onScroll = () => {
+        header.classList.toggle("is-scrolled", window.scrollY > 10);
+      };
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+    })();
+  </script>
+  <script>
+    (function () {
+      const btn = document.querySelector("[data-builder-top-menu-toggle]");
+      const drawer = document.querySelector("[data-builder-top-drawer]");
+      const closes = Array.from(document.querySelectorAll("[data-builder-top-drawer-close]"));
+      if (!btn || !drawer) return;
+
+      const setOpen = (open) => {
+        document.body.classList.toggle("is-builder-top-menu-open", !!open);
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        drawer.setAttribute("aria-hidden", open ? "false" : "true");
+        if (open) {
+          drawer.querySelector("a,button")?.focus?.();
+        } else {
+          btn.focus?.();
+        }
+      };
+
+      btn.addEventListener("click", () => setOpen(!document.body.classList.contains("is-builder-top-menu-open")));
+      closes.forEach((x) => x.addEventListener("click", () => setOpen(false)));
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") setOpen(false);
+      });
+    })();
+  </script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

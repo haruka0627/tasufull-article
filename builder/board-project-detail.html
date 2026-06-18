@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>掲示板詳細 | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+  <link rel="stylesheet" href="../tasful-app-mobile.css" />
+  <link rel="stylesheet" href="../tasful-app-mobile-detail.css" />
+</head>
+<body class="builder-body tasu-app-shell-detail" data-page="builder-board-project-detail">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18" />
+                <path d="M7 21V7l8-4v18" />
+                <path d="M17 21V11l-6-4" />
+                <path d="M9 9v.01" />
+                <path d="M9 12v.01" />
+                <path d="M9 15v.01" />
+                <path d="M9 18v.01" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">掲示板詳細</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="board-projects.html" data-builder-page-back aria-label="案件一覧へ">‹ 案件を探す</a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title" data-builder-mvp-pd-title>掲示板詳細</h1>
+          <p class="builder-header__sub" data-builder-mvp-pd-sub>—</p>
+        </div>
+
+        <div class="builder-role" data-builder-role></div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-panel mvp-pd-hero" aria-label="案件サマリー">
+        <div class="mvp-pd-hero__head">
+          <div class="mvp-pd-hero__badges" data-builder-mvp-pd-badges></div>
+          <p class="mvp-pd-hero__summary" data-builder-mvp-pd-hero-summary>—</p>
+        </div>
+        <dl class="mvp-pd-statGrid" data-builder-mvp-pd-stats></dl>
+      </section>
+
+      <div class="mvp-dark-layout mvp-pd-layout" aria-label="案件詳細レイアウト">
+        <div class="mvp-pd-main">
+          <section class="builder-panel mvp-pd-panel--overview" aria-label="案件概要">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title" data-builder-board-pd-overview-title>案件内容</h2>
+            </div>
+            <div class="mvp-pd-body" data-builder-mvp-pd-overview></div>
+          </section>
+
+          <section class="builder-panel mvp-pd-panel--work" aria-label="作業内容">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title" data-builder-board-pd-work-title>作業内容</h2>
+            </div>
+            <div class="mvp-pd-body" data-builder-mvp-pd-work></div>
+          </section>
+
+          <section class="builder-panel mvp-pd-panel--compact" aria-label="募集職種">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title" data-builder-board-pd-trades-title>募集職種</h2>
+            </div>
+            <div class="mvp-pd-chips" data-builder-mvp-pd-trades></div>
+          </section>
+
+          <section class="builder-panel" aria-label="希望条件">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">希望条件</h2>
+            </div>
+            <div class="mvp-pd-body" data-builder-mvp-pd-preferred></div>
+          </section>
+
+          <section class="builder-panel" aria-label="注意事項">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">注意事項</h2>
+            </div>
+            <div class="mvp-pd-body" data-builder-mvp-pd-notes></div>
+          </section>
+
+          <section class="builder-panel" aria-label="添付資料">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">添付資料</h2>
+              <span class="builder-kpi" data-builder-mvp-pd-attach-kpi>—</span>
+            </div>
+            <ul class="mvp-pd-attachGrid" data-builder-mvp-pd-attachments></ul>
+          </section>
+        </div>
+
+        <aside class="mvp-dark-side">
+          <div class="mvp-dark-side__stack">
+            <section class="builder-panel" aria-label="応募状況" data-builder-board-pd-apps-section>
+              <div class="builder-panel__head">
+                <h2 class="builder-section-title" data-builder-board-pd-apps-title>応募状況</h2>
+                <span class="builder-kpi" data-builder-mvp-pd-app-kpi>—</span>
+              </div>
+              <div class="builder-callouts" data-builder-mvp-pd-app-callouts></div>
+              <div class="builder-meta" data-builder-mvp-pd-app-meta></div>
+              <ul class="mvp-pd-appList" data-builder-mvp-pd-app-list></ul>
+            </section>
+
+            <section class="builder-panel mvp-pd-cta" aria-label="アクション">
+              <div class="builder-panel__head">
+                <h2 class="builder-section-title">操作</h2>
+              </div>
+              <div class="mvp-pd-ctaStack">
+                <button type="button" class="mvp-pd-btnPrimary" data-builder-board-pd-apply hidden>この案件に応募する</button>
+                <p class="mvp-pd-ctaHint" data-builder-board-pd-apply-status hidden></p>
+                <a class="builder-btn builder-btn--secondary" href="board-threads.html" data-builder-board-pd-threads>やり取り一覧</a>
+                <a class="builder-btn builder-btn--ghost" href="../talk-home.html?tab=notify" data-builder-board-pd-talk>TASFUL TALK</a>
+                <a class="mvp-pd-btnPrimary" href="#" data-builder-board-pd-thread hidden>チャットで相談する</a>
+                <a class="builder-btn builder-btn--ghost" href="mvp-project-new.html" data-builder-board-pd-edit hidden>案件を編集</a>
+              </div>
+              <p class="mvp-pd-ctaHint" data-builder-board-pd-thread-hint hidden>選定後にチャットが利用できます。</p>
+            </section>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved.</p></footer>
+    </main>
+  </div>
+
+  <div class="builder-board-pd-apply-dock" data-builder-board-pd-apply-dock hidden aria-label="応募操作">
+    <button type="button" class="builder-board-pd-apply-dock__btn" data-builder-board-pd-apply-dock-btn>応募する</button>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-notifications-store.js" defer></script>
+  <script src="../talk-platform-notify.js" defer></script>
+  <script src="../listing-demo-catalog.js"></script>
+  <script src="builder-board-feed.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+  <script src="../tasful-app-mobile.js" defer></script>
+</body>
+</html>

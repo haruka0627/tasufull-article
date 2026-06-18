@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>お気に入り一覧 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="favorites-list.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body data-page="favorites-list" data-favorites-view="list" data-breadcrumb-page-label="お気に入り">
+  <header class="fav-site-header">
+    <div class="fav-site-header__inner">
+      <a href="index-top.html" class="favorites-header__logo" aria-label="TASFUL">
+        <img src="images/tasful-ai-globe.png?v=4" alt="" class="favorites-header__logo-icon">
+        <span class="favorites-header__logo-main">TASFUL</span>
+        <span class="favorites-header__logo-sub">プラットフォーム</span>
+      </a>
+      <div class="fav-site-header__actions">
+        <a href="business.html" class="fav-site-header__link">法人・事業者の方へ</a>
+        <a href="index.html" class="fav-site-header__link fav-site-header__link--primary">掲載サービス一覧</a>
+      </div>
+    </div>
+  </header>
+
+  <nav data-breadcrumb aria-label="パンくず"></nav>
+
+  <main class="fav-page">
+    <header class="fav-page-head">
+      <h1 class="fav-page-head__title">お気に入り一覧</h1>
+      <p class="fav-page-head__sub">気になるサービスをお気に入りとして保存できます。</p>
+    </header>
+
+    <section class="fav-toolbar" aria-label="検索とフィルター">
+      <div class="fav-toolbar__row">
+        <label class="fav-search">
+          <span class="fav-search__icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </span>
+          <input
+            type="search"
+            class="fav-search__input"
+            data-favorites-search
+            placeholder="サービス名・会社名・キーワードで検索"
+            autocomplete="off"
+          >
+        </label>
+        <select class="fav-select fav-select--type" data-favorites-type-filter aria-label="種別">
+          <option value="">すべての種別</option>
+          <option value="business-service">業務サービス</option>
+          <option value="store">店舗・販売</option>
+          <option value="product">商品</option>
+          <option value="skill">スキル</option>
+          <option value="job">求人</option>
+          <option value="worker">ワーカー</option>
+          <option value="listing">掲載</option>
+        </select>
+        <select class="fav-select fav-select--sort" data-favorites-sort aria-label="並び替え">
+          <option value="date-desc">保存日が新しい順</option>
+          <option value="date-asc">保存日が古い順</option>
+          <option value="name">名前順</option>
+        </select>
+        <div class="fav-view-toggle" role="group" aria-label="表示形式">
+          <button type="button" class="fav-view-toggle__btn is-active" data-favorites-view-btn="list" aria-pressed="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+            リスト
+          </button>
+          <button type="button" class="fav-view-toggle__btn" data-favorites-view-btn="card" aria-pressed="false">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            カード
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="fav-panel" data-favorites-panel hidden>
+      <div class="fav-panel__head">
+        <p class="fav-panel__count">
+          <span class="fav-panel__count-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2a2 2 0 0 0-2 2v17l4-2.5 4 2.5 4-2.5 4 2.5V4a2 2 0 0 0-2-2H6z"/></svg>
+          </span>
+          <span data-favorites-count>0</span>件のお気に入り
+        </p>
+        <button type="button" class="fav-panel__clear" data-favorites-clear-all>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+          すべて削除
+        </button>
+      </div>
+      <ul class="fav-list" data-favorites-list></ul>
+      <p class="fav-no-results" data-favorites-no-results hidden>条件に一致するお気に入りはありません。</p>
+    </section>
+
+    <div class="fav-empty" data-favorites-empty hidden>
+      <div class="fav-empty__icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2a2 2 0 0 0-2 2v17l4-2.5 4 2.5 4-2.5 4 2.5V4a2 2 0 0 0-2-2H6z"/></svg>
+      </div>
+      <p class="fav-empty__title">お気に入りはまだありません</p>
+      <p class="fav-empty__lead">気になるサービスをお気に入りに追加すると、ここに表示されます。</p>
+      <a href="index.html" class="fav-empty__cta">サービスを探す <span aria-hidden="true">›</span></a>
+    </div>
+
+    <section class="fav-promo" aria-label="サービス探索">
+      <div class="fav-promo__icon" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6 2a2 2 0 0 0-2 2v17l4-2.5 4 2.5 4-2.5 4 2.5V4a2 2 0 0 0-2-2H6z"/></svg>
+      </div>
+      <div class="fav-promo__text">
+        <p class="fav-promo__title">もっと気になるサービスを見つけましょう</p>
+        <p class="fav-promo__stat" data-favorites-promo-stat hidden></p>
+        <p class="fav-promo__sub" data-favorites-promo-sub>気になるサービスをお気に入りに追加すると、ここにまとめて確認できます。</p>
+      </div>
+      <a href="index.html" class="fav-promo__btn favorites-cta__button">サービスを探す <span aria-hidden="true">›</span></a>
+    </section>
+
+    <p class="fav-footnote">※ お気に入りはこのブラウザにのみ保存されます。別の端末やブラウザでは表示されません。</p>
+  </main>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="favorite-store.js"></script>
+  <script src="detail-nav-context.js"></script>
+  <script src="favorites-list.js"></script>
+</body>
+</html>

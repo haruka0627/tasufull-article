@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>実機 localStorage エクスポート</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; line-height: 1.5; }
+    code, pre { background: #f3f4f6; padding: 2px 6px; border-radius: 4px; }
+    pre { padding: 12px; overflow: auto; max-height: 40vh; }
+    button { margin-top: 12px; padding: 10px 16px; font-size: 16px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>実機 localStorage エクスポート</h1>
+  <p>このページを<strong>実機の同じブラウザ</strong>で開き、エクスポートした JSON を
+    <code>fixtures/real-device-localStorage.json</code> に保存してください。</p>
+  <p>推奨: 先に対象 URL を開いてから、このページへ遷移するか、下のボタンでダウンロードしてください。</p>
+  <p><a href="board-thread.html?thread_id=thread-demo-001&amp;role=owner&amp;from=talk#completion">対象 URL を開く</a></p>
+  <button type="button" id="download">real-device-localStorage.json をダウンロード</button>
+  <button type="button" id="copy">クリップボードにコピー</button>
+  <pre id="preview"></pre>
+  <script>
+    (function () {
+      var out = {};
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        out[k] = localStorage.getItem(k);
+      }
+      var json = JSON.stringify(out, null, 2);
+      document.getElementById("preview").textContent = json.slice(0, 4000) + (json.length > 4000 ? "\n…" : "");
+      document.getElementById("download").addEventListener("click", function () {
+        var blob = new Blob([json], { type: "application/json" });
+        var a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "real-device-localStorage.json";
+        a.click();
+        URL.revokeObjectURL(a.href);
+      });
+      document.getElementById("copy").addEventListener("click", function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(json).then(function () {
+            alert("クリップボードにコピーしました。fixtures/real-device-localStorage.json に保存してください。");
+          });
+        } else {
+          prompt("コピーして fixtures/real-device-localStorage.json に保存", json);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

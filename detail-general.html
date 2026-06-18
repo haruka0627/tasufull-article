@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+  <title>E | TASFUL</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="tasu-banner.css">
+
+  <link rel="stylesheet" href="business-board.css">
+
+  <link rel="stylesheet" href="listing-detail-page.css">
+
+  <link rel="stylesheet" href="detail-bottom-sections.css">
+
+  <link rel="stylesheet" href="detail-business.css">
+
+  <link rel="stylesheet" href="./detail-business-service.css">
+  <link rel="stylesheet" href="listing-ai-badge.css">
+  <link rel="stylesheet" href="./detail-business-service-sticky-nav.css">
+  <link rel="stylesheet" href="detail-favorites.css">
+  <link rel="stylesheet" href="./business-service-flow.css">
+  <link rel="stylesheet" href="site-member-nav.css">
+
+
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+
+<body data-detail-type="general" data-detail-page="1" data-listing-loaded="false" class="biz-detail-page biz-detail-page--field-service biz-detail-page--business-service">
+
+
+
+  <div class="tasu-banner" data-biz-detail-simple-banner>
+
+    <div class="tasu-text">
+
+       <span class="logo">TASFUL</span>?E
+
+      <a href="post.html" class="link"></a>
+      <a href="listing-management.html" class="link accent"></a>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="biz-detail-status-wrap bsd-status-wrap">
+
+    <p class="listing-detail-status listing-detail-status--loading" data-listing-detail-status hidden></p>
+
+  </div>
+
+
+
+  <template id="business-service-detail-layout">
+
+    <div class="bsd-page business-service-page">
+
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+
+      <a href="business.html" class="bsd-back biz-detail-back" data-biz-detail-back>?E?E</a>
+
+
+
+      <!-- ETOP?E ?E/ ?CTA + E-->
+      <section class="bsd-hero-shell hero-card bsd-card" aria-label="サービス概要">
+        <div class="bsd-hero hero-card__grid detail-hero-grid hero-top-grid biz-detail-hero biz-detail-fv">
+
+          <div class="bsd-hero__col bsd-hero__col--media biz-detail-fv__media">
+
+            <div class="hero-gallery">
+
+              <div class="hero-gallery-main-wrap" data-biz-detail-hero-figure>
+
+                <img class="hero-main-image" data-biz-detail-hero-img alt="" width="640" height="480" decoding="async">
+
+                <button type="button"
+                  class="biz-detail-gallery-nav biz-detail-gallery-nav--prev"
+                  data-biz-detail-gallery-prev
+                  aria-label="前の画像"
+                  hidden>?</button>
+
+                <button type="button"
+                  class="biz-detail-gallery-nav biz-detail-gallery-nav--next"
+                  data-biz-detail-gallery-next
+                  aria-label="次の画像"
+                  hidden>?</button>
+
+              </div>
+
+              <div class="hero-thumbnails" data-biz-detail-gallery hidden></div>
+
+            </div>
+
+          </div>
+
+
+
+          <div class="bsd-hero__col bsd-hero__col--info hero-main biz-detail-hero__body biz-detail-fv__main">
+
+            <div class="hero-main-inner hero-info">
+
+            <div class="bsd-hero__top-tags hero-tags" data-bsd-hero-top-tags>
+
+              <span class="bsd-hero__pill" data-bsd-hero-category hidden></span>
+
+              <div class="bsd-hero__top-tags-extra" data-biz-detail-hero-genre-tags hidden></div>
+
+            </div>
+
+            <div data-biz-detail-hero-condition-tags hidden></div>
+
+
+
+            <h1 class="bsd-hero__title service-title hero-title biz-detail-hero__title" data-biz-detail-title></h1>
+
+
+
+            <div class="bsd-hero__company-block">
+
+              <div class="bsd-hero__company-row company-row">
+
+                <span class="bsd-hero__company-icon company-icon" aria-hidden="true">
+
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
+
+                    <path d="M5 20c0-3.866 3.134-7 7-7s7 3.134 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+
+                  </svg>
+
+                </span>
+
+                <p class="bsd-hero__company company-name hero-company biz-detail-hero__company" data-biz-detail-company></p>
+
+              </div>
+
+              <div class="company-badges">
+                <span class="bsd-hero__verified verified-badge" data-bsd-verified-badge hidden>?E</span>
+                <span class="bsd-hero__achievement hero-achievement-badge result-badge" data-bsd-hero-achievement hidden></span>
+                <span class="bsd-hero__pr-badge pr-badge" data-bsd-pr-badge hidden>PR</span>
+              </div>
+
+              <div class="bsd-hero__title-badges biz-detail-hero__title-badges" data-biz-detail-title-badges hidden aria-hidden="true"></div>
+
+            </div>
+
+
+
+            <div class="bsd-hero__rating-row rating-row hero-rating-row" data-biz-detail-hero-rating-row hidden>
+
+              <div class="bsd-hero__rating">
+
+                <span class="bsd-hero__stars stars detail-gold-stars" data-biz-detail-hero-rating-stars aria-hidden="true"></span>
+
+                <span class="bsd-hero__score" data-biz-detail-hero-rating-score></span>
+
+                <span class="bsd-hero__count" data-biz-detail-hero-rating-count></span>
+
+              </div>
+
+            </div>
+
+
+
+            <ul class="bsd-hero__meta bsd-hero__meta--area hero-meta-grid hero-meta-row biz-detail-quick" data-biz-detail-hero-quick></ul>
+
+
+
+            <div class="bsd-hero__bottom-tags hero-bottom-tags" data-bsd-hero-bottom-tags hidden aria-label="?"></div>
+
+
+
+            <div class="bsd-hero__lead-block" data-bsd-hero-lead-block hidden>
+
+              <p class="bsd-hero__lead hero-description biz-detail-hero__lead" data-biz-detail-hero-lead></p>
+
+              <button type="button" class="bsd-hero__lead-more" data-bsd-hero-lead-more hidden aria-expanded="false">
+
+                <span class="bsd-hero__lead-more-label">?</span>
+
+                <span class="bsd-hero__lead-more-icon" aria-hidden="true">?</span>
+
+              </button>
+
+            </div>
+
+
+
+            </div>
+
+          </div>
+
+
+
+            <aside class="bsd-hero__col bsd-hero__col--cta hero-cta hero-cta-column biz-detail-fv__aside" aria-label="相談・見積">
+
+            <div class="bsd-cta-card hero-cta-card biz-detail-fv-card">
+
+              <p class="bsd-cta-card__head" data-bsd-cta-head>
+
+                <span class="bsd-cta-card__head-main">?E?E</span>
+
+                <span class="bsd-cta-card__head-sub">24</span>
+
+              </p>
+
+
+
+              <div class="bsd-cta-card__actions biz-detail-sidebar__cta-group" data-biz-detail-sidebar-actions data-bsd-cta-actions>
+                <button type="button" class="biz-detail-btn biz-detail-btn--primary biz-detail-btn--taxi-gold bsd-btn bsd-btn--primary" data-business-service-estimate data-biz-detail-estimate>?</button>
+                <button type="button" class="biz-detail-btn biz-detail-btn--outline bsd-btn bsd-btn--outline" data-business-service-chat data-biz-detail-inquiry>?E</button>
+              </div>
+
+
+
+              <a href="#" class="bsd-cta-card__materials bsd-cta-materials-card hero-download-card" data-bsd-materials-link hidden>
+
+                <span class="bsd-cta-materials-card__icon" aria-hidden="true"></span>
+
+                <span class="bsd-cta-materials-card__body">
+
+                  <span class="bsd-cta-materials-card__label"></span>
+
+                  <span class="bsd-cta-materials-card__sub">?EDF</span>
+
+                </span>
+
+              </a>
+
+
+
+              <div class="bsd-cta-card__sub">
+
+                <button type="button" class="bsd-cta-card__fav" data-biz-detail-favorite aria-label="" aria-pressed="false">
+
+                  <span class="bsd-cta-card__fav-icon" aria-hidden="true">?</span><span class="bsd-cta-card__fav-label" data-bsd-favorite-label> ?</span>
+
+                </button>
+
+              </div>
+
+
+
+              <div class="bsd-sr-only" data-biz-detail-sidebar-rating hidden></div>
+
+              <div class="bsd-sr-only biz-detail-side-price"><span data-biz-detail-sidebar-price-label></span><p data-biz-detail-sidebar-price></p></div>
+
+            </div>
+
+          </aside>
+
+
+
+          <ul class="bsd-hero__feature-row hero-feature-list" data-bsd-hero-feature-row aria-label="?" hidden></ul>
+
+        </div>
+
+      </section>
+
+
+
+      <nav
+        class="shop-sticky-action-nav business-sticky-action-nav"
+        data-business-sticky-action-nav
+        data-shop-sticky-action-nav
+        hidden
+        role="navigation"
+        aria-label="ページ内ナビとお問い合わせ"
+      >
+        <div class="shop-sticky-action-nav__tabs" data-business-sticky-action-tabs data-shop-sticky-action-tabs></div>
+        <div class="shop-sticky-action-nav__actions" data-business-sticky-action-actions data-shop-sticky-action-actions></div>
+      </nav>
+      <div
+        class="shop-sticky-action-nav-spacer business-sticky-action-nav-spacer"
+        data-business-sticky-action-spacer
+        data-shop-sticky-action-spacer
+        hidden
+        aria-hidden="true"
+      ></div>
+
+
+
+      <!-- E?E?E?EE-->
+
+      <div class="bsd-sections-stack">
+
+        <section class="bsd-section bsd-card business-summary" id="section-overview" hidden>
+
+          <div class="business-summary__layout">
+
+            <div class="business-summary__content">
+
+              <h2 class="business-summary__title"></h2>
+
+              <p class="business-summary__description" data-bsd-overview-lead data-bsd-overview-description></p>
+
+              <div class="bsd-overview-features" data-bsd-overview-cards aria-label="E?"></div>
+
+              <div class="bsd-sr-only" data-biz-detail-description></div>
+
+              <ul class="bsd-sr-only" data-bsd-overview-points></ul>
+
+            </div>
+
+            <aside class="bsd-overview-aside" data-bsd-overview-kpis-wrap hidden aria-label="?">
+              <div class="bsd-overview-kpis" data-bsd-overview-kpis></div>
+            </aside>
+
+          </div>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card general-event-info" id="section-general-event-info" hidden aria-labelledby="generalEventInfoTitle">
+
+          <div class="section-header">
+            <h2 class="section-title" id="generalEventInfoTitle">?E</h2>
+          </div>
+
+          <dl class="general-event-info__list" data-general-event-info-list></dl>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card general-organizer-info" id="section-general-organizer" hidden aria-labelledby="generalOrganizerTitle">
+
+          <div class="section-header">
+            <h2 class="section-title" id="generalOrganizerTitle">?E?</h2>
+          </div>
+
+          <table class="bsd-company-table company-info-panel__table">
+            <tbody data-general-organizer-table></tbody>
+          </table>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card pricing-plan service-menu" id="section-service-menu">
+
+          <h2 class="pricing-plan__title" data-biz-detail-service-menu-title></h2>
+
+          <p class="pricing-plan__lead" data-biz-detail-service-menu-lead>?EE</p>
+
+          <div class="pricing-plan__table-wrap bsd-pricing-table-wrap" data-bsd-pricing-table-wrap>
+
+            <table class="pricing-plan__table bsd-pricing-table" data-bsd-pricing-table>
+
+              <thead>
+
+                <tr>
+
+                  <th scope="col">?E</th>
+
+                  <th scope="col">?E?</th>
+
+                  <th scope="col"></th>
+
+                </tr>
+
+              </thead>
+
+              <tbody data-bsd-pricing-tbody></tbody>
+
+            </table>
+
+          </div>
+
+          <div class="biz-detail-price-cards bsd-cards-fallback bsd-sr-only" data-biz-detail-service-menu hidden></div>
+
+          <div class="pricing-plan__footnotes" data-bsd-pricing-footnotes>
+
+            <p></p>
+
+            <p></p>
+
+          </div>
+
+          <p class="pricing-plan__more bsd-section__more" data-bsd-pricing-more><a href="#section-service-menu">? </a></p>
+
+          <p class="bsd-sr-only bsd-pricing-note" data-fs-pricing-note>?E?</p>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card case-studies" id="section-achievements" hidden>
+
+          <h2 class="case-studies__title">?</h2>
+
+          <p class="case-studies__lead" data-biz-detail-cases-lead>?</p>
+
+          <div class="bsd-work-cases-grid biz-detail-cases" data-bsd-work-cases-grid data-biz-detail-cases></div>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card bsd-trust-section license-credentials" id="section-license" hidden aria-labelledby="bsdTrustTitle">
+
+          <header class="bsd-trust-section__head">
+            <h2 class="bsd-trust-section__title license-credentials__title" id="bsdTrustTitle">E?</h2>
+            <p class="bsd-trust-section__lead license-credentials__lead" data-biz-detail-license-lead>?EE?E?</p>
+          </header>
+
+          <div class="bsd-trust-section__badges" data-bsd-trust-verification-badges hidden aria-hidden="true">
+            <span class="bsd-trust-badge" data-bsd-trust-badge="ai">AI</span>
+            <span class="bsd-trust-badge" data-bsd-trust-badge="ops"></span>
+          </div>
+
+          <div class="bsd-trust-section__layout license-credentials__layout bsd-license">
+            <div class="bsd-trust-section__certs" data-bsd-cert-list-wrap>
+              <div class="bsd-trust-section__cert-list" data-bsd-license-list role="list"></div>
+            </div>
+          </div>
+
+          <div class="bsd-sr-only biz-detail-license-cards" data-biz-detail-license></div>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card request-flow" id="section-flow">
+
+          <h2 class="request-flow__title"></h2>
+
+          <p class="request-flow__lead">?E ?E? ?EE?EE?E ?EE?6E?</p>
+
+          <ol class="request-flow__steps bsd-flow" data-bsd-flow-steps></ol>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card reviews-panel" id="section-reviews" data-biz-detail-reviews-section aria-labelledby="bizDetailReviewsTitle">
+
+          <div class="section-header">
+            <h2 class="section-title" id="bizDetailReviewsTitle">E</h2>
+            <p class="section-description">?E</p>
+          </div>
+
+          <div class="reviews-panel__body bsd-reviews taxi-review-section" data-biz-detail-taxi-review-section>
+
+            <div class="taxi-review-section__content" data-biz-detail-reviews-body>
+
+              <div class="reviews-panel__layout taxi-review-section__grid bsd-reviews__grid">
+
+                <div class="reviews-panel__summary-box taxi-review-section__summary bsd-reviews__summary">
+
+                  <p class="taxi-review-section__score reviews-panel__score" data-biz-detail-review-average>4.9</p>
+
+                  <p class="taxi-review-section__stars reviews-panel__stars detail-gold-stars detail-gold-stars--lg" data-biz-detail-review-stars aria-hidden="true">?E?E?</p>
+
+                  <p class="taxi-review-section__count reviews-panel__count" data-biz-detail-review-count-wrap>(<span data-biz-detail-review-count>32</span>)</p>
+
+                </div>
+
+                <span class="reviews-panel__sep" aria-hidden="true">?</span>
+
+                <div class="taxi-review-section__breakdown bsd-reviews__breakdown reviews-panel__breakdown" data-biz-detail-reviews-breakdown aria-label="E"></div>
+
+                <div class="reviews-panel__slider">
+
+                  <div class="taxi-review-section__cards bsd-reviews__cards reviews-panel__cards" data-biz-detail-reviews-strip data-review-count="2"></div>
+
+                  <button type="button" class="reviews-panel__slider-nav" data-reviews-scroll-next aria-label="次の口コミへ">›</button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <p class="reviews-panel__more bsd-section__more"><a href="#section-reviews"> </a></p>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card company-info-panel" id="section-company-info">
+
+          <div class="section-header">
+            <h2 class="section-title">E</h2>
+            <p class="section-description">?E?E?E?E</p>
+          </div>
+
+          <table class="bsd-company-table company-info-panel__table">
+
+            <tbody data-bsd-company-table></tbody>
+
+          </table>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card" id="section-service-area">
+
+          <div class="section-header">
+            <h2 class="section-title">?</h2>
+            <p class="section-description">E?EE</p>
+          </div>
+
+          <div class="bsd-area bsd-area-v2">
+            <div class="bsd-area-v2__top">
+              <div class="bsd-area-v2__left">
+                <div class="bsd-area-v2__mode-card" data-bsd-area-online-card>
+                  <div class="bsd-area-v2__mode-icon" aria-hidden="true"></div>
+                  <div class="bsd-area-v2__mode-body">
+                    <p class="bsd-area-v2__mode-title">?</p>
+                    <p class="bsd-area-v2__mode-desc">E?EE?E</p>
+                    <p class="bsd-area-v2__mode-value" data-bsd-area-online-value></p>
+                  </div>
+                </div>
+                <div class="bsd-area-v2__mode-card" data-bsd-area-visit-card>
+                  <div class="bsd-area-v2__mode-icon" aria-hidden="true"></div>
+                  <div class="bsd-area-v2__mode-body">
+                    <p class="bsd-area-v2__mode-title">?</p>
+                    <p class="bsd-area-v2__mode-desc">?E?E?E</p>
+                    <p class="bsd-area-v2__mode-value" data-bsd-area-visit-value>E</p>
+                  </div>
+                </div>
+              </div>
+              <div class="bsd-area-v2__right">
+                <div class="bsd-area-v2__about">
+                  <p class="bsd-area-v2__about-title">?E</p>
+                  <ul class="bsd-area-v2__about-list" aria-label="?E">
+                    <li><span class="bsd-area-v2__check" aria-hidden="true">?</span><span>?</span></li>
+                    <li><span class="bsd-area-v2__check" aria-hidden="true">?</span><span>EE</span></li>
+                    <li><span class="bsd-area-v2__check" aria-hidden="true">?</span><span>E</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="bsd-area-v2__bottom" aria-label="エリアごとの対応方法">
+              <div class="bsd-area-v2__bottom-title"></div>
+              <div class="bsd-area-v2__cards">
+                <article class="bsd-area-v2__info-card" data-bsd-area-info-online>
+                  <div class="bsd-area-v2__info-icon" aria-hidden="true"></div>
+                  <h3 class="bsd-area-v2__info-title">?</h3>
+                  <p class="bsd-area-v2__info-desc">E?EE?</p>
+                </article>
+                <article class="bsd-area-v2__info-card" data-bsd-area-info-visit>
+                  <div class="bsd-area-v2__info-icon" aria-hidden="true">?</div>
+                  <h3 class="bsd-area-v2__info-title">E?</h3>
+                  <p class="bsd-area-v2__info-desc">?E?EEE?</p>
+                </article>
+                <article class="bsd-area-v2__info-card" data-bsd-area-info-other>
+                  <div class="bsd-area-v2__info-icon" aria-hidden="true"></div>
+                  <h3 class="bsd-area-v2__info-title">E?E?E</h3>
+                  <p class="bsd-area-v2__info-desc">?E?E?E</p>
+                </article>
+              </div>
+            </div>
+          </div>
+
+        </section>
+
+
+
+        <section class="bsd-section bsd-card" id="section-business-payment" hidden aria-labelledby="bsdPaymentTitle">
+          <div class="bsd-section__head section-header">
+            <h2 class="section-title" id="bsdPaymentTitle">?E</h2>
+            <p class="section-description">?E?E?E?E?TASFUL?</p>
+          </div>
+          <div data-bsf-payment-panel></div>
+        </section>
+
+        <section id="contacts" class="bsd-section bsd-card job-applications-panel" data-listing-contacts-section data-detail-keep hidden aria-labelledby="listingContactsTitle">
+          <div class="job-applications-panel__head">
+            <h2 id="listingContactsTitle" class="job-applications-panel__title" data-listing-contacts-title>依頼者一覧</h2>
+            <span class="job-applications-panel__count" data-listing-contacts-count>0 件</span>
+          </div>
+          <p class="job-applications-panel__lead" data-listing-contacts-lead hidden></p>
+          <ul class="job-applications-list" data-listing-contacts-list aria-label="依頼者一覧"></ul>
+        </section>
+
+        <section class="bsd-section bsd-card biz-detail-faq-panel" id="section-faq" hidden aria-labelledby="bsdFaqTitle">
+
+          <div class="section-header">
+            <h2 class="section-title" id="bsdFaqTitle"></h2>
+            <p class="section-description">?EE?E</p>
+          </div>
+
+          <div class="biz-detail-faq" data-bsd-faq-list></div>
+
+        </section>
+
+      </div>
+
+
+
+      <footer class="bsd-footer fs-site-footer" data-fs-site-footer>
+
+        <div class="bsd-footer__inner">
+
+          <p class="bsd-footer__logo"><span class="bsd-footer__mark" aria-hidden="true"></span> TASFUL</p>
+
+          <p class="bsd-footer__tagline">E?EE</p>
+
+          <p class="bsd-footer__copy">? 2026 TASFUL All Rights Reserved.</p>
+
+        </div>
+
+      </footer>
+
+
+
+      <section class="bsd-sr-only" id="section-strengths" hidden><div data-biz-detail-strengths></div></section>
+
+      <section class="bsd-sr-only" id="section-shop-bottom" hidden></section>
+
+      <footer class="bsd-sr-only" data-biz-detail-disclaimer hidden></footer>
+
+    </div>
+
+  </template>
+
+
+
+  <main id="business-service-detail-root"></main>
+
+  <section
+    class="listing-detail-not-found"
+    data-listing-detail-not-found
+    data-general-not-found
+    hidden
+    aria-live="polite"
+    style="max-width:42rem;margin:2rem auto;padding:1.5rem;text-align:center;"
+  >
+    <h1 style="font-size:1.25rem;margin:0 0 .75rem;"></h1>
+    <p style="color:#64748b;margin:0 0 .5rem;">?EE?E?</p>
+    <p data-listing-detail-not-found-id data-general-not-found-id style="font-size:.875rem;color:#94a3b8;"></p>
+    <a href="listing-management.html" style="color:#1d4ed8;font-weight:600;">E</a>
+  </section>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script src="chat-supabase-config.js"></script>
+
+  <script src="tasu-supabase-client.js"></script>
+
+  <script src="listing-tags.js"></script>
+
+  <script src="business-categories.js"></script>
+
+  <script src="business-wording.js"></script>
+
+  <script src="listing-renderer.js"></script>
+
+  <script src="business-listings-db.js"></script>
+
+  <script src="business-board-renderer.js"></script>
+
+  <script src="listing-route-resolver.js"></script>
+
+
+  <script src="listing-demo-catalog.js"></script>
+  <script src="business-board-demo.js"></script>
+
+  <script src="company-reviews-db.js"></script>
+
+  <script src="business-service-data.js"></script>
+
+  <script src="ai-workspace-links.js"></script>
+  <script src="detail-nav-context.js"></script>
+  <script src="./detail-business.js"></script>
+
+  <script src="./detail-business-service.js"></script>
+
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="service-deals-db.js"></script>
+  <script src="business-service-payment.js"></script>
+  <script src="talk-category-normalize.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="talk-follow-store.js"></script>
+  <script src="talk-follow-notify.js"></script>
+  <script src="platform-chat-category-flow.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="platform-chat-fee-gate-flow.js"></script>
+  <script src="platform-chat-bench-embed-bridge.js" defer></script>
+  <script src="listing-contact-requests-store.js" defer></script>
+  <script src="listing-detail-contacts.js" defer></script>
+  <script src="business-service-flow.js"></script>
+  <script src="./detail-business-service-sticky-nav.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="detail-type-config.js"></script>
+  <script src="favorite-store.js"></script>
+  <script src="favorite-actions.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="shop-payout.js"></script>
+  <script src="platform-chat-fee.js"></script>
+  <script src="talk-platform-fee-notify.js"></script>
+  <script src="contact-actions.js"></script>
+  <script src="./detail-business-service-loader.js"></script>
+  <script src="detail-general-loader.js"></script>
+
+  <script>
+
+    (function () {
+
+      function showLoadIssue(message) {
+
+        const status = document.querySelector("[data-listing-detail-status]");
+
+        const root = document.getElementById("business-service-detail-root");
+
+        if (status) {
+
+          status.hidden = false;
+
+          status.className = "listing-detail-status listing-detail-status--error";
+
+          status.innerHTML = message;
+
+        }
+
+        if (root) root.hidden = false;
+
+        document.body.dataset.listingLoaded = "error";
+
+      }
+
+      window.addEventListener("error", function () {
+
+        if (document.body.dataset.listingLoaded === "true") return;
+
+        showLoadIssue("スクリプトの読み込みに失敗しました。");
+
+      });
+
+      setTimeout(function () {
+
+        if (document.body.dataset.listingLoaded === "true") return;
+
+        if (document.body.dataset.detailType === "general") {
+          window.TasuDetailGeneralLoader?.boot?.();
+        } else {
+          window.TasuDetailBusinessServiceLoader?.mountBusinessServiceLayout?.();
+          showLoadIssue("読み込めませんでした。ページを再読み込みするか、一覧から再度お開きください。");
+        }
+
+      }, 10000);
+
+    })();
+
+  </script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+
+</html>

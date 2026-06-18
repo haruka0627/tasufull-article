@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE運用（管理者） | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="anpi-line-admin.css">
+</head>
+<body class="dash-body anpi-line-admin-page-body" data-page="anpi-line-admin">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" aria-label="サイドナビ">
+        <div class="dash-nav-group">
+          <p class="dash-nav-group__label">安否・LINE</p>
+          <a class="dash-nav-link is-active" href="anpi-line-admin.html">LINE運用（管理者）</a>
+          <a class="dash-nav-link" href="anpi-dashboard.html">安否ダッシュボード</a>
+          <a class="dash-nav-link" href="anpi-notifications.html">安否通知センター</a>
+          <a class="dash-nav-link" href="anpi-register.html">安否サービス登録</a>
+          <a class="dash-nav-link" href="dashboard.html">ダッシュボード</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="dash-main">
+      <header class="dash-header">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="dash-header__heading">
+              <h1 class="dash-header__title">LINE運用</h1>
+              <p class="dash-header__sub">本番公開前の確認・テストPush（管理者専用）</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dash-content dash-shell" data-anpi-line-admin-root aria-live="polite">
+        <p>読み込み中…</p>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js" defer></script>
+  <script src="supabase-public-key.js" defer></script>
+  <script src="tasu-supabase-client.js" defer></script>
+  <script src="member-auth.js" defer></script>
+  <script src="anpi-identity.js" defer></script>
+  <script src="anpi-rls.js" defer></script>
+  <script src="anpi-user-context-supabase.js" defer></script>
+  <script src="anpi-user-context.js" defer></script>
+  <script src="anpi-notification-log-supabase.js" defer></script>
+  <script src="anpi-notification-log.js" defer></script>
+  <script src="anpi-line-login-config.js" defer></script>
+  <script src="anpi-line-healthcheck.js" defer></script>
+  <script src="anpi-line-admin.js" defer></script>
+  <script src="anpi-line-admin-page.js" defer></script>
+</body>
+</html>

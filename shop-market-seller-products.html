@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>出品商品管理 | TASFUL市場</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-product-grid.css">
+  <link rel="stylesheet" href="shop-market-seller-products.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-seller-products-page" data-page="shop_market_seller_products">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <main class="tasful-market-seller-products-main" aria-label="出品商品管理">
+    <header class="tasful-market-seller-products-main__head">
+      <div>
+        <h1 class="tasful-market-seller-products-main__title">出品商品管理</h1>
+        <p class="tasful-market-seller-products-main__lead" data-tasful-seller-products-count>出品商品: 0件</p>
+      </div>
+      <a href="shop-market-listing-new.html" class="tasful-market-seller-products-main__cta" data-tasful-seller-products-new>商品を出品する</a>
+    </header>
+
+    <section class="tasful-market-seller-products-empty" data-tasful-seller-products-empty aria-label="出品商品なし">
+      <p class="tasful-market-seller-products-empty__icon" aria-hidden="true">🏷</p>
+      <h2 class="tasful-market-seller-products-empty__title">出品商品はまだありません</h2>
+      <p class="tasful-market-seller-products-empty__text">商品情報を入力して、市場TOP・検索・出品者ページに公開できます。</p>
+      <a href="shop-market-listing-new.html" class="tasful-market-seller-products-empty__btn" data-tasful-seller-products-empty-cta>商品を出品する</a>
+      <a href="shop-market-mypage.html" class="tasful-market-seller-products-empty__link">マイページへ戻る</a>
+    </section>
+
+    <div class="tasful-market-grid" data-tasful-seller-products-grid hidden aria-live="polite"></div>
+  </main>
+
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-seller-products.js"></script>
+</body>
+</html>

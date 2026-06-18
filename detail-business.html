@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>業務サービス詳細へ移動中… | TasuFull</title>
+  <script src="listing-route-resolver.js"></script>
+  <script>
+    (function () {
+      const root = typeof globalThis !== "undefined" ? globalThis : window;
+      const params = new URLSearchParams(root.location.search);
+      const raw = String(params.get("id") || params.get("listingId") || "").trim();
+      const target =
+        root.TasuListingRouteResolver?.legacyBusinessRedirectUrl?.(raw) ||
+        root.TasuListingRouteResolver?.buildDetailUrl?.("business_service") ||
+        "detail-business-service.html?id=demo-business-service-001";
+      root.location.replace(target);
+    })();
+  </script>
+
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+</head>
+<body>
+  <p>業務サービス詳細へ移動しています…</p>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>

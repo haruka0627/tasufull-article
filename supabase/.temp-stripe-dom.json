@@ -1,0 +1,119 @@
+{
+  "url": "https://checkout.stripe.com/c/pay/cs_test_a1KfmcB48shyDBC6cK2Z2Exq1h17aWNQKxENOz0G0j7MpmTHB65BR6JXAq#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdpamZkaWAnPydvZCcpJ2JwZGZkaGppYFNkd2xka3EnPydmamtxd2ppJyknZHVsTmB8Jz8ndW5acWB2cVowNFZIcU9iMHFPVldWXGZ8bEBwTGJEfV9TcDdSal9dazcyZEFPb2lCQF1rf1JDVHRcMlB3Y002YGl2YkExPVM2UmtON0pHS0JXMTFwMFFja3JOSXdXU2pERjU1NGl9VV1OPUwnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+  "frames": [
+    {
+      "url": "https://checkout.stripe.com/c/pay/cs_test_a1KfmcB48shyDBC6cK2Z2Exq1h17aWNQKxENOz0G0j7MpmTHB65BR6JXAq#fidnandhYHdWcXxpYCc",
+      "name": ""
+    },
+    {
+      "url": "https://js.stripe.com/v3/link-login-inner-8cc60be19ccd86ddbd31d91f1f224829.html#debugMode=false&publishableApiKey=pk_tes",
+      "name": "link-login"
+    },
+    {
+      "url": "https://js.stripe.com/v3/checkout-inner-origin-frame-34346d76cb6a3898dd185c91acdd3045.html#debugMode=false&prefetchOrigi",
+      "name": "stripe-origin-frame"
+    },
+    {
+      "url": "https://js.stripe.com/v3/controller-067fafc02ce50976bd365c2804c31b89.html#__shared_params__[version]=v3&__shared_params_",
+      "name": "__privateStripeController8261"
+    },
+    {
+      "url": "https://js.stripe.com/v3/elements-inner-express-checkout-65d38097af6e85bf71cd801d5bbf61e5.html#__shared_params__[version",
+      "name": "__privateStripeFrame8264"
+    },
+    {
+      "url": "https://js.stripe.com/v3/hcaptcha-invisible-9c0e0993cd30f38d572143ffdfedca4c.html#debugMode=false&parentOrigin=https%3A%",
+      "name": "hcaptcha-invisible"
+    },
+    {
+      "url": "https://js.stripe.com/v3/elements-inner-express-checkout-65d38097af6e85bf71cd801d5bbf61e5.html#__shared_params__[version",
+      "name": "__privateStripeFrame8266"
+    },
+    {
+      "url": "https://b.stripecdn.com/stripethirdparty-srv/assets/v32.17/HCaptchaInvisible.html?id=fcda129a-888f-47b5-b8a9-2b2acec713f",
+      "name": ""
+    },
+    {
+      "url": "https://js.stripe.com/v3/m-outer-3437aaddcdf6922d623e172c2d6f9278.html#url=https%3A%2F%2Fcheckout.stripe.com%2Fc%2Fpay%2",
+      "name": "__privateStripeMetricsController8260"
+    },
+    {
+      "url": "https://newassets.hcaptcha.com/captcha/v1/be2fb915d274e0153a2483e68ec5703d502b9d3d/static/hcaptcha.html#frame=challenge&",
+      "name": ""
+    },
+    {
+      "url": "https://newassets.hcaptcha.com/captcha/v1/be2fb915d274e0153a2483e68ec5703d502b9d3d/static/hcaptcha.html#frame=checkbox-i",
+      "name": ""
+    },
+    {
+      "url": "https://m.stripe.network/inner-preview.html#url=https%3A%2F%2Fcheckout.stripe.com%2Fc%2Fpay%2Fcs_test_a1KfmcB48shyDBC6cK",
+      "name": ""
+    },
+    {
+      "url": "https://newassets.hcaptcha.com/captcha/v1/be2fb915d274e0153a2483e68ec5703d502b9d3d/static/hcaptcha.html#frame=challenge&",
+      "name": ""
+    },
+    {
+      "url": "https://newassets.hcaptcha.com/captcha/v1/be2fb915d274e0153a2483e68ec5703d502b9d3d/static/hcaptcha.html#frame=checkbox-i",
+      "name": ""
+    }
+  ],
+  "inputs": [
+    {
+      "name": "email",
+      "type": "text",
+      "placeholder": "email@example.com",
+      "id": "email",
+      "autocomplete": "email"
+    },
+    {
+      "name": "cardNumber",
+      "type": "text",
+      "placeholder": "1234 1234 1234 1234",
+      "id": "cardNumber",
+      "autocomplete": "cc-number"
+    },
+    {
+      "name": "cardExpiry",
+      "type": "text",
+      "placeholder": "MM (月) / YY (年)",
+      "id": "cardExpiry",
+      "autocomplete": "cc-exp"
+    },
+    {
+      "name": "cardCvc",
+      "type": "text",
+      "placeholder": "CVC",
+      "id": "cardCvc",
+      "autocomplete": "cc-csc"
+    },
+    {
+      "name": "billingName",
+      "type": "text",
+      "placeholder": "氏名",
+      "id": "billingName",
+      "autocomplete": "cc-name"
+    },
+    {
+      "name": "enableStripePass",
+      "type": "checkbox",
+      "placeholder": null,
+      "id": "enableStripePass",
+      "autocomplete": null
+    },
+    {
+      "name": "agent_identity_token",
+      "type": "text",
+      "placeholder": null,
+      "id": "",
+      "autocomplete": "off"
+    },
+    {
+      "name": null,
+      "type": "checkbox",
+      "placeholder": null,
+      "id": "",
+      "autocomplete": null
+    }
+  ]
+}

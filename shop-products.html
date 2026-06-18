@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商品一覧 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-store-cards.css">
+  <link rel="stylesheet" href="shop-products.css">
+  <link rel="stylesheet" href="shop-vendors-brand.css">
+    <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body class="shop-store-list-page shop-products-page tasful-shop-mall-brand" data-page="shop_products">
+
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットフォームへようこそ　
+      <a href="shop-vendors.html" class="link">店舗・販売一覧</a>　｜　
+      <a href="index.html" class="link accent">一覧トップ</a>
+    </div>
+  </div>
+
+  <header class="shop-market-header shop-store-market-header" data-shop-store-market-header aria-label="サイトヘッダー">
+    <div class="shop-market-header__inner">
+      <a href="index-top.html" class="tasful-ai-logo shop-market-header__logo" aria-label="TASFUL 店舗・販売 TOP">
+        <img
+          src="images/tasful-globe-logo.png"
+          alt="TASFUL"
+          class="tasful-ai-logo-icon"
+        >
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">店舗・販売</span>
+        </div>
+      </a>
+      <div class="shop-market-header__center">
+        <form class="shop-market-header__search" role="search" action="shop-vendors.html" method="get">
+          <span class="shop-market-header__search-icon" aria-hidden="true">🔍</span>
+          <input type="search" name="keyword" class="shop-market-header__search-input" placeholder="店舗・商品を検索" aria-label="店舗・商品を検索">
+        </form>
+        <nav class="shop-market-header__nav" aria-label="メインメニュー">
+          <a href="shop-vendors.html" class="shop-market-header__nav-link">カテゴリから探す</a>
+          <a href="shop-vendors.html#shop-store-area" class="shop-market-header__nav-link">エリアから探す</a>
+          <a href="index.html" class="shop-market-header__nav-link">特集一覧</a>
+          <a href="ai-workspace.html" class="shop-market-header__nav-link shop-market-header__nav-link--ai">AI相談</a>
+        </nav>
+      </div>
+      <div class="shop-market-header__actions">
+        <a href="index.html" class="shop-market-header__action" aria-label="お気に入り">
+          <span class="shop-market-header__action-icon" aria-hidden="true">♡</span>
+          <span class="shop-market-header__action-label">お気に入り</span>
+        </a>
+        <a href="index.html" class="shop-market-header__action shop-market-header__action--cart" aria-label="カート">
+          <span class="shop-market-header__action-icon" aria-hidden="true">🛒</span>
+          <span class="shop-market-header__action-label">カート</span>
+        </a>
+        <a href="index.html" class="shop-market-header__action shop-market-header__action--primary" aria-label="マイページ">
+          <span class="shop-market-header__action-icon" aria-hidden="true">👤</span>
+          <span class="shop-market-header__action-label">マイページ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="shop-products-container shop-products-main" data-shop-products-main>
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <section class="shop-products-hero-wrap">
+      <div class="shop-products-hero" data-shop-products-hero aria-label="店舗情報"></div>
+    </section>
+
+    <div class="shop-products-info-stack" data-shop-products-info-stack>
+      <section class="shop-products-block shop-products-services" data-shop-products-services aria-label="サービス情報"></section>
+      <section class="shop-products-block shop-products-reviews" data-shop-products-reviews aria-label="口コミ" hidden></section>
+      <section class="shop-products-block shop-products-recommended" data-shop-products-recommended aria-label="おすすめ商品" hidden></section>
+    </div>
+
+    <div class="shop-products-layout">
+      <aside class="shop-products-sidebar" data-shop-products-sidebar aria-label="絞り込み">
+        <div class="shop-products-sidebar__panel">
+          <h2 class="shop-products-sidebar__title">カテゴリ</h2>
+          <div class="shop-products-filter__cats" data-shop-products-filter-categories></div>
+
+          <h2 class="shop-products-sidebar__title">価格</h2>
+          <div class="shop-products-filter__price">
+            <input type="number" class="shop-products-filter__input" data-shop-products-price-min placeholder="最小価格" min="0" aria-label="最小価格">
+            <span class="shop-products-filter__sep">〜</span>
+            <input type="number" class="shop-products-filter__input" data-shop-products-price-max placeholder="最大価格" min="0" aria-label="最大価格">
+            <button type="button" class="shop-products-filter__apply" data-shop-products-price-apply>絞り込む</button>
+          </div>
+
+          <h2 class="shop-products-sidebar__title">こだわり</h2>
+          <div class="shop-products-filter__checks" data-shop-products-filter-commitment></div>
+
+          <h2 class="shop-products-sidebar__title">シーン</h2>
+          <div class="shop-products-filter__checks" data-shop-products-filter-scenes></div>
+        </div>
+      </aside>
+
+      <section class="shop-products-list-area shop-products-content">
+        <button type="button" class="shop-products-filter-toggle" data-shop-products-filter-toggle>絞り込み</button>
+
+        <div class="shop-products-heading">
+          <div>
+            <h2 data-shop-products-title>商品一覧</h2>
+            <p data-shop-products-lead>メニュー・商品をご覧ください。</p>
+          </div>
+        </div>
+
+        <div class="shop-products-controls" data-shop-products-controls role="search">
+          <div class="shop-products-search">
+            <input
+              type="search"
+              id="productSearchInput"
+              data-shop-products-search
+              placeholder="商品名・キーワードで検索"
+              aria-label="商品名・キーワードで検索"
+            >
+            <button type="button" class="shop-products-search__btn" aria-label="検索">🔍</button>
+          </div>
+
+          <select id="productCategorySelect" data-shop-products-select-category aria-label="カテゴリを選択">
+            <option value="すべて">カテゴリを選択</option>
+          </select>
+
+          <select id="productSortSelect" data-shop-products-sort aria-label="並び替え">
+            <option value="recommended">並び替え：おすすめ順</option>
+            <option value="new">並び替え：新着順</option>
+            <option value="popular">並び替え：人気順</option>
+            <option value="price_asc">並び替え：価格が安い順</option>
+            <option value="price_desc">並び替え：価格が高い順</option>
+          </select>
+
+          <div class="shop-products-count-wrap">
+            <div class="shop-products-count" data-shop-products-count-total>全0件</div>
+            <div class="shop-products-count shop-products-count--filtered" data-shop-products-count-filtered hidden>検索後：該当0件</div>
+          </div>
+        </div>
+
+        <div class="shop-products-chips" data-shop-products-chips role="tablist" aria-label="カテゴリで絞り込み"></div>
+
+        <div class="shop-products-empty" data-shop-products-empty hidden>
+          <p>条件に一致する商品がありません。</p>
+        </div>
+
+        <div class="shop-products-grid" data-shop-products-grid aria-live="polite"></div>
+
+        <div class="shop-products-more-wrap" data-shop-products-more-wrap hidden>
+          <button type="button" class="shop-products-more-btn" data-shop-products-more>もっと見る</button>
+        </div>
+
+        <nav class="shop-products-pagination" data-shop-products-pagination aria-label="ページ送り" hidden></nav>
+      </section>
+    </div>
+  </main>
+
+  <footer class="tasful-market-footer tasful-shop-mall-footer" aria-label="TASFUL市場フッター">
+    <div class="tasful-market-footer__inner">
+      <div class="tasful-market-footer__brand-block">
+        <p class="tasful-market-footer__brand">TASFUL市場</p>
+        <p class="tasful-market-footer__lead">安心して売買できる</p>
+        <p class="tasful-market-footer__sub">TASFULのショッピングマーケット</p>
+      </div>
+
+      <nav class="tasful-market-footer__block" aria-labelledby="tasful-shop-products-footer-guide">
+        <h2 class="tasful-market-footer__heading" id="tasful-shop-products-footer-guide">ご利用ガイド</h2>
+        <ul class="tasful-market-footer__links">
+          <li><a href="index-top.html">配送について</a></li>
+          <li><a href="index-top.html">返品・キャンセル</a></li>
+          <li><a href="ai-workspace.html">よくある質問</a></li>
+          <li><a href="index-top.html">お問い合わせ</a></li>
+        </ul>
+      </nav>
+
+      <nav class="tasful-market-footer__block" aria-labelledby="tasful-shop-products-footer-seller">
+        <h2 class="tasful-market-footer__heading" id="tasful-shop-products-footer-seller">出品する</h2>
+        <ul class="tasful-market-footer__links">
+          <li><a href="post.html?scope=business">出店ガイド</a></li>
+          <li><a href="builder/mvp-partner-register.html">Connect認証について</a></li>
+        </ul>
+      </nav>
+
+      <p class="tasful-market-footer__copy">© TASFUL</p>
+    </div>
+  </footer>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-products-config.js"></script>
+  <script src="stripe-featured-config.js"></script>
+  <script src="stripe-shop-config.js"></script>
+  <script src="shop-payout.js"></script>
+  <script src="shop-checkout.js"></script>
+  <script src="shop-products-page.js"></script>
+</body>
+</html>

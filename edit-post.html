@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>掲載編集へ移動中 | TASFUL</title>
+</head>
+<body>
+  <p>掲載編集ページへ移動しています…</p>
+  <script src="business-listings-db.js"></script>
+  <script src="listings-db.js"></script>
+  <script>
+    (async function () {
+      const params = new URLSearchParams(window.location.search);
+      const id = String(params.get("listingId") || params.get("id") || "").trim();
+      if (!id) {
+        window.location.replace("my-listings.html");
+        return;
+      }
+      const enc = encodeURIComponent(id);
+      try {
+        const business = await window.TasuBusinessListings?.fetchBusinessListingById?.(id);
+        if (business) {
+          window.location.replace("post.html?scope=business&id=" + enc);
+          return;
+        }
+        const listing = await window.TasuListingStore?.fetchListingById?.(id);
+        if (listing) {
+          const type = encodeURIComponent(String(listing.listing_type || "skill").trim());
+          window.location.replace("post.html?type=" + type + "&id=" + enc);
+          return;
+        }
+      } catch (err) {
+        console.error("[edit-post] redirect failed:", err);
+      }
+      window.location.replace("my-listings.html");
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f97316" />
+  <title>案件投稿 | Builder MVP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-mvp-project-new">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">案件投稿（MVP）</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">案件投稿</h1>
+          <p class="builder-header__sub">投稿 → 応募 → Talk → 入退場 → 完了</p>
+          <div class="mvp-dark-steps" aria-label="ステップ">
+            <div class="mvp-dark-steps__item is-active" aria-current="step">
+              <span class="mvp-dark-steps__dot" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 19l7-7-7-7" />
+                  <path d="M5 12h14" />
+                </svg>
+              </span>
+              <span class="mvp-dark-steps__label">投稿</span>
+            </div>
+            <div class="mvp-dark-steps__line" aria-hidden="true"></div>
+            <div class="mvp-dark-steps__item">
+              <span class="mvp-dark-steps__dot" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                </svg>
+              </span>
+              <span class="mvp-dark-steps__label">応募</span>
+            </div>
+            <div class="mvp-dark-steps__line" aria-hidden="true"></div>
+            <div class="mvp-dark-steps__item">
+              <span class="mvp-dark-steps__dot" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+                </svg>
+              </span>
+              <span class="mvp-dark-steps__label">Talk</span>
+            </div>
+            <div class="mvp-dark-steps__line" aria-hidden="true"></div>
+            <div class="mvp-dark-steps__item">
+              <span class="mvp-dark-steps__dot" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 2v4" />
+                  <path d="M16 2v4" />
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M3 10h18" />
+                </svg>
+              </span>
+              <span class="mvp-dark-steps__label">入退場</span>
+            </div>
+            <div class="mvp-dark-steps__line" aria-hidden="true"></div>
+            <div class="mvp-dark-steps__item">
+              <span class="mvp-dark-steps__dot" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </span>
+              <span class="mvp-dark-steps__label">完了</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="builder-role" data-builder-role></div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <div class="mvp-dark-layout" aria-label="案件入力レイアウト">
+        <section class="builder-panel mvp-dark-main" aria-label="案件入力">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">入力</h2>
+          <span class="builder-kpi" data-builder-mvp-kpi>—</span>
+        </div>
+
+        <form class="builder-form" data-builder-mvp-project-form>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">案件タイトル</span>
+            <input class="builder-input" type="text" name="title" placeholder="例：新宿区 共同住宅 外装改修" data-builder-mvp-project-title />
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">案件種別</span>
+            <select class="builder-select" name="project_category" data-builder-mvp-project-category>
+              <option value="見積依頼">見積依頼</option>
+              <option value="協力会社募集" selected>協力会社募集</option>
+              <option value="応援募集">応援募集</option>
+              <option value="職人募集">職人募集</option>
+              <option value="正社員募集">正社員募集</option>
+              <option value="アルバイト募集">アルバイト募集</option>
+            </select>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">投稿先</span>
+            <select class="builder-select" name="kind" data-builder-mvp-project-kind>
+              <option value="builder_board" selected>Builder掲示板</option>
+              <option value="tasful_managed">TASFUL案件管理</option>
+            </select>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">公開範囲</span>
+            <select class="builder-select" name="visibility" data-builder-mvp-project-visibility>
+              <option value="partner_only" selected>パートナー限定</option>
+              <option value="team_only">チーム限定</option>
+              <option value="private">非公開（自分だけ）</option>
+              <option value="public">公開（全体）</option>
+            </select>
+            <span class="builder-field__hint" data-builder-visibility-hint>—</span>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">連絡ポリシー</span>
+            <select class="builder-select" name="contact_policy" data-builder-mvp-project-contact-policy>
+              <option value="tasful_talk_only" selected>TASFUL Talkのみ（推奨）</option>
+              <option value="owner_allowed">オーナー判断で共有可</option>
+              <option value="admin_only">管理者のみ共有可</option>
+            </select>
+            <span class="builder-field__hint" data-builder-contact-policy-hint>—</span>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">案件区分（source）</span>
+            <select class="builder-select" name="source" data-builder-mvp-project-source>
+              <option value="company" selected>掲示板（企業）</option>
+              <option value="partner">掲示板（パートナー）</option>
+              <option value="public_user">掲示板（一般）</option>
+              <option value="tasful">TASFUL管理案件</option>
+            </select>
+            <span class="builder-field__hint" data-builder-mvp-source-hint>—</span>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">開始日</span>
+            <input class="builder-input" type="date" name="start" value="2024-07-01" data-builder-mvp-project-start />
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">終了日</span>
+            <input class="builder-input" type="date" name="end" value="2024-07-31" data-builder-mvp-project-end />
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">工種タグ（カンマ区切り）</span>
+            <input class="builder-input" type="text" name="trade_tags" placeholder="例: 足場" value="足場, 外装, 防水" data-builder-mvp-project-trades />
+            <div class="mvp-chipRow" data-mvp-chiprow="trades" aria-label="工種タグプレビュー"></div>
+          </label>
+
+          <label class="builder-field">
+            <span class="builder-field__label">エリア（カンマ区切り）</span>
+            <input class="builder-input" type="text" name="areas" placeholder="例: 東京" value="東京, 新宿区" data-builder-mvp-project-areas />
+            <div class="mvp-chipRow" data-mvp-chiprow="areas" aria-label="エリアプレビュー"></div>
+          </label>
+
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">概要</span>
+            <div class="mvp-dark-textarea">
+              <div class="mvp-dark-textarea__toolbar" aria-hidden="true">
+                <button type="button" class="mvp-dark-textarea__tool">B</button>
+                <button type="button" class="mvp-dark-textarea__tool">I</button>
+                <button type="button" class="mvp-dark-textarea__tool">U</button>
+                <span class="mvp-dark-textarea__sep"></span>
+                <button type="button" class="mvp-dark-textarea__tool">🔗</button>
+                <button type="button" class="mvp-dark-textarea__tool">•</button>
+                <button type="button" class="mvp-dark-textarea__tool">1.</button>
+              </div>
+              <textarea class="builder-textarea" name="description" rows="6" placeholder="条件、注意事項…" data-builder-mvp-project-desc>【概要】
+- 共同住宅（外装改修）に伴う足場設置の案件です。
+- 近隣配慮（騒音・搬入導線）を優先し、作業前に段取り確認を行います。
+- 期間：2024年7月1日〜（現場状況により調整あり）
+- 連絡は原則 TASFUL Talk 内でお願いします。写真共有・進捗報告もTalkに統一します。</textarea>
+              <div class="mvp-dark-textarea__counter"><span data-mvp-desc-count>0</span> / 2000 文字</div>
+            </div>
+          </label>
+
+          <div class="builder-form__actions">
+            <button type="submit" class="builder-btn builder-btn--primary mvp-dark-btnPrimary" data-builder-mvp-project-publish>
+              投稿（demo）
+              <span class="mvp-dark-btnPrimary__icon" aria-hidden="true">🚀</span>
+            </button>
+            <a class="builder-btn builder-btn--ghost" href="mvp-projects.html">キャンセル</a>
+          </div>
+        </form>
+        </section>
+
+        <aside class="mvp-dark-side" aria-label="補足情報">
+          <div class="mvp-dark-side__stack">
+            <div class="builder-callouts" data-builder-mvp-project-callouts></div>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved.</p></footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-ai-drafts-store.js" defer></script>
+  <script src="../talk-ai-draft-apply.js" defer></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

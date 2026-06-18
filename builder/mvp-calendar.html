@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>カレンダー | Builder MVP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+  <link rel="stylesheet" href="../tasful-app-mobile.css" />
+  <link rel="stylesheet" href="../tasful-app-mobile-detail.css" />
+</head>
+<body class="builder-body tasu-app-shell-detail" data-page="builder-mvp-calendar">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <button type="button" class="builder-talk-back" data-builder-talk-back data-tasu-talk-back hidden>TALKに戻る</button>
+          <a class="builder-brand" href="mvp-projects.html" aria-label="案件一覧へ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">カレンダー（MVP）</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">カレンダー</h1>
+          <p class="builder-header__sub" data-mvp-cal-header-sub>公式カレンダー — 予定確認</p>
+        </div>
+
+        <div class="builder-role" data-builder-role></div>
+        <a class="builder-btn builder-btn--ghost mvp-cal-talk-link" href="../talk-home.html?tab=notify">TASFUL TALK</a>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main mvp-cal-main builder-bench-scroll">
+      <section class="builder-panel mvp-cal-partnerSchedule" data-mvp-cal-partner-schedule hidden aria-label="受諾済み予定">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">今月の予定</h2>
+          <span class="builder-kpi" data-mvp-cal-partner-kpi>0件</span>
+        </div>
+        <ul class="mvp-cal-partnerSchedule__list" data-mvp-cal-partner-accepted-list></ul>
+        <p class="mvp-cal-partnerSchedule__empty" data-mvp-cal-partner-empty hidden>受諾済みの予定はありません。</p>
+      </section>
+
+      <div class="mvp-cal-layout" data-mvp-cal-ops-layout>
+        <section class="builder-panel mvp-cal-leftPanel" aria-label="予定一覧">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">予定</h2>
+            <span class="builder-kpi" data-builder-mvp-cal-kpi>—</span>
+          </div>
+          <ul class="builder-notif mvp-cal-list" data-builder-mvp-cal-list></ul>
+        </section>
+
+        <aside class="builder-panel mvp-cal-detailPanel" aria-label="現場詳細">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title" data-mvp-cal-detail-heading>現場詳細</h2>
+          </div>
+          <div class="mvp-cal-detail" data-builder-mvp-cal-detail>
+            <p class="mvp-cal-detail__empty">予定を選択すると詳細を表示します。</p>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved.</p></footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-notifications-store.js" defer></script>
+  <script src="../talk-platform-notify.js" defer></script>
+  <script src="builder-board-feed.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+  <script src="../builder-bench-embed.js"></script>
+  <script src="../tasful-app-mobile.js" defer></script>
+</body>
+</html>

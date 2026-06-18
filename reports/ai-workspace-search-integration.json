@@ -1,0 +1,98 @@
+{
+  "capturedAt": "2026-06-12T13:02:45.584Z",
+  "note": "TASFUL内検索はAI APIを使用しません（tasu-cross-search）",
+  "results": [
+    {
+      "id": "vendor",
+      "file": "vendor-search.png",
+      "prompt": "埼玉で屋根修理業者を探して",
+      "expectCard": true,
+      "expectIntent": "service_request",
+      "state": {
+        "cardCount": 1,
+        "hasCompareSummary": false,
+        "hasCriteria": true,
+        "hasApiError": false,
+        "hasCompareBtn": true,
+        "hasInquiryBtn": true,
+        "hasNextCtaButtons": false,
+        "hasDraftCta": true,
+        "hasRecommendPick": false,
+        "hasDraftAccordion": false,
+        "hasTestProductLabel": false,
+        "hasObjectObject": false,
+        "text": "検索元: TASFUL内TASFUL内の候補業務サービス（法人・業者）の掲載から候補を探しました。 （業務サービス依頼）【検索条件】 ・種別: vendor ・カテゴリ: 屋根修理 ・地域: 埼玉県1. TASFUL設備メンテナンスカテゴリ 修理・メンテナンス / 水道修理地域 東京都23区・神奈川県・埼玉県料金 出張費3,000円〜 / 作業料 要見積 / 深夜対応あり評価 第二種電気工事士 / 給水装置工事主任技術者 / 損害保険加入済水道修理、電気修理、エアコン修理、24時間対応、即日対応予算適合★★★★★対応日時★★★★★返信速度★★★★☆口コミ評価★★★★☆条件一致度 96点比較ポイント 業務サービス掲載として条件に近い候補です連絡先電話 詳細ページで確認営業時間 —対応エリア 東京都23区・神奈川県・埼玉県連絡方法 詳細ページ公開状態 —詳細を見る見積相談へ進む比較に追加問い合わせ文を作るAIで問い合わせ文を作成する →※ AIは依頼確定・購入確定・応募確定・決済・個人情報送信・取引完了・レビュー投稿は行いません。電話・チャット・詳細ページからご確認ください。"
+      },
+      "passed": true
+    },
+    {
+      "id": "vendor-compare",
+      "file": null,
+      "prompt": "評価4以上の草刈り業者を比較して",
+      "expectCard": true,
+      "expectCompare": true,
+      "state": {
+        "cardCount": 4,
+        "hasCompareSummary": true,
+        "hasCriteria": true,
+        "hasApiError": false,
+        "hasCompareBtn": true,
+        "hasInquiryBtn": true,
+        "hasNextCtaButtons": true,
+        "hasDraftCta": true,
+        "hasRecommendPick": true,
+        "hasDraftAccordion": false,
+        "hasTestProductLabel": false,
+        "hasObjectObject": false,
+        "text": "検索元: TASFUL内TASFUL内の候補業務サービス（法人・業者）の掲載から候補を探しました。 （業務サービス依頼）【検索条件】 ・種別: vendor ・カテゴリ: 草刈り ・評価: 4以上 ・比較モード ・並び: rating_desc1. 掲載事業者カテゴリ 清掃・片付け / 草刈り地域 東京都、埼玉県、千葉県、神奈川県料金 見積相談評価 造園・外構・草刈作業（詳細はお問い合わせください）草刈り、除草、庭木、剪定、伐採予算適合★★★★☆対応日時★★★★☆返信速度★★★★★口コミ評価★★★★☆条件一致度 94点比較ポイント 業務サービス掲載として条件に近い候補です連絡先電話 詳細ページで確認営業時間 —対応エリア 東京都、埼玉県、千葉県、神奈川県連絡方法 詳細ページ公開状態 —詳細を見る見積相談へ進む比較に追加問い合わせ文を作る2. 掲載事業者カテゴリ 清掃・片付け / 草刈り地域 東京都、神奈川県、埼玉県南部料金 8,000円〜評価 造園・外構作業（詳細はお問い合わせください）草刈り、除草、芝生、庭管理、即日対応予算適合★★★☆☆対応日時★★★☆☆返信速度★★★★★口コミ評価★★★★☆条件一致度 89点比較ポイント 業務サービス掲載として条件に近い候補です連絡先電話 詳細ページで確認営業時間 —対応エリア 東京都、神奈川県、埼玉県南部連絡方法 詳細ページ公開状態 —詳細を見る見積相談へ進む比較に追加問い合わせ文を作る3. 掲載事業者カテゴリ 清掃・片付け / 草刈り地域 神奈川県、東京都多摩地域料金 7,500円〜評価 —草刈り、除草、剪定、庭管理、定期契約予算適合★★★★★対応日時★★☆☆☆返信速度★★★★★口コミ評価★★★★☆条件一致度 86点比較ポイント 業務サービス掲載として条件に近い候補です連絡先電話 詳細ページで確認営業時間 —対応エリア 神奈川県、東"
+      },
+      "passed": true
+    },
+    {
+      "id": "worker",
+      "file": "worker-search.png",
+      "prompt": "Connect対応のワーカーを探して",
+      "expectCard": true,
+      "expectConnect": true,
+      "state": {
+        "cardCount": 2,
+        "hasCompareSummary": true,
+        "hasCriteria": true,
+        "hasApiError": false,
+        "hasCompareBtn": true,
+        "hasInquiryBtn": true,
+        "hasNextCtaButtons": true,
+        "hasDraftCta": true,
+        "hasRecommendPick": true,
+        "hasDraftAccordion": false,
+        "hasTestProductLabel": false,
+        "hasObjectObject": false,
+        "text": "検索元: TASFUL内TASFUL内の候補ワーカー掲載から、作業・人手の候補を探しました。 （ワーカー依頼）【検索条件】 ・種別: worker ・Connect対応1. 渋谷エリア買い物代行・即日対応対応カテゴリ デリバリー・買い物代行地域 —料金目安 ¥2,500評価 —買い物代行、即日対応、深夜対応、車あり、女性対応可、法人対応評価★★★★☆実績★★★★★対応カテゴリ★★★★☆稼働状況★★★★☆返信速度★★★★★条件一致度 96点比較ポイント 作業・人手の依頼条件に近い候補です連絡先電話 詳細ページで確認営業時間 —対応エリア —連絡方法 詳細ページ公開状態 —詳細を見る依頼相談へ進む比較に追加問い合わせ文を作る2. 買い物代行対応カテゴリ ワーカー地域 —料金目安 ¥2,500評価 —即日対応、深夜対応、車あり、女性対応可、法人対応、領収書対応評価★★★★☆実績★★☆☆☆対応カテゴリ★★★★☆稼働状況★★★★☆返信速度★★★★☆条件一致度 90点比較ポイント 作業・人手の依頼条件に近い候補です連絡先電話 詳細ページで確認営業時間 —対応エリア —連絡方法 詳細ページ公開状態 —詳細を見る依頼相談へ進む比較に追加問い合わせ文を作る整理結果おすすめ:渋谷エリア買い物代行・即日対応詳細を見る今回の条件では2件とも対応可能な候補です。評価重視なら渋谷エリア買い物代行・即日対応という傾向があります。最終判断は利用者自身で行ってください。次にできること依頼文を作る条件を整理する比較表を作るAIで問い合わせ文を作成する →※ AIは依頼確定・購入確定・応募確定・決済・個人情報送信・取引完了・レビュー投稿は行いません。電話・チャット・詳細ページからご確認ください。"
+      },
+      "passed": true
+    },
+    {
+      "id": "product",
+      "file": "product-search.png",
+      "prompt": "近くの商品を探して",
+      "expectCard": true,
+      "state": {
+        "cardCount": 5,
+        "hasCompareSummary": true,
+        "hasCriteria": true,
+        "hasApiError": false,
+        "hasCompareBtn": true,
+        "hasInquiryBtn": true,
+        "hasNextCtaButtons": true,
+        "hasDraftCta": true,
+        "hasRecommendPick": true,
+        "hasDraftAccordion": false,
+        "hasTestProductLabel": false,
+        "hasObjectObject": false,
+        "text": "検索元: TASFUL内TASFUL内の候補商品・店舗販売の掲載から候補を探しました。 （商品検索）【検索条件】 ・種別: product ・近くの候補 ・並び: nearby1. 商品価格 ¥50,000カテゴリ ゲーム店舗 @u_me—価格★★★★★特徴★★★☆☆保証★★★★★評価★★★★☆条件一致度 93点比較ポイント 商品条件に近い候補です商品を見る購入ページへ進む店舗ページへ比較に追加問い合わせ文を作る2. 商品価格 ¥10,000カテゴリ PC店舗 @u_me—価格★★★☆☆特徴★★☆☆☆保証★★★★★評価★★★★☆条件一致度 92点比較ポイント 商品条件に近い候補です商品を見る購入ページへ進む店舗ページへ比較に追加問い合わせ文を作る3. 商品価格 ¥100,000カテゴリ 商品店舗 @u_me—価格★★★★★特徴★★★☆☆保証★★★★★評価★★★★☆条件一致度 88点比較ポイント 商品条件に近い候補です商品を見る購入ページへ進む店舗ページへ比較に追加問い合わせ文を作る4. 商品価格 ¥5,000カテゴリ 商品店舗 @u_me—価格★★★☆☆特徴★★☆☆☆保証★★★★★評価★★★★☆条件一致度 81点比較ポイント 商品条件に近い候補です商品を見る購入ページへ進む店舗ページへ比較に追加問い合わせ文を作る5. 商品価格 ¥30,000カテゴリ 商品店舗 @u_me—価格★★★☆☆特徴★★☆☆☆保証★★★★★評価★★★★☆条件一致度 80点比較ポイント 商品条件に近い候補です商品を見る購入ページへ進む店舗ページへ比較に追加問い合わせ文を作る整理結果おすすめ:商品詳細を見る今回の条件では5件とも対応可能な候補です。価格重視なら商品という傾向があります。最終判断は利用者自身で行ってください。次にできること比較表を作る購入判断材料を整理する問い合わせ文を作るAIで問い合わせ"
+      },
+      "passed": true
+    }
+  ],
+  "passed": true
+}

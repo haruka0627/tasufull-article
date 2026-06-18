@@ -1,0 +1,871 @@
+{
+  "key": "product-bank_transfer",
+  "url": "http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0&liveFlowReset=1&paymentMethod=bank_transfer",
+  "checkpoints": [
+    {
+      "id": "01-start",
+      "label": "開始直後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": true,
+        "text": "銀行振込が完了しました",
+        "mode": "purchase_bank_report"
+      },
+      "notifyA": {
+        "domCards": 2,
+        "domTitles": [
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 1,
+        "domTitles": [
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          }
+        ]
+      },
+      "statusA": "購入者の振込をお待ちください。",
+      "statusB": "銀行振込を完了してください。",
+      "aShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "bShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "shippingCarrier": "",
+      "trackingNumber": "",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082104896-oliuiw",
+        "paymentMethod": "bank_transfer",
+        "productShipped": false,
+        "shippingCarrier": "",
+        "trackingNumber": "",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": false,
+        "paymentConfirmed": false,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 2817,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "02-after-bank-report",
+      "label": "B振込報告後",
+      "aButton": {
+        "visible": true,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 3,
+        "domTitles": [
+          "購入者が銀行振込完了を報告しました",
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 2,
+        "domTitles": [
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          }
+        ]
+      },
+      "statusA": "購入者から振込完了報告が届きました。入金を確認してください。",
+      "statusB": "出品者の入金確認をお待ちください。",
+      "aShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "bShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "shippingCarrier": "",
+      "trackingNumber": "",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082104896-oliuiw",
+        "paymentMethod": "bank_transfer",
+        "productShipped": false,
+        "shippingCarrier": "",
+        "trackingNumber": "",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": false,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 2810,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "03-after-payment-confirm",
+      "label": "A入金確認後",
+      "aButton": {
+        "visible": true,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 3,
+        "domTitles": [
+          "購入者が銀行振込完了を報告しました",
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 3,
+        "domTitles": [
+          "入金確認が完了しました",
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          }
+        ]
+      },
+      "statusA": "入金を確認しました。商品を発送してください。",
+      "statusB": "入金確認が完了しました。商品の発送をお待ちください。",
+      "aShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "bShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "shippingCarrier": "",
+      "trackingNumber": "",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082104896-oliuiw",
+        "paymentMethod": "bank_transfer",
+        "productShipped": false,
+        "shippingCarrier": "",
+        "trackingNumber": "",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": true,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 2810,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "04-after-ship",
+      "label": "A発送後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": true,
+        "text": "商品を受け取りました",
+        "mode": "purchase_receive"
+      },
+      "notifyA": {
+        "domCards": 3,
+        "domTitles": [
+          "購入者が銀行振込完了を報告しました",
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 4,
+        "domTitles": [
+          "商品が発送されました",
+          "入金確認が完了しました",
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          }
+        ]
+      },
+      "statusA": "商品を発送しました。購入者の受取確認をお待ちください。",
+      "statusB": "商品が発送されました。到着後に受取確認を行ってください。",
+      "aShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-82104896-4820"
+      },
+      "bShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-82104896-4820"
+      },
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-82104896-4820",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082104896-oliuiw",
+        "paymentMethod": "bank_transfer",
+        "productShipped": true,
+        "shippingCarrier": "ヤマト運輸",
+        "trackingNumber": "3591-82104896-4820",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": true,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 4133,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "05-after-receive",
+      "label": "B受取/完了後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 5,
+        "domTitles": [
+          "取引が完了しました",
+          "購入者が商品を受け取りました",
+          "購入者が銀行振込完了を報告しました",
+          "商品が購入されました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "購入者が商品を受け取りました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_received_v1"
+          },
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "購入者が商品を受け取りました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_received_v1"
+          },
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "商品が購入されました",
+            "actionLabel": "購入者を確認する",
+            "source": "platform"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          },
+          {
+            "title": "商品が購入されました",
+            "kind": "platform",
+            "source": "platform",
+            "threadId": ""
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 5,
+        "domTitles": [
+          "取引が完了しました",
+          "商品が発送されました",
+          "入金確認が完了しました",
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082104896-oliuiw"
+          }
+        ]
+      },
+      "statusA": "取引が完了しました",
+      "statusB": "取引が完了しました",
+      "aShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-82104896-4820"
+      },
+      "bShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-82104896-4820"
+      },
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-82104896-4820",
+      "reviewA": true,
+      "reviewB": true,
+      "thread": {
+        "id": "chat-1781082104896-oliuiw",
+        "paymentMethod": "bank_transfer",
+        "productShipped": true,
+        "shippingCarrier": "ヤマト運輸",
+        "trackingNumber": "3591-82104896-4820",
+        "productReceived": true,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": true,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": true
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+        "ngBulkCopyLen": 4131,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    }
+  ],
+  "ngBulkCopy": "=== ベンチ診断 NG一覧 ===\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0&paymentMethod=bank_transfer\n\ntimestamp:\n2026-06-10T09:03:20.147Z\n\ncategory:\nConnectなし購入\n\nstage:\ncompleted\n\nNG count:\n3\n\n--------------------\n1.\nngType:\nchat_diag_ok_but_composer_missing_dom\n\ncause:\n診断はOKだが、実DOMではNG\n\n原因:\n診断はOKだが、実DOMではNG\n\nexpected:\naChatLoadReady=true かつ composer DOM 存在\n\nactual:\ncomposerDomExists=undefined\n\ndiff:\ndiag.aChatLoadReady=true vs dom.actualComposerDomExists=false\n\nfixTargetFile:\nchat-detail.js\n\nfixTargetFunction:\napplyRoomComposerState() / bindComposerInput()\n\n修正対象:\nchat-detail.js\n\n修正関数:\napplyRoomComposerState() / bindComposerInput()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0&paymentMethod=bank_transfer\n\ntimestamp:\n2026-06-10T09:03:20.149Z\n\n完了条件:\n—\n\nrelatedValues:\nsectionKey: diag_dom\ndetail: 診断はOKだが、実DOMではNG: diag.aChatLoadReady=true vs dom.actualComposerDomExists=false\nisDomConsistency: true\nactorAId: u_product\nactorBId: u_hiro\nthreadId: chat-1781082104896-oliuiw\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\ndiagAChatLoadReady: true\ndiagNotifyRowsCount: 5\nactualNotifyRowDomCount: 5\nactualNotifyErrorVisible: false\nactualNotifyEmptyTextVisible: false\n\n--------------------\n\n2.\nngType:\nnotification_missing\n\ncause:\nnotification_store_not_written\n\n原因:\nnotification_store_not_written\n\nexpected:\nB送信後、A通知に「新しいメッセージが届きました」\n\nactual:\nlocalStorage=false storeApi=false iframeRows=0 postMessage=false\n\ndiff:\nNG notification_store_not_written\n\nfixTargetFile:\nplatform-chat-dual-window-notify.js\n\nfixTargetFunction:\nnotifyDemoChatMessage() / notifyPlatformChatMessage()\n\n修正対象:\nplatform-chat-dual-window-notify.js\n\n修正関数:\nnotifyDemoChatMessage() / notifyPlatformChatMessage()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0&paymentMethod=bank_transfer\n\ntimestamp:\n2026-06-10T09:03:20.149Z\n\n完了条件:\n- 購入後 A/B 双方に「やりとりが開始されました」が通知 iframe に visible\n- A/B 送信後、相手側に「新しいメッセージが届きました」が visible\n- localStorage / store / iframe DOM が一致\n\nrelatedValues:\nrecipientUserId: u_product\nside: A\nthreadId: chat-1781082104896-oliuiw\nnotifyKind: message\nsenderSide: B\nlocalStorageMatched: 0\nstoreApiMatched: 0\niframeDomRows: 0\nbenchPostMessageReceived: false\nlatestTitle: 取引が完了しました\nsectionKey: notify_display_load\ndetail: A側: B送信後メッセージ通知なし (notification_store_not_written)\nisDomConsistency: false\nactorAId: u_product\nactorBId: u_hiro\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\n\n--------------------\n\n3.\nngType:\nproduct_shipping_notification_missing\n\ncause:\nproduct_shipping_postmessage_missing\n\n原因:\nproduct_shipping_postmessage_missing\n\nexpected:\nA発送申請後、B通知に「商品が発送されました」系が表示\n\nactual:\nlocalStorage=true storeApi=true iframeRows=1 postMessage=false sellerHasNotify=false\n\ndiff:\nNG product_shipping_postmessage_missing\n\nfixTargetFile:\nplatform-chat-dual-window-notify.js\n\nfixTargetFunction:\nnotifyBenchParentRuntimeNotification()\n\n修正対象:\nplatform-chat-dual-window-notify.js\n\n修正関数:\nnotifyBenchParentRuntimeNotification()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0&paymentMethod=bank_transfer\n\ntimestamp:\n2026-06-10T09:03:20.149Z\n\n完了条件:\n—\n\nrelatedValues:\nrecipientUserId: u_hiro\nsellerUserId: u_product\nside: B\nthreadId: chat-1781082104896-oliuiw\nnotifyKind: product_shipped\nproductShipped: true\nlocalStorageMatched: 1\nstoreApiMatched: 1\niframeDomRows: 1\nbenchPostMessageReceived: false\nlatestTitle: 商品が発送されました\nsellerNotifyMatched: 0\nsectionKey: notify_display_load\ndetail: B側: 発送申請後の購入者通知なし (product_shipping_postmessage_missing)\nisDomConsistency: false\nactorAId: u_product\nactorBId: u_hiro\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\n\n--------------------",
+  "ok": true,
+  "errors": [],
+  "final": {
+    "thread": {
+      "id": "chat-1781082104896-oliuiw",
+      "paymentMethod": "bank_transfer",
+      "productShipped": true,
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-82104896-4820",
+      "productReceived": true,
+      "shippingReady": false,
+      "bankTransferReported": true,
+      "paymentConfirmed": true,
+      "codPaymentReported": false,
+      "cashOnDeliveryConfirmed": false,
+      "completed": true
+    },
+    "ngCount": 0,
+    "ngCodes": [],
+    "diagnosticNgCount": 2,
+    "diagnosticNgCodes": [
+      "notification_missing:notification_store_not_written",
+      "product_shipping_notification_missing:product_shipping_postmessage_missing"
+    ],
+    "reviewA": true,
+    "reviewB": true,
+    "diagPanel": {
+      "verdictFoldOpen": true,
+      "panelInitialized": true,
+      "panelStillBooting": false,
+      "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocusnotificationPrimary Root Causenotificatio",
+      "ngBulkCopyLen": 4131,
+      "ngBulkHasCause": true,
+      "receiveUiNgCodes": []
+    },
+    "bShippingCard": true,
+    "statusB": "取引が完了しました"
+  }
+}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>マイページ | TASFUL市場</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-product-grid.css">
+  <link rel="stylesheet" href="shop-market-mypage.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-mypage-page" data-page="shop_market_mypage">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <main class="tasful-market-mypage-main" aria-label="マイページ">
+    <header class="tasful-market-mypage-hero">
+      <p class="tasful-market-mypage-hero__greeting">こんにちは</p>
+      <h1 class="tasful-market-mypage-hero__title">アカウントサービス</h1>
+      <p class="tasful-market-mypage-hero__lead">購入・出品・設定をここから管理できます</p>
+    </header>
+
+    <section class="tasful-market-mypage-section" aria-labelledby="mypage-purchase-heading">
+      <h2 id="mypage-purchase-heading" class="tasful-market-mypage-section__title">【購入】</h2>
+      <div class="tasful-market-mypage-grid">
+        <a href="shop-market-order-history.html" class="tasful-market-mypage-card" data-tasful-mypage-order-history>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">📦</span>
+          <span class="tasful-market-mypage-card__label">注文履歴</span>
+          <span class="tasful-market-mypage-card__meta" data-tasful-mypage-order-count></span>
+        </a>
+        <a href="shop-market-favorites.html" class="tasful-market-mypage-card" data-tasful-mypage-favorites>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">♡</span>
+          <span class="tasful-market-mypage-card__label">お気に入り</span>
+          <span class="tasful-market-mypage-card__meta" data-tasful-mypage-fav-count></span>
+        </a>
+        <a href="shop-market-recent.html" class="tasful-market-mypage-card" data-tasful-mypage-recent>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">👁</span>
+          <span class="tasful-market-mypage-card__label">最近見た商品</span>
+          <span class="tasful-market-mypage-card__meta" data-tasful-mypage-recent-count></span>
+        </a>
+        <a href="shop-market-cart.html" class="tasful-market-mypage-card">
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">🛒</span>
+          <span class="tasful-market-mypage-card__label">カート</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="tasful-market-mypage-section" aria-labelledby="mypage-account-heading">
+      <h2 id="mypage-account-heading" class="tasful-market-mypage-section__title">【アカウント】</h2>
+      <div class="tasful-market-mypage-grid">
+        <a href="shop-market-address.html" class="tasful-market-mypage-card" data-tasful-mypage-address>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">📍</span>
+          <span class="tasful-market-mypage-card__label">お届け先</span>
+        </a>
+        <a href="shop-market-payment.html" class="tasful-market-mypage-card" data-tasful-mypage-payment>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">💳</span>
+          <span class="tasful-market-mypage-card__label">支払い方法</span>
+        </a>
+        <a href="shop-market-profile.html" class="tasful-market-mypage-card" data-tasful-mypage-profile>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">👤</span>
+          <span class="tasful-market-mypage-card__label">プロフィール</span>
+        </a>
+        <a href="shop-store.html" class="tasful-market-mypage-card">
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">🏠</span>
+          <span class="tasful-market-mypage-card__label">市場トップ</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="tasful-market-mypage-section" aria-labelledby="mypage-market-heading">
+      <h2 id="mypage-market-heading" class="tasful-market-mypage-section__title">【市場】</h2>
+      <div class="tasful-market-mypage-grid">
+        <a href="shop-market-seller-products.html" class="tasful-market-mypage-card" data-tasful-mypage-listed>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">🏷</span>
+          <span class="tasful-market-mypage-card__label">出品した商品</span>
+          <span class="tasful-market-mypage-card__meta" data-tasful-mypage-listed-count></span>
+        </a>
+        <a href="shop-market-listing-new.html" class="tasful-market-mypage-card" data-tasful-mypage-listing-new>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">➕</span>
+          <span class="tasful-market-mypage-card__label">出品する</span>
+        </a>
+        <a href="shop-market-order-history.html" class="tasful-market-mypage-card" data-tasful-mypage-purchased>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">🛍</span>
+          <span class="tasful-market-mypage-card__label">購入した商品</span>
+        </a>
+        <a href="shop-market-following.html" class="tasful-market-mypage-card" data-tasful-mypage-following>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">⭐</span>
+          <span class="tasful-market-mypage-card__label">フォロー中ショップ</span>
+          <span class="tasful-market-mypage-card__meta" data-tasful-mypage-follow-count></span>
+        </a>
+        <a href="shop-market-seller-orders.html" class="tasful-market-mypage-card" data-tasful-mypage-seller-orders>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">📋</span>
+          <span class="tasful-market-mypage-card__label">出品者注文管理</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="tasful-market-mypage-section" aria-labelledby="mypage-support-heading">
+      <h2 id="mypage-support-heading" class="tasful-market-mypage-section__title">【サポート】</h2>
+      <div class="tasful-market-mypage-grid">
+        <a href="shop-market-contact.html" class="tasful-market-mypage-card" data-tasful-mypage-contact>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">✉</span>
+          <span class="tasful-market-mypage-card__label">お問い合わせ</span>
+        </a>
+        <a href="shop-market-guide.html" class="tasful-market-mypage-card" data-tasful-mypage-guide>
+          <span class="tasful-market-mypage-card__icon" aria-hidden="true">📖</span>
+          <span class="tasful-market-mypage-card__label">利用ガイド</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="tasful-market-mypage-listed-preview" aria-labelledby="mypage-listed-preview-heading" data-tasful-mypage-listed-preview hidden>
+      <div class="tasful-market-mypage-listed-preview__head">
+        <h2 id="mypage-listed-preview-heading" class="tasful-market-mypage-listed-preview__title">出品した商品</h2>
+        <a href="#" class="tasful-market-mypage-listed-preview__more" data-tasful-mypage-listed-more>すべて見る</a>
+      </div>
+      <div class="tasful-market-grid" data-tasful-mypage-listed-grid></div>
+    </section>
+
+    <section class="tasful-market-mypage-recent-preview" aria-labelledby="mypage-recent-preview-heading" data-tasful-mypage-recent-preview hidden>
+      <div class="tasful-market-mypage-recent-preview__head">
+        <h2 id="mypage-recent-preview-heading" class="tasful-market-mypage-recent-preview__title">最近見た商品</h2>
+        <a href="shop-market-recent.html" class="tasful-market-mypage-recent-preview__more">すべて見る</a>
+      </div>
+      <div class="tasful-market-grid" data-tasful-mypage-recent-grid></div>
+    </section>
+  </main>
+
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-mypage.js"></script>
+</body>
+</html>

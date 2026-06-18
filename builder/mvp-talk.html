@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f97316" />
+  <title>TASFUL Talk | Builder MVP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-mvp-talk">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18" />
+                <path d="M7 21V7l8-4v18" />
+                <path d="M17 21V11l-6-4" />
+                <path d="M9 9v.01" />
+                <path d="M9 12v.01" />
+                <path d="M9 15v.01" />
+                <path d="M9 18v.01" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">TASFUL Talk（MVP）</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="threads.html" data-builder-page-back aria-label="スレッド詳細へ">‹ スレッド詳細</a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">TASFUL Talk</h1>
+          <p class="builder-header__sub" data-builder-mvp-talk-sub>—</p>
+        </div>
+
+        <div class="builder-role" data-builder-role></div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-panel" aria-label="メッセージ">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">スレッド</h2>
+          <span class="builder-kpi" data-builder-mvp-talk-kpi>—</span>
+        </div>
+
+        <div class="builder-chat" data-builder-mvp-chat>
+          <ul class="builder-chat__list" data-builder-mvp-chat-list></ul>
+          <form class="builder-chat__form" data-builder-mvp-chat-form>
+            <input class="builder-input builder-chat__input" type="text" placeholder="メッセージを入力…" data-builder-mvp-chat-input />
+            <button class="builder-btn builder-btn--primary" type="submit" data-builder-mvp-chat-send>送信</button>
+          </form>
+        </div>
+      </section>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved.</p></footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>お気に入り | TASFUL市場</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-product-grid.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-catalog-page" data-page="shop_market_favorites">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <main class="tasful-market-catalog-main" aria-label="お気に入り">
+    <h1 class="tasful-market-catalog-main__title">お気に入り</h1>
+    <p class="tasful-market-catalog-main__lead" data-tasful-catalog-count hidden></p>
+    <div class="tasful-market-catalog-empty" data-tasful-catalog-empty>
+      <p class="tasful-market-catalog-empty__icon" aria-hidden="true">♡</p>
+      <p class="tasful-market-catalog-empty__text">お気に入りはまだありません</p>
+      <a href="shop-search.html" class="tasful-market-catalog-empty__btn">商品を探す</a>
+    </div>
+    <div class="tasful-market-grid" data-tasful-catalog-grid hidden></div>
+  </main>
+
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-catalog-list.js"></script>
+</body>
+</html>

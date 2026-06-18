@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>重要問い合わせセンター | TASFUL 運営</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="support-trouble-center.css" />
+</head>
+<body class="support-trouble-page" data-page="support-trouble-center">
+  <div class="support-trouble-app" data-support-trouble-root>
+    <header class="support-trouble-header">
+      <div>
+        <nav class="support-trouble-crumb" aria-label="パンくず">
+          <a class="support-trouble-crumb__link" href="builder-admin/admin-index.html">TASFUL Admin</a>
+          <span class="support-trouble-crumb__sep" aria-hidden="true">&gt;</span>
+          <a class="support-trouble-crumb__link" href="admin-operations-dashboard.html">AI運営司令塔</a>
+          <span class="support-trouble-crumb__sep" aria-hidden="true">&gt;</span>
+          <span class="support-trouble-crumb__current">重要問い合わせセンター</span>
+        </nav>
+        <a class="support-trouble-back" href="admin-operations-dashboard.html">← AI運営司令塔へ戻る</a>
+        <h1>重要問い合わせセンター</h1>
+        <p>AI一次対応＋運営承認。金銭・BAN・返金の最終実行は管理者ボタンのみ（本フェーズはステータス更新まで）。</p>
+        <div class="support-trouble-notify-bar" data-support-notify-bar hidden>
+          未読の重要通知: <strong data-support-notify-count>0</strong> 件
+        </div>
+      </div>
+      <span class="support-trouble-badge" data-support-alert-badge hidden>要対応あり</span>
+    </header>
+
+    <div class="support-trouble-layout">
+      <aside class="support-trouble-filters" aria-label="フィルター">
+        <h2>一覧</h2>
+        <button type="button" class="support-trouble-filter-btn is-active" data-support-filter="all">
+          すべて <span class="support-trouble-filter-count" data-support-count="all">0</span>
+        </button>
+        <button type="button" class="support-trouble-filter-btn" data-support-filter="open">
+          未対応 <span class="support-trouble-filter-count" data-support-count="open">0</span>
+        </button>
+        <button type="button" class="support-trouble-filter-btn" data-support-filter="ai_replied">
+          AI自動返信済み <span class="support-trouble-filter-count" data-support-count="ai_replied">0</span>
+        </button>
+        <button type="button" class="support-trouble-filter-btn" data-support-filter="needs_review">
+          要確認 <span class="support-trouble-filter-count" data-support-count="needs_review">0</span>
+        </button>
+        <button type="button" class="support-trouble-filter-btn" data-support-filter="connect">
+          Connect問題 <span class="support-trouble-filter-count" data-support-count="connect">0</span>
+        </button>
+        <button type="button" class="support-trouble-filter-btn" data-support-filter="risk">
+          重大リスク <span class="support-trouble-filter-count" data-support-count="risk">0</span>
+        </button>
+        <button type="button" class="support-trouble-filter-btn" data-support-filter="resolved">
+          解決済み <span class="support-trouble-filter-count" data-support-count="resolved">0</span>
+        </button>
+      </aside>
+
+      <div class="support-trouble-main">
+        <section class="support-trouble-list" aria-label="チケット一覧">
+          <div class="support-trouble-list__head">チケット</div>
+          <div data-support-ticket-list>
+            <p class="support-trouble-empty">チケットがありません</p>
+          </div>
+        </section>
+
+        <section class="support-trouble-detail" aria-label="チケット詳細">
+          <div class="support-trouble-detail__head">詳細</div>
+          <div class="support-trouble-detail__body" data-support-ticket-detail>
+            <p class="support-trouble-empty">左の一覧からチケットを選択してください</p>
+          </div>
+          <div class="support-trouble-actions" data-support-admin-actions hidden>
+            <button type="button" class="support-trouble-btn support-trouble-btn--primary" data-support-action="send_reply">返信を送信</button>
+            <button type="button" class="support-trouble-btn" data-support-action="refund">返金対応へ進む</button>
+            <button type="button" class="support-trouble-btn" data-support-action="connect_verified">出金/Connect確認済み</button>
+            <button type="button" class="support-trouble-btn" data-support-action="cancel_project">案件キャンセル</button>
+            <button type="button" class="support-trouble-btn" data-support-action="account_restrict">アカウント制限</button>
+            <button type="button" class="support-trouble-btn support-trouble-btn--danger" data-support-action="ban_candidate">BAN候補にする</button>
+            <button type="button" class="support-trouble-btn" data-support-action="resolved">解決済みにする</button>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <div class="support-trouble-modal" data-support-confirm-modal hidden role="dialog" aria-modal="true" aria-labelledby="supportConfirmTitle">
+    <div class="support-trouble-modal__backdrop" data-support-modal-cancel></div>
+    <div class="support-trouble-modal__panel">
+      <h2 id="supportConfirmTitle">操作の確認</h2>
+      <p data-support-confirm-message>この操作を記録します。Stripe API は実行しません。</p>
+      <label>
+        <span class="support-trouble-detail__section h3">管理者メモ（任意）</span>
+        <textarea data-support-confirm-note rows="3" style="width:100%;margin-top:0.35rem;border-radius:8px;padding:0.5rem;"></textarea>
+      </label>
+      <div class="support-trouble-modal__actions">
+        <button type="button" class="support-trouble-btn" data-support-modal-cancel>キャンセル</button>
+        <button type="button" class="support-trouble-btn support-trouble-btn--primary" data-support-modal-confirm>実行する</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <link rel="stylesheet" href="supabase-ops-data-source.css" />
+  <script src="supabase-ops-primary-config.js"></script>
+  <script src="supabase-ops-primary-cache.js"></script>
+  <script src="supabase-ops-read-config.js"></script>
+  <script src="supabase-ops-read-adapter.js"></script>
+  <script src="supabase-ops-read-bootstrap.js"></script>
+  <script src="supabase-ops-data-source-ui.js"></script>
+  <script src="supabase-ops-write-config.js"></script>
+  <script src="supabase-ops-write-adapter.js"></script>
+  <link rel="stylesheet" href="stripe-connect-trouble.css" />
+  <script src="stripe-connect-event-map.js"></script>
+  <script src="connect-identity-templates.js"></script>
+  <script src="offplatform-risk-detector.js"></script>
+  <script src="refund-cancel-decision-checklist.js"></script>
+  <script src="chargeback-evidence-pack.js"></script>
+  <script src="stripe-connect-ingest.js"></script>
+  <script src="stripe-connect-trouble-ui.js"></script>
+  <script src="support-ticket-classifier.js"></script>
+  <script src="support-ticket-ai-reply.js"></script>
+  <script src="support-admin-notify.js"></script>
+  <script src="support-ticket-store.js"></script>
+  <script src="ai-ops-types.js"></script>
+  <script src="ai-ops-ai-provider.js"></script>
+  <script src="ai-ops-notify.js"></script>
+  <script src="ai-ops-case-store.js"></script>
+  <script src="support-ticket-service.js"></script>
+  <script src="support-trouble-center.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+-- shop_store_products は listing_id 版で既に作成済みのため、このファイルは実行不要です。
+-- 参照用: 利用カラム
+--
+-- listing_id, product_name, product_category, product_description,
+-- product_image_url, product_image_urls, price, tax_included, product_condition,
+-- stock_quantity, stock_status, is_new, is_used, same_day_shipping,
+-- ai_consult_enabled, contact_enabled, display_order, is_active
+-- （localStorage 保存時のみ）delivery_method, shipping_estimate, shipping_fee,
+-- handoff_method, return_policy
+--
+-- 保存時: shop_store_products.listing_id = business_listings.id（掲載 listings の id）

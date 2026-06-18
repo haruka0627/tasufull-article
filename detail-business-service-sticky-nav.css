@@ -1,0 +1,256 @@
+/* 業務サービス詳細 — タブ＋CTA 追従バー（shop-sticky-action-nav デザイン流用） */
+
+body.biz-detail-page--business-service.biz-detail-page--action-nav .biz-detail-page-wrap,
+body.biz-detail-page--business-service.biz-detail-page--action-nav #business-service-detail-root,
+body.biz-detail-page--business-service.biz-detail-page--action-nav .bsd-page.business-service-page,
+body.biz-detail-page--business-service.biz-detail-page--action-nav .bsd-sections-stack {
+  overflow: visible !important;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav[hidden],
+body.biz-detail-page--business-service .business-sticky-action-nav[hidden] {
+  display: none !important;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav,
+body.biz-detail-page--business-service .business-sticky-action-nav {
+  position: -webkit-sticky;
+  position: sticky;
+  top: var(--shop-sticky-nav-top, 72px);
+  z-index: 110;
+  max-width: var(--bsd-max, 1180px);
+  width: 100%;
+  margin: 20px auto 18px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  border-radius: 22px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav.is-stuck,
+body.biz-detail-page--business-service .business-sticky-action-nav.is-stuck {
+  position: fixed;
+  top: var(--shop-sticky-nav-top, 72px);
+  left: var(--shop-sticky-nav-left, 0);
+  width: var(--shop-sticky-nav-width, min(1180px, calc(100% - 48px)));
+  z-index: 110;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav-spacer,
+body.biz-detail-page--business-service .business-sticky-action-nav-spacer {
+  display: block;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav-spacer[hidden],
+body.biz-detail-page--business-service .business-sticky-action-nav-spacer[hidden] {
+  display: none !important;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #475569;
+  font-weight: 800;
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__tab:hover {
+  color: #9a6a00;
+  background: rgba(255, 247, 223, 0.65);
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__tab.is-active {
+  background: #fff7df;
+  color: #9a6a00;
+  border-color: rgba(212, 175, 55, 0.28);
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__actions {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  width: auto;
+  max-width: none;
+  flex: 0 0 auto;
+  flex-shrink: 0;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__btn--fav.is-favorite,
+body.biz-detail-page--business-service .shop-sticky-action-nav__btn--fav.is-active {
+  background: #fff7ed;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__fav-icon {
+  font-size: 1em;
+  line-height: 1;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 18px;
+  border-radius: 14px;
+  font-weight: 900;
+  font-size: 0.86rem;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid rgba(184, 134, 11, 0.35);
+  background: #fff;
+  color: #9a6a00;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__btn:hover {
+  transform: translateY(-1px);
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__btn--gold {
+  background: linear-gradient(135deg, #d6a72f, #a97600);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(184, 134, 11, 0.25);
+  min-width: 9.5em;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+body.biz-detail-page--business-service .shop-sticky-action-nav__btn--outline {
+  background: #fff;
+  color: #9a6a00;
+}
+
+body.biz-detail-page--business-service #section-faq .biz-detail-faq__item {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+body.biz-detail-page--business-service #section-faq .biz-detail-faq__item summary {
+  padding: 14px 0;
+  font-weight: 800;
+  cursor: pointer;
+  list-style: none;
+}
+
+body.biz-detail-page--business-service #section-faq .biz-detail-faq__answer {
+  padding: 0 0 14px;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+@media (max-width: 768px) {
+  body.biz-detail-page--business-service .shop-sticky-action-nav,
+  body.biz-detail-page--business-service .business-sticky-action-nav {
+    top: var(--shop-sticky-nav-top, 60px);
+    margin: 14px 0 16px;
+    padding: 10px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  body.biz-detail-page--business-service .shop-sticky-action-nav.is-stuck,
+  body.biz-detail-page--business-service .business-sticky-action-nav.is-stuck {
+    top: var(--shop-sticky-nav-top, 60px);
+    left: 12px;
+    width: calc(100% - 24px);
+  }
+
+  body.biz-detail-page--business-service .shop-sticky-action-nav__tabs {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+
+  body.biz-detail-page--business-service .shop-sticky-action-nav__actions {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    gap: 8px;
+  }
+
+  body.biz-detail-page--business-service .shop-sticky-action-nav__actions .shop-sticky-action-nav__btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+    width: auto;
+    padding: 10px 12px;
+    font-size: 0.8rem;
+  }
+
+  body.biz-detail-page--business-service .shop-sticky-action-nav__actions .shop-sticky-action-nav__btn--gold {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
+
+/* スマホ詳細テンプレ（960px以下）— PC用追従バーは非表示・固定解除 */
+@media (max-width: 960px) {
+  body.tasu-mdetail-page.biz-detail-page--business-service .shop-sticky-action-nav,
+  body.tasu-mdetail-page.biz-detail-page--business-service .business-sticky-action-nav,
+  body.tasu-mdetail-page.tasu-mdetail-page--business-service .shop-sticky-action-nav,
+  body.tasu-mdetail-page.tasu-mdetail-page--business-service .business-sticky-action-nav {
+    display: none !important;
+    visibility: hidden !important;
+    position: static !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+  }
+
+  body.tasu-mdetail-page.biz-detail-page--business-service .shop-sticky-action-nav-spacer,
+  body.tasu-mdetail-page.biz-detail-page--business-service .business-sticky-action-nav-spacer {
+    display: none !important;
+    height: 0 !important;
+  }
+
+  body.tasu-mdetail-page.biz-detail-page--business-service.biz-detail-page--action-nav-stuck,
+  body.tasu-mdetail-page.tasu-mdetail-page--business-service.biz-detail-page--action-nav-stuck {
+    padding-bottom: 0 !important;
+  }
+}

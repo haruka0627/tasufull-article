@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>協力会社検索 | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-partners">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">協力会社検索</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">協力会社検索</h1>
+          <p class="builder-header__sub">工種・エリア・稼働状況から絞り込み</p>
+        </div>
+
+        <a class="builder-account" href="favorites.html" aria-label="お気に入りへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-panel" aria-label="検索条件">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">検索条件</h2>
+        </div>
+
+        <form class="builder-search" data-builder-partner-search-form>
+          <label class="builder-field">
+            <span class="builder-field__label">キーワード</span>
+            <input class="builder-input" type="search" name="q" placeholder="例: 内装、大工、足場…" data-builder-search-q />
+          </label>
+          <label class="builder-field">
+            <span class="builder-field__label">工種</span>
+            <select class="builder-select" name="trade" data-builder-search-trade>
+              <option value="">すべて</option>
+              <option value="carpenter">大工</option>
+              <option value="scaffold">足場</option>
+              <option value="interior">内装</option>
+              <option value="electric">電気</option>
+              <option value="plumbing">設備</option>
+            </select>
+          </label>
+          <label class="builder-field">
+            <span class="builder-field__label">エリア</span>
+            <select class="builder-select" name="area" data-builder-search-area>
+              <option value="">すべて</option>
+              <option value="tokyo">東京</option>
+              <option value="kanagawa">神奈川</option>
+              <option value="chiba">千葉</option>
+              <option value="saitama">埼玉</option>
+            </select>
+          </label>
+          <label class="builder-field">
+            <span class="builder-field__label">稼働</span>
+            <select class="builder-select" name="availability" data-builder-search-availability>
+              <option value="">すべて</option>
+              <option value="available">空きあり</option>
+              <option value="limited">一部可</option>
+              <option value="busy">満枠</option>
+            </select>
+          </label>
+
+          <div class="builder-search__actions">
+            <button type="submit" class="builder-btn builder-btn--primary" data-builder-search-submit>検索</button>
+            <button type="button" class="builder-btn builder-btn--ghost" data-builder-search-reset>リセット</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="builder-panel" aria-label="検索結果">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">検索結果</h2>
+          <span class="builder-kpi" data-builder-partner-results-kpi>—</span>
+        </div>
+
+        <ul class="builder-list" data-builder-partner-results></ul>
+      </section>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="builder-partner-evaluation-parse.js"></script>
+  <script src="builder-partner-evaluation-store.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

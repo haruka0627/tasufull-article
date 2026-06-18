@@ -1,0 +1,751 @@
+/* 美容サロンカテゴリ（beauty_salon）専用 — detail-shop.html を予約したくなるLP UIへ */
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] {
+  background: #fbfaf8;
+  --beauty-accent: #e56a8a;
+  --beauty-accent-deep: #cf4c71;
+  --beauty-ink: #111827;
+  --beauty-muted: #6b7280;
+  --beauty-border: rgba(17, 24, 39, 0.08);
+  --beauty-soft: rgba(229, 106, 138, 0.12);
+  --beauty-cream: rgba(255, 245, 249, 0.95);
+  --beauty-radius: 22px;
+  --beauty-shadow: 0 14px 40px rgba(17, 24, 39, 0.06);
+  --beauty-star: #d8a44a; /* ピンク寄りゴールド */
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-detail-container {
+  max-width: 1240px;
+}
+
+/* ── TOP（3カラム grid） ── */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv {
+  display: grid;
+  grid-template-columns: 370px 1fr 290px;
+  gap: 56px;
+  align-items: start;
+  max-width: 1240px;
+  padding: 28px 40px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: var(--beauty-shadow);
+  box-sizing: border-box;
+}
+
+/* TOP右の不要な縦カード（共通サイドカード）を消す */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-sidebar__sticky {
+  display: none;
+}
+
+/* 飲食用の固定ボトムナビは美容では一旦非表示 */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-sticky-bar {
+  display: none;
+}
+
+/* 左：メイン画像 */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-figure] {
+  width: 370px;
+  height: 266px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-img] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* サムネ 72×72 */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-gallery] {
+  width: 370px;
+  display: grid;
+  grid-template-columns: repeat(6, 58px);
+  gap: 10px;
+  margin-top: 12px;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv .shop-thumb-btn {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #f3f4f6;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv .shop-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 中央 */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv .shop-detail-main-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  align-self: start;
+}
+
+/* TOP中央：参考画像どおりの順番に固定
+   - バッジ → 店名 → 評価 → エリア → 説明 → タグ → CTA */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-genre-tags] {
+  order: 0;
+  margin: 0;
+  margin-bottom: 16px; /* カテゴリ → タイトル */
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-title] {
+  order: 1;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-rating-row] {
+  order: 2;
+  margin-top: 20px; /* タイトル → 評価 */
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-quick] {
+  order: 3;
+  margin: 0;
+  margin-top: 18px; /* 評価 → 住所 */
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-lead] {
+  order: 4;
+  margin-top: 18px; /* 住所 → 説明 */
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-condition-tags] {
+  order: 5;
+  margin-top: 0;
+  margin-bottom: 24px;
+  margin-top: 18px; /* タグ行を少し下げる */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 10px;
+  max-width: 520px;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-shop-restaurant-ctas] {
+  order: 6;
+  width: 100%;
+  margin-top: 28px; /* CTAをほんの少し下へ */
+}
+
+.beauty-category-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: var(--beauty-soft);
+  color: var(--beauty-accent-deep);
+  border: 1px solid rgba(229, 106, 138, 0.22);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-title] {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-rating-row] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-weight: 800;
+  color: var(--beauty-muted);
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-rating-stars] {
+  color: var(--beauty-star);
+  font-size: 16px;
+  line-height: 1;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-rating-score] {
+  color: var(--beauty-ink);
+  font-weight: 900;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .beauty-top-area {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--beauty-muted);
+  font-weight: 800;
+  margin: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .beauty-top-area__icon {
+  color: rgba(229, 106, 138, 0.75);
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-lead] {
+  margin: 0;
+  line-height: 1.9;
+  max-width: 420px;
+  color: #374151;
+  font-weight: 600;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+.beauty-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  color: #4b5563;
+  font-weight: 800;
+  font-size: 12px;
+  margin: 0;
+}
+
+.beauty-ctas {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  margin-top: 0;
+  flex-wrap: nowrap;
+}
+
+.beauty-cta {
+  height: 52px;
+  min-height: 52px;
+  width: 180px;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid rgba(17, 24, 39, 0.10);
+}
+
+.beauty-cta--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, rgba(229, 106, 138, 0.95), rgba(240, 155, 173, 0.95));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(229, 106, 138, 0.18);
+}
+
+.beauty-cta--ghost {
+  background: #fff;
+  color: var(--beauty-ink);
+  border-color: rgba(229, 106, 138, 0.35);
+}
+
+/* 右：こだわり */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .beauty-points {
+  width: 290px;
+  padding: 28px;
+  border-radius: 20px;
+  background: var(--beauty-cream);
+  border: 1px solid rgba(229, 106, 138, 0.14);
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+}
+
+/* 右カードを少し右へ（中央との圧迫感を軽減） */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv .biz-detail-fv__aside {
+  justify-self: end;
+  margin-left: 12px;
+}
+
+.beauty-points__title {
+  margin: 0 0 12px;
+  font-weight: 900;
+  font-size: 15px;
+  color: var(--beauty-ink);
+}
+
+.beauty-points__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+
+.beauty-points__item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: #374151;
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+.beauty-points__icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(229, 106, 138, 0.14);
+  color: var(--beauty-accent-deep);
+  font-weight: 900;
+}
+
+/* 下部タブ/本文（restaurantのDOMを美容でも利用） */
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-restaurant-tabs {
+  display: flex;
+  gap: 18px;
+  margin: 14px 0 18px;
+  padding: 0 2px 8px;
+  background: transparent;
+  border: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-restaurant-tab {
+  flex: 0 0 auto;
+  padding: 10px 0;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 0.86rem;
+  color: #4b5563;
+  border-bottom: 2px solid transparent;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-restaurant-tab.is-active {
+  color: var(--beauty-accent-deep);
+  border-bottom-color: rgba(229, 106, 138, 0.75);
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-restaurant-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+  gap: 18px 22px;
+  align-items: start;
+  margin-bottom: 28px;
+}
+
+body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-restaurant-sidebar {
+  position: sticky;
+  top: 92px;
+  display: grid;
+  gap: 14px;
+}
+
+.beauty-side-card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  padding: 14px 14px 16px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+}
+
+.beauty-side-card__title {
+  margin: 0 0 10px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: var(--beauty-ink);
+}
+
+.beauty-side-kv {
+  display: grid;
+  gap: 8px;
+  color: #4b5563;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.beauty-side-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.beauty-side-btn {
+  min-height: 44px;
+  border-radius: 16px;
+  border: 1px solid rgba(229, 106, 138, 0.35);
+  background: #fff;
+  color: var(--beauty-ink);
+  font-weight: 900;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.beauty-side-btn--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, rgba(229, 106, 138, 0.95), rgba(240, 155, 173, 0.95));
+  color: #fff;
+}
+
+/* メニュー（おすすめメニュー） */
+.beauty-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.beauty-menu-card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+}
+
+.beauty-menu-card__img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.beauty-menu-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.beauty-menu-card__body {
+  padding: 12px 12px 14px;
+  display: grid;
+  gap: 8px;
+}
+
+.beauty-menu-card__name {
+  margin: 0;
+  font-weight: 900;
+  font-size: 0.92rem;
+  color: var(--beauty-ink);
+}
+
+.beauty-menu-card__meta {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  color: #6b7280;
+  font-weight: 800;
+  font-size: 0.84rem;
+}
+
+.beauty-menu-card__price {
+  color: var(--beauty-ink);
+  font-weight: 900;
+}
+
+/* スタイル */
+.beauty-style-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.beauty-style-photo {
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #f3f4f6;
+  aspect-ratio: 4 / 5;
+}
+
+.beauty-style-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* スタイリスト */
+.beauty-stylist-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.beauty-stylist-card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 12px;
+  padding: 12px;
+  align-items: center;
+}
+
+.beauty-stylist-card__img {
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f3f4f6;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+}
+
+.beauty-stylist-card__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.beauty-stylist-card__body {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.beauty-stylist-card__name {
+  margin: 0;
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: var(--beauty-ink);
+}
+
+.beauty-stylist-card__spec {
+  margin: 0;
+  color: var(--beauty-muted);
+  font-weight: 800;
+  font-size: 0.82rem;
+}
+
+.beauty-stylist-card__desc {
+  margin: 4px 0 0;
+  color: #4b5563;
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.beauty-stylist-card__btn {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 0.85rem;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(229, 106, 138, 0.95), rgba(240, 155, 173, 0.95));
+  border: 1px solid rgba(229, 106, 138, 0.35);
+}
+
+/* サロン情報 */
+.beauty-info-table {
+  border-radius: 18px;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #fff;
+  overflow: hidden;
+}
+
+.beauty-info-row {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.9fr) minmax(0, 2fr);
+  gap: 18px;
+  align-items: start;
+  padding: 14px 14px;
+  border-top: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.beauty-info-row:first-child {
+  border-top: none;
+}
+
+.beauty-info-key {
+  color: #374151;
+  font-weight: 900;
+}
+
+.beauty-info-val {
+  color: #111827;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+/* 口コミ */
+.beauty-review-top {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.beauty-review-score__num {
+  font-size: 3.1rem;
+  font-weight: 1000;
+  line-height: 1;
+  color: var(--beauty-ink);
+}
+
+.beauty-review-score__stars {
+  margin-top: 10px;
+  color: var(--beauty-star);
+  letter-spacing: 0.12em;
+  font-weight: 900;
+}
+
+.beauty-review-score__count {
+  margin-top: 8px;
+  color: var(--beauty-muted);
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.beauty-review-bar {
+  display: grid;
+  grid-template-columns: 18px 1fr 56px;
+  gap: 10px;
+  align-items: center;
+  margin: 9px 0;
+  color: #4b5563;
+  font-weight: 900;
+  font-size: 0.86rem;
+}
+
+.beauty-review-bar__track {
+  height: 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.beauty-review-bar__fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(229, 106, 138, 0.35), rgba(229, 106, 138, 0.95));
+  border-radius: 999px;
+}
+
+.beauty-review-cards {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.beauty-review-card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  padding: 14px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+}
+
+.beauty-review-card__head {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.beauty-review-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--beauty-soft);
+  color: var(--beauty-accent-deep);
+  font-weight: 1000;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(229, 106, 138, 0.22);
+}
+
+.beauty-review-name {
+  font-weight: 1000;
+  color: var(--beauty-ink);
+}
+
+.beauty-review-sub {
+  margin-top: 4px;
+  color: var(--beauty-muted);
+  font-weight: 800;
+  font-size: 0.84rem;
+}
+
+.beauty-review-date {
+  color: #9ca3af;
+  font-weight: 800;
+  margin-left: 6px;
+}
+
+.beauty-review-stars {
+  color: var(--beauty-star);
+  letter-spacing: 0.08em;
+  font-weight: 1000;
+  white-space: nowrap;
+}
+
+.beauty-review-text {
+  margin: 10px 0 0;
+  color: #374151;
+  line-height: 1.7;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-hero-figure],
+  body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-gallery] {
+    width: 100%;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="beauty_salon"] .biz-detail-fv.beauty-top-fv [data-biz-detail-gallery] {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-restaurant-body {
+    grid-template-columns: 1fr;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="beauty_salon"] .shop-restaurant-sidebar {
+    position: static;
+  }
+
+  .beauty-menu-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .beauty-style-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .beauty-stylist-row {
+    grid-template-columns: 1fr;
+  }
+
+  .beauty-review-top {
+    grid-template-columns: 1fr;
+  }
+}
+

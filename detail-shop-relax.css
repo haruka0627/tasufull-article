@@ -1,0 +1,751 @@
+/* リラクゼーション・マッサージ（relaxation）専用 — 癒し/安心感/清潔感 UI */
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] {
+  background: #fbfaf8;
+  --relax-accent: #4f8f3a;
+  --relax-accent-deep: #3f7d2d;
+  --relax-gold: #d4a437;
+  --relax-soft: #f1f8ec;
+  --relax-beige: #f8f3eb;
+  --relax-ink: #111827;
+  --relax-muted: #6b7280;
+  --relax-border: #e5e7eb;
+  --relax-shadow: 0 14px 40px rgba(17, 24, 39, 0.06);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-detail-container {
+  max-width: 1240px;
+  padding-top: 10px;
+}
+
+/* パンくず：ヘッダー下の余白を確保（リラクのみ） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-breadcrumb {
+  margin-top: 14px;
+  margin-bottom: 18px;
+}
+
+/* TOP（3カラム） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv {
+  display: grid;
+  /* 画像の主張を少し抑えて、余白感を作る */
+  grid-template-columns: 400px 1fr 300px;
+  gap: 64px;
+  align-items: start;
+  max-width: 1240px;
+  margin-top: 0;
+  margin-bottom: 32px;
+  padding: 44px 44px;
+  border-radius: 24px;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: var(--relax-shadow);
+  box-sizing: border-box;
+}
+
+/* TOP右の不要な縦カード（共通サイドカード）を消す */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sidebar__sticky {
+  display: none;
+}
+
+/* リラクは下部固定バーをメインナビとして使う（上部タブは非表示） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar {
+  display: block;
+}
+
+/* 下部floating固定バー（小売で作った形式に寄せる） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  width: fit-content;
+  max-width: min(980px, calc(100vw - 24px));
+  padding: 10px 12px;
+  border-radius: 18px;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  box-shadow: 0 18px 42px rgba(17, 24, 39, 0.14);
+  z-index: 9999;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar__inner {
+  max-width: none;
+  padding: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar__company {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-sticky-bar__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-sticky-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 12px;
+  margin-right: 12px;
+  border-right: 1px solid rgba(17, 24, 39, 0.10);
+}
+
+/* FAQタブはリラクでは非表示（JS除去のフォールバック） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-sticky-nav [data-shop-sticky-nav="faq"] {
+  display: none !important;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-sticky-nav__item {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 0.86rem;
+  color: #374151;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-sticky-nav__item.is-active {
+  color: var(--relax-accent-deep);
+  background: rgba(79, 143, 58, 0.12);
+  border-color: rgba(79, 143, 58, 0.18);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar__actions .biz-detail-btn {
+  height: 40px;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar__actions .biz-detail-btn--primary {
+  background: linear-gradient(135deg, var(--relax-accent), var(--relax-accent-deep));
+  color: #fff;
+  border: 1px solid transparent;
+  box-shadow: 0 12px 26px rgba(79, 143, 58, 0.18);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar__actions .biz-detail-btn--outline {
+  background: #fff;
+  color: var(--relax-ink);
+  border: 1px solid rgba(79, 143, 58, 0.40);
+}
+
+/* 下部固定バーで本文が隠れないように余白 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-body {
+  padding-bottom: 92px;
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-sticky-bar {
+    max-width: calc(100vw - 16px);
+    padding: 10px 10px;
+  }
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-sticky-nav {
+    padding-right: 8px;
+    margin-right: 8px;
+  }
+}
+
+/* 上部タブバー（通常）はリラクでは非表示 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-tabs-sticky-wrap,
+body.shop-detail-page[data-shop-category-profile="relaxation"] nav.shop-restaurant-tabs[data-shop-restaurant-tabs] {
+  display: none !important;
+}
+
+/* 左：メイン画像 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-figure] {
+  width: 400px;
+  height: 264px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-img] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* サムネ 72×72 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-gallery] {
+  width: 400px;
+  display: grid;
+  grid-template-columns: repeat(6, 60px);
+  gap: 14px;
+  margin-top: 12px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv .shop-thumb-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #f3f4f6;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv .shop-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 中央：順番固定（バッジ→店名→評価→エリア→説明→タグ→CTA） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv .shop-detail-main-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* メインタイトル上の不要な表示（例: ほぐし処 和み）を出さない */
+body.shop-detail-page[data-shop-category-profile="relaxation"] [data-biz-detail-company] {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-genre-tags] {
+  order: 0;
+  margin: 0 0 14px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-title] {
+  order: 1;
+  margin: 0 0 14px;
+  font-size: 38px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-rating-row] {
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 16px;
+  font-weight: 800;
+  color: var(--relax-muted);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-rating-stars] {
+  color: var(--relax-gold);
+  font-size: 16px;
+  line-height: 1;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-rating-score] {
+  color: var(--relax-ink);
+  font-weight: 900;
+}
+
+/* エリア（quick）はタイトル/評価の後に固定 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-quick] {
+  order: 3;
+  margin: 0 0 18px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-top-area {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--relax-muted);
+  font-weight: 800;
+  margin: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-top-area__icon {
+  color: rgba(79, 143, 58, 0.75);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-lead] {
+  order: 4;
+  margin: 0 0 22px;
+  line-height: 1.9;
+  max-width: 520px;
+  color: #374151;
+  font-weight: 600;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-condition-tags] {
+  order: 5;
+  margin: 26px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 12px;
+  max-width: 520px;
+}
+
+.relax-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  color: #4b5563;
+  font-weight: 800;
+  font-size: 12px;
+  margin: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-shop-restaurant-ctas] {
+  order: 6;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.relax-ctas {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: nowrap;
+}
+
+.relax-cta {
+  height: 56px;
+  min-height: 56px;
+  width: 200px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid rgba(17, 24, 39, 0.10);
+}
+
+.relax-cta--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--relax-accent), var(--relax-accent-deep));
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(79, 143, 58, 0.18);
+}
+
+.relax-cta--ghost {
+  background: #fff;
+  color: var(--relax-ink);
+  border-color: rgba(79, 143, 58, 0.45);
+}
+
+/* バッジ */
+.relax-category-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgba(79, 143, 58, 0.12);
+  color: var(--relax-accent-deep);
+  border: 1px solid rgba(79, 143, 58, 0.20);
+  font-weight: 900;
+  font-size: 12px;
+}
+
+/* 右：こだわり */
+.relax-points {
+  width: 300px;
+  padding: 28px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, var(--relax-soft), var(--relax-beige));
+  border: 1px solid rgba(79, 143, 58, 0.12);
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+}
+
+.relax-points__title {
+  margin: 0 0 12px;
+  font-weight: 1000;
+  font-size: 15px;
+  color: var(--relax-ink);
+}
+
+.relax-points__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 18px;
+}
+
+.relax-points__item {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: #374151;
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+.relax-points__icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(79, 143, 58, 0.14);
+  color: var(--relax-accent-deep);
+  font-weight: 1000;
+}
+
+/* タブ/本文（restaurantのDOMを流用して見た目だけ変える） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-tabs {
+  display: flex;
+  gap: 18px;
+  margin: 14px 0 18px;
+  padding: 0 2px 8px;
+  background: transparent;
+  border: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* タブナビは「構造的にstickyが効かない」場合があるため、リラク詳細では fixed で確定追従 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] {
+  --relax-tabs-h: 64px;
+}
+
+/* sticky専用ラッパー（sticky無効化の影響を最小化） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-tabs-sticky-wrap {
+  position: -webkit-sticky !important;
+  position: sticky !important;
+  top: 72px !important;
+  z-index: 9999 !important;
+  background: transparent;
+  overflow: visible !important;
+  transform: none !important;
+  contain: none !important;
+  will-change: auto !important;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] nav.shop-restaurant-tabs.relax-detail-tabs {
+  /* stickyはラッパーに付与。nav本体は通常フローで表示 */
+  position: relative !important;
+  top: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  transform: none !important;
+
+  z-index: 0 !important;
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+  padding: 10px 16px !important;
+
+  width: 100% !important;
+  max-width: 760px !important;
+  margin: 16px auto 24px !important;
+  box-sizing: border-box !important;
+
+  min-height: var(--relax-tabs-h);
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* sticky なので fixed 用の余白は不要 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-body {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* sticky阻害要因（overflow/contain）をリラクタブ周辺で無効化 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-detail-container,
+body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-page-wrap,
+body.shop-detail-page[data-shop-category-profile="relaxation"] .detail-page-main,
+body.shop-detail-page[data-shop-category-profile="relaxation"] [data-biz-detail-root],
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-body {
+  /* sticky が効かない典型要因（祖先 overflow/transform/contain）をリラク詳細だけで解除 */
+  overflow: visible !important;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  transform: none !important;
+  contain: none !important;
+  will-change: auto !important;
+}
+
+/* NOTE: html/body は style.css 側で overflow-x:hidden。
+   sticky が効かない場合は「祖先の overflow/transform」が原因になりやすいので、
+   リラク詳細では上のラッパー群を overflow:visible に固定して対処する。 */
+
+/* 実DOM（DevTools確認済）: fixed適用は上で完結 */
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="relaxation"] nav.shop-restaurant-tabs.relax-detail-tabs {
+    padding: 10px 12px !important;
+    gap: 6px;
+    max-width: calc(100% - 24px) !important;
+  }
+
+  /* スマホ：おすすめメニューを横スクロールカードに */
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-grid {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card {
+    flex: 0 0 72%;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-tab {
+  flex: 0 0 auto;
+  padding: 8px 14px;
+  text-decoration: none;
+  font-weight: 900;
+  font-size: 0.86rem;
+  color: #374151;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-tab.is-active {
+  color: var(--relax-accent-deep);
+  background: rgba(79, 143, 58, 0.12);
+  border-color: rgba(79, 143, 58, 0.18);
+}
+
+/* おすすめメニュー（リラク） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(79, 143, 58, 0.22);
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.08);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card__img img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card__body {
+  padding: 12px 12px 14px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card__name {
+  font-size: 0.95rem;
+  font-weight: 950;
+  line-height: 1.35;
+  color: var(--relax-ink);
+  margin: 0 0 8px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card__dur {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: var(--relax-muted);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .relax-menu-card__price {
+  margin: 0;
+  font-weight: 1000;
+  color: var(--relax-accent-deep);
+}
+
+/* タブクリック時に見出しが隠れないように（ヘッダー + stickyタブ分） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-products,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-shop-cases,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-shop-highlights,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-reviews,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-shop-bottom {
+  scroll-margin-top: 140px;
+}
+
+/* alias IDs（タブhrefのスクロール先） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-top,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-menu,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-gallery,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-therapists,
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-info {
+  scroll-margin-top: 140px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 320px);
+  gap: 18px 22px;
+  align-items: start;
+  margin-bottom: 28px;
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-sidebar {
+  position: sticky;
+  top: 92px;
+  display: grid;
+  gap: 14px;
+}
+
+.relax-side-card {
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 18px;
+  background: #fff;
+  padding: 14px 14px 16px;
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+}
+
+.relax-side-card__title {
+  margin: 0 0 10px;
+  font-weight: 1000;
+  font-size: 0.95rem;
+  color: var(--relax-ink);
+}
+
+.relax-side-kv {
+  display: grid;
+  gap: 8px;
+  color: #4b5563;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.relax-side-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.relax-side-btn {
+  min-height: 44px;
+  border-radius: 16px;
+  border: 1px solid rgba(79, 143, 58, 0.35);
+  background: #fff;
+  color: var(--relax-ink);
+  font-weight: 1000;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+.relax-side-btn--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--relax-accent), var(--relax-accent-deep));
+  color: #fff;
+}
+
+/* 口コミバー（緑） */
+.relax-review-bar__track {
+  height: 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.relax-review-bar__fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(212, 164, 55, 0.35), rgba(212, 164, 55, 0.95));
+  border-radius: 999px;
+}
+
+/* 口コミ（メイン）に薄い色と立体感 */
+body.shop-detail-page[data-shop-category-profile="relaxation"] #section-reviews.shop-card {
+  background: #fff;
+  border-color: rgba(212, 164, 55, 0.18);
+  box-shadow: 0 12px 30px rgba(17, 24, 39, 0.06);
+}
+
+body.shop-detail-page[data-shop-category-profile="relaxation"] .beauty-review-card {
+  background: #fff;
+  border-color: rgba(212, 164, 55, 0.22);
+  box-shadow: 0 8px 20px rgba(17, 24, 39, 0.06);
+}
+
+/* 星色をゴールドへ統一（上部/総合/カード内） */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .beauty-review-score__stars,
+body.shop-detail-page[data-shop-category-profile="relaxation"] .beauty-review-stars,
+body.shop-detail-page[data-shop-category-profile="relaxation"] .beauty-review-card__head .beauty-review-stars {
+  color: var(--relax-gold);
+}
+
+/* 「すべての口コミを見る」リンク色もゴールド寄りに */
+body.shop-detail-page[data-shop-category-profile="relaxation"] .food-link {
+  color: #9a7209;
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-hero-figure],
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-gallery] {
+    width: 100%;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .biz-detail-fv.relax-top-fv [data-biz-detail-gallery] {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-body {
+    grid-template-columns: 1fr;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="relaxation"] .shop-restaurant-sidebar {
+    position: static;
+  }
+}
+

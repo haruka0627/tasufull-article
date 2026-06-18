@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>やりとり詳細 | Builder MVP</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+  <link rel="stylesheet" href="../chat.css" />
+  <link rel="stylesheet" href="../tasful-app-mobile.css" />
+  <link rel="stylesheet" href="../tasful-app-mobile-detail.css" />
+</head>
+<body class="builder-body tasu-app-shell-detail" data-page="builder-mvp-thread">
+  <div class="builder-app mvp-slack-thread-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18" />
+                <path d="M7 21V7l8-4v18" />
+                <path d="M17 21V11l-6-4" />
+                <path d="M9 9v.01" />
+                <path d="M9 12v.01" />
+                <path d="M9 15v.01" />
+                <path d="M9 18v.01" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">やりとり詳細</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="mvp-threads.html" data-builder-page-back aria-label="やりとり一覧へ">‹ やりとり一覧</a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">やりとり詳細</h1>
+          <p class="builder-header__sub" data-builder-mvp-thread-header-sub>メッセージのやりとり</p>
+        </div>
+
+        <div class="builder-role" data-builder-role></div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell mvp-slack-thread builder-bench-scroll">
+      <section class="mvp-slack-thread__header builder-panel" aria-label="やりとり操作">
+        <div class="mvp-slack-thread__headerMain">
+          <div class="mvp-slack-thread__titleWrap">
+            <h2 class="mvp-slack-thread__title" data-builder-mvp-thread-project-title>—</h2>
+            <div class="mvp-slack-thread__badges">
+              <span class="mvp-pill mvp-pill--open" data-builder-mvp-thread-status>—</span>
+              <span class="mvp-slack-thread__site" data-builder-mvp-thread-site-status>—</span>
+              <span class="mvp-thread-summary__unread" data-builder-mvp-thread-unread hidden>—</span>
+            </div>
+          </div>
+          <div class="mvp-slack-thread__meta">
+            <span>参加者 <strong data-builder-mvp-thread-participants>—</strong></span>
+            <span>更新 <time data-builder-mvp-thread-updated datetime="">—</time></span>
+            <span>メッセージ <strong data-builder-mvp-thread-msg-kpi>—</strong></span>
+          </div>
+        </div>
+        <div class="mvp-slack-thread__actions">
+          <button type="button" class="builder-btn builder-btn--secondary" data-builder-mvp-thread-enter hidden>入場</button>
+          <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-thread-leave hidden>退場</button>
+          <button
+            type="button"
+            class="builder-btn builder-btn--primary"
+            data-builder-mvp-thread-complete-open
+          >完了報告</button>
+          <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-thread-cancel hidden>キャンセル</button>
+          <a class="builder-btn builder-btn--ghost" href="../talk-home.html?tab=notify" data-builder-mvp-thread-talk>TASFUL TALK</a>
+        </div>
+      </section>
+
+      <div class="mvp-thread-chatLockBannerHost" data-builder-mvp-thread-chat-lock hidden aria-live="polite"></div>
+
+      <section class="builder-panel mvp-thread-contextPanel" data-builder-mvp-thread-context hidden aria-label="案件情報"></section>
+
+      <section class="builder-panel mvp-sitePhotosPanel" id="photos" aria-label="現場写真">
+        <div data-builder-mvp-site-photos></div>
+      </section>
+
+      <section class="builder-panel mvp-threadReportsPanel" id="files" aria-label="報告書・図面">
+        <div data-builder-mvp-thread-reports></div>
+      </section>
+
+      <section class="builder-panel mvp-thread-completionPanel" id="completion" aria-label="完了報告">
+        <div data-builder-thread-completion-host></div>
+      </section>
+
+      <section class="mvp-slack-thread__body builder-panel" aria-label="メッセージ">
+        <ul class="mvp-slack-thread__msgs" data-builder-mvp-thread-msgs aria-live="polite"></ul>
+      </section>
+
+      <footer class="mvp-slack-thread__compose builder-panel" aria-label="メッセージ入力">
+        <form class="mvp-thread-compose__form" data-builder-mvp-thread-form>
+          <textarea
+            class="builder-textarea mvp-thread-compose__input"
+            rows="3"
+            placeholder="メッセージを入力…"
+            data-builder-mvp-thread-input
+          ></textarea>
+          <div class="mvp-thread-compose__pending" data-builder-mvp-thread-pending hidden></div>
+          <div class="mvp-thread-compose__actions">
+            <label class="builder-btn builder-btn--ghost mvp-thread-compose__fileBtn">
+              画像
+              <input type="file" accept="image/*" data-builder-mvp-thread-attach-image hidden />
+            </label>
+            <label class="builder-btn builder-btn--ghost mvp-thread-compose__fileBtn">
+              PDF
+              <input type="file" accept="application/pdf,.pdf" data-builder-mvp-thread-attach-pdf hidden />
+            </label>
+            <button type="submit" class="builder-btn builder-btn--primary" data-builder-mvp-thread-send>送信</button>
+          </div>
+        </form>
+      </footer>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved.</p></footer>
+    </main>
+
+    <div class="mvp-slack-modal" data-builder-mvp-thread-complete-modal hidden>
+      <div class="mvp-slack-modal__panel" role="dialog" aria-labelledby="mvpThreadCompleteTitle" aria-modal="true">
+        <div class="mvp-slack-modal__head">
+          <h2 id="mvpThreadCompleteTitle" class="builder-section-title" data-builder-mvp-thread-complete-modal-title>作業完了</h2>
+          <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-thread-complete-close>閉じる</button>
+        </div>
+        <div data-builder-mvp-thread-complete-modal-body></div>
+      </div>
+    </div>
+
+    <div class="mvp-slack-modal" data-builder-mvp-thread-review-modal hidden>
+      <div class="mvp-slack-modal__panel chat-review-modal__panel" role="dialog" aria-labelledby="mvpThreadReviewTitle" aria-modal="true">
+        <div class="mvp-slack-modal__head">
+          <h2 id="mvpThreadReviewTitle" class="builder-section-title">取引相手を評価</h2>
+          <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-thread-review-close>閉じる</button>
+        </div>
+        <p class="chat-report-modal__sub">やりとりは完了しました。相手の評価をお願いします。</p>
+        <p class="chat-review-target" data-builder-mvp-thread-review-target></p>
+        <div class="chat-review-stars" role="radiogroup" aria-label="評価（1〜5）">
+          <button type="button" class="chat-review-star chat-review-star--on" data-builder-mvp-thread-review-star data-star="1" aria-label="1つ星">★</button>
+          <button type="button" class="chat-review-star chat-review-star--on" data-builder-mvp-thread-review-star data-star="2" aria-label="2つ星">★</button>
+          <button type="button" class="chat-review-star chat-review-star--on" data-builder-mvp-thread-review-star data-star="3" aria-label="3つ星">★</button>
+          <button type="button" class="chat-review-star chat-review-star--on" data-builder-mvp-thread-review-star data-star="4" aria-label="4つ星">★</button>
+          <button type="button" class="chat-review-star chat-review-star--on" data-builder-mvp-thread-review-star data-star="5" aria-label="5つ星">★</button>
+        </div>
+        <label class="chat-report-detail-label" for="mvpThreadReviewComment">コメント（任意）</label>
+        <textarea id="mvpThreadReviewComment" class="chat-report-detail" rows="3" placeholder="よかった点があれば一言" data-builder-mvp-thread-review-comment></textarea>
+        <div class="mvp-slack-modal__actions chat-review-modal__actions">
+          <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-thread-review-skip>スキップして完了</button>
+          <button type="button" class="builder-btn builder-btn--primary" data-builder-mvp-thread-review-submit>評価を送る</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="mvp-slack-modal" data-builder-mvp-site-photo-modal hidden>
+      <div class="mvp-slack-modal__panel" role="dialog" aria-labelledby="mvpSitePhotoTitle" aria-modal="true">
+        <div class="mvp-slack-modal__head">
+          <h2 id="mvpSitePhotoTitle" class="builder-section-title">現場写真を追加</h2>
+          <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-site-photo-close>閉じる</button>
+        </div>
+        <form data-builder-mvp-site-photo-form>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">カテゴリ</span>
+            <select class="builder-select" data-builder-mvp-site-photo-stage required>
+              <option value="before">着工前</option>
+              <option value="progress" selected>施工中</option>
+              <option value="after">完了後</option>
+            </select>
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">写真ファイル</span>
+            <label class="builder-btn builder-btn--ghost mvp-thread-compose__fileBtn">
+              ファイルを選択
+              <input type="file" accept="image/*" data-builder-mvp-site-photo-file hidden />
+            </label>
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">ファイル名</span>
+            <input class="builder-input" type="text" data-builder-mvp-site-photo-filename placeholder="例: 着工前_玄関.jpg" required />
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">メモ</span>
+            <textarea class="builder-input builder-textarea" rows="2" data-builder-mvp-site-photo-memo placeholder="玄関前の状態 など"></textarea>
+          </label>
+          <div class="mvp-slack-modal__actions">
+            <button type="submit" class="builder-btn builder-btn--primary">追加</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-notifications-store.js" defer></script>
+  <script src="../talk-platform-notify.js" defer></script>
+  <script src="../listing-demo-catalog.js"></script>
+  <script src="builder-board-feed.js"></script>
+  <script src="../builder-bench-embed.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+  <script src="../tasful-app-mobile.js" defer></script>
+  <script>
+    document.addEventListener(
+      "click",
+      function (ev) {
+        var btn = ev.target && ev.target.closest("[data-builder-mvp-thread-complete-open]");
+        if (!btn || btn.disabled || btn.hidden) return;
+        if (typeof window.__openMvpThreadCompletion === "function") {
+          ev.preventDefault();
+          window.__openMvpThreadCompletion();
+        }
+      },
+      true
+    );
+  </script>
+  <script>
+    (function () {
+      var blockedHashes = { completion: 1, photos: 1, photo: 1, report: 1, files: 1 };
+      function isOpsPartnerBenchEmbed() {
+        var sp = new URLSearchParams(window.location.search);
+        return sp.get("benchEmbed") === "1" && sp.get("builderFlow") === "ops_partner";
+      }
+      function scrollToHash() {
+        var hash = String(window.location.hash || "").replace(/^#/, "").trim().toLowerCase();
+        if (!hash || blockedHashes[hash]) return;
+        if (isOpsPartnerBenchEmbed() && blockedHashes[hash]) return;
+        var target = document.getElementById(hash);
+        if (!target) return;
+        requestAnimationFrame(function () {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+          target.classList.add("deal-detail-panel--highlight");
+          window.setTimeout(function () {
+            target.classList.remove("deal-detail-panel--highlight");
+          }, 1800);
+        });
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", scrollToHash);
+      } else {
+        scrollToHash();
+      }
+    })();
+  </script>
+</body>
+</html>

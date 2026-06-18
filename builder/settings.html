@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>Builder設定 | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-settings">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builderダッシュボードへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">設定</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">Builder設定</h1>
+          <p class="builder-header__sub">通知・公開・応募・表示・担当者・会社情報（Builder運用）</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-panel" aria-label="Builder運用設定">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">運用設定</h2>
+          <span class="builder-kpi" data-builder-settings-kpi>demo</span>
+        </div>
+
+        <form class="builder-form builder-settings-form" data-builder-settings-form>
+          <fieldset class="builder-settings-group">
+            <legend class="builder-settings-group__title">Builder通知設定</legend>
+            <label class="builder-settings-check">
+              <input type="checkbox" name="notify_applications" data-builder-settings-notify-applications checked />
+              <span>新規応募を通知する</span>
+            </label>
+            <label class="builder-settings-check">
+              <input type="checkbox" name="notify_messages" data-builder-settings-notify-messages checked />
+              <span>スレッドの新着メッセージを通知する</span>
+            </label>
+            <label class="builder-settings-check">
+              <input type="checkbox" name="notify_completion" data-builder-settings-notify-completion />
+              <span>完了報告・退場を通知する</span>
+            </label>
+          </fieldset>
+
+          <fieldset class="builder-settings-group">
+            <legend class="builder-settings-group__title">案件公開設定</legend>
+            <label class="builder-field">
+              <span class="builder-field__label">デフォルト公開範囲</span>
+              <select class="builder-select" name="default_visibility" data-builder-settings-default-visibility>
+                <option value="partner_only">協力会社限定</option>
+                <option value="team_only">チーム限定</option>
+                <option value="private">非公開（自分だけ）</option>
+                <option value="public">公開（全体）</option>
+              </select>
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">連絡ポリシー（デフォルト）</span>
+              <select class="builder-select" name="default_contact_policy" data-builder-settings-default-contact>
+                <option value="tasful_talk_only">TASFUL Talkのみ（推奨）</option>
+                <option value="owner_allowed">オーナー判断で共有可</option>
+                <option value="admin_only">管理者のみ共有可</option>
+              </select>
+            </label>
+          </fieldset>
+
+          <fieldset class="builder-settings-group">
+            <legend class="builder-settings-group__title">応募受付設定</legend>
+            <label class="builder-settings-check">
+              <input type="checkbox" name="accept_applications" data-builder-settings-accept-applications checked />
+              <span>案件への応募を受け付ける</span>
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">1案件あたりの募集人数（デフォルト）</span>
+              <input class="builder-input" type="number" name="default_required_partners" min="1" max="99" value="3" data-builder-settings-required-partners />
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">応募上限（0 = 無制限）</span>
+              <input class="builder-input" type="number" name="max_applications" min="0" max="999" value="0" data-builder-settings-max-applications />
+            </label>
+          </fieldset>
+
+          <fieldset class="builder-settings-group">
+            <legend class="builder-settings-group__title">デフォルト表示設定</legend>
+            <label class="builder-field">
+              <span class="builder-field__label">案件一覧の初期表示</span>
+              <select class="builder-select" name="default_list_view" data-builder-settings-list-view>
+                <option value="in_progress">進行中を優先</option>
+                <option value="open">募集中を優先</option>
+                <option value="recent">更新順</option>
+              </select>
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">ダッシュボードのロール表示</span>
+              <select class="builder-select" name="default_role_view" data-builder-settings-role-view>
+                <option value="owner">オーナー表示</option>
+                <option value="partner">協力会社表示</option>
+              </select>
+            </label>
+          </fieldset>
+
+          <fieldset class="builder-settings-group">
+            <legend class="builder-settings-group__title">担当者情報</legend>
+            <label class="builder-field">
+              <span class="builder-field__label">担当者名</span>
+              <input class="builder-input" type="text" name="contact_name" value="山田 太郎" data-builder-settings-contact-name />
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">メールアドレス</span>
+              <input class="builder-input" type="email" name="contact_email" value="yamada@example.com" data-builder-settings-contact-email />
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">電話番号</span>
+              <input class="builder-input" type="tel" name="contact_phone" value="03-1234-5678" data-builder-settings-contact-phone />
+            </label>
+          </fieldset>
+
+          <fieldset class="builder-settings-group builder-settings-group--full">
+            <legend class="builder-settings-group__title">会社情報</legend>
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">会社名 / 屋号</span>
+              <input class="builder-input" type="text" name="company_name" value="株式会社オレンジ建装" data-builder-settings-company-name />
+            </label>
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">所在地</span>
+              <input class="builder-input" type="text" name="company_address" value="東京都新宿区西新宿1-1-1" data-builder-settings-company-address />
+            </label>
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">事業内容（Builder表示用）</span>
+              <textarea class="builder-textarea" name="company_bio" rows="3" data-builder-settings-company-bio>内装・リフォームを中心に、首都圏で協力会社ネットワークを運用しています。</textarea>
+            </label>
+          </fieldset>
+
+          <div class="builder-form__actions">
+            <button type="submit" class="builder-btn builder-btn--primary" data-builder-settings-save>設定を保存（demo）</button>
+            <a class="builder-btn builder-btn--ghost" href="./index.html">ダッシュボードへ</a>
+          </div>
+        </form>
+
+        <p class="builder-settings-note">支払い方法・口座管理は TASFUL 本体のアカウント設定で行います。Builder設定では変更できません。</p>
+      </section>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

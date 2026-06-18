@@ -1,0 +1,123 @@
+/* TASFUL ヘッダーロゴ — 画像地球 + テキスト */
+
+:root {
+  --tasful-header-navy: #071733;
+}
+
+.tasful-ai-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  flex-shrink: 0;
+  line-height: 1;
+  background: transparent;
+}
+
+.tasful-ai-logo-icon {
+  width: 56px;
+  height: 56px;
+  min-width: 56px;
+  min-height: 56px;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  object-position: center;
+  transform: scale(1);
+  flex-shrink: 0;
+  display: block;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.tasful-ai-logo-text {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.tasful-ai-logo-text .main {
+  font-size: 42px;
+  font-weight: 800;
+  color: #0f2147;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.tasful-ai-logo-text .sub {
+  font-size: 18px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* 濃紺ヘッダー（#071733） */
+.top-portal-header .tasful-ai-logo,
+.job-top-header .tasful-ai-logo,
+.ai-top-header .tasful-ai-logo,
+.gen-ai-header .tasful-ai-logo,
+.ai-workspace-page .shop-market-header .tasful-ai-logo,
+.signup-header .tasful-ai-logo {
+  background: transparent;
+}
+
+.top-portal-header .tasful-ai-logo-text .main,
+.job-top-header .tasful-ai-logo-text .main,
+.ai-top-header .tasful-ai-logo-text .main,
+.gen-ai-header .tasful-ai-logo-text .main,
+.ai-workspace-page .shop-market-header .tasful-ai-logo-text .main,
+.signup-header .tasful-ai-logo-text .main {
+  font-size: 42px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.top-portal-header .tasful-ai-logo-text .sub,
+.job-top-header .tasful-ai-logo-text .sub,
+.ai-top-header .tasful-ai-logo-text .sub,
+.gen-ai-header .tasful-ai-logo-text .sub,
+.ai-workspace-page .shop-market-header .tasful-ai-logo-text .sub,
+.signup-header .tasful-ai-logo-text .sub {
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media (max-width: 720px) {
+  .tasful-ai-logo-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    min-height: 48px;
+  }
+
+  .tasful-ai-logo-text .main,
+  .top-portal-header .tasful-ai-logo-text .main,
+  .job-top-header .tasful-ai-logo-text .main,
+  .ai-top-header .tasful-ai-logo-text .main,
+  .gen-ai-header .tasful-ai-logo-text .main,
+  .ai-workspace-page .shop-market-header .tasful-ai-logo-text .main,
+  .signup-header .tasful-ai-logo-text .main {
+    font-size: 32px;
+  }
+
+  .tasful-ai-logo-text .sub,
+  .top-portal-header .tasful-ai-logo-text .sub,
+  .job-top-header .tasful-ai-logo-text .sub,
+  .ai-top-header .tasful-ai-logo-text .sub,
+  .gen-ai-header .tasful-ai-logo-text .sub,
+  .ai-workspace-page .shop-market-header .tasful-ai-logo-text .sub,
+  .signup-header .tasful-ai-logo-text .sub {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .tasful-ai-logo-text .sub {
+    display: none;
+  }
+}

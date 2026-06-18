@@ -1,0 +1,74 @@
+=== ベンチ診断 NG一覧 ===
+
+currentUrl:
+http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=shop&demoConnect=1&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=shop-1&paymentMethod=bank_transfer
+
+timestamp:
+2026-06-10T09:06:38.628Z
+
+category:
+Connectあり購入
+
+stage:
+completed
+
+NG count:
+1
+
+--------------------
+1.
+ngType:
+chat_diag_ok_but_composer_missing_dom
+
+cause:
+診断はOKだが、実DOMではNG
+
+原因:
+診断はOKだが、実DOMではNG
+
+expected:
+aChatLoadReady=true かつ composer DOM 存在
+
+actual:
+composerDomExists=undefined
+
+diff:
+diag.aChatLoadReady=true vs dom.actualComposerDomExists=false
+
+fixTargetFile:
+chat-detail.js
+
+fixTargetFunction:
+applyRoomComposerState() / bindComposerInput()
+
+修正対象:
+chat-detail.js
+
+修正関数:
+applyRoomComposerState() / bindComposerInput()
+
+currentUrl:
+http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=shop&demoConnect=1&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=shop-1&paymentMethod=bank_transfer
+
+timestamp:
+2026-06-10T09:06:38.628Z
+
+完了条件:
+—
+
+relatedValues:
+sectionKey: diag_dom
+detail: 診断はOKだが、実DOMではNG: diag.aChatLoadReady=true vs dom.actualComposerDomExists=false
+isDomConsistency: true
+actorAId: u_shop_demo
+actorBId: u_hiro
+threadId: chat-1781082326134-xaq93j
+focus: completion
+primaryRootCause: A購入者の「レビューをする」が未表示
+diagAChatLoadReady: true
+diagNotifyRowsCount: 4
+actualNotifyRowDomCount: 4
+actualNotifyErrorVisible: false
+actualNotifyEmptyTextVisible: false
+
+--------------------

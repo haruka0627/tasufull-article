@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>案件カレンダー | Builder Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body admin-cal--ops-schedule" data-page="builder-admin-calendar">
+  <div class="builder-app admin-cal-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder Admin ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="../builder-admin/admin-index.html" aria-label="Builder Adminダッシュボード">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" /><path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder Admin</span>
+              <span class="builder-brand__sub">案件カレンダー</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="../builder-admin/admin-index.html" aria-label="運営ダッシュボードへ">‹ 運営ダッシュボード</a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">案件手配カレンダー</h1>
+          <p class="builder-header__sub">手配状況の俯瞰・現場詳細・スレッド連携</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=AD" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>運営</span>
+            <span class="builder-account__sub" data-builder-member-type>TASFUL運営</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main admin-cal-main builder-bench-scroll">
+      <section class="builder-panel admin-cal-toolbar" aria-label="カレンダー操作">
+        <div class="admin-cal-toolbar__row">
+          <div class="admin-cal-viewTabs" role="tablist" aria-label="表示切替">
+            <button type="button" class="admin-cal-viewTabs__btn is-active" data-admin-cal-view="month" role="tab" aria-selected="true">月</button>
+            <button type="button" class="admin-cal-viewTabs__btn" data-admin-cal-view="week" role="tab" aria-selected="false">週</button>
+            <button type="button" class="admin-cal-viewTabs__btn" data-admin-cal-view="day" role="tab" aria-selected="false">日</button>
+          </div>
+          <div class="admin-cal-nav">
+            <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-prev aria-label="前へ">‹</button>
+            <strong class="admin-cal-nav__label" data-admin-cal-period-label>—</strong>
+            <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-next aria-label="次へ">›</button>
+            <button type="button" class="builder-btn builder-btn--secondary" data-admin-cal-today>今日</button>
+          </div>
+          <span class="builder-kpi" data-admin-cal-kpi>—</span>
+          <span data-admin-cal-csv-export-host></span>
+          <button type="button" class="builder-btn builder-btn--primary" data-admin-cal-assignment-open>現場予定を追加</button>
+          <button type="button" class="builder-btn builder-btn--secondary" data-admin-cal-add-open>案件を追加</button>
+        </div>
+
+        <form class="admin-cal-filters" data-admin-cal-filters>
+          <label class="admin-cal-filter">
+            <span class="admin-cal-filter__label">担当者</span>
+            <select class="builder-select" name="assignee" data-admin-cal-filter-assignee>
+              <option value="">すべて</option>
+            </select>
+          </label>
+          <label class="admin-cal-filter">
+            <span class="admin-cal-filter__label">カテゴリ</span>
+            <select class="builder-select" name="category" data-admin-cal-filter-category>
+              <option value="">すべて</option>
+            </select>
+          </label>
+          <label class="admin-cal-filter">
+            <span class="admin-cal-filter__label">手配状況</span>
+            <select class="builder-select" name="status" data-admin-cal-filter-status>
+              <option value="">すべて</option>
+              <option value="unassigned">未手配</option>
+              <option value="assigned">手配済み</option>
+              <option value="completed">完了</option>
+            </select>
+          </label>
+          <label class="admin-cal-filter">
+            <span class="admin-cal-filter__label">開始日</span>
+            <input class="builder-input" type="date" name="dateFrom" data-admin-cal-filter-from />
+          </label>
+          <label class="admin-cal-filter">
+            <span class="admin-cal-filter__label">終了日</span>
+            <input class="builder-input" type="date" name="dateTo" data-admin-cal-filter-to />
+          </label>
+          <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-filter-reset>リセット</button>
+        </form>
+
+        <ul class="admin-cal-legend" aria-label="手配状況の色">
+          <li><span class="admin-cal-legend__dot admin-cal-legend__dot--unassigned"></span>未手配</li>
+          <li><span class="admin-cal-legend__dot admin-cal-legend__dot--assigned"></span>手配済み</li>
+          <li><span class="admin-cal-legend__dot admin-cal-legend__dot--completed"></span>完了</li>
+        </ul>
+      </section>
+
+      <div class="admin-cal-layout">
+        <section class="builder-panel admin-cal-gridPanel" aria-label="カレンダー">
+          <div class="admin-cal-grid" data-admin-cal-grid></div>
+          <div class="admin-cal-assignment-preview" data-admin-cal-assignment-preview hidden aria-live="polite" aria-label="登録した現場のプレビュー">
+            <div class="admin-cal-assignment-preview__card" data-admin-cal-assignment-preview-card>
+              <span class="admin-cal-assignment-preview__badge">登録完了</span>
+              <h3 class="admin-cal-assignment-preview__title" data-admin-cal-assignment-preview-title>—</h3>
+              <dl class="admin-cal-assignment-preview__meta">
+                <div><dt>作業日</dt><dd data-admin-cal-assignment-preview-date>—</dd></div>
+                <div><dt>担当パートナー</dt><dd data-admin-cal-assignment-preview-partner>—</dd></div>
+                <div><dt>備考</dt><dd data-admin-cal-assignment-preview-notes>—</dd></div>
+              </dl>
+              <p class="admin-cal-assignment-preview__hint">PDF・Google Map は右の詳細パネルから確認できます。</p>
+              <div class="admin-cal-assignment-preview__actions">
+                <button type="button" class="builder-btn builder-btn--primary" data-admin-cal-assignment-preview-complete>完了</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="builder-panel admin-cal-detailPanel" aria-label="案件詳細">
+          <div class="admin-cal-detailPanel__head">
+            <h2 class="builder-section-title admin-cal-detailPanel__title" data-admin-cal-detail-title>案件詳細</h2>
+            <div class="admin-cal-detailPanel__actions">
+              <a class="builder-btn builder-btn--ghost" href="#" data-admin-cal-thread-link hidden>スレッド</a>
+              <button type="button" class="builder-btn builder-btn--primary" data-admin-cal-complete-open hidden>完了</button>
+            </div>
+          </div>
+          <div class="admin-cal-detail" data-admin-cal-detail>
+            <p class="admin-cal-detail__empty">日付または案件を選択してください。</p>
+          </div>
+        </aside>
+      </div>
+
+      <section class="builder-panel admin-cal-footerActions" aria-label="クイック操作">
+        <a class="builder-btn builder-btn--secondary" href="#" data-admin-cal-footer-thread hidden>スレッドを開く</a>
+        <button type="button" class="builder-btn builder-btn--primary" data-admin-cal-footer-complete hidden>完了フォーム</button>
+      </section>
+
+      <footer class="builder-footer"><p>© 2024 TASFUL. All rights reserved. Builder Admin</p></footer>
+    </main>
+
+    <div class="mvp-slack-modal admin-cal-modal admin-cal-assignmentModal" data-admin-cal-assignment-modal hidden>
+      <div class="mvp-slack-modal__panel admin-cal-assignmentModal__panel" role="dialog" aria-labelledby="adminCalAssignmentTitle" aria-modal="true">
+        <div class="mvp-slack-modal__head">
+          <h2 id="adminCalAssignmentTitle" class="builder-section-title">現場予定を追加</h2>
+          <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-assignment-close>閉じる</button>
+        </div>
+        <form data-admin-cal-assignment-form class="admin-cal-assignmentForm">
+          <div data-admin-cal-partner-filters></div>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">協力パートナー選択 <span class="admin-cal-required">必須</span></span>
+            <div class="admin-cal-partnerSearchWrap" data-admin-cal-assignment-partner-list></div>
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">邸名 <span class="admin-cal-required">必須</span></span>
+            <input class="builder-input" type="text" name="houseName" required data-admin-cal-assignment-house-name placeholder="例: 山田様邸 / 〇〇マンション101号室" />
+          </label>
+          <div class="admin-cal-addForm__row">
+            <label class="builder-field">
+              <span class="builder-field__label">作業日 <span class="admin-cal-required">必須</span></span>
+              <input class="builder-input" type="date" name="workDate" required data-admin-cal-assignment-work-date />
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">開始時間</span>
+              <input class="builder-input" type="time" name="startTime" data-admin-cal-assignment-start-time />
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">終了時間</span>
+              <input class="builder-input" type="time" name="endTime" data-admin-cal-assignment-end-time />
+            </label>
+          </div>
+          <label class="builder-field builder-field--full admin-cal-pdfField">
+            <span class="builder-field__label">指示書PDF</span>
+            <label class="builder-btn builder-btn--ghost mvp-thread-compose__fileBtn">
+              PDFを選択（ファイル名のみ保存）
+              <input type="file" accept=".pdf,application/pdf" data-admin-cal-assignment-instruction-pdf hidden />
+            </label>
+          </label>
+          <label class="builder-field builder-field--full admin-cal-pdfField">
+            <span class="builder-field__label">駐車場PDF</span>
+            <label class="builder-btn builder-btn--ghost mvp-thread-compose__fileBtn">
+              PDFを選択（任意）
+              <input type="file" accept=".pdf,application/pdf" data-admin-cal-assignment-parking-pdf hidden />
+            </label>
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">現場住所</span>
+            <input class="builder-input" type="text" name="siteAddress" data-admin-cal-assignment-site-address placeholder="埼玉県さいたま市…" />
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">備考</span>
+            <textarea class="builder-input builder-textarea" name="notes" rows="3" data-admin-cal-assignment-notes placeholder="注意事項、現場ルール、近隣注意、鍵情報など"></textarea>
+          </label>
+          <p class="admin-cal-addForm__hint">登録すると選択したパートナーのカレンダーにのみ反映され、通知が送信されます。同じ日に別パートナーへの登録も可能です。</p>
+          <div class="mvp-slack-modal__actions admin-cal-assignmentForm__actions">
+            <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-assignment-cancel>キャンセル</button>
+            <button type="submit" class="builder-btn builder-btn--primary">登録して通知</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="mvp-slack-modal admin-cal-modal" data-admin-cal-add-modal hidden>
+      <div class="mvp-slack-modal__panel" role="dialog" aria-labelledby="adminCalAddTitle" aria-modal="true">
+        <div class="mvp-slack-modal__head">
+          <h2 id="adminCalAddTitle" class="builder-section-title">案件を追加</h2>
+          <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-add-close>閉じる</button>
+        </div>
+        <form data-admin-cal-add-form>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">案件名</span>
+            <input class="builder-input" type="text" name="title" required data-admin-cal-add-title placeholder="例: 外壁補修工事" />
+          </label>
+          <div class="admin-cal-addForm__row">
+            <label class="builder-field">
+              <span class="builder-field__label">開始日</span>
+              <input class="builder-input" type="date" name="start" required data-admin-cal-add-start />
+            </label>
+            <label class="builder-field">
+              <span class="builder-field__label">終了日</span>
+              <input class="builder-input" type="date" name="end" required data-admin-cal-add-end />
+            </label>
+          </div>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">担当パートナー</span>
+            <select class="builder-select" name="partnerId" required data-admin-cal-add-partner>
+              <option value="">選択してください</option>
+            </select>
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">カテゴリ</span>
+            <select class="builder-select" name="category" data-admin-cal-add-category>
+              <option value="scaffold">足場</option>
+              <option value="interior">内装</option>
+              <option value="carpenter">大工</option>
+            </select>
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">現場住所</span>
+            <input class="builder-input" type="text" name="location" data-admin-cal-add-location placeholder="東京都渋谷区…" />
+          </label>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">指示書</span>
+            <textarea class="builder-input builder-textarea" name="instructions" rows="3" data-admin-cal-add-instructions placeholder="作業内容・注意事項"></textarea>
+          </label>
+          <p class="admin-cal-addForm__hint">登録すると選択したパートナーのカレンダーに反映され、通知が送信されます。</p>
+          <div class="mvp-slack-modal__actions">
+            <button type="submit" class="builder-btn builder-btn--primary">登録して通知</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="mvp-slack-modal admin-cal-modal" data-admin-cal-complete-modal hidden>
+      <div class="mvp-slack-modal__panel" role="dialog" aria-labelledby="adminCalCompleteTitle" aria-modal="true">
+        <div class="mvp-slack-modal__head">
+          <h2 id="adminCalCompleteTitle" class="builder-section-title">作業完了</h2>
+          <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-complete-close>閉じる</button>
+        </div>
+        <form data-admin-cal-complete-form>
+          <label class="builder-field builder-field--full">
+            <span class="builder-field__label">完了写真（任意）</span>
+            <label class="builder-btn builder-btn--ghost mvp-thread-compose__fileBtn">
+              写真を追加
+              <input type="file" accept="image/*" multiple data-admin-cal-complete-photos hidden />
+            </label>
+            <div class="mvp-thread-compose__pending" data-admin-cal-complete-pending hidden></div>
+          </label>
+          <label class="mvp-slack-modal__consent">
+            <input type="checkbox" data-admin-cal-complete-consent />
+            作業完了に同意します
+          </label>
+          <div class="mvp-slack-modal__actions">
+            <button type="submit" class="builder-btn builder-btn--primary">完了を確定</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="mvp-slack-modal admin-cal-modal" data-admin-cal-preview-modal hidden>
+      <div class="mvp-slack-modal__panel admin-cal-previewPanel" role="dialog" aria-labelledby="adminCalPreviewTitle" aria-modal="true">
+        <div class="mvp-slack-modal__head">
+          <h2 id="adminCalPreviewTitle" class="builder-section-title" data-admin-cal-preview-title>添付プレビュー</h2>
+          <button type="button" class="builder-btn builder-btn--ghost" data-admin-cal-preview-close>閉じる</button>
+        </div>
+        <div class="admin-cal-previewBody" data-admin-cal-preview-body></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../builder-bench-embed.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+/* 法人・店舗 中間ポータル（business-portal.html 専用） */
+
+.business-portal-page {
+  --biz-portal-max: 1100px;
+  --biz-portal-radius: 24px;
+  --biz-portal-teal: #0d9488;
+  --biz-portal-teal-dark: #047857;
+  --biz-portal-gold: #c9a227;
+  --biz-portal-gold-dark: #967622;
+}
+
+.business-portal-page .biz-portal-main {
+  margin: 0;
+  padding: 0;
+}
+
+.business-portal-page .biz-portal-hero {
+  position: relative;
+  padding: 48px 16px 40px;
+  overflow: hidden;
+  text-align: center;
+  background:
+    radial-gradient(ellipse 70% 80% at 15% 20%, rgba(255, 215, 0, 0.14), transparent 55%),
+    radial-gradient(ellipse 60% 70% at 85% 30%, rgba(232, 201, 106, 0.12), transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, #fffdf8 42%, #fff8ec 100%);
+}
+
+.business-portal-page .biz-portal-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(255, 215, 0, 0.08), transparent 42%),
+    radial-gradient(circle at 80% 50%, rgba(255, 215, 0, 0.06), transparent 40%);
+  pointer-events: none;
+}
+
+.business-portal-page .biz-portal-hero__inner {
+  position: relative;
+  z-index: 1;
+  max-width: var(--biz-portal-max);
+  margin: 0 auto;
+}
+
+.business-portal-page .biz-portal-hero__title {
+  margin: 0 0 16px;
+  font-size: clamp(26px, 3.6vw, 38px);
+  font-weight: 900;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: #0f172a;
+}
+
+.business-portal-page .biz-portal-hero__title-sep {
+  display: inline-block;
+  margin: 0 0.35em;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.business-portal-page .biz-portal-hero__lead {
+  margin: 0;
+  font-size: clamp(15px, 1.6vw, 18px);
+  font-weight: 600;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.business-portal-page .biz-portal-choices {
+  padding: 8px 16px 48px;
+  background: linear-gradient(180deg, #fff8ec 0%, #ffffff 28%, #f8fafc 100%);
+}
+
+.business-portal-page .biz-portal-choices__inner {
+  max-width: var(--biz-portal-max);
+  margin: 0 auto;
+}
+
+.business-portal-page .biz-portal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.business-portal-page .biz-portal-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+  padding: 32px 30px 30px;
+  border-radius: var(--biz-portal-radius);
+  overflow: hidden;
+  border: 1px solid transparent;
+  box-shadow:
+    0 18px 48px rgba(15, 23, 42, 0.08),
+    0 6px 18px rgba(15, 23, 42, 0.05);
+}
+
+.business-portal-page .biz-portal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.business-portal-page .biz-portal-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.business-portal-page .biz-portal-card--service {
+  border-color: rgba(110, 231, 183, 0.55);
+  background: linear-gradient(165deg, #ffffff 0%, #f8fffe 38%, #f0fdf9 72%, #ecfdf5 100%);
+}
+
+.business-portal-page .biz-portal-card--service::before {
+  background: radial-gradient(ellipse 52% 46% at 100% 100%, rgba(110, 231, 183, 0.28) 0%, transparent 58%);
+}
+
+.business-portal-page .biz-portal-card--shop {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: linear-gradient(155deg, #fffff9 0%, #faf0d8 32%, #fff6e8 58%, #fffef9 100%);
+}
+
+.business-portal-page .biz-portal-card--shop::before {
+  background:
+    radial-gradient(ellipse 85% 55% at 18% 0%, rgba(232, 201, 106, 0.32), transparent 58%),
+    radial-gradient(ellipse 70% 45% at 92% 100%, rgba(212, 175, 55, 0.16), transparent 52%);
+}
+
+.business-portal-page .biz-portal-card__badge {
+  align-self: flex-start;
+  margin: 0 0 12px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+}
+
+.business-portal-page .biz-portal-card--service .biz-portal-card__badge {
+  color: #0f766e;
+  background: #d1fae5;
+}
+
+.business-portal-page .biz-portal-card--shop .biz-portal-card__badge {
+  color: var(--biz-portal-gold-dark);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.business-portal-page .biz-portal-card__title {
+  margin: 0 0 8px;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 900;
+  line-height: 1.3;
+  color: #0f172a;
+}
+
+.business-portal-page .biz-portal-card__sub {
+  margin: 0 0 16px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.business-portal-page .biz-portal-card--service .biz-portal-card__sub {
+  color: var(--biz-portal-teal);
+}
+
+.business-portal-page .biz-portal-card--shop .biz-portal-card__sub {
+  color: var(--biz-portal-gold-dark);
+}
+
+.business-portal-page .biz-portal-card__desc {
+  flex: 1 1 auto;
+  margin: 0 0 24px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.75;
+  color: #475569;
+}
+
+.business-portal-page .biz-portal-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: flex-start;
+  min-height: 48px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.business-portal-page .biz-portal-card__cta:hover {
+  transform: translateY(-1px);
+}
+
+.business-portal-page .biz-portal-card__cta-arrow {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+}
+
+.business-portal-page .biz-portal-card__cta-arrow svg {
+  width: 18px;
+  height: 18px;
+}
+
+.business-portal-page .biz-portal-card__cta--teal {
+  color: #fff;
+  background: linear-gradient(180deg, #34d399 0%, #10b981 42%, #059669 78%, #047857 100%);
+  box-shadow:
+    0 10px 28px rgba(16, 185, 129, 0.42),
+    0 4px 12px rgba(5, 150, 105, 0.24);
+}
+
+.business-portal-page .biz-portal-card__cta--gold {
+  color: #3d2f0a;
+  background: linear-gradient(180deg, #fff4d4 0%, #e8c96a 38%, #d4af37 72%, #c9a227 100%);
+  box-shadow:
+    0 10px 28px rgba(201, 162, 39, 0.38),
+    0 4px 12px rgba(150, 118, 34, 0.2);
+}
+
+.business-portal-page .biz-portal-compare {
+  padding: 0 16px 56px;
+  background: #f8fafc;
+}
+
+.business-portal-page .biz-portal-compare__inner {
+  max-width: var(--biz-portal-max);
+  margin: 0 auto;
+  padding: 24px 28px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.business-portal-page .biz-portal-compare__title {
+  margin: 0 0 16px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: #64748b;
+}
+
+.business-portal-page .biz-portal-compare__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.business-portal-page .biz-portal-compare__item {
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.55;
+  text-align: center;
+}
+
+.business-portal-page .biz-portal-compare__item strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.business-portal-page .biz-portal-compare__item--service {
+  color: #0f766e;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+}
+
+.business-portal-page .biz-portal-compare__item--service strong {
+  color: #047857;
+}
+
+.business-portal-page .biz-portal-compare__item--shop {
+  color: var(--biz-portal-gold-dark);
+  background: #fffbeb;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+}
+
+.business-portal-page .biz-portal-compare__item--shop strong {
+  color: #7c5a12;
+}
+
+@media (max-width: 768px) {
+  .business-portal-page .biz-portal-grid,
+  .business-portal-page .biz-portal-compare__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .business-portal-page .biz-portal-hero {
+    padding-top: 36px;
+  }
+
+  .business-portal-page .biz-portal-card {
+    min-height: 0;
+  }
+}

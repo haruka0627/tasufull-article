@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>法人・業務サービス / 店�E・販売 | TasuFull</title>
+  <meta name="description" content="法人・業務サービスと店�E・販売のどちらをお探しか、目皁E��合わせてお選びください、E>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="top.css">
+  <link rel="stylesheet" href="business-portal.css">
+    <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+</head>
+<body class="top-page business-portal-page">
+  <div class="top-pr-area top-portal-ref__hide-pr" aria-label="PR・キャンペ�Eン">
+    <div class="top-pr-card">
+      <span class="top-pr-banner__badge top-pr-badge">PR</span>
+      <p class="top-pr-banner__text">
+        <strong>AI相諁E��今だけ�E回無料！E/strong>
+        <span class="top-pr-banner__sub">相場チェチE��・生�EAI・画像解析など、すぐ使える便利機�E、E/span>
+      </p>
+      <a href="/contact" class="top-pr-banner__btn">AIを体験すめEↁE/a>
+    </div>
+  </div>
+
+  <header class="top-site-header site-header top-portal-header">
+    <div class="top-site-header__inner">
+      <a href="index-top.html" class="tasful-ai-logo top-site-header__logo top-portal-header__logo" aria-label="TASFUL プラットフォームTOP">
+        <img
+          src="images/tasful-ai-globe.png?v=4"
+          alt=""
+          class="tasful-ai-logo-icon"
+        >
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <nav class="top-site-header__nav top-portal-header__nav" aria-label="メインナビ">
+        <a href="index.html">掲載を探ぁE/a>
+        <a href="post.html">掲載すめE/a>
+        <a href="/contact">AI相諁E/a>
+        <a href="/contact">お知らせ</a>
+        <a href="/contact">ご利用ガイチE/a>
+      </nav>
+      <div class="top-portal-header__actions">
+        <a href="dashboard.html" class="top-portal-header__login">ログイン</a>
+        <a href="signup.html" class="top-site-header__cta top-portal-header__register">無料で登録する</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="biz-portal-main">
+    <section class="biz-portal-hero" aria-labelledby="bizPortalTitle">
+      <div class="biz-portal-hero__inner">
+        <h1 class="biz-portal-hero__title" id="bizPortalTitle">
+          法人・業務サービス<span class="biz-portal-hero__title-sep" aria-hidden="true">/</span>店�E・販売
+        </h1>
+        <p class="biz-portal-hero__lead">
+          目皁E��合わせて、�Eロへの依頼・店�E啁E��の検索を選べます、E        </p>
+      </div>
+    </section>
+
+    <section class="biz-portal-choices" aria-label="サービス種別の選抁E>
+      <div class="biz-portal-choices__inner">
+        <div class="biz-portal-grid">
+          <article class="biz-portal-card biz-portal-card--service">
+            <span class="biz-portal-card__badge">業務依頼</span>
+            <h2 class="biz-portal-card__title">法人・業務サービス</h2>
+            <p class="biz-portal-card__sub">プロに依頼・業老E��見つける</p>
+            <p class="biz-portal-card__desc">
+              建設・修琁E�E渁E��・IT・チE��イン・運送など、業務を依頼できる法人・業老E��探せます、E            </p>
+            <a class="biz-portal-card__cta biz-portal-card__cta--teal" href="business.html">
+              業老E��探ぁE              <span class="biz-portal-card__cta-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 7 6 5-6 5"/></svg>
+              </span>
+            </a>
+          </article>
+
+          <article class="biz-portal-card biz-portal-card--shop">
+            <span class="biz-portal-card__badge">啁E��・店�E</span>
+            <h2 class="biz-portal-card__title">店�E・販売</h2>
+            <p class="biz-portal-card__sub">お店�E啁E��を探ぁE/p>
+            <p class="biz-portal-card__desc">
+              食品・雑貨・美容品�EインチE��アなど、商品や店�E惁E��を探せます、E            </p>
+            <a class="biz-portal-card__cta biz-portal-card__cta--gold" href="shop-store.html">
+              店�E・啁E��を見る
+              <span class="biz-portal-card__cta-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 7 6 5-6 5"/></svg>
+              </span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="biz-portal-compare" aria-labelledby="bizPortalCompareTitle">
+      <div class="biz-portal-compare__inner">
+        <h2 class="biz-portal-compare__title" id="bizPortalCompareTitle">どちらを選ぶ�E�E/h2>
+        <div class="biz-portal-compare__grid">
+          <div class="biz-portal-compare__item biz-portal-compare__item--service">
+            <strong>法人・業務サービス</strong>
+            サービス・作業・依頼向け
+          </div>
+          <div class="biz-portal-compare__item biz-portal-compare__item--shop">
+            <strong>店�E・販売</strong>
+            啁E��・店�E・購入向け
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

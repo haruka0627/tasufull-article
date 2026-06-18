@@ -1,0 +1,142 @@
+/**
+ * 詳細ページ: Supabase 読み込み・未入力時の表示
+ */
+/* 店舗詳細は detail-shop-store-bottom.js が表示制御（未読込時の白画面を防ぐ） */
+/* 統合案件詳細（type=project）は public-board-detail-page.js が表示制御 */
+body[data-detail-page]:not([data-listing-loaded="true"]):not([data-listing-loaded="error"]):not([data-board-detail-loaded="true"]):not([data-board-detail-loaded="error"]):not(.shop-detail-page) .detail-page-main {
+  visibility: hidden;
+  min-height: 50vh;
+}
+
+body[data-detail-page][data-listing-loaded="true"] .detail-page-main,
+body[data-detail-page][data-listing-loaded="error"] .detail-page-main,
+body[data-detail-page][data-board-detail-loaded="true"] .detail-page-main,
+body[data-detail-page][data-board-detail-loaded="error"] .detail-page-main {
+  visibility: visible;
+}
+
+body.shop-detail-page[data-listing-loaded="error"] .biz-detail-status-wrap {
+  display: block;
+}
+
+body.shop-detail-page[data-listing-loaded="false"] .biz-detail-status-wrap,
+body.shop-detail-page[data-listing-loaded="true"] .biz-detail-status-wrap {
+  display: block;
+}
+
+body.shop-detail-page[data-listing-loaded="true"] .detail-page-main,
+body.shop-detail-page[data-listing-loaded="true"] [data-biz-detail-root] {
+  visibility: visible;
+}
+
+body[data-detail-page] [data-detail-static] {
+  display: none !important;
+}
+
+.listing-detail-status {
+  margin: 1.5rem auto;
+  max-width: 42rem;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.listing-detail-status--loading {
+  background: #f8fafc;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+.listing-detail-status--error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.listing-detail-status--error a {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.listing-payment-panel {
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  font-size: 0.875rem;
+}
+
+.listing-payment-panel a {
+  color: #1d4ed8;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.listing-hero__figure {
+  position: relative;
+  min-height: 180px;
+  background: #f8f6f0;
+}
+
+.listing-hero__figure img {
+  display: block;
+  width: 100%;
+  min-height: 180px;
+  object-fit: cover;
+}
+
+.listing-hero__figure.is-placeholder::after {
+  content: "No Image";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #8b7a4a;
+  pointer-events: none;
+}
+
+.listing-field-empty {
+  color: #9ca3af;
+  font-style: normal;
+}
+
+.listing-tags-empty {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px dashed #d1d5db;
+  background: #fafaf9;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.listing-portfolio-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 248px;
+  height: 140px;
+  border-radius: 0.5rem;
+  border: 1px dashed #e5e7eb;
+  background: linear-gradient(180deg, #fafaf8 0%, #f3f0e8 100%);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.card__image--placeholder {
+  background: #f3f0e8;
+  object-fit: cover;
+}
+
+.card__description:empty::before,
+.card__title-link:empty::before {
+  content: "";
+}

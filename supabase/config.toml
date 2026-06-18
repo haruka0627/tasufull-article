@@ -1,0 +1,27 @@
+# Supabase CLI 用（Edge Functions デプロイ）
+# https://supabase.com/docs/guides/functions
+
+[functions.stripe-create-checkout]
+verify_jwt = false
+
+[functions.stripe-confirm-checkout]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+# ブラウザ（localhost:8765 等）からの fetch — OPTIONS / CORS を通す
+[functions.serper-search]
+verify_jwt = false
+
+[functions.gemini-chat]
+verify_jwt = false
+
+[functions.openai-chat]
+verify_jwt = false
+
+[functions.claude-chat]
+verify_jwt = false
+
+[functions.gemini-chat-diagnose]
+verify_jwt = false

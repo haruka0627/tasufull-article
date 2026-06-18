@@ -1,0 +1,766 @@
+/* ==========================================================================
+   出品者カード — ランクカラー（高級 SaaS・LEGEND基準で全ランク統一）
+   構造・サイズ共通 / 枠・プレート・名前の色のみランク差分
+   ========================================================================== */
+
+/* --- ランクカラーパレット --- */
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-new {
+  --rank-color: #f97316;
+  --rank-name-color: #ea580c;
+  --rank-chip-bg: linear-gradient(135deg, #f97316 0%, #fb923c 48%, #facc15 100%);
+  --rank-chip-text: #fffbeb;
+  --rank-chip-border: rgba(251, 191, 36, 0.62);
+  --rank-chip-shadow:
+    0 1px 4px rgba(234, 88, 12, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  --rank-chip-accent: linear-gradient(145deg, #fde68a, #f97316);
+  --rank-avatar-shadow: rgba(249, 115, 22, 0.18);
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-bronze {
+  --rank-color: #b87333;
+  --rank-name-color: #9a5f2a;
+  --rank-chip-bg: linear-gradient(135deg, #9a5a28 0%, #b87333 50%, #c48240 100%);
+  --rank-chip-text: #fffaf6;
+  --rank-chip-border: rgba(212, 167, 44, 0.5);
+  --rank-chip-shadow: 0 1px 3px rgba(154, 95, 42, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  --rank-chip-accent: linear-gradient(145deg, #f0d0a8, #b87333);
+  --rank-avatar-shadow: rgba(184, 115, 51, 0.13);
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-silver {
+  --rank-color: #94a3b8;
+  --rank-name-color: #64748b;
+  --rank-chip-bg: linear-gradient(135deg, #64748b 0%, #94a3b8 50%, #7c90a8 100%);
+  --rank-chip-text: #f8fafc;
+  --rank-chip-border: rgba(186, 198, 214, 0.58);
+  --rank-chip-shadow: 0 1px 3px rgba(71, 85, 105, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  --rank-chip-accent: linear-gradient(145deg, #e2e8f0, #94a3b8);
+  --rank-avatar-shadow: rgba(100, 116, 139, 0.11);
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-gold {
+  --rank-color: #d4a63a;
+  --rank-name-color: #b8860b;
+  --rank-gold-name-gradient: linear-gradient(
+    135deg,
+    #a67c00 0%,
+    #d4a63a 24%,
+    #f4d06f 50%,
+    #ffe7a3 72%,
+    #d4a63a 100%
+  );
+  --rank-chip-bg: linear-gradient(
+    135deg,
+    #c9922a 0%,
+    #e8b84c 32%,
+    #f4d06f 58%,
+    #ffe7a3 78%,
+    #d4a63a 100%
+  );
+  --rank-chip-text: #fffef8;
+  --rank-chip-border: rgba(255, 231, 163, 0.65);
+  --rank-chip-shadow:
+    0 0 14px rgba(244, 208, 111, 0.28),
+    0 1px 4px rgba(180, 134, 11, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+  --rank-crown-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14'%3E%3Cpath fill='%23FFE7A3' d='M2 12h16L15 4l-2.5 2.8L10 2 7.5 6.8 5 4 2 12z'/%3E%3Crect fill='%23F4D06F' x='2' y='11' width='16' height='2.5' rx='0.6'/%3E%3Ccircle fill='%23D4A63A' cx='10' cy='2.5' r='1.1'/%3E%3C/svg%3E");
+  --rank-avatar-shadow: rgba(244, 208, 111, 0.22);
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-platinum {
+  --rank-platinum-ring: linear-gradient(
+    135deg,
+    #e2e8f0 0%,
+    #cbd5e1 14%,
+    #94a3b8 28%,
+    #9eb8d4 44%,
+    #b8c5d4 58%,
+    #c8d2de 72%,
+    #a8b4c4 86%,
+    #dce4ed 100%
+  );
+  --rank-platinum-name-gradient: linear-gradient(
+    135deg,
+    #4a5568 0%,
+    #6b7a8c 28%,
+    #8e9eae 50%,
+    #7a8fa8 72%,
+    #4a5568 100%
+  );
+  --rank-platinum-chip-bg: linear-gradient(
+    135deg,
+    #d8dfe8 0%,
+    #c8d2de 22%,
+    #b0bcc9 44%,
+    #aec0d4 58%,
+    #c4ccd6 74%,
+    #d6dde6 100%
+  );
+  --rank-color: #7c8fa3;
+  --rank-chip-bg: var(--rank-platinum-chip-bg);
+  --rank-chip-text: #1e293b;
+  --rank-chip-border: rgba(255, 255, 255, 0.88);
+  --rank-chip-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.75),
+    0 0 12px rgba(186, 210, 235, 0.45),
+    0 0 6px rgba(255, 255, 255, 0.5),
+    0 1px 3px rgba(71, 85, 105, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    inset 0 0 8px rgba(255, 255, 255, 0.28);
+  --rank-crown-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14'%3E%3Cpath fill='%23F8FAFC' d='M2 12h16L15 4l-2.5 2.8L10 2 7.5 6.8 5 4 2 12z'/%3E%3Crect fill='%23CBD5E1' x='2' y='11' width='16' height='2.5' rx='0.6'/%3E%3Ccircle fill='%2394A3B8' cx='10' cy='2.5' r='1.1'/%3E%3C/svg%3E");
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-legend {
+  /* バッジ（#7c3aed → #6366f1 → #a855f7）ベースのオーロラ */
+  --rank-legend-aurora: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #6d5ce8 18%,
+    #6366f1 36%,
+    #5b7fd9 48%,
+    #6aadc8 58%,
+    #8b7ce8 72%,
+    #a855f7 86%,
+    #7c3aed 100%
+  );
+  --rank-legend-gradient: var(--rank-legend-aurora);
+  --rank-legend-name-gradient: linear-gradient(
+    135deg,
+    #6d28d9 0%,
+    #7c3aed 24%,
+    #6366f1 44%,
+    #5b7fd9 54%,
+    #6aadc8 64%,
+    #8b7ce8 78%,
+    #a855f7 90%,
+    #e8e4f4 100%
+  );
+  --rank-color: #6d5cad;
+  --rank-name-color: #6d5cad;
+  --rank-chip-bg: linear-gradient(135deg, #7c3aed 0%, #6366f1 38%, #8b5cf6 62%, #ec4899 88%, #a855f7 100%);
+  --rank-chip-text: #faf8ff;
+  --rank-chip-border: rgba(196, 181, 253, 0.55);
+  --rank-chip-shadow:
+    0 0 16px rgba(124, 58, 237, 0.28),
+    0 0 8px rgba(99, 102, 241, 0.2),
+    0 1px 4px rgba(91, 33, 182, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --rank-crown-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 14'%3E%3Cpath fill='%23EDE9FE' d='M2 12h16L15 4l-2.5 2.8L10 2 7.5 6.8 5 4 2 12z'/%3E%3Crect fill='%23C4B5FD' x='2' y='11' width='16' height='2.5' rx='0.6'/%3E%3Ccircle fill='%23A78BFA' cx='10' cy='2.5' r='1.1'/%3E%3C/svg%3E");
+  --rank-avatar-shadow: rgba(124, 58, 237, 0.2);
+}
+
+/* --- プロフィール画像枠 --- */
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar {
+  box-sizing: border-box;
+  border-width: 4px;
+  border-style: solid;
+  box-shadow: none;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar.rank-new,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar.rank-bronze,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar.rank-silver,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar.rank-gold {
+  border-color: var(--rank-color);
+  background: #fff;
+  box-shadow:
+    0 2px 10px var(--rank-avatar-shadow),
+    0 0 0 1px rgba(15, 23, 42, 0.03);
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar.rank-platinum {
+  border: 4px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    var(--rank-platinum-ring) border-box;
+  box-shadow:
+    0 0 0 1px rgba(100, 116, 139, 0.5),
+    0 0 0 1.5px rgba(255, 255, 255, 0.95),
+    0 0 18px rgba(255, 255, 255, 0.62),
+    0 0 12px rgba(125, 180, 230, 0.38),
+    inset 0 0 12px rgba(255, 255, 255, 0.26),
+    0 2px 12px rgba(71, 85, 105, 0.16);
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar.rank-legend {
+  border: 4px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    var(--rank-legend-aurora) border-box;
+  background-size: auto, 240% 240%;
+  background-position: center, 0% 50%;
+  animation: legendRingAurora 8s ease-in-out infinite;
+  box-shadow:
+    0 2px 10px rgba(124, 58, 237, 0.1),
+    0 0 0 1px rgba(124, 58, 237, 0.08);
+}
+
+/* --- アカウント名 --- */
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name {
+  font-size: clamp(1.625rem, 2.8vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  max-width: 100%;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-new,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-bronze,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-silver {
+  color: var(--rank-name-color, var(--rank-color));
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-gold,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-gold,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-platinum,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-platinum,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-legend,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-legend {
+  background-size: 100% auto;
+  background-position: 50% center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  text-shadow: none;
+  will-change: filter;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-gold,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-gold {
+  background-image: var(--rank-gold-name-gradient);
+  filter: brightness(0.97) saturate(0.98);
+  animation: nameBreatheGold 8s ease-in-out infinite;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-platinum,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-platinum {
+  background-image: var(--rank-platinum-name-gradient);
+  filter: brightness(0.96) saturate(0.97);
+  animation: nameBreathePlatinum 9s ease-in-out infinite;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-legend,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-legend {
+  background-image: var(--rank-legend-name-gradient);
+  filter: brightness(0.95) saturate(0.93);
+  opacity: 0.97;
+  animation: nameBreatheLegend 8.5s ease-in-out infinite;
+}
+
+/* --- 小ランクバッジ（全ランク共通プレート構造） --- */
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: max-content;
+  max-width: 7.25rem;
+  padding: 0.3rem 0.85rem 0.28rem;
+  border-radius: 7px;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--rank-chip-text);
+  background: var(--rank-chip-bg);
+  border: 1px solid var(--rank-chip-border);
+  box-shadow: var(--rank-chip-shadow);
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-new::before,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-bronze::before,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-silver::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    transparent 48%
+  );
+  pointer-events: none;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-new::after,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-bronze::after,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-silver::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  z-index: 3;
+  width: 5px;
+  height: 5px;
+  transform: translateX(-50%) rotate(45deg);
+  border-radius: 1px;
+  background: var(--rank-chip-accent);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+  opacity: 0.82;
+  pointer-events: none;
+}
+
+/* 高ランク：バッジ中央上部に王冠 */
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-gold::after,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-platinum::after,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-legend::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 50%;
+  z-index: 4;
+  width: 12px;
+  height: 9px;
+  transform: translateX(-50%);
+  border-radius: 0;
+  background: transparent;
+  background-image: var(--rank-crown-icon);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
+  opacity: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.35));
+}
+
+/* --- 高ランク演出：バッジ反射（GOLD / PLATINUM / LEGEND） --- */
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-gold,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-platinum,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-legend {
+  overflow: visible;
+  isolation: isolate;
+  padding-top: 0.42rem;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-gold::before,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-platinum::before,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-legend::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  clip-path: inset(0 round 7px);
+  background: linear-gradient(
+    108deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(255, 255, 255, 0.08) 44%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(255, 255, 255, 0.08) 56%,
+    transparent 62%,
+    transparent 100%
+  );
+  background-size: 240% 100%;
+  background-position: 130% 0;
+  opacity: 0;
+  pointer-events: none;
+  animation: rankChipShineSweep 3.1s ease-in-out infinite;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-platinum::before {
+  background: linear-gradient(
+    108deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(255, 255, 255, 0.1) 44%,
+    rgba(255, 255, 255, 0.36) 50%,
+    rgba(219, 234, 254, 0.12) 56%,
+    transparent 62%,
+    transparent 100%
+  );
+  animation-duration: 3.4s;
+  animation-delay: 0.3s;
+}
+
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-legend::before {
+  animation-duration: 2.9s;
+}
+
+@keyframes rankChipShineSweep {
+  0%,
+  70%,
+  100% {
+    background-position: 130% 0;
+    opacity: 0;
+  }
+
+  10% {
+    opacity: 0.7;
+  }
+
+  26% {
+    background-position: -40% 0;
+    opacity: 0.45;
+  }
+
+  38% {
+    background-position: -40% 0;
+    opacity: 0;
+  }
+}
+
+/* --- 高ランク演出：アカウント名・文字内呼吸（GOLD / PLATINUM / LEGEND） --- */
+@keyframes nameBreatheGold {
+  0%,
+  100% {
+    filter: brightness(0.94) saturate(0.96);
+  }
+
+  50% {
+    filter: brightness(1.05) saturate(1.02);
+  }
+}
+
+@keyframes nameBreathePlatinum {
+  0%,
+  100% {
+    filter: brightness(0.93) saturate(0.95);
+  }
+
+  50% {
+    filter: brightness(1.04) saturate(1.01);
+  }
+}
+
+@keyframes nameBreatheLegend {
+  0%,
+  100% {
+    filter: brightness(0.93) saturate(0.91);
+    opacity: 0.96;
+  }
+
+  50% {
+    filter: brightness(1.04) saturate(0.98);
+    opacity: 1;
+  }
+}
+
+@keyframes legendRingAurora {
+  0%,
+  100% {
+    background-position: center, 0% 50%;
+  }
+
+  50% {
+    background-position: center, 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-gold::before,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-platinum::before,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-legend::before,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-gold,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-gold,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-platinum,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-platinum,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-legend,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-legend {
+    animation: none;
+  }
+
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-gold,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-gold,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-platinum,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-platinum,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-name.rank-legend,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-left__username.seller-name.rank-legend {
+    animation: none;
+    filter: brightness(1) saturate(1);
+    opacity: 1;
+  }
+
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-gold::before,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-platinum::before,
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-rank-chip.rank-legend::before {
+    opacity: 0;
+    background-position: 130% 0;
+  }
+
+  :is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .profile-avatar.rank-legend {
+    animation: none;
+    background-size: auto, 100% 100%;
+    background-position: center, 50% 50%;
+  }
+}
+
+/* プレート要素は非表示 */
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-plate-wrap,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .rank-name-plate-wrap,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-main__plate,
+:is([data-listing-seller], body[data-detail-type="product"] .product-hero-seller-card,
+body[data-detail-type="job"] .product-hero-seller-card,
+body[data-detail-type="worker"] .product-hero-seller-card,
+body[data-detail-type="skill"] .product-hero-seller-card, .list-card-seller) .seller-footer {
+  display: none !important;
+}
+
+/* 開発用ランク切替バー（localhost / ?rankPreview=1） */
+.seller-rank-preview {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px dashed rgba(15, 23, 42, 0.14);
+  background: #fafaf9;
+}
+
+.seller-rank-preview__title {
+  margin: 0 0 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.seller-rank-preview__warn {
+  margin: 0 0 8px;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: #b45309;
+}
+
+.seller-rank-preview__warn code {
+  font-size: 0.625rem;
+}
+
+.seller-rank-preview__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.seller-rank-preview__link {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.seller-rank-preview__link.is-active {
+  border-color: #c4b5fd;
+  background: #f5f3ff;
+  color: #5b21b6;
+}

@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-06-13T11:32:52.029Z",
+  "baseUrl": "http://localhost:5173",
+  "viewport": {
+    "width": 390,
+    "height": 667
+  },
+  "device": "iPhone SE相当（390×667）",
+  "format": "mp4",
+  "orderId": "TM-MQC9Y4IY",
+  "product": {
+    "shopId": "demo-shop-tasful-bakery",
+    "productId": "p-0"
+  },
+  "submissionPriority": "video",
+  "supplementaryScreenshots": "C:/Users/rubih/tasufull-article/screenshots/market-notify-390",
+  "overallPass": true,
+  "submissions": [
+    {
+      "fileName": "market-notify-full-flow-390.mp4",
+      "duration": "49秒",
+      "content": "購入→購入通知→seller-orders→注文受付→各ステータス通知→レビュー画面まで通しデモ",
+      "path": "C:/Users/rubih/tasufull-article/videos/market-notify-390/market-notify-full-flow-390.mp4"
+    },
+    {
+      "fileName": "market-notify-buyer-view-390.mp4",
+      "duration": "39秒",
+      "content": "購入者視点 — 通知一覧→タップ→遷移→戻る→次通知（5種連続）",
+      "path": "C:/Users/rubih/tasufull-article/videos/market-notify-390/market-notify-buyer-view-390.mp4"
+    },
+    {
+      "fileName": "market-notify-seller-view-390.mp4",
+      "duration": "26秒",
+      "content": "出品者視点 — 購入通知→注文管理→発送処理（ステータス更新で通知発火）",
+      "path": "C:/Users/rubih/tasufull-article/videos/market-notify-390/market-notify-seller-view-390.mp4"
+    }
+  ],
+  "errors": [],
+  "reusableLib": "scripts/lib/capture-demo-video-390.mjs"
+}

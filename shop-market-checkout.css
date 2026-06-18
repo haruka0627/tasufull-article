@@ -1,0 +1,390 @@
+/* TASFUL市場 — 注文確認（390px基準） */
+body.tasful-market-checkout-page {
+  padding-top: calc(var(--tasful-market-header-total-h, 152px) + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px)) !important;
+  background: var(--tasful-market-bg);
+}
+
+body.tasful-market-checkout-page.content-bottom-padding {
+  padding-bottom: calc(210px + env(safe-area-inset-bottom, 0px)) !important;
+}
+
+body.tasful-market-checkout-page.content-bottom-padding .tasful-market-checkout-main {
+  padding-bottom: 40px;
+}
+
+.tasful-market-checkout-summary {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tasful-market-checkout-summary .tasful-market-checkout-section {
+  margin-bottom: 0;
+}
+
+.tasful-market-checkout-payment-section,
+.tasful-market-checkout-trust-section {
+  scroll-margin-bottom: calc(210px + env(safe-area-inset-bottom, 0px));
+}
+
+.tasful-market-checkout-aside-summary {
+  display: none;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--tasful-market-border);
+}
+
+.tasful-market-checkout-aside-item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+
+.tasful-market-checkout-aside-item + .tasful-market-checkout-aside-item {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.tasful-market-checkout-aside-item__img {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.tasful-market-checkout-aside-item__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tasful-market-checkout-aside-item__shop {
+  margin: 0 0 2px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #067d62;
+}
+
+.tasful-market-checkout-aside-item__title {
+  margin: 0 0 4px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.tasful-market-checkout-aside-item__meta {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #b12704;
+}
+
+body.tasful-market-checkout-page .tasu-banner {
+  display: none !important;
+}
+
+.tasful-market-checkout-main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 12px 24px;
+}
+
+.tasful-market-checkout-main__title {
+  margin: 0 0 12px;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.tasful-market-checkout-main__status {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  color: var(--tasful-market-muted);
+  font-size: 0.875rem;
+}
+
+.tasful-market-checkout-section {
+  margin-bottom: 10px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 12px;
+}
+
+.tasful-market-checkout-section__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tasful-market-checkout-section__title {
+  margin: 0 0 10px;
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.tasful-market-checkout-section__head .tasful-market-checkout-section__title {
+  margin-bottom: 0;
+}
+
+.tasful-market-checkout-section__change {
+  padding: 4px 10px;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #007185;
+  cursor: pointer;
+}
+
+.tasful-market-checkout-address {
+  margin: 0;
+  font-style: normal;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-checkout-payment {
+  display: grid;
+  gap: 8px;
+}
+
+.tasful-market-checkout-payment__option {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.tasful-market-checkout-payment__option:has(input:checked) {
+  border-color: #c4a24a;
+  background: #fffbeb;
+}
+
+.tasful-market-checkout-payment__option input {
+  grid-row: span 2;
+  width: 18px;
+  height: 18px;
+  accent-color: #c4a24a;
+}
+
+.tasful-market-checkout-payment__label {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.tasful-market-checkout-payment__sub {
+  grid-column: 2;
+  font-size: 0.6875rem;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-checkout-items {
+  display: grid;
+  gap: 10px;
+}
+
+.tasful-market-checkout-item {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.tasful-market-checkout-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tasful-market-checkout-item__img {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.tasful-market-checkout-item__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tasful-market-checkout-item__body {
+  min-width: 0;
+}
+
+.tasful-market-checkout-item__condition {
+  display: inline-block;
+  margin-bottom: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  font-size: 0.625rem;
+  font-weight: 800;
+}
+
+.tasful-market-checkout-item__title {
+  margin: 0 0 4px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.tasful-market-checkout-item__meta {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-checkout-item__price {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #b12704;
+}
+
+.tasful-market-checkout-item__seller {
+  margin: 4px 0 0;
+  font-size: 0.6875rem;
+  color: #067d62;
+  font-weight: 700;
+}
+
+.tasful-market-checkout-trust {
+  margin-bottom: 10px;
+  padding: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 12px;
+}
+
+.tasful-market-checkout-trust__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #047857;
+}
+
+.tasful-market-checkout-totals__list {
+  margin: 0;
+}
+
+.tasful-market-checkout-totals__list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 0.8125rem;
+}
+
+.tasful-market-checkout-totals__list dt {
+  margin: 0;
+  color: var(--tasful-market-muted);
+  font-weight: 600;
+}
+
+.tasful-market-checkout-totals__list dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.tasful-market-checkout-totals__list .is-total {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--tasful-market-border);
+  font-size: 1rem;
+}
+
+.tasful-market-checkout-totals__list .is-total dd {
+  color: #b12704;
+  font-size: 1.125rem;
+  font-weight: 900;
+}
+
+.tasful-market-checkout-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  padding: 0 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  background: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid var(--tasful-market-border);
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.tasful-market-checkout-bar__summary {
+  margin: 0;
+  padding: 10px 4px 8px;
+  background: #f8f9fa;
+  border-top: 1px solid #eee;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #111827;
+  text-align: center;
+}
+
+.tasful-market-checkout-bar__summary::after {
+  content: none;
+}
+
+.tasful-market-checkout-bar__summary strong,
+.tasful-market-checkout-bar__summary {
+  color: #b12704;
+}
+
+.tasful-market-checkout-bar__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 24px);
+  margin: 0 12px 10px;
+  min-height: 48px;
+  border: none;
+  border-radius: 999px;
+  background: #ffd814;
+  color: #111;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.tasful-market-checkout-bar__btn:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.tasful-market-checkout-bar__note {
+  margin: 8px 0 0;
+  font-size: 0.625rem;
+  line-height: 1.5;
+  color: var(--tasful-market-muted);
+  text-align: center;
+}
+
+.tasful-market-checkout-bar--aside {
+  display: none;
+}

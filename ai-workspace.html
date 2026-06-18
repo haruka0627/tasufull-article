@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TASFUL AI | TASFUL</title>
+  <meta name="description" content="TASFUL AI Workspace — 業者・求人・商品探しから資料作成、画像解析、Web検索、音声相談まで。仕事で使えるAIの作業画面">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasful-general-ai.css">
+  <link rel="stylesheet" href="ai-workspace-chat.css">
+  <link rel="stylesheet" href="ai-workspace.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body class="tasful-general-ai-page ai-workspace-page" data-page="ai_workspace">
+  <nav data-breadcrumb aria-label="パンくず"></nav>
+  <div
+    id="tasful-ai-viewport-full"
+    data-ai-workspace-chat
+    data-mode="cross-matching"
+    data-workspace-tool="consult"
+    data-search-target="tasful"
+  >
+    <aside id="sidebar-fixed" data-tga-sidebar aria-label="チャット履歴">
+      <div class="side-inner-top">
+        <div class="side-brand-row">
+          <div class="tasful-earth-wrap">
+            <svg class="tasful-earth-logo" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+              <circle class="earth-glow" cx="50" cy="50" r="38"/>
+              <circle class="earth-core" cx="50" cy="50" r="28"/>
+              <ellipse class="earth-line" cx="50" cy="50" rx="20" ry="28"/>
+              <ellipse class="earth-line" cx="50" cy="50" rx="10" ry="28"/>
+              <ellipse class="earth-line" cx="50" cy="50" rx="28" ry="10"/>
+              <ellipse class="earth-line" cx="50" cy="50" rx="28" ry="20"/>
+              <circle class="earth-highlight" cx="40" cy="36" r="5"/>
+            </svg>
+          </div>
+          <span class="brand-name">
+            <a href="ai-workspace.html" class="logo">TASFUL AI</a>
+            <small style="font-size: 10px; color: #8E75FF; margin-top: 1px; letter-spacing: 0.05em;">Workspace</small>
+          </span>
+        </div>
+
+        <button type="button" id="new-chat-trigger" class="new-chat-btn" data-tga-new-chat>
+          <span class="material-symbols-outlined" style="font-size:20px;">add</span>
+          新しいチャット
+        </button>
+
+        <div class="history-search-wrap">
+          <span class="history-search-icon">⌕</span>
+          <input type="search" id="history-search" data-tga-history-search placeholder="会話を検索..." autocomplete="off">
+        </div>
+
+        <div class="history-label">最近の履歴</div>
+        <div class="history-panel">
+          <div id="history-list" data-tga-history></div>
+        </div>
+      </div>
+
+      <div class="sidebar-bottom-wrap">
+        <nav class="tga-sidebar-links" aria-label="関連ページ">
+          <a href="ai-top.html" class="tga-notice-link">AI TOP</a>
+          <a href="gen-ai-workspace.html" class="tga-notice-link">生成AI</a>
+          <a href="index-top.html" class="tga-notice-link">プラットフォームTOP</a>
+        </nav>
+
+        <div class="user-profile-area" aria-label="ログインユーザー">
+          <div class="user-avatar" aria-hidden="true">は</div>
+          <div class="user-info">
+            <span class="user-info__name">はるかまん</span>
+            <span class="user-plan-badge">BA</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="tga-sidebar-backdrop" data-tga-sidebar-backdrop hidden></div>
+
+    <main id="center-main-stage">
+      <div class="tga-mobile-bar" aria-label="モバイルナビ">
+        <button type="button" class="tga-mobile-bar__btn" data-tga-history-toggle aria-label="履歴を開く">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <span class="tga-mobile-bar__title">TASFUL AI</span>
+        <a href="index-top.html" class="tga-mobile-bar__link">TOP</a>
+      </div>
+
+      <div id="chat-scroller" data-ai-chat-scroll>
+        <section id="welcome-screen" data-tga-welcome aria-label="TASFUL AIホーム">
+          <h1 class="neon-welcome-title">TASFUL AI</h1>
+          <p class="welcome-lead">Web検索、資料作成、画像解析から、<br>業者・求人・商品探し、<br>音声相談までひとつで使えるAIです。</p>
+
+          <nav class="welcome-starter-chips" data-tga-starter-chips aria-label="ショートカット">
+            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="最新情報を調べたい">Web検索</button>
+            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="提案資料の文章を作りたい">資料作成</button>
+            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="画像の内容を確認したい">画像解析</button>
+            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="草刈り業者を探したい">業者検索</button>
+            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="条件に合う求人を探したい">求人検索</button>
+            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="音声でAIに相談したい">音声相談</button>
+          </nav>
+
+          <section class="welcome-guide-panel" aria-label="使い方とFAQ">
+            <h2 class="welcome-guide-panel__title">よくある質問</h2>
+            <dl class="welcome-faq-list">
+              <div class="welcome-faq-item">
+                <dt>資料作成はどこまで対応しますか？</dt>
+                <dd>たたき台の作成と、修正指示を繰り返して整えるところまで対応します。</dd>
+              </div>
+              <div class="welcome-faq-item">
+                <dt>業者検索の結果はそのまま依頼できますか？</dt>
+                <dd>候補の整理と問い合わせ文の作成まで支援します。最終操作は各ページで行ってください。</dd>
+              </div>
+            </dl>
+            <p class="welcome-notice">注意: AIは依頼確定・購入・応募・決済は行いません。</p>
+          </section>
+        </section>
+
+        <div class="message-wrapper chat-messages ai-chat-thread" id="message-wrapper" data-ai-chat-messages role="log" aria-live="polite" aria-relevant="additions" hidden></div>
+      </div>
+
+      <div id="bottom-container">
+        <div class="ai-workspace-model-host" data-ai-model-selector-host aria-label="AIモデル選択"></div>
+        <div id="neon-bar-area">
+          <div class="neon-input-frame" data-ai-composer-frame>
+            <div id="image-preview-area" data-ai-attach-preview hidden></div>
+
+            <textarea
+              id="ai-main-textarea"
+              class="ai-chat__input"
+              data-ai-chat-input
+              rows="1"
+              placeholder="相談内容を入力してください"
+              autocomplete="off"
+              maxlength="2000"
+            ></textarea>
+
+            <div class="input-actions-row">
+              <div class="input-actions-left">
+                <div class="tool-selector-wrap">
+                  <button
+                    type="button"
+                    id="tool-toggle-btn"
+                    class="tool-toggle-btn workspace-mode-btn"
+                    data-tga-mode-toggle
+                    aria-expanded="false"
+                    aria-haspopup="listbox"
+                    aria-label="ツールを選択"
+                  >
+                    <span class="material-symbols-outlined workspace-mode-btn__icon" aria-hidden="true">tune</span>
+                    <span class="workspace-mode-btn__text">
+                      <span class="workspace-mode-btn__prefix">ツール：</span>
+                      <span data-tga-mode-label>AI相談</span>
+                    </span>
+                    <span class="material-symbols-outlined workspace-mode-btn__chev" aria-hidden="true">expand_more</span>
+                  </button>
+                  <div id="tool-dropdown" class="tool-dropdown" data-tga-mode-dropdown role="listbox" aria-label="相談・検索モード">
+                    <div class="tool-item" data-tga-workspace-tool data-tool="consult" data-search-target="tasful" data-desc="自然文で相談・案内・FAQ">🔍 AI相談</div>
+                    <div class="tool-item" data-tga-workspace-tool data-tool="tasful" data-search-target="tasful" data-desc="TASFUL内の掲載から候補を表示">📍 TASFUL検索</div>
+                    <div class="tool-item" data-tga-workspace-tool data-tool="web" data-search-target="web" data-desc="Web上の情報を検索して整理">🌐 Web検索</div>
+                    <div class="tool-item" data-tga-workspace-tool data-tool="both" data-search-target="both" data-desc="TASFUL内候補とWeb結果を併用">🔀 両方検索</div>
+                    <div class="tool-item" data-tga-workspace-tool data-tool="media" data-search-target="tasful" data-desc="画像・PDFを添付して解析">🖼️ 画像・PDF</div>
+                  </div>
+                </div>
+
+                <div class="action-chip workspace-badge" aria-live="polite">
+                  <span class="material-symbols-outlined action-icon" aria-hidden="true">layers</span>
+                  <span class="action-text">AI Workspace</span>
+                </div>
+              </div>
+
+              <div class="input-actions-right">
+                <input
+                  type="file"
+                  id="image-upload"
+                  data-ai-attach-input
+                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                  multiple
+                  hidden
+                >
+                <button type="button" class="image-upload-neon" id="image-btn" data-ai-attach-btn aria-label="画像またはPDFを添付">
+                  <span class="material-symbols-outlined">add_photo_alternate</span>
+                  <span class="image-upload-text">画像・PDF</span>
+                </button>
+                <button type="button" class="send-neon send-btn" id="send-trigger" data-ai-chat-send aria-label="送信">
+                  <span class="material-symbols-outlined" id="send-btn-icon">send</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-footer">TASFUL AI Workspace</div>
+      </div>
+    </main>
+
+    <div class="ai-code-copy-toast" data-ai-code-copy-toast hidden role="status" aria-live="polite">コピーしました</div>
+
+    <div class="ai-search-target-sync" data-ai-search-target hidden aria-hidden="true">
+      <input type="radio" name="ai-search-target" value="tasful" data-ai-search-target-input checked>
+      <input type="radio" name="ai-search-target" value="web" data-ai-search-target-input>
+      <input type="radio" name="ai-search-target" value="both" data-ai-search-target-input>
+    </div>
+  </div>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js" defer></script>
+  <script src="tasu-supabase-client.js" defer></script>
+  <script src="listing-tags.js" defer></script>
+  <script src="product-listing-fields.js" defer></script>
+  <script src="job-listing-fields.js" defer></script>
+  <script src="worker-listing-fields.js" defer></script>
+  <script src="listings-db.js" defer></script>
+  <script src="business-categories.js" defer></script>
+  <script src="business-wording.js" defer></script>
+  <script src="listing-renderer.js" defer></script>
+  <script src="business-listings-db.js" defer></script>
+  <script src="business-board-demo.js" defer></script>
+  <script src="shop-store-products-db.js" defer></script>
+  <script src="ai-workspace-links.js" defer></script>
+  <script src="detail-nav-context.js" defer></script>
+  <script src="ai-modes.js" defer></script>
+  <script src="ai-faq-knowledge.js" defer></script>
+  <script src="ai-search-field-match.js" defer></script>
+  <script src="ai-search-target.js" defer></script>
+  <script src="ai-search-result-ux.js" defer></script>
+  <script src="ai-search.js" defer></script>
+  <script src="supabase-public-key.js" defer></script>
+  <script src="search-intent-detector.js" defer></script>
+  <script src="serper-search-service.js" defer></script>
+  <script src="ai-interaction-log.js" defer></script>
+  <script src="ai-plan-models.js" defer></script>
+  <script src="ai-workspace-response-ux.js" defer></script>
+  <script src="ai-model-gateway.js" defer></script>
+  <script src="ai-search-orchestrator.js" defer></script>
+  <script src="ai-model-selector.js" defer></script>
+  <script src="ai-workspace-search-intent.js" defer></script>
+  <script src="ai-intent-router.js" defer></script>
+  <script src="ai-search-router.js" defer></script>
+  <script src="ai-cross-search.js" defer></script>
+  <script src="talk-inquiry-drafts-store.js" defer></script>
+  <script src="ai-workspace-search-actions.js" defer></script>
+  <script src="ai-workspace-inquiry.js" defer></script>
+  <script src="ai-web-search-serper.js" defer></script>
+  <script src="ai-concierge.js" defer></script>
+  <script src="ai-consult-bridge.js" defer></script>
+  <script src="ai-generate-ui.js" defer></script>
+  <script src="ai-workspace-conversation-demo.js" defer></script>
+  <script src="ai-workspace-category-demos.js" defer></script>
+  <script src="ai-call-consent.js" defer></script>
+  <script src="ai-search-state.js" defer></script>
+  <script src="ai-workspace-chat.js" defer></script>
+  <script src="tasful-general-ai-shell.js" defer></script>
+</body>
+</html>

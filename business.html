@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>法人・業者・店舗のサービス掲載一覧 | TasuFull</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="top.css">
+  <link rel="stylesheet" href="category-list-page.css">
+  <link rel="stylesheet" href="search-index.css">
+  <link rel="stylesheet" href="detail-favorites.css">
+  <link rel="stylesheet" href="business-board.css">
+  <link rel="stylesheet" href="shop-store-cards.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="business-board-header.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body id="top" class="category-list-page business-board-page" data-category-page="business">
+
+  <header class="shop-market-header top-portal-header" data-business-market-header aria-label="サイトヘッダー">
+    <div class="shop-market-header__inner">
+      <a href="index-top.html" class="tasful-ai-logo top-site-header__logo top-portal-header__logo" aria-label="TASFUL プラットフォームTOP">
+        <img
+          src="images/tasful-ai-globe.png?v=4"
+          alt=""
+          class="tasful-ai-logo-icon"
+        >
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <div class="shop-market-header__center">
+        <form class="shop-market-header__search" role="search" action="business.html" method="get">
+          <span class="shop-market-header__search-icon" aria-hidden="true">🔍</span>
+          <input type="search" name="keyword" class="shop-market-header__search-input" placeholder="業者・サービスを検索" aria-label="業者・サービスを検索">
+        </form>
+        <nav class="shop-market-header__nav" aria-label="メインメニュー">
+          <a href="business.html" class="shop-market-header__nav-link">業務サービスTOP</a>
+          <a href="shop-store.html" class="shop-market-header__nav-link">店舗・販売</a>
+          <a href="index-top.html" class="shop-market-header__nav-link">プラットフォームTOP</a>
+          <a href="ai-workspace.html" class="shop-market-header__nav-link shop-market-header__nav-link--ai">AI相談</a>
+        </nav>
+      </div>
+      <div class="shop-market-header__actions">
+        <a href="post.html?scope=business" class="shop-market-header__cta">掲載する</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="page">
+    <main class="main">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <header class="biz-board-header">
+        <div class="biz-board-header__grid">
+          <div class="biz-board-header__copy">
+            <p class="biz-board-header__badge" data-category-badge>法人・業者・店舗</p>
+            <h1 class="biz-board-header__title" data-category-title>法人・業者・店舗のサービス掲載一覧</h1>
+            <p class="biz-board-header__lead">
+              許可・資格・会社情報を確認できる事業者が、対応サービス・料金目安・受付状況を掲載しています。
+            </p>
+            <p class="biz-board-header__note">
+              無許可営業や違法業務の掲載は禁止です。許認可が必要な業務は、証明可能な事業者のみ掲載できます。
+            </p>
+            <p class="biz-board-header__demo-note" data-biz-board-demo-note hidden>UI確認用のデモ掲載を表示しています（本番データと併記）</p>
+          </div>
+          <aside class="biz-board-trust" aria-label="安心の事業者掲載">
+            <h2 class="biz-board-trust__title">安心の事業者掲載</h2>
+            <ul class="biz-board-trust__list">
+              <li>許可・資格確認済み事業者のみ掲載</li>
+              <li>法人確認 / 電話確認</li>
+              <li>安心して問い合わせ可能</li>
+            </ul>
+          </aside>
+        </div>
+      </header>
+
+      <section class="biz-board-search" aria-label="業者・サービス検索">
+        <form class="biz-board-search__form" data-biz-board-search-form>
+          <div class="biz-board-search__field">
+            <label for="bizSearchKeyword">キーワード</label>
+            <input type="search" id="bizSearchKeyword" data-biz-board-keyword placeholder="会社名・サービス名・対応内容">
+          </div>
+          <div class="biz-board-search__field">
+            <label for="bizSearchIndustry">カテゴリ</label>
+            <select id="bizSearchIndustry" data-biz-board-search-industry>
+              <option value="">すべて</option>
+              <option value="taxi">タクシー</option>
+              <option value="repair">修理</option>
+              <option value="construction">建設</option>
+              <option value="cleaning">清掃</option>
+              <option value="local_service">地域サービス</option>
+              <option value="store">店舗</option>
+            </select>
+          </div>
+          <div class="biz-board-search__field">
+            <label for="bizSearchArea">対応地域</label>
+            <input type="text" id="bizSearchArea" data-biz-board-search-area placeholder="例：東京都">
+          </div>
+          <div class="biz-board-search__field">
+            <label for="bizSearchBudget">料金目安</label>
+            <input type="text" id="bizSearchBudget" data-biz-board-search-budget placeholder="例：見積無料・8,000円〜">
+          </div>
+          <button type="submit" class="biz-board-search__submit">検索</button>
+        </form>
+        <ul class="biz-board-tags" data-biz-board-popular-tags aria-label="人気の検索"></ul>
+      </section>
+
+      <div class="biz-board-layout">
+        <aside class="biz-board-filter" aria-label="条件で絞り込む">
+          <h2 class="biz-board-filter__title">条件で絞り込む</h2>
+          <form data-biz-board-filter-form>
+            <fieldset class="biz-board-filter__group">
+              <legend>カテゴリ</legend>
+              <select name="industry">
+                <option value="">すべて</option>
+                <option value="taxi">タクシー</option>
+                <option value="repair">修理</option>
+                <option value="construction">建設</option>
+                <option value="cleaning">清掃</option>
+                <option value="local_service">地域サービス</option>
+                <option value="store">店舗</option>
+              </select>
+            </fieldset>
+            <fieldset class="biz-board-filter__group">
+              <legend>対応地域</legend>
+              <input type="text" name="area" placeholder="都道府県・市区">
+            </fieldset>
+            <fieldset class="biz-board-filter__group">
+              <legend>料金目安</legend>
+              <input type="text" name="budget" placeholder="キーワード">
+            </fieldset>
+            <fieldset class="biz-board-filter__group">
+              <legend>受付状況</legend>
+              <select name="status_filter">
+                <option value="">すべて</option>
+                <option value="available">受付中</option>
+                <option value="busy">対応中</option>
+                <option value="closed">対応不可</option>
+              </select>
+            </fieldset>
+            <fieldset class="biz-board-filter__group biz-board-filter__checks">
+              <legend class="biz-board-filter__checks-legend">対応条件</legend>
+              <div class="biz-board-filter__checks-inner">
+                <div class="condition-list">
+                  <label class="condition-item"><input type="checkbox" name="cond_same_day"><span>即日対応</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_night"><span>夜間対応</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_24h"><span>24時間対応</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_free_estimate"><span>見積無料</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_invoice"><span>インボイス対応</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_permit"><span>許可確認済み</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_insurance"><span>保険加入</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_reservation"><span>予約可能</span></label>
+                  <label class="condition-item"><input type="checkbox" name="cond_order"><span>注文可能</span></label>
+                </div>
+              </div>
+            </fieldset>
+            <div class="biz-board-filter__actions">
+              <button type="button" class="biz-board-filter__apply" data-biz-board-filter-apply>この条件で検索</button>
+              <button type="button" class="biz-board-filter__clear" data-biz-board-filter-clear>検索条件をクリア</button>
+            </div>
+          </form>
+        </aside>
+
+        <div class="biz-board-main">
+          <div class="biz-board-main__toolbar">
+            <p class="biz-board-count" data-biz-board-count-range>
+              <span class="biz-board-count__label">表示</span>
+              <strong class="biz-board-count__num" data-category-count>0</strong>
+              <span class="biz-board-count__unit">件</span>
+            </p>
+            <p class="biz-board-sort">
+              <label for="categorySort">並び順</label>
+              <select id="categorySort" data-category-sort>
+                <option value="newest" selected>おすすめ順</option>
+                <option value="pr">PR掲載優先</option>
+                <option value="featured">注目掲載優先</option>
+              </select>
+            </p>
+          </div>
+
+          <ul class="category-business-nav filters__list" data-business-category-nav aria-label="カテゴリ">
+            <li class="filters__item"><button type="button" class="filter-chip is-active" data-biz-cat="">すべて</button></li>
+            <li class="filters__item"><button type="button" class="filter-chip" data-biz-cat="taxi">タクシー</button></li>
+            <li class="filters__item"><button type="button" class="filter-chip" data-biz-cat="repair">修理</button></li>
+            <li class="filters__item"><button type="button" class="filter-chip" data-biz-cat="construction">建設</button></li>
+            <li class="filters__item"><button type="button" class="filter-chip" data-biz-cat="cleaning">清掃</button></li>
+            <li class="filters__item"><button type="button" class="filter-chip" data-biz-cat="local_service">地域サービス</button></li>
+            <li class="filters__item"><button type="button" class="filter-chip" data-biz-cat="other_business">その他</button></li>
+          </ul>
+
+          <div class="biz-board-tabs" data-biz-board-tabs role="tablist" aria-label="受付・条件">
+            <button type="button" class="is-active" data-tab="all" role="tab" aria-selected="true">すべて</button>
+            <button type="button" data-tab="open" role="tab">受付中</button>
+            <button type="button" data-tab="soon" role="tab">即日対応</button>
+            <button type="button" data-tab="construction" role="tab">建設</button>
+            <button type="button" data-tab="license" role="tab">許可確認済み</button>
+          </div>
+
+          <div class="biz-board-spotlight-list biz-board-spotlight-list--mobile" data-business-spotlight aria-label="PR・注目掲載（モバイル）"></div>
+
+          <div class="biz-board-table-wrap">
+            <table class="biz-board-table">
+              <colgroup>
+                <col class="col-main">
+                <col class="col-area">
+                <col class="col-price">
+                <col class="col-badges">
+                <col class="col-actions">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col">事業者・サービス</th>
+                  <th scope="col">対応地域</th>
+                  <th scope="col">料金目安</th>
+                  <th scope="col">受付・条件</th>
+                  <th scope="col" class="biz-board-table__th-actions">操作</th>
+                </tr>
+              </thead>
+              <tbody data-category-list></tbody>
+            </table>
+          </div>
+
+          <div class="biz-board-mobile-list" data-business-mobile-list aria-label="サービス掲載一覧（モバイル）"></div>
+
+          <nav class="biz-board-pagination" data-biz-board-pagination aria-label="ページ送り"></nav>
+
+          <div class="biz-board-empty" data-category-empty hidden>
+            <div class="biz-board-empty__icon" aria-hidden="true">🔍</div>
+            <p class="biz-board-empty__title">該当する掲載がありません</p>
+            <p class="biz-board-empty__text">キーワードや絞り込み条件を変更して、再度お試しください。</p>
+            <p class="biz-board-empty__hint">人気のカテゴリから探すこともできます。</p>
+            <div class="biz-board-empty__tags" data-biz-board-empty-tags></div>
+            <button type="button" class="biz-board-empty__clear" data-biz-board-empty-clear>検索条件をクリア</button>
+            <p class="biz-board-empty__post"><a href="post.html?scope=business">掲載フォーム</a>からサービス掲載を追加する</p>
+          </div>
+
+          <aside class="biz-board-listing-cta">
+            <div class="biz-board-listing-cta__copy">
+              <p class="biz-board-listing-cta__title">事業者の方へ</p>
+              <p class="biz-board-listing-cta__text">サービス・店舗情報を掲載して、依頼・問い合わせを受け付けましょう。</p>
+            </div>
+            <a href="post.html?scope=business" class="biz-board-listing-cta__btn">掲載を申し込む</a>
+          </aside>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="search.js"></script>
+  <script src="listing-tags.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="business-wording.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="listings-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="detail-nav-context.js"></script>
+  <script src="business-board-renderer.js"></script>
+  <script src="business-board-page.js"></script>
+  <script src="favorites-db.js"></script>
+  <script src="detail-favorites.js"></script>
+</body>
+</html>

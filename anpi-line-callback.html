@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LINE連携 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="anpi-line-callback.css">
+</head>
+<body class="dash-body anpi-line-callback-page" data-page="anpi-line-callback">
+  <main class="anpi-line-callback" data-anpi-line-callback-root>
+    <div class="anpi-line-callback__card">
+      <h1 class="anpi-line-callback__title">LINE連携</h1>
+      <p class="anpi-line-callback__status" data-anpi-callback-status>処理中…</p>
+      <p class="anpi-line-callback__detail" data-anpi-callback-detail hidden></p>
+      <a class="anpi-line-callback__back" href="anpi-register.html" data-anpi-callback-back hidden>
+        安否サービス登録へ戻る
+      </a>
+    </div>
+  </main>
+  <script src="anpi-line-login-config.js"></script>
+  <script src="anpi-line-callback.js"></script>
+</body>
+</html>

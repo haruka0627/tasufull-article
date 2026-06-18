@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生成AIワークスペース | TASFUL</title>
+  <meta name="description" content="TASFUL 生成AIワークスペース — 文章作成・画像解析・AIキャラ会話など">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="gen-ai-workspace.css">
+  <link rel="stylesheet" href="ai-workspace-chat.css">
+</head>
+<body class="gen-ai-page" data-page="gen_ai_workspace" data-gen-ai-root>
+  <header class="gen-ai-header" aria-label="生成AIワークスペース">
+    <div class="gen-ai-header__inner">
+      <a href="index-top.html" class="gen-ai-header__logo">TASFUL 生成AI</a>
+      <div class="gen-ai-header__meta">
+        <span data-gen-ai-usage-header aria-live="polite">利用回数: —</span>
+        <a href="ai-workspace.html">AI相談ワークスペース</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="gen-ai-main" aria-label="生成AIメイン">
+    <section class="gen-ai-hero">
+      <h1 class="gen-ai-hero__title">生成AIワークスペース</h1>
+      <p class="gen-ai-hero__lead">文章・画像・資料の作成に加え、AIキャラとの会話もご利用いただけます。</p>
+    </section>
+
+    <section class="gen-ai-welcome" data-gen-ai-welcome aria-label="ツール選択">
+      <div class="welcome-tools" data-welcome-tools aria-label="利用可能なAIツール"></div>
+    </section>
+
+    <section class="gen-ai-chat-view" data-gen-ai-chat-view hidden aria-label="AIチャット">
+      <div class="gen-ai-layout" data-gen-ai-layout>
+        <div class="chat-area" data-gen-ai-chat data-mode="汎用チャット">
+          <div class="chat-area__head">
+            <select class="tool-dropdown" data-tool-dropdown aria-label="AIツールを選択"></select>
+            <span class="chat-area__usage" data-gen-ai-usage-chat aria-live="polite"></span>
+            <button type="button" class="chat-area__reset" data-gen-ai-reset>会話をリセット</button>
+          </div>
+          <div class="chat-area__messages" data-gen-ai-messages role="log" aria-live="polite"></div>
+          <form class="chat-area__form" data-gen-ai-form>
+            <input
+              type="text"
+              class="chat-area__input"
+              data-gen-ai-input
+              placeholder="メッセージを入力…"
+              autocomplete="off"
+              maxlength="4000"
+              required
+            >
+            <input
+              type="file"
+              data-gen-ai-file
+              accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+              hidden
+              aria-hidden="true"
+            >
+            <button type="button" class="chat-area__attach" data-gen-ai-attach aria-label="画像またはPDFを添付">添付</button>
+            <span class="chat-area__file-name" data-gen-ai-file-name></span>
+            <button type="submit" class="chat-area__send" data-gen-ai-send>送信</button>
+          </form>
+        </div>
+
+        <aside class="gen-ai-character-panel" data-gen-ai-character-panel hidden aria-label="AIキャラクター">
+          <div id="character-stage" class="ai-character-stage" data-ai-character-stage>
+            <div class="ai-character-stage__visual">
+              <img
+                class="ai-character-stage__img"
+                data-ai-character-img
+                src="images/ai-character.webp"
+                alt="AIキャラクター"
+                width="240"
+                height="320"
+                decoding="async"
+              >
+            </div>
+            <p class="ai-character-stage__hint" data-ai-character-stage-hint></p>
+          </div>
+          <div class="ai-voice-control" data-ai-voice-control>
+            <label class="ai-voice-control__label">
+              <input type="checkbox" class="ai-voice-control__toggle" data-ai-voice-toggle checked>
+              <span class="ai-voice-control__text">音声読み上げ</span>
+            </label>
+            <p class="ai-voice-control__note">Web Speech API（ブラウザ標準）</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="ai-concierge.js" defer></script>
+  <script src="gen-ai-workspace.js" defer></script>
+</body>
+</html>

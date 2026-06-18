@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI運営司令塔 | TASFUL 運営</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="admin-operations-dashboard.css" />
+  <link rel="stylesheet" href="supabase-ops-data-source.css" />
+</head>
+<body class="ops-dash-page" data-page="admin-operations-dashboard">
+  <div class="ops-ai-app" data-ops-dash-root>
+    <aside class="ops-ai-sidebar" aria-label="運営メニュー">
+      <a class="ops-ai-brand" href="builder-admin/admin-index.html">
+        <span class="ops-ai-brand__mark" aria-hidden="true">T</span>
+        <span class="ops-ai-brand__text">TASFUL</span>
+      </a>
+      <nav class="ops-ai-nav" data-ops-ai-nav>
+        <a class="ops-ai-nav__item is-active" href="#ops-ai-top" data-ops-nav="dashboard" data-ops-nav-scroll>
+          <span class="ops-ai-nav__icon" aria-hidden="true">▦</span>
+          <span class="ops-ai-nav__label">ダッシュボード</span>
+        </a>
+        <a class="ops-ai-nav__item" href="#ops-ai-secretary" data-ops-nav="secretary" data-ops-nav-scroll data-ops-nav-target="ops-ai-secretary">
+          <span class="ops-ai-nav__icon" aria-hidden="true">✦</span>
+          <span class="ops-ai-nav__label">AI運営秘書</span>
+          <span class="ops-ai-nav__badge ops-ai-nav__badge--ai">AI</span>
+        </a>
+        <a class="ops-ai-nav__item" href="support-trouble-center.html" data-ops-nav="inquiry">
+          <span class="ops-ai-nav__icon" aria-hidden="true">✉</span>
+          <span class="ops-ai-nav__label">問い合わせ</span>
+          <span class="ops-ai-nav__badge ops-ai-nav__badge--danger" data-ops-nav-badge="inquiry" hidden>0</span>
+        </a>
+        <a class="ops-ai-nav__item" href="support-trouble-center.html?filter=report" data-ops-nav="report">
+          <span class="ops-ai-nav__icon" aria-hidden="true">⚠</span>
+          <span class="ops-ai-nav__label">通報</span>
+          <span class="ops-ai-nav__badge ops-ai-nav__badge--warn" data-ops-nav-badge="report" hidden>0</span>
+        </a>
+        <a class="ops-ai-nav__item" href="support-trouble-center.html?filter=connect" data-ops-nav="connect">
+          <span class="ops-ai-nav__icon" aria-hidden="true">🔗</span>
+          <span class="ops-ai-nav__label">Connect</span>
+          <span class="ops-ai-nav__badge ops-ai-nav__badge--info" data-ops-nav-badge="connect" hidden>0</span>
+        </a>
+        <a class="ops-ai-nav__item" href="builder/admin-partner-evaluations.html" data-ops-nav="builder-eval">
+          <span class="ops-ai-nav__icon" aria-hidden="true">🔧</span>
+          <span class="ops-ai-nav__label">Builder審査 / 評価</span>
+          <span class="ops-ai-nav__badge ops-ai-nav__badge--warn" data-ops-nav-badge="builder-eval" hidden>0</span>
+        </a>
+        <a class="ops-ai-nav__item" href="talk-home.html?tab=notify&amp;talkAdmin=1" data-ops-nav="builder-notify">
+          <span class="ops-ai-nav__icon" aria-hidden="true">📋</span>
+          <span class="ops-ai-nav__label">Builder通知 / 取引確認</span>
+        </a>
+        <a class="ops-ai-nav__item" href="anpi-line-admin.html" data-ops-nav="anpi">
+          <span class="ops-ai-nav__icon" aria-hidden="true">♥</span>
+          <span class="ops-ai-nav__label">安否</span>
+          <span class="ops-ai-nav__badge ops-ai-nav__badge--ok" data-ops-nav-badge="anpi">0</span>
+        </a>
+        <a class="ops-ai-nav__item" href="#ops-ai-watch" data-ops-nav="watch" data-ops-nav-scroll data-ops-nav-target="ops-ai-watch">
+          <span class="ops-ai-nav__icon" aria-hidden="true">👁</span>
+          <span class="ops-ai-nav__label">OPS WATCH</span>
+          <span class="ops-ai-nav__badge ops-ai-nav__badge--purple" data-ops-nav-badge="watch" hidden>0</span>
+        </a>
+        <a class="ops-ai-nav__item" href="admin-ai-operations-center.html" data-ops-nav="api-report">
+          <span class="ops-ai-nav__icon" aria-hidden="true">📊</span>
+          <span class="ops-ai-nav__label">APIレポート</span>
+        </a>
+        <a class="ops-ai-nav__item" href="#ops-ai-quick" data-ops-nav="ops-report" data-ops-nav-scroll data-ops-nav-target="ops-ai-quick">
+          <span class="ops-ai-nav__icon" aria-hidden="true">📋</span>
+          <span class="ops-ai-nav__label">運営レポート</span>
+        </a>
+        <a class="ops-ai-nav__item" href="builder/settings.html" data-ops-nav="settings">
+          <span class="ops-ai-nav__icon" aria-hidden="true">⚙</span>
+          <span class="ops-ai-nav__label">各種設定</span>
+        </a>
+      </nav>
+      <div class="ops-ai-sidebar__foot">
+        <a class="ops-ai-sidebar__support" href="support-trouble-center.html">サポート</a>
+        <p class="ops-ai-sidebar__eta" data-ops-dash-work-eta>今日の想定作業時間: —</p>
+      </div>
+    </aside>
+
+    <div class="ops-ai-main">
+      <header class="ops-ai-topbar ops-ai-topbar--compact" id="ops-ai-top">
+        <div class="ops-ai-topbar__intro">
+          <h1>AI運営司令塔</h1>
+          <p class="ops-ai-topbar__sub">AIが整理した結論だけ見て、必要な1件だけ対応する</p>
+        </div>
+        <div class="ops-ai-topbar__tools">
+          <button type="button" class="ops-ai-icon-btn" aria-label="更新" data-ops-dash-refresh>↻</button>
+          <time class="ops-ai-updated" data-ops-dash-updated datetime=""></time>
+        </div>
+      </header>
+
+      <section class="ops-ai-morning-summary" id="ops-ai-morning-summary" data-ops-morning-summary aria-labelledby="ops-morning-summary-heading">
+        <header class="ops-ai-morning-summary__head">
+          <h2 class="ops-ai-morning-summary__title" id="ops-morning-summary-heading">本日の運営サマリー</h2>
+          <p class="ops-ai-morning-summary__sub">朝3分 — タップで各パネルへジャンプ</p>
+        </header>
+        <div class="ops-ai-morning-summary__chips" data-ops-morning-summary-chips role="list"></div>
+      </section>
+
+      <section class="ops-ai-daily-inbox" id="ops-ai-daily-inbox" data-ops-daily-inbox aria-labelledby="ops-daily-inbox-heading">
+        <header class="ops-ai-daily-inbox__head">
+          <h2 class="ops-ai-daily-inbox__title" id="ops-daily-inbox-heading">本日の運営結果</h2>
+          <p class="ops-ai-daily-inbox__sub">AI対応案・自動処理・Connect・Support・Builder・安否・TALKを一画面で確認（約5分）</p>
+        </header>
+        <div class="ops-ai-daily-inbox__summary" data-ops-daily-inbox-summary></div>
+        <div class="ops-ai-daily-inbox__priority" data-ops-daily-inbox-priority></div>
+        <div class="ops-ai-daily-inbox__sections" data-ops-daily-inbox-sections></div>
+        <p class="ops-ai-daily-inbox-toast" data-ops-daily-inbox-toast hidden aria-live="polite"></p>
+      </section>
+
+      <section class="ops-ai-command ops-ai-command--compact" id="ops-ai-command" aria-label="運営チェック">
+        <button type="button" class="ops-ai-command__start" data-ops-morning-check-start>本日の運営チェックを開始</button>
+        <p class="ops-ai-command__hint">問い合わせ・通報・Connect・安否・OPS WATCH・APIコストを一括確認</p>
+      </section>
+
+      <section class="ops-ai-daily-conclusion ops-ai-daily-conclusion--hero" data-ops-daily-conclusion aria-label="本日の結論">
+        <div class="ops-ai-daily-conclusion__head">
+          <h2 class="ops-ai-daily-conclusion__title">本日の結論</h2>
+          <time class="ops-ai-daily-conclusion__time" data-ops-daily-conclusion-time datetime=""></time>
+        </div>
+        <div class="ops-ai-daily-conclusion__stats" data-ops-daily-conclusion-stats></div>
+        <div class="ops-ai-daily-conclusion__action">
+          <p class="ops-ai-daily-conclusion__action-label">今日やること</p>
+          <p class="ops-ai-daily-conclusion__sentence" data-ops-daily-conclusion-sentence></p>
+        </div>
+        <div class="ops-ai-daily-conclusion__next" data-ops-daily-next-action>
+          <p class="ops-ai-daily-conclusion__next-label">次の操作</p>
+          <p class="ops-ai-daily-conclusion__next-message" data-ops-daily-next-message></p>
+          <div class="ops-ai-daily-conclusion__next-cta" data-ops-daily-next-cta-host></div>
+        </div>
+      </section>
+
+      <section class="ops-ai-secretary" id="ops-ai-secretary" aria-label="AI運営秘書 — 毎日起点">
+        <section class="ops-ai-watch" id="ops-ai-watch" data-ops-ai-watch aria-labelledby="ops-ai-watch-heading"></section>
+        <section class="ops-ai-kpi" id="ops-ai-kpi" data-ops-ai-kpi-center aria-labelledby="ops-ai-kpi-heading"></section>
+        <section class="ops-ai-autofix" id="ops-ai-autofix" data-ops-ai-auto-fix aria-labelledby="ops-ai-autofix-heading"></section>
+        <section class="ops-ai-hsg" id="ops-ai-hsg" data-ops-ai-human-send-gate aria-labelledby="ops-ai-hsg-heading"></section>
+        <header class="ops-ai-secretary__head">
+          <h2 class="ops-ai-secretary__title">AI運営秘書</h2>
+          <p class="ops-ai-secretary__sub">未対応・通報・Connect・安否・Builder・TALK通知を一画面で確認し、各専用画面へ進みます（実行操作は行いません）</p>
+          <div class="ops-ai-secretary__pills" aria-label="集約カテゴリ">
+            <span class="ops-ai-secretary__pill">優先</span>
+            <span class="ops-ai-secretary__pill">未対応</span>
+            <span class="ops-ai-secretary__pill">通報</span>
+            <span class="ops-ai-secretary__pill">Connect</span>
+            <span class="ops-ai-secretary__pill">安否</span>
+            <span class="ops-ai-secretary__pill">Builder</span>
+            <span class="ops-ai-secretary__pill">TALK通知</span>
+          </div>
+        </header>
+        <div class="ops-ai-secretary-summary">
+          <pre class="ops-ai-secretary-summary__text" data-talk-ops-summary></pre>
+          <div class="ops-ai-secretary-metrics" data-talk-ops-metrics aria-label="件数サマリー"></div>
+        </div>
+        <div class="talk-ops-hub ops-ai-hub" id="ops-ai-hub" data-talk-ops-hub aria-live="polite" aria-label="運営情報ハブ"></div>
+      </section>
+
+      <section class="ops-ai-focus" id="ops-ai-focus" aria-label="今日の対応">
+        <section class="ops-ai-panel ops-ai-panel--focus" aria-labelledby="ops-priority-heading">
+          <div class="ops-ai-panel__head">
+            <h2 id="ops-priority-heading">要確認タスク</h2>
+          </div>
+          <div class="ops-ai-table-wrap">
+            <table class="ops-ai-table ops-ai-table--tasks ops-ai-table--compact">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">内容</th>
+                  <th scope="col">重要度</th>
+                  <th scope="col">対応</th>
+                </tr>
+              </thead>
+              <tbody data-ops-dash-priority-tasks></tbody>
+            </table>
+          </div>
+          <ul class="ops-ai-alert-list" data-ops-dash-alerts hidden aria-hidden="true"></ul>
+        </section>
+
+        <section class="ops-ai-panel ops-ai-panel--focus" aria-labelledby="ops-suggest-heading">
+          <div class="ops-ai-panel__head">
+            <h2 id="ops-suggest-heading">AI提案</h2>
+          </div>
+          <div class="ops-ai-suggest-list ops-ai-suggest-list--compact" data-ops-dash-suggestions></div>
+        </section>
+
+        <section class="ops-ai-panel ops-ai-panel--focus ops-ai-response" id="ops-ai-response" aria-labelledby="ops-response-heading">
+          <div class="ops-ai-panel__head">
+            <h2 id="ops-response-heading">AI対応案</h2>
+            <span class="ops-ai-response-badge" data-ops-ai-response-count hidden>0件</span>
+          </div>
+          <p class="ops-ai-response-lead">AIは対応案を提案します。送信前に Safety &amp; License Gate を通過し、利用者へ影響する送信・通知は必ず承認待ちを経由します（BAN・返金実行・非表示はしません）。</p>
+          <div class="ops-ai-response-body" data-ops-ai-response-plans></div>
+          <p class="ops-ai-response-toast" data-ops-ai-response-toast hidden aria-live="polite"></p>
+        </section>
+
+        <section class="ops-ai-panel ops-ai-panel--focus ops-ai-auto" id="ops-ai-automation" aria-labelledby="ops-automation-heading">
+          <div class="ops-ai-panel__head">
+            <h2 id="ops-automation-heading">AI自動処理候補</h2>
+            <span class="ops-ai-auto-badge" data-ops-ai-automation-count hidden>0件</span>
+          </div>
+          <p class="ops-ai-auto-lead">定型業務の自動化候補を表示します。利用者への通知は承認待ち経由のみ（BAN・返金・停止・非表示は自動実行しません）。</p>
+          <div class="ops-ai-auto-body" data-ops-ai-automation></div>
+          <p class="ops-ai-auto-toast" data-ops-ai-automation-toast hidden aria-live="polite"></p>
+        </section>
+
+        <section class="ops-ai-panel ops-ai-panel--focus ops-ai-connect" id="ops-ai-connect" aria-labelledby="ops-connect-heading">
+          <div class="ops-ai-panel__head">
+            <h2 id="ops-connect-heading">Connect対応</h2>
+            <span class="ops-ai-connect-badge" data-ops-connect-pending-badge hidden>0件</span>
+          </div>
+          <div class="ops-ai-connect-body" data-ops-connect-panel></div>
+        </section>
+
+        <section class="ops-ai-panel ops-ai-panel--focus" aria-labelledby="ops-api-heading">
+          <div class="ops-ai-panel__head">
+            <h2 id="ops-api-heading">APIコスト要約</h2>
+            <a class="ops-ai-panel__link" href="admin-ai-operations-center.html">詳細</a>
+          </div>
+          <div class="ops-ai-api ops-ai-api--compact" data-ops-dash-api-cost></div>
+        </section>
+      </section>
+
+      <details class="ops-ai-fold ops-ai-fold--section" id="ops-ai-kpi-fold">
+        <summary class="ops-ai-fold__summary">KPIサマリー</summary>
+        <div class="ops-ai-fold__body">
+          <section class="ops-ai-kpi" aria-label="KPI" data-ops-dash-summary></section>
+        </div>
+      </details>
+
+      <details class="ops-ai-fold ops-ai-fold--section" id="ops-ai-category-fold">
+        <summary class="ops-ai-fold__summary">カテゴリ別ステータス</summary>
+        <div class="ops-ai-fold__body">
+          <section class="ops-ai-panel ops-ai-panel--fold" aria-labelledby="ops-category-heading">
+            <div class="ops-ai-category-grid" data-ops-dash-category-status></div>
+          </section>
+        </div>
+      </details>
+
+      <details class="ops-ai-fold ops-ai-fold--section" id="ops-ai-activity-fold">
+        <summary class="ops-ai-fold__summary">最近のアクティビティ</summary>
+        <div class="ops-ai-fold__body">
+          <section class="ops-ai-panel ops-ai-panel--fold" aria-labelledby="ops-activity-heading">
+            <ul class="ops-ai-activity-list" data-ops-dash-activity></ul>
+          </section>
+        </div>
+      </details>
+
+      <details class="ops-ai-fold" id="ops-ai-more">
+        <summary class="ops-ai-fold__summary">運営クイック入力</summary>
+        <div class="ops-ai-fold__body">
+          <div class="ops-ai-suggest-list" data-ops-dash-suggestions-all hidden aria-hidden="true"></div>
+
+          <section class="ops-ai-quick" id="ops-ai-quick" aria-label="AI運営秘書クイックアクセス">
+            <div class="ops-ai-quick__chips">
+              <a href="#ops-ai-watch" class="ops-ai-chip">Ops Watchを確認</a>
+              <a href="support-trouble-center.html" class="ops-ai-chip">問い合わせを確認</a>
+              <a href="support-trouble-center.html?filter=connect" class="ops-ai-chip">Connect関連を確認</a>
+              <a href="support-trouble-center.html?filter=report" class="ops-ai-chip">通報を確認</a>
+              <a href="admin-ai-operations-center.html" class="ops-ai-chip">APIレポートを表示</a>
+              <button type="button" class="ops-ai-chip ops-ai-chip--btn" data-ops-morning-check-start-secondary>本日のレポートを生成</button>
+            </div>
+            <form class="ops-ai-quick__form" data-ops-dash-quick-form data-talk-ops-command-form>
+              <input type="text" class="ops-ai-quick__input" data-ops-dash-quick-input data-talk-ops-command-input placeholder="AIに指示する（例：未対応の問い合わせを見せて）" autocomplete="off" />
+              <button type="submit" class="ops-ai-quick__send" aria-label="送信">➤</button>
+            </form>
+          </section>
+          <pre class="ops-ai-command-result" data-talk-ops-command-result hidden></pre>
+        </div>
+      </details>
+
+      <footer class="ops-ai-foot">
+        <div class="ops-ai-status" data-ops-dash-load-status></div>
+      </footer>
+
+      <div class="ops-ai-response-modal" data-ops-ai-response-modal hidden role="dialog" aria-modal="true" aria-labelledby="opsAiResponseModalTitle">
+        <div class="ops-ai-response-modal__backdrop" data-ops-ai-response-modal-close></div>
+        <div class="ops-ai-response-modal__panel">
+          <header class="ops-ai-response-modal__head">
+            <h2 id="opsAiResponseModalTitle" data-ops-ai-response-modal-title>返信案を編集</h2>
+            <button type="button" class="ops-ai-response-modal__close" data-ops-ai-response-modal-close aria-label="閉じる">×</button>
+          </header>
+          <div class="ops-ai-response-modal__body">
+            <label class="ops-ai-response-modal__label" for="opsAiResponseDraft">返信案</label>
+            <textarea id="opsAiResponseDraft" class="ops-ai-response-modal__draft" data-ops-ai-response-modal-draft rows="8"></textarea>
+            <p class="ops-ai-response-modal__note">送信時はTasuTalkNotificationsへ通知を作成し、運営履歴・送信ログにも記録します。</p>
+          </div>
+          <footer class="ops-ai-response-modal__foot">
+            <button type="button" class="ops-ai-response-btn ops-ai-response-btn--ghost" data-ops-ai-response-modal-close>キャンセル</button>
+            <button type="button" class="ops-ai-response-btn ops-ai-response-btn--ghost" data-ops-ai-response-modal-save>保存</button>
+            <button type="button" class="ops-ai-response-btn ops-ai-response-btn--primary" data-ops-ai-response-modal-send>保存して送信</button>
+          </footer>
+        </div>
+      </div>
+
+      <div class="ops-ai-connect-modal" data-ops-connect-modal hidden role="dialog" aria-modal="true" aria-labelledby="opsConnectModalTitle">
+        <div class="ops-ai-connect-modal__backdrop" data-ops-connect-modal-close></div>
+        <div class="ops-ai-connect-modal__panel">
+          <header class="ops-ai-connect-modal__head">
+            <h2 id="opsConnectModalTitle">Connect回答文</h2>
+            <button type="button" class="ops-ai-connect-modal__close" data-ops-connect-modal-close aria-label="閉じる">×</button>
+          </header>
+          <div class="ops-ai-connect-modal__body" data-ops-connect-modal-body></div>
+          <footer class="ops-ai-connect-modal__foot">
+            <p class="ops-ai-connect-modal__note">この回答文は送信前に内容を確認してください。実送信は行われません。</p>
+            <p class="ops-ai-connect-modal__toast" data-ops-connect-copy-toast hidden aria-live="polite"></p>
+            <div class="ops-ai-connect-modal__actions">
+              <button type="button" class="ops-ai-connect-btn ops-ai-connect-btn--ghost" data-ops-connect-copy>コピー</button>
+              <a class="ops-ai-connect-btn ops-ai-connect-btn--ghost" data-ops-connect-stripe-link href="https://dashboard.stripe.com/" target="_blank" rel="noopener noreferrer">Stripeを開く</a>
+              <button type="button" class="ops-ai-connect-btn ops-ai-connect-btn--primary" data-ops-connect-mark-done>対応済みにする</button>
+              <button type="button" class="ops-ai-connect-btn ops-ai-connect-btn--ghost" data-ops-connect-modal-close>閉じる</button>
+            </div>
+          </footer>
+        </div>
+      </div>
+
+      <nav class="ops-ai-shortcuts-hidden" aria-hidden="true" data-ops-dash-shortcuts></nav>
+      <ul class="ops-ai-tasks-hidden" hidden data-ops-dash-tasks></ul>
+      <a href="#ops-ai-focus" hidden data-ops-dash-hub-cta>AI運営秘書を開く</a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="supabase-ops-primary-config.js"></script>
+  <script src="supabase-ops-primary-cache.js"></script>
+  <script src="supabase-ops-read-config.js"></script>
+  <script src="supabase-ops-read-adapter.js"></script>
+  <script src="supabase-ops-read-bootstrap.js"></script>
+  <script src="supabase-ops-data-source-ui.js"></script>
+  <script src="supabase-ops-write-config.js"></script>
+  <script src="supabase-ops-write-adapter.js"></script>
+  <link rel="stylesheet" href="stripe-connect-trouble.css" />
+  <script src="stripe-connect-event-map.js"></script>
+  <script src="connect-identity-templates.js"></script>
+  <script src="offplatform-risk-detector.js"></script>
+  <script src="refund-cancel-decision-checklist.js"></script>
+  <script src="chargeback-evidence-pack.js"></script>
+  <script src="stripe-connect-ingest.js"></script>
+  <script src="stripe-connect-trouble-ui.js"></script>
+  <script src="support-ticket-classifier.js"></script>
+  <script src="support-ticket-ai-reply.js"></script>
+  <script src="support-ticket-store.js"></script>
+  <script src="support-ticket-service.js"></script>
+  <script src="support-admin-notify.js"></script>
+  <script src="ai-ops-types.js"></script>
+  <script src="ai-ops-ai-provider.js"></script>
+  <script src="ai-ops-case-store.js"></script>
+  <script src="ai-ops-command-parser.js"></script>
+  <script src="ai-ops-notify.js"></script>
+  <script src="builder/builder-partner-evaluation-store.js"></script>
+  <script src="shop-market-event-store.js"></script>
+  <script src="platform-chat-fee.js"></script>
+  <script src="search-intent-detector.js"></script>
+  <script src="serper-search-service.js"></script>
+  <script src="ai-interaction-log.js"></script>
+  <script src="ai-plan-models.js"></script>
+  <script src="ai-model-gateway.js"></script>
+  <script src="ai-search-orchestrator.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="ops-watch-categories.js"></script>
+  <script src="ops-watch-store.js"></script>
+  <script src="ops-watch-analyzer.js"></script>
+  <script src="talk-ops-watch-notify.js"></script>
+  <script src="ops-watch-service.js"></script>
+  <script src="ops-watch-daily.js"></script>
+  <script src="ops-watch-browser.js"></script>
+  <script src="talk-ops-watch-ui.js"></script>
+  <script src="talk-ops-assistant.js"></script>
+  <script src="admin-connect-ai-support.js"></script>
+  <script src="admin-ai-response-safety-license-gate.js"></script>
+  <script src="admin-ai-decision-learning.js"></script>
+  <script src="admin-ai-outcome-learning.js"></script>
+  <script src="admin-ai-response-plans.js"></script>
+  <script src="admin-ai-automation-engine.js"></script>
+  <script src="admin-ai-daily-inbox.js"></script>
+  <script src="admin-ai-ops-watch.js"></script>
+  <script src="admin-ai-kpi-center.js"></script>
+  <script src="admin-ai-auto-fix-candidate.js"></script>
+  <script src="admin-ai-human-send-gate.js"></script>
+  <script src="admin-ai-morning-summary.js"></script>
+  <script src="admin-operations-dashboard.js"></script>
+  <script src="talk-ops-room.js"></script>
+</body>
+</html>

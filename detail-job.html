@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>求人詳細 | TasuFull</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            page: '#F8F9FA',
+            gold: { DEFAULT: '#F4D06F', dark: '#D4A63A', light: '#FFE7A3' },
+          },
+          fontFamily: {
+            sans: ['"Noto Sans JP"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="detail-trust-score.css">
+  <link rel="stylesheet" href="detail-favorites.css">
+  <link rel="stylesheet" href="listing-detail-page.css">
+  <link rel="stylesheet" href="listing-ai-badge.css">
+  <link rel="stylesheet" href="detail-bottom-sections.css">
+  <link rel="stylesheet" href="detail-category.css">
+  <link rel="stylesheet" href="listing-featured.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+  <link rel="stylesheet" href="detail-job.css">
+</head>
+<body class="job-detail-page job-detail-sticky-footer min-h-screen bg-page font-sans text-gray-800 antialiased" data-detail-page="1" data-detail-type="job" data-listing-loaded="false">
+  <script>
+    (function () {
+      var p = new URLSearchParams(location.search);
+      var view = p.get("view");
+      if (view === "hire-result") {
+        p.set("view", "applications");
+        location.replace(location.pathname + "?" + p.toString() + "#applications");
+        return;
+      }
+      if (view === "applications") {
+        document.body.dataset.jobPdView = "applications";
+      }
+    })();
+  </script>
+
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットフォームへようこそ　
+      <a href="/post" class="link">今月システム利用料5％！</a>　
+      ｜　
+      <a href="listing-management.html" class="link accent">掲載管理</a>　
+      ｜　
+      <span style="color: #94a3b8;"></span>
+    </div>
+  </div>
+
+  <div class="job-detail-wrap skill-detail-wrap mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+    <header class="page-subheader mb-5 flex items-center justify-between">
+      <a href="job-top.html" class="text-sm text-gray-500 transition hover:text-gold-dark" data-job-back-link>← 一覧に戻る</a>
+      <span class="text-sm font-bold text-gold-dark">TasuFull 求人</span>
+    </header>
+
+    <main class="job-detail-main skill-detail-main w-full max-w-none detail-page-main">
+
+      <div class="job-detail-layout job-main-cards">
+
+          <section class="job-top-card job-hero-section skill-hero-section job-panel-card" data-detail-keep aria-label="求人概要">
+            <div class="job-top-card__grid skill-hero-premium__grid">
+              <div class="job-top-card__media skill-hero-premium__media">
+                <p class="skill-hero-premium__media-label">職場・チームイメージ</p>
+                <figure class="listing-hero__figure skill-hero-premium__figure is-loading" data-listing-hero-figure>
+                  <img id="mainImage" data-listing-image alt="" width="640" height="480" decoding="async">
+                </figure>
+                <div class="job-top-card__thumbs skill-hero-premium__gallery" role="tablist" aria-label="掲載画像" data-listing-gallery hidden></div>
+              </div>
+
+              <div class="job-top-card__main job-hero-premium__center skill-hero-premium__center">
+                <span class="job-top-card__category skill-hero-premium__category" data-listing-category-badge>求人</span>
+                <h1 class="skill-hero-premium__title" data-listing-service-name data-listing-title>求人掲載</h1>
+                <p class="job-hero-summary job-hero-fv-summary skill-hero-premium__subtitle" data-listing-subtitle data-listing-job-hero-summary>募集内容の概要をご確認ください</p>
+                <div class="job-hero-fv-tags" data-listing-job-hero-fv-tags aria-label="求人条件タグ" hidden aria-hidden="true"></div>
+                <a href="#section-seller" class="job-hero-fv-seller" data-listing-job-hero-fv-seller hidden aria-hidden="true"></a>
+                <div class="job-hero-fv-reward" data-listing-job-hero-fv-reward hidden aria-hidden="true">
+                  <span class="job-hero-fv-reward__label">報酬</span>
+                  <p class="job-hero-fv-reward__price"><span data-listing-job-fv-price>応相談</span></p>
+                </div>
+                <div class="job-top-card__tags job-hero-tags skill-hero-premium__tags" data-listing-tags aria-label="求人条件タグ" hidden></div>
+                <div class="job-apply-success" data-job-apply-success hidden role="status" aria-live="polite">
+                  <p class="job-apply-success__title">応募が完了しました。</p>
+                  <p class="job-apply-success__text">掲載者からの連絡をお待ちください。</p>
+                </div>
+                <span class="job-top-card__status" data-listing-job-status hidden aria-hidden="true">受付中</span>
+                <a href="#section-seller" class="job-top-company job-top-company--hero-compact product-hero-seller-card" data-listing-job-hero-seller hidden></a>
+                <p class="skill-hero-premium__description" data-listing-description hidden aria-hidden="true"></p>
+              </div>
+
+              <aside class="job-top-card__cta job-hero-premium__cta skill-hero-premium__cta" data-job-hero-cta>
+                <div class="job-top-cta job-cta-panel skill-cta-panel">
+                  <p class="skill-cta-panel__label">報酬（目安）</p>
+                  <p class="skill-cta-panel__price job-cta-panel__price">
+                    <span data-listing-price>応相談</span>
+                    <span class="skill-cta-panel__tax job-cta-panel__tax" hidden aria-hidden="true">（税込）</span>
+                  </p>
+                  <ul class="job-cta-panel__hints" data-listing-job-cta-hints aria-label="応募について" hidden></ul>
+                  <p class="skill-cta-panel__label skill-cta-panel__label--actions" data-listing-cta-heading>ご応募・ご相談</p>
+                  <a href="#" class="job-top-cta__apply hero-apply-btn" data-listing-primary-cta>応募する</a>
+                  <a href="#" class="job-top-cta__consult skill-cta-panel__secondary cta-consult">募集者に相談する</a>
+                  <button type="button" class="job-top-cta__favorite skill-cta-panel__favorite" data-favorite-button data-tasu-favorite data-target-id="" data-target-type="job">
+                    <svg class="job-top-cta__favorite-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                    お気に入り
+                  </button>
+                </div>
+                <div class="job-top-cta__features" data-listing-job-content-features-wrap hidden>
+                  <h3 class="job-top-cta__features-title">この求人の特徴</h3>
+                  <ul class="job-content-features" data-listing-job-content-features aria-label="求人の特徴"></ul>
+                </div>
+              </aside>
+            </div>
+
+            <div class="job-top-card__metrics job-top-metrics" data-detail-keep aria-label="条件サマリー" hidden>
+              <div class="job-top-metrics__grid" data-listing-job-hero-metrics></div>
+            </div>
+          </section>
+
+          <section id="section-description" class="section-anchor job-section job-content-card job-panel-card job-detail-section" data-listing-job-description-wrap data-detail-keep hidden aria-labelledby="jobContentTitle">
+            <div class="job-content-card__layout">
+              <div class="job-content-card__main">
+                <h2 id="jobContentTitle" class="job-content-card__title">仕事内容</h2>
+                <div class="job-content-card__body" data-listing-job-description></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="section-reward" class="section-anchor job-section job-salary-card job-panel-card job-detail-section" data-listing-job-salary-wrap hidden aria-labelledby="jobSalaryTitle">
+            <h2 id="jobSalaryTitle" class="job-section-card__title">報酬</h2>
+            <div class="job-content-salary" data-listing-job-content-salary hidden>
+              <p class="job-content-salary__body" data-listing-job-salary-body></p>
+              <p class="job-content-salary__note" data-listing-job-salary-note></p>
+            </div>
+          </section>
+
+          <div class="job-accordions-stack" data-listing-job-accordions-wrap hidden>
+            <div class="job-details-accordions" data-listing-job-accordions>
+              <details id="section-requirements" class="section-anchor job-section job-details-accordion" data-listing-job-required-wrap hidden>
+                <summary class="job-details-accordion__summary">
+                  <span class="job-details-accordion__icon" aria-hidden="true"><svg class="job-details-accordion__icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></span>
+                  <span class="job-details-accordion__title">応募条件</span>
+                </summary>
+                <div class="job-details-accordion__body" data-listing-job-required></div>
+              </details>
+              <details id="section-welcome" class="section-anchor job-section job-details-accordion" data-listing-job-welcome-wrap hidden>
+                <summary class="job-details-accordion__summary">
+                  <span class="job-details-accordion__icon" aria-hidden="true"><svg class="job-details-accordion__icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6"/></svg></span>
+                  <span class="job-details-accordion__title">歓迎スキル</span>
+                </summary>
+                <div class="job-details-accordion__body" data-listing-job-welcome></div>
+              </details>
+              <details id="section-benefits" class="section-anchor job-section job-details-accordion" data-listing-job-benefits-wrap hidden>
+                <summary class="job-details-accordion__summary">
+                  <span class="job-details-accordion__icon" aria-hidden="true"><svg class="job-details-accordion__icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></span>
+                  <span class="job-details-accordion__title">福利厚生</span>
+                </summary>
+                <div class="job-details-accordion__body" data-listing-job-benefits></div>
+              </details>
+              <details class="job-details-accordion" data-listing-job-application-wrap hidden>
+                <summary class="job-details-accordion__summary">
+                  <span class="job-details-accordion__icon" aria-hidden="true"><svg class="job-details-accordion__icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg></span>
+                  <span class="job-details-accordion__title">応募方法</span>
+                </summary>
+                <div class="job-details-accordion__body" data-listing-job-application></div>
+              </details>
+              <details id="section-contract" class="section-anchor job-section job-details-accordion" data-listing-job-contract-wrap hidden>
+                <summary class="job-details-accordion__summary">
+                  <span class="job-details-accordion__icon" aria-hidden="true"><svg class="job-details-accordion__icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>
+                  <span class="job-details-accordion__title">契約条件</span>
+                </summary>
+                <div class="job-details-accordion__body" data-listing-job-contract></div>
+              </details>
+            </div>
+          </div>
+
+          <section id="applications" class="section-anchor job-section job-applications-panel job-panel-card" data-job-applications-section data-detail-keep hidden aria-labelledby="jobApplicationsTitle">
+            <div class="job-applications-panel__head">
+              <h2 id="jobApplicationsTitle" class="job-section-card__title">応募状況</h2>
+              <span class="job-applications-panel__count" data-job-applications-count>0 件</span>
+            </div>
+            <p class="job-applications-panel__lead" data-job-applications-lead hidden>応募者とやりとりを始めるには、利用料550円のお支払い後にチャットが開きます。</p>
+            <div class="job-applications-toolbar" data-job-applications-toolbar hidden>
+              <div class="job-applications-toolbar__search">
+                <input
+                  type="search"
+                  class="job-applications-toolbar__input"
+                  data-job-applications-search
+                  placeholder="名前・自己PR・応募先で検索"
+                  autocomplete="off"
+                  enterkeyhint="search"
+                  aria-label="応募者を検索"
+                >
+              </div>
+              <div class="job-applications-toolbar__controls">
+                <div class="job-applications-toolbar__filters" role="tablist" aria-label="応募者フィルター">
+                  <button type="button" class="job-applications-filter-chip is-active" data-job-applications-filter="all" role="tab" aria-selected="true">すべて</button>
+                  <button type="button" class="job-applications-filter-chip" data-job-applications-filter="applied" role="tab" aria-selected="false">応募中</button>
+                  <button type="button" class="job-applications-filter-chip" data-job-applications-filter="started" role="tab" aria-selected="false">やりとり開始済み</button>
+                  <button type="button" class="job-applications-filter-chip" data-job-applications-filter="rejected" role="tab" aria-selected="false">断り済み</button>
+                </div>
+                <label class="job-applications-toolbar__sort">
+                  <span class="job-applications-toolbar__sort-label">並び替え</span>
+                  <select class="job-applications-toolbar__sort-select" data-job-applications-sort aria-label="並び替え">
+                    <option value="newest">新しい順</option>
+                    <option value="oldest">古い順</option>
+                    <option value="name">名前順</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+            <ul class="job-applications-list" data-job-applications-list aria-label="応募者一覧"></ul>
+          </section>
+
+          <section id="section-seller" class="section-anchor job-section job-company-panel job-panel-card" data-detail-keep data-listing-seller data-author-user-id="u_company" aria-labelledby="detailSellerTitle" hidden>
+            <h2 id="detailSellerTitle" class="job-section-card__title">掲載者情報</h2>
+            <p class="job-company-panel__lead">この求人を掲載している企業情報です</p>
+            <div class="job-company-renewal">
+              <div class="job-company-renewal__upper">
+                <div class="job-company-renewal__info">
+                  <div class="job-company-renewal__profile">
+                    <div class="job-company-renewal__brand job-company-renewal__logo-column">
+                      <div class="job-company-renewal__avatar-wrap">
+                        <div class="job-company-renewal__avatar-host" data-job-company-avatar aria-hidden="true"></div>
+                      </div>
+                      <p class="job-company-renewal__online job-company-renewal__online-status" data-seller-status-online hidden>
+                        <span class="job-company-renewal__online-dot" data-seller-status-dot aria-hidden="true"></span>
+                        <span class="job-company-renewal__online-text" data-seller-status-label>オンライン</span>
+                      </p>
+                    </div>
+                    <div class="job-company-renewal__identity">
+                      <p class="job-company-renewal__name" data-seller-display-name>掲載者</p>
+                      <div class="job-company-renewal__badges" data-seller-badges aria-label="認証情報">
+                        <span class="job-company-badge job-company-badge--muted">認証情報なし</span>
+                      </div>
+                      <div class="job-company-renewal__intro" data-job-company-intro hidden></div>
+                    </div>
+                  </div>
+                  <ul class="job-company-renewal__chips" aria-label="企業情報">
+                    <li class="job-company-renewal__chip">
+                      <span class="job-company-renewal__chip-icon" aria-hidden="true">📍</span>
+                      <span class="job-company-renewal__chip-text" data-job-company-location>—</span>
+                    </li>
+                    <li class="job-company-renewal__chip">
+                      <span class="job-company-renewal__chip-icon" aria-hidden="true">🏢</span>
+                      <span class="job-company-renewal__chip-text" data-job-company-industry>—</span>
+                    </li>
+                    <li class="job-company-renewal__chip">
+                      <span class="job-company-renewal__chip-icon" aria-hidden="true">📋</span>
+                      <span class="job-company-renewal__chip-text" data-job-company-recruitment-status>—</span>
+                    </li>
+                  </ul>
+                  <div class="job-company-renewal__services" data-job-company-services-wrap hidden>
+                    <h3 class="job-company-renewal__services-title">主な対応業務</h3>
+                    <ul class="job-company-renewal__services-list" data-job-company-services></ul>
+                  </div>
+                </div>
+                <div class="job-company-renewal__stats" aria-label="実績">
+                  <div class="job-company-renewal__stat job-company-renewal__stat--listings">
+                    <span class="job-company-renewal__stat-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </span>
+                    <div class="job-company-renewal__stat-copy">
+                      <span class="job-company-renewal__stat-label">掲載求人数</span>
+                      <strong class="job-company-renewal__stat-value" data-job-company-listing-count>—</strong>
+                    </div>
+                  </div>
+                  <div class="job-company-renewal__stat job-company-renewal__stat--response">
+                    <span class="job-company-renewal__stat-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </span>
+                    <div class="job-company-renewal__stat-copy">
+                      <span class="job-company-renewal__stat-label">返信目安</span>
+                      <strong class="job-company-renewal__stat-value" data-seller-response-time>—</strong>
+                    </div>
+                  </div>
+                  <div class="job-company-renewal__stat job-company-renewal__stat--deals">
+                    <span class="job-company-renewal__stat-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg>
+                    </span>
+                    <div class="job-company-renewal__stat-copy">
+                      <span class="job-company-renewal__stat-label">採用実績</span>
+                      <strong class="job-company-renewal__stat-value" data-seller-deals>—</strong>
+                    </div>
+                  </div>
+                  <div class="job-company-renewal__stat job-company-renewal__stat--login">
+                    <span class="job-company-renewal__stat-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </span>
+                    <div class="job-company-renewal__stat-copy">
+                      <span class="job-company-renewal__stat-label">最終ログイン</span>
+                      <strong class="job-company-renewal__stat-value" data-seller-last-login>—</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="job-company-renewal__lower">
+                <div class="job-company-renewal__overview" data-job-company-overview-wrap hidden>
+                  <h3 class="job-company-renewal__overview-title">会社概要</h3>
+                  <dl class="job-company-renewal__overview-list" data-job-company-overview></dl>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="section-workplace" class="section-anchor job-section job-workplace-gallery job-panel-card" data-detail-keep>
+            <div class="job-workplace-gallery__head">
+              <h2 class="job-workplace-gallery__title job-section-card__title">職場イメージ</h2>
+              <span class="job-workplace-gallery__count" data-listing-portfolio-count>—</span>
+            </div>
+            <div class="job-workplace-gallery__track-wrap">
+              <div class="job-workplace-gallery__track" id="portfolioStrip" data-listing-portfolio-strip></div>
+            </div>
+          </section>
+
+          <section id="otherServices" class="section-anchor detail-bottom-card detail-seller-services job-related-panel job-panel-card" data-detail-keep aria-labelledby="detailRelatedTitle">
+            <div class="job-related-panel__head">
+              <h2 id="detailRelatedTitle" class="job-related-panel__title job-section-card__title">この企業の他の求人</h2>
+              <span class="job-related-panel__count" data-job-related-count>—</span>
+            </div>
+            <div class="detail-seller-services__body">
+              <div class="detail-seller-services__track-wrap">
+                <button type="button" class="detail-strip-scroll-btn detail-strip-scroll-btn--prev" aria-label="前へ" data-scroll-target="otherServicesStrip" data-scroll-dir="-1">‹</button>
+                <div class="detail-seller-services__track" id="otherServicesStrip" data-listing-other-services-strip></div>
+                <button type="button" class="detail-strip-scroll-btn detail-strip-scroll-btn--next" aria-label="次へ" data-scroll-target="otherServicesStrip" data-scroll-dir="1">›</button>
+              </div>
+            </div>
+          </section>
+
+          <section id="section-reviews" class="section-anchor detail-bottom-card detail-reviews job-reviews-hidden" data-detail-keep aria-labelledby="detailReviewsTitle" hidden>
+            <header class="detail-bottom-card__head">
+              <div class="detail-bottom-card__head-main">
+                <h2 id="detailReviewsTitle" class="detail-bottom-card__title">応募レビュー</h2>
+              </div>
+            </header>
+            <div class="detail-reviews__body">
+              <div class="detail-reviews__cards" id="reviewsStrip" data-listing-reviews-strip></div>
+            </div>
+          </section>
+      </div>
+    </main>
+
+    <footer class="job-detail-footer pb-8 text-center text-xs text-gray-400">© TasuFull — 求人マーケットプレイス</footer>
+  </div>
+
+  <div class="job-bottom-dock" data-job-bottom-dock>
+    <div class="job-bottom-dock__inner">
+      <nav class="job-bottom-dock__nav section-nav job-section-nav" aria-label="ページ内ナビゲーション">
+        <div class="section-nav__inner">
+          <a href="#section-description" class="section-nav__link is-active" data-job-section-nav>仕事内容</a>
+          <a href="#section-reward" class="section-nav__link" data-job-section-nav>報酬</a>
+          <a href="#section-requirements" class="section-nav__link" data-job-section-nav>応募条件</a>
+          <a href="#section-welcome" class="section-nav__link" data-job-section-nav>歓迎スキル</a>
+          <a href="#section-benefits" class="section-nav__link" data-job-section-nav>福利厚生</a>
+          <a href="#section-contract" class="section-nav__link" data-job-section-nav>契約条件</a>
+          <a href="#applications" class="section-nav__link" data-job-section-nav data-job-applications-nav hidden>応募状況</a>
+          <a href="#section-seller" class="section-nav__link" data-job-section-nav>掲載者情報</a>
+          <a href="#section-workplace" class="section-nav__link" data-job-section-nav>職場イメージ</a>
+        </div>
+      </nav>
+      <div class="job-bottom-dock__actions" aria-label="応募アクション">
+        <a href="#" class="job-bottom-dock__apply" data-job-dock-apply>応募する</a>
+        <a href="#" class="job-bottom-dock__consult" data-job-dock-consult>相談する</a>
+        <button type="button" class="job-bottom-dock__favorite" data-job-dock-favorite data-favorite-button data-tasu-favorite data-target-id="" data-target-type="job" aria-label="お気に入り">
+          <svg class="job-bottom-dock__favorite-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="job-bottom-dock__favorite-label">お気に入り</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="favorites-db.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="detail-trust-score.js"></script>
+  <script src="detail-favorites.js"></script>
+  <script src="listing-tags.js"></script>
+  <script src="listing-images.js"></script>
+  <script src="job-listing-fields.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="stripe-featured-config.js"></script>
+  <script src="listing-featured.js"></script>
+  <script src="listing-route-resolver.js"></script>
+  <script src="listing-demo-catalog.js"></script>
+  <script src="listings-db.js"></script>
+  <script src="listing-seller-profile.js"></script>
+  <script src="job-top-renderer.js"></script>
+  <script src="listing-detail-loader.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="shop-payout.js"></script>
+  <script src="platform-chat-fee.js"></script>
+  <script src="talk-notifications-store.js" defer></script>
+  <script src="talk-platform-notify.js" defer></script>
+  <script src="talk-platform-fee-notify.js" defer></script>
+  <script src="job-applications-store.js" defer></script>
+  <script src="platform-chat-job-flow.js" defer></script>
+  <script src="contact-actions.js" defer></script>
+  <script src="job-detail-applications.js" defer></script>
+  <script src="detail-job.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>店舗詳細 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="business-board.css">
+  <link rel="stylesheet" href="listing-detail-page.css">
+  <link rel="stylesheet" href="detail-bottom-sections.css">
+  <link rel="stylesheet" href="detail-business.css">
+  <link rel="stylesheet" href="detail-shop-store.css">
+  <link rel="stylesheet" href="detail-shop-restaurant.css">
+  <link rel="stylesheet" href="detail-shop-beauty.css">
+  <link rel="stylesheet" href="detail-shop-relax.css">
+  <link rel="stylesheet" href="detail-shop-retail.css">
+  <script src="detail-shop-guard.js"></script>
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+  <link rel="stylesheet" href="detail-shop-mobile.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body data-detail-type="shop_store" data-detail-page="shop" data-listing-loaded="false" class="biz-detail-page shop-detail-page biz-detail-page--store-shop detail-shop-page">
+
+  <div class="tasu-banner" data-biz-detail-simple-banner>
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットフォームへようこそ　
+      <a href="business.html" class="link">法人・業者一覧</a>　｜　
+      <a href="index.html" class="link accent">一覧トップ</a>　｜　
+      <a href="listing-management.html" class="link accent">掲載管理</a>
+    </div>
+  </div>
+
+  <!-- 店舗・販売はヘッダー/フッターを表示する -->
+  <header class="shop-market-header shop-detail-header" data-biz-detail-market-header aria-label="店舗検索ヘッダー">
+    <div class="shop-market-header__inner">
+      <a href="index-top.html" class="tasful-ai-logo shop-market-header__logo" aria-label="TASFUL プラットフォームTOP">
+        <img
+          src="images/tasful-ai-globe.png?v=4"
+          alt=""
+          class="tasful-ai-logo-icon"
+        >
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <div class="shop-market-header__center">
+        <form class="shop-market-header__search" role="search" action="shop-store.html" method="get">
+          <span class="shop-market-header__search-icon" aria-hidden="true">🔍</span>
+          <input type="search" name="keyword" class="shop-market-header__search-input" placeholder="店舗・商品を検索" aria-label="店舗・商品を検索">
+        </form>
+        <nav class="shop-market-header__nav" aria-label="メインメニュー">
+          <a href="shop-store.html" class="shop-market-header__nav-link">カテゴリから探す</a>
+          <a href="shop-store.html#shop-store-area" class="shop-market-header__nav-link">エリアから探す</a>
+          <a href="index.html" class="shop-market-header__nav-link">特集一覧</a>
+          <a href="ai-workspace.html" class="shop-market-header__nav-link shop-market-header__nav-link--ai">AI相談</a>
+        </nav>
+      </div>
+      <div class="shop-market-header__actions">
+        <a href="index.html" class="shop-market-header__action" aria-label="お気に入り">
+          <span class="shop-market-header__action-icon" aria-hidden="true">♡</span>
+          <span class="shop-market-header__action-label">お気に入り</span>
+        </a>
+        <a href="index.html" class="shop-market-header__action" aria-label="通知">
+          <span class="shop-market-header__action-icon" aria-hidden="true">🔔</span>
+          <span class="shop-market-header__action-label">通知</span>
+        </a>
+        <a href="index.html" class="shop-market-header__action shop-market-header__action--primary" aria-label="マイページ">
+          <span class="shop-market-header__action-icon" aria-hidden="true">👤</span>
+          <span class="shop-market-header__action-label">マイページ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="biz-detail-status-wrap">
+    <p class="listing-detail-status listing-detail-status--loading" data-listing-detail-status hidden>掲載データを読み込んでいます…</p>
+  </div>
+
+  <div class="biz-detail-page-wrap detail-page-main" data-biz-detail-root hidden>
+    <div class="shop-detail-container">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <div class="relax-tabs-sticky-wrap" data-relax-tabs-sticky-wrap>
+        <nav class="shop-restaurant-tabs" data-shop-restaurant-tabs hidden aria-label="ページ内ナビ">
+          <a class="shop-restaurant-tab" href="#top" data-shop-tab="top">トップ</a>
+          <a class="shop-restaurant-tab" href="#section-products" data-shop-tab="menu">メニュー</a>
+          <a class="shop-restaurant-tab" href="#section-shop-cases" data-shop-tab="photos">写真</a>
+          <a class="shop-restaurant-tab" href="#section-reviews" data-shop-tab="reviews">口コミ</a>
+          <a class="shop-restaurant-tab" href="#section-shop-bottom" data-shop-tab="details">店舗詳細</a>
+          <a class="shop-restaurant-tab" href="#section-shop-bottom" data-shop-tab="access">アクセス</a>
+        </nav>
+      </div>
+      <header class="biz-detail-top" data-biz-detail-legacy-top>
+        <a href="business.html" class="biz-detail-back" data-biz-detail-back>← 法人・業者一覧に戻る</a>
+      </header>
+
+      <!-- FV: 画像 | 会社情報 | サイドCTA -->
+      <section class="biz-detail-hero biz-detail-fv shop-card" aria-label="店舗概要">
+      <div class="biz-detail-hero__media biz-detail-fv__media">
+        <div class="biz-detail-hero__figure-wrap">
+          <figure class="biz-detail-hero__figure" data-biz-detail-hero-figure>
+            <img data-biz-detail-hero-img alt="" width="640" height="480" decoding="async">
+          </figure>
+        </div>
+        <div class="biz-detail-gallery hero-thumbnails" data-biz-detail-gallery hidden></div>
+      </div>
+
+      <div class="biz-detail-hero__body biz-detail-fv__main shop-detail-main-info">
+        <h1 class="biz-detail-hero__title biz-detail-hero__catch" data-biz-detail-title></h1>
+        <div class="biz-detail-hero__company-row biz-detail-hero__title-row">
+          <p class="biz-detail-hero__company" data-biz-detail-company></p>
+          <div class="biz-detail-hero__title-badges" data-biz-detail-title-badges hidden></div>
+        </div>
+        <div class="biz-detail-hero__genre-tags" data-biz-detail-hero-genre-tags hidden></div>
+        <div class="biz-detail-hero__rating-row" data-biz-detail-hero-rating-row hidden>
+          <span class="biz-detail-hero__rating-stars detail-gold-stars" data-biz-detail-hero-rating-stars aria-hidden="true"></span>
+          <span class="biz-detail-hero__rating-score" data-biz-detail-hero-rating-score></span>
+          <span class="biz-detail-hero__rating-count" data-biz-detail-hero-rating-count></span>
+        </div>
+        <div class="biz-detail-hero__condition-tags" data-biz-detail-hero-condition-tags hidden></div>
+        <p class="biz-detail-hero__lead" data-biz-detail-hero-lead hidden></p>
+        <ul class="biz-detail-quick" data-biz-detail-hero-quick></ul>
+        <div class="shop-restaurant-ctas" data-shop-restaurant-ctas hidden></div>
+      </div>
+
+      <aside class="biz-detail-fv__aside" id="section-inquiry" aria-label="問い合わせ">
+        <div class="shop-restaurant-points" data-shop-restaurant-points hidden></div>
+        <div class="biz-detail-sidebar__sticky biz-detail-fv-card">
+          <p class="biz-detail-fv-card__trust-head" data-biz-detail-fv-trust-head hidden>TASFUL内で完結の安心な取引</p>
+          <div class="biz-detail-fv-taxi-rating" data-biz-detail-sidebar-rating hidden>
+            <p class="biz-detail-fv-taxi-rating__label">口コミの評価</p>
+            <div class="biz-detail-fv-taxi-rating__main">
+              <span class="biz-detail-fv-taxi-rating__stars detail-gold-stars detail-gold-stars--md" data-biz-detail-sidebar-rating-stars aria-hidden="true">★★★★★</span>
+              <span class="biz-detail-fv-taxi-rating__score" data-biz-detail-sidebar-rating-score>4.9</span>
+            </div>
+            <p class="biz-detail-fv-taxi-rating__count" data-biz-detail-sidebar-rating-count>口コミ 56件</p>
+          </div>
+          <div class="biz-detail-side-price">
+            <span class="biz-detail-side-price__label" data-biz-detail-sidebar-price-label data-shop-bind="priceLabel">料金目安</span>
+            <p class="biz-detail-fv-taxi-price-route" data-biz-detail-sidebar-price-route hidden></p>
+            <p class="biz-detail-sidebar__price" data-biz-detail-sidebar-price></p>
+          </div>
+          <div class="biz-detail-sidebar__cta-group" data-biz-detail-sidebar-actions></div>
+          <button type="button" class="biz-detail-favorite" data-biz-detail-favorite aria-label="お気に入りに追加" hidden>
+            <span class="biz-detail-favorite__icon" aria-hidden="true">♡</span> <span data-shop-bind="favoriteLabel">お気に入りに追加</span>
+          </button>
+        </div>
+      </aside>
+    </section>
+
+      <div class="shop-sticky-action-nav" data-shop-sticky-action-nav hidden role="navigation" aria-label="ページ内ナビとお問い合わせ">
+        <div class="shop-sticky-action-nav__tabs" data-shop-sticky-action-tabs></div>
+        <div class="shop-sticky-action-nav__actions" data-shop-sticky-action-actions></div>
+      </div>
+      <div class="shop-sticky-action-nav-spacer" data-shop-sticky-action-spacer hidden aria-hidden="true"></div>
+
+      <!-- Shop専用 下部セクション mount 点（renderer はここへ直接描画） -->
+      <div class="shop-restaurant-body" data-shop-restaurant-body hidden>
+        <div class="shop-restaurant-main" aria-label="店舗詳細セクション">
+          <div id="shop-sections-root">
+            <section id="section-products" class="shop-card" data-shop-section="products" aria-label="メイン掲載"></section>
+            <section id="section-shop-cases" class="shop-card" data-shop-section="cases" hidden aria-label="事例"></section>
+            <section id="section-shop-highlights" class="shop-card" data-shop-section="highlights" hidden aria-label="店舗の特徴"></section>
+            <section id="section-shop-bottom" class="shop-card" data-shop-section="info" aria-label="店舗情報"></section>
+            <section id="contacts" class="section-anchor job-applications-panel job-panel-card mb-4 shop-card" data-listing-contacts-section data-detail-keep hidden aria-labelledby="listingContactsTitle">
+              <div class="job-applications-panel__head">
+                <h2 id="listingContactsTitle" class="job-applications-panel__title" data-listing-contacts-title>注文者一覧</h2>
+                <span class="job-applications-panel__count" data-listing-contacts-count>0 件</span>
+              </div>
+              <p class="job-applications-panel__lead" data-listing-contacts-lead hidden></p>
+              <ul class="job-applications-list" data-listing-contacts-list aria-label="注文者一覧"></ul>
+            </section>
+            <section id="section-reviews" data-shop-section="reviews" hidden></section>
+            <section id="section-faq" class="shop-card" data-shop-section="faq"></section>
+          </div>
+        </div>
+        <aside class="shop-restaurant-sidebar" data-shop-restaurant-sidebar aria-label="サイドバー"></aside>
+      </div>
+
+      <footer class="shop-market-footer shop-store-site-footer shop-footer shop-card" data-biz-detail-market-footer>
+        <div class="shop-store-footer-card">
+          <div class="shop-store-site-footer__grid shop-market-footer__grid">
+        <div class="shop-store-site-footer__brand shop-market-footer__brand">
+          <p class="shop-store-site-footer__logo shop-market-footer__logo">
+            <span class="shop-store-site-footer__logo-mark" aria-hidden="true"></span>
+            <span>TASFUL</span>
+          </p>
+          <p class="shop-store-site-footer__tagline shop-market-footer__tagline">あなたの「困った」を解決する<br>地域密着型の便利プラットフォーム</p>
+          <div class="shop-store-site-footer__sns" aria-label="SNS">
+            <a href="index.html" class="shop-store-sns-btn" aria-label="LINE">
+              <svg class="shop-store-sns-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+              </svg>
+            </a>
+            <a href="index.html" class="shop-store-sns-btn" aria-label="Instagram">
+              <svg class="shop-store-sns-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                <circle cx="12" cy="12" r="4"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+              </svg>
+            </a>
+            <a href="index.html" class="shop-store-sns-btn" aria-label="X">
+              <svg class="shop-store-sns-btn__icon shop-store-sns-btn__icon--x" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+            </a>
+            <a href="index.html" class="shop-store-sns-btn" aria-label="Facebook">
+              <svg class="shop-store-sns-btn__icon shop-store-sns-btn__icon--fb" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M14 8.5V6.75c0-.966.784-1.75 1.75-1.75h1.5V2h-2.25C13.01 2 11 4.01 11 6.75V8.5H8v3h3V22h3V11.5h2.6l.4-3H14z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="shop-store-site-footer__col shop-market-footer__col">
+          <h3>探す</h3>
+          <ul>
+            <li><a href="shop-store.html">カテゴリから探す</a></li>
+            <li><a href="shop-store.html#shop-store-area">エリアから探す</a></li>
+            <li><a href="shop-store.html">新着ショップ</a></li>
+            <li><a href="index.html">人気ランキング</a></li>
+          </ul>
+        </div>
+        <div class="shop-store-site-footer__col shop-market-footer__col">
+          <h3>TASFULについて</h3>
+          <ul>
+            <li><a href="index.html">TASFULとは</a></li>
+            <li><a href="index.html">ご利用ガイド</a></li>
+            <li><a href="post.html?scope=business">掲載をご希望の方</a></li>
+            <li><a href="index.html">お問い合わせ</a></li>
+          </ul>
+        </div>
+        <div class="shop-store-site-footer__col shop-market-footer__col">
+          <h3>サポート</h3>
+          <ul>
+            <li><a href="index.html">ヘルプセンター</a></li>
+            <li><a href="index.html">利用規約</a></li>
+            <li><a href="index.html">プライバシーポリシー</a></li>
+            <li><a href="index.html">特定商取引法</a></li>
+          </ul>
+        </div>
+        <div class="shop-store-site-footer__ai shop-market-footer__ai">
+          <div class="shop-store-site-footer__ai-card">
+            <div class="shop-store-site-footer__ai-card-top">
+              <div class="shop-store-site-footer__ai-card-text">
+                <p class="shop-store-site-footer__ai-title">AIに相談する</p>
+                <p class="shop-store-site-footer__ai-lead">お店選びやサービス選びを<br>AIがサポートします</p>
+              </div>
+              <span class="shop-store-site-footer__ai-avatar" aria-hidden="true">🤖</span>
+            </div>
+            <a href="ai-workspace.html" class="shop-store-site-footer__ai-cta">AIに相談する</a>
+          </div>
+        </div>
+          </div>
+          <p class="shop-store-site-footer__copy">© 2026 TASFUL All Rights Reserved.</p>
+        </div>
+      </footer>
+    </div>
+
+    <footer class="biz-detail-disclaimer" data-biz-detail-disclaimer hidden>
+      <p>TASFULは掲載の検索・メッセージ機能を提供する場であり、取引内容・支払い・施工・納品・送迎の保証等については、掲載者と利用者の間で直接確認してください。</p>
+      <p>許認可が必要な業務は、掲載者自身が必要な許可・資格を保有している必要があります。</p>
+    </footer>
+  </div>
+
+  <div class="biz-detail-sticky-bar" data-biz-detail-sticky-bar hidden aria-label="問い合わせ">
+    <div class="biz-detail-sticky-bar__inner">
+      <p class="biz-detail-sticky-bar__company" data-biz-detail-sticky-company></p>
+      <div class="shop-sticky-bar__row" data-shop-sticky-row>
+        <nav class="shop-sticky-nav" data-shop-sticky-nav aria-label="ページ内ナビ">
+          <a class="shop-sticky-nav__item" href="#section-products" data-target="section-products" data-shop-sticky-nav="products">商品</a>
+          <a class="shop-sticky-nav__item" href="#section-shop-cases" data-target="section-shop-cases" data-shop-sticky-nav="cases" hidden>事例</a>
+          <a class="shop-sticky-nav__item" href="#section-shop-highlights" data-target="section-shop-highlights" data-shop-sticky-nav="highlights" hidden>特徴</a>
+          <a class="shop-sticky-nav__item" href="#section-shop-bottom" data-target="section-shop-bottom" data-shop-sticky-nav="bottom">店舗情報</a>
+          <a class="shop-sticky-nav__item" href="#section-shop-reviews" data-target="section-shop-reviews" data-shop-sticky-nav="reviews">口コミ</a>
+          <a class="shop-sticky-nav__item" href="#section-faq" data-target="section-faq" data-shop-sticky-nav="faq">FAQ</a>
+        </nav>
+        <div class="biz-detail-sticky-bar__actions" aria-label="CTA">
+        <a href="ai-workspace.html" class="biz-detail-btn biz-detail-btn--primary biz-detail-btn--store-ai" data-biz-detail-sticky-ai hidden data-shop-bind="ctaAiText">AIに相談する</a>
+        <a href="chat.html" class="biz-detail-btn biz-detail-btn--primary" data-biz-detail-sticky-inquiry data-shop-bind="ctaPrimaryText">問い合わせる</a>
+        <a href="#section-products" class="biz-detail-btn biz-detail-btn--outline" data-biz-detail-sticky-estimate data-shop-bind="ctaSecondaryText">見積もり相談</a>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="listing-tags.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="business-wording.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="listing-route-resolver.js"></script>
+
+  <script src="listing-demo-catalog.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="stripe-featured-config.js"></script>
+  <script src="stripe-shop-config.js"></script>
+  <script src="shop-payout.js"></script>
+  <script src="shop-checkout.js"></script>
+  <script src="detail-shop-store.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="favorite-store.js"></script>
+  <script src="favorite-actions.js"></script>
+  <script src="ai-workspace-links.js"></script>
+  <script src="detail-shop-store-bottom.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="shop-payout.js" defer></script>
+  <script src="platform-chat-category-flow.js" defer></script>
+  <script src="platform-chat-fee.js" defer></script>
+  <script src="talk-notifications-store.js" defer></script>
+  <script src="talk-platform-notify.js" defer></script>
+  <script src="platform-chat-fee-gate-flow.js" defer></script>
+  <script src="talk-platform-fee-notify.js" defer></script>
+  <script src="listing-contact-requests-store.js" defer></script>
+  <script src="platform-chat-bench-embed-bridge.js" defer></script>
+  <script src="contact-actions.js" defer></script>
+  <script src="listing-detail-contacts.js" defer></script>
+  <script src="detail-shop-mobile.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>
+

@@ -1,0 +1,849 @@
+{
+  "key": "shop-bank_transfer",
+  "url": "http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=shop&demoConnect=1&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=shop-1&liveFlowReset=1&paymentMethod=bank_transfer",
+  "checkpoints": [
+    {
+      "id": "01-start",
+      "label": "開始直後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": true,
+        "text": "銀行振込が完了しました",
+        "mode": "purchase_bank_report"
+      },
+      "notifyA": {
+        "domCards": 1,
+        "domTitles": [
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 1,
+        "domTitles": [
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "statusA": "購入者の振込をお待ちください。",
+      "statusB": "銀行振込を完了してください。",
+      "aShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "bShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "shippingCarrier": "",
+      "trackingNumber": "",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082326134-xaq93j",
+        "paymentMethod": "bank_transfer",
+        "productShipped": false,
+        "shippingCarrier": "",
+        "trackingNumber": "",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": false,
+        "paymentConfirmed": false,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocuschatPrimary Root Cause診断はOKだが、実DOMではNG修正対",
+        "ngBulkCopyLen": 1457,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "02-after-bank-report",
+      "label": "B振込報告後",
+      "aButton": {
+        "visible": true,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 2,
+        "domTitles": [
+          "購入者が銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 2,
+        "domTitles": [
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "statusA": "購入者から振込完了報告が届きました。入金を確認してください。",
+      "statusB": "出品者の入金確認をお待ちください。",
+      "aShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "bShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "shippingCarrier": "",
+      "trackingNumber": "",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082326134-xaq93j",
+        "paymentMethod": "bank_transfer",
+        "productShipped": false,
+        "shippingCarrier": "",
+        "trackingNumber": "",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": false,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocuschatPrimary Root Cause診断はOKだが、実DOMではNG修正対",
+        "ngBulkCopyLen": 1457,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "03-after-payment-confirm",
+      "label": "A入金確認後",
+      "aButton": {
+        "visible": true,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 2,
+        "domTitles": [
+          "購入者が銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 3,
+        "domTitles": [
+          "入金確認が完了しました",
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "入金確認が完了しました",
+            "kind": "platform_chat_demo_payment_confirmed_v1",
+            "source": "platform_chat_demo_payment_confirmed_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "statusA": "入金を確認しました。商品を発送してください。",
+      "statusB": "入金確認が完了しました。商品の発送をお待ちください。",
+      "aShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "bShippingCard": {
+        "visible": false,
+        "title": "",
+        "carrier": "",
+        "tracking": ""
+      },
+      "shippingCarrier": "",
+      "trackingNumber": "",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082326134-xaq93j",
+        "paymentMethod": "bank_transfer",
+        "productShipped": false,
+        "shippingCarrier": "",
+        "trackingNumber": "",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": true,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocuschatPrimary Root Cause診断はOKだが、実DOMではNG修正対",
+        "ngBulkCopyLen": 1457,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "04-after-ship",
+      "label": "A発送後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": true,
+        "text": "商品を受け取りました",
+        "mode": "purchase_receive"
+      },
+      "notifyA": {
+        "domCards": 2,
+        "domTitles": [
+          "購入者が銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 4,
+        "domTitles": [
+          "商品が発送されました",
+          "入金確認が完了しました",
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "入金確認が完了しました",
+            "kind": "platform_chat_demo_payment_confirmed_v1",
+            "source": "platform_chat_demo_payment_confirmed_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "statusA": "商品を発送しました。購入者の受取確認をお待ちください。",
+      "statusB": "商品が発送されました。到着後に受取確認を行ってください。",
+      "aShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-32613493-4820"
+      },
+      "bShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-32613493-4820"
+      },
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-32613493-4820",
+      "reviewA": false,
+      "reviewB": false,
+      "thread": {
+        "id": "chat-1781082326134-xaq93j",
+        "paymentMethod": "bank_transfer",
+        "productShipped": true,
+        "shippingCarrier": "ヤマト運輸",
+        "trackingNumber": "3591-32613493-4820",
+        "productReceived": false,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": true,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": false
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocuschatPrimary Root Cause診断はOKだが、実DOMではNG修正対",
+        "ngBulkCopyLen": 1464,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    },
+    {
+      "id": "05-after-receive",
+      "label": "B受取/完了後",
+      "aButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "bButton": {
+        "visible": false,
+        "text": "",
+        "mode": ""
+      },
+      "notifyA": {
+        "domCards": 4,
+        "domTitles": [
+          "取引完了手数料をお支払いください",
+          "購入者が商品を受け取りました",
+          "購入者が銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "取引完了手数料をお支払いください",
+            "actionLabel": "手数料を支払う",
+            "source": "platform_chat_demo_purchase_completion_fee_v1"
+          },
+          {
+            "title": "購入者が商品を受け取りました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_received_v1"
+          },
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "取引完了手数料をお支払いください",
+            "actionLabel": "手数料を支払う",
+            "source": "platform_chat_demo_purchase_completion_fee_v1"
+          },
+          {
+            "title": "購入者が商品を受け取りました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_received_v1"
+          },
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "購入者が銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "notifyB": {
+        "domCards": 5,
+        "domTitles": [
+          "取引が完了しました",
+          "商品が発送されました",
+          "入金確認が完了しました",
+          "銀行振込完了を報告しました",
+          "やりとりが開始されました"
+        ],
+        "localStorage": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "storeApi": [
+          {
+            "title": "取引が完了しました",
+            "actionLabel": "レビューする",
+            "source": "platform_chat_demo_purchase_completed_v1"
+          },
+          {
+            "title": "商品が発送されました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_product_shipped_v1"
+          },
+          {
+            "title": "入金確認が完了しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_payment_confirmed_v1"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "actionLabel": "確認する",
+            "source": "platform_chat_demo_bank_transfer_reported_v1"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "actionLabel": "チャットを開く",
+            "source": "platform"
+          }
+        ],
+        "postMessage": [
+          {
+            "title": "入金確認が完了しました",
+            "kind": "platform_chat_demo_payment_confirmed_v1",
+            "source": "platform_chat_demo_payment_confirmed_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "銀行振込完了を報告しました",
+            "kind": "platform_chat_demo_bank_transfer_reported_v1",
+            "source": "platform_chat_demo_bank_transfer_reported_v1",
+            "threadId": "chat-1781082326134-xaq93j"
+          },
+          {
+            "title": "やりとりが開始されました",
+            "kind": "chat_started",
+            "source": "platform",
+            "threadId": "chat-1781082326134-xaq93j"
+          }
+        ]
+      },
+      "statusA": "取引が完了しました",
+      "statusB": "取引が完了しました",
+      "aShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-32613493-4820"
+      },
+      "bShippingCard": {
+        "visible": true,
+        "title": "商品が発送されました",
+        "carrier": "ヤマト運輸",
+        "tracking": "3591-32613493-4820"
+      },
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-32613493-4820",
+      "reviewA": true,
+      "reviewB": true,
+      "thread": {
+        "id": "chat-1781082326134-xaq93j",
+        "paymentMethod": "bank_transfer",
+        "productShipped": true,
+        "shippingCarrier": "ヤマト運輸",
+        "trackingNumber": "3591-32613493-4820",
+        "productReceived": true,
+        "shippingReady": false,
+        "bankTransferReported": true,
+        "paymentConfirmed": true,
+        "codPaymentReported": false,
+        "cashOnDeliveryConfirmed": false,
+        "completed": true
+      },
+      "ngCount": 0,
+      "ngCodes": [],
+      "diagPanel": {
+        "verdictFoldOpen": true,
+        "panelInitialized": true,
+        "panelStillBooting": false,
+        "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocuschatPrimary Root Cause診断はOKだが、実DOMではNG修正対",
+        "ngBulkCopyLen": 1468,
+        "ngBulkHasCause": true,
+        "receiveUiNgCodes": []
+      }
+    }
+  ],
+  "ngBulkCopy": "=== ベンチ診断 NG一覧 ===\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=shop&demoConnect=1&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=shop-1&paymentMethod=bank_transfer\n\ntimestamp:\n2026-06-10T09:06:38.628Z\n\ncategory:\nConnectあり購入\n\nstage:\ncompleted\n\nNG count:\n1\n\n--------------------\n1.\nngType:\nchat_diag_ok_but_composer_missing_dom\n\ncause:\n診断はOKだが、実DOMではNG\n\n原因:\n診断はOKだが、実DOMではNG\n\nexpected:\naChatLoadReady=true かつ composer DOM 存在\n\nactual:\ncomposerDomExists=undefined\n\ndiff:\ndiag.aChatLoadReady=true vs dom.actualComposerDomExists=false\n\nfixTargetFile:\nchat-detail.js\n\nfixTargetFunction:\napplyRoomComposerState() / bindComposerInput()\n\n修正対象:\nchat-detail.js\n\n修正関数:\napplyRoomComposerState() / bindComposerInput()\n\ncurrentUrl:\nhttp://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=shop&demoConnect=1&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=shop-1&paymentMethod=bank_transfer\n\ntimestamp:\n2026-06-10T09:06:38.628Z\n\n完了条件:\n—\n\nrelatedValues:\nsectionKey: diag_dom\ndetail: 診断はOKだが、実DOMではNG: diag.aChatLoadReady=true vs dom.actualComposerDomExists=false\nisDomConsistency: true\nactorAId: u_shop_demo\nactorBId: u_hiro\nthreadId: chat-1781082326134-xaq93j\nfocus: completion\nprimaryRootCause: A購入者の「レビューをする」が未表示\ndiagAChatLoadReady: true\ndiagNotifyRowsCount: 4\nactualNotifyRowDomCount: 4\nactualNotifyErrorVisible: false\nactualNotifyEmptyTextVisible: false\n\n--------------------",
+  "ok": true,
+  "errors": [],
+  "final": {
+    "thread": {
+      "id": "chat-1781082326134-xaq93j",
+      "paymentMethod": "bank_transfer",
+      "productShipped": true,
+      "shippingCarrier": "ヤマト運輸",
+      "trackingNumber": "3591-32613493-4820",
+      "productReceived": true,
+      "shippingReady": false,
+      "bankTransferReported": true,
+      "paymentConfirmed": true,
+      "codPaymentReported": false,
+      "cashOnDeliveryConfirmed": false,
+      "completed": true
+    },
+    "ngCount": 0,
+    "ngCodes": [],
+    "diagnosticNgCount": 0,
+    "diagnosticNgCodes": [],
+    "reviewA": true,
+    "reviewB": true,
+    "diagPanel": {
+      "verdictFoldOpen": true,
+      "panelInitialized": true,
+      "panelStillBooting": false,
+      "panelTextHead": "Primary Focus / Root CausefocusnotificationctachatcompletionreviewPrimary FocuschatPrimary Root Cause診断はOKだが、実DOMではNG修正対",
+      "ngBulkCopyLen": 1468,
+      "ngBulkHasCause": true,
+      "receiveUiNgCodes": []
+    },
+    "bShippingCard": true,
+    "statusB": "取引が完了しました"
+  }
+}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>Builder Admin | TASFUL 運営</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="../builder/manifest.json" />
+  <link rel="stylesheet" href="../builder/builder.css" />
+</head>
+<body class="builder-body" data-page="builder-admin-dashboard">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder Admin ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="admin-index.html" aria-label="Builder Adminダッシュボード">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18" />
+                <path d="M7 21V7l8-4v18" />
+                <path d="M17 21V11l-6-4" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder Admin</span>
+              <span class="builder-brand__sub">TASFUL 運営</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">Builder 運営ダッシュボード</h1>
+          <p class="builder-header__sub">手配・パートナー・審査・通知・売上の管理サマリー</p>
+          <a class="builder-admin-back" href="../builder/index.html">利用者Builderへ</a>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=AD" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>運営</span>
+            <span class="builder-account__sub" data-builder-member-type>TASFUL運営</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main" data-builder-main>
+      <section class="builder-stat-grid" aria-label="運営統計" data-builder-stat-grid>
+        <article class="builder-stat-card" data-builder-stat-card data-builder-stat="companies">
+          <div class="builder-stat-card__icon builder-stat-card__icon--orange" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18" /><path d="M6 21V7l8-4v18" /><path d="M18 21V11l-6-4" />
+            </svg>
+          </div>
+          <div class="builder-stat-card__body">
+            <span class="builder-stat-card__label">利用会社数</span>
+            <strong class="builder-stat-card__value" data-builder-stat-value="companies">—</strong>
+            <span class="builder-stat-card__desc">登録済みの利用会社</span>
+          </div>
+          <span class="builder-stat-card__action builder-stat-card__action--pending" aria-disabled="true">詳細を見る（準備中）</span>
+        </article>
+
+        <article class="builder-stat-card" data-builder-stat-card data-builder-stat="registeredPartners">
+          <div class="builder-stat-card__icon builder-stat-card__icon--slate" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="builder-stat-card__body">
+            <span class="builder-stat-card__label">登録パートナー数</span>
+            <strong class="builder-stat-card__value" data-builder-stat-value="registeredPartners">—</strong>
+            <span class="builder-stat-card__desc">協力会社・職人の登録数</span>
+          </div>
+          <a class="builder-stat-card__action" href="../builder/admin-partners.html" data-builder-stat-action="registeredPartners">パートナー検索 ›</a>
+        </article>
+
+        <article class="builder-stat-card" data-builder-stat-card data-builder-stat="applications">
+          <div class="builder-stat-card__icon builder-stat-card__icon--amber" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="builder-stat-card__body">
+            <span class="builder-stat-card__label">応募件数</span>
+            <strong class="builder-stat-card__value" data-builder-stat-value="applications">—</strong>
+            <span class="builder-stat-card__desc">全案件の応募状況</span>
+          </div>
+          <a class="builder-stat-card__action" href="../builder/admin-applications.html" data-builder-stat-action="applications">応募管理 ›</a>
+        </article>
+
+        <article class="builder-stat-card" data-builder-stat-card data-builder-stat="unreadThreads">
+          <div class="builder-stat-card__icon builder-stat-card__icon--orange" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+            </svg>
+          </div>
+          <div class="builder-stat-card__body">
+            <span class="builder-stat-card__label">未読スレッド</span>
+            <strong class="builder-stat-card__value" data-builder-stat-value="unreadThreads">—</strong>
+            <span class="builder-stat-card__desc">未対応・未読のやり取り</span>
+          </div>
+          <a class="builder-stat-card__action" href="../builder/mvp-threads.html" data-builder-stat-action="unreadThreads">スレッド管理へ ›</a>
+        </article>
+
+        <article class="builder-stat-card builder-stat-card--alert" data-builder-stat-card data-builder-stat="reviews">
+          <div class="builder-stat-card__icon builder-stat-card__icon--red" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 9v4" /><path d="M12 17h.01" />
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+            </svg>
+          </div>
+          <div class="builder-stat-card__body">
+            <span class="builder-stat-card__label">審査管理</span>
+            <strong class="builder-stat-card__value builder-stat-card__value--alert" data-builder-stat-value="unreviewedReviews">—</strong>
+            <span class="builder-stat-card__desc">未審査件数</span>
+          </div>
+          <a class="builder-stat-card__action builder-stat-card__action--alert" href="../builder/admin-reviews.html" data-builder-stat-action="reviews">審査管理 ›</a>
+        </article>
+
+        <article class="builder-stat-card" data-builder-stat-card data-builder-stat="dispatch">
+          <div class="builder-stat-card__icon builder-stat-card__icon--orange" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7h18" /><path d="M4 7l2 14h12l2-14" /><path d="M9 7V5a3 3 0 0 1 6 0v2" />
+            </svg>
+          </div>
+          <div class="builder-stat-card__body">
+            <span class="builder-stat-card__label">案件手配</span>
+            <strong class="builder-stat-card__value" data-builder-stat-value="undispatchedProjects">—</strong>
+            <span class="builder-stat-card__desc">未手配案件数</span>
+          </div>
+          <a class="builder-stat-card__action" href="../builder/admin-dispatch.html" data-builder-stat-action="dispatch">案件手配 ›</a>
+        </article>
+
+        <article class="builder-stat-card" data-builder-stat-card data-builder-stat="adminNotifications">
+          <div class="builder-stat-card__icon builder-stat-card__icon--slate" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
+            </svg>
+          </div>
+          <div class="builder-stat-card__body">
+            <span class="builder-stat-card__label">通知送信</span>
+            <strong class="builder-stat-card__value" data-builder-stat-value="adminNotifications">—</strong>
+            <span class="builder-stat-card__desc">運営からの送信件数</span>
+          </div>
+          <a class="builder-stat-card__action" href="../builder/admin-notifications.html" data-builder-stat-action="adminNotifications">通知送信 ›</a>
+        </article>
+      </section>
+
+      <section class="builder-panel builder-recent-section" aria-labelledby="builderAdminRecentTitle">
+        <div class="builder-recent-section__head">
+          <h2 id="builderAdminRecentTitle" class="builder-section-title">最近の案件（運営）</h2>
+          <div class="builder-admin-dashboardTools">
+            <span data-admin-csv-export-host></span>
+            <a class="builder-section-link" href="../builder/mvp-projects.html" data-builder-recent-link>案件一覧へ ›</a>
+          </div>
+        </div>
+        <ul class="builder-recent-grid" data-builder-recent-list></ul>
+      </section>
+
+      <section class="builder-quick-section" aria-label="運営メニュー">
+        <h2 class="builder-section-title builder-quick-section__title">運営メニュー</h2>
+        <nav class="builder-quick-grid" data-builder-quick-grid>
+          <a class="builder-quick-card" href="../builder/admin-dispatch.html" data-builder-quick="dispatch">
+            <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 7h18" /><path d="M4 7l2 14h12l2-14" /><path d="M9 7V5a3 3 0 0 1 6 0v2" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>案件手配</strong><span>パートナー割り当て</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/admin-partners.html" data-builder-quick="partner-search">
+            <span class="builder-quick-card__icon builder-quick-card__icon--slate" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>パートナー検索</strong><span>運営専用・条件検索</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/admin-applications.html" data-builder-quick="applications">
+            <span class="builder-quick-card__icon builder-quick-card__icon--amber" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" />
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>応募管理</strong><span>採用・却下・保留</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/admin-reviews.html" data-builder-quick="reviews">
+            <span class="builder-quick-card__icon builder-quick-card__icon--amber" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 9v4" /><path d="M12 17h.01" />
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>審査管理</strong><span>パートナー審査・承認</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/admin-notifications.html" data-builder-quick="admin-notifications">
+            <span class="builder-quick-card__icon builder-quick-card__icon--slate" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 2 11 13" /><path d="M22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>通知送信</strong><span>利用者・パートナーへ配信</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/mvp-threads.html" data-builder-quick="threads">
+            <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>スレッド管理</strong><span>未読・未対応の確認</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/admin-calendar.html" data-builder-quick="calendar">
+            <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4" /><path d="M8 2v4" /><path d="M3 10h18" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>案件カレンダー</strong><span>手配状況・現場詳細</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/mvp-notifications.html" data-builder-quick="notifications">
+            <span class="builder-quick-card__icon builder-quick-card__icon--slate" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>通知</strong><span>通知ログ・確認</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../admin-operations-dashboard.html" data-builder-quick="operations-dashboard">
+            <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="9" rx="1" /><rect x="14" y="3" width="7" height="5" rx="1" />
+                <rect x="14" y="12" width="7" height="9" rx="1" /><rect x="3" y="16" width="7" height="5" rx="1" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>総合運営ダッシュボード</strong><span>Support・AI運営・評価の横断サマリー</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../builder/admin-partner-evaluations.html" data-builder-quick="partner-evaluations">
+            <span class="builder-quick-card__icon builder-quick-card__icon--amber" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19h16" /><path d="M6 17V9" /><path d="M12 17V5" /><path d="M18 17v-7" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>パートナー評価</strong><span>期日・クレーム実績スコア</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../admin-ai-operations-center.html" data-builder-quick="ai-ops-center">
+            <span class="builder-quick-card__icon builder-quick-card__icon--slate" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2a4 4 0 0 1 4 4v2" /><circle cx="12" cy="12" r="3" />
+                <path d="M12 19v3" /><path d="M8 22h8" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>AI運営センター</strong><span>横断管理・AI分析・運営コマンド</span></span>
+          </a>
+
+          <a class="builder-quick-card" href="../support-trouble-center.html" data-builder-quick="support-trouble">
+            <span class="builder-quick-card__icon builder-quick-card__icon--red" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 9v4" /><path d="M12 17h.01" />
+                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              </svg>
+            </span>
+            <span class="builder-quick-card__text"><strong>トラブルセンター</strong><span>問い合わせ・Connect・AI一次対応</span></span>
+          </a>
+        </nav>
+      </section>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL inc. All rights reserved. Builder Admin</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../builder/builder.js" defer></script>
+</body>
+</html>

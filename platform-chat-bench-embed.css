@@ -1,0 +1,712 @@
+/**
+ * 2窓ベンチ iframe — 出品者管理ビュー / 購入者待機
+ */
+body.listing-bench-seller-management,
+body[data-bench-management="1"] {
+  background: #f8f9fa;
+}
+
+body.listing-bench-seller-management .tasu-banner,
+body.listing-bench-seller-management footer,
+body.listing-bench-seller-management .skill-detail-wrap > *:not(:has([data-listing-contacts-section])):not([data-worker-requests-section]):not(:has([data-worker-requests-section])),
+body.listing-bench-seller-management .detail-page-main > *:not(:has([data-listing-contacts-section])):not([data-worker-requests-section]):not(:has([data-worker-requests-section])),
+body.listing-bench-seller-management main > .detail-hero,
+body.listing-bench-seller-management main > *:not(:has([data-listing-contacts-section])):not([data-worker-requests-section]):not(:has([data-worker-requests-section])),
+body.listing-bench-seller-management #section-details,
+body.listing-bench-seller-management #section-options,
+body.listing-bench-seller-management #section-seller,
+body.listing-bench-seller-management #section-portfolio,
+body.listing-bench-seller-management #section-reviews,
+body.listing-bench-seller-management #otherServices,
+body.listing-bench-seller-management .detail-bottom-sections > *:not([data-listing-contacts-section]),
+body[data-bench-management="1"] .tasu-banner,
+body[data-bench-management="1"] footer,
+body[data-bench-management="1"] .skill-detail-wrap > *:not(:has([data-listing-contacts-section])):not([data-worker-requests-section]):not(:has([data-worker-requests-section])),
+body[data-bench-management="1"] .detail-page-main > *:not(:has([data-listing-contacts-section])):not([data-worker-requests-section]):not(:has([data-worker-requests-section])),
+body[data-bench-management="1"] main > .detail-hero,
+body[data-bench-management="1"] main > *:not(:has([data-listing-contacts-section])):not([data-worker-requests-section]):not(:has([data-worker-requests-section])),
+body[data-bench-management="1"] #section-details,
+body[data-bench-management="1"] #section-options,
+body[data-bench-management="1"] #section-seller,
+body[data-bench-management="1"] #section-portfolio,
+body[data-bench-management="1"] #section-reviews,
+body[data-bench-management="1"] #otherServices,
+body[data-bench-management="1"] .detail-bottom-sections > *:not([data-listing-contacts-section]) {
+  display: none !important;
+}
+
+body.listing-bench-seller-management .section-nav__link:not([data-listing-contacts-nav]):not([data-worker-requests-nav]),
+body[data-bench-management="1"] .section-nav__link:not([data-listing-contacts-nav]):not([data-worker-requests-nav]) {
+  display: none !important;
+}
+
+body.listing-bench-seller-management [data-worker-requests-nav],
+body[data-bench-management="1"] [data-worker-requests-nav] {
+  display: inline-flex !important;
+}
+
+body.listing-bench-seller-management .skill-hero-premium,
+body.listing-bench-seller-management .skill-cta-panel,
+body.listing-bench-seller-management #requests ~ #section-seller,
+body.listing-bench-seller-management #requests ~ #section-portfolio,
+body[data-bench-management="1"] .skill-hero-premium,
+body[data-bench-management="1"] .skill-cta-panel,
+body[data-bench-management="1"] #requests ~ #section-seller,
+body[data-bench-management="1"] #requests ~ #section-portfolio {
+  display: none !important;
+}
+
+body.listing-bench-seller-management [data-listing-contacts-section],
+body.listing-bench-seller-management [data-job-applications-section],
+body.listing-bench-seller-management [data-worker-requests-section],
+body[data-bench-management="1"] [data-listing-contacts-section],
+body[data-bench-management="1"] [data-job-applications-section],
+body[data-bench-management="1"] [data-worker-requests-section] {
+  display: block !important;
+  visibility: visible !important;
+  margin: 0 !important;
+  min-height: auto;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+body.listing-bench-seller-management .job-detail-wrap > *:not(:has([data-job-applications-section])),
+body[data-bench-management="1"] .job-detail-wrap > *:not(:has([data-job-applications-section])) {
+  display: none !important;
+}
+
+body.listing-bench-seller-management [data-listing-contacts-nav],
+body[data-bench-management="1"] [data-listing-contacts-nav] {
+  display: inline-flex !important;
+}
+
+body.listing-bench-seller-management .section-nav,
+body[data-bench-management="1"] .section-nav {
+  display: block !important;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: #f8f9fa;
+  border-bottom: 1px solid rgba(120, 113, 108, 0.12);
+}
+
+/* 詳細ページ — ベンチ購入者ビュー（B下）: 固定CTA とナビの重なりを防止 */
+body[data-bench-embed="1"][data-detail-page="1"]:not(.listing-bench-seller-management):not([data-bench-management="1"]) .section-nav,
+body[data-bench-embed="1"][data-detail-page="1"]:not(.listing-bench-seller-management):not([data-bench-management="1"]) .tasu-banner,
+body[data-bench-embed="1"][data-detail-page="1"]:not(.listing-bench-seller-management):not([data-bench-management="1"]) .page-subheader {
+  display: none !important;
+}
+
+body.listing-bench-seller-management .skill-detail-wrap,
+body.listing-bench-seller-management .detail-page-main,
+body[data-bench-management="1"] .skill-detail-wrap,
+body[data-bench-management="1"] .detail-page-main {
+  max-width: none;
+  padding: 0.5rem;
+}
+
+body.listing-bench-seller-management .detail-bottom-sections,
+body[data-bench-management="1"] .detail-bottom-sections {
+  display: block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.listing-bench-seller-management .page-subheader,
+body[data-bench-management="1"] .page-subheader {
+  display: none !important;
+}
+
+body.listing-bench-seller-management .job-applications-panel__head,
+body.listing-bench-seller-management .job-applications-panel__lead,
+body[data-bench-management="1"] .job-applications-panel__head,
+body[data-bench-management="1"] .job-applications-panel__lead {
+  display: none !important;
+}
+
+body.listing-bench-seller-management .skill-detail-wrap,
+body[data-bench-management="1"] .skill-detail-wrap {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+
+body.listing-bench-seller-management [data-listing-contacts-section] .listing-contact-card,
+body[data-bench-management="1"] [data-listing-contacts-section] .listing-contact-card {
+  padding: 0.65rem 0.75rem;
+}
+
+body.listing-bench-seller-management [data-listing-contacts-section] .listing-contact-card__header,
+body[data-bench-management="1"] [data-listing-contacts-section] .listing-contact-card__header {
+  margin-bottom: 0.5rem;
+}
+
+body.listing-bench-seller-management [data-listing-contacts-section] .listing-contact-card__fields,
+body[data-bench-management="1"] [data-listing-contacts-section] .listing-contact-card__fields {
+  gap: 0.4rem;
+}
+
+body.listing-bench-seller-management .tasu-mdetail-shell,
+body.listing-bench-seller-management .tasu-mdetail-head,
+body[data-bench-management="1"] .tasu-mdetail-shell,
+body[data-bench-management="1"] .tasu-mdetail-head {
+  display: none !important;
+}
+
+body.listing-bench-seller-management .tasu-app-tabbar,
+body.listing-bench-seller-management .talk-mobile-tabbar,
+body.listing-bench-seller-management [data-tasu-app-tabbar],
+body[data-bench-management="1"] .tasu-app-tabbar,
+body[data-bench-management="1"] .talk-mobile-tabbar,
+body[data-bench-management="1"] [data-tasu-app-tabbar] {
+  display: none !important;
+}
+
+body.platform-chat-bench-buyer-wait,
+body.platform-chat-bench-seller-idle {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: #f5f5f4;
+  color: #1c1c1a;
+}
+
+.platform-chat-bench-seller-idle {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.platform-chat-bench-seller-idle__card {
+  width: 100%;
+  max-width: 22rem;
+  background: #fff;
+  border: 1px solid rgba(120, 113, 108, 0.2);
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.platform-chat-bench-seller-idle__badge {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.platform-chat-bench-seller-idle__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.platform-chat-bench-seller-idle__body {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #57534e;
+}
+
+.platform-chat-bench-seller-idle__listing {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(120, 113, 108, 0.15);
+  font-size: 0.75rem;
+  color: #78716c;
+}
+
+.platform-chat-bench-buyer-wait {
+  box-sizing: border-box;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.platform-chat-bench-buyer-wait__card {
+  width: 100%;
+  max-width: 22rem;
+  background: #fff;
+  border: 1px solid rgba(120, 113, 108, 0.2);
+  border-radius: 12px;
+  padding: 1.25rem 1rem;
+  text-align: center;
+}
+
+.platform-chat-bench-buyer-wait__badge {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.platform-chat-bench-buyer-wait__title {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.platform-chat-bench-buyer-wait__body {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #57534e;
+}
+
+.platform-chat-bench-buyer-wait__listing {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(120, 113, 108, 0.15);
+  font-size: 0.75rem;
+  color: #78716c;
+}
+
+/* =============================================================================
+   Bench iframe — 通知タブ compact（ファーストビューで CTA まで表示）
+   高さは talk-chat-demo-review-mode.js が iframe の innerHeight で設定
+   ============================================================================= */
+body[data-bench-embed="1"].talk-bench-notify-compact.talk-home-page {
+  overflow: hidden;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .dash-sidebar,
+body[data-bench-embed="1"].talk-bench-notify-compact .dash-sidebar__overlay,
+body[data-bench-embed="1"].talk-bench-notify-compact .dash-header,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-home-lead,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-dashboard,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-line-rail,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-mobile-tabbar,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-settings-btn,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-summary,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-mobile-chips,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-category-bar,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-filter-bar--notify {
+  display: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .dash-app {
+  min-height: 0;
+  overflow: hidden;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .dash-main {
+  margin-left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .dash-content.dash-shell {
+  padding: 0.2rem 0.45rem 0.3rem !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-home-main {
+  gap: 0.15rem !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-line-app {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  grid-template-columns: 1fr !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-line-stage {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+/* 通知ベンチ — チャット/AI パネルは非表示（display:flex !important が [hidden] を上書きしないよう notify のみ指定） */
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-line-split,
+body[data-bench-embed="1"].talk-bench-notify-compact [data-talk-panel="chat"],
+body[data-bench-embed="1"].talk-bench-notify-compact [data-talk-panel="ai"],
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-ai-hub,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-ai-card,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-ai-hero-card,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-unified-inbox,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-settings-modal {
+  display: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact [data-talk-panel="notify"] {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+  height: 100% !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact [data-talk-panel="notify"] > .talk-card {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  padding: 0.3rem 0.4rem 0.35rem !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-toolbar {
+  margin-bottom: 0.1rem !important;
+  padding: 0 !important;
+  gap: 0.2rem !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-toolbar__title {
+  margin: 0 !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.25 !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-toolbar__sub {
+  display: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-list,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-list.talk-notify-list--scrollable {
+  gap: 0.35rem !important;
+  margin-top: 0.1rem !important;
+  padding: 0 0 0.25rem !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  height: var(--talk-notify-list-max-height, auto) !important;
+  max-height: var(--talk-notify-list-max-height, 100%) !important;
+  min-height: 0 !important;
+  flex: 0 0 auto !important;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  touch-action: pan-y;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__dual-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__dual-actions .talk-notify-card__action--ghost {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__dual-actions .talk-notify-card__action--primary {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-list:not(.talk-notify-list--empty) {
+  display: block !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-list--empty-pure {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--compact {
+  padding: 0.5rem 0.55rem !important;
+  border-radius: 10px !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--minimal-inline {
+  padding: 0.5rem 0.55rem !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--minimal-inline .talk-notify-card__body--minimal-inline {
+  gap: 0.42rem !important;
+  padding: 0 !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--minimal-inline .talk-notify-card__title {
+  margin: 0 !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.3 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--minimal-inline .talk-notify-card__text {
+  margin: 0 !important;
+  font-size: 0.75rem !important;
+  line-height: 1.35 !important;
+  display: block !important;
+  -webkit-line-clamp: unset !important;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+
+/* 求人ベンチ — ファーストビューにタイトル+CTA を収める */
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--job-details .talk-notify-card__job-title,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--job-details .talk-notify-card__text--details,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--job-details .talk-notify-card__job-supplement,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--job-details .talk-notify-card__job-time {
+  display: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--job-details .talk-notify-card__title--job-event {
+  margin: 0.1rem 0 0 !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.3 !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--job-details .talk-notify-card__job-head {
+  display: block !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--minimal-inline .talk-notify-card__minimal-action,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--platform .talk-notify-card__body .talk-notify-card__minimal-action,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--platform .talk-notify-card__body .talk-notify-card__card-cta {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  min-height: 44px !important;
+  height: auto !important;
+  margin: 0.25rem 0 0 !important;
+  padding: 0.45rem 0.7rem !important;
+  border-radius: 999px !important;
+  border: none !important;
+  background: #2563eb !important;
+  color: #fff !important;
+  font-size: 0.8125rem !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+  word-break: break-word !important;
+  box-sizing: border-box !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  position: static !important;
+  clip: auto !important;
+  clip-path: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__cta-row--anpi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__cta-row--anpi .talk-notify-card__action--primary.talk-notify-card__minimal-action,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__cta-row--anpi .talk-notify-card__action--primary.talk-notify-card__card-cta {
+  border: 2px solid #2563eb !important;
+  background: #2563eb !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__cta-row--anpi .talk-notify-card__action--ghost.talk-notify-card__minimal-action {
+  border: 2px solid #2563eb !important;
+  background: #fff !important;
+  color: #2563eb !important;
+  font-weight: 700 !important;
+  box-shadow: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--shop-store-purchase.talk-notify-card--platform .talk-notify-card__body .talk-notify-card__minimal-action,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--shop-store-purchase.talk-notify-card--minimal-inline .talk-notify-card__minimal-action,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card--shop-store-purchase.talk-notify-card--cta-only .talk-notify-card__body .talk-notify-card__card-cta {
+  display: inline-flex !important;
+  justify-content: center !important;
+  width: fit-content !important;
+  min-width: 96px !important;
+  max-width: 120px !important;
+  min-height: 36px !important;
+  height: 36px !important;
+  margin: 0.35rem 0 0 !important;
+  padding: 0 17px !important;
+  align-self: flex-start !important;
+  flex: 0 0 auto !important;
+  font-size: 0.75rem !important;
+  line-height: 1.2 !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__meta,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__meta--legacy {
+  display: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__actions,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__actions--platform,
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-card__actions--sr {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-empty-state--bench {
+  min-height: 6rem !important;
+  padding: 1rem 0.5rem !important;
+}
+
+body[data-bench-embed="1"].talk-bench-notify-compact .talk-notify-empty-state--bench .talk-notify-empty-state__title {
+  margin: 0 !important;
+  font-size: 0.8125rem !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+}
+
+/* 2窓ベンチ B下 詳細 iframe — 初回CTAをクリック可能にする */
+body[data-bench-embed="1"]:not(.talk-home-page) {
+  --tasu-app-tabbar-total: 0px !important;
+  --tasu-mdetail-tabbar-offset: 0px !important;
+  --tasu-mdetail-tabbar-measured: 0px !important;
+  --tasu-mdetail-bottom-stack: 0px !important;
+}
+
+body[data-bench-embed="1"]:not(.talk-home-page) .shop-mobile-inquiry-dock {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  z-index: 10050 !important;
+  pointer-events: none !important;
+  padding: 8px 10px 10px !important;
+  box-shadow: 0 -6px 18px rgba(15, 23, 42, 0.12) !important;
+}
+
+body[data-bench-embed="1"]:not(.talk-home-page) .shop-mobile-inquiry-dock__btn {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+body[data-bench-embed="1"]:not(.talk-home-page) .skill-cta-panel__primary,
+body[data-bench-embed="1"]:not(.talk-home-page) [data-listing-primary-cta],
+body[data-bench-embed="1"]:not(.talk-home-page) .tasu-mdetail-cta-dock__btn--primary {
+  position: relative !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
+}
+
+body[data-bench-embed="1"][data-bench-viewport="390"]:not(.talk-home-page) {
+  scroll-behavior: auto;
+}
+
+/* =============================================================================
+   Bench iframe — チャットプレビュー（chat-detail / buyer-wait / seller-idle）
+   ============================================================================= */
+body[data-bench-embed="1"].talk-bench-chat-compact {
+  margin: 0;
+  min-height: 360px;
+  overflow: auto;
+}
+
+body[data-bench-embed="1"].talk-bench-chat-compact .tasu-app-tabbar,
+body[data-bench-embed="1"].talk-bench-chat-compact .talk-mobile-tabbar,
+body[data-bench-embed="1"].talk-bench-chat-compact [data-tasu-app-tabbar] {
+  display: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-chat-compact.chat-detail-page,
+body[data-bench-embed="1"].talk-bench-chat-compact[data-page="chat_detail"] {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+body[data-bench-embed="1"].talk-bench-chat-compact .chat-detail-shell,
+body[data-bench-embed="1"].talk-bench-chat-compact .chat-detail-main,
+body[data-bench-embed="1"].talk-bench-chat-compact .chat-room {
+  flex: 1 1 auto;
+  min-height: 280px;
+  max-height: none !important;
+}
+
+body[data-bench-embed="1"].talk-bench-chat-compact .chat-message-list,
+body[data-bench-embed="1"].talk-bench-chat-compact [data-chat-messages] {
+  min-height: 160px;
+  max-height: none !important;
+  overflow-y: auto !important;
+}
+
+body[data-bench-embed="1"][data-job-end-debug-ui="1"] #chatJobEndDebug {
+  display: block !important;
+  visibility: visible !important;
+  max-height: 7rem;
+}
+
+body[data-bench-embed="1"] #chatJobEndBar.chat-job-end-bar--visible,
+body[data-bench-embed="1"] #chatJobEndBarBtn.chat-job-end-bar__btn--visible {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  min-height: 42px !important;
+  overflow: visible !important;
+}
+
+body[data-bench-embed="1"] .chat-composer {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 4;
+}

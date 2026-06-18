@@ -1,0 +1,16 @@
+{
+  "capturedAt": "2026-06-12T12:50:03.417Z",
+  "url": "http://127.0.0.1:5500/screenshots-viewer.html?category=ai-workspace",
+  "expected": 8,
+  "cardCount": 11,
+  "passBadges": 10,
+  "hasCategoryNav": true,
+  "flowHeader": true,
+  "flowConsecutive": true,
+  "prefilledTitle": "PASSTALK入力欄への下書き反映",
+  "prefilledHasReport": true,
+  "status": "11 件 · PASS 10 / FAIL 0 · AI Workspace · QA対象 59 / アーカイブ 1192",
+  "pageTitle": "Screenshots QA Center",
+  "passed": true,
+  "screenshot": "screenshots/screenshots-viewer/ai-workspace-gallery.png"
+}

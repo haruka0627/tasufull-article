@@ -1,0 +1,102 @@
+/* お気に入りボタン（詳細ページ共通） */
+
+.tasu-favorite-btn {
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.tasu-favorite-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.tasu-favorite-btn__icon {
+  display: inline-block;
+  margin-right: 0.2rem;
+  font-size: 1.05em;
+  line-height: 1;
+  color: #94a3b8;
+}
+
+.tasu-favorite-btn--saved .tasu-favorite-btn__icon,
+.tasu-favorite-btn--saved {
+  color: #b45309;
+}
+
+.tasu-favorite-btn--saved {
+  border-color: rgba(193, 168, 88, 0.55) !important;
+  background: linear-gradient(180deg, #fff9eb 0%, #f8f0dc 100%) !important;
+}
+
+.tasu-favorite-btn--saved .tasu-favorite-btn__label {
+  font-weight: 700;
+  color: #7a5710;
+}
+
+/* 詳細ページ — お気に入りトースト */
+.tasu-favorite-toast {
+  position: fixed;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  z-index: 10050;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.28);
+  transform: translateX(-50%) translateY(0.5rem);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tasu-favorite-toast.is-visible,
+.tasu-favorite-toast:not([hidden]) {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+[data-biz-detail-favorite].is-active,
+[data-biz-detail-favorite].is-favorite {
+  border-color: rgba(193, 168, 88, 0.55) !important;
+  background: linear-gradient(180deg, #fff9eb 0%, #f8f0dc 100%) !important;
+  color: #7a5710;
+}
+
+.tasu-contact-toast {
+  position: fixed;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  z-index: 10050;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.28);
+  transform: translateX(-50%) translateY(0.5rem);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.tasu-contact-toast.is-visible,
+.tasu-contact-toast:not([hidden]) {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

@@ -1,0 +1,264 @@
+=== ベンチ診断 NG一覧 ===
+
+currentUrl:
+http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0
+
+timestamp:
+2026-06-10T09:01:42.643Z
+
+category:
+Connectなし購入
+
+stage:
+completed
+
+NG count:
+4
+
+--------------------
+1.
+ngType:
+chat_diag_ok_but_composer_missing_dom
+
+cause:
+診断はOKだが、実DOMではNG
+
+原因:
+診断はOKだが、実DOMではNG
+
+expected:
+aChatLoadReady=true かつ composer DOM 存在
+
+actual:
+composerDomExists=undefined
+
+diff:
+diag.aChatLoadReady=true vs dom.actualComposerDomExists=false
+
+fixTargetFile:
+chat-detail.js
+
+fixTargetFunction:
+applyRoomComposerState() / bindComposerInput()
+
+修正対象:
+chat-detail.js
+
+修正関数:
+applyRoomComposerState() / bindComposerInput()
+
+currentUrl:
+http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0
+
+timestamp:
+2026-06-10T09:01:42.645Z
+
+完了条件:
+—
+
+relatedValues:
+sectionKey: diag_dom
+detail: 診断はOKだが、実DOMではNG: diag.aChatLoadReady=true vs dom.actualComposerDomExists=false
+isDomConsistency: true
+actorAId: u_product
+actorBId: u_hiro
+threadId: chat-1781082022242-13l17u
+focus: completion
+primaryRootCause: A購入者の「レビューをする」が未表示
+diagAChatLoadReady: true
+diagNotifyRowsCount: 4
+actualNotifyRowDomCount: 4
+actualNotifyErrorVisible: false
+actualNotifyEmptyTextVisible: false
+
+--------------------
+
+2.
+ngType:
+product_receive_confirm_ui_missing
+
+cause:
+product_receive_ui_blocked_by_frozen_iframe
+
+原因:
+product_receive_ui_blocked_by_frozen_iframe
+
+expected:
+Bチャットに「受け取り完了申請」等の受取確認ボタンが表示、A側には出ない
+
+actual:
+B visible=false btn="none" A visible=false btn="none" bUser=u_hiro frozen=true
+
+diff:
+NG product_receive_ui_blocked_by_frozen_iframe
+
+fixTargetFile:
+chat-dual-window-demo.html
+
+fixTargetFunction:
+reloadBenchChatRoomState() / openBenchFrameNavigate()
+
+修正対象:
+chat-dual-window-demo.html
+
+修正関数:
+reloadBenchChatRoomState() / openBenchFrameNavigate()
+
+currentUrl:
+http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0
+
+timestamp:
+2026-06-10T09:01:42.645Z
+
+完了条件:
+—
+
+relatedValues:
+recipientUserId: u_hiro
+sellerUserId: u_product
+side: B
+threadId: chat-1781082022242-13l17u
+productShipped: true
+bChatOpened: true
+bCompletionButtonVisible: false
+bCompletionButtonText: none
+aCompletionButtonVisible: false
+aCompletionButtonText: none
+bCurrentUserId: u_hiro
+bResolvedThreadId: chat-1781082022242-13l17u
+bChatFrameFrozen: true
+sectionKey: notify_display_load
+detail: B側: 発送通知後の受取確認UIなし (product_receive_ui_blocked_by_frozen_iframe)
+isDomConsistency: false
+actorAId: u_product
+actorBId: u_hiro
+focus: completion
+primaryRootCause: A購入者の「レビューをする」が未表示
+
+--------------------
+
+3.
+ngType:
+notification_missing
+
+cause:
+notification_store_not_written
+
+原因:
+notification_store_not_written
+
+expected:
+B送信後、A通知に「新しいメッセージが届きました」
+
+actual:
+localStorage=false storeApi=false iframeRows=0 postMessage=false
+
+diff:
+NG notification_store_not_written
+
+fixTargetFile:
+platform-chat-dual-window-notify.js
+
+fixTargetFunction:
+notifyDemoChatMessage() / notifyPlatformChatMessage()
+
+修正対象:
+platform-chat-dual-window-notify.js
+
+修正関数:
+notifyDemoChatMessage() / notifyPlatformChatMessage()
+
+currentUrl:
+http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0
+
+timestamp:
+2026-06-10T09:01:42.645Z
+
+完了条件:
+- 購入後 A/B 双方に「やりとりが開始されました」が通知 iframe に visible
+- A/B 送信後、相手側に「新しいメッセージが届きました」が visible
+- localStorage / store / iframe DOM が一致
+
+relatedValues:
+recipientUserId: u_product
+side: A
+threadId: chat-1781082022242-13l17u
+notifyKind: message
+senderSide: B
+localStorageMatched: 0
+storeApiMatched: 0
+iframeDomRows: 0
+benchPostMessageReceived: false
+latestTitle: 取引が完了しました
+sectionKey: notify_display_load
+detail: A側: B送信後メッセージ通知なし (notification_store_not_written)
+isDomConsistency: false
+actorAId: u_product
+actorBId: u_hiro
+focus: completion
+primaryRootCause: A購入者の「レビューをする」が未表示
+
+--------------------
+
+4.
+ngType:
+product_shipping_notification_missing
+
+cause:
+product_shipping_postmessage_missing
+
+原因:
+product_shipping_postmessage_missing
+
+expected:
+A発送申請後、B通知に「商品が発送されました」系が表示
+
+actual:
+localStorage=true storeApi=true iframeRows=1 postMessage=false sellerHasNotify=false
+
+diff:
+NG product_shipping_postmessage_missing
+
+fixTargetFile:
+platform-chat-dual-window-notify.js
+
+fixTargetFunction:
+notifyBenchParentRuntimeNotification()
+
+修正対象:
+platform-chat-dual-window-notify.js
+
+修正関数:
+notifyBenchParentRuntimeNotification()
+
+currentUrl:
+http://localhost:5500/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=product&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=product-0
+
+timestamp:
+2026-06-10T09:01:42.645Z
+
+完了条件:
+—
+
+relatedValues:
+recipientUserId: u_hiro
+sellerUserId: u_product
+side: B
+threadId: chat-1781082022242-13l17u
+notifyKind: product_shipped
+productShipped: true
+localStorageMatched: 1
+storeApiMatched: 1
+iframeDomRows: 1
+benchPostMessageReceived: false
+latestTitle: 商品が発送されました
+sellerNotifyMatched: 0
+sectionKey: notify_display_load
+detail: B側: 発送申請後の購入者通知なし (product_shipping_postmessage_missing)
+isDomConsistency: false
+actorAId: u_product
+actorBId: u_hiro
+focus: completion
+primaryRootCause: A購入者の「レビューをする」が未表示
+
+--------------------

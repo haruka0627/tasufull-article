@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>注文確認 | TASFUL市場</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-checkout.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-checkout-page" data-page="shop_market_checkout">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <main class="tasful-market-checkout-main" aria-label="注文確認">
+    <h1 class="tasful-market-checkout-main__title">注文確認</h1>
+    <p class="tasful-market-checkout-main__status" data-tasful-checkout-status hidden></p>
+
+    <div class="tasful-market-checkout-layout" data-tasful-checkout-layout hidden>
+      <div class="tasful-market-checkout-body" data-tasful-checkout-body hidden>
+        <div class="tasful-market-checkout-summary" data-tasful-checkout-summary>
+          <section class="tasful-market-checkout-section tasful-market-checkout-summary__items" aria-label="注文商品">
+            <h2 class="tasful-market-checkout-section__title">注文商品</h2>
+            <div class="tasful-market-checkout-items" data-tasful-checkout-items></div>
+          </section>
+
+          <section class="tasful-market-checkout-section tasful-market-checkout-totals tasful-market-checkout-summary__totals" aria-label="合計">
+            <h2 class="tasful-market-checkout-section__title">合計</h2>
+            <dl class="tasful-market-checkout-totals__list" data-tasful-checkout-totals></dl>
+          </section>
+        </div>
+
+        <section class="tasful-market-checkout-section" aria-label="お届け先">
+          <div class="tasful-market-checkout-section__head">
+            <h2 class="tasful-market-checkout-section__title">お届け先</h2>
+            <button type="button" class="tasful-market-checkout-section__change" data-tasful-checkout-address-change>変更</button>
+          </div>
+          <address class="tasful-market-checkout-address" data-tasful-checkout-address></address>
+        </section>
+
+        <section class="tasful-market-checkout-section tasful-market-checkout-payment-section" aria-label="支払い方法">
+          <h2 class="tasful-market-checkout-section__title">支払い方法</h2>
+          <div class="tasful-market-checkout-payment" data-tasful-checkout-payment role="radiogroup" aria-label="支払い方法を選択">
+            <label class="tasful-market-checkout-payment__option">
+              <input type="radio" name="payment" value="card" checked>
+              <span class="tasful-market-checkout-payment__label">クレジットカード</span>
+              <span class="tasful-market-checkout-payment__sub">Stripe Connect（デモ）</span>
+            </label>
+            <label class="tasful-market-checkout-payment__option">
+              <input type="radio" name="payment" value="cvs">
+              <span class="tasful-market-checkout-payment__label">コンビニ払い</span>
+            </label>
+            <label class="tasful-market-checkout-payment__option">
+              <input type="radio" name="payment" value="bank">
+              <span class="tasful-market-checkout-payment__label">銀行振込</span>
+            </label>
+          </div>
+        </section>
+
+        <section class="tasful-market-checkout-trust tasful-market-checkout-trust-section" aria-label="安心表示">
+          <ul class="tasful-market-checkout-trust__list">
+            <li>✓ TASFUL安心決済</li>
+            <li>✓ Connect認証出品者</li>
+            <li>✓ 商品到着後サポート対応</li>
+            <li>✓ 返品・キャンセル条件を確認済み</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="tasful-market-checkout-bar tasful-market-checkout-bar--aside" data-tasful-checkout-bar hidden>
+        <div class="tasful-market-checkout-aside-summary" data-tasful-checkout-aside-summary></div>
+        <p class="tasful-market-checkout-bar__summary" data-tasful-checkout-bar-summary></p>
+        <button type="button" class="tasful-market-checkout-bar__btn" data-tasful-checkout-submit-aside>注文を確定する</button>
+        <p class="tasful-market-checkout-bar__note">注文を確定すると、TASFUL市場の利用規約・返品キャンセルポリシーに同意したものとみなされます。</p>
+      </div>
+    </div>
+  </main>
+
+  <div class="tasful-market-checkout-bar tasful-market-checkout-bar--mobile" data-tasful-checkout-bar-mobile hidden>
+    <p class="tasful-market-checkout-bar__summary" data-tasful-checkout-bar-summary></p>
+    <button type="button" class="tasful-market-checkout-bar__btn" data-tasful-checkout-submit>注文を確定する</button>
+    <p class="tasful-market-checkout-bar__note">注文を確定すると、TASFUL市場の利用規約・返品キャンセルポリシーに同意したものとみなされます。</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-market-product-data.js"></script>
+  <script src="platform-notify-action-labels.js"></script>
+  <script src="talk-official-rooms.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="shop-market-notify.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-checkout.js"></script>
+</body>
+</html>

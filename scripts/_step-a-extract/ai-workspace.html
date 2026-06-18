@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Workspace | TASFUL</title>
+  <meta name="description" content="TASFUL AI Workspace — 相場チェック・文章作成・画像解析など、AI相談をはじめる">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="shop-store-cards.css">
+  <link rel="stylesheet" href="ai-workspace.css">
+</head>
+<body class="ai-workspace-page shop-store-list-page" data-page="ai_workspace">
+  <header class="shop-market-header shop-store-market-header" data-shop-store-market-header aria-label="サイトヘッダー">
+    <div class="shop-market-header__inner">
+      <a href="index-top.html" class="shop-market-header__logo" aria-label="TASFUL プラットフォームTOP">
+        <span class="shop-market-header__logo-mark" aria-hidden="true"></span>
+        <span class="shop-market-header__logo-text">TASFUL</span>
+      </a>
+      <div class="shop-market-header__center">
+        <form class="shop-market-header__search" role="search" action="shop-store.html" method="get">
+          <span class="shop-market-header__search-icon" aria-hidden="true">🔍</span>
+          <input type="search" name="keyword" class="shop-market-header__search-input" placeholder="店舗・商品を検索" aria-label="店舗・商品を検索">
+        </form>
+        <nav class="shop-market-header__nav" aria-label="メインメニュー">
+          <a href="shop-store.html" class="shop-market-header__nav-link">カテゴリから探す</a>
+          <a href="shop-store.html#shop-store-area" class="shop-market-header__nav-link">エリアから探す</a>
+          <a href="index-top.html" class="shop-market-header__nav-link">特集一覧</a>
+          <a href="ai-workspace.html" class="shop-market-header__nav-link shop-market-header__nav-link--ai is-active" aria-current="page">AI相談</a>
+        </nav>
+      </div>
+      <div class="shop-market-header__actions">
+        <a href="index.html" class="shop-market-header__action" aria-label="お気に入り">
+          <span class="shop-market-header__action-icon" aria-hidden="true">♡</span>
+          <span class="shop-market-header__action-label">お気に入り</span>
+        </a>
+        <a href="dashboard.html" class="shop-market-header__action" aria-label="通知">
+          <span class="shop-market-header__action-icon" aria-hidden="true">🔔</span>
+          <span class="shop-market-header__action-label">通知</span>
+        </a>
+        <a href="post.html?scope=business" class="shop-market-header__cta">店舗を掲載する</a>
+        <a href="dashboard.html" class="shop-market-header__action shop-market-header__action--primary" aria-label="マイページ">
+          <span class="shop-market-header__action-icon" aria-hidden="true">👤</span>
+          <span class="shop-market-header__action-label">マイページ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="ai-workspace-main" aria-label="AI Workspace">
+    <section class="ai-workspace-hero">
+      <figure class="ai-workspace-hero__visual">
+        <img src="images/ai-workspace-hero.png" alt="AI Workspace" width="1040" height="520" decoding="async">
+      </figure>
+      <p class="ai-workspace-hero__eyebrow">TASFUL AI WORKSPACE</p>
+      <h1 class="ai-workspace-hero__title">AI相談・作成・サポート</h1>
+      <p class="ai-workspace-hero__lead">
+        相場チェック、文章作成、画像解析など。仕事の判断を、すぐ近くでサポートします。
+      </p>
+      <div class="ai-workspace-hero__actions">
+        <a href="/contact" class="ai-workspace-hero__btn ai-workspace-hero__btn--primary">無料で試す</a>
+        <a href="chat-list.html" class="ai-workspace-hero__btn ai-workspace-hero__btn--ghost">チャット一覧</a>
+      </div>
+    </section>
+
+    <div class="ai-workspace-features" aria-label="主な機能">
+      <article class="ai-workspace-feature">
+        <strong>相場・見積の相談</strong>
+        <p>作業内容から目安を整理し、依頼前の判断を支援します。</p>
+      </article>
+      <article class="ai-workspace-feature">
+        <strong>文章・資料作成</strong>
+        <p>掲載文、返信文、説明文のたたき台を素早く作成できます。</p>
+      </article>
+      <article class="ai-workspace-feature">
+        <strong>画像の読み取り</strong>
+        <p>写真や資料から要点を抽出し、次のアクションを提案します。</p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

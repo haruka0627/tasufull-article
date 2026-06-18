@@ -1,0 +1,271 @@
+/* TASFUL市場 — 注文完了 */
+body.tasful-market-complete-page {
+  padding-top: calc(var(--tasful-market-header-total-h, 152px) + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+  background: var(--tasful-market-bg);
+}
+
+.tasful-market-complete-main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 12px 0;
+}
+
+.tasful-market-complete-card {
+  padding: 20px 16px;
+  background: #fff;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.tasful-market-complete-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.tasful-market-complete-card__title {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+  font-weight: 900;
+}
+
+.tasful-market-complete-card__lead {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-complete-card__summary {
+  margin: 0 0 12px;
+  padding: 14px 12px;
+  text-align: left;
+  background: #f8fafc;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 10px;
+}
+
+.tasful-market-complete-card__shop {
+  margin: 0 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #067d62;
+}
+
+.tasful-market-complete-card__product {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--tasful-market-text);
+  line-height: 1.45;
+}
+
+.tasful-market-complete-card__facts {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.tasful-market-complete-card__fact {
+  display: grid;
+  grid-template-columns: 5.5em 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.tasful-market-complete-card__fact dt {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-complete-card__fact dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--tasful-market-text);
+  word-break: break-all;
+}
+
+.tasful-market-complete-card__order {
+  margin: 0 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #007185;
+}
+
+.tasful-market-complete-card__total {
+  margin: 0 0 10px;
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: #b12704;
+}
+
+.tasful-market-complete-card__note {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-complete-card__next {
+  margin: 0 0 12px;
+  padding: 14px 12px;
+  text-align: left;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 10px;
+}
+
+.tasful-market-complete-card__next-title {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #0f1111;
+}
+
+.tasful-market-complete-card__next-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.tasful-market-complete-card__next-list li {
+  position: relative;
+  padding-left: 1.1em;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #0f1111;
+}
+
+.tasful-market-complete-card__next-list li::before {
+  content: "・";
+  position: absolute;
+  left: 0;
+  color: #007185;
+  font-weight: 700;
+}
+
+.tasful-market-complete-card__next-list a {
+  color: #007185;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tasful-market-complete-card__next-list a:hover {
+  color: #c7511f;
+}
+
+.tasful-market-complete-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.tasful-market-complete-actions__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 999px;
+  border: 1px solid var(--tasful-market-border);
+  background: #fff;
+  color: var(--tasful-market-text);
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tasful-market-complete-actions__btn--primary {
+  background: #ffd814;
+  border-color: #e6c200;
+  color: #111;
+}
+
+.tasful-market-complete-actions__btn--secondary {
+  background: #fff;
+  border-color: var(--tasful-market-border);
+  color: var(--tasful-market-text);
+}
+
+@media (max-width: 520px) {
+  .tasful-market-complete-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* PC — 完了ページ専用: コンパクト縦余白・自然終了（フッター高さは他ページと同じ） */
+@media (min-width: 961px) {
+  html:has(body.tasful-market-complete-page) {
+    min-height: 0 !important;
+    height: auto !important;
+    background: #1f2937;
+  }
+
+  body.tasful-market-complete-page {
+    min-height: 0 !important;
+    height: auto !important;
+    padding-bottom: 0 !important;
+    background: var(--tasful-market-bg);
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-main {
+    max-width: 760px;
+    padding-top: 12px;
+    padding-bottom: 0;
+    min-height: 0;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-card {
+    padding: 28px 32px;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-card__icon {
+    margin-bottom: 14px;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-card__title {
+    margin-bottom: 10px;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-card__lead {
+    margin-bottom: 14px;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-card__summary {
+    margin-bottom: 14px;
+    padding: 16px 14px;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-card__next {
+    margin-bottom: 14px;
+    padding: 16px 14px;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-card__next-list li {
+    font-size: 0.875rem;
+  }
+
+  body.tasful-market-complete-page .tasful-market-complete-actions {
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+
+  body.tasful-market-complete-page .tasful-market-footer {
+    margin-top: 18px;
+    margin-bottom: 0;
+  }
+}

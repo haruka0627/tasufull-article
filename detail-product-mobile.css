@@ -1,0 +1,405 @@
+/**
+ * detail-product.html — スマホ専用 UI（max-width: 960px）
+ * PC（961px以上）・他カテゴリ詳細には影響しない
+ */
+@media (max-width: 960px) {
+  body[data-detail-type="product"].tasu-mdetail-page {
+    --product-sp-tabbar-offset: var(
+      --product-sp-tabbar-measured,
+      calc(var(--tasu-app-tabbar-total, 52px) + 1px)
+    );
+    --product-sp-cta-reserve: var(--product-sp-cta-measured, 118px);
+    --product-sp-bottom-gap: 12px;
+    --product-sp-bottom-pad: calc(
+      var(--product-sp-tabbar-offset) + var(--product-sp-cta-reserve) + var(--product-sp-bottom-gap)
+    );
+  }
+
+  body[data-detail-type="product"].tasu-app-mobile-page.tasu-mdetail-page {
+    padding-bottom: var(--product-sp-bottom-pad) !important;
+  }
+
+  /* ヒーロー商品画像 */
+  body[data-detail-type="product"] .tasu-mdetail-hero__media {
+    width: 100%;
+    height: 230px;
+    margin: 0 0 0.75rem;
+    overflow: hidden;
+    border-radius: 14px;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-hero__img {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* tasu-banner.css の header 潰し — クローン内見出しを復元 */
+  body[data-detail-type="product"] .tasu-mdetail-section__body header.skill-seller-premium__head,
+  body[data-detail-type="product"] .tasu-mdetail-section__body header.skill-details-premium__head,
+  body[data-detail-type="product"] .tasu-mdetail-section__body header.detail-bottom-card__head {
+    display: flex !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0.85rem 0 0.65rem !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* 商品ギャラリー — 概要/詳細情報カードと左右ラインを揃える */
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-premium,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .tasu-mdetail-section__chunk--portfolio,
+  body[data-detail-type="product"] .tasu-mdetail-section__body [data-tasu-mdetail-from="section-portfolio"] {
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-premium__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 0.75rem 0 0;
+    padding: 0 0 0.65rem;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-premium__head h2 {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-premium__track-wrap {
+    overflow: hidden;
+    padding: 0.65rem 0 0;
+    margin: 0;
+  }
+
+  /* 商品ギャラリー — 巨大プレースホルダー文字の防止 */
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-premium__track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-premium__scroll-btn {
+    display: none !important;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-card {
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 14px;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-portfolio-card img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 230px !important;
+    max-height: 240px !important;
+    object-fit: cover !important;
+    display: block !important;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .listing-portfolio-placeholder {
+    width: 100%;
+    min-width: 0;
+    min-height: 148px;
+    max-height: 240px;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    border-radius: 14px;
+  }
+
+  /* 提供者情報 — レイアウト・余白 */
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-premium__body,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-product-seller-card {
+    min-height: 0 !important;
+    padding-bottom: 1rem !important;
+    gap: 1rem;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-premium__avatar-wrap img,
+  body[data-detail-type="product"] .tasu-mdetail-section__body [data-listing-seller] .profile-avatar {
+    width: 4rem !important;
+    height: 4rem !important;
+    max-width: 4rem !important;
+    max-height: 4rem !important;
+    object-fit: cover;
+  }
+
+  /* 提供者情報 — ランク色・装飾（PC seller-rank-plate / detail-product-seller-section 相当） */
+  body[data-detail-type="product"] .tasu-mdetail-section__body [data-listing-seller] .skill-seller-premium__avatar-wrap {
+    width: fit-content;
+    margin-inline: auto;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body [data-listing-seller] .seller-rank-chip {
+    position: relative;
+    display: inline-flex;
+    margin-inline: auto;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body [data-listing-seller] .seller-left__username.seller-name {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    animation: none;
+    transform: none;
+  }
+
+  body[data-detail-type="product"].tasu-mdetail-page .tasu-mdetail-section__body .skill-seller-premium__stats,
+  body[data-detail-type="product"].tasu-mdetail-page .tasu-mdetail-section__body .seller-stats-grid,
+  body[data-detail-type="product"].tasu-mdetail-page .tasu-mdetail-section__body .stats-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-bottom: 0.5rem;
+  }
+
+  body[data-detail-type="product"].tasu-mdetail-page .tasu-mdetail-section__body .skill-seller-premium__activity-grid,
+  body[data-detail-type="product"].tasu-mdetail-page .tasu-mdetail-section__body .status-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-activity,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .status-item {
+    min-height: 0;
+    padding: 10px 12px;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-main__stats,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-premium__block--stats {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0;
+    min-height: 0;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10px 6px;
+    min-width: 0;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-stat__label,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-stat__value {
+    width: 100%;
+    text-align: center;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-stat--rating .seller-stat__rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-stat--rating .seller-stat__stars,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-stat--rating .seller-stat__count {
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-stat__value {
+    margin-top: 4px;
+    font-size: 1rem;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-seller-premium__block-title {
+    margin: 0 0 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  /* 購入・相談 / 他の商品 — 巨大 SVG・テキストの縮小 */
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-apply-btn,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-follow-btn,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-more-jobs-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-height: 48px;
+    max-height: none;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    border-radius: 12px;
+    box-sizing: border-box;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-more-jobs-btn {
+    justify-content: space-between;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-btn__icon,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-follow-btn svg,
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-more-jobs-btn svg {
+    width: 1.125rem !important;
+    height: 1.125rem !important;
+    min-width: 1.125rem !important;
+    min-height: 1.125rem !important;
+    max-width: 1.75rem !important;
+    max-height: 1.75rem !important;
+    flex-shrink: 0;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .seller-actions__note {
+    margin: 0.15rem 0 0;
+    font-size: 0.6875rem;
+    line-height: 1.45;
+    color: #94a3b8;
+  }
+
+  /* 他の商品 — PC と同じ detail-bottom-card 見出し */
+  body[data-detail-type="product"] [data-tasu-mdetail-other-products-section] .detail-bottom-card__head {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 1.4rem 1.5rem 1.05rem !important;
+    overflow: visible !important;
+    background: #fff !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  body[data-detail-type="product"] [data-tasu-mdetail-other-products-section] .detail-bottom-card__title {
+    font-size: 1.125rem;
+    font-weight: 800;
+  }
+
+  body[data-detail-type="product"] [data-tasu-mdetail-other-products-section] .detail-product-other-services-card {
+    overflow: hidden;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.04);
+  }
+
+  body[data-detail-type="product"] [data-tasu-mdetail-other-products-section] .detail-seller-services__body {
+    padding: 0 1.5rem 1.25rem;
+  }
+
+  body[data-detail-type="product"] [data-tasu-mdetail-other-products-section].tasu-mdetail-section {
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+
+  body[data-detail-type="product"].tasu-mdetail-page
+    [data-tasu-mobile-detail-shell]
+    > [data-tasu-mdetail-sections]:has(+ [data-product-mobile-copyright]) {
+    padding-bottom: 0;
+  }
+
+  body[data-detail-type="product"] [data-product-mobile-copyright] {
+    margin-top: 1rem;
+    margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0.25rem;
+    text-align: center;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: #9ca3af;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-seller-services__track {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    overflow: visible;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-seller-service-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-seller-service-card img {
+    width: 4.5rem !important;
+    height: 4.5rem !important;
+    max-width: 4.5rem !important;
+    max-height: 4.5rem !important;
+    object-fit: cover !important;
+    flex-shrink: 0;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-strip-scroll-btn {
+    display: none !important;
+  }
+
+  /* 口コミ — 空状態の過大余白 */
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-reviews.detail-reviews--empty .detail-reviews__body {
+    min-height: 0;
+    padding: 0.85rem 0 0.5rem;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-reviews__empty-state {
+    margin: 0;
+    padding: 0.75rem 0.85rem;
+    font-size: 0.8125rem;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-bottom-card__title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .detail-bottom-card__more {
+    font-size: 0.75rem;
+  }
+
+  /* 概要・詳細ブロック */
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-details-block__title {
+    font-size: 0.8125rem;
+  }
+
+  body[data-detail-type="product"] .tasu-mdetail-section__body .skill-details-block__content {
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+}

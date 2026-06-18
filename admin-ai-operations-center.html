@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI運営センター | TASFUL 運営</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="ai-ops-center.css" />
+</head>
+<body class="ai-ops-page" data-page="admin-ai-operations-center">
+  <div class="ai-ops-app" data-ai-ops-root>
+    <header class="ai-ops-header">
+      <a class="ai-ops-back" href="builder-admin/admin-index.html">← Builder Admin</a>
+      <h1>AI運営センター</h1>
+      <p>問い合わせ・決済・Connect・通報・違反・案件を横断管理。AIは補助のみ。返金・BAN・制限等の実行は管理者承認必須。</p>
+      <div class="ai-ops-notify-bar" data-ai-ops-notify-bar hidden>
+        重要通知: <strong data-ai-ops-notify-count>0</strong> 件
+      </div>
+    </header>
+
+    <div class="ai-ops-command">
+      <input type="text" data-ai-ops-command-input placeholder="運営コマンド（例: 返金案件だけ見せて / BAN候補一覧）" />
+      <button type="button" class="ai-ops-btn ai-ops-btn--primary" data-ai-ops-command-run>実行</button>
+      <button type="button" class="ai-ops-btn" data-ai-ops-command-clear>クリア</button>
+    </div>
+    <p class="ai-ops-hint" data-ai-ops-command-hint hidden aria-live="polite"></p>
+
+    <nav class="ai-ops-tabs" data-ai-ops-tabs aria-label="案件タブ"></nav>
+
+    <div class="ai-ops-layout">
+      <section class="ai-ops-panel" aria-label="案件一覧">
+        <div class="ai-ops-panel__head">案件一覧 <span data-ai-ops-list-count></span></div>
+        <div data-ai-ops-case-list></div>
+      </section>
+      <section class="ai-ops-panel" aria-label="案件詳細">
+        <div class="ai-ops-panel__head">AI分析・詳細</div>
+        <div class="ai-ops-detail" data-ai-ops-case-detail>
+          <p class="ai-ops-hint">案件を選択してください</p>
+        </div>
+        <div class="ai-ops-actions" data-ai-ops-actions hidden>
+          <button type="button" class="ai-ops-btn ai-ops-btn--primary" data-ai-ops-action="send_reply">返信送信</button>
+          <button type="button" class="ai-ops-btn" data-ai-ops-action="needs_review">要確認へ</button>
+          <button type="button" class="ai-ops-btn" data-ai-ops-action="resolved">解決済み</button>
+          <button type="button" class="ai-ops-btn" data-ai-ops-action="refund_candidate">返金候補</button>
+          <button type="button" class="ai-ops-btn" data-ai-ops-action="listing_suspend_candidate">掲載停止候補</button>
+          <button type="button" class="ai-ops-btn" data-ai-ops-action="account_restrict_candidate">制限候補</button>
+          <button type="button" class="ai-ops-btn" data-ai-ops-action="ban_candidate">BAN候補</button>
+          <button type="button" class="ai-ops-btn" data-ai-ops-action="connect_verified">Connect確認済み</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="ai-ops-modal" data-ai-ops-modal hidden role="dialog" aria-modal="true">
+    <div class="ai-ops-modal__backdrop" data-ai-ops-modal-cancel></div>
+    <div class="ai-ops-modal__panel">
+      <h2 data-ai-ops-modal-title>操作の確認</h2>
+      <p data-ai-ops-modal-text>この操作は記録のみです。Stripe・BAN・返金APIは実行しません。</p>
+      <label>管理者メモ<textarea rows="3" data-ai-ops-modal-note></textarea></label>
+      <div class="ai-ops-modal__actions">
+        <button type="button" class="ai-ops-btn" data-ai-ops-modal-cancel>キャンセル</button>
+        <button type="button" class="ai-ops-btn ai-ops-btn--primary" data-ai-ops-modal-confirm>実行する</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <link rel="stylesheet" href="supabase-ops-data-source.css" />
+  <script src="supabase-ops-primary-config.js"></script>
+  <script src="supabase-ops-primary-cache.js"></script>
+  <script src="supabase-ops-read-config.js"></script>
+  <script src="supabase-ops-read-adapter.js"></script>
+  <script src="supabase-ops-read-bootstrap.js"></script>
+  <script src="supabase-ops-data-source-ui.js"></script>
+  <script src="supabase-ops-write-config.js"></script>
+  <script src="supabase-ops-write-adapter.js"></script>
+  <link rel="stylesheet" href="stripe-connect-trouble.css" />
+  <script src="stripe-connect-event-map.js"></script>
+  <script src="connect-identity-templates.js"></script>
+  <script src="offplatform-risk-detector.js"></script>
+  <script src="refund-cancel-decision-checklist.js"></script>
+  <script src="chargeback-evidence-pack.js"></script>
+  <script src="stripe-connect-ingest.js"></script>
+  <script src="stripe-connect-trouble-ui.js"></script>
+  <script src="support-ticket-classifier.js"></script>
+  <script src="support-ticket-ai-reply.js"></script>
+  <script src="support-admin-notify.js"></script>
+  <script src="support-ticket-store.js"></script>
+  <script src="support-ticket-service.js"></script>
+  <script src="ai-ops-types.js"></script>
+  <script src="ai-ops-ai-provider.js"></script>
+  <script src="ai-ops-notify.js"></script>
+  <script src="ai-ops-command-parser.js"></script>
+  <script src="ai-ops-case-store.js"></script>
+  <script src="admin-ai-operations-center.js"></script>
+</body>
+</html>
