@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -16,8 +16,7 @@ const url = buildLocalPageUrl(
   "shop-store-checkout.html?mode=buyNow&shopId=demo-shop-haru-cafe&productId=p-0&quantity=1"
 );
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForSelector("[data-shop-store-checkout-payment]", { timeout: 30000 });
 
@@ -57,8 +56,10 @@ const metrics = await page.evaluate(() => {
 
 await page.screenshot({ path: path.join(OUT, "checkout-390-payment-bar.png"), fullPage: false });
 await page.screenshot({ path: path.join(OUT, "checkout-390-full.png"), fullPage: true });
-await browser.close();
+});
 
 const report = { url, viewport: "390", ...metrics, overall: metrics.pass ? "PASS" : "FAIL" };
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+
+await closeAllBrowsers();

@@ -3,7 +3,7 @@
  * chat-detail ヘッダー整列 — 390px + PC
  *   node scripts/test-chat-detail-header-align-390.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "chat-detail.html" });
@@ -134,15 +134,14 @@ async function runMobileChecks(page, label, errors, pass, fail) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const errors = [];
+  await withPlaywrightBrowser(async (browser) => {const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     errors.push(m);
     console.log(`  ✗ ${m}`);
   };
 
-  try {
+  
     console.log("\n--- 390px 通常 ---");
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
     await mobile.goto(CHAT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
@@ -190,12 +189,13 @@ async function main() {
     } else {
       console.log("All chat-detail header checks passed.");
     }
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

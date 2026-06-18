@@ -1,10 +1,9 @@
 /**
  * 友達ルームヘッダー — 実DOM / computed style 計測
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await page.goto(
   "http://localhost:5173/talk-home.html?tab=chat&thread=talk-mock-friend-001&talkDev=1",
   { waitUntil: "domcontentloaded", timeout: 60000 }
@@ -109,4 +108,6 @@ const report = await page.evaluate(() => {
 });
 
 console.log(JSON.stringify(report, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

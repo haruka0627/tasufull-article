@@ -2,7 +2,7 @@
 /**
  * プラット全カテゴリ — 390px A/B 通知一覧スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
@@ -76,10 +76,7 @@ CATEGORIES.forEach((id) => {
 
 shots.forEach((s) => logScreenshotUrl(s.name, s.url.replace(/^\//, "")));
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   for (const shot of shots) {
     await page.goto(`${BASE}${shot.url}`, { waitUntil: "domcontentloaded", timeout: 60000 });
     if (shot.url.includes("tab=notify")) {
@@ -88,8 +85,9 @@ try {
     await page.waitForTimeout(450);
     await page.screenshot({ path: path.join(OUT, shot.name) });
   }
-} finally {
-  await browser.close();
-}
+});
+
 
 console.log(`capture-chat-dual-window-demo-390 OK → ${OUT} (${shots.length} files)`);
+
+await closeAllBrowsers();

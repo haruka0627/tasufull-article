@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -33,8 +33,7 @@ const c = await fetch(`${base}/stripe-create-genai-checkout`, {
 }).then((r) => r.json());
 
 const server = await startStaticServer();
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 await page.goto(c.url, { waitUntil: "domcontentloaded" });
 await page.waitForSelector("#cardNumber", { timeout: 60000 });
 await page.locator("#email").fill("e2e-3d-ticket@tasful.test");
@@ -61,5 +60,7 @@ const plan = await fetch(`${base}/stripe-get-genai-plan`, {
 }).then((r) => r.json());
 console.log("tickets", plan.entitlements?.tickets3dRemaining);
 
-await browser.close();
+});
 server.close();
+
+await closeAllBrowsers();

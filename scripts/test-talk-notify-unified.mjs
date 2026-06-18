@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK — 通知最終方針 全体統一（390px / talkDev=1）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const DEPRECATED_NOTIFY_IDS = new Set([
@@ -60,8 +60,7 @@ const DESTINATION_CHECKS = [
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 const fail = (msg) => {
   console.log("NG", msg);
   failed = true;
@@ -228,6 +227,6 @@ for (const check of DESTINATION_CHECKS) {
   await destPage.close();
 }
 
-
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

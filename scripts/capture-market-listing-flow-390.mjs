@@ -1,3 +1,4 @@
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL市場 — 出品フロー 390px 検証
  */
@@ -101,8 +102,7 @@ async function countBrokenImages(page) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 const pageErrors = [];
 page.on("pageerror", (err) => pageErrors.push(String(err?.message || err)));
 await page.route(/supabase\.co/i, (route) => route.abort("failed"));
@@ -372,10 +372,8 @@ try {
     checks: {},
     errors: [String(err?.message || err)],
   });
-} finally {
-  await browser.close();
-  staticServer?.close?.();
-}
+}});
+staticServer?.close?.();
 
 const overallPass = screens.length === 5 && screens.every((s) => s.pass);
 const report = {
@@ -394,4 +392,5 @@ const report = {
 
 fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2), "utf8");
 console.log(JSON.stringify({ overallPass, passCount: report.passCount, failCount: report.failCount, reportPath: REPORT_PATH }, null, 2));
+await closeAllBrowsers();
 process.exit(overallPass ? 0 : 1);

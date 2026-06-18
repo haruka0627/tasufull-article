@@ -3,7 +3,7 @@
  * 指定 URL で board-thread 完了報告画面を 390px キャプチャ
  * builder/board-thread.html?thread_id=thread-demo-001&role=owner&from=talk#completion
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -18,8 +18,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const BASE = await requireDevServer();
 console.log(`[dev] BASE_URL=${BASE}`);
 logScreenshotUrl("board-thread-completion-390.png", TARGET_PATH);
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 const errors = [];
 page.on("pageerror", (e) => errors.push(String(e)));
 page.on("console", (m) => {
@@ -74,7 +73,7 @@ console.log("meta:", meta);
 console.log("errors:", errors.length ? errors : "none");
 console.log("saved:", out);
 
-await browser.close();
+});
 
 if (
   meta.emptySiteGroups > 0 ||
@@ -83,5 +82,6 @@ if (
   !meta.hasApprove ||
   !meta.hasSummary
 ) {
+  await closeAllBrowsers();
   process.exit(1);
 }

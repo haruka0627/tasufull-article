@@ -4,7 +4,7 @@
  *
  *   node scripts/capture-talk-notification-final-review.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import { finalizeVerification } from "./lib/finalize-verification.mjs";
 import { renderScreenshotBackNav, SCREENSHOT_BACK_NAV_CSS } from "./lib/screenshot-image-viewer.mjs";
@@ -592,8 +592,7 @@ const report = {
   bulkTest: null,
 };
 
-const browser = await chromium.launch({ headless: true });
-const request = await browser.newContext().then((c) => c.request);
+await withPlaywrightBrowser(async (browser) => {const request = await browser.newContext().then((c) => c.request);
 
 for (const vp of VIEWPORTS) {
   const vpReport = { label: vp.label, width: vp.width, verdict: "PASS", shots: [] };
@@ -874,7 +873,7 @@ for (const vp of VIEWPORTS) {
   }
 }
 
-await browser.close();
+});
 
 for (const [key, cat] of Object.entries(report.categories)) {
   const navFails = report.navigationChecks.filter((n) => n.group === key && n.verdict === "FAIL");
@@ -1019,3 +1018,5 @@ console.log(`\nSaved: ${OUT}/report.json`);
 console.log(`Saved: ${OUT}/index.html`);
 
 await finalizeVerification(root, { primaryFolder: "talk-notification-final-review", openBrowser: false });
+
+await closeAllBrowsers();

@@ -4,7 +4,7 @@
  *
  *   BASE_URL=http://127.0.0.1:5173 node scripts/test-detail-premium-demo-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5173").replace(/\/$/, "");
 
@@ -116,8 +116,7 @@ async function inspect(page, spec, vp) {
 
 async function main() {
   console.log(`\n一般カテゴリ詳細デモ E2E — ${BASE}\n`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   for (const width of [1280, 390]) {
     const vp = width >= 1000 ? "pc" : "sp";
@@ -138,10 +137,11 @@ async function main() {
     }
   }
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   const total = results.length;
   console.log(`\n--- 結果: ${ok}/${total} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === total ? 0 : 1);
 }
 
@@ -149,3 +149,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

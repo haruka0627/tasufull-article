@@ -1,8 +1,8 @@
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Tripo GLB の 3D 表示確認（再生成なし・task_poll のみ）
  * node scripts/browser-test-gen-ai-3d-glb.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -74,8 +74,7 @@ const server = await startStaticServer();
 const baseUrl = `http://127.0.0.1:${PORT}/gen-ai-workspace.html?mode=AI%E3%82%AD%E3%83%A3%E3%83%A9%E4%BC%9A%E8%A9%B1`;
 
 const glbErrors = [];
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(300000);
 
 page.on("console", (msg) => {
@@ -254,11 +253,11 @@ try {
   const failed = results.filter((r) => !r.ok).length;
   console.log(`\n3D GLB verify: ${results.length - failed}/${results.length} passed`);
   if (glbErrors.length) console.log("Console:", glbErrors);
+  await closeAllBrowsers();
   process.exit(failed ? 1 : 0);
 } catch (err) {
   console.error(err);
+  await closeAllBrowsers();
   process.exit(1);
-} finally {
-  await browser.close();
-  server.close();
-}
+}});
+server.close();

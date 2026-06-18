@@ -1,7 +1,7 @@
 /**
  * Admin CSV export + calendar partner search filters
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
@@ -12,8 +12,7 @@ const builder = path.join(root, "builder");
 const ADMIN_CAL = `file://${path.join(builder, "admin-calendar.html")}`;
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ acceptDownloads: true });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ acceptDownloads: true });
   const page = await context.newPage();
   page.on("dialog", async (d) => d.accept());
 
@@ -87,10 +86,12 @@ async function main() {
   );
 
   console.log("OK: admin CSV export and partner search test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

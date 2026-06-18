@@ -1,7 +1,7 @@
 /**
  * Builder 最終フロー — PC 1280 / SP 390 スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -33,9 +33,7 @@ const base = await findBaseUrl();
 console.log("Base URL:", base);
 console.log("Output:", OUT_DIR);
 
-const browser = await chromium.launch({ headless: true });
-
-async function seedForScreenshots(page) {
+await withPlaywrightBrowser(async (browser) => {async function seedForScreenshots(page) {
   await page.evaluate(
     ({ mvpKey, projectId, threadId, partnerId }) => {
       localStorage.setItem(
@@ -142,5 +140,7 @@ async function captureSet(viewport, tag) {
 await captureSet({ width: 1280, height: 900 }, "pc1280");
 await captureSet({ width: 390, height: 844 }, "sp390");
 
-await browser.close();
+});
 console.log("OK: screenshots captured at", OUT_DIR);
+
+await closeAllBrowsers();

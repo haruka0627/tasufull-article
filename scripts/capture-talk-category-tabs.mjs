@@ -2,7 +2,7 @@
 /**
  * TASFUL TALK / 通知タブ — 横スクロールカテゴリバー + ⚙フィルター 390px スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -25,8 +25,7 @@ const EXPECT_CATEGORIES = [
 ];
 
 mkdirSync(OUT_DIR, { recursive: true });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${BASE}/talk-home.html?tab=notify`, {
   waitUntil: "domcontentloaded",
@@ -96,7 +95,7 @@ await page.waitForSelector("[data-talk-chat-filter-panel]:not([hidden])", { time
 await page.waitForTimeout(500);
 await page.screenshot({ path: `${OUT_DIR}/06-talk-gear-filter-390.png`, fullPage: false });
 
-await browser.close();
+});
 
 const issues = [];
 for (const label of EXPECT_CATEGORIES) {
@@ -119,7 +118,9 @@ console.log("gear filter:", gearLabels.join(", "));
 
 if (issues.length) {
   console.log("NG:", issues.join("; "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("OK: talk category tabs");
+await closeAllBrowsers();
 process.exit(0);

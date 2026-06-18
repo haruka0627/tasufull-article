@@ -2,7 +2,7 @@
 /**
  * 最優先確認: スキル購入通知 → CTA 390px + タップ遷移 + 購入直後チャット
  */
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -24,8 +24,7 @@ const FORBIDDEN_CHAT = "納品物の確認をお願いします";
 fs.mkdirSync(OUT, { recursive: true });
 
 const iphone = devices["iPhone 13"];
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   ...iphone,
   viewport: { width: 390, height: 844 },
   hasTouch: true,
@@ -166,7 +165,7 @@ else ok(`no wrong scene text (${FORBIDDEN_CHAT})`);
 
 await page.screenshot({ path: path.join(OUT, "03-skill-purchase-chat-390.png"), fullPage: false });
 
-await browser.close();
+});
 if (failed) process.exit(1);
 console.log("\nSkill purchase notify flow: ALL PASSED");
 console.log(`Screenshots: ${OUT}`);

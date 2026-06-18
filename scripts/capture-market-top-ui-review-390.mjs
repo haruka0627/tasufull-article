@@ -2,7 +2,7 @@
  * TASFUL市場 TOP — UIレビュー用 390px 端末画面キャプチャ
  * ビューポート 390px のみ。必ず http://localhost 経由（file:// 禁止）。
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -90,8 +90,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
 const pageUrl = buildLocalPageUrl(base, "shop-store.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 
 await page.goto(pageUrl, { waitUntil: "networkidle", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -159,7 +158,7 @@ const report = await page.evaluate(() => {
   };
 });
 
-await browser.close();
+});
 
 const pass =
   report.hasCountdown &&
@@ -174,4 +173,5 @@ const pass =
 
 console.log(JSON.stringify({ baseUrl: base, pageUrl, outDir: OUT_DIR, files, report, pass }, null, 2));
 console.log("DONE: UI review screenshots at 390px viewport");
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK Phase5.6 — relay candidate 診断 E2E（スケルトン）
  *
@@ -66,13 +67,7 @@ async function runStructuralChecks() {
 async function runBrowserRelayWait() {
   const { chromium } = await import("./lib/playwright-browser.mjs");
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({
-    permissions: ["microphone"],
-  });
-  const page = await context.newPage();
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     await page.goto(`${BASE}/talk-home.html?talkDev=1&talkCallDebug=1`, { waitUntil: "domcontentloaded" });
 
     const result = await page.evaluate(
@@ -124,9 +119,8 @@ async function runBrowserRelayWait() {
       console.warn(`  WARN  relay E2E: ${result.reason} — staging TURN may be unreachable (non-fatal)`);
       pass("relay E2E: structure completed without credential leak");
     }
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 async function main() {
@@ -168,3 +162,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

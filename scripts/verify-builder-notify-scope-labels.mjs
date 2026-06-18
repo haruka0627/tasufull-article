@@ -2,7 +2,7 @@
 /**
  * Builder通知 — 運営/一般の判別ラベル + 案件名（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
 
@@ -56,8 +56,7 @@ async function resetStorage(page) {
 
 mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 await resetStorage(page);
 
 await page.goto(`${BASE}/talk-home.html?tab=notify&talkAdmin=1`, {
@@ -99,7 +98,7 @@ const overflow = await page.evaluate(() => ({
 await page.screenshot({ path: `${OUT_DIR}/notify-builder-scope-390.png`, fullPage: true });
 logScreenshotUrl("notify-builder-scope-390", "/talk-home.html?tab=notify&talkAdmin=1");
 
-await browser.close();
+});
 
 console.log("\n## Builder通知 分類ラベル確認（390px）\n");
 console.log("| 通知 | ラベル | 案件名 | OK/NG |");
@@ -115,8 +114,10 @@ if (failed.length || overflow.doc || overflow.body) {
   for (const r of failed) {
     console.log(`- ${r.id}: ${r.issues.join("; ")}`);
   }
+  await closeAllBrowsers();
   process.exit(1);
 }
 
 console.log("\n全件 OK");
+await closeAllBrowsers();
 process.exit(0);

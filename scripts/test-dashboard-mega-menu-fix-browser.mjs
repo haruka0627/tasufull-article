@@ -1,7 +1,7 @@
 /**
  * ダッシュボード メガメニュー修正 — 4カード・3パネル検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
 import path from "path";
@@ -109,8 +109,7 @@ const cases = [];
 
 // --- 4 cards PC ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDashboard(page, base);
@@ -147,13 +146,12 @@ const cases = [];
   });
 
   await page.locator("[data-dash-quick]").screenshot({ path: path.join(OUT_DIR, "quick-cards-1280.png") });
-  await browser.close();
+    });
 }
 
 // --- catalog mega PC ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDashboard(page, base);
@@ -206,7 +204,7 @@ const cases = [];
   await page.locator("[data-dash-service-mega].is-open").screenshot({
     path: path.join(OUT_DIR, "catalog-mega-1280.png"),
   });
-  await browser.close();
+    });
 }
 
 // --- publish / comms PC ---
@@ -214,8 +212,7 @@ for (const [panelId, label] of [
   ["publish", "掲載・出品"],
   ["comms", "やりとり"],
 ]) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDashboard(page, base);
@@ -243,13 +240,12 @@ for (const [panelId, label] of [
   await page.locator("[data-dash-service-mega].is-open").screenshot({
     path: path.join(OUT_DIR, `${panelId}-menu-1280.png`),
   });
-  await browser.close();
+    });
 }
 
 // --- SP ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDashboard(page, base);
@@ -302,13 +298,12 @@ for (const [panelId, label] of [
     await closeMegaPanel(page, panelId);
   }
 
-  await browser.close();
+    });
 }
 
 // --- toggle / outside click ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await prepareDashboard(page, base);
   await openMegaPanel(page, "catalog");
   await closeMegaPanel(page, "catalog");
@@ -336,14 +331,13 @@ for (const [panelId, label] of [
     actual: outsideClosed ? "閉じた" : "開いたまま",
     expected: "閉じる",
   });
-  await browser.close();
+    });
 }
 
 // --- link navigation ---
 for (const [panelId, links] of Object.entries(PANEL_LINKS)) {
   for (const link of links) {
-    const browser = await chromium.launch({ headless: true });
-    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await prepareDashboard(page, base);
     await openMegaPanel(page, panelId);
 
@@ -372,14 +366,13 @@ for (const [panelId, links] of Object.entries(PANEL_LINKS)) {
       actual: `href=${href || "—"}`,
       expected: link.href,
     });
-    await browser.close();
+        });
   }
 }
 
 // --- anpi navigation ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await prepareDashboard(page, base);
   const [response] = await Promise.all([
     page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 30000 }).catch(() => null),
@@ -394,7 +387,7 @@ for (const [panelId, links] of Object.entries(PANEL_LINKS)) {
     actual: page.url(),
     expected: "anpi-dashboard.html",
   });
-  await browser.close();
+    });
 }
 
 const failCount = cases.filter((c) => !c.pass).length;
@@ -439,5 +432,6 @@ console.log(`\n${REVIEW_TITLE}: ${allPass ? "PASS" : "FAIL"} (${passCount}/${cas
 console.log(`Screenshots: screenshots/${FOLDER_ID}/`);
 if (!allPass) {
   cases.filter((c) => !c.pass).forEach((c) => console.log(`  FAIL: ${c.label} — ${c.actual}`));
+  await closeAllBrowsers();
   process.exit(1);
 }

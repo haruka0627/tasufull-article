@@ -1,7 +1,7 @@
 /**
  * アカウント系・安否系・Connect系 — PCレイアウト統一確認（v2）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -49,8 +49,7 @@ function fixCssMime(page) {
 }
 
 async function auditPage(base, { file, title }, viewport) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height } });
   await fixCssMime(page);
   await page.goto(`${base}/${file}?v=${Date.now()}`, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(1500);
@@ -103,7 +102,7 @@ async function auditPage(base, { file, title }, viewport) {
     path: path.join(OUT_DIR, `${slug}-${viewport.key}.png`),
     fullPage: false,
   });
-  await browser.close();
+    });
   return metrics;
 }
 
@@ -211,6 +210,7 @@ const failed = Object.entries(checks).flatMap(([file, c]) =>
 if (!report.comparisonPass) failed.push("comparison:payment-vs-anpi-register");
 if (failed.length) {
   console.error("FAIL:", [...new Set(failed)].join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS: account page heads unified v2");

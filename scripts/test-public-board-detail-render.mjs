@@ -2,7 +2,7 @@
 /**
  * 通知URLから public-board-detail（案件）が描画されることを検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 async function findBaseUrl() {
   if (process.env.BASE_URL) return process.env.BASE_URL.replace(/\/$/, "");
@@ -88,9 +88,7 @@ async function collectDetail(page) {
   });
 }
 
-const browser = await chromium.launch();
-
-for (const viewport of [
+await withPlaywrightBrowser(async (browser) => {for (const viewport of [
   { label: "PC1280", width: 1280, height: 800 },
   { label: "SP390", width: 390, height: 844 },
 ]) {
@@ -155,7 +153,7 @@ for (const viewport of [
   await page.close();
 }
 
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log("\n=== public-board-detail render test ===\n");

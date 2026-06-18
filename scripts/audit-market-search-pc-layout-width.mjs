@@ -2,7 +2,7 @@
  * 市場検索 PC — レイアウト幅調査（制限箇所特定 + 1192/1360/1440/1520 比較）
  * 商品カード画像幅 224px を全案で維持（layout max-width 1192px 固定）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -70,8 +70,7 @@ const CONSTRAINT_SOURCES = [
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const report = {
   capturedAt: new Date().toISOString(),
@@ -422,4 +421,6 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
 console.log("\nRECOMMENDATION:", best.label);
 console.log(JSON.stringify(report.recommendation, null, 2));
 
-await browser.close();
+});
+
+await closeAllBrowsers();

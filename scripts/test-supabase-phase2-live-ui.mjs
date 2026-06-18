@@ -1,15 +1,15 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Phase 2 live staging UI（HTTP 必須: file:// では canQuerySupabase=false）
  *   BUILDER_BASE_URL=http://127.0.0.1:8765 node scripts/test-supabase-phase2-live-ui.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const base = (process.env.BUILDER_BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -28,10 +28,9 @@ async function waitHydrated(page, timeout = 20000) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
-  try {
+  
     await page.goto(`${base}/admin-operations-dashboard.html?supabaseRead=1`, {
       waitUntil: "domcontentloaded",
     });
@@ -68,14 +67,13 @@ async function main() {
     if (cards < 1) fail(`talk-ops-room cards ${cards}`);
     if (!hasStaging) fail("talk-ops-room missing staging/ops content in UI");
     pass(`talk-ops-room live UI (${cards} cards)`);
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   console.log("\nLive staging UI checks passed.");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch(() => {
+  console.error();
+  closeAllBrowsers().finally(() => process.exit(1));
 });

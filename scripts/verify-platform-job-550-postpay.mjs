@@ -2,7 +2,7 @@
 /**
  * 求人550円後段フロー検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -37,8 +37,7 @@ async function waitApplications(page) {
 }
 
 async function run() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   const errors = [];
   const report = { markers: MARKERS, cases: [] };
@@ -163,10 +162,11 @@ async function run() {
   report.screenshots = fs.readdirSync(OUT_DIR).filter((f) => f.endsWith(".png"));
   fs.writeFileSync(path.join(OUT_DIR, "job-550-postpay-report.json"), JSON.stringify(report, null, 2));
 
-  await browser.close();
+    });
   console.log(JSON.stringify(report, null, 2));
   if (errors.length) {
     errors.forEach((e) => console.error(`NG: ${e}`));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("ALL OK — job 550 postpay verified");

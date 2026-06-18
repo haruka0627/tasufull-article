@@ -2,7 +2,7 @@
 /**
  * 実フロー management → fee-pay → #frame-b-notify 6項目診断（message含む）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -115,10 +115,7 @@ async function sendFromAChat(bench) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const bench = await (await browser.newContext()).newPage({ viewport: { width: 390, height: 844 } });
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await bench.goto(
     `${BASE}/chat-dual-window-demo.html?benchPattern=skill-0&liveFlow=1&benchViewport=390`,
     { waitUntil: "domcontentloaded", timeout: 30000 }
@@ -267,6 +264,6 @@ try {
     process.exit(1);
   }
   console.log("\nOK: all B-notify checkpoints passed on #frame-b-notify");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

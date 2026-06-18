@@ -4,7 +4,7 @@
  *
  *   node scripts/verify-anpi-notification-logs-real-db.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
@@ -121,11 +121,7 @@ async function main() {
   const server = await ensureStaticServer(base);
   await deleteLogsForHolder(cfg, HOLDER_ID);
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     await page.addInitScript(({ userId }) => {
       delete window.__ANPI_NOTIFICATION_LOGS_SUPABASE_MOCK__;
       try {
@@ -277,10 +273,8 @@ async function main() {
     } else {
       fail("既読化が Supabase に反映", JSON.stringify({ is_read: readRow?.is_read }));
     }
-  } finally {
-    await browser.close();
-    if (server) await new Promise((r) => server.close(r));
-  }
+    });
+  if (server) await new Promise((r) => server.close(r));
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);
@@ -291,3 +285,5 @@ main().catch((e) => {
   console.error(e);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

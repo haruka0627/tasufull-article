@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * post.html 編集モード — Playwright E2E
  *
@@ -6,7 +7,6 @@
  *   node scripts/test-post-edit-browser.mjs
  *   BASE_URL=http://localhost:5180 node scripts/test-post-edit-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const LISTINGS_KEY = "tasful_listings";
@@ -108,20 +108,19 @@ async function testResponsive(page, label) {
 async function main() {
   console.log(`\npost 編集モード E2E — ${BASE}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const consoleErrors = [];
 
   page.on("console", (msg) => {
     if (msg.type() === "error" && !isIgnorableConsoleError(msg.text())) {
       consoleErrors.push(msg.text());
     }
-  });
+});
   page.on("pageerror", (err) => {
     if (!isIgnorableConsoleError(err.message)) {
       consoleErrors.push(err.message);
     }
-  });
+});
 
   try {
     await seedListing(page);
@@ -224,9 +223,9 @@ async function main() {
     else fail("console エラーなし", consoleErrors.slice(0, 3).join(" | "));
   } catch (err) {
     fail("テスト実行", err.message);
-  } finally {
-    await browser.close();
   }
+});
+  
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);

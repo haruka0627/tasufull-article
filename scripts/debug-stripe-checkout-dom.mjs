@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,8 +14,7 @@ const c = await fetch(`${base}/stripe-create-genai-checkout`, {
   body: JSON.stringify({ genai_plan: "genai_3d_generate_500", user_id: "u_me", origin: "http://127.0.0.1:5206" }),
 }).then((r) => r.json());
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 await page.goto(c.url, { waitUntil: "domcontentloaded", timeout: 120000 });
 await page.waitForTimeout(5000);
 
@@ -39,4 +38,6 @@ writeFileSync(
 );
 console.log("screenshot", out);
 console.log("dom", join(root, "supabase", ".temp-stripe-dom.json"));
-await browser.close();
+});
+
+await closeAllBrowsers();

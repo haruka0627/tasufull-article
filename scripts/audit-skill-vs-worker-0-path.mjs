@@ -2,7 +2,7 @@
 /**
  * skill-0 成功経路 vs worker-0 — 同一項目トレース（skill は読み取りのみ）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -300,10 +300,9 @@ function diffTraces(skill, worker) {
   return rows;
 }
 
-const browser = await chromium.launch({ headless: true });
-const skillTrace = await traceCategory(browser, "skill", SPECS.skill);
+await withPlaywrightBrowser(async (browser) => {const skillTrace = await traceCategory(browser, "skill", SPECS.skill);
 const workerTrace = await traceCategory(browser, "worker", SPECS.worker);
-await browser.close();
+});
 
 const diff = diffTraces(skillTrace, workerTrace);
 const report = { at: new Date().toISOString(), skill: skillTrace, worker: workerTrace, diff };

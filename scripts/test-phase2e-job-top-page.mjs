@@ -2,7 +2,7 @@
 /**
  * Phase 2-E smoke: job-top.html listing + detail-job link.
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.env.BASE_URL || "http://127.0.0.1:5188";
 
@@ -15,8 +15,7 @@ function collectErrors(page) {
   return errors;
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const errors = collectErrors(page);
 
 try {
@@ -62,10 +61,11 @@ try {
   };
 
   console.log(JSON.stringify(result, null, 2));
+  await closeAllBrowsers();
   process.exit(result.ok ? 0 : 1);
 } catch (e) {
   console.log(JSON.stringify({ ok: false, error: String(e), errors }, null, 2));
+  await closeAllBrowsers();
   process.exit(1);
-} finally {
-  await browser.close();
-}
+}});
+

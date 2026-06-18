@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — フォロー通知フィルタ・バッジ smoke test
  *
@@ -10,8 +11,7 @@ const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, ""
 const FOLLOW_KEY = "tasful_talk_notify_follow_only";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -117,9 +117,8 @@ async function main() {
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 }
 
 main();

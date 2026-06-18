@@ -3,7 +3,7 @@
  * NB-3 STEP 3 — ops/admin guard 検証
  *   node scripts/test-auth-ops-guard.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import { canUseLocalStorageFallback, isProductionHost } from "./lib/auth-current-user-core.mjs";
 
@@ -20,13 +20,11 @@ try {
 } catch (err) {
   console.warn("[test-auth-ops-guard] dev server unavailable:", err.message);
   console.log("SUMMARY: core PASS · browser SKIPPED");
+  await closeAllBrowsers();
   process.exit(0);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   const adminUrl = buildLocalPageUrl(base, "admin-operations-dashboard.html");
   await page.goto(adminUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.waitForFunction(() => typeof window.TasuAuthOpsGuard !== "undefined", {
@@ -133,6 +131,6 @@ try {
   console.log("  URL/LS escalation blocked on prod: PASS");
   console.log("  demo talkAdmin: PASS");
   console.log("\nSUMMARY: ALL PASS");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

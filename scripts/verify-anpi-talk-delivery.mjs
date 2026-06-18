@@ -2,7 +2,7 @@
 /**
  * 安否通知 — TASFUL TALK 配信確認（通知タブは回帰のみ）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -82,9 +82,8 @@ function sameTarget(actual, expected) {
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
-const browser = await chromium.launch({ headless: true });
-const results = [];
-
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 async function resetStorage(page) {
   await page.goto(`${BASE}/talk-home.html`, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.evaluate((keys) => keys.forEach((k) => localStorage.removeItem(k)), STORAGE_KEYS);
@@ -303,7 +302,7 @@ for (const c of NOTIFY_TAB_CASES) {
 await listPage.close();
 await roomPage.close();
 await notifyPage.close();
-await browser.close();
+});
 
 const failed = results.filter((r) => r.status !== "OK");
 console.log(`\nTALK messages: ${talkAudit.msgCount}`);
@@ -312,6 +311,8 @@ if (failed.length) {
   for (const r of failed) {
     console.log(`- [${r.surface}] ${r.id || r.title || ""}: ${r.issues.join("; ")}`);
   }
+  await closeAllBrowsers();
   process.exit(1);
 }
+await closeAllBrowsers();
 process.exit(0);

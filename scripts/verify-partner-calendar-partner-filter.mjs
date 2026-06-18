@@ -2,7 +2,7 @@
 /**
  * パートナー導線 — partnerId フィルター・画面分離確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { auditPartnerAssignmentPage } from "./lib/audit-partner-assignment.mjs";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
@@ -58,9 +58,8 @@ async function auditPartnerCalendar(page, partnerId) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const results = [];
-
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 for (const [label, viewport] of [
   ["390", { width: 390, height: 844 }],
   ["1280", { width: 1280, height: 900 }],
@@ -142,7 +141,7 @@ for (const [label, viewport] of [
   await page.close();
 }
 
-await browser.close();
+});
 
 console.log("\n## パートナー導線 画面分離確認\n");
 let failed = false;
@@ -153,4 +152,5 @@ for (const r of results) {
   if (r.issues?.length) r.issues.forEach((i) => console.log(`  - ${i}`));
 }
 
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

@@ -3,7 +3,7 @@
  * TASFUL AI compact panel — talk-home + chat-detail
  *   node scripts/test-talk-tasful-ai-sheet-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
@@ -53,15 +53,14 @@ async function assertIconOnlyAiBtn(page, contextLabel) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const errors = [];
+  await withPlaywrightBrowser(async (browser) => {const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     errors.push(m);
     console.log(`  ✗ ${m}`);
   };
 
-  try {
+  
     console.log("\n--- talk-home (390px) ---");
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
     await mobile.goto(buildLocalPageUrl(base, "talk-home.html", "?tab=chat&talkDev=1"), {
@@ -329,12 +328,13 @@ async function main() {
     } else {
       console.log("All TASFUL AI compact panel checks passed.");
     }
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

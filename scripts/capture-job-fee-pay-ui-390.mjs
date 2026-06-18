@@ -2,7 +2,7 @@
 /**
  * 求人550円支払い画面 — 390px スクショ（変更後）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -19,8 +19,7 @@ if (fs.existsSync(BEFORE_SRC)) {
   fs.copyFileSync(BEFORE_SRC, path.join(OUT, "01-before-390.png"));
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 page.on("dialog", async (d) => d.accept());
 
 await page.goto(`${BASE}/talk-home.html?tab=notify&userId=${POSTER_ID}&talkDev=1`, {
@@ -63,5 +62,7 @@ const audit = await page.evaluate(() => ({
 await page.screenshot({ path: path.join(OUT, "02-after-390.png") });
 
 fs.writeFileSync(path.join(OUT, "capture-report.json"), JSON.stringify({ baseUrl: BASE, audit }, null, 2));
-await browser.close();
+});
 console.log(JSON.stringify({ out: OUT, audit }, null, 2));
+
+await closeAllBrowsers();

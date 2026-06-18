@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** notifyJobHiredToApplicant → tasful_talk_notifications 経路トレース */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 import { fixedJobBenchUrl } from "./lib/fixed-bench-url.mjs";
 
@@ -9,8 +9,7 @@ const URL = fixedJobBenchUrl(BASE);
 const BUYER = "u_hiro";
 const HIRED = "応募が承諾されました";
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 
 page.on("dialog", async (d) => d.accept());
 
@@ -194,4 +193,6 @@ if (!ok) {
   console.log("TRACE_OK");
 }
 
-await browser.close();
+});
+
+await closeAllBrowsers();

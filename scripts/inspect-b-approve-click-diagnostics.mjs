@@ -2,7 +2,7 @@
 /**
  * B下「承認する」クリック診断（9項目）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -12,8 +12,7 @@ const EXACT_PATH =
 const EXACT_URL = `${BASE}${EXACT_PATH}`;
 const contactId = "contact-demo-skill-dual-001";
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
 
 const errors = [];
 const pushErr = (m) => {
@@ -21,7 +20,7 @@ const pushErr = (m) => {
   console.error(`NG: ${m}`);
 };
 
-try {
+
   await page.goto(EXACT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2000);
 
@@ -230,6 +229,5 @@ try {
   const report = { exactUrl: EXACT_URL, threadId, preClick, clickTrace, postClick, errors, ok: errors.length === 0 };
   console.log(JSON.stringify(report, null, 2));
   if (errors.length) process.exit(1);
-} finally {
-  await browser.close();
-}
+});
+

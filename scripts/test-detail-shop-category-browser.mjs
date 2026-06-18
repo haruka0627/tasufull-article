@@ -7,7 +7,7 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -282,8 +282,7 @@ async function testShopStoreListLinks(page) {
 async function main() {
   console.log(`\ndetail-shop カテゴリ表示 E2E — ${BASE}\n`);
   const consoleErrors = [];
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   page.on("console", (msg) => {
     if (msg.type() === "error" && !isIgnorableConsoleError(msg.text())) {
@@ -313,9 +312,10 @@ async function main() {
   if (fatal.length === 0) pass("console エラーなし");
   else fail("console エラーなし", fatal.slice(0, 2).join(" | "));
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   console.log(`\n--- 結果: ${ok}/${results.length} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === results.length ? 0 : 1);
 }
 
@@ -323,3 +323,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

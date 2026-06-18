@@ -2,7 +2,7 @@
 /**
  * TASFUL TALK 安否通知 → 対応ページ遷移 → 操作可否の確認（読み取り専用）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5173").replace(/\/$/, "");
 
@@ -53,9 +53,8 @@ const CASES = [
   },
 ];
 
-const browser = await chromium.launch();
-const results = [];
-
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 const seedPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await seedPage.goto(`${BASE}/talk-home.html?tab=notify`, { waitUntil: "domcontentloaded" });
 await seedPage.waitForSelector('[data-talk-notify-id="anpi-check-request-001"]', { timeout: 25000 });
@@ -222,7 +221,7 @@ results.push({
 });
 
 await aux.close();
-await browser.close();
+});
 
 results.push({
   type: "TASFUL TALK連携解除",
@@ -241,3 +240,5 @@ results.push({
 });
 
 console.log(JSON.stringify(results, null, 2));
+
+await closeAllBrowsers();

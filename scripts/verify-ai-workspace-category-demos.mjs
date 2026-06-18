@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = {
@@ -30,8 +30,7 @@ const server = await new Promise((resolve) => {
 });
 
 const base = `http://127.0.0.1:${server.address().port}`;
-const browser = await chromium.launch({ headless: true });
-let fails = 0;
+await withPlaywrightBrowser(async (browser) => {let fails = 0;
 
 async function checkDemo(demo, profile, suggestion) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -53,7 +52,8 @@ await checkDemo("job", "job", "応募文を作る");
 await checkDemo("product", "product", "比較表を作る");
 await checkDemo("conversation", "vendor", "問い合わせ文を作る");
 
-await browser.close();
+});
 server.close();
 console.log(fails ? `FAILED ${fails}` : "ALL PASSED");
+await closeAllBrowsers();
 process.exit(fails ? 1 : 0);

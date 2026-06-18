@@ -3,7 +3,7 @@
  * NB-3 STEP 5 — 市場 buyer/seller identity 検証
  *   node scripts/test-market-identity.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import {
   listingOwnerId,
@@ -26,13 +26,11 @@ try {
 } catch (err) {
   console.warn("[test-market-identity] dev server unavailable:", err.message);
   console.log("SUMMARY: core PASS · browser SKIPPED");
+  await closeAllBrowsers();
   process.exit(0);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   const url = buildLocalPageUrl(base, "shop-market-mypage.html", "?talkDev=1&userId=u_me");
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.waitForFunction(() => typeof window.TasuMarketIdentity !== "undefined", {
@@ -108,6 +106,6 @@ try {
   console.log("  prod LS blocked: PASS");
   console.log("  checkout page: PASS");
   console.log("\nSUMMARY: ALL PASS");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

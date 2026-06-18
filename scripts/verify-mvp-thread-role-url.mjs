@@ -1,7 +1,7 @@
 /**
  * Verify mvp-thread URL keeps &role= after load, re-render, send, reload.
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -26,8 +26,7 @@ function parseUrl(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const pageOwner = await context.newPage();
   const pagePartner = await context.newPage();
 
@@ -94,10 +93,12 @@ async function main() {
   console.log(
     JSON.stringify({ afterLoad, afterSend, afterReload, storage, listHref }, null, 2)
   );
-  await browser.close();
+    });
 }
 
 main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

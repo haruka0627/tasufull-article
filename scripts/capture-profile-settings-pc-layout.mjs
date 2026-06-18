@@ -1,7 +1,7 @@
 /**
  * プロフィール設定 — PC/SP レイアウト確認（1280 / 1024 / 390）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,8 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 
 async function capture(name, viewport) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport });
   await page.goto(`${base}/profile-settings.html`, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(1500);
 
@@ -71,7 +70,7 @@ async function capture(name, viewport) {
 
   const outPath = path.join(OUT_DIR, name);
   await page.screenshot({ path: outPath, fullPage: false });
-  await browser.close();
+    });
   return metrics;
 }
 
@@ -109,6 +108,7 @@ console.log(JSON.stringify(report, null, 2));
 const failed = Object.entries(report.checks).filter(([, ok]) => !ok);
 if (failed.length) {
   console.error("FAIL:", failed.map(([k]) => k).join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS: profile-settings PC layout");

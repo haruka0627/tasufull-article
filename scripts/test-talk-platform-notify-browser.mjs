@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK Phase3 — platform → notify tab smoke test
  *
@@ -38,8 +39,7 @@ async function countDomNotifications(page, id) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await context.newPage();
   await page.goto(`${BASE}/talk-home.html`, { waitUntil: "domcontentloaded", timeout: 20000 });
   await page.evaluate(() => {
@@ -191,9 +191,8 @@ async function main() {
     }
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));

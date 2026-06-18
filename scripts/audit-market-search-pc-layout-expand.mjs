@@ -2,7 +2,7 @@
  * 市場検索 PC — layout 最大幅拡張 再検証
  * shell + layout 同時拡張、4列 / 1440px+ 5列、1280/1440/1600 スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -49,8 +49,7 @@ const VARIANTS = [
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const report = {
   capturedAt: new Date().toISOString(),
@@ -386,4 +385,6 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
 console.log("\nRECOMMENDATION:", report.recommendation.label);
 console.log(JSON.stringify(report.recommendation, null, 2));
 
-await browser.close();
+});
+
+await closeAllBrowsers();

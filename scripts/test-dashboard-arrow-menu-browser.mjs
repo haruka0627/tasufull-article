@@ -1,7 +1,7 @@
 /**
  * ダッシュボード 矢印付き展開メニュー検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
 import path from "path";
@@ -104,8 +104,7 @@ for (const [viewport, suffix] of [
   [{ width: 1280, height: 900 }, "1280"],
   [{ width: 390, height: 844 }, "390"],
 ]) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDashboard(page, base);
@@ -211,13 +210,12 @@ for (const [viewport, suffix] of [
     await closePanel(page, panelId);
   }
 
-  await browser.close();
+    });
 }
 
 // toggle / outside
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await prepareDashboard(page, base);
   await openPanel(page, "catalog");
   await closePanel(page, "catalog");
@@ -245,13 +243,12 @@ for (const [viewport, suffix] of [
     actual: outsideClosed ? "hidden" : "open",
     expected: "hidden",
   });
-  await browser.close();
+    });
 }
 
 // anpi link
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await prepareDashboard(page, base);
   const [response] = await Promise.all([
     page.waitForNavigation({ waitUntil: "domcontentloaded", timeout: 30000 }).catch(() => null),
@@ -264,7 +261,7 @@ for (const [viewport, suffix] of [
     actual: page.url(),
     expected: "anpi-dashboard.html",
   });
-  await browser.close();
+    });
 }
 
 const failCount = cases.filter((c) => !c.pass).length;
@@ -302,5 +299,6 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, { title: REVIEW_TITLE, report: inde
 console.log(`\n${REVIEW_TITLE}: ${allPass ? "PASS" : "FAIL"} (${passCount}/${cases.length})`);
 if (!allPass) {
   cases.filter((c) => !c.pass).forEach((c) => console.log(`  FAIL: ${c.label} — ${c.actual}`));
+  await closeAllBrowsers();
   process.exit(1);
 }

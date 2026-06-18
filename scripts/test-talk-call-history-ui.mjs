@@ -5,7 +5,7 @@
  *   node scripts/test-talk-call-history-ui.mjs
  *   SUPABASE_STRICT=1 node scripts/test-talk-call-history-ui.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { ensureTalkTestUsers, loadTalkSupabaseConfig } from "./lib/talk-rls-test-auth.mjs";
 import { enableTalkDevMode, signInTalkTestUser, talkHomeUrl } from "./lib/talk-test-env.mjs";
 
@@ -208,12 +208,7 @@ async function main() {
   await ensureTalkTestUsers([USER_A, USER_B]);
   await cleanupActiveCallSessions([USER_A, USER_B]);
 
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream"],
-  });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const pageA = await browser.newPage({ viewport: { width: 390, height: 844 } });
     const pageB = await browser.newPage({ viewport: { width: 390, height: 844 } });
     await enableTalkDevMode(pageA);
@@ -354,12 +349,13 @@ async function main() {
       process.exit(1);
     }
     console.log("=== PASS (0 errors) ===\n");
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

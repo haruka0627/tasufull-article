@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK — 公式トーク通知ミラー Playwright 検証（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 
@@ -20,8 +20,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.addInitScript(() => {
   [
@@ -154,5 +153,6 @@ if (notifyTab.platform < 19) failed = true;
 if (notifyTab.builder < 22) failed = true;
 if (notifyTab.anpi < 6) failed = true;
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

@@ -2,7 +2,7 @@
 /**
  * Phase 2-C smoke: checkout → demo order complete + service-fee-pay card.
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.env.BASE_URL || "http://127.0.0.1:5173";
 const SHOP_ID = "demo-shop-haru-cafe";
@@ -17,11 +17,10 @@ function collectErrors(page) {
   return errors;
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const results = [];
 
-try {
+
   const checkoutUrl = `${BASE}/checkout.html?shopId=${encodeURIComponent(SHOP_ID)}&productId=${encodeURIComponent(PRODUCT_ID)}&productName=${encodeURIComponent("テスト商品")}&price=1200&quantity=2`;
   const checkoutErrors = collectErrors(page);
   await page.goto(checkoutUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
@@ -114,9 +113,9 @@ try {
       dealId?.includes("local-deal-test-phase2c") &&
       feeErrors.length === 0,
   });
-} finally {
-  await browser.close();
-}
+});
+
 
 console.log(JSON.stringify(results, null, 2));
+await closeAllBrowsers();
 process.exit(results.every((r) => r.ok) ? 0 : 1);

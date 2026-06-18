@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** 修正報告用スクショ（390px / PC） */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
 
@@ -21,9 +21,7 @@ async function resetStorage(page) {
   await page.evaluate((keys) => keys.forEach((k) => localStorage.removeItem(k)), STORAGE_KEYS);
 }
 
-const browser = await chromium.launch({ headless: true });
-
-for (const [label, viewport] of [
+await withPlaywrightBrowser(async (browser) => {for (const [label, viewport] of [
   ["390", { width: 390, height: 844 }],
   ["1280", { width: 1280, height: 900 }],
 ]) {
@@ -62,5 +60,7 @@ for (const [label, viewport] of [
   await page.close();
 }
 
-await browser.close();
+});
 console.log(`\nSaved to ${OUT}/`);
+
+await closeAllBrowsers();

@@ -1,7 +1,7 @@
 /**
  * Admin calendar: site assignment registration (calendarAssignments storage)
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -48,8 +48,7 @@ async function registerAssignment(page, { houseName, partnerRadioValue, workDate
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
   page.on("dialog", async (d) => d.accept());
 
@@ -150,10 +149,12 @@ async function main() {
   if (textB?.includes(HOUSE_A)) throw new Error("Partner B should not see partner A assignment");
 
   console.log("OK: admin calendar site assignment test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

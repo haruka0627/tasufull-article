@@ -5,7 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
@@ -45,9 +45,7 @@ async function openTalkHomeSheet(page) {
 
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
     await openTalkHomeSheet(mobile);
     await capture(mobile, "talk-home-tasful-ai-sheet-390.png", "talk-home 390px sheet open");
@@ -74,12 +72,13 @@ async function main() {
     await chatMobile.close();
 
     console.log("\nScreenshots ready in reports/screenshots/tasful-ai-talk/");
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

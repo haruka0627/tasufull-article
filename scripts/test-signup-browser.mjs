@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 会員登録フロー — ブラウザ自動確認 (Playwright)
  *
@@ -6,7 +7,6 @@
  *   node scripts/test-signup-browser.mjs
  *   BASE_URL=http://127.0.0.1:5175 node scripts/test-signup-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5175").replace(/\/$/, "");
 const VIEWPORTS = [
@@ -249,8 +249,7 @@ async function testRegistrationFlow(page) {
 async function main() {
   console.log(`\n会員登録 E2E — ${BASE}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
 
   try {
@@ -275,9 +274,8 @@ async function main() {
     await testRegistrationFlow(page);
   } catch (err) {
     fail("例外", err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);

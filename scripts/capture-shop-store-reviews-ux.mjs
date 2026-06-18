@@ -4,7 +4,7 @@
  *
  *   node scripts/capture-shop-store-reviews-ux.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeVerification } from "./lib/finalize-verification.mjs";
 import { primaryScreenshotsDir } from "./lib/screenshot-ops.mjs";
@@ -105,9 +105,7 @@ fs.mkdirSync(BEFORE, { recursive: true });
 fs.mkdirSync(AFTER, { recursive: true });
 
 const base = await findDevServerBaseUrl({ probePath: "detail-shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-
-const backups = backupAndRestoreHead();
+await withPlaywrightBrowser(async (browser) => {const backups = backupAndRestoreHead();
 console.log("[reviews-ux] capturing BEFORE (git HEAD markup/css)...");
 const beforeReport = await capturePhase(browser, base, BEFORE, "before");
 restoreBackups(backups);
@@ -126,7 +124,7 @@ for (const vp of afterReport.viewports) {
   }
 }
 
-await browser.close();
+});
 
 const report = {
   generatedAt: new Date().toISOString(),
@@ -160,4 +158,5 @@ console.log(JSON.stringify(report.overall, null, 2));
 console.log(JSON.stringify(report.geminiRecheck, null, 2));
 console.log(`\nSaved: ${OUT}`);
 await finalizeVerification(ROOT, { primaryFolder: "shop-store-final-review" });
+await closeAllBrowsers();
 process.exit(report.overall.after === "PASS" ? 0 : 1);

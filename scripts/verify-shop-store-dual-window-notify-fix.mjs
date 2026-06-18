@@ -3,7 +3,7 @@
  * 店舗販売 — 2窓ベンチ通知修正検証
  * 購入フロー + TALK購入通知（A=u_shop_demo）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -251,9 +251,7 @@ const report = {
   allPass: true,
 };
 
-const browser = await chromium.launch({ headless: true });
-
-for (const vp of VIEWPORTS) {
+await withPlaywrightBrowser(async (browser) => {for (const vp of VIEWPORTS) {
   for (const prod of PRODUCTS) {
     for (const mode of MODES) {
       const caseId = `${prod.label}-${mode}-${vp.label}`;
@@ -418,4 +416,6 @@ console.log(
     2
   )
 );
-await browser.close();
+});
+
+await closeAllBrowsers();

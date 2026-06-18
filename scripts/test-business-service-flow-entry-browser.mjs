@@ -4,7 +4,7 @@
  *
  *   BASE_URL=http://127.0.0.1:8765 node scripts/test-business-service-flow-entry-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const DEMO_ID = process.env.BSD_DEMO_ID || "business-demo-other-001";
@@ -24,8 +24,7 @@ function fail(step, detail = "") {
 
 async function main() {
   console.log(`\n業務詳細 CTA 入口統一 Step1 — ${BASE}\n`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(`${BASE}/detail-business-service.html?id=${encodeURIComponent(DEMO_ID)}`, {
     waitUntil: "domcontentloaded",
@@ -108,7 +107,7 @@ async function main() {
     fail("chat-detail へ遷移", String(err.message || err));
   }
 
-  await browser.close();
+    });
   const failed = results.filter((r) => !r.ok);
   console.log(`\n--- ${results.length - failed.length}/${results.length} passed ---\n`);
   if (failed.length) process.exit(1);
@@ -118,3 +117,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

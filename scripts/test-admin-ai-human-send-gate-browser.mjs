@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI運営秘書 Phase12 — Human Send Gate E2E
  *   node scripts/test-admin-ai-human-send-gate-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 import fs from "fs";
@@ -41,7 +41,7 @@ function pageUrl(rel) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -51,8 +51,7 @@ function pass(msg) {
 async function main() {
   fs.mkdirSync(SHOT_DIR, { recursive: true });
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   await page.setViewportSize({ width: 390, height: 844 });
 
   await page.goto(pageUrl("admin-operations-dashboard.html"), { waitUntil: "domcontentloaded" });
@@ -227,11 +226,11 @@ async function main() {
   await page.screenshot({ path: path.join(SHOT_DIR, "human-send-gate-1280.png"), fullPage: false });
   pass("390px / 1280px スクショ保存");
 
-  await browser.close();
+    });
   console.log("\nAll Human Send Gate (Phase12) tests passed.");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch(() => {
+  console.error();
+  closeAllBrowsers().finally(() => process.exit(1));
 });

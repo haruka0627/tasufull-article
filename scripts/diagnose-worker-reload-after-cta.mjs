@@ -2,7 +2,7 @@
 /**
  * CTA後に固定親URLで再読込 → A上通知が消えるか（内部resetあり）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -13,8 +13,7 @@ const PARENT_URL = fixedWorkerBenchUrl(BASE);
 const OUT = path.join("screenshots", "worker-notify-reload-after-cta");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 
 async function readState(label) {
   return page.evaluate((tag) => {
@@ -61,5 +60,6 @@ fs.writeFileSync(path.join(OUT, "reload-report.json"), JSON.stringify(report, nu
 
 console.log(JSON.stringify(report, null, 2));
 console.log(`RESULT: ${report.ok ? "OK" : "NG — reload drops A notify"}`);
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(report.ok ? 0 : 1);

@@ -1,7 +1,7 @@
 /**
  * 市場検索 PC — コンテンツ max-width 再監査（1240現状 vs 1360/1440/1520）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -24,8 +24,7 @@ const VARIANTS = [
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const report = {
   capturedAt: new Date().toISOString(),
@@ -204,4 +203,6 @@ fs.writeFileSync(path.join(OUT_DIR, "report.md"), md);
 console.log("\nRECOMMENDATION:", best.label);
 console.log(JSON.stringify(report.recommendation, null, 2));
 
-await browser.close();
+});
+
+await closeAllBrowsers();

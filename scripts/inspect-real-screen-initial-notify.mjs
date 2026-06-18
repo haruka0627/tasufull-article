@@ -4,7 +4,7 @@
  * ユーザーと同じ URL 形式: benchViewport=390（デフォルトタブ）, userId=u_hiro
  * 人工 postMessage refresh なし
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -333,13 +333,13 @@ async function inspectCategory(browser, cat) {
   return result;
 }
 
-const browser = await chromium.launch({ headless: true });
-const results = [];
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 for (const cat of CATEGORIES) {
   console.log(`Real screen: ${cat.id}`);
   results.push(await inspectCategory(browser, cat));
 }
-await browser.close();
+});
 
 const outPath = path.join(OUT_DIR, "report.json");
 fs.writeFileSync(outPath, JSON.stringify({ generatedAt: new Date().toISOString(), results }, null, 2));
@@ -358,3 +358,5 @@ for (const r of results) {
   );
 }
 console.log(`\nReport: ${outPath}`);
+
+await closeAllBrowsers();

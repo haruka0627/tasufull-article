@@ -3,7 +3,7 @@
  * NB-3 STEP 4 — Connect 状態 helper 検証
  *   node scripts/test-connect-state.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import {
   snapshotFromDbRow,
@@ -37,13 +37,11 @@ try {
 } catch (err) {
   console.warn("[test-connect-state] dev server unavailable:", err.message);
   console.log("SUMMARY: core PASS · browser SKIPPED");
+  await closeAllBrowsers();
   process.exit(0);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   const url = buildLocalPageUrl(
     base,
     "payment-settings.html",
@@ -157,6 +155,6 @@ try {
   console.log("  prod JWT no DB: PASS");
   console.log("  payment-settings UI: PASS");
   console.log("\nSUMMARY: ALL PASS");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

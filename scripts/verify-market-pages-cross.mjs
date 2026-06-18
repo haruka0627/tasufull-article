@@ -1,7 +1,7 @@
 /**
  * 市場ページ横断 — shop-market-pc.css 追加影響確認（390px / 1280px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -157,8 +157,7 @@ const PAGES = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const results = [];
 
 function auditPage(viewport) {
@@ -334,7 +333,7 @@ for (const spec of PAGES) {
   results.push(entry);
 }
 
-await browser.close();
+});
 
 const passCount = results.filter((r) => r.pass).length;
 const report = {
@@ -348,4 +347,5 @@ const report = {
 
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(report.overallPass ? 0 : 1);

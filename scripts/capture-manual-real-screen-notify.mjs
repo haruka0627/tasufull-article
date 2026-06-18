@@ -3,7 +3,7 @@
  * 実画面証跡 — B下CTA → A上通知カード表示 → カードCTA → Aチャット遷移
  * 完了条件: スクショで A上通知カードが視認できること
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -257,13 +257,13 @@ async function captureCategory(browser, cat) {
   return result;
 }
 
-const browser = await chromium.launch({ headless: true });
-const results = [];
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 for (const cat of CATS) {
   console.log(`Capture: ${cat.id}`);
   results.push(await captureCategory(browser, cat));
 }
-await browser.close();
+});
 
 const reportPath = path.join(OUT_DIR, "report.json");
 fs.writeFileSync(reportPath, JSON.stringify({ at: new Date().toISOString(), results }, null, 2));
@@ -279,3 +279,5 @@ for (const r of results) {
   );
 }
 console.log(`\nReport: ${reportPath}`);
+
+await closeAllBrowsers();

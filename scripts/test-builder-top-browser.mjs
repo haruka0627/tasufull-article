@@ -1,7 +1,7 @@
 /**
  * Builder TOP — public-board導線・フッター復元スモークテスト
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -34,9 +34,7 @@ const PUBLIC_BOARD_LINKS = [
 const FOOTER_REQUIRED = ["利用規約", "プライバシーポリシー", "会社概要", "お問い合わせ"];
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-
-  for (const width of [1280, 390]) {
+  await withPlaywrightBrowser(async (browser) => {for (const width of [1280, 390]) {
     const page = await browser.newPage({ viewport: { width, height: width === 390 ? 844 : 900 } });
     await page.goto(topUrl, { waitUntil: "domcontentloaded" });
     await page.waitForSelector("[data-builder-top-projects] .builder-top-project-card", { timeout: 10000 });
@@ -85,7 +83,7 @@ async function main() {
     await page.close();
   }
 
-  await browser.close();
+    });
   console.log(`\nResult: ${passed} passed, ${failed} failed`);
   if (failed > 0) process.exit(1);
   console.log("OK: builder TOP smoke test passed");
@@ -95,3 +93,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

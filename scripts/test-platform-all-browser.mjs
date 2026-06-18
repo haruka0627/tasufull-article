@@ -1,11 +1,11 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL プラットフォーム — 主要導線・投稿・詳細・会員・TALK連携 smoke
  *
  *   node scripts/test-platform-all-browser.mjs
  *   BASE_URL=http://127.0.0.1:8765 node scripts/test-platform-all-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
@@ -78,8 +78,7 @@ const MEMBER_PAGES = [
 ];
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const errors = [];
+  await withPlaywrightBrowser(async (browser) => {const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     errors.push(m);
@@ -381,18 +380,21 @@ async function main() {
       console.log("\n--- page errors (sample) ---");
       [...new Set(pageErrors)].slice(0, 5).forEach((e) => console.log(`  ! ${e}`));
     }
-  } finally {
-    await browser.close();
+  } catch (err) {
+    errors.push(String(err?.message || err));
   }
+});
+  
 
   console.log(`\n=== SUMMARY: ${errors.length ? "FAIL" : "PASS"} (${errors.length} failures) ===`);
   if (errors.length) {
     errors.forEach((e) => console.log(`  - ${e}`));
+    await closeAllBrowsers();
     process.exit(1);
   }
 }
 
 main().catch((err) => {
   console.error(err);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

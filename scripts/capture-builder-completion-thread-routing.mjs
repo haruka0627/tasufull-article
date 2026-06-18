@@ -2,7 +2,7 @@
 /**
  * 完了報告スレッド振り分け — レビュー用スクショ PC1280 / SP390
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -104,9 +104,7 @@ async function seedCalendarCompletion(page) {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const BASE = await requireDevServer();
 console.log(`[dev] BASE_URL=${BASE}`);
-const browser = await chromium.launch({ headless: true });
-
-for (const { file, width, height, kind } of [
+await withPlaywrightBrowser(async (browser) => {for (const { file, width, height, kind } of [
   { file: "board-thread-completion-1280.png", width: 1280, height: 900, kind: "board" },
   { file: "board-thread-completion-390.png", width: 390, height: 844, kind: "board" },
   { file: "mvp-thread-completion-1280.png", width: 1280, height: 900, kind: "mvp" },
@@ -180,5 +178,7 @@ for (const { file, width, height, kind } of [
   await page.close();
 }
 
-await browser.close();
+});
 console.log(`Screenshots saved to ${OUT_DIR}`);
+
+await closeAllBrowsers();

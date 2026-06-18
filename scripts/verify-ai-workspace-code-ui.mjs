@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = {
@@ -34,8 +34,7 @@ const base = `http://127.0.0.1:${port}`;
 const outDir = join(root, "screenshots", "ai-workspace-generate-ui");
 await mkdir(outDir, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-let fails = 0;
+await withPlaywrightBrowser(async (browser) => {let fails = 0;
 
 for (const [tag, w, h] of [
   ["pc1280", 1280, 900],
@@ -64,6 +63,7 @@ for (const [tag, w, h] of [
   await page.close();
 }
 
-await browser.close();
+});
 server.close();
+await closeAllBrowsers();
 process.exit(fails ? 1 : 0);

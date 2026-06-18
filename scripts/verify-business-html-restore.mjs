@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parse } from "parse5";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -49,8 +49,7 @@ const staticChecks = {
 };
 
 const BASE = process.env.BASE_URL || "http://127.0.0.1:5188";
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const pageErrors = [];
 const consoleErrors = [];
 
@@ -98,7 +97,7 @@ try {
   pageErrors.push(`navigation: ${err.message || err}`);
 }
 
-await browser.close();
+});
 
 const report = {
   static: staticChecks,
@@ -140,3 +139,5 @@ const pass =
 console.log(JSON.stringify(report, null, 2));
 console.log(pass ? "PASS business.html restore" : "FAIL business.html restore");
 process.exitCode = pass ? 0 : 1;
+
+await closeAllBrowsers();

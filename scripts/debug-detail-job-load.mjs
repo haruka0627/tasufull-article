@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5188, 5182, 5199];
 let base = null;
@@ -18,12 +18,12 @@ for (const port of PORTS) {
 }
 if (!base) {
   console.error("No server found");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("Base:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const logs = [];
 page.on("console", (msg) => logs.push(`[${msg.type()}] ${msg.text()}`));
 page.on("pageerror", (err) => logs.push(`[pageerror] ${err.message}`));
@@ -51,4 +51,4 @@ for (const id of ["demo-job-001", "9c950eea-409d-4d1b-9d72-7728d91960f8"]) {
   console.log("last logs:", logs.slice(-8));
 }
 
-await browser.close();
+});

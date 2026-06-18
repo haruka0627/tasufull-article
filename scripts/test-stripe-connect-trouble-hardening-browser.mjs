@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Stripe Connect トラブル強化 E2E
  *   node scripts/test-stripe-connect-trouble-hardening-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
@@ -13,7 +13,7 @@ const RUN = Date.now().toString(36).slice(-6);
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -234,9 +234,8 @@ function runRegression(script) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  try {
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
+  
     await loadSupportCenter(page);
     await clearOpsStorage(page);
     await testEventMappings(page);
@@ -244,9 +243,8 @@ async function main() {
     await testOffplatform(page);
     await testAiOpsAndOpsHub(page);
     await testNoExecuteButtons(page);
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   runRegression("test-admin-operations-dashboard-browser.mjs");
   runRegression("test-ai-operations-center-browser.mjs");
@@ -257,5 +255,5 @@ async function main() {
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

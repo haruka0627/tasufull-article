@@ -2,7 +2,7 @@
 /**
  * 実際の #frame-b-notify を chatStarted 直後に検査 + 空表示スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -10,8 +10,6 @@ import { requireDevServer } from "./lib/dev-base-url.mjs";
 const BASE = await requireDevServer();
 const OUT_DIR = path.join("screenshots", "bench-b-notify-inspect");
 fs.mkdirSync(OUT_DIR, { recursive: true });
-
-const browser = await chromium.launch({ headless: true });
 
 async function readBNotifyFrame(bench) {
   const src = await bench.locator("#frame-b-notify").getAttribute("src");
@@ -31,7 +29,6 @@ async function readBNotifyFrame(bench) {
       window.TasuTalkData?.getNotifications?.({ filter: "all", applySettings: false, showMuted: true }) || [];
     const filtered =
       window.TasuTalkJobFullReviewMode?.filterJobFullReviewNotifications?.(visibleAll) || visibleAll;
-    const listOpts = window.TasuTalkHomeUi ? null : null;
     return {
       iframeUserId: params.get("userId"),
       demoProfile: params.get("demoProfile"),
@@ -59,7 +56,7 @@ async function readBNotifyFrame(bench) {
   return { src, frameFound: true, ...data };
 }
 
-try {
+await withPlaywrightBrowser(async (browser) => {
   const bench = await (await browser.newContext()).newPage({ viewport: { width: 1280, height: 900 } });
   const contactId = "contact-demo-skill-dual-001";
 
@@ -160,6 +157,6 @@ try {
   } else {
     console.log("差異なし: B上にカード表示");
   }
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

@@ -1,7 +1,7 @@
 /**
  * 求人応募 — 応募カード → 採用 / 断る → 採用時のみチャット + 双方通知
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const JOB_ID = "job_demo_full_001";
@@ -53,8 +53,7 @@ function notifTitles(notifs) {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 await page.addInitScript((keys) => {
   Object.values(keys).forEach((k) => localStorage.removeItem(k));
@@ -230,11 +229,12 @@ if (afterReject.hireThreadCount !== afterHire.hireThreadCount) {
 }
 if (afterReject.rejectNotifCount < 1) failures.push("断り通知が届いていない");
 
-await browser.close();
+});
 
 if (failures.length) {
   console.error("FAILED:");
   failures.forEach((f) => console.error(" -", f));
+  await closeAllBrowsers();
   process.exit(1);
 }
 

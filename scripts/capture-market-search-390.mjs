@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 検索ページ — 390px 検証（localhost 必須）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -17,8 +17,7 @@ const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const listUrl = buildLocalPageUrl(base, "shop-search.html");
 const filterUrl = buildLocalPageUrl(base, "shop-search.html", "keyword=コーヒー&connect=1&rating4=1");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(listUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -315,7 +314,7 @@ async function probeHeaderOnPort(port) {
 const port5173 = await probeHeaderOnPort(5173);
 const port5500 = await probeHeaderOnPort(5500);
 
-await browser.close();
+});
 
 const pass =
   report.isLocalhost &&
@@ -399,4 +398,5 @@ console.log(
     2
   )
 );
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

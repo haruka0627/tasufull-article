@@ -1,7 +1,7 @@
 /**
  * 安否サービス登録 — ヘッダー構成・レイアウト確認（1280 / 390）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,8 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 
 async function capture(name, viewport) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport });
   await page.goto(`${base}/anpi-register.html`, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(2000);
 
@@ -62,7 +61,7 @@ async function capture(name, viewport) {
   });
 
   await page.screenshot({ path: path.join(OUT_DIR, name), fullPage: false });
-  await browser.close();
+    });
   return metrics;
 }
 
@@ -97,6 +96,7 @@ console.log(JSON.stringify(report, null, 2));
 const failed = Object.entries(report.checks).filter(([, ok]) => !ok);
 if (failed.length) {
   console.error("FAIL:", failed.map(([k]) => k).join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS: anpi-register header layout");

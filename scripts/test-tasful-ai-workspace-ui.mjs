@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,8 +9,7 @@ const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, ""
 const outDir = join(root, "screenshots/tasful-ai-workspace-final");
 mkdirSync(outDir, { recursive: true });
 
-const browser = await chromium.launch();
-let fails = 0;
+await withPlaywrightBrowser(async (browser) => {let fails = 0;
 function ok(name, cond) {
   if (!cond) {
     console.log("FAIL:", name);
@@ -109,7 +108,8 @@ for (const vp of [
   await page.close();
 }
 
-await browser.close();
+});
 writeFileSync(join(outDir, "result.txt"), fails ? `FAILED ${fails}` : "ALL PASSED");
 console.log(fails ? `FAILED ${fails}` : "ALL PASSED");
+await closeAllBrowsers();
 process.exit(fails ? 1 : 0);

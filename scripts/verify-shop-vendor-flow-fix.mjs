@@ -2,7 +2,7 @@
 /**
  * 店舗販売導線 A–D 修正後の検証 + スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -31,8 +31,7 @@ function fail(step, detail) {
   report.counts.ng += 1;
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(25000);
 
 async function loadAllVendorCards() {
@@ -215,4 +214,6 @@ for (const s of shots) {
 
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ counts: report.counts, steps: report.steps }, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

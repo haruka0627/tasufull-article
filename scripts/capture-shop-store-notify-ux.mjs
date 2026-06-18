@@ -2,7 +2,7 @@
 /**
  * 店舗販売購入通知 UX — 2窓ベンチ検証 + 必須スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -198,8 +198,7 @@ const report = {
 base = await findDevServerBaseUrl({ probePath: "chat-dual-window-demo.html" });
 report.base = base;
 
-const browser = await chromium.launch({ headless: true });
-let canonicalCaseId = "";
+await withPlaywrightBrowser(async (browser) => {let canonicalCaseId = "";
 
 for (const vp of VIEWPORTS) {
   for (const prod of PRODUCTS) {
@@ -295,4 +294,6 @@ report.ok = report.cases.filter((c) => c.uxPass).length;
 report.ng = report.cases.filter((c) => !c.uxPass).length;
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ uxFlow: report.uxFlow, allPass: report.allPass, ok: report.ok, ng: report.ng }, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

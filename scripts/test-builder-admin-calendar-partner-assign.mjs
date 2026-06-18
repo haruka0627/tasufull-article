@@ -1,7 +1,7 @@
 /**
  * Admin calendar: partner-specific assignment + notification + partner calendar visibility
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -32,8 +32,7 @@ async function setPartnerContext(page, partnerId) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
   page.on("dialog", async (d) => d.accept());
 
@@ -169,10 +168,12 @@ async function main() {
   if (!textAfterB?.includes(TEST_TITLE)) throw new Error("Partner B should see calendar after reassignment");
 
   console.log("OK: admin calendar partner assignment test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

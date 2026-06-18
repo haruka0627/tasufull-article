@@ -2,13 +2,11 @@
 /**
  * chatStarted 後の通知レコードと B上 iframe 参照件数を実データで切り分け
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   const bench = await (await browser.newContext()).newPage({ viewport: { width: 1280, height: 900 } });
   const contactId = "contact-demo-skill-dual-001";
 
@@ -174,6 +172,6 @@ try {
   console.log(`\nB上 getNotifications 件数: ${iframeData.getNotificationsCount}`);
   console.log(`B上 filter後 件数: ${iframeData.filteredCount}`);
   console.log(`B上 DOMカード 件数: ${iframeData.domCardCount}`);
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

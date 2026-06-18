@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 実API検証（ChatGPT / Claude）: 「草刈り業者への問い合わせ文を作って」
  *   node scripts/capture-ai-workspace-real-api.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PROMPT = "草刈り業者への問い合わせ文を作って";
@@ -240,12 +241,11 @@ async function main() {
 
   const server = await startServer();
   const base = "http://127.0.0.1:8790";
-  const browser = await chromium.launch({ headless: true });
-  const captures = [];
+  await withPlaywrightBrowser(async (browser) => {const captures = [];
   const errors = [];
   const checks = {};
 
-  try {
+  
     const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
     await preparePage(page, base);
 
@@ -442,13 +442,13 @@ async function main() {
     } else {
       console.log("ALL PASSED");
     }
-  } finally {
-    await browser.close();
-    server.close();
-  }
+    });
+  server.close();
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

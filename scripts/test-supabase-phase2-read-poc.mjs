@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Supabase Phase 2 read-through PoC E2E
  *   node scripts/test-supabase-phase2-read-poc.mjs
@@ -6,7 +7,6 @@
  * ローカル: merge ロジック + mock remote + 既存 E2E 非破壊（フラグ OFF）
  * 任意: SUPABASE_URL + anon key で live read（staging RLS 適用後）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -21,7 +21,7 @@ function pageUrl(rel, qs) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -157,14 +157,12 @@ async function runExistingSmoke() {
 async function main() {
   testMergeLogic();
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  try {
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
+  
     await testFlagOffRegression(page);
     await testMockReadThrough(page);
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   await testLiveStagingOptional();
   await runExistingSmoke();
@@ -172,7 +170,7 @@ async function main() {
   console.log("\nAll Supabase Phase 2 read PoC tests passed.");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch(() => {
+  console.error();
+  closeAllBrowsers().finally(() => process.exit(1));
 });

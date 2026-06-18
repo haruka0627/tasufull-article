@@ -1,11 +1,10 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
 const THREAD_ID = "chat-demo-skill-plain-001";
 
-const browser = await chromium.launch({ headless: true });
-const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
 
 async function openChat(page, userId, reset = false) {
   const resetQs = reset ? "&liveFlowReset=1" : "";
@@ -82,4 +81,6 @@ if (!afterPayComposerSeller || !afterPayComposerBuyer) {
 }
 
 console.log("OK skill contact gate flow — partner pays 550 yen");
-await browser.close();
+});
+
+await closeAllBrowsers();

@@ -1,7 +1,7 @@
 /**
  * 成功済み task の GLB を UI に注入して表示のみ確認（生成なし・チケット消費なし）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -55,8 +55,7 @@ const server = await new Promise((resolve) => {
   s.listen(PORT, "127.0.0.1", () => resolve(s));
 });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(300000);
 
 await page.goto(`http://127.0.0.1:${PORT}/gen-ai-workspace.html?mode=AI%E3%82%AD%E3%83%A3%E3%83%A9%E4%BC%9A%E8%A9%B1`);
@@ -102,6 +101,7 @@ console.log("loadTripoGlbToStage", display.loadResult);
 console.log("modelKind", display.modelKind);
 console.log("GLB display:", display.modelKind === "gltf" ? "OK" : "FAIL");
 
-await browser.close();
+});
 server.close();
+await closeAllBrowsers();
 process.exit(display.modelKind === "gltf" ? 0 : 1);

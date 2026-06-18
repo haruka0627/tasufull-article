@@ -3,7 +3,7 @@
  * TALK通知センター — 店舗販売通知カード CTA サイズ検証
  *   node scripts/capture-talk-shop-notify-cta.mjs [--phase=before|after]
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import { debugScreenshotsDir } from "./lib/screenshot-ops.mjs";
 import fs from "node:fs";
@@ -77,8 +77,7 @@ async function seedShopStoreNotify(page) {
 }
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
-const browser = await chromium.launch({ headless: true });
-const report = { generatedAt: new Date().toISOString(), phase, overall: "PASS", viewports: [] };
+await withPlaywrightBrowser(async (browser) => {const report = { generatedAt: new Date().toISOString(), phase, overall: "PASS", viewports: [] };
 
 for (const vp of VIEWPORTS) {
   const vpReport = { label: vp.label, verdict: "PASS", issues: [], shots: [], metrics: null };
@@ -165,7 +164,8 @@ for (const vp of VIEWPORTS) {
   if (vpReport.verdict !== "PASS") report.overall = "FAIL";
 }
 
-await browser.close();
+});
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(report.overall === "PASS" ? 0 : 1);

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** job-0 ベンチ修正証跡 — 390px スクショ + 診断パネル */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -12,8 +12,7 @@ const HIRED = "応募が承諾されました";
 const OUT = path.join("screenshots", "bench-job-0-fix-proof");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 const report = { url: URL, checks: {}, ok: false };
 
 page.on("dialog", async (d) => {
@@ -32,7 +31,6 @@ async function openVerdictPanel() {
   });
 }
 
-try {
   await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(6000);
 
@@ -225,6 +223,7 @@ try {
 
   console.log(JSON.stringify(report, null, 2));
   if (!report.ok) process.exitCode = 1;
-} finally {
-  await browser.close();
-}
+
+});
+
+await closeAllBrowsers();

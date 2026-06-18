@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — browser smoke test (Phase1–4)
  *
@@ -13,8 +14,7 @@ const AI_DRAFTS_KEY = "tasful_talk_ai_drafts";
 const PHASE4_MARKER = "phase4-ai-e2e-notice";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await context.newPage();
   const errors = [];
 
@@ -147,9 +147,8 @@ async function main() {
     else pass("generateTalkAiDraft exposed");
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));

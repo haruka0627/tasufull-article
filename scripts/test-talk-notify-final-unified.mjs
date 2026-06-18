@@ -3,7 +3,7 @@
  * Builder / 安否 / 求人 / ワーカー / 業務 / 店舗 / 運営
  * from=talk / 遷移のみ / 戻り導線 / タブバー
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188, 8765];
 
@@ -105,8 +105,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 const fail = (msg) => {
   console.log("NG", msg);
   failed = true;
@@ -346,5 +345,6 @@ for (const sample of [
   await verifyNotifyFlow(sample);
 }
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

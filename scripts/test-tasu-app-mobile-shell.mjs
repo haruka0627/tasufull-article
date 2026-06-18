@@ -3,14 +3,13 @@
  * スマホ共通下部タブ・戻る（390px）
  *   node scripts/test-tasu-app-mobile-shell.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const PAGES = ["detail-job.html", "post.html", "my-listings.html", "checkout.html"];
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -18,7 +17,7 @@ async function main() {
     console.log(`  ✗ ${m}`);
   };
 
-  try {
+  
     for (const p of PAGES) {
       await page.goto(`${BASE}/${p}`, { waitUntil: "domcontentloaded", timeout: 20000 });
       await page.waitForFunction(() => typeof window.TasufulAppMobile?.isMobileViewport === "function");
@@ -67,12 +66,13 @@ async function main() {
     } else {
       console.log("All mobile shell checks passed.");
     }
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((e) => {
   console.error(e);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

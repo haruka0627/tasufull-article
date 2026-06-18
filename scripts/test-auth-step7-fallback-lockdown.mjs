@@ -3,7 +3,7 @@
  * NB-3 STEP 7 — localStorage / URL fallback lockdown 検証
  *   node scripts/test-auth-step7-fallback-lockdown.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import {
   canUseLocalStorageFallback,
@@ -37,13 +37,11 @@ try {
 } catch (err) {
   console.warn("[step7] dev server unavailable:", err.message);
   console.log("\nSUMMARY: core PASS · browser SKIPPED");
+  await closeAllBrowsers();
   process.exit(0);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(buildLocalPageUrl(base, "talk-home.html", "?talkDev=1&userId=u_me"), {
     waitUntil: "domcontentloaded",
     timeout: 30000,
@@ -119,6 +117,6 @@ try {
   console.log("  browser prod lockdown: PASS");
   console.log("  browser demo compat: PASS");
   console.log("\nSUMMARY: ALL PASS");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

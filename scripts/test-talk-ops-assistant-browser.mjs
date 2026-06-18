@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK 運営通知センター E2E
  *   node scripts/test-talk-ops-assistant-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -34,7 +34,7 @@ const KEYS = [
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -112,8 +112,7 @@ async function seedOpsExtras(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(pageUrl("support-intake.html"), { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => window.TasuSupportTicketService, { timeout: 15000 });
@@ -214,10 +213,10 @@ async function main() {
   pass("既存TASFUL TALK（通知タブ）維持");
 
   console.log("\nAll TALK operations assistant tests passed.");
-  await browser.close();
+    });
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

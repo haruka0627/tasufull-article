@@ -1,7 +1,7 @@
 /**
  * Builder admin_ops 新着案件 → カレンダーで対象案件が自動選択されること（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import {
   auditPartnerAssignmentPage,
   BUILDER_DEMO_ASSIGNMENT_PROJECT,
@@ -21,8 +21,7 @@ const STORAGE_KEYS = [
   "tasful_official_room_last_seen_v1",
 ];
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${base}/talk-home.html`, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.evaluate((keys) => keys.forEach((k) => localStorage.removeItem(k)), STORAGE_KEYS);
@@ -60,5 +59,6 @@ console.log("Partner assignment audit:", JSON.stringify(calAudit, null, 2));
 
 if (!calAudit.ok) failed = true;
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

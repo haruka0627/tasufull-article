@@ -2,14 +2,13 @@
  * VRM PoC スモークテスト（Vite dev 起動済み: http://localhost:5173）
  * npx playwright install chromium の後に実行
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.env.VITE_DEV_URL || "http://localhost:5173";
 const TIMEOUT_MS = 90000;
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e.message || e)));
   page.on("console", (msg) => {
@@ -66,7 +65,7 @@ async function main() {
     };
   });
 
-  await browser.close();
+    });
 
   if (errors.length) {
     console.error("Page errors:", errors.slice(0, 10));
@@ -91,3 +90,5 @@ main().catch((e) => {
   console.error("FAIL:", e.message || e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

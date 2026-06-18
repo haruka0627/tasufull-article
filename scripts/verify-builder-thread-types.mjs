@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 const MVP_KEY = "tasful:builder:mvp:v1";
 
 const cases = [
@@ -94,9 +93,10 @@ for (const c of cases) {
   if (!ok) failed += 1;
 }
 
-await browser.close();
+});
 if (failed) {
   console.error(`${failed} check(s) failed`);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("All thread type checks passed");

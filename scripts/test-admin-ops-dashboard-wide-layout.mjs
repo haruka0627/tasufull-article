@@ -3,7 +3,7 @@
  * AI運営司令塔 — PCワイドレイアウト + サマリー帯
  *   node scripts/test-admin-ops-dashboard-wide-layout.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 import fs from "fs";
@@ -181,8 +181,8 @@ async function checkViewport(page, vp) {
 
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-  const consoleErrors = [];
+  let consoleErrors = [];
+await withPlaywrightBrowser(async (browser) => {
   const page = await browser.newPage();
   page.on("console", (msg) => {
     if (msg.type() === "error" && !isIgnorableConsoleError(msg.text())) {
@@ -203,7 +203,7 @@ async function main() {
     pass("console errors: 0 (UI relevant)");
   }
 
-  await browser.close();
+    });
   console.log(`\nScreenshots: ${OUT}`);
   if (failures.length) {
     console.error(`\nFAIL (${failures.length})`);
@@ -216,3 +216,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

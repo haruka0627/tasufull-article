@@ -1,7 +1,7 @@
 /**
  * 安否ダッシュボード — 対応が必要な項目（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const DEMO_KEY = "tasful_anpi_notify_demo_v1";
@@ -29,8 +29,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 const fail = (msg) => {
   console.log("NG", msg);
   failed = true;
@@ -321,5 +320,6 @@ for (const spec of SHORTCUTS) {
   await page.close();
 }
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

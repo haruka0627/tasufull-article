@@ -1,7 +1,7 @@
 /**
  * ダッシュボード クイックアクション — カテゴリカラー確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
 import path from "path";
@@ -45,10 +45,8 @@ function fixCssMime(page) {
   });
 }
 
-
 async function capture(viewport) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport });
   await fixCssMime(page);
   await page.goto(`${base}/dashboard.html?v=${Date.now()}`, { waitUntil: "networkidle", timeout: 60000 });
   await page.evaluate(() => {
@@ -110,7 +108,7 @@ async function capture(viewport) {
     fullPage: !(quickBox && quickBox.width > 0),
   });
 
-  await browser.close();
+    });
   return cards;
 }
 
@@ -225,6 +223,7 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
 if (!allPass) {
   const failed = allCases.filter((c) => !c.pass).map((c) => c.label);
   console.error("FAIL:", failed.join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS: dashboard quick action colors");

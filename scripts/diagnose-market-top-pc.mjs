@@ -1,7 +1,7 @@
 /**
  * 市場TOP PC レイアウト診断 + フルページキャプチャ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -13,8 +13,7 @@ fs.mkdirSync(OUT, { recursive: true });
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
 const url = buildLocalPageUrl(base, "shop-store.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 await page.goto(url, { waitUntil: "networkidle", timeout: 90000 });
 await assertPlaywrightLocalhostPage(page);
 await page.waitForSelector(".tasful-market-card", { timeout: 30000 });
@@ -193,4 +192,6 @@ for (const [name, y] of [
 
 fs.writeFileSync(path.join(OUT, "diagnostic-after.json"), JSON.stringify(diagAfter, null, 2));
 console.log(JSON.stringify({ before: diag, after: diagAfter }, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

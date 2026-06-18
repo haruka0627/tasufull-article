@@ -2,7 +2,7 @@
  * Phase 1 — TALK 運営通知センター一覧（390px）
  * 期待: TASFUL運営 / TASFUL AI / TASFULサポート / 友達 のみ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -46,8 +46,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${base}/talk-home.html?tab=chat`, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForSelector("#talkChatThreadList [data-talk-thread-id]", { timeout: 15000 }).catch(() => {});
@@ -78,7 +77,7 @@ const result = await page.evaluate(
 );
 
 await page.screenshot({ path: path.join(OUT_DIR, "talk-list-mobile390.png"), fullPage: true });
-await browser.close();
+});
 
 const forbiddenFound = result.names.filter((n) =>
   FORBIDDEN_NAMES.some((f) => n.includes(f.replace(/\s/g, "")) || n.includes(f) || f.includes(n))
@@ -103,6 +102,7 @@ fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null,
 console.log(JSON.stringify(report, null, 2));
 if (!report.pass) {
   console.error("FAIL");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS");

@@ -2,7 +2,7 @@
 /**
  * 店舗販売導線 — 回帰検証（shop-vendors 系のみ・市場TOP/shop-store.html 非対象）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -43,8 +43,7 @@ function buildStoreProductUrl(shopId, productId) {
   return `${STORE_PRODUCT_PAGE}?shopId=${encodeURIComponent(shopId)}&productId=${encodeURIComponent(productId)}`;
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(25000);
 
 async function shot(file, viewport) {
@@ -502,5 +501,6 @@ console.log(
     2
   )
 );
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(report.ng === 0 ? 0 : 1);

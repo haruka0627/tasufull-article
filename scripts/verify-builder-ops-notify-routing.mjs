@@ -4,7 +4,7 @@
  * - 一覧表示 / navigate ボタン遷移 / 既読
  * - talk-builder-notify-master-v1.js の builder-ops-flow-* シード準拠
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import {
   auditPartnerAssignmentPage,
@@ -85,9 +85,8 @@ function displayUrl(url) {
 const OUT_DIR = "screenshots/builder-ops-notify-routing";
 mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const results = [];
-
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 async function resetNotifyStorage(page) {
   await page.goto(`${BASE}/talk-home.html?talkDev=1`, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.evaluate((keys) => {
@@ -223,7 +222,7 @@ for (const c of OPS_FLOW_CASES) {
   await page.close();
 }
 
-await browser.close();
+});
 
 console.log("\n## Builder運営案件 通知導線確認（390px / talkDev=1）\n");
 console.log("| 通知名 | 対象 | 遷移先URL | 案件表示 | OK/NG |");

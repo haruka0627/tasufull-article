@@ -3,7 +3,7 @@
  * 手動ブラウザ相当 — 固定URLを1回開き、B下CTA→A通知→管理→550円→A/Bチャット
  * Playwright連打ではなく、開いて待ってから1クリックの手動操作を模倣
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -19,8 +19,7 @@ const URL = fixedWorkerBenchUrl(BASE);
 const OUT = path.join("screenshots", "manual-bench-worker-0-full");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 
 const report = { url: URL, steps: {}, ok: false };
 
@@ -162,9 +161,9 @@ try {
   await page.screenshot({ path: path.join(OUT, "final.png") });
 } catch (e) {
   report.error = String(e.message || e);
-} finally {
-  await browser.close();
 }
+});
+
 
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));

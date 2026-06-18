@@ -2,7 +2,7 @@
 /**
  * スキル購入者（u_hiro）通知タブ — CTA遷移 + 390pxレイアウト
  */
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -15,8 +15,7 @@ const NOTIFY_ID = "platform-chat-demo-skill-review-b-001";
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   ...devices["iPhone 13"],
   viewport: { width: 390, height: 844 },
   hasTouch: true,
@@ -163,9 +162,10 @@ else ok("buyer userId preserved");
 
 await page.screenshot({ path: path.join(OUT, "02-review-chat-390.png"), fullPage: false });
 
-await browser.close();
+});
 if (failed) {
   console.log("\nVERIFY FAILED");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("\nVERIFY PASSED");

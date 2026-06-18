@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * スマホ詳細ページ — 文字化け・下部タブ・戻る（390px）
  *   node scripts/test-mobile-detail-pages.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
@@ -43,8 +43,7 @@ const NOTIFY_OPEN_CASES = [
 ];
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -540,9 +539,11 @@ async function main() {
     } else {
       console.log("All mobile detail page checks passed.");
     }
-  } finally {
-    await browser.close();
+  } catch (err) {
+    fail(String(err?.message || err));
   }
+});
+  
 }
 
 main().catch((e) => {

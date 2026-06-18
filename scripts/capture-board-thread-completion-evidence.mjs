@@ -3,7 +3,7 @@
  * 実機と同じ URL の証拠スクショ（URL情報を画面上に表示してから撮影）
  * 対象: builder/board-thread.html?thread_id=thread-demo-001&role=owner&from=talk#completion
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -73,8 +73,7 @@ console.log(`[dev] BASE_URL=${BASE}`);
 console.log("=== Capture metadata (declared) ===");
 console.log(JSON.stringify({ ...CAPTURE_META, fullUrl: FULL_URL }, null, 2));
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   viewport: { width: CAPTURE_META.viewportWidth, height: CAPTURE_META.viewportHeight },
 });
 
@@ -122,4 +121,6 @@ console.log("file:", out);
 console.log("overlayVisible:", overlayVisible);
 console.log("consoleErrors:", errors.length ? errors : "none");
 
-await browser.close();
+});
+
+await closeAllBrowsers();

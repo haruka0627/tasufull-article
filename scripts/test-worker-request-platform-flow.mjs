@@ -1,7 +1,7 @@
 /**
  * プラットフォーム ワーカー依頼 — 依頼カード → 受諾 / 断る → 受諾時のみ worker_request チャット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const WORKER_ID = "worker_hiro_001";
@@ -38,8 +38,7 @@ function countWorkerThreads(threads) {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 await page.addInitScript((keys) => {
   // sessionStorage: 同一タブ内の goto 間で保持（globalThis は毎ナビでリセットされる）
@@ -228,11 +227,12 @@ if (afterReject.workerThreadCount !== afterAccept.workerThreadCount) {
 }
 if (afterReject.rejectNotifCount < 1) failures.push("断り通知が届いていない");
 
-await browser.close();
+});
 
 if (failures.length) {
   console.error("FAILED:");
   failures.forEach((f) => console.error(" -", f));
+  await closeAllBrowsers();
   process.exit(1);
 }
 

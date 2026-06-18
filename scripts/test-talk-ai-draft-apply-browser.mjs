@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — AI下書き → 投稿フォーム反映
  *
@@ -118,8 +119,7 @@ async function seedDrafts(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await context.newPage();
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
@@ -277,9 +277,8 @@ async function main() {
     else pass("apply button visible for job");
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));

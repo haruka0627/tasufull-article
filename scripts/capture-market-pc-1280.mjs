@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 — PC版 UI スクリーンショット（1280px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -14,8 +14,7 @@ const CART_KEY = "tasu_market_cart_count";
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 
 async function shot(name, url, waitSel) {
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -186,7 +185,7 @@ const audit = await page.evaluate(() => {
   };
 });
 
-await browser.close();
+});
 
 const pass =
   topPageAudit.pathname.endsWith(TOP_PATH) &&
@@ -232,4 +231,5 @@ const report = {
 
 fs.writeFileSync(path.join(OUT_DIR, "pc-report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

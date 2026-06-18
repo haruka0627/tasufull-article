@@ -1,7 +1,7 @@
 /**
  * shop-vendors / detail-shop-store ブランド統一の簡易確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -12,8 +12,7 @@ const OUT = path.join(__dirname, "..", "screenshots", "shop-vendors-brand");
 fs.mkdirSync(OUT, { recursive: true });
 
 const base = await findDevServerBaseUrl({ probePath: "shop-vendors.html" });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const report = { pages: [] };
 
 for (const spec of [
@@ -62,7 +61,7 @@ for (const spec of [
   report.pages.push({ ...spec, audit, screenshot: shot });
 }
 
-await browser.close();
+});
 const reportPath = path.join(OUT, "report.json");
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
@@ -79,4 +78,5 @@ const ok =
   detail?.audit?.hasMarketFooter &&
   !detail?.audit?.hasOldSiteFooter;
 
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

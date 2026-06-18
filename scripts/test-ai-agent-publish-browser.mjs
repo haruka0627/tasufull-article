@@ -5,7 +5,7 @@
  * 事前: npm run dev
  *   node scripts/test-ai-agent-publish-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const LISTINGS_KEY = "tasful_listings";
@@ -199,8 +199,7 @@ async function verifyDetailPage(page, listingId, label) {
 async function main() {
   console.log(`\nAI Agent 掲載フロー E2E — ${BASE}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const consoleErrors = [];
 
   page.on("console", (msg) => {
@@ -238,9 +237,8 @@ async function main() {
     else fail("console エラーなし", consoleErrors.slice(0, 3).join(" | "));
   } catch (err) {
     fail("テスト実行", err.message);
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);
@@ -248,3 +246,5 @@ async function main() {
 }
 
 main();
+
+await closeAllBrowsers();

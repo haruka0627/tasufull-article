@@ -2,7 +2,7 @@
 /**
  * TALK 通知 → 詳細/スレッド/カレンダー → TALKに戻る で位置復元
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const results = [];
 function push(name, ok, detail = "") {
@@ -73,9 +73,7 @@ const SCENARIOS = [
 ];
 
 const BASE = await findBaseUrl();
-const browser = await chromium.launch({ headless: true });
-
-for (const viewport of [
+await withPlaywrightBrowser(async (browser) => {for (const viewport of [
   { tag: "PC1280", width: 1280, height: 900 },
   { tag: "SP390", width: 390, height: 844 },
 ]) {
@@ -239,7 +237,7 @@ for (const viewport of [
   await context.close();
 }
 
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log("\n=== talk notify return position ===\n");

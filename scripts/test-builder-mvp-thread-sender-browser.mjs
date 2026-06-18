@@ -1,7 +1,7 @@
 /**
  * Builder MVP thread sender / LINE layout test (URL role per tab)
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -50,8 +50,7 @@ async function sendAndInspect(page, role, text) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(threadUrl("owner"));
   await page.waitForSelector("[data-builder-mvp-thread-msgs]");
@@ -142,10 +141,12 @@ async function main() {
       2
     )
   );
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

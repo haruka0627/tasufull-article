@@ -7,7 +7,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -189,15 +189,14 @@ async function inspectPage(page, spec, viewport) {
 async function main() {
   console.log(`\ndetail-shop レイアウト E2E — ${BASE}\n`);
   await mkdir(SHOT_DIR, { recursive: true });
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   for (const spec of CASES) {
     await inspectPage(page, spec, { width: 1280, height: 900 });
     await inspectPage(page, spec, { width: 390, height: 844 });
   }
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   const summary = { ok, total: results.length, results };
   await writeFile(
@@ -207,6 +206,7 @@ async function main() {
   );
   console.log(`\n--- 結果: ${ok}/${results.length} OK ---`);
   console.log(`スクショ: ${SHOT_DIR}\n`);
+  await closeAllBrowsers();
   process.exit(ok === results.length ? 0 : 1);
 }
 
@@ -214,3 +214,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

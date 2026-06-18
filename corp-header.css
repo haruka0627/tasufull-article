@@ -1,0 +1,159 @@
+/**
+ * HP-MIGRATION-1 — 企業サイト共通ヘッダー
+ */
+.corp-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--corp-header-bg);
+  border-bottom: 1px solid var(--corp-border);
+  backdrop-filter: blur(10px);
+}
+
+.corp-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.75rem;
+  padding-block: 0.5rem;
+}
+
+.corp-header__brand {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.corp-header__brand-main {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+}
+
+.corp-header__brand-sub {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--corp-muted);
+  letter-spacing: 0.04em;
+}
+
+.corp-nav {
+  position: relative;
+}
+
+.corp-nav__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--corp-border);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  list-style: none;
+}
+
+.corp-nav__toggle::-webkit-details-marker {
+  display: none;
+}
+
+.corp-nav__toggle-icon {
+  width: 1.125rem;
+  height: 2px;
+  background: var(--corp-text);
+  box-shadow: 0 -6px 0 var(--corp-text), 0 6px 0 var(--corp-text);
+}
+
+.corp-nav__list {
+  display: none;
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  min-width: 13rem;
+  margin: 0;
+  padding: 0.5rem;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--corp-border);
+  border-radius: var(--corp-radius);
+  box-shadow: var(--corp-shadow);
+}
+
+.corp-nav[open] .corp-nav__list {
+  display: grid;
+  gap: 0.125rem;
+}
+
+.corp-nav__link {
+  display: block;
+  padding: 0.625rem 0.875rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--corp-text);
+}
+
+.corp-nav__link:hover {
+  background: var(--corp-surface);
+}
+
+.corp-nav__link[aria-current="page"] {
+  background: var(--corp-accent-soft);
+  color: var(--corp-accent);
+  font-weight: 700;
+}
+
+@media (min-width: 900px) {
+  .corp-nav {
+    display: contents;
+  }
+
+  .corp-nav__toggle {
+    display: none;
+  }
+
+  .corp-nav__list {
+    display: flex;
+    position: static;
+    width: auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+    gap: 0.25rem;
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+  }
+
+  .corp-nav__list > li {
+    flex: 0 0 auto;
+  }
+
+  .corp-nav[open] .corp-nav__list {
+    display: flex;
+  }
+
+  .corp-nav__link {
+    padding: 0.5rem 0.75rem;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1280px) {
+  .corp-nav__link {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+}

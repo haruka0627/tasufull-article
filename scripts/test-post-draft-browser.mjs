@@ -6,7 +6,7 @@
  *   node scripts/test-post-draft-browser.mjs
  *   BASE_URL=http://127.0.0.1:5179 node scripts/test-post-draft-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5179").replace(/\/$/, "");
 const PAGE = "/post.html";
@@ -64,8 +64,7 @@ async function readFormValues(page) {
 async function main() {
   console.log(`\npost AI下書き生成 E2E — ${BASE}${PAGE}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const consoleErrors = [];
 
   page.on("console", (msg) => {
@@ -172,9 +171,8 @@ async function main() {
     else fail("console エラーなし", consoleErrors.slice(0, 3).join(" | "));
   } catch (err) {
     fail("テスト実行", err.message);
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);
@@ -184,3 +182,5 @@ async function main() {
 }
 
 main();
+
+await closeAllBrowsers();

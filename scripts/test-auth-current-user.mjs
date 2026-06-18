@@ -6,7 +6,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import {
   isProductionHost,
@@ -68,11 +68,7 @@ function runCoreTests() {
 }
 
 async function runBrowserTests(base) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  const url = buildLocalPageUrl(base, "talk-home.html", "?talkDev=1&userId=u_me");
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
     await page.waitForFunction(() => typeof window.TasuAuthCurrentUser !== "undefined", {
       timeout: 15000,
@@ -169,15 +165,12 @@ async function runBrowserTests(base) {
       return window.TasuChatUserIdentity?.getEffectiveUserId?.() || "";
     });
     assert(identityProdEmpty === "", "browser: production no u_me fallback");
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 async function runScreenshotSmoke(base) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const url = buildLocalPageUrl(base, "talk-home.html", "?talkDev=1&userId=u_me");
     await page.goto(url, { waitUntil: "networkidle", timeout: 45000 });
     await page.waitForFunction(
@@ -186,9 +179,8 @@ async function runScreenshotSmoke(base) {
     );
     const title = await page.title();
     assert(title.includes("TALK") || title.includes("TASFUL"), "talk-home loads");
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 console.log("[test-auth-current-user] core unit tests…");
@@ -201,6 +193,7 @@ try {
 } catch (err) {
   console.warn("[test-auth-current-user] dev server unavailable:", err.message);
   console.log("\nSUMMARY: core PASS · browser SKIPPED (start vite or Live Server)");
+  await closeAllBrowsers();
   process.exit(0);
 }
 
@@ -213,3 +206,5 @@ await runScreenshotSmoke(base);
 console.log("  smoke: PASS");
 
 console.log("\nSUMMARY: ALL PASS");
+
+await closeAllBrowsers();

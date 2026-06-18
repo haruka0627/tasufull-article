@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK — 公式トーク通知ミラー スクリーンショット（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,8 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 
 async function freshPage() {
   const page = await context.newPage();
@@ -91,5 +90,7 @@ console.log("Saved: 06-action-destination.png", href);
 await listPage.close();
 await notifyPage.close();
 await destPage.close();
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

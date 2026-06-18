@@ -1,10 +1,10 @@
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 画像キャラ設定自動生成 — ブラウザ実機相当 E2E（Playwright）
  *
  * 実行: npm run dev を別ターミナルで起動後
  *   node scripts/e2e-genai-image-character.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -101,8 +101,7 @@ async function readSavedCharacter(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
 
   page.on("dialog", async (dialog) => {
@@ -381,14 +380,15 @@ async function main() {
 
     const failed = results.filter((r) => !r.ok).length;
     console.log(`\nTotal: ${results.length}, Failed: ${failed}`);
+    await closeAllBrowsers();
     process.exit(failed ? 1 : 0);
   } catch (err) {
     console.error("E2E error:", err);
     record("E2E 実行", false, err.message);
+    await closeAllBrowsers();
     process.exit(1);
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 }
 
 main();

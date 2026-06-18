@@ -3,7 +3,7 @@
  * RELEASE FROZEN — 市場ECリリース確定（2026-06-16）reports/market-ec-release-status.md
  * node scripts/review-market-final-ux-audit.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -65,9 +65,7 @@ const VIEWPORTS = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-
-const report = {
+await withPlaywrightBrowser(async (browser) => {const report = {
   capturedAt: new Date().toISOString(),
   base,
   pages: {},
@@ -403,7 +401,7 @@ for (const pageDef of PAGES) {
   await page.close();
 }
 
-await browser.close();
+});
 
 // リリース前ブロッカー抽出
 const blockers = [];
@@ -528,3 +526,5 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
 console.log("OVERALL:", report.overall);
 console.log("P0:", blockers.length, "P1:", report.releaseBlockers.filter((r) => r.priority === "P1").length);
 console.log(md);
+
+await closeAllBrowsers();

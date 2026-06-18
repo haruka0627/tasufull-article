@@ -2,7 +2,7 @@
 /**
  * Builder 一般案件フロー — 2窓ベンチ + スレッド 390px / 1280px スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -14,8 +14,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const BASE = await requireDevServer();
 const FLOWS = ["partner_user", "user_user", "vendor_user"];
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
 await context.route("**/*", (route) => {
   if (route.request().resourceType() === "font") route.abort();
   else route.continue();
@@ -90,5 +89,7 @@ for (const flow of FLOWS) {
   }
 }
 
-await browser.close();
+});
 console.log(`Screenshots saved to ${OUT_DIR}`);
+
+await closeAllBrowsers();

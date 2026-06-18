@@ -1,7 +1,7 @@
 /**
  * 生成AI Stripe E2E（Playwright + API）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -325,8 +325,7 @@ if (catalog.data?.products) {
   console.log("Webhook:", JSON.stringify(catalog.data.webhook, null, 2));
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 try {
   await runPaidPlanTest(page, "genai_basic_300", "u_e2e_basic", { text: 30, voice: 30, image: 10 });
@@ -336,11 +335,11 @@ try {
 } catch (err) {
   record("E2E execution", false, err.message);
   console.error(err);
-} finally {
-  await browser.close();
-}
+}});
+
 
 console.log("\n--- E2E Summary ---");
 const failed = results.filter((r) => !r.ok);
 console.log(`Total: ${results.length}, Passed: ${results.length - failed.length}, Failed: ${failed.length}`);
+await closeAllBrowsers();
 process.exit(failed.length ? 1 : 0);

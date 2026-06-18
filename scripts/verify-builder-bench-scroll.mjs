@@ -2,7 +2,7 @@
 /**
  * Builder 2窓ベンチ — 下段 iframe 縦スクロール検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -38,8 +38,7 @@ function scrollProbe(doc, selector) {
   };
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 const url = `${BASE}/chat-dual-window-demo.html?benchMode=builder&builderFlow=ops_partner&benchViewport=390`;
 await page.goto(url, { waitUntil: "domcontentloaded" });
 await page.waitForSelector("#opsAddCalendarBtn", { timeout: 60000 });
@@ -155,5 +154,6 @@ record(
 const passed = results.filter((r) => r.ok).length;
 const total = results.length;
 console.log(`\n${passed}/${total} passed`);
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(passed === total ? 0 : 1);

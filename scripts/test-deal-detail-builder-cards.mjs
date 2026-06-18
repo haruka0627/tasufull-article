@@ -1,7 +1,7 @@
 /**
  * Builder案件詳細 — 管理系カード Playwright 検証（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 
@@ -22,8 +22,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 async function auditPage(url) {
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -115,5 +114,6 @@ for (const spec of cases) {
   if (!ok) failed = true;
 }
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

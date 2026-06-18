@@ -2,7 +2,7 @@
 /**
  * worker-0 — 「チャットを開く」後の chat-detail init 診断
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -48,16 +48,7 @@ async function clickVisibleCta(frame, selectors) {
   }, selectors);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
-const pageErrors = [];
-page.on("dialog", async (d) => d.accept());
-page.on("pageerror", (err) => pageErrors.push(String(err)));
-page.on("console", (msg) => {
-  if (msg.type() === "error") pageErrors.push(`console:${msg.text()}`);
-});
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(BENCH_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2500);
 
@@ -227,6 +218,6 @@ try {
   fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null, 2));
   await page.screenshot({ path: path.join(OUT_DIR, "after-chat-open.png"), fullPage: true });
   console.log(JSON.stringify(report, null, 2));
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

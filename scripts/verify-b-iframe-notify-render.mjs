@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -10,8 +10,7 @@ const URL = fixedJobBenchUrl(BASE);
 const OUT = path.join("screenshots", "bench-job-0-fix-proof");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 
 await page.goto(URL, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForTimeout(5000);
@@ -98,5 +97,7 @@ await page.screenshot({
 });
 
 console.log(JSON.stringify(audit, null, 2));
-await browser.close();
+});
 process.exitCode = audit.ok ? 0 : 1;
+
+await closeAllBrowsers();

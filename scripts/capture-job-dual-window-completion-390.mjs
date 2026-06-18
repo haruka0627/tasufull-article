@@ -3,7 +3,7 @@
  * 求人 2窓 — 掲載者申請 → 応募者承認（390px スクショ）
  * 同一 BrowserContext = 同一 localStorage（2窓同期を再現）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
@@ -44,8 +44,7 @@ fs.mkdirSync(path.join(OUT, "applicant"), { recursive: true });
 
 Object.entries(URLS).forEach(([k, v]) => logScreenshotUrl(`dual-${k}`, v.replace(/^\//, "")));
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: VIEWPORT });
 const poster = await context.newPage();
 const applicant = await context.newPage();
 
@@ -67,7 +66,7 @@ function shot(page, subdir, name) {
   return page.screenshot({ path: path.join(OUT, subdir, name) });
 }
 
-try {
+
   await poster.goto(`${BASE}${URLS.posterReset}`, { waitUntil: "domcontentloaded" });
   await waitChatReady(poster);
   await shot(poster, "poster", "01-chat-active-390.png");
@@ -140,6 +139,6 @@ try {
 
   console.log(`[capture] review modal title (poster): ${reviewTitle?.trim()}`);
   console.log(`[capture] OK → ${OUT}`);
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

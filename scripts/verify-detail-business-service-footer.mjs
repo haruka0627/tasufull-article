@@ -2,18 +2,17 @@
  * 業務サービス詳細 — PC/SP フッター検証
  * node scripts/verify-detail-business-service-footer.mjs [baseUrl]
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.argv[2] || "http://127.0.0.1:8765";
 const URL = `${BASE}/detail-business-service.html?id=demo-business-service-001`;
 
 function fail(msg) {
   console.error(`FAIL: ${msg}`);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
-const browser = await chromium.launch();
-const errors = [];
+await withPlaywrightBrowser(async (browser) => {const errors = [];
 
 async function runViewport(width, label) {
   const page = await browser.newPage({ viewport: { width, height: 844 } });
@@ -110,7 +109,7 @@ async function runViewport(width, label) {
 
 await runViewport(390, "SP");
 await runViewport(1280, "PC");
-await browser.close();
+});
 
 const globalErr = errors.filter((e) => e.includes("global is not defined"));
 if (globalErr.length) fail(globalErr.join("; "));
@@ -119,3 +118,5 @@ if (errors.length) {
 }
 
 console.log("OK: detail-business-service footer checks passed");
+
+await closeAllBrowsers();

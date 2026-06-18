@@ -1,7 +1,7 @@
 /**
  * TALK 友達 / カレンダー / フィルタ UI 検証（390 / 1280）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,9 +25,7 @@ async function findBaseUrl() {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 
-const browser = await chromium.launch({ headless: true });
-
-async function openChat(page) {
+await withPlaywrightBrowser(async (browser) => {async function openChat(page) {
   await page.goto(`${base}/talk-home.html?tab=chat&talkDev=1`, {
     waitUntil: "domcontentloaded",
     timeout: 60000,
@@ -175,7 +173,7 @@ await page1280.click('[data-talk-select-thread][data-talk-thread-id="official_pl
 await page1280.waitForTimeout(800);
 await page1280.screenshot({ path: path.join(OUT_DIR, "talk-home-desktop1280.png"), fullPage: true });
 await page1280.close();
-await browser.close();
+});
 
 const checks = {
   addMenuHasFriendAndGroup: addMenu390.items.includes("友達追加") && addMenu390.items.includes("グループ作成"),
@@ -212,6 +210,7 @@ fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null,
 console.log(JSON.stringify(report, null, 2));
 if (!report.pass) {
   console.error("FAIL");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS");

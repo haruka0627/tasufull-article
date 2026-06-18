@@ -1,7 +1,7 @@
 /**
  * Builder Admin applications smoke test (Playwright)
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -13,8 +13,7 @@ const MVP_KEY = "tasful:builder:mvp:v1";
 const NOTIF_KEY = "tasful:builder:mvp:notifications:v1";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(`file://${path.join(builderAdmin, "admin-index.html")}`);
   const link = page.locator('[data-builder-quick="applications"]');
@@ -84,10 +83,12 @@ async function main() {
   if (!userList?.includes("応募中")) throw new Error("User project detail not reflecting pending status");
 
   console.log("OK: builder admin applications smoke test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

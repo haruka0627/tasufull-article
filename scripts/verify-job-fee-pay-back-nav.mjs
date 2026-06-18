@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${BASE}/talk-home.html?tab=notify&userId=u_job_demo_full&talkDev=1`, {
   waitUntil: "domcontentloaded",
@@ -65,4 +64,6 @@ const afterBack = await page.evaluate(() => {
 });
 
 console.log(JSON.stringify({ payAudit, afterFirstBack, afterBack }, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

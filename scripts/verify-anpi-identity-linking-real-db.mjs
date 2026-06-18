@@ -10,7 +10,7 @@
  *   - sql/anpi-identity-linking.sql 適用済み
  *   - http://127.0.0.1:8765 で静的配信
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
@@ -139,8 +139,7 @@ async function main() {
   await deleteContextByAnpiUser(cfg, ANPI_USER_ID);
   await deleteByUserId(cfg, LOGS_TABLE, ANPI_USER_ID);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.addInitScript(() => {
     window.TASU_CHAT_SUPABASE_CONFIG = window.TASU_CHAT_SUPABASE_CONFIG || {};
@@ -284,7 +283,7 @@ async function main() {
     fail("primary context", JSON.stringify(primary));
   }
 
-  await browser.close();
+    });
   if (server) server.close();
 
   const ok = results.filter((r) => r.ok).length;
@@ -296,3 +295,5 @@ main().catch((e) => {
   console.error(e);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

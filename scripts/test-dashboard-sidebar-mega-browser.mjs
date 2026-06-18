@@ -1,7 +1,7 @@
 /**
  * ダッシュボード サイドバー hover メガメニュー検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
 import path from "path";
@@ -62,8 +62,7 @@ const base = await findBaseUrl();
 const cases = [];
 
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDashboard(page, base);
@@ -175,12 +174,11 @@ const cases = [];
     expected: "closed",
   });
 
-  await browser.close();
+    });
 }
 
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDashboard(page, base);
@@ -200,7 +198,7 @@ const cases = [];
   });
 
   await page.screenshot({ path: path.join(OUT_DIR, "dashboard-390.png"), fullPage: false });
-  await browser.close();
+    });
 }
 
 const failCount = cases.filter((c) => !c.pass).length;
@@ -235,5 +233,6 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, { title: REVIEW_TITLE, report: inde
 console.log(`\n${REVIEW_TITLE}: ${allPass ? "PASS" : "FAIL"} (${passCount}/${cases.length})`);
 if (!allPass) {
   cases.filter((c) => !c.pass).forEach((c) => console.log(`  FAIL: ${c.label} — ${c.actual}`));
+  await closeAllBrowsers();
   process.exit(1);
 }

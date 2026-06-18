@@ -13,7 +13,7 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -241,8 +241,7 @@ async function runViewport(page, label, width, height) {
 
 async function main() {
   const consoleErrors = [];
-  const browser = await chromium.launch();
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
 
   page.on("console", (msg) => {
@@ -286,11 +285,12 @@ async function main() {
   if (consoleErrors.length === 0) pass("console エラーなし");
   else fail("console エラーなし", consoleErrors.slice(0, 3).join(" | "));
 
-  await browser.close();
+    });
 
   const ok = results.filter((r) => r.ok).length;
   const total = results.length;
   console.log(`\n--- 結果: ${ok}/${total} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === total ? 0 : 1);
 }
 
@@ -298,3 +298,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

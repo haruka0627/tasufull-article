@@ -1,8 +1,7 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const url = "http://127.0.0.1:5173/detail-product.html?id=product_set_2026";
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForTimeout(5000);
 
@@ -30,4 +29,6 @@ const metrics = await page.evaluate(() => {
 
 console.log(JSON.stringify(metrics, null, 2));
 await page.screenshot({ path: "screenshots/product-detail/pc-1280-regression.png", fullPage: false });
-await browser.close();
+});
+
+await closeAllBrowsers();

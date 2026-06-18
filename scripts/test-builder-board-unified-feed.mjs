@@ -1,7 +1,7 @@
 /**
  * Builder 掲示板 — 案件 / ワーカー 共通一覧・詳細
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const MVP_KEY = "tasful:builder:mvp:v1";
@@ -23,8 +23,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 await page.addInitScript((mvpKey) => {
   localStorage.removeItem(mvpKey);
@@ -131,11 +130,12 @@ if (workerBefore.appsTitle !== "依頼状況") failures.push(`ワーカーパネ
 if (!workerAfter.threadId) failures.push("ワーカー受諾後スレッド未作成");
 if (workerAfter.threadKind !== "worker_request") failures.push(`worker_request 未設定: ${workerAfter.threadKind}`);
 
-await browser.close();
+});
 
 if (failures.length) {
   console.error("FAILED:");
   failures.forEach((f) => console.error(" -", f));
+  await closeAllBrowsers();
   process.exit(1);
 }
 

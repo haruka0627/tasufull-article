@@ -2,19 +2,17 @@
  * anpi-dashboard.html — SP/PC フッター・タブバー余白検証
  * node scripts/verify-anpi-dashboard-mobile-footer.mjs [baseUrl]
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.argv[2] || "http://127.0.0.1:8765";
 const URL = `${BASE}/anpi-dashboard.html`;
 
 function fail(msg) {
   console.error(`FAIL: ${msg}`);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
-const browser = await chromium.launch();
-
-async function sp() {
+await withPlaywrightBrowser(async (browser) => {async function sp() {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.goto(URL, { waitUntil: "networkidle", timeout: 90000 });
   await page.waitForTimeout(3000);
@@ -138,5 +136,7 @@ async function pc() {
 
 await sp();
 await pc();
-await browser.close();
+});
 console.log("OK: anpi-dashboard mobile footer checks passed");
+
+await closeAllBrowsers();

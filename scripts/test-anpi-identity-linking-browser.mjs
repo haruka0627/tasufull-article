@@ -4,7 +4,7 @@
  *
  *   node scripts/test-anpi-identity-linking-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { runAnpiRlsBrowserTests } from "./lib/anpi-rls-browser-tests.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
@@ -409,11 +409,10 @@ async function main() {
     { name: "SP", width: 390, height: 844 },
   ];
 
-  const browser = await chromium.launch({ headless: true });
-  for (const vp of viewports) {
+  await withPlaywrightBrowser(async (browser) => {for (const vp of viewports) {
     await runViewport(browser, vp);
   }
-  await browser.close();
+    });
 
   const ok = results.filter((r) => r.ok).length;
   const ng = results.filter((r) => !r.ok);
@@ -428,3 +427,5 @@ main().catch((e) => {
   console.error(e);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

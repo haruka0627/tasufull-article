@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK Phase17 — クイック操作 smoke test
  *
@@ -17,8 +18,7 @@ async function activeAiMode(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -119,9 +119,8 @@ async function main() {
     else pass("corrupt recent-actions localStorage does not break page");
   } catch (err) {
     fail(String(err?.message || err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   console.log("");
   if (errors.length) {

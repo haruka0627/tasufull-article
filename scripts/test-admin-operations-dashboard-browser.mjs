@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 総合運営ダッシュボード E2E
  *   node scripts/test-admin-operations-dashboard-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -37,7 +37,7 @@ const KEYS = [
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -145,8 +145,7 @@ async function seedDashboardExtras(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(pageUrl("support-intake.html"), { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => window.TasuSupportTicketService, { timeout: 15000 });
@@ -529,10 +528,10 @@ async function main() {
   pass("空データ時390pxで横スクロールなし");
 
   console.log("\nAll admin operations dashboard tests passed.");
-  await browser.close();
+    });
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

@@ -5,7 +5,7 @@
  *   node scripts/test-ai-concierge-handoff-browser.mjs
  *   BASE_URL=http://127.0.0.1:8765 node scripts/test-ai-concierge-handoff-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
@@ -121,8 +121,7 @@ async function testAiWorkspaceDeepLink(page, { tabModeId, slug, genMode }) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 
   console.log("\n======== tab handoff (ai-workspace → gen-ai) ========");
   for (const h of HANDOFFS) {
@@ -143,7 +142,7 @@ async function main() {
     });
   }
 
-  await browser.close();
+    });
 
   const failed = results.filter((r) => !r.ok);
   console.log(`\n=== ${results.length - failed.length}/${results.length} passed ===`);
@@ -157,3 +156,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

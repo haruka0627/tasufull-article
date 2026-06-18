@@ -1,7 +1,7 @@
 /**
  * トークカレンダー — デモ予定入り 390px キャプチャ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,8 +25,7 @@ async function findBaseUrl() {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 async function seedCalendar() {
   await page.goto(`${base}/talk-home.html?tab=chat&talkDev=1`, {
@@ -111,7 +110,7 @@ const chatCheck = await page.evaluate(() => ({
 }));
 console.log("Chat check:", chatCheck);
 
-await browser.close();
+});
 
 const pass =
   seedReport.friend >= 3 &&
@@ -128,4 +127,5 @@ const pass =
   !chatCheck.hasCalendarList;
 
 console.log("\nPASS:", pass);
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

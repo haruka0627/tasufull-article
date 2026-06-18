@@ -1,7 +1,7 @@
 /**
  * Builder スレッド内 — 完了報告・承認・差し戻し・再提出
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 const MVP_KEY = "tasful:builder:mvp:v1";
 const PROJECT_ID = "demo-project-001";
@@ -11,8 +11,7 @@ const PARTNER_ID = "demo-partner-001";
 const base = await requireDevServer();
 console.log(`[dev] BASE_URL=${base}`);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 async function seedHiredThread() {
   await page.evaluate(
@@ -291,11 +290,12 @@ if (!afterApprove.threadCompleted) failures.push("承認後 thread.status が co
 if (!afterApprove.hasCompletedEvent) failures.push("completed イベントなし");
 if (!afterApprove.sysApproved) failures.push("承認システムメッセージなし");
 
-await browser.close();
+});
 
 if (failures.length) {
   console.error("FAILED:");
   failures.forEach((f) => console.error(" -", f));
+  await closeAllBrowsers();
   process.exit(1);
 }
 

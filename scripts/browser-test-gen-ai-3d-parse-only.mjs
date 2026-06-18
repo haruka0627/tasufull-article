@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -26,8 +26,7 @@ const server = await new Promise((resolve) => {
   s.listen(PORT, "127.0.0.1", () => resolve(s));
 });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(600000);
 await page.goto(`http://127.0.0.1:${PORT}/gen-ai-workspace.html`, { waitUntil: "domcontentloaded" });
 await page.waitForFunction(() => Boolean(window.TasuTripoGenAiConfig));
@@ -59,6 +58,7 @@ const result = await page.evaluate(async (url) => {
 }, poll.modelUrl);
 
 console.log(result);
-await browser.close();
+});
 server.close();
+await closeAllBrowsers();
 process.exit(result.ok ? 0 : 1);

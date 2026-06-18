@@ -2,15 +2,14 @@
 /**
  * 本番相当 chat-detail（review なし）— 送信で通知
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
 const THREAD = "chat-demo-skill-plain-001";
 const issues = [];
 
-const browser = await chromium.launch({ headless: true });
-try {
+await withPlaywrightBrowser(async (browser) => {
   const page = await browser.newPage();
   await page.goto(
     `${BASE}/chat-detail.html?thread=${THREAD}&userId=u_sachi&talkDev=1&demoProfile=skill&demoConnect=0`,
@@ -63,12 +62,14 @@ try {
 
   if (!audit.count) issues.push("no notify without review=chat-demo");
   if (audit.latest?.title !== "新しいメッセージが届きました") issues.push(`title=${audit.latest?.title}`);
-} finally {
-  await browser.close();
-}
+});
+
 
 if (issues.length) {
   issues.forEach((i) => console.log("NG", i));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("VERIFY PASSED");
+
+await closeAllBrowsers();

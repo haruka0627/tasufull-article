@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** パートナー案件確認画面 — 390px / PC スクショ */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
 
@@ -17,9 +17,7 @@ const RESET_KEYS = [
 const URL =
   "/builder/partner-assignment.html?role=partner&partnerId=demo-partner-001&projectId=builder_demo_001&from=talk";
 
-const browser = await chromium.launch({ headless: true });
-
-for (const [label, viewport] of [
+await withPlaywrightBrowser(async (browser) => {for (const [label, viewport] of [
   ["390", { width: 390, height: 844 }],
   ["1280", { width: 1280, height: 900 }],
 ]) {
@@ -34,5 +32,7 @@ for (const [label, viewport] of [
   await page.close();
 }
 
-await browser.close();
+});
 console.log(`Saved to ${OUT}/`);
+
+await closeAllBrowsers();

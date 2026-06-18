@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** B 本番通知 iframe — 360px 高さでカード+CTA が写るか */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -9,8 +9,7 @@ const BASE = await requireDevServer();
 const OUT = path.join("screenshots", "bench-job-0-notify-360");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (
+await withPlaywrightBrowser(async (browser) => {const page = await (
   await browser.newContext({ viewport: { width: 390, height: 900 } })
 ).newPage();
 
@@ -74,5 +73,6 @@ const ok =
   report.cta.includes("やり取りチャットを開く");
 
 console.log(JSON.stringify({ ...report, ok, screenshot: path.join(OUT, "b-notify-iframe-360-proof.png") }, null, 2));
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

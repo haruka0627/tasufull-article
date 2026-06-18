@@ -1,7 +1,7 @@
 /**
  * 市場TOP PC 最終確認 — 1280px（人気商品 / Connect / 閲覧履歴）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -17,8 +17,7 @@ const TOP_PATH = "shop-store.html";
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: TOP_PATH });
 const topUrl = buildLocalPageUrl(base, TOP_PATH);
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 await page.goto(topUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -337,7 +336,7 @@ const spAudit = await spPage.evaluate(() => {
 await spPage.screenshot({ path: path.join(OUT_DIR, "market-top-mobile-390.png"), fullPage: false });
 await spPage.close();
 
-await browser.close();
+});
 
 const pass =
   audit.timesale &&
@@ -398,4 +397,5 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
   ],
 });
 
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 TOP — PC 1280px ゾーン別スクリーンショット + 視認可能見出し検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -21,8 +21,7 @@ const REQUIRED_HEADINGS = [
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
 const url = buildLocalPageUrl(base, "shop-store.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 
 async function scrollSectionBelowHeader(sectionId) {
   await page.evaluate((id) => {
@@ -236,7 +235,7 @@ const mobileAudit = await page.evaluate(() => ({
 }));
 await page.screenshot({ path: path.join(OUT_DIR, "04-mobile-first-view.png"), fullPage: false });
 
-await browser.close();
+});
 
 const pass =
   midHeadingAudit.ok &&
@@ -285,4 +284,5 @@ const report = {
 };
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

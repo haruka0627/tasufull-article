@@ -2,7 +2,7 @@
 /**
  * shop-products.html 横スクロール検証（1280 / 1440 / 390）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -24,9 +24,7 @@ const report = {
   cases: [],
 };
 
-const browser = await chromium.launch({ headless: true });
-
-for (const vp of [
+await withPlaywrightBrowser(async (browser) => {for (const vp of [
   { label: "1280", width: 1280, height: 900 },
   { label: "1440", width: 1440, height: 900 },
   { label: "390", width: 390, height: 844 },
@@ -64,7 +62,9 @@ for (const vp of [
   await page.close();
 }
 
-await browser.close();
+});
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ overall: report.overall, cases: report.cases }, null, 2));
 await finalizeVerification(path.join(__dirname, ".."), { primaryFolder: "shop-products-hscroll-fix" });
+
+await closeAllBrowsers();

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AIワークスペース会話UIの余白確認
  *   node scripts/verify-ai-workspace-chat-spacing.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = { ".html": "text/html", ".js": "application/javascript", ".css": "text/css", ".png": "image/png" };
@@ -87,10 +88,7 @@ async function main() {
   const base = "http://127.0.0.1:8779";
   const outDir = join(root, "screenshots", "ai-workspace-chat-spacing");
   await mkdir(outDir, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-  const errors = [];
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     for (const [name, w, h] of [
       ["pc1280", 1280, 900],
       ["mobile390", 390, 844],
@@ -116,13 +114,13 @@ async function main() {
     } else {
       console.log("ALL PASSED");
     }
-  } finally {
-    await browser.close();
-    server.close();
-  }
+  });
+server.close();
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

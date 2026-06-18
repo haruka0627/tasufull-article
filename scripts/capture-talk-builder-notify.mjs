@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK — Builder通知マスター v1.0 スクリーンショット（390px / talkDev=1）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -14,8 +14,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 
 const page = await context.newPage();
 await page.addInitScript(() => {
@@ -105,5 +104,7 @@ for (const target of navTargets) {
   await p.close();
 }
 
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

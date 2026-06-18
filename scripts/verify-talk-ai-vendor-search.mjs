@@ -2,7 +2,7 @@
 /**
  * TASFUL TALK — AI業者検索原型 E2E 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -13,8 +13,7 @@ function record(name, ok, detail = "") {
   console.log(`${ok ? "OK" : "FAIL"} ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 page.setDefaultTimeout(120000);
 
 await page.goto(`${BASE}/talk-home.html?tab=ai`, { waitUntil: "domcontentloaded" });
@@ -98,11 +97,12 @@ if (flow?.href) {
   record("mvp-project-detail reachable pre-chat", projectReady === true);
 }
 
-await browser.close();
+});
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 if (failed.length) {
   console.error("Failures:", failed.map((f) => f.name).join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("AI vendor search prototype checks passed");

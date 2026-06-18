@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,9 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-
-for (const productId of PRODUCTS) {
+await withPlaywrightBrowser(async (browser) => {for (const productId of PRODUCTS) {
   for (const shot of [
     { suffix: "390", width: 390, height: 844, mobile: true },
     { suffix: "1280", width: 1280, height: 900, mobile: false },
@@ -88,5 +86,7 @@ for (const productId of PRODUCTS) {
   }
 }
 
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

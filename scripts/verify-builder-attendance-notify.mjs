@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -8,8 +8,7 @@ const OUT_DIR = "screenshots/builder-attendance-notify";
 const THREAD_ID = "builder_thread_demo_001";
 mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 async function openNotifyAdminOps() {
   await page.goto(`${BASE}/talk-home.html?tab=notify`, {
@@ -74,7 +73,8 @@ for (const { action, title } of [
   console.log(action, ok ? "OK" : "NG", JSON.stringify(info));
 }
 
-await browser.close();
+});
 const failed = results.filter((r) => !r.ok);
 console.log(`\n結果: ${results.length - failed.length}/${results.length} OK`);
+await closeAllBrowsers();
 process.exit(failed.length ? 1 : 0);

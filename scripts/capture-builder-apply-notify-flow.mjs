@@ -1,7 +1,7 @@
 /**
  * 「応募がありました」通知 → board-project-detail 遷移の検証＋スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -27,9 +27,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-
-async function captureFlow(viewport, tag) {
+await withPlaywrightBrowser(async (browser) => {async function captureFlow(viewport, tag) {
   const page = await browser.newPage({ viewport });
   await page.addInitScript(() => {
     [
@@ -123,7 +121,7 @@ async function captureFlow(viewport, tag) {
 const pc = await captureFlow({ width: 1280, height: 900 }, "pc1280");
 const mobile = await captureFlow({ width: 390, height: 844 }, "mobile390");
 
-await browser.close();
+});
 
 const report = {
   notification: {
@@ -157,3 +155,5 @@ const report = {
 fs.writeFileSync(path.join(OUT_DIR, "audit.json"), JSON.stringify(report, null, 2));
 console.log("\nReport:", JSON.stringify(report.checks, null, 2));
 console.log("Saved audit:", path.join(OUT_DIR, "audit.json"));
+
+await closeAllBrowsers();

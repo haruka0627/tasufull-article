@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI運営センター E2E
  *   node scripts/test-ai-operations-center-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -27,7 +27,7 @@ const KEYS = [
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -86,8 +86,7 @@ async function seedCases(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(pageUrl("admin-ai-operations-center.html"), { waitUntil: "domcontentloaded" });
   await page.waitForFunction(
@@ -156,10 +155,10 @@ async function main() {
   pass("既存 Builder index 維持");
 
   console.log("\nAll AI operations center tests passed.");
-  await browser.close();
+    });
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

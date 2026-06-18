@@ -4,7 +4,7 @@
  * - LINE layout for all past messages (owner + partner views)
  * - Complete modal → siteData / invoice / PDF / notification
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -196,8 +196,7 @@ async function runCompletionFlow(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   const seed = await seedLegacyThread(page);
   if (!seed.ok) throw new Error(seed.error || "seed failed");
@@ -247,10 +246,12 @@ async function main() {
       2
     )
   );
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

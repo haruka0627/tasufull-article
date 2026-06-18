@@ -2,7 +2,7 @@
  * TALK P1 切り分け再検証（修正なし）
  * node scripts/triage-talk-p1-rerun.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -436,12 +436,12 @@ async function auditCalendarNotify(browser) {
   return results;
 }
 
-const browser = await chromium.launch({ headless: true });
-const all = [];
+let all = [];
+await withPlaywrightBrowser(async (browser) => {
 all.push(...(await runChatHubVariant(browser, { label: "talkDev=0", talkDev: false })));
 all.push(...(await runChatHubVariant(browser, { label: "talkDev=1", talkDev: true })));
 all.push(...(await auditCalendarNotify(browser)));
-await browser.close();
+});
 
 const summary = {
   capturedAt: new Date().toISOString(),
@@ -515,3 +515,5 @@ fs.writeFileSync(path.join(OUT, "report.md"), md);
 console.log(md);
 console.log("\nVerdicts:", verdicts);
 console.log("Report:", path.join(OUT, "report.md"));
+
+await closeAllBrowsers();

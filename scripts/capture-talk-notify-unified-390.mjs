@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK 通知統一 — 390px スクリーンショット（現行UI / talkDev=1）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -14,8 +14,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.addInitScript(() => {
   [
@@ -62,5 +61,7 @@ if (await builderRoom.count()) {
   await page.screenshot({ path: path.join(OUT_DIR, "04-official-builder-room.png"), fullPage: false });
 }
 
-await browser.close();
+});
 console.log("Saved to", OUT_DIR);
+
+await closeAllBrowsers();

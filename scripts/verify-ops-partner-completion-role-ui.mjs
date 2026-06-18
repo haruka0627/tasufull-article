@@ -3,7 +3,7 @@
  * ops_partner 完了報告 UI — role 分岐検証
  * B: 提出フォームのみ / A: 確認・承認のみ（提出前は空表示）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -84,8 +84,7 @@ async function openCompletionModal(page, side) {
   await page.waitForTimeout(400);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 page.setDefaultTimeout(90000);
 
 const url = `${BASE}/chat-dual-window-demo.html?benchMode=builder&builderFlow=ops_partner&benchViewport=390`;
@@ -272,12 +271,13 @@ record(
 );
 record("B no inline submit after TALK open", !talkOpen?.b?.submitForm && !talkOpen?.b?.submitCard);
 
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 if (failed.length) {
   console.error("Failures:", failed.map((f) => f.name).join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("All completion role UI checks passed");

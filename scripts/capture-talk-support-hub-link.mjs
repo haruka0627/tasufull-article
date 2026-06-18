@@ -5,7 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
@@ -36,8 +36,7 @@ async function openSupportRoom(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
     await mobile.goto(talkChatUrl, { waitUntil: "domcontentloaded", timeout: 20000 });
     await mobile.waitForSelector(`[data-talk-thread-id="${SUPPORT_ID}"]`, { timeout: 15000 });
@@ -63,12 +62,13 @@ async function main() {
     await pc.close();
 
     console.log(`\nScreenshots ready in ${OUT}/`);
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

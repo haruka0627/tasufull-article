@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Supabase Phase 5 — update dual-write + TALK ops sync（Staging + admin JWT）
  *   node scripts/load-dotenv-run.mjs scripts/test-supabase-phase5-update-dual-write.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { readFileSync, existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -14,7 +14,7 @@ const RUN = Date.now().toString(36).slice(-8);
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -393,10 +393,9 @@ async function testLiveUiFlow(cfg) {
     console.log("SKIP: Phase 5 UI flow (BUILDER_BASE_URL + admin JWT)");
     return;
   }
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const qs = "supabaseRead=1&supabaseDualWrite=1";
-  try {
+  
     await page.goto(pageUrl("support-trouble-center.html", qs), {
       waitUntil: "domcontentloaded",
     });
@@ -456,9 +455,8 @@ async function testLiveUiFlow(cfg) {
         { method: "DELETE", jwt: cfg.service, query: `?id=eq.${ticketId}` }
       );
     }
-  } finally {
-    await browser.close();
-  }
+});
+  
 }
 
 async function runPhase4Regression() {
@@ -481,14 +479,12 @@ async function runPhase4Regression() {
 
 async function main() {
   const cfg = loadEnv();
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  try {
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
+  
     await testDualWriteOff(page);
     await testMockUpdateDualWrite(page);
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   if (cfg) await testLiveUpdateDualWrite(cfg);
   await testLiveUiFlow(cfg);
@@ -497,7 +493,7 @@ async function main() {
   console.log("\nAll Supabase Phase 5 update dual-write tests passed.");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch(() => {
+  console.error();
+  closeAllBrowsers().finally(() => process.exit(1));
 });

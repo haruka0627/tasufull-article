@@ -1,7 +1,7 @@
 /**
  * TASFUL 公式通知ルーム — ヘッダー・カード余白確認（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,8 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 async function openOfficialRoom(roomId) {
   await page.goto(`${base}/talk-home.html?tab=chat&thread=${encodeURIComponent(roomId)}&talkDev=1`, {
@@ -160,7 +159,7 @@ const friendPass =
 
 console.log("FRIEND PASS:", friendPass);
 
-await browser.close();
+});
 
 const pass =
   rooms.every((r) => report[r.id]?.hasNotifyHeader) &&
@@ -169,4 +168,5 @@ const pass =
   report.official_platform?.cardTags?.some((t) => /購入|応募|相談|レビュー|採用|支払|チャット|完了/.test(t));
 
 console.log("\nPASS:", pass);
+await closeAllBrowsers();
 process.exit(pass && friendPass ? 0 : 1);

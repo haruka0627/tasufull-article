@@ -3,7 +3,7 @@
  * 店舗販売 checkout / complete ヘッダーロゴ検証
  *   node scripts/capture-shop-store-flow-header.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -33,8 +33,7 @@ const VIEWPORTS = [
 ];
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store-checkout.html" });
-const browser = await chromium.launch({ headless: true });
-const report = { generatedAt: new Date().toISOString(), overall: "PASS", results: [] };
+await withPlaywrightBrowser(async (browser) => {const report = { generatedAt: new Date().toISOString(), overall: "PASS", results: [] };
 
 for (const pageDef of PAGES) {
   for (const vp of VIEWPORTS) {
@@ -88,7 +87,9 @@ for (const pageDef of PAGES) {
   }
 }
 
-await browser.close();
+});
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
 console.log(`Saved: ${OUT}`);
+
+await closeAllBrowsers();

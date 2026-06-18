@@ -2,7 +2,7 @@
 /**
  * チャット中心完了フロー — 求人 + 一般案件デモ検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -156,11 +156,7 @@ async function runFlow(page, { threadId, requesterId, approverId, reviewParam, e
   return issues;
 }
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
-const page = await context.newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await resetJobDemo(page);
   await seedGeneralThread(page);
 
@@ -193,6 +189,6 @@ try {
   }
 
   console.log("verify-chat-completion-flow OK (job + general)");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

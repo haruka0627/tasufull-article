@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI Workspace TASFUL内検索 検証スクリーンショット
  *   node scripts/capture-ai-workspace-search.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = join(root, "screenshots", "ai-workspace-search");
@@ -145,10 +146,9 @@ async function main() {
 
   const server = await startServer();
   const base = "http://127.0.0.1:8793";
-  const browser = await chromium.launch({ headless: true });
-  const results = [];
+  await withPlaywrightBrowser(async (browser) => {const results = [];
 
-  try {
+  
     const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
     for (const testCase of CASES) {
       const result = await runCase(page, base, testCase);
@@ -205,13 +205,13 @@ async function main() {
     console.log("report:", join(reportDir, "ai-workspace-search-integration.md"));
 
     if (!report.passed) process.exitCode = 1;
-  } finally {
-    await browser.close();
-    server.close();
-  }
+    });
+  server.close();
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

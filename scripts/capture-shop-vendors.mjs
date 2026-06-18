@@ -1,7 +1,7 @@
 /**
  * shop-vendors.html — PC1280 / 390px スクショ + 導線確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -15,8 +15,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const base = await findDevServerBaseUrl({ probePath: PAGE_PATH });
 const pageUrl = buildLocalPageUrl(base, PAGE_PATH);
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 async function waitListReady() {
   await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -152,7 +151,7 @@ if (listAudit.firstCard?.id) {
   }
 }
 
-await browser.close();
+});
 
 const reportPath = path.join(OUT_DIR, "report.json");
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2), "utf8");
@@ -166,4 +165,5 @@ const ok =
   report.flow.storeDetail?.ok &&
   report.flow.productDetail?.ok;
 
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

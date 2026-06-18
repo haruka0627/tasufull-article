@@ -5,7 +5,7 @@
  *   node scripts/seed-general-demo-002.mjs
  *   BASE_URL=http://localhost:5180 node scripts/seed-general-demo-002.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const STORAGE_KEY = "tasful_listings";
@@ -14,8 +14,7 @@ const DEMO_ID = "general-demo-002";
 async function main() {
   console.log(`\nseed general-demo-002 — ${BASE}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   try {
     await page.goto(`${BASE}/detail-general.html`, { waitUntil: "domcontentloaded", timeout: 30000 });
@@ -45,11 +44,12 @@ async function main() {
   } catch (err) {
     console.error("  NG ", err.message);
     process.exitCode = 1;
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   console.log("");
 }
 
 main();
+
+await closeAllBrowsers();

@@ -1,8 +1,8 @@
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 3Dチケット Stripe 購入 → 本番3D生成 E2E（u_me）
  * node scripts/e2e-genai-3d-stripe-purchase.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -170,6 +170,7 @@ let tickets0 = Number(ent0.tickets3dRemaining) || 0;
 console.log(`チケット（購入前）: remaining=${tickets0}`);
 if (tickets0 > 0 && resetOk) {
   console.error("Expected 0 tickets before purchase");
+  await closeAllBrowsers();
   process.exit(1);
 }
 if (tickets0 > 0) {
@@ -194,11 +195,7 @@ const imageData = `data:image/png;base64,${imgBuf.toString("base64")}`;
 const server = await startStaticServer();
 const baseUrl = `${origin}/gen-ai-workspace.html?mode=${encodeURIComponent("AIキャラ会話")}`;
 
-const browser = await chromium.launch({
-  headless: process.env.PW_HEADED !== "1",
-  slowMo: process.env.PW_HEADED === "1" ? 80 : 0,
-});
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(600000);
 
 const saveLogs = [];
@@ -343,11 +340,11 @@ try {
   console.log("taskId:", ui.character?.tripoTaskId);
   console.log("note:", ui.note);
   const failed = results.filter((r) => !r.ok).length;
+  await closeAllBrowsers();
   process.exit(failed ? 1 : 0);
 } catch (err) {
   console.error("E2E aborted:", err);
+  await closeAllBrowsers();
   process.exit(1);
-} finally {
-  await browser.close();
-  server.close();
-}
+}});
+server.close();

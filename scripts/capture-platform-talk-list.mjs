@@ -1,7 +1,7 @@
 /**
  * 一般トーク一覧 — TASFUL運営ルーム実画面キャプチャ + localStorage 監査
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,8 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${base}/talk-home.html?tab=chat`, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForTimeout(2500);
@@ -102,4 +101,6 @@ await page.waitForTimeout(1200);
 await page.screenshot({ path: path.join(OUT_DIR, "official-tasful-room-390.png"), fullPage: false });
 console.log("Saved: official-tasful-room-390.png");
 
-await browser.close();
+});
+
+await closeAllBrowsers();

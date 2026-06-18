@@ -7,7 +7,7 @@
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -234,8 +234,7 @@ async function test404(page) {
 async function main() {
   console.log(`\n店舗詳細 回帰 E2E — ${BASE}\n`);
   await mkdir(SHOT_DIR, { recursive: true });
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const consoleErrors = [];
   page.on("console", (m) => {
     if (m.type() === "error" && !/favicon|404|supabase/i.test(m.text())) {
@@ -252,10 +251,11 @@ async function main() {
   if (consoleErrors.length) fail("console", consoleErrors.slice(0, 2).join(" | "));
   else pass("console エラーなし");
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   console.log(`\n--- 結果: ${ok}/${results.length} OK ---`);
   console.log(`スクショ: ${SHOT_DIR}\n`);
+  await closeAllBrowsers();
   process.exit(ok === results.length ? 0 : 1);
 }
 
@@ -263,3 +263,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

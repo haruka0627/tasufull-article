@@ -2,7 +2,7 @@
 /**
  * 初回CTA → A上通知（厳密）— listingId / title / recipientUserId で判定
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -259,11 +259,10 @@ async function auditOne(page, cat) {
   };
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
 const results = [];
 
-try {
+
   for (const cat of CATEGORIES) {
     console.log(`Strict audit: ${cat.id}`);
     results.push(await auditOne(page, cat));
@@ -287,6 +286,6 @@ try {
     console.log("\nFAILED (non-baseline):", failed.map((f) => f.category).join(", "));
     process.exit(1);
   }
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

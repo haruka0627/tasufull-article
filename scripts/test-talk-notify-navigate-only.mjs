@@ -2,7 +2,7 @@
  * TASFUL TALK — 通知は遷移のみ（390px）
  * 通知タブ・公式トークに業務操作ボタンがないことを検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const FORBIDDEN_RE = /受ける|受けない|承認する|差し戻す|支払う|完了にする/;
@@ -60,8 +60,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.addInitScript(() => {
   [
@@ -126,5 +125,6 @@ for (const expect of NAV_EXPECT) {
   if (expect.hrefIncludes.every((p) => nav.href.includes(p))) ok(`${expect.id}: href OK`);
 }
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

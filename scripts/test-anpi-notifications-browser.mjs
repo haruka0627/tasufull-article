@@ -4,7 +4,7 @@
  *
  *   node scripts/test-anpi-notifications-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const STORAGE_LOGS = "tasu_anpi_notification_logs_v1";
@@ -192,10 +192,9 @@ async function runViewport(browser, vp) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  await runViewport(browser, { name: "PC1280", width: 1280, height: 900 });
+  await withPlaywrightBrowser(async (browser) => {await runViewport(browser, { name: "PC1280", width: 1280, height: 900 });
   await runViewport(browser, { name: "SP390", width: 390, height: 844 });
-  await browser.close();
+    });
 
   const failed = results.filter((r) => !r.ok);
   console.log(`\n=== ${results.length - failed.length}/${results.length} passed ===`);
@@ -209,3 +208,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * トラブルセンター E2E
  *   node scripts/test-support-trouble-center-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const INTAKE = "/support-intake.html";
@@ -14,7 +14,7 @@ const NOTIFY_KEY = "tasu_support_admin_notifications_v1";
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -35,8 +35,7 @@ async function submitViaApi(page, payload) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(`${BASE}${INTAKE}`, { waitUntil: "domcontentloaded" });
   await clearStorage(page);
@@ -160,10 +159,10 @@ async function main() {
   pass("解決済みに変更できる");
 
   console.log("\nAll support trouble center browser tests passed.");
-  await browser.close();
+    });
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

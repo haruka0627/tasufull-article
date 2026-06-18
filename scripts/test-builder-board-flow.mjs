@@ -2,7 +2,7 @@
 /**
  * 一般案件（builder_board）専用 board-* ページの最小検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5173").replace(/\/$/, "");
 const results = [];
@@ -11,9 +11,7 @@ function push(name, ok, detail = "") {
   results.push({ name, ok, detail });
 }
 
-const browser = await chromium.launch();
-
-// 1. board-projects: builder_board のみ / tasful_managed 非表示
+await withPlaywrightBrowser(async (browser) => {// 1. board-projects: builder_board のみ / tasful_managed 非表示
 const listPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await listPage.goto(`${BASE}/builder/board-projects.html?role=partner`, { waitUntil: "domcontentloaded" });
 await listPage.waitForSelector("[data-builder-board-project-list] article.mvp-card", { timeout: 20000 });
@@ -142,12 +140,13 @@ push("board-thread: 完了/支払い導線", threadData.hasCompletion && threadD
 push("board-thread: メッセージ入力あり", threadData.hasCompose, "");
 
 await listPage.close();
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log(JSON.stringify(results, null, 2));
 if (failed.length) {
   console.error(`FAILED ${failed.length}/${results.length}`);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log(`ALL PASSED ${results.length}/${results.length}`);

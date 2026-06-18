@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = { ".html": "text/html", ".js": "application/javascript", ".css": "text/css" };
@@ -27,8 +27,7 @@ function startServer(port = 8769) {
 async function main() {
   await startServer();
   const BASE = "http://127.0.0.1:8769";
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const ids = [
     "demo-biz-tasful-garden-1",
     "demo-biz-lawn-1",
@@ -56,7 +55,8 @@ async function main() {
     console.log(`${ok ? "OK" : "NG"} ${id}: rows=${result.rowCount} first=${result.firstRow.slice(0, 40)}`);
     if (!ok) failed += 1;
   }
-  await browser.close();
+    });
+  await closeAllBrowsers();
   process.exit(failed ? 1 : 0);
 }
 

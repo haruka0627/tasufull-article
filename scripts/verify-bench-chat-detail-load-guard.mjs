@@ -2,7 +2,7 @@
 /**
  * worker-0 / product-0 / job-0 — ベンチ iframe chat-detail 読込ガード検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -254,11 +254,9 @@ async function runJobPattern(page) {
   return result.state;
 }
 
-const browser = await chromium.launch({ headless: true });
-const results = {};
+await withPlaywrightBrowser(async (browser) => {const results = {};
 const errors = [];
 
-try {
   for (const pat of PATTERNS) {
     const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
     const page = await context.newPage();
@@ -278,6 +276,7 @@ try {
     process.exit(1);
   }
   console.log(JSON.stringify({ ok: true, results }, null, 2));
-} finally {
-  await browser.close();
-}
+
+});
+
+await closeAllBrowsers();

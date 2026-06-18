@@ -7,7 +7,7 @@
  * ユーザー確認用:
  *   node scripts/capture-shop-store-final-review.mjs --page review-gauge
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { debugScreenshotsDir } from "./lib/screenshot-ops.mjs";
 import {
@@ -33,8 +33,7 @@ const OUT = debugScreenshotsDir(root, "shop-store-review-gauge");
 
 const base = await findDevServerBaseUrl({ probePath: "detail-shop-store.html" });
 
-const browser = await chromium.launch({ headless: true });
-const report = {
+await withPlaywrightBrowser(async (browser) => {const report = {
   generatedAt: new Date().toISOString(),
   kind: "debug",
   primaryFolder: "shop-store-final-review",
@@ -82,9 +81,10 @@ for (const vp of REVIEW_GAUGE_VIEWPORTS) {
   }
 }
 
-await browser.close();
+});
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
 console.log(`\n[debug] Saved: ${OUT}`);
 console.log("[primary] node scripts/capture-shop-store-final-review.mjs --page review-gauge");
+await closeAllBrowsers();
 process.exit(report.overall === "PASS" ? 0 : 1);

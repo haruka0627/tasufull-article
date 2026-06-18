@@ -2,7 +2,7 @@
 /**
  * LINE風チャット UI — 「こんにちは」送信フロー 390px スクショ（6枚）
  */
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, devUrl } from "./lib/dev-base-url.mjs";
@@ -15,8 +15,7 @@ const SEND_TEXT = "こんにちは";
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   ...devices["iPhone 13"],
   isMobile: true,
   hasTouch: true,
@@ -210,7 +209,7 @@ const report = {
 };
 
 fs.writeFileSync(path.join(OUT, "capture-report.json"), JSON.stringify(report, null, 2));
-await browser.close();
+});
 console.log(JSON.stringify(report, null, 2));
 
 if (!postSendAudit.textMatchesInput) {
@@ -231,3 +230,5 @@ if (!audit.composerAboveTabbar) {
 if (!postSendAudit.meOnRight) {
   throw new Error("self message not right-aligned");
 }
+
+await closeAllBrowsers();

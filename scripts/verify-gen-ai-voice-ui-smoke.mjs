@@ -9,7 +9,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const html = readFileSync(join(root, "gen-ai-workspace.html"), "utf8");
@@ -61,8 +61,7 @@ if (SKIP_BROWSER) {
   console.log("\n=== Browser UI smoke (skipped: GEN_AI_UI_SMOKE_SKIP_BROWSER=1) ===\n");
 } else {
   console.log("\n=== Browser UI smoke ===\n");
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   try {
     await page.goto(baseUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
@@ -171,9 +170,8 @@ if (SKIP_BROWSER) {
     );
   } catch (err) {
     record("Browser UI smoke execution", false, err.message);
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 }
 
 const failed = results.filter((r) => !r.ok);
@@ -182,4 +180,7 @@ console.log(`Total: ${results.length}, Passed: ${results.length - failed.length}
 if (!failed.length) {
   console.log("\nManual checklist: docs/gen-ai-voice-manual-checklist.md");
 }
+await closeAllBrowsers();
 process.exit(failed.length ? 1 : 0);
+
+await closeAllBrowsers();

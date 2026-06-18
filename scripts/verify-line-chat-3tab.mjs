@@ -2,7 +2,7 @@
  * LINE-style chat 3-tab verification (owner / partner / user)
  * Report-only — no code fixes.
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 import fs from "fs";
@@ -129,8 +129,7 @@ async function getStorageSnapshot(page) {
 async function main() {
   fs.mkdirSync(outDir, { recursive: true });
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
 
   const pageOwner = await context.newPage();
   const pagePartner = await context.newPage();
@@ -253,7 +252,7 @@ async function main() {
   console.log(JSON.stringify(report, null, 2));
   console.log(`\nScreenshots: ${outDir}`);
 
-  await browser.close();
+    });
 
   if (!allLayoutPass || !allFromPass) process.exit(1);
 }
@@ -262,3 +261,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

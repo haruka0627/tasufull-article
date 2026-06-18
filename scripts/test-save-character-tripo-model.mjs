@@ -2,7 +2,7 @@
  * saveCharacterTripoModel が localStorage に Tripo フィールドを書くことを確認
  * node scripts/test-save-character-tripo-model.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -31,8 +31,7 @@ const server = await new Promise((resolve) => {
   s.listen(PORT, "127.0.0.1", () => resolve(s));
 });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 page.on("console", (msg) => {
   if (msg.text().includes("[GenAi3D] saveCharacterTripoModel")) {
@@ -140,6 +139,7 @@ const pass2 =
 
 console.log(pass && pass2 ? "PASS all" : "FAIL");
 
-await browser.close();
+});
 server.close();
+await closeAllBrowsers();
 process.exit(pass && pass2 ? 0 : 1);

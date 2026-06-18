@@ -2,7 +2,7 @@
 /**
  * Smoke test Phase 2-B shop pages via Playwright (requires dev server on BASE_URL).
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.env.BASE_URL || "http://127.0.0.1:5173";
 const SHOP_ID = "demo-shop-haru-cafe";
@@ -19,11 +19,10 @@ async function checkPage(page, url, assert) {
   return { url, status: res?.status(), errors };
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const results = [];
 
-try {
+
   results.push(
     await checkPage(page, `${BASE}/shop-store.html`, async (p) => {
       const cards = await p.locator("[data-shop-store-grid] .shop-store-card, [data-shop-store-grid] article").count();
@@ -81,10 +80,10 @@ try {
     errors: hasCheckoutPath ? [] : ["checkout navigation not triggered"],
     note: checkoutNav.includes("checkout.html") ? "navigated" : "buy button present (payout gating may block nav)",
   });
-} finally {
-  await browser.close();
-}
+});
+
 
 console.log(JSON.stringify(results, null, 2));
 const failed = results.filter((r) => r.errors?.length || (r.status && r.status >= 400));
+await closeAllBrowsers();
 process.exit(failed.length ? 1 : 0);

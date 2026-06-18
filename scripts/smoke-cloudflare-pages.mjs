@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * NB-1B — Cloudflare Pages smoke (*.pages.dev or local dist)
  *
@@ -31,7 +32,7 @@ function parseArgs() {
   const base = i >= 0 ? process.argv[i + 1] : process.env.PAGES_BASE_URL || "";
   if (!base) {
     console.error("Usage: node scripts/smoke-cloudflare-pages.mjs --base <origin>");
-    process.exit(2);
+        process.exit(2);
   }
   return base.replace(/\/$/, "");
 }
@@ -47,8 +48,7 @@ async function main() {
   assert(!isProductionHost({ hostname: new URL(base).hostname }), "smoke base should not be tasful.jp yet");
   passNote("hostname is not production apex — using talkProductionMode simulation");
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const consoleErrors = [];
   const failedAssets = [];
 
@@ -148,9 +148,8 @@ async function main() {
   } catch (err) {
     console.error("\n[smoke-pages] SUMMARY: FAIL —", err.message);
     process.exitCode = 1;
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 }
 
 function passNote(msg) {

@@ -2,14 +2,13 @@
 /**
  * ベンチ — B下は通知CTA押下までチャットへ自動遷移しない
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const issues = [];
+await withPlaywrightBrowser(async (browser) => {const issues = [];
 
-try {
+
   const context = await browser.newContext();
   const bench = await context.newPage({ viewport: { width: 1280, height: 900 } });
 
@@ -166,6 +165,6 @@ try {
     process.exit(1);
   }
   console.log("\nOK: B chat gated until notify CTA");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

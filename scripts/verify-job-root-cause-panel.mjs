@@ -1,12 +1,11 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 import { fixedJobBenchUrl } from "./lib/fixed-bench-url.mjs";
 
 const BASE = await requireDevServer();
 const URL = fixedJobBenchUrl(BASE) + "&diagFocus=completion";
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
 await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForTimeout(8000);
 await page.evaluate(() => document.getElementById("benchVerdictFold")?.setAttribute("open", "open"));
@@ -58,5 +57,6 @@ if (r.verdicts?.completion?.status === "SKIP" && r.verdicts?.notification?.statu
 }
 
 console.log(JSON.stringify({ ok: issues.length === 0, issues, ...r }, null, 2));
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(issues.length ? 1 : 0);

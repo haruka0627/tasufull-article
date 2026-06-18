@@ -2,7 +2,7 @@
 /**
  * 通知一覧スクロール・並び順安定性（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -11,8 +11,7 @@ const OUT_DIR = "screenshots/notify-scroll-stability";
 const NOTIFY_ID = "builder-ops-route-005";
 mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 const panelSel = '[data-talk-panel="notify"], .talk-home-main, html';
 
@@ -99,5 +98,6 @@ const readOk = after.cardFound && after.cardRead;
 console.log("after scroll:", after.scroll, "top ids:", after.ids.join(", "));
 console.log(`order: ${orderOk ? "OK" : "NG"} scroll: ${scrollOk ? "OK" : "NG"} (${before.scroll}→${after.scroll}) read kept: ${readOk ? "OK" : "NG"}`);
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(orderOk && scrollOk && readOk ? 0 : 1);

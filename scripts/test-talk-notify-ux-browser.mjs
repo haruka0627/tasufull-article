@@ -4,13 +4,12 @@
  *
  *   node scripts/test-talk-notify-ux-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -18,7 +17,7 @@ async function main() {
     console.log(`  ✗ ${m}`);
   };
 
-  try {
+  
     await page.goto(`${BASE}/talk-home.html`, {
       waitUntil: "domcontentloaded",
       timeout: 20000,
@@ -264,12 +263,13 @@ async function main() {
     } else {
       console.log("All notify UX checks passed.");
     }
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

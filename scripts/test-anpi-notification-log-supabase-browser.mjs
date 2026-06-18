@@ -4,7 +4,7 @@
  *
  *   node scripts/test-anpi-notification-log-supabase-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { runAnpiRlsBrowserTests } from "./lib/anpi-rls-browser-tests.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
@@ -368,10 +368,9 @@ async function runViewport(browser, vp) {
 
 async function main() {
   console.log(`\n安否通知ログ Supabase E2E — ${BASE}\n`);
-  const browser = await chromium.launch({ headless: true });
-  await runViewport(browser, { name: "PC", width: 1280, height: 800 });
+  await withPlaywrightBrowser(async (browser) => {await runViewport(browser, { name: "PC", width: 1280, height: 800 });
   await runViewport(browser, { name: "SP", width: 390, height: 844 });
-  await browser.close();
+    });
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);
@@ -382,3 +381,5 @@ main().catch((e) => {
   console.error(e);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

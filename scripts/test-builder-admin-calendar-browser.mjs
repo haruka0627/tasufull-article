@@ -1,7 +1,7 @@
 /**
  * Builder Admin Calendar smoke test
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -12,8 +12,7 @@ const MVP_KEY = "tasful:builder:mvp:v1";
 const PAGE = `file://${path.join(builder, "admin-calendar.html")}`;
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
   page.on("dialog", async (d) => d.accept());
 
@@ -97,10 +96,12 @@ async function main() {
   if (!synced) throw new Error("Cross-tab sync: completed state not visible");
 
   console.log("OK: builder admin calendar smoke test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

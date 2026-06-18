@@ -1,7 +1,7 @@
 /**
  * Phase 4 追補 — ナビ遷移 + 公式通知カード UI（390 / 1280）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -28,9 +28,7 @@ fs.mkdirSync(LEGACY_OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-
-async function ensureUnreadNotifyCards(page, roomId) {
+await withPlaywrightBrowser(async (browser) => {async function ensureUnreadNotifyCards(page, roomId) {
   await page.evaluate((id) => {
     const store = window.TasuTalkNotifications;
     const rooms = window.TasuTalkOfficialRooms;
@@ -157,7 +155,7 @@ const platform1280 = await inspectRoomCard(page1280);
 await page1280.screenshot({ path: path.join(OUT_DIR, "talk-home-desktop1280.png"), fullPage: true });
 await page1280.close();
 
-await browser.close();
+});
 
 const checks = {
   builderToWorkspace: /builder\/index\.html$/i.test(nav390.builderHref),
@@ -196,6 +194,7 @@ fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null,
 console.log(JSON.stringify(report, null, 2));
 if (!report.pass) {
   console.error("FAIL");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS");

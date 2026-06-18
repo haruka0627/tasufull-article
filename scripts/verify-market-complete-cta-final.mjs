@@ -2,7 +2,7 @@
  * 注文完了 CTA 最終目視確認 — 市場/店舗販売 × SP 390px
  * node scripts/verify-market-complete-cta-final.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -76,9 +76,7 @@ const FLOWS = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-market-complete.html" });
-const browser = await chromium.launch({ headless: true });
-
-const report = {
+await withPlaywrightBrowser(async (browser) => {const report = {
   capturedAt: new Date().toISOString(),
   viewport: "390",
   frozen: false,
@@ -259,7 +257,8 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
   })),
 });
 
-await browser.close();
+});
 console.log("OVERALL:", report.overall, report.frozen ? "(FROZEN)" : "");
 console.log(md);
+await closeAllBrowsers();
 process.exit(report.overall === "PASS" ? 0 : 1);

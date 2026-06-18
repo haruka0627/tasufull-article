@@ -3,17 +3,14 @@
  * A-notify 描画パイプライン監査 — purchased + contact-gate 状態
  * 1. rows.length  2. demo-worker-001 の有無  3. filter 除外  4. store  5. reconcile ループ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 import { fixedWorkerBenchUrl } from "./lib/fixed-bench-url.mjs";
 
 const BASE = await requireDevServer();
 const URL = fixedWorkerBenchUrl(BASE);
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(6500);
 
@@ -89,6 +86,6 @@ try {
     report.store.forSellerCount > 0 &&
     (report.dom.cardCount > 0 || report.iframeDiag?.rowsLength > 0);
   process.exitCode = ok ? 0 : 1;
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
 /**
  * 指定URLのみ — 納品完了申請通知 CTA → B下承認カード 6項目検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -22,16 +22,7 @@ function pushErr(msg) {
   console.error(`NG: ${msg}`);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
-
-const navMessages = [];
-page.on("console", (msg) => {
-  const t = msg.text();
-  if (/tasu-bench-frame-navigate|bench-frame-navigate/i.test(t)) navMessages.push(t);
-});
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(EXACT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2500);
 
@@ -259,6 +250,6 @@ try {
   fs.writeFileSync(path.join(OUT_DIR, "audit.json"), JSON.stringify(report, null, 2));
 
   if (errors.length) process.exit(1);
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

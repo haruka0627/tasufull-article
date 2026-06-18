@@ -1,7 +1,7 @@
 /**
  * 市場検索 PC layout 1440px + 1440+5列 — 本番反映後検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -29,8 +29,7 @@ const TARGETS = {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const report = {
   capturedAt: new Date().toISOString(),
@@ -193,4 +192,6 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
 });
 
 console.log("\nOVERALL:", report.overall);
-await browser.close();
+});
+
+await closeAllBrowsers();

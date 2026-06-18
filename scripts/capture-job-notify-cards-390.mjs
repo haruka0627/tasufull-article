@@ -2,7 +2,7 @@
 /**
  * 求人カテゴリ通知カード（応募 / 採用 / 一覧2件）390px スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, devUrl } from "./lib/dev-base-url.mjs";
@@ -14,8 +14,7 @@ const HIRED_NOTIFY_ID = "platform-verify-job-full-applicant-start-001";
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 async function waitNotifyReady() {
   await page.waitForFunction(
@@ -72,6 +71,8 @@ const audit = await page.evaluate(
   { applyId: APPLY_NOTIFY_ID, hiredId: HIRED_NOTIFY_ID }
 );
 
-await browser.close();
+});
 
 console.log(JSON.stringify({ outDir: OUT, audit }, null, 2));
+
+await closeAllBrowsers();

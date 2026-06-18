@@ -2,7 +2,7 @@
 /**
  * 2窓デモ — complete-request / チャット通知 / 戻る
  */
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -16,8 +16,7 @@ const fail = (msg) => {
 };
 const ok = (msg) => console.log("OK", msg);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   ...devices["iPhone 13"],
   viewport: { width: 390, height: 844 },
   hasTouch: true,
@@ -106,9 +105,10 @@ else ok("message notify CTA");
 if (!/よろしく/.test(msgNotify.body)) fail(`body: ${msgNotify.body}`);
 else ok("message notify body preview");
 
-await browser.close();
+});
 if (failed) {
   console.log("\nVERIFY FAILED");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("\nVERIFY PASSED");

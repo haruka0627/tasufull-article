@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * screenshots-viewer.html — AI Workspace カテゴリ表示確認
  *   node scripts/capture-screenshots-viewer-ai-workspace.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 import { writeScreenshotsManifest } from "./lib/screenshots-manifest.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -60,9 +61,7 @@ async function main() {
 
   const server = await startServer();
   const base = `http://127.0.0.1:${PORT}`;
-  const browser = await chromium.launch({ headless: true });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 1400 } });
     await page.goto(`${base}/screenshots-viewer.html?category=ai-workspace&mode=registered`, {
       waitUntil: "networkidle",
@@ -142,13 +141,13 @@ async function main() {
     console.log(report.passed ? "PASS" : "FAIL");
 
     if (!report.passed) process.exitCode = 1;
-  } finally {
-    await browser.close();
-    server.close();
-  }
+    });
+  server.close();
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

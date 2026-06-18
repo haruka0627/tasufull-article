@@ -1,7 +1,6 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await page.goto("http://127.0.0.1:5173/detail-product.html?id=product_set_2026", {
   waitUntil: "networkidle",
   timeout: 60000,
@@ -17,4 +16,6 @@ const gap = await page.evaluate(() => {
     : null;
 });
 console.log("mobile gap:", gap);
-await browser.close();
+});
+
+await closeAllBrowsers();

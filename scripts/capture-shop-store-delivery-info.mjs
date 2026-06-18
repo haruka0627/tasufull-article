@@ -2,7 +2,7 @@
 /**
  * 店舗販売 — 配送・発送情報表示検証（PC1280 / 390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { spawn } from "child_process";
 import fs from "fs";
@@ -92,9 +92,7 @@ function evalCheckout(rows) {
   );
 }
 
-const browser = await chromium.launch({ headless: true });
-
-for (const vp of VIEWPORTS) {
+await withPlaywrightBrowser(async (browser) => {for (const vp of VIEWPORTS) {
   for (const prod of PRODUCTS) {
     for (const mode of ["cart", "buyNow"]) {
       const caseId = `${prod.label}-${mode}-${vp.label}`;
@@ -213,7 +211,7 @@ for (const vp of VIEWPORTS) {
   await page.close();
 }
 
-await browser.close();
+});
 
 function runScript(script) {
   return new Promise((resolve) => {
@@ -275,3 +273,5 @@ console.log(
     2
   )
 );
+
+await closeAllBrowsers();

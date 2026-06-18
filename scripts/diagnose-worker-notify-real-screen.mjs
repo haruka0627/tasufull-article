@@ -3,7 +3,7 @@
  * 実画面NG状態の6項目診断
  * URL: worker-0, liveFlow=1, B=購入済み/確認待ち, A=空
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -14,8 +14,7 @@ const PARENT_URL = fixedWorkerBenchUrl(BASE);
 const OUT = path.join("screenshots", "worker-notify-real-screen");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (
+await withPlaywrightBrowser(async (browser) => {const page = await (
   await browser.newContext({ viewport: { width: 390, height: 900 } })
 ).newPage();
 
@@ -165,9 +164,9 @@ try {
 } catch (e) {
   report.error = String(e.message || e);
   report.ok = false;
-} finally {
-  await browser.close();
 }
+});
+
 
 fs.writeFileSync(path.join(OUT, "diagnose-report.json"), JSON.stringify(report, null, 2));
 console.log("\n=== WORKER NOTIFY REAL SCREEN DIAGNOSE ===");
@@ -176,4 +175,5 @@ for (const [k, v] of Object.entries(report.checks)) {
 }
 console.log(`RESULT: ${report.ok ? "OK" : "NG (matches user report)"}`);
 console.log(`Report: ${OUT}/diagnose-report.json`);
+await closeAllBrowsers();
 process.exit(report.ok ? 0 : 1);

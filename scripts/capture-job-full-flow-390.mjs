@@ -2,7 +2,7 @@
 /**
  * 求人 end-to-end 通知デモ — 390px スクショ16枚
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
@@ -28,8 +28,7 @@ for (const f of fs.readdirSync(OUT)) {
   if (f.endsWith(".png")) fs.unlinkSync(path.join(OUT, f));
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${BASE}/talk-home.html?talkDev=1&jobFullFresh=1`, { waitUntil: "domcontentloaded" });
 await page.waitForFunction(
@@ -197,7 +196,7 @@ const audit = await page.evaluate(() => ({
   reviewMode: window.TasuTalkJobFullReviewMode?.isJobFullReviewMode?.(),
 }));
 
-await browser.close();
+});
 
 console.log(
   JSON.stringify(
@@ -212,3 +211,5 @@ console.log(
     2
   )
 );
+
+await closeAllBrowsers();

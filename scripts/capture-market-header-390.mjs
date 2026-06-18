@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 — 共通ヘッダー 390px 検証（localhost 必須）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -18,9 +18,7 @@ const searchUrl = buildLocalPageUrl(base, "shop-search.html");
 const cartUrl = buildLocalPageUrl(base, "shop-market-cart.html");
 const navFoodUrl = buildLocalPageUrl(base, "shop-search.html", "category=food");
 
-const browser = await chromium.launch({ headless: true });
-
-async function inspectHeader(page) {
+await withPlaywrightBrowser(async (browser) => {async function inspectHeader(page) {
   return page.evaluate(() => {
     const header = document.querySelector("[data-tasful-market-header]");
     const headerRect = header?.getBoundingClientRect();
@@ -131,7 +129,7 @@ await page.screenshot({
   clip: { x: 0, y: 0, width: 390, height: 120 },
 });
 
-await browser.close();
+});
 
 const pass =
   topReport.hasHeader &&
@@ -165,4 +163,5 @@ const pass =
 console.log(
   JSON.stringify({ baseUrl: base, topUrl, searchUrl, cartUrl, navFoodUrl, topReport, searchReport, searchFromTopOk, navFoodActive, cartPageOk, cartHeaderOk, cartLinkOnSearch, pass }, null, 2)
 );
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

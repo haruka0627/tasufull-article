@@ -8,7 +8,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { loadTalkSupabaseConfig } from "./lib/talk-rls-test-auth.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -71,12 +71,7 @@ function staticChecks() {
 async function main() {
   staticChecks();
 
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream"],
-  });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
     await page.addInitScript(() => {
@@ -232,9 +227,8 @@ async function main() {
     } else {
       pass("mock mode E2E complete (set SUPABASE_STRICT=1 for DB verify)");
     }
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   console.log(`\n${errors.length ? "FAIL" : "PASS"} — ${errors.length} error(s)`);
   if (errors.length) {
@@ -247,3 +241,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

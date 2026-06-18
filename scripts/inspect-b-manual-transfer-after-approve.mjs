@@ -2,7 +2,7 @@
 /**
  * Connectなし — 承認後の振込→支払い報告→入金確認→完了 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -21,10 +21,7 @@ const pushErr = (m) => {
   console.error(`NG: ${m}`);
 };
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(EXACT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2000);
 
@@ -252,6 +249,6 @@ try {
 
   console.log(JSON.stringify({ threadId, afterApprove, afterPaid, depositCard, finalAudit, errors, ok: !errors.length }, null, 2));
   if (errors.length) process.exit(1);
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

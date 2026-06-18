@@ -4,14 +4,13 @@
  *
  *   node scripts/test-talk-notification-settings-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const SETTINGS_KEY = "tasful_talk_notification_settings";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   const page = await context.newPage();
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
@@ -166,12 +165,12 @@ async function main() {
     else pass("urgent OFF warning displayed");
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("\nOK: TASFUL TALK Phase9 notification settings");

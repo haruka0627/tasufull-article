@@ -2,7 +2,7 @@
  * 3Dチケット付与の session 冪等性テスト
  * node scripts/test-genai-3d-ticket-grant-idempotency.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync, writeFileSync, unlinkSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -72,8 +72,7 @@ function startStaticServer() {
 }
 
 async function payCheckoutSession(url) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   await page.goto(url, { waitUntil: "domcontentloaded" });
   await page.waitForSelector("#cardNumber", { timeout: 60000 });
   await page.locator("#email").fill("e2e-idempotency@tasful.test");
@@ -84,7 +83,7 @@ async function payCheckoutSession(url) {
   await page.getByRole("button", { name: /^支払う$/ }).click();
   await page.waitForURL(/gen-ai-workspace\.html/, { timeout: 120000 });
   const sessionId = new URL(page.url()).searchParams.get("session_id");
-  await browser.close();
+    });
   return sessionId;
 }
 
@@ -98,6 +97,7 @@ console.log("=== 3D ticket grant idempotency ===\n");
 
 if (!resetTicketsToZero()) {
   console.error("Could not reset tickets");
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -130,4 +130,5 @@ const after3 = Number(confirm3.data?.tickets3dRemaining ?? confirm3.data?.entitl
 record("third confirm no extra grant", confirm3.data?.ok && after3 === tickets0 + 1, `still ${after3}`);
 
 const failed = results.filter((r) => !r.ok).length;
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

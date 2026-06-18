@@ -1,7 +1,6 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
-const browser = await chromium.launch({ headless: true });
-for (const id of ["demo_product_001", "product_set_2026"]) {
+await withPlaywrightBrowser(async (browser) => {for (const id of ["demo_product_001", "product_set_2026"]) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.goto(`http://127.0.0.1:5173/detail-product.html?id=${id}`, {
     waitUntil: "networkidle",
@@ -26,4 +25,6 @@ for (const id of ["demo_product_001", "product_set_2026"]) {
   console.log(id, gap);
   await page.close();
 }
-await browser.close();
+});
+
+await closeAllBrowsers();

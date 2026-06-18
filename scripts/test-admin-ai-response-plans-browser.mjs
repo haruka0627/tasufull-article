@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI運営秘書 Phase2/3 — AI対応案 E2E（TALK通知・運営履歴）
  *   node scripts/test-admin-ai-response-plans-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -40,7 +40,7 @@ function pageUrl(rel) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -144,8 +144,7 @@ async function seedDashboardExtras(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(pageUrl("support-intake.html"), { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => window.TasuSupportTicketService, { timeout: 15000 });
@@ -431,11 +430,11 @@ async function main() {
   }
   pass("390pxで操作できる");
 
-  await browser.close();
+    });
   console.log("\nAll AI response plan tests passed.");
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

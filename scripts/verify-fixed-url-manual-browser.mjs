@@ -3,7 +3,7 @@
  * 固定URL — 手動ブラウザ相当の実画面検証
  * 固定親URLのみ — 3秒以内に4枠 / B下CTA / A上通知
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -43,8 +43,7 @@ async function snap(page, tag) {
   }, tag);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 const errors = [];
 page.on("pageerror", (e) => errors.push(String(e.message || e)));
 page.on("console", (m) => {
@@ -112,7 +111,7 @@ report.ok =
   report.checks.notify?.ok === true;
 
 fs.writeFileSync(path.join(OUT, "manual-browser-report.json"), JSON.stringify(report, null, 2));
-await browser.close();
+});
 
 console.log("\n=== FIXED URL MANUAL BROWSER VERIFY ===");
 console.log("URL:", URL);
@@ -124,4 +123,5 @@ console.log("A notify:", report.checks.notify?.ok ? "OK" : "NG", report.checks.n
 if (report.errors.length) console.log("Errors:", report.errors);
 console.log("RESULT:", report.ok ? "MANUAL-BROWSER OK" : "MANUAL-BROWSER NG");
 console.log("Screenshots:", OUT);
+await closeAllBrowsers();
 process.exit(report.ok ? 0 : 1);

@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 /** Payment inside a-chat fee-pay iframe → B上 notify */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const issues = [];
+await withPlaywrightBrowser(async (browser) => {const issues = [];
 
-try {
+
   const bench = await (await browser.newContext()).newPage({ viewport: { width: 1280, height: 900 } });
   const contactId = "contact-demo-skill-dual-001";
 
@@ -101,6 +100,6 @@ try {
     process.exit(1);
   }
   console.log("OK");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
 /**
  * 全カテゴリ CTA 監査 — benchViewport=390, demoConnect=0
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -261,11 +261,10 @@ function rowFail(cat, issue, meta, extra) {
   };
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
 const results = [];
 
-try {
+
   for (const cat of CATEGORIES) {
     console.log(`Auditing ${cat.id}...`);
     results.push(await auditCategory(page, cat));
@@ -283,6 +282,6 @@ try {
       問題有無: r.hasIssue ? "あり" : "なし",
     }))
   );
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

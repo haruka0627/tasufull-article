@@ -2,7 +2,7 @@
  * TASFUL市場 TOP — 390px スクリーンショット検証
  * 必ず http://localhost 経由（file:// 禁止）。
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -34,8 +34,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 const pageUrl = buildLocalPageUrl(base, "shop-store.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -179,7 +178,7 @@ await page.screenshot({
   fullPage: true,
 });
 
-await browser.close();
+});
 
 const pass =
   report.topbarVisible &&
@@ -220,4 +219,5 @@ const pass =
   report.scrollY === 0;
 
 console.log(JSON.stringify({ baseUrl: base, pageUrl, ...report, pass }, null, 2));
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

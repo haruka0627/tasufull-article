@@ -2,7 +2,7 @@
 /**
  * 店舗販売購入通知 — コンパクトカード検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -181,8 +181,7 @@ const report = { cases: [], compactFlow: "PASS", allPass: true };
 base = await findDevServerBaseUrl({ probePath: "chat-dual-window-demo.html" });
 report.base = base;
 
-const browser = await chromium.launch({ headless: true });
-let canonicalCaseId = "";
+await withPlaywrightBrowser(async (browser) => {let canonicalCaseId = "";
 
 for (const vp of VIEWPORTS) {
   for (const prod of PRODUCTS) {
@@ -274,4 +273,6 @@ fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2))
 console.log(
   JSON.stringify({ compactFlow: report.compactFlow, allPass: report.allPass, ok: report.ok, ng: report.ng }, null, 2)
 );
-await browser.close();
+});
+
+await closeAllBrowsers();

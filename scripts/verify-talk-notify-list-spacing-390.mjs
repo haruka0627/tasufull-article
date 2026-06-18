@@ -2,12 +2,11 @@
 /**
  * 通知タブ — 390px 下部余白・空状態
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const issues = [];
+await withPlaywrightBrowser(async (browser) => {const issues = [];
 
 async function measure(label, url, afterLoad) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -50,7 +49,7 @@ async function measure(label, url, afterLoad) {
   return m;
 }
 
-try {
+
   const empty = await measure("empty", `${BASE}/talk-home.html?tab=notify&talkDev=1`, async (page) => {
     await page.waitForFunction(() => window.TasuTalkData?.getNotifications);
     await page.evaluate(() => {
@@ -87,6 +86,6 @@ try {
     process.exit(1);
   }
   console.log("verify-talk-notify-list-spacing-390 OK");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

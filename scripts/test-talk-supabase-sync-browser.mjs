@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — Supabase 同期（localStorage フォールバック含む）
  *
@@ -6,7 +7,6 @@
  *
  * DB テーブル未作成時も local 系は通過。SUPABASE_STRICT=1 で DB 必須。
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { ensureTalkTestUsers } from "./lib/talk-rls-test-auth.mjs";
 import {
   enableTalkDevMode,
@@ -24,8 +24,8 @@ async function main() {
   if (STRICT) {
     await ensureTalkTestUsers(["u_me", "u_store"]);
   }
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 }
+});
   const page = await context.newPage();
   await enableTalkDevMode(page);
   const errors = [];
@@ -96,7 +96,7 @@ async function main() {
       } catch {
         return false;
       }
-    });
+});
     if (!bcastLocal) fail("broadcast draft local missing");
     else pass("broadcast draft local save");
 
@@ -230,7 +230,7 @@ async function main() {
       } catch {
         return false;
       }
-    });
+});
     if (!corruptInline) fail("corrupt localStorage inline should not crash");
     else pass("corrupt localStorage inline safe");
 
@@ -246,7 +246,7 @@ async function main() {
       } catch {
         return false;
       }
-    });
+});
     if (!corruptAfterReload) fail("corrupt localStorage after reload should not crash");
     else pass("corrupt localStorage after reload safe");
 
@@ -285,18 +285,19 @@ async function main() {
     await pageB.close();
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
   }
+});
+  
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("\nOK: TASFUL TALK Supabase sync (browser)");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch(() => {
+  console.error();
+  closeAllBrowsers().finally(() => process.exit(1));
 });

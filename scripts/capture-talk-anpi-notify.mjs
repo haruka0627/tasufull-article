@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK — 安否通知マスター v1.0 スクリーンショット（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,8 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 
 const page = await context.newPage();
 await page.addInitScript(() => {
@@ -74,5 +73,7 @@ for (const dest of destinations) {
   await p.close();
 }
 
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

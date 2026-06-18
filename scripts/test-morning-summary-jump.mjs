@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.env.BASE_URL || "http://localhost:5173";
 const TARGETS = [
@@ -16,8 +16,7 @@ const VIEWPORTS = [
 ];
 
 async function main() {
-  const browser = await chromium.launch();
-  let fail = 0;
+  await withPlaywrightBrowser(async (browser) => {let fail = 0;
 
   for (const vp of VIEWPORTS) {
     const page = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
@@ -68,7 +67,7 @@ async function main() {
     await page.close();
   }
 
-  await browser.close();
+    });
   if (fail) {
     console.error(`\n${fail} failure(s)`);
     process.exitCode = 1;
@@ -81,3 +80,5 @@ main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

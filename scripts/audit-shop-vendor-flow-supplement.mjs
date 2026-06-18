@@ -1,9 +1,8 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "shop-vendors.html" });
-const b = await chromium.launch({ headless: true });
-const p = await b.newPage();
+await withPlaywrightBrowser(async (browser) => {const p = await browser.newPage();
 await p.setViewportSize({ width: 1280, height: 900 });
 
 await p.goto(buildLocalPageUrl(base, "detail-shop-store.html?id=demo-shop-haru-cafe"), {
@@ -57,4 +56,6 @@ console.log(
   }))
 );
 
-await b.close();
+});
+
+await closeAllBrowsers();

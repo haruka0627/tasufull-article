@@ -2,7 +2,7 @@
  * 生成済み taskId で URL再取得・キャラ保存・3D表示を確認（再生成・チケット消費なし）
  * node scripts/verify-tripo-character-save-once.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -62,6 +62,7 @@ console.log("complete_generation:", {
 
 if (!complete.modelUrl && !complete.downloadUrl) {
   console.error("No model URL from complete_generation");
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -106,8 +107,7 @@ const server = await new Promise((resolve) => {
   s.listen(PORT, "127.0.0.1", () => resolve(s));
 });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 page.setDefaultTimeout(180000);
 
 await page.goto(`http://127.0.0.1:${PORT}/gen-ai-workspace.html?mode=AI%E3%82%AD%E3%83%A3%E3%83%A9%E4%BC%9A%E8%A9%B1`);
@@ -202,6 +202,7 @@ const ok =
   gltfOk &&
   /3Dモデルが完成しました/.test(ui.note);
 
-await browser.close();
+});
 server.close();
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

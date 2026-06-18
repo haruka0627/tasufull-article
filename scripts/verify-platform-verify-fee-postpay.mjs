@@ -3,7 +3,7 @@
  * プラット通知 v3 — Connectなし8件 後段フロー検証
  * 通知タブ / TASFUL TALK 両方
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -279,8 +279,7 @@ async function runFlow(page, c, entry, index) {
   };
 }
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const page = await context.newPage();
 
 page.on("dialog", async (dialog) => {
@@ -331,10 +330,11 @@ for (const r of results) {
   console.log("");
 }
 
-await browser.close();
+});
 
 if (report.fail > 0) {
   console.error(`FAIL: ${report.fail}/${report.total}`);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log(`PASS: ${report.pass}/${report.total}`);

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Supabase Phase 3 dual-write PoC E2E
  *   node scripts/test-supabase-phase3-dual-write.mjs
  *   BUILDER_BASE_URL=http://127.0.0.1:8765 node scripts/load-dotenv-run.mjs scripts/test-supabase-phase3-dual-write.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -20,7 +20,7 @@ function pageUrl(rel, qs) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -224,20 +224,18 @@ async function runPhase2Regression() {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  try {
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
+  
     await testDualWriteOff(page);
     await testMockDualWrite(page);
     await testLiveStagingOptional(page);
-  } finally {
-    await browser.close();
-  }
+    });
+  
   await runPhase2Regression();
   console.log("\nAll Supabase Phase 3 dual-write PoC tests passed.");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch(() => {
+  console.error();
+  closeAllBrowsers().finally(() => process.exit(1));
 });

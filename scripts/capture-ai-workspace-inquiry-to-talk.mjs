@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI Workspace 問い合わせ文 → TALK下書き 検証
  *   node scripts/capture-ai-workspace-inquiry-to-talk.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 import { writeScreenshotsManifest } from "./lib/screenshots-manifest.mjs";
 import {
   assertQaCenterReady,
@@ -47,8 +48,7 @@ async function main() {
 
   const server = await startServer();
   const base = "http://127.0.0.1:8794";
-  const browser = await chromium.launch({ headless: true });
-  const report = {
+  await withPlaywrightBrowser(async (browser) => {const report = {
     capturedAt: new Date().toISOString(),
     steps: [],
     passed: false,
@@ -336,10 +336,12 @@ async function main() {
     console.log("report:", join(reportDir, "ai-workspace-inquiry-to-talk.md"));
 
     if (!report.passed) process.exitCode = 1;
-  } finally {
-    await browser.close();
-    server.close();
+  } catch (err) {
+    console.error(err);
+    process.exitCode = 1;
   }
+  });
+  server.close();
 }
 
 main().catch((err) => {

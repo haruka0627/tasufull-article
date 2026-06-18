@@ -1,7 +1,7 @@
 /**
  * login.html / signup.html デザイン統一検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
 import path from "path";
@@ -97,8 +97,7 @@ for (const viewport of [
   { label: "1280", width: 1280, height: 900 },
   { label: "390", width: 390, height: 844 },
 ]) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
   collectPageErrors(page, errors);
 
@@ -168,12 +167,11 @@ for (const viewport of [
   });
 
   allErrors.push(...errors);
-  await browser.close();
+    });
 }
 
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   collectPageErrors(page, errors);
   await fixCssMime(page);
@@ -214,7 +212,7 @@ for (const viewport of [
   });
 
   allErrors.push(...errors);
-  await browser.close();
+    });
 }
 
 const passCount = cases.filter((c) => c.ok).length;
@@ -260,4 +258,5 @@ console.log(`PASS ${passCount}/${cases.length}, console errors: ${allErrors.leng
 cases.filter((c) => !c.ok).forEach((c) => console.log(`  FAIL ${c.id}: ${c.message}`));
 if (allErrors.length) allErrors.forEach((e) => console.log(`  ERR ${e}`));
 
+await closeAllBrowsers();
 process.exit(failCount > 0 || allErrors.length > 0 ? 1 : 0);

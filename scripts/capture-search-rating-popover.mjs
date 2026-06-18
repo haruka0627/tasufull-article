@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 検索ページ — 信用ポップオーバー検証（1280px + 390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -125,8 +125,7 @@ function collectLayoutMetrics() {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT_PC });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT_PC });
 await page.goto(searchUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
 await page.waitForSelector(".tasful-market-search-card", { timeout: 20000 });
@@ -200,4 +199,6 @@ const report = {
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
 
-await browser.close();
+});
+
+await closeAllBrowsers();

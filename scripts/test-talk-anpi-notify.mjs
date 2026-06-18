@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK — 安否通知マスター v1.0 Playwright 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 
@@ -36,8 +36,7 @@ function hrefMatches(actual, expected) {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.addInitScript(() => {
   localStorage.removeItem("tasful_talk_notifications");
@@ -147,5 +146,6 @@ for (const dest of HASH_DESTINATIONS) {
   await destPage.close();
 }
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

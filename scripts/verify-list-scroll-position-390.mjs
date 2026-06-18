@@ -1,7 +1,7 @@
 /**
  * 一覧画面は scrollTop=0、チャット画面は最下部で開始することを検証（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
@@ -128,8 +128,7 @@ const SCENARIOS = [
 
 await mkdir(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: VIEWPORT });
 const page = await context.newPage();
 
 const results = [];
@@ -149,7 +148,7 @@ for (const scenario of SCENARIOS) {
   results.push({ ...scenario, measured, pass, shotPath, fullUrl });
 }
 
-await browser.close();
+});
 
 console.log("\n=== list scroll position (390px) ===\n");
 let failed = 0;
@@ -162,4 +161,5 @@ for (const r of results) {
   console.log(`  screenshot: ${r.shotPath}\n`);
 }
 
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

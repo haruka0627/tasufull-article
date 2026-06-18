@@ -2,7 +2,7 @@
 /**
  * public-board-detail（from=talk）レビュー用スクショ PC1280 / SP390
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -29,9 +29,7 @@ const URL =
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const BASE = await findBaseUrl();
-const browser = await chromium.launch({ headless: true });
-
-for (const { file, width, height } of [
+await withPlaywrightBrowser(async (browser) => {for (const { file, width, height } of [
   { file: "public-board-detail-talk-1280.png", width: 1280, height: 900 },
   { file: "public-board-detail-talk-390.png", width: 390, height: 844 },
 ]) {
@@ -72,5 +70,7 @@ for (const { file, width, height } of [
   await page.close();
 }
 
-await browser.close();
+});
 console.log(`Screenshots saved to ${OUT_DIR}`);
+
+await closeAllBrowsers();

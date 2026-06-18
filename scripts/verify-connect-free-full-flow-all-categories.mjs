@@ -3,7 +3,7 @@
  * Connectなし — skill 基準の全6カテゴリ E2E
  * B下CTA → A通知 → 管理カード → チャットに進む → 支払い → A/Bチャット開始
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -320,11 +320,7 @@ async function runCategory(page, cat) {
   console.log(`OK: ${cat.id}`, { cta: cta.text, ...postPay });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
-page.on("dialog", async (d) => d.accept());
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   for (const cat of CATEGORIES) {
     await runCategory(page, cat);
   }
@@ -333,6 +329,6 @@ try {
     process.exit(1);
   }
   console.log(JSON.stringify({ ok: true, categories: CATEGORIES.map((c) => c.id) }, null, 2));
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK Phase13 — カテゴリ正規化 smoke test
  *
@@ -21,8 +22,7 @@ const CATEGORIES = [
 ];
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -145,9 +145,8 @@ async function main() {
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 }
 
 main();

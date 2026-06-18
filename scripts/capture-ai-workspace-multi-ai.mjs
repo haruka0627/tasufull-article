@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * マルチAI（Gemini / ChatGPT / Claude）応答確認スクリーンショット
  *   node scripts/capture-ai-workspace-multi-ai.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = {
@@ -118,10 +119,8 @@ async function main() {
   const base = "http://127.0.0.1:8788";
   const outDir = join(root, "screenshots", "ai-workspace-multi-ai");
   await mkdir(outDir, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
   const errors = [];
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const mobileHistory = await captureViewport(browser, base, outDir, { width: 390, height: 844 }, "mobile390");
     const pcHistory = await captureViewport(browser, base, outDir, { width: 1280, height: 900 }, "pc1280");
 
@@ -140,10 +139,8 @@ async function main() {
     } else {
       console.log("ALL PASSED");
     }
-  } finally {
-    await browser.close();
-    server.close();
-  }
+  });
+  server.close();
 }
 
 main().catch((err) => {

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Supabase Phase 6 — primary source PoC E2E
  *   node scripts/load-dotenv-run.mjs scripts/test-supabase-phase6-primary-source.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { readFileSync, existsSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "url";
@@ -14,7 +14,7 @@ const RUN = Date.now().toString(36).slice(-8);
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -384,9 +384,8 @@ async function runPhase5Regression() {
 async function main() {
   loadEnv();
   const cfg = loadEnv();
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  try {
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
+  
     await testPrimaryOffRegression(page);
     await testReadPocLocalWins(page);
     await testPrimaryOnRemoteWins(page);
@@ -395,14 +394,13 @@ async function main() {
     await testDashboardAndTalk(page);
     await testDataSourceBadge(page);
     if (cfg) await testLivePrimaryOptional(cfg, page);
-  } finally {
-    await browser.close();
-  }
+    });
+  
   await runPhase5Regression();
   console.log("\nAll Supabase Phase 6 primary source tests passed.");
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
+main().catch(() => {
+  console.error();
+  closeAllBrowsers().finally(() => process.exit(1));
 });

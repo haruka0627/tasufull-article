@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 /** CTA を早期押下（A notify 未準備）でもカードが出るか */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 import { fixedWorkerBenchUrl } from "./lib/fixed-bench-url.mjs";
 
 const BASE = await requireDevServer();
 const URL = fixedWorkerBenchUrl(BASE);
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 
 await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 45000 });
 await page.waitForTimeout(600);
@@ -38,5 +37,6 @@ const snap = await page.evaluate(() => {
 
 console.log(snap);
 console.log(snap.visible > 0 && snap.titles.some((t) => t.includes("依頼が届きました")) ? "OK" : "NG");
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(snap.visible > 0 ? 0 : 1);

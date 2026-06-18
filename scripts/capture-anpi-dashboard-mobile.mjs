@@ -1,7 +1,7 @@
 /**
  * 安否ダッシュボード — 390px スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -27,9 +27,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-
-async function capture(page, file, url) {
+await withPlaywrightBrowser(async (browser) => {async function capture(page, file, url) {
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.evaluate(() => document.querySelector("vite-error-overlay")?.remove());
   await page.waitForSelector("[data-anpi-dashboard-shell]:not([hidden])", { timeout: 20000 });
@@ -47,5 +45,7 @@ await capture(page, "02-dashboard-gemini-from-talk.png", `${base}/anpi-dashboard
 await capture(page, "03-dashboard-gemini-check-focus.png", `${base}/anpi-dashboard.html#check`);
 
 await page.close();
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

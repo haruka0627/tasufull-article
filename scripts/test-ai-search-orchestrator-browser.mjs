@@ -5,7 +5,7 @@
  *   node scripts/test-ai-search-orchestrator-browser.mjs
  *   BASE_URL=http://127.0.0.1:8765 node scripts/test-ai-search-orchestrator-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
@@ -256,8 +256,7 @@ async function testPlanSelector(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
   const { page, errors } = await setupPage(context);
 
   await testGlobals(page);
@@ -277,7 +276,7 @@ async function main() {
   else pass("console clean");
 
   await context.close();
-  await browser.close();
+    });
 
   const failed = results.filter((r) => !r.ok);
   console.log(`\n=== ${results.length - failed.length}/${results.length} passed ===`);
@@ -291,3 +290,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

@@ -1,7 +1,7 @@
 /**
  * PCヘッダー — 参考画像とのピクセル比較 + 実測値レポート
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -48,8 +48,7 @@ if (!fs.existsSync(REF_PATH)) {
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
 const url = buildLocalPageUrl(base, "shop-store.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 async function measure() {
   return page.evaluate(() => {
@@ -173,7 +172,7 @@ const mobileAudit = await page.evaluate(() => ({
 }));
 await page.screenshot({ path: path.join(OUT_DIR, "04-mobile-390-unchanged.png"), fullPage: false });
 
-await browser.close();
+});
 
 const m1280 = viewportReports.find((r) => r.viewport === "1280").metrics;
 const m1600 = viewportReports.find((r) => r.viewport === "1600").metrics;
@@ -256,4 +255,5 @@ const report = {
 
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

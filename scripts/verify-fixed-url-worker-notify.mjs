@@ -3,7 +3,7 @@
  * 固定URLのみ — worker 初回通知実画面検証
  * OK: B下CTA後 A上に「依頼が届きました」が視認できること
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -17,8 +17,7 @@ const URL = fixedWorkerBenchUrl(BASE);
 const OUT = path.join("screenshots", "fixed-url-worker-notify");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (
+await withPlaywrightBrowser(async (browser) => {const page = await (
   await browser.newContext({ viewport: { width: 390, height: 900 } })
 ).newPage();
 
@@ -215,9 +214,9 @@ try {
 } catch (e) {
   report.error = String(e.message || e).split("\n")[0];
   report.ok = false;
-} finally {
-  await browser.close();
 }
+});
+
 
 const reportPath = path.join(OUT, "verify-report.json");
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
@@ -230,4 +229,5 @@ for (const [k, v] of Object.entries(report.checks)) {
 console.log(`\nRESULT: ${report.ok ? "SCREEN OK" : "SCREEN NG"}`);
 if (report.screenshots?.aNotify) console.log(`Screenshot: ${report.screenshots.aNotify}`);
 console.log(`Report: ${reportPath}`);
+await closeAllBrowsers();
 process.exit(report.ok ? 0 : 1);

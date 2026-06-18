@@ -2,7 +2,7 @@
  * Builderカレンダー / 案件確認 — role別表示 Playwright 検証（390px）
  * 受諾判断は partner-assignment.html（mvp-calendar の旧 accept UI は使用しない）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const MVP_KEY = "tasful:builder:mvp:v1";
@@ -13,8 +13,7 @@ const OPS_NOTIFY_ID = "builder-ops-route-001";
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 const fail = (msg) => {
   console.log("NG", msg);
   failed = true;
@@ -207,5 +206,6 @@ for (const role of ["admin", "ops"]) {
   await page.close();
 }
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

@@ -2,7 +2,7 @@
 /**
  * Builder MVP スレッド / 通知 — PC 1280 + 390 スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -13,8 +13,7 @@ const OUT_DIR = path.join(__dirname, "..", "screenshots", "builder-mvp-thread-re
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
 const page = await context.newPage();
 
 const MVP_KEYS = ["tasful:builder:mvp:v1", "tasful:builder:mvp:notifications:v1"];
@@ -92,5 +91,7 @@ await shot("partner-dashboard-mobile390", "/builder/index.html", { width: 390, h
 await setRole("user");
 await shot("user-dashboard-pc1280", "/builder/user-dashboard.html", { width: 1280, height: 900 });
 
-await browser.close();
+});
 console.log("Done:", OUT_DIR);
+
+await closeAllBrowsers();

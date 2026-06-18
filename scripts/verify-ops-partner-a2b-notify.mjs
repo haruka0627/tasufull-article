@@ -2,12 +2,11 @@
 /**
  * ops_partner A→B メッセージ通知（calendar_assigned_partner_id 欠落時も含む）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 page.setDefaultTimeout(90000);
 
 await page.goto(
@@ -84,8 +83,8 @@ console.log(JSON.stringify(result, null, 2));
 const failed = Object.entries(result.checks).filter(([, ok]) => !ok);
 if (failed.length) {
   console.error("FAIL:", failed.map(([k]) => k).join(", "));
-  await browser.close();
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS: ops_partner A→B message notify");
-await browser.close();
+});

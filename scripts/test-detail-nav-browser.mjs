@@ -3,7 +3,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = { ".html": "text/html", ".js": "application/javascript", ".css": "text/css" };
@@ -27,8 +27,7 @@ function startServer(port = 8766) {
 async function main() {
   await startServer();
   const BASE = "http://127.0.0.1:8766";
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
 
   async function check(name, fn) {
@@ -93,9 +92,10 @@ async function main() {
     if (!/[?&]returnTo=/.test(href || "")) throw new Error(`missing returnTo: ${href}`);
   });
 
-  await browser.close();
+    });
   if (errors.length) {
     console.error(`\n${errors.length} failure(s)`);
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("\nAll detail nav tests passed");

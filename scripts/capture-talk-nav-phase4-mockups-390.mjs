@@ -1,7 +1,7 @@
 /**
  * Phase 4 UI案 — 現状 + 案A + 案B スクリーンショット（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -34,8 +34,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 const manifest = [];
 for (const shot of shots) {
@@ -48,6 +47,8 @@ for (const shot of shots) {
   console.log("Captured:", shot.file);
 }
 
-await browser.close();
+});
 fs.writeFileSync(path.join(OUT_DIR, "manifest.json"), JSON.stringify({ base, shots: manifest }, null, 2));
 console.log("Done:", OUT_DIR);
+
+await closeAllBrowsers();

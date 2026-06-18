@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { parse } from "parse5";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const FILE = path.join(ROOT, "index-top.html");
@@ -83,8 +83,7 @@ let consoleErrors = [];
 
 if (process.env.SKIP_BROWSER !== "1") {
   try {
-    const browser = await chromium.launch();
-    const page = await browser.newPage();
+    await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
     page.on("pageerror", (e) => consoleErrors.push(`pageerror: ${e.message}`));
     page.on("console", (msg) => {
       if (msg.type() === "error") consoleErrors.push(`console: ${msg.text()}`);
@@ -102,7 +101,7 @@ if (process.env.SKIP_BROWSER !== "1") {
       categories: await page.locator(".top-category-card").count(),
       rankings: await page.locator(".top-ranking").count(),
     };
-    await browser.close();
+        });
     browserOk =
       consoleErrors.length === 0 &&
       domChecks.tasHeroVisible &&
@@ -130,3 +129,5 @@ const result = {
 console.log(JSON.stringify(result, null, 2));
 console.log(result.pass ? "PASS tas-hero restore" : "FAIL tas-hero restore");
 process.exitCode = result.pass ? 0 : 1;
+
+await closeAllBrowsers();

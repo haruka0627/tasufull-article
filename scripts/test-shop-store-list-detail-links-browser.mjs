@@ -4,7 +4,7 @@
  *
  *   BASE_URL=http://127.0.0.1:5174 node scripts/test-shop-store-list-detail-links-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 
@@ -45,8 +45,7 @@ async function loadAllListCards(page) {
 
 async function main() {
   console.log(`\nshop-store → detail-shop E2E — ${BASE}\n`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(`${BASE}/shop-store.html`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector(".shop-store-card[data-id]", { timeout: 20000 });
@@ -114,9 +113,10 @@ async function main() {
     await page.waitForSelector(".shop-store-card[data-id]", { timeout: 15000 });
   }
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   console.log(`\n--- 結果: ${ok}/${results.length} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === results.length ? 0 : 1);
 }
 
@@ -124,3 +124,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

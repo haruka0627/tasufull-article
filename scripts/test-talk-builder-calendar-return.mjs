@@ -2,7 +2,7 @@
  * TALK → Builder案件確認 — 戻り導線・下部タブバー（390px）
  * builder-project-new-001 は DEPRECATED。board通知 + partner-assignment 直接URL で検証。
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const DEPRECATED_NOTIFY_ID = "builder-project-new-001";
@@ -14,8 +14,7 @@ const MVP_KEY = "tasful:builder:mvp:v1";
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 const fail = (msg) => {
   console.log("NG", msg);
   failed = true;
@@ -193,5 +192,6 @@ const padBottom = await page.evaluate(() => getComputedStyle(document.body).padd
 if (padBottom && padBottom !== "0px") fail(`通常Builder: padding-bottom あり (${padBottom})`);
 else ok("通常Builder: padding-bottom なし（シェル未起動）");
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

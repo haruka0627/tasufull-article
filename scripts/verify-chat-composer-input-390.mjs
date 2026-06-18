@@ -2,7 +2,7 @@
 /**
  * 支払い後チャット — composer 入力 390px 検証
  */
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 
@@ -26,8 +26,7 @@ async function resolveDevBase() {
 const BASE = await resolveDevBase();
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   ...devices["iPhone 13"],
   isMobile: true,
   hasTouch: true,
@@ -110,7 +109,7 @@ const after = await page.evaluate(() => {
 });
 
 await page.screenshot({ path: path.join(OUT, "02-after-send-390.png"), fullPage: false });
-await browser.close();
+});
 
 const inputOk =
   !before.disabled &&
@@ -141,4 +140,5 @@ console.log(
     2
   )
 );
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

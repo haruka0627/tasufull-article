@@ -1,7 +1,7 @@
 /**
  * 市場ページ — フッター下の巨大余白がないこと（PC1280/1440・390）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 
 const PRODUCT = { shopId: "demo-shop-tasful-bakery", productId: "p-0" };
@@ -50,9 +50,8 @@ function sampleOrder(i) {
 }
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const results = [];
-
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 for (const vp of VIEWPORTS) {
   for (const pg of PAGES) {
     const page = await browser.newPage({ viewport: { width: vp.w, height: vp.h } });
@@ -113,11 +112,12 @@ for (const vp of VIEWPORTS) {
   }
 }
 
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 if (failed.length) {
   console.error("\nFailed:", failed.length);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log(`\nAll ${results.length} checks passed.`);

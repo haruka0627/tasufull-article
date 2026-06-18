@@ -3,15 +3,14 @@
  * OPS WATCH 本番 Edge 実動作 + 通知サンプル生成
  *   node scripts/test-ops-watch-live-production.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { writeFileSync } from "fs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const CATEGORIES = ["openai", "stripe", "cursor"];
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const report = { deployed: true, runs: [], samples: [], errors: [] };
 
   await page.goto(`${BASE}/talk-home.html`, {
@@ -80,7 +79,7 @@ async function main() {
     });
   }, CATEGORIES);
 
-  await browser.close();
+    });
 
   const outPath = "scripts/ops-watch-live-report.json";
   writeFileSync(outPath, JSON.stringify(report, null, 2), "utf8");
@@ -97,3 +96,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

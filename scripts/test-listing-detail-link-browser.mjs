@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 掲載管理 — 詳細リンク E2E
  *
@@ -6,7 +7,6 @@
  *   node scripts/test-listing-detail-link-browser.mjs
  *   BASE_URL=http://localhost:5180 node scripts/test-listing-detail-link-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const PAGE = "/listing-management.html";
@@ -356,8 +356,7 @@ async function verifyGeneralDetailPage(page, label) {
 async function main() {
   console.log(`\n掲載カード詳細リンク E2E — ${BASE}${PAGE}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const consoleErrors = [];
 
   page.on("console", (msg) => {
@@ -438,9 +437,8 @@ async function main() {
     else fail("console エラーなし", consoleErrors.slice(0, 3).join(" | "));
   } catch (err) {
     fail("テスト実行", err.message);
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);

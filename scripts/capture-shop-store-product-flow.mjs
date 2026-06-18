@@ -2,7 +2,7 @@
 /**
  * 店舗販売導線 — detail-shop-store-product 分離検証（PC1280 / 390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -20,9 +20,7 @@ function step(name, pass, detail, extra = {}) {
   if (!pass) report.ok = false;
 }
 
-const browser = await chromium.launch({ headless: true });
-
-async function shot(page, name) {
+await withPlaywrightBrowser(async (browser) => {async function shot(page, name) {
   await page.screenshot({ path: path.join(OUT, name), fullPage: true });
 }
 
@@ -127,8 +125,9 @@ for (const vp of [
   await page.close();
 }
 
-await browser.close();
+});
 
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(report.ok ? 0 : 1);

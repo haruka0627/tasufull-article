@@ -1,7 +1,7 @@
 /**
  * Builder Admin notifications smoke test (Playwright)
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -13,8 +13,7 @@ const ADMIN_NOTIF_KEY = "tasful:builder:admin:notifications:v1";
 const MVP_NOTIF_KEY = "tasful:builder:mvp:notifications:v1";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   page.on("dialog", async (dialog) => {
     await dialog.accept();
@@ -76,10 +75,12 @@ async function main() {
   if (!countText?.includes("1")) throw new Error(`Dashboard count expected 1, got ${countText}`);
 
   console.log("OK: builder admin notifications smoke test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

@@ -1,7 +1,7 @@
 /**
  * 商品詳細 UX改善 — Store Info / レビュータブ / 購入BOX信頼情報 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -20,8 +20,7 @@ const PRODUCT_QUERY = `shopId=${SHOP_ID}&productId=${PRODUCT_ID}`;
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "detail-shop-product.html" });
 const productUrl = buildLocalPageUrl(base, `detail-shop-product.html?${PRODUCT_QUERY}`);
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const report = {
   capturedAt: new Date().toISOString(),
@@ -284,4 +283,6 @@ console.log("1280-reviews", check1280Reviews.pass ? "PASS" : "FAIL", check1280Re
 console.log("390", check390.pass ? "PASS" : "FAIL", check390.fails);
 console.log("\nOVERALL:", report.overall);
 
-await browser.close();
+});
+
+await closeAllBrowsers();

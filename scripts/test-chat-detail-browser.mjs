@@ -4,7 +4,7 @@
  *
  *   BASE_URL=http://localhost:5180 node scripts/test-chat-detail-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const THREAD_KEY = "tasful_chat_threads";
@@ -86,8 +86,7 @@ async function waitChatDetailReady(page) {
 async function main() {
   console.log(`\nchat-detail E2E — ${BASE}\n`);
   const consoleErrors = [];
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   page.on("console", (msg) => {
     if (msg.type() === "error" && !isIgnorableConsoleError(msg.text())) {
@@ -212,9 +211,10 @@ async function main() {
   if (fatal.length === 0) pass("console エラーなし");
   else fail("console エラーなし", fatal.slice(0, 2).join(" | "));
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   console.log(`\n--- 結果: ${ok}/${results.length} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === results.length ? 0 : 1);
 }
 
@@ -222,3 +222,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

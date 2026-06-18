@@ -1,7 +1,7 @@
 /**
  * Builder Admin partners search smoke test (Playwright)
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -13,8 +13,7 @@ const PARTNERS_KEY = "tasful:builder:admin:partners:v1";
 const CANDIDATES_KEY = "tasful:builder:admin:dispatchCandidates:v1";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(`file://${path.join(builder, "index.html")}`);
   const userHasAdminLink = await page.locator('a[href*="admin-partners"]').count();
@@ -80,10 +79,12 @@ async function main() {
   }
 
   console.log("OK: builder admin partners smoke test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

@@ -1,7 +1,7 @@
 /**
  * Builder MVP template list / apply smoke test (Playwright)
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -26,8 +26,7 @@ const demoTemplate = {
 };
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(`file://${path.join(builder, "index.html")}`);
   const templatesLink = page.locator('[data-builder-quick="templates"]');
@@ -77,10 +76,12 @@ async function main() {
   if (!countAfterDelete?.includes("0")) throw new Error(`Expected 0 templates after delete, got ${countAfterDelete}`);
 
   console.log("OK: builder MVP templates smoke test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
 /**
  * fixtures/real-device-localStorage.json を Playwright に注入してスクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -16,6 +16,7 @@ const TARGET = "/builder/board-thread.html?thread_id=thread-demo-001&role=owner&
 if (!fs.existsSync(FIXTURE)) {
   console.error("Missing:", FIXTURE);
   console.error("実機で scripts/export-real-device-localStorage-console.js を Console に貼り付けてエクスポートしてください。");
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -23,8 +24,7 @@ const imported = JSON.parse(fs.readFileSync(FIXTURE, "utf8"));
 const BASE = await requireDevServer();
 console.log(`[dev] BASE_URL=${BASE}`);
 logScreenshotUrl(path.basename(OUT), TARGET);
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${BASE}/builder/board-thread.html`, { waitUntil: "domcontentloaded" });
 await page.evaluate((storage) => {
@@ -81,4 +81,4 @@ fs.mkdirSync(path.dirname(OUT), { recursive: true });
 await page.screenshot({ path: OUT, fullPage: true });
 console.log(JSON.stringify(meta, null, 2));
 console.log("saved:", OUT);
-await browser.close();
+});

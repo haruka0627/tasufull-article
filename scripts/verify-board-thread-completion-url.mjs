@@ -2,7 +2,7 @@
 /**
  * 実機と同じ URL で board-thread 完了報告画面を検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -17,9 +17,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const BASE = await requireDevServer();
 console.log(`[dev] BASE_URL=${BASE}`);
 logScreenshotUrl("verify-board-thread-completion", TARGET_URL);
-const browser = await chromium.launch({ headless: true });
-
-async function diagnose(label, setupPage) {
+await withPlaywrightBrowser(async (browser) => {async function diagnose(label, setupPage) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
@@ -130,4 +128,6 @@ console.log("diag:", swDiag);
 console.log("screenshot:", swOut);
 await swPage.close();
 
-await browser.close();
+});
+
+await closeAllBrowsers();

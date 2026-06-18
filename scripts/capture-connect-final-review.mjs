@@ -3,7 +3,7 @@
  * Connect — 最終UX監査（調査・キャプチャ・レポートのみ）
  *   node scripts/capture-connect-final-review.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import { finalizeVerification } from "./lib/finalize-verification.mjs";
 import { renderScreenshotBackNav, SCREENSHOT_BACK_NAV_CSS } from "./lib/screenshot-image-viewer.mjs";
@@ -910,8 +910,7 @@ const report = {
   },
 };
 
-const browser = await chromium.launch({ headless: true });
-const requestCtx = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const requestCtx = await browser.newContext();
 const request = requestCtx.request;
 
 // --- 本人確認・振込設定 ---
@@ -1233,7 +1232,7 @@ for (const scene of CHAT_SCENES) {
 }
 
 await requestCtx.close();
-await browser.close();
+});
 
 for (const cat of Object.values(report.notifyCategories)) {
   if (cat.verdict !== "FAIL") cat.verdict = cat.issues.length ? "FAIL" : cat.minors?.length ? "MINOR" : "PASS";
@@ -1382,3 +1381,5 @@ const reviewUrl = await finalizeVerification(root, { primaryFolder: "connect-fin
 console.log(`Connect final review: ${report.overall} (FAIL ${report.summary.failCount}, MINOR ${report.summary.minorCount})`);
 console.log(`Report: ${path.join(OUT, "report.json")}`);
 console.log(`Review: ${reviewUrl}`);
+
+await closeAllBrowsers();

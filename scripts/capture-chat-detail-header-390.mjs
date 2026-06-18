@@ -5,7 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "chat-detail.html" });
@@ -72,9 +72,7 @@ async function seedPremiumHomeHeader(page) {
 
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
     await mobile.goto(CHAT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
     await mobile.waitForSelector("#chatMobileHead", { timeout: 15000 });
@@ -116,12 +114,13 @@ async function main() {
     });
     console.log("saved chat-detail-header-pc.png");
     await pc.close();
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

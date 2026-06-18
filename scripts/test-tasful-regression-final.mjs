@@ -8,7 +8,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -462,8 +462,7 @@ async function runSmokeChecks() {
   base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
   console.log(`Base URL: ${base}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   page.on("console", (msg) => {
     if (msg.type() !== "error") return;
     const text = msg.text();
@@ -483,7 +482,7 @@ async function runSmokeChecks() {
     await checkOpsDashboard(page, vp);
   }
 
-  await browser.close();
+    });
 
   if (consoleErrors.length) {
     consoleErrors.forEach((e) => fail("console", e));
@@ -554,3 +553,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

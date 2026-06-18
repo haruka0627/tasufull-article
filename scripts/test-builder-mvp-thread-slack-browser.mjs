@@ -2,7 +2,7 @@
  * Builder MVP Slack-style thread smoke test (Playwright)
  * Includes LINE-style layout: logged-in user = right, others = left, system = center
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -87,8 +87,7 @@ async function assertLineLayout(page, role, partnerId) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   page.on("dialog", async (dialog) => {
     await dialog.accept();
@@ -162,10 +161,12 @@ async function main() {
   await page.waitForSelector("[data-builder-mvp-pd-stats]");
 
   console.log("OK: builder mvp slack thread smoke test passed (LINE layout verified)");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

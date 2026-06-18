@@ -5,7 +5,7 @@
  *   node scripts/test-contact-chat-actions-browser.mjs
  *   BASE_URL=http://localhost:5180 node scripts/test-contact-chat-actions-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const THREAD_KEY = "tasful_chat_threads";
@@ -220,8 +220,7 @@ async function testLayout(page, width) {
 
 async function main() {
   console.log(`\n相談・問い合わせ E2E — ${BASE}\n`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await testGeneralContact(page);
   await testShopContact(page);
@@ -230,9 +229,10 @@ async function main() {
   await testLayout(page, 1280);
   await testLayout(page, 390);
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   console.log(`\n--- 結果: ${ok}/${results.length} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === results.length ? 0 : 1);
 }
 
@@ -240,3 +240,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

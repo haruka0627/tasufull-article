@@ -4,7 +4,7 @@
  * 提出優先は動画: npm run demo:market-notify-video
  * 購入〜レビュー依頼の6通知を実画面で検証・スクリーンショット提出
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { devices } from "playwright";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
@@ -126,8 +126,7 @@ const results = [];
 let orderId = "";
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   ...devices["iPhone 13"],
   viewport: VIEWPORT,
   hasTouch: true,
@@ -331,9 +330,10 @@ try {
     pass: false,
     errors: [String(err?.message || err)],
   });
-} finally {
-  await browser.close();
+
 }
+});
+
 
 const overallPass = results.length === NOTIFY_CASES.length && results.every((r) => r.pass);
 const report = {
@@ -350,4 +350,5 @@ const report = {
 
 fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2), "utf8");
 console.log(JSON.stringify({ overallPass, reportPath: REPORT_PATH, passCount: report.passCount, failCount: report.failCount }, null, 2));
+await closeAllBrowsers();
 process.exit(overallPass ? 0 : 1);

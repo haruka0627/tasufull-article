@@ -3,7 +3,7 @@
  * 求人 — 2段階終了（掲載者依頼 → 応募者完了）+ レビュー導線 E2E
  * PASS条件: 実DOM上でボタンが visible（診断値のみでは不可）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -23,8 +23,7 @@ const BUYER_ID = "u_hiro";
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
 page.on("dialog", async (d) => d.accept());
 
 const issues = [];
@@ -94,7 +93,7 @@ const flow = await runBenchJobHireFullFlow(page, { run: 1 });
 if (!flow.ok) {
   console.log(JSON.stringify({ ok: false, step: flow.failedStep, message: flow.message }, null, 2));
   await page.screenshot({ path: path.join(OUT, "fail-pre-end-390.png") });
-  await browser.close();
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -239,5 +238,6 @@ const report = {
   verify,
 };
 console.log(JSON.stringify(report, null, 2));
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(issues.length ? 1 : 0);

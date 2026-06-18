@@ -6,7 +6,7 @@
  *   node scripts/test-favorite-actions-browser.mjs
  *   BASE_URL=http://localhost:5180 node scripts/test-favorite-actions-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const FAV_KEY = "tasful_favorites";
@@ -210,9 +210,7 @@ async function testLayout(page, label, url, width) {
 
 async function main() {
   console.log(`\nお気に入り E2E — ${BASE}\n`);
-  const browser = await chromium.launch();
-
-  const pc = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const pc = await browser.newPage();
   await testFavoriteFlow(
     pc,
     "detail-general.html",
@@ -241,11 +239,12 @@ async function main() {
   );
   await biz.close();
 
-  await browser.close();
+    });
 
   const ok = results.filter((r) => r.ok).length;
   const total = results.length;
   console.log(`\n--- 結果: ${ok}/${total} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === total ? 0 : 1);
 }
 
@@ -253,3 +252,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

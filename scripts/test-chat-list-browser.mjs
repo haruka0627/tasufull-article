@@ -3,7 +3,7 @@
  * chat-list — ダッシュボード戻り導線 E2E
  *   node scripts/test-chat-list-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5179").replace(/\/$/, "");
 const PAGE = "/chat-list.html";
@@ -20,8 +20,7 @@ function fail(step, detail = "") {
 
 async function main() {
   console.log(`\nchat-list 戻る導線 E2E — ${BASE}${PAGE}\n`);
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
   page.on("console", (m) => {
     if (m.type() === "error") errors.push(m.text());
@@ -87,9 +86,8 @@ async function main() {
     else pass("コンソールエラーなし");
   } catch (err) {
     fail("例外", err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);
@@ -97,3 +95,5 @@ async function main() {
 }
 
 main();
+
+await closeAllBrowsers();

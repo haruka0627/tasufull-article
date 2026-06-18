@@ -4,7 +4,7 @@
  *
  *   BASE_URL=http://127.0.0.1:5174 node scripts/test-business-board-field-service-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5174").replace(/\/$/, "");
 const OTHER_DEMO_ID = "business-demo-other-001";
@@ -63,8 +63,7 @@ async function collectDetailLinks(page) {
 
 async function main() {
   console.log(`\nbusiness.html field-service E2E — ${BASE}\n`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const consoleErrors = [];
   page.on("console", (msg) => {
     if (msg.type() === "error") consoleErrors.push(msg.text());
@@ -172,7 +171,7 @@ async function main() {
     pass("console error なし");
   }
 
-  await browser.close();
+    });
 
   const failed = results.filter((r) => !r.ok);
   console.log(`\n--- ${results.length - failed.length}/${results.length} passed ---\n`);
@@ -183,3 +182,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

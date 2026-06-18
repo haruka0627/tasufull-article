@@ -1,8 +1,7 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
-const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 const results = [];
 
 await page.goto("http://localhost:5502/screenshots/index.html#recent-reviews", {
@@ -48,7 +47,8 @@ results.push({
   ok: (await back.getAttribute("href")) === "../index.html#recent-reviews",
 });
 
-await browser.close();
+});
 const allOk = results.every((r) => r.ok);
 console.log(JSON.stringify({ allOk, results }, null, 2));
+await closeAllBrowsers();
 process.exit(allOk ? 0 : 1);

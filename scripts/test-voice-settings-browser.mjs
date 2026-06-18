@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
@@ -41,12 +41,7 @@ async function main() {
     pass("gen-ai-workspace hooks");
   } else fail("gen-ai-workspace hooks missing");
 
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream"],
-  });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await page.goto(`${BASE}/voice-settings.html`, { waitUntil: "load", timeout: 30000 });
 
@@ -158,9 +153,8 @@ async function main() {
     );
     if (voiceLink) pass("gen-ai voice-settings link visible");
     else fail("gen-ai voice-settings link missing");
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   console.log(`\n=== ${errors.length ? "FAIL" : "PASS"} (${errors.length} errors) ===`);
   if (errors.length) {
@@ -173,3 +167,5 @@ main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

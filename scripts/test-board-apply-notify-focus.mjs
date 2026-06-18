@@ -2,7 +2,7 @@
 /**
  * 「応募がありました」通知 → board-project-detail?view=applications のフォーカス検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const NOTIFY_PATH =
   "/builder/board-project-detail.html?id=demo-project-001&view=applications&from=talk";
@@ -71,9 +71,7 @@ async function collectFocusState(page) {
 }
 
 const BASE = await findBaseUrl();
-const browser = await chromium.launch({ headless: true });
-
-for (const viewport of [
+await withPlaywrightBrowser(async (browser) => {for (const viewport of [
   { label: "PC1280", width: 1280, height: 900 },
   { label: "SP390", width: 390, height: 844 },
 ]) {
@@ -129,7 +127,7 @@ for (const viewport of [
   await page.close();
 }
 
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log("\n=== board apply notify focus test ===\n");

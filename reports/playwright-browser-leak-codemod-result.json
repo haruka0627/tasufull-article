@@ -1,0 +1,3505 @@
+{
+  "summary": {
+    "migrated": 66,
+    "unchanged": 1,
+    "manual": [],
+    "noOp": 782
+  },
+  "results": [
+    {
+      "file": "scripts/apply-a2-html-fix.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-anpi-no-response-phase2-supabase.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-genai-entitlements-db.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-marketplace-public-safe-layer.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-marketplace-rls-p3.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-marketplace-rls.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-phase2d-static-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-staging-phase2-supabase.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-staging-phase3-dual-write-supabase.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-staging-phase4-ops-rls.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-supabase-rls-p0-drop-dev.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-talk-call-push-supabase.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-talk-production-supabase.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-talk-staging-supabase.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-tas-hero-restore-index-top.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/apply-tasu-app-mobile-shell.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-ai-workspace-category-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-bench-cta-all-categories.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-bench-notify-layout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-board-thread-real-device-dom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-builder-mvp-thread-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-builder-notify-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-gen-ai-ux.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-initial-notify-strict.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-live-flow-reset-boot.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-localstorage-usage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-market-footer-links.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-market-search-pc-card-ratio.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-market-search-pc-layout-expand.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-market-search-pc-layout-width.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-market-search-pc-max-width.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-notify-system-inventory.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-playwright-browser-leak.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/audit-shop-products-all.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-shop-vendor-flow-supplement.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-shop-vendor-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/audit-skill-vs-worker-0-path.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/browser-test-gen-ai-3d-glb.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/browser-test-gen-ai-3d-parse-only.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/browser-test-gen-ai.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/browser-test-genai-3d-production-once.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/browser-verify-prod-glb-display.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-detail-premium-pages.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-hero-banner-ai.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-hero-banner-wide.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-legend-card-bg.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-legend-svg.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-market-notify-gemini-review-sheets.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-phase3-1c-hero.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-ranking-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-screenshots-index.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-screenshots-manifest.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-shop-store-market-top.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/build-tasful-market-header-logo.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-account-page-head-unified-v2.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-account-page-head-unified.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-ai-workspace-inquiry-to-talk.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-ai-workspace-multi-ai.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-ai-workspace-real-api.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-ai-workspace-search.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-amazon-search-compare.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-anpi-dashboard-mobile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-anpi-final-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-anpi-notifications-mobile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-anpi-register-header-layout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-anpi-register-mobile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-b-notify-iframe-360.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-b-notify-user-exact-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-bench-job-0-fix-proof.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-bench-ui-fix-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-board-thread-completion-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-board-thread-completion-evidence.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-board-thread-normal-chat.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-apply-notify-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-completion-thread-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-dashboard-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-final-flow-bench.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-final-flow-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-final-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-general-flow-bench.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-mvp-thread-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-mvp-thread-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-notify-report-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-ops-flow-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-ops-toolbar.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-builder-top-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-chat-detail-header-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-chat-dual-window-demo-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-chat-line-konnichiwa-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-chat-line-ui-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-chatgpt-real-api.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-claude-real-api.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-connect-final-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-connect-ui-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-connect-ui-round2.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-corp-hp-visual-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-dashboard-quick-actions-color.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-deal-detail-builder-cards.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-detail-job-verify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-detail-shop-hero-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-gemini-review-trio.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-index-recent-section.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-iwasho-home-top.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-applications-toolbar-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-dual-window-completion-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-fee-pay-final-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-fee-pay-ui-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-full-flow-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-hired-notify-chat-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-notify-cards-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-pay-chat-ui-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-review-mode-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-job-top-mobile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-manual-real-screen-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-cart-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-checkout-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-full-flow-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-header-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-header-pc-compare.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-listing-flow-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-mypage-suite-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-notify-demo-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-notify-demo-video-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-notify-ui-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-order-history-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-order-history-search-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-pc-1280.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-product-detail-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-product-detail-cvr.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-product-detail-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-product-detail-nav.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-product-detail-pc.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-search-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-seller-products-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-top-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-top-pc-rhythm-1280.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-top-pc-zones.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-top-ui-review-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-market-top-viewports.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-mobile-390-compare.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-mobile-copyright.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-notify-center-realistic-demo-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-notify-scroll-stability.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-notify-ui-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-notify-ui-round2.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-partner-assignment.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-partner-calendar-simple.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-pc-demo001.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-platform-job-ui-review-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-platform-manual-review-flows.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-platform-shell-tabbar-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-platform-talk-list.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-platform-verify-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-bottom-mobile-card.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-bottom-pc-card.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-bottom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-mobile-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-pc-1280.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-seller-rank.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-product-shop-payment-final-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-profile-settings-pc-layout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-public-board-detail-talk-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-public-board-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-screenshots-viewer-ai-workspace.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-screenshots-viewer-search.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-search-pc-scale.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-search-rating-popover.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-mall-brand.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-product-anchor-tabs.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-products-hscroll-fix.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-products-ia-reorder.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-checkout-390-padding.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-delivery-info.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-final-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-flow-header.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-notify-compact.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-notify-ux.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-product-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-purchase-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-review-gauge.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-review-gemini-recheck.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-reviews-ux.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-store-ux-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-vendors-brand.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-shop-vendors.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-anpi-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-builder-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-calendar-demo-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-category-tabs.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-friend-group-chat-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-nav-phase4-mockups-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-notification-final-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-notify-flow-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-notify-unified-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-official-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-ops-split.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-room-header-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-shop-notify-cta.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-support-hub-link.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-talk-tasful-ai-sheet.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-with-real-device-localStorage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-worker-bottom-related.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-worker-brushup-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-worker-detail-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-worker-review-mode-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/capture-worker-target-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/check-job-top-lines.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/check-playwright-scripts-syntax.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/check-prod-ui-test-state.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/check-tripo-glb-cors.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/codemod-playwright-browser-leak.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/compare-skill-vs-others-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/count-c9f47df-demos.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/count-shop-demos.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-checkout-pi-after-visit.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-checkout-session.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-create-checkout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-detail-job-load.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-gemini-history.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-stripe-checkout-dom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-stripe-pay-hosted.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-tripo-health.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/debug-vite-product-parse.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/deploy-cloudflare-pages.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diag-business-a-chat-reload-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diag-skill-buyer-notify-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diag-skill-buyer-notify-tap-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diag-work-service-stripe-pay-click.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diag-worker-0-chat-init.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-dashboard-urls.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-gemini-edge.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-job-0-b-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-market-top-pc.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-product-detail-pc-width.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-worker-0-notify.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/diagnose-worker-fast-cta.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-worker-notify-real-screen.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diagnose-worker-reload-after-cta.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/diff-html-lines.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/e2e-gen-ai-3d.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/e2e-gen-ai-live-stage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/e2e-genai-3d-stripe-purchase.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/e2e-genai-image-character.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/e2e-genai-stripe.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/extract-ai-character.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/extract-transcript-html-step-a.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fetch-vrm-sample.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/final-playwright-restore-remigrate.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-ai-workspace-html-parse.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-bsd-inline-script-quotes.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-detail-business-service-html-phase2d.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-detail-product-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-detail-product-vite-parse.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-detail-shop-retail-css.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-job-top-html-phase2e.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-playwright-syntax-errors.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/fix-shop-html-phase2b.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/generate-demo-ranking-images.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/generate-stage-production-files.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inject-listing-route-resolver.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-a-notify-render-pipeline.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-b-approve-click-diagnostics.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/inspect-b-completion-cta-chain.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-b-manual-transfer-after-approve.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-b-notify-dom-pipeline-mismatch.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-b-notify-iframe-layout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-b-notify-management-flow-exact-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-b-notify-settings-blocked.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-bench-all-categories-flow.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/inspect-bench-chat-started-data.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-bench-deposit-complete-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-bench-deposit-real-screen.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-bench-notify-cta-chain.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/inspect-bench-real-screen-approve.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-bench-worker-0-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-detail-shop-mobile-dom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-fee-pay-chat-started-data.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-frame-a-chat-management.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/inspect-frame-b-notify-live.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/inspect-frame-b-notify-real-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-job-0-b-notify-dom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-real-screen-initial-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-talk-room-header-dom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-vrm-file.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/inspect-vrm-glb-json.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/install-signup-assets.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/investigate-board-thread-localStorage-diff.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/investigate-phase2-untracked.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/issue-anpi-rls-jwt.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/anpi-rls-browser-tests.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/audit-mvp-calendar-selection.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/audit-partner-assignment.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/auth-current-user-core.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/bench-flow-diag-e2e.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/bench-job-hire-e2e.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/builder-actor-identity-core.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/capture-demo-video-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/capture-shop-store-review-gauge.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/connect-state-core.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/corp-shell.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/dev-base-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/dev-server-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/finalize-screenshot-run.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/finalize-verification.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/fixed-bench-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/gemini-review-sheet.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/gemini-review-trio.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/live-flow-e2e.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/market-identity-core.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/phase2d-html-fix.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/platform-manual-review-flows.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/playwright-browser.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/lib/playwright-video-mp4.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/review-index-artifacts.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/screenshot-image-viewer.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/screenshot-ops.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/screenshots-index.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/screenshots-manifest.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/screenshots-qa.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/seed-notify-center-realistic-demo.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/talk-call-push-delivery.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/talk-call-push-edge-guard.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/talk-rls-test-auth.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/talk-test-env.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/lib/verify-marketplace-connect-bench.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/load-dotenv-run.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/make-header-logo-transparent.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/make-hero-gold-logo-transparent.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/make-stats-icons-transparent.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/make-tasful-logo-transparent.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/merge-detail-favorite-scripts.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/merge-post-latest-flows.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/migrate-builder-export-to-supabase.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/migrate-corp-hp-content.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/open-latest-screenshots.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-builder-html-auth-stack.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-html-supabase-client.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-post-fs-sections-terms.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-post-payment-terms.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-review-folder-index-backnav.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-shop-mall-brand-pages.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-shop-store-pc-header.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-shop-vendors-brand.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/patch-tasful-globe-src.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-bench-memory-idle.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-both-urls.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-gallery-align.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-mobile-dom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-mobile-gap-detail.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-mobile-gap.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-pc-gap.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-product-align.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-product-mobile-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/probe-talk-call-phase72-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/process-signup-character.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/process-tasful-ai-globe.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/profile-talk-home-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/recover-detail-shop-store-css.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/recover-detail-shop-store-css2.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/remigrate-playwright-safe.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/repair-capture-verify-audit.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/repair-playwright-finally-artifacts.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/repair-playwright-hoist-arrays.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/repair-playwright-syntax-artifacts.mjs",
+      "status": "unchanged",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/repair-post-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/replay-transcript-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/report-builder-final-ng.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/report-deploy-git-manifest.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/restore-and-remigrate-playwright.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/restore-dashboard.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/restore-member-settings-pages.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/restore-shop-vendors-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/restore-signup.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-admin-ai-full-system.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-admin-ai-production-connectivity.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-breadcrumb-trail.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-builder-user-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-chat-list-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-connect-user-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-cta-mobile-ux.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-market-final-ux-audit.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-market-user-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-talk-user-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-tasful-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/review-ui-full-system.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/save-real-device-localStorage-from-clipboard.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/scaffold-corp-hp.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/scan-detail-business-service-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/scan-job-top-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/scan-phase2d-mojibake.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/scan-staged-secrets.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/scan-stray-e.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/scan-untracked-html-corruption.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/seed-general-demo-002.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/seed-staging-phase2-read-poc.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/seed-u-me-help.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/seed-u-me.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/setup-ai-model-secrets.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/setup-genai-stripe-secrets.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/setup-openai-claude-secrets.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/site-wide-diagnostic.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/smoke-cloudflare-pages.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/smoke-post-empty-cards.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/smoke-post-fs-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/smoke-post-fs-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/splice-ranking-into-index-top.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/splice-tas-hero.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/strip-catch-closeall.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-admin-ai-auto-fix-candidate-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-automation-engine-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-connectivity-p0.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-connectivity-p1.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-connectivity-p2.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-daily-inbox-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-decision-learning-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-human-send-gate-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-kpi-center-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-ops-watch-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-outcome-learning-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-response-plans-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ai-response-safety-license-gate-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-operations-dashboard-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-admin-ops-dashboard-fullwide.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-admin-ops-dashboard-ui-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-admin-ops-dashboard-wide-layout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-agent-publish-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-ai-anpi-notification-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-concierge-handoff-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-cross-search-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-cross-search-call-consent-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-cross-search-contact-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-field-match-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-ai-operations-center-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-ai-plan-model-selector-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-search-orchestrator-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-search-state-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-search-target-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-ai-serper-search-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ai-workspace-consult-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-all.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-context-supabase-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-dashboard-action-required.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-dashboard-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-identity-linking-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-admin-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-fallback-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-login-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-notification-log-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-safety-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-send-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-token-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-line-unlink-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-no-response-phase2-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-notification-badge-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-notification-log-supabase-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-notifications-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-notify-dashboard-actions.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-notify-dashboard-verify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-notify-priority-fixes.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-register-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-anpi-rls-production-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-auth-current-user.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-auth-login-unified-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-auth-ops-guard.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-auth-step7-fallback-lockdown.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-b-notify-dom-reconcile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-board-apply-hire-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-board-apply-notify-focus.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-actor-identity.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-builder-admin-applications-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-calendar-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-calendar-partner-assign.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-calendar-site-assignment.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-csv-partner-search.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-dispatch-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-notifications-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-partners-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-admin-reviews-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-board-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-board-threads.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-board-unified-feed.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-calendar-roles.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-dashboard-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-final-flow-inspection.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-flow-audit.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-mvp-rerequest-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-mvp-templates-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-mvp-thread-integration.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-mvp-thread-sender-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-mvp-thread-slack-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-partner-evaluation-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-builder-report-pdf-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-site-photo-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-thread-completion-approval-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-builder-top-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-board-field-service-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-deal-complete-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-deal-panel-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-estimate-approval-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-fee-paid-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-flow-entry-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-review-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-sales-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-business-service-work-complete-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-calendar-request-accept-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-character-expression.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-chat-detail-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-chat-detail-header-align-390.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-chat-list-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-connect-state.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-contact-chat-actions-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-dashboard-arrow-menu-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-dashboard-hover-menu-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-dashboard-mega-menu-fix-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-dashboard-mobile-quick-access-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-dashboard-service-drawer-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-dashboard-sidebar-mega-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-deal-detail-builder-cards.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-demo-deals-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-general-demo-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-detail-nav-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-premium-demo-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-shop-category-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-shop-file-protocol-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-shop-goods-interior-layout-unified-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-shop-layout-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-shop-other-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-detail-shop-regression-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-favorite-actions-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-fetch-glb-proxy.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-garden-menu-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gemini-chat.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gemini-generic-chat.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gemini-image-analyze.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gemini-image-character.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gemini-intent.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gemini-natural-chat.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gen-ai-3d-stage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gen-ai-live-stage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-gen-ai-mouth-estimate.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-3d-production.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-3d-ticket-grant-idempotency.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-3d-ui-visibility.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-entitlements-prod.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-plan-access.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-seed-form-apply.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-stripe.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-tripo-connection.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-genai-tripo-test-generate-once.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-job-apply-hire-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-listing-detail-link-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-listing-management-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-market-identity.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-member-fetch.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-mobile-detail-pages.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-morning-summary-jump.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-notification-settings-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-ops-watch-live-production.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ops-watch-phase1-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-ops-watch-phase2-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-phase2b-shop-pages.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-phase2c-checkout-flow.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-phase2d-business-service-page.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-phase2e-job-top-page.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-phase2f-main-pages.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-platform-all-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-playwright-browser-cleanup.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/test-playwright-leak-compare.mjs",
+      "status": "skipped"
+    },
+    {
+      "file": "scripts/test-post-draft-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-post-edit-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-product-shop-payment-flows.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-public-board-detail-render.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-public-board-pages.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-sales-fees-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-save-character-tripo-model.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-shop-store-list-detail-links-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-shop-store-other-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-signup-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-stripe-connect-trouble-hardening-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-supabase-phase2-live-ui.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-supabase-phase2-read-poc.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-supabase-phase3-dual-write.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-supabase-phase4-rls-admin.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-supabase-phase5-update-dual-write.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-supabase-phase6-primary-source.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-support-trouble-center-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-admin-notify-filter-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-ai-draft-apply-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-all-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-anpi-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-breadcrumb-absent.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-broadcast-drafts-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-broadcast-send-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-builder-calendar-return.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-builder-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-builder-project-assigned-calendar.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-chat-detail.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-history-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-notification-center.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-push-delivery.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-push-notification-design.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-relay-candidate.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-service-worker.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-call-turn-config.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-category-phase13-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-chat-hub-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-composer-line-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-dashboard-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-follow-filter-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-follow-notify-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-home-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notification-settings-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-notify-actions-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-compact-mobile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-detail-mobile.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-notify-final-unified.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-navigate-only.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-return-all.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-return-position.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-scroll-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-unified.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-notify-ux-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-official-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-ops-assistant-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-ops-split-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-phase20-routes-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-platform-notify-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-quick-actions-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-simple-filters-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-staging-multiuser-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-supabase-sync-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-support-room.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-tasful-ai-sheet-browser.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-talk-unified-inbox-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-talk-webrtc-call-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-tasful-ai-workspace-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-tasful-regression-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-tasful-ui-final-smoke.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-tasu-app-mobile-shell.mjs",
+      "status": "migrated",
+      "remaining": 0
+    },
+    {
+      "file": "scripts/test-voice-settings-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-worker-request-accept-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/test-worker-request-platform-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/trace-job-hire-full-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/trace-job-hire-notify-path.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/triage-talk-p1-rerun.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/trim-rank-plates.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/update-tasful-logo.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/validate-post-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-a2-dom.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ai-matching.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ai-workspace-category-demos.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ai-workspace-chat-spacing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ai-workspace-code-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ai-workspace-generate-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ai-workspace-glow-layers.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-anpi-context-real-db.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-anpi-dashboard-mobile-footer.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-anpi-identity-linking-real-db.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-anpi-no-response-rls-p0.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-anpi-notification-logs-real-db.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-anpi-rls-real-db.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-anpi-talk-delivery.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-auth-step10-review-scores.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-auth-step8-rls-inventory.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-auth-step8b-legacy-rls.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-b-iframe-notify-render.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-bench-b-chat-gated.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-bench-chat-detail-load-guard.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-bench-chat-started-b-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-bench-chat-started-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-bench-fee-pay-b-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-bench-notify-compact.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-bench-notify-no-ai-card.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-board-thread-completion-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-attendance-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-bench-scroll.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-dual-window-bench.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-general-flow-bench.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-general-flow-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-general-flow-unified.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-notify-scope-labels.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-ops-notify-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-ops-partner-bench.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-ops-talk-dual-delivery.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-route-demo-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-scope-filters.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-builder-thread-types.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-business-html-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-business-worker-connect-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-completion-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-composer-input-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-demo-notify-cta-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-dual-window-demo.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-header-actions-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-live-flow-e2e.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-message-notify-bench.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-message-notify-liveflow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-message-notify-production.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-message-notify-send.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-mobile-back-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-chat-mobile-scroll-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-cloudflare-pages-stage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-connect-free-full-flow-all-categories.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-contact-gate-skill.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-demo-deals.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-detail-business-service-footer.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-detail-business-service-html-syntax.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-detail-contact-cta-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-detail-shop-mobile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-detail-shop-restaurant-reviews.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-fixed-url-manual-browser.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-fixed-url-worker-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-gemini-deploy.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-gen-ai-character-image.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-gen-ai-usage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-gen-ai-voice-ui-smoke.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-genai-cancel-scheduled.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-general-flow-diag.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-index-home-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-job-0-bench-flow-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-job-applications-scroll-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-job-dual-window-completion.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-job-end-review-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-job-fee-pay-back-nav.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-job-root-cause-panel.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-line-chat-3tab.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-list-scroll-position-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-listing-sales-responsive.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-manual-bench-job-0-full.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-manual-bench-worker-0-full.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-market-complete-cta-final.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-market-complete-pc-layout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-market-notify-live-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-market-page-height.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-market-pages-cross.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-market-search-pc-layout-expand.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-market-search-sp-cta.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-marketplace-rls.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-member-breadcrumb-files.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-mvp-thread-role-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-notify-category-chips.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ops-partner-a2b-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ops-partner-completion-role-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ops-partner-idle-zero-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-ops-partner-thread-compose-scroll.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-partner-calendar-partner-filter.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase1-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase2b-shop-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase2c-checkout-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase2d-business-service-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase2d-static-restore.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase2e-job-top-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase2f-cleanup.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase3-1a-index-top.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase3-1b-index-top-categories.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase3-1c-console.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-phase3-1c-index-top-hero.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-completion-notify-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-connect-complete.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-fee-notify.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-fee-rules.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-job-550-postpay.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-job-apply-notify-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-notify-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-notify-unified.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-review-notify-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-verify-fee-postpay.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-platform-verify-notify-routing.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-post-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-product-connect-bench-initial.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-product-connect-completion-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-product-connect-review-notify-open.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-product-connect-seller-confirm-no-fee-gate.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-product-detail-ux.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-product-review-notify-autoopen.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-product-shop-payment-final-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-screenshot-image-viewer.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-screenshots-qa-gate.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-shop-connect-completion-review.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-shop-store-dual-window-notify-fix.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-shop-vendor-flow-fix.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-shop-vendor-regression.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-shop-vendors-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-skill-buyer-notify-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-skill-connect-bench-initial.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-skill-connect-completion-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-skill-connect-review-notify-open.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-skill-connect-seller-confirm-no-fee-gate.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-skill-purchase-notify-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-ai-vendor-search.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-anpi-navigation.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-friend-calendar-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-nav-phase4-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-notification-center-list-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-notification-center-phase3-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-notify-list-spacing-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-talk-rls-staging.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-tas-hero-restore-index-top.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-tasful-ai-screenshots-index.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-tripo-character-save-once.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-voice-input.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-vrm-poc.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-worker-0-cta-click.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-worker-connect-bench-initial.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-worker-connect-completion-flow.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-worker-connect-review-notify-open.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/verify-worker-connect-seller-confirm-no-fee-gate.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/wait-and-capture-real-device-localStorage.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/wire-screenshot-index-hooks.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/wrap-ranking-cards.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/write-detail-shop-product-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/write-job-top-html-phase2e.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/write-phase2c-checkout-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_capture-worker-390-after.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_capture-worker-390-compare.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_check-bsd-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_collect-pillar-snippets.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_debug-business-rows.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_debug-talk-save2.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_detail-regression-check.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_dump-long-portal-line.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-a6-index-home-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-at-portal-hero-label.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-at-user.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-dist-index-home.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-e66-business-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-full-portal-hero.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-portal-hero-v2.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-portal-hero.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-tas-cards.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-tas-fragment-write.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-tas-hero-block.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-tas-hero-write.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_extract-trust-stats.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_find-all-portal-patches.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_find-article-pillar.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_find-portal-hero-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_find-tas-card-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_grep-transcript-html.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_head-bsd-line.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_html-tag-balance.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_probe-ai-edges-once.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_probe-skill-cta-tabbar.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_probe-worker-dom-390.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_probe-worker-footer-pc.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_probe-worker-hero-layout.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_probe-worker-mobile.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_read-at-64918.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_read-backup-zip.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_resolve-worker-target-url.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_scan-backups-ui.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_sweep-worker-footer-gap.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_verify-bsd-vite.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_verify-e66-extract-selectors.mjs",
+      "status": "no-op"
+    },
+    {
+      "file": "scripts/_verify-shop-footer-sns.mjs",
+      "status": "no-op"
+    }
+  ]
+}

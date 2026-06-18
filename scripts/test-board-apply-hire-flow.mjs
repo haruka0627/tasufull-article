@@ -1,7 +1,7 @@
 /**
  * 一般案件 — 応募カード → 採用する → チャット自動作成 + 双方通知
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 
@@ -22,8 +22,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 const MVP_KEY = "tasful:builder:mvp:v1";
 
@@ -99,5 +98,6 @@ if (!afterHire.hireNotifTitles.some((t) => t === "採用が完了しました"))
 if (afterHire.matchCount > 0) failed = true;
 if (!afterHire.chatHref?.includes("board-thread.html")) failed = true;
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

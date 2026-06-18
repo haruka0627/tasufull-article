@@ -3,7 +3,7 @@
  * 市場通知 — 実購入フロー発火検証（デモシード注入なし）
  * 購入 UI + 出品者ステータス操作のみで 6 種の通知が store に記録されることを確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { devices } from "playwright";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
@@ -126,8 +126,7 @@ const results = [];
 let orderId = "";
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   ...devices["iPhone 13"],
   viewport: { width: 390, height: 844 },
   hasTouch: true,
@@ -302,9 +301,10 @@ try {
     pass: false,
     errors: [String(err?.message || err)],
   });
-} finally {
-  await browser.close();
+
 }
+});
+
 
 const coreSteps = STEPS.map((s) => s.id);
 const coreResults = results.filter((r) => coreSteps.includes(r.id));
@@ -344,4 +344,5 @@ console.log(
     2
   )
 );
+await closeAllBrowsers();
 process.exit(overallPass ? 0 : 1);

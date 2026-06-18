@@ -1,7 +1,7 @@
 /**
  * Site photo history: thread, admin calendar, partner calendar, completion, notification
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -15,8 +15,7 @@ const ADMIN_CAL = `file://${path.join(builder, "admin-calendar.html")}`;
 const PARTNER_CAL = `file://${path.join(builder, "mvp-calendar.html")}`;
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
   page.on("dialog", async (d) => d.accept());
 
@@ -121,10 +120,12 @@ async function main() {
   }, MVP_KEY);
 
   console.log("OK: builder site photo history test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

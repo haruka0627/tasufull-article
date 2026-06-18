@@ -2,15 +2,14 @@
 /**
  * talk-home 通知タブ初期化の計測（review=chat-demo / skill / u_hiro）
  */
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
 const URL =
   `${BASE}/talk-home.html?tab=notify&talkDev=1&review=chat-demo&demoProfile=skill&userId=u_hiro&talkPerf=1`;
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   ...devices["iPhone 13"],
   viewport: { width: 390, height: 844 },
 });
@@ -116,7 +115,7 @@ console.log("\n=== talk-home notify profile ===");
 console.log("initial wall ms:", Date.now() - t0);
 console.log(JSON.stringify(audit, null, 2));
 
-await browser.close();
+});
 
 let failed = false;
 if (!audit.bootstrapped) {

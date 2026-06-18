@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 商品詳細 — 390px 検証（localhost 必須）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -15,8 +15,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(searchUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -31,7 +30,7 @@ const cardMeta = await page.evaluate(() => {
 
 if (!cardMeta.link) {
   console.log(JSON.stringify({ pass: false, reason: "no-card-link", cardMeta }, null, 2));
-  await browser.close();
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -220,7 +219,7 @@ await page.click("[data-tasful-product-buy-now]");
 await page.waitForURL(/shop-market-checkout\.html/, { waitUntil: "domcontentloaded", timeout: 15000 });
 const checkoutOk = page.url().includes("shop-market-checkout.html") && page.url().includes("mode=buyNow");
 
-await browser.close();
+});
 
 const pass =
   report.isLocalhost &&
@@ -294,4 +293,5 @@ console.log(
     2
   )
 );
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

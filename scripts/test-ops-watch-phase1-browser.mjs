@@ -3,7 +3,7 @@
  * TASFUL OPS WATCH Phase1 E2E
  *   node scripts/test-ops-watch-phase1-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
@@ -74,8 +74,7 @@ function pickField(v) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
   const pass = (msg) => console.log(`  OK  ${msg}`);
   const fail = (msg) => {
@@ -311,7 +310,7 @@ async function main() {
   if (headlineBlocked?.ok) fail("validateNewServiceName should block article title");
   else pass(`headline blocked: ${headlineBlocked?.reason}`);
 
-  await browser.close();
+    });
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));
@@ -324,3 +323,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

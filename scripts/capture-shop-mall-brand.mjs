@@ -2,7 +2,7 @@
 /**
  * 店舗販売4ページ — ブランド統一スクショ（PC1280 / 390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -25,8 +25,7 @@ const pages = [
   },
 ];
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 for (const vp of [
   { tag: "pc1280", width: 1280, height: 900 },
@@ -83,4 +82,6 @@ report.detailShopOldLinks = {
 
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ shots: report.shots.length, logoIssues: report.logo.filter((l) => l.logoOk === false), oldLinks: report.detailShopOldLinks.count }, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

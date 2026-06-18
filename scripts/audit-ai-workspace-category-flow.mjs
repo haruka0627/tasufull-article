@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI Workspace 比較支援フロー最終監査
  * - 4デモ × 5段階スクリーンショット
@@ -9,7 +10,6 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile, readdir } from "node:fs/promises";
 import { join, extname, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = join(root, "screenshots", "ai-workspace-category-flow");
@@ -150,9 +150,7 @@ const recommendItems = [];
 /** @type {string[]} */
 const screenshots = [];
 
-const browser = await chromium.launch({ headless: true });
-
-for (const demo of DEMOS) {
+await withPlaywrightBrowser(async (browser) => {for (const demo of DEMOS) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(`${base}/ai-workspace.html?demo=${demo.id}`, { waitUntil: "networkidle" });
   await page.waitForSelector(".ai-compare-card", { timeout: 20000 });
@@ -191,7 +189,7 @@ for (const demo of DEMOS) {
   await page.close();
 }
 
-await browser.close();
+});
 server.close();
 
 /** @type {{ file: string, line: number, word: string, text: string }[]} */
@@ -285,4 +283,5 @@ await writeFile(reportPath, report, "utf8");
 console.log("Report:", reportPath);
 console.log(ngItems.length ? `NG ${ngItems.length}` : "ALL PASSED");
 console.log("Screenshots:", outDir);
+await closeAllBrowsers();
 process.exit(ngItems.length ? 1 : 0);

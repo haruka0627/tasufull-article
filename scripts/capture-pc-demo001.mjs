@@ -1,11 +1,10 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 
 const outDir = "screenshots/product-detail";
 fs.mkdirSync(outDir, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 await page.goto("http://127.0.0.1:5173/detail-product.html?id=demo_product_001", {
   waitUntil: "networkidle",
   timeout: 60000,
@@ -27,5 +26,7 @@ if (box && footerBox) {
   });
 }
 await page.close();
-await browser.close();
+});
 console.log("done");
+
+await closeAllBrowsers();

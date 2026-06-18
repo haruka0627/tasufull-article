@@ -2,7 +2,7 @@
 /**
  * ops_partner idle 初期状態 — 通知0件・Bカレンダー0件
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -13,8 +13,7 @@ function record(name, ok, detail = "") {
   console.log(`${ok ? "OK" : "FAIL"} ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 page.setDefaultTimeout(90000);
 
 const url = `${BASE}/chat-dual-window-demo.html?benchMode=builder&builderFlow=ops_partner&benchViewport=390`;
@@ -131,11 +130,12 @@ const afterAdd = await page.evaluate(() => {
 record("after add B talk notify", afterAdd.bTalkCount >= 1 || afterAdd.calNotifCount >= 1, `talk=${afterAdd.bTalkCount} mvp=${afterAdd.calNotifCount}`);
 record("after add step calendar_added", afterAdd.step === "calendar_added", afterAdd.step);
 
-await browser.close();
+});
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 if (failed.length) {
   console.error("Failures:", failed.map((f) => f.name).join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("ops_partner idle zero-notify checks passed");

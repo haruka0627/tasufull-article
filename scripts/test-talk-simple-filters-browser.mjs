@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — 一般ユーザー簡素フィルター E2E
  *   node scripts/test-talk-simple-filters-browser.mjs
@@ -8,8 +9,7 @@ import { chromium } from "./lib/playwright-browser.mjs";
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 800 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 800 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -76,9 +76,8 @@ async function main() {
   } catch (err) {
     console.error(err);
     process.exitCode = 1;
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 }
 
 main();

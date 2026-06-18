@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 商品詳細 — PC 1280 / 1440 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -18,8 +18,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 await page.goto(searchUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -32,7 +31,7 @@ const detailPath = await page.evaluate(() => {
 
 if (!detailPath) {
   console.log(JSON.stringify({ pass: false, reason: "no-detail-link" }, null, 2));
-  await browser.close();
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -183,10 +182,11 @@ for (const vp of VIEWPORTS) {
   reports.push(report);
 }
 
-await browser.close();
+});
 
 const pass = reports.every((r) => r.pass);
 const out = { baseUrl: base, detailPath, reports, pass };
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

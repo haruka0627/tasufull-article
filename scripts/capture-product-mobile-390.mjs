@@ -1,12 +1,11 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 
 const url = "http://127.0.0.1:5173/detail-product.html?id=product_set_2026";
 const outDir = "screenshots/product-detail";
 fs.mkdirSync(outDir, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForTimeout(7000);
 
@@ -59,4 +58,6 @@ await snap("04-purchase-actions", ".tasu-mdetail-section__body .seller-actions")
 await snap("05-other-products", "[data-tasu-mdetail-other-products-section]");
 await snap("06-bottom-cta", "[data-tasu-mdetail-cta-dock]");
 
-await browser.close();
+});
+
+await closeAllBrowsers();

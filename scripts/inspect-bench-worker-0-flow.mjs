@@ -2,7 +2,7 @@
 /**
  * worker-0 ベンチ — skill 基準の contact フロー検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -21,11 +21,7 @@ const pushErr = (m) => {
   console.error(`NG: ${m}`);
 };
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-const page = await context.newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(BENCH_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2000);
 
@@ -127,6 +123,6 @@ try {
     process.exit(1);
   }
   console.log(JSON.stringify({ ok: true, initial, afterRequest }, null, 2));
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

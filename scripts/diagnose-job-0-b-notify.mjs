@@ -2,7 +2,7 @@
 /**
  * job-0 — 550円後 B-notify「応募が承諾されました」6項目診断
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 import { fixedJobBenchUrl } from "./lib/fixed-bench-url.mjs";
 
@@ -11,8 +11,7 @@ const URL = fixedJobBenchUrl(BASE);
 const HIRED_TITLE = "応募が承諾されました";
 const BUYER_ID = "u_hiro";
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 
 page.on("dialog", async (d) => {
   await d.accept();
@@ -208,10 +207,12 @@ try {
     report.bOnChat;
 
   console.log(JSON.stringify(report, null, 2));
+  await closeAllBrowsers();
   process.exit(report.ok ? 0 : 1);
 } catch (err) {
   console.error(err);
+  await closeAllBrowsers();
   process.exit(1);
-} finally {
-  await browser.close();
 }
+});
+

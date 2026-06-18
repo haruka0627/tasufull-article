@@ -9,7 +9,7 @@
  *   MOBILE=1 node scripts/test-demo-deals-browser.mjs   # 390px
  *   BASE_URL=http://127.0.0.1:5188 node scripts/test-demo-deals-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5188").replace(/\/$/, "");
 const MOBILE = process.env.MOBILE === "1" || process.env.MOBILE === "true";
@@ -237,51 +237,54 @@ async function testPageContent(page) {
 async function main() {
   console.log(`test-demo-deals-browser  BASE=${BASE}  viewport=${VIEWPORT.width}x${VIEWPORT.height}`);
 
-  let browser;
+  let exitCode = 0;
+
   try {
-    browser = await chromium.launch({ headless: true });
+    await withPlaywrightBrowser(async (browser) => {
+      const context = await browser.newContext({ viewport: VIEWPORT });
+      const page = await context.newPage();
+
+      const pageErrors = [];
+      page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
+
+      try {
+        await page.goto(`${BASE}/dashboard.html`, { waitUntil: "domcontentloaded", timeout: 8000 });
+      } catch {
+        console.error(`\nサーバーに接続できません: ${BASE}`);
+        console.error("別ターミナルで npm run dev を起動してから再実行してください。");
+        exitCode = 1;
+        return;
+      }
+
+      for (const entry of ENTRY_POINTS) {
+        await testSidebarFromEntry(page, entry);
+      }
+
+      await testPageContent(page);
+
+      const failed = results.filter((r) => !r.ok);
+      console.log(`\n--- 結果: ${results.length - failed.length}/${results.length} OK ---`);
+      if (pageErrors.length) {
+        console.warn("pageerror:", pageErrors.slice(0, 5));
+      }
+
+      if (failed.length) {
+        console.error("\ntest-demo-deals-browser FAILED:");
+        for (const r of failed) console.error(`  - ${r.step}: ${r.detail}`);
+        exitCode = 1;
+        return;
+      }
+
+      console.log("\ntest-demo-deals-browser OK");
+    });
   } catch (err) {
     console.error("Playwright 起動失敗。npx playwright install chromium を実行してください。");
     console.error(err);
-    process.exit(1);
+    exitCode = 1;
   }
 
-  const context = await browser.newContext({ viewport: VIEWPORT });
-  const page = await context.newPage();
-
-  const pageErrors = [];
-  page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
-
-  try {
-    await page.goto(`${BASE}/dashboard.html`, { waitUntil: "domcontentloaded", timeout: 8000 });
-  } catch {
-    console.error(`\nサーバーに接続できません: ${BASE}`);
-    console.error("別ターミナルで npm run dev を起動してから再実行してください。");
-    await browser.close();
-    process.exit(1);
-  }
-
-  for (const entry of ENTRY_POINTS) {
-    await testSidebarFromEntry(page, entry);
-  }
-
-  await testPageContent(page);
-
-  await browser.close();
-
-  const failed = results.filter((r) => !r.ok);
-  console.log(`\n--- 結果: ${results.length - failed.length}/${results.length} OK ---`);
-  if (pageErrors.length) {
-    console.warn("pageerror:", pageErrors.slice(0, 5));
-  }
-
-  if (failed.length) {
-    console.error("\ntest-demo-deals-browser FAILED:");
-    for (const r of failed) console.error(`  - ${r.step}: ${r.detail}`);
-    process.exit(1);
-  }
-
-  console.log("\ntest-demo-deals-browser OK");
+  await closeAllBrowsers();
+  process.exit(exitCode);
 }
 
 main().catch((err) => {

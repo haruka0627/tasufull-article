@@ -1,7 +1,7 @@
 /**
  * TASFUL TALK — 通知→詳細→戻る でスクロール・タブ・選択カードを復元
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 
@@ -20,8 +20,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.addInitScript(() => {
   [
@@ -72,7 +71,7 @@ const before = await page.evaluate(() => {
 
 if (before.scroll < 80) {
   console.log("NG scroll setup failed", before);
-  await browser.close();
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("OK scroll preset:", before.scroll, before.panelTag);
@@ -150,5 +149,6 @@ if (after.scroll < Math.max(60, Number(stored.scroll || 0) - 80)) {
 if (after.restoreFlag === "1") fail("restore フラグが残っている");
 else ok("restore フラグ消去");
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

@@ -6,7 +6,7 @@
  *
  * 手動確認: docs/gen-ai-voice-manual-checklist.md（gen-ai 音声）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -307,9 +307,7 @@ function chatSeedInitScript() {
 
 async function main() {
   console.log(`\nTASFUL UI final smoke — ${BASE}\n`);
-  const browser = await chromium.launch({ headless: true });
-
-  for (const vp of VIEWPORTS) {
+  await withPlaywrightBrowser(async (browser) => {for (const vp of VIEWPORTS) {
     const context = await browser.newContext({ viewport: { width: vp.w, height: vp.h } });
     const consoleMap = new Map();
 
@@ -458,7 +456,7 @@ async function main() {
     await context.close();
   }
 
-  await browser.close();
+    });
 
   const failed = results.filter((r) => !r.ok);
   const byPage = new Map();
@@ -494,6 +492,7 @@ async function main() {
   }
 
   const hardFail = failed.filter((f) => f.priority === "P0" || f.priority === "P1");
+  await closeAllBrowsers();
   process.exit(hardFail.length ? 1 : 0);
 }
 
@@ -501,3 +500,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

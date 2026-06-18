@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 検索ページ — Amazon JP PC レイアウト検証（1280px + 390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -17,8 +17,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
 
-const browser = await chromium.launch({ headless: true });
-const demoCart = [
+await withPlaywrightBrowser(async (browser) => {const demoCart = [
   {
     shopId: "demo-shop-cafe",
     productId: "p-1",
@@ -221,7 +220,7 @@ const mobileMetrics = await mobilePage.evaluate(() => ({
 }));
 await mobilePage.screenshot({ path: path.join(OUT_DIR, "04-mobile-390.png"), fullPage: false });
 
-await browser.close();
+});
 
 const targets = {
   fiveGridColumns: pcMetrics.firstRowColumnCount >= 5,
@@ -268,4 +267,5 @@ const report = {
 
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

@@ -2,7 +2,7 @@
 /**
  * Builder ops_partner 2窓ベンチ — カレンダー〜完了フロー検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -13,8 +13,7 @@ function record(name, ok, detail = "") {
   console.log(`${ok ? "OK" : "FAIL"} ${name}${detail ? ` — ${detail}` : ""}`);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 page.setDefaultTimeout(90000);
 
 const url = `${BASE}/chat-dual-window-demo.html?benchMode=builder&builderFlow=ops_partner&benchViewport=390`;
@@ -476,11 +475,12 @@ record("exit_at persists", Boolean(persist.exit_at));
 record("entry_user_id", Boolean(persist.entry_user_id));
 record("exit_user_id", Boolean(persist.exit_user_id));
 
-await browser.close();
+});
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 if (failed.length) {
   console.error("Failures:", failed.map((f) => f.name).join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("All ops_partner bench checks passed");

@@ -2,7 +2,7 @@
 /**
  * チャット LINE形式 UI — 390px スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, devUrl } from "./lib/dev-base-url.mjs";
@@ -23,8 +23,7 @@ const URLS = {
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 page.on("dialog", async (dialog) => {
   await dialog.accept();
 });
@@ -153,7 +152,9 @@ const report = {
 };
 
 fs.writeFileSync(path.join(OUT, "capture-report.json"), JSON.stringify(report, null, 2));
-await browser.close();
+});
 console.log(JSON.stringify(report, null, 2));
 
 if (!audit.scrollBottom) throw new Error("chat not scrolled to bottom");
+
+await closeAllBrowsers();

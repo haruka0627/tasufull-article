@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 商品詳細 — PC CVR / 390 検証 + 提出スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -17,9 +17,7 @@ fs.mkdirSync(OUT_PC, { recursive: true });
 fs.mkdirSync(OUT_390, { recursive: true });
 
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
-const browser = await chromium.launch({ headless: true });
-
-async function capturePcCvr(viewportWidth = 1280) {
+await withPlaywrightBrowser(async (browser) => {async function capturePcCvr(viewportWidth = 1280) {
   const suffix = String(viewportWidth);
   const page = await browser.newPage({ viewport: { width: viewportWidth, height: 900 } });
   await page.goto(buildLocalPageUrl(base, DETAIL_PATH), { waitUntil: "domcontentloaded", timeout: 15000 });
@@ -224,7 +222,7 @@ async function capture390() {
 const pcReport1280 = await capturePcCvr(1280);
 const pcReport1440 = await capturePcCvr(1440);
 const mobileReport = await capture390();
-await browser.close();
+});
 
 const out = {
   baseUrl: base,
@@ -247,4 +245,5 @@ const out = {
 
 fs.writeFileSync(path.join(OUT_PC, "cvr-report.json"), JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));
+await closeAllBrowsers();
 process.exit(out.pass ? 0 : 1);

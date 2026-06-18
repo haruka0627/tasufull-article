@@ -2,12 +2,11 @@
 /**
  * Builder MVP スレッド / 通知 — 一覧・詳細・導線・リダイレクト監査
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
 const page = await context.newPage();
 
 const MVP_KEYS = ["tasful:builder:mvp:v1", "tasful:builder:mvp:notifications:v1"];
@@ -262,12 +261,13 @@ record(
 );
 record("board-threads not mvp-thread links", boardHrefs.every((h) => !h.includes("mvp-thread.html")));
 
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 if (failed.length) {
   console.error("Failures:", failed.map((f) => f.name).join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("All audits passed");

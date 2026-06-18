@@ -3,7 +3,7 @@
  * 利用者TALK / 運営TALK 分離（兄弟構成: talk-home + audience）
  *   node scripts/test-talk-ops-split-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
@@ -13,15 +13,14 @@ const OPS_TALK_URL =
   "talk-home.html?audience=admin_ops&tab=chat&talkAdmin=1";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const errors = [];
+  await withPlaywrightBrowser(async (browser) => {const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     errors.push(m);
     console.log(`  ✗ ${m}`);
   };
 
-  try {
+  
     console.log("\n--- user TALK (390px) ---");
     const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
     await mobile.goto(buildLocalPageUrl(base, "talk-home.html", "?tab=chat&talkDev=1"), {
@@ -164,12 +163,13 @@ async function main() {
     } else {
       console.log("All talk ops split checks passed.");
     }
-  } finally {
-    await browser.close();
-  }
+    });
+  
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

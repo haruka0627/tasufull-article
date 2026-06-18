@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI検索結果の sessionStorage 復元 smoke test
  *   node scripts/test-ai-search-state-browser.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = {
@@ -54,8 +55,7 @@ const mockHtml =
 async function main() {
   const server = await startServer();
   const BASE = "http://127.0.0.1:8765";
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -144,10 +144,8 @@ async function main() {
     }
   } catch (err) {
     fail(String(err));
-  } finally {
-    await browser.close();
-    server.close();
-  }
+  }  });
+  server.close();
 
   if (errors.length) {
     console.error(`\n${errors.length} failure(s)`);

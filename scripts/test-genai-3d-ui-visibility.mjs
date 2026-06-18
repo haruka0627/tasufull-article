@@ -2,7 +2,7 @@
  * 3D UI 本番/開発モード表示テスト
  * node scripts/test-genai-3d-ui-visibility.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -32,8 +32,7 @@ const server = await new Promise((resolve) => {
   s.listen(PORT, "127.0.0.1", () => resolve(s));
 });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const url = `http://127.0.0.1:${PORT}/gen-ai-workspace.html?mode=AI%E3%82%AD%E3%83%A3%E3%83%A9%E4%BC%9A%E8%A9%B1`;
 
 async function vis(devMode, plan, char) {
@@ -122,6 +121,7 @@ for (const [name, ok] of checks) {
   if (!ok) failed += 1;
 }
 
-await browser.close();
+});
 server.close();
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

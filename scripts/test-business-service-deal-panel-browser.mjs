@@ -4,7 +4,7 @@
  *
  *   BASE_URL=http://127.0.0.1:8765 node scripts/test-business-service-deal-panel-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const DEMO_ID = process.env.BSD_DEMO_ID || "business-demo-other-001";
@@ -53,8 +53,7 @@ async function openConsultingChat(page) {
 
 async function main() {
   console.log(`\n取引パネル Step2 E2E — ${BASE}\n`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   page.on("console", (msg) => {
     if (msg.type() === "error" && !isIgnorableConsoleError(msg.text())) {
@@ -178,7 +177,7 @@ async function main() {
   if (!critical.length) pass("console error なし");
   else fail("console error なし", critical.slice(0, 2).join(" | "));
 
-  await browser.close();
+    });
   const failed = results.filter((r) => !r.ok);
   console.log(`\n--- ${results.length - failed.length}/${results.length} passed ---\n`);
   if (failed.length) process.exit(1);
@@ -188,3 +187,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

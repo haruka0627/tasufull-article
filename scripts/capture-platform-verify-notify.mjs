@@ -2,7 +2,7 @@
 /**
  * プラット通知 v3 検証 — 390px スクショ + カテゴリ切替
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -34,8 +34,7 @@ const CATEGORY_CHIPS = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const page = await context.newPage();
 
 await page.addInitScript(({ markers }) => {
@@ -79,6 +78,7 @@ fs.writeFileSync(path.join(OUT_DIR, "audit.json"), JSON.stringify(audit, null, 2
 
 if (audit.count !== 18) {
   console.error("Expected 18 notifications, got", audit.count);
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -128,4 +128,4 @@ console.log("\n=== 通知 → 確認する → 遷移先 ===");
 audit.rows.forEach((r) => console.log(`${r.title}\t→\t${r.actionLabel}\t→\t${r.href}`));
 
 console.log(`\nOK: platform verify notify v${audit.version} (${audit.count} items)`);
-await browser.close();
+});

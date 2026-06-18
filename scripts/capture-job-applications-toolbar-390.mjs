@@ -1,7 +1,7 @@
 /**
  * 応募者確認 — 検索・フィルター・並び替え UI（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { BASE_URL, requireDevServer } from "./lib/dev-base-url.mjs";
@@ -38,8 +38,7 @@ async function run() {
   await requireDevServer();
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
 
   await page.goto(PAGE_URL, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -91,7 +90,7 @@ async function run() {
     };
   });
 
-  await browser.close();
+    });
 
   console.log(JSON.stringify(audit, null, 2));
   const errors = [];
@@ -102,6 +101,7 @@ async function run() {
   if (!audit.workplaceHidden) errors.push("workplace visible");
   if (errors.length) {
     errors.forEach((e) => console.error(`NG: ${e}`));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("OK — job applications toolbar screenshots captured");

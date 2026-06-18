@@ -4,7 +4,7 @@
  *
  *   node scripts/test-ai-cross-search-call-consent-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const results = [];
@@ -194,10 +194,9 @@ async function runViewport(browser, vp) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  await runViewport(browser, { name: "PC1280", width: 1280, height: 800 });
+  await withPlaywrightBrowser(async (browser) => {await runViewport(browser, { name: "PC1280", width: 1280, height: 800 });
   await runViewport(browser, { name: "SP390", width: 390, height: 844 });
-  await browser.close();
+    });
   const failed = results.filter((r) => !r.ok);
   console.log(`\n=== ${results.length - failed.length}/${results.length} passed ===`);
   if (failed.length) process.exit(1);
@@ -207,3 +206,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

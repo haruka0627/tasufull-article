@@ -10,7 +10,7 @@
  * 補助: screenshots/market-notify-390/
  *   npm run demo:market-notify-video
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import {
   closeDemoVideoContext,
@@ -317,9 +317,7 @@ async function recordSellerViewVideo(browser, base) {
 }
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-
-const setupContext = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const setupContext = await browser.newContext({
   ...DEMO_DEVICE_PROFILE,
   viewport: DEMO_VIEWPORT_390,
   isMobile: true,
@@ -343,8 +341,8 @@ try {
 }
 
 if (!orderId) {
-  await browser.close();
   console.error(JSON.stringify({ ok: false, errors }, null, 2));
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -368,7 +366,7 @@ try {
   errors.push(`seller-view: ${String(err?.message || err)}`);
 }
 
-await browser.close();
+});
 
 const submissionList = formatVideoSubmissionList(submissions);
 const overallPass = submissions.length === 3 && errors.length === 0;
@@ -397,4 +395,5 @@ for (const v of submissionList) {
   console.log(`${v.fileName}\n${v.duration}\n${v.content}\n`);
 }
 
+await closeAllBrowsers();
 process.exit(overallPass ? 0 : 1);

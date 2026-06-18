@@ -1,7 +1,7 @@
 /**
  * Builder ワーカー依頼 — 依頼カード → 受諾 / 断る → 受諾時のみ worker_request スレッド
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const MVP_KEY = "tasful:builder:mvp:v1";
@@ -26,8 +26,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 async function setRole(role, partnerId) {
   await page.evaluate(
@@ -184,11 +183,12 @@ if (!afterAccept.notifTitles.includes("依頼を引き受けました")) failure
 if (!afterAccept.notifTitles.includes("依頼を受けました")) failures.push("投稿者向け受諾通知がない");
 if (!afterAccept.chatHref?.includes("board-thread.html")) failures.push("チャットリンクが不正");
 
-await browser.close();
+});
 
 if (failures.length) {
   console.error("FAILED:");
   failures.forEach((f) => console.error(" -", f));
+  await closeAllBrowsers();
   process.exit(1);
 }
 

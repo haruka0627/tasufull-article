@@ -1,7 +1,7 @@
 /**
  * プラット料金ルール統一 — 求人550円 / 他5% / Connect完了通知
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { BASE_URL, requireDevServer } from "./lib/dev-base-url.mjs";
@@ -48,8 +48,7 @@ async function run() {
   await requireDevServer();
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
   const errors = [];
   const report = {};
@@ -410,7 +409,7 @@ async function run() {
   await skillPage.close();
 
   await jobPage.close();
-  await browser.close();
+    });
 
   report.errors = errors;
   report.screenshots = fs.readdirSync(OUT_DIR).filter((f) => f.endsWith(".png"));
@@ -418,6 +417,7 @@ async function run() {
 
   if (errors.length) {
     errors.forEach((e) => console.error(`NG: ${e}`));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("ALL OK — platform fee rules verified");

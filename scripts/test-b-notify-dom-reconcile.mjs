@@ -2,17 +2,13 @@
 /**
  * rows=1 + 空DOM + notifyRenderSig 一致 — 強制再描画の回帰テスト
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 import { fixedJobBenchUrl } from "./lib/fixed-bench-url.mjs";
 
 const BASE = await requireDevServer();
 const URL = fixedJobBenchUrl(BASE);
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
-page.on("dialog", async (d) => await d.accept());
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(6500);
 
@@ -89,7 +85,8 @@ try {
     String(after.domTitle).includes("応募が承諾");
 
   console.log(JSON.stringify({ before, injected, after, ok }, null, 2));
+  await closeAllBrowsers();
   process.exit(ok ? 0 : 1);
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

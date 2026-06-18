@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 商品詳細 — セクションナビ 1280px 提出スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -13,8 +13,7 @@ const DETAIL_PATH = "detail-shop-product.html?shopId=demo-shop-tasful-bakery&pro
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 await page.goto(buildLocalPageUrl(base, DETAIL_PATH), { waitUntil: "domcontentloaded", timeout: 15000 });
 await assertPlaywrightLocalhostPage(page);
@@ -94,7 +93,7 @@ const report = await page.evaluate(() => {
   };
 });
 
-await browser.close();
+});
 
 const out = {
   baseUrl: base,
@@ -125,4 +124,5 @@ const out = {
 
 fs.writeFileSync(path.join(OUT_DIR, "nav-report.json"), JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));
+await closeAllBrowsers();
 process.exit(out.pass ? 0 : 1);

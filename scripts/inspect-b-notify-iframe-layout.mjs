@@ -1,10 +1,9 @@
 #!/usr/bin/env node
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const page = await (
+await withPlaywrightBrowser(async (browser) => {const page = await (
   await browser.newContext({ viewport: { width: 390, height: 900 } })
 ).newPage();
 
@@ -73,4 +72,6 @@ const report = await page.evaluate(() => {
 });
 
 console.log(JSON.stringify(report, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

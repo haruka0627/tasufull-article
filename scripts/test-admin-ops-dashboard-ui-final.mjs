@@ -3,7 +3,7 @@
  * AI運営司令塔 UI最終確認
  *   node scripts/test-admin-ops-dashboard-ui-final.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 import fs from "fs";
@@ -232,9 +232,8 @@ async function checkViewport(page, vp) {
 
 async function main() {
   fs.mkdirSync(OUT, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-  const consoleErrors = [];
-
+  let consoleErrors = [];
+await withPlaywrightBrowser(async (browser) => {
   for (const vp of VIEWPORTS) {
     console.log(`\n=== ${vp.id} ===`);
     const page = await browser.newPage();
@@ -262,10 +261,12 @@ async function main() {
     process.exit(1);
   }
   console.log("\nPASS admin ops dashboard UI final QA");
-  await browser.close();
+    });
 }
 
 main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

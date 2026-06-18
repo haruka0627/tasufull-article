@@ -2,7 +2,7 @@
 /**
  * 求人 応募状況 — スマホスクロール 390px 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -14,15 +14,14 @@ const LISTING = "job_demo_full_001";
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   viewport: { width: 390, height: 844 },
   isMobile: true,
   hasTouch: true,
 });
 const issues = [];
 
-try {
+
   await page.goto(
     `${BASE}/detail-job.html?id=${LISTING}&userId=${POSTER}&talkDev=1&review=job-full&view=applications&from=talk#applications`,
     { waitUntil: "domcontentloaded" }
@@ -104,6 +103,6 @@ try {
     process.exit(1);
   }
   console.log("verify-job-applications-scroll-390 OK");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

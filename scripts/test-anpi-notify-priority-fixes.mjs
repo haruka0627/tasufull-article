@@ -3,7 +3,7 @@
  * 安否通知 優先不整合修正の検証
  *   node scripts/test-anpi-notify-priority-fixes.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -36,8 +36,7 @@ function ok(name, cond, detail = "") {
   }
 }
 
-const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 // 1–2. TALK動的安否: targetUrl 優先
 await page.goto(`${BASE}/talk-home.html?tab=notify`, { waitUntil: "domcontentloaded" });
@@ -179,6 +178,7 @@ ok("success link notifications", hrefs.includes("anpi-notifications.html"));
 ok("success link ai workspace", hrefs.includes("ai-workspace.html"));
 ok("success link dashboard", hrefs.includes("dashboard.html"));
 
-await browser.close();
+});
 console.log(fails ? `FAILED ${fails}` : "ALL PASSED");
+await closeAllBrowsers();
 process.exit(fails ? 1 : 0);

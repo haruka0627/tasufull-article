@@ -2,7 +2,7 @@
 /**
  * 固定親URLブート診断 — 内部reset / 無限reload / iframe未表示
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -14,8 +14,7 @@ const OUT = path.join("screenshots", "live-flow-reset-audit");
 fs.mkdirSync(OUT, { recursive: true });
 
 async function auditPage(label, url) {
-  const browser = await chromium.launch({ headless: true });
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const ctx = await browser.newContext({ viewport: { width: 390, height: 900 } });
   const page = await ctx.newPage();
 
   const metrics = {
@@ -107,7 +106,7 @@ async function auditPage(label, url) {
     metrics.noForbiddenParams;
 
   await page.screenshot({ path: path.join(OUT, `${label}-full.png`) });
-  await browser.close();
+    });
   return metrics;
 }
 
@@ -118,4 +117,5 @@ fs.writeFileSync(path.join(OUT, "audit-report.json"), JSON.stringify(report, nul
 
 console.log("\n=== fixed parent URL BOOT AUDIT ===");
 console.log(boot.ok ? "OK" : "NG", boot);
+await closeAllBrowsers();
 process.exit(boot.ok ? 0 : 1);

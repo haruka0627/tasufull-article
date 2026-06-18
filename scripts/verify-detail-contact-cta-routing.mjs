@@ -1,7 +1,7 @@
 /**
  * スキル / 商品 / 店舗 — 相談CTA → chat-list 遷移の検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { BASE_URL, requireDevServer } from "./lib/dev-base-url.mjs";
@@ -175,9 +175,8 @@ async function verifyRegression(browser) {
 }
 
 await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-
-const results = [];
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 for (const spec of CASES) {
   const r = await runCase(browser, spec);
   results.push(r);
@@ -195,9 +194,10 @@ regression.forEach((r) => {
   console.log(`  ${r.ok ? "OK" : "NG"} ${r.id}${r.error ? ` — ${r.error}` : ""}`);
 });
 
-await browser.close();
+});
 
 const allOk =
   results.every((r) => r.ok) && regression.every((r) => r.ok);
 console.log(`\n${allOk ? "ALL OK" : "SOME FAILED"} (${results.filter((r) => r.ok).length}/${results.length} CTA routes)`);
+await closeAllBrowsers();
 process.exit(allOk ? 0 : 1);

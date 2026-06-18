@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — 統合ビュー smoke test
  *
@@ -10,8 +11,7 @@ const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, ""
 const RECENT_KEY = "tasful_talk_recent_actions";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -214,9 +214,8 @@ async function main() {
     else pass("corrupt localStorage does not break page");
   } catch (err) {
     fail(String(err?.message || err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   console.log("");
   if (errors.length) {

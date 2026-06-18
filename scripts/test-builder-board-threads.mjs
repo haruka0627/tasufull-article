@@ -2,7 +2,7 @@
 /**
  * 一般案件やり取り一覧（board-threads.html）の最小検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5173").replace(/\/$/, "");
 const results = [];
@@ -11,8 +11,7 @@ function push(name, ok, detail = "") {
   results.push({ name, ok, detail });
 }
 
-const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${BASE}/builder/board-threads.html?role=partner`, { waitUntil: "domcontentloaded" });
 await page.waitForSelector("[data-builder-board-thread-list] .mvp-thread-card", { timeout: 20000 });
@@ -116,12 +115,13 @@ push(
 );
 
 await page.close();
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log(JSON.stringify(results, null, 2));
 if (failed.length) {
   console.error(`FAILED ${failed.length}/${results.length}`);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log(`ALL PASSED ${results.length}/${results.length}`);

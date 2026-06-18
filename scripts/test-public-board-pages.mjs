@@ -2,7 +2,7 @@
 /**
  * 統合公開ページ（public-board）の最小検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5173").replace(/\/$/, "");
 const MVP_KEY = "tasful:builder:mvp:v1";
@@ -12,9 +12,7 @@ function push(name, ok, detail = "") {
   results.push({ name, ok, detail });
 }
 
-const browser = await chromium.launch();
-
-// --- 統合一覧 ---
+await withPlaywrightBrowser(async (browser) => {// --- 統合一覧 ---
 const listPage = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 await listPage.goto(`${BASE}/public-board.html`, { waitUntil: "domcontentloaded" });
 await listPage.waitForSelector("[data-job-list-body] .job-table-row", { timeout: 20000 });
@@ -208,7 +206,7 @@ const topLinks = await topPage.evaluate(() => ({
 }));
 push("index-top: 統合導線", topLinks.board > 0, `links=${topLinks.board}`);
 
-await browser.close();
+});
 
 const failed = results.filter((r) => !r.ok);
 console.log("\n=== public-board unified test ===\n");

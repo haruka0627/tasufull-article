@@ -1,7 +1,7 @@
 /**
  * Builder 通知ルーティング最終監査
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const THREAD_ID = "thread-audit-001";
@@ -31,8 +31,7 @@ async function findBaseUrl() {
 }
 
 const base = await findBaseUrl();
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 await page.goto(`${base}/talk-home.html?tab=notify`, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForTimeout(500);
@@ -115,7 +114,7 @@ talkLinks.mvpCal = await page.evaluate(() =>
 
 console.log("\nTALK back links:", JSON.stringify(talkLinks, null, 2));
 
-await browser.close();
+});
 
 const failures = [];
 if (results?.error) failures.push(results.error);
@@ -133,6 +132,7 @@ if (!talkLinks.mvpCal) failures.push("mvp-calendar: TALKリンクなし");
 if (failures.length) {
   console.error("\nFAILED:");
   failures.forEach((f) => console.error(" -", f));
+  await closeAllBrowsers();
   process.exit(1);
 }
 

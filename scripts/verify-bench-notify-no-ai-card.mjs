@@ -2,12 +2,11 @@
 /**
  * ベンチ通知 iframe — AI相談カード非表示・空状態文言
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const issues = [];
+await withPlaywrightBrowser(async (browser) => {const issues = [];
 
 function benchNotifyUrl(userId) {
   const u = new URL(`${BASE}/talk-home.html`);
@@ -68,7 +67,7 @@ async function auditFrame(frame, label) {
   return m;
 }
 
-try {
+
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await page.goto(
     `${BASE}/chat-dual-window-demo.html?benchPattern=skill-0&liveFlow=1&liveFlowReset=1&benchViewport=1280`,
@@ -103,6 +102,6 @@ try {
     process.exit(1);
   }
   console.log("\nOK: bench notify iframes — no AI card, correct empty state");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

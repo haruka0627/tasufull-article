@@ -2,7 +2,7 @@
 /**
  * Connectなし — 全カテゴリの通知文言・フロー段階をベンチで検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -76,11 +76,10 @@ const pushErr = (m) => {
   console.error(`NG: ${m}`);
 };
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 1440, height: 900 } })).newPage();
 const results = [];
 
-try {
+
   for (const cat of CATEGORIES) {
     const url =
       `${BASE}/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=${cat.id}` +
@@ -157,6 +156,5 @@ try {
   fs.writeFileSync(path.join(OUT_DIR, "audit.json"), JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
   if (errors.length) process.exit(1);
-} finally {
-  await browser.close();
-}
+});
+

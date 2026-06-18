@@ -1,7 +1,7 @@
 /**
  * Work report PDF / completion report PDF: thread UI, completion auto-gen, calendar, notifications
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -39,8 +39,7 @@ async function resetThread(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
   page.on("dialog", async (d) => d.accept());
 
@@ -170,10 +169,12 @@ async function main() {
   if (!calDetail?.includes("請求書")) throw new Error("Partner calendar missing invoice PDF");
 
   console.log("OK: builder report PDF test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

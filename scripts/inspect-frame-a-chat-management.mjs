@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** sellerManagementOpened 後の #frame-a-chat 実測（通知CTAクリック経由） */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -9,8 +9,7 @@ const BASE = await requireDevServer();
 const OUT = path.join("screenshots", "bench-a-chat-inspect");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const consoleLogs = [];
+await withPlaywrightBrowser(async (browser) => {const consoleLogs = [];
 const pageErrors = [];
 const failedReqs = [];
 
@@ -51,7 +50,7 @@ async function inspectAChatFrame(bench, label) {
   return { label, src, display, iframeBox, benchMeta, inner };
 }
 
-try {
+
   const bench = await (await browser.newContext()).newPage({ viewport: { width: 1280, height: 900 } });
   bench.on("console", (msg) => {
     if (msg.type() === "error" || msg.type() === "warning") {
@@ -177,9 +176,9 @@ try {
 
   if (!ok) {
     console.error("\nVERIFY FAILED");
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("\nVERIFY OK");
-} finally {
-  await browser.close();
-}
+});
+

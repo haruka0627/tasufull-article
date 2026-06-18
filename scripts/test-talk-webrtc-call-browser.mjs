@@ -5,7 +5,7 @@
  *   node scripts/test-talk-webrtc-call-browser.mjs
  *   SUPABASE_STRICT=1 node scripts/test-talk-webrtc-call-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { ensureTalkTestUsers, loadTalkSupabaseConfig } from "./lib/talk-rls-test-auth.mjs";
 import {
   enableTalkDevMode,
@@ -78,12 +78,7 @@ async function main() {
     await cleanupActiveCallSessions([USER_A, USER_B]);
   }
 
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream"],
-  });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await enableTalkDevMode(page);
     await gotoTalkHome(page, BASE, USER_A, "chat");
@@ -277,9 +272,8 @@ async function main() {
     }
 
     await page.close();
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   console.log(`\n=== ${errors.length ? "FAIL" : "PASS"} (${errors.length} errors) ===`);
   if (errors.length) {
@@ -292,3 +286,5 @@ main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

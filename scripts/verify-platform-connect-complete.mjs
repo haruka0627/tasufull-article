@@ -2,7 +2,7 @@
 /**
  * Connectあり 取引完了通知 — 5カテゴリ × 通知タブ/TALK 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -213,8 +213,7 @@ async function runEntry(page, c, entry, index) {
 }
 
 async function run() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const page = await context.newPage();
 
   await page.addInitScript(({ markers }) => {
@@ -259,11 +258,12 @@ async function run() {
   };
 
   fs.writeFileSync(path.join(OUT_DIR, "connect-complete-report.json"), JSON.stringify(report, null, 2));
-  await browser.close();
+    });
 
   console.log(JSON.stringify(report, null, 2));
   if (errors.length) {
     errors.forEach((e) => console.error(`NG: ${e}`));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("ALL OK — connect complete notifications verified");

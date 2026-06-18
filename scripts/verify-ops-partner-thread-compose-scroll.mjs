@@ -2,12 +2,11 @@
 /**
  * ops_partner 現場連絡 — benchEmbed で入力欄・送信・完了モーダルまで到達できること
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
 page.setDefaultTimeout(90000);
 
 await page.goto(
@@ -127,5 +126,6 @@ const ok =
   b.bodyOverflowY === "auto";
 
 console.log(ok ? "PASS thread compose scroll" : "FAIL thread compose scroll");
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

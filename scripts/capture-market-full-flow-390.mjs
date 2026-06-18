@@ -1,3 +1,4 @@
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL市場 — 購入者・出品者導線 全画面 390px スクリーンショット検証
  * localhost 必須（file:// 禁止）
@@ -159,8 +160,7 @@ async function evalCommon(page) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 
 await page.addInitScript(
   ({ historyKey, cartCountKey, cartItemsKey }) => {
@@ -617,10 +617,8 @@ try {
     checks: {},
     errors: [String(err?.message || err)],
   });
-} finally {
-  await browser.close();
-  staticServer?.close?.();
-}
+}});
+staticServer?.close?.();
 
 const overallPass = screens.length === 10 && screens.every((s) => s.pass);
 const report = {
@@ -639,4 +637,5 @@ fs.writeFileSync(REPORT_PATH, JSON.stringify(report, null, 2), "utf8");
 
 console.log(JSON.stringify({ overallPass, passCount: report.passCount, failCount: report.failCount, reportPath: REPORT_PATH }, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(overallPass ? 0 : 1);

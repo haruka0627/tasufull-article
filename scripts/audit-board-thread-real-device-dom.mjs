@@ -4,7 +4,7 @@
  * - URL: board-thread.html（#completion なし）
  * - 累積 localStorage 相当（completion_submission なし、採用済み、メッセージあり）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -175,8 +175,7 @@ async function auditUrl(page, label, urlPath) {
 
 const BASE = await requireDevServer();
 console.log(`[dev] BASE_URL=${BASE}`);
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 // 実機相当 localStorage
 await page.goto(`${BASE}/builder/board-thread.html`, { waitUntil: "domcontentloaded" });
@@ -223,4 +222,6 @@ fs.writeFileSync(outPath, JSON.stringify(report, null, 2));
 
 console.log(JSON.stringify(report, null, 2));
 console.log("\nWrote:", outPath);
-await browser.close();
+});
+
+await closeAllBrowsers();

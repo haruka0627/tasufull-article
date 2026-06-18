@@ -2,7 +2,7 @@
 /**
  * chat-detail 送信 → 相手向け「新しいメッセージが届きました」
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -19,10 +19,7 @@ function ng(m) {
   issues.push(m);
 }
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   const senderPage = await context.newPage();
   const senderUrl =
     `${BASE}/chat-detail.html?thread=${THREAD}&userId=${SENDER}&talkDev=1&review=chat-demo&demoProfile=skill&demoConnect=0&demoState=active`;
@@ -156,12 +153,14 @@ try {
   else ok("recipient talk-home data has notify");
   if (!recipientAudit.domCount) ng("recipient DOM missing message notify card");
   else ok("recipient DOM shows message notify");
-} finally {
-  await browser.close();
-}
+});
+
 
 if (issues.length) {
   console.log("\nVERIFY FAILED", issues.length);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("\nVERIFY PASSED");
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
 /**
  * 求人 review=job モード — 390px スクショ（通知タブ / TALK / 導線着地）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, devUrl } from "./lib/dev-base-url.mjs";
@@ -25,8 +25,7 @@ const URLS = {
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 
 async function waitNotifyReady() {
   await page.waitForFunction(
@@ -110,8 +109,10 @@ const report = {
 };
 
 fs.writeFileSync(path.join(OUT, "capture-report.json"), JSON.stringify(report, null, 2));
-await browser.close();
+});
 console.log(JSON.stringify(report, null, 2));
 
 if (notifyAudit.count !== 2) throw new Error(`expected 2 notify rows, got ${notifyAudit.count}`);
 if (talkAudit.count !== 2) throw new Error(`expected 2 talk messages, got ${talkAudit.count}`);
+
+await closeAllBrowsers();

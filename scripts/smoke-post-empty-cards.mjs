@@ -1,7 +1,7 @@
 /**
  * Smoke test: empty shop/field-service cards hidden correctly
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -9,8 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const url = `file://${path.join(root, "post.html").replace(/\\/g, "/")}`;
 
-const browser = await chromium.launch();
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const errors = [];
 page.on("pageerror", (err) => errors.push(String(err)));
 page.on("console", (msg) => {
@@ -124,7 +123,7 @@ const afterSubcategory = {
 
 console.log(JSON.stringify({ errors, shopResults, fsResults, afterSubcategory }, null, 2));
 
-await browser.close();
+});
 const failed =
   errors.length > 0 ||
   shopResults.visibleEmptyShopMounts > 0 ||
@@ -136,4 +135,5 @@ const failed =
   afterSubcategory.visibleShopFlow > 0 ||
   afterSubcategory.visibleEmptyFsMounts > 0;
 
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

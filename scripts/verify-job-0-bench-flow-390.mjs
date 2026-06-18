@@ -2,7 +2,7 @@
 /**
  * job-0 求人フロー — 2窓390px 検証（Connectなし・やりとり開始通知含む）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -39,8 +39,7 @@ async function pollUntil(page, timeoutMs, evaluateFn, args) {
   return false;
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
 
 const report = { benchUrl: BENCH_URL, steps: [], ok: false, message: "" };
 const log = (step, data) => report.steps.push({ step, at: new Date().toISOString(), ...(data || {}) });
@@ -226,6 +225,7 @@ try {
 }
 
 fs.writeFileSync(path.join(OUT, "verify-report.json"), JSON.stringify(report, null, 2));
-await browser.close();
+});
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(report.ok ? 0 : 1);

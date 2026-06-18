@@ -5,7 +5,7 @@
  * 3. カレンダー — admin/ops 管理ビュー
  * 4. deal-detail — 管理系のみ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const MVP_KEY = "tasful:builder:mvp:v1";
@@ -30,8 +30,7 @@ const ACTIVE_NOTIFY_IDS = [
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 
 function fail(msg) {
   console.log("NG", msg);
@@ -261,5 +260,6 @@ for (const role of ["admin", "ops", "owner"]) {
   }
 }
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

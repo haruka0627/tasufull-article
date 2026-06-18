@@ -5,7 +5,7 @@
  * 3. from=talk 戻り（操作後も通知タブへ）
  * 4. settings → anpi-register?from=talk → TALKに戻る
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 const DEMO_KEY = "tasful_anpi_notify_demo_v1";
@@ -34,8 +34,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 const fail = (msg) => {
   console.log("NG", msg);
   failed = true;
@@ -350,6 +349,7 @@ console.log("\n=== 4. settings → register → TALK ===");
   await page.close();
 }
 
-await browser.close();
+});
 console.log(failed ? "\nFAILED" : "\nALL PASSED");
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

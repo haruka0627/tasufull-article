@@ -2,7 +2,7 @@
 /**
  * worker-0 初回通知 — 作成 vs 表示の切り分け（8項目）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -10,8 +10,7 @@ const BENCH_URL =
   `${BASE}/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=worker` +
   `&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=1280&benchPattern=worker-0&liveFlowReset=1`;
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
 const page = await context.newPage();
 
 const report = {
@@ -20,7 +19,7 @@ const report = {
   verdict: "",
 };
 
-try {
+
   const messages = [];
   page.on("console", (msg) => {
     if (/contact|worker|notify|fee.?gate/i.test(msg.text())) {
@@ -260,6 +259,6 @@ try {
 
   console.log(JSON.stringify(report, null, 2));
   process.exitCode = report.verdict.startsWith("PASS") ? 0 : 1;
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
  * TASFUL市場 注文履歴 — 390px 検証（localhost 必須）
  * 市場TOP → 商品詳細 → 注文確認 → 注文完了 → 注文履歴
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -16,8 +16,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
 const storeUrl = buildLocalPageUrl(base, "shop-store.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(storeUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -119,7 +118,7 @@ const mypageReport = await page.evaluate(() => {
 });
 
 await page.screenshot({ path: path.join(OUT_DIR, "market-mypage-mobile390.png"), fullPage: false });
-await browser.close();
+});
 
 const pass =
   completeReport.hasHistoryCta &&
@@ -159,4 +158,5 @@ console.log(
     2
   )
 );
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

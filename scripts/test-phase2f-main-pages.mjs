@@ -2,7 +2,7 @@
 /**
  * Phase 2-F: console smoke on main pages after cleanup.
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = process.env.BASE_URL || "http://127.0.0.1:5188";
 const PAGES = [
@@ -15,9 +15,8 @@ const PAGES = [
   "/checkout.html?shopId=demo-shop-haru-cafe&productId=demo-restaurant-0&productName=test&price=100&quantity=1",
 ];
 
-const browser = await chromium.launch({ headless: true });
-const results = [];
-
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 for (const path of PAGES) {
   const page = await browser.newPage();
   const errors = [];
@@ -37,7 +36,8 @@ for (const path of PAGES) {
   await page.close();
 }
 
-await browser.close();
+});
 console.log(JSON.stringify(results, null, 2));
 const allOk = results.every((r) => r.ok);
+await closeAllBrowsers();
 process.exit(allOk ? 0 : 1);

@@ -3,7 +3,7 @@
  * AI運営秘書 本番接続レビュー
  *   node scripts/review-admin-ai-production-connectivity.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 import fs from "fs";
@@ -495,9 +495,7 @@ function buildMarkdown(audit) {
 
 async function main() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-
-  for (const vp of [
+  await withPlaywrightBrowser(async (browser) => {for (const vp of [
     { name: "390", width: 390, height: 844 },
     { name: "1280", width: 1280, height: 900 },
   ]) {
@@ -521,7 +519,7 @@ async function main() {
     await page.close();
   }
 
-  await browser.close();
+    });
 
   const report = JSON.parse(fs.readFileSync(REPORT_JSON, "utf8"));
   console.log(buildMarkdown(report));
@@ -532,3 +530,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

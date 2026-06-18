@@ -2,7 +2,7 @@
 /**
  * スキル成功経路 vs 他カテゴリ — 6項目比較（人工 refresh なし）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -296,14 +296,13 @@ async function runOne(browser, cat) {
   return trace;
 }
 
-const browser = await chromium.launch({ headless: true });
-fs.mkdirSync(path.dirname(OUT), { recursive: true });
+await withPlaywrightBrowser(async (browser) => {fs.mkdirSync(path.dirname(OUT), { recursive: true });
 const results = [];
 for (const cat of CATS) {
   console.log(`Compare: ${cat.id}`);
   results.push(await runOne(browser, cat));
 }
-await browser.close();
+});
 fs.writeFileSync(OUT, JSON.stringify({ at: new Date().toISOString(), results }, null, 2));
 
 console.log("\n=== SKILL vs OTHERS (6 checks) ===");
@@ -313,3 +312,5 @@ for (const r of results) {
   );
 }
 console.log(`\n${OUT}`);
+
+await closeAllBrowsers();

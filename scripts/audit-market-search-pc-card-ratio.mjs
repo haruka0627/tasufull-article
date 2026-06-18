@@ -2,7 +2,7 @@
  * 市場検索 PC — 商品カード画像比率 再監査（現状 / 案B 1:1 / 案C 1:1+拡大）
  * 1280px viewport、食品・ハンドメイドカテゴリ含む
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -109,8 +109,7 @@ const VARIANTS = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 await page.setViewportSize(VIEWPORT);
 
 const report = {
@@ -397,4 +396,6 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
 console.log("\nRECOMMENDATION:", best.label);
 console.log(report.comparison);
 
-await browser.close();
+});
+
+await closeAllBrowsers();

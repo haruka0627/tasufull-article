@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 
@@ -7,8 +7,7 @@ const ids = JSON.parse(
   fs.readFileSync("screenshots/shop-vendor-flow-audit/report.json", "utf8")
 ).steps.vendorList.cards.map((c) => c.id);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const productsFails = [];
 const productLinkStats = { ok: 0, ng: 0, ngIds: [] };
 
@@ -45,4 +44,6 @@ for (const id of ids) {
 }
 
 console.log(JSON.stringify({ productsFails, productLinkStats }, null, 2));
-await browser.close();
+});
+
+await closeAllBrowsers();

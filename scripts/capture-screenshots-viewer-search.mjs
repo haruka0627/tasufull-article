@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * screenshots-viewer 検索フィルタ + サムネイル表示の検証
  *   node scripts/capture-screenshots-viewer-search.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 import { writeScreenshotsManifest } from "./lib/screenshots-manifest.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -118,9 +119,7 @@ async function main() {
   await writeScreenshotsManifest(root);
   const server = await startServer();
   const base = `http://127.0.0.1:${PORT}`;
-  const browser = await chromium.launch({ headless: true });
-
-  const cases = [
+  await withPlaywrightBrowser(async (browser) => {const cases = [
     {
       query: "connect-verification.png",
       exact: 1,
@@ -159,7 +158,7 @@ async function main() {
     },
   ];
 
-  try {
+  
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     const results = [];
     for (const c of cases) {
@@ -186,13 +185,13 @@ async function main() {
     const passed = results.every((r) => r.pass);
     if (!passed) process.exitCode = 1;
     else console.log("SCREENSHOTS VIEWER SEARCH PASS");
-  } finally {
-    await browser.close();
-    server.close();
-  }
+    });
+  server.close();
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

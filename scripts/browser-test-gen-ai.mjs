@@ -1,8 +1,8 @@
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * gen-ai-workspace ブラウザ実機確認（Playwright）
  * npx playwright install chromium が未実行の場合は先に実行してください
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const SPEAKING_IDLE_TIMEOUT_MS = Number(process.env.GEN_AI_SPEAKING_IDLE_MS) || 90000;
 const SPEAKING_ACTIVE_TIMEOUT_MS = Number(process.env.GEN_AI_SPEAKING_ACTIVE_MS) || 20000;
@@ -111,8 +111,7 @@ async function getSpeechTestContext(page) {
   }));
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 page.on("console", (msg) => {
   const text = msg.text();
@@ -234,9 +233,9 @@ try {
   }
 } catch (err) {
   record("Browser test execution", false, err.message);
-} finally {
-  await browser.close();
 }
+});
+
 
 console.log("\n--- Browser Summary ---");
 const failed = results.filter((r) => !r.ok);
@@ -245,4 +244,5 @@ if (logs.length) {
   console.log("\nGemini logs captured:");
   logs.forEach((l) => console.log(" ", l.slice(0, 120)));
 }
+await closeAllBrowsers();
 process.exit(failed.length ? 1 : 0);

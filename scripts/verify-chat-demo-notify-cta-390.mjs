@@ -2,7 +2,7 @@
 /**
  * review=chat-demo — 通知 CTA 390px レイアウト + タップ遷移
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -34,8 +34,7 @@ const TAP_CASES = [
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 
 await page.goto(NOTIFY_URL, { waitUntil: "domcontentloaded", timeout: 60000 });
 await page.waitForSelector('[data-talk-notify-id="platform-chat-demo-skill-purchase-001"]', {
@@ -147,6 +146,6 @@ for (const spec of TAP_CASES) {
   ok(`${spec.id}: tap -> ${dest.split("?")[0]}`);
 }
 
-await browser.close();
+});
 if (failed) process.exit(1);
 console.log("All checks passed");

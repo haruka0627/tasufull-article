@@ -1,7 +1,7 @@
 /**
  * 商品詳細PC — DOM実測（shell / main / hero / buybox）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -15,8 +15,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const detailPath = "detail-shop-product.html?shopId=demo-shop-tasful-bakery&productId=p-0";
 
@@ -91,8 +90,10 @@ for (const vw of VIEWPORTS) {
   reports.push({ viewport: vw, ...measure });
 }
 
-await browser.close();
+});
 
 const out = { baseUrl: base, detailPath, reports };
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(out, null, 2));
 console.log(JSON.stringify(out, null, 2));
+
+await closeAllBrowsers();

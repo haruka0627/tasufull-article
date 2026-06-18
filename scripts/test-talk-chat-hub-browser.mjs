@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — チャットハブ smoke test（現行UI / talkDev=1）
  *
  *   node scripts/test-talk-chat-hub-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const THREAD_KEY = "tasful_chat_threads";
@@ -21,8 +21,8 @@ function talkUrl(params = {}) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 }
+});
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -337,14 +337,15 @@ async function main() {
     }
   } catch (err) {
     fail(String(err?.message || err));
-  } finally {
-    await browser.close();
   }
+});
+  
 
   console.log("");
   if (errors.length) {
     console.error(`FAILED (${errors.length}):`);
     errors.forEach((e) => console.error(`  - ${e}`));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("All talk chat hub checks passed.");

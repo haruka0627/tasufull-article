@@ -2,7 +2,7 @@
 /**
  * 店舗販売導線 調査（修正禁止・レポートのみ）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -30,8 +30,7 @@ function pass(step, detail) {
   report.ok.push({ step, detail });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(25000);
 
 async function loadAllVendorCards() {
@@ -308,5 +307,6 @@ fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ ok: report.ok.length, broken: report.broken.length, reportPath }, null, 2));
 console.log(JSON.stringify(report, null, 2));
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(0);

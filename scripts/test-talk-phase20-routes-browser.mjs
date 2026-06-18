@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK Phase20 — 導線・タブ・破損localStorage・レスポンシブ smoke
  *
  *   node scripts/test-talk-phase20-routes-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
@@ -51,8 +51,7 @@ const VIEWPORTS = [
 ];
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const errors = [];
+  await withPlaywrightBrowser(async (browser) => {const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     errors.push(m);
@@ -183,9 +182,11 @@ async function main() {
     } else {
       console.log("Phase20 routes/responsive/resilience checks passed.");
     }
-  } finally {
-    await browser.close();
+  } catch (err) {
+    fail(String(err?.message || err));
   }
+});
+  
 }
 
 main().catch((err) => {

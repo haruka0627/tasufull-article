@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 /** system通知OFF → pipeline(applySettings:true)空 / store有り の再現 */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
 const EXACT_URL =
   `${BASE}/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=skill&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=1280&benchPattern=skill-0`;
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext()).newPage();
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(EXACT_URL, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(1500);
 
@@ -44,6 +42,6 @@ try {
     return { empty, domTitles: titles, strict: strict.map((n) => n.title), relaxed: relaxed.map((n) => n.title) };
   });
   console.log(JSON.stringify(audit, null, 2));
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
  * Live2D風画像アニメ E2E
  * npm run dev 後: node scripts/e2e-gen-ai-live-stage.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -20,11 +20,7 @@ function record(name, ok, detail = "") {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-  page.on("dialog", async (d) => d.accept());
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     await page.goto(`${baseUrl}/gen-ai-workspace.html?mode=${charMode}`, {
       waitUntil: "networkidle",
       timeout: 60000,
@@ -107,12 +103,12 @@ async function main() {
     await page.locator('[data-gen-ai-stage-renderer="live"]').click();
     const box = await page.locator(".ai-character-stage__visual-stack").boundingBox();
     record("モバイル表示", box && box.width > 80, `${box ? Math.round(box.width) : 0}px`);
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   const failed = results.filter((r) => !r.ok).length;
   console.log(`\nTotal: ${results.length}, Failed: ${failed}`);
+  await closeAllBrowsers();
   process.exit(failed ? 1 : 0);
 }
 
@@ -120,3 +116,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

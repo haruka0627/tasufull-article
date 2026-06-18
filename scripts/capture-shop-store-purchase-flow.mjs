@@ -2,7 +2,7 @@
 /**
  * 店舗販売購入フロー検証 — shop-store-cart/checkout/complete
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -145,8 +145,7 @@ async function runFlow(page, vp, fc, mode) {
   return result;
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const products = [
   { shopId: "demo-shop-haru-cafe", productId: "demo-restaurant-0", label: "demo" },
@@ -166,7 +165,8 @@ for (const vp of [
   }
 }
 
-await browser.close();
+});
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ ok: report.ok, cases: report.cases.length, failed: report.cases.filter((c) => c.steps.some((s) => !s.pass)).map((c) => c.caseId) }, null, 2));
+await closeAllBrowsers();
 process.exit(report.ok ? 0 : 1);

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * TASFUL TALK — 配信下書き 本番一斉送信
  *
@@ -10,8 +11,7 @@ const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, ""
 const MARKER = "bcast-prod-send-e2e";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -65,9 +65,8 @@ async function main() {
     else pass("corrupt storage safe");
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));

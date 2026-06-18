@@ -2,7 +2,7 @@
 /**
  * domCards vs 実表示の不一致調査 — 指定URLのみ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -102,10 +102,7 @@ function auditBNotify(page) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(EXACT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2000);
 
@@ -200,6 +197,6 @@ try {
   } else if (last?.domCardCount > 0) {
     console.log("DOM にカードあり — 以前の全画面スクショは別ウィンドウの可能性");
   }
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

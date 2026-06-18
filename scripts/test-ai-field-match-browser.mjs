@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 全フィールド重み付け検索 smoke test
  *   node scripts/test-ai-field-match-browser.mjs
@@ -7,7 +8,6 @@ import { createServer } from "node:http";
 import { readFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = {
@@ -38,8 +38,7 @@ function startServer(port = 8777) {
 async function main() {
   const server = await startServer();
   const BASE = "http://127.0.0.1:8777";
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -47,7 +46,7 @@ async function main() {
     console.log(`  ✗ ${m}`);
   };
 
-  try {
+  
     await page.goto(`${BASE}/ai-workspace.html?mode=cross-matching`, {
       waitUntil: "domcontentloaded",
       timeout: 30000,
@@ -175,10 +174,8 @@ async function main() {
 
     console.log(errors.length ? `\nFAILED (${errors.length})` : "\nALL PASSED");
     process.exitCode = errors.length ? 1 : 0;
-  } finally {
-    await browser.close();
-    server.close();
-  }
+    });
+  server.close();
 }
 
 main().catch((err) => {

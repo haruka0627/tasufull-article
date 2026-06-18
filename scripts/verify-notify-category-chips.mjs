@@ -2,7 +2,7 @@
 /**
  * 通知タブ上部カテゴリ — 横スクロール + Builder表記
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -24,8 +24,7 @@ const EXPECT_CHIPS = [
 ];
 
 mkdirSync(OUT_DIR, { recursive: true });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${BASE}/talk-home.html?tab=notify`, {
   waitUntil: "domcontentloaded",
@@ -86,7 +85,7 @@ if (anpiFilter.types.some((t) => t !== "安否" && t !== "(なし)")) {
   issues.push(`安否以外混在: ${anpiFilter.types.join(",")}`);
 }
 
-await browser.close();
+});
 
 console.log("chips:", audit.chips.map((c) => `${c.id}=${c.label}`).join(", "));
 console.log("line tabs:", audit.line.join(", "));
@@ -94,7 +93,9 @@ console.log("anpi filter:", anpiFilter);
 
 if (issues.length) {
   console.log("NG:", issues.join("; "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("OK: notify category chips");
+await closeAllBrowsers();
 process.exit(0);

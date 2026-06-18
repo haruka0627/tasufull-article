@@ -1,7 +1,7 @@
 /**
  * Builder 運営⇔パートナー 7フロー通知 — 通知タブキャプチャ + JSON出力
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -36,8 +36,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.addInitScript(() => {
   [
@@ -113,5 +112,6 @@ await captureCardShot("builder-ops-flow-005", "notify-tags-flow-005-390.png");
 await page.screenshot({ path: path.join(OUT_DIR, "notify-tab-390.png"), fullPage: true });
 console.log("Saved: notify-tab-390.png");
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -7,8 +7,7 @@ const URL =
   `${BASE}/talk-home.html?tab=notify&talkDev=1&review=chat-demo&demoProfile=skill&userId=u_hiro`;
 const NOTIFY_ID = "platform-chat-demo-skill-review-b-001";
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   ...devices["iPhone 13"],
   viewport: { width: 390, height: 844 },
   hasTouch: true,
@@ -83,4 +82,6 @@ if (!navigated) {
   console.log("direct href:", page.url());
 }
 
-await browser.close();
+});
+
+await closeAllBrowsers();

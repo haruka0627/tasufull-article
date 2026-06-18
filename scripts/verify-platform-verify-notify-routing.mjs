@@ -2,7 +2,7 @@
 /**
  * プラット通知 v3.1 — 18件「確認する」導線検証 + 390px スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -127,8 +127,7 @@ const CASES = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const page = await context.newPage();
 
 await page.addInitScript(({ markers }) => {
@@ -213,8 +212,9 @@ for (const r of results) {
 
 if (report.fail > 0) {
   console.error(`FAIL: ${report.fail}/${results.length}`);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log(`PASS: ${report.pass}/${results.length}`);
 console.log(`Report: ${OUT_DIR}/routing-report.json`);
-await browser.close();
+});

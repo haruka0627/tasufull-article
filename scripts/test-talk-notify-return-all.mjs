@@ -2,7 +2,7 @@
  * TASFUL TALK — 通知戻り導線 全サービス統一（390px）
  * 通知URLに from=talk / 戻る → 通知タブ / TALKに戻る / 下部タブバー
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5176, 5174, 5199, 5200, 5188];
 
@@ -34,8 +34,7 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 const fail = (msg) => {
   console.log("NG", msg);
   failed = true;
@@ -151,5 +150,6 @@ else ok("通常遷移: TALKに戻る非表示");
 if (normal.tabCount !== 5) fail(`通常遷移: タブバー ${normal.tabCount}`);
 else ok("通常遷移: 下部タブバー維持");
 
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(failed ? 1 : 0);

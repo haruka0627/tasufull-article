@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** 指定URL + 管理画面導線（A通知CTA→管理→支払い）で B上 dom vs pipeline */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -38,10 +38,7 @@ function audit(page) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(EXACT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2500);
 
@@ -136,6 +133,6 @@ try {
     await page.locator("#frame-b-notify").screenshot({ path: shot });
     console.log(`\n=== mgmt flow t+${ms}ms ===`, JSON.stringify(a, null, 2), "\nshot:", shot);
   }
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

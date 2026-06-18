@@ -5,7 +5,7 @@
  */
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5179").replace(/\/$/, "");
 const OUT = join(process.cwd(), "screenshots", "responsive-final");
@@ -65,8 +65,7 @@ async function main() {
   mkdirSync(OUT, { recursive: true });
   console.log(`\nレスポンシブ最終確認 — ${BASE}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   const errors = [];
   page.on("console", (m) => {
     if (m.type() === "error") errors.push(m.text());
@@ -209,7 +208,7 @@ async function main() {
   if (severe.length) fail("コンソールエラー", severe.slice(0, 3).join(" | "));
   else pass("コンソールエラーなし");
 
-  await browser.close();
+    });
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);
@@ -217,3 +216,5 @@ async function main() {
 }
 
 main();
+
+await closeAllBrowsers();

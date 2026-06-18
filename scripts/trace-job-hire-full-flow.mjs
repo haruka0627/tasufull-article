@@ -2,7 +2,7 @@
 /**
  * job-0 ベンチ — 550円→承諾通知→B CTA フルフロー E2E（3回連続 PASS 必須）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -22,8 +22,7 @@ const PASSES_REQUIRED = 3;
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 900 } });
 const page = await context.newPage();
 
 page.on("dialog", async (d) => {
@@ -123,7 +122,7 @@ console.log(JSON.stringify({ summary, runs: report.runs.map((r) => ({
   screenshot: r.screenshot,
 })) }, null, 2));
 
-await browser.close();
+});
 
 if (!report.ok) {
   const fail = report.runs.find((r) => !r.ok);
@@ -137,3 +136,5 @@ if (!report.ok) {
 } else {
   console.log(`FULL_FLOW_OK (${PASSES_REQUIRED}/${PASSES_REQUIRED} passes)`);
 }
+
+await closeAllBrowsers();

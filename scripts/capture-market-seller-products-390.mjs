@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 — 出品商品管理 390px スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -16,8 +16,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-market-seller-products.html", ports: [5500, 5173, 5174] });
 const pageUrl = buildLocalPageUrl(base, "shop-market-seller-products.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 const consoleErrors = [];
 const failedRequests = [];
 
@@ -53,7 +52,7 @@ const checks = await page.evaluate(() => ({
 
 await page.screenshot({ path: path.join(OUT_DIR, "seller-products-empty-390.png"), fullPage: false });
 
-await browser.close();
+});
 
 const report = {
   generatedAt: new Date().toISOString(),
@@ -76,4 +75,5 @@ const report = {
 
 fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null, 2), "utf8");
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(report.pass ? 0 : 1);

@@ -5,7 +5,7 @@
  *   node scripts/test-ai-serper-search-browser.mjs
  *   BASE_URL=http://127.0.0.1:8765 node scripts/test-ai-serper-search-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
@@ -204,8 +204,7 @@ async function testSiteSearch(page, vpName) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const viewports = [
+  await withPlaywrightBrowser(async (browser) => {const viewports = [
     { name: "PC1280", width: 1280, height: 800 },
     { name: "SP390", width: 390, height: 844 },
   ];
@@ -231,7 +230,7 @@ async function main() {
     await context.close();
   }
 
-  await browser.close();
+    });
 
   const failed = results.filter((r) => !r.ok);
   console.log(`\n=== ${results.length - failed.length}/${results.length} passed ===`);
@@ -245,3 +244,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
 /**
  * 指定URLのみ — #frame-b-notify スクショと DOM を同一瞬間で取得
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -54,10 +54,7 @@ async function auditAndSync(page) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(EXACT_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2500);
 
@@ -134,6 +131,6 @@ try {
     console.error("DOM missing chat-started card");
     process.exit(1);
   }
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

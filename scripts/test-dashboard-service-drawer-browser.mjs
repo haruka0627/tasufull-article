@@ -1,7 +1,7 @@
 /**
  * ダッシュボード サービスメガメニュー — 開閉・リンク検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
 import path from "path";
@@ -96,8 +96,7 @@ const cases = [];
 
 // --- PC mega menu ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => {
@@ -150,13 +149,12 @@ const cases = [];
   await page.locator("[data-dash-service-mega].is-open").screenshot({
     path: path.join(OUT_DIR, "mega-menu-1280.png"),
   });
-  await browser.close();
+    });
 }
 
 // --- SP bottom sheet ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await prepareDashboard(page, base);
   await openMegaMenu(page);
 
@@ -182,13 +180,12 @@ const cases = [];
   await page.locator("[data-dash-service-mega].is-open").screenshot({
     path: path.join(OUT_DIR, "mega-menu-390.png"),
   });
-  await browser.close();
+    });
 }
 
 // --- toggle / outside click ---
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await prepareDashboard(page, base);
   await openMegaMenu(page);
   await closeMegaMenu(page);
@@ -216,13 +213,12 @@ const cases = [];
     actual: outsideClosed ? "閉じた" : "開いたまま",
     expected: "閉じる",
   });
-  await browser.close();
+    });
 }
 
 // --- all mega links ---
 for (const link of MEGA_LINKS) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   await prepareDashboard(page, base);
   await openMegaMenu(page);
 
@@ -251,7 +247,7 @@ for (const link of MEGA_LINKS) {
     actual: `href=${href || "—"}`,
     expected: link.href,
   });
-  await browser.close();
+    });
 }
 
 const failCount = cases.filter((c) => !c.pass).length;

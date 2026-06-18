@@ -3,7 +3,7 @@
  * 実画面相当 — 2窓ベンチ iframe 上の UI クリックのみで承認まで検証
  * （localStorage 直接操作・approve API 直呼びは使わない）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -47,10 +47,7 @@ async function requestCompletionViaAChatUi(page) {
   await submitBtn.click();
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(`${EXACT_URL}&liveFlowReset=1`, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2500);
 
@@ -211,6 +208,6 @@ try {
   fs.writeFileSync(path.join(OUT_DIR, "audit.json"), JSON.stringify(report, null, 2));
   console.log(JSON.stringify({ ok: report.ok, errors, threadId, roomBefore, roomAfter }, null, 2));
   if (errors.length) process.exit(1);
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

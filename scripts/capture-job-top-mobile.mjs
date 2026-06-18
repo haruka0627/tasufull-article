@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,9 +25,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-
-async function captureMobile() {
+await withPlaywrightBrowser(async (browser) => {async function captureMobile() {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   await page.goto(`${base}/job-top.html`, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(5000);
@@ -161,5 +159,7 @@ async function capturePc() {
 
 await captureMobile();
 await capturePc();
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

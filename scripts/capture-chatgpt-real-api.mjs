@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * ChatGPT 実API検証のみ
  *   node scripts/capture-chatgpt-real-api.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const PROMPT = "草刈り業者への問い合わせ文を作って";
@@ -89,9 +90,7 @@ async function main() {
 
   const server = await startServer();
   const base = "http://127.0.0.1:8791";
-  const browser = await chromium.launch({ headless: true });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
     await page.goto(`${base}/ai-workspace.html`, { waitUntil: "domcontentloaded", timeout: 60000 });
     await page.waitForSelector("[data-ai-model-bar]", { timeout: 15000 });
@@ -156,13 +155,13 @@ async function main() {
     } else {
       console.log("PASSED");
     }
-  } finally {
-    await browser.close();
-    server.close();
-  }
+    });
+  server.close();
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

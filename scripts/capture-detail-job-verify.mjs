@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -24,9 +24,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-
-async function audit(page, label) {
+await withPlaywrightBrowser(async (browser) => {async function audit(page, label) {
   const metrics = await page.evaluate(() => {
     const text = document.body.innerText || "";
     const forbidden = [
@@ -129,5 +127,7 @@ async function captureMobile() {
 
 await capturePc();
 await captureMobile();
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

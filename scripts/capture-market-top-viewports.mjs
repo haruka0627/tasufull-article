@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 TOP (shop-store.html) — 390 / 768 / 1280px スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -22,9 +22,9 @@ const VIEWPORTS = [
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: TOP_PATH });
 const topUrl = buildLocalPageUrl(base, TOP_PATH);
-const browser = await chromium.launch({ headless: true });
+let reports = [];
+await withPlaywrightBrowser(async (browser) => {
 const page = await browser.newPage();
-const reports = [];
 
 for (const vp of VIEWPORTS) {
   await page.setViewportSize({ width: vp.width, height: vp.height });
@@ -88,7 +88,7 @@ for (const vp of VIEWPORTS) {
   reports.push({ ...audit, screenshot: file });
 }
 
-await browser.close();
+});
 
 const pass = reports.every((r) => {
   const mobileOk = r.viewport === "390px"
@@ -132,4 +132,5 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
   })),
 });
 
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

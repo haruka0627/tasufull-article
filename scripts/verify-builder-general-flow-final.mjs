@@ -2,7 +2,7 @@
 /**
  * 一般案件（board / mvp-thread）最終フロー検証 — ops_partner 同等品質チェック
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -67,8 +67,7 @@ async function threadDoc(page, side) {
   }, id);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 page.setDefaultTimeout(120000);
 
 const url = `${BASE}/chat-dual-window-demo.html?benchMode=builder&builderFlow=${FLOW}&benchViewport=390`;
@@ -159,7 +158,7 @@ if (!phase1Frame.applyCtaVisible) {
 }
 if (!phase1Frame.applyCtaVisible) {
   console.error("Phase1 setup failed: apply_cta_not_visible", phase1Frame);
-  await browser.close();
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -260,7 +259,7 @@ const phase1 = {
 
 if (!phase1.appNotif || phase1.appsCount < 1) {
   console.error("Phase1 runtime store missing application", phase1);
-  await browser.close();
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -809,12 +808,13 @@ record("6 rejection notification", phase6.rejectNotif === true);
 record("6 status rejected", phase6.subStatus === "rejected");
 record("6 resubmit ok", phase6.resubmitOk === true);
 
-await browser.close();
+});
 const failed = results.filter((r) => !r.ok);
 console.log(`\n${results.length - failed.length}/${results.length} passed`);
 if (failed.length) {
   console.error("\n=== NG一覧 ===");
   failed.forEach((f) => console.error(`- ${f.name}${f.detail ? `: ${f.detail}` : ""}`));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("All general flow final checks passed");

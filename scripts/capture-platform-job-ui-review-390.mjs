@@ -7,7 +7,7 @@
  *   job-ui-review.json
  *   job-ui-review.md
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, devUrl } from "./lib/dev-base-url.mjs";
@@ -504,12 +504,11 @@ async function runJobFlow(page) {
 
 async function run() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: VIEWPORT });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
   page.on("dialog", async (d) => d.accept());
 
   await runJobFlow(page);
-  await browser.close();
+    });
 
   const index = {
     generatedAt: new Date().toISOString(),
@@ -545,3 +544,5 @@ async function run() {
 }
 
 await run();
+
+await closeAllBrowsers();

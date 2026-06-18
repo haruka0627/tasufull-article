@@ -2,7 +2,7 @@
  * 飲食・カフェ口コミの評価色検証 + 工具店の口コミ回帰
  * Usage: node scripts/verify-detail-shop-restaurant-reviews.mjs [baseUrl]
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const base = (process.argv[2] || "http://127.0.0.1:5173").replace(/\/$/, "");
 
@@ -123,16 +123,15 @@ async function checkToolsRetail(page, width) {
   } else pass(`${prefix}: retail stars gold (${state.starsColor})`);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const restaurantUrl = `${base}/detail-shop.html?id=demo-shop-haru-cafe`;
-try {
+
   await checkReviews(page, "restaurant", restaurantUrl, 1280);
   await checkReviews(page, "restaurant", restaurantUrl, 390);
   await checkToolsRetail(page, 1280);
   await checkToolsRetail(page, 390);
   if (process.exitCode) console.error("\nSome checks failed.");
   else console.log("\nAll checks passed.");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

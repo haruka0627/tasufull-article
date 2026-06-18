@@ -2,7 +2,7 @@
 /**
  * ベンチ UI 修正確認 — 390px スクショ（ステップタグ・チャットプレビュー・診断）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -18,8 +18,7 @@ const URL = fixedJobBenchUrl(BASE);
 const OUT = path.join("screenshots", "bench-ui-fix-390");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 1400 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 1400 } });
 page.on("dialog", async (d) => d.accept());
 
 await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -62,5 +61,7 @@ const report = {
 fs.writeFileSync(path.join(OUT, "audit.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
 
-await browser.close();
+});
 process.exitCode = flow.ok ? 0 : 1;
+
+await closeAllBrowsers();

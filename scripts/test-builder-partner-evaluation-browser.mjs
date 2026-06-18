@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * Builder パートナー実績評価 E2E
  *   node scripts/test-builder-partner-evaluation-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -25,7 +25,7 @@ const VIS_KEY = "tasful:builder:partner_visibility:v1";
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -33,8 +33,7 @@ function pass(msg) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(pageUrl("admin-partner-evaluations.html"), { waitUntil: "domcontentloaded" });
   await page.waitForSelector("[data-builder-eval-form]", { timeout: 15000 });
@@ -152,10 +151,10 @@ async function main() {
   pass("既存Builder index は表示維持");
 
   console.log("\nAll builder partner evaluation tests passed.");
-  await browser.close();
+    });
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

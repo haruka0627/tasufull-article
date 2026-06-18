@@ -2,7 +2,7 @@
 /**
  * TASFUL市場 — カート画面 390px（おすすめセクション余白検証）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { devices } from "playwright";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
@@ -16,8 +16,7 @@ const REPORT_PATH = path.join(OUT_DIR, "cart-layout-report.json");
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   ...devices["iPhone 13"],
   viewport: { width: 390, height: 844 },
   hasTouch: true,
@@ -157,8 +156,8 @@ try {
 } catch (err) {
   console.error(err);
   process.exitCode = 1;
-} finally {
-  await browser.close();
 }
+});
 
+await closeAllBrowsers();
 process.exit(overallPass ? 0 : 1);

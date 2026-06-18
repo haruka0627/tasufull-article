@@ -7,7 +7,7 @@
  *   manual-review-index.json
  *   manual-review-index.md
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, devUrl } from "./lib/dev-base-url.mjs";
@@ -489,9 +489,8 @@ function buildMarkdown(index) {
 
 async function run() {
   fs.mkdirSync(REVIEW_ROOT, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-  const allErrors = [];
-
+  let allErrors = [];
+await withPlaywrightBrowser(async (browser) => {
   for (const cfg of [{ type: "job" }, ...NON_JOB_CATEGORIES.map((c) => ({ type: "nonjob", cfg: c }))]) {
     const context = await browser.newContext({ viewport: VIEWPORT });
     const page = await context.newPage();
@@ -507,7 +506,7 @@ async function run() {
     await context.close();
   }
 
-  await browser.close();
+    });
 
   const index = {
     generatedAt: new Date().toISOString(),
@@ -529,3 +528,5 @@ async function run() {
 }
 
 await run();
+
+await closeAllBrowsers();

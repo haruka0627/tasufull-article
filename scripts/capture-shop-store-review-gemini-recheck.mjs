@@ -4,7 +4,7 @@
  *
  *   node scripts/capture-shop-store-review-gemini-recheck.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -158,8 +158,7 @@ async function auditContext(page) {
 }
 
 const base = await findDevServerBaseUrl({ probePath: "detail-shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: VP.width, height: VP.height } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: VP.width, height: VP.height } });
 const page = await context.newPage();
 
 const report = {
@@ -235,8 +234,8 @@ try {
   report.error = String(err?.message || err);
 } finally {
   await context.close();
-  await browser.close();
 }
+});
 
 const existingReportPath = path.join(OUT, "report.json");
 let merged = report;
@@ -256,3 +255,5 @@ fs.writeFileSync(existingReportPath, JSON.stringify(merged, null, 2));
 
 console.log(JSON.stringify({ overall: report.overall, shots: report.shots, context: report.context?.recognition }, null, 2));
 await finalizeVerification(ROOT, { primaryFolder: "shop-store-final-review" });
+
+await closeAllBrowsers();

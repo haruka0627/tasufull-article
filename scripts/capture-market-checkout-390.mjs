@@ -1,7 +1,7 @@
 /**
  * TASFUL市場 注文確認 — 390px 検証（localhost 必須）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -16,8 +16,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const searchUrl = buildLocalPageUrl(base, "shop-search.html");
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(searchUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
 await assertPlaywrightLocalhostPage(page);
@@ -113,7 +112,7 @@ const cartCheckoutReport = await page2.evaluate(() => ({
 }));
 
 await page2.screenshot({ path: path.join(OUT_DIR, "market-checkout-cart-mobile390.png"), fullPage: false });
-await browser.close();
+});
 
 const pass =
   buyNowReport.url.includes("shop-market-checkout.html") &&
@@ -152,4 +151,5 @@ console.log(
     2
   )
 );
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

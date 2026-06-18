@@ -3,7 +3,7 @@
  * Builder通知・取引チャット — 最終UX監査（調査・キャプチャ・レポートのみ）
  *   node scripts/capture-builder-final-review.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import { finalizeVerification } from "./lib/finalize-verification.mjs";
 import { renderScreenshotBackNav, SCREENSHOT_BACK_NAV_CSS } from "./lib/screenshot-image-viewer.mjs";
@@ -517,8 +517,7 @@ const report = {
   geminiShots: {},
 };
 
-const browser = await chromium.launch({ headless: true });
-const requestCtx = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const requestCtx = await browser.newContext();
 const request = requestCtx.request;
 
 /** @type {Array<{ sceneKey: string, viewport: string, audit: object, url: string }>} */
@@ -797,7 +796,7 @@ for (const scene of CHAT_SCENES) {
 }
 
 await requestCtx.close();
-await browser.close();
+});
 
 // カテゴリ判定
 for (const cat of Object.values(report.notifyCategories)) {
@@ -922,3 +921,5 @@ console.log(JSON.stringify(report.summary, null, 2));
 console.log(`Saved: ${OUT}/report.json`);
 
 await finalizeVerification(root, { primaryFolder: "builder-final-review", openBrowser: false });
+
+await closeAllBrowsers();

@@ -3,7 +3,7 @@
  * shop-products.html 情報設計（サービス→口コミ→おすすめ→商品一覧）検証 + スクショ
  *   node scripts/capture-shop-products-ia-reorder.mjs [--phase=before|after]
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import fs from "node:fs";
 import path from "node:path";
@@ -35,8 +35,7 @@ const EXPECTED_ORDER = [
 const base = await findDevServerBaseUrl({ probePath: "shop-products.html" });
 const url = buildLocalPageUrl(base, `shop-products.html?id=${encodeURIComponent(SHOP_ID)}`);
 
-const browser = await chromium.launch({ headless: true });
-const report = {
+await withPlaywrightBrowser(async (browser) => {const report = {
   generatedAt: new Date().toISOString(),
   phase,
   url,
@@ -144,7 +143,8 @@ for (const vp of VIEWPORTS) {
   if (vpReport.verdict !== "PASS") report.overall = "FAIL";
 }
 
-await browser.close();
+});
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+await closeAllBrowsers();
 process.exit(report.overall === "PASS" ? 0 : 1);

@@ -1,7 +1,7 @@
 /**
  * 安否サービス登録 — スマホプレビュー中央寄せ確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -26,8 +26,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 
 async function capture(name, viewport) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport });
   await page.goto(`${base}/anpi-register.html`, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(2000);
 
@@ -60,7 +59,7 @@ async function capture(name, viewport) {
 
   const outPath = path.join(OUT_DIR, name);
   await page.screenshot({ path: outPath, fullPage: false });
-  await browser.close();
+    });
   return metrics;
 }
 
@@ -77,6 +76,7 @@ const centered =
   m800.app.width <= 390.5;
 if (!centered) {
   console.error("FAIL: 800px viewport — dash-app not centered");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("OK: 800px viewport — dash-app centered within 390px");
@@ -87,6 +87,7 @@ const card390 =
   m390.section.width >= 360;
 if (!card390) {
   console.error("FAIL: 390px — card container not centered or too narrow");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("OK: 390px — card container centered with usable width");

@@ -2,7 +2,7 @@
 /**
  * liveFlow 動的 thread — A送信 → B通知
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -16,8 +16,7 @@ function ng(m) {
   issues.push(m);
 }
 
-const browser = await chromium.launch({ headless: true });
-try {
+await withPlaywrightBrowser(async (browser) => {
   const context = await browser.newContext();
   const bench = await context.newPage({ viewport: { width: 1280, height: 900 } });
   const contactId = "contact-demo-skill-dual-001";
@@ -152,12 +151,14 @@ try {
   else ok("B notify data");
   if (!bAudit.dom) ng("B notify DOM missing");
   else ok("B notify DOM");
-} finally {
-  await browser.close();
-}
+});
+
 
 if (issues.length) {
   console.log("\nVERIFY FAILED", issues.length);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("\nVERIFY PASSED");
+
+await closeAllBrowsers();

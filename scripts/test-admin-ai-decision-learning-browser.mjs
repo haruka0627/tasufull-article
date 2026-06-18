@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI運営秘書 Phase7 — Decision Learning E2E
  *   node scripts/test-admin-ai-decision-learning-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -39,7 +39,7 @@ function pageUrl(rel) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -124,8 +124,7 @@ async function seed(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
   await page.setViewportSize({ width: 390, height: 844 });
 
   await page.goto(pageUrl("admin-operations-dashboard.html"), { waitUntil: "domcontentloaded" });
@@ -283,11 +282,11 @@ async function main() {
   if (width > 390) fail(`learning width ${width}px`);
   pass("390pxで類似判断表示が収まる");
 
-  await browser.close();
+    });
   console.log("\nAll Decision Learning tests passed.");
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

@@ -5,7 +5,7 @@
  *   screenshots/market-notify-390/
  *   screenshots/market-notify-pc/
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { devices } from "playwright";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
@@ -268,8 +268,7 @@ async function captureListOverview(page, base, outDir, orderId, viewportKey) {
 }
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const report = {
+await withPlaywrightBrowser(async (browser) => {const report = {
   generatedAt: new Date().toISOString(),
   baseUrl: base,
   orderId: "",
@@ -311,5 +310,7 @@ for (const vp of VIEWPORTS) {
 const manifestPath = path.join(ROOT, "screenshots", "market-notify-390", "ui-review-manifest.json");
 fs.writeFileSync(manifestPath, JSON.stringify(report, null, 2), "utf8");
 
-await browser.close();
+});
 console.log(JSON.stringify({ ok: true, orderId: report.orderId, manifestPath }, null, 2));
+
+await closeAllBrowsers();

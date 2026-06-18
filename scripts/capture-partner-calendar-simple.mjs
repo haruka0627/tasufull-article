@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** パートナー用カレンダー（受諾済み予定）— 390px / PC スクショ */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer, logScreenshotUrl } from "./lib/dev-base-url.mjs";
 
@@ -27,9 +27,7 @@ const SHOTS = [
   },
 ];
 
-const browser = await chromium.launch({ headless: true });
-
-for (const [vpLabel, viewport] of [
+await withPlaywrightBrowser(async (browser) => {for (const [vpLabel, viewport] of [
   ["390", { width: 390, height: 844 }],
   ["1280", { width: 1280, height: 900 }],
 ]) {
@@ -47,5 +45,7 @@ for (const [vpLabel, viewport] of [
   }
 }
 
-await browser.close();
+});
 console.log(`Saved to ${OUT}/`);
+
+await closeAllBrowsers();

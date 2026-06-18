@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 /** fee-pay iframe 経由の chatStarted — 実データ切り分け */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   const bench = await (await browser.newContext()).newPage({ viewport: { width: 1280, height: 900 } });
   const contactId = "contact-demo-skill-dual-001";
 
@@ -106,6 +104,6 @@ try {
   const gen = parentStore.length > 0 && parentStore[0]?.recipientUserId === "u_hiro";
   const render = iframeData && iframeData.domCardCount > 0;
   console.log("\n切り分け:", !gen ? "生成失敗" : !render ? "描画/同期失敗" : "成功");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

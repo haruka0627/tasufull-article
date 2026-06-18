@@ -2,7 +2,7 @@
 /**
  * ワーカー review=worker モード — 390px スクショ（通知 / TALK / 導線）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer, devUrl } from "./lib/dev-base-url.mjs";
@@ -23,8 +23,7 @@ const URLS = {
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: VIEWPORT });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
 page.on("dialog", async (dialog) => {
   await dialog.accept();
 });
@@ -187,7 +186,9 @@ const report = {
 };
 
 fs.writeFileSync(path.join(OUT, "capture-report.json"), JSON.stringify(report, null, 2));
-await browser.close();
+});
 console.log(JSON.stringify(report, null, 2));
 
 if (notifyAudit.count !== 3) throw new Error(`expected 3 notify rows, got ${notifyAudit.count}`);
+
+await closeAllBrowsers();

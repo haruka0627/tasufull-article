@@ -4,7 +4,7 @@
  * 1. 求人550円支払い
  * 2. 支払い後チャット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -16,8 +16,7 @@ const POSTER_ID = "u_job_demo_full";
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 page.on("dialog", async (d) => d.accept());
 
 await page.goto(`${BASE}/talk-home.html?tab=notify&userId=${POSTER_ID}&talkDev=1`, {
@@ -126,5 +125,7 @@ fs.writeFileSync(
   JSON.stringify({ baseUrl: BASE, payAudit, chatAudit }, null, 2)
 );
 
-await browser.close();
+});
 console.log(JSON.stringify({ out: OUT, payAudit, chatAudit }, null, 2));
+
+await closeAllBrowsers();

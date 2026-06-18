@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI運営秘書 Phase4 — Safety & License Gate E2E
  *   node scripts/test-admin-ai-response-safety-license-gate-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 
@@ -33,7 +33,7 @@ function pageUrl(rel) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -84,8 +84,7 @@ async function seed(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(pageUrl("support-intake.html"), { waitUntil: "domcontentloaded" });
   await page.waitForFunction(() => window.TasuSupportTicketService, { timeout: 15000 });
@@ -245,11 +244,11 @@ async function main() {
   if (!gateVisible) fail("gate not visible at 390px");
   pass("390pxでGate表示・操作可能");
 
-  await browser.close();
+    });
   console.log("\nAll Safety & License Gate tests passed.");
 }
 
 main().catch((e) => {
   console.error(e);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

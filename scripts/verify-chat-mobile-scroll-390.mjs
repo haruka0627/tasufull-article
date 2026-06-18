@@ -6,7 +6,7 @@
  * 3. 入力欄・送信ボタンは固定（タブバーに被らない）
  * 4. 完了後レビューカードが入力欄に隠れない
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -88,8 +88,7 @@ async function injectLongHistory(page) {
   }, THREAD);
 }
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   viewport: { width: 390, height: 844 },
   isMobile: true,
   hasTouch: true,
@@ -97,7 +96,7 @@ const context = await browser.newContext({
 const page = await context.newPage();
 const issues = [];
 
-try {
+
   await page.goto(
     `${BASE}/chat-detail.html?thread=${THREAD}&userId=${POSTER}&talkDev=1&review=job-full&jobFullReset=1&from=talk`,
     { waitUntil: "domcontentloaded" }
@@ -249,6 +248,6 @@ try {
     process.exit(1);
   }
   console.log("verify-chat-mobile-scroll-390 OK");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

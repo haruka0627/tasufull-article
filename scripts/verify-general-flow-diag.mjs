@@ -3,7 +3,7 @@
  * 一般案件 — 共通フロー診断パネル スモーク E2E
  * （フロー未到達時は notification_missing を正しく出すことも PASS 条件）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -14,8 +14,7 @@ const URL = fixedGeneralBenchUrl(BASE);
 const OUT = path.join("screenshots", "general-flow-diag");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 900 } });
 const issues = [];
 
 await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -76,5 +75,6 @@ await page.screenshot({ path: path.join(OUT, "01-general-diag-panel-390.png"), f
 
 const report = { ok: issues.length === 0, issues, url: URL, diag };
 console.log(JSON.stringify(report, null, 2));
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(issues.length ? 1 : 0);

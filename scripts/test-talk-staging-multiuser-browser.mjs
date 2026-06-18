@@ -4,7 +4,7 @@
  *
  *   node scripts/test-talk-staging-multiuser-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { ensureTalkTestUsers } from "./lib/talk-rls-test-auth.mjs";
 import {
   enableTalkDevMode,
@@ -19,15 +19,14 @@ const MARKER = process.env.TALK_TEST_MARKER || `staging-multi-${Date.now()}`;
 
 async function main() {
   await ensureTalkTestUsers(["u_admin", "u_me", "u_store", "u_worker"]);
-  const browser = await chromium.launch({ headless: true });
-  const errors = [];
+  await withPlaywrightBrowser(async (browser) => {const errors = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     errors.push(m);
     console.log(`  ✗ ${m}`);
   };
 
-  try {
+  
     const sender = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await enableTalkDevMode(sender);
     sender.on("dialog", (d) => d.accept());
@@ -117,14 +116,14 @@ async function main() {
     else pass("u_me isolated from u_store AI draft");
     await mePage.close();
     await sender.close();
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   console.log("\n---");
   if (errors.length) {
     console.error(`FAILED (${errors.length})`);
     errors.forEach((e) => console.error(`  - ${e}`));
+    await closeAllBrowsers();
     process.exit(1);
   }
   console.log("Staging multi-user checks passed.");

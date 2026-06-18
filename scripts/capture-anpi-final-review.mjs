@@ -3,7 +3,7 @@
  * 安否フロー — 最終UX監査（調査・キャプチャ・レポートのみ）
  *   node scripts/capture-anpi-final-review.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import { finalizeVerification } from "./lib/finalize-verification.mjs";
 import { renderScreenshotBackNav, SCREENSHOT_BACK_NAV_CSS } from "./lib/screenshot-image-viewer.mjs";
@@ -741,8 +741,7 @@ report.geminiBeforeAfter = Object.fromEntries(
   ])
 );
 
-const browser = await chromium.launch({ headless: true });
-const requestCtx = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const requestCtx = await browser.newContext();
 const request = requestCtx.request;
 
 // --- 安否通知（TALK）---
@@ -1070,7 +1069,7 @@ for (const vp of VIEWPORTS) {
 }
 
 await requestCtx.close();
-await browser.close();
+});
 
 for (const cat of Object.values(report.notifyCategories)) {
   if (cat.verdict !== "FAIL") cat.verdict = cat.issues.length ? "FAIL" : cat.minors?.length ? "MINOR" : "PASS";
@@ -1234,3 +1233,5 @@ const reviewUrl = await finalizeVerification(root, { primaryFolder: "anpi-final-
 console.log(`Anpi final review: ${report.overall} (FAIL ${report.summary.failCount}, MINOR ${report.summary.minorCount})`);
 console.log(`Report: ${path.join(OUT, "report.json")}`);
 console.log(`Review: ${reviewUrl}`);
+
+await closeAllBrowsers();

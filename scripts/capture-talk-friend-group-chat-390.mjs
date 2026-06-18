@@ -1,7 +1,7 @@
 /**
  * 友達 / グループ トーク — 390px UI 確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,8 +25,7 @@ async function findBaseUrl() {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 async function openRoom(threadId) {
   await page.goto(`${base}/talk-home.html?tab=chat&thread=${encodeURIComponent(threadId)}&talkDev=1`, {
@@ -83,7 +82,7 @@ const groupNames = await page.evaluate(() =>
 );
 await page.screenshot({ path: path.join(OUT_DIR, "talk-group-chat-mobile390.png"), fullPage: false });
 
-await browser.close();
+});
 
 const report = {
   friend: { peer: friendPeer, read: friendRead },
@@ -104,4 +103,5 @@ const pass =
 
 console.log(JSON.stringify(report, null, 2));
 console.log("PASS:", pass);
+await closeAllBrowsers();
 process.exit(pass ? 0 : 1);

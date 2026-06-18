@@ -2,7 +2,7 @@
  * 市場フッター リンク監査
  * node scripts/audit-market-footer-links.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -44,8 +44,7 @@ const FORBIDDEN_HREFS = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const report = { capturedAt: new Date().toISOString(), base, pages: {}, overall: "PASS" };
+await withPlaywrightBrowser(async (browser) => {const report = { capturedAt: new Date().toISOString(), base, pages: {}, overall: "PASS" };
 
 for (const pageDef of PAGES) {
   const page = await browser.newPage();
@@ -159,7 +158,9 @@ ${Object.entries(report.pages)
 `;
 
 fs.writeFileSync(path.join(OUT_DIR, "report.md"), md);
-await browser.close();
+});
 
 console.log("OVERALL:", report.overall);
 console.log(md);
+
+await closeAllBrowsers();

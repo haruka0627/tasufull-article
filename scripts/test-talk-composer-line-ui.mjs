@@ -6,7 +6,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -409,8 +409,8 @@ async function testVisualParity(page, vp, fail, pass) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const failures = [];
+  let failures = [];
+await withPlaywrightBrowser(async (browser) => {
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     failures.push(m);
@@ -435,7 +435,7 @@ async function main() {
     await page.close();
   }
 
-  await browser.close();
+    });
 
   if (consoleErrors.length) consoleErrors.forEach((e) => fail(`console: ${e}`));
   else pass("console errors: 0");
@@ -453,3 +453,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

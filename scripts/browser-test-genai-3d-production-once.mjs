@@ -1,3 +1,4 @@
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 本番3D生成 UI 1回テスト（Playwright・自動再試行なし・test_generate 不使用）
  * node scripts/browser-test-genai-3d-production-once.mjs
@@ -132,6 +133,7 @@ if (ticketsBefore < 1) {
 
 record("tickets >= 1 before test", ticketsBefore >= 1, `remaining=${ticketsBefore}`);
 if (ticketsBefore < 1) {
+  await closeAllBrowsers();
   process.exit(1);
 }
 
@@ -141,8 +143,7 @@ const imageData = `data:image/png;base64,${imgBuf.toString("base64")}`;
 const server = await startStaticServer();
 const baseUrl = `http://127.0.0.1:${PORT}/gen-ai-workspace.html?mode=AI%E3%82%AD%E3%83%A3%E3%83%A9%E4%BC%9A%E8%A9%B1`;
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 page.setDefaultTimeout(600000);
 
 const uiLogs = [];
@@ -332,13 +333,13 @@ try {
   if (uiLogs.length) console.log("UI logs (sample):", uiLogs.slice(-5));
 
   const failed = report.checks.filter((c) => !c.ok).length;
+  await closeAllBrowsers();
   process.exit(success && failed === 0 ? 0 : 1);
 } catch (err) {
   console.error("Test aborted:", err);
   const entFail = await getPlan();
   console.log("チケット（中断時）:", entFail.tickets3dRemaining);
+  await closeAllBrowsers();
   process.exit(1);
-} finally {
-  await browser.close();
-  server.close();
-}
+}});
+server.close();

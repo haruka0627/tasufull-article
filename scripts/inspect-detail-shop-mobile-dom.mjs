@@ -1,14 +1,13 @@
 /**
  * detail-shop.html?id=demo-shop-reworks — 実DOM・computed style 調査（390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 
 const base = (process.argv[2] || "http://127.0.0.1:5173").replace(/\/$/, "");
 const url = `${base}/detail-shop.html?id=demo-shop-reworks`;
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
 await page.waitForTimeout(1200);
 
@@ -196,4 +195,6 @@ console.log(JSON.stringify(report, null, 2));
 console.log("\nWrote", outPath);
 
 await page.screenshot({ path: "screenshots/detail-shop-reworks-390-inspect.png", fullPage: true }).catch(() => {});
-await browser.close();
+});
+
+await closeAllBrowsers();

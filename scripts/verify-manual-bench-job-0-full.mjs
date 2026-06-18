@@ -2,7 +2,7 @@
 /**
  * 求人 job-0 ベンチ — 550円後承諾通知 / 完了申請 / 完了承認レビュー通知（実画面E2E）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -20,8 +20,7 @@ const TRADE_DONE_TITLE = "取引が完了しました";
 const OUT = path.join("screenshots", "manual-bench-job-0-full");
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
 const report = { url: URL, checks: {}, ok: false };
 
 page.on("dialog", async (d) => {
@@ -69,7 +68,7 @@ async function waitChatReady(frame) {
   await page.waitForTimeout(400);
 }
 
-try {
+
   if (!isCanonicalBenchParentUrl(URL)) throw new Error("job bench URL must be canonical");
   await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(6500);
@@ -430,6 +429,6 @@ try {
   report.ok = issues.length === 0;
   console.log(JSON.stringify(report, null, 2));
   process.exitCode = report.ok ? 0 : 1;
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

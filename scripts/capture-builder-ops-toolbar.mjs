@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** ops_partner 2窓ベンチ — ツールバースクリーンショット */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -13,8 +13,7 @@ fs.mkdirSync(OUT, { recursive: true });
 const BASE = await requireDevServer();
 const PATH = "/chat-dual-window-demo.html?benchMode=builder&builderFlow=ops_partner";
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
 await context.route("**/*", (route) => {
   const type = route.request().resourceType();
   if (type === "font" || type === "media") route.abort();
@@ -54,5 +53,7 @@ async function shotToolbar(name, vp) {
 await shotToolbar("toolbar-pc1280", { width: 1280, height: 900 });
 await shotToolbar("toolbar-mobile390", { width: 390, height: 844 });
 
-await browser.close();
+});
 console.log(`\nFormal URL: ${BASE}${PATH}`);
+
+await closeAllBrowsers();

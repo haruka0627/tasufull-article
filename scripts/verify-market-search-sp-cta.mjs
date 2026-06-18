@@ -2,7 +2,7 @@
  * 市場検索 SP CTA 検証（390px / 1280px）
  * node scripts/verify-market-search-sp-cta.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -22,8 +22,7 @@ const VIEWPORTS = [
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-search.html" });
 const url = buildLocalPageUrl(base, "shop-search.html", "?keyword=パン");
-const browser = await chromium.launch({ headless: true });
-const report = { capturedAt: new Date().toISOString(), url, viewports: {}, overall: "PASS" };
+await withPlaywrightBrowser(async (browser) => {const report = { capturedAt: new Date().toISOString(), url, viewports: {}, overall: "PASS" };
 
 for (const vp of VIEWPORTS) {
   const page = await browser.newPage();
@@ -159,7 +158,8 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
   })),
 });
 
-await browser.close();
+});
 console.log("OVERALL:", report.overall);
 console.log(md);
+await closeAllBrowsers();
 process.exit(report.overall === "PASS" ? 0 : 1);

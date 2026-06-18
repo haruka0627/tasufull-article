@@ -2,7 +2,7 @@
  * Phase 3 — TALK 通知ルーム整理（390px）
  * 期待: プラット / 安否 / 運営 / AI / サポート / 友達
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -47,8 +47,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${base}/talk-home.html?tab=chat&talkDev=1`, {
   waitUntil: "domcontentloaded",
@@ -90,7 +89,7 @@ const result = await page.evaluate(() => {
 });
 
 await page.screenshot({ path: path.join(OUT_DIR, "talk-list-mobile390.png"), fullPage: true });
-await browser.close();
+});
 
 const forbiddenFound = result.names.filter((n) => {
   if (ALLOWED_NAMES.has(n)) return false;
@@ -128,6 +127,7 @@ fs.writeFileSync(path.join(OUT_DIR, "report.json"), JSON.stringify(report, null,
 console.log(JSON.stringify(report, null, 2));
 if (!report.pass) {
   console.error("FAIL");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS");

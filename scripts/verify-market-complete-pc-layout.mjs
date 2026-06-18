@@ -1,7 +1,7 @@
 /**
  * 注文完了ページ PC レイアウト — CTA〜フッター間隔・フッター下余白
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
@@ -38,8 +38,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findDevServerBaseUrl({ probePath: "shop-market-complete.html" });
 const pageUrl = buildLocalPageUrl(base, "shop-market-complete.html");
 const refFooterUrl = buildLocalPageUrl(base, "shop-market-cart.html");
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 let refFooterH = null;
 {
@@ -231,4 +230,6 @@ await finalizeScreenshotRun(ROOT, FOLDER_ID, {
 });
 
 console.log("\nOVERALL:", report.overall);
-await browser.close();
+});
+
+await closeAllBrowsers();

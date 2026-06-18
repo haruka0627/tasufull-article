@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * 生成AI系 UI/動作 監査（スクリーンショット + 分類レポート）
  *   node scripts/audit-gen-ai-ux.mjs
@@ -7,7 +8,7 @@ import { createServer } from "node:http";
 import { readFile, mkdir, writeFile } from "node:fs/promises";
 import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "playwright";
+
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(root, "screenshots", "gen-ai-ux-audit");
@@ -231,9 +232,7 @@ async function main() {
   await mkdir(OUT, { recursive: true });
   const server = await startServer();
   const base = "http://127.0.0.1:8780";
-  const browser = await chromium.launch({ headless: true });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     await auditGenAiWorkspace(browser, base);
     await auditTalkAi(browser, base);
     await auditPostAgent(browser, base);
@@ -261,10 +260,8 @@ async function main() {
     console.log("\nFindings:");
     for (const f of findings) console.log(`  [${f.status}] ${f.area}: ${f.note}`);
     process.exitCode = findings.some((f) => f.status === "broken") ? 1 : 0;
-  } finally {
-    await browser.close();
-    server.close();
-  }
+  });
+  server.close();
 }
 
 main().catch((e) => {

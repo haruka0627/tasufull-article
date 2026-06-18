@@ -2,7 +2,7 @@
  * 390px モバイル — 変更前(HEAD) / 変更後(作業ツリー) 比較キャプチャ
  */
 import { execSync } from "child_process";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -42,8 +42,7 @@ function writeHeadTracked() {
 async function captureMobile(label) {
   const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
   const url = buildLocalPageUrl(base, "shop-store.html");
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: VIEWPORT });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: VIEWPORT });
   await page.goto(url, { waitUntil: "domcontentloaded", timeout: 60000 });
   await assertPlaywrightLocalhostPage(page);
   await page.waitForFunction(
@@ -76,7 +75,7 @@ async function captureMobile(label) {
   });
   const outPath = path.join(OUT_DIR, label);
   await page.screenshot({ path: outPath, fullPage: false });
-  await browser.close();
+    });
   return audit;
 }
 
@@ -105,3 +104,5 @@ const report = {
 };
 fs.writeFileSync(path.join(OUT_DIR, "mobile-390-compare.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify(report, null, 2));
+
+await closeAllBrowsers();

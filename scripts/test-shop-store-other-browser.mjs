@@ -5,7 +5,7 @@
  *   node scripts/test-shop-store-other-browser.mjs
  *   BASE_URL=http://localhost:5180 node scripts/test-shop-store-other-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://localhost:5173").replace(/\/$/, "");
 const DEMO_ID = "shop-store-demo-other-001";
@@ -150,8 +150,7 @@ async function testLayout(page, width) {
 
 async function main() {
   console.log(`\nshop-store その他デモ E2E — ${BASE}\n`);
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await testInitialView(page, "初期表示");
   await testOtherCategoryFilter(page, "その他カテゴリ");
@@ -159,9 +158,10 @@ async function main() {
   await page.setViewportSize({ width: 390, height: 900 });
   await testLayout(page, 390);
 
-  await browser.close();
+    });
   const ok = results.filter((r) => r.ok).length;
   console.log(`\n--- 結果: ${ok}/${results.length} OK ---\n`);
+  await closeAllBrowsers();
   process.exit(ok === results.length ? 0 : 1);
 }
 
@@ -169,3 +169,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

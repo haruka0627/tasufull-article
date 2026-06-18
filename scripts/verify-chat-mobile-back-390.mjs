@@ -2,7 +2,7 @@
 /**
  * スマホ chat-detail — 戻るヘッダー 390px 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -38,8 +38,7 @@ async function measureHeader(page) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   viewport: { width: 390, height: 844 },
   isMobile: true,
   hasTouch: true,
@@ -47,7 +46,7 @@ const context = await browser.newContext({
 const page = await context.newPage();
 const issues = [];
 
-try {
+
   await openChat(
     page,
     `thread=${THREAD}&userId=${POSTER}&talkDev=1&review=job-full&from=talk`
@@ -105,6 +104,6 @@ try {
     )
   );
   console.log("verify-chat-mobile-back-390 OK");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

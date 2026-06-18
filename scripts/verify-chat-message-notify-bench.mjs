@@ -2,12 +2,11 @@
 /**
  * 2窓ベンチ — A送信 → B上「新しいメッセージが届きました」（storage refresh）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const issues = [];
+await withPlaywrightBrowser(async (browser) => {const issues = [];
 
 function ok(msg) {
   console.log("OK", msg);
@@ -17,7 +16,7 @@ function ng(msg) {
   issues.push(msg);
 }
 
-try {
+
   const context = await browser.newContext();
   const bench = await context.newPage({ viewport: { width: 1280, height: 900 } });
 
@@ -134,12 +133,14 @@ try {
   if (bAudit.latest && !String(bAudit.latest.href || "").includes(profile.threadId)) {
     ng(`B href missing thread: ${bAudit.latest.href}`);
   } else if (bAudit.latest) ok("B href threadId");
-} finally {
-  await browser.close();
-}
+});
+
 
 if (issues.length) {
   console.log("\nVERIFY FAILED", issues.length);
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("\nVERIFY PASSED");
+
+await closeAllBrowsers();

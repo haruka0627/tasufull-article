@@ -1,7 +1,7 @@
 /**
  * Builder 通知・スレッド完結フロー — 最終通し点検
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const PORTS = [5173, 5175, 5176, 5174, 5199, 5200, 5188];
 const MVP_KEY = "tasful:builder:mvp:v1";
@@ -33,8 +33,7 @@ function warn(cond, msg) {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 async function setRole(role, partnerId) {
   await page.evaluate(
@@ -519,11 +518,12 @@ const calAssign = await page.evaluate(() => {
 });
 warn(calAssign.ok, `新着案件 → カレンダー (${calAssign.href || calAssign.error})`);
 
-await browser.close();
+});
 
 if (failures.length) {
   console.error("\nFAILED:");
   failures.forEach((f) => console.error(" -", f));
+  await closeAllBrowsers();
   process.exit(1);
 }
 

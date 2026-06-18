@@ -2,7 +2,7 @@
 /**
  * board-thread 通常チャット（#completion なし）— 390 / 1280 スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -70,8 +70,7 @@ function seedNormalOwnerChat() {
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const BASE = await requireDevServer();
 console.log(`[dev] BASE_URL=${BASE}`);
-const browser = await chromium.launch({ headless: true });
-let failed = false;
+await withPlaywrightBrowser(async (browser) => {let failed = false;
 
 for (const { file, width, height, seed, label, expectMsgBody } of [
   {
@@ -163,9 +162,10 @@ for (const { file, width, height, seed, label, expectMsgBody } of [
   await page.close();
 }
 
-await browser.close();
+});
 if (failed) {
   console.error("FAIL: normal chat still shows empty panels or hides chat");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("OK: board-thread normal chat empty panels hidden");

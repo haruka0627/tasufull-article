@@ -8,7 +8,7 @@
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:5179").replace(/\/$/, "");
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -337,8 +337,7 @@ async function testLoginGuard(page) {
 async function main() {
   console.log(`\n通知設定 E2E — ${BASE}${PAGE_PATH}\n`);
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
 
   const consoleErrors = [];
@@ -367,9 +366,8 @@ async function main() {
     await testLoginGuard(page);
   } catch (err) {
     fail("例外", err instanceof Error ? err.message : String(err));
-  } finally {
-    await browser.close();
-  }
+  }  });
+  
 
   const ng = results.filter((r) => !r.ok);
   console.log(`\n--- 結果: ${results.length - ng.length}/${results.length} OK ---\n`);
@@ -377,3 +375,5 @@ async function main() {
 }
 
 main();
+
+await closeAllBrowsers();

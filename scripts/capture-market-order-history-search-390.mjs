@@ -2,7 +2,7 @@
 /**
  * TASFUL市場 — 注文履歴 検索・絞り込み 390px スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { devices } from "playwright";
 import { assertPlaywrightLocalhostPage, buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
@@ -89,8 +89,7 @@ const DEMO_ORDERS = [
 ];
 
 const base = await findDevServerBaseUrl({ probePath: "shop-store.html" });
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({
   ...devices["iPhone 13"],
   viewport: { width: 390, height: 844 },
   hasTouch: true,
@@ -223,9 +222,9 @@ try {
   });
 } catch (err) {
   errors.push(String(err?.message || err));
-} finally {
-  await browser.close();
 }
+});
+
 
 const overallPass = errors.length === 0;
 const report = {
@@ -243,4 +242,5 @@ const report = {
 
 fs.writeFileSync(path.join(OUT_DIR, "search-filter-report.json"), JSON.stringify(report, null, 2), "utf8");
 console.log(JSON.stringify({ overallPass, errors, reportPath: path.join(OUT_DIR, "search-filter-report.json") }, null, 2));
+await closeAllBrowsers();
 process.exit(overallPass ? 0 : 1);

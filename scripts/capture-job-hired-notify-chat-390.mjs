@@ -2,7 +2,7 @@
 /**
  * 求人やりとり開始通知 → チャット導線 390px スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -14,8 +14,7 @@ const APPLICANT_ID = "u_hiro";
 
 fs.mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 await page.goto(`${BASE}/talk-home.html?tab=notify&userId=${APPLICANT_ID}&talkDev=1&review=job`, {
   waitUntil: "domcontentloaded",
@@ -100,5 +99,7 @@ fs.writeFileSync(
   JSON.stringify({ baseUrl: BASE, notifyHref, audit }, null, 2)
 );
 
-await browser.close();
+});
 console.log(JSON.stringify({ out: OUT, notifyHref, audit }, null, 2));
+
+await closeAllBrowsers();

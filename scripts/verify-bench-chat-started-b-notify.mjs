@@ -2,14 +2,13 @@
 /**
  * 2窓ベンチ — A支払い後 B上に「やりとりが開始されました」
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const issues = [];
+await withPlaywrightBrowser(async (browser) => {const issues = [];
 
-try {
+
   const context = await browser.newContext();
   const bench = await context.newPage({ viewport: { width: 1280, height: 900 } });
   const contactId = "contact-demo-skill-dual-001";
@@ -170,6 +169,6 @@ try {
     process.exit(1);
   }
   console.log("\nOK: B notify shows chat-started after payment");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

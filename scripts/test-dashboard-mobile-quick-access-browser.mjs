@@ -1,7 +1,7 @@
 /**
  * ダッシュボード スマホ クイックアクセス v2 検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeScreenshotRun } from "./lib/finalize-screenshot-run.mjs";
 import fs from "fs";
 import path from "path";
@@ -105,8 +105,7 @@ const cases = [];
 const allErrors = [];
 
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareMobileDashboard(page, base);
@@ -258,12 +257,11 @@ const allErrors = [];
   });
 
   allErrors.push(...errors);
-  await browser.close();
+    });
 }
 
 {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   collectPageErrors(page, errors);
   await prepareDesktopDashboard(page, base);
@@ -287,7 +285,7 @@ const allErrors = [];
 
   await page.screenshot({ path: path.join(OUT_DIR, "dashboard-1280.png"), fullPage: true });
   allErrors.push(...errors);
-  await browser.close();
+    });
 }
 
 const passCount = cases.filter((c) => c.ok).length;
@@ -339,4 +337,5 @@ console.log(`PASS ${passCount}/${cases.length}, console errors: ${allErrors.leng
 cases.filter((c) => !c.ok).forEach((c) => console.log(`  FAIL ${c.id}: ${c.message}`));
 if (allErrors.length) allErrors.forEach((e) => console.log(`  ERR ${e}`));
 
+await closeAllBrowsers();
 process.exit(failCount > 0 || allErrors.length > 0 ? 1 : 0);

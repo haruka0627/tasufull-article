@@ -3,7 +3,7 @@
  * 店舗販売導線 — 最終UX検証（画像 / 完了画面 / 導線監査）
  */
 import { finalizeVerification } from "./lib/finalize-verification.mjs";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import { spawn } from "child_process";
 import fs from "fs";
@@ -85,9 +85,7 @@ function runScript(script) {
   });
 }
 
-const browser = await chromium.launch({ headless: true });
-
-const purchase = await runScript("capture-shop-store-purchase-flow.mjs");
+await withPlaywrightBrowser(async (browser) => {const purchase = await runScript("capture-shop-store-purchase-flow.mjs");
 report.purchaseFlow = purchase.exitCode === 0 && purchase.ok ? "PASS" : "FAIL";
 if (report.purchaseFlow !== "PASS") report.allPass = false;
 
@@ -248,7 +246,7 @@ for (const vp of VIEWPORTS) {
   await page.close();
 }
 
-await browser.close();
+});
 
 report.ok = report.cases.filter((c) => c.pass).length;
 report.ng = report.cases.filter((c) => !c.pass).length;
@@ -274,3 +272,5 @@ console.log(
 );
 
 await finalizeVerification(path.join(__dirname, ".."), { primaryFolder: "shop-store-ux-final" });
+
+await closeAllBrowsers();

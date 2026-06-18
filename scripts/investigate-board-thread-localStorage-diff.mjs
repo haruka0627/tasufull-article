@@ -4,7 +4,7 @@
  * - 実機相当（自然初期化 / seed なし）
  * - seedGeneralCompletion 後
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -157,9 +157,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 fs.mkdirSync(FIXTURE_DIR, { recursive: true });
 const BASE = await requireDevServer();
 console.log(`[dev] BASE_URL=${BASE}`);
-const browser = await chromium.launch({ headless: true });
-
-// A) 自然状態: localStorage 空 → アプリが自分で初期化 + #completion シード
+await withPlaywrightBrowser(async (browser) => {// A) 自然状態: localStorage 空 → アプリが自分で初期化 + #completion シード
 const ctxNatural = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const pageNatural = await ctxNatural.newPage();
 await pageNatural.goto(`${BASE}${TARGET_PATH}`, { waitUntil: "load", timeout: 60000 });
@@ -290,4 +288,6 @@ if (!realDeviceUsed) {
 
 await ctxNatural.close();
 await ctxSeed.close();
-await browser.close();
+});
+
+await closeAllBrowsers();

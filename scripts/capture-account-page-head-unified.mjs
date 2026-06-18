@@ -1,7 +1,7 @@
 /**
  * アカウント系ページ — 統一ページ見出し確認
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -35,8 +35,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 
 async function auditPage({ file, title }, viewport) {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport });
   await page.goto(`${base}/${file}`, { waitUntil: "networkidle", timeout: 60000 });
   await page.waitForTimeout(2000);
 
@@ -72,7 +71,7 @@ async function auditPage({ file, title }, viewport) {
     path: path.join(OUT_DIR, `${slug}-${viewport.width}.png`),
     fullPage: false,
   });
-  await browser.close();
+    });
   return metrics;
 }
 
@@ -110,6 +109,7 @@ const failed = Object.entries(checks).flatMap(([file, c]) =>
 );
 if (failed.length) {
   console.error("FAIL:", failed.join(", "));
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("PASS: account page heads unified");

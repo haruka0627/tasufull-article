@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 import fs from "fs";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 import { fixedJobBenchUrl } from "./lib/fixed-bench-url.mjs";
 
 const BASE = await requireDevServer();
 const URL = fixedJobBenchUrl(BASE);
-const browser = await chromium.launch({ headless: true });
-const page = await (await browser.newContext({ viewport: { width: 390, height: 900 } })).newPage();
-page.on("dialog", async (d) => await d.accept());
-
-const findFrame = (p, re) => p.frames().find((f) => re.test(f.url()));
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(URL, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(6500);
   const bDetail = findFrame(page, /detail-job/i);
@@ -97,6 +91,6 @@ try {
     return r.top >= lr.top - 2 && r.top < lr.bottom && r.height > 0;
   });
   console.log(JSON.stringify(report, null, 2));
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

@@ -2,7 +2,7 @@
 /**
  * 通知システム棚卸し — 通知タブ / TASFUL TALK / シード一覧
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { writeFileSync, mkdirSync } from "fs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -10,8 +10,7 @@ const BASE = await requireDevServer();
 const OUT = "screenshots/notify-system-audit";
 mkdirSync(OUT, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const page = await context.newPage();
 
 await page.goto(`${BASE}/talk-home.html?tab=notify`, {
@@ -199,4 +198,6 @@ for (const n of [...audit.seedRows, ...audit.preserved]) {
 console.log(`\nlocalStorage store: ${audit.storeCount} ids`);
 console.log(`Saved: ${OUT}/audit.json`);
 
-await browser.close();
+});
+
+await closeAllBrowsers();

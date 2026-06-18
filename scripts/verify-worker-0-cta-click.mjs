@@ -2,7 +2,7 @@
 /**
  * worker-0 — 通常 Playwright .click() で startContact → 通知まで検証
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -10,11 +10,10 @@ const BENCH_URL =
   `${BASE}/chat-dual-window-demo.html?talkDev=1&review=chat-demo&demoProfile=worker` +
   `&demoConnect=0&liveFlow=1&userId=u_hiro&benchViewport=390&benchPattern=worker-0&liveFlowReset=1`;
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const errors = [];
 
-try {
+
   await page.goto(BENCH_URL, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(3000);
 
@@ -138,6 +137,6 @@ try {
   };
   console.log(JSON.stringify(report, null, 2));
   process.exitCode = errors.length ? 1 : 0;
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

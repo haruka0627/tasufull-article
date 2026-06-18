@@ -2,7 +2,7 @@
  * detail-shop.html スマホUI検証（390px / 1280px）
  * Usage: node scripts/verify-detail-shop-mobile.mjs [baseUrl]
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const base = (process.argv[2] || "http://127.0.0.1:5173").replace(/\/$/, "");
 const url = `${base}/detail-shop.html?id=demo-shop-reworks`;
@@ -293,13 +293,11 @@ async function check1280(page) {
   else pass("1280: shop title visible");
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
-try {
+await withPlaywrightBrowser(async (browser) => {
   await check390(page);
   await check1280(page);
   if (process.exitCode) console.error("\nSome checks failed.");
   else console.log("\nAll checks passed.");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

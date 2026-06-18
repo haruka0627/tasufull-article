@@ -2,7 +2,7 @@
 /**
  * Builder 通知導線テスト（6件）— 表示 / ボタン / 遷移
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { mkdirSync } from "fs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
@@ -82,9 +82,8 @@ function matchUrl(actualUrl, c) {
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
-const browser = await chromium.launch({ headless: true });
-const results = [];
-
+let results = [];
+await withPlaywrightBrowser(async (browser) => {
 async function resetStorage(page) {
   await page.goto(`${BASE}/talk-home.html`, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.evaluate((keys) => keys.forEach((k) => localStorage.removeItem(k)), STORAGE_KEYS);
@@ -166,12 +165,14 @@ for (const c of CASES) {
 }
 
 await listPage.close();
-await browser.close();
+});
 
 const failed = results.filter((r) => r.status !== "OK");
 console.log(`\n結果: ${results.length - failed.length}/${results.length} OK`);
 if (failed.length) {
   for (const r of failed) console.log(`- ${r.id}: ${r.issues.join("; ")}`);
+  await closeAllBrowsers();
   process.exit(1);
 }
+await closeAllBrowsers();
 process.exit(0);

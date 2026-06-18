@@ -3,7 +3,7 @@
  * TASFUL OPS WATCH Phase2 E2E
  *   node scripts/test-ops-watch-phase2-browser.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 const KEY = "tasu_ops_watch_last_auto_run_at";
@@ -69,8 +69,7 @@ async function setupMocks(page) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
   const page = await context.newPage();
   const errors = [];
   const pass = (m) => console.log(`  OK  ${m}`);
@@ -270,7 +269,7 @@ async function main() {
     pass("category notify path ok");
   }
 
-  await browser.close();
+    });
 
   if (errors.length) {
     console.error("\nFAILED:", errors.join("; "));
@@ -283,3 +282,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

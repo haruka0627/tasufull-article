@@ -2,7 +2,7 @@
 /**
  * チャット上部 — [主アクション] [︙] / キャンセルはメニュー内（390px）
  */
-import { chromium, devices } from "./lib/playwright-browser.mjs";
+import { devices, withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -33,8 +33,7 @@ const THREAD_IDS = {
 fs.mkdirSync(OUT, { recursive: true });
 
 const iphone = devices["iPhone 13"];
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({
   ...iphone,
   viewport: VIEWPORT,
   hasTouch: true,
@@ -118,6 +117,6 @@ for (const spec of CASES) {
   });
 }
 
-await browser.close();
+});
 if (failed) process.exit(1);
 console.log(`\nAll cases passed. Screenshots: ${OUT}`);

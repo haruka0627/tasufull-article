@@ -6,7 +6,7 @@
  *
  * 前提: sql/anpi-user-context.sql 適用済み、http://127.0.0.1:8765 で静的配信
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
@@ -154,17 +154,7 @@ async function main() {
     await deleteRowByUserId(cfg, TEST_USER_ID);
   }
 
-  const browser = await chromium.launch({ headless: true });
-  const context = await browser.newContext();
-  const page = await context.newPage();
-
-  const logs = [];
-  page.on("console", (msg) => {
-    const t = msg.text();
-    if (t.includes("[AnpiContext]")) logs.push(t);
-  });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     await page.addInitScript(
       ({ userId }) => {
         delete window.__ANPI_CONTEXT_SUPABASE_MOCK__;
@@ -334,11 +324,9 @@ async function main() {
       console.log("\n  [AnpiContext] ログ:");
       logs.forEach((l) => console.log(`    ${l}`));
     }
-  } finally {
-    await browser.close();
-    if (server) {
+    });
+  if (server) {
       await new Promise((r) => server.close(r));
-    }
   }
 
   const ng = results.filter((r) => !r.ok);
@@ -350,3 +338,5 @@ main().catch((e) => {
   console.error(e);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

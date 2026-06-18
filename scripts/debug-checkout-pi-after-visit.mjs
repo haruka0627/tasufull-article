@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { readFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -15,8 +15,7 @@ const c = await fetch(`${base}/stripe-create-genai-checkout`, {
 }).then((r) => r.json());
 console.log("session", c.session_id);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 await page.goto(c.url, { waitUntil: "domcontentloaded" });
 for (const wait of [0, 3, 6, 10]) {
   if (wait) await page.waitForTimeout(wait * 1000);
@@ -28,4 +27,6 @@ for (const wait of [0, 3, 6, 10]) {
   console.log(`after ${wait}s visit:`, pay);
   if (pay.ok) break;
 }
-await browser.close();
+});
+
+await closeAllBrowsers();

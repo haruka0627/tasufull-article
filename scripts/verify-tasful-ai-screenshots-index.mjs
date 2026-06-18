@@ -5,7 +5,7 @@
  */
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { resolveStaticServer } from "./lib/finalize-verification.mjs";
 import { writeScreenshotsIndex } from "./lib/screenshots-index.mjs";
 
@@ -23,11 +23,10 @@ const SHOTS = [
 async function main() {
   await writeScreenshotsIndex(root);
   const { close } = await resolveStaticServer(root);
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const results = [];
 
-  try {
+  
     await page.goto(`${BASE}/screenshots/index.html#recent-reviews`, {
       waitUntil: "domcontentloaded",
     });
@@ -100,13 +99,13 @@ async function main() {
     const allOk = results.every((r) => r.ok);
     console.log(JSON.stringify({ allOk, shotCount, results }, null, 2));
     if (!allOk) process.exitCode = 1;
-  } finally {
-    await browser.close();
-    close();
-  }
+    });
+  close();
 }
 
 main().catch((err) => {
   console.error(err);
   process.exitCode = 1;
 });
+
+await closeAllBrowsers();

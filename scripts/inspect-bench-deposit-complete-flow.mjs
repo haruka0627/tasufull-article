@@ -2,7 +2,7 @@
 /**
  * Connectなし — 支払い報告後の入金確認→完了通知→レビュー導線（2窓ベンチ実UI）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -53,10 +53,7 @@ async function clickNotifyCta(page, frameSelector, titlePattern) {
 
 const headed = process.env.PLAYWRIGHT_HEADED === "1";
 const slowMo = Number(process.env.PLAYWRIGHT_SLOWMO || 0) || 0;
-const browser = await chromium.launch({ headless: !headed, slowMo });
-const page = await (await browser.newContext({ viewport: { width: 1440, height: 1100 } })).newPage();
-
-try {
+await withPlaywrightBrowser(async (browser) => {
   await page.goto(`${BASE}${EXACT_PATH}&liveFlowReset=1`, { waitUntil: "domcontentloaded", timeout: 45000 });
   await page.waitForTimeout(2000);
 
@@ -265,6 +262,6 @@ try {
   fs.writeFileSync(path.join(OUT_DIR, "audit.json"), JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
   if (errors.length) process.exit(1);
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

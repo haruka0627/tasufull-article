@@ -1,7 +1,7 @@
 /**
  * Builder MVP re-request → post smoke test (Playwright)
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
@@ -12,8 +12,7 @@ const RE_REQUESTS_KEY = "tasful:builder:mvp:reRequests:v1";
 const TEMPLATES_KEY = "tasful:builder:mvp:projectTemplates:v1";
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(`file://${path.join(builder, "re-request.html")}?project_id=demo-project-001`);
   await page.waitForSelector("[data-builder-re-summary]");
@@ -79,10 +78,12 @@ async function main() {
   if (tplTitle !== "テンプレ案件") throw new Error(`Template apply broken: ${tplTitle}`);
 
   console.log("OK: builder MVP re-request smoke test passed");
-  await browser.close();
+    });
 }
 
 main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

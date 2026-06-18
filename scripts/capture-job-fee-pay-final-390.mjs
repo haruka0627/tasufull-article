@@ -2,7 +2,7 @@
 /**
  * 求人550円支払い — from=notify / from=talk 390px スクショ
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 
@@ -79,8 +79,7 @@ function measureLayout() {
   };
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 page.on("dialog", async (d) => d.accept());
 
 const report = {};
@@ -97,7 +96,7 @@ for (const from of ["notify", "talk"]) {
 }
 
 fs.writeFileSync(path.join(OUT, "capture-report.json"), JSON.stringify({ baseUrl: BASE, report }, null, 2));
-await browser.close();
+});
 
 const ok =
   report.notify?.backText === "← 通知へ戻る" &&
@@ -106,4 +105,5 @@ const ok =
   report.talk?.ctaAboveTabbar;
 
 console.log(JSON.stringify({ ok, report }, null, 2));
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

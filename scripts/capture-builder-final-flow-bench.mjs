@@ -2,7 +2,7 @@
 /**
  * Builder 最終フロー — ops_partner 通し + 一般スレッド 390px スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -13,8 +13,7 @@ const OUT_DIR = path.join(__dirname, "..", "screenshots", "builder-final-flow-be
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext();
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext();
 await context.route("**/*", (route) => {
   const type = route.request().resourceType();
   if (type === "font" || route.request().url().includes("fonts.googleapis")) route.abort();
@@ -126,5 +125,7 @@ for (const flow of ["partner_user", "user_user", "vendor_user"]) {
   await shotBenchStep(`${flow}-bench-mobile390`);
 }
 
-await browser.close();
+});
 console.log(`Screenshots saved to ${OUT_DIR}`);
+
+await closeAllBrowsers();

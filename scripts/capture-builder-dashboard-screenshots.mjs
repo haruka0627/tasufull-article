@@ -1,4 +1,4 @@
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -14,9 +14,7 @@ const SHOTS = [
 
 fs.mkdirSync(OUT_DIR, { recursive: true });
 
-const browser = await chromium.launch({ headless: true });
-
-for (const shot of SHOTS) {
+await withPlaywrightBrowser(async (browser) => {for (const shot of SHOTS) {
   const page = await browser.newPage({
     viewport: { width: shot.width, height: shot.height },
   });
@@ -30,5 +28,7 @@ for (const shot of SHOTS) {
   await page.close();
 }
 
-await browser.close();
+});
 console.log("Done.");
+
+await closeAllBrowsers();

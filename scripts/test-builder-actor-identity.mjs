@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * NB-3 STEP 6 — Builder actor identity 検証
  *   node scripts/test-builder-actor-identity.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 import {
   normalizeMvpRole,
@@ -44,18 +44,18 @@ try {
 } catch (err) {
   console.warn("[test-builder-actor-identity] dev server unavailable:", err.message);
   console.log("SUMMARY: core PASS · browser SKIPPED");
+  await closeAllBrowsers();
   process.exit(0);
 }
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
 const PARTNER_USER_SPEC = {
   poster: { role: "partner", id: "demo-partner-002" },
   applicant: { role: "user", id: "demo-builder-user" },
 };
 
-try {
+
   const benchUrl = buildLocalPageUrl(
     base,
     "chat-dual-window-demo.html",
@@ -254,6 +254,5 @@ try {
   console.log("  prod URL/LS blocked: PASS");
   console.log("  prod JWT deal match: PASS");
   console.log("\nSUMMARY: ALL PASS");
-} finally {
-  await browser.close();
-}
+});
+

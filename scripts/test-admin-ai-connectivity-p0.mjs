@@ -1,9 +1,9 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /**
  * AI運営秘書 P0接続テスト — Builder + TALK bus
  *   node scripts/test-admin-ai-connectivity-p0.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
 import fs from "fs";
@@ -38,7 +38,7 @@ function pageUrl(rel) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 }
 
 function pass(msg) {
@@ -47,9 +47,7 @@ function pass(msg) {
 
 async function main() {
   fs.mkdirSync(SHOT_DIR, { recursive: true });
-  const browser = await chromium.launch({ headless: true });
-
-  for (const vp of [
+  await withPlaywrightBrowser(async (browser) => {for (const vp of [
     { name: "390", width: 390, height: 844 },
     { name: "1280", width: 1280, height: 900 },
   ]) {
@@ -191,12 +189,11 @@ async function main() {
     await page.screenshot({ path: path.join(SHOT_DIR, `dashboard-${vp.name}.png`), fullPage: true });
     await page.close();
   }
-
-  await browser.close();
+});
   console.log("\nAll P0 connectivity tests passed.");
 }
 
 main().catch((err) => {
   console.error(err);
-  process.exit(1);
+  closeAllBrowsers().finally(() => process.exit(1));
 });

@@ -1,7 +1,7 @@
 /**
  * Builder案件詳細 — カード分離 390px スクリーンショット
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -38,8 +38,7 @@ fs.mkdirSync(OUT_DIR, { recursive: true });
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
 
 for (const shot of SHOTS) {
   await page.goto(`${base}${shot.url}`, { waitUntil: "domcontentloaded", timeout: 60000 });
@@ -49,4 +48,6 @@ for (const shot of SHOTS) {
   console.log("Saved:", outPath);
 }
 
-await browser.close();
+});
+
+await closeAllBrowsers();

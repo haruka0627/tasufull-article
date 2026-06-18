@@ -9,7 +9,7 @@
  *   node scripts/capture-shop-store-final-review.mjs --fast
  *   node scripts/capture-shop-store-final-review.mjs --page checkout --viewport 390
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -1137,9 +1137,7 @@ function renderIndexHtml(reportData = report) {
 </html>`;
 }
 
-const browser = await chromium.launch({ headless: true });
-
-console.log(
+await withPlaywrightBrowser(async (browser) => {console.log(
   JSON.stringify(
     {
       mode: runPlan.mode,
@@ -1336,7 +1334,7 @@ function applyUiSummary(target) {
   };
 }
 
-await browser.close();
+});
 
 applyUiSummary(report);
 
@@ -1356,3 +1354,5 @@ fs.writeFileSync(path.join(OUT, "index.html"), renderIndexHtml(finalReport));
 
 console.log(JSON.stringify(finalReport.summary, null, 2));
 await finalizeVerification(ROOT, { primaryFolder: "shop-store-final-review" });
+
+await closeAllBrowsers();

@@ -3,7 +3,7 @@
  * TALK チャット画面 — 「TALK > TALK」パンくず非表示（390〜960px）
  *   node scripts/test-talk-breadcrumb-absent.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
@@ -59,8 +59,8 @@ async function assertNoTalkBreadcrumb(page, contextLabel) {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const consoleErrors = [];
+  let consoleErrors = [];
+await withPlaywrightBrowser(async (browser) => {
   const failures = [];
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
@@ -100,7 +100,7 @@ async function main() {
     await page.close();
   }
 
-  await browser.close();
+    });
 
   if (consoleErrors.length) {
     consoleErrors.forEach((e) => fail(`console: ${e}`));
@@ -119,3 +119,5 @@ main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
+
+await closeAllBrowsers();

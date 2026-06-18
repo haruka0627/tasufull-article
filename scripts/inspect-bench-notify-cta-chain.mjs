@@ -1,6 +1,6 @@
 #!/usr/bin/env node
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 /** CTAクリック → postMessage → A下遷移 の全チェーン実測 */
-import { chromium } from "./lib/playwright-browser.mjs";
 import fs from "fs";
 import path from "path";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
@@ -10,8 +10,7 @@ const OUT = path.join("screenshots", "bench-notify-cta-chain");
 fs.mkdirSync(OUT, { recursive: true });
 
 async function runScenario(viewportMode) {
-  const browser = await chromium.launch({ headless: true });
-  const trace = { viewportMode, steps: {} };
+  await withPlaywrightBrowser(async (browser) => {const trace = { viewportMode, steps: {} };
   try {
     const bench = await (await browser.newContext({ viewport: { width: 1400, height: 900 } })).newPage();
     const messages = [];
@@ -200,9 +199,12 @@ async function runScenario(viewportMode) {
       trace.steps.aChatChanged;
 
     return trace;
-  } finally {
-    await browser.close();
+  } catch (err) {
+    trace.fatal = String(err?.message || err);
+    return trace;
   }
+});
+  
 }
 
 const r390 = await runScenario("390");
@@ -215,6 +217,7 @@ console.log(JSON.stringify(r1280, null, 2));
 
 if (!r390.ok || !r1280.ok) {
   console.error("\nCHAIN VERIFY FAILED");
+  await closeAllBrowsers();
   process.exit(1);
 }
 console.log("\nCHAIN VERIFY OK");

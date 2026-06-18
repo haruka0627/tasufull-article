@@ -2,7 +2,7 @@
 /**
  * 商品詳細 — 4タブアンカーナビ検証（PC1280 / 390px）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { buildLocalPageUrl, findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import fs from "fs";
 import path from "path";
@@ -16,8 +16,7 @@ const DETAIL =
   "detail-shop-product.html?shopId=demo-shop-haru-cafe&productId=demo-restaurant-0";
 const base = await findDevServerBaseUrl({ probePath: "detail-shop-product.html" });
 
-const browser = await chromium.launch({ headless: true });
-const page = await browser.newPage();
+await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 const report = { base, tabs: [], screenshots: [], pass: true, failures: [] };
 
 async function auditViewport(width, height, tag) {
@@ -111,5 +110,6 @@ await auditViewport(390, 844, "390");
 
 fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify(report, null, 2));
 console.log(JSON.stringify({ pass: report.pass, tabs: report.tabs, failures: report.failures }, null, 2));
-await browser.close();
+});
+await closeAllBrowsers();
 process.exit(report.pass ? 0 : 1);

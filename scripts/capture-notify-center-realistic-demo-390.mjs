@@ -7,7 +7,7 @@
  *
  *   npm run demo:notify-center-realistic
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 import {
   closeDemoVideoContext,
@@ -121,9 +121,7 @@ async function recordListVideo(browser, base) {
 }
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
-const browser = await chromium.launch({ headless: true });
-
-const setupContext = await browser.newContext({
+await withPlaywrightBrowser(async (browser) => {const setupContext = await browser.newContext({
   ...DEMO_DEVICE_PROFILE,
   viewport: DEMO_VIEWPORT_390,
   isMobile: true,
@@ -145,7 +143,7 @@ try {
   console.error(String(err?.message || err));
 }
 
-await browser.close();
+});
 
 const manifest = {
   generatedAt: new Date().toISOString(),
@@ -187,4 +185,5 @@ console.log(
   )
 );
 
+await closeAllBrowsers();
 process.exit(ok ? 0 : 1);

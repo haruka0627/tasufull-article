@@ -2,7 +2,7 @@
  * 生成AI 3Dステージ — Playwright E2E
  * npm run dev 起動後: node scripts/e2e-gen-ai-3d.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -17,24 +17,7 @@ function record(name, ok, detail = "") {
 }
 
 async function main() {
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
-
-  page.on("dialog", async (d) => d.accept());
-
-  await page.route("**/functions/v1/gemini-chat", async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({
-        reply: "わぁ、すごいですね！嬉しいです。",
-        usedGemini: true,
-        intent: "chat",
-      }),
-    });
-  });
-
-  try {
+  await withPlaywrightBrowser(async (browser) => {
     await page.goto(`${baseUrl}/gen-ai-workspace.html?mode=${chatMode}`, {
       waitUntil: "networkidle",
       timeout: 60000,
@@ -134,12 +117,12 @@ async function main() {
       mobileStack && mobileStack.width > 100 && mobileStack.width <= 390,
       mobileStack ? `${Math.round(mobileStack.width)}px` : "no box"
     );
-  } finally {
-    await browser.close();
-  }
+    });
+  
 
   const failed = results.filter((r) => !r.ok).length;
   console.log(`\nTotal: ${results.length}, Failed: ${failed}`);
+  await closeAllBrowsers();
   process.exit(failed ? 1 : 0);
 }
 
@@ -147,3 +130,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

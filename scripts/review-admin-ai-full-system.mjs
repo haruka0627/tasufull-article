@@ -3,7 +3,7 @@
  * AI運営秘書 Phase1〜12 統合レビュー
  *   node scripts/review-admin-ai-full-system.mjs
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { finalizeFromOutDir } from "./lib/finalize-screenshot-run.mjs";
 import { fileURLToPath, pathToFileURL } from "url";
 import path from "path";
@@ -614,8 +614,7 @@ async function main() {
   const testResults = await runPhaseTests();
   testResults.forEach((t) => console.log(`${t.status}: ${t.name}`));
 
-  const browser = await chromium.launch({ headless: true });
-  const page = await browser.newPage();
+  await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage();
 
   await page.goto(pageUrl("admin-operations-dashboard.html"), { waitUntil: "domcontentloaded" });
   await page.evaluate((keys) => keys.forEach((k) => localStorage.removeItem(k)), KNOWN_STORAGE_KEYS);
@@ -644,7 +643,7 @@ async function main() {
   await page.waitForTimeout(300);
   await page.screenshot({ path: path.join(SHOT_DIR, "talk-ops-390.png"), fullPage: true });
 
-  await browser.close();
+    });
 
   const dupRenders =
     (checks.performance.opsWatch || 0) >= 2 ||
@@ -675,3 +674,5 @@ main().catch((err) => {
   console.error(err);
   process.exit(1);
 });
+
+await closeAllBrowsers();

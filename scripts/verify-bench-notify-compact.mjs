@@ -2,12 +2,11 @@
 /**
  * Bench iframe — 通知タブ compact（CTA がスクロールなしで見える）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
-const browser = await chromium.launch({ headless: true });
-const issues = [];
+await withPlaywrightBrowser(async (browser) => {const issues = [];
 
 function benchNotifyUrl(userId) {
   const u = new URL(`${BASE}/talk-home.html`);
@@ -58,7 +57,7 @@ async function measure(label, url, setup, viewport = { width: 1280, height: 420 
   return m;
 }
 
-try {
+
   const empty = await measure("empty", benchNotifyUrl("u_sachi"));
   if (!empty.compact) issues.push("empty: missing talk-bench-notify-compact class");
   if (empty.benchEmbed !== "1") issues.push("empty: benchEmbed dataset missing");
@@ -101,6 +100,6 @@ try {
     process.exit(1);
   }
   console.log("\nOK: bench notify compact — CTA visible without scroll");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();

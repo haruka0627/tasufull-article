@@ -2,7 +2,7 @@
 /**
  * 求人 2窓完了フロー — 掲載者申請 → 応募者承認（自動検証）
  */
-import { chromium } from "./lib/playwright-browser.mjs";
+import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { requireDevServer } from "./lib/dev-base-url.mjs";
 
 const BASE = await requireDevServer();
@@ -18,13 +18,12 @@ function collectVisibleText(page) {
   return page.evaluate(() => document.body?.innerText || "");
 }
 
-const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const poster = await context.newPage();
 const applicant = await context.newPage();
 const issues = [];
 
-try {
+
   await poster.goto(
     `${BASE}/chat-detail.html?thread=${THREAD}&userId=${POSTER}&talkDev=1&review=job-full&jobFullReset=1`,
     { waitUntil: "domcontentloaded" }
@@ -207,6 +206,6 @@ try {
     process.exit(1);
   }
   console.log("verify-job-dual-window-completion OK");
-} finally {
-  await browser.close();
-}
+});
+
+await closeAllBrowsers();
