@@ -1,0 +1,929 @@
+{
+  "generatedAt": "2026-06-07T04:13:19.955Z",
+  "baseUrl": "http://localhost:5173",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "screenshotRoot": "screenshots/platform-manual-review",
+  "categories": [
+    {
+      "categoryKey": "job",
+      "categoryLabel": "求人",
+      "steps": [
+        {
+          "order": 1,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "求人一覧",
+          "fileName": "screenshots/platform-manual-review/job/01-job-list.png",
+          "url": "job-top.html",
+          "fullUrl": "http://localhost:5173/job-top.html",
+          "from": null,
+          "to": "job-top.html",
+          "operation": "求人一覧を開く",
+          "checkPoints": [
+            "求人カードが一覧表示される",
+            "TasuFull求人トップが表示される"
+          ]
+        },
+        {
+          "order": 2,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "求人詳細（応募者）",
+          "fileName": "screenshots/platform-manual-review/job/02-job-detail.png",
+          "url": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "from": "job-top.html",
+          "to": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "operation": "求人詳細を開く",
+          "checkPoints": [
+            "ヒーロー・報酬・応募ボタンが表示される",
+            "職場イメージ等の詳細セクションがある"
+          ]
+        },
+        {
+          "order": 3,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "応募送信",
+          "fileName": "screenshots/platform-manual-review/job/03-apply.png",
+          "url": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "from": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "to": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "operation": "応募ボタン押下（または応募済み表示）",
+          "checkPoints": [
+            "「応募済み」または応募完了トースト",
+            "掲載者への応募通知が発火する導線"
+          ]
+        },
+        {
+          "order": 4,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "応募通知",
+          "fileName": "screenshots/platform-manual-review/job/04-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_job_demo_full&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_job_demo_full&talkDev=1",
+          "from": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_job_demo_full&talkDev=1",
+          "operation": "掲載者が通知タブで応募通知を確認",
+          "checkPoints": [
+            "「この求人に応募がありました」",
+            "「確認する」のみ（本文なし）"
+          ]
+        },
+        {
+          "order": 5,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "応募者確認",
+          "fileName": "screenshots/platform-manual-review/job/05-applications.png",
+          "url": "detail-job.html?id=job_demo_full_001&view=applications&userId=u_job_demo_full&talkDev=1&from=talk#applications",
+          "fullUrl": "http://localhost:5173/detail-job.html?id=job_demo_full_001&view=applications&userId=u_job_demo_full&talkDev=1&from=talk#applications",
+          "from": "talk-home.html?tab=notify&userId=u_job_demo_full&talkDev=1",
+          "to": "detail-job.html?id=job_demo_full_001&view=applications&userId=u_job_demo_full&talkDev=1&from=talk#applications",
+          "operation": "「確認する」→ 応募者確認（view=applications）",
+          "checkPoints": [
+            "応募者カードと検索/フィルター/並び替え",
+            "職場イメージ・求人詳細セクションは非表示",
+            "件数バッジが維持される"
+          ]
+        },
+        {
+          "order": 6,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "550円支払い",
+          "fileName": "screenshots/platform-manual-review/job/06-pay-550.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-1780805491102-nchqp4&listingId=job_demo_full_001&category=job&applicationId=job-app-demo-002",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-1780805491102-nchqp4&listingId=job_demo_full_001&category=job&applicationId=job-app-demo-002",
+          "from": "detail-job.html?id=job_demo_full_001&view=applications&userId=u_job_demo_full&talkDev=1&from=talk#applications",
+          "to": "platform-chat-fee-pay.html?thread=chat-1780805491102-nchqp4&listingId=job_demo_full_001&category=job&applicationId=job-app-demo-002",
+          "operation": "「やりとりに進む」→ 利用料550円の支払い画面",
+          "checkPoints": [
+            "¥550 定額",
+            "Connect/5%表記なし",
+            "求人カテゴリ"
+          ]
+        },
+        {
+          "order": 7,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "求人チャット",
+          "fileName": "screenshots/platform-manual-review/job/07-chat.png",
+          "url": "chat-detail.html?thread=chat-1780805491102-nchqp4",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-1780805491102-nchqp4",
+          "from": "platform-chat-fee-pay.html?thread=chat-1780805491102-nchqp4&listingId=job_demo_full_001&category=job&applicationId=job-app-demo-002",
+          "to": "chat-detail.html?thread=chat-1780805491102-nchqp4",
+          "operation": "550円支払い完了 → チャットを開く",
+          "checkPoints": [
+            "求人応募カードが表示される",
+            "deal-detail / チャットで確認 なし"
+          ]
+        },
+        {
+          "order": 8,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "採用通知",
+          "fileName": "screenshots/platform-manual-review/job/08-hired-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_hiro&talkDev=1",
+          "from": "chat-detail.html?thread=chat-1780805491102-nchqp4",
+          "to": "talk-home.html?tab=notify&userId=u_hiro&talkDev=1",
+          "operation": "応募者が「採用されました」通知を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "hire-result へ遷移する href"
+          ]
+        },
+        {
+          "order": 9,
+          "category": "求人",
+          "categoryKey": "job",
+          "screenName": "採用結果",
+          "fileName": "screenshots/platform-manual-review/job/09-hired-card.png",
+          "url": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1&view=hire-result&applicationId=job-app-demo-001&from=talk#applications",
+          "fullUrl": "http://localhost:5173/detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1&view=hire-result&applicationId=job-app-demo-001&from=talk#applications",
+          "from": "talk-home.html?tab=notify&userId=u_hiro&talkDev=1",
+          "to": "detail-job.html?id=job_demo_full_001&userId=u_hiro&talkDev=1&view=hire-result&applicationId=job-app-demo-001&from=talk#applications",
+          "operation": "「確認する」→ 採用結果カード（view=hire-result）",
+          "checkPoints": [
+            "採用結果カード1件",
+            "やりとり開始または待機メッセージ",
+            "通常求人詳細は非表示"
+          ]
+        }
+      ]
+    },
+    {
+      "categoryKey": "worker",
+      "categoryLabel": "ワーカー",
+      "steps": [
+        {
+          "order": 1,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "ワーカー詳細",
+          "fileName": "screenshots/platform-manual-review/worker/01-worker-detail.png",
+          "url": "detail-worker.html?id=demo-worker-001&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/detail-worker.html?id=demo-worker-001&userId=u_hiro&talkDev=1",
+          "from": null,
+          "to": "detail-worker.html?id=demo-worker-001&userId=u_hiro&talkDev=1",
+          "operation": "ワーカー詳細を開く（依頼者視点）",
+          "checkPoints": [
+            "プロフィールと報酬が表示される",
+            "依頼ボタンが表示される"
+          ]
+        },
+        {
+          "order": 2,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "依頼通知",
+          "fileName": "screenshots/platform-manual-review/worker/02-request-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "from": "detail-worker.html?id=demo-worker-001&userId=u_hiro&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "operation": "通知タブで「依頼が届きました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "deal-detail へ行かない"
+          ]
+        },
+        {
+          "order": 3,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "前払い支払い",
+          "fileName": "screenshots/platform-manual-review/worker/03-fee-pay.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-worker-fee-001&listingId=demo-worker-001&category=worker&notify=platform-verify-worker-request-001&userId=u_worker&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-worker-fee-001&listingId=demo-worker-001&category=worker&notify=platform-verify-worker-request-001&userId=u_worker&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-worker-fee-001&listingId=demo-worker-001&category=worker&notify=platform-verify-worker-request-001&userId=u_worker&talkDev=1&from=talk",
+          "operation": "「確認する」→ 5%・最低550円の支払い画面",
+          "checkPoints": [
+            "5%・最低550円",
+            "deal-detail リンクなし",
+            "worker カテゴリ"
+          ]
+        },
+        {
+          "order": 4,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "チャット（前払い後）",
+          "fileName": "screenshots/platform-manual-review/worker/04-chat.png",
+          "url": "chat-detail.html?thread=chat-demo-worker-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-worker-fee-001",
+          "from": "platform-chat-fee-pay.html?thread=chat-demo-worker-fee-001&listingId=demo-worker-001&category=worker&notify=platform-verify-worker-request-001&userId=u_worker&talkDev=1&from=talk",
+          "to": "chat-detail.html?thread=chat-demo-worker-fee-001",
+          "operation": "支払い完了 → チャットを開く",
+          "checkPoints": [
+            "コンテンツカードが表示される",
+            "deal-detail なし"
+          ]
+        },
+        {
+          "order": 5,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "コンテンツカード",
+          "fileName": "screenshots/platform-manual-review/worker/05-content-card.png",
+          "url": "chat-detail.html?thread=chat-demo-worker-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-worker-fee-001",
+          "from": "chat-detail.html?thread=chat-demo-worker-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-worker-fee-001",
+          "operation": "チャット内カード（セクションラベル確認）",
+          "checkPoints": [
+            "「依頼内容」セクション",
+            "一覧/detail への不要リンクなし"
+          ]
+        },
+        {
+          "order": 6,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "完了報告（チャット）",
+          "fileName": "screenshots/platform-manual-review/worker/06-complete.png",
+          "url": "chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-worker-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1",
+          "operation": "取引スレッドで完了報告カードを確認",
+          "checkPoints": [
+            "「完了報告」カード",
+            "承認/差し戻しボタン",
+            "deal-detail へ行かない"
+          ]
+        },
+        {
+          "order": 7,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "取引完了通知",
+          "fileName": "screenshots/platform-manual-review/worker/07-complete-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "operation": "通知タブで「取引が完了しました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "chat-detail へ遷移"
+          ]
+        },
+        {
+          "order": 8,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "完了報告（通知経由）",
+          "fileName": "screenshots/platform-manual-review/worker/08-complete-card.png",
+          "url": "chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_worker&talkDev=1",
+          "to": "chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1&from=talk",
+          "operation": "「確認する」→ 完了報告カード付きチャット",
+          "checkPoints": [
+            "完了報告カードが表示",
+            "チャットで確認 ボタンなし"
+          ]
+        },
+        {
+          "order": 9,
+          "category": "ワーカー",
+          "categoryKey": "worker",
+          "screenName": "完了後5%請求",
+          "fileName": "screenshots/platform-manual-review/worker/09-fee-after-complete.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-worker-deal-001&listingId=demo-worker-001&category=worker&deal=worker_deal_demo_001&phase=complete",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-worker-deal-001&listingId=demo-worker-001&category=worker&deal=worker_deal_demo_001&phase=complete",
+          "from": "chat-detail.html?thread=chat-demo-worker-deal-001&deal=worker_deal_demo_001&userId=u_worker&talkDev=1&from=talk",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-worker-deal-001&listingId=demo-worker-001&category=worker&deal=worker_deal_demo_001&phase=complete",
+          "operation": "完了承認 → 完了時5%・最低550円の支払い画面",
+          "checkPoints": [
+            "phase=complete",
+            "5%・最低550円",
+            "取引完了後の請求であること"
+          ]
+        }
+      ]
+    },
+    {
+      "categoryKey": "skill",
+      "categoryLabel": "スキル",
+      "steps": [
+        {
+          "order": 1,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "スキル詳細",
+          "fileName": "screenshots/platform-manual-review/skill/01-skill-detail.png",
+          "url": "detail-skill.html?id=demo-skill-001&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/detail-skill.html?id=demo-skill-001&userId=u_hiro&talkDev=1",
+          "from": null,
+          "to": "detail-skill.html?id=demo-skill-001&userId=u_hiro&talkDev=1",
+          "operation": "スキル詳細を開く（購入者視点）",
+          "checkPoints": [
+            "スキル概要と価格が表示される",
+            "相談/購入CTAが表示される"
+          ]
+        },
+        {
+          "order": 2,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "購入通知",
+          "fileName": "screenshots/platform-manual-review/skill/02-purchase-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "from": "detail-skill.html?id=demo-skill-001&userId=u_hiro&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "operation": "通知タブで「スキルが購入されました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "支払い画面へ遷移する"
+          ]
+        },
+        {
+          "order": 3,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "前払い支払い",
+          "fileName": "screenshots/platform-manual-review/skill/03-fee-pay.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-skill-fee-001&listingId=demo-skill-001&category=skill&notify=platform-verify-skill-purchase-001&userId=u_sachi&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-skill-fee-001&listingId=demo-skill-001&category=skill&notify=platform-verify-skill-purchase-001&userId=u_sachi&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-skill-fee-001&listingId=demo-skill-001&category=skill&notify=platform-verify-skill-purchase-001&userId=u_sachi&talkDev=1&from=talk",
+          "operation": "「確認する」→ 5%・最低550円の支払い画面",
+          "checkPoints": [
+            "5%・最低550円",
+            "deal-detail リンクなし",
+            "skill カテゴリ"
+          ]
+        },
+        {
+          "order": 4,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "チャット（前払い後）",
+          "fileName": "screenshots/platform-manual-review/skill/04-chat.png",
+          "url": "chat-detail.html?thread=chat-demo-skill-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-skill-fee-001",
+          "from": "platform-chat-fee-pay.html?thread=chat-demo-skill-fee-001&listingId=demo-skill-001&category=skill&notify=platform-verify-skill-purchase-001&userId=u_sachi&talkDev=1&from=talk",
+          "to": "chat-detail.html?thread=chat-demo-skill-fee-001",
+          "operation": "支払い完了 → チャットを開く",
+          "checkPoints": [
+            "コンテンツカードが表示される",
+            "deal-detail なし"
+          ]
+        },
+        {
+          "order": 5,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "コンテンツカード",
+          "fileName": "screenshots/platform-manual-review/skill/05-content-card.png",
+          "url": "chat-detail.html?thread=chat-demo-skill-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-skill-fee-001",
+          "from": "chat-detail.html?thread=chat-demo-skill-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-skill-fee-001",
+          "operation": "チャット内カード（セクションラベル確認）",
+          "checkPoints": [
+            "「購入内容」セクション",
+            "一覧/detail への不要リンクなし"
+          ]
+        },
+        {
+          "order": 6,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "完了報告（チャット）",
+          "fileName": "screenshots/platform-manual-review/skill/06-complete.png",
+          "url": "chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-skill-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1",
+          "operation": "取引スレッドで完了報告カードを確認",
+          "checkPoints": [
+            "「完了報告」カード",
+            "承認/差し戻しボタン",
+            "deal-detail へ行かない"
+          ]
+        },
+        {
+          "order": 7,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "取引完了通知",
+          "fileName": "screenshots/platform-manual-review/skill/07-complete-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "operation": "通知タブで「取引が完了しました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "chat-detail へ遷移"
+          ]
+        },
+        {
+          "order": 8,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "完了報告（通知経由）",
+          "fileName": "screenshots/platform-manual-review/skill/08-complete-card.png",
+          "url": "chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_sachi&talkDev=1",
+          "to": "chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1&from=talk",
+          "operation": "「確認する」→ 完了報告カード付きチャット",
+          "checkPoints": [
+            "完了報告カードが表示",
+            "チャットで確認 ボタンなし"
+          ]
+        },
+        {
+          "order": 9,
+          "category": "スキル",
+          "categoryKey": "skill",
+          "screenName": "完了後5%請求",
+          "fileName": "screenshots/platform-manual-review/skill/09-fee-after-complete.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-skill-deal-001&listingId=skill_deal_demo_001&category=skill&deal=skill_deal_demo_001&phase=complete",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-skill-deal-001&listingId=skill_deal_demo_001&category=skill&deal=skill_deal_demo_001&phase=complete",
+          "from": "chat-detail.html?thread=chat-demo-skill-deal-001&deal=skill_deal_demo_001&userId=u_sachi&talkDev=1&from=talk",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-skill-deal-001&listingId=skill_deal_demo_001&category=skill&deal=skill_deal_demo_001&phase=complete",
+          "operation": "完了承認 → 完了時5%・最低550円の支払い画面",
+          "checkPoints": [
+            "phase=complete",
+            "5%・最低550円",
+            "取引完了後の請求であること"
+          ]
+        }
+      ]
+    },
+    {
+      "categoryKey": "product",
+      "categoryLabel": "商品",
+      "steps": [
+        {
+          "order": 1,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "商品詳細",
+          "fileName": "screenshots/platform-manual-review/product/01-product-detail.png",
+          "url": "detail-product.html?id=demo-product-001&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/detail-product.html?id=demo-product-001&userId=u_hiro&talkDev=1",
+          "from": null,
+          "to": "detail-product.html?id=demo-product-001&userId=u_hiro&talkDev=1",
+          "operation": "商品詳細を開く（購入者視点）",
+          "checkPoints": [
+            "商品画像と価格が表示される",
+            "問い合わせ/購入CTAが表示される"
+          ]
+        },
+        {
+          "order": 2,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "購入通知",
+          "fileName": "screenshots/platform-manual-review/product/02-purchase-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "from": "detail-product.html?id=demo-product-001&userId=u_hiro&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "operation": "通知タブで「商品が購入されました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "5%・最低550円の前払い導線"
+          ]
+        },
+        {
+          "order": 3,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "前払い支払い",
+          "fileName": "screenshots/platform-manual-review/product/03-fee-pay.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-product-fee-001&listingId=demo-product-001&category=product&notify=platform-verify-product-purchase-001&userId=u_product&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-product-fee-001&listingId=demo-product-001&category=product&notify=platform-verify-product-purchase-001&userId=u_product&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-product-fee-001&listingId=demo-product-001&category=product&notify=platform-verify-product-purchase-001&userId=u_product&talkDev=1&from=talk",
+          "operation": "「確認する」→ 5%・最低550円の支払い画面",
+          "checkPoints": [
+            "5%・最低550円",
+            "deal-detail リンクなし",
+            "product カテゴリ"
+          ]
+        },
+        {
+          "order": 4,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "チャット（前払い後）",
+          "fileName": "screenshots/platform-manual-review/product/04-chat.png",
+          "url": "chat-detail.html?thread=chat-demo-product-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-product-fee-001",
+          "from": "platform-chat-fee-pay.html?thread=chat-demo-product-fee-001&listingId=demo-product-001&category=product&notify=platform-verify-product-purchase-001&userId=u_product&talkDev=1&from=talk",
+          "to": "chat-detail.html?thread=chat-demo-product-fee-001",
+          "operation": "支払い完了 → チャットを開く",
+          "checkPoints": [
+            "コンテンツカードが表示される",
+            "deal-detail なし"
+          ]
+        },
+        {
+          "order": 5,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "コンテンツカード",
+          "fileName": "screenshots/platform-manual-review/product/05-content-card.png",
+          "url": "chat-detail.html?thread=chat-demo-product-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-product-fee-001",
+          "from": "chat-detail.html?thread=chat-demo-product-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-product-fee-001",
+          "operation": "チャット内カード（セクションラベル確認）",
+          "checkPoints": [
+            "「購入内容」セクション",
+            "一覧/detail への不要リンクなし"
+          ]
+        },
+        {
+          "order": 6,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "完了報告（チャット）",
+          "fileName": "screenshots/platform-manual-review/product/06-complete.png",
+          "url": "chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-product-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1",
+          "operation": "取引スレッドで完了報告カードを確認",
+          "checkPoints": [
+            "「完了報告」カード",
+            "承認/差し戻しボタン",
+            "deal-detail へ行かない"
+          ]
+        },
+        {
+          "order": 7,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "取引完了通知",
+          "fileName": "screenshots/platform-manual-review/product/07-complete-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "operation": "通知タブで「取引が完了しました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "chat-detail へ遷移"
+          ]
+        },
+        {
+          "order": 8,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "完了報告（通知経由）",
+          "fileName": "screenshots/platform-manual-review/product/08-complete-card.png",
+          "url": "chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_product&talkDev=1",
+          "to": "chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1&from=talk",
+          "operation": "「確認する」→ 完了報告カード付きチャット",
+          "checkPoints": [
+            "完了報告カードが表示",
+            "チャットで確認 ボタンなし"
+          ]
+        },
+        {
+          "order": 9,
+          "category": "商品",
+          "categoryKey": "product",
+          "screenName": "完了後5%請求",
+          "fileName": "screenshots/platform-manual-review/product/09-fee-after-complete.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-product-deal-001&listingId=demo-product-001&category=product&deal=product_deal_demo_001&phase=complete",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-product-deal-001&listingId=demo-product-001&category=product&deal=product_deal_demo_001&phase=complete",
+          "from": "chat-detail.html?thread=chat-demo-product-deal-001&deal=product_deal_demo_001&userId=u_product&talkDev=1&from=talk",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-product-deal-001&listingId=demo-product-001&category=product&deal=product_deal_demo_001&phase=complete",
+          "operation": "完了承認 → 完了時5%・最低550円の支払い画面",
+          "checkPoints": [
+            "phase=complete",
+            "5%・最低550円",
+            "取引完了後の請求であること"
+          ]
+        }
+      ]
+    },
+    {
+      "categoryKey": "business",
+      "categoryLabel": "業務サービス",
+      "steps": [
+        {
+          "order": 1,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "業務サービス詳細",
+          "fileName": "screenshots/platform-manual-review/business/01-business-detail.png",
+          "url": "detail-business-service.html?id=demo-business-service-001&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/detail-business-service.html?id=demo-business-service-001&userId=u_hiro&talkDev=1",
+          "from": null,
+          "to": "detail-business-service.html?id=demo-business-service-001&userId=u_hiro&talkDev=1",
+          "operation": "業務サービス詳細を開く（相談者視点）",
+          "checkPoints": [
+            "サービス概要が表示される",
+            "相談CTAが表示される"
+          ]
+        },
+        {
+          "order": 2,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "相談通知",
+          "fileName": "screenshots/platform-manual-review/business/02-consult-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "from": "detail-business-service.html?id=demo-business-service-001&userId=u_hiro&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "operation": "通知タブで「相談が届きました（業務）」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "category=business_service"
+          ]
+        },
+        {
+          "order": 3,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "前払い支払い",
+          "fileName": "screenshots/platform-manual-review/business/03-fee-pay.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-business-fee-001&listingId=demo-business-service-001&category=business_service&notify=platform-verify-business-consult-001&userId=u_business_demo&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-business-fee-001&listingId=demo-business-service-001&category=business_service&notify=platform-verify-business-consult-001&userId=u_business_demo&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-business-fee-001&listingId=demo-business-service-001&category=business_service&notify=platform-verify-business-consult-001&userId=u_business_demo&talkDev=1&from=talk",
+          "operation": "「確認する」→ 5%・最低550円の支払い画面",
+          "checkPoints": [
+            "5%・最低550円",
+            "deal-detail リンクなし",
+            "business_service カテゴリ"
+          ]
+        },
+        {
+          "order": 4,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "チャット（前払い後）",
+          "fileName": "screenshots/platform-manual-review/business/04-chat.png",
+          "url": "chat-detail.html?thread=chat-demo-business-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-business-fee-001",
+          "from": "platform-chat-fee-pay.html?thread=chat-demo-business-fee-001&listingId=demo-business-service-001&category=business_service&notify=platform-verify-business-consult-001&userId=u_business_demo&talkDev=1&from=talk",
+          "to": "chat-detail.html?thread=chat-demo-business-fee-001",
+          "operation": "支払い完了 → チャットを開く",
+          "checkPoints": [
+            "コンテンツカードが表示される",
+            "deal-detail なし"
+          ]
+        },
+        {
+          "order": 5,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "コンテンツカード",
+          "fileName": "screenshots/platform-manual-review/business/05-content-card.png",
+          "url": "chat-detail.html?thread=chat-demo-business-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-business-fee-001",
+          "from": "chat-detail.html?thread=chat-demo-business-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-business-fee-001",
+          "operation": "チャット内カード（セクションラベル確認）",
+          "checkPoints": [
+            "「相談内容」セクション",
+            "一覧/detail への不要リンクなし"
+          ]
+        },
+        {
+          "order": 6,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "完了報告（チャット）",
+          "fileName": "screenshots/platform-manual-review/business/06-complete.png",
+          "url": "chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-business-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1",
+          "operation": "取引スレッドで完了報告カードを確認",
+          "checkPoints": [
+            "「完了報告」カード",
+            "承認/差し戻しボタン",
+            "deal-detail へ行かない"
+          ]
+        },
+        {
+          "order": 7,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "取引完了通知",
+          "fileName": "screenshots/platform-manual-review/business/07-complete-notify.png",
+          "url": "talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "operation": "通知タブで「取引が完了しました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "chat-detail へ遷移"
+          ]
+        },
+        {
+          "order": 8,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "完了報告（通知経由）",
+          "fileName": "screenshots/platform-manual-review/business/08-complete-card.png",
+          "url": "chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=u_business_demo&talkDev=1",
+          "to": "chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1&from=talk",
+          "operation": "「確認する」→ 完了報告カード付きチャット",
+          "checkPoints": [
+            "完了報告カードが表示",
+            "チャットで確認 ボタンなし"
+          ]
+        },
+        {
+          "order": 9,
+          "category": "業務サービス",
+          "categoryKey": "business",
+          "screenName": "完了後5%請求",
+          "fileName": "screenshots/platform-manual-review/business/09-fee-after-complete.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-business-deal-001&listingId=demo-business-service-001&category=business_service&deal=business_deal_demo_001&phase=complete",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-business-deal-001&listingId=demo-business-service-001&category=business_service&deal=business_deal_demo_001&phase=complete",
+          "from": "chat-detail.html?thread=chat-demo-business-deal-001&deal=business_deal_demo_001&userId=u_business_demo&talkDev=1&from=talk",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-business-deal-001&listingId=demo-business-service-001&category=business_service&deal=business_deal_demo_001&phase=complete",
+          "operation": "完了承認 → 完了時5%・最低550円の支払い画面",
+          "checkPoints": [
+            "phase=complete",
+            "5%・最低550円",
+            "取引完了後の請求であること"
+          ]
+        }
+      ]
+    },
+    {
+      "categoryKey": "shop",
+      "categoryLabel": "店舗販売",
+      "steps": [
+        {
+          "order": 1,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "店舗詳細",
+          "fileName": "screenshots/platform-manual-review/shop/01-shop-detail.png",
+          "url": "detail-shop.html?id=demo-shop-reworks&userId=u_hiro&talkDev=1",
+          "fullUrl": "http://localhost:5173/detail-shop.html?id=demo-shop-reworks&userId=u_hiro&talkDev=1",
+          "from": null,
+          "to": "detail-shop.html?id=demo-shop-reworks&userId=u_hiro&talkDev=1",
+          "operation": "店舗詳細を開く（購入者視点）",
+          "checkPoints": [
+            "店舗ヒーローと商品一覧が表示される",
+            "問い合わせ/購入導線がある"
+          ]
+        },
+        {
+          "order": 2,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "購入通知",
+          "fileName": "screenshots/platform-manual-review/shop/02-purchase-notify.png",
+          "url": "talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "from": "detail-shop.html?id=demo-shop-reworks&userId=u_hiro&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "operation": "通知タブで「商品が購入されました（店舗）」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "category=shop_store"
+          ]
+        },
+        {
+          "order": 3,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "前払い支払い",
+          "fileName": "screenshots/platform-manual-review/shop/03-fee-pay.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-shop-fee-001&listingId=demo-shop-reworks&category=shop_store&notify=platform-verify-shop-purchase-001&userId=demo_shop_user&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-shop-fee-001&listingId=demo-shop-reworks&category=shop_store&notify=platform-verify-shop-purchase-001&userId=demo_shop_user&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-shop-fee-001&listingId=demo-shop-reworks&category=shop_store&notify=platform-verify-shop-purchase-001&userId=demo_shop_user&talkDev=1&from=talk",
+          "operation": "「確認する」→ 5%・最低550円の支払い画面",
+          "checkPoints": [
+            "5%・最低550円",
+            "deal-detail リンクなし",
+            "shop_store カテゴリ"
+          ]
+        },
+        {
+          "order": 4,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "チャット（前払い後）",
+          "fileName": "screenshots/platform-manual-review/shop/04-chat.png",
+          "url": "chat-detail.html?thread=chat-demo-shop-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-shop-fee-001",
+          "from": "platform-chat-fee-pay.html?thread=chat-demo-shop-fee-001&listingId=demo-shop-reworks&category=shop_store&notify=platform-verify-shop-purchase-001&userId=demo_shop_user&talkDev=1&from=talk",
+          "to": "chat-detail.html?thread=chat-demo-shop-fee-001",
+          "operation": "支払い完了 → チャットを開く",
+          "checkPoints": [
+            "コンテンツカードが表示される",
+            "deal-detail なし"
+          ]
+        },
+        {
+          "order": 5,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "コンテンツカード",
+          "fileName": "screenshots/platform-manual-review/shop/05-content-card.png",
+          "url": "chat-detail.html?thread=chat-demo-shop-fee-001",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-shop-fee-001",
+          "from": "chat-detail.html?thread=chat-demo-shop-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-shop-fee-001",
+          "operation": "チャット内カード（セクションラベル確認）",
+          "checkPoints": [
+            "「購入内容」セクション",
+            "一覧/detail への不要リンクなし"
+          ]
+        },
+        {
+          "order": 6,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "完了報告（チャット）",
+          "fileName": "screenshots/platform-manual-review/shop/06-complete.png",
+          "url": "chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-shop-fee-001",
+          "to": "chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1",
+          "operation": "取引スレッドで完了報告カードを確認",
+          "checkPoints": [
+            "「完了報告」カード",
+            "承認/差し戻しボタン",
+            "deal-detail へ行かない"
+          ]
+        },
+        {
+          "order": 7,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "取引完了通知",
+          "fileName": "screenshots/platform-manual-review/shop/07-complete-notify.png",
+          "url": "talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "fullUrl": "http://localhost:5173/talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "from": "chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1",
+          "to": "talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "operation": "通知タブで「取引が完了しました」を確認",
+          "checkPoints": [
+            "タイトルのみ＋「確認する」",
+            "chat-detail へ遷移"
+          ]
+        },
+        {
+          "order": 8,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "完了報告（通知経由）",
+          "fileName": "screenshots/platform-manual-review/shop/08-complete-card.png",
+          "url": "chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1&from=talk",
+          "fullUrl": "http://localhost:5173/chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1&from=talk",
+          "from": "talk-home.html?tab=notify&userId=demo_shop_user&talkDev=1",
+          "to": "chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1&from=talk",
+          "operation": "「確認する」→ 完了報告カード付きチャット",
+          "checkPoints": [
+            "完了報告カードが表示",
+            "チャットで確認 ボタンなし"
+          ]
+        },
+        {
+          "order": 9,
+          "category": "店舗販売",
+          "categoryKey": "shop",
+          "screenName": "完了後5%請求",
+          "fileName": "screenshots/platform-manual-review/shop/09-fee-after-complete.png",
+          "url": "platform-chat-fee-pay.html?thread=chat-demo-shop-deal-001&listingId=demo-shop-reworks&category=shop_store&deal=shop_deal_demo_001&phase=complete",
+          "fullUrl": "http://localhost:5173/platform-chat-fee-pay.html?thread=chat-demo-shop-deal-001&listingId=demo-shop-reworks&category=shop_store&deal=shop_deal_demo_001&phase=complete",
+          "from": "chat-detail.html?thread=chat-demo-shop-deal-001&deal=shop_deal_demo_001&userId=demo_shop_user&talkDev=1&from=talk",
+          "to": "platform-chat-fee-pay.html?thread=chat-demo-shop-deal-001&listingId=demo-shop-reworks&category=shop_store&deal=shop_deal_demo_001&phase=complete",
+          "operation": "完了承認 → 完了時5%・最低550円の支払い画面",
+          "checkPoints": [
+            "phase=complete",
+            "5%・最低550円",
+            "取引完了後の請求であること"
+          ]
+        }
+      ]
+    }
+  ]
+}

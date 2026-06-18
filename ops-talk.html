@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>運営TALK | TASFUL</title>
+  <meta http-equiv="refresh" content="0;url=talk-home.html?audience=admin_ops&amp;tab=chat&amp;talkAdmin=1" />
+  <script>
+    (function () {
+      var q = location.search || "";
+      var params = new URLSearchParams(q.startsWith("?") ? q.slice(1) : q);
+      params.set("audience", "admin_ops");
+      if (!params.get("tab")) params.set("tab", "chat");
+      if (!params.get("talkAdmin")) params.set("talkAdmin", "1");
+      location.replace("talk-home.html?" + params.toString());
+    })();
+  </script>
+</head>
+<body>
+  <p><a href="talk-home.html?audience=admin_ops&amp;tab=chat&amp;talkAdmin=1">運営TALKへ移動</a></p>
+</body>
+</html>

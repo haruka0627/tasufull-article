@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>すべてのやりとり | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body data-page="chat-list" data-breadcrumb-page-label="すべてのやりとり">
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットへようこそ　
+      <a href="/post" class="link">今月システム利用料5％！</a>　
+      ｜　
+      <a href="ai-workspace.html" class="link accent">AI無料キャンペーン中</a>　
+      ｜　
+      <span style="color: #94a3b8;"></span>
+    </div>
+  </div>
+
+  <div class="page">
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+    <div class="chat-list-top">
+      <a href="dashboard.html" class="tasful-ai-logo chat-list-top__logo" data-chat-dashboard-link aria-label="TASFUL 会員ダッシュボード">
+        <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon" decoding="async">
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+        </div>
+      </a>
+      <a href="talk-home.html" class="chat-list-back" data-chat-back-dashboard>TASFUL TALK へ</a>
+      <a href="dashboard.html" class="chat-list-back">← ダッシュボード</a>
+    </div>
+    <main class="chat-shell" aria-label="すべてのやりとり">
+      <section class="chat-card chat-card--hub">
+        <header class="chat-hub-head">
+          <div class="chat-hub-head__main">
+            <h1 class="chat-hub-head__title">すべてのやりとり</h1>
+            <p class="chat-hub-head__sub">相談・見積り・取引チャット・運営通知をまとめて確認できます</p>
+          </div>
+        </header>
+
+        <div class="chat-hub-toolbar" data-chat-hub-toolbar>
+          <label class="chat-hub-search">
+            <span class="chat-hub-search__icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            </span>
+            <input
+              type="search"
+              class="chat-hub-search__input"
+              data-chat-hub-search
+              placeholder="相手名・掲載名・メッセージで検索"
+              autocomplete="off"
+              enterkeyhint="search"
+            >
+          </label>
+          <div class="chat-hub-toolbar__row">
+            <div class="chat-hub-filters" role="tablist" aria-label="絞り込み" data-chat-hub-filters>
+              <button type="button" class="chat-hub-filter is-active" data-chat-hub-filter="all" role="tab" aria-selected="true">すべて</button>
+              <button type="button" class="chat-hub-filter" data-chat-hub-filter="unread" role="tab" aria-selected="false">未読</button>
+              <button type="button" class="chat-hub-filter" data-chat-hub-filter="consult" role="tab" aria-selected="false">相談・見積り</button>
+              <button type="button" class="chat-hub-filter" data-chat-hub-filter="ongoing" role="tab" aria-selected="false">進行中の取引</button>
+              <button type="button" class="chat-hub-filter" data-chat-hub-filter="completed" role="tab" aria-selected="false">完了</button>
+              <button type="button" class="chat-hub-filter" data-chat-hub-filter="ops" role="tab" aria-selected="false">運営通知</button>
+            </div>
+            <label class="chat-hub-sort">
+              <span class="chat-hub-sort__label">並び替え</span>
+              <select class="chat-hub-sort__select" data-chat-hub-sort aria-label="並び替え">
+                <option value="newest">新しい順</option>
+                <option value="unread">未読優先</option>
+                <option value="oldest">更新が古い順</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <p class="chat-hub-policy" role="note">連絡先の直接交換（電話・メール・LINE・外部URLなど）は禁止です。やりとりはTASFUL内でお願いします。</p>
+
+        <div class="chat-hub-empty" data-chat-hub-empty hidden>
+          <p class="chat-hub-empty__title" data-chat-hub-empty-title>該当するやりとりはありません</p>
+          <p class="chat-hub-empty__sub" data-chat-hub-empty-sub>掲載詳細から相談・見積りを始めると、ここに表示されます。</p>
+        </div>
+
+        <ul id="chatThreadList" class="chat-list" aria-label="やりとり一覧"></ul>
+      </section>
+    </main>
+  </div>
+
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="talk-chat-profile.js"></script>
+  <script src="talk-chat-thread-model.js"></script>
+  <script src="chat-room-status.js"></script>
+  <script src="chat-data.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="chat-list.js"></script>
+</body>
+</html>

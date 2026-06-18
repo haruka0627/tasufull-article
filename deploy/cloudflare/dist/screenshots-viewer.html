@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Screenshots QA Center — TASFUL</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0f14;
+      --panel: #121820;
+      --border: rgba(255, 255, 255, 0.08);
+      --text: #e8edf4;
+      --muted: #8b97a8;
+      --accent: #5b9cff;
+      --pass: #4ade80;
+      --fail: #f87171;
+      --warn: #fbbf24;
+      --pc: #6ee7b7;
+      --sp: #fbbf24;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 14px 20px;
+      background: rgba(11, 15, 20, 0.94);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+    }
+    .topbar__row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .topbar h1 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .topbar .meta {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .topbar .actions {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .search-row {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 12px;
+      width: 100%;
+    }
+    .search-box {
+      width: 100%;
+      max-width: 520px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      font-size: 0.88rem;
+    }
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(91, 156, 255, 0.2);
+    }
+    .search-box::placeholder { color: var(--muted); }
+    .quick-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .quick-tags__label {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-right: 2px;
+    }
+    .quick-tag {
+      border-radius: 999px;
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      cursor: pointer;
+    }
+    .quick-tag:hover,
+    .quick-tag.is-active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(91, 156, 255, 0.1);
+    }
+    mark.search-hit,
+    .search-hit {
+      background: rgba(251, 191, 36, 0.35);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+    .group-count {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-left: 8px;
+    }
+    .group-search-banner {
+      margin: 0 0 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .category-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    button, .link-btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    button:hover, .link-btn:hover { border-color: var(--accent); }
+    button.is-active { border-color: var(--accent); color: var(--accent); }
+    .cat-pill {
+      border-radius: 999px;
+      font-size: 0.78rem;
+      padding: 5px 12px;
+    }
+    .cat-pill.is-active {
+      background: rgba(91, 156, 255, 0.12);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .cat-pill.is-warn:not(.is-active) {
+      border-color: rgba(251, 191, 36, 0.45);
+      color: var(--warn);
+    }
+    main { padding: 20px; max-width: 1500px; margin: 0 auto; }
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 48px 16px;
+    }
+    .warn-panel {
+      margin-bottom: 24px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      background: rgba(251, 191, 36, 0.06);
+    }
+    .warn-panel__title {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+      color: var(--warn);
+    }
+    .warn-panel__sub {
+      margin: 0 0 10px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .warn-list {
+      margin: 0;
+      padding-left: 1.1rem;
+      font-size: 0.78rem;
+      max-height: 180px;
+      overflow: auto;
+    }
+    .warn-list code { font-size: 0.75rem; }
+    .warn-list .muted { color: var(--muted); }
+    .linkish {
+      background: none;
+      border: none;
+      color: var(--accent);
+      padding: 0;
+      font-size: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .group { margin-bottom: 32px; }
+    .group-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 0 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .flow-block {
+      margin: 0 0 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(91, 156, 255, 0.28);
+      background: rgba(91, 156, 255, 0.06);
+    }
+    .flow-block__title {
+      margin: 0 0 4px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .flow-block__sub { margin: 0; }
+    .pair-block { margin-bottom: 20px; }
+    .device-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+    .shot-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: zoom-in;
+      transition: border-color 0.15s, transform 0.15s;
+      max-width: 240px;
+      width: 100%;
+    }
+    .shot-card--unregistered {
+      border-color: rgba(251, 191, 36, 0.25);
+    }
+    .shot-card:hover {
+      border-color: rgba(91, 156, 255, 0.45);
+      transform: translateY(-1px);
+    }
+    .shot-card__thumb {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 96px;
+      max-height: 360px;
+      padding: 8px;
+      background: #000;
+      overflow: hidden;
+    }
+    .shot-card__thumb img {
+      display: block;
+      max-width: 100%;
+      max-height: 340px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+    .diff-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: #000;
+      max-height: 360px;
+      overflow: hidden;
+    }
+    .diff-col {
+      position: relative;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-height: 360px;
+    }
+    .diff-col img {
+      display: block;
+      max-width: 100%;
+      max-height: 340px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+    .diff-label {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      z-index: 1;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.72);
+      color: #fff;
+    }
+    .shot-meta {
+      padding: 10px 12px;
+      font-size: 0.78rem;
+    }
+    .shot-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      margin: 0 0 6px;
+      color: var(--text);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 4px;
+    }
+    .shot-desc {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.45;
+    }
+    .shot-time {
+      color: var(--muted);
+      font-size: 0.74rem;
+      margin-bottom: 6px;
+    }
+    .shot-links {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .shot-link {
+      color: var(--accent);
+      font-size: 0.74rem;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    .shot-link:hover { text-decoration: underline; }
+    .shot-name {
+      font-family: ui-monospace, monospace;
+      word-break: break-all;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .badge--pass { background: rgba(74, 222, 128, 0.15); color: var(--pass); }
+    .badge--fail { background: rgba(248, 113, 113, 0.15); color: var(--fail); }
+    .badge--unknown { background: rgba(139, 151, 168, 0.12); color: var(--muted); }
+    .badge--warn { background: rgba(251, 191, 36, 0.15); color: var(--warn); }
+    .badge--diff { background: rgba(91, 156, 255, 0.12); color: var(--accent); }
+    .badge--pc { background: rgba(110, 231, 183, 0.15); color: var(--pc); }
+    .badge--sp { background: rgba(251, 191, 36, 0.15); color: var(--sp); }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.92);
+      display: none;
+      flex-direction: column;
+    }
+    .lightbox.is-open { display: flex; }
+    .lightbox-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      background: rgba(0, 0, 0, 0.6);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .lightbox-bar .name {
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .lightbox-stage {
+      flex: 1;
+      overflow: auto;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 16px;
+      gap: 12px;
+    }
+    .lightbox-stage img {
+      display: block;
+      max-width: none;
+      max-height: none;
+      width: auto;
+      height: auto;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    }
+    .lb-diff {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .lb-diff[hidden] { display: none !important; }
+    .lb-diff__col { text-align: center; }
+    .lb-diff__label {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .lightbox-hint {
+      color: var(--muted);
+      font-size: 0.75rem;
+      padding: 0 16px 10px;
+    }
+    .nav-btn {
+      min-width: 36px;
+      text-align: center;
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__row">
+      <h1>Screenshots QA Center</h1>
+      <a class="meta" href="docs/screenshots-qa-rules.md">検証ルール</a>
+      <span class="meta" id="status">読み込み中…</span>
+      <div class="actions">
+        <button type="button" id="btn-qa" class="is-active">QA登録済み</button>
+        <button type="button" id="btn-latest">最新バッチ</button>
+        <button type="button" id="btn-diff" title="前回スクショと並べて比較">差分確認</button>
+        <button type="button" id="btn-refresh">manifest更新</button>
+      </div>
+    </div>
+    <div class="search-row">
+      <input
+        type="search"
+        id="search-input"
+        class="search-box"
+        placeholder="スクショ名・説明・レポート・URLで検索"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="スクショ検索"
+      >
+      <div class="quick-tags" id="quick-tags" aria-label="クイック検索">
+        <span class="quick-tags__label">クイック:</span>
+        <button type="button" class="quick-tag" data-search="AI Workspace">AI Workspace</button>
+        <button type="button" class="quick-tag" data-search="Builder">Builder</button>
+        <button type="button" class="quick-tag" data-search="Talk">Talk</button>
+        <button type="button" class="quick-tag" data-search="Connect">Connect</button>
+        <button type="button" class="quick-tag" data-search="通知">通知</button>
+        <button type="button" class="quick-tag" data-search="求人">求人</button>
+        <button type="button" class="quick-tag" data-search="一般案件">一般案件</button>
+        <button type="button" class="quick-tag" data-search="問い合わせ">問い合わせ</button>
+      </div>
+    </div>
+    <nav class="category-nav" id="category-nav" aria-label="カテゴリフィルタ"></nav>
+  </header>
+  <main id="app"></main>
+
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="画像プレビュー">
+    <div class="lightbox-bar">
+      <button type="button" class="nav-btn" id="lb-prev" title="前 (←)">←</button>
+      <span class="name" id="lb-name"></span>
+      <button type="button" class="nav-btn" id="lb-next" title="次 (→)">→</button>
+      <button type="button" id="lb-close" title="閉じる (Esc)">Esc</button>
+    </div>
+    <div class="lightbox-stage" id="lb-stage">
+      <div class="lb-diff" id="lb-diff" hidden>
+        <div class="lb-diff__col">
+          <span class="lb-diff__label">前回</span>
+          <img id="lb-prev-img" alt="">
+        </div>
+        <div class="lb-diff__col">
+          <span class="lb-diff__label">今回</span>
+          <img id="lb-current-img" alt="">
+        </div>
+      </div>
+      <img id="lb-img" alt="">
+    </div>
+    <div class="lightbox-hint">実寸表示 · 差分確認モード時は前回/今回を並列表示 · ← → · Esc</div>
+  </div>
+
+  <script src="screenshots-viewer.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+/* 390px — 中身に合わせた高さ（市場共通 min-height 打ち消しは shop-market-top.css） */
+body.tasful-market-page.tasful-market-cart-page {
+  padding-top: calc(var(--tasful-market-header-total-h, 152px) + env(safe-area-inset-top, 0px)) !important;
+  /* padding-bottom: iPhone ホームインジケータ回避のみ（装飾余白なし） */
+  padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+  background: var(--tasful-market-bg);
+}
+
+.tasful-market-cart-main {
+  max-width: 960px;
+  margin: 0 auto;
+  /* 下余白なし — 最終ブロックは cross-sell。main 全体の padding-bottom は空白の原因になる */
+  padding: 16px 16px 0;
+}
+.tasful-market-cart-main__title {
+  margin: 0 0 8px;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.tasful-market-cart-main__count {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  color: var(--tasful-market-muted);
+  font-weight: 600;
+}
+
+.tasful-market-cart-main__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* 390px: 操作CTAは下部 .tasful-market-cart-main__actions--mobile のみ（aside はサマリー表示のみ） */
+.tasful-market-cart-summary .tasful-market-cart-main__btn {
+  display: none;
+}
+
+.tasful-market-cart-main__items {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.tasful-market-cart-item {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 10px;
+}
+
+.tasful-market-cart-item__img {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.tasful-market-cart-item__img-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.tasful-market-cart-item__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tasful-market-cart-item__title {
+  margin: 0 0 4px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.tasful-market-cart-item__title-link {
+  color: inherit;
+  text-decoration: none;
+  font-weight: inherit;
+}
+
+.tasful-market-cart-item__meta {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--tasful-market-muted);
+  font-weight: 600;
+}
+
+.tasful-market-cart-item__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+}
+
+.tasful-market-cart-item__foot .tasful-market-cart-item__remove::before {
+  content: "·";
+  margin: 0 0.35em;
+  color: var(--tasful-market-muted);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.tasful-market-cart-item__remove {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #2563eb;
+  font: inherit;
+  font-size: inherit;
+  font-weight: 600;
+  line-height: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tasful-market-cart-item__remove:hover,
+.tasful-market-cart-item__remove:focus-visible {
+  color: #1d4ed8;
+}
+
+.tasful-market-cart-main__empty {
+  margin: 0 0 16px;
+  padding: 20px 16px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 10px;
+}
+
+.tasful-market-cart-main__empty-text {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--tasful-market-text, #111827);
+}
+
+.tasful-market-cart-main__empty .tasful-market-cart-main__btn {
+  min-width: 160px;
+}
+
+.tasful-market-cart-main__btn--checkout {
+  width: 100%;
+  flex: 1 1 100%;
+  /* min-height: 44px — タップ領域確保（ボタン内のみ） */
+  min-height: 44px;
+  background: #ffd814 !important;
+  border-color: #e6c200 !important;
+}
+
+.tasful-market-cart-main__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f7efdc 0%, #edd9a8 100%);
+  border: 1px solid #c4a24a;
+  color: #1f2937;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tasful-market-cart-main__btn--outline {
+  background: #fff;
+}
+
+.tasful-market-cart-cross-sell {
+  margin-top: 16px;
+  margin-bottom: 0;
+  padding-top: 0;
+}
+
+.tasful-market-cart-main + .tasful-market-footer {
+  margin-top: 8px;
+}
+
+.tasful-market-cart-cross-sell__title {
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--tasful-market-text, #111827);
+}
+
+.tasful-market-cart-cross-sell__scroll {
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  align-items: flex-start;
+  min-height: 0;
+}
+
+/* P1-5 — カート 戻る導線（ヘッダーロゴ） */
+body.tasful-market-cart-page .tasful-market-mall-header__logo {
+  min-height: var(--tasful-back-link-min-h, 36px);
+  padding-block: 3px;
+  box-sizing: border-box;
+}

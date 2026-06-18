@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>商品詳細 | TasuFull</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            page: '#F8F9FA',
+            gold: { DEFAULT: '#F4D06F', dark: '#D4A63A', light: '#FFE7A3' },
+          },
+          fontFamily: {
+            sans: ['"Noto Sans JP"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="detail-trust-score.css">
+  <link rel="stylesheet" href="detail-favorites.css">
+  <link rel="stylesheet" href="listing-detail-page.css">
+  <link rel="stylesheet" href="listing-ai-badge.css">
+  <link rel="stylesheet" href="detail-skill-premium.css">
+  <link rel="stylesheet" href="detail-bottom-sections.css">
+  <link rel="stylesheet" href="detail-premium-layout.css">
+  <link rel="stylesheet" href="seller-rank-plate.css">
+  <link rel="stylesheet" href="detail-category.css">
+  <link rel="stylesheet" href="listing-featured.css">
+  <link rel="stylesheet" href="detail-product.css">
+  <link rel="stylesheet" href="skill-paid-options.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+  <link rel="stylesheet" href="detail-product-mobile.css">
+</head>
+<body class="min-h-screen bg-page font-sans text-gray-800 antialiased" data-detail-page="1" data-detail-type="product" data-listing-loaded="false">
+
+    <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットフォームへようこそ　
+      <a href="/post" class="link">今月システム利用料5％！</a>　
+      ｜　
+      <a href="listing-management.html" class="link accent">掲載管理</a>　
+      ｜　
+      <span style="color: #94a3b8;"></span>
+    </div>
+  </div>
+
+  <nav class="section-nav" aria-label="ページ内ナビゲーション">
+    <div class="section-nav__inner">
+      <a href="#section-details" class="section-nav__link is-active">商品説明</a>
+      <a href="#section-options" class="section-nav__link">有料オプション</a>
+      <a href="#section-seller" class="section-nav__link">出品者情報</a>
+      <a href="#section-portfolio" class="section-nav__link">ギャラリー</a>
+      <a href="#section-reviews" class="section-nav__link">商品レビュー</a>
+    </div>
+  </nav>
+
+  <div class="skill-detail-wrap mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+    <header class="page-subheader mb-5 flex items-center justify-between">
+      <a href="index.html" class="text-sm text-gray-500 transition hover:text-gold-dark">← 一覧に戻る</a>
+      <span class="text-sm font-bold text-gold-dark">TasuFull</span>
+    </header>
+    <main class="skill-detail-main w-full max-w-none">
+      <section class="skill-hero-section skill-hero-premium detail-product-hero mb-4 w-full overflow-hidden rounded-xl" data-detail-keep>
+        <div class="skill-hero-premium__grid">
+          <div class="skill-hero-premium__media">
+            <p class="skill-hero-premium__media-label">商品画像</p>
+            <figure class="listing-hero__figure skill-hero-premium__figure is-loading" data-listing-hero-figure>
+              <img id="mainImage" data-listing-image alt="" width="640" height="800" decoding="async">
+            </figure>
+            <div class="skill-hero-premium__gallery" role="tablist" aria-label="掲載画像" data-listing-gallery hidden></div>
+          </div>
+          <div class="skill-hero-premium__center product-hero-premium__center">
+            <span class="skill-hero-premium__category" data-listing-category-badge>商品</span>
+            <h1 class="skill-hero-premium__title" data-listing-service-name data-listing-title>商品掲載</h1>
+            <p class="skill-hero-premium__subtitle product-hero-summary" data-listing-subtitle data-listing-product-hero-summary>商品の概要をご確認ください</p>
+            <div class="skill-hero-premium__tags product-hero-tags" data-listing-tags aria-label="タグ"></div>
+            <ul class="product-hero-features" data-listing-product-hero-features aria-label="商品の特徴" hidden></ul>
+            <a href="#section-seller" class="product-hero-seller-card" data-listing-product-hero-seller hidden></a>
+            <p class="skill-hero-premium__description" data-listing-description hidden aria-hidden="true">説明はまだ登録されていません。</p>
+          </div>
+          <aside class="skill-hero-premium__cta product-hero-premium__cta">
+            <div class="skill-cta-panel product-cta-panel">
+              <p class="skill-cta-panel__label">販売価格</p>
+              <p class="skill-cta-panel__price product-cta-panel__price">
+                <span data-listing-price>要相談</span><span class="product-cta-panel__suffix" data-listing-price-suffix hidden>〜</span>
+                <span class="skill-cta-panel__tax">（税込）</span>
+              </p>
+              <ul class="product-cta-panel__hints" data-listing-product-cta-hints aria-label="購入について">
+                <li>見積相談OK</li>
+                <li>カスタム対応</li>
+                <li>即相談可能</li>
+              </ul>
+              <p class="skill-cta-panel__label" data-listing-cta-heading>ご購入・ご相談</p>
+              <a href="#" class="skill-cta-panel__primary cta-consult" data-listing-primary-cta>購入する</a>
+              <a href="#" class="skill-cta-panel__secondary cta-consult">相談する</a>
+              <button type="button" class="skill-cta-panel__favorite" data-favorite-button data-tasu-favorite data-target-id="" data-target-type="product">
+                <svg class="h-4 w-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                お気に入りに追加
+              </button>
+              <p class="skill-cta-panel__note" data-listing-cta-note>在庫・配送は詳細をご確認ください</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section id="section-details" class="section-anchor skill-details-premium skill-section-spaced mb-4" aria-labelledby="detailDetailsTitle" data-listing-product-details data-detail-keep>
+        <header class="skill-details-premium__head">
+          <span class="skill-details-premium__icon" aria-hidden="true">✨</span>
+          <h2 id="detailDetailsTitle" class="skill-details-premium__title">詳細</h2>
+        </header>
+        <div class="skill-details-premium__body">
+          <div class="skill-details-block">
+            <h3 class="skill-details-block__title">商品説明</h3>
+            <div class="skill-details-block__content skill-details-block__content--long" data-listing-product-description>未登録</div>
+          </div>
+          <div class="skill-details-block">
+            <h3 class="skill-details-block__title">カテゴリ</h3>
+            <div class="skill-details-block__content" data-listing-product-category>未登録</div>
+          </div>
+          <div class="skill-details-block">
+            <h3 class="skill-details-block__title">状態</h3>
+            <div class="skill-details-block__content" data-listing-product-condition>未登録</div>
+          </div>
+          <div class="skill-details-block">
+            <h3 class="skill-details-block__title">価格</h3>
+            <div class="skill-details-block__content" data-listing-product-price-note>未登録</div>
+          </div>
+          <div class="skill-details-block">
+            <h3 class="skill-details-block__title">在庫・発送目安</h3>
+            <div class="skill-details-block__content" data-listing-product-stock>未登録</div>
+          </div>
+          <div class="skill-details-block">
+            <h3 class="skill-details-block__title">仕様</h3>
+            <div class="skill-details-block__content" data-listing-product-specs>未登録</div>
+          </div>
+          <div class="skill-details-block">
+            <h3 class="skill-details-block__title">配送方法</h3>
+            <div class="skill-details-block__content" data-listing-product-shipping>未登録</div>
+          </div>
+        </div>
+      </section>
+      <section
+        id="section-options"
+        class="section-anchor paid-options-section skill-section-spaced mb-4"
+        data-detail-keep
+        data-paid-options-root
+        aria-labelledby="paidOptionsTitle"
+        hidden
+      >
+        <div class="paid-options-card">
+          <div class="paid-options-heading">
+            <span class="paid-options-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h14l-1.25 9a1 1 0 01-1 .9H7.25a1 1 0 01-1-.9L6 6z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 6V4a2 2 0 012-2h8a2 2 0 012 2v2"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 11h6"/>
+              </svg>
+            </span>
+            <h2 id="paidOptionsTitle" class="paid-options-title">追加オプション</h2>
+          </div>
+          <div class="paid-options-body">
+            <div class="paid-options-layout">
+              <div class="paid-options-list" id="optionList" role="list" aria-label="有料オプション一覧"></div>
+              <aside class="paid-options-total" aria-live="polite">
+                <span class="paid-options-total__accent" aria-hidden="true"></span>
+                <span class="paid-options-total__label">合計金額</span>
+                <strong id="optionTotal" class="paid-options-total__price">¥0</strong>
+                <p class="paid-options-total__hint" data-options-hint>オプションを選択してください</p>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="section-seller" class="detail-product-seller-section section-anchor skill-seller-premium skill-section-spaced" data-detail-keep data-listing-seller data-author-user-id="u_store" aria-labelledby="detailSellerTitle">
+        <header class="skill-seller-premium__head skill-seller-premium__head--bar">
+          <p class="skill-seller-premium__lead">この商品の出品者</p>
+          <span class="skill-seller-premium__chip">信頼プロフィール</span>
+        </header>
+        <div class="detail-product-seller-card skill-seller-premium__body seller-card-inner seller-card">
+          <div class="detail-product-author-panel seller-left seller-card-col seller-card-col--left">
+            <h2 id="detailSellerTitle" class="seller-left__title skill-seller-premium__title">出品者情報</h2>
+            <div class="skill-seller-premium__avatar-wrap">
+              <img data-seller-avatar src="https://placehold.co/160x160/f3ead4/967622?text=S" alt="出品者" class="skill-seller-premium__avatar profile-avatar rank-new" width="104" height="104" loading="lazy">
+              <span class="skill-seller-premium__status-dot skill-seller-premium__status-dot--offline" data-seller-status-dot aria-label="稼働状況"></span>
+            </div>
+            <span class="seller-rank-chip rank-new" data-seller-rank-chip>NEW</span>
+            <p class="seller-left__username skill-seller-premium__name seller-name rank-new" data-seller-display-name>出品者</p>
+            <p class="seller-left__handle skill-seller-premium__handle" data-seller-handle>@—</p>
+            <p class="seller-left__login skill-seller-premium__last-login" data-seller-last-login>最終ログイン：—</p>
+          </div>
+          <div class="seller-main seller-card-col seller-card-col--center skill-seller-premium__main">
+            <div class="skill-seller-premium__block skill-seller-premium__block--tags seller-main__tags">
+              <h4 class="skill-seller-premium__block-title">認証・信頼</h4>
+              <div class="skill-seller-premium__badges seller-tags" data-seller-badges aria-label="認証・会員バッジ">
+                <span class="skill-seller-badge tag-chip skill-seller-badge--muted">バッジ情報なし</span>
+              </div>
+            </div>
+            <div class="skill-seller-premium__block skill-seller-premium__block--stats seller-main__stats">
+              <h4 class="skill-seller-premium__block-title">実績</h4>
+              <div class="skill-seller-premium__stats seller-stats-grid stats-grid" aria-label="統計">
+                <div class="skill-seller-stat seller-stat">
+                  <span class="skill-seller-stat__label seller-stat__label">総販売実績</span>
+                  <strong class="skill-seller-stat__value seller-stat__value" data-seller-deals>—</strong>
+                </div>
+                <div class="skill-seller-stat seller-stat">
+                  <span class="skill-seller-stat__label seller-stat__label">フォロワー</span>
+                  <strong class="skill-seller-stat__value seller-stat__value" data-seller-followers>—</strong>
+                </div>
+                <div class="skill-seller-stat skill-seller-stat--rating seller-stat seller-stat--rating">
+                  <span class="skill-seller-stat__label seller-stat__label">評価</span>
+                  <p class="seller-stat__rating" data-seller-trust-anchor aria-label="評価">
+                    <span data-seller-rating-value>—</span>
+                    <span class="seller-stat__stars" data-seller-rating-stars aria-hidden="true"></span>
+                  </p>
+                  <span class="seller-stat__count" data-seller-rating-count></span>
+                </div>
+              </div>
+            </div>
+            <div class="skill-seller-premium__block skill-seller-premium__block--activity seller-main__activity">
+              <h4 class="skill-seller-premium__block-title">対応・稼働情報</h4>
+              <div class="skill-seller-premium__activity-grid status-grid">
+                <div class="skill-seller-activity status-item"><span class="skill-seller-activity__label">平均返信</span><strong class="skill-seller-activity__value skill-seller-activity__value--accent" data-seller-response-time>—</strong></div>
+                <div class="skill-seller-activity status-item"><span class="skill-seller-activity__label">返信状況</span><strong class="skill-seller-activity__value" data-seller-availability>—</strong></div>
+                <div class="skill-seller-activity status-item"><span class="skill-seller-activity__label">稼働時間</span><strong class="skill-seller-activity__value" data-seller-work-hours>未設定</strong></div>
+                <div class="skill-seller-activity status-item"><span class="skill-seller-activity__label">納品目安</span><strong class="skill-seller-activity__value" data-seller-delivery-estimate>—</strong></div>
+                <div class="skill-seller-activity status-item"><span class="skill-seller-activity__label">ステータス</span><strong class="skill-seller-activity__value skill-seller-activity__value--status" data-seller-status-label>—</strong></div>
+              </div>
+            </div>
+          </div>
+          <aside class="seller-actions seller-card-col seller-card-col--right skill-seller-premium__actions seller-actions-col" aria-label="出品者への操作">
+            <a href="#" class="seller-apply-btn cta-consult">購入・相談する</a>
+            <button type="button" class="seller-follow-btn"><svg class="seller-btn__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>フォロー</button>
+            <a href="#otherServices" class="seller-more-jobs-btn"><span>他の商品を見る</span><svg class="seller-btn__icon seller-btn__icon--arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+            <p class="seller-actions__note">ご相談は24時間以内に返信いたします</p>
+          </aside>
+        </div>
+      </section>
+      <section id="section-portfolio" class="section-anchor skill-portfolio-premium skill-section-spaced overflow-hidden rounded-xl bg-white" data-detail-keep>
+        <div class="skill-portfolio-premium__head">
+          <h2 class="text-[15px] font-bold text-gray-800">商品ギャラリー</h2>
+          <span class="text-xs text-gray-400" data-listing-portfolio-count>—</span>
+        </div>
+        <div class="skill-portfolio-premium__track-wrap">
+          <div class="skill-portfolio-premium__track" id="portfolioStrip" data-listing-portfolio-strip></div>
+          <button type="button" class="skill-portfolio-premium__scroll-btn skill-portfolio-premium__scroll-btn--next" aria-label="次へ" data-scroll-target="portfolioStrip" data-scroll-dir="1">›</button>
+        </div>
+      </section>
+      <div class="detail-bottom-sections" data-detail-keep>
+        <section id="section-reviews" class="section-anchor detail-bottom-card detail-reviews" data-detail-keep aria-labelledby="detailReviewsTitle">
+          <header class="detail-bottom-card__head">
+            <div class="detail-bottom-card__head-main">
+              <h2 id="detailReviewsTitle" class="detail-bottom-card__title">口コミ・評価</h2>
+              <a href="#" class="detail-bottom-card__more">もっと見る →</a>
+            </div>
+            <span class="detail-bottom-card__head-line" aria-hidden="true"></span>
+          </header>
+          <div class="detail-reviews__body">
+            <div class="detail-reviews__summary">
+              <p class="detail-reviews__summary-label">総合評価</p>
+              <p class="detail-reviews__score" data-listing-review-average>—</p>
+              <p class="detail-reviews__stars detail-gold-stars detail-gold-stars--lg" aria-hidden="true">★★★★★</p>
+              <p class="detail-reviews__count">(<strong data-listing-review-count>0</strong>件)</p>
+            </div>
+            <div class="detail-reviews__cards-wrap">
+              <div class="detail-reviews__cards" id="reviewsStrip" data-listing-reviews-strip></div>
+            </div>
+          </div>
+        </section>
+        <section id="otherServices" class="section-anchor detail-bottom-card detail-seller-services" data-detail-keep aria-labelledby="detailRelatedTitle">
+          <header class="detail-bottom-card__head">
+            <div class="detail-bottom-card__head-main">
+              <h2 id="detailRelatedTitle" class="detail-bottom-card__title">他の商品を見る</h2>
+              <a href="index.html#products" class="detail-bottom-card__more">もっと見る →</a>
+            </div>
+            <span class="detail-bottom-card__head-line" aria-hidden="true"></span>
+          </header>
+          <div class="detail-seller-services__body">
+            <div class="detail-seller-services__track-wrap">
+              <button type="button" class="detail-strip-scroll-btn detail-strip-scroll-btn--prev" aria-label="前へ" data-scroll-target="otherServicesStrip" data-scroll-dir="-1">‹</button>
+              <div class="detail-seller-services__track" id="otherServicesStrip" data-listing-other-services-strip></div>
+              <button type="button" class="detail-strip-scroll-btn detail-strip-scroll-btn--next" aria-label="次へ" data-scroll-target="otherServicesStrip" data-scroll-dir="1">›</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="contacts" class="section-anchor job-applications-panel job-panel-card mb-4" data-listing-contacts-section data-detail-keep hidden aria-labelledby="listingContactsTitle">
+          <div class="job-applications-panel__head">
+            <h2 id="listingContactsTitle" class="job-applications-panel__title" data-listing-contacts-title>購入者一覧</h2>
+            <span class="job-applications-panel__count" data-listing-contacts-count>0 件</span>
+          </div>
+          <p class="job-applications-panel__lead" data-listing-contacts-lead hidden></p>
+          <ul class="job-applications-list" data-listing-contacts-list aria-label="購入者一覧"></ul>
+        </section>
+      </div>
+    </main>
+    <footer class="pb-8 text-center text-xs text-gray-400">© TasuFull — 商品マーケットプレイス</footer>
+  </div>
+  <script type="application/json" id="listing-options-data">[]</script>
+  <script src="listing-options.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="favorites-db.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="detail-trust-score.js"></script>
+  <script src="detail-favorites.js"></script>
+  <script src="listing-tags.js"></script>
+  <script src="listing-images.js"></script>
+  <script src="product-listing-fields.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="stripe-featured-config.js"></script>
+  <script src="listing-featured.js"></script>
+  <script src="listing-route-resolver.js"></script>
+
+  <script src="listing-demo-catalog.js"></script>
+  <script src="listings-db.js"></script>
+  <script src="listing-seller-profile.js"></script>
+  <script src="listing-detail-loader.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="shop-payout.js" defer></script>
+  <script src="platform-chat-category-flow.js" defer></script>
+  <script src="platform-chat-purchase-payment-flow.js" defer></script>
+  <script src="platform-chat-connect-entry-flow.js" defer></script>
+  <script src="platform-chat-fee.js" defer></script>
+  <script src="talk-notifications-store.js" defer></script>
+  <script src="talk-platform-notify.js" defer></script>
+  <script src="platform-chat-fee-gate-flow.js" defer></script>
+  <script src="talk-platform-fee-notify.js" defer></script>
+  <script src="listing-contact-requests-store.js" defer></script>
+  <script src="platform-chat-bench-embed-bridge.js" defer></script>
+  <script src="contact-actions.js" defer></script>
+  <script src="listing-detail-contacts.js" defer></script>
+  <script src="detail-product.js"></script>
+  <script src="detail-skill.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>

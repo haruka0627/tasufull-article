@@ -1,0 +1,236 @@
+/* 売上・手数料管理 — 会員ページ */
+
+.sf-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.sf-stats {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+}
+
+.sf-stat {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--dash-card, #fff);
+  border: 1px solid var(--dash-border, #e2e8f0);
+  box-shadow: var(--dash-shadow, 0 4px 16px rgba(15, 23, 42, 0.06));
+}
+
+.sf-stat__label {
+  margin: 0 0 8px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--dash-text-muted, #64748b);
+}
+
+.sf-stat__value {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+  font-weight: 900;
+  color: var(--dash-navy, #1e293b);
+  line-height: 1.2;
+}
+
+.sf-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+  min-width: 0;
+}
+
+.sf-filters__btn {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid var(--dash-border, #e2e8f0);
+  background: #fff;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--dash-text-muted, #64748b);
+  cursor: pointer;
+}
+
+.sf-filters__btn.is-active {
+  border-color: #c4a24a;
+  background: #fffbeb;
+  color: #967622;
+}
+
+.sf-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px;
+  border: 1px solid var(--dash-border, #e2e8f0);
+  background: #fff;
+  box-shadow: var(--dash-shadow, 0 4px 16px rgba(15, 23, 42, 0.06));
+  width: 100%;
+  max-width: 100%;
+}
+
+.sf-row--highlight {
+  background: #fffbeb;
+  outline: 2px solid #d4a017;
+  outline-offset: -2px;
+}
+
+.sf-row--highlight td {
+  font-weight: 600;
+}
+
+.sf-table {
+  width: 100%;
+  min-width: 880px;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.sf-table th,
+.sf-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #eef2f7;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.sf-table th {
+  background: #fafaf8;
+  font-weight: 800;
+  color: #475569;
+  white-space: nowrap;
+}
+
+.sf-table tr:last-child td {
+  border-bottom: none;
+}
+
+.sf-table td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.sf-table td:not(.num):not(.sf-status-cell) {
+  max-width: 14rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.sf-table th:last-child,
+.sf-table td.sf-status-cell {
+  white-space: nowrap;
+  max-width: none;
+  width: 1%;
+}
+
+.sf-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  flex-shrink: 0;
+  white-space: nowrap;
+  line-height: 1.2;
+  border: 1px solid transparent;
+}
+
+.sf-status--pending {
+  background: #fff7ed;
+  color: #c2410c;
+  border-color: #fed7aa;
+}
+
+.sf-status--scheduled {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.sf-status--transferred {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+.sf-status--completed {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+/* legacy alias */
+.sf-status--paid {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+.sf-status--cancelled {
+  background: #f1f5f9;
+  color: #64748b;
+  border-color: #e2e8f0;
+}
+
+.sf-empty {
+  text-align: center;
+  padding: 48px 24px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px dashed var(--dash-border, #e2e8f0);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.sf-empty__title {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.sf-empty__text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--dash-text-muted, #64748b);
+}
+
+@media (max-width: 960px) {
+  .sf-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .sf-stat__value {
+    font-size: 1.25rem;
+  }
+
+  .sf-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 4px;
+  }
+
+  .sf-filters__btn {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .sf-stats {
+    grid-template-columns: 1fr;
+  }
+}

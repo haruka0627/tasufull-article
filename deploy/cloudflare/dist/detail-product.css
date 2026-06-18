@@ -1,0 +1,657 @@
+/* 商品詳細専用 — detail-product.html（data-detail-type="product"）
+   一覧用 .product-list-card とは完全分離 */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.section-nav {
+  position: sticky;
+  top: var(--tasu-banner-height);
+  z-index: 9990;
+  margin-bottom: 1rem;
+  background: #fff;
+  border-bottom: 1px solid #ececec;
+}
+
+.section-nav__inner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.section-nav__inner::-webkit-scrollbar {
+  display: none;
+}
+
+.section-nav__link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  padding: 0 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  color: #6b7280;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.section-nav__link:hover {
+  color: #374151;
+}
+
+.section-nav__link.is-active {
+  color: #1f2937;
+  font-weight: 600;
+  border-bottom-color: #c1a858;
+}
+
+.section-anchor {
+  scroll-margin-top: calc(var(--tasu-banner-height) + 4.5rem);
+}
+
+/* ==========================================================================
+   出品者情報 — detail-job「会社・掲載者情報」と同構造（専用 class のみ）
+   ========================================================================== */
+
+body[data-detail-type="product"] .detail-product-seller-section.skill-seller-premium {
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .detail-product-seller-card {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  padding: 1.25rem 1rem 1.35rem;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  body[data-detail-type="product"] .detail-product-seller-section .detail-product-seller-card {
+    grid-template-columns: 272px minmax(0, 1fr) 212px;
+    grid-template-areas: "left main actions";
+    column-gap: 0;
+    row-gap: 0;
+    align-items: stretch;
+    min-height: 320px;
+    padding: 28px 32px 32px;
+  }
+
+  body[data-detail-type="product"] .detail-product-seller-section .detail-product-author-panel {
+    grid-area: left;
+    padding-right: 28px;
+    border-right: 1px dashed rgba(15, 23, 42, 0.14);
+  }
+
+  body[data-detail-type="product"] .detail-product-seller-section .seller-main {
+    grid-area: main;
+    padding: 4px 28px 0;
+    border-right: 1px dashed rgba(15, 23, 42, 0.14);
+  }
+
+  body[data-detail-type="product"] .detail-product-seller-section .seller-actions {
+    grid-area: actions;
+    margin-left: 4px;
+  }
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .detail-product-author-panel,
+body[data-detail-type="product"] .detail-product-seller-section .seller-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  text-align: center;
+  position: static;
+  float: none;
+  transform: none;
+  left: auto;
+  right: auto;
+  width: auto;
+  max-width: none;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-left__title {
+  align-self: stretch;
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-main,
+body[data-detail-type="product"] .detail-product-seller-section .skill-seller-premium__main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  position: static;
+  transform: none;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: static;
+  transform: none;
+}
+
+@media (min-width: 1024px) {
+  body[data-detail-type="product"] .detail-product-seller-section .seller-actions {
+    justify-content: flex-start;
+    padding: 18px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    background: #fafaf9;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  }
+}
+
+@media (max-width: 1023px) {
+  body[data-detail-type="product"] .detail-product-seller-section .seller-actions {
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+  }
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .skill-seller-premium__avatar-wrap {
+  width: fit-content;
+  margin-inline: auto;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-left__username.seller-name {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  animation: none;
+  transform: none;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-rank-chip {
+  position: relative;
+  display: inline-flex;
+  margin-inline: auto;
+}
+
+/* 右CTA — detail-job と同見た目 */
+body[data-detail-type="product"] .detail-product-seller-section .seller-apply-btn,
+body[data-detail-type="product"] .detail-product-seller-section .seller-follow-btn,
+body[data-detail-type="product"] .detail-product-seller-section .seller-more-jobs-btn {
+  display: inline-flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  position: static;
+  transform: none;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-btn__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-apply-btn {
+  font-weight: 800;
+  color: #1b1b1b;
+  background: linear-gradient(135deg, #d4a93a, #f5d97a);
+  border: 1px solid rgba(212, 169, 58, 0.45);
+  box-shadow: 0 8px 24px rgba(212, 169, 58, 0.25);
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-apply-btn:hover {
+  background: linear-gradient(135deg, #e0b84a, #fce88a);
+  border-color: rgba(212, 169, 58, 0.65);
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-follow-btn {
+  font-weight: 700;
+  color: #8a7340;
+  background: #fff;
+  border: 1.5px solid rgba(193, 168, 88, 0.55);
+  box-shadow: none;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-more-jobs-btn {
+  font-weight: 600;
+  color: #4b5563;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-more-jobs-btn span {
+  color: inherit;
+}
+
+/* 一覧用グローバル上書きの無効化（detail 内の stats / tags） */
+body[data-detail-type="product"] .detail-product-seller-section .skill-seller-premium__stats.seller-stats-grid,
+body[data-detail-type="product"] .detail-product-seller-section .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+}
+
+body[data-detail-type="product"] .detail-product-seller-section .seller-tags,
+body[data-detail-type="product"] .detail-product-seller-section .skill-seller-premium__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================================================
+   ヒーロー内・出品者ミニカード（detail-job と同 class: .product-hero-seller-card）
+   ホストに rank-* を付けない（detail-category 誤セレクタ回避）
+   ========================================================================== */
+
+body[data-detail-type="product"] .detail-product-hero.skill-hero-section {
+  overflow: visible;
+  height: auto;
+}
+
+body[data-detail-type="product"] .detail-product-hero .skill-hero-premium__grid {
+  align-items: stretch;
+  height: auto;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-premium__center {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+  align-self: stretch;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-premium__cta {
+  align-self: stretch;
+  height: auto;
+}
+
+/* カード本体 — detail-category / rank 誤爆を遮断 */
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card {
+  box-sizing: border-box;
+  position: static;
+  align-self: stretch;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 0.25rem;
+  min-height: 150px;
+  height: auto;
+  max-height: none;
+  padding: 18px 22px;
+  border-radius: 18px !important;
+  clip-path: none !important;
+  overflow: visible;
+  display: grid !important;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 0.75rem;
+  border: 1px solid rgba(214, 179, 91, 0.35);
+  background:
+    radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.06), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+  box-shadow:
+    0 12px 30px rgba(180, 140, 60, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  color: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: normal;
+  -webkit-text-fill-color: inherit;
+  animation: none;
+  filter: none;
+  will-change: auto;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card::before,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card::after {
+  content: none !important;
+  display: none !important;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card:hover {
+  border-color: rgba(212, 180, 120, 0.5);
+  box-shadow:
+    0 14px 34px rgba(180, 140, 60, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="legend"] {
+  border-color: rgba(196, 181, 253, 0.42);
+  background:
+    radial-gradient(circle at 8% 18%, rgba(124, 58, 237, 0.1), transparent 32%),
+    radial-gradient(circle at 92% 82%, rgba(56, 189, 248, 0.07), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 248, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="platinum"] {
+  background:
+    radial-gradient(circle at 12% 22%, rgba(148, 163, 184, 0.08), transparent 30%),
+    linear-gradient(135deg, rgba(252, 252, 254, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="gold"] {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(244, 208, 111, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="new"],
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="bronze"],
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="silver"] {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.07), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__avatar-wrap {
+  grid-column: 1;
+  grid-row: 1;
+  position: relative;
+  flex-shrink: 0;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__main {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.15rem;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__avatar,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .profile-avatar {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-name-wrap {
+  order: 1;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__handle {
+  order: 2;
+  margin: 0.05rem 0 0.2rem;
+  font-size: 0.6875rem;
+  color: #8b7d66;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__head {
+  order: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.15rem;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__login {
+  order: 4;
+  margin: 0.1rem 0 0;
+  font-size: 0.625rem;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stats {
+  order: 5;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.35rem 0.5rem;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 520px) {
+  body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-card__name,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-name {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-name-wrap {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="legend"] .product-hero-seller-name-wrap {
+  position: relative;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card[data-seller-rank="legend"] .product-hero-seller-name-wrap::after {
+  content: "";
+  position: absolute;
+  left: 4%;
+  bottom: -4px;
+  width: 92%;
+  max-width: calc(100% - 8%);
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(124, 58, 237, 0.45),
+    rgba(56, 189, 248, 0.35),
+    transparent
+  );
+  filter: blur(0.3px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .seller-name.rank-legend,
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-card__name.seller-name.rank-legend {
+  font-weight: 900;
+  font-size: clamp(1.25rem, 1.8vw, 1.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    110deg,
+    #2563eb 0%,
+    #7c3aed 24%,
+    #ec4899 48%,
+    #38bdf8 72%,
+    #8b5cf6 100%
+  );
+  background-size: 260% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: productHeroLegendNameAurora 9s ease-in-out infinite alternate;
+}
+
+@keyframes productHeroLegendNameAurora {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .seller-name.rank-legend,
+  body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .product-hero-seller-card__name.seller-name.rank-legend {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .seller-rank-chip {
+  border-radius: 7px !important;
+  max-width: 6.5rem;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card .skill-seller-badge {
+  border-radius: 6px;
+  height: auto;
+  min-height: 0;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.5625rem;
+  line-height: 1.2;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat {
+  min-width: 0;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-label {
+  display: block;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #94a3b8;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-value:not(.product-hero-seller-card__stat-value--status) {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #d8a72f;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-shadow: 0 1px 8px rgba(216, 167, 47, 0.22);
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-sub {
+  margin-left: 0.15rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #c49228;
+  white-space: nowrap;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-card__stat-value--status:not(.product-hero-seller-online) {
+  display: inline-block;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0;
+  border-radius: 0 !important;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #8b7d66;
+  background: none;
+  border: none;
+  box-shadow: none;
+  white-space: nowrap;
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-online {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.375rem;
+  max-width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0 !important;
+  background: transparent;
+  color: #16a34a;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+  box-shadow: none;
+  text-shadow: 0 0 8px rgba(22, 163, 74, 0.25);
+}
+
+body[data-detail-type="product"] .detail-product-hero .product-hero-seller-online::before {
+  content: "";
+  flex-shrink: 0;
+  width: 0.5625rem;
+  height: 0.5625rem;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+}
+
+body[data-detail-type="product"] #section-options .product-hero-seller-card,
+body[data-detail-type="product"] .paid-options-section .product-hero-seller-card {
+  display: none !important;
+}
+
+/* 最下部カード（他の商品）— tasu-banner.css の header 潰しを解除 */
+body[data-detail-type="product"] #otherServices:not([hidden]) .detail-bottom-card__head {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 1.4rem 1.5rem 1.05rem !important;
+  overflow: visible !important;
+  background: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body[data-detail-type="product"] #otherServices:not([hidden]) .detail-bottom-card__title {
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+/* 最下部カード → コピーライト間の余白（14px〜18px） */
+body[data-detail-type="product"] .skill-detail-wrap > footer {
+  margin-top: 1rem;
+  padding-top: 0;
+  padding-bottom: 2rem;
+}

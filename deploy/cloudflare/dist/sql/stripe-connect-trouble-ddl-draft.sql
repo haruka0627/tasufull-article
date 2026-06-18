@@ -1,0 +1,41 @@
+-- TASFUL Stripe Connect トラブル強化 — DDL 草案（本番未適用・Phase 7）
+-- 現状は localStorage + 既存 support_events / ai_ops_events で代替可能
+
+-- create table if not exists public.stripe_event_ingest_logs (
+--   id text primary key,
+--   created_at timestamptz not null default now(),
+--   event_type text not null,
+--   ticket_id text references public.support_tickets(id),
+--   case_id text references public.ai_ops_cases(id),
+--   connect_issue_id text,
+--   evidence_pack_id text,
+--   mapping jsonb,
+--   payload jsonb
+-- );
+
+-- create table if not exists public.chargeback_evidence_packs (
+--   id text primary key,
+--   created_at timestamptz not null default now(),
+--   ticket_id text,
+--   case_id text,
+--   dispute_id text,
+--   transaction_id text,
+--   order_id text,
+--   project_id text,
+--   pack jsonb not null,
+--   submitted_to_stripe boolean not null default false,
+--   admin_required boolean not null default true
+-- );
+
+-- create table if not exists public.offplatform_risk_events (
+--   id text primary key,
+--   created_at timestamptz not null default now(),
+--   ticket_id text,
+--   case_id text,
+--   risk_type text not null,
+--   severity text not null,
+--   matched_terms jsonb,
+--   source_text_preview text
+-- );
+
+-- RLS: ops admin のみ（ops-rls-production.sql と同型の tasu_can_manage_ops()）

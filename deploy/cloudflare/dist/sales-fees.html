@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>売上・手数料管理 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="sales-fees.css">
+</head>
+<body class="dash-body" data-page="sales-fees">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ"></nav>
+    </aside>
+    <div class="dash-main">
+      <header class="dash-header dash-header--account">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <a href="index-top.html" class="tasful-ai-logo dash-header__logo" aria-label="TASFUL">
+              <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+              <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+            </a>
+          </div>
+          <div class="dash-header__actions">
+            <a href="chat-list.html" class="dash-header-link" aria-label="メッセージ">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="dash-header-link__label">メッセージ</span>
+              <span class="dash-header-link__badge" data-dash-msg-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="dashboard.html#dash-notices" class="dash-header-link" aria-label="通知">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="dash-header-link__label">通知</span>
+              <span class="dash-header-link__badge" data-dash-notice-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="profile-settings.html" class="dash-profile" aria-label="プロフィール">
+              <img class="dash-profile__avatar" data-dash-avatar src="https://placehold.co/64x64/f3ead4/967622?text=ME" width="40" height="40" alt="">
+              <span class="dash-profile__text">
+                <span class="dash-profile__name" data-dash-user-name>会員</span>
+                <span class="dash-profile__sub">個人・事業者</span>
+              </span>
+              <svg class="dash-profile__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+          </div>
+        </div>
+      </header>
+      <main class="dash-content dash-shell sf-layout">
+        <section class="dash-member-page-head">
+          <h1 class="dash-member-page-head__title">売上・手数料管理</h1>
+          <p class="dash-member-page-head__sub">完了した業務サービス取引の見積・手数料・差引売上を確認できます。</p>
+        </section>
+        <section class="sf-stats" data-sf-stats aria-label="売上サマリー"></section>
+        <nav class="sf-filters" data-sf-filters aria-label="期間フィルター"></nav>
+        <div class="sf-table-wrap" data-sf-table-wrap>
+          <table class="sf-table">
+            <thead>
+              <tr>
+                <th scope="col">取引ID</th>
+                <th scope="col">サービス名</th>
+                <th scope="col">見積金額</th>
+                <th scope="col">手数料</th>
+                <th scope="col">差引売上</th>
+                <th scope="col">手数料率</th>
+                <th scope="col">支払い日時</th>
+                <th scope="col">レビュー評価</th>
+                <th scope="col">ステータス</th>
+              </tr>
+            </thead>
+            <tbody data-sf-tbody></tbody>
+          </table>
+        </div>
+        <div class="sf-empty" data-sf-empty hidden>
+          <p class="sf-empty__title">該当する取引がありません</p>
+          <p class="sf-empty__text">期間フィルターを変更するか、取引が発生するまでお待ちください。</p>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="dashboard-guard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="service-deals-db.js"></script>
+  <script src="business-service-reviews-db.js"></script>
+  <script src="business-service-sales-db.js"></script>
+  <script src="favorites-db.js"></script>
+  <script src="business-service-data.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="dashboard-data.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="demo-deals-data.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="sales-fees.js"></script>
+</body>
+</html>

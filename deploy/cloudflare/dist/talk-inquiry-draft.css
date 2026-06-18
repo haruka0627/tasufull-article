@@ -1,0 +1,166 @@
+.talk-inquiry-draft-page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0f0f14 0%, #14141c 40%, #101018 100%);
+  color: #eceaf8;
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+}
+
+.talk-inquiry-draft__header {
+  padding: 20px 16px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.talk-inquiry-draft__back {
+  color: #b8a8ff;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.talk-inquiry-draft__title {
+  margin: 10px 0 4px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.talk-inquiry-draft__sub {
+  margin: 0;
+  font-size: 12px;
+  color: rgba(236, 234, 248, 0.65);
+}
+
+.talk-inquiry-draft__main {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.talk-inquiry-draft__loading,
+.talk-inquiry-draft__error {
+  text-align: center;
+  padding: 40px 16px;
+  color: rgba(236, 234, 248, 0.7);
+}
+
+.talk-inquiry-draft-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(142, 117, 255, 0.25);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.talk-inquiry-draft-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.talk-inquiry-draft-card__badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(142, 117, 255, 0.2);
+  color: #d9ccff;
+}
+
+.talk-inquiry-draft-card__meta {
+  font-size: 12px;
+  color: rgba(236, 234, 248, 0.65);
+}
+
+.talk-inquiry-draft-card__target {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.talk-inquiry-draft-card__label {
+  display: block;
+  font-size: 11px;
+  color: rgba(236, 234, 248, 0.55);
+  margin-bottom: 4px;
+}
+
+.talk-inquiry-draft-card__subject,
+.talk-inquiry-draft-card__body {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  color: #f5f3ff;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+.talk-inquiry-draft-card__body {
+  min-height: 180px;
+  resize: vertical;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.talk-inquiry-draft-card__field {
+  margin-bottom: 12px;
+}
+
+.talk-inquiry-draft-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.talk-inquiry-draft-card__btn {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  color: #eceaf8;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.talk-inquiry-draft-card__btn--primary {
+  border-color: rgba(142, 117, 255, 0.55);
+  background: linear-gradient(135deg, #7c5cff, #5b8dff);
+  color: #fff;
+  font-weight: 600;
+}
+
+.talk-inquiry-draft-card__btn--ghost {
+  background: transparent;
+}
+
+.talk-inquiry-draft-card__note {
+  margin: 12px 0 0;
+  font-size: 11px;
+  color: rgba(236, 234, 248, 0.55);
+  line-height: 1.5;
+}
+
+.ai-inquiry-panel__fields {
+  display: grid;
+  gap: 12px;
+  margin: 12px 0;
+}
+
+.ai-inquiry-panel__label {
+  display: block;
+  font-size: 11px;
+  color: rgba(236, 234, 248, 0.55);
+  margin-bottom: 4px;
+}
+
+.ai-inquiry-panel__subject {
+  margin: 0;
+  font-weight: 600;
+}
+
+.ai-inquiry-loading {
+  opacity: 0.75;
+  font-style: italic;
+}

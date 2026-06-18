@@ -1,0 +1,79 @@
+{
+  "at": "2026-06-18T09:49:17.459Z",
+  "project": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "anonProbes": [
+    {
+      "table": "transaction_rooms",
+      "status": 200,
+      "rows": 0,
+      "pass": true
+    },
+    {
+      "table": "transaction_messages",
+      "status": 200,
+      "rows": 0,
+      "pass": true
+    },
+    {
+      "table": "chats",
+      "status": 200,
+      "rows": 0,
+      "pass": true
+    },
+    {
+      "table": "reviews",
+      "status": 200,
+      "rows": 0,
+      "pass": true
+    },
+    {
+      "table": "favorites",
+      "status": 200,
+      "rows": 0,
+      "pass": true
+    }
+  ],
+  "abProbes": [
+    {
+      "test": "transaction_rooms A reads own / B stranger denied",
+      "aRows": 1,
+      "bRows": 0,
+      "pass": true
+    },
+    {
+      "test": "transaction_messages B cannot read A room",
+      "bRows": 0,
+      "pass": true
+    },
+    {
+      "test": "favorites B cannot read A",
+      "bRows": 0,
+      "pass": true
+    },
+    {
+      "test": "favorites B cannot insert as A",
+      "pass": true
+    }
+  ],
+  "opsProbes": [
+    {
+      "memberSupportRows": 0,
+      "adminSupportRows": 1,
+      "pass": true
+    }
+  ],
+  "permissivePolicies": {
+    "ok": false,
+    "rows": []
+  },
+  "errors": [],
+  "passes": [
+    "no using(true)/Allow all on legacy tables",
+    "anon READ transaction_rooms 0",
+    "anon READ transaction_messages 0",
+    "anon READ chats 0",
+    "anon READ reviews 0",
+    "anon READ favorites 0",
+    "seed transaction_room"
+  ]
+}

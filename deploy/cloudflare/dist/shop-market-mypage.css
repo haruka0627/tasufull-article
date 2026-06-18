@@ -1,0 +1,153 @@
+/* TASFUL市場 — マイページ（Amazon アカウントサービス風） */
+body.tasful-market-mypage-page {
+  padding-top: calc(var(--tasful-market-header-total-h, 152px) + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+  background: var(--tasful-market-bg);
+}
+
+.tasful-market-mypage-main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 16px 0;
+}
+
+.tasful-market-mypage-hero {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: linear-gradient(135deg, #232f3e 0%, #37475a 100%);
+  border-radius: 12px;
+  color: #fff;
+}
+
+.tasful-market-mypage-hero__greeting {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.tasful-market-mypage-hero__title {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.tasful-market-mypage-hero__lead {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  opacity: 0.9;
+  line-height: 1.5;
+}
+
+.tasful-market-mypage-section {
+  margin-bottom: 16px;
+}
+
+.tasful-market-mypage-section__title {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  font-weight: 900;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-mypage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.tasful-market-mypage-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+  min-height: 88px;
+  padding: 14px 12px;
+  background: #fff;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 12px;
+  text-decoration: none;
+  color: var(--tasful-market-text);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.tasful-market-mypage-card__icon {
+  font-size: 1.375rem;
+  line-height: 1;
+}
+
+.tasful-market-mypage-card__label {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.tasful-market-mypage-card__meta {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #007185;
+}
+
+.tasful-market-mypage-listed-preview {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tasful-market-border);
+}
+
+.tasful-market-mypage-listed-preview__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tasful-market-mypage-listed-preview__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 900;
+}
+
+.tasful-market-mypage-listed-preview__more {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #007185;
+  text-decoration: none;
+}
+
+.tasful-market-mypage-listed-preview .tasful-market-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tasful-market-mypage-recent-preview {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--tasful-market-border);
+}
+
+.tasful-market-mypage-recent-preview__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tasful-market-mypage-recent-preview__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 900;
+}
+
+.tasful-market-mypage-recent-preview__more {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #007185;
+  text-decoration: none;
+}
+
+.tasful-market-mypage-recent-preview .tasful-market-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}

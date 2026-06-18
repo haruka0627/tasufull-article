@@ -1,0 +1,6950 @@
+/* 法人・業者・店舗 — 高級法人詳細（建設業向けプレミアムUI） */
+
+.biz-detail-page {
+  background: #f6f7f9;
+  color: #1a1a1a;
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+.biz-detail-status-wrap,
+.biz-detail-page-wrap {
+  max-width: min(92.5rem, calc(100vw - 1.25rem));
+  margin: 0 auto;
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+  box-sizing: border-box;
+}
+
+.biz-detail-page-wrap {
+  padding-bottom: 7rem;
+}
+
+.biz-detail-page--construction .biz-detail-panel {
+  padding: 1.45rem 1.5rem;
+}
+
+.biz-detail-page--taxi .biz-detail-fv-card--taxi {
+  border-color: rgba(150, 118, 34, 0.22);
+}
+
+.biz-detail-page--taxi .biz-detail-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.biz-detail-page--taxi #section-strengths {
+  order: 1;
+}
+
+.biz-detail-page--taxi #section-coverage {
+  order: 2;
+}
+
+.biz-detail-page--taxi #section-achievements {
+  order: 3;
+}
+
+.biz-detail-page--taxi #section-reviews {
+  order: 4;
+}
+
+.biz-detail-page--taxi #section-price {
+  order: 5;
+}
+
+.biz-detail-page--taxi #section-license {
+  order: 6;
+}
+
+.biz-detail-page--taxi #section-company {
+  order: 7;
+}
+
+.biz-detail-page--taxi #section-map {
+  order: 8;
+}
+
+.biz-detail-page--taxi #section-properties,
+.biz-detail-page--taxi #section-conditions,
+.biz-detail-page--taxi #section-category-extra,
+.biz-detail-page--taxi #section-overview,
+.biz-detail-page--taxi #section-payment {
+  order: 90;
+}
+
+.biz-detail-page--taxi .biz-detail-panel--strengths .biz-detail-strength__icon {
+  filter: none;
+}
+
+.biz-detail-page--taxi .biz-detail-strengths--taxi {
+  grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+  gap: 0.85rem;
+}
+
+.biz-detail-page--taxi .biz-detail-strengths--taxi .biz-detail-strength {
+  text-align: left;
+  padding: 1.05rem 1rem;
+}
+
+.biz-detail-page--taxi .biz-detail-strengths--taxi .biz-detail-strength__icon {
+  margin-bottom: 0.45rem;
+  font-size: 1.5rem;
+}
+
+.biz-detail-taxi-price-summary {
+  padding: 1rem 1.15rem;
+  background: #fffdf9;
+  border: 1px solid rgba(150, 118, 34, 0.22);
+  border-radius: 14px;
+}
+
+.biz-detail-taxi-price-summary__line {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+
+.biz-detail-taxi-price-summary__line + .biz-detail-taxi-price-summary__line {
+  margin-top: 0.45rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.biz-detail-booking-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.5rem;
+  margin: 0 0 1rem;
+}
+
+.biz-detail-booking-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.85rem;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: #fffdf6;
+  border: 1px solid rgba(150, 118, 34, 0.4);
+  border-radius: 999px;
+}
+
+.biz-detail-coverage-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.55rem;
+}
+
+.biz-detail-coverage-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.28rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: #fffdf6;
+  border: 1px solid rgba(150, 118, 34, 0.42);
+  border-radius: 999px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+}
+
+.biz-detail-page--taxi #section-coverage .biz-detail-coverage-taxi {
+  display: flex;
+  flex-direction: column;
+  gap: 1.05rem;
+  margin-top: 0.35rem;
+  padding: 1.15rem 1.2rem;
+  background: #fffdf9;
+  border: 1px solid rgba(150, 118, 34, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.92) inset;
+}
+
+.biz-detail-coverage-taxi__intro {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.75;
+  color: #1a1a1a;
+  letter-spacing: 0.02em;
+}
+
+.biz-detail-coverage-taxi__meta {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: #333;
+}
+
+.biz-detail-coverage-taxi__label {
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: 0.03em;
+}
+
+.biz-detail-coverage-taxi__value {
+  font-weight: 600;
+  color: #2a2a2a;
+}
+
+.biz-detail-coverage-taxi__extras {
+  padding-top: 0.35rem;
+  border-top: 1px solid rgba(150, 118, 34, 0.14);
+}
+
+.biz-detail-page--taxi #section-coverage .biz-detail-coverage-taxi__extras .biz-detail-coverage-tags {
+  margin-top: 0.55rem;
+}
+
+/* ── タクシー詳細 LP ── */
+.biz-detail-page--taxi .biz-detail-fv-card--taxi {
+  border-color: rgba(150, 118, 34, 0.32);
+  box-shadow:
+    0 18px 48px rgba(150, 118, 34, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+}
+
+/* タクシーFV — 余白・呼吸感（高級LP） */
+.biz-detail-page--taxi .biz-detail-fv {
+  padding: 2.5rem 2.75rem;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+
+.biz-detail-page--taxi .biz-detail-fv__media {
+  margin-right: 2.75rem;
+}
+
+.biz-detail-page--taxi .biz-detail-fv__main {
+  max-width: 38.75rem;
+  width: 100%;
+  margin-right: 2.25rem;
+  padding-top: 0;
+}
+
+.biz-detail-page--taxi .biz-detail-fv__aside {
+  min-width: 0;
+}
+
+/* 受付状態・タグ（タクシーLP） */
+.biz-detail-hero__company-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.55rem;
+  margin-bottom: 0.5rem;
+}
+
+.biz-detail-hero__title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.biz-detail-hero__title-badges {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.biz-detail-hero__title-badges .biz-detail-hero__corp-badge,
+.biz-detail-hero__title-badges .biz-detail-hero__pr--inline {
+  position: relative;
+  top: 0;
+  margin: 0;
+}
+
+.biz-detail-hero__pr--inline {
+  display: inline-block;
+  padding: 0.14rem 0.48rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #7a5710;
+  background: #fff9eb;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  border-radius: 4px;
+  line-height: 1.3;
+  vertical-align: middle;
+}
+
+.biz-detail-hero__reception-block {
+  margin-bottom: 0.75rem;
+}
+
+.biz-detail-page--taxi .biz-detail-hero__reception-block {
+  margin-top: 1.125rem;
+  margin-bottom: 0;
+}
+
+.biz-detail-hero__reception-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+}
+
+.biz-detail-hero__reception-block .biz-detail-reception-wrap {
+  margin-bottom: 0;
+}
+
+.biz-detail-hero__reception-hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.biz-detail-page--taxi .biz-detail-reception {
+  padding: 0.52rem 1.05rem 0.52rem 0.82rem;
+  font-size: 0.9375rem;
+}
+
+.biz-detail-hero__tag-row {
+  margin-bottom: 0.85rem;
+}
+
+.biz-detail-page--taxi .biz-detail-hero__tag-row {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.biz-detail-hero__tag-row .biz-detail-hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.45rem;
+  margin-bottom: 0;
+}
+
+.biz-detail-hero__trust-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.28rem;
+  padding: 0.28rem 0.62rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #5a5348;
+  background: #fffdf7;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: 999px;
+}
+
+.biz-detail-hero__trust-tag-icon {
+  font-size: 0.8125rem;
+  line-height: 1;
+}
+
+.biz-detail-reception-wrap {
+  margin-bottom: 0;
+}
+
+.biz-detail-reception {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0.48rem 1rem 0.48rem 0.78rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  line-height: 1.35;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+
+.biz-detail-reception__dot {
+  flex-shrink: 0;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.biz-detail-reception--open {
+  color: #15803d;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.65) inset,
+    0 4px 14px rgba(22, 163, 74, 0.18);
+}
+
+.biz-detail-reception--open .biz-detail-reception__dot {
+  background: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.28);
+  animation: biz-detail-reception-pulse 1.8s ease-in-out infinite;
+}
+
+.biz-detail-reception--busy {
+  color: #9a3412;
+  background: #fff7ed;
+  border: 1px solid rgba(234, 88, 12, 0.35);
+}
+
+.biz-detail-reception--paused {
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid rgba(100, 116, 139, 0.28);
+}
+
+@keyframes biz-detail-reception-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.88);
+  }
+}
+
+/* 右CTAカード（タクシー） */
+.biz-detail-fv-card--taxi {
+  padding: 1.65rem 1.75rem 1.5rem;
+}
+
+.biz-detail-fv-card--taxi .detail-gold-stars {
+  color: #f5b301;
+  text-shadow:
+    0 0 12px rgba(245, 179, 1, 0.4),
+    0 1px 2px rgba(246, 195, 67, 0.3);
+}
+
+.biz-detail-fv-taxi-rating {
+  margin-bottom: 1.05rem;
+  padding: 0.35rem 0 1.1rem;
+  border-bottom: 1px solid #f0efeb;
+}
+
+.biz-detail-fv-taxi-rating__label {
+  margin: 0 0 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  color: #8b8477;
+}
+
+.biz-detail-fv-taxi-rating__main {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+}
+
+.biz-detail-fv-card--taxi .biz-detail-fv-taxi-rating__stars.detail-gold-stars--md {
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+}
+
+.biz-detail-fv-taxi-rating__score {
+  font-size: 1.125rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #1a1a1a;
+  letter-spacing: -0.03em;
+}
+
+.biz-detail-fv-taxi-rating__count {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #a8b0bc;
+  letter-spacing: 0.01em;
+}
+
+.biz-detail-fv-card--taxi .biz-detail-side-price {
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.9rem;
+}
+
+.biz-detail-fv-taxi-price-route {
+  margin: 0 0 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.55;
+  color: #4a4a4a;
+}
+
+.biz-detail-fv-card--taxi .biz-detail-sidebar__price {
+  font-size: clamp(1.75rem, 2.6vw, 2rem);
+  color: #7a5710;
+}
+
+.biz-detail-sidebar__cta-group--taxi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0;
+}
+
+.biz-detail-sidebar__cta-group--taxi .biz-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.biz-detail-sidebar__cta-group--taxi .biz-detail-btn__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.biz-detail-btn--taxi-gold {
+  min-height: 50px;
+  color: #fff;
+  background: linear-gradient(145deg, #f6c343 0%, #f5b301 45%, #d99a00 100%);
+  border-color: #c98f00;
+  box-shadow: 0 6px 18px rgba(245, 179, 1, 0.32);
+}
+
+.biz-detail-btn--taxi-gold:hover {
+  filter: brightness(1.04);
+}
+
+.biz-detail-btn--taxi-outline,
+.biz-detail-btn--taxi-favorite {
+  min-height: 46px;
+  color: #7a5710;
+  background: #fff;
+  border-color: rgba(245, 179, 1, 0.65);
+}
+
+.biz-detail-btn--taxi-outline:hover,
+.biz-detail-btn--taxi-favorite:hover {
+  background: #fffdf7;
+}
+
+.biz-detail-fv-card--taxi .biz-detail-favorite[hidden] {
+  display: none !important;
+}
+
+.biz-detail-fv-card--taxi .biz-detail-fv-taxi-rating {
+  margin-bottom: 0.85rem;
+  padding: 0.25rem 0 0.85rem;
+}
+
+.biz-detail-fv-card--taxi .biz-detail-side-price {
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.biz-detail-fv-taxi-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.2rem 0.4rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid #f0efeb;
+}
+
+.biz-detail-fv-taxi-link {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: #a8a295;
+  text-decoration: none;
+}
+
+.biz-detail-fv-taxi-link:hover {
+  text-decoration: underline;
+  color: #8b8477;
+}
+
+.biz-detail-fv-taxi-links__sep {
+  font-size: 0.625rem;
+  color: #ddd8ce;
+  user-select: none;
+}
+
+.biz-detail-fv-taxi-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem 1rem;
+  margin: 0 0 0.85rem;
+  padding: 0.15rem 0 0;
+}
+
+.biz-detail-fv-taxi-info__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.biz-detail-fv-taxi-info__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #334155;
+}
+
+.biz-detail-fv-taxi-info__icon {
+  flex-shrink: 0;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.biz-detail-fv-taxi-info__value {
+  min-width: 0;
+  word-break: break-word;
+}
+
+@media (max-width: 640px) {
+  .biz-detail-fv-taxi-info {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .biz-detail-fv-taxi-info__col {
+    gap: 0.75rem;
+  }
+
+  .biz-detail-fv-taxi-info__col + .biz-detail-fv-taxi-info__col {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #f5f4f0;
+  }
+}
+
+.biz-detail-fv-card--taxi .biz-detail-favorite {
+  margin-top: 0.35rem;
+  padding: 0.45rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: transparent;
+  border: 1px solid #e8e6e1;
+  border-radius: 8px;
+}
+
+.biz-detail-fv-card--taxi .biz-detail-favorite:hover {
+  color: #7a5710;
+  border-color: rgba(245, 179, 1, 0.45);
+  background: #fffdf7;
+}
+
+.biz-detail-sidebar-taxi-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.4rem;
+  margin: 0 0 1rem;
+}
+
+.biz-detail-sidebar-taxi-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #1a1a1a;
+  background: #fffdf6;
+  border: 1px solid rgba(150, 118, 34, 0.38);
+  border-radius: 999px;
+}
+
+.biz-detail-sidebar-taxi-badge--airport {
+  color: #5c4a12;
+  background: #fff9eb;
+}
+
+.biz-detail-taxi-details {
+  border: 1px solid rgba(150, 118, 34, 0.22);
+  border-radius: 14px;
+  background: #fffdf9;
+  overflow: hidden;
+}
+
+.biz-detail-taxi-details__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.95rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  cursor: pointer;
+  list-style: none;
+}
+
+.biz-detail-taxi-details__summary::-webkit-details-marker {
+  display: none;
+}
+
+.biz-detail-taxi-details__summary::before {
+  content: "▸";
+  font-size: 0.875rem;
+  color: #967622;
+  transition: transform 0.2s ease;
+}
+
+.biz-detail-taxi-details[open] .biz-detail-taxi-details__summary::before {
+  transform: rotate(90deg);
+}
+
+.biz-detail-taxi-details__body {
+  padding: 0 1.1rem 1.1rem;
+  border-top: 1px solid rgba(150, 118, 34, 0.14);
+}
+
+.biz-detail-taxi-detail-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.55rem;
+}
+
+.biz-detail-taxi-detail-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 2.35rem;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #1a1a1a;
+  background: #fff;
+  border: 1px solid rgba(150, 118, 34, 0.28);
+  border-radius: 999px;
+}
+
+.biz-detail-taxi-detail-card__icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.biz-detail-cases--taxi-routes {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.biz-detail-route-card {
+  background: #fff;
+  border: 1px solid rgba(150, 118, 34, 0.28);
+  border-radius: 16px;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+}
+
+.biz-detail-route-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(150, 118, 34, 0.5);
+  box-shadow: 0 14px 32px rgba(26, 26, 26, 0.1);
+}
+
+.biz-detail-route-card__body {
+  padding: 1.15rem 1.2rem 1.2rem;
+}
+
+.biz-detail-route-card__route {
+  margin: 0 0 0.65rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.65;
+  color: #1a1a1a;
+}
+
+.biz-detail-route-card__price {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+  color: #7a5710;
+}
+
+.biz-detail-route-card__price--consult {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #6b665c;
+}
+
+.biz-detail-map-areas {
+  margin-bottom: 1rem;
+}
+
+.biz-detail-map-areas__label {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8b8477;
+}
+
+.biz-detail-map-areas__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.45rem;
+}
+
+.biz-detail-map-area-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  background: #fffdf6;
+  border: 1px solid rgba(150, 118, 34, 0.35);
+  border-radius: 999px;
+}
+
+.biz-detail-page--taxi .biz-detail-panel--price .biz-detail-panel__title--showcase::after {
+  content: none;
+}
+
+.biz-detail-top {
+  margin: 0.85rem 0 0.5rem;
+}
+
+.biz-detail-back {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #967622;
+  text-decoration: none;
+}
+
+.biz-detail-back:hover {
+  text-decoration: underline;
+}
+
+.biz-detail-breadcrumb {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #8b8477;
+  line-height: 1.5;
+}
+
+.biz-detail-breadcrumb a {
+  color: #967622;
+  text-decoration: none;
+}
+
+.biz-detail-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* ── FV ── */
+.biz-detail-fv {
+  display: grid;
+  grid-template-columns: minmax(260px, 400px) minmax(0, 1fr) minmax(260px, 300px);
+  gap: 1.5rem;
+  align-items: start;
+  margin-bottom: 1.75rem;
+  padding: 1.35rem 1.4rem;
+  background: #fff;
+  border: 1px solid #eceae6;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(26, 26, 26, 0.04);
+}
+
+.biz-detail-fv__media {
+  min-width: 0;
+}
+
+.biz-detail-hero__figure-wrap {
+  position: relative;
+}
+
+.biz-detail-hero__figure {
+  margin: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #f8f4eb 0%, #efe9dc 100%);
+  border: 1px solid #ebe9e4;
+  aspect-ratio: 4 / 3;
+}
+
+.biz-detail-hero__figure.is-placeholder img {
+  object-fit: contain;
+  padding: 1.5rem;
+}
+
+.biz-detail-hero__figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  object-fit: cover;
+}
+
+.biz-detail-gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #7a5710;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+}
+
+.biz-detail-gallery-nav--prev {
+  left: 0.5rem;
+}
+
+.biz-detail-gallery-nav--next {
+  right: 0.5rem;
+}
+
+.hero-thumbnails,
+.biz-detail-gallery.hero-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.hero-thumbnails .biz-detail-gallery__thumb {
+  flex: 0 0 auto;
+}
+
+.biz-detail-gallery {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  scrollbar-width: thin;
+}
+
+.biz-detail-gallery__thumb {
+  flex: 0 0 auto;
+  width: 4.75rem;
+  height: 4.75rem;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #fff;
+}
+
+.biz-detail-gallery__thumb.is-active {
+  border-color: #c9a227;
+  box-shadow: 0 0 0 1px rgba(201, 162, 39, 0.35);
+}
+
+.biz-detail-gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.biz-detail-gallery__more {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.75rem;
+  height: 4.75rem;
+  padding: 0 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #7a5710;
+  background: #fffdf7;
+  border: 1px dashed rgba(201, 162, 39, 0.55);
+}
+
+.biz-detail-hero-work-cases__empty {
+  margin: 0.5rem 0 0;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #8b8477;
+  text-align: center;
+  background: #fffdf7;
+  border: 1px dashed rgba(201, 162, 39, 0.4);
+  border-radius: 10px;
+}
+
+.biz-detail-hero-work-cases {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+  max-height: min(52vh, 520px);
+  overflow-y: auto;
+  padding-right: 0.15rem;
+  scrollbar-width: thin;
+}
+
+.biz-detail-case--hero-work {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.65rem;
+  align-items: start;
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+  border-radius: 14px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.biz-detail-case--hero-work.is-active {
+  border-color: rgba(201, 162, 39, 0.65);
+  box-shadow: 0 6px 20px rgba(26, 26, 26, 0.08);
+  background: #fffdf7;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__img {
+  width: 5.5rem;
+  min-height: 5.5rem;
+  aspect-ratio: 1;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__img img {
+  object-fit: cover;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__img--empty {
+  background: #e8e8e6;
+  border-radius: 10px;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__body {
+  padding: 0.15rem 0 0;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__title {
+  margin: 0 0 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__foot {
+  margin-top: 0.35rem;
+  padding-top: 0.45rem;
+  gap: 0.2rem;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__foot-item {
+  font-size: 0.6875rem;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__foot-item em {
+  min-width: 2.5rem;
+  font-size: 0.625rem;
+}
+
+.biz-detail-case--hero-work .biz-detail-case__note {
+  margin: 0.2rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.45;
+  color: #8b8477;
+}
+
+.biz-detail-page--construction .biz-detail-fv__media--work-cases,
+.biz-detail-page--repair .biz-detail-fv__media--work-cases {
+  display: flex;
+  flex-direction: column;
+}
+
+/* FV 中央 */
+.biz-detail-fv__main {
+  min-width: 0;
+  padding-top: 0.15rem;
+}
+
+.biz-detail-hero__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 0.75rem;
+}
+
+.biz-detail-hero__badges .biz-badge {
+  flex-shrink: 0;
+}
+
+.biz-detail-hero__pr {
+  display: inline-block;
+  margin: 0 0 0.4rem;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #7a5710;
+  background: #fff9eb;
+  border: 1px solid rgba(201, 162, 39, 0.45);
+  border-radius: 4px;
+}
+
+.biz-detail-hero__pr--subtle {
+  flex-shrink: 0;
+  margin: 0.1rem 0 0;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #a8a295;
+  background: #fafaf9;
+  border: 1px solid #ebe9e4;
+  border-radius: 4px;
+}
+
+.biz-detail-hero__category {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #967622;
+}
+
+.biz-detail-hero__category--taxi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.45rem;
+  margin-bottom: 0.5rem;
+}
+
+.biz-detail-hero__service-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.62rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #7a5710;
+  letter-spacing: 0.02em;
+  background: linear-gradient(180deg, #fffdf7 0%, #fff9eb 100%);
+  border: 1px solid rgba(201, 162, 39, 0.38);
+  border-radius: 999px;
+}
+
+.biz-detail-hero__company {
+  margin: 0;
+  font-size: clamp(2rem, 3.2vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.biz-detail-page--construction .biz-detail-fv__main {
+  display: flex;
+  flex-direction: column;
+}
+
+.biz-detail-page--construction .biz-detail-hero__company-row {
+  order: 1;
+}
+
+.biz-detail-page--construction .biz-detail-hero__tag-row {
+  order: 2;
+}
+
+.biz-detail-page--construction .biz-detail-hero__category {
+  order: 3;
+}
+
+.biz-detail-page--construction .biz-detail-hero__title {
+  order: 4;
+}
+
+.biz-detail-page--construction .biz-detail-hero__reception-block {
+  display: none !important;
+}
+
+.biz-detail-page--taxi .biz-detail-hero__company-row {
+  margin-top: 1.125rem;
+  margin-bottom: 0.65rem;
+}
+
+.biz-detail-page--taxi .biz-detail-hero__company {
+  font-size: clamp(1rem, 1.55vw, 1.125rem);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+  color: #2d2a26;
+}
+
+.biz-detail-hero__catch {
+  margin: 0 0 0.75rem;
+  font-size: clamp(0.9375rem, 1.5vw, 1.0625rem);
+  font-weight: 600;
+  color: #4a4a4a;
+  line-height: 1.68;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: 36rem;
+}
+
+.biz-detail-page--taxi .biz-detail-hero__headline,
+.biz-detail-page--taxi .biz-detail-hero__title.biz-detail-hero__headline {
+  margin: 0;
+  font-size: clamp(1.85rem, 3.4vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.035em;
+  color: #1a1a1a;
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  max-width: none;
+}
+
+.biz-detail-page--taxi .biz-detail-hero__lead {
+  margin: 0 0 0.85rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.72;
+  color: #5a5954;
+  max-width: 40rem;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.biz-detail-hero__catch[data-catch-lines="2"] {
+  -webkit-line-clamp: 2;
+}
+
+.biz-detail-hero__area {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #5a5954;
+}
+
+.biz-detail-quick {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 0.85rem;
+  margin: 0 0 1.1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.biz-detail-quick__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.biz-detail-quick__icon {
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+}
+
+.biz-detail-quick__label {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #8b8477;
+}
+
+.biz-detail-hero__cta--inline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* FV 右サイドカード */
+.biz-detail-fv-card {
+  position: sticky;
+  top: 4.75rem;
+  padding: 1.35rem 1.25rem;
+  background: #fff;
+  border: 1px solid rgba(201, 162, 39, 0.42);
+  border-radius: 18px;
+  box-shadow:
+    0 14px 40px rgba(26, 26, 26, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+}
+
+.biz-detail-fv-card--construction {
+  border-color: rgba(201, 162, 39, 0.5);
+  box-shadow:
+    0 16px 44px rgba(150, 118, 34, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.85) inset;
+}
+
+.biz-detail-side-price {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f0efeb;
+}
+
+.biz-detail-side-price__label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #8b8477;
+}
+
+.biz-detail-sidebar__price {
+  margin: 0;
+  font-size: clamp(1.625rem, 2.4vw, 1.875rem);
+  font-weight: 800;
+  color: #7a5710;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
+
+.biz-detail-sidebar__cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 1.05rem;
+}
+
+.biz-detail-sidebar__cta-group .biz-detail-btn--inquiry-main {
+  min-height: 52px;
+  font-size: 1rem;
+  box-shadow: 0 5px 16px rgba(150, 118, 34, 0.28);
+}
+
+.biz-detail-sidebar__meta-block {
+  padding-top: 0.15rem;
+  border-top: 1px solid #f0efeb;
+}
+
+.biz-detail-dl--side .biz-detail-dl__row {
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #f8f7f5;
+}
+
+.biz-detail-dl--side .biz-detail-dl__row:last-child {
+  border-bottom: none;
+}
+
+.biz-detail-favorite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  width: 100%;
+  margin-top: 0.65rem;
+  padding: 0.55rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #5a5954;
+  background: #fafaf9;
+  border: 1px solid #e8e6e1;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.biz-detail-favorite:hover {
+  border-color: #c9a227;
+  color: #7a5710;
+}
+
+/* ── レイアウト ── */
+.biz-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 280px);
+  gap: 1.35rem;
+  align-items: start;
+}
+
+.biz-detail-panel {
+  margin-bottom: 1.15rem;
+  padding: 1.25rem 1.35rem;
+  background: #fff;
+  border: 1px solid #eceae6;
+  border-radius: 18px;
+  box-shadow: 0 2px 14px rgba(26, 26, 26, 0.03);
+}
+
+.biz-detail-panel[hidden] {
+  display: none !important;
+}
+
+.biz-detail-panel__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.biz-detail-panel__title--showcase {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 0.65rem;
+  padding-left: 0.85rem;
+  position: relative;
+}
+
+.biz-detail-panel__title--showcase::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  bottom: 0.12em;
+  width: 4px;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #e8c05a 0%, #967622 100%);
+}
+
+.biz-detail-page--construction #section-coverage .biz-detail-panel__title--showcase::after {
+  content: "🔧";
+  font-size: 1.05rem;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.biz-detail-page--construction #section-achievements .biz-detail-panel__title--showcase::after {
+  content: "🏗";
+  font-size: 1.05rem;
+}
+
+.biz-detail-page--construction #section-price .biz-detail-panel__title--showcase::after {
+  content: "💴";
+  font-size: 1.05rem;
+}
+
+.biz-detail-page--construction #section-license .biz-detail-panel__title--showcase::after {
+  content: "📋";
+  font-size: 1.05rem;
+}
+
+.biz-detail-page--construction #section-company .biz-detail-panel__title--showcase::after {
+  content: "🏢";
+  font-size: 1.05rem;
+}
+
+.biz-detail-panel__lead {
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  line-height: 1.72;
+  color: #6b665c;
+  max-width: 52rem;
+}
+
+.biz-detail-page--construction .biz-detail-panel--primary {
+  padding: 1.65rem 1.55rem;
+  margin-bottom: 1.35rem;
+  box-shadow: 0 4px 20px rgba(26, 26, 26, 0.04);
+}
+
+.biz-detail-page--construction .biz-detail-panel--showcase:not(.biz-detail-panel--primary) {
+  padding: 1.35rem 1.4rem;
+}
+
+.biz-detail-page--construction .biz-detail-panel--compact,
+.biz-detail-page--construction .biz-detail-panel--map,
+.biz-detail-page--construction .biz-detail-panel--strengths {
+  padding: 1.15rem 1.25rem;
+}
+
+.biz-detail-panel__body {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: #4a4a4a;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.biz-detail-panel__body--muted {
+  margin-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: #8b8477;
+}
+
+.biz-detail-panel__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.biz-detail-panel--compact {
+  padding: 1rem 1.2rem;
+}
+
+/* 強みカード */
+.biz-detail-strengths {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.85rem;
+}
+
+.biz-detail-strength {
+  padding: 1rem 0.85rem;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #f0efeb;
+  border-radius: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+}
+
+.biz-detail-strength--premium {
+  background: linear-gradient(180deg, #fffdf9 0%, #fff 100%);
+  border-color: rgba(201, 162, 39, 0.22);
+  box-shadow: 0 2px 10px rgba(26, 26, 26, 0.03);
+}
+
+.biz-detail-strength:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26, 26, 26, 0.07);
+  border-color: rgba(201, 162, 39, 0.35);
+}
+
+.biz-detail-strength__icon {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.7rem;
+  line-height: 1;
+}
+
+.biz-detail-strength__title {
+  margin: 0 0 0.3rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+}
+
+.biz-detail-strength__desc {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: #6b665c;
+}
+
+/* 対応内容グリッド */
+.biz-detail-service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 0.65rem;
+}
+
+.biz-detail-service-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+  border: 1px solid #eceae6;
+  border-radius: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.biz-detail-service-item:hover {
+  border-color: rgba(201, 162, 39, 0.45);
+  box-shadow: 0 4px 14px rgba(26, 26, 26, 0.05);
+}
+
+.biz-detail-service-item__icon {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.biz-detail-service-item__label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #3d3d3d;
+}
+
+/* 対応物件 */
+.biz-detail-properties {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.75rem;
+}
+
+.biz-detail-property {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+  background: #fafaf9;
+  border: 1px solid #f0efeb;
+  border-radius: 14px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.biz-detail-property.is-active {
+  background: #fffdf7;
+  border-color: rgba(201, 162, 39, 0.5);
+}
+
+.biz-detail-property__icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.biz-detail-property__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4a4a4a;
+}
+
+/* 施工事例 */
+.biz-detail-cases {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.biz-detail-cases--premium {
+  margin-top: 0.15rem;
+}
+
+.biz-detail-case {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: 18px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.biz-detail-case--premium:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px rgba(26, 26, 26, 0.11);
+  border-color: rgba(201, 162, 39, 0.48);
+}
+
+.biz-detail-case__img {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #f8f4eb;
+}
+
+.biz-detail-case__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+
+.biz-detail-case__img--empty {
+  background: #e8e8e6;
+  min-height: 100%;
+}
+
+.biz-detail-hero__figure.is-work-case-empty {
+  background: #eceae8;
+}
+
+.biz-detail-hero__figure.is-work-case-empty img {
+  display: none;
+}
+
+/* 建設・修理：実績カード 3カラム・上画像下テキスト */
+.biz-detail-cases--work-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem;
+  align-items: stretch;
+}
+
+.biz-detail-page--construction .biz-detail-case--work-grid,
+.biz-detail-page--repair .biz-detail-case--work-grid {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.biz-detail-page--construction .biz-detail-case--work-grid .biz-detail-case__img,
+.biz-detail-page--repair .biz-detail-case--work-grid .biz-detail-case__img {
+  width: 100%;
+  height: 180px;
+  min-height: 180px;
+  max-height: 180px;
+  aspect-ratio: auto;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+  background: #e8e8e6;
+}
+
+.biz-detail-page--construction .biz-detail-case--work-grid .case-card-image,
+.biz-detail-page--repair .biz-detail-case--work-grid .case-card-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+  display: block;
+}
+
+.biz-detail-page--construction .biz-detail-case--work-grid .biz-detail-case__img--empty,
+.biz-detail-page--repair .biz-detail-case--work-grid .biz-detail-case__img--empty {
+  border-radius: 12px 12px 0 0;
+}
+
+.biz-detail-page--construction .biz-detail-case--work-grid .biz-detail-case__body,
+.biz-detail-page--repair .biz-detail-case--work-grid .biz-detail-case__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1rem 1.1rem;
+}
+
+.biz-detail-case__meta-label {
+  display: block;
+  margin-bottom: 0.15rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #8b8477;
+}
+
+.biz-detail-case__meta {
+  margin: 0 0 0.4rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #5a5954;
+}
+
+.biz-detail-case__meta--price {
+  font-weight: 700;
+  color: #7a5710;
+}
+
+.biz-detail-page--construction .biz-detail-case--work-grid .biz-detail-case__content,
+.biz-detail-page--repair .biz-detail-case--work-grid .biz-detail-case__content {
+  margin: 0 0 0.45rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: #5a5954;
+}
+
+.biz-detail-case--premium:hover .biz-detail-case__img img {
+  transform: scale(1.04);
+}
+
+.biz-detail-case__body {
+  padding: 1rem 1rem 1.1rem;
+}
+
+.biz-detail-case__title {
+  margin: 0 0 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  line-height: 1.45;
+  color: #1a1a1a;
+}
+
+.biz-detail-case__content {
+  margin: 0 0 0.65rem;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #6b665c;
+}
+
+.biz-detail-case__foot {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-top: 0.75rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid #f0efeb;
+}
+
+.biz-detail-case__foot-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #5a5954;
+}
+
+.biz-detail-case__foot-item em {
+  flex-shrink: 0;
+  min-width: 2.75rem;
+  font-style: normal;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #8b8477;
+}
+
+.biz-detail-case__foot-item--price {
+  font-weight: 700;
+  color: #7a5710;
+}
+
+.biz-detail-more-link {
+  margin: 0.85rem 0 0;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.biz-detail-more-link a {
+  color: #967622;
+  text-decoration: none;
+}
+
+.biz-detail-more-link a:hover {
+  text-decoration: underline;
+}
+
+/* 料金カード */
+.biz-detail-price-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 0.85rem;
+}
+
+.biz-detail-price-card {
+  position: relative;
+  padding: 1.1rem 1.05rem 1.05rem;
+  background: #fff;
+  border: 1px solid #eceae6;
+  border-radius: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.biz-detail-price-card--featured {
+  background: linear-gradient(165deg, #fffdf7 0%, #fff 72%);
+  border-color: rgba(201, 162, 39, 0.42);
+  box-shadow: 0 6px 20px rgba(150, 118, 34, 0.1);
+}
+
+.biz-detail-price-card__icon {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.biz-detail-price-card__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8b8477;
+}
+
+.biz-detail-price-card__value {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #7a5710;
+  line-height: 1.35;
+}
+
+.biz-detail-price-card__note {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  color: #6b665c;
+}
+
+/* 対応メニュー — 料金カードレイアウト流用 */
+.biz-detail-option-cards {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 900px) {
+  .biz-detail-option-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.biz-detail-option-card {
+  border-color: rgba(201, 162, 39, 0.28);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.biz-detail-option-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201, 162, 39, 0.45);
+  box-shadow: 0 8px 22px rgba(150, 118, 34, 0.12);
+}
+
+.biz-detail-option-card__title {
+  margin: 0 0 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #1a2e44;
+  line-height: 1.35;
+}
+
+.biz-detail-option-card__desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #6b665c;
+  line-height: 1.5;
+}
+
+.biz-detail-page--repair .biz-detail-reception__dot {
+  display: none;
+}
+
+/* 対応メニュー（全カテゴリ共通）— スマホ4件 / PC 3列×2段 */
+.biz-detail-service-menu-cards {
+  grid-template-columns: 1fr;
+  align-items: stretch;
+}
+
+@media (min-width: 720px) {
+  .biz-detail-service-menu-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.biz-detail-service-menu-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  border-color: rgba(201, 162, 39, 0.28);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.biz-detail-service-menu-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(201, 162, 39, 0.45);
+  box-shadow: 0 8px 22px rgba(150, 118, 34, 0.12);
+}
+
+.biz-detail-service-menu-card__inner {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.biz-detail-service-menu-card__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #1a2e44;
+  line-height: 1.35;
+  flex-shrink: 0;
+}
+
+.biz-detail-service-menu-card__price {
+  margin: 0 0 0.35rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: #7a5710;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.biz-detail-service-menu-card__desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #6b665c;
+  line-height: 1.5;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.biz-detail-service-menu-more-btn {
+  border: none;
+  padding: 0;
+  background: none;
+  font: inherit;
+  font-weight: 700;
+  color: #967622;
+  cursor: pointer;
+}
+
+.biz-detail-service-menu-more-btn:hover {
+  text-decoration: underline;
+}
+
+/* 許可・資格カード */
+.biz-detail-license-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.biz-detail-license-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.9rem 0.95rem;
+  background: #fff;
+  border: 1px solid #eceae6;
+  border-radius: 14px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.biz-detail-license-card:hover {
+  border-color: rgba(201, 162, 39, 0.4);
+  box-shadow: 0 6px 18px rgba(26, 26, 26, 0.05);
+}
+
+.biz-detail-license-card__icon {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.biz-detail-license-card__label {
+  margin: 0 0 0.2rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8b8477;
+}
+
+.biz-detail-license-card__value {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #1a1a1a;
+}
+
+/* DL */
+.biz-detail-dl {
+  margin: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.biz-detail-dl__row {
+  display: grid;
+  grid-template-columns: 8.5rem minmax(0, 1fr);
+  gap: 0.5rem 0.85rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.biz-detail-dl__row dt {
+  margin: 0;
+  font-weight: 700;
+  color: #6b665c;
+}
+
+.biz-detail-dl__row dd {
+  margin: 0;
+  color: #1a1a1a;
+  word-break: break-word;
+}
+
+.biz-detail-dl--compact .biz-detail-dl__row {
+  grid-template-columns: 5.25rem minmax(0, 1fr);
+  font-size: 0.8125rem;
+}
+
+/* 地図カード */
+.biz-detail-map-card {
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid #eceae6;
+  background: #fafaf9;
+}
+
+.biz-detail-map-embed {
+  aspect-ratio: 16 / 7;
+  min-height: 200px;
+}
+
+.biz-detail-map-embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  border: 0;
+}
+
+.biz-detail-map-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #7a5710;
+  text-decoration: none;
+  background: #fffdf7;
+  border-top: 1px solid #eceae6;
+}
+
+.biz-detail-map-link:hover {
+  background: #fff9eb;
+}
+
+/* サイドバー FAQ */
+.biz-detail-sidebar__stack {
+  position: sticky;
+  top: 5.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.biz-detail-sidecard {
+  padding: 1rem 1.05rem;
+  background: #fff;
+  border: 1px solid #eceae6;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(26, 26, 26, 0.03);
+}
+
+.biz-detail-sidecard[hidden] {
+  display: none !important;
+}
+
+.biz-detail-sidecard__title {
+  margin: 0 0 0.65rem;
+  font-size: 0.9375rem;
+  font-weight: 800;
+}
+
+.biz-detail-checklist {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.biz-detail-checklist li {
+  position: relative;
+  padding: 0.35rem 0 0.35rem 1.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.biz-detail-checklist li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #2d8a4e;
+  font-weight: 800;
+}
+
+.biz-detail-checklist--gold li::before {
+  color: #c9a227;
+}
+
+.biz-detail-faq__item {
+  border-bottom: 1px solid #f0efeb;
+}
+
+.biz-detail-faq__item:last-child {
+  border-bottom: none;
+}
+
+.biz-detail-faq summary {
+  position: relative;
+  padding: 0.6rem 1.75rem 0.6rem 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+  transition: color 0.2s ease;
+}
+
+.biz-detail-faq summary:hover {
+  color: #7a5710;
+}
+
+.biz-detail-faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.biz-detail-faq summary::after {
+  content: "+";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #967622;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+.biz-detail-faq__item[open] summary::after {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.biz-detail-faq__answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.32s ease,
+    opacity 0.28s ease;
+}
+
+.biz-detail-faq__item[open] .biz-detail-faq__answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.biz-detail-faq__answer > p {
+  overflow: hidden;
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.15rem;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: #6b665c;
+}
+
+/* CTA ボタン */
+.biz-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 1rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.biz-detail-btn--primary {
+  width: 100%;
+  color: #fff;
+  background: linear-gradient(145deg, #e8c05a 0%, #c9a227 42%, #967622 100%);
+  border-color: #9b7416;
+  box-shadow: 0 4px 14px rgba(150, 118, 34, 0.25);
+}
+
+.biz-detail-btn--primary:hover {
+  filter: brightness(1.05);
+}
+
+.biz-detail-btn--outline {
+  width: 100%;
+  color: #7a5710;
+  background: #fff;
+  border-color: rgba(201, 162, 39, 0.65);
+}
+
+.biz-detail-btn--outline:hover {
+  background: #fffdf7;
+}
+
+.biz-detail-btn--sub {
+  width: 100%;
+  min-height: 38px;
+  font-size: 0.875rem;
+  color: #7a5710;
+  background: #fff;
+  border-color: rgba(201, 162, 39, 0.45);
+}
+
+.biz-detail-btn--sub:hover {
+  background: #fffdf7;
+}
+
+.biz-detail-btn--ghost {
+  width: 100%;
+  min-height: 36px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #5a5954;
+  background: #fafaf9;
+  border-color: #e8e6e1;
+}
+
+/* 注意書き */
+.biz-detail-disclaimer {
+  margin-top: 1.5rem;
+  padding: 1rem 1.15rem;
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: #8b8477;
+  background: #fafaf9;
+  border: 1px solid #eceae6;
+  border-radius: 14px;
+}
+
+.biz-detail-disclaimer p {
+  margin: 0 0 0.45rem;
+}
+
+.biz-detail-disclaimer p:last-child {
+  margin-bottom: 0;
+}
+
+/* 下部固定CTA */
+.biz-detail-sticky-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  padding: 0.5rem 0 calc(0.5rem + env(safe-area-inset-bottom, 0));
+  background: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid rgba(201, 162, 39, 0.25);
+  box-shadow: 0 -8px 32px rgba(26, 26, 26, 0.12);
+  box-sizing: border-box;
+}
+
+.biz-detail-sticky-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  max-width: min(92.5rem, calc(100vw - 1.25rem));
+  margin: 0 auto;
+  padding: 0.5rem 0.85rem;
+}
+
+.biz-detail-sticky-bar__company {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.875rem;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.biz-detail-sticky-bar__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+}
+
+.biz-detail-sticky-bar .biz-detail-btn {
+  width: auto;
+  min-width: 8rem;
+  min-height: 46px;
+  padding: 0 1.15rem;
+  font-size: 0.875rem;
+  border-radius: 11px;
+}
+
+.biz-detail-sticky-bar .biz-detail-btn--outline {
+  background: #fff;
+  border-width: 1.5px;
+}
+
+/* 建設：FV余白 */
+.biz-detail-page--construction .biz-detail-fv {
+  padding: 1.5rem 1.55rem;
+  margin-bottom: 2rem;
+}
+
+.biz-detail-page--construction .biz-detail-hero__company {
+  margin-bottom: 0.45rem;
+}
+
+/* ── 修理・メンテナンス詳細（建設UI派生・ゴールドCTA） ── */
+.biz-detail-page--repair {
+  --repair-navy: #1e3a5f;
+  --repair-navy-light: #2d4a6f;
+  --repair-gold: #f5b301;
+  --repair-gold-soft: #f6c343;
+  --repair-gold-border: rgba(201, 162, 39, 0.42);
+  --detail-gold: #f5b301;
+  --detail-gold-glow: rgba(245, 179, 1, 0.42);
+}
+
+/* 修理・清掃・店舗出張 共通ヒーロー配列（左画像 / 中央情報 / 右CTA） */
+.biz-detail-page--repair .biz-detail-fv,
+.biz-detail-page--cleaning .biz-detail-fv,
+.biz-detail-page--store .biz-detail-fv:not(.biz-detail-fv--store-shop) {
+  padding: 2.5rem 2.75rem;
+  gap: 0;
+  margin-bottom: 2rem;
+}
+
+.biz-detail-page--repair .biz-detail-fv__media,
+.biz-detail-page--cleaning .biz-detail-fv__media,
+.biz-detail-page--store .biz-detail-fv__media:not(.biz-detail-fv__media--store-shop) {
+  margin-right: 2.75rem;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main,
+.biz-detail-page--cleaning .biz-detail-fv__main,
+.biz-detail-page--store .biz-detail-fv__main:not(.biz-detail-fv__main--store-shop),
+.biz-detail-fv__main--service:not(.biz-detail-fv__main--store-shop) {
+  max-width: 38.75rem;
+  width: 100%;
+  margin-right: 2.25rem;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main [data-biz-detail-title],
+.biz-detail-page--cleaning .biz-detail-fv__main [data-biz-detail-title],
+.biz-detail-page--store .biz-detail-fv__main [data-biz-detail-title] {
+  order: 1;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main [data-biz-detail-hero-reception-block],
+.biz-detail-page--cleaning .biz-detail-fv__main [data-biz-detail-hero-reception-block],
+.biz-detail-page--store .biz-detail-fv__main [data-biz-detail-hero-reception-block] {
+  order: 2;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main .biz-detail-hero__company-row,
+.biz-detail-page--cleaning .biz-detail-fv__main .biz-detail-hero__company-row,
+.biz-detail-page--store .biz-detail-fv__main .biz-detail-hero__company-row {
+  order: 3;
+  margin-top: 1rem;
+  margin-bottom: 0;
+  align-items: center;
+  gap: 12px;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main [data-biz-detail-hero-condition-tags],
+.biz-detail-page--cleaning .biz-detail-fv__main [data-biz-detail-hero-condition-tags],
+.biz-detail-page--store .biz-detail-fv__main [data-biz-detail-hero-condition-tags] {
+  order: 4;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main [data-biz-detail-hero-lead],
+.biz-detail-page--cleaning .biz-detail-fv__main [data-biz-detail-hero-lead],
+.biz-detail-page--store .biz-detail-fv__main [data-biz-detail-hero-lead] {
+  order: 5;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main [data-biz-detail-hero-quick],
+.biz-detail-page--cleaning .biz-detail-fv__main [data-biz-detail-hero-quick],
+.biz-detail-page--store .biz-detail-fv__main [data-biz-detail-hero-quick] {
+  order: 6;
+  margin-top: 0.35rem;
+}
+
+.biz-detail-page--repair .biz-detail-fv__main .biz-detail-hero__tag-row,
+.biz-detail-page--repair .biz-detail-fv__main .biz-detail-hero__category,
+.biz-detail-page--repair .biz-detail-fv__main .biz-detail-hero__area,
+.biz-detail-page--repair .biz-detail-fv__main .biz-detail-hero__coverage,
+.biz-detail-page--repair .biz-detail-fv__main .biz-detail-hero__cta--inline,
+.biz-detail-page--cleaning .biz-detail-fv__main .biz-detail-hero__tag-row,
+.biz-detail-page--cleaning .biz-detail-fv__main .biz-detail-hero__category,
+.biz-detail-page--cleaning .biz-detail-fv__main .biz-detail-hero__area,
+.biz-detail-page--cleaning .biz-detail-fv__main .biz-detail-hero__coverage,
+.biz-detail-page--cleaning .biz-detail-fv__main .biz-detail-hero__cta--inline,
+.biz-detail-page--store .biz-detail-fv__main .biz-detail-hero__tag-row,
+.biz-detail-page--store .biz-detail-fv__main .biz-detail-hero__category,
+.biz-detail-page--store .biz-detail-fv__main .biz-detail-hero__area,
+.biz-detail-page--store .biz-detail-fv__main .biz-detail-hero__coverage,
+.biz-detail-page--store .biz-detail-fv__main .biz-detail-hero__cta--inline {
+  display: none !important;
+}
+
+.biz-detail-page--repair .detail-gold-stars {
+  color: var(--repair-gold);
+  text-shadow:
+    0 0 12px rgba(245, 179, 1, 0.4),
+    0 1px 2px rgba(246, 195, 67, 0.3);
+}
+
+.biz-detail-fv-card--repair > .biz-detail-favorite,
+.biz-detail-fv-card--repair > .biz-detail-favorite[hidden],
+.biz-detail-fv-card--cleaning > .biz-detail-favorite,
+.biz-detail-fv-card--cleaning > .biz-detail-favorite[hidden],
+.biz-detail-fv-card--store > .biz-detail-favorite,
+.biz-detail-fv-card--store > .biz-detail-favorite[hidden] {
+  display: none !important;
+}
+
+.biz-detail-fv-card--repair,
+.biz-detail-fv-card--cleaning,
+.biz-detail-fv-card--store {
+  padding: 1.65rem 1.75rem 1.5rem;
+}
+
+.biz-detail-fv-card--repair .detail-gold-stars {
+  color: #f5b301;
+  text-shadow:
+    0 0 12px rgba(245, 179, 1, 0.4),
+    0 1px 2px rgba(246, 195, 67, 0.3);
+}
+
+.biz-detail-fv-card--repair .biz-detail-fv-taxi-rating__stars.detail-gold-stars--md {
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+}
+
+.biz-detail-fv-card--repair .biz-detail-sidebar__price {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  font-weight: 800;
+  color: var(--repair-navy);
+}
+
+.biz-detail-sidebar__cta-group--repair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.biz-detail-sidebar__cta-group--repair .biz-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.biz-detail-sidebar__cta-group--repair .biz-detail-btn--repair-emergency {
+  min-height: 52px;
+  background: linear-gradient(145deg, #e6a800 0%, #d99a00 48%, #b8860b 100%);
+  border-color: #a67c00;
+  box-shadow: 0 6px 18px rgba(217, 154, 0, 0.34);
+}
+
+.biz-detail-sidebar__cta-group--repair .biz-detail-btn--repair-emergency:hover {
+  filter: brightness(1.04);
+}
+
+.biz-detail-hero__corp-badge {
+  display: inline-block;
+  margin-left: 0;
+  padding: 0.14rem 0.48rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.biz-detail-page--repair .biz-detail-fv-card--repair,
+.biz-detail-page--repair .biz-detail-fv-card--construction {
+  border-color: rgba(30, 58, 95, 0.22);
+  box-shadow:
+    0 16px 44px rgba(30, 58, 95, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.85) inset;
+}
+
+.biz-detail-page--repair .biz-detail-panel__title--showcase {
+  font-size: clamp(1.125rem, 1.8vw, 1.3125rem);
+  line-height: 1.4;
+}
+
+.biz-detail-page--repair .biz-detail-panel__title--showcase::before {
+  background: linear-gradient(180deg, #d4a63a 0%, var(--repair-gold) 100%);
+}
+
+.biz-detail-page--repair #section-coverage .biz-detail-panel__title--showcase::after {
+  content: "🔧";
+}
+
+.biz-detail-page--repair #section-achievements .biz-detail-panel__title--showcase::after {
+  content: "📋";
+}
+
+.biz-detail-page--repair #section-price .biz-detail-panel__title--showcase::after {
+  content: "💴";
+}
+
+/* 修理・清掃・店舗出張ヒーロー見出し（最大2行・省略なし・JSで2行に収まるまで縮小） */
+.biz-detail-page--repair [data-biz-detail-title].biz-detail-hero__headline,
+.biz-detail-page--cleaning [data-biz-detail-title].biz-detail-hero__headline,
+.biz-detail-page--store [data-biz-detail-title].biz-detail-hero__headline,
+.biz-detail-page--repair .biz-detail-hero__headline--fit,
+.biz-detail-page--cleaning .biz-detail-hero__headline--fit,
+.biz-detail-page--store .biz-detail-hero__headline--fit {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.875rem, 2.4vw, 2.625rem);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #1a2e44;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  display: block;
+  max-width: 100%;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+  box-orient: unset;
+}
+
+.biz-detail-page--repair .biz-detail-hero__title.biz-detail-hero__headline,
+.biz-detail-page--cleaning .biz-detail-hero__title.biz-detail-hero__headline,
+.biz-detail-page--store .biz-detail-hero__title.biz-detail-hero__headline {
+  display: block;
+  overflow: visible;
+  text-overflow: unset;
+  max-width: 100%;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: unset;
+}
+
+.biz-detail-page--repair .biz-detail-hero__reception-block,
+.biz-detail-page--cleaning .biz-detail-hero__reception-block,
+.biz-detail-page--store .biz-detail-hero__reception-block {
+  margin-top: 1.125rem;
+  margin-bottom: 0;
+}
+
+.biz-detail-page--repair .biz-detail-hero__reception-hint,
+.biz-detail-page--cleaning .biz-detail-hero__reception-hint,
+.biz-detail-page--store .biz-detail-hero__reception-hint {
+  font-size: 0.875rem;
+}
+
+.biz-detail-page--repair .biz-detail-reception--open {
+  color: #166534;
+  background: #ecfdf5;
+  border-color: #86efac;
+}
+
+.biz-detail-page--repair .biz-detail-hero__company,
+.biz-detail-page--cleaning .biz-detail-hero__company,
+.biz-detail-page--store .biz-detail-hero__company {
+  font-size: clamp(1.0625rem, 1.6vw, 1.2rem);
+  font-weight: 700;
+  margin: 0;
+}
+
+.biz-detail-page--repair .biz-detail-hero__company {
+  color: var(--repair-navy);
+}
+
+.biz-detail-page--cleaning .biz-detail-hero__company {
+  color: var(--cleaning-navy);
+}
+
+.biz-detail-page--store .biz-detail-hero__company {
+  color: var(--store-navy);
+}
+
+.biz-detail-page--repair .biz-detail-hero__condition-tags,
+.biz-detail-page--cleaning .biz-detail-hero__condition-tags,
+.biz-detail-page--store .biz-detail-hero__condition-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.38rem 0.42rem;
+  margin: 0.7rem 0 0.95rem;
+}
+
+.biz-detail-page--repair .biz-detail-hero__condition-tag {
+  display: inline-block;
+  padding: 0.2rem 0.58rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #8a6d12;
+  background: #fff;
+  border: 1px solid var(--repair-gold-border);
+  border-radius: 999px;
+}
+
+.biz-detail-page--cleaning .biz-detail-hero__condition-tag {
+  display: inline-block;
+  padding: 0.2rem 0.58rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #8a6d12;
+  background: #fff;
+  border: 1px solid var(--cleaning-gold-border);
+  border-radius: 999px;
+}
+
+.biz-detail-page--store .biz-detail-hero__condition-tag {
+  display: inline-block;
+  padding: 0.2rem 0.58rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #8a6d12;
+  background: #fff;
+  border: 1px solid var(--store-gold-border);
+  border-radius: 999px;
+}
+
+.biz-detail-page--repair .biz-detail-hero__lead,
+.biz-detail-page--cleaning .biz-detail-hero__lead,
+.biz-detail-page--store .biz-detail-hero__lead {
+  margin-top: 0;
+  font-size: 0.96875rem;
+  line-height: 1.78;
+  color: #475569;
+  display: block;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+  max-width: 40rem;
+}
+
+.biz-detail-page--repair .biz-detail-quick,
+.biz-detail-page--cleaning .biz-detail-quick {
+  gap: 0.75rem 1rem;
+  margin: 0.5rem 0 0;
+  padding: 1rem 1.1rem;
+  background: #f8fafc;
+  border: 1px solid #e8ecf0;
+  border-radius: 12px;
+  list-style: none;
+}
+
+.biz-detail-page--repair .biz-detail-quick__item,
+.biz-detail-page--cleaning .biz-detail-quick__item {
+  font-size: 0.875rem;
+  line-height: 1.58;
+}
+
+.biz-detail-page--repair .biz-detail-quick__label,
+.biz-detail-page--cleaning .biz-detail-quick__label {
+  font-size: 0.75rem;
+  margin-bottom: 0.12rem;
+}
+
+.biz-detail-page--repair .biz-detail-repair-coverage {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.15rem 1.35rem;
+}
+
+.biz-detail-repair-coverage__group {
+  padding: 1.15rem 1.2rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+
+.biz-detail-repair-coverage__title {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--repair-navy);
+}
+
+.biz-detail-repair-coverage__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.5rem;
+}
+
+.biz-detail-repair-coverage__list li {
+  padding: 0.28rem 0.62rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #334155;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+}
+
+.biz-detail-strengths--repair {
+  gap: 1rem;
+}
+
+.biz-detail-strengths--repair .biz-detail-strength {
+  padding: 1.1rem 0.95rem;
+  border-color: #e2e8f0;
+  background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+}
+
+.biz-detail-strengths--repair .biz-detail-strength__icon {
+  font-size: 1.85rem;
+  color: var(--repair-navy);
+}
+
+.biz-detail-strengths--repair .biz-detail-strength__title {
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.biz-detail-strengths--repair .biz-detail-strength__desc {
+  font-size: 0.8125rem;
+  line-height: 1.65;
+}
+
+.biz-detail-page--repair .biz-detail-faq__q,
+.biz-detail-page--repair .biz-detail-faq__a {
+  font-size: 0.9375rem;
+  line-height: 1.72;
+}
+
+.biz-detail-page--repair .biz-detail-sidebar__price {
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  color: var(--repair-navy);
+}
+
+.biz-detail-page--repair .biz-detail-sidebar__rating-label,
+.biz-detail-page--repair .biz-detail-sidebar__price-label {
+  font-size: 0.875rem;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid {
+  align-items: stretch;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid .biz-detail-case {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid .biz-detail-case__img {
+  aspect-ratio: 16 / 10;
+  flex-shrink: 0;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid .biz-detail-case__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.05rem 1.05rem 1.15rem;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid .biz-detail-case__title {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid .biz-detail-case__content {
+  font-size: 0.8125rem;
+  line-height: 1.68;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid .biz-detail-case__foot {
+  margin-top: auto;
+  gap: 0.42rem;
+}
+
+.biz-detail-page--repair .biz-detail-cases--repair-grid .biz-detail-case__foot-item {
+  font-size: 0.8125rem;
+  line-height: 1.58;
+}
+
+@media (max-width: 900px) {
+  .biz-detail-cases--work-grid-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .biz-detail-cases--work-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.biz-detail-page--repair .taxi-review-section {
+  padding: 1.65rem 1.75rem;
+}
+
+.biz-detail-page--repair .taxi-review-section__stars.detail-gold-stars--lg {
+  font-size: 1.85rem;
+  letter-spacing: 0.1em;
+}
+
+.biz-detail-page--repair .taxi-review-section__cards {
+  gap: 0.35rem 0;
+}
+
+.biz-detail-page--repair .taxi-review-section__card {
+  padding: 0.35rem 1.5rem 0.75rem;
+}
+
+.biz-detail-page--repair .taxi-review-section__card-text {
+  font-size: 0.875rem;
+  line-height: 1.82;
+  margin-top: 0.65rem;
+}
+
+.biz-detail-page--repair .taxi-review-section .detail-gold-stars--sm {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+}
+
+.biz-detail-page--repair .biz-detail-sticky-bar .biz-detail-btn--taxi-gold {
+  min-height: 44px;
+}
+
+.biz-detail-page--repair .biz-detail-sticky-bar .biz-detail-btn--repair-emergency {
+  background: linear-gradient(145deg, #e6a800 0%, #d99a00 48%, #b8860b 100%);
+  border-color: #a67c00;
+}
+
+@media (max-width: 1100px) {
+  .biz-detail-page--repair .biz-detail-fv__media {
+    margin-right: 1.75rem;
+  }
+
+  .biz-detail-page--repair .biz-detail-fv__main {
+    margin-right: 1.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .biz-detail-page--repair .biz-detail-repair-coverage {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-page--repair .biz-detail-fv {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .biz-detail-page--repair .biz-detail-fv__media {
+    margin-right: 0;
+  }
+
+  .biz-detail-page--repair .biz-detail-fv__main {
+    margin-right: 0;
+    max-width: none;
+  }
+}
+
+/* レスポンシブ */
+@media (max-width: 1100px) {
+  .biz-detail-fv {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .biz-detail-fv__aside {
+    grid-column: 1 / -1;
+  }
+
+  .biz-detail-fv-card {
+    position: sticky;
+    top: 4.5rem;
+  }
+
+  .biz-detail-page--taxi .biz-detail-fv__media {
+    margin-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .biz-detail-page--taxi .biz-detail-fv__main {
+    max-width: none;
+    margin-right: 0;
+    margin-bottom: 1.75rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .biz-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-sidebar__stack {
+    position: static;
+  }
+
+  .biz-detail-cases {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .biz-detail-fv {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+    border-radius: 16px;
+  }
+
+  .biz-detail-page--taxi .biz-detail-fv {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .biz-detail-page--taxi .biz-detail-fv__media {
+    margin-bottom: 1.5rem;
+  }
+
+  .biz-detail-page--taxi .biz-detail-fv__main {
+    margin-bottom: 1.5rem;
+  }
+
+  .biz-detail-hero__cta--inline {
+    display: none;
+  }
+
+  .biz-detail-strengths {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .biz-detail-sticky-bar__inner {
+    padding: 0.25rem 0.65rem;
+  }
+
+  .biz-detail-sticky-bar__company {
+    display: none;
+  }
+
+  .biz-detail-sticky-bar__actions {
+    width: 100%;
+  }
+
+  .biz-detail-sticky-bar .biz-detail-btn {
+    flex: 1;
+    min-width: 0;
+    min-height: 48px;
+  }
+
+  .biz-detail-page-wrap {
+    padding-bottom: 5.5rem;
+  }
+
+  .biz-detail-cases--premium {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 0.85rem;
+    padding-bottom: 0.35rem;
+  }
+
+  .biz-detail-cases--premium .biz-detail-case {
+    flex: 0 0 min(88vw, 300px);
+    scroll-snap-align: start;
+  }
+}
+
+@media (max-width: 640px) {
+  .biz-detail-dl__row {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+
+  .biz-detail-quick {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-cases {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-properties {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ── タクシー：口コミ・評価（独立セクション・横長カード） ── */
+.biz-detail-page--taxi #section-reviews.biz-detail-panel {
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin-bottom: 1.15rem;
+}
+
+.taxi-review-section {
+  --taxi-review-star: #f5b301;
+  --taxi-review-star-soft: #f6c343;
+  margin-top: 20px;
+  padding: 24px;
+  background: #fff;
+  border: 1px solid #eceae6;
+  border-radius: 18px;
+  box-shadow: 0 2px 14px rgba(26, 26, 26, 0.03);
+}
+
+.taxi-review-section > .biz-detail-panel__title--showcase {
+  margin-bottom: 1.15rem;
+}
+
+.taxi-review-section .detail-gold-stars {
+  color: var(--taxi-review-star);
+  text-shadow:
+    0 0 14px rgba(245, 179, 1, 0.42),
+    0 1px 2px rgba(246, 195, 67, 0.35);
+}
+
+.taxi-review-section .detail-gold-stars--md {
+  font-size: 0.8125rem;
+  letter-spacing: 0.05em;
+}
+
+.taxi-review-section .detail-gold-stars--sm {
+  font-size: 0.625rem;
+  letter-spacing: 0.03em;
+}
+
+.taxi-review-section__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 10.5rem) minmax(0, 12rem) minmax(0, 1.4fr);
+  align-items: start;
+  gap: 1.35rem 1.75rem;
+}
+
+.taxi-review-section__summary {
+  min-width: 0;
+}
+
+.taxi-review-section__score {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--taxi-review-star);
+  text-shadow: 0 0 20px rgba(245, 179, 1, 0.35);
+}
+
+.taxi-review-section__stars {
+  margin: 0.55rem 0 0;
+}
+
+.taxi-review-section__stars.detail-gold-stars--lg {
+  font-size: 1.7rem;
+  letter-spacing: 0.12em;
+  line-height: 1.15;
+}
+
+.taxi-review-section__count {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: #b8c0cc;
+}
+
+.taxi-review-section__count strong {
+  font-weight: 600;
+  color: #a8b0bc;
+}
+
+.taxi-review-section__breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-top: 0.15rem;
+  min-width: 0;
+}
+
+.taxi-review-section__bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.6875rem;
+}
+
+.taxi-review-section__bar-label {
+  flex-shrink: 0;
+  width: 4.25rem;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.taxi-review-section__bar-track {
+  flex: 1;
+  height: 0.4375rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #f1f5f9;
+}
+
+.taxi-review-section__bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #d4a63a 0%, #f4d06f 55%, #ffe7a3 100%);
+  box-shadow: 0 0 8px rgba(255, 231, 163, 0.35);
+}
+
+.taxi-review-section__bar-pct {
+  flex-shrink: 0;
+  width: 3.5rem;
+  text-align: right;
+  font-weight: 600;
+  color: #94a3b8;
+  white-space: nowrap;
+}
+
+.taxi-review-section__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  min-width: 0;
+}
+
+.taxi-review-section__cards[data-review-count="4"] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.taxi-review-section__card {
+  padding: 0.2rem 1.4rem 0.55rem;
+  border-left: 1px solid rgba(15, 23, 42, 0.05);
+  min-width: 0;
+}
+
+.taxi-review-section__cards > .taxi-review-section__card:first-child {
+  border-left: none;
+  padding-left: 0.55rem;
+}
+
+.taxi-review-section__card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+}
+
+.taxi-review-section__card-avatar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 0.875rem;
+  font-weight: 800;
+}
+
+.taxi-review-section__card-name {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.taxi-review-section__card-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.1rem;
+}
+
+.taxi-review-section__card-rating-num {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--taxi-review-star);
+}
+
+.taxi-review-section__card-tag {
+  display: inline-block;
+  margin-top: 0.55rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: #8a6d12;
+  background: rgba(246, 195, 67, 0.22);
+  border: 1px solid rgba(245, 179, 1, 0.28);
+  border-radius: 999px;
+}
+
+.taxi-review-section__card-text {
+  margin: 0.55rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.72;
+  color: #334155;
+}
+
+.taxi-review-section__card-date {
+  display: block;
+  margin-top: 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.taxi-review-section__empty-top {
+  display: grid;
+  grid-template-columns: minmax(0, 9.5rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 1.25rem 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.taxi-review-section__empty-msg {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #64748b;
+  text-align: center;
+}
+
+.taxi-review-section__fallback {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.taxi-review-section__fallback-card {
+  padding: 1rem 0.9rem;
+  text-align: left;
+  background: #fffdf9;
+  border: 1px solid rgba(150, 118, 34, 0.22);
+  border-radius: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.taxi-review-section__fallback-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(26, 26, 26, 0.06);
+}
+
+.taxi-review-section__fallback-icon {
+  display: block;
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.taxi-review-section__fallback-title {
+  margin: 0.4rem 0 0.2rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.taxi-review-section__fallback-desc {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: #555;
+}
+
+@media (max-width: 1100px) {
+  .taxi-review-section__grid {
+    grid-template-columns: minmax(0, 9.5rem) minmax(0, 12rem);
+  }
+
+  .taxi-review-section__cards {
+    grid-column: 1 / -1;
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 0.35rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .taxi-review-section__card {
+    flex: 0 0 min(17.5rem, 88vw);
+    scroll-snap-align: start;
+    border-left: none;
+    border-right: 1px solid rgba(15, 23, 42, 0.05);
+    padding: 0.2rem 1.25rem 0.55rem;
+  }
+
+  .taxi-review-section__fallback {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .taxi-review-section {
+    padding: 1.25rem 1.15rem;
+  }
+
+  .taxi-review-section__grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .taxi-review-section__empty-top {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .taxi-review-section__empty-msg {
+    text-align: left;
+  }
+
+  .taxi-review-section__fallback {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 清掃・片付け詳細（修理UI派生・清潔感・薄ブルーアクセント） ── */
+.biz-detail-page--cleaning {
+  --cleaning-navy: #2a4d6e;
+  --cleaning-blue: #6ba3c7;
+  --cleaning-blue-soft: #e8f4fc;
+  --cleaning-gold: #c9a227;
+  --cleaning-gold-border: rgba(201, 162, 39, 0.35);
+  --detail-gold: #c9a227;
+}
+
+/* ── 店舗・出張サービス詳細（清掃UIと同一構造・テラコッタアクセント） ── */
+.biz-detail-page--store {
+  --store-navy: #3d2e28;
+  --store-accent: #c47b5a;
+  --store-accent-soft: #faf3ef;
+  --store-gold: #c9a227;
+  --store-gold-border: rgba(201, 162, 39, 0.35);
+  --detail-gold: #c9a227;
+}
+
+.biz-detail-page--cleaning .biz-detail-main,
+.biz-detail-page--store .biz-detail-main {
+  min-width: 0;
+}
+
+.biz-detail-page--cleaning .biz-detail-panel--showcase,
+.biz-detail-page--store .biz-detail-panel--showcase {
+  padding: 1.45rem 1.55rem;
+  margin-bottom: 1.35rem;
+}
+
+.biz-detail-page--cleaning .biz-detail-panel--primary,
+.biz-detail-page--store .biz-detail-panel--primary {
+  padding: 1.65rem 1.55rem;
+  margin-bottom: 1.35rem;
+}
+
+.biz-detail-page--cleaning .biz-detail-repair-coverage,
+.biz-detail-page--store .biz-detail-repair-coverage {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem 1.4rem;
+  align-items: stretch;
+}
+
+.biz-detail-page--cleaning .biz-detail-cleaning-coverage__group,
+.biz-detail-page--store .biz-detail-store-coverage__group {
+  display: flex;
+  flex-direction: column;
+  min-height: 12.5rem;
+  padding: 1.35rem 1.45rem;
+}
+
+.biz-detail-page--cleaning .biz-detail-cleaning-coverage__list,
+.biz-detail-page--store .biz-detail-store-coverage__list {
+  margin: 0;
+  padding: 0 0 0 1.15rem;
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  flex: 1 1 auto;
+}
+
+.biz-detail-page--cleaning .biz-detail-cleaning-coverage__list li,
+.biz-detail-page--store .biz-detail-store-coverage__list li {
+  padding: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.65;
+  color: #334155;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.biz-detail-page--cleaning #section-service-menu .biz-detail-panel__title--showcase::after,
+.biz-detail-page--store #section-service-menu .biz-detail-panel__title--showcase::after {
+  content: "メニュー";
+}
+
+.biz-detail-page--cleaning .biz-detail-service-menu-cards,
+.biz-detail-page--store .biz-detail-service-menu-cards {
+  gap: 1.15rem 1.25rem;
+}
+
+.biz-detail-page--cleaning .detail-gold-stars {
+  color: var(--cleaning-gold);
+}
+
+.biz-detail-page--cleaning .biz-detail-fv-card--cleaning {
+  border-color: rgba(42, 77, 110, 0.2);
+  box-shadow:
+    0 16px 44px rgba(42, 77, 110, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.85) inset;
+}
+
+.biz-detail-page--cleaning .biz-detail-sidebar__price {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  font-weight: 800;
+  color: var(--cleaning-navy);
+}
+
+.biz-detail-page--cleaning .biz-detail-panel__title--showcase {
+  color: var(--cleaning-navy);
+}
+
+.biz-detail-page--cleaning .biz-detail-panel__title--showcase::before {
+  background: linear-gradient(90deg, var(--cleaning-blue), var(--cleaning-gold));
+}
+
+.biz-detail-page--cleaning #section-coverage .biz-detail-panel__title--showcase::after {
+  content: "対応範囲";
+}
+
+.biz-detail-page--cleaning #section-achievements .biz-detail-panel__title--showcase::after {
+  content: "実績";
+}
+
+.biz-detail-page--cleaning .biz-detail-reception--open {
+  background: var(--cleaning-blue-soft);
+  border-color: rgba(107, 163, 199, 0.4);
+  color: var(--cleaning-navy);
+}
+
+.biz-detail-page--cleaning .biz-detail-reception--busy,
+.biz-detail-page--cleaning .biz-detail-reception--paused {
+  font-size: 0.8125rem;
+}
+
+.biz-detail-page--cleaning .biz-detail-reception__dot {
+  display: none;
+}
+
+.biz-detail-page--cleaning .biz-detail-cleaning-coverage__group {
+  background: linear-gradient(180deg, #fff 0%, var(--cleaning-blue-soft) 100%);
+  border-color: rgba(107, 163, 199, 0.28);
+}
+
+.biz-detail-page--cleaning .biz-detail-repair-coverage__title {
+  color: var(--cleaning-navy);
+}
+
+.biz-detail-strengths--cleaning .biz-detail-strength {
+  border-color: rgba(107, 163, 199, 0.22);
+  background: linear-gradient(180deg, #fff 0%, #f8fcff 100%);
+}
+
+.biz-detail-strengths--cleaning .biz-detail-strength__icon {
+  color: var(--cleaning-blue);
+}
+
+.biz-detail-page--cleaning .biz-detail-cases--cleaning-grid,
+.biz-detail-page--cleaning .biz-detail-cases--work-grid-layout,
+.biz-detail-page--store .biz-detail-cases--store-grid,
+.biz-detail-page--store .biz-detail-cases--work-grid-layout {
+  align-items: stretch;
+}
+
+.biz-detail-page--cleaning .biz-detail-cases--cleaning-grid .biz-detail-case,
+.biz-detail-page--cleaning .biz-detail-cases--work-grid-layout .biz-detail-case,
+.biz-detail-page--store .biz-detail-cases--store-grid .biz-detail-case,
+.biz-detail-page--store .biz-detail-cases--work-grid-layout .biz-detail-case {
+  border-color: rgba(107, 163, 199, 0.22);
+}
+
+.biz-detail-sidebar__cta-group--cleaning,
+.biz-detail-sidebar__cta-group--store {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.biz-detail-sidebar__cta-group--cleaning .biz-detail-btn,
+.biz-detail-sidebar__cta-group--store .biz-detail-btn {
+  width: 100%;
+}
+
+.biz-detail-page--cleaning .biz-detail-sticky-bar .biz-detail-btn--cleaning-estimate,
+.biz-detail-page--cleaning .biz-detail-sticky-bar .biz-detail-btn--taxi-gold {
+  background: linear-gradient(135deg, var(--cleaning-gold) 0%, #dbb84a 100%);
+  border-color: var(--cleaning-gold-border);
+  color: #1a2e44;
+}
+
+/* 店舗・出張：カラー・装飾（構造は清掃と共通） */
+.biz-detail-page--store .detail-gold-stars {
+  color: var(--store-gold);
+}
+
+.biz-detail-page--store .biz-detail-fv-card--store {
+  border-color: rgba(196, 123, 90, 0.28);
+  box-shadow:
+    0 16px 44px rgba(61, 46, 40, 0.08),
+    0 0 0 1px rgba(255, 255, 255, 0.85) inset;
+}
+
+.biz-detail-page--store .biz-detail-sidebar__price {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  font-weight: 800;
+  color: var(--store-navy);
+}
+
+.biz-detail-page--store .biz-detail-panel__title--showcase {
+  color: var(--store-navy);
+}
+
+.biz-detail-page--store .biz-detail-panel__title--showcase::before {
+  background: linear-gradient(90deg, var(--store-accent), var(--store-gold));
+}
+
+.biz-detail-page--store #section-coverage .biz-detail-panel__title--showcase::after {
+  content: "対応範囲";
+}
+
+.biz-detail-page--store #section-achievements .biz-detail-panel__title--showcase::after {
+  content: "実績";
+}
+
+.biz-detail-page--store .biz-detail-reception--open {
+  background: var(--store-accent-soft);
+  border-color: rgba(196, 123, 90, 0.35);
+  color: var(--store-navy);
+}
+
+.biz-detail-page--store .biz-detail-reception--busy,
+.biz-detail-page--store .biz-detail-reception--paused {
+  font-size: 0.8125rem;
+}
+
+.biz-detail-page--store .biz-detail-reception__dot {
+  display: none;
+}
+
+.biz-detail-page--store .biz-detail-store-coverage__group {
+  background: linear-gradient(180deg, #fff 0%, var(--store-accent-soft) 100%);
+  border-color: rgba(196, 123, 90, 0.28);
+}
+
+.biz-detail-page--store .biz-detail-repair-coverage__title {
+  color: var(--store-navy);
+}
+
+.biz-detail-strengths--store .biz-detail-strength {
+  border-color: rgba(196, 123, 90, 0.22);
+  background: linear-gradient(180deg, #fff 0%, #faf6f3 100%);
+}
+
+.biz-detail-strengths--store .biz-detail-strength__icon {
+  color: var(--store-accent);
+}
+
+.biz-detail-page--store .biz-detail-cases--store-grid .biz-detail-case,
+.biz-detail-page--store .biz-detail-cases--work-grid-layout .biz-detail-case {
+  border-color: rgba(196, 123, 90, 0.22);
+}
+
+.biz-detail-page--store .biz-detail-sticky-bar .biz-detail-btn--store-estimate,
+.biz-detail-page--store .biz-detail-sticky-bar .biz-detail-btn--taxi-gold {
+  background: linear-gradient(135deg, var(--store-gold) 0%, #dbb84a 100%);
+  border-color: var(--store-gold-border);
+  color: #3d2e28;
+}
+
+@media (max-width: 900px) {
+  .biz-detail-page--cleaning .biz-detail-repair-coverage,
+  .biz-detail-page--store .biz-detail-repair-coverage {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-page--repair .biz-detail-fv__media,
+  .biz-detail-page--cleaning .biz-detail-fv__media,
+  .biz-detail-page--store .biz-detail-fv__media {
+    margin-right: 0;
+  }
+
+  .biz-detail-page--repair .biz-detail-fv__main,
+  .biz-detail-page--cleaning .biz-detail-fv__main,
+  .biz-detail-page--store .biz-detail-fv__main:not(.biz-detail-fv__main--store-shop) {
+    margin-right: 0;
+    max-width: none;
+  }
+}
+
+/* ショップECヘッダー：初期非表示 → store_field_service 時のみ表示 */
+header.shop-detail-header[data-biz-detail-market-header] {
+  display: none;
+}
+
+body.shop-detail-page header.shop-detail-header[data-biz-detail-market-header],
+body.biz-detail-page--store-shop header.shop-detail-header[data-biz-detail-market-header],
+header.shop-detail-header[data-biz-detail-market-header].is-visible {
+  display: block !important;
+  visibility: visible !important;
+  height: auto !important;
+  min-height: 72px !important;
+  overflow: visible !important;
+}
+
+/* ── TASFUL内店舗（専門ショップ・ゴールドEC） ── */
+.biz-detail-page--store-shop,
+body.shop-detail-page.biz-detail-page--store-shop {
+  --shop-gold: #c9a227;
+  --shop-gold-soft: #f7f0dc;
+  --shop-ink: #1a1a1a;
+  --shop-border: rgba(201, 162, 39, 0.28);
+  --detail-gold: #c9a227;
+  --shop-header-height: 72px;
+  background: #f6f7f9;
+  color: var(--shop-ink);
+  padding-top: 0 !important;
+}
+
+/* 黒い固定バナーはショップ詳細のみ非表示 */
+body.shop-detail-page .tasu-banner,
+body.shop-detail-page .tasu-platform-header,
+body.shop-detail-page .global-black-header,
+.biz-detail-page--store-shop .tasu-banner,
+.biz-detail-page--store-shop .tasu-platform-header,
+.biz-detail-page--store-shop .global-black-header,
+.biz-detail-page--store-shop [data-biz-detail-simple-banner] {
+  display: none !important;
+}
+
+/* tasu-banner.css が全 header を潰すため、ECヘッダーを復元 */
+.biz-detail-page--store-shop header.shop-market-header[data-biz-detail-market-header] {
+  display: block !important;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: auto !important;
+  min-height: var(--shop-header-height) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  background: #fff !important;
+  border: none !important;
+  border-bottom: 1px solid #eee !important;
+  box-shadow: none !important;
+  z-index: 10001;
+}
+
+.biz-detail-page--store-shop header.shop-market-header[data-biz-detail-market-header]::before,
+.biz-detail-page--store-shop header.shop-market-header[data-biz-detail-market-header]::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* 専門ショップECヒーロー（420px | 1fr | 240px）— 横長・高密度 */
+.biz-detail-page--store-shop .shop-hero,
+.biz-detail-page--store-shop .biz-hero,
+.biz-detail-page--store-shop .business-hero-card,
+.biz-detail-page--store-shop .shop-detail-hero-card,
+.biz-detail-page--store-shop .shop-hero-grid,
+.biz-detail-page--store-shop .biz-detail-fv.biz-detail-fv--store-shop {
+  display: grid;
+  grid-template-columns: 420px minmax(0, 1fr) 250px;
+  gap: 36px;
+  align-items: start !important;
+  height: auto !important;
+  min-height: unset !important;
+  padding: 28px 32px !important;
+  margin-bottom: 2.5rem;
+  background: #fff;
+  border: 1px solid #ebe6dc;
+  border-radius: 28px;
+  box-shadow: 0 8px 32px rgba(26, 26, 26, 0.06);
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-fv__media,
+.biz-detail-page--store-shop .shop-hero-media {
+  margin-right: 0 !important;
+  min-width: 0;
+  align-self: start !important;
+  flex: 0 0 auto;
+  height: auto !important;
+  min-height: unset !important;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-hero__figure-wrap {
+  position: relative;
+  flex: 0 0 auto;
+  height: auto;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-hero__figure {
+  margin: 0;
+  aspect-ratio: unset;
+  min-height: unset !important;
+  height: auto !important;
+  border-radius: 18px;
+  border-color: #e8e4da;
+  overflow: hidden;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .shop-main-image,
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-hero__figure img {
+  display: block;
+  width: 100%;
+  height: 300px;
+  min-height: unset !important;
+  max-height: none;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-hero__figure-wrap > .biz-detail-gallery-nav {
+  display: none !important;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-store-gallery .biz-detail-gallery-nav--store-thumb {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 1.1rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-gallery-nav--prev.biz-detail-gallery-nav--store-thumb {
+  left: 0.15rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-gallery-nav--next.biz-detail-gallery-nav--store-thumb {
+  right: 0.15rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-store-gallery,
+.biz-detail-page--store-shop .shop-gallery-thumbs {
+  position: relative;
+  flex: 0 0 auto;
+  margin-top: 0;
+}
+
+.biz-detail-page--store-shop.biz-detail-page--store .biz-detail-fv--store-shop .biz-detail-fv__media,
+.biz-detail-page--store-shop.biz-detail-page--store .biz-detail-fv--store-shop .biz-detail-fv__main {
+  margin-right: 0 !important;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .shop-gallery-thumbs,
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .hero-thumbnails,
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-gallery.hero-thumbnails {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  position: static !important;
+  margin-top: 0 !important;
+  flex: 0 0 auto;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-store-gallery__track {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: center;
+  overflow-x: auto;
+  padding: 0 1.75rem 0.15rem;
+  scroll-snap-type: x proximity;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-store-gallery .biz-detail-gallery__thumb {
+  flex: 0 0 78px;
+  width: 78px;
+  height: 56px;
+  border-radius: 10px;
+  scroll-snap-align: start;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-store-gallery .biz-detail-gallery__thumb img,
+.biz-detail-page--store-shop .shop-gallery-thumbs img,
+.biz-detail-page--store-shop .hero-thumbnails img {
+  width: 78px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-fv__main,
+.biz-detail-page--store-shop .shop-hero-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-self: start !important;
+  flex: 0 0 auto;
+  max-width: none;
+  width: auto;
+  height: auto !important;
+  min-height: unset !important;
+  margin-right: 0 !important;
+  padding: 0;
+}
+
+.biz-detail-page--store-shop .shop-hero-info > * {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  flex: 0 0 auto;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv__main [data-biz-detail-hero-genre-tags] {
+  order: 1;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__store-title-block {
+  order: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem 0.65rem;
+  margin: 0;
+}
+
+.biz-detail-page--store-shop .shop-title,
+.biz-detail-page--store-shop .biz-detail-hero__store-title-block [data-biz-detail-title] {
+  order: unset;
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #111;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__store-title-block .biz-detail-hero__company-row {
+  order: unset;
+  margin: 0;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv__main [data-biz-detail-hero-rating-row] {
+  order: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  flex-wrap: wrap;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__rating-stars.detail-gold-stars {
+  font-size: 1.05rem;
+  letter-spacing: 0.06em;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__rating-score {
+  font-weight: 800;
+  font-size: 1.125rem;
+  color: var(--shop-ink);
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__rating-count {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__rating-link {
+  color: #7a5e10;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.biz-detail-page--store-shop .shop-description,
+.biz-detail-page--store-shop .biz-detail-fv__main [data-biz-detail-hero-lead] {
+  order: 4;
+  font-size: 15px;
+  line-height: 1.9;
+  color: #444;
+  margin: 0;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv__main .biz-detail-store-info,
+.biz-detail-page--store-shop .biz-detail-fv__main [data-biz-detail-hero-quick].biz-detail-store-info {
+  order: 5;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-store-info__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: #334155;
+}
+
+.biz-detail-page--store-shop .biz-detail-store-info__icon {
+  flex-shrink: 0;
+  width: 1.25rem;
+  text-align: center;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--shop-gold);
+}
+
+.biz-detail-page--store-shop .biz-detail-store-info__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.biz-detail-page--store-shop .shop-feature-tags,
+.biz-detail-page--store-shop .biz-detail-fv__main [data-biz-detail-hero-condition-tags] {
+  order: 6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px !important;
+  padding-top: 0;
+  flex: 0 0 auto;
+  align-self: flex-start;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-fv__aside {
+  min-width: 0;
+  max-width: 250px;
+  width: 250px;
+  align-self: start !important;
+  height: auto !important;
+  min-height: unset !important;
+  display: block;
+  flex: 0 0 auto;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-sidebar__sticky {
+  position: static;
+  top: auto;
+  flex: 0 0 auto;
+  height: auto !important;
+  min-height: unset !important;
+  display: block;
+  align-self: start;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__genre-tag {
+  display: inline-block;
+  padding: 0.22rem 0.65rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #7a5e10;
+  background: var(--shop-gold-soft);
+  border: 1px solid var(--shop-border);
+  border-radius: 999px;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv-card--store-shop,
+.biz-detail-page--store-shop .shop-cta-card,
+.biz-detail-page--store-shop .shop-cta-card.biz-detail-fv-card--store-shop {
+  width: 250px;
+  max-width: 100%;
+  height: auto !important;
+  min-height: unset !important;
+  padding: 18px !important;
+  border: 1px solid var(--shop-border);
+  border-radius: 22px;
+  box-shadow: 0 8px 24px rgba(201, 162, 39, 0.1);
+  background: linear-gradient(180deg, #fff 0%, #fffdf8 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-self: start !important;
+  flex: 0 0 auto !important;
+  position: sticky;
+  top: 24px;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv-card--store-shop > .biz-detail-favorite,
+.biz-detail-page--store-shop .biz-detail-fv-card--store-shop > .biz-detail-favorite[hidden] {
+  display: none !important;
+}
+
+.biz-detail-page--store-shop .shop-cta-card * {
+  margin-top: 0;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-card__trust-head,
+.biz-detail-page--store-shop .shop-cta-card [data-biz-detail-fv-trust-head] {
+  margin: 0 0 10px !important;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-align: center;
+  color: #7a5e10;
+  background: var(--shop-gold-soft);
+  border: 1px solid var(--shop-border);
+  border-radius: 8px;
+  line-height: 1.4;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-taxi-rating,
+.biz-detail-page--store-shop .shop-cta-card .rating-box,
+.biz-detail-page--store-shop .shop-cta-card .review-box {
+  padding: 10px 0 !important;
+  margin-bottom: 12px !important;
+  font-size: 13px !important;
+  flex: 0 0 auto;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-taxi-rating__label {
+  font-size: 0.6875rem;
+  margin-bottom: 0.25rem;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-taxi-rating__score {
+  font-size: 1rem;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-taxi-rating__count {
+  font-size: 0.75rem;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-sidebar__cta-group--store,
+.biz-detail-page--store-shop .shop-cta-card .cta-section,
+.biz-detail-page--store-shop .shop-cta-card .cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px !important;
+  margin-bottom: 10px !important;
+  flex: 0 0 auto;
+}
+
+.biz-detail-page--store-shop .shop-cta-card button,
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn,
+.biz-detail-page--store-shop .shop-cta-card .cta-btn,
+.biz-detail-page--store-shop .shop-cta-card .primary-btn,
+.biz-detail-page--store-shop .shop-cta-card .secondary-btn {
+  width: 100%;
+  min-height: 52px !important;
+  padding: 12px 14px !important;
+  font-size: 15px !important;
+  border-radius: 14px !important;
+  font-weight: 700;
+  flex: 0 0 auto !important;
+  gap: 0.15rem;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn--store-ai,
+.biz-detail-page--store-shop .shop-cta-card .ai-btn,
+.biz-detail-page--store-shop .shop-cta-card .cta-primary {
+  background: linear-gradient(145deg, #f0d060 0%, #e8c547 35%, var(--shop-gold) 70%, #a67c00 100%);
+  border: 1px solid #a67c00;
+  color: #1a1a1a;
+  min-height: 66px !important;
+  font-size: 15px !important;
+  font-weight: 800;
+  flex-direction: column;
+  box-shadow: 0 6px 16px rgba(201, 162, 39, 0.28);
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn--store-inquiry {
+  background: linear-gradient(145deg, #f5e6b8 0%, #e8d49a 55%, #d4bc7a 100%);
+  border: 1px solid #c9a227;
+  color: #1a1a1a;
+  flex-direction: column;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn--store-estimate,
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn--store-phone,
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn--store-favorite {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn__icon {
+  font-size: 0.9rem;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-card__platform-note {
+  margin: 0 0 8px !important;
+  font-size: 0.625rem;
+  color: #94a3b8;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-btn__sub {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1.25;
+  opacity: 0.85;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-trust-badges--store,
+.biz-detail-page--store-shop .shop-cta-card .trust-list,
+.biz-detail-page--store-shop .shop-cta-card .safe-list {
+  margin: 10px 0 0 !important;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px !important;
+  font-size: 11px !important;
+  color: #64748b;
+  flex: 0 0 auto;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-trust-badges--store li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  white-space: nowrap;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-trust-badges__icon {
+  font-size: 0.65rem;
+}
+
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-side-price,
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-sidebar__meta-block {
+  flex: 0 0 auto;
+  margin-bottom: 10px !important;
+}
+
+.biz-detail-page--store-shop .biz-detail-strengths-scroll-wrap {
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
+
+.biz-detail-page--store-shop .biz-detail-strengths--store {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.85rem;
+  min-width: min-content;
+}
+
+.biz-detail-page--store-shop .biz-detail-strengths--store .biz-detail-strength--shop-card {
+  flex: 0 0 168px;
+  scroll-snap-align: start;
+  border: 1px solid var(--shop-border);
+  background: linear-gradient(180deg, #fff 0%, #fffdf8 100%);
+  text-align: center;
+  padding: 1.25rem 1rem;
+  border-radius: 14px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.biz-detail-page--store-shop .biz-detail-strengths--store .biz-detail-strength--shop-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(201, 162, 39, 0.14);
+}
+
+.biz-detail-page--store-shop .biz-detail-strength__icon-disc {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 0.65rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #f7f0dc, #fff);
+  border: 1px solid var(--shop-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.biz-detail-page--store-shop .biz-detail-strength__icon-glyph {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+
+.biz-detail-page--store-shop .biz-detail-store-services {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-store-service-card {
+  padding: 1.45rem 1.15rem;
+  min-height: 148px;
+  border: 1px solid #e8e4da;
+  border-radius: 14px;
+  background: #fff;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.biz-detail-page--store-shop .biz-detail-store-service-card:hover {
+  border-color: var(--shop-border);
+  box-shadow: 0 14px 32px rgba(201, 162, 39, 0.14);
+  transform: translateY(-4px);
+}
+
+.biz-detail-page--store-shop .biz-detail-store-service-card__icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.55rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-store-service-card__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--shop-ink);
+}
+
+.biz-detail-page--store-shop .biz-detail-store-service-card__desc {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+.biz-detail-page--store-shop .biz-detail-products-scroll-wrap,
+.biz-detail-page--store-shop .biz-detail-shop-gallery-scroll {
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.biz-detail-page--store-shop .biz-detail-products-scroll,
+.biz-detail-page--store-shop .biz-detail-shop-gallery-scroll {
+  display: flex;
+  gap: 14px;
+  scroll-snap-type: x mandatory;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card--ec {
+  flex: 0 0 210px;
+  width: 210px;
+  max-width: 210px;
+  scroll-snap-align: start;
+  border: 1px solid #e8e4da;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card--ec:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(26, 26, 26, 0.08);
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__media {
+  position: relative;
+  background: #f8f8f8;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__img {
+  display: block;
+  width: 100%;
+  height: 135px;
+  object-fit: cover;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__tag {
+  position: absolute;
+  top: 0.65rem;
+  left: 0.65rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 6px;
+  background: #334155;
+  color: #fff;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__tag.is-new {
+  background: var(--shop-gold);
+  color: #1a1a1a;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__ship {
+  position: absolute;
+  top: 0.65rem;
+  right: 2.5rem;
+  padding: 0.18rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__fav {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  width: 1.65rem;
+  height: 1.65rem;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__body {
+  padding: 12px 12px 12px;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__title {
+  margin: 0 0 0.28rem;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__price {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--shop-ink);
+  line-height: 1.25;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__tax {
+  font-size: 10px;
+  font-weight: 500;
+  color: #64748b;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__state {
+  margin: 0.2rem 0 0;
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.35;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__stock {
+  margin: 0.2rem 0 0.4rem;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__stock--is-in {
+  color: #166534;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__stock--is-out {
+  color: #b91c1c;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__ai,
+.biz-detail-page--store-shop .biz-detail-product-card__buy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  height: 34px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 10px;
+  text-decoration: none;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__ai {
+  background: linear-gradient(145deg, #e8c547, var(--shop-gold));
+  color: #1a1a1a;
+}
+
+.biz-detail-page--store-shop .biz-detail-product-card__buy {
+  border: 1px solid var(--shop-border);
+  color: var(--shop-ink);
+  background: #fff;
+}
+
+.biz-detail-page--store-shop .biz-detail-products-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-products-tab {
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+  color: #475569;
+}
+
+.biz-detail-page--store-shop .biz-detail-products-tab.is-active {
+  background: var(--shop-gold-soft);
+  border-color: var(--shop-border);
+  color: #7a5e10;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-gallery-card {
+  flex: 0 0 220px;
+  scroll-snap-align: start;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #e8e4da;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-gallery-card img {
+  display: block;
+  width: 220px;
+  height: 160px;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-gallery-card:hover img {
+  transform: scale(1.06);
+}
+
+.biz-detail-page--store-shop .biz-detail-panel__head-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.biz-detail-page--store-shop .biz-detail-panel__title--showcase {
+  color: var(--shop-ink);
+}
+
+.biz-detail-page--store-shop .biz-detail-panel__title--showcase::before {
+  background: linear-gradient(90deg, var(--shop-gold), #e8c547);
+}
+
+.biz-detail-page--store-shop .biz-detail-map-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.biz-detail-page--store-shop .biz-detail-sticky-bar--store-shop {
+  background: #fff;
+  border-top: 1px solid var(--shop-border);
+  box-shadow: 0 -8px 32px rgba(26, 26, 26, 0.08);
+}
+
+.biz-detail-page--store-shop .biz-detail-sticky-bar--store-shop .biz-detail-sticky-bar__actions {
+  display: flex;
+  gap: 0.65rem;
+}
+
+@media (max-width: 1100px) {
+  .biz-detail-page--store-shop .biz-detail-store-services {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .biz-detail-page--store-shop .biz-detail-store-services {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ── マーケットヘッダー・フッター ── */
+.biz-detail-page--store-shop .shop-market-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  min-height: var(--shop-header-height);
+  height: var(--shop-header-height);
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+.biz-detail-page--store-shop .shop-market-header__logo {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--shop-ink);
+}
+
+.biz-detail-page--store-shop .shop-market-header__logo-mark {
+  width: 1.125rem;
+  height: 1.125rem;
+  background: linear-gradient(145deg, #e8c547, #c9a227);
+  transform: rotate(45deg);
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(201, 162, 39, 0.45);
+}
+
+.biz-detail-page--store-shop .shop-market-header__logo-text {
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  line-height: 1;
+}
+
+.biz-detail-page--store-shop .shop-market-header__center {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem 2rem;
+  min-width: 0;
+  padding: 0 0.5rem;
+}
+
+.biz-detail-page--store-shop .shop-market-header__search {
+  flex: 1 1 280px;
+  max-width: 420px;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 40px;
+  padding: 0 1rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 999px;
+  background: #fafafa;
+}
+
+.biz-detail-page--store-shop .shop-market-header__search-icon {
+  flex-shrink: 0;
+  font-size: 0.9rem;
+  opacity: 0.55;
+}
+
+.biz-detail-page--store-shop .shop-market-header__search-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  color: #333;
+  outline: none;
+}
+
+.biz-detail-page--store-shop .shop-market-header__search-input::placeholder {
+  color: #999;
+}
+
+.biz-detail-page--store-shop .shop-market-header__nav {
+  flex: 0 1 auto;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem 1.15rem;
+}
+
+.biz-detail-page--store-shop .shop-market-header__nav-link {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #555;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.biz-detail-page--store-shop .shop-market-header__nav-link:hover {
+  color: var(--shop-ink);
+}
+
+.biz-detail-page--store-shop .shop-market-header__nav-link--ai {
+  color: #9a7b2e;
+  font-weight: 700;
+}
+
+.biz-detail-page--store-shop .shop-market-header__actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.biz-detail-page--store-shop .shop-market-header__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-width: 2.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #666;
+  text-decoration: none;
+}
+
+.biz-detail-page--store-shop .shop-market-header__action-icon {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+.biz-detail-page--store-shop .shop-market-header__action--primary {
+  color: #7a5e10;
+}
+
+.biz-detail-page--store-shop .shop-market-header__action--primary .shop-market-header__action-icon {
+  color: #9a7b2e;
+}
+
+/* パンくず（ヘッダー下 → TOPカード上） */
+.biz-detail-page--store-shop .biz-detail-breadcrumb--shop {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.5;
+  margin: 18px 0 16px;
+}
+
+.biz-detail-page--store-shop .biz-detail-breadcrumb--shop a {
+  color: #777;
+  text-decoration: none;
+}
+
+.biz-detail-page--store-shop .biz-detail-breadcrumb--shop a:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+.biz-detail-page--store-shop .biz-detail-breadcrumb__sep {
+  margin: 0 0.35rem;
+  color: #bbb;
+}
+
+.biz-detail-page--store-shop .biz-detail-breadcrumb__current {
+  color: #333;
+  font-weight: 600;
+}
+
+.biz-detail-page--store-shop .biz-detail-top--store-shop-hidden {
+  display: none !important;
+}
+
+.biz-detail-page--store-shop .shop-market-footer {
+  margin-top: 2rem;
+  padding: 2.5rem 1.25rem 2rem;
+  background: linear-gradient(180deg, #fffdf8 0%, #f7f0dc 100%);
+  border-top: 1px solid var(--shop-border);
+}
+
+/* Footer safety: decorative assets only (exclude SNS control icons) */
+.biz-detail-page--store-shop .shop-market-footer svg:not(.shop-store-sns-btn__icon),
+.biz-detail-page--store-shop .shop-market-footer img {
+  max-width: 100%;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__grid {
+  display: grid;
+  grid-template-columns: 1.4fr repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__logo {
+  margin: 0 0 0.35rem;
+  font-size: 1.35rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__tagline {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__col h3 {
+  margin: 0 0 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--shop-ink);
+}
+
+.biz-detail-page--store-shop .shop-market-footer__col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__col a {
+  font-size: 0.8125rem;
+  color: #475569;
+  text-decoration: none;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__ai {
+  padding: 1rem;
+  border: 1px solid var(--shop-border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__ai-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.biz-detail-page--store-shop .shop-market-footer__ai-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #e8c547, var(--shop-gold));
+  color: #1a1a1a;
+  text-decoration: none;
+}
+
+/* ── レイアウト（ショップ全幅） ── */
+.biz-detail-page--store-shop .biz-detail-status-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.biz-detail-page--store-shop .biz-detail-page-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px 2rem;
+  box-sizing: border-box;
+}
+
+.biz-detail-page--store-shop .biz-detail-page-wrap > .biz-detail-fv--store-shop,
+.biz-detail-page--store-shop .biz-detail-page-wrap > .biz-detail-fv {
+  margin-top: 0;
+  margin-bottom: 40px !important;
+}
+
+.biz-detail-page--store-shop .biz-detail-layout--store-shop-full {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.biz-detail-page--store-shop .biz-detail-sidebar--store-shop-hidden {
+  display: none !important;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__gold-member {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #5c4510;
+  background: linear-gradient(145deg, #f5e6a8, #d4af37);
+  border: 1px solid #b8962e;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__condition-tags.shop-feature-tags {
+  margin-top: 8px !important;
+}
+
+.biz-detail-page--store-shop .biz-detail-hero__condition-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #475569;
+}
+
+.biz-detail-page--store-shop .biz-detail-fv-trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.85rem;
+  margin: 0.85rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.6875rem;
+  color: #64748b;
+}
+
+/* ── 店舗情報・地図・お知らせ ── */
+.biz-detail-page--store-shop .biz-detail-shop-bottom-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 0.95fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-bottom__title {
+  margin: 0 0 0.85rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-info-dl dt {
+  font-weight: 700;
+  color: #64748b;
+}
+
+.biz-detail-page--store-shop .biz-detail-map-card--inline .biz-detail-map-embed iframe {
+  width: 100%;
+  height: 220px;
+  border: 0;
+  border-radius: 12px;
+}
+
+.biz-detail-page--store-shop .biz-detail-map-placeholder {
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px dashed #e2e8f0;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-news-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-news-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-news-item__date {
+  display: block;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.biz-detail-page--store-shop .biz-detail-shop-news-item__title {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* ── EC口コミ ── */
+.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section,
+.biz-detail-page--store-shop .shop-ec-reviews.taxi-review-section {
+  border: 1px solid #ebe6dc;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section__card {
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.04);
+}
+
+.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section__card-tag {
+  background: var(--shop-gold-soft);
+  color: #7a5e10;
+  border: 1px solid var(--shop-border);
+}
+
+.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section__card-text::before {
+  content: "購入・利用 ";
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #94a3b8;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+@media (max-width: 1280px) {
+  .biz-detail-page--store-shop .shop-hero-grid,
+  .biz-detail-page--store-shop .biz-detail-fv.biz-detail-fv--store-shop {
+    grid-template-columns: minmax(280px, 36%) minmax(0, 1fr) 220px;
+    gap: 28px;
+  }
+
+  .biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-fv__aside {
+    width: 220px;
+    max-width: 220px;
+  }
+
+  .biz-detail-page--store-shop .shop-cta-card,
+  .biz-detail-page--store-shop .shop-cta-card.biz-detail-fv-card--store-shop {
+    width: 220px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .biz-detail-page--store-shop .shop-hero-grid,
+  .biz-detail-page--store-shop .biz-detail-fv.biz-detail-fv--store-shop {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding: 24px 28px !important;
+    gap: 24px;
+  }
+
+  .biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-fv__aside {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .biz-detail-page--store-shop .shop-cta-card,
+  .biz-detail-page--store-shop .shop-cta-card.biz-detail-fv-card--store-shop {
+    width: 100%;
+    max-width: 400px;
+    position: static;
+    top: auto;
+  }
+
+  .biz-detail-page--store-shop .shop-title,
+  .biz-detail-page--store-shop .biz-detail-hero__store-title-block [data-biz-detail-title] {
+    font-size: clamp(1.75rem, 6vw, 42px);
+  }
+
+  .biz-detail-page--store-shop .biz-detail-fv--store-shop .shop-main-image,
+  .biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-hero__figure img {
+    height: 280px;
+    min-height: unset !important;
+    max-height: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .biz-detail-page--store-shop header.shop-market-header[data-biz-detail-market-header] {
+    min-height: auto !important;
+    height: auto !important;
+  }
+
+  .biz-detail-page--store-shop .shop-market-header__inner {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: var(--shop-header-height);
+    padding: 0.65rem 16px;
+    gap: 0.65rem;
+  }
+
+  .biz-detail-page--store-shop .shop-market-header__center {
+    order: 3;
+    flex: 1 1 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0;
+  }
+
+  .biz-detail-page--store-shop .shop-market-header__search {
+    flex: 1 1 auto;
+    max-width: none;
+  }
+
+  .biz-detail-page--store-shop .shop-market-header__nav {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .biz-detail-page--store-shop .biz-detail-page-wrap,
+  .biz-detail-page--store-shop .biz-detail-status-wrap {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .biz-detail-page--store-shop .shop-market-footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .biz-detail-page--store-shop .biz-detail-shop-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .biz-detail-page--store-shop .shop-hero-grid,
+  .biz-detail-page--store-shop .biz-detail-fv.biz-detail-fv--store-shop {
+    grid-template-columns: 1fr;
+    padding: 20px 18px !important;
+    gap: 20px;
+    border-radius: 20px;
+  }
+
+  .biz-detail-page--store-shop .biz-detail-fv--store-shop .shop-main-image,
+  .biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-hero__figure img {
+    height: 240px;
+    min-height: unset !important;
+    max-height: none;
+  }
+
+  .biz-detail-page--store-shop .shop-title,
+  .biz-detail-page--store-shop .biz-detail-hero__store-title-block [data-biz-detail-title] {
+    font-size: clamp(1.5rem, 8vw, 32px);
+  }
+}
+
+@media (max-width: 720px) {
+  .biz-detail-page--store-shop .shop-market-header__inner {
+    min-height: 64px;
+  }
+
+  .biz-detail-page--store-shop .shop-market-header__nav-link {
+    font-size: 0.75rem;
+  }
+
+  .biz-detail-page--store-shop .shop-market-header__action-label {
+    display: none;
+  }
+
+  .biz-detail-page--store-shop .shop-market-footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
+   専門ショップ TOPカード — 実DOMクラス準拠（detail-business.html + JS付与）
+   読み込み: detail-business.css（本ファイル・最終上書き）
+
+   外枠/グリッド: section.biz-detail-hero.biz-detail-fv
+   左:            .biz-detail-fv__media
+   画像:          .biz-detail-hero__figure img / [data-biz-detail-hero-img]
+   サムネ:        .biz-detail-gallery.hero-thumbnails / [data-biz-detail-gallery]
+   中央:          .biz-detail-hero__body.biz-detail-fv__main
+   右CTA:         .biz-detail-fv__aside > .biz-detail-fv-card
+   ボタン:        .biz-detail-sidebar__cta-group--store .biz-detail-btn
+   body:          .biz-detail-page--store-shop
+   ============================================================================= */
+
+/* ── 専門店ECヒーロー（参考画像基準・最終上書き） ── */
+body.biz-detail-page--store-shop .biz-detail-fv__grid,
+body.biz-detail-page--store-shop .biz-detail-hero.biz-detail-fv,
+body.biz-detail-page--store-shop .business-hero-card,
+body.biz-detail-page--store-shop .shop-detail-hero-card {
+  display: grid !important;
+  grid-template-columns: 420px minmax(0, 1fr) 250px !important;
+  gap: 36px !important;
+  align-items: start !important;
+  padding: 26px 28px 20px !important;
+  margin-bottom: 40px !important;
+  height: auto !important;
+  min-height: unset !important;
+  background: #fff !important;
+  border: 1px solid #ebe6dc !important;
+  border-radius: 28px !important;
+  box-shadow: 0 10px 40px rgba(26, 26, 26, 0.06) !important;
+}
+
+/* 専門ショップ：.biz-detail-page--store の中央カラム幅制限を無効化 */
+body.biz-detail-page--store-shop .biz-detail-fv__main,
+body.biz-detail-page--store-shop .biz-detail-fv__main--store-shop {
+  max-width: none !important;
+  width: 100% !important;
+  margin-right: 0 !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-fv > .biz-detail-fv__media,
+body.biz-detail-page--store-shop .biz-detail-fv > .biz-detail-fv__main,
+body.biz-detail-page--store-shop .biz-detail-fv > .biz-detail-fv__aside {
+  align-self: start !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-fv__media {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-right: 0 !important;
+  flex: 0 0 auto !important;
+  width: 100%;
+  max-width: 420px;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__figure-wrap {
+  flex: 0 0 auto;
+  height: auto;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__figure {
+  margin: 0;
+  aspect-ratio: unset !important;
+  min-height: unset !important;
+  height: auto !important;
+}
+
+body.biz-detail-page--store-shop .main-image,
+body.biz-detail-page--store-shop .biz-detail-main-image,
+body.biz-detail-page--store-shop .shop-main-image,
+body.biz-detail-page--store-shop .biz-detail-hero__figure img,
+body.biz-detail-page--store-shop [data-biz-detail-hero-img] {
+  width: 100% !important;
+  height: 300px !important;
+  min-height: unset !important;
+  max-height: none !important;
+  object-fit: cover !important;
+  border-radius: 18px !important;
+  display: block;
+}
+
+body.biz-detail-page--store-shop .thumbnail-list,
+body.biz-detail-page--store-shop .shop-gallery-thumbs,
+body.biz-detail-page--store-shop .biz-detail-gallery.hero-thumbnails,
+body.biz-detail-page--store-shop [data-biz-detail-gallery] {
+  margin-top: 8px !important;
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 10px !important;
+  position: static !important;
+  flex: 0 0 auto !important;
+  align-items: center;
+}
+
+body.biz-detail-page--store-shop .biz-detail-store-gallery__track,
+body.biz-detail-page--store-shop .hero-thumbnails.biz-detail-store-gallery__track {
+  display: flex !important;
+  gap: 10px !important;
+  margin-top: 0 !important;
+  padding: 0 1.75rem 0 !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-gallery__thumb,
+body.biz-detail-page--store-shop .thumbnail,
+body.biz-detail-page--store-shop .shop-thumb {
+  flex: 0 0 78px;
+  width: 78px;
+  height: 56px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  background: #f5f5f5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.biz-detail-page--store-shop .biz-detail-gallery__thumb:hover,
+body.biz-detail-page--store-shop .thumbnail:hover,
+body.biz-detail-page--store-shop .biz-detail-gallery__thumb.is-active,
+body.biz-detail-page--store-shop .thumbnail.is-active {
+  border-color: #d4a62a !important;
+  box-shadow: 0 0 0 1px rgba(212, 166, 42, 0.35);
+}
+
+body.biz-detail-page--store-shop .biz-detail-gallery__thumb img,
+body.biz-detail-page--store-shop .thumbnail img,
+body.biz-detail-page--store-shop .shop-thumb img {
+  width: 78px !important;
+  height: 56px !important;
+  object-fit: cover !important;
+  border-radius: 10px;
+  display: block;
+}
+
+body.biz-detail-page--store-shop .shop-hero-info,
+body.biz-detail-page--store-shop .biz-detail-hero__body.biz-detail-fv__main,
+body.biz-detail-page--store-shop .biz-detail-fv__main,
+body.biz-detail-page--store-shop .biz-detail-fv__main.biz-detail-fv__main--store-shop {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  padding: 0 !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+body.biz-detail-page--store-shop .shop-title,
+body.biz-detail-page--store-shop .biz-detail-title,
+body.biz-detail-page--store-shop [data-biz-detail-title] {
+  font-size: 30px !important;
+  line-height: 1.18 !important;
+  letter-spacing: -0.02em !important;
+  margin: 0 0 18px !important;
+  font-weight: 900 !important;
+  color: #111 !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__store-title-block,
+body.biz-detail-page--store-shop .shop-title-block {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 0.5rem 0.65rem !important;
+  margin: 0 0 4px !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__store-title-block .shop-title,
+body.biz-detail-page--store-shop .biz-detail-hero__store-title-block [data-biz-detail-title] {
+  margin-bottom: 0 !important;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+body.biz-detail-page--store-shop .shop-category-tags,
+body.biz-detail-page--store-shop .biz-detail-category-tags,
+body.biz-detail-page--store-shop [data-biz-detail-hero-genre-tags] {
+  margin: 0 0 14px !important;
+}
+
+body.biz-detail-page--store-shop .shop-meta-tags,
+body.biz-detail-page--store-shop .biz-detail-meta-tags,
+body.biz-detail-page--store-shop [data-biz-detail-title-badges],
+body.biz-detail-page--store-shop .biz-detail-hero__store-title-block .biz-detail-hero__company-row {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  margin-top: 10px !important;
+  gap: 10px !important;
+}
+
+body.biz-detail-page--store-shop .shop-meta-tag,
+body.biz-detail-page--store-shop .biz-detail-meta-tag,
+body.biz-detail-page--store-shop .biz-detail-hero__gold-member {
+  padding: 6px 12px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__gold-member {
+  color: #5c4510 !important;
+  background: linear-gradient(145deg, #f5e6a8, #d4af37) !important;
+  border: 1px solid #b8962e !important;
+  letter-spacing: 0.04em;
+}
+
+body.biz-detail-page--store-shop .shop-description,
+body.biz-detail-page--store-shop .biz-detail-description,
+body.biz-detail-page--store-shop [data-biz-detail-hero-lead] {
+  font-size: 14px !important;
+  line-height: 1.8 !important;
+  margin: 0 0 18px !important;
+  color: #444 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body.biz-detail-page--store-shop .store-shop-hero-rating,
+body.biz-detail-page--store-shop [data-biz-detail-hero-rating-row] {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 0.25rem 0.4rem !important;
+  margin: 14px 0 12px !important;
+}
+
+body.biz-detail-page--store-shop .gold-stars,
+body.biz-detail-page--store-shop .store-shop-hero-rating .detail-gold-stars {
+  color: #d4a62a !important;
+  font-size: 20px !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1 !important;
+}
+
+body.biz-detail-page--store-shop .rating-text,
+body.biz-detail-page--store-shop .biz-detail-hero__rating-score,
+body.biz-detail-page--store-shop .biz-detail-hero__rating-count {
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__rating-link {
+  color: #7a5e10 !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__rating-link:hover {
+  text-decoration: underline !important;
+}
+
+body.biz-detail-page--store-shop .shop-info-list,
+body.biz-detail-page--store-shop .biz-detail-info-list,
+body.biz-detail-page--store-shop .biz-detail-store-info,
+body.biz-detail-page--store-shop [data-biz-detail-hero-quick].biz-detail-store-info {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+body.biz-detail-page--store-shop .shop-info-item,
+body.biz-detail-page--store-shop .biz-detail-info-item,
+body.biz-detail-page--store-shop .biz-detail-store-info__row {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  font-size: 13px !important;
+  line-height: 1.7 !important;
+  color: #334155 !important;
+  margin: 0 !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-store-info__icon {
+  color: #b8860b !important;
+  font-size: 1rem !important;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+body.biz-detail-page--store-shop .biz-detail-store-info__text {
+  flex: 1;
+  min-width: 0;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__genre-tags {
+  gap: 8px !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__genre-tag {
+  padding: 6px 12px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #475569 !important;
+  background: #f1f3f5 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 999px !important;
+}
+
+body.biz-detail-page--store-shop .shop-feature-tags,
+body.biz-detail-page--store-shop .biz-detail-tags,
+body.biz-detail-page--store-shop [data-biz-detail-hero-condition-tags] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin: 18px 0 0 !important;
+  padding: 0 !important;
+}
+
+body.biz-detail-page--store-shop .shop-feature-tag,
+body.biz-detail-page--store-shop .biz-detail-tag,
+body.biz-detail-page--store-shop .biz-detail-hero__condition-tag {
+  padding: 8px 14px !important;
+  border-radius: 999px !important;
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #5c4510 !important;
+  background: #fff !important;
+  border: 1px solid rgba(183, 132, 22, 0.4) !important;
+  box-shadow: 0 1px 2px rgba(26, 26, 26, 0.04);
+}
+
+body.biz-detail-page--store-shop .biz-detail-fv__aside,
+body.biz-detail-page--store-shop .store-shop-cta.biz-detail-fv__aside {
+  width: 250px !important;
+  max-width: 250px !important;
+  flex: 0 0 250px !important;
+  margin: 0 !important;
+  align-self: start !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-fv__aside .biz-detail-sidebar__sticky {
+  position: static !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+/* ── 右CTA：EC購入・相談パネル（コンパクト） ── */
+body.biz-detail-page--store-shop .store-shop-cta,
+body.biz-detail-page--store-shop .biz-detail-fv__aside {
+  width: 250px !important;
+  max-width: 250px !important;
+  flex: 0 0 250px !important;
+  align-self: start !important;
+  height: auto !important;
+  min-height: unset !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-fv__aside .biz-detail-sidebar__sticky {
+  height: auto !important;
+  min-height: unset !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta.biz-detail-fv-card,
+body.biz-detail-page--store-shop .biz-detail-fv__aside .store-shop-cta,
+body.biz-detail-page--store-shop .biz-detail-fv-card.store-shop-cta,
+body.biz-detail-page--store-shop .biz-detail-fv-card.biz-detail-fv-card--store-shop {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 250px !important;
+  max-width: 100% !important;
+  padding: 18px !important;
+  border-radius: 18px !important;
+  background: #fff !important;
+  border: 1px solid rgba(197, 151, 43, 0.22) !important;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.06) !important;
+  align-self: start !important;
+  flex: 0 0 auto !important;
+  height: auto !important;
+  min-height: unset !important;
+  position: sticky;
+  top: 24px;
+  gap: 0 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta [data-biz-detail-fv-trust-head] {
+  margin: 0 0 10px !important;
+  padding: 0 !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-align: center !important;
+  color: #9a7b1a !important;
+  background: transparent !important;
+  border: none !important;
+  line-height: 1.4 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .rating-box,
+body.biz-detail-page--store-shop .store-shop-cta .review-box,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-taxi-rating {
+  padding: 0 0 12px !important;
+  margin: 0 0 14px !important;
+  border-bottom: 1px solid #eee !important;
+  flex: 0 0 auto !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-taxi-rating__label {
+  margin: 0 0 4px !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+  letter-spacing: 0.02em;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .rating-box__row,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-taxi-rating__main {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 0.25rem 0.35rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .rating-box .gold-stars,
+body.biz-detail-page--store-shop .store-shop-cta .rating-box__row .gold-stars {
+  color: #d4a62a !important;
+  font-size: 15px !important;
+  letter-spacing: 0.03em !important;
+  line-height: 1 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .rating-box .rating-text,
+body.biz-detail-page--store-shop .store-shop-cta .rating-box__row .rating-text {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  color: #1a1a1a !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-taxi-rating__count {
+  display: none !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .cta-buttons,
+body.biz-detail-page--store-shop .store-shop-cta .cta-group,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-sidebar__cta-group--store {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta button,
+body.biz-detail-page--store-shop .store-shop-cta .cta-btn,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn {
+  width: 100% !important;
+  min-height: 50px !important;
+  padding: 10px 14px !important;
+  border-radius: 10px !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.25 !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  gap: 0 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .cta-ai,
+body.biz-detail-page--store-shop .store-shop-cta .cta-primary,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn--store-ai {
+  min-height: 58px !important;
+  background: linear-gradient(135deg, #b88712, #e2bd45) !important;
+  color: #fff !important;
+  border: 1px solid #a6780d !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .cta-contact,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn--store-inquiry {
+  min-height: 58px !important;
+  background: linear-gradient(135deg, #f8e7a8, #ddb74e) !important;
+  color: #2b2108 !important;
+  border: 1px solid #c99a22 !important;
+  box-shadow: none !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .cta-outline,
+body.biz-detail-page--store-shop .store-shop-cta .cta-estimate,
+body.biz-detail-page--store-shop .store-shop-cta .cta-phone,
+body.biz-detail-page--store-shop .store-shop-cta .cta-favorite,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn--store-estimate,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn--store-phone,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn--store-favorite {
+  min-height: 50px !important;
+  background: #fff !important;
+  color: #7a5300 !important;
+  border: 1px solid rgba(183, 132, 22, 0.45) !important;
+  box-shadow: none !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .cta-subtext,
+body.biz-detail-page--store-shop .store-shop-cta small,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn__sub {
+  display: block !important;
+  margin-top: 3px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+  opacity: 0.8 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .cta-ai .cta-subtext,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn--store-ai .cta-subtext {
+  color: rgba(255, 255, 255, 0.9) !important;
+  opacity: 1 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-btn__icon {
+  display: none !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-card__platform-note {
+  margin: 10px 0 0 !important;
+  padding: 0 !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+  text-align: center !important;
+  color: #94a3b8 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .trust-list,
+body.biz-detail-page--store-shop .store-shop-cta .safe-list,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-trust-badges--store {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 8px !important;
+  margin: 16px 0 0 !important;
+  padding: 14px 0 0 !important;
+  border-top: 1px solid #eee !important;
+  list-style: none !important;
+  font-size: 10px !important;
+  text-align: center !important;
+  flex: 0 0 auto !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .trust-list li,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-trust-badges--store li {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 0.2rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.25 !important;
+  color: #64748b !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-trust-badges__icon {
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-side-price {
+  display: none !important;
+}
+
+@media (max-width: 1280px) {
+  body.biz-detail-page--store-shop .biz-detail-fv__grid,
+  body.biz-detail-page--store-shop .biz-detail-hero.biz-detail-fv {
+    grid-template-columns: minmax(320px, 42%) minmax(0, 1fr) 210px !important;
+    gap: 24px !important;
+  }
+
+  body.biz-detail-page--store-shop .biz-detail-fv__media {
+    max-width: none;
+  }
+
+  body.biz-detail-page--store-shop .biz-detail-fv__aside,
+  body.biz-detail-page--store-shop .biz-detail-fv__aside .biz-detail-fv-card {
+    width: 240px !important;
+    max-width: 240px !important;
+    flex: 0 0 240px !important;
+  }
+}
+
+@media (max-width: 1100px) {
+  body.biz-detail-page--store-shop .biz-detail-fv__grid,
+  body.biz-detail-page--store-shop .biz-detail-hero.biz-detail-fv {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    padding: 24px 28px 22px !important;
+  }
+
+  body.biz-detail-page--store-shop .biz-detail-fv__aside,
+  body.biz-detail-page--store-shop .store-shop-cta.biz-detail-fv__aside {
+    grid-column: 1 / -1;
+    width: 100% !important;
+    max-width: 400px !important;
+    flex: 0 0 auto !important;
+  }
+
+  body.biz-detail-page--store-shop .biz-detail-fv__aside .biz-detail-fv-card,
+  body.biz-detail-page--store-shop .store-shop-cta.biz-detail-fv-card {
+    width: 100% !important;
+    max-width: 400px !important;
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  body.biz-detail-page--store-shop .biz-detail-fv__grid,
+  body.biz-detail-page--store-shop .biz-detail-hero.biz-detail-fv {
+    grid-template-columns: 1fr !important;
+    padding: 20px 18px 18px !important;
+  }
+
+  body.biz-detail-page--store-shop .biz-detail-hero__figure img,
+  body.biz-detail-page--store-shop [data-biz-detail-hero-img] {
+    height: 240px !important;
+  }
+
+  body.biz-detail-page--store-shop .shop-title,
+  body.biz-detail-page--store-shop [data-biz-detail-title] {
+    font-size: 28px !important;
+  }
+}
+
+/* ── 専門ショップ：セクション間余白（TOPカード ↔ 特徴） ── */
+body.biz-detail-page--store-shop .biz-detail-fv,
+body.biz-detail-page--store-shop .biz-detail-fv__grid,
+body.biz-detail-page--store-shop .shop-detail-hero-card,
+body.biz-detail-page--store-shop .business-hero-card {
+  margin-bottom: 40px !important;
+}
+
+body.biz-detail-page--store-shop #section-strengths.shop-features-section,
+body.biz-detail-page--store-shop #section-strengths.store-features-section,
+body.biz-detail-page--store-shop #section-strengths.biz-features-section,
+body.biz-detail-page--store-shop .shop-features-section,
+body.biz-detail-page--store-shop .store-features-section,
+body.biz-detail-page--store-shop .biz-features-section {
+  margin-top: 16px !important;
+  margin-bottom: 2rem !important;
+  padding: 28px 30px !important;
+  border-radius: 26px !important;
+  border: 1px solid #ebe6dc !important;
+  box-shadow: 0 8px 32px rgba(26, 26, 26, 0.05) !important;
+}
+
+body.biz-detail-page--store-shop .shop-section-title,
+body.biz-detail-page--store-shop .features-title,
+body.biz-detail-page--store-shop #section-strengths .biz-detail-panel__title--showcase {
+  margin-bottom: 12px !important;
+}
+
+body.biz-detail-page--store-shop .shop-features-lead,
+body.biz-detail-page--store-shop #section-strengths .biz-detail-panel__lead {
+  margin: 0 0 0.5rem !important;
+  line-height: 1.75 !important;
+  color: #475569 !important;
+}
+
+body.biz-detail-page--store-shop .features-grid-wrap {
+  margin-top: 24px !important;
+}
+
+body.biz-detail-page--store-shop .features-grid,
+body.biz-detail-page--store-shop .biz-detail-strengths--store.features-grid {
+  margin-top: 0 !important;
+  gap: 18px !important;
+}
+
+/* 専門ショップ：下部ギャラリーは非表示（TOP・商品で十分） */
+body.biz-detail-page--store-shop .gallery-section,
+body.biz-detail-page--store-shop .shop-gallery-section,
+body.biz-detail-page--store-shop #section-shop-gallery,
+body.biz-detail-page--store-shop .biz-detail-panel--shop-gallery {
+  display: none !important;
+}
+
+/* 専門ショップ：掲載商品カード最終微調整 */
+body.biz-detail-page--store-shop .product-card-image,
+body.biz-detail-page--store-shop .biz-detail-product-card__img {
+  height: 135px !important;
+}
+
+body.biz-detail-page--store-shop .product-card .biz-detail-product-card__body,
+body.biz-detail-page--store-shop .biz-detail-product-card__body {
+  padding: 12px !important;
+  padding-bottom: 12px !important;
+}
+
+body.biz-detail-page--store-shop .product-title,
+body.biz-detail-page--store-shop .biz-detail-product-card__title {
+  font-size: 15px !important;
+  line-height: 1.45 !important;
+}
+
+body.biz-detail-page--store-shop .product-price,
+body.biz-detail-page--store-shop .biz-detail-product-card__price {
+  font-size: 17px !important;
+  font-weight: 800 !important;
+}
+
+body.biz-detail-page--store-shop .product-status,
+body.biz-detail-page--store-shop .product-stock,
+body.biz-detail-page--store-shop .biz-detail-product-card__state,
+body.biz-detail-page--store-shop .biz-detail-product-card__stock {
+  font-size: 12px !important;
+}
+
+body.biz-detail-page--store-shop .product-card .cta-btn,
+body.biz-detail-page--store-shop .biz-detail-product-card__ai,
+body.biz-detail-page--store-shop .biz-detail-product-card__buy {
+  height: 34px !important;
+  min-height: 34px !important;
+  font-size: 12px !important;
+  border-radius: 10px !important;
+}
+
+body.biz-detail-page--store-shop .products-section,
+body.biz-detail-page--store-shop #section-products,
+body.biz-detail-page--store-shop .biz-detail-panel--products {
+  padding-bottom: 18px !important;
+}
+
+/* ── 業者サービス専用詳細（法人向けLP・白＋ゴールド / 内部ID: field_service） ── */
+.biz-detail-page--field-service {
+  --fs-gold: #b8941f;
+  --fs-gold-soft: #faf6ee;
+  --fs-ink: #1a1a1a;
+  --fs-muted: #6b7280;
+  --fs-border: rgba(184, 148, 31, 0.16);
+  --fs-surface: #f4f5f7;
+  --fs-section-gap: clamp(3rem, 5vw, 4.5rem);
+  --detail-gold: #b8941f;
+  background: #f6f7f9;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .biz-detail-page-wrap,
+.biz-detail-page--field-service .biz-detail-status-wrap {
+  max-width: min(97.5rem, calc(100vw - 2rem));
+}
+
+body.biz-detail-page--field-service #section-products,
+body.biz-detail-page--field-service #section-shop-gallery,
+body.biz-detail-page--field-service .biz-detail-panel--products,
+body.biz-detail-page--field-service .biz-detail-panel--shop-gallery {
+  display: none !important;
+}
+
+.biz-detail-page--field-service .biz-detail-layout > .biz-detail-panel,
+.biz-detail-page--field-service .biz-detail-fv {
+  margin-top: var(--fs-section-gap);
+}
+
+.biz-detail-page--field-service .biz-detail-fv {
+  margin-top: 0;
+}
+
+.biz-detail-page--field-service .biz-detail-panel {
+  margin-bottom: var(--fs-section-gap);
+  padding: 1.75rem 1.85rem;
+  border-color: var(--fs-border);
+  box-shadow: 0 8px 32px rgba(26, 26, 26, 0.04);
+}
+
+.biz-detail-page--field-service .biz-detail-panel__title {
+  margin-bottom: 1rem;
+}
+
+.biz-detail-page--field-service .biz-detail-panel__title--showcase {
+  margin-bottom: 1.15rem;
+}
+
+.biz-detail-page--field-service .biz-detail-panel__lead {
+  margin-bottom: 1.15rem;
+  line-height: 1.72;
+}
+
+.biz-detail-page--field-service .biz-detail-fv,
+.biz-detail-page--field-service .field-service-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 28%) minmax(0, 47%) minmax(0, 25%);
+  gap: clamp(1.25rem, 2.5vw, 2.25rem);
+  padding: clamp(2rem, 3.5vw, 3.25rem);
+  margin-bottom: var(--fs-section-gap);
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 24px;
+  box-shadow: 0 16px 48px rgba(26, 26, 26, 0.05);
+  align-items: start;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__media,
+.biz-detail-page--field-service .field-service-main-image {
+  margin-right: 0;
+  align-self: start;
+}
+
+.biz-detail-page--field-service .field-service-main-image .biz-detail-hero__figure {
+  max-width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 18px;
+}
+
+.biz-detail-page--field-service .field-service-main-image .biz-detail-hero__figure img {
+  min-height: 200px;
+}
+
+.biz-detail-page--field-service .field-service-main-image .biz-detail-gallery {
+  margin-top: 0.85rem;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main,
+.biz-detail-page--field-service .field-service-info {
+  max-width: none;
+  width: 100%;
+  margin-right: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main [data-biz-detail-title] {
+  order: 1;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main .biz-detail-hero__company-row {
+  order: 2;
+  margin-top: 0.35rem;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main [data-biz-detail-hero-rating-row] {
+  order: 3;
+  margin-top: 0.5rem;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main [data-biz-detail-hero-genre-tags] {
+  order: 4;
+  margin-top: 0.85rem;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main [data-biz-detail-hero-lead] {
+  order: 5;
+  margin-top: 0.85rem;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main [data-biz-detail-hero-condition-tags] {
+  order: 6;
+  margin: 0.65rem 0 0;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main [data-biz-detail-hero-quick] {
+  order: 7;
+  margin-top: 1.1rem;
+}
+
+.biz-detail-page--field-service .biz-detail-fv__main [data-biz-detail-hero-reception-block] {
+  display: none !important;
+}
+
+.biz-detail-page--field-service .biz-detail-hero__headline--field-service {
+  font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .field-service-hero__company {
+  font-size: clamp(1rem, 1.4vw, 1.125rem);
+  font-weight: 600;
+  color: var(--fs-muted);
+  margin: 0;
+}
+
+.biz-detail-page--field-service .field-service-hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.5rem;
+}
+
+.biz-detail-page--field-service .field-service-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.38rem 0.82rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #6b5412;
+  background: var(--fs-gold-soft);
+  border: 1px solid var(--fs-border);
+  border-radius: 999px;
+}
+
+.biz-detail-page--field-service .field-service-hero-badge--priority {
+  color: #fff;
+  background: linear-gradient(135deg, #c9a227 0%, #a8841a 100%);
+  border-color: #a8841a;
+  box-shadow: 0 4px 14px rgba(201, 162, 39, 0.35);
+}
+
+.biz-detail-page--field-service .field-service-hero-badge__icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+
+.biz-detail-page--field-service .field-service-lp-tags,
+.biz-detail-page--field-service .field-service-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.75rem;
+}
+
+.biz-detail-page--field-service .field-service-hero-tag,
+.biz-detail-page--field-service .field-service-lp-tag,
+.biz-detail-page--field-service .biz-detail-hero__genre-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 0.95rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #6b5412;
+  background: var(--fs-gold-soft);
+  border: 1px solid var(--fs-border);
+  border-radius: 999px;
+}
+
+.biz-detail-page--field-service .field-service-info-board.field-service-hero-quick {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+  border: none;
+}
+
+.biz-detail-page--field-service .field-service-info-board__col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.biz-detail-page--field-service .field-service-info-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 18px rgba(26, 26, 26, 0.03);
+}
+
+.biz-detail-page--field-service .field-service-info-card__icon {
+  flex-shrink: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.biz-detail-page--field-service .field-service-info-card__label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #8a6d12;
+}
+
+.biz-detail-page--field-service .field-service-info-card__value {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .field-service-hero-desc {
+  font-size: 0.9375rem;
+  line-height: 1.78;
+  color: var(--fs-muted);
+}
+
+.biz-detail-page--field-service .detail-gold-stars {
+  color: var(--fs-gold);
+  text-shadow: 0 0 10px rgba(201, 162, 39, 0.35);
+}
+
+.biz-detail-page--field-service .field-service-cta-wrap {
+  position: sticky;
+  top: 1.25rem;
+  align-self: start;
+}
+
+.biz-detail-page--field-service .biz-detail-fv-card--field-service,
+.biz-detail-page--field-service .field-service-cta {
+  padding: 1.5rem 1.45rem 1.35rem;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 22px;
+  box-shadow: 0 20px 50px rgba(26, 26, 26, 0.07);
+}
+
+.biz-detail-page--field-service .biz-detail-fv-card--field-service > .biz-detail-favorite,
+.biz-detail-page--field-service .biz-detail-fv-card--field-service > .biz-detail-favorite[hidden] {
+  display: none !important;
+}
+
+.biz-detail-page--field-service .biz-detail-sidebar__cta-group--field-service {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.biz-detail-page--field-service .biz-detail-sidebar__cta-group--field-service .biz-detail-btn,
+.biz-detail-page--field-service .field-service-cta-btn {
+  width: 100%;
+  min-height: 3.25rem;
+  border-radius: 14px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.biz-detail-page--field-service .field-service-cta-btn--gold:hover,
+.biz-detail-page--field-service .biz-detail-sidebar__cta-group--field-service .biz-detail-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(184, 148, 31, 0.28);
+}
+
+.biz-detail-page--field-service .field-service-cta-btn--outline:hover,
+.biz-detail-page--field-service .biz-detail-sidebar__cta-group--field-service .biz-detail-btn--outline:hover {
+  transform: translateY(-1px);
+  background: var(--fs-gold-soft);
+}
+
+.biz-detail-page--field-service .biz-detail-sidebar__price {
+  font-size: clamp(1.05rem, 1.5vw, 1.2rem);
+  font-weight: 800;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .biz-detail-panel__title--showcase {
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .biz-detail-panel__title--showcase::before {
+  background: linear-gradient(90deg, var(--fs-gold), #e8c96a);
+}
+
+.biz-detail-page--field-service .biz-detail-reception--open {
+  background: var(--fs-gold-soft);
+  border-color: var(--fs-border);
+  color: #6b5412;
+}
+
+.biz-detail-page--field-service .field-service-coverage,
+.biz-detail-page--field-service .biz-detail-repair-coverage.field-service-coverage {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.4rem 1.5rem;
+}
+
+.biz-detail-page--field-service .field-service-coverage__group,
+.biz-detail-page--field-service .biz-detail-repair-coverage__group {
+  padding: 1.45rem 1.5rem;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 20px;
+  box-shadow: 0 6px 22px rgba(26, 26, 26, 0.04);
+}
+
+.biz-detail-page--field-service .field-service-coverage__group--primary,
+.biz-detail-page--field-service .biz-detail-repair-coverage__group--primary {
+  padding: 1.5rem 1.55rem;
+}
+
+.biz-detail-page--field-service .field-service-coverage__group--primary .biz-detail-repair-coverage__title,
+.biz-detail-page--field-service .biz-detail-repair-coverage__group--primary .biz-detail-repair-coverage__title {
+  font-size: 1.0625rem;
+}
+
+.biz-detail-page--field-service .field-service-coverage__list {
+  gap: 0.35rem 0.42rem;
+}
+
+.biz-detail-page--field-service .field-service-coverage__tag,
+.biz-detail-page--field-service .field-service-coverage__list li {
+  padding: 0.22rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #4a5568;
+  background: #fff;
+  border: 1px solid rgba(201, 162, 39, 0.22);
+  border-radius: 999px;
+}
+
+@media (min-width: 900px) {
+  .biz-detail-page--field-service .field-service-coverage__group--primary,
+  .biz-detail-page--field-service .biz-detail-repair-coverage__group--primary {
+    grid-column: span 2;
+  }
+}
+
+.biz-detail-page--field-service .field-service-features__grid,
+.biz-detail-page--field-service .field-service-features .biz-detail-strengths-scroll-wrap {
+  overflow: visible;
+}
+
+.biz-detail-page--field-service .biz-detail-strengths--field-service {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.15rem 1.25rem;
+}
+
+.biz-detail-page--field-service .biz-detail-strength--field-service {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 9.5rem;
+  padding: 1.35rem 1.15rem;
+  border-color: var(--fs-border);
+  background: #fff;
+  border-radius: 18px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.biz-detail-page--field-service .biz-detail-strength--field-service:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(26, 26, 26, 0.08);
+}
+
+.biz-detail-page--field-service .biz-detail-strength--field-service .biz-detail-strength__icon {
+  font-size: 2rem;
+  color: var(--fs-gold);
+  margin-bottom: 0.45rem;
+}
+
+.biz-detail-page--field-service .biz-detail-strength--field-service .biz-detail-strength__title {
+  font-size: 0.9375rem;
+}
+
+.biz-detail-page--field-service .biz-detail-strength--field-service .biz-detail-strength__desc {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--fs-muted);
+}
+
+.biz-detail-page--field-service .field-service-menu__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem 1.65rem;
+}
+
+.biz-detail-page--field-service .field-service-menu-card {
+  border: 1px solid var(--fs-border);
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.biz-detail-page--field-service .field-service-menu-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(184, 148, 31, 0.35);
+  box-shadow: 0 18px 40px rgba(26, 26, 26, 0.09);
+}
+
+.biz-detail-page--field-service .field-service-menu-card--popular {
+  border-color: #c9a227;
+  box-shadow: 0 8px 28px rgba(201, 162, 39, 0.14);
+}
+
+.biz-detail-page--field-service .field-service-menu-card__inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__media {
+  aspect-ratio: 16 / 10;
+  background: #f6f7f9;
+  overflow: hidden;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 260px;
+  padding: 1.45rem 1.5rem 1.35rem;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__title {
+  margin: 0 0 0.85rem;
+  font-size: 1.125rem;
+  line-height: 1.4;
+  font-weight: 800;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__price {
+  margin: 0 0 1rem;
+  padding: 0;
+  border: none;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__price-label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #8a6d12;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__price-value {
+  display: block;
+  font-size: clamp(1.5rem, 2.2vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .field-service-menu-card__meta {
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__meta-row {
+  display: grid;
+  grid-template-columns: 5.25rem 1fr;
+  gap: 0.35rem 0.55rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__meta-row dt {
+  margin: 0;
+  color: #8a6d12;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__meta-row dd {
+  margin: 0;
+  color: var(--fs-ink);
+  font-weight: 600;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__cta {
+  display: flex;
+  gap: 0.45rem;
+  margin-top: 0.85rem;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__cta-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.35rem;
+  padding: 0.4rem 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 10px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__cta-btn--primary {
+  color: #fff;
+  background: linear-gradient(135deg, #c9a227 0%, #a8841a 100%);
+  border: 1px solid #a8841a;
+}
+
+.biz-detail-page--field-service .field-service-menu-card__cta-btn--outline {
+  color: #6b5412;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+}
+
+.biz-detail-page--field-service .field-service-cases__grid,
+.biz-detail-page--field-service .field-service-cases__grid.biz-detail-cases--work-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.65rem 1.75rem;
+  align-items: stretch;
+}
+
+.biz-detail-page--field-service .field-service-case-card--lp {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--fs-border);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 10px 32px rgba(26, 26, 26, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.biz-detail-page--field-service .field-service-case-card--lp:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(26, 26, 26, 0.09);
+}
+
+.biz-detail-page--field-service .field-service-case-card__media {
+  min-height: 100%;
+  background: var(--fs-surface);
+}
+
+.biz-detail-page--field-service .field-service-case-card__media img {
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  display: block;
+}
+
+.biz-detail-page--field-service .field-service-case-card__media--compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem;
+  padding: 0.5rem;
+}
+
+.biz-detail-page--field-service .field-service-case-card__media--empty {
+  min-height: 200px;
+  background: linear-gradient(145deg, #f4f5f7 0%, #eceef1 100%);
+}
+
+.biz-detail-page--field-service .field-service-case-card__compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  padding: 0.65rem;
+  background: #fff;
+  border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+  position: relative;
+}
+
+.biz-detail-page--field-service .field-service-case-card__compare::after {
+  content: "→";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  width: 1.65rem;
+  height: 1.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #6b5412;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(26, 26, 26, 0.08);
+  pointer-events: none;
+}
+
+.biz-detail-page--field-service .field-service-case-card__shot {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f3f4f6;
+  position: relative;
+  border: 1px solid rgba(201, 162, 39, 0.18);
+}
+
+.biz-detail-page--field-service .field-service-case-card__shot--before figcaption {
+  background: rgba(90, 89, 84, 0.72);
+}
+
+.biz-detail-page--field-service .field-service-case-card__shot--after figcaption {
+  background: rgba(168, 109, 18, 0.88);
+}
+
+.biz-detail-page--field-service .field-service-case-card__shot img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.biz-detail-page--field-service .field-service-case-card__shot figcaption {
+  position: absolute;
+  left: 0.45rem;
+  bottom: 0.45rem;
+  padding: 0.18rem 0.5rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #fff;
+  border-radius: 6px;
+}
+
+.biz-detail-page--field-service .field-service-case-card__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 132px;
+  font-size: 0.75rem;
+  color: var(--fs-muted);
+}
+
+.biz-detail-page--field-service .field-service-case-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem 1.2rem 1.25rem;
+}
+
+.biz-detail-page--field-service .field-service-case-card__title {
+  margin: 0 0 0.65rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  line-height: 1.45;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .field-service-case-card__outcome,
+.biz-detail-page--field-service .field-service-case-card__cost,
+.biz-detail-page--field-service .field-service-case-card__region {
+  margin: 0 0 0.45rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .field-service-case-card__outcome span,
+.biz-detail-page--field-service .field-service-case-card__cost span,
+.biz-detail-page--field-service .field-service-case-card__region span {
+  display: block;
+  margin-bottom: 0.12rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #8a6d12;
+}
+
+.biz-detail-page--field-service .field-service-case-card__outcome {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--fs-gold);
+}
+
+.biz-detail-page--field-service .field-service-case-card__summary {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.68;
+  color: var(--fs-muted);
+}
+
+.biz-detail-page--field-service .field-service-case-card__facts {
+  margin: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.biz-detail-page--field-service .field-service-case-card__fact {
+  display: grid;
+  grid-template-columns: 5rem 1fr;
+  gap: 0.35rem 0.55rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.biz-detail-page--field-service .field-service-case-card__fact dt {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #8a6d12;
+}
+
+.biz-detail-page--field-service .field-service-case-card__fact dd {
+  margin: 0;
+  font-weight: 600;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .field-service-case-card__fact--price dd {
+  color: #8a6d12;
+}
+
+.biz-detail-page--field-service .biz-detail-cases--field-service .field-service-case-card,
+.biz-detail-page--field-service .field-service-cases__grid .field-service-case-card {
+  border-color: var(--fs-border);
+  background: #fff;
+}
+
+.biz-detail-page--field-service .field-service-area__text {
+  margin-bottom: 1rem;
+  padding: 1rem 1.15rem;
+  background: var(--fs-gold-soft);
+  border: 1px solid var(--fs-border);
+  border-radius: 14px;
+}
+
+.biz-detail-page--field-service .field-service-area__label {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #8a6d12;
+}
+
+.biz-detail-page--field-service .field-service-area__value {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fs-ink);
+}
+
+.biz-detail-layout--field-service-full .biz-detail-sidebar {
+  display: none;
+}
+
+/* 口コミ */
+.biz-detail-page--field-service .field-service-reviews .taxi-review-section__grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.biz-detail-page--field-service .field-service-reviews .taxi-review-section__summary {
+  padding: 1.25rem 1.15rem;
+  background: var(--fs-surface);
+  border-radius: 18px;
+  border: 1px solid var(--fs-border);
+}
+
+.biz-detail-page--field-service .field-service-reviews .taxi-review-section__cards {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+  scroll-snap-type: x proximity;
+}
+
+.biz-detail-page--field-service .field-service-reviews .taxi-review-section__card {
+  flex: 0 0 min(100%, 300px);
+  scroll-snap-align: start;
+  padding: 1.15rem 1.2rem;
+  background: #fff;
+  border: 1px solid var(--fs-border);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(26, 26, 26, 0.04);
+}
+
+/* フッター前4カラム */
+.biz-detail-page--field-service .field-service-bottom .biz-detail-shop-bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.5rem 1.75rem;
+}
+
+.biz-detail-page--field-service .field-service-bottom .biz-detail-shop-bottom-col {
+  padding: 1.15rem 1.2rem;
+  background: var(--fs-surface);
+  border: 1px solid var(--fs-border);
+  border-radius: 18px;
+}
+
+.biz-detail-page--field-service .field-service-bottom-area__value {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--fs-ink);
+}
+
+.biz-detail-page--field-service .field-service-bottom-area__note {
+  margin: 0.5rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--fs-muted);
+}
+
+/* 下固定CTA */
+.biz-detail-page--field-service .biz-detail-sticky-bar--field-service {
+  padding: 0.85rem 0;
+  box-shadow: 0 -8px 32px rgba(26, 26, 26, 0.1);
+}
+
+.biz-detail-page--field-service .biz-detail-sticky-bar--field-service .biz-detail-sticky-bar__inner {
+  max-width: min(97.5rem, calc(100vw - 2rem));
+  margin: 0 auto;
+  padding: 0.35rem 1rem;
+}
+
+.biz-detail-page--field-service .biz-detail-sticky-bar--field-service .biz-detail-sticky-bar__actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
+  flex: 1;
+}
+
+.biz-detail-page--field-service .biz-detail-sticky-bar--field-service .biz-detail-btn {
+  min-height: 3rem;
+  border-radius: 12px;
+}
+
+@media (max-width: 1100px) {
+  .biz-detail-page--field-service .field-service-menu__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .biz-detail-page--field-service .field-service-bottom .biz-detail-shop-bottom-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .biz-detail-page--field-service .field-service-case-card--lp {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .biz-detail-page--field-service .biz-detail-fv,
+  .biz-detail-page--field-service .field-service-hero {
+    grid-template-columns: 1fr;
+    padding: 1.5rem 1.15rem;
+    gap: 1.35rem;
+  }
+
+  .biz-detail-page--field-service .field-service-cta-wrap {
+    position: static;
+  }
+
+  .biz-detail-page--field-service .field-service-info-board.field-service-hero-quick {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-page--field-service .field-service-coverage__group--primary,
+  .biz-detail-page--field-service .biz-detail-repair-coverage__group--primary {
+    grid-column: span 1;
+  }
+
+  .biz-detail-page--field-service .field-service-menu__cards,
+  .biz-detail-page--field-service .field-service-cases__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-page--field-service .field-service-reviews .taxi-review-section__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .biz-detail-page--field-service .biz-detail-sticky-bar--field-service .biz-detail-sticky-bar__inner {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .biz-detail-page--field-service .biz-detail-sticky-bar--field-service .biz-detail-sticky-bar__actions {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .biz-detail-page--field-service .field-service-bottom .biz-detail-shop-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================================================
+   店舗・販売詳細（detail-shop-store）— 最終微調整（余白・高級感・読みやすさ）
+   HTML構造・レスポンシブ・フッター/ナビ/マップ/特徴/対応サービス/ギャラリー構成は維持
+   ============================================================================= */
+
+/* 【1】TOPヒーローカード余白 */
+body.biz-detail-page--store-shop .biz-detail-fv__grid,
+body.biz-detail-page--store-shop .biz-detail-hero.biz-detail-fv,
+body.biz-detail-page--store-shop .business-hero-card,
+body.biz-detail-page--store-shop .shop-detail-hero-card,
+body.biz-detail-page--store-shop .shop-hero-grid,
+.biz-detail-page--store-shop .shop-hero-grid,
+.biz-detail-page--store-shop .biz-detail-fv.biz-detail-fv--store-shop {
+  padding: 32px 34px 28px !important;
+  margin-bottom: 36px !important;
+}
+
+body.biz-detail-page--store-shop .shop-hero-info,
+body.biz-detail-page--store-shop .biz-detail-hero__body.biz-detail-fv__main,
+body.biz-detail-page--store-shop .biz-detail-fv__main,
+body.biz-detail-page--store-shop .biz-detail-fv__main.biz-detail-fv__main--store-shop {
+  gap: 14px !important;
+}
+
+body.biz-detail-page--store-shop .shop-description,
+body.biz-detail-page--store-shop .biz-detail-fv__main [data-biz-detail-hero-lead] {
+  line-height: 1.72 !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-fv__main .biz-detail-store-info,
+body.biz-detail-page--store-shop .biz-detail-fv__main [data-biz-detail-hero-quick].biz-detail-store-info {
+  gap: 0.6rem !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-store-info__row {
+  line-height: 1.72 !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-hero__genre-tags {
+  margin-bottom: 0.5rem !important;
+}
+
+/* 【2】サムネイル */
+body.biz-detail-page--store-shop .biz-detail-gallery__thumb,
+body.biz-detail-page--store-shop .thumbnail,
+body.biz-detail-page--store-shop .shop-thumb,
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-store-gallery .biz-detail-gallery__thumb {
+  flex: 0 0 78px !important;
+  width: 78px !important;
+  height: 68px !important;
+}
+
+body.biz-detail-page--store-shop .biz-detail-gallery__thumb img,
+body.biz-detail-page--store-shop .thumbnail img,
+body.biz-detail-page--store-shop .shop-thumb img,
+.biz-detail-page--store-shop .biz-detail-fv--store-shop .biz-detail-store-gallery .biz-detail-gallery__thumb img,
+.biz-detail-page--store-shop .shop-gallery-thumbs img,
+.biz-detail-page--store-shop .hero-thumbnails img {
+  width: 78px !important;
+  height: 68px !important;
+}
+
+/* 【3】右CTA — 安心アイコン・ボタン間隔 */
+body.biz-detail-page--store-shop .store-shop-cta .cta-buttons,
+body.biz-detail-page--store-shop .store-shop-cta .cta-group,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-sidebar__cta-group--store,
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-sidebar__cta-group--store,
+.biz-detail-page--store-shop .shop-cta-card .cta-group {
+  gap: 12px !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .trust-list li,
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-trust-badges--store li,
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-trust-badges--store li {
+  line-height: 1.45 !important;
+  color: #556677 !important;
+}
+
+body.biz-detail-page--store-shop .store-shop-cta .biz-detail-fv-trust-badges__icon,
+.biz-detail-page--store-shop .shop-cta-card .biz-detail-fv-trust-badges__icon {
+  font-size: 16px !important;
+  opacity: 0.92;
+}
+
+/* 【4】口コミカード — ややコンパクト */
+body.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section__card,
+body.biz-detail-page--store-shop .shop-ec-reviews.taxi-review-section .taxi-review-section__card {
+  padding: 0.15rem 1.1rem 0.4rem !important;
+  min-height: 0 !important;
+}
+
+body.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section__card-head {
+  margin-bottom: 0.15rem;
+}
+
+body.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section__card-avatar {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.8125rem;
+}
+
+body.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section__card-text {
+  margin-top: 0.4rem;
+}
+
+/* 【5】商品カード下部ボタン — EC感 */
+body.biz-detail-page--store-shop .product-card .cta-btn,
+body.biz-detail-page--store-shop .biz-detail-product-card__ai,
+body.biz-detail-page--store-shop .biz-detail-product-card__buy {
+  height: 32px !important;
+  min-height: 32px !important;
+  padding: 0 0.65rem !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+}
+
+/* 【6】セクション境界（掲載商品・口コミのみ — マップ/特徴/対応サービス/ギャラリーは除外） */
+body.biz-detail-page--store-shop #section-products.biz-detail-panel,
+body.biz-detail-page--store-shop #section-reviews.biz-detail-panel,
+body.biz-detail-page--store-shop .biz-detail-panel--products:not(#section-strengths),
+body.biz-detail-page--store-shop .biz-detail-panel--reviews {
+  border: 1px solid #f2eadf;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  background: #fff;
+}
+
+body.biz-detail-page--store-shop .shop-ec-reviews-panel {
+  border: 1px solid #f2eadf;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  background: #fff;
+}
+
+body.biz-detail-page--store-shop .shop-ec-reviews-panel .taxi-review-section,
+body.biz-detail-page--store-shop .shop-ec-reviews.taxi-review-section {
+  border: none;
+  box-shadow: none;
+}

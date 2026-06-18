@@ -1,0 +1,201 @@
+{
+  "generatedAt": "2026-06-18T09:09:06.969Z",
+  "project": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "policies": null,
+  "devPolicyCount": null,
+  "permissivePolicySamples": [],
+  "anonProbes": [
+    {
+      "table": "talk_notifications",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 401,
+      "anonInsertDenied": true
+    },
+    {
+      "table": "talk_ai_drafts",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 401,
+      "anonInsertDenied": true
+    },
+    {
+      "table": "anpi_user_contexts",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "anpi_check_sessions",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "anpi_no_response_audit_log",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "support_tickets",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 401,
+      "anonInsertDenied": true
+    },
+    {
+      "table": "ai_ops_cases",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 401,
+      "anonInsertDenied": true
+    },
+    {
+      "table": "connect_issues",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 401,
+      "anonInsertDenied": true
+    },
+    {
+      "table": "listings",
+      "anonReadStatus": 401,
+      "anonReadRows": 0,
+      "anonReadDenied": true,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "business_listings",
+      "anonReadStatus": 401,
+      "anonReadRows": 0,
+      "anonReadDenied": true,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "favorites",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "transaction_rooms",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "transaction_messages",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "service_deals",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "chats",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "reviews",
+      "anonReadStatus": 200,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "shop_orders",
+      "anonReadStatus": 404,
+      "anonReadRows": 0,
+      "anonReadDenied": true,
+      "anonInsertStatus": null,
+      "missing": true
+    },
+    {
+      "table": "members",
+      "anonReadStatus": 400,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    },
+    {
+      "table": "profiles",
+      "anonReadStatus": 400,
+      "anonReadRows": 0,
+      "anonReadDenied": false,
+      "anonInsertStatus": 400,
+      "anonInsertDenied": false
+    }
+  ],
+  "abProbes": [
+    {
+      "test": "userA reads userB notifications",
+      "pass": true,
+      "rows": 0
+    }
+  ],
+  "opsProbes": [
+    {
+      "table": "support_tickets",
+      "role": "member",
+      "rows": 0,
+      "pass": true
+    },
+    {
+      "table": "ai_ops_cases",
+      "role": "member",
+      "rows": 0,
+      "pass": true
+    },
+    {
+      "table": "connect_issues",
+      "role": "member",
+      "rows": 0,
+      "pass": true
+    },
+    {
+      "table": "support_tickets",
+      "role": "tasu_admin",
+      "status": 206,
+      "rows": 1
+    }
+  ],
+  "errors": [],
+  "passes": [
+    "anon INSERT denied talk_notifications",
+    "anon INSERT denied support_tickets",
+    "anon INSERT denied ai_ops_cases",
+    "talk_notifications A/B isolation"
+  ]
+}

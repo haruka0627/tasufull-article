@@ -1,0 +1,14 @@
+{
+  "capturedAt": "2026-06-18T14:00:00.000Z",
+  "project": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "event": "auth-step10-review-scores-patch applied",
+  "review_scores": [
+    {
+      "policyname": "review_scores_select_own",
+      "qual": "((user_id = talk_current_user_id()) OR talk_is_admin())"
+    }
+  ],
+  "views": ["public_review_scores"],
+  "trigger": "review_scores_apply_review_row_trg",
+  "removed": ["review_scores_select_authenticated"]
+}

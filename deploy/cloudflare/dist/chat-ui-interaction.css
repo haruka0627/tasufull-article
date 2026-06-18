@@ -1,0 +1,121 @@
+/**
+ * ボタン hover / focus の点滅防止・操作中スタイル（chat / notify / bench 共通）
+ */
+
+.chat-connect-card__btn,
+.chat-job-review-prompt__btn,
+.chat-review-btn,
+.chat-complete-btn,
+.chat-composer__send,
+.talk-notify-card__action,
+.talk-notify-card__platform-action,
+.talk-notify-card__minimal-action,
+.talk-notify-card__card-cta,
+.bench-toolbar button,
+.bench-log__btns button {
+  outline: none;
+  box-shadow: none;
+  transition:
+    background-color 0.1s ease,
+    border-color 0.1s ease,
+    color 0.1s ease,
+    opacity 0.1s ease;
+}
+
+.chat-connect-card__btn:focus:not(:focus-visible),
+.chat-job-review-prompt__btn:focus:not(:focus-visible),
+.chat-review-btn:focus:not(:focus-visible),
+.chat-complete-btn:focus:not(:focus-visible),
+.talk-notify-card__action:focus:not(:focus-visible),
+.talk-notify-card__platform-action:focus:not(:focus-visible),
+.talk-notify-card__minimal-action:focus:not(:focus-visible),
+.talk-notify-card__card-cta:focus:not(:focus-visible),
+.bench-toolbar button:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.chat-connect-card__btn:focus-visible,
+.chat-job-review-prompt__btn:focus-visible,
+.chat-review-btn:focus-visible,
+.chat-complete-btn:focus-visible,
+.talk-notify-card__action:focus-visible,
+.talk-notify-card__platform-action:focus-visible,
+.talk-notify-card__minimal-action:focus-visible,
+.talk-notify-card__card-cta:focus-visible,
+.bench-toolbar button:focus-visible {
+  outline: 2px solid rgba(196, 162, 74, 0.55);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.chat-connect-card__btn.is-acting,
+.chat-job-review-prompt__btn.is-acting,
+.talk-notify-card__action.is-acting,
+.talk-notify-card__platform-action.is-acting,
+.talk-notify-card__minimal-action.is-acting {
+  opacity: 0.68;
+  pointer-events: none;
+  cursor: wait;
+}
+
+html[data-tasu-flow-action-pending="1"] .chat-connect-card__btn:not(.is-acting),
+html[data-tasu-flow-action-pending="1"] .chat-complete-btn {
+  pointer-events: none;
+  opacity: 0.82;
+}
+
+/* マウス hover では強い枠を出さない */
+.talk-notify-card__action:hover,
+.talk-notify-card__platform-action:hover,
+.chat-connect-card__btn--primary:hover {
+  filter: none;
+}
+
+.talk-notify-list[data-notify-pointer-on-action="1"] .talk-notify-card__action {
+  transition: opacity 0.1s ease;
+}
+
+.bench-btn,
+.chat-action-btn {
+  outline: none;
+  box-shadow: none;
+  transition:
+    background-color 0.1s ease,
+    border-color 0.1s ease,
+    color 0.1s ease,
+    opacity 0.1s ease;
+}
+
+.bench-btn:focus:not(:focus-visible),
+.chat-action-btn:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+.bench-btn:focus-visible,
+.chat-action-btn:focus-visible {
+  outline: 2px solid rgba(196, 162, 74, 0.55);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.bench-btn.is-acting,
+.chat-action-btn.is-acting {
+  opacity: 0.68;
+  pointer-events: none;
+  cursor: wait;
+}
+
+.chat-review-stars--readonly .chat-review-star {
+  pointer-events: none;
+  cursor: default;
+}
+
+.chat-review-view-comment {
+  margin: 0.75rem 0 0;
+  color: #334155;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}

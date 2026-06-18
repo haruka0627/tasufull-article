@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>やりとり完了 | TASFUL</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <style>
+    body.job-completion-page {
+      margin: 0;
+      background: #f8fafc;
+      min-height: 100dvh;
+    }
+    .job-completion-shell {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom));
+    }
+    .job-completion-back {
+      display: inline-flex;
+      align-items: center;
+      color: #334155;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+    .job-completion-card {
+      background: #fff;
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      padding: 1.25rem 1rem 1rem;
+      box-shadow: 0 8px 24px rgba(29, 78, 216, 0.08);
+    }
+    .job-completion-card__badge {
+      display: inline-block;
+      margin: 0 0 0.5rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+    .job-completion-card__title {
+      margin: 0 0 0.75rem;
+      font-size: 1.05rem;
+      line-height: 1.5;
+    }
+    .job-completion-card__rows {
+      margin: 0 0 1rem;
+      padding: 0;
+      list-style: none;
+    }
+    .job-completion-card__rows li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.45rem 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.875rem;
+    }
+    .job-completion-card__rows dt {
+      color: #64748b;
+      margin: 0;
+    }
+    .job-completion-card__rows dd {
+      margin: 0;
+      color: #0f172a;
+      font-weight: 600;
+      text-align: right;
+    }
+    .job-completion-card__guide {
+      margin: 0 0 1rem;
+      color: #64748b;
+      font-size: 0.875rem;
+      line-height: 1.55;
+    }
+    .job-completion-actions {
+      display: grid;
+      gap: 0.55rem;
+    }
+    .job-completion-actions__btn {
+      display: block;
+      text-align: center;
+      padding: 0.75rem 1rem;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border: 1px solid #e2e8f0;
+      color: #0f172a;
+      background: #fff;
+    }
+    .job-completion-actions__btn--primary {
+      background: #111827;
+      border-color: #111827;
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="job-completion-page" data-page="job_completion">
+  <main class="job-completion-shell">
+    <a class="job-completion-back" id="jobCompletionBack" href="talk-home.html?tab=notify&talkDev=1">← 戻る</a>
+
+    <section class="job-completion-card" aria-labelledby="jobCompletionHeading">
+      <p class="job-completion-card__badge">やりとりが完了しました</p>
+      <h1 id="jobCompletionHeading" class="job-completion-card__title" data-job-completion-title>求人やりとり</h1>
+
+      <dl class="job-completion-card__rows">
+        <li>
+          <dt>案件名</dt>
+          <dd data-job-completion-job>—</dd>
+        </li>
+        <li>
+          <dt>相手</dt>
+          <dd data-job-completion-partner>—</dd>
+        </li>
+        <li>
+          <dt>完了日時</dt>
+          <dd data-job-completion-at>—</dd>
+        </li>
+      </dl>
+
+      <p class="job-completion-card__guide">お疲れさまでした。評価・レビューでやりとりを締めくくれます。</p>
+
+      <div class="job-completion-actions">
+        <a class="job-completion-actions__btn job-completion-actions__btn--primary" id="jobCompletionReviewBtn" href="#">レビューする</a>
+        <a class="job-completion-actions__btn" id="jobCompletionChatBtn" href="#">チャットを見る</a>
+        <a class="job-completion-actions__btn" id="jobCompletionApplicationsBtn" href="#" hidden>応募状況へ戻る</a>
+        <a class="job-completion-actions__btn" id="jobCompletionNotifyBtn" href="#">通知へ戻る</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="job-applications-store.js"></script>
+  <script src="platform-chat-job-card.js"></script>
+  <script src="platform-chat-job-flow.js"></script>
+  <script src="platform-chat-job-full-demo.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="job-completion.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+</body>
+</html>

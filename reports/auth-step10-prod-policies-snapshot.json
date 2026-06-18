@@ -1,0 +1,85 @@
+{
+  "capturedAt": "2026-06-18T12:00:00.000Z",
+  "project": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "note": "STEP 10-EXEC prep · linked DB = 本番 Supabase プロジェクト（release-blocker-roadmap 確定）",
+  "legacyPolicies": [
+    {
+      "tablename": "favorites",
+      "policyname": "favorites_delete_own",
+      "cmd": "DELETE",
+      "roles": "{authenticated}",
+      "qual": "((user_id = talk_current_user_id()) OR talk_is_admin())"
+    },
+    {
+      "tablename": "favorites",
+      "policyname": "favorites_insert_own",
+      "cmd": "INSERT",
+      "roles": "{authenticated}",
+      "with_check": "(user_id = talk_current_user_id())"
+    },
+    {
+      "tablename": "favorites",
+      "policyname": "favorites_select_own",
+      "cmd": "SELECT",
+      "roles": "{authenticated}",
+      "qual": "((user_id = talk_current_user_id()) OR talk_is_admin())"
+    },
+    {
+      "tablename": "favorites",
+      "policyname": "favorites_update_own",
+      "cmd": "UPDATE",
+      "roles": "{authenticated}",
+      "qual": "(user_id = talk_current_user_id())",
+      "with_check": "(user_id = talk_current_user_id())"
+    },
+    {
+      "tablename": "review_scores",
+      "policyname": "review_scores_select_authenticated",
+      "cmd": "SELECT",
+      "roles": "{authenticated}",
+      "qual": "((user_id IS NOT NULL) OR (user_id IS NULL))",
+      "issue": "AUTH-H-1: authenticated 全行 READ 相当"
+    },
+    {
+      "tablename": "reviews",
+      "policyname": "reviews_insert_reviewer",
+      "cmd": "INSERT",
+      "roles": "{authenticated}"
+    },
+    {
+      "tablename": "reviews",
+      "policyname": "reviews_select_participant",
+      "cmd": "SELECT",
+      "roles": "{authenticated}"
+    },
+    {
+      "tablename": "transaction_messages",
+      "policyname": "transaction_messages_insert_sender",
+      "cmd": "INSERT",
+      "roles": "{authenticated}"
+    },
+    {
+      "tablename": "transaction_messages",
+      "policyname": "transaction_messages_select_participant",
+      "cmd": "SELECT",
+      "roles": "{authenticated}"
+    },
+    {
+      "tablename": "transaction_reads",
+      "policies": "select_own, upsert_own, update_own"
+    },
+    {
+      "tablename": "transaction_rooms",
+      "policies": "select_participant, insert_participant, update_participant"
+    }
+  ],
+  "chatsAiMessages": {
+    "chats": { "rlsEnabled": true, "policies": 0 },
+    "ai_messages": { "rlsEnabled": true, "policies": 0 }
+  },
+  "permissiveAllowAll": {
+    "legacyTargets": 0,
+    "other": ["moderation_logs_insert_anon", "reports_insert_anon"]
+  },
+  "step8bApplied": true
+}

@@ -1,0 +1,323 @@
+/* TOP最上部 PR/注目枠 — 一覧より大きいプレミアム横長カード（#premium-list 非適用） */
+
+body.index-page .section--top-spotlight {
+  margin-bottom: 1.35rem;
+}
+
+body.index-page .top-spotlight {
+  max-width: min(96rem, 100%);
+  margin-inline: auto;
+  padding-inline: clamp(0.5rem, 2vw, 1.25rem);
+}
+
+body.index-page .top-spotlight__stage {
+  max-width: var(--max-width, 72rem);
+  margin-inline: auto;
+}
+
+body.index-page .top-spotlight__stage .top-spotlight__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+body.index-page .top-spotlight__stage .top-spotlight__item {
+  margin: 0;
+}
+
+/* ── 大型プレミアムカード本体 ── */
+body.index-page .top-spotlight__stage .list-card.list-card--top-premium.list-card--horizontal {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr) minmax(10.5rem, auto);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  box-sizing: border-box;
+  min-height: calc((148px + 2.85rem) * 1.33);
+  overflow: hidden;
+  border-radius: calc(var(--radius-xl, 1rem) + 4px);
+  background: linear-gradient(
+    152deg,
+    rgba(255, 251, 240, 0.98) 0%,
+    rgba(255, 254, 248, 0.96) 42%,
+    rgba(252, 246, 232, 0.94) 100%
+  );
+  border: 2px solid #c9a227;
+  box-shadow:
+    0 24px 56px rgba(150, 118, 34, 0.24),
+    0 12px 30px rgba(201, 162, 39, 0.18),
+    0 0 38px rgba(184, 148, 46, 0.12);
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease;
+}
+
+body.index-page .top-spotlight__stage .list-card.list-card--top-premium.list-card--horizontal:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 30px 64px rgba(150, 118, 34, 0.3),
+    0 14px 34px rgba(201, 162, 39, 0.22),
+    0 0 44px rgba(184, 148, 46, 0.15);
+}
+
+body.index-page .top-spotlight__stage .list-card.list-card--top-premium.top-spotlight--pr.list-card--horizontal {
+  border-color: #b8941f;
+  box-shadow:
+    0 26px 60px rgba(150, 118, 34, 0.28),
+    0 12px 32px rgba(201, 162, 39, 0.2),
+    0 0 40px rgba(184, 148, 46, 0.14);
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium.card--premium::before {
+  content: none;
+  display: none;
+}
+
+/* 標準バッジは非表示（リボンのみ） */
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-featured-badge,
+body.index-page .top-spotlight__stage .list-card--top-premium .featured-card__pr-badge {
+  display: none !important;
+}
+
+/* ── 左上リボン ── */
+body.index-page .top-spotlight__stage .list-card--top-premium .card__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+body.index-page .top-spotlight__stage .top-spotlight-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.05rem 0.5rem 0.7rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(60, 45, 10, 0.25);
+  background: linear-gradient(
+    128deg,
+    #7a5710 0%,
+    #967622 22%,
+    #c9a227 55%,
+    #e8c05a 100%
+  );
+  border-radius: 0 0 var(--radius-lg, 0.65rem) 0;
+  box-shadow:
+    0 4px 14px rgba(120, 98, 42, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+}
+
+body.index-page .top-spotlight__stage .top-spotlight-ribbon::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 6px 0 0 10px;
+  border-color: #7a5710 transparent transparent transparent;
+  filter: brightness(0.92);
+}
+
+body.index-page .top-spotlight__stage .top-spotlight-ribbon__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.125rem;
+  height: 1.125rem;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15));
+}
+
+body.index-page .top-spotlight__stage .top-spotlight-ribbon--pr .top-spotlight-ribbon__icon::before {
+  content: "📢";
+}
+
+body.index-page .top-spotlight__stage .top-spotlight-ribbon--featured .top-spotlight-ribbon__icon::before {
+  content: "👑";
+}
+
+body.index-page .top-spotlight__stage .top-spotlight-ribbon__text {
+  white-space: nowrap;
+}
+
+/* ── 左：画像 ── */
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__media {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.3rem 0.85rem 1.3rem 1.2rem;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__media .card__media-wrap {
+  width: 100%;
+  max-width: 300px;
+  max-height: 204px;
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0.65rem;
+  box-shadow: 0 6px 20px rgba(90, 74, 32, 0.12);
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__media .card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 204px;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* ── 中央：出品者・タイトル・価格・タグ ── */
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__content {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: 0;
+  padding: 1.3rem 1.1rem 1.25rem 1rem;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__content .listing-card-title {
+  margin: 0.5rem 0 0.15rem;
+  font-size: 1.3125rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__content .list-card-seller__name {
+  font-size: 1.03125rem;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__content .card__price {
+  margin: 0.08rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__content .list-card__tags {
+  margin: 0.15rem 0 0;
+  gap: 0.4rem;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__content .card__tag {
+  min-height: 30px;
+  font-size: 0.71875rem;
+}
+
+/* ── 右：大きめCTA ── */
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__cta {
+  grid-column: 3;
+  display: grid;
+  grid-template-rows: 3.75rem 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  align-self: stretch;
+  min-width: 10.5rem;
+  padding: 0 1.85rem 1.35rem 0.95rem;
+  padding-top: 0;
+  border: none;
+  background: transparent;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__cta .card__button {
+  grid-row: 2;
+  align-self: center;
+  justify-self: center;
+  min-width: 7.5rem;
+  max-width: 9.5rem;
+  height: 46px;
+  min-height: 46px;
+  padding: 0 1.35rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #fff;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #8f7120 0%, #967622 35%, #c9a227 100%);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 0.5rem;
+  box-shadow:
+    0 6px 20px rgba(184, 148, 46, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition:
+    filter 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__cta .card__button:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    0 8px 24px rgba(184, 148, 46, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  transform: translateY(-1px);
+}
+
+/*
+ * 最上部 PR/注目 — 一覧横長と同じ余白（#premium-list / #free-list と同一）
+ * 旧 calc は right がマイナス寄りになり角にはみ出していたため廃止
+ */
+body.index-page .top-spotlight__stage .top-spotlight__item > .card-list__favorite {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  z-index: 7;
+}
+
+@media (max-width: 767px) {
+  body.index-page .top-spotlight__stage .list-card.list-card--top-premium.list-card--horizontal {
+    grid-template-columns: minmax(0, 152px) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    min-height: calc((148px + 2.85rem) * 1.08);
+  }
+
+  body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__media .card__media-wrap {
+    max-width: 100%;
+    max-height: 176px;
+  }
+
+  body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__media .card__image {
+    max-height: 176px;
+  }
+
+  body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__cta {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: flex;
+    justify-content: stretch;
+    padding: 0 1rem 1.1rem;
+    min-width: 0;
+  }
+
+  body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__cta .card__button {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.index-page .top-spotlight__stage .list-card.list-card--top-premium.list-card--horizontal,
+  body.index-page .top-spotlight__stage .list-card.list-card--top-premium.list-card--horizontal:hover,
+  body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__cta .card__button,
+  body.index-page .top-spotlight__stage .list-card--top-premium .list-card-horizontal__cta .card__button:hover {
+    transition: none;
+    transform: none;
+  }
+}

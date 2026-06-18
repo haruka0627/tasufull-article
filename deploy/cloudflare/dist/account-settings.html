@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>リダイレクト中 | TASFUL</title>
+  <script>
+    (function () {
+      var target =
+        location.hash === "#notifications"
+          ? "notification-settings.html"
+          : "payment-settings.html";
+      location.replace(target);
+    })();
+  </script>
+</head>
+<body>
+  <p>設定ページへ移動しています…</p>
+</body>
+</html>

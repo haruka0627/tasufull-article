@@ -1,0 +1,1201 @@
+/**
+ * detail-shop.html — スマホ専用（960px以下）
+ * PCレイアウト・スタイルは変更しない
+ */
+@media (max-width: 960px) {
+  /* 汎用モバイルテンプレの clone UI ではなく、店舗詳細本体を表示 */
+  body.shop-detail-page--native-mobile .tasu-mobile-detail-shell,
+  body.shop-detail-page--native-mobile [data-tasu-mobile-detail-shell],
+  body.shop-detail-page--native-mobile .tasu-mdetail-cta-dock,
+  body.shop-detail-page--native-mobile [data-tasu-mdetail-cta-dock] {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile [data-tasu-mdetail-pc-hidden] {
+    display: revert !important;
+    visibility: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    margin: revert !important;
+    padding: revert !important;
+    border: revert !important;
+    box-shadow: revert !important;
+  }
+
+  body.shop-detail-page--native-mobile .biz-detail-page-wrap[data-biz-detail-root] {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  body.shop-detail-page--native-mobile.shop-detail-page {
+    --shop-mobile-inquiry-dock-h: 56px;
+    /* body 下余白（+35px: 被り解消）。ドック直上の見え方はフッター padding で微調整 */
+    --shop-mobile-footer-reserve: 121px;
+    /* コピーライト底辺 ↔ お問い合わせドック上端 10〜15px 目安 */
+    --shop-mobile-footer-dock-pad: 12px;
+    overflow-x: clip;
+  }
+
+  /* tasful-app-mobile.css の tabbar 分だけの padding を上書き */
+  body.shop-detail-page--native-mobile.shop-detail-page.tasu-app-mobile-page.shop-detail-page--mobile-inquiry-dock {
+    padding-bottom: var(--shop-mobile-footer-reserve) !important;
+  }
+
+  body.shop-detail-page--native-mobile.shop-detail-page.tasu-app-mobile-page.shop-detail-page--mobile-inquiry-dock
+    .biz-detail-page-wrap[data-biz-detail-root],
+  body.shop-detail-page--native-mobile.shop-detail-page.tasu-app-mobile-page.shop-detail-page--mobile-inquiry-dock
+    .shop-detail-container,
+  body.shop-detail-page--native-mobile.shop-detail-page.tasu-app-mobile-page.shop-detail-page--mobile-inquiry-dock
+    #shop-sections-root {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.shop-detail-page:not(.shop-detail-page--mobile-inquiry-dock) {
+    padding-bottom: calc(var(--tasu-app-tabbar-total, 52px) + 116px + 24px) !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-detail-container,
+  body.shop-detail-page--native-mobile .biz-detail-page-wrap[data-biz-detail-root],
+  body.shop-detail-page--native-mobile .shop-restaurant-main,
+  body.shop-detail-page--native-mobile #shop-sections-root {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    box-sizing: border-box;
+  }
+
+  /* 横余白は .shop-detail-container の 12px のみ（wrap/main は 0） */
+  body.shop-detail-page--native-mobile.detail-shop-page .biz-detail-page-wrap[data-biz-detail-root],
+  body.shop-detail-page--native-mobile.detail-shop-page .detail-page-main {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-detail-container {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    max-width: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-restaurant-body,
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-restaurant-main {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  body.shop-detail-page--native-mobile .biz-detail-breadcrumb {
+    margin-top: 8px;
+    margin-bottom: 10px;
+    font-size: 12px;
+  }
+
+  /* 共通ヒーロー：1カラム店舗カード（PC右カラム・3列グリッドは使わない） */
+  body.shop-detail-page--native-mobile .biz-detail-fv,
+  body.shop-detail-page--native-mobile .biz-detail-hero.biz-detail-fv {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-wrap: nowrap !important;
+    gap: 16px !important;
+    grid-template-columns: none !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 0 16px !important;
+    padding: 18px 16px 20px !important;
+    border-radius: 18px !important;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06) !important;
+  }
+
+  body.shop-detail-page--native-mobile .biz-detail-fv__media,
+  body.shop-detail-page--native-mobile .biz-detail-hero__media {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    flex: none !important;
+  }
+
+  body.shop-detail-page--native-mobile .biz-detail-fv [data-biz-detail-hero-figure],
+  body.shop-detail-page--native-mobile .biz-detail-hero__figure {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 4 / 3;
+  }
+
+  body.shop-detail-page--native-mobile .biz-detail-fv__main,
+  body.shop-detail-page--native-mobile .shop-detail-main-info {
+    width: 100% !important;
+    max-width: none !important;
+    flex: none !important;
+    min-width: 0 !important;
+  }
+
+  /* PC用ヒーロー右（こだわり・サイドCTA）— スマホでは非表示 */
+  body.shop-detail-page--native-mobile .biz-detail-fv__aside {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile .relax-tabs-sticky-wrap {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile [data-biz-detail-legacy-top] {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-restaurant-body {
+    display: block !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-restaurant-body[data-shop-restaurant-body] {
+    grid-template-columns: 1fr !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-restaurant-sidebar {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile #shop-sections-root > .shop-card,
+  body.shop-detail-page--native-mobile #shop-sections-root > section {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 0 12px !important;
+    padding: 12px !important;
+    border-radius: 18px;
+    box-sizing: border-box !important;
+    scroll-margin-top: calc(var(--shop-sticky-nav-top, 60px) + 56px);
+    writing-mode: horizontal-tb !important;
+  }
+
+  body.shop-detail-page--native-mobile .beauty-info-table,
+  body.shop-detail-page--native-mobile .food-info-table {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.shop-detail-page--native-mobile .beauty-info-row,
+  body.shop-detail-page--native-mobile .food-info-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    grid-template-columns: none !important;
+    gap: 12px !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    padding: 14px !important;
+    box-sizing: border-box !important;
+    writing-mode: horizontal-tb !important;
+  }
+
+  body.shop-detail-page--native-mobile .beauty-info-key,
+  body.shop-detail-page--native-mobile .food-info-key {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    align-items: center !important;
+    align-self: center !important;
+    justify-content: flex-start !important;
+    gap: 8px !important;
+    width: auto !important;
+    max-width: 42% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    text-align: left !important;
+    white-space: nowrap !important;
+    writing-mode: horizontal-tb !important;
+  }
+
+  body.shop-detail-page--native-mobile .beauty-info-val,
+  body.shop-detail-page--native-mobile .food-info-val,
+  body.shop-detail-page--native-mobile .food-info-label {
+    display: block !important;
+    flex: 1 1 auto !important;
+    align-self: center !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    text-align: left !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    writing-mode: horizontal-tb !important;
+  }
+
+  body.shop-detail-page--native-mobile .food-info-icon {
+    display: inline-flex !important;
+    flex: 0 0 18px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    align-self: center !important;
+    width: 18px !important;
+    height: 18px !important;
+    line-height: 1 !important;
+  }
+
+  body.shop-detail-page--native-mobile .food-info-icon svg {
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-access-list {
+    display: grid;
+    gap: 12px;
+    width: calc(100% - 0px);
+    margin: 0;
+    padding: 0;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-access-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+    padding: 14px !important;
+    border-radius: 16px;
+    background: #fff;
+    border: 1px solid rgba(17, 24, 39, 0.08);
+    writing-mode: horizontal-tb !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-access-label {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    font-size: 13px;
+    font-weight: 800;
+    color: #374151;
+    text-align: left !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-access-value {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.65;
+    color: #111827;
+    text-align: left !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    writing-mode: horizontal-tb !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-products-section {
+    overflow: visible !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-section-head {
+    padding: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-products-rail {
+    width: 100%;
+    overflow: visible;
+    margin: 0;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-prod-grid.retail-prod-grid {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    grid-template-columns: none !important;
+    gap: 10px !important;
+    margin: 0 !important;
+    padding: 0 0 8px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 14px;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-prod-grid .retail-prod-card {
+    flex: 0 0 175px !important;
+    width: 175px !important;
+    max-width: 180px !important;
+    min-width: 0 !important;
+    scroll-snap-align: start;
+    border-radius: 15px !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-prod-grid .retail-prod-card__img img {
+    height: 124px !important;
+    object-fit: cover !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-buyback-list {
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature__cta--full {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 100% !important;
+    min-height: 44px !important;
+    margin-top: 10px !important;
+    box-sizing: border-box;
+  }
+
+  body.shop-detail-page--native-mobile[data-shop-mvis-faq="0"] #section-faq {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile[data-shop-mvis-cases="0"] #section-shop-cases {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile[data-shop-mvis-highlights="0"] #section-shop-highlights {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile[data-shop-mvis-products="0"] #section-products {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile[data-shop-mvis-info="0"] #section-shop-bottom {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile[data-shop-mvis-reviews="0"] #section-reviews {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile #section-reviews.shop-card:not(.is-hidden):not(.shop-section--empty) {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* PC専用ブロック / スマホ専用ブロック */
+  body.shop-detail-page--native-mobile .shop-detail-pc-only {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-detail-sp-only {
+    display: block;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature-stack {
+    display: grid;
+    gap: 12px;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature {
+    padding: 16px 16px 14px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature__title {
+    margin: 0 0 8px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature__desc {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #475569;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature__list li {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #7a5e10;
+    background: #fff7df;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+  }
+
+  body.shop-detail-page--native-mobile .shop-mobile-feature__cta {
+    display: inline-flex;
+    margin-top: 4px;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    color: #1a1a1a;
+    background: linear-gradient(145deg, #f0d060 0%, #e8c547 35%, #d4af37 70%, #a67c00 100%);
+    border: 1px solid #a67c00;
+  }
+
+  /* スマホ：追従タブは固定しない（通常フロー） */
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav,
+  body.shop-detail-page--native-mobile .shop-mobile-sticky-nav,
+  body.shop-detail-page--native-mobile [data-shop-sticky-action-nav] {
+    position: static !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 0 12px !important;
+    padding: 8px 10px !important;
+    align-items: center !important;
+    align-content: center !important;
+    justify-content: flex-start !important;
+    flex-wrap: nowrap !important;
+    flex-direction: row !important;
+    gap: 0 !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav.is-stuck,
+  body.shop-detail-page--native-mobile .shop-mobile-sticky-nav.is-stuck {
+    position: static !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    margin: 0 0 12px !important;
+    z-index: auto !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav__actions,
+  body.shop-detail-page--native-mobile [data-shop-sticky-action-actions] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav__tabs,
+  body.shop-detail-page--native-mobile [data-shop-sticky-action-tabs],
+  body.shop-detail-page--native-mobile .shop-mobile-sticky-nav__list {
+    display: flex !important;
+    flex: 1 1 auto !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    align-content: center !important;
+    gap: 8px !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav__tab,
+  body.shop-detail-page--native-mobile .shop-mobile-sticky-nav__item {
+    flex: 0 0 auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    height: 36px !important;
+    min-height: 0 !important;
+    max-height: 36px !important;
+    padding: 0 12px !important;
+    margin: 0 !important;
+    border-radius: 999px !important;
+    white-space: nowrap !important;
+    font-size: 13px !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav-spacer,
+  body.shop-detail-page--native-mobile [data-shop-sticky-action-spacer] {
+    height: 0 !important;
+    min-height: 0 !important;
+    max-height: 56px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.shop-detail-page--action-nav-stuck .shop-sticky-action-nav-spacer:not([hidden]) {
+    max-height: 56px !important;
+  }
+
+  body.shop-detail-page--native-mobile .shop-market-footer.shop-store-site-footer {
+    margin-top: 8px;
+  }
+
+  /* PC由来レイアウトの明示リセット（960px以下のみ） */
+  body.shop-detail-page--native-mobile .retail-top-fv__grid,
+  body.shop-detail-page--native-mobile .retail-top-fv__side,
+  body.shop-detail-page--native-mobile .shop-restaurant-sidebar,
+  body.shop-detail-page--native-mobile .biz-detail-fv__aside {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile .retail-top-fv,
+  body.shop-detail-page--native-mobile .retail-top-fv__main {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    grid-template-columns: none !important;
+  }
+
+  body.shop-detail-page--native-mobile .beauty-review-top {
+    display: block !important;
+    grid-template-columns: none !important;
+    gap: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile [style*="min-width"],
+  body.shop-detail-page--native-mobile .shop-sticky-action-nav-spacer {
+    min-width: 0 !important;
+  }
+
+  /*
+   * === 実DOM向け 強制上書き（Playwright 390px 調査結果ベース）===
+   * 対象 class:
+   *   商品: #section-products.shop-card > .shop-mobile-products-rail > .retail-prod-grid > .retail-prod-card
+   *   買取: #section-shop-cases / #section-shop-highlights > #shop-sp-buyback-* .shop-mobile-feature
+   *   アクセス: #section-shop-bottom > #section-shop-info > .shop-mobile-access-*
+   *   タブ: .shop-sticky-action-nav.shop-mobile-sticky-nav
+   *   下部: .tasu-app-tabbar
+   */
+  body.shop-detail-page--native-mobile.detail-shop-page #shop-sections-root {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 12px 0 3rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 12px !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #shop-sections-root > section.shop-card,
+  body.shop-detail-page--native-mobile.detail-shop-page #shop-sections-root > section {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 0 12px !important;
+    padding: 12px !important;
+    border-radius: 18px !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  /* 商品一覧: レーンはセクション内いっぱい（横 padding は外枠12pxのみ） */
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products.shop-card.shop-mobile-products-section {
+    padding: 12px !important;
+    overflow: visible !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .food-sec-head,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .shop-mobile-section-head {
+    padding: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .shop-mobile-products-rail {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .retail-prod-grid,
+  body.shop-detail-page--native-mobile.detail-shop-page[data-shop-category-profile="goods_interior"] #section-products .retail-prod-grid {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    grid-template-columns: none !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 0 8px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-padding-inline: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .retail-prod-grid .retail-prod-card,
+  body.shop-detail-page--native-mobile.detail-shop-page[data-shop-category-profile="goods_interior"] #section-products .retail-prod-card {
+    flex: 0 0 175px !important;
+    width: 175px !important;
+    min-width: 175px !important;
+    max-width: 180px !important;
+    overflow: hidden !important;
+    scroll-snap-align: start !important;
+    border-radius: 15px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .retail-prod-card__img img {
+    height: 124px !important;
+    object-fit: cover !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .retail-prod-card__body {
+    padding: 10px 10px 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .retail-prod-card__name,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .retail-prod-card__price {
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  /* 買取: #section-shop-cases / #section-shop-highlights 内 .shop-mobile-feature */
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-cases.shop-card,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights.shop-card {
+    padding: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-cases .food-sec-head,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights .food-sec-head {
+    padding: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-cases #shop-sp-buyback-main.shop-mobile-feature,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights .shop-mobile-buyback-list,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights #shop-sp-buyback-visit.shop-mobile-feature,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights #shop-sp-buyback-corp.shop-mobile-feature,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights #shop-sp-buyback-appraisal.shop-mobile-feature {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights .shop-mobile-buyback-list.shop-detail-sp-only {
+    display: grid !important;
+    gap: 10px !important;
+    padding: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-cases .shop-mobile-feature,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights .shop-mobile-feature {
+    padding: 14px !important;
+    border-radius: 16px !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights .shop-mobile-feature__cta--full,
+  body.shop-detail-page--native-mobile.detail-shop-page #shop-sp-buyback-appraisal .shop-mobile-feature__cta {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 44px !important;
+    margin-top: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* アクセス: #section-shop-bottom > #section-shop-info */
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-bottom.shop-card {
+    padding: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info.beauty-info-card.shop-mobile-access-section {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .food-sec-head,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .shop-mobile-section-head {
+    padding: 0 !important;
+    margin-bottom: 10px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .shop-mobile-access-list {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: grid !important;
+    gap: 10px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .shop-detail-pc-only,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .beauty-info-table.shop-detail-pc-only {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .food-info-table {
+    border-radius: 16px !important;
+    border: 1px solid rgba(17, 24, 39, 0.08) !important;
+    background: #fff !important;
+    overflow: hidden !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .food-info-row {
+    padding: 14px !important;
+    border-top: 1px solid #f0f0f0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .food-info-row:first-child {
+    border-top: none !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .shop-mobile-access-item {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 14px !important;
+    border-radius: 16px !important;
+    box-sizing: border-box !important;
+    writing-mode: horizontal-tb !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .food-info-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .food-info-row .food-info-key {
+    display: inline-flex !important;
+    align-items: center !important;
+    align-self: center !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: 42% !important;
+    margin: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .food-info-row .food-info-val {
+    display: block !important;
+    flex: 1 1 auto !important;
+    align-self: center !important;
+    width: auto !important;
+    max-width: none !important;
+    text-align: left !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    writing-mode: horizontal-tb !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .beauty-info-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .beauty-info-row .beauty-info-key,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .beauty-info-row .beauty-info-val {
+    align-self: center !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .shop-mobile-access-label,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-info .shop-mobile-access-value {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    text-align: left !important;
+    white-space: normal !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+    writing-mode: horizontal-tb !important;
+  }
+
+  /* タブナビ: スマホは static（追従なし） */
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-sticky-action-nav.shop-mobile-sticky-nav,
+  body.shop-detail-page--native-mobile.detail-shop-page [data-shop-sticky-action-nav].shop-sticky-action-nav {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 0 12px !important;
+    padding: 8px 10px !important;
+    position: static !important;
+    top: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    z-index: auto !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-sticky-action-nav.is-stuck {
+    position: static !important;
+    width: 100% !important;
+    left: auto !important;
+    right: auto !important;
+    margin: 0 0 12px !important;
+  }
+
+  /* ヒーロー: コンテナ内いっぱい（外枠12pxは container のみ） */
+  body.shop-detail-page--native-mobile.detail-shop-page .biz-detail-fv,
+  body.shop-detail-page--native-mobile.detail-shop-page .biz-detail-hero.biz-detail-fv {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 14px 12px 16px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* detail-shop-store.css の .shop-card 28px / section 18px を打ち消す */
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-card {
+    padding: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #shop-sections-root section {
+    padding: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page.shop-detail-page--mobile-inquiry-dock #section-reviews,
+  body.shop-detail-page.detail-shop-page.shop-detail-page--mobile-inquiry-dock #section-reviews {
+    padding-bottom: calc(
+      var(--shop-mobile-inquiry-dock-h, 56px) + var(--tasu-app-tabbar-total, 52px) + 56px
+    ) !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page.shop-detail-page--mobile-inquiry-dock
+    #section-reviews
+    .food-reviews-footer,
+  body.shop-detail-page.detail-shop-page.shop-detail-page--mobile-inquiry-dock
+    #section-reviews
+    .food-reviews-footer {
+    margin-bottom: calc(
+      var(--shop-mobile-inquiry-dock-h, 56px) + var(--tasu-app-tabbar-total, 52px) + 16px
+    ) !important;
+  }
+
+  body.shop-detail-page.detail-shop-page.shop-detail-page--mobile-inquiry-dock:not(.tasu-app-mobile-page) {
+    padding-bottom: calc(
+      var(--shop-mobile-inquiry-dock-h, 56px) + var(--tasu-app-tabbar-total, 52px) + 32px
+    ) !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #shop-sections-root > section,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-cases,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-highlights,
+  body.shop-detail-page--native-mobile.detail-shop-page #section-shop-bottom {
+    scroll-margin-top: 12px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .tasu-app-tabbar[data-tasu-app-tabbar] {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 42 !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    isolation: isolate !important;
+    box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08) !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-market-footer.shop-store-site-footer {
+    margin-bottom: 0 !important;
+    /* お問い合わせドック直上にコピーライトを寄せる */
+    padding-bottom: var(--shop-mobile-footer-dock-pad, 12px) !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-store-site-footer__copy,
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-market-footer .shop-store-site-footer__copy {
+    margin-bottom: 0 !important;
+  }
+
+  /* ヒーロー: 店名重複を非表示・カテゴリバッジをギャラリー直下へ */
+  body.shop-detail-page--native-mobile.detail-shop-page .retail-top-fv--mobile-hero [data-biz-detail-title],
+  body.shop-detail-page--native-mobile.detail-shop-page .retail-top-fv--mobile-hero .biz-detail-hero__company-row {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .retail-top-fv--mobile-hero [data-biz-detail-hero-genre-tags] {
+    width: 100% !important;
+    margin: 0 0 10px !important;
+    padding: 0 !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .retail-top-fv--mobile-hero .food-category-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 6px 12px !important;
+    border-radius: 999px !important;
+    font-size: 13px !important;
+    font-weight: 800 !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .retail-top-fv--mobile-hero [data-shop-restaurant-ctas],
+  body.shop-detail-page--native-mobile.detail-shop-page .retail-top-fv--mobile-hero .retail-ctas {
+    display: none !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page [data-biz-detail-sticky-bar] {
+    display: none !important;
+  }
+
+  /* カテゴリタブ: アクティブ状態を明確化 */
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-sticky-action-nav__tab,
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-mobile-sticky-nav__item {
+    border-radius: 10px 10px 0 0 !important;
+    border: none !important;
+    border-bottom: 3px solid transparent !important;
+    background: #f1f5f9 !important;
+    color: #64748b !important;
+    font-weight: 700 !important;
+    padding: 8px 12px 6px !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 40px !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-sticky-action-nav__tab.is-active,
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-mobile-sticky-nav__item.is-active {
+    background: #1e293b !important;
+    color: #fff !important;
+    font-weight: 900 !important;
+    border-bottom-color: #d4af37 !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12) !important;
+  }
+
+  /* 商品一覧: 下部フル幅ボタン */
+  body.shop-detail-page--native-mobile.detail-shop-page .shop-mobile-products-all-btn {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    margin: 12px 0 0 !important;
+    padding: 12px 16px !important;
+    border-radius: 14px !important;
+    border: 2px solid rgba(212, 175, 55, 0.45) !important;
+    background: #fff !important;
+    color: #9a6a00 !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+  }
+
+  body.shop-detail-page--native-mobile.detail-shop-page #section-products .food-link {
+    display: none !important;
+  }
+}
+
+/* フローティングお問い合わせ（タブバー直上・960px以下） */
+@media (max-width: 960px) {
+  .shop-mobile-inquiry-dock {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: var(--tasu-app-tabbar-total, 52px);
+    z-index: 41;
+    padding: 10px 12px 12px;
+    background-color: #f7f7f5;
+    background-image: none;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -8px 24px rgba(15, 23, 42, 0.1);
+    box-sizing: border-box;
+    pointer-events: none;
+    isolation: isolate;
+  }
+
+  .shop-mobile-inquiry-dock::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: #f7f7f5;
+    z-index: -1;
+  }
+
+  .shop-mobile-inquiry-dock__btn {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    max-width: none;
+    min-height: var(--shop-mobile-inquiry-dock-h, 56px);
+    padding: 12px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(154, 106, 0, 0.35);
+    background: linear-gradient(135deg, #f0d060 0%, #d4af37 55%, #a67c00 100%) !important;
+    background-color: #d4af37 !important;
+    color: #1a1a1a;
+    font-weight: 900;
+    font-size: 16px;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.14);
+    box-sizing: border-box;
+    opacity: 1 !important;
+  }
+
+  .shop-mobile-inquiry-dock__main {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .shop-mobile-inquiry-dock__icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .shop-mobile-inquiry-dock__label {
+    letter-spacing: 0.02em;
+  }
+
+  .shop-mobile-inquiry-dock__line {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .shop-mobile-inquiry-dock__line-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #06c755;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+  }
+}
+
+@media (min-width: 961px) {
+  .shop-detail-sp-only,
+  .shop-mobile-inquiry-dock {
+    display: none !important;
+  }
+
+  /* スマホ用クラス残留時も PC ヒーロー3カラムを維持 */
+  body.shop-detail-page.detail-shop-page .biz-detail-fv.retail-top-fv {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    grid-template-columns: none !important;
+  }
+
+  body.shop-detail-page.detail-shop-page .biz-detail-fv.retail-top-fv .biz-detail-fv__media,
+  body.shop-detail-page.detail-shop-page .biz-detail-fv.retail-top-fv .biz-detail-hero__media {
+    flex: 0 0 430px !important;
+    width: 430px !important;
+    max-width: 430px !important;
+    display: block !important;
+  }
+
+  body.shop-detail-page.detail-shop-page .biz-detail-fv.retail-top-fv .biz-detail-fv__main,
+  body.shop-detail-page.detail-shop-page .biz-detail-fv.retail-top-fv .shop-detail-main-info {
+    flex: 0 1 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    display: flex !important;
+  }
+
+  body.shop-detail-page.detail-shop-page .biz-detail-fv.retail-top-fv .biz-detail-fv__aside {
+    display: flex !important;
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    max-width: 280px !important;
+  }
+
+  body.shop-detail-page.detail-shop-page .retail-top-fv--mobile-hero [data-biz-detail-title],
+  body.shop-detail-page.detail-shop-page .retail-top-fv [data-biz-detail-title] {
+    display: block !important;
+  }
+
+  body.shop-detail-page.detail-shop-page .retail-top-fv--mobile-hero .biz-detail-hero__company-row {
+    display: flex !important;
+  }
+
+  body.shop-detail-page.detail-shop-page .retail-top-fv--mobile-hero [data-shop-restaurant-ctas],
+  body.shop-detail-page.detail-shop-page .retail-top-fv--mobile-hero .retail-ctas {
+    display: flex !important;
+  }
+
+  body.shop-detail-page.detail-shop-page #section-reviews.shop-card:not(.is-hidden):not(.shop-section--empty) {
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+}

@@ -1,0 +1,783 @@
+/**
+ * detail-worker.html — ワーカー詳細（一般詳細UIベースの差分）
+ */
+html {
+  scroll-behavior: smooth;
+}
+
+.worker-detail-wrap {
+  margin-top: 20px;
+}
+
+.worker-detail-main > .worker-hero-section {
+  margin-top: 4px;
+}
+
+.worker-section-spaced {
+  margin-bottom: 1.35rem;
+}
+
+.section-nav {
+  position: sticky;
+  top: var(--tasu-banner-height);
+  z-index: 9990;
+  margin-bottom: 0;
+  background: #fff;
+  border-bottom: 1px solid #ececec;
+}
+
+.section-nav__inner {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.section-nav__inner::-webkit-scrollbar {
+  display: none;
+}
+
+.section-nav__link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  padding: 0 1.125rem;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  color: #6b7280;
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.section-nav__link:hover {
+  color: #374151;
+}
+
+.section-nav__link.is-active {
+  color: #1f2937;
+  font-weight: 600;
+  border-bottom-color: #f4d06f;
+}
+
+.section-anchor {
+  scroll-margin-top: calc(var(--tasu-banner-height) + 4.5rem);
+}
+
+.worker-cta-panel .skill-cta-panel__label {
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.worker-cta-panel__lead {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.worker-seller-premium__head .skill-seller-premium__lead::before {
+  content: none;
+}
+
+/* モバイル固定CTA（料金なし） */
+.worker-sticky-cta {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9995;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid rgba(212, 166, 58, 0.22);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.worker-sticky-cta__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.worker-sticky-cta__btn {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  background: linear-gradient(180deg, #f4d06f 0%, #d4a63a 100%);
+  box-shadow: 0 2px 10px rgba(212, 166, 58, 0.28);
+}
+
+@media (min-width: 1024px) {
+  .worker-sticky-cta {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-consult:hover {
+    transform: none;
+  }
+}
+
+/* ヒーロー要約 */
+body[data-detail-type="worker"] .worker-hero-summary {
+  color: #64748b;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+body[data-detail-type="worker"] .worker-hero-summary-text {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #475569;
+}
+
+body[data-detail-type="worker"] .worker-hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+body[data-detail-type="worker"] .worker-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 166, 58, 0.35);
+  background: rgba(255, 248, 230, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #7a5c12;
+}
+
+/* ヒーロー概要メタ（対応エリア等）— 出品者カードの上 */
+body[data-detail-type="worker"] .worker-hero-meta {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ヒーロー内・出品者ミニカード（求人 detail と同型）— レイアウト。ランク色は seller-rank-plate.css */
+body[data-detail-type="worker"] .product-hero-seller-card {
+  --product-seller-label: #94a3b8;
+  --product-seller-handle: #8b7d66;
+  --product-seller-stat: #d8a72f;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+  overflow: visible;
+  padding: 0.75rem 0.85rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(214, 179, 91, 0.35);
+  background:
+    radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.06), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+  box-shadow:
+    0 12px 30px rgba(180, 140, 60, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card:hover {
+  border-color: rgba(212, 180, 120, 0.5);
+  box-shadow:
+    0 14px 34px rgba(180, 140, 60, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-2px);
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend {
+  background:
+    radial-gradient(circle at 8% 18%, rgba(124, 58, 237, 0.1), transparent 32%),
+    radial-gradient(circle at 92% 82%, rgba(56, 189, 248, 0.07), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 248, 0.98), rgba(255, 255, 255, 0.98));
+  border-color: rgba(196, 181, 253, 0.42);
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-platinum {
+  background:
+    radial-gradient(circle at 12% 22%, rgba(148, 163, 184, 0.08), transparent 30%),
+    linear-gradient(135deg, rgba(252, 252, 254, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-gold {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(244, 208, 111, 0.12), transparent 30%),
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-new {
+  background:
+    radial-gradient(circle at 10% 20%, rgba(249, 115, 22, 0.07), transparent 28%),
+    linear-gradient(135deg, rgba(255, 252, 244, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__avatar,
+body[data-detail-type="worker"] .product-hero-seller-card .profile-avatar {
+  flex-shrink: 0;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  object-fit: cover;
+  box-sizing: border-box;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__main {
+  flex: 1;
+  min-width: 0;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.2rem;
+  padding-top: 0.1rem;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-card__head {
+  padding-top: 0.35rem;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-card__avatar.profile-avatar.rank-legend,
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .profile-avatar.rank-legend {
+  border-width: 3px;
+  box-shadow:
+    0 0 12px rgba(124, 58, 237, 0.35),
+    0 0 22px rgba(56, 189, 248, 0.2),
+    0 0 0 1px rgba(196, 181, 253, 0.35);
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card .seller-rank-chip {
+  max-width: 6.5rem;
+  padding: 0.24rem 0.62rem 0.22rem;
+  font-size: 0.59375rem;
+  letter-spacing: 0.1em;
+  overflow: visible;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .seller-rank-chip.rank-legend {
+  border-radius: 999px;
+  box-shadow:
+    0 0 16px rgba(124, 58, 237, 0.32),
+    0 0 8px rgba(99, 102, 241, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card .skill-seller-badge {
+  height: auto;
+  min-height: 0;
+  padding: 0.12rem 0.45rem;
+  font-size: 0.5625rem;
+  line-height: 1.2;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card .product-hero-seller-card__name,
+body[data-detail-type="worker"] .product-hero-seller-card .product-hero-seller-name {
+  margin: 0;
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card .product-hero-seller-name-wrap {
+  display: block;
+  max-width: 100%;
+  min-width: 0;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-name-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-name-wrap::after {
+  content: "";
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: -4px;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(124, 58, 237, 0.45),
+    rgba(56, 189, 248, 0.35),
+    transparent
+  );
+  filter: blur(0.3px);
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-name,
+body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-card__name.seller-name.rank-legend {
+  font-weight: 900;
+  font-size: clamp(1.25rem, 1.8vw, 1.9rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  background: linear-gradient(
+    110deg,
+    #2563eb 0%,
+    #7c3aed 24%,
+    #ec4899 48%,
+    #38bdf8 72%,
+    #8b5cf6 100%
+  );
+  background-size: 260% 100%;
+  background-position: 0% 50%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: workerLegendNameAurora 9s ease-in-out infinite alternate;
+  text-shadow:
+    0 0 10px rgba(124, 58, 237, 0.22),
+    0 0 18px rgba(56, 189, 248, 0.12);
+  filter: none;
+  opacity: 1;
+  will-change: background-position, filter;
+}
+
+@keyframes workerLegendNameAurora {
+  0% {
+    background-position: 0% 50%;
+    filter: brightness(1);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.08);
+  }
+  100% {
+    background-position: 0% 50%;
+    filter: brightness(1);
+  }
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__handle {
+  margin: 0.05rem 0 0.35rem;
+  font-size: 0.6875rem;
+  color: var(--product-seller-handle);
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.65rem;
+}
+
+@media (min-width: 640px) {
+  body[data-detail-type="worker"] .product-hero-seller-card__stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__stat-label {
+  display: block;
+  font-size: 0.5625rem;
+  font-weight: 600;
+  color: var(--product-seller-label);
+  letter-spacing: 0.04em;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__stat-value:not(.product-hero-seller-card__stat-value--status) {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--product-seller-stat);
+  line-height: 1.2;
+  text-shadow: 0 1px 8px rgba(216, 167, 47, 0.22);
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__stat-sub {
+  margin-left: 0.15rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #c49228;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__stat-value--status:not(.product-hero-seller-online) {
+  display: inline-block;
+  width: fit-content;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #8b7d66;
+  background: none;
+  border: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-online {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #15803d;
+}
+
+body[data-detail-type="worker"] .product-hero-seller-online::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 999px;
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.55);
+}
+
+body[data-detail-type="worker"] .product-hero-seller-card__login {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  color: #94a3b8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-name,
+  body[data-detail-type="worker"] .product-hero-seller-card.rank-legend .product-hero-seller-card__name.seller-name.rank-legend {
+    animation: none;
+  }
+}
+
+/* 下部・詳細本体カード */
+body[data-detail-type="worker"] .worker-details-card {
+  display: block;
+  overflow: hidden;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: #fff;
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+}
+
+body[data-detail-type="worker"] .worker-details-card .skill-details-premium__head {
+  background: linear-gradient(90deg, #fffdf6 0%, #ffffff 100%);
+  border-bottom: 1px solid #f0ebe0;
+}
+
+body[data-detail-type="worker"] .worker-details-card .skill-details-block__content {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: #374151;
+  white-space: pre-wrap;
+}
+
+body[data-detail-type="worker"] .worker-details-card .skill-details-block:not([hidden]) {
+  display: block;
+}
+
+body[data-detail-type="worker"] .worker-details-empty {
+  margin: 0;
+  padding: 1.25rem 0 0.5rem;
+  font-size: 0.875rem;
+  color: #94a3b8;
+  text-align: center;
+}
+
+body[data-detail-type="worker"] .worker-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+body[data-detail-type="worker"] .worker-detail-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 0.8125rem;
+  color: #374151;
+}
+
+/* 最下部カード（関連ワーカー）→ コピーライト間の余白 */
+body[data-detail-type="worker"] .skill-detail-wrap > footer {
+  margin-top: 0.875rem;
+  padding-top: 0;
+}
+
+/* 関連ワーカー — tasu-banner.css の header 潰しを解除して見出しを表示 */
+body[data-detail-type="worker"] #otherServices:not([hidden]) .detail-bottom-card__head {
+  display: block !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 1.4rem 1.5rem 1.05rem !important;
+  overflow: visible !important;
+  background: #fff !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+body[data-detail-type="worker"] #otherServices:not([hidden]) .detail-bottom-card__title {
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+/* 下部ワーカー情報カード CTA — detail-job #section-seller と同じ見た目 */
+body[data-detail-type="worker"] #section-seller .seller-apply-btn,
+body[data-detail-type="worker"] #section-seller .seller-follow-btn,
+body[data-detail-type="worker"] #section-seller .seller-more-jobs-btn {
+  display: inline-flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+body[data-detail-type="worker"] #section-seller .seller-btn__icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+
+body[data-detail-type="worker"] #section-seller .seller-apply-btn {
+  font-weight: 800;
+  color: #1b1b1b;
+  background: linear-gradient(135deg, #d4a93a, #f5d97a);
+  border: 1px solid rgba(212, 169, 58, 0.45);
+  box-shadow: 0 8px 24px rgba(212, 169, 58, 0.25);
+}
+
+body[data-detail-type="worker"] #section-seller .seller-apply-btn:hover {
+  color: #1b1b1b;
+  background: linear-gradient(135deg, #e0b84a, #fce88a);
+  border-color: rgba(212, 169, 58, 0.65);
+  box-shadow: 0 10px 28px rgba(212, 169, 58, 0.32);
+  transform: translateY(-1px);
+}
+
+body[data-detail-type="worker"] #section-seller .seller-follow-btn {
+  font-weight: 700;
+  color: #8a7340;
+  background: #fff;
+  border: 1.5px solid rgba(193, 168, 88, 0.55);
+  box-shadow: none;
+}
+
+body[data-detail-type="worker"] #section-seller .seller-follow-btn:hover {
+  color: #6f5c32;
+  background: #fff;
+  border-color: rgba(193, 168, 88, 0.75);
+}
+
+body[data-detail-type="worker"] #section-seller .seller-more-jobs-btn {
+  font-weight: 600;
+  color: #4b5563;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: none;
+}
+
+body[data-detail-type="worker"] #section-seller .seller-more-jobs-btn:hover {
+  color: #374151;
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.2);
+}
+
+body[data-detail-type="worker"] #section-seller .seller-more-jobs-btn span {
+  color: inherit;
+}
+
+/* 依頼カード（ワーカー本人向け #requests） */
+.worker-requests-panel .job-applications-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.worker-requests-panel .job-applications-panel__count {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #967622;
+  background: #fff8e8;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+}
+
+.worker-requests-panel .job-applications-panel__lead {
+  margin: 0 0 0.85rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.worker-requests-panel .job-applications-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.worker-requests-panel .job-app-card {
+  border: 1px solid #e8dfd0;
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  background: #fffdf8;
+}
+
+.worker-requests-panel .job-app-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.worker-requests-panel .job-app-card__name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.worker-requests-panel .job-app-card__target {
+  margin-top: 0.35rem;
+}
+
+.worker-requests-panel .job-app-card__target-label {
+  margin: 0;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.worker-requests-panel .job-app-card__target-title {
+  margin: 0.12rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.worker-requests-panel .job-app-card__chip {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.15rem 0.5rem;
+}
+
+.worker-requests-panel .job-app-card__chip--open {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.worker-requests-panel .job-app-card__chip--draft {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.worker-requests-panel .job-app-card__chip--urgent {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.worker-requests-panel .job-app-card__meta,
+.worker-requests-panel .job-app-card__memo {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.worker-requests-panel .job-app-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+}
+
+.worker-requests-panel .job-app-card__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.4rem 0.85rem;
+  border-radius: 10px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.worker-requests-panel .job-app-card__btn--hire {
+  background: #fff8e8;
+  border-color: #e8c96a;
+  color: #7a5710;
+}
+
+.worker-requests-panel .job-app-card__btn--reject {
+  background: #fff;
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+
+.worker-requests-panel .job-app-card__btn--chat {
+  background: #967622;
+  color: #fff;
+}
+
+.worker-requests-panel.is-view-focus {
+  outline: 2px solid #f59e0b;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+

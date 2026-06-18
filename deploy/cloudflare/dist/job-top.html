@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>求人を探す | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="detail-favorites.css">
+  <link rel="stylesheet" href="job-top.css">
+  <link rel="stylesheet" href="job-top-mobile.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+</head>
+<body id="top" class="job-top-page" data-page="job-top">
+
+  <header class="job-top-header" aria-label="求人サイトヘッダー">
+    <div class="job-top-header__inner">
+      <div class="job-top-header__brand">
+        <a href="index-top.html" class="tasful-ai-logo job-top-header__logo-link" aria-label="TASFUL プラットフォームTOP">
+        <img
+          src="images/tasful-ai-globe.png?v=4"
+          alt=""
+          class="tasful-ai-logo-icon"
+        >
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+        <nav class="job-top-header__cta-nav" aria-label="クイックアクション">
+          <a href="post.html?type=job" class="job-top-header__pill job-top-header__pill--post">掲載する</a>
+          <a href="index.html" class="job-top-header__pill job-top-header__pill--top">一覧トップ</a>
+        </nav>
+      </div>
+      <div class="job-top-header__actions">
+        <a href="chat.html" class="job-top-header__action">
+          <span class="job-top-header__action-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </span>
+          <span class="job-top-header__action-label">メッセージ</span>
+        </a>
+        <a href="index.html" class="job-top-header__action">
+          <span class="job-top-header__action-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </span>
+          <span class="job-top-header__action-label">お気に入り</span>
+        </a>
+        <a href="index.html" class="job-top-header__account">
+          <span class="job-top-header__account-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <span class="job-top-header__account-name">TASFUL株式会社</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="job-top-container">
+    <main class="job-top-main-wrap">
+
+      <section class="job-top-search job-search-card" aria-label="求人検索">
+        <form class="job-top-search__form" data-job-top-search-form>
+          <div class="job-top-search__field">
+            <label for="jobTopKeyword">キーワード検索</label>
+            <input type="search" id="jobTopKeyword" name="keyword" data-job-top-keyword placeholder="求人名・会社名・業務内容で検索">
+          </div>
+          <div class="job-top-search__field">
+            <label for="jobTopJobType">職種</label>
+            <select id="jobTopJobType" name="job_type" data-job-top-industry-select>
+              <option value="">すべて</option>
+            </select>
+          </div>
+          <div class="job-top-search__field">
+            <label for="jobTopEmployment">雇用形態</label>
+            <select id="jobTopEmployment" name="employment" data-job-top-employment-select>
+              <option value="">すべて</option>
+            </select>
+          </div>
+          <div class="job-top-search__field">
+            <label for="jobTopArea">エリア</label>
+            <input type="text" id="jobTopArea" name="area" placeholder="例：東京都">
+          </div>
+          <div class="job-top-search__field">
+            <label for="jobTopSalary">予算・単価</label>
+            <input type="text" id="jobTopSalary" name="salary" placeholder="例：日給・月額・時給">
+          </div>
+          <button type="submit" class="job-top-search__submit">検索</button>
+        </form>
+        <div class="job-top-search__tags">
+          <span class="job-top-search__tags-label">人気検索</span>
+          <div class="job-top-search__tags-list" data-job-top-popular-tags></div>
+        </div>
+      </section>
+
+      <section class="job-top-pr" data-job-top-pr-section hidden aria-label="PR求人">
+        <div class="job-top-pr__inner">
+          <header class="job-top-pr__head">
+            <h2 class="job-top-pr__title">PR求人 / 注目求人</h2>
+            <p class="job-top-pr__lead">上位掲載中の注目求人を表示しています。</p>
+          </header>
+          <div class="job-top-pr__grid" data-job-top-pr-grid></div>
+        </div>
+      </section>
+
+      <div class="job-top-layout">
+        <aside class="job-top-filter" aria-label="絞り込み">
+          <button type="button" class="job-top-filter__toggle" data-job-top-filter-toggle aria-expanded="true">絞り込み</button>
+          <div class="job-top-filter__panel" data-job-top-filter-panel>
+            <h2 class="job-top-filter__title">絞り込み</h2>
+            <form class="job-top-filter__form" data-job-top-filter-form>
+              <fieldset class="job-top-filter__group">
+                <legend>対応エリア</legend>
+                <input type="text" name="area" placeholder="都道府県・市区">
+              </fieldset>
+              <fieldset class="job-top-filter__group">
+                <legend>業種</legend>
+                <select name="job_type" data-job-top-industry-select>
+                  <option value="">すべて</option>
+                </select>
+              </fieldset>
+              <fieldset class="job-top-filter__group">
+                <legend>雇用形態</legend>
+                <select name="employment" data-job-top-employment-select>
+                  <option value="">すべて</option>
+                </select>
+              </fieldset>
+              <fieldset class="job-top-filter__group">
+                <legend>予算・単価</legend>
+                <input type="text" name="salary" placeholder="キーワード">
+              </fieldset>
+              <fieldset class="job-top-filter__group">
+                <legend>期間</legend>
+                <input type="text" name="period" placeholder="例：3ヶ月・長期">
+              </fieldset>
+              <fieldset class="job-top-filter__group">
+                <legend>募集状況</legend>
+                <select name="recruitment">
+                  <option value="">すべて</option>
+                  <option value="open">募集中</option>
+                  <option value="urgent">急募</option>
+                  <option value="soon">すぐ開始</option>
+                </select>
+              </fieldset>
+              <fieldset class="job-top-filter__group job-top-filter__group--checks">
+                <legend>条件</legend>
+                <div class="job-top-filter__checks">
+                  <label class="job-top-filter__check"><input type="checkbox" name="cond_urgent"><span>急募のみ</span></label>
+                  <label class="job-top-filter__check"><input type="checkbox" name="cond_soon"><span>すぐに開始可能</span></label>
+                  <label class="job-top-filter__check"><input type="checkbox" name="cond_license"><span>資格必須</span></label>
+                </div>
+              </fieldset>
+              <div class="job-top-filter__actions">
+                <button type="button" class="job-top-filter__apply" data-job-top-filter-apply>この条件で検索</button>
+                <button type="button" class="job-top-filter__clear" data-job-top-filter-clear>条件をクリア</button>
+              </div>
+            </form>
+          </div>
+        </aside>
+
+        <div class="job-top-main">
+          <div class="job-top-main__toolbar">
+            <p class="job-top-count"><span class="job-top-count__label">表示件数</span> <strong data-job-top-count>0</strong><span class="job-top-count__unit">件</span></p>
+            <p class="job-top-sort">
+              <label for="jobTopSort">並び順</label>
+              <select id="jobTopSort" data-job-top-sort>
+                <option value="newest" selected>新着順</option>
+                <option value="featured">注目掲載優先</option>
+                <option value="pr">PR優先</option>
+              </select>
+            </p>
+          </div>
+
+          <div class="job-top-tabs job-category-tabs" data-job-top-tabs role="tablist" aria-label="求人カテゴリ"></div>
+
+          <div class="job-list-panel">
+            <div class="job-table-wrap" aria-label="求人一覧">
+              <div class="job-table">
+                <div class="job-table-header" role="row">
+                  <div class="job-table-cell job-table-cell--main" role="columnheader">会社名 / 案件名</div>
+                  <div class="job-table-cell job-table-cell--industry" role="columnheader">業種</div>
+                  <div class="job-table-cell job-table-cell--area" role="columnheader">エリア</div>
+                  <div class="job-table-cell job-table-cell--salary" role="columnheader">予算・単価</div>
+                  <div class="job-table-cell job-table-cell--period" role="columnheader">必要期間</div>
+                  <div class="job-table-cell job-table-cell--deadline" role="columnheader">応募期限</div>
+                  <div class="job-table-cell job-table-cell--date" role="columnheader">更新日</div>
+                  <div class="job-table-cell job-table-cell--actions job-action-cell" role="columnheader">操作</div>
+                </div>
+                <div class="job-table-body" data-job-list-body></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="job-list-mobile" data-job-list-mobile aria-label="求人一覧（モバイル）"></div>
+
+          <div class="job-top-pagination-bar">
+            <nav class="job-top-pagination" data-job-top-pagination aria-label="ページ送り"></nav>
+            <p class="job-top-pagination__range" data-job-top-range></p>
+          </div>
+
+          <div class="job-top-empty" data-job-top-empty hidden>
+            <p class="job-top-empty__title">該当する求人がありません</p>
+            <p class="job-top-empty__text">キーワードや絞り込み条件を変更して、再度お試しください。</p>
+            <p class="job-top-empty__text"><a href="post.html?type=job">求人掲載フォーム</a>から新しい求人を追加できます。</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="listing-tags.js"></script>
+  <script src="listing-images.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="listing-route-resolver.js"></script>
+  <script src="listing-demo-catalog.js"></script>
+  <script src="listings-db.js"></script>
+  <script src="job-listing-fields.js"></script>
+  <script src="favorites-db.js"></script>
+  <script src="detail-favorites.js"></script>
+  <script src="job-top-renderer.js"></script>
+  <script src="job-top-page.js"></script>
+</body>
+</html>

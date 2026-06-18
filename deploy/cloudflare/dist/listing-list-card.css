@@ -1,0 +1,862 @@
+/* ==========================================================================
+   一覧カード統一 — index / カテゴリ一覧のみ（detail 非適用）
+   出品者ブランド + 案件タイトル重視
+   ========================================================================== */
+
+body.index-page .list-card--navigable,
+body.category-list-page .list-card--navigable {
+  cursor: pointer;
+}
+
+body.index-page .list-card--navigable:focus-visible,
+body.category-list-page .list-card--navigable:focus-visible {
+  outline: 2px solid rgba(193, 168, 88, 0.65);
+  outline-offset: 3px;
+}
+
+/* 説明文・旧カテゴリ行は一覧では非表示 */
+body.index-page .card-list .card .card__description,
+body.category-list-page .card-list .card .card__description {
+  display: none !important;
+}
+
+body.index-page .card-list .list-card .card__category,
+body.category-list-page .card-list .list-card .card__category {
+  display: none !important;
+}
+
+/* 画像上の旧アバター */
+body.index-page .card-list .card .card__media-wrap > .card__avatar,
+body.category-list-page .card-list .card .card__media-wrap > .card__avatar {
+  display: none !important;
+}
+
+body.index-page .card-list .card:not(.list-card) .card__profile:not(.list-card-seller),
+body.category-list-page .card-list .card:not(.list-card) .card__profile:not(.list-card-seller) {
+  display: none;
+}
+
+/* ── 右カラム：タイトル主役 ── */
+body.index-page .card-list .list-card .card__main,
+body.category-list-page .card-list .list-card .card__main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+body.index-page .card-list .list-card .list-card__header,
+body.category-list-page .card-list .list-card .list-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.125rem;
+}
+
+body.index-page .card-list .list-card .list-card__head-row,
+body.category-list-page .card-list .list-card .list-card__head-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.65rem;
+  min-width: 0;
+}
+
+body.index-page .card-list .list-card .list-card__type-badge,
+body.category-list-page .card-list .list-card .list-card__type-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  border-radius: var(--radius-pill, 999px);
+  color: #5a5954;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(184, 148, 46, 0.28);
+}
+
+body.index-page .card-list .list-card.card--premium .list-card__type-badge,
+body.category-list-page .card-list .list-card.card--premium .list-card__type-badge {
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-gold-dark, #967622), var(--color-gold, #c9a227));
+  border-color: transparent;
+}
+
+body.index-page .card-list .list-card .list-card__type-badge--skill,
+body.category-list-page .card-list .list-card .list-card__type-badge--skill {
+  color: #5a6b4a;
+  background: #e8efe4;
+  border-color: #d0ddc8;
+}
+
+body.index-page .card-list .list-card .list-card__type-badge--job,
+body.category-list-page .card-list .list-card .list-card__type-badge--job {
+  color: #6b4a3d;
+  background: #f0e6e0;
+  border-color: #e8d0c0;
+}
+
+body.index-page .card-list .list-card .list-card__type-badge--worker,
+body.category-list-page .card-list .list-card .list-card__type-badge--worker {
+  color: #4a5568;
+  background: #eef2f7;
+  border-color: #d5dde8;
+}
+
+body.index-page .card-list .list-card .list-card__stat,
+body.category-list-page .card-list .list-card .list-card__stat {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #6f6e6a);
+  white-space: nowrap;
+}
+
+body.index-page .card-list .list-card .list-card__stat-icon,
+body.category-list-page .card-list .list-card .list-card__stat-icon {
+  font-size: 0.75rem;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+/* タイトル — カードの主役（価格より上）※ list-card 有無どちらも対象 */
+body.index-page .card-list .listing-card-title,
+body.category-list-page .card-list .listing-card-title {
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 0 0 8px;
+  color: #0f172a;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  visibility: visible;
+  opacity: 1;
+  min-height: 0;
+}
+
+body.index-page .card-list .listing-card-title__link,
+body.category-list-page .card-list .listing-card-title__link {
+  color: inherit;
+  -webkit-text-fill-color: currentColor;
+  text-decoration: none;
+}
+
+/* 旧タイトル要素は一覧では非表示（detail 用 class との競合回避） */
+body.index-page .card-list .list-card .card__title:not(.listing-card-title),
+body.category-list-page .card-list .list-card .card__title:not(.listing-card-title) {
+  display: none !important;
+}
+
+/* 価格 — 補足（タイトルより弱く） */
+body.index-page .card-list .list-card .card__price,
+body.category-list-page .card-list .list-card .card__price,
+body.index-page .card-list .list-card.card--premium .card__main > .card__price,
+body.category-list-page .card-list .list-card.card--premium .card__main > .card__price,
+body.index-page .card-list .list-card.card--free .card__main > .card__price,
+body.category-list-page .card-list .list-card.card--free .card__main > .card__price {
+  order: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: var(--color-text-muted, #6f6e6a);
+}
+
+body.index-page .card-list .list-card.card--premium .card__price,
+body.category-list-page .card-list .list-card.card--premium .card__price {
+  color: #8a7340;
+}
+
+/* タグはタイトル・価格の下 */
+body.index-page .card-list .list-card .list-card__tags,
+body.category-list-page .card-list .list-card .list-card__tags {
+  margin-top: 0.125rem;
+}
+
+/* 左カラム — 画像 + 出品者 */
+body.index-page .list-card .list-card-media-column,
+body.category-list-page .list-card .list-card-media-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+body.index-page .list-card .list-card-media .card__image,
+body.category-list-page .list-card .list-card-media .card__image {
+  width: 100%;
+  max-height: 170px;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* 出品者行（横並び） */
+body.index-page .list-card-seller,
+body.category-list-page .list-card-seller {
+  margin: 0;
+  padding: 0.75rem 0.85rem 0.9rem;
+  border-top: 1px solid rgba(184, 148, 46, 0.15);
+  flex-shrink: 0;
+}
+
+body.index-page .list-card-seller__row,
+body.category-list-page .list-card-seller__row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 0;
+}
+
+body.index-page .list-card-seller__avatar-wrap,
+body.category-list-page .list-card-seller__avatar-wrap {
+  flex-shrink: 0;
+}
+
+body.index-page .list-card-seller__avatar,
+body.category-list-page .list-card-seller__avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  border: 3px solid var(--rank-color, rgba(184, 148, 46, 0.35));
+  box-shadow: 0 2px 8px var(--rank-avatar-shadow, rgba(15, 23, 42, 0.08));
+}
+
+body.index-page .list-card-seller__identity,
+body.category-list-page .list-card-seller__identity {
+  flex: 1;
+  min-width: 0;
+}
+
+body.index-page .list-card-seller__name-line,
+body.category-list-page .list-card-seller__name-line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  min-width: 0;
+}
+
+body.index-page .list-card-seller__name,
+body.category-list-page .list-card-seller__name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  position: static;
+  transform: none;
+  left: auto;
+}
+
+body.index-page .list-card-seller__name-line .seller-rank-chip,
+body.category-list-page .list-card-seller__name-line .seller-rank-chip {
+  flex-shrink: 0;
+  position: relative;
+  top: 0;
+  max-width: none;
+}
+
+body.index-page .list-card-seller__meta,
+body.category-list-page .list-card-seller__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-top: 0.15rem;
+  min-height: 0;
+}
+
+body.index-page .list-card-seller__rating,
+body.category-list-page .list-card-seller__rating {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.35rem;
+  line-height: 1.35;
+}
+
+body.index-page .list-card-seller__rating-score,
+body.category-list-page .list-card-seller__rating-score {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #8a7340;
+}
+
+body.index-page .list-card-seller__rating-count,
+body.category-list-page .list-card-seller__rating-count {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #5a5954;
+}
+
+/* UI確認用固定評価 — @ID の下・対応可能の上 */
+body.index-page .list-card-seller__rating--ui-fixed,
+body.category-list-page .list-card-seller__rating--ui-fixed {
+  display: inline-flex !important;
+}
+
+body.index-page .list-card-seller__rating[hidden]:not(.list-card-seller__rating--ui-fixed),
+body.category-list-page .list-card-seller__rating[hidden]:not(.list-card-seller__rating--ui-fixed) {
+  display: none !important;
+}
+
+body.index-page .list-card-seller__availability,
+body.category-list-page .list-card-seller__availability {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #4a5568;
+}
+
+body.index-page .list-card-seller__availability[hidden],
+body.category-list-page .list-card-seller__availability[hidden] {
+  display: none !important;
+}
+
+body.index-page .list-card-seller__status-dot,
+body.category-list-page .list-card-seller__status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #94a3b8;
+}
+
+body.index-page .list-card-seller__availability.is-online .list-card-seller__status-dot,
+body.category-list-page .list-card-seller__availability.is-online .list-card-seller__status-dot {
+  background: #3d9a5c;
+  box-shadow: 0 0 0 2.5px rgba(61, 154, 92, 0.32);
+}
+
+body.index-page .list-card-seller__availability.is-online,
+body.category-list-page .list-card-seller__availability.is-online {
+  color: #3d6b4a;
+}
+
+body.index-page .list-card-seller__availability.is-busy .list-card-seller__status-dot,
+body.category-list-page .list-card-seller__availability.is-busy .list-card-seller__status-dot {
+  background: #c9a227;
+}
+
+body.index-page .list-card-seller__availability.is-away .list-card-seller__status-dot,
+body.category-list-page .list-card-seller__availability.is-away .list-card-seller__status-dot {
+  background: #94a3b8;
+}
+
+body.index-page .list-card-seller__handle,
+body.category-list-page .list-card-seller__handle {
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #5a5954;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.index-page .list-card-seller .seller-name,
+body.category-list-page .list-card-seller .seller-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+/* 一覧 — ランクチップ・名前・枠（控えめ） */
+body.index-page .list-card-seller .seller-rank-chip,
+body.category-list-page .list-card-seller .seller-rank-chip {
+  padding: 0.18rem 0.45rem 0.16rem;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  max-width: 5.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+body.index-page .list-card-seller .seller-rank-chip::after,
+body.category-list-page .list-card-seller .seller-rank-chip::after {
+  top: -5px;
+  width: 9px;
+  height: 7px;
+  opacity: 0.75;
+}
+
+body.index-page .list-card-seller .seller-name.rank-gold,
+body.index-page .list-card-seller .seller-name.rank-platinum,
+body.index-page .list-card-seller .seller-name.rank-legend,
+body.category-list-page .list-card-seller .seller-name.rank-gold,
+body.category-list-page .list-card-seller .seller-name.rank-platinum,
+body.category-list-page .list-card-seller .seller-name.rank-legend {
+  animation: none;
+  filter: none;
+}
+
+body.index-page .list-card-seller .profile-avatar.rank-legend,
+body.category-list-page .list-card-seller .profile-avatar.rank-legend {
+  animation: none;
+  border-width: 2px;
+  box-shadow:
+    0 0 0 1px rgba(167, 139, 250, 0.2),
+    0 2px 6px rgba(124, 58, 237, 0.1);
+}
+
+/* カード左アクセント（極薄・全ランク） */
+body.index-page .card-list .list-card[class*="list-card--rank-"],
+body.category-list-page .card-list .list-card[class*="list-card--rank-"] {
+  position: relative;
+  background-image: linear-gradient(
+    90deg,
+    var(--list-card-rank-wash, transparent) 0%,
+    transparent 24%
+  );
+}
+
+body.index-page .card-list .list-card[class*="list-card--rank-"]::after,
+body.category-list-page .card-list .list-card[class*="list-card--rank-"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--list-card-rank-accent, rgba(184, 148, 46, 0.35));
+  opacity: 0.55;
+  pointer-events: none;
+  z-index: 2;
+}
+
+body.index-page .card-list .list-card.list-card--rank-new,
+body.category-list-page .card-list .list-card.list-card--rank-new {
+  --list-card-rank-wash: rgba(249, 115, 22, 0.05);
+  --list-card-rank-accent: #f97316;
+}
+
+body.index-page .card-list .list-card.list-card--rank-bronze,
+body.category-list-page .card-list .list-card.list-card--rank-bronze {
+  --list-card-rank-wash: rgba(184, 115, 51, 0.05);
+  --list-card-rank-accent: #b87333;
+}
+
+body.index-page .card-list .list-card.list-card--rank-silver,
+body.category-list-page .card-list .list-card.list-card--rank-silver {
+  --list-card-rank-wash: rgba(148, 163, 184, 0.06);
+  --list-card-rank-accent: #94a3b8;
+}
+
+body.index-page .card-list .list-card.list-card--rank-gold,
+body.category-list-page .card-list .list-card.list-card--rank-gold {
+  --list-card-rank-wash: rgba(212, 166, 58, 0.06);
+  --list-card-rank-accent: #d4a63a;
+}
+
+body.index-page .card-list .list-card.list-card--rank-platinum,
+body.category-list-page .card-list .list-card.list-card--rank-platinum {
+  --list-card-rank-wash: rgba(186, 198, 214, 0.07);
+  --list-card-rank-accent: #94a3b8;
+}
+
+body.index-page .card-list .list-card.list-card--rank-legend,
+body.category-list-page .card-list .list-card.list-card--rank-legend {
+  --list-card-rank-wash: rgba(167, 139, 250, 0.08);
+  --list-card-rank-accent: #a78bfa;
+}
+
+/* ── 一覧横長カード（無料・上位掲載共通）— 画像左 / 情報中央 / CTA右 ── */
+body.index-page .card-list .list-card.list-card--horizontal,
+body.category-list-page .card-list .list-card.list-card--horizontal {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 228px) minmax(0, 1fr) minmax(8.5rem, auto);
+  grid-template-rows: minmax(0, 1fr);
+  align-items: stretch;
+  gap: 0;
+  box-sizing: border-box;
+  min-height: calc(148px + 2.85rem);
+  overflow: hidden;
+  border-radius: var(--radius-xl, 1rem);
+}
+
+body.index-page .card-list .list-card.list-card--horizontal.card--free,
+body.category-list-page .card-list .list-card.list-card--horizontal.card--free {
+  background: #fff;
+  border: 1px solid #dcd8ce;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(26, 26, 26, 0.06));
+}
+
+body.index-page .card-list .list-card.list-card--horizontal .card__decor,
+body.category-list-page .card-list .list-card.list-card--horizontal .card__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* 左：画像のみ */
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__media,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__media {
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 1.15rem 0.75rem 1.15rem 1rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__media .card__media-wrap,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__media .card__media-wrap {
+  width: 100%;
+  max-width: 212px;
+  height: auto;
+  max-height: 148px;
+  aspect-ratio: 16 / 10;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0.55rem;
+  flex-shrink: 0;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__media .card__image,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__media .card__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-height: 148px;
+  min-height: 0;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+/* 中央：出品者 → タイトル → 価格 → タグ */
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.65rem;
+  min-width: 0;
+  padding: 1.15rem 1.05rem 1.15rem 0.95rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller {
+  margin: 0;
+  padding: 0;
+  border-top: none;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__row,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__row {
+  gap: 0.75rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__avatar,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__avatar {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__name-line,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__name-line {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.5rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__name-line .seller-rank-chip,
+body.category-list-page
+  .card-list
+  .list-card--horizontal
+  .list-card-horizontal__content
+  .list-card-seller__name-line
+  .seller-rank-chip {
+  flex-shrink: 0;
+  order: 0;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__name-line .list-card-seller__name,
+body.category-list-page
+  .card-list
+  .list-card--horizontal
+  .list-card-horizontal__content
+  .list-card-seller__name-line
+  .list-card-seller__name {
+  order: 1;
+  flex: 1;
+  min-width: 0;
+  font-size: 0.9375rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__handle,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__handle {
+  margin-top: 0.12rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__meta,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card-seller__meta {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.85rem;
+  margin-top: 0.28rem;
+  row-gap: 0.35rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .listing-card-title,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .listing-card-title {
+  margin: 0.55rem 0 0.2rem;
+  font-size: 1.125rem;
+  font-weight: 800;
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .card__price,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .card__price {
+  margin: 0.15rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-muted, #6f6e6a);
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card__tags,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .list-card__tags {
+  margin: 0.45rem 0 0.1rem;
+  gap: 0.45rem;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .card__tag,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .card__tag {
+  min-height: 30px;
+  padding: 0.14rem 0.55rem;
+  font-size: 0.6875rem;
+}
+
+/* 右：CTA（上段はお気に入り用の余白、下段中央にボタン） */
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__cta,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__cta {
+  grid-column: 3;
+  display: grid;
+  grid-template-rows: 3.5rem 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  justify-items: center;
+  align-self: stretch;
+  box-sizing: border-box;
+  min-width: 8.5rem;
+  padding: 0 1.55rem 1.2rem 0.85rem;
+  padding-top: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button {
+  grid-row: 2;
+  align-self: center;
+  justify-self: center;
+  flex-shrink: 0;
+  min-width: 6rem;
+  max-width: 8.25rem;
+  width: auto;
+  height: 38px;
+  min-height: 38px;
+  padding: 0 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button--outline,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button--outline {
+  align-self: center;
+  width: auto;
+  max-width: 8.25rem;
+  color: #5a5954;
+  background: transparent;
+  border: 1px solid #d0ccc2;
+  box-shadow: none;
+}
+
+body.index-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button--outline:hover,
+body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button--outline:hover {
+  color: var(--color-gold-dark, #967622);
+  border-color: var(--color-gold, #c9a227);
+  background: var(--color-gold-subtle, #faf6ec);
+  filter: none;
+}
+
+/* ── 上位掲載のみの差分 ── */
+body.index-page .card-list .list-card.list-card--horizontal.is-featured,
+body.category-list-page .card-list .list-card.list-card--horizontal.is-featured {
+  background: linear-gradient(
+    165deg,
+    rgba(255, 251, 240, 0.98) 0%,
+    rgba(252, 246, 232, 0.94) 100%
+  );
+  border: 1.5px solid rgba(193, 168, 88, 0.42);
+  box-shadow:
+    0 10px 28px rgba(120, 98, 42, 0.1),
+    0 2px 8px rgba(90, 74, 32, 0.06);
+}
+
+body.index-page .card-list .list-card.is-featured .list-card-featured-badge,
+body.category-list-page .card-list .list-card.is-featured .list-card-featured-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 4;
+  font-size: 0.5625rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0.28rem 0.62rem 0.28rem 0.5rem;
+  color: #fff;
+  background: linear-gradient(
+    128deg,
+    #8f7120 0%,
+    var(--color-gold-dark, #967622) 38%,
+    var(--color-gold-light, #d4b85c) 100%
+  );
+  border: none;
+  border-radius: var(--radius-xl, 1rem) 0 var(--radius-lg, 0.65rem) 0;
+  box-shadow: 0 2px 10px rgba(150, 118, 34, 0.28);
+}
+
+body.index-page .card-list .list-card.is-featured .list-card-horizontal__content .card__tag,
+body.category-list-page .card-list .list-card.is-featured .list-card-horizontal__content .card__tag {
+  color: #7a5710;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(193, 168, 88, 0.28);
+}
+
+body.index-page .card-list .list-card.is-featured .list-card-horizontal__cta .card__button:not(.card__button--outline),
+body.category-list-page .card-list .list-card.is-featured .list-card-horizontal__cta .card__button:not(.card__button--outline) {
+  letter-spacing: 0.04em;
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-gold-dark, #967622), var(--color-gold, #c9a227));
+  border: 1px solid rgba(193, 168, 88, 0.35);
+  box-shadow: 0 2px 10px rgba(184, 148, 46, 0.22);
+}
+
+body.index-page .card-list .list-card.is-featured .list-card-horizontal__cta .card__button:not(.card__button--outline):hover,
+body.category-list-page
+  .card-list
+  .list-card.is-featured
+  .list-card-horizontal__cta
+  .card__button:not(.card__button--outline):hover {
+  color: #fff;
+  filter: brightness(1.06);
+  box-shadow: 0 4px 14px rgba(184, 148, 46, 0.28);
+}
+
+body.index-page .card-list__item:has(.list-card--horizontal) > .card-list__favorite,
+body.category-list-page .card-list__item:has(.list-card--horizontal) > .card-list__favorite {
+  top: 1.1rem;
+  right: 1.1rem;
+  z-index: 7;
+}
+
+@media (max-width: 767px) {
+  body.index-page .card-list .list-card.list-card--horizontal,
+  body.category-list-page .card-list .list-card.list-card--horizontal {
+    grid-template-columns: minmax(0, 132px) minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    min-height: calc(120px + 2.25rem);
+  }
+
+  body.index-page .card-list .list-card--horizontal .list-card-horizontal__media,
+  body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__media {
+    grid-row: 1 / span 2;
+    padding: 1rem 0.6rem 1rem 0.85rem;
+  }
+
+  body.index-page .card-list .list-card--horizontal .list-card-horizontal__media .card__media-wrap,
+  body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__media .card__media-wrap {
+    max-width: none;
+    max-height: 120px;
+  }
+
+  body.index-page .card-list .list-card--horizontal .list-card-horizontal__media .card__image,
+  body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__media .card__image {
+    max-height: 120px;
+  }
+
+  body.index-page .card-list .list-card--horizontal .list-card-horizontal__content,
+  body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content {
+    grid-column: 2;
+    padding: 1rem 0.95rem 0.65rem;
+    gap: 0.55rem;
+  }
+
+  body.index-page .card-list .list-card--horizontal .list-card-horizontal__cta,
+  body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__cta {
+    grid-column: 2;
+    grid-row: 2;
+    grid-template-rows: 3.25rem auto;
+    justify-items: end;
+    align-self: start;
+    min-width: 0;
+    padding: 0 1.05rem 1rem;
+  }
+
+  body.index-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button,
+  body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__cta .card__button {
+    grid-row: 2;
+    justify-self: end;
+  }
+
+  body.index-page .card-list .list-card--horizontal .list-card-horizontal__content .listing-card-title,
+  body.category-list-page .card-list .list-card--horizontal .list-card-horizontal__content .listing-card-title {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 640px) {
+  body.index-page .list-card .list-card-media .card__image,
+  body.category-list-page .list-card .list-card-media .card__image {
+    max-height: 150px;
+  }
+
+  body.index-page .card-list .listing-card-title,
+  body.category-list-page .card-list .listing-card-title {
+    font-size: 18px;
+  }
+
+  body.index-page .list-card-seller__name,
+  body.category-list-page .list-card-seller__name {
+    font-size: 0.875rem;
+  }
+
+  body.index-page .card-list .list-card .list-card__stat,
+  body.category-list-page .card-list .list-card .list-card__stat {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* 最上部プレミアム枠 → listing-top-premium.css */

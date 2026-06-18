@@ -1,0 +1,1475 @@
+/* 飲食カテゴリ（restaurant）専用 — detail-shop.html をカフェUIへ寄せる */
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] {
+  background: #f7f7f5;
+  --food-accent: #d98a00;
+  --food-accent-deep: #c97900;
+  --food-ink: #111827;
+  --food-muted: #6b7280;
+  --food-border: #e5e7eb;
+  --food-radius: 18px;
+  --food-star: #e6a23c;
+  --food-earth: #b37e14;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-detail-container {
+  max-width: 1240px;
+}
+
+/* パンくず（小さめ） */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-breadcrumb {
+  font-size: 12px;
+  color: var(--food-muted);
+  margin: 10px 0 12px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-breadcrumb a {
+  color: var(--food-muted);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* FV サムネを6枚グリッドに */
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-gallery] {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-thumb-btn,
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-thumb-more {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-thumb-btn {
+  position: relative;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-thumb-more-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: inherit;
+  background: rgba(15, 23, 42, 0.45);
+  color: #fff;
+  font-weight: 1000;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+/* 店舗情報（1カラム表） */
+.food-info-card .shop-info-list {
+  display: none;
+}
+
+.food-info-table {
+  border-radius: 16px;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  background: #fff;
+  overflow: hidden;
+}
+
+.food-info-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.9fr) minmax(0, 2fr);
+  gap: 18px;
+  align-items: center;
+  padding: 14px 14px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.food-info-row:first-child {
+  border-top: none;
+}
+
+.food-info-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #374151;
+  font-weight: 1000;
+}
+
+.food-info-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--food-accent-deep);
+  flex: 0 0 auto;
+}
+
+.food-info-icon svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.food-info-val {
+  color: #111827;
+  font-weight: 800;
+  line-height: 1.7;
+}
+
+/* ── FV: 画像 / 情報 / こだわりポイント ── */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv {
+  display: grid;
+  /* 指定: 左35% / 中央45% / 右20% */
+  grid-template-columns: 35fr 45fr 20fr;
+  row-gap: 20px;
+  column-gap: 32px;
+  align-items: start;
+}
+
+/* 中央 ↔ 右 の余白を約40pxへ */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv__aside {
+  margin-left: 8px;
+}
+
+/* FV中央（情報）をLPっぽく並び替え */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-detail-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.food-category-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(217, 138, 0, 0.12);
+  color: var(--food-accent-deep);
+  border: 1px solid rgba(217, 138, 0, 0.18);
+  font-weight: 1000;
+  font-size: 12px;
+  align-self: flex-start;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-title] {
+  order: 1;
+  margin-top: 2px;
+  margin-bottom: 10px;
+  font-size: 2.15rem;
+  font-weight: 1000;
+  letter-spacing: -0.02em;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-company] {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-rating-row] {
+  order: 2;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-rating-row] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  color: var(--food-muted);
+  font-weight: 900;
+  font-size: 0.95rem;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-rating-stars] {
+  color: var(--food-star);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-rating-score] {
+  color: var(--food-ink);
+  font-weight: 1000;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-rating-count] {
+  color: var(--food-muted);
+  font-weight: 900;
+}
+
+/* 簡易住所（TOP用） */
+.food-top-location {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
+  color: var(--food-muted);
+}
+
+.food-top-location__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.food-top-location__icon {
+  color: #94a3b8;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-lead] {
+  order: 4;
+  margin-top: 2px;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  line-height: 1.6;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-genre-tags] {
+  order: 0;
+  margin-top: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-condition-tags] {
+  order: 6;
+  margin-top: 6px;
+  width: 100%;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-shop-restaurant-ctas] {
+  order: 7;
+  margin-top: 24px;
+}
+
+/* 簡易住所を評価の下に表示 */
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-quick] {
+  order: 3;
+  display: block !important;
+  margin: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv__aside {
+  position: static;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-sidebar__sticky {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-points[hidden] {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-points {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #fff;
+  padding: 24px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.04);
+}
+
+.shop-restaurant-points__title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--food-ink);
+}
+
+.shop-restaurant-points__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 18px;
+}
+
+.shop-restaurant-points__item {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.shop-restaurant-points__icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(217, 138, 0, 0.12);
+  color: var(--food-accent-deep);
+  font-weight: 900;
+}
+
+/* 中央CTA */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-ctas[hidden] {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-ctas {
+  display: flex;
+  gap: 18px;
+  margin-top: 0;
+}
+
+.shop-restaurant-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  min-width: 180px;
+  max-width: 220px;
+  min-height: 58px;
+  padding: 0 22px;
+  border-radius: 14px;
+  border: 1px solid var(--food-border);
+  background: #fff;
+  color: var(--food-ink);
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.shop-restaurant-cta__icon {
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+/* お手本: 相談=ゴールド塗り / 予約=白+枠 */
+.shop-restaurant-cta--consult {
+  border-color: transparent;
+  background: var(--food-earth);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08);
+}
+
+.shop-restaurant-cta--consult:hover {
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+  transform: translateY(-1px);
+}
+
+.shop-restaurant-cta--reserve {
+  background: #fff;
+  border-color: rgba(179, 126, 20, 0.55);
+  color: #111827;
+}
+
+.shop-restaurant-cta--reserve:hover {
+  background: rgba(217, 138, 0, 0.06);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+/* ── タブ ── */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-tabs[hidden] {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-tabs {
+  display: flex;
+  gap: 18px;
+  margin: 14px 0 18px;
+  padding: 0 2px 8px;
+  border-radius: 0;
+  border: none;
+  background: transparent;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.shop-restaurant-tab {
+  flex: 0 0 auto;
+  padding: 10px 0;
+  border-radius: 0;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 0.86rem;
+  color: #374151;
+  border: none;
+  border-bottom: 2px solid transparent;
+}
+
+.shop-restaurant-tab.is-active {
+  color: var(--food-accent-deep);
+  border-bottom-color: var(--food-accent);
+  background: transparent;
+}
+
+/* ── 本文 2カラム ── */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-body[hidden] {
+  display: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
+  gap: 18px 22px;
+  align-items: start;
+  margin-top: 0;
+  margin-bottom: 28px;
+}
+
+body.shop-detail-page.shop-detail-page--action-nav[data-shop-category-profile="restaurant"] .shop-restaurant-body {
+  margin-top: 0;
+}
+
+/* サイドバー */
+.shop-restaurant-sidebar {
+  position: sticky;
+  top: 92px;
+  display: grid;
+  gap: 14px;
+}
+
+.food-side-card {
+  border: 1px solid var(--food-border);
+  border-radius: var(--food-radius);
+  background: #fff;
+  padding: 14px 14px 16px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.04);
+}
+
+.food-side-card__title {
+  margin: 0 0 10px;
+  font-weight: 900;
+  font-size: 0.95rem;
+  color: var(--food-ink);
+}
+
+.food-side-kv {
+  display: grid;
+  gap: 6px;
+  color: #374151;
+  font-size: 0.88rem;
+}
+
+.food-side-kv__row {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+.food-side-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.food-side-btn {
+  min-height: 42px;
+  border-radius: 14px;
+  border: 1px solid var(--food-border);
+  background: #fff;
+  color: var(--food-ink);
+  font-weight: 900;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.86rem;
+}
+
+.food-side-btn--primary {
+  border-color: transparent;
+  background: linear-gradient(135deg, #f3c96a, var(--food-accent));
+}
+
+.food-map {
+  height: 150px;
+  border-radius: 14px;
+  border: 1px solid #eef2f7;
+  background: radial-gradient(circle at 40% 35%, #fff 0%, #f3f4f6 45%, #eceff3 100%);
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.food-map::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 16px;
+  height: 16px;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: rgba(217, 138, 0, 0.9);
+  border-radius: 4px;
+  box-shadow: 0 10px 22px rgba(217, 138, 0, 0.25);
+}
+
+/* ── セクション: 見出しなど ── */
+.food-sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.food-sec-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--food-ink);
+}
+
+.food-link {
+  color: var(--food-accent-deep);
+  font-weight: 900;
+  text-decoration: none;
+  font-size: 0.88rem;
+}
+
+.food-link:hover {
+  text-decoration: underline;
+}
+
+/* 紹介写真（上部の横並び） */
+.food-intro-photos {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* メニューカード */
+.food-menu-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.food-menu-card {
+  border: 1px solid var(--food-border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.food-menu-card__img {
+  width: 100%;
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.food-menu-card__img img {
+  width: 74px;
+  height: 74px;
+  border-radius: 999px;
+  object-fit: cover;
+  display: block;
+  border: 1px solid #eef2f7;
+}
+
+.food-menu-card__body {
+  padding: 10px 10px 12px;
+}
+
+.food-menu-card__name {
+  margin: 0;
+  font-weight: 900;
+  font-size: 0.9rem;
+  color: var(--food-ink);
+}
+
+.food-menu-card__price {
+  margin: 6px 0 0;
+  color: #374151;
+  font-weight: 900;
+  font-size: 0.88rem;
+}
+
+.food-menu-card__price small {
+  font-size: 0.78rem;
+  color: var(--food-muted);
+  font-weight: 700;
+}
+
+/* 写真 */
+.food-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.food-photo {
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid #eef2f7;
+  aspect-ratio: 16 / 11;
+  background: #e5e7eb;
+}
+
+.food-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/*
+ * 飲食口コミ：layout profile が goods_interior でも .food-reviews-* を使うため
+ * data-shop-category-profile=restaurant 以外でも色を定義する
+ */
+body.shop-detail-page[data-shop-category-key="restaurant"] #section-reviews,
+body.shop-detail-page #section-reviews:has(.food-reviews-layout),
+body.shop-detail-page #section-reviews:has(.food-reviews-top) {
+  --food-ink: #111827;
+  --food-muted: #6b7280;
+  --food-star: #f59e0b;
+  --food-accent: #fbbf24;
+}
+
+body.shop-detail-page #section-reviews .food-reviews-scoreblock__num {
+  color: #111827;
+  font-size: 3.2rem;
+  font-weight: 1000;
+  line-height: 1;
+}
+
+body.shop-detail-page #section-reviews .food-reviews-scoreblock__stars,
+body.shop-detail-page #section-reviews .food-review-stars.detail-gold-stars,
+body.shop-detail-page #section-reviews .food-star.detail-gold-stars,
+body.shop-detail-page #section-reviews .food-review-stars,
+body.shop-detail-page #section-reviews .food-star {
+  color: #f59e0b;
+  letter-spacing: 0.1em;
+  font-weight: 900;
+}
+
+body.shop-detail-page #section-reviews .food-reviews-scoreblock__count {
+  color: #6b7280;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+body.shop-detail-page #section-reviews .food-review-rate {
+  color: #6b7280;
+  font-weight: 1000;
+}
+
+/* 口コミ（参考UI寄せ） */
+.food-reviews-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.food-reviews-summary-band {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 2px 0 4px;
+}
+
+.food-reviews-top {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.food-reviews-scoreblock {
+  padding: 6px 4px;
+  display: grid;
+  gap: 8px;
+}
+
+.food-reviews-barsblock {
+  padding: 6px 0;
+  width: 100%;
+  max-width: 520px;
+}
+
+.food-reviews-list__featured {
+  margin-bottom: 4px;
+}
+
+.food-reviews-list__featured .food-review-pickup {
+  margin: 0;
+}
+
+@media (min-width: 961px) {
+  body.shop-detail-page #section-reviews .food-reviews-layout {
+    gap: 18px;
+  }
+
+  body.shop-detail-page #section-reviews .food-reviews-summary-band {
+    max-width: 280px;
+  }
+
+  body.shop-detail-page #section-reviews .food-reviews-barsblock {
+    max-width: 440px;
+  }
+
+  body.shop-detail-page #section-reviews .food-reviews-list {
+    margin-top: 4px;
+    border-top: 1px solid rgba(17, 24, 39, 0.06);
+    padding-top: 4px;
+  }
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page #section-reviews .food-reviews-summary-band {
+    justify-content: center;
+    text-align: center;
+    padding: 4px 0 10px;
+  }
+
+  body.shop-detail-page #section-reviews .food-reviews-scoreblock {
+    justify-items: center;
+    width: 100%;
+  }
+
+  body.shop-detail-page #section-reviews .food-reviews-scoreblock__num {
+    font-size: 2.75rem;
+  }
+
+  body.shop-detail-page #section-reviews .food-reviews-barsblock {
+    max-width: none;
+    width: 100%;
+  }
+
+  body.shop-detail-page:has(.shop-mobile-inquiry-dock) #section-reviews,
+  body.shop-detail-page--native-mobile:has(.shop-mobile-inquiry-dock) #section-reviews {
+    padding-bottom: calc(
+      var(--shop-mobile-inquiry-dock-h, 56px) + var(--tasu-app-tabbar-total, 52px) + 28px
+    ) !important;
+    scroll-margin-bottom: calc(var(--shop-mobile-inquiry-dock-h, 56px) + var(--tasu-app-tabbar-total, 52px) + 12px);
+  }
+
+  body.shop-detail-page #section-reviews .food-reviews-footer {
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+  }
+
+  body.shop-detail-page #section-reviews .food-review-more-btn {
+    scroll-margin-bottom: calc(
+      var(--shop-mobile-inquiry-dock-h, 56px) + var(--tasu-app-tabbar-total, 52px) + 48px
+    );
+  }
+}
+
+.food-reviews-scoreblock__num {
+  font-size: 3.2rem;
+  font-weight: 1000;
+  line-height: 1;
+  color: var(--food-ink, #111827);
+}
+
+.food-reviews-scoreblock__stars {
+  margin-top: 10px;
+  color: var(--food-star, #f59e0b);
+  letter-spacing: 0.12em;
+  font-weight: 900;
+}
+
+.food-reviews-scoreblock__count {
+  margin-top: 8px;
+  color: var(--food-muted, #6b7280);
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.food-reviews-barsblock {
+  padding: 6px 0;
+}
+
+.food-reviews-bar {
+  display: grid;
+  grid-template-columns: 18px 1fr 56px;
+  gap: 10px;
+  align-items: center;
+  margin: 9px 0;
+  color: #374151;
+  font-weight: 900;
+  font-size: 0.86rem;
+}
+
+.food-reviews-bar__track {
+  height: 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.food-reviews-bar__fill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #f3c96a, var(--food-accent));
+  border-radius: 999px;
+}
+
+.food-reviews-bar__pct {
+  text-align: right;
+  color: var(--food-muted);
+  font-weight: 900;
+  font-size: 0.84rem;
+}
+
+.food-review-pickup {
+  border-radius: 16px;
+  border: 1px solid rgba(217, 138, 0, 0.16);
+  background: rgba(255, 248, 235, 0.85);
+  padding: 14px;
+}
+
+.food-review-pickup__head {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  gap: 10px;
+  align-items: center;
+}
+
+.food-review-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.food-review-avatar span {
+  font-weight: 1000;
+  color: #111827;
+}
+
+.food-review-meta {
+  min-width: 0;
+}
+
+.food-review-name {
+  margin: 0;
+  font-weight: 1000;
+  color: var(--food-ink);
+  font-size: 0.95rem;
+}
+
+.food-review-sub {
+  margin: 4px 0 0;
+  color: var(--food-muted);
+  font-weight: 900;
+  font-size: 0.84rem;
+}
+
+.food-star {
+  color: var(--food-star, #f59e0b);
+  letter-spacing: 0.1em;
+  font-weight: 1000;
+}
+
+.food-date {
+  color: var(--food-muted);
+  font-weight: 900;
+}
+
+.food-reviews-scoreblock__stars,
+.food-review-stars,
+body.shop-detail-page[data-shop-category-profile="restaurant"] .detail-gold-stars,
+body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-hero-rating-stars],
+body.shop-detail-page[data-shop-category-key="restaurant"] .detail-gold-stars,
+body.shop-detail-page[data-shop-category-key="restaurant"] [data-biz-detail-hero-rating-stars],
+body.shop-detail-page[data-shop-category-profile="restaurant"] .food-star,
+body.shop-detail-page[data-shop-category-key="restaurant"] .food-star,
+body.shop-detail-page[data-shop-category-profile="restaurant"] .food-review-stars,
+body.shop-detail-page[data-shop-category-key="restaurant"] .food-review-stars,
+body.shop-detail-page[data-shop-category-profile="restaurant"] .food-reviews-scoreblock__stars,
+body.shop-detail-page[data-shop-category-key="restaurant"] .food-reviews-scoreblock__stars {
+  color: var(--food-star, #f59e0b);
+}
+
+/* 設備バッジ（FV内） */
+.food-facility-chip {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  font-weight: 900;
+  font-size: 12px;
+  margin-right: 8px;
+  margin-top: 8px;
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="restaurant"] [data-biz-detail-title] {
+    margin-top: 4px;
+  }
+}
+
+/* =========================================================
+   飲食：下部固定ナビ（邪魔にならないように調整）
+   - PCでは非表示（スマホだけでOK）
+   - フッター付近では被らないようフェードアウト
+   ========================================================= */
+
+@media (min-width: 961px) {
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-sticky-bar {
+    display: none;
+  }
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-sticky-bar {
+    bottom: 12px;
+    z-index: 20;
+    max-width: calc(100% - 20px);
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-sticky-bar__inner {
+    max-width: 100%;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-sticky-bar.is-near-footer {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+}
+
+.food-review-stars {
+  white-space: nowrap;
+  color: var(--food-star, #f59e0b);
+  font-weight: 1000;
+  letter-spacing: 0.06em;
+  font-size: 0.9rem;
+}
+
+.food-review-rate {
+  color: var(--food-muted);
+  font-weight: 1000;
+  letter-spacing: 0;
+  margin-left: 6px;
+}
+
+.food-review-text {
+  margin: 10px 0 0;
+  color: #374151;
+  line-height: 1.7;
+  font-size: 0.9rem;
+}
+
+.food-reviews-list {
+  margin-top: 12px;
+  border-top: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.food-review-row {
+  display: grid;
+  gap: 8px;
+  padding: 14px 2px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06);
+}
+
+.food-review-row__head {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 10px;
+  align-items: center;
+}
+
+.food-reviews-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.food-review-summary-card {
+  border: 1px solid var(--food-border);
+  border-radius: var(--food-radius);
+  background: #fff;
+  padding: 14px 14px 16px;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.04);
+}
+
+.food-review-summary {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.food-review-summary__score {
+  font-size: 2.1rem;
+  font-weight: 1000;
+  line-height: 1;
+  color: var(--food-ink);
+}
+
+.food-review-summary__meta {
+  display: grid;
+  gap: 4px;
+  color: var(--food-muted);
+  font-weight: 900;
+}
+
+.food-review-summary__stars {
+  color: var(--food-accent);
+  letter-spacing: 0.04em;
+}
+
+.food-review-summary__btn {
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.food-review-score {
+  border: 1px solid var(--food-border);
+  border-radius: 16px;
+  padding: 12px;
+  background: #fff;
+}
+
+.food-review-score__num {
+  font-size: 2.1rem;
+  font-weight: 1000;
+  color: var(--food-ink);
+  line-height: 1;
+}
+
+.food-review-score__meta {
+  margin-top: 6px;
+  color: var(--food-muted);
+  font-weight: 800;
+  font-size: 0.86rem;
+}
+
+.food-review-bars {
+  border: 1px solid var(--food-border);
+  border-radius: 16px;
+  padding: 12px;
+  background: #fff;
+}
+
+.food-review-bar {
+  display: grid;
+  grid-template-columns: 20px 1fr 42px;
+  gap: 10px;
+  align-items: center;
+  margin: 7px 0;
+  color: #374151;
+  font-weight: 800;
+  font-size: 0.86rem;
+}
+
+.food-review-bar__track {
+  height: 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  overflow: hidden;
+}
+
+.food-review-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f3c96a, var(--food-accent));
+  border-radius: 999px;
+}
+
+.food-review-list {
+  display: grid;
+  gap: 10px;
+}
+
+.food-review-more-btn {
+  min-height: 44px;
+  border-radius: 14px;
+  border: 1px solid var(--food-border);
+  background: #fff;
+  color: var(--food-ink);
+  font-weight: 900;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  padding: 0 18px;
+  min-width: min(520px, 100%);
+}
+
+.food-sns-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.food-sns-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 1000;
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.food-sns-icon--ig {
+  background: radial-gradient(circle at 30% 30%, #feda75, #d62976 50%, #4f5bd5 100%);
+}
+
+.food-sns-icon--x {
+  background: #111827;
+}
+
+.food-sns-icon--fb {
+  background: #1877f2;
+}
+
+/* 旧カード定義は新レイアウトへ統合したため不要 */
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv {
+    grid-template-columns: 1fr;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-body {
+    grid-template-columns: 1fr;
+  }
+
+  .shop-restaurant-sidebar {
+    position: static;
+  }
+
+  .food-menu-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .food-intro-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .food-photo-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* 店舗情報: 2カラム表をスマホ1カラムへ（住所の縦1文字折れ防止） */
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .food-info-table,
+  body.shop-detail-page[data-shop-category-key="restaurant"] .food-info-table {
+    width: 100%;
+    max-width: none;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .food-info-row,
+  body.shop-detail-page[data-shop-category-key="restaurant"] .food-info-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    grid-template-columns: none;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .food-info-key,
+  body.shop-detail-page[data-shop-category-key="restaurant"] .food-info-key {
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    flex: 0 0 auto;
+    gap: 8px;
+    margin: 0;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .food-info-icon,
+  body.shop-detail-page[data-shop-category-key="restaurant"] .food-info-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .food-info-val,
+  body.shop-detail-page[data-shop-category-key="restaurant"] .food-info-val {
+    flex: 1 1 auto;
+    align-self: center;
+    width: auto;
+    max-width: none;
+    text-align: left;
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .shop-restaurant-tabs {
+    border-radius: 18px;
+  }
+}
+
+/* =========================================================
+   飲食カテゴリ TOP 専用（参考画像レイアウト固定）
+   既存スタイルを追加ではなく、専用クラスで上書きする
+   ========================================================= */
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv {
+  /* お手本通り：Flexで3カラムを完全固定（重なりを物理的に防ぐ） */
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: nowrap;
+  width: 100%;
+  max-width: 1240px;
+  padding: 32px;
+  border-radius: 22px;
+  background: #fff;
+  box-sizing: border-box;
+  margin-bottom: 0;
+}
+
+/* 3カラム：左35% / 中央43% / 右22% */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-fv__media,
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-hero__media {
+  /* お手本：左38%（縮みすぎ防止のclamp） */
+  flex: 0 0 clamp(420px, 38%, 520px);
+  width: clamp(420px, 38%, 520px);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-fv__main,
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-detail-main-info {
+  /* 中央は残り幅を自然に使う（重なり防止の min-width:0 は維持） */
+  flex: 1 1 42%;
+  width: 42%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-fv__aside {
+  /* 右：こだわりポイント（20%）を常に右端に固定 */
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 280px;
+  min-width: 0;
+  margin-left: 0;
+  position: static;
+  transform: none;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-figure] {
+  width: 100%;
+  height: 310px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-img] {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* サムネ 64×64 / 6列 / gap 8 */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-gallery] {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-thumb-btn {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* 中央：順番を固定して詰める（重なり防止のため min-width:0） */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-detail-main-info {
+  min-width: 0;
+  gap: 12px;
+}
+
+/* 右カラムはGrid内に通常配置（余計なズラしを無効化） */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-fv__aside {
+  margin-left: 0;
+  position: static;
+  transform: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-genre-tags] {
+  order: 0;
+  margin-top: 0;
+  margin-bottom: 8px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-title] {
+  order: 1;
+  margin: 8px 0 12px;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-rating-row] {
+  order: 2;
+  margin: 0 0 14px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-rating-row] {
+  font-size: 14px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-quick] {
+  order: 3;
+  margin: 0 0 16px;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-lead] {
+  order: 4;
+  margin: 0 0 18px;
+  line-height: 1.8;
+  max-width: 420px;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-hero-condition-tags] {
+  order: 5;
+  margin-top: 0;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-shop-restaurant-ctas] {
+  order: 6;
+  margin-top: 24px;
+}
+
+/* CTA: 180×56 / gap 20 */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-restaurant-ctas {
+  display: flex;
+  gap: 16px;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-restaurant-cta {
+  flex: 1;
+  width: 48%;
+  height: 58px;
+  min-height: 58px;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 0 18px;
+}
+
+/* 相談=ゴールド塗り（#b37e14）/ 予約=白+枠 */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-restaurant-cta--consult {
+  background: var(--food-earth);
+  color: #fff;
+  box-shadow: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-restaurant-cta--reserve {
+  background: #fff;
+  border-color: rgba(179, 126, 20, 0.55);
+  color: #111827;
+  box-shadow: none;
+}
+
+/* 右：こだわりポイント 280px / padding 24 */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-restaurant-points {
+  width: 100%;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  background: rgba(255, 248, 235, 0.85);
+  box-shadow: none;
+  margin-top: 0;
+  min-height: 0;
+  max-height: none;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-restaurant-points__list {
+  gap: 18px;
+}
+
+/* TOPに出すタグは設備タグのみ（カテゴリ系タグは出さない） */
+body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .food-facility-chip {
+  font-size: 13px;
+  padding: 6px 12px;
+  margin-top: 8px;
+  margin-right: 8px;
+  height: 28px;
+  background: #f3f4f6;
+  color: #374151;
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-fv__media,
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-hero__media,
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv [data-biz-detail-gallery] {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .biz-detail-fv__aside {
+    width: 100%;
+    flex-basis: auto;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="restaurant"] .biz-detail-fv.food-top-fv .shop-restaurant-ctas {
+    flex-wrap: wrap;
+  }
+}
+
+/* 飲食：追従バー共通スタイルは detail-shop-store.css */
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .food-news-list .retail-news__item--static {
+  cursor: default;
+}
+
+body.shop-detail-page[data-shop-category-profile="restaurant"] .food-news-list .retail-news__item--static:hover {
+  transform: none;
+  box-shadow: none;
+}
+

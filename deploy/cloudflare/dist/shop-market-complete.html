@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>注文完了 | TASFUL市場</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-checkout.css">
+  <link rel="stylesheet" href="shop-market-complete.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-complete-page" data-page="shop_market_complete">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <main class="tasful-market-complete-main" aria-label="注文完了">
+    <div class="tasful-market-complete-card">
+      <p class="tasful-market-complete-card__icon" aria-hidden="true">✓</p>
+      <h1 class="tasful-market-complete-card__title">ご注文ありがとうございます</h1>
+      <p class="tasful-market-complete-card__lead">注文を受け付けました。</p>
+      <div class="tasful-market-complete-card__summary" data-tasful-complete-summary>
+        <p class="tasful-market-complete-card__shop" data-tasful-complete-shop>HARU CAFE</p>
+        <p class="tasful-market-complete-card__product" data-tasful-complete-product>季節のパンケーキ</p>
+        <dl class="tasful-market-complete-card__facts">
+          <div class="tasful-market-complete-card__fact">
+            <dt>注文番号</dt>
+            <dd data-tasful-complete-order-id>TM-DEMO</dd>
+          </div>
+          <div class="tasful-market-complete-card__fact">
+            <dt>合計</dt>
+            <dd data-tasful-complete-total>¥1,280</dd>
+          </div>
+        </dl>
+      </div>
+      <section class="tasful-market-complete-card__next" aria-label="次の流れ">
+        <h2 class="tasful-market-complete-card__next-title">次の流れ</h2>
+        <ul class="tasful-market-complete-card__next-list">
+          <li>注文内容は<a href="shop-market-order-history.html">注文履歴</a>から確認できます</li>
+          <li>店舗からの連絡・発送／受け取り案内をお待ちください</li>
+          <li>キャンセルや変更は店舗へお問い合わせください</li>
+        </ul>
+      </section>
+      <p class="tasful-market-complete-card__note">デモ注文のため、実際の決済・発送は行われません。</p>
+    </div>
+    <div class="tasful-market-complete-actions">
+      <a href="shop-store.html" class="tasful-market-complete-actions__btn tasful-market-complete-actions__btn--primary" data-tasful-complete-primary-link>商品を見る</a>
+      <a href="shop-store.html" class="tasful-market-complete-actions__btn tasful-market-complete-actions__btn--secondary" data-tasful-complete-secondary-link>TASFUL市場へ戻る</a>
+    </div>
+  </main>
+
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-complete.js"></script>
+</body>
+</html>

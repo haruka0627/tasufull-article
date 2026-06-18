@@ -1,0 +1,803 @@
+/* detail-shop.html — 仕上げ用（shop_store 専用） */
+@import url("detail-shop-store-bottom.css");
+
+body.shop-detail-page .detail-page-main,
+body.shop-detail-page .biz-detail-page-wrap,
+body.shop-detail-page [data-biz-detail-root] {
+  height: auto;
+  max-height: none;
+  overflow: visible;
+}
+
+body.shop-detail-page {
+  background: #f7f7f5;
+}
+
+body.shop-detail-page [data-biz-detail-root] {
+  width: 100%;
+}
+
+body.shop-detail-page .shop-detail-container {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  body.shop-detail-page .shop-detail-container {
+    padding: 0 16px;
+  }
+}
+
+body.shop-detail-page .shop-card {
+  border-radius: 24px;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #f1ede4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+/* データなしセクションは DOM 上も非表示（白枠・min-height 防止） */
+body.shop-detail-page .is-hidden,
+body.shop-detail-page .shop-section--empty,
+body.shop-detail-page #shop-sections-root > section.is-hidden,
+body.shop-detail-page #shop-sections-root > section[hidden],
+body.shop-detail-page #shop-sections-root [data-shop-section].is-hidden,
+body.shop-detail-page #shop-sections-root [data-shop-section][hidden] {
+  display: none !important;
+  visibility: hidden !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: hidden !important;
+}
+
+/* ── TOPカード（3カラム） ── */
+body.shop-detail-page .biz-detail-fv {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 32px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page.shop-detail-page--native-mobile .biz-detail-fv:not(.retail-top-fv) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "media info"
+      "cta cta";
+  }
+
+  body.shop-detail-page.shop-detail-page--native-mobile .biz-detail-fv:not(.retail-top-fv) .biz-detail-fv__media {
+    grid-area: media;
+  }
+
+  body.shop-detail-page.shop-detail-page--native-mobile .biz-detail-fv:not(.retail-top-fv) .biz-detail-fv__main {
+    grid-area: info;
+  }
+
+  body.shop-detail-page.shop-detail-page--native-mobile .biz-detail-fv:not(.retail-top-fv) .biz-detail-fv__aside {
+    grid-area: cta;
+  }
+}
+
+@media (max-width: 720px) {
+  body.shop-detail-page.shop-detail-page--native-mobile .biz-detail-fv:not(.retail-top-fv) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "info"
+      "cta";
+    padding: 20px 18px;
+    border-radius: 20px;
+  }
+}
+
+body.shop-detail-page .biz-detail-hero__figure {
+ aspect-ratio: 4 / 3;
+ border-radius: 18px;
+ overflow: hidden;
+}
+
+body.shop-detail-page .biz-detail-hero__figure img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
+}
+
+body.shop-detail-page [data-biz-detail-gallery] {
+ display: flex;
+ gap: 8px;
+ margin-top: 12px;
+ overflow: hidden;
+}
+
+body.shop-detail-page .shop-thumb-btn {
+ width: 60px;
+ height: 60px;
+ padding: 0;
+ border: 2px solid transparent;
+ border-radius: 12px;
+ overflow: hidden;
+ background: #eef2f7;
+ cursor: pointer;
+}
+
+body.shop-detail-page .shop-thumb-btn.is-active {
+ border-color: #d4af37;
+}
+
+body.shop-detail-page .shop-thumb-btn img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
+}
+
+body.shop-detail-page .shop-thumb-more {
+ width: 60px;
+ height: 60px;
+ border-radius: 12px;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ font-weight: 800;
+ color: #64748b;
+ background: #f1f5f9;
+ border: 1px dashed #cbd5e1;
+}
+
+body.shop-detail-page .shop-tag {
+ display: inline-flex;
+ align-items: center;
+ height: 26px;
+ padding: 0 10px;
+ border-radius: 999px;
+ font-size: 12px;
+ font-weight: 700;
+ color: #334155;
+ background: #f1f5f9;
+ border: 1px solid #e2e8f0;
+ margin-right: 8px;
+ margin-top: 8px;
+}
+
+body.shop-detail-page .shop-tag--top {
+ background: #fff7df;
+ border-color: rgba(212, 175, 55, 0.35);
+ color: #7a5e10;
+}
+
+body.shop-detail-page [data-biz-detail-title] {
+ font-size: clamp(28px, 2.4vw, 34px);
+ line-height: 1.22;
+ margin: 8px 0 10px;
+ letter-spacing: -0.01em;
+}
+
+body.shop-detail-page [data-biz-detail-company] {
+ font-size: 16px;
+ font-weight: 800;
+ margin: 0;
+ color: #1e293b;
+}
+
+body.shop-detail-page [data-biz-detail-hero-lead] {
+ display: -webkit-box;
+ -webkit-box-orient: vertical;
+ -webkit-line-clamp: 3;
+ overflow: hidden;
+ font-size: 14px;
+ line-height: 1.7;
+ color: #475569;
+ margin-top: 10px;
+}
+
+body.shop-detail-page .shop-hero-meta__item {
+ display: grid;
+ grid-template-columns: 18px 72px 1fr;
+ gap: 8px;
+ align-items: start;
+ font-size: 13px;
+ line-height: 1.6;
+ color: #334155;
+ margin-top: 10px;
+}
+
+body.shop-detail-page .shop-hero-meta__label {
+ color: #64748b;
+ font-weight: 700;
+}
+
+/* 右CTAをコンパクトに */
+body.shop-detail-page .biz-detail-fv__aside .biz-detail-fv-card {
+ padding: 18px 18px 16px;
+ border-radius: 20px;
+}
+
+body.shop-detail-page .biz-detail-sidebar__cta-group {
+ display: grid;
+ gap: 10px;
+}
+
+/* ── Shopセクション mount ── */
+body.shop-detail-page #shop-sections-root {
+ width: 100%;
+ max-width: 1280px;
+ margin: 18px auto 3rem;
+ padding: 0 24px;
+ box-sizing: border-box;
+ display: flex;
+ flex-direction: column;
+ gap: 18px;
+}
+
+@media (max-width: 720px) {
+ body.shop-detail-page #shop-sections-root {
+   padding: 0 16px;
+ }
+}
+
+body.shop-detail-page #shop-sections-root section {
+ background: #fff;
+ border: 1px solid rgba(15, 23, 42, 0.06);
+ border-radius: 18px;
+ box-shadow: 0 6px 24px rgba(15, 23, 42, 0.04);
+ padding: 18px 18px 16px;
+}
+
+body.shop-detail-page .shop-sec__head {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ margin-bottom: 12px;
+}
+
+body.shop-detail-page .shop-sec__title {
+ margin: 0;
+ font-size: 18px;
+ font-weight: 800;
+ color: #0f172a;
+}
+
+body.shop-detail-page .shop-connect-setup-notice,
+.connect-required-setup-notice {
+ margin: 0 0 14px;
+ padding: 12px 14px;
+ border-radius: 10px;
+ background: #f8fafc;
+ border: 1px solid #e2e8f0;
+ color: #475569;
+ font-size: 14px;
+ line-height: 1.6;
+}
+
+/* ── 商品一覧 ── */
+body.shop-detail-page .shop-products-grid {
+ display: grid;
+ grid-template-columns: repeat(5, minmax(0, 1fr));
+ gap: 14px;
+}
+
+@media (max-width: 1100px) {
+ body.shop-detail-page .shop-products-grid {
+   grid-template-columns: repeat(4, minmax(0, 1fr));
+ }
+}
+
+@media (max-width: 720px) {
+ body.shop-detail-page .shop-products-grid {
+   grid-template-columns: repeat(2, minmax(0, 1fr));
+   gap: 12px;
+ }
+}
+
+@media (max-width: 420px) {
+ body.shop-detail-page .shop-products-grid {
+   grid-template-columns: 1fr;
+ }
+}
+
+body.shop-detail-page .shop-prod-card {
+ border: 1px solid rgba(15, 23, 42, 0.06);
+ border-radius: 12px;
+ overflow: hidden;
+ background: #fff;
+ display: flex;
+ flex-direction: column;
+}
+
+body.shop-detail-page .shop-prod-card__media {
+ aspect-ratio: 4 / 3;
+ background: #f1f5f9;
+ overflow: hidden;
+}
+
+body.shop-detail-page .shop-prod-card__media img {
+ width: 100%;
+ height: 100%;
+ object-fit: cover;
+ display: block;
+}
+
+body.shop-detail-page .shop-prod-card__body {
+ padding: 10px 10px 12px;
+ display: flex;
+ flex-direction: column;
+ gap: 8px;
+}
+
+body.shop-detail-page .shop-prod-card__title {
+ margin: 0;
+ font-size: 13px;
+ line-height: 1.45;
+ font-weight: 800;
+ color: #0f172a;
+ display: -webkit-box;
+ -webkit-box-orient: vertical;
+ -webkit-line-clamp: 2;
+ overflow: hidden;
+ min-height: 2.9em;
+}
+
+body.shop-detail-page .shop-prod-card__price {
+ margin: 0;
+ font-size: 14px;
+ font-weight: 900;
+ color: #0f172a;
+}
+
+body.shop-detail-page .shop-prod-card__meta {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 6px;
+}
+
+body.shop-detail-page .shop-prod-chip {
+ font-size: 11px;
+ font-weight: 700;
+ padding: 3px 8px;
+ border-radius: 999px;
+ background: #f1f5f9;
+ border: 1px solid #e2e8f0;
+ color: #475569;
+}
+
+body.shop-detail-page .shop-prod-chip--stock {
+ background: #fffbeb;
+ border-color: rgba(212, 175, 55, 0.35);
+ color: #7a5e10;
+}
+
+body.shop-detail-page .shop-prod-card__link {
+ display: block;
+ text-decoration: none;
+ color: inherit;
+}
+
+body.shop-detail-page .shop-prod-card__actions {
+ display: grid;
+ grid-template-columns: 1fr 1fr;
+ gap: 8px;
+ margin-top: 8px;
+ padding: 0 10px 10px;
+}
+
+body.shop-detail-page .shop-prod-btn {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ height: 36px;
+ border-radius: 10px;
+ font-size: 12px;
+ font-weight: 800;
+ text-decoration: none;
+}
+
+body.shop-detail-page .shop-prod-btn--buy {
+ background: linear-gradient(135deg, #f5e6a8, #d4af37);
+ color: #1a1a1a;
+ border: 1px solid rgba(212, 175, 55, 0.55);
+}
+
+body.shop-detail-page .shop-prod-btn--buy.is-disabled {
+ opacity: 0.55;
+ pointer-events: none;
+ background: #e2e8f0;
+ color: #64748b;
+ border-color: #cbd5e1;
+}
+
+body.shop-detail-page .shop-prod-btn--inquiry {
+ background: #fff;
+ color: #7a5e10;
+ border: 1px solid rgba(212, 175, 55, 0.55);
+}
+
+/* ── 店舗情報 + 口コミ（2カラム） ── */
+body.shop-detail-page .shop-info-reviews {
+ display: grid;
+ grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+ gap: 16px;
+}
+
+@media (max-width: 860px) {
+ body.shop-detail-page .shop-info-reviews {
+   grid-template-columns: 1fr;
+ }
+}
+
+body.shop-detail-page .shop-info-list {
+ list-style: none;
+ margin: 0;
+ padding: 0;
+ display: grid;
+ gap: 10px;
+}
+
+body.shop-detail-page .shop-info-row {
+ display: grid;
+ grid-template-columns: 86px 1fr;
+ gap: 10px;
+ font-size: 13px;
+ line-height: 1.6;
+}
+
+body.shop-detail-page .shop-info-key {
+ color: #64748b;
+ font-weight: 800;
+}
+
+body.shop-detail-page .shop-reviews-summary {
+ display: grid;
+ grid-template-columns: 140px 1fr;
+ gap: 14px;
+ align-items: start;
+}
+
+@media (max-width: 420px) {
+ body.shop-detail-page .shop-reviews-summary {
+   grid-template-columns: 1fr;
+ }
+}
+
+body.shop-detail-page .shop-reviews-score__num {
+ font-size: 40px;
+ line-height: 1;
+ font-weight: 900;
+ color: #b7791f;
+}
+
+body.shop-detail-page .shop-reviews-score__stars {
+ margin-top: 6px;
+ color: #d4af37;
+ letter-spacing: 0.08em;
+ font-weight: 800;
+}
+
+body.shop-detail-page .shop-reviews-score__count {
+ margin-top: 6px;
+ color: #64748b;
+ font-size: 12px;
+ font-weight: 700;
+}
+
+body.shop-detail-page .shop-reviews-bars {
+ display: grid;
+ gap: 8px;
+}
+
+body.shop-detail-page .shop-reviews-bar {
+ display: grid;
+ grid-template-columns: 18px 1fr 42px;
+ gap: 8px;
+ align-items: center;
+ font-size: 12px;
+ color: #64748b;
+}
+
+body.shop-detail-page .shop-reviews-bar__track {
+ height: 8px;
+ border-radius: 999px;
+ background: #f1f5f9;
+ overflow: hidden;
+}
+
+body.shop-detail-page .shop-reviews-bar__fill {
+ display: block;
+ height: 100%;
+ background: linear-gradient(90deg, #d4af37, #f5e6a8);
+}
+
+body.shop-detail-page .shop-reviews-btn,
+body.shop-detail-page .shop-reviews-more {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ height: 38px;
+ border-radius: 12px;
+ font-size: 12px;
+ font-weight: 800;
+ text-decoration: none;
+ border: 1px solid rgba(15, 23, 42, 0.08);
+ color: #7a5e10;
+ background: #fff;
+ margin-top: 10px;
+}
+
+/* ── FAQ ── */
+body.shop-detail-page .shop-faq-item {
+ border: 1px solid rgba(15, 23, 42, 0.08);
+ border-radius: 12px;
+ overflow: hidden;
+ background: #fff;
+ margin: 0 0 10px;
+}
+
+body.shop-detail-page .shop-faq-item summary {
+ list-style: none;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ padding: 12px 14px;
+ font-size: 13px;
+ font-weight: 800;
+ color: #0f172a;
+}
+
+body.shop-detail-page .shop-faq-item summary::-webkit-details-marker {
+ display: none;
+}
+
+body.shop-detail-page .shop-faq-plus {
+ width: 18px;
+ height: 18px;
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ border-radius: 999px;
+ border: 1px solid rgba(15, 23, 42, 0.12);
+ color: #64748b;
+ flex-shrink: 0;
+}
+
+body.shop-detail-page .shop-faq-a {
+  padding: 0 14px 12px;
+  color: #475569;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+body.shop-detail-page .shop-highlights-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body.shop-detail-page .shop-highlights-list__label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.04em;
+}
+
+body.shop-detail-page .shop-highlights-list__value {
+  display: block;
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.45;
+}
+
+@media (max-width: 640px) {
+  body.shop-detail-page .shop-highlights-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================
+   店舗・販売共通：タブ＋CTA 一体型追従バー
+   ========================================================= */
+
+body.shop-detail-page.shop-detail-page--action-nav .biz-detail-page-wrap,
+body.shop-detail-page.shop-detail-page--action-nav .shop-detail-container,
+body.shop-detail-page.shop-detail-page--action-nav [data-biz-detail-root] {
+  overflow: visible !important;
+}
+
+body.shop-detail-page.shop-detail-page--action-nav .relax-tabs-sticky-wrap,
+body.shop-detail-page.shop-detail-page--action-nav .shop-restaurant-tabs {
+  display: none !important;
+}
+
+body.shop-detail-page .shop-sticky-action-nav[hidden] {
+  display: none !important;
+}
+
+body.shop-detail-page .shop-sticky-action-nav {
+  position: -webkit-sticky;
+  position: sticky;
+  top: var(--shop-sticky-nav-top, 72px);
+  z-index: 100;
+  max-width: 1180px;
+  width: 100%;
+  margin: 28px auto 24px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(212, 175, 55, 0.24);
+  border-radius: 22px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  box-sizing: border-box;
+}
+
+body.shop-detail-page .shop-sticky-action-nav.is-stuck {
+  position: fixed;
+  top: var(--shop-sticky-nav-top, 72px);
+  left: var(--shop-sticky-nav-left, 0);
+  width: var(--shop-sticky-nav-width, min(1180px, calc(100% - 48px)));
+  z-index: 100;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+body.shop-detail-page .shop-sticky-action-nav-spacer {
+  display: block;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+body.shop-detail-page .shop-sticky-action-nav-spacer[hidden] {
+  display: none !important;
+}
+
+body.shop-detail-page .shop-sticky-action-nav__tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+body.shop-detail-page .shop-sticky-action-nav__tabs::-webkit-scrollbar {
+  display: none;
+}
+
+body.shop-detail-page .shop-sticky-action-nav__tab {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #475569;
+  font-weight: 800;
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+body.shop-detail-page .shop-sticky-action-nav__tab:hover {
+  color: #9a6a00;
+  background: rgba(255, 247, 223, 0.65);
+}
+
+body.shop-detail-page .shop-sticky-action-nav__tab.is-active {
+  background: #fff7df;
+  color: #9a6a00;
+  border-color: rgba(212, 175, 55, 0.28);
+}
+
+body.shop-detail-page .shop-sticky-action-nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+body.shop-detail-page .shop-sticky-action-nav__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 18px;
+  border-radius: 14px;
+  font-weight: 900;
+  font-size: 0.86rem;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid rgba(184, 134, 11, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+body.shop-detail-page .shop-sticky-action-nav__btn:hover {
+  transform: translateY(-1px);
+}
+
+body.shop-detail-page .shop-sticky-action-nav__btn--gold {
+  background: linear-gradient(135deg, #d6a72f, #a97600);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(184, 134, 11, 0.25);
+}
+
+body.shop-detail-page .shop-sticky-action-nav__btn--outline {
+  background: #fff;
+  color: #9a6a00;
+}
+
+@media (max-width: 768px) {
+  body.shop-detail-page .shop-sticky-action-nav {
+    top: var(--shop-sticky-nav-top, 60px);
+    margin: 18px 12px 20px;
+    padding: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body.shop-detail-page .shop-sticky-action-nav.is-stuck {
+    top: var(--shop-sticky-nav-top, 60px);
+  }
+
+  body.shop-detail-page .shop-sticky-action-nav__actions {
+    display: none;
+  }
+
+  body.shop-detail-page .shop-sticky-action-nav__tabs {
+    width: 100%;
+  }
+}
+
+/* お店のこだわり — 横位置のみ少し左へ（ヒーローグリッド・画像は変更しない） */
+body.shop-detail-page .biz-detail-fv .shop-hero-right {
+  align-self: flex-start;
+}
+
+body.shop-detail-page .biz-detail-fv:not(.retail-top-fv) .shop-hero-right .shop-highlight-card:not([hidden]),
+body.shop-detail-page .biz-detail-fv:not(.retail-top-fv) .shop-hero-right .shop-commitment-card:not([hidden]),
+body.shop-detail-page .biz-detail-fv:not(.retail-top-fv) .shop-hero-right [data-shop-restaurant-points]:not([hidden]),
+body.shop-detail-page .biz-detail-fv:not(.retail-top-fv) .shop-hero-right .shop-restaurant-points:not([hidden]),
+body.shop-detail-page .biz-detail-fv:not(.retail-top-fv) .shop-hero-right .retail-points {
+  position: relative;
+  right: 32px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page .biz-detail-fv .shop-hero-right .shop-highlight-card:not([hidden]),
+  body.shop-detail-page .biz-detail-fv .shop-hero-right .shop-commitment-card:not([hidden]),
+  body.shop-detail-page .biz-detail-fv .shop-hero-right [data-shop-restaurant-points]:not([hidden]),
+  body.shop-detail-page .biz-detail-fv .shop-hero-right .retail-points {
+    right: 0;
+  }
+}

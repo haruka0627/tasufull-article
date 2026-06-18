@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TASFUL TALK | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="talk-home.css?v=peer-message-final-1">
+  <link rel="stylesheet" href="ai-workspace-chat.css">
+  <link rel="stylesheet" href="chat-ui-interaction.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+</head>
+<body class="dash-body talk-home-page" data-page="talk-home">
+  <div class="dash-app">
+    <nav class="tasu-common-breadcrumb tasu-common-breadcrumb--talk talk-home-breadcrumb" data-breadcrumb aria-label="パンくず"></nav>
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ">
+        <div class="dash-nav-group">
+          <p class="dash-nav-group__label">連絡</p>
+          <a class="dash-nav-link is-active" href="talk-home.html">
+            <span>TASFUL TALK</span>
+          </a>
+          <a class="dash-nav-link" href="chat-list.html">
+            <span>取引チャット一覧</span>
+          </a>
+        </div>
+        <div class="dash-nav-group" data-talk-ops-nav hidden>
+          <p class="dash-nav-group__label">運営</p>
+          <a class="dash-nav-link" href="admin-operations-dashboard.html#ops-ai-secretary" data-talk-ops-nav-link>
+            <span>AI運営秘書</span>
+          </a>
+        </div>
+        <div class="dash-nav-group">
+          <p class="dash-nav-group__label">会員</p>
+          <a class="dash-nav-link" href="dashboard.html">ダッシュボード</a>
+          <a class="dash-nav-link" href="ai-workspace.html">AI相談</a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="dash-main">
+      <header class="dash-header dash-header--member" data-talk-page-header>
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="dash-header__intro">
+              <h1 class="dash-header__title">TASFUL TALK</h1>
+              <p class="dash-header__sub">通知・連絡・AI のハブ</p>
+            </div>
+          </div>
+          <div class="dash-header__actions">
+            <a href="dashboard.html" class="dash-header-link">
+              <span class="dash-header-link__label">ダッシュボード</span>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="dash-content dash-shell talk-home-main" data-talk-root>
+        <p class="talk-home-lead" data-talk-simple-lead>
+          トーク・AI・通知をまとめた TASFUL の連絡アプリです。
+        </p>
+        <p class="talk-home-lead talk-home-lead--power" data-talk-power-only hidden>
+          TASFUL全体の通知・連絡・AI操作のホームです。Builder の案件チャット本体は変更せず、ここから遷移できます。
+        </p>
+
+        <section class="talk-dashboard" data-talk-dashboard data-talk-power-only hidden aria-label="TASFUL TALK ダッシュボード">
+          <div class="talk-dashboard-stats" data-talk-dashboard-stats aria-label="サマリー"></div>
+
+          <section class="talk-quick-actions" aria-labelledby="talkQuickActionsTitle">
+            <h2 id="talkQuickActionsTitle" class="talk-dashboard-section__title">クイック操作</h2>
+            <div class="talk-quick-actions__grid" data-talk-quick-actions aria-label="クイック操作"></div>
+          </section>
+
+          <section class="talk-recent-actions" aria-labelledby="talkRecentActionsTitle" hidden data-talk-recent-section>
+            <h2 id="talkRecentActionsTitle" class="talk-dashboard-section__title">最近の操作</h2>
+            <div class="talk-recent-actions__track" data-talk-recent-actions aria-label="最近の操作"></div>
+          </section>
+
+          <section class="talk-unified-inbox" aria-labelledby="talkUnifiedInboxTitle">
+            <div class="talk-unified-inbox__head">
+              <h2 id="talkUnifiedInboxTitle" class="talk-dashboard-section__title">通知・AI・配信下書き統合ビュー</h2>
+              <p class="talk-unified-inbox__sub">未読通知・AI下書き・配信準備をこの画面からまとめて操作できます</p>
+            </div>
+            <div class="talk-filter-bar talk-filter-bar--unified" data-talk-unified-filter-bar>
+              <div class="talk-filter-bar__row">
+                <button type="button" class="talk-filter-bar__toggle" data-talk-unified-filter-toggle aria-expanded="false">
+                  <span class="talk-filter-bar__icon" aria-hidden="true">⚙</span> フィルター
+                </button>
+              </div>
+              <div class="talk-filter-panel" data-talk-unified-filter-panel hidden>
+                <div data-talk-unified-filter-sections aria-label="統合ビューフィルタ"></div>
+              </div>
+            </div>
+            <p class="talk-unified-inbox__summary" data-talk-unified-summary aria-live="polite"></p>
+            <div class="talk-unified-inbox__list" data-talk-unified-list aria-label="統合カード一覧"></div>
+          </section>
+
+          <section class="talk-dashboard-important" aria-labelledby="talkDashboardImportantTitle">
+            <div class="talk-dashboard-important__head">
+              <h2 id="talkDashboardImportantTitle" class="talk-dashboard-section__title">重要なお知らせ</h2>
+              <button type="button" class="talk-dashboard-link" data-talk-dashboard-view-all-notify>すべて見る</button>
+            </div>
+            <div class="talk-dashboard-important__list" data-talk-dashboard-important></div>
+          </section>
+
+          <section class="talk-dashboard-recent" aria-labelledby="talkDashboardRecentTitle">
+            <h2 id="talkDashboardRecentTitle" class="talk-dashboard-section__title">最近のチャット</h2>
+            <ul class="talk-dashboard-recent__list" data-talk-dashboard-recent></ul>
+            <button type="button" class="talk-dashboard-link" data-talk-dashboard-go-chat>チャットタブへ</button>
+          </section>
+        </section>
+
+        <div class="talk-tabs talk-tabs--legacy" role="tablist" aria-label="TASFUL TALK タブ（レガシー）" hidden>
+          <button type="button" class="talk-tabs__btn is-active" role="tab" data-talk-tab="chat" aria-selected="true">トーク</button>
+          <button type="button" class="talk-tabs__btn talk-tabs__btn--ai" role="tab" data-talk-tab="ai" aria-selected="false">AI</button>
+          <button type="button" class="talk-tabs__btn" role="tab" data-talk-tab="notify" aria-selected="false">通知</button>
+        </div>
+
+        <div class="talk-line-app" data-talk-line-app aria-label="TASFUL TALK">
+          <nav class="talk-line-rail" aria-label="メインメニュー">
+            <button type="button" class="talk-line-rail__btn is-active" data-talk-line-nav="talk" title="トーク">
+              <span class="talk-line-rail__icon" aria-hidden="true">💬</span>
+              <span class="talk-line-rail__label">トーク</span>
+            </button>
+            <button type="button" class="talk-line-rail__btn" data-talk-line-nav="platform" title="プラット通知">
+              <span class="talk-line-rail__icon" aria-hidden="true">🏷</span>
+              <span class="talk-line-rail__label">プラット</span>
+            </button>
+            <a class="talk-line-rail__btn talk-line-rail__btn--link" href="builder/index.html" data-talk-line-nav="builder" title="Builder">
+              <span class="talk-line-rail__icon" aria-hidden="true">📋</span>
+              <span class="talk-line-rail__label">Builder</span>
+            </a>
+            <button type="button" class="talk-line-rail__btn" data-talk-line-nav="anpi" title="安否通知">
+              <span class="talk-line-rail__icon" aria-hidden="true">🛡</span>
+              <span class="talk-line-rail__label">安否</span>
+            </button>
+            <a class="talk-line-rail__btn talk-line-rail__btn--link talk-line-rail__btn--ai" href="ai-workspace.html" data-talk-line-nav="ai" title="AI Workspace">
+              <span class="talk-line-rail__icon" aria-hidden="true">✨</span>
+              <span class="talk-line-rail__label">AI</span>
+            </a>
+            <a class="talk-line-rail__btn talk-line-rail__btn--link" href="dashboard.html" data-talk-line-nav="mypage" title="マイページ">
+              <span class="talk-line-rail__icon" aria-hidden="true">👤</span>
+              <span class="talk-line-rail__label">マイ</span>
+            </a>
+            <a class="talk-line-rail__btn talk-line-rail__btn--link talk-line-rail__btn--ops" href="admin-operations-dashboard.html#ops-ai-secretary" data-talk-line-nav="ops" data-talk-ops-nav-link hidden title="AI運営秘書">
+              <span class="talk-line-rail__icon" aria-hidden="true">🛡</span>
+              <span class="talk-line-rail__label">秘書</span>
+            </a>
+          </nav>
+
+          <div class="talk-line-stage" data-talk-line-stage>
+            <div class="talk-line-split is-active" data-talk-line-split data-talk-panel="chat" data-talk-line-view="chat">
+              <aside class="talk-line-list-col" aria-label="チャット一覧">
+                <header class="talk-line-list-head">
+                  <div class="talk-line-search-row">
+                    <label class="talk-line-search">
+                      <span class="visually-hidden">検索</span>
+                      <span class="talk-line-search__icon" aria-hidden="true">🔍</span>
+                      <input
+                        type="search"
+                        class="talk-line-search__input"
+                        data-talk-chat-search
+                        placeholder="検索"
+                        autocomplete="off"
+                        enterkeyhint="search"
+                      >
+                    </label>
+                    <button type="button" class="talk-line-add-friend" data-talk-friend-add-open data-future-feature="friend_request" title="追加" aria-label="追加" aria-haspopup="menu" aria-expanded="false">
+                      ＋
+                    </button>
+                    <div class="talk-line-add-menu" data-talk-add-menu hidden aria-hidden="true" role="menu" aria-label="追加メニュー">
+                      <button type="button" class="talk-line-add-menu__item" data-talk-add-action="friend" role="menuitem">友達追加</button>
+                      <button type="button" class="talk-line-add-menu__item" data-talk-add-action="group" role="menuitem">グループ作成</button>
+                    </div>
+                  </div>
+                  <div class="talk-line-category-bar">
+                    <div
+                      class="talk-line-category-tabs"
+                      data-talk-line-list-filters
+                      role="tablist"
+                      aria-label="カテゴリ"
+                    ></div>
+                    <button
+                      type="button"
+                      class="talk-line-notify-entry"
+                      data-talk-open-notify
+                      title="通知一覧"
+                      aria-label="通知一覧"
+                    >🔔</button>
+                    <button
+                      type="button"
+                      class="talk-line-list-overflow"
+                      data-talk-list-overflow-open
+                      aria-expanded="false"
+                      title="一覧メニュー"
+                      aria-label="一覧メニュー"
+                      aria-haspopup="menu"
+                    >⋯</button>
+                    <button
+                      type="button"
+                      class="talk-line-filter-gear"
+                      data-talk-chat-filter-toggle
+                      aria-expanded="false"
+                      title="フィルター"
+                      aria-label="詳細フィルター"
+                    >⚙</button>
+                  </div>
+                  <div class="talk-line-list-overflow-menu" data-talk-list-overflow-menu hidden aria-hidden="true" role="menu" aria-label="通知センターメニュー">
+                    <button type="button" class="talk-line-list-overflow-menu__item" data-talk-list-action="open-notify" role="menuitem">通知一覧</button>
+                    <button type="button" class="talk-line-list-overflow-menu__item" data-talk-list-action="unread-only" role="menuitem">未読のみ表示</button>
+                    <button type="button" class="talk-line-list-overflow-menu__item" data-talk-list-action="important-only" role="menuitem">重要のみ表示</button>
+                    <button type="button" class="talk-line-list-overflow-menu__item" data-talk-list-action="mark-all-read" role="menuitem">すべて既読にする</button>
+                  </div>
+                  <div class="talk-filter-panel talk-filter-panel--line" data-talk-chat-filter-panel hidden>
+                    <div data-talk-chat-filter-sections aria-label="トーク詳細フィルタ"></div>
+                  </div>
+                  <h2 class="visually-hidden" data-talk-line-list-title>トーク</h2>
+                </header>
+                <ul id="talkChatThreadList" class="talk-line-list" aria-label="チャット一覧"></ul>
+                <p class="talk-line-list-foot" data-talk-power-only hidden>
+                  <a href="chat-list.html">従来の取引チャット一覧</a>
+                  ·
+                  <a href="chat-detail.html" data-talk-legacy-chat-detail>詳細ページ（レガシー）</a>
+                </p>
+              </aside>
+
+              <section class="talk-line-room-col talk-line-room--empty" data-talk-line-room aria-label="会話">
+                <div class="talk-line-room-empty" data-talk-line-room-empty>
+                  <p class="talk-line-room-empty__title">チャットを選択</p>
+                  <p class="talk-line-room-empty__sub">一覧から会話を選ぶと、ここにメッセージが表示されます</p>
+                </div>
+                <div class="talk-line-room-active" data-talk-line-room-active hidden>
+                  <header class="talk-line-room-header">
+                    <button type="button" class="talk-line-room-header__back" data-talk-line-room-back aria-label="一覧に戻る">←</button>
+                    <div class="talk-line-room-header__peer talk-line-room-header__main">
+                      <a class="talk-line-room-header__avatar-link" href="#" data-talk-line-peer-avatar-link>
+                        <span class="talk-line-room-header__avatar-slot" data-talk-line-peer-avatar-slot></span>
+                      </a>
+                      <div class="talk-line-room-header__meta header-name-container">
+                        <h3 class="talk-line-room-header__name" data-talk-line-peer-name>相手</h3>
+                        <div class="talk-line-room-header__chips" data-talk-line-peer-chips hidden></div>
+                        <p class="talk-line-room-header__subtitle" data-talk-line-peer-subtitle hidden></p>
+                      </div>
+                    </div>
+                    <div class="talk-line-room-header__actions">
+                      <button type="button" class="talk-line-room-header__icon-btn" data-talk-line-action="call" title="通話（準備中）" disabled aria-label="通話">📞</button>
+                      <button type="button" class="talk-line-room-header__icon-btn" data-talk-line-action="video" title="ビデオ通話（準備中）" disabled aria-label="ビデオ通話">🎥</button>
+                      <button type="button" class="talk-line-room-header__icon-btn" data-talk-line-action="menu" title="メニュー" aria-label="メニュー" aria-haspopup="true">⋮</button>
+                    </div>
+                  </header>
+                  <div class="talk-line-room-context" data-talk-line-room-context hidden>
+                    <p class="talk-line-room-context__title" data-talk-line-room-context-title></p>
+                    <a class="talk-line-room-context__link" href="#" data-talk-line-room-context-link hidden>掲載を見る</a>
+                  </div>
+                  <div class="talk-line-messages chat-messages" data-talk-line-messages role="log" aria-live="polite" aria-relevant="additions"></div>
+                  <form class="talk-line-composer" data-talk-line-composer>
+                    <div class="talk-line-composer__toolbar">
+                      <button type="button" class="talk-line-composer__tool" data-talk-line-action="attach" title="添付（準備中）" disabled aria-label="添付">📎</button>
+                      <button type="button" class="talk-line-composer__tool talk-line-composer__tool--ai" data-talk-line-action="ai" title="AI相談" aria-label="AI">✨</button>
+                      <label class="talk-line-composer__field">
+                        <span class="visually-hidden" for="talkLineComposerInput">メッセージ</span>
+                        <textarea id="talkLineComposerInput" class="talk-line-composer__input" data-talk-line-composer-input rows="1" placeholder="メッセージ"></textarea>
+                      </label>
+                      <button type="submit" class="talk-line-composer__send" data-talk-line-composer-send aria-label="送信">送信</button>
+                    </div>
+                  </form>
+                </div>
+              </section>
+            </div>
+
+            <section class="talk-panel talk-panel--line-stage" data-talk-panel="notify" data-talk-line-view="notify" hidden aria-label="通知">
+          <div class="talk-card">
+            <div class="talk-notify-toolbar">
+              <div class="talk-notify-toolbar__titles">
+                <h2 class="talk-card__title talk-notify-toolbar__title">通知</h2>
+                <p class="talk-card__sub talk-notify-toolbar__sub">TASFUL各機能からの通知を集約</p>
+              </div>
+              <button type="button" class="talk-notify-settings-btn" data-talk-notify-settings-open>
+                通知設定
+              </button>
+            </div>
+            <p class="talk-notify-summary" data-talk-notify-summary aria-live="polite"></p>
+            <div
+              class="talk-notify-mobile-chips talk-notify-category-bar"
+              data-talk-notify-mobile-chips
+              role="tablist"
+              aria-label="通知カテゴリ"
+            ></div>
+            <div class="talk-filter-bar talk-filter-bar--notify" data-talk-notify-filter-bar>
+              <div class="talk-filter-bar__row">
+                <label class="talk-filter-bar__search talk-filter-bar__search--notify">
+                  <span class="talk-filter-bar__search-icon" aria-hidden="true">🔍</span>
+                  <span class="visually-hidden">通知を検索</span>
+                  <input
+                    type="search"
+                    class="talk-filter-bar__search-input"
+                    data-talk-notify-search
+                    placeholder="タイトル・本文を検索"
+                    autocomplete="off"
+                    enterkeyhint="search"
+                  >
+                </label>
+                <button type="button" class="talk-filter-bar__toggle" data-talk-notify-filter-toggle aria-expanded="false">
+                  <span class="talk-filter-bar__icon" aria-hidden="true">⚙</span> フィルター
+                </button>
+              </div>
+              <div class="talk-filter-panel" data-talk-notify-filter-panel hidden>
+                <div data-talk-notify-filter-sections aria-label="通知フィルタ"></div>
+              </div>
+            </div>
+            <div class="talk-notify-list" data-talk-notify-list></div>
+          </div>
+            </section>
+
+        <div class="talk-notify-detail" data-talk-notify-detail hidden aria-hidden="true">
+          <div class="talk-notify-detail__backdrop" data-talk-notify-detail-close tabindex="-1" aria-hidden="true"></div>
+          <div
+            class="talk-notify-detail__panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="talkNotifyDetailTitle"
+          >
+            <header class="talk-notify-detail__head">
+              <h3 id="talkNotifyDetailTitle" class="talk-notify-detail__title" data-talk-notify-detail-title>通知詳細</h3>
+              <button type="button" class="talk-notify-detail__close" data-talk-notify-detail-close aria-label="閉じる">
+                ✕
+              </button>
+            </header>
+            <div class="talk-notify-detail__body" data-talk-notify-detail-body></div>
+          </div>
+        </div>
+
+        <div class="talk-notify-settings-modal" data-talk-notify-settings-modal hidden aria-hidden="true">
+          <div class="talk-broadcast-modal__backdrop" data-talk-notify-settings-close tabindex="-1" aria-hidden="true"></div>
+          <div
+            class="talk-notify-settings-modal__panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="talkNotifySettingsTitle"
+          >
+            <header class="talk-broadcast-modal__head">
+              <h3 id="talkNotifySettingsTitle" class="talk-broadcast-modal__title">通知設定</h3>
+              <button type="button" class="talk-broadcast-modal__close" data-talk-notify-settings-close aria-label="閉じる">
+                ✕
+              </button>
+            </header>
+            <form class="talk-notify-settings-form" data-talk-notify-settings-form>
+              <fieldset class="talk-notify-settings-group">
+                <legend class="talk-notify-settings-group__title">受信</legend>
+                <label class="talk-notify-settings-toggle talk-notify-settings-toggle--master">
+                  <input type="checkbox" data-talk-settings-enabled checked />
+                  <span>すべての通知を受け取る</span>
+                </label>
+                <label class="talk-notify-settings-toggle">
+                  <input type="checkbox" data-talk-settings-show-muted />
+                  <span>非表示通知も見る</span>
+                </label>
+              </fieldset>
+              <fieldset class="talk-notify-settings-group" data-talk-settings-types-fieldset>
+                <legend class="talk-notify-settings-group__title">カテゴリ</legend>
+                <div class="talk-notify-settings-grid" data-talk-settings-types></div>
+              </fieldset>
+              <fieldset class="talk-notify-settings-group" data-talk-settings-priorities-fieldset>
+                <legend class="talk-notify-settings-group__title">優先度</legend>
+                <p class="talk-notify-settings-warn" data-talk-settings-urgent-warn hidden>
+                  緊急通知をOFFにすると、重要なお知らせ（安否など）を見逃す可能性があります。
+                </p>
+                <div class="talk-notify-settings-grid" data-talk-settings-priorities></div>
+              </fieldset>
+              <fieldset class="talk-notify-settings-group">
+                <legend class="talk-notify-settings-group__title">おやすみ時間</legend>
+                <label class="talk-notify-settings-toggle">
+                  <input type="checkbox" data-talk-settings-quiet-enabled />
+                  <span>おやすみ時間を有効にする</span>
+                </label>
+                <div class="talk-notify-settings-quiet" data-talk-settings-quiet-times>
+                  <label class="talk-notify-settings-time">
+                    <span>開始</span>
+                    <input type="time" data-talk-settings-quiet-start value="22:00" />
+                  </label>
+                  <label class="talk-notify-settings-time">
+                    <span>終了</span>
+                    <input type="time" data-talk-settings-quiet-end value="07:00" />
+                  </label>
+                </div>
+                <p class="talk-notify-settings-hint">おやすみ中も緊急通知は表示されます。</p>
+              </fieldset>
+              <div class="talk-notify-settings-actions">
+                <button type="submit" class="talk-ai-action talk-ai-action--primary">設定を保存</button>
+                <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-settings-reset>
+                  初期設定に戻す
+                </button>
+                <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-notify-settings-close>
+                  閉じる
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+            <section class="talk-panel talk-panel--line-stage" data-talk-panel="ai" data-talk-line-view="ai" hidden aria-label="AI">
+          <div class="talk-card talk-ai-card">
+            <div class="talk-ai-hub" data-talk-ai-hub>
+              <article class="talk-ai-hero-card">
+                <div class="talk-ai-hero-card__content">
+                  <p class="talk-ai-hero-card__brand">TASFUL AI</p>
+                  <h2 class="talk-ai-hero-card__title">何をお手伝いしましょうか？</h2>
+                  <p class="talk-ai-hero-card__sub">検索・Q&A・候補案内は TASFUL AI 本体で。ここからショートカットできます。</p>
+                  <button type="button" class="talk-ai-hero-card__cta" data-talk-ai-pick="qa">
+                    AI相談を開く <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </article>
+
+              <section class="talk-ai-hub-section" aria-labelledby="talkAiToolsTitle">
+                <h3 id="talkAiToolsTitle" class="talk-ai-hub-section__title">よく使うAI機能</h3>
+                <div class="talk-ai-tools-grid" role="group" aria-label="よく使うAI機能">
+                  <button type="button" class="talk-ai-tool-card" data-talk-ai-pick="project">
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">📋</span>
+                    <span class="talk-ai-tool-card__label">案件作成</span>
+                  </button>
+                  <button type="button" class="talk-ai-tool-card" data-talk-ai-pick="job">
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">👔</span>
+                    <span class="talk-ai-tool-card__label">求人作成</span>
+                  </button>
+                  <button type="button" class="talk-ai-tool-card" data-talk-ai-pick="ad">
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">✍️</span>
+                    <span class="talk-ai-tool-card__label">文章作成</span>
+                  </button>
+                  <button type="button" class="talk-ai-tool-card" data-talk-ai-pick="ad" data-talk-ai-variant="ad_copy">
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">📢</span>
+                    <span class="talk-ai-tool-card__label">広告文作成</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="talk-ai-tool-card"
+                    data-talk-ai-pick="qa"
+                    data-talk-ai-seed="草刈り業者を探したい"
+                  >
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">🌿</span>
+                    <span class="talk-ai-tool-card__label">業者を探す</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="talk-ai-tool-card"
+                    data-talk-ai-pick="qa"
+                    data-talk-ai-seed="料金の仕組みを教えて"
+                  >
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">💴</span>
+                    <span class="talk-ai-tool-card__label">料金・使い方</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="talk-ai-tool-card"
+                    data-talk-ai-pick="business"
+                    data-talk-ai-seed="業務サービスを掲載したいです。サービス名・料金・詳細説明の下書きをお願いします。"
+                  >
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">🔧</span>
+                    <span class="talk-ai-tool-card__label">業務サービス掲載</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="talk-ai-tool-card"
+                    data-talk-ai-pick="shop"
+                    data-talk-ai-seed="店舗・販売を掲載したいです。店舗名・紹介文の下書きをお願いします。"
+                  >
+                    <span class="talk-ai-tool-card__icon" aria-hidden="true">🏪</span>
+                    <span class="talk-ai-tool-card__label">店舗掲載</span>
+                  </button>
+                </div>
+              </section>
+
+              <section class="talk-ai-hub-section" aria-labelledby="talkAiSuggestTitle">
+                <h3 id="talkAiSuggestTitle" class="talk-ai-hub-section__title">おすすめ相談</h3>
+                <ul class="talk-ai-suggest-list">
+                  <li>
+                    <button type="button" class="talk-ai-suggest-item" data-talk-ai-pick="project" data-talk-ai-seed="案件を作りたいです。掲載の手順と文案の下書きをお願いします。">案件を作りたい</button>
+                  </li>
+                  <li>
+                    <button type="button" class="talk-ai-suggest-item" data-talk-ai-pick="job" data-talk-ai-seed="求人を募集したいです。求人票の下書きをお願いします。">求人を募集したい</button>
+                  </li>
+                  <li>
+                    <button type="button" class="talk-ai-suggest-item" data-talk-ai-pick="business" data-talk-ai-seed="業務サービスを掲載したいです。掲載文案の下書きをお願いします。">業務サービスを掲載したい</button>
+                  </li>
+                  <li>
+                    <button type="button" class="talk-ai-suggest-item" data-talk-ai-pick="shop" data-talk-ai-seed="店舗・販売を掲載したいです。店舗紹介文の下書きをお願いします。">店舗・販売を掲載したい</button>
+                  </li>
+                  <li>
+                    <button type="button" class="talk-ai-suggest-item" data-talk-ai-pick="job" data-talk-ai-seed="応募者を集めたいです。求人募集の文案と運用のコツを教えてください。">応募者を集めたい</button>
+                  </li>
+                  <li>
+                    <button type="button" class="talk-ai-suggest-item" data-talk-ai-pick="ad" data-talk-ai-seed="広告文を作りたいです。告知・キャンペーン向けの文案をお願いします。">広告文を作りたい</button>
+                  </li>
+                </ul>
+              </section>
+
+              <section class="talk-ai-hub-section" aria-labelledby="talkAiHistoryTitle">
+                <h3 id="talkAiHistoryTitle" class="talk-ai-hub-section__title">最近のAI履歴</h3>
+                <div class="talk-ai-history-list" data-talk-ai-history-list aria-live="polite"></div>
+              </section>
+
+              <details class="talk-ai-power" data-talk-ai-power hidden>
+                <summary class="talk-ai-power__summary">運営向け AI</summary>
+                <div class="talk-ai-power__grid" data-talk-ai-admin-grid role="group" aria-label="運営向けAI"></div>
+              </details>
+            </div>
+            <div class="talk-ai-vendor-search" data-talk-ai-vendor-search hidden aria-label="AI業者検索">
+              <button type="button" class="talk-ai-composer__back" data-talk-ai-vendor-back aria-label="AIメニューに戻る">
+                ← AIメニュー
+              </button>
+              <h2 class="talk-ai-vendor-search__title">AI業者検索</h2>
+              <p class="talk-card__sub talk-ai-vendor-search__sub">
+                サブスク会員業者を条件で探し、相談すると既存のやりとりチャットへ接続します（原型）
+              </p>
+              <form class="talk-ai-vendor-form" data-talk-ai-vendor-form>
+                <div class="talk-ai-vendor-form__grid">
+                  <label class="talk-ai-vendor-form__field">
+                    <span>業種</span>
+                    <input type="text" data-talk-vendor-trade placeholder="例: 外壁・設備・内装" />
+                  </label>
+                  <label class="talk-ai-vendor-form__field">
+                    <span>エリア</span>
+                    <input type="text" data-talk-vendor-area placeholder="例: 東京都" />
+                  </label>
+                  <label class="talk-ai-vendor-form__field">
+                    <span>希望日</span>
+                    <input type="date" data-talk-vendor-date />
+                  </label>
+                  <label class="talk-ai-vendor-form__field talk-ai-vendor-form__field--wide">
+                    <span>キーワード</span>
+                    <input type="text" data-talk-vendor-keyword placeholder="例: 足場 夜間対応" />
+                  </label>
+                </div>
+                <div class="talk-ai-vendor-form__actions">
+                  <button type="submit" class="talk-ai-action talk-ai-action--primary">検索する</button>
+                </div>
+              </form>
+              <p class="talk-ai-vendor-search__status" data-talk-ai-vendor-status role="status" aria-live="polite"></p>
+              <div class="talk-ai-vendor-results" data-talk-ai-vendor-results aria-live="polite"></div>
+            </div>
+            <div class="talk-ai-composer" data-talk-ai-composer hidden>
+              <button type="button" class="talk-ai-composer__back" data-talk-ai-back aria-label="AIメニューに戻る">← AIメニュー</button>
+              <p class="talk-ai-composer__mode" data-talk-ai-mode-label>AI相談</p>
+              <p class="talk-card__sub" data-talk-ai-hint>質問・告知したい内容を入力してください</p>
+              <div class="talk-ai-modes talk-ai-modes--legacy" role="group" aria-label="AIモード" data-talk-power-only hidden>
+                <button type="button" class="talk-ai-modes__btn is-active" data-talk-ai-mode="qa">QA AI</button>
+                <button type="button" class="talk-ai-modes__btn" data-talk-ai-mode="ad">広告作成AI</button>
+                <button type="button" class="talk-ai-modes__btn" data-talk-ai-mode="notice">通知作成AI</button>
+                <button type="button" class="talk-ai-modes__btn" data-talk-ai-mode="project">案件作成AI</button>
+                <button type="button" class="talk-ai-modes__btn" data-talk-ai-mode="job">求人作成AI</button>
+              </div>
+            <form class="talk-ai-form" data-talk-ai-form>
+              <label for="talkAiInput">入力</label>
+              <textarea id="talkAiInput" data-talk-ai-input placeholder="質問・告知したい内容・通知文案の要点を入力"></textarea>
+              <div class="talk-ai-form__actions">
+                <button type="submit" class="talk-ai-form__submit" data-talk-ai-generate>相談する</button>
+              </div>
+            </form>
+            </div>
+            <section class="talk-ai-result" data-talk-ai-result hidden aria-label="AIの回答">
+              <h3 class="talk-ai-result__title" data-talk-ai-result-title>AIの回答</h3>
+              <div class="talk-ai-result__body talk-ai-result__body--rich" data-talk-ai-output-html hidden aria-live="polite"></div>
+              <pre class="talk-ai-result__body" data-talk-ai-output aria-live="polite"></pre>
+              <div class="talk-ai-result__actions" data-talk-ai-result-actions>
+                <button type="button" class="talk-ai-action talk-ai-action--primary" data-talk-ai-save>下書き保存</button>
+                <button type="button" class="talk-ai-action" data-talk-ai-copy>コピー</button>
+                <button type="button" class="talk-ai-action talk-ai-action--notify" data-talk-ai-to-notify hidden>通知として追加</button>
+                <button type="button" class="talk-ai-action talk-ai-action--broadcast" data-talk-ai-save-broadcast hidden>配信下書きに保存</button>
+                <button type="button" class="talk-ai-action talk-ai-action--apply" data-talk-ai-apply-form hidden>投稿フォームへ反映</button>
+                <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-ai-discard>破棄</button>
+                <button type="button" class="talk-ai-action" data-talk-ai-regenerate>再生成</button>
+              </div>
+              <p class="talk-ai-result__status" data-talk-ai-status role="status" aria-live="polite"></p>
+            </section>
+            <section class="talk-ai-saved-section" data-talk-ai-saved-section aria-labelledby="talkAiSavedTitle">
+              <h3 id="talkAiSavedTitle" class="talk-ai-hub-section__title">保存済み下書き</h3>
+              <p class="talk-ai-saved__sub">最新5件（localStorage）</p>
+              <div class="talk-ai-saved__list" data-talk-ai-drafts-list></div>
+            </section>
+            <section class="talk-ai-broadcast" id="talkBroadcastSection" data-talk-power-only hidden aria-label="配信下書き">
+              <h3 class="talk-ai-broadcast__title">配信下書き</h3>
+              <p class="talk-ai-broadcast__sub">広告・通知の一斉配信準備（本番送信はモック：自分の通知タブへ）</p>
+              <div
+                class="talk-broadcast-banner talk-draft-banner talk-draft-banner--ok"
+                data-talk-broadcast-banner
+                hidden
+                role="status"
+                aria-live="polite"
+              ></div>
+              <div
+                class="talk-broadcast-banner talk-draft-banner talk-draft-banner--warn"
+                data-talk-broadcast-error-banner
+                hidden
+                role="alert"
+                aria-live="assertive"
+              ></div>
+              <div class="talk-ai-broadcast__list" data-talk-broadcast-list></div>
+            </section>
+          </div>
+            </section>
+          </div>
+        </div>
+
+        <nav class="talk-mobile-tabbar tasu-app-tabbar" data-talk-mobile-tabbar data-tasu-app-tabbar aria-label="アプリメニュー">
+          <a class="talk-mobile-tabbar__item tasu-app-tabbar__item" href="dashboard.html" data-talk-mobile-tab="home" data-tasu-app-tab="home">
+            <span class="talk-mobile-tabbar__icon tasu-app-tabbar__icon" aria-hidden="true">🏠</span>
+            <span class="talk-mobile-tabbar__label tasu-app-tabbar__label">ホーム</span>
+          </a>
+          <a class="talk-mobile-tabbar__item tasu-app-tabbar__item is-active" href="talk-home.html?tab=chat" data-talk-mobile-tab="chat" data-tasu-app-tab="chat">
+            <span class="talk-mobile-tabbar__icon tasu-app-tabbar__icon" aria-hidden="true">💬</span>
+            <span class="talk-mobile-tabbar__label tasu-app-tabbar__label">TALK</span>
+          </a>
+          <a class="talk-mobile-tabbar__item tasu-app-tabbar__item" href="ai-workspace.html" data-talk-mobile-tab="ai" data-tasu-app-tab="ai">
+            <span class="talk-mobile-tabbar__icon tasu-app-tabbar__icon" aria-hidden="true">✨</span>
+            <span class="talk-mobile-tabbar__label tasu-app-tabbar__label">AI</span>
+          </a>
+          <!-- マイページ: 将来 my-page.html へ差し替え -->
+          <a class="talk-mobile-tabbar__item tasu-app-tabbar__item" href="profile-settings.html" data-talk-mobile-tab="mypage" data-tasu-app-tab="mypage">
+            <span class="talk-mobile-tabbar__icon tasu-app-tabbar__icon" aria-hidden="true">👤</span>
+            <span class="talk-mobile-tabbar__label tasu-app-tabbar__label">マイページ</span>
+          </a>
+        </nav>
+
+        <div class="talk-friend-add-modal" data-talk-friend-add-modal hidden aria-hidden="true">
+          <div class="talk-broadcast-modal__backdrop" data-talk-friend-add-close tabindex="-1" aria-hidden="true"></div>
+          <div class="talk-broadcast-modal__panel talk-friend-add-modal__panel" role="dialog" aria-modal="true" aria-labelledby="talkFriendAddTitle">
+            <header class="talk-broadcast-modal__head">
+              <h3 id="talkFriendAddTitle" class="talk-broadcast-modal__title">友達追加</h3>
+              <button type="button" class="talk-broadcast-modal__close" data-talk-friend-add-close aria-label="閉じる">✕</button>
+            </header>
+            <p class="talk-friend-add-modal__lead">友達を追加する方法を選んでください</p>
+            <div class="talk-friend-add-modal__tabs" role="tablist" aria-label="追加方法">
+              <button type="button" class="talk-friend-add-modal__method is-active" data-talk-friend-method="qr" role="tab">QRコード</button>
+              <button type="button" class="talk-friend-add-modal__method" data-talk-friend-method="phone" role="tab">電話番号</button>
+              <button type="button" class="talk-friend-add-modal__method" data-talk-friend-method="id" role="tab">ID検索</button>
+              <button type="button" class="talk-friend-add-modal__method" data-talk-friend-method="invite" role="tab">招待リンク</button>
+            </div>
+            <div class="talk-friend-add-modal__panels">
+              <section class="talk-friend-panel" data-talk-friend-panel="qr" aria-hidden="false">
+                <div class="talk-friend-panel__body" data-talk-friend-panel-body></div>
+              </section>
+              <section class="talk-friend-panel" data-talk-friend-panel="phone" hidden aria-hidden="true">
+                <div class="talk-friend-panel__body" data-talk-friend-panel-body>
+                  <label class="talk-friend-panel__field">
+                    <span class="talk-friend-panel__label">電話番号</span>
+                    <input class="talk-friend-panel__input" type="tel" data-talk-friend-search-input="phone" placeholder="09012345678" autocomplete="tel">
+                  </label>
+                  <button type="button" class="talk-ai-action talk-ai-action--primary" data-talk-friend-search-submit="phone">検索</button>
+                  <div data-talk-friend-search-results="phone"></div>
+                </div>
+              </section>
+              <section class="talk-friend-panel" data-talk-friend-panel="id" hidden aria-hidden="true">
+                <div class="talk-friend-panel__body" data-talk-friend-panel-body>
+                  <label class="talk-friend-panel__field">
+                    <span class="talk-friend-panel__label">TALK ID</span>
+                    <input class="talk-friend-panel__input" type="search" data-talk-friend-search-input="id" placeholder="@username" autocomplete="off">
+                  </label>
+                  <button type="button" class="talk-ai-action talk-ai-action--primary" data-talk-friend-search-submit="id">検索</button>
+                  <div data-talk-friend-search-results="id"></div>
+                </div>
+              </section>
+              <section class="talk-friend-panel" data-talk-friend-panel="invite" hidden aria-hidden="true">
+                <div class="talk-friend-panel__body" data-talk-friend-panel-body></div>
+              </section>
+            </div>
+            <div class="talk-broadcast-modal__actions">
+              <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-friend-add-close>閉じる</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="talk-group-create-modal" data-talk-group-create-modal hidden aria-hidden="true">
+          <div class="talk-broadcast-modal__backdrop" data-talk-group-create-close tabindex="-1" aria-hidden="true"></div>
+          <div class="talk-broadcast-modal__panel" role="dialog" aria-modal="true" aria-labelledby="talkGroupCreateTitle">
+            <header class="talk-broadcast-modal__head">
+              <h3 id="talkGroupCreateTitle" class="talk-broadcast-modal__title">グループ作成</h3>
+              <button type="button" class="talk-broadcast-modal__close" data-talk-group-create-close aria-label="閉じる">✕</button>
+            </header>
+            <label class="talk-friend-panel__field">
+              <span class="talk-friend-panel__label">グループ名</span>
+              <input class="talk-friend-panel__input" type="text" data-talk-group-name-input placeholder="例: 現場チーム" maxlength="80">
+            </label>
+            <label class="talk-friend-panel__field">
+              <span class="talk-friend-panel__label">メモ（任意）</span>
+              <textarea class="talk-friend-panel__input talk-friend-panel__textarea" data-talk-group-note-input rows="3" placeholder="用途やメンバー条件など"></textarea>
+            </label>
+            <div class="talk-broadcast-modal__actions">
+              <button type="button" class="talk-ai-action talk-ai-action--primary" data-talk-group-create-submit>作成</button>
+              <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-group-create-close>キャンセル</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="talk-room-menu" data-talk-room-menu hidden aria-hidden="true" role="menu" aria-label="トークメニュー">
+          <div class="talk-room-menu__items" data-talk-room-menu-items></div>
+        </div>
+
+        <div class="talk-report-modal" data-talk-report-modal hidden aria-hidden="true">
+          <div class="talk-broadcast-modal__backdrop" data-talk-report-close tabindex="-1" aria-hidden="true"></div>
+          <div class="talk-broadcast-modal__panel" role="dialog" aria-modal="true" aria-labelledby="talkReportTitle">
+            <header class="talk-broadcast-modal__head">
+              <h3 id="talkReportTitle" class="talk-broadcast-modal__title">通報</h3>
+              <button type="button" class="talk-broadcast-modal__close" data-talk-report-close aria-label="閉じる">✕</button>
+            </header>
+            <p class="talk-friend-panel__hint">通報理由を選択してください</p>
+            <div class="talk-report-reasons" data-talk-report-reasons></div>
+            <label class="talk-friend-panel__field">
+              <span class="talk-friend-panel__label">詳細（任意）</span>
+              <textarea class="talk-friend-panel__input talk-friend-panel__textarea" data-talk-report-detail rows="3"></textarea>
+            </label>
+            <div class="talk-broadcast-modal__actions">
+              <button type="button" class="talk-ai-action talk-ai-action--primary" data-talk-report-submit>通報する</button>
+              <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-report-close>キャンセル</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="talk-broadcast-modal" data-talk-broadcast-modal hidden aria-hidden="true">
+          <div class="talk-broadcast-modal__backdrop" data-talk-broadcast-close tabindex="-1" aria-hidden="true"></div>
+          <div
+            class="talk-broadcast-modal__panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="talkBroadcastModalTitle"
+          >
+            <header class="talk-broadcast-modal__head">
+              <h3 id="talkBroadcastModalTitle" class="talk-broadcast-modal__title">配信下書きに保存</h3>
+              <button type="button" class="talk-broadcast-modal__close" data-talk-broadcast-close aria-label="閉じる">✕</button>
+            </header>
+            <form class="talk-broadcast-modal__form" data-talk-broadcast-form>
+              <label class="talk-broadcast-modal__field">
+                <span class="talk-broadcast-modal__label">配信タイトル</span>
+                <input type="text" class="talk-broadcast-modal__input" data-talk-broadcast-title maxlength="120" required />
+              </label>
+              <label class="talk-broadcast-modal__field">
+                <span class="talk-broadcast-modal__label">配信対象</span>
+                <select class="talk-broadcast-modal__select" data-talk-broadcast-segment required></select>
+                <span class="talk-broadcast-modal__hint" data-talk-broadcast-segment-hint>—</span>
+              </label>
+              <label class="talk-broadcast-modal__field">
+                <span class="talk-broadcast-modal__label">重要度</span>
+                <select class="talk-broadcast-modal__select" data-talk-broadcast-priority required>
+                  <option value="normal" selected>通常</option>
+                  <option value="important">重要</option>
+                  <option value="urgent">緊急</option>
+                </select>
+              </label>
+              <div class="talk-broadcast-modal__actions">
+                <button type="submit" class="talk-ai-action talk-ai-action--primary">配信下書きを保存</button>
+                <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-broadcast-close>キャンセル</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="talk-broadcast-view" data-talk-broadcast-view hidden aria-hidden="true">
+          <div class="talk-broadcast-modal__backdrop" data-talk-broadcast-view-close tabindex="-1" aria-hidden="true"></div>
+          <div class="talk-broadcast-view__panel" role="dialog" aria-modal="true" aria-labelledby="talkBroadcastViewTitle">
+            <header class="talk-broadcast-modal__head">
+              <h3 id="talkBroadcastViewTitle" class="talk-broadcast-modal__title">配信下書きの確認</h3>
+              <button type="button" class="talk-broadcast-modal__close" data-talk-broadcast-view-close aria-label="閉じる">✕</button>
+            </header>
+            <pre class="talk-broadcast-view__body" data-talk-broadcast-view-body></pre>
+            <dl class="talk-broadcast-view__meta" data-talk-broadcast-view-meta></dl>
+            <div class="talk-broadcast-view__actions">
+              <button type="button" class="talk-ai-action talk-ai-action--send" data-talk-broadcast-view-send hidden>
+                本番送信
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="talk-broadcast-send-modal" data-talk-broadcast-send-modal hidden aria-hidden="true">
+          <div class="talk-broadcast-modal__backdrop" data-talk-broadcast-send-close tabindex="-1" aria-hidden="true"></div>
+          <div
+            class="talk-broadcast-modal__panel"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="talkBroadcastSendTitle"
+          >
+            <header class="talk-broadcast-modal__head">
+              <h3 id="talkBroadcastSendTitle" class="talk-broadcast-modal__title">本番送信の確認</h3>
+              <button type="button" class="talk-broadcast-modal__close" data-talk-broadcast-send-close aria-label="閉じる">
+                ✕
+              </button>
+            </header>
+            <p class="talk-broadcast-send-modal__lead" data-talk-broadcast-send-lead>
+              選択した対象に送信しますか？
+            </p>
+            <p class="talk-broadcast-send-modal__hint" data-talk-broadcast-send-hint>
+              配信対象ユーザーへ TASFUL TALK 通知を一斉送信します。初回は少人数のセグメントでテストすることを推奨します。
+            </p>
+            <dl class="talk-broadcast-send-modal__meta" data-talk-broadcast-send-meta></dl>
+            <div class="talk-broadcast-modal__actions">
+              <button type="button" class="talk-ai-action talk-ai-action--send" data-talk-broadcast-send-confirm>
+                送信する
+              </button>
+              <button type="button" class="talk-ai-action talk-ai-action--muted" data-talk-broadcast-send-close>キャンセル</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="talk-runtime.js"></script>
+  <script src="auth-current-user.js"></script>
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="talk-home-layout.js"></script>
+  <script src="talk-filter-ui.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="talk-chat-profile.js"></script>
+  <script src="talk-chat-thread-model.js"></script>
+  <script src="chat-data.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="demo-deals-data.js"></script>
+  <script src="platform-chat-completion.js"></script>
+  <script src="platform-chat-category-flow.js"></script>
+  <script src="platform-chat-dual-window-flow.js"></script>
+  <script src="platform-chat-dual-window-demo.js"></script>
+  <script src="platform-chat-dual-window-notify.js"></script>
+  <script src="platform-chat-live-flow.js"></script>
+  <script src="platform-chat-connect-demo-seed.js"></script>
+  <script src="chat-room-status.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="talk-supabase-sync.js"></script>
+  <script src="talk-category-normalize.js"></script>
+  <script src="talk-notification-settings-store.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="talk-follow-store.js"></script>
+  <script src="talk-follow-notify.js"></script>
+  <script src="listing-route-resolver.js"></script>
+  <script src="platform-notify-action-labels.js"></script>
+  <script src="talk-notify-content-type.js"></script>
+  <script src="talk-official-notify-card.js"></script>
+  <script src="platform-chat-completion-flow.js"></script>
+  <script src="platform-chat-review-flow.js"></script>
+  <script src="talk-platform-notify-master-v1.js"></script>
+  <script src="talk-job-review-mode.js"></script>
+  <script src="talk-chat-demo-review-mode.js"></script>
+  <script src="platform-chat-bench-embed-bridge.js"></script>
+  <script src="talk-worker-review-mode.js"></script>
+  <script src="talk-builder-notify-master-v1.js"></script>
+  <script src="talk-anpi-notify-master-v1.js"></script>
+  <script src="shop-payout.js"></script>
+  <script src="platform-chat-fee.js"></script>
+  <script src="listing-demo-catalog.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="platform-chat-demo-seed.js"></script>
+  <script src="platform-chat-content-card.js"></script>
+  <script src="job-applications-store.js"></script>
+  <script src="platform-chat-job-card.js"></script>
+  <script src="platform-chat-job-flow.js"></script>
+  <script src="platform-chat-job-full-demo.js"></script>
+  <script src="talk-official-rooms.js"></script>
+  <script src="talk-home-data.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="talk-platform-fee-notify.js"></script>
+  <script src="talk-ai-drafts-store.js"></script>
+  <script src="talk-ai-usage-history.js"></script>
+  <script src="talk-broadcast-audience.js"></script>
+  <script src="talk-broadcast-drafts-store.js"></script>
+  <script src="talk-ai-draft-apply.js"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="ai-workspace-links.js"></script>
+  <script src="listing-tags.js"></script>
+  <script src="product-listing-fields.js"></script>
+  <script src="job-listing-fields.js"></script>
+  <script src="worker-listing-fields.js"></script>
+  <script src="listings-db.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="business-wording.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="ai-modes.js"></script>
+  <script src="ai-plan-models.js"></script>
+  <script src="ai-model-gateway.js"></script>
+  <script src="ops-watch-categories.js"></script>
+  <script src="ops-watch-store.js"></script>
+  <script src="ops-watch-analyzer.js"></script>
+  <script src="talk-ops-watch-notify.js"></script>
+  <script src="talk-ops-watch-notify-ui.js"></script>
+  <script src="ops-watch-service.js"></script>
+  <script src="ops-watch-daily.js"></script>
+  <script src="ops-watch-browser.js"></script>
+  <script src="ai-model-selector.js"></script>
+  <script src="talk-ai-draft.js"></script>
+  <script src="talk-ai-search-bridge.js"></script>
+  <script src="shop-market-notify.js"></script>
+  <script src="talk-notify-tier.js"></script>
+  <script src="talk-notify-actions.js"></script>
+  <script src="talk-notify-detail.js"></script>
+  <script src="support-ticket-store.js"></script>
+  <script src="ai-ops-types.js"></script>
+  <script src="ai-ops-ai-provider.js"></script>
+  <script src="ai-ops-case-store.js"></script>
+  <script src="builder/builder-partner-evaluation-store.js"></script>
+  <script src="talk-ops-assistant.js"></script>
+  <script src="talk-friend-hub-store.js"></script>
+  <script src="talk-room-safety-store.js"></script>
+  <script src="talk-friend-memo-store.js"></script>
+  <script src="talk-room-calendar-store.js"></script>
+  <script src="talk-room-calendar-demo-seed.js"></script>
+  <script src="talk-friend-hub-ui.js"></script>
+  <script src="talk-sub-nav.js"></script>
+  <script src="talk-line-room-menu.js"></script>
+  <script src="talk-line-room.js"></script>
+  <script src="tasful-app-mobile.js"></script>
+  <script src="platform-chat-interaction-trace.js"></script>
+  <script src="builder-bench-embed.js"></script>
+  <script src="talk-home.js?v=notify-tier-round2-1"></script>
+  <script>
+    (function () {
+      const sidebar = document.getElementById("dashSidebar");
+      const overlay = document.querySelector("[data-dash-overlay]");
+      const menuBtn = document.querySelector("[data-dash-menu]");
+      function close() {
+        sidebar?.classList.remove("is-open");
+        overlay?.setAttribute("aria-hidden", "true");
+      }
+      function open() {
+        sidebar?.classList.add("is-open");
+        overlay?.setAttribute("aria-hidden", "false");
+      }
+      menuBtn?.addEventListener("click", () => {
+        if (sidebar?.classList.contains("is-open")) close();
+        else open();
+      });
+      overlay?.addEventListener("click", close);
+    })();
+  </script>
+</body>
+</html>

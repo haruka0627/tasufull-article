@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>チャット | TasuFull</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="chat-ui-interaction.css">
+  <link rel="stylesheet" href="business-service-flow.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+  <link rel="stylesheet" href="common-breadcrumb.css">
+  <script>
+    window.global = window.global || window;
+    (function () {
+      var VERSION = "20260609-script-trace-v2";
+      window.__tasuChatDetailHtmlReached = true;
+      window.__tasuChatDetailExpectedScriptVersion = VERSION;
+      window.__tasuChatDetailScriptLoadError = "";
+      window.__tasuChatDetailScriptPipelinePhase = "head_bootstrap";
+      try {
+        document.documentElement.dataset.chatDetailExpectedVersion = VERSION;
+        document.documentElement.dataset.chatDetailHtmlReached = "1";
+      } catch (e) {
+        /* ignore */
+      }
+      window.__tasuChatDetailInstallFileSupabaseStub = function () {
+        if (window.supabase && typeof window.supabase.createClient === "function") return;
+        var chain = function () {
+          var api = {
+            select: function () { return api; },
+            insert: function () { return api; },
+            update: function () { return api; },
+            delete: function () { return api; },
+            eq: function () { return api; },
+            in: function () { return api; },
+            limit: function () { return api; },
+            order: function () { return api; },
+            single: function () {
+              return Promise.resolve({ data: null, error: { message: "file_protocol_stub" } });
+            },
+            maybeSingle: function () {
+              return Promise.resolve({ data: null, error: null });
+            },
+          };
+          api.then = function (resolve) {
+            return Promise.resolve(resolve({ data: [], error: null }));
+          };
+          return api;
+        };
+        window.supabase = {
+          createClient: function () {
+            return {
+              from: function () { return chain(); },
+              channel: function () {
+                return { on: function () { return this; }, subscribe: function () { return this; } };
+              },
+              removeChannel: function () {},
+              auth: {
+                getUser: function () {
+                  return Promise.resolve({ data: { user: null }, error: null });
+                },
+              },
+            };
+          },
+        };
+      };
+      if (location.protocol === "file:") {
+        window.__tasuChatDetailInstallFileSupabaseStub();
+      }
+    })();
+  </script>
+</head>
+<body data-page="chat">
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットへようこそ　
+      <a href="/post" class="link">今月システム利用料5％！</a>　
+      ｜　
+      <a href="ai-workspace.html" class="link accent">AI無料キャンペーン中</a>　
+      ｜　
+      <span style="color: #94a3b8;"></span>
+    </div>
+  </div>
+
+  <div class="page chat-detail-page">
+    <nav class="tasu-common-breadcrumb tasu-common-breadcrumb--talk chat-detail-breadcrumb" data-breadcrumb aria-label="パンくず"></nav>
+    <header id="chatMobileHead" class="chat-mobile-head" aria-label="チャット">
+      <div class="chat-mobile-head__slot chat-mobile-head__slot--start">
+        <button type="button" id="chatMobileBack" class="chat-mobile-head__back" aria-label="戻る">← 戻る</button>
+      </div>
+      <h1 id="chatMobileTitle" class="chat-mobile-head__title">チャット</h1>
+      <div class="chat-mobile-head__slot chat-mobile-head__slot--end" aria-hidden="true"></div>
+    </header>
+    <main class="chat-shell" aria-label="取引用チャット詳細">
+      <div id="bsfChatDealPanel" class="bsf-chat-deal-panel" hidden></div>
+      <section class="chat-card chat-detail" aria-label="チャット">
+        <header class="chat-peer-header" id="chatPeerHeader" aria-label="会話相手">
+          <a id="chatPeerAvatarLink" class="chat-peer-header__avatar-link" href="#" data-future-feature="profile_page">
+            <img id="chatPeerAvatar" class="chat-peer-header__avatar" src="" alt="" width="56" height="56" decoding="async">
+            <span id="chatPeerOnlineDot" class="chat-peer-header__online" hidden aria-hidden="true"></span>
+          </a>
+          <div class="chat-peer-header__body">
+            <h1 id="chatPeerName" class="chat-peer-header__name">相手</h1>
+            <p id="chatPeerPresence" class="chat-peer-header__presence">オフライン</p>
+            <p id="chatPeerStatus" class="chat-peer-header__status" hidden></p>
+          </div>
+          <div class="chat-peer-header__actions">
+            <span id="chatStatusPill" class="chat-pill chat-pill--active">ACTIVE</span>
+            <a class="chat-pill" href="chat-list.html" style="text-decoration:none;">← 一覧</a>
+          </div>
+        </header>
+
+        <header class="chat-card__head chat-card__head--context">
+          <div>
+            <h2 id="chatTitle" class="chat-card__title chat-card__title--sub">取引用チャット</h2>
+            <p id="chatSub" class="chat-card__sub">相手：</p>
+            <p id="chatListingMeta" class="chat-detail__listing-meta" hidden>
+              <span id="chatListingCategory" class="chat-thread__category"></span>
+              <a id="chatListingDetailLink" class="chat-detail__listing-link" href="#">掲載詳細を見る</a>
+            </p>
+          </div>
+          <div class="chat-card__head-side">
+            <div id="chatRemaining" class="chat-thread__expires">残り</div>
+          </div>
+        </header>
+
+        <div class="chat-note" role="note" aria-label="注意事項">
+          <p class="chat-note__title"><strong>【ご注意】</strong></p>
+          <p class="chat-note__body">安全のため、連絡先交換は禁止されています。<br>メッセージ内容はシステムにより自動確認されます。</p>
+        </div>
+
+        <div class="chat-room-status-row">
+          <div id="chatRoomStatusNotice" class="chat-room-status-notice" role="alert" hidden>
+            この取引は期限切れです
+          </div>
+          <div class="chat-room-status-row__actions">
+            <button type="button" id="chatApproveCompleteBtn" class="chat-complete-btn chat-complete-btn--approve" hidden>やりとり完了を承認</button>
+            <button type="button" id="chatCompleteBtn" class="chat-complete-btn">取引完了</button>
+            <button type="button" id="chatCancelRequestBtn" class="chat-complete-btn chat-complete-btn--ghost" hidden>キャンセル申請</button>
+            <button type="button" id="chatCancelRespondApproveBtn" class="chat-complete-btn chat-complete-btn--approve" hidden>承認する</button>
+            <button type="button" id="chatCancelRespondRejectBtn" class="chat-complete-btn chat-complete-btn--ghost" hidden>却下する</button>
+            <div class="chat-overflow-menu" id="chatOverflowMenu">
+              <button type="button" id="chatOverflowBtn" class="chat-overflow-btn" aria-haspopup="menu" aria-expanded="false" aria-label="その他">︙</button>
+              <div id="chatOverflowPanel" class="chat-overflow-panel" role="menu" hidden>
+                <button type="button" id="chatOverflowCancelItem" class="chat-overflow-panel__item chat-overflow-panel__item--danger" data-chat-cancel-open role="menuitem" hidden>キャンセル</button>
+                <button type="button" class="chat-overflow-panel__item" data-chat-report-room role="menuitem">通報</button>
+                <button type="button" class="chat-overflow-panel__item" data-block-open role="menuitem">ブロック</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="chatReviewViewModal" class="chat-report-modal" hidden>
+          <div class="chat-report-modal__backdrop" data-review-view-close aria-hidden="true"></div>
+          <div class="chat-report-modal__panel chat-review-modal__panel" role="dialog" aria-labelledby="chatReviewViewTitle" aria-modal="true">
+            <h2 id="chatReviewViewTitle" class="chat-report-modal__title">届いた評価</h2>
+            <p id="chatReviewViewSub" class="chat-report-modal__sub"></p>
+            <div id="chatReviewViewStars" class="chat-review-stars chat-review-stars--readonly" aria-live="polite"></div>
+            <p id="chatReviewViewComment" class="chat-review-view-comment"></p>
+            <div class="chat-report-modal__actions chat-review-modal__actions">
+              <button type="button" class="chat-report-btn chat-report-btn--primary" data-review-view-close>閉じる</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="chatReviewModal" class="chat-report-modal" hidden>
+          <div class="chat-report-modal__backdrop" data-review-close aria-hidden="true"></div>
+          <div class="chat-report-modal__panel chat-review-modal__panel" role="dialog" aria-labelledby="chatReviewTitle" aria-modal="true">
+            <h2 id="chatReviewTitle" class="chat-report-modal__title">取引相手を評価</h2>
+            <p id="chatReviewSub" class="chat-report-modal__sub"></p>
+            <p id="chatReviewTarget" class="chat-review-target"></p>
+            <div id="chatReviewStars" class="chat-review-stars" role="radiogroup" aria-label="評価（1〜5）">
+              <button type="button" class="chat-review-star" data-star="1" aria-label="1つ星">★</button>
+              <button type="button" class="chat-review-star" data-star="2" aria-label="2つ星">★</button>
+              <button type="button" class="chat-review-star" data-star="3" aria-label="3つ星">★</button>
+              <button type="button" class="chat-review-star" data-star="4" aria-label="4つ星">★</button>
+              <button type="button" class="chat-review-star" data-star="5" aria-label="5つ星">★</button>
+            </div>
+            <label class="chat-report-detail-label" for="chatReviewComment">コメント（任意）</label>
+            <textarea id="chatReviewComment" class="chat-report-detail" rows="3" placeholder="よかった点があれば一言"></textarea>
+            <div class="chat-report-modal__actions chat-review-modal__actions">
+              <button type="button" id="chatReviewSkip" class="chat-report-btn chat-report-btn--ghost">スキップして完了</button>
+              <button type="button" id="chatReviewSubmit" class="chat-report-btn chat-report-btn--primary">評価を送る</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="chatCompleteModal" class="chat-report-modal" hidden>
+          <div class="chat-report-modal__backdrop" data-complete-close aria-hidden="true"></div>
+          <div class="chat-report-modal__panel" role="dialog" aria-labelledby="chatCompleteTitle" aria-modal="true">
+            <h2 id="chatCompleteTitle" class="chat-report-modal__title">取引完了</h2>
+            <p id="chatCompleteBody" class="chat-report-modal__sub"></p>
+            <div id="chatShipForm" class="chat-ship-form" hidden>
+              <p class="chat-ship-form__hint">配送情報を入力してから発送を確定してください。</p>
+              <label class="chat-report-detail-label" for="chatShipCarrier">配送会社 <span class="chat-ship-form__req">必須</span></label>
+              <input id="chatShipCarrier" class="chat-ship-form__input" type="text" autocomplete="organization" placeholder="例: ヤマト運輸" />
+              <label class="chat-report-detail-label" for="chatShipTracking">追跡番号 <span class="chat-ship-form__opt">任意</span></label>
+              <input id="chatShipTracking" class="chat-ship-form__input" type="text" autocomplete="off" inputmode="numeric" placeholder="例: 1234567890" />
+              <p id="chatShipFormError" class="chat-ship-form__error" hidden></p>
+            </div>
+            <div id="chatWorkReportForm" class="chat-work-report-form" hidden>
+              <label class="chat-report-detail-label" for="chatWorkReportPhotos">完了写真</label>
+              <input
+                id="chatWorkReportPhotos"
+                class="chat-work-report-form__photos"
+                type="file"
+                accept="image/*"
+                capture="environment"
+                multiple
+              />
+              <p class="chat-work-report-form__hint">スマホではカメラ・写真フォルダから直接選択できます</p>
+              <label class="chat-report-detail-label" for="chatWorkReportContent">完了報告 <span class="chat-ship-form__req">必須</span></label>
+              <textarea id="chatWorkReportContent" class="chat-report-detail" rows="3" placeholder="作業内容・完了状況を記入してください"></textarea>
+              <label class="chat-report-detail-label" for="chatWorkReportMemo">備考 <span class="chat-ship-form__opt">任意</span></label>
+              <textarea id="chatWorkReportMemo" class="chat-report-detail" rows="2" placeholder="補足があれば記入してください"></textarea>
+              <p id="chatWorkReportFormError" class="chat-ship-form__error" hidden></p>
+            </div>
+            <div class="chat-report-modal__actions">
+              <button type="button" class="chat-report-btn chat-report-btn--ghost" data-complete-close>キャンセル</button>
+              <button type="button" id="chatCompleteSubmit" class="chat-report-btn chat-report-btn--primary">完了する</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="chatCancelModal" class="chat-report-modal" hidden>
+          <div class="chat-report-modal__backdrop" data-cancel-close aria-hidden="true"></div>
+          <div class="chat-report-modal__panel" role="dialog" aria-labelledby="chatCancelTitle" aria-modal="true">
+            <h2 id="chatCancelTitle" class="chat-report-modal__title">本当にキャンセルしますか？</h2>
+            <p id="chatCancelBody" class="chat-report-modal__sub">キャンセルすると、このやりとりは終了します。</p>
+            <fieldset id="chatCancelReasons" class="chat-report-reasons" hidden></fieldset>
+            <div class="chat-report-modal__actions">
+              <button type="button" class="chat-report-btn chat-report-btn--ghost" data-cancel-close>戻る</button>
+              <button type="button" id="chatCancelSubmit" class="chat-report-btn chat-report-btn--danger">キャンセルする</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="chatMessages" class="chat-detail__messages" aria-label="メッセージ一覧"></div>
+
+        <div id="chatReportModal" class="chat-report-modal" hidden>
+          <div class="chat-report-modal__backdrop" data-report-close aria-hidden="true"></div>
+          <div class="chat-report-modal__panel" role="dialog" aria-labelledby="chatReportTitle" aria-modal="true">
+            <h2 id="chatReportTitle" class="chat-report-modal__title">メッセージを通報</h2>
+            <p class="chat-report-modal__sub">理由を選択してください</p>
+            <fieldset id="chatReportReasons" class="chat-report-reasons"></fieldset>
+            <label class="chat-report-detail-label" for="chatReportDetail">詳細（任意）</label>
+            <textarea id="chatReportDetail" class="chat-report-detail" rows="3" placeholder="補足があれば入力"></textarea>
+            <div class="chat-report-modal__actions">
+              <button type="button" class="chat-report-btn chat-report-btn--ghost" data-report-close>キャンセル</button>
+              <button type="button" id="chatReportSubmit" class="chat-report-btn chat-report-btn--primary">通報する</button>
+            </div>
+          </div>
+        </div>
+        <div id="chatReportToast" class="chat-report-toast" role="status" aria-live="polite" hidden></div>
+
+        <div id="chatBlockModal" class="chat-report-modal" hidden>
+          <div class="chat-report-modal__backdrop" data-block-close aria-hidden="true"></div>
+          <div class="chat-report-modal__panel" role="dialog" aria-labelledby="chatBlockTitle" aria-modal="true">
+            <h2 id="chatBlockTitle" class="chat-report-modal__title">ユーザーをブロック</h2>
+            <p id="chatBlockBody" class="chat-report-modal__sub"></p>
+            <div class="chat-report-modal__actions">
+              <button type="button" class="chat-report-btn chat-report-btn--ghost" data-block-close>キャンセル</button>
+              <button type="button" id="chatBlockSubmit" class="chat-report-btn chat-report-btn--primary">ブロックする</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="chatPostCompleteBar" class="chat-post-complete-bar" hidden>
+          <p id="chatPostCompleteText" class="chat-post-complete-bar__text">取引が完了しました</p>
+          <button type="button" id="chatReviewBarBtn" class="chat-review-btn">レビューする</button>
+        </div>
+
+        <div class="chat-composer" aria-label="入力欄">
+          <div id="chatJobEndBar" class="chat-job-end-bar job-end-action-bar" hidden>
+            <button type="button" id="chatJobEndBarBtn" class="chat-job-end-bar__btn chat-complete-btn job-end-action-bar__btn" hidden></button>
+          </div>
+          <div id="chatAttachPreview" class="chat-attach-preview" aria-label="添付プレビュー" hidden></div>
+          <div class="chat-composer__toolbar">
+            <div class="chat-composer__slot chat-composer__slot--attach">
+              <button id="chatAttach" class="chat-icon-btn" type="button" aria-label="画像添付" title="画像添付">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true">
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 15V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v8"/>
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 15l4-4a2 2 0 0 1 3 0l2 2a2 2 0 0 0 3 0l4-4a2 2 0 0 1 3 0l2 2"/>
+                  <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                </svg>
+              </button>
+            </div>
+            <div id="chatInputWrap" class="chat-composer__slot chat-composer__slot--input">
+              <textarea id="chatInput" class="chat-input" rows="1" placeholder="メッセージ（Enterで送信 / Shift+Enterで改行）" aria-label="メッセージ入力" autocomplete="off" autocapitalize="sentences" enterkeyhint="send"></textarea>
+            </div>
+            <div class="chat-composer__slot chat-composer__slot--send">
+              <button id="chatSend" class="chat-send" type="button">送信</button>
+            </div>
+          </div>
+          <input id="chatFileInput" type="file" accept="image/*" class="chat-file" tabindex="-1" aria-hidden="true">
+          <div id="chatInlineError" class="chat-alert" style="display:none;margin-top:0.55rem;background:transparent;border:none;color:#b45309;padding:0;" aria-live="polite"></div>
+          <div id="chatAlert" class="chat-alert" style="display:none;" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    onerror="window.__tasuChatDetailInstallFileSupabaseStub && window.__tasuChatDetailInstallFileSupabaseStub()"
+  ></script>
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="talk-chat-profile.js"></script>
+  <script src="talk-chat-thread-model.js"></script>
+  <script src="chat-data.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="chat-ocr-config.js"></script>
+  <script src="chat-ocr.js"></script>
+  <script src="chat-moderation.js"></script>
+  <script src="chat-reports.js"></script>
+  <script src="chat-blocks.js"></script>
+  <script src="chat-reviews.js"></script>
+  <script src="chat-room-status.js"></script>
+  <script src="chat-thread-store.js"></script>
+  <script src="talk-pending-draft-message.js"></script>
+  <script src="demo-deals-data.js"></script>
+  <script src="platform-chat-completion.js"></script>
+  <script src="platform-chat-connect-demo-seed.js"></script>
+  <script src="listing-demo-catalog.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="platform-chat-demo-seed.js"></script>
+  <script src="platform-chat-content-card.js"></script>
+  <script src="platform-chat-job-card.js"></script>
+  <script src="platform-chat-job-flow.js"></script>
+  <script src="platform-chat-category-flow.js"></script>
+  <script src="platform-chat-purchase-payment-flow.js"></script>
+  <script src="platform-chat-dual-window-flow.js"></script>
+  <script src="platform-chat-dual-window-demo.js"></script>
+  <script src="platform-chat-dual-window-notify.js"></script>
+  <script src="platform-chat-live-flow.js"></script>
+  <script src="platform-chat-cancel-flow.js"></script>
+  <script src="platform-chat-work-service-connect-flow.js"></script>
+  <script src="platform-chat-connect-entry-flow.js"></script>
+  <script src="platform-chat-connect-chat-flow.js"></script>
+  <script src="platform-chat-manual-transfer-flow.js"></script>
+  <script src="platform-chat-contact-gate.js"></script>
+  <script src="platform-chat-start-fee-card.js"></script>
+  <script src="platform-chat-completion-flow.js"></script>
+  <script src="platform-chat-review-flow.js"></script>
+  <script src="platform-chat-interaction-trace.js"></script>
+  <script src="job-applications-store.js"></script>
+  <script src="platform-chat-job-full-demo.js"></script>
+  <script src="talk-chat-demo-review-mode.js"></script>
+  <script src="shop-payout.js"></script>
+  <script src="platform-chat-fee.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="talk-platform-fee-notify.js"></script>
+  <script src="platform-chat-bench-embed-bridge.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="business-service-payment.js"></script>
+  <script src="service-deals-db.js"></script>
+  <script src="service-deal-fee-payment.js"></script>
+  <script src="business-service-reviews-db.js"></script>
+  <script src="business-service-chat-ui.js"></script>
+  <script>
+    (function () {
+      var VERSION = "20260609-script-trace-v2";
+      var MAIN_SCRIPT_ID = "chat-detail-main-script";
+      var RETRY_KEY = "__tasuChatDetailMainScriptRetried";
+      window.__tasuChatDetailHtmlReached = true;
+      window.__tasuChatDetailExpectedScriptVersion = VERSION;
+      window.__tasuChatDetailScriptLoadError = window.__tasuChatDetailScriptLoadError || "";
+      window.__tasuChatDetailScriptPipelinePhase = "pre_main_script";
+
+      function resolveSameDirScriptUrl(filename) {
+        try {
+          return new URL(filename, document.baseURI || window.location.href).href;
+        } catch (e) {
+          return filename;
+        }
+      }
+
+      function stampDomEvidence(patch) {
+        try {
+          var host = document.body || document.documentElement;
+          if (!host) return;
+          Object.keys(patch || {}).forEach(function (key) {
+            host.dataset[key] = String(patch[key]);
+          });
+        } catch (e2) {
+          /* ignore */
+        }
+      }
+
+      window.__tasuOnChatDetailScriptLoad = function (ev) {
+        var ts = new Date().toISOString();
+        var el = ev && ev.target ? ev.target : document.getElementById(MAIN_SCRIPT_ID);
+        var src = (el && el.src) || resolveSameDirScriptUrl("chat-detail.js");
+        window.__tasuChatDetailScriptLoaded = true;
+        window.__tasuChatDetailScriptVersion = VERSION;
+        window.__tasuChatDetailScriptLoadAt = ts;
+        window.__tasuChatDetailScriptLoadError = "";
+        window.__tasuChatDetailScriptPipelinePhase = "main_script_loaded";
+        try {
+          if (el) {
+            el.dataset.loaded = "1";
+            el.dataset.loadedAt = ts;
+            el.dataset.loadedSrc = src;
+            delete el.dataset.loadError;
+            delete el.dataset.loadErrorAt;
+          }
+          stampDomEvidence({
+            chatDetailScriptLoaded: "1",
+            chatDetailScriptVersion: VERSION,
+            chatDetailScriptLoadAt: ts,
+          });
+          delete (document.body || document.documentElement).dataset.chatDetailScriptLoadError;
+        } catch (e2) {
+          /* ignore */
+        }
+      };
+
+      window.__tasuOnChatDetailScriptError = function (ev) {
+        var ts = new Date().toISOString();
+        var el = ev && ev.target ? ev.target : document.getElementById(MAIN_SCRIPT_ID);
+        var src = (el && el.src) || resolveSameDirScriptUrl("chat-detail.js");
+        var detail = {
+          src: src,
+          error: "script_load_failed",
+          at: ts,
+          pageHref: String(window.location.href || ""),
+          pageProtocol: String(window.location.protocol || ""),
+          expectedVersion: VERSION,
+          pipelinePhase: String(window.__tasuChatDetailScriptPipelinePhase || ""),
+        };
+        var msg = JSON.stringify(detail);
+        window.__tasuChatDetailScriptLoadError = msg;
+        window.__tasuChatDetailScriptPipelinePhase = "main_script_error";
+        try {
+          if (el) {
+            el.dataset.loadError = msg;
+            el.dataset.loadErrorAt = ts;
+          }
+          stampDomEvidence({ chatDetailScriptLoadError: msg });
+        } catch (e2) {
+          /* ignore */
+        }
+      };
+
+      function loadChatDetailMainScript(reason) {
+        window.__tasuChatDetailScriptPipelinePhase = "loading_main_script:" + String(reason || "initial");
+        var urls = [
+          resolveSameDirScriptUrl("chat-detail.js"),
+          "chat-detail.js",
+          "./chat-detail.js",
+        ];
+        var seen = {};
+        urls = urls.filter(function (url) {
+          if (!url || seen[url]) return false;
+          seen[url] = true;
+          return true;
+        });
+
+        var existing = document.getElementById(MAIN_SCRIPT_ID);
+        if (existing) existing.parentNode.removeChild(existing);
+
+        var index = 0;
+        function tryNext() {
+          if (index >= urls.length) {
+            window.__tasuOnChatDetailScriptError({ target: { src: urls.join(" | ") } });
+            return;
+          }
+          var url = urls[index++];
+          var script = document.createElement("script");
+          script.id = MAIN_SCRIPT_ID;
+          script.dataset.expectedVersion = VERSION;
+          script.dataset.loadReason = String(reason || "initial");
+          script.src = url;
+          script.addEventListener("load", function (ev) {
+            window.__tasuOnChatDetailScriptLoad(ev);
+          });
+          script.addEventListener("error", function () {
+            if (index < urls.length) {
+              script.parentNode && script.parentNode.removeChild(script);
+              tryNext();
+              return;
+            }
+            window.__tasuOnChatDetailScriptError({ target: script });
+          });
+          document.body.appendChild(script);
+        }
+        tryNext();
+      }
+
+      window.__tasuLoadChatDetailMainScript = loadChatDetailMainScript;
+      loadChatDetailMainScript("after_deps");
+
+      window.addEventListener("load", function () {
+        if (window.__tasuChatDetailScriptLoaded === true) return;
+        window.setTimeout(function () {
+          if (window.__tasuChatDetailScriptLoaded === true) return;
+          if (window[RETRY_KEY] === true) {
+            window.__tasuOnChatDetailScriptError({
+              target: { src: resolveSameDirScriptUrl("chat-detail.js") },
+            });
+            return;
+          }
+          window[RETRY_KEY] = true;
+          loadChatDetailMainScript("retry_after_window_load");
+        }, 0);
+      });
+    })();
+  </script>
+  <script src="tasful-app-mobile.js" defer></script>
+</body>
+</html>
+

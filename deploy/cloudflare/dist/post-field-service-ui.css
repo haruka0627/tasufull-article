@@ -1,0 +1,1040 @@
+/**
+ * 業務サービス掲載フォーム — 出品CMS向けUI（body.post--field-service-flow のみ）
+ */
+body.post--field-service-flow [data-common-description-field] {
+  display: none !important;
+}
+
+body.post--field-service-flow {
+  --fs-section-gap: 32px;
+  --fs-card-inner-gap: 20px;
+  --fs-mini-gap: 16px;
+  --fs-label-gap: 8px;
+  --fs-field-gap: 16px;
+  --fs-card-pad: 24px;
+  --fs-mini-pad: 16px;
+  --fs-focus: #d4a017;
+  --fs-focus-glow: rgba(212, 160, 23, 0.12);
+  --fs-card-radius: 14px;
+  --fs-mini-radius: 10px;
+  --fs-card-border: rgba(15, 23, 42, 0.1);
+  --fs-card-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.07);
+  --fs-gold: var(--color-gold, #c1a858);
+  --fs-gold-dark: var(--color-gold-dark, #8a7340);
+  --fs-gold-subtle: var(--color-gold-subtle, #f7f3e8);
+  --fs-gold-glow: var(--color-gold-glow, rgba(193, 168, 88, 0.28));
+  --fs-danger: #dc2626;
+  --fs-danger-border: #fca5a5;
+  --fs-danger-bg: #fff;
+  --fs-form-max: 76rem;
+}
+
+/* フォーム幅（業務サービスのみ） */
+body.post--field-service-flow .post-page {
+  --post-max: var(--fs-form-max);
+  max-width: min(var(--fs-form-max), calc(100% - 2rem));
+}
+
+body.post--field-service-flow .post-action-bar__inner {
+  max-width: var(--fs-form-max);
+}
+
+body.post--field-service-flow #listingForm {
+  padding-bottom: 96px;
+}
+
+/* ── Sticky CTA ── */
+body.post--field-service-flow .post-action-bar {
+  --post-action-h: 72px;
+  min-height: 72px;
+  padding: 16px 24px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.82);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
+/* ── フロー ── */
+body.post--field-service-flow .post-field-service-flow {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-section-gap);
+  margin-bottom: var(--post-section-gap);
+  padding: 4px 0 8px;
+}
+
+body.post--field-service-flow .post-field-service-flow__slot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-section-gap);
+}
+
+/* ── セクションカード ── */
+body.post--field-service-flow .post-field-service-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-card-inner-gap);
+  margin: 0;
+  padding: var(--fs-card-pad);
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--fs-card-radius);
+  box-shadow: var(--fs-card-shadow);
+  overflow: hidden;
+}
+
+body.post--field-service-flow .post-field-service-flow > section.post-field-service-card:nth-child(even),
+body.post--field-service-flow .post-field-service-flow > div:nth-child(even) .post-field-service-card {
+  background: #fafbfd;
+}
+
+body.post--field-service-flow .post-field-service-card__head {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+body.post--field-service-flow .post-field-service-card__title {
+  margin: 0 0 var(--fs-label-gap);
+  padding: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+  line-height: 1.3;
+}
+
+body.post--field-service-flow .post-field-service-card__desc {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #6b7280;
+}
+
+body.post--field-service-flow .post-field-service-card__divider {
+  margin: 8px 0 16px;
+  padding: 0;
+  border: none;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.post--field-service-flow .post-field-service-card__body {
+  padding: 0;
+}
+
+body.post--field-service-flow .post-fs-field-hint {
+  display: block;
+  margin: 0 0 var(--fs-label-gap);
+  font-size: 12px;
+  line-height: 1.55;
+  color: #6b7280;
+}
+
+body.post--field-service-flow .post-fs-repeater-section-hint {
+  margin: 0 0 var(--fs-field-gap);
+  font-size: 13px;
+  line-height: 1.7;
+  color: #6b7280;
+}
+
+/* ── 特徴タグUI ── */
+body.post--field-service-flow .post-fs-preset-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ── 希望連絡方法：カード選択 ── */
+body.post--field-service-flow .post-fs-contact-method-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body.post--field-service-flow .post-fs-contact-card {
+  position: relative;
+  display: block;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+body.post--field-service-flow .post-fs-contact-card input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+body.post--field-service-flow .post-fs-contact-card__inner {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  background: #fff;
+  border: 1px solid #ece7dc;
+  border-radius: 12px;
+  box-sizing: border-box;
+  transition: all 0.18s ease;
+}
+
+body.post--field-service-flow .post-fs-contact-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #5f6368;
+  flex: 0 0 auto;
+}
+
+body.post--field-service-flow .post-fs-contact-card__icon svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+body.post--field-service-flow .post-fs-contact-card__label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+body.post--field-service-flow .post-fs-contact-card:hover .post-fs-contact-card__inner {
+  border-color: var(--fs-focus);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+body.post--field-service-flow .post-fs-contact-card input:checked + .post-fs-contact-card__inner {
+  color: #fff;
+  background: linear-gradient(135deg, #d4a017 0%, #f3d37a 100%);
+  border-color: transparent;
+  box-shadow: 0 6px 18px rgba(212, 160, 23, 0.18);
+}
+
+body.post--field-service-flow .post-fs-contact-card input:checked + .post-fs-contact-card__inner .post-fs-contact-card__label {
+  color: #fff;
+}
+
+body.post--field-service-flow .post-fs-contact-card input:checked + .post-fs-contact-card__inner .post-fs-contact-card__icon {
+  color: #fff;
+}
+
+body.post--field-service-flow .post-fs-contact-card input:focus-visible + .post-fs-contact-card__inner {
+  box-shadow: 0 0 0 4px var(--fs-focus-glow);
+}
+
+body.post--field-service-flow .post-fs-preset-tag {
+  position: relative;
+  display: inline-flex;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+body.post--field-service-flow .post-fs-preset-tag input {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+body.post--field-service-flow .post-fs-preset-tag span {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.125rem;
+  padding: 0 0.9rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+body.post--field-service-flow .post-fs-preset-tag:hover span {
+  transform: translateY(-1px);
+  border-color: rgba(15, 23, 42, 0.2);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+body.post--field-service-flow .post-fs-preset-tag input:checked + span {
+  color: #fff;
+  background: linear-gradient(135deg, #d4a017 0%, #c1a858 50%, #b8954a 100%);
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(212, 160, 23, 0.38);
+  transform: translateY(-1px);
+}
+
+body.post--field-service-flow .post-fs-preset-tag input:focus-visible + span {
+  box-shadow: 0 0 0 4px var(--fs-focus-glow);
+}
+
+body.post--field-service-flow .post-fs-repeater--license .post-fs-repeater__grid {
+  display: grid;
+  gap: var(--fs-field-gap);
+}
+
+@media (min-width: 640px) {
+  body.post--field-service-flow .post-fs-repeater--license .post-fs-repeater__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+body.post--field-service-flow .post-fs-repeater--license .post-fs-repeater__grid .post-field {
+  margin-bottom: 0;
+}
+
+body.post--field-service-flow .post-fs-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 16px;
+}
+
+body.post--field-service-flow .post-fs-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+}
+
+body.post--field-service-flow .post-fs-kpi-row .post-field {
+  margin: 0;
+}
+
+@media (max-width: 639px) {
+  body.post--field-service-flow .post-fs-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+body.post--field-service-flow .post-field-service-card__body--grid {
+  display: grid;
+  gap: var(--fs-section-gap);
+}
+
+body.post--field-service-flow .post-field-service-card__body--stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-section-gap);
+}
+
+@media (min-width: 640px) {
+  body.post--field-service-flow .post-field-service-card__body--grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--fs-section-gap);
+    row-gap: var(--fs-section-gap);
+  }
+}
+
+body.post--field-service-flow .post-field-service-card__body--grid > .post-field--full,
+body.post--field-service-flow .post-field-service-card__body--grid > .post-field--checkgroup.post-field--full,
+body.post--field-service-flow .post-field-service-card__body--grid > fieldset.post-field--full,
+body.post--field-service-flow .post-field-service-card__body--grid > [data-fs-overview-features-wrap],
+body.post--field-service-flow .post-field-service-card__body--grid > [data-fs-custom-badges-wrap],
+body.post--field-service-flow .post-field-service-card__body--grid > [data-fs-license-list-wrap] {
+  grid-column: 1 / -1;
+}
+
+/* ── フィールド縦リズム ── */
+body.post--field-service-flow .post-field-service-card .post-field,
+body.post--field-service-flow .post-field-service-card fieldset.post-field,
+body.post--field-service-flow [data-fs-mount] > .post-field,
+body.post--field-service-flow [data-fs-mount] .post-field,
+body.post--field-service-flow .post-work-case__field {
+  display: block;
+  margin: 0 0 var(--fs-field-gap);
+  gap: 0;
+}
+
+body.post--field-service-flow .post-field-service-card .post-field:last-child,
+body.post--field-service-flow [data-fs-mount] > .post-field:last-child,
+body.post--field-service-flow [data-fs-mount] .post-field:last-child,
+body.post--field-service-flow .post-work-case__grid > .post-work-case__field:last-child,
+body.post--field-service-flow .post-work-case__grid > .post-fs-image-field:last-child {
+  margin-bottom: 0;
+}
+
+body.post--field-service-flow .post-field-service-card label,
+body.post--field-service-flow .post-field-service-card .post-field__legend,
+body.post--field-service-flow .post-work-case__field > span,
+body.post--field-service-flow .post-fs-image-field__label {
+  display: block;
+  margin: 0 0 var(--fs-label-gap);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.35;
+}
+
+body.post--field-service-flow .post-field-service-card input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+body.post--field-service-flow .post-field-service-card textarea,
+body.post--field-service-flow .post-field-service-card select.post-select,
+body.post--field-service-flow .post-fs-menu-card input,
+body.post--field-service-flow .post-fs-menu-card textarea,
+body.post--field-service-flow .post-fs-mini-card input,
+body.post--field-service-flow .post-fs-mini-card textarea,
+body.post--field-service-flow .post-fs-repeater input,
+body.post--field-service-flow .post-fs-repeater textarea,
+body.post--field-service-flow .post-work-case__field input,
+body.post--field-service-flow .post-work-case__field textarea {
+  width: 100%;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.875rem;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--fs-mini-radius);
+  box-sizing: border-box;
+  background: #fff;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+body.post--field-service-flow .post-field-service-card input:focus-visible,
+body.post--field-service-flow .post-field-service-card textarea:focus-visible,
+body.post--field-service-flow .post-field-service-card select:focus-visible,
+body.post--field-service-flow .post-fs-menu-card input:focus-visible,
+body.post--field-service-flow .post-fs-menu-card textarea:focus-visible,
+body.post--field-service-flow .post-fs-mini-card input:focus-visible,
+body.post--field-service-flow .post-fs-mini-card textarea:focus-visible,
+body.post--field-service-flow .post-fs-repeater input:focus-visible,
+body.post--field-service-flow .post-fs-repeater textarea:focus-visible {
+  border-color: var(--fs-focus);
+  box-shadow: 0 0 0 4px var(--fs-focus-glow);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+body.post--field-service-flow .post-field-service-card textarea,
+body.post--field-service-flow .post-fs-mini-card textarea,
+body.post--field-service-flow .post-fs-repeater textarea,
+body.post--field-service-flow .post-work-case__field textarea {
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+body.post--field-service-flow .post-field-service-card__body--checks .post-field--checkgroup {
+  margin: 0 0 var(--fs-field-gap);
+}
+
+body.post--field-service-flow .post-field--checkgroup .post-check {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.875rem;
+}
+
+body.post--field-service-flow .post-check-grid {
+  gap: var(--fs-label-gap) var(--fs-section-gap);
+}
+
+body.post--field-service-flow .post-field__hint {
+  margin: var(--fs-label-gap) 0 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #64748b;
+}
+
+body.post--field-service-flow [data-fs-mount="images"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-section-gap);
+}
+
+body.post--field-service-flow [data-fs-mount="basic"] {
+  display: grid;
+  gap: var(--fs-section-gap);
+}
+
+@media (min-width: 640px) {
+  body.post--field-service-flow [data-fs-mount="basic"] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  body.post--field-service-flow [data-fs-mount="basic"] > .post-field--full,
+  body.post--field-service-flow [data-fs-mount="basic"] > [data-fs-catch-copy-field],
+  body.post--field-service-flow [data-fs-mount="basic"] > [data-fs-service-desc-field],
+  body.post--field-service-flow [data-fs-mount="basic"] > [data-common-description-field],
+  body.post--field-service-flow [data-fs-mount="basic"] > [data-fs-tags-field],
+  body.post--field-service-flow [data-fs-mount="basic"] > [data-shop-store-tags-field] {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── 追加ボタン（outline gold） ── */
+body.post--field-service-flow .post-fs-add-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.75rem;
+  margin: var(--fs-field-gap) 0 0;
+  padding: 0 1rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--fs-gold-dark);
+  background: #fff;
+  border: 1px solid rgba(193, 168, 88, 0.55);
+  border-radius: var(--fs-mini-radius);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+body.post--field-service-flow .post-fs-add-btn:first-child,
+body.post--field-service-flow [data-fs-overview-features-list] + .post-fs-add-btn,
+body.post--field-service-flow [data-fs-custom-badges-list] + .post-fs-add-btn,
+body.post--field-service-flow [data-fs-license-items-list] + .post-fs-add-btn,
+body.post--field-service-flow [data-fs-flow-steps-list] + .post-fs-add-btn {
+  margin-top: 0;
+}
+
+body.post--field-service-flow .post-section__body > .post-fs-add-btn {
+  margin-top: 0;
+}
+
+body.post--field-service-flow .post-fs-add-btn:hover:not(:disabled) {
+  color: var(--fs-gold-dark);
+  background: var(--fs-gold-subtle);
+  border-color: var(--fs-gold);
+  box-shadow: 0 0 0 3px var(--fs-gold-glow);
+}
+
+body.post--field-service-flow .post-fs-add-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+body.post--field-service-flow .post-fs-add-btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--fs-gold-dark);
+  background: var(--fs-gold-subtle);
+  border-radius: 6px;
+}
+
+/* ── 削除ボタン（outline red） ── */
+body.post--field-service-flow .post-fs-remove-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.875rem;
+  padding: 0 0.6rem;
+  font-family: inherit;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--fs-danger);
+  background: var(--fs-danger-bg);
+  border: 1px solid var(--fs-danger-border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+body.post--field-service-flow .post-fs-remove-btn:hover {
+  color: #fff;
+  background: var(--fs-danger);
+  border-color: var(--fs-danger);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+}
+
+/* ── サービスメニューカード ── */
+body.post--field-service-flow .post-service-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin: 0 0 var(--fs-field-gap);
+}
+
+body.post--field-service-flow .post-fs-menu-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-mini-gap);
+  margin: 0;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+body.post--field-service-flow .post-fs-menu-card__head {
+  margin: 0;
+  padding: 0 4rem 0 0;
+}
+
+body.post--field-service-flow .post-fs-menu-card__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+body.post--field-service-flow .post-fs-menu-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-mini-gap);
+}
+
+body.post--field-service-flow .post-fs-menu-card .post-work-case__field {
+  margin-bottom: 0;
+}
+
+/* ── Mini-card（リピーター） ── */
+body.post--field-service-flow .post-fs-repeater,
+body.post--field-service-flow .post-fs-repeater-block,
+body.post--field-service-flow .post-work-case.post-fs-repeater-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-mini-gap);
+  margin: 0;
+  padding: calc(var(--fs-mini-pad) + 1.75rem) var(--fs-mini-pad) var(--fs-mini-pad);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: var(--fs-mini-radius);
+  background: #f4f6f9;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+}
+
+body.post--field-service-flow .post-fs-flow-step-card {
+  background: #fff;
+  border-color: rgba(15, 23, 42, 0.06);
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+}
+
+body.post--field-service-flow .post-fs-step-badge {
+  display: inline-flex;
+  align-self: flex-start;
+  margin: 0;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--fs-gold-dark);
+  background: var(--fs-gold-subtle);
+  border: 1px solid rgba(193, 168, 88, 0.35);
+  border-radius: 6px;
+}
+
+body.post--field-service-flow [data-fs-feature-custom-list],
+body.post--field-service-flow [data-fs-license-items-list],
+body.post--field-service-flow [data-fs-flow-steps-list],
+body.post--field-service-flow .post-work-cases-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-mini-gap);
+  margin: 0 0 var(--fs-field-gap);
+}
+
+body.post--field-service-flow .post-fs-repeater-block__label {
+  margin: 0 0 var(--fs-field-gap);
+  padding-right: 4.25rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: #475569;
+}
+
+body.post--field-service-flow .post-work-case__head {
+  display: none;
+}
+
+body.post--field-service-flow .post-work-case__remove {
+  display: none;
+}
+
+/* メニュー / 事例（旧セクション） */
+body.post--field-service-flow .post-section--service-menu,
+body.post--field-service-flow .post-section--work-cases {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+body.post--field-service-flow .post-section--service-menu .post-section__head,
+body.post--field-service-flow .post-section--work-cases .post-section__head {
+  display: none;
+}
+
+body.post--field-service-flow .post-section--service-menu .post-section__body,
+body.post--field-service-flow .post-section--work-cases .post-section__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-section-gap);
+  padding: 0;
+}
+
+body.post--field-service-flow .post-work-case__grid {
+  display: grid;
+  gap: var(--fs-section-gap);
+}
+
+@media (min-width: 640px) {
+  body.post--field-service-flow .post-work-case__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--fs-section-gap);
+    row-gap: var(--fs-section-gap);
+  }
+
+  body.post--field-service-flow .post-work-case__field--full,
+  body.post--field-service-flow .post-fs-image-field,
+  body.post--field-service-flow .post-fs-image-field--full {
+    grid-column: 1 / -1;
+  }
+}
+
+/* ── 画像アップロード ── */
+body.post--field-service-flow .post-fs-image-field {
+  margin: 0 0 var(--fs-field-gap);
+}
+
+body.post--field-service-flow .post-fs-image-upload {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-field-gap);
+}
+
+body.post--field-service-flow .post-fs-upload-dropzone,
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__dropzone,
+body.post--field-service-flow [data-fs-mount="images"] .post-gallery-upload__dropzone {
+  position: relative;
+  min-height: 132px;
+  margin: 0;
+  padding: 1.25rem 1rem;
+  border: 2px dashed rgba(15, 23, 42, 0.14);
+  border-radius: var(--fs-mini-radius);
+  background: linear-gradient(180deg, #fafbfd 0%, #fff 100%);
+  transition:
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+body.post--field-service-flow .post-fs-upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 2px;
+  color: var(--fs-gold-dark);
+  background: var(--fs-gold-subtle);
+  border-radius: 12px;
+}
+
+body.post--field-service-flow .post-fs-upload-icon svg {
+  display: block;
+}
+
+body.post--field-service-flow .post-fs-upload-dropzone:hover,
+body.post--field-service-flow .post-fs-upload-dropzone:focus-visible,
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__dropzone:hover,
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__dropzone:focus-visible,
+body.post--field-service-flow [data-fs-mount="images"] .post-gallery-upload__dropzone:hover,
+body.post--field-service-flow [data-fs-mount="images"] .post-gallery-upload__dropzone:focus-visible {
+  border-color: var(--fs-gold);
+  background: var(--fs-gold-subtle);
+  box-shadow: 0 0 0 4px var(--fs-gold-glow);
+  outline: none;
+}
+
+body.post--field-service-flow .post-fs-upload-dropzone.is-dragover,
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__dropzone.is-dragover,
+body.post--field-service-flow [data-fs-mount="images"] .post-gallery-upload__dropzone.is-dragover {
+  border-color: var(--fs-gold);
+  background: #fffdf5;
+  box-shadow:
+    0 0 0 4px var(--fs-gold-glow),
+    0 8px 24px rgba(193, 168, 88, 0.15);
+  transform: scale(1.005);
+}
+
+body.post--field-service-flow .post-fs-image-upload .post-main-upload__preview,
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__preview {
+  margin: 0;
+}
+
+body.post--field-service-flow .post-fs-preview-thumb,
+body.post--field-service-flow .post-fs-image-upload .post-main-upload__preview-item,
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__preview-item,
+body.post--field-service-flow .post-gallery-upload__preview-item {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 12px;
+  background: #f1f5f9;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+}
+
+body.post--field-service-flow .post-fs-preview-thumb img,
+body.post--field-service-flow .post-fs-image-upload .post-main-upload__preview-item img,
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__preview-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+body.post--field-service-flow .post-fs-preview-thumb .post-main-upload__remove,
+body.post--field-service-flow .post-fs-image-upload .post-main-upload__preview-item .post-main-upload__remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+}
+
+/* ── CTAトグル ── */
+body.post--field-service-flow [data-fs-mount="contact"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fs-mini-gap);
+}
+
+body.post--field-service-flow .post-fs-cta-toggles {
+  margin-bottom: 0;
+}
+
+body.post--field-service-flow .post-fs-cta-switch-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0.75rem 0 0;
+}
+
+body.post--field-service-flow .post-fs-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 0;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 10px;
+}
+
+body.post--field-service-flow .post-fs-switch-row__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+body.post--field-service-flow .post-fs-switch {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 48px;
+  height: 28px;
+  cursor: pointer;
+}
+
+body.post--field-service-flow .post-fs-switch input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+body.post--field-service-flow .post-fs-switch__slider {
+  position: absolute;
+  inset: 0;
+  background: #e2e8f0;
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+body.post--field-service-flow .post-fs-switch__slider::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
+  transition: transform 0.2s ease;
+}
+
+body.post--field-service-flow .post-fs-switch input:checked + .post-fs-switch__slider {
+  background: linear-gradient(135deg, #d4a017, #c1a858);
+}
+
+body.post--field-service-flow .post-fs-switch input:checked + .post-fs-switch__slider::after {
+  transform: translateX(20px);
+}
+
+body.post--field-service-flow .post-fs-cta-copy-block {
+  margin-top: var(--fs-mini-gap);
+  padding-top: var(--fs-mini-gap);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.post--field-service-flow .post-gallery-upload__preview-item .post-gallery-upload__remove,
+body.post--field-service-flow [data-fs-mount="images"] .post-gallery-upload__preview-item button[type="button"] {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+}
+
+body.post--field-service-flow [data-fs-mount="images"] .post-main-upload__dropzone:not(:has(.post-fs-upload-icon))::before,
+body.post--field-service-flow [data-fs-mount="images"] .post-gallery-upload__dropzone::before {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto var(--fs-label-gap);
+  background-color: var(--fs-gold-subtle);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 16V8M12 8L9 11M12 8L15 11' stroke='%238a7340' stroke-width='1.75' stroke-linecap='round'/%3E%3Cpath d='M4 16.5V17.5C4 18.88 5.12 20 6.5 20h11c1.38 0 2.5-1.12 2.5-2.5v-1' stroke='%238a7340' stroke-width='1.75' stroke-linecap='round'/%3E%3Crect x='4' y='4' width='16' height='12' rx='2' stroke='%238a7340' stroke-width='1.75'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 1.65rem;
+  border-radius: 12px;
+}
+
+body.post--field-service-flow [data-shop-products-section] {
+  display: none !important;
+}
+
+/* ── 利用規約同意 ── */
+body.post--field-service-flow .post-terms-check,
+body.post--field-service-flow [data-agreement-wrap] {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  justify-content: flex-start;
+  margin: 0;
+  cursor: pointer;
+}
+
+body.post--field-service-flow .post-terms-check input[type="checkbox"],
+body.post--field-service-flow [data-agreement-wrap] input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  flex-shrink: 0;
+  border: 1px solid #d8dce5;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+}
+
+body.post--field-service-flow .post-terms-check input[type="checkbox"]:hover,
+body.post--field-service-flow [data-agreement-wrap] input[type="checkbox"]:hover {
+  border-color: #d4a017;
+  box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.08);
+}
+
+body.post--field-service-flow .post-terms-check input[type="checkbox"]:focus-visible,
+body.post--field-service-flow [data-agreement-wrap] input[type="checkbox"]:focus-visible {
+  outline: none;
+  border-color: #d4a017;
+  box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.12);
+}
+
+body.post--field-service-flow .post-terms-check input[type="checkbox"]:checked,
+body.post--field-service-flow [data-agreement-wrap] input[type="checkbox"]:checked {
+  background: linear-gradient(135deg, #d4a017 0%, #f3d37a 100%);
+  border-color: transparent;
+  box-shadow: none;
+}
+
+body.post--field-service-flow .post-terms-check input[type="checkbox"]:checked::after,
+body.post--field-service-flow [data-agreement-wrap] input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+body.post--field-service-flow .post-terms-check > span,
+body.post--field-service-flow [data-agreement-wrap] > span {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: #2b3445;
+}
+
+body.post--field-service-flow .post-terms-block.post-field--error .post-terms-check > span,
+body.post--field-service-flow .post-terms-block.post-field--error [data-agreement-wrap] > span {
+  color: #b91c1c;
+}

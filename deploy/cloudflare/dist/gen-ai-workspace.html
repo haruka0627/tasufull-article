@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>生成AIワークスペース | TASFUL</title>
+  <meta name="description" content="TASFUL 生成AIワークスペース — 文章作成・画像解析・AIキャラ会話など">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="gen-ai-workspace.css">
+  <link rel="stylesheet" href="ai-workspace-chat.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  </head>
+<body class="gen-ai-page" data-page="gen_ai_workspace" data-gen-ai-root>
+  <header class="gen-ai-header" aria-label="生成AIワークスペース">
+    <div class="gen-ai-header__inner">
+      <a href="index-top.html" class="tasful-ai-logo gen-ai-header__logo" aria-label="TASFUL プラットフォームTOP">
+        <img
+          src="images/tasful-ai-globe.png?v=4"
+          alt=""
+          class="tasful-ai-logo-icon"
+        >
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <div class="gen-ai-header__meta">
+        <div class="gen-ai-usage-status" data-gen-ai-usage-status aria-live="polite">
+          <div class="gen-ai-usage-status__row">
+            <span class="gen-ai-usage-status__line" data-gen-ai-usage-header>無料枠 残り — 回</span>
+            <button type="button" class="gen-ai-plan-btn" data-gen-ai-usage-plan-btn>プランを見る</button>
+          </div>
+          <span class="gen-ai-usage-status__detail" data-gen-ai-usage-detail hidden></span>
+        </div>
+        <a href="ai-workspace.html">AI相談ワークスペース</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="gen-ai-main" aria-label="生成AIメイン">
+    <section class="gen-ai-hero">
+      <h1 class="gen-ai-hero__title">生成AIワークスペース</h1>
+      <p class="gen-ai-hero__lead">文章・画像・資料の作成に加え、AIキャラとの会話もご利用いただけます。</p>
+      <p class="gen-ai-plan-soon" data-gen-ai-plan-soon hidden aria-live="polite"></p>
+    </section>
+
+    <section class="gen-ai-welcome" data-gen-ai-welcome aria-label="ツール選択">
+      <div class="welcome-tools" data-welcome-tools aria-label="利用可能なAIツール"></div>
+    </section>
+
+    <section class="gen-ai-chat-view" data-gen-ai-chat-view hidden aria-label="AIチャット">
+      <div class="gen-ai-layout" data-gen-ai-layout>
+        <div class="chat-area" data-gen-ai-chat data-mode="汎用チャット">
+          <div class="chat-area__head">
+            <select class="tool-dropdown" data-tool-dropdown aria-label="AIツールを選択"></select>
+            <div class="chat-area__usage-row">
+              <span class="chat-area__usage" data-gen-ai-usage-chat aria-live="polite"></span>
+              <button type="button" class="gen-ai-plan-btn gen-ai-plan-btn--chat" data-gen-ai-usage-plan-btn>プランを見る</button>
+            </div>
+            <button type="button" class="chat-area__reset" data-gen-ai-reset>会話をリセット</button>
+          </div>
+
+          <div class="chat-area__character-bar" data-gen-ai-character-bar hidden>
+            <label class="chat-area__character-bar-label" for="genAiCharacterSelect">マイキャラ</label>
+            <select id="genAiCharacterSelect" class="chat-area__character-select" data-gen-ai-character-select aria-label="保存済みマイキャラを選択">
+              <option value="">TASFUL AI（標準）</option>
+            </select>
+          </div>
+
+          <div class="gen-ai-usage-limit" data-gen-ai-usage-limit hidden role="alert">
+            <p class="gen-ai-usage-limit__msg" data-gen-ai-usage-limit-msg>本日の無料回数を使い切りました</p>
+          </div>
+
+          <div class="my-character-panel" data-gen-ai-my-character-panel hidden aria-label="マイAIキャラ設定">
+            <div class="my-character-panel__head">
+              <h3 class="my-character-panel__title">マイAIキャラ設定</h3>
+              <p class="my-character-panel__lead">入力して保存すると、会話モードで切り替えて使えます（localStorage）</p>
+            </div>
+            <form class="my-character-panel__form" data-gen-ai-char-form>
+              <input type="hidden" data-gen-ai-char-editing-id value="">
+              <div class="my-character-panel__grid">
+                <label class="my-character-field">
+                  <span class="my-character-field__label">キャラ名</span>
+                  <input type="text" data-gen-ai-char-name maxlength="40" placeholder="例：近衛木乃香" required>
+                </label>
+                <label class="my-character-field">
+                  <span class="my-character-field__label">キャラ名の読み仮名</span>
+                  <input type="text" data-gen-ai-char-name-kana maxlength="60" placeholder="例：このえ このか" inputmode="text" lang="ja">
+                </label>
+                <label class="my-character-field">
+                  <span class="my-character-field__label">一人称</span>
+                  <input type="text" data-gen-ai-char-first-person maxlength="20" placeholder="例：ボク、私、うち">
+                </label>
+                <label class="my-character-field my-character-field--full">
+                  <span class="my-character-field__label">ユーザーの呼び方</span>
+                  <input type="text" data-gen-ai-char-user-call maxlength="30" placeholder="例：ひろさん">
+                </label>
+                <label class="my-character-field my-character-field--full">
+                  <span class="my-character-field__label">ユーザー呼び方の読み仮名</span>
+                  <input type="text" data-gen-ai-char-user-call-kana maxlength="60" placeholder="例：ひろさん" inputmode="text" lang="ja">
+                </label>
+                <label class="my-character-field my-character-field--full">
+                  <span class="my-character-field__label">性格</span>
+                  <textarea data-gen-ai-char-personality rows="2" maxlength="300" placeholder="例：明るく丁寧、好奇心旺盛"></textarea>
+                </label>
+                <label class="my-character-field my-character-field--full">
+                  <span class="my-character-field__label">話し方</span>
+                  <textarea data-gen-ai-char-speaking rows="2" maxlength="300" placeholder="例：です・ます調、短文で親しみやすく"></textarea>
+                </label>
+                <label class="my-character-field my-character-field--full">
+                  <span class="my-character-field__label">見た目メモ</span>
+                  <textarea data-gen-ai-char-appearance rows="2" maxlength="400" placeholder="例：青い髪、カジュアルな服装"></textarea>
+                </label>
+                <div class="my-character-field my-character-field--full my-character-appearance-ai" data-gen-ai-char-appearance-ai hidden>
+                  <div class="my-character-appearance-ai__actions">
+                    <button type="button" class="my-character-appearance-ai__btn" data-gen-ai-char-analyze-btn disabled>
+                      AIで見た目メモを作る
+                    </button>
+                    <button type="button" class="my-character-appearance-ai__btn my-character-appearance-ai__btn--seed" data-gen-ai-char-seed-btn disabled>
+                      AIでキャラ設定も作る
+                    </button>
+                  </div>
+                  <label class="my-character-appearance-ai__overwrite">
+                    <input type="checkbox" data-gen-ai-char-overwrite-ai>
+                    <span>入力済みも上書きする</span>
+                  </label>
+                  <p class="my-character-appearance-ai__status" data-gen-ai-char-analyze-status aria-live="polite"></p>
+                </div>
+                <label class="my-character-field my-character-field--full">
+                  <span class="my-character-field__label">用途</span>
+                  <input type="text" data-gen-ai-char-purpose maxlength="120" placeholder="例：相談相手、学習サポート">
+                </label>
+                <div class="my-character-field my-character-field--full my-character-field--image">
+                  <span class="my-character-field__label">キャラ画像</span>
+                  <div class="my-character-image-upload">
+                    <input type="file" data-gen-ai-char-image accept="image/jpeg,image/png,image/webp" hidden>
+                    <button type="button" class="my-character-image-upload__btn" data-gen-ai-char-image-pick>画像を選択</button>
+                    <span class="my-character-image-upload__name" data-gen-ai-char-image-name>未設定（デフォルト画像を使用）</span>
+                    <button type="button" class="my-character-image-upload__clear" data-gen-ai-char-image-clear hidden>画像をクリア</button>
+                    <div class="my-character-field my-character-field--full my-character-field--mouth">
+                  <span class="my-character-field__label">口位置調整（口パク）</span>
+                  <p class="my-character-mouth-hint">スライダーを動かすと右のキャラ上で位置がリアルタイム反映されます</p>
+                  <div class="my-character-mouth-estimate">
+                    <button type="button" class="my-character-mouth-estimate__btn" data-gen-ai-char-mouth-estimate-btn disabled>
+                      口位置を自動推定
+                    </button>
+                    <p class="my-character-mouth-estimate__status" data-gen-ai-char-mouth-estimate-status aria-live="polite"></p>
+                  </div>
+                  <label class="my-character-range">
+                    <span class="my-character-range__head">
+                      <span class="my-character-range__label">口位置X</span>
+                      <output class="my-character-range__value" data-gen-ai-char-mouth-x-val>50</output>
+                    </span>
+                    <input type="range" data-gen-ai-char-mouth-x min="0" max="100" step="1" value="50">
+                  </label>
+                  <label class="my-character-range">
+                    <span class="my-character-range__head">
+                      <span class="my-character-range__label">口位置Y</span>
+                      <output class="my-character-range__value" data-gen-ai-char-mouth-y-val>45</output>
+                    </span>
+                    <input type="range" data-gen-ai-char-mouth-y min="0" max="100" step="1" value="45">
+                  </label>
+                  <label class="my-character-range">
+                    <span class="my-character-range__head">
+                      <span class="my-character-range__label">口サイズ</span>
+                      <output class="my-character-range__value" data-gen-ai-char-mouth-scale-val>1.0</output>
+                    </span>
+                    <input type="range" data-gen-ai-char-mouth-scale min="0.3" max="2" step="0.05" value="1">
+                  </label>
+                </div>
+              </div>
+                  <div class="my-character-image-preview" data-gen-ai-char-image-preview hidden>
+                    <img data-gen-ai-char-image-preview-img alt="キャラプレビュー" width="120" height="160">
+                  </div>
+                </div>
+                <div class="my-character-field my-character-field--full my-character-field--mouth">
+                  <span class="my-character-field__label">口位置調整（口パク）</span>
+                  <p class="my-character-mouth-hint">スライダーを動かすと右のキャラ上で位置がリアルタイム反映されます</p>
+                  <label class="my-character-range">
+                    <span class="my-character-range__head">
+                      <span class="my-character-range__label">口位置X</span>
+                      <output class="my-character-range__value" data-gen-ai-char-mouth-x-val>50</output>
+                    </span>
+                    <input type="range" data-gen-ai-char-mouth-x min="0" max="100" step="1" value="50">
+                  </label>
+                  <label class="my-character-range">
+                    <span class="my-character-range__head">
+                      <span class="my-character-range__label">口位置Y</span>
+                      <output class="my-character-range__value" data-gen-ai-char-mouth-y-val>45</output>
+                    </span>
+                    <input type="range" data-gen-ai-char-mouth-y min="0" max="100" step="1" value="45">
+                  </label>
+                  <label class="my-character-range">
+                    <span class="my-character-range__head">
+                      <span class="my-character-range__label">口サイズ</span>
+                      <output class="my-character-range__value" data-gen-ai-char-mouth-scale-val>1.0</output>
+                    </span>
+                    <input type="range" data-gen-ai-char-mouth-scale min="0.3" max="2" step="0.05" value="1">
+                  </label>
+                </div>
+              </div>
+              <div class="my-character-panel__actions">
+                <button type="submit" class="my-character-panel__save" data-gen-ai-char-save>キャラを保存</button>
+                <button type="button" class="my-character-panel__new" data-gen-ai-char-new>新規作成</button>
+              </div>
+              <p class="my-character-panel__status" data-gen-ai-char-status aria-live="polite"></p>
+            </form>
+          </div>
+
+          <div class="char-from-image-cta" data-gen-ai-char-from-image hidden>
+            <div class="char-from-image-cta__preview" data-gen-ai-char-mode-preview hidden>
+              <img data-gen-ai-char-mode-preview-img alt="アップロード画像プレビュー" width="160" height="200" decoding="async">
+            </div>
+            <p class="char-from-image-cta__lead" data-gen-ai-char-from-image-lead>アップロードした画像をマイキャラの見た目として使えます。</p>
+            <div class="char-from-image-cta__analyze-actions">
+              <button type="button" class="char-from-image-cta__btn char-from-image-cta__btn--analyze" data-gen-ai-char-mode-analyze-btn disabled>
+                AIで見た目メモを作る
+              </button>
+              <button type="button" class="char-from-image-cta__btn char-from-image-cta__btn--analyze char-from-image-cta__btn--seed" data-gen-ai-char-mode-seed-btn disabled>
+                AIでキャラ設定も作る
+              </button>
+            </div>
+            <label class="char-from-image-cta__overwrite">
+              <input type="checkbox" data-gen-ai-char-mode-overwrite-ai>
+              <span>入力済みも上書きする</span>
+            </label>
+            <p class="char-from-image-cta__analyze-status" data-gen-ai-char-mode-analyze-status aria-live="polite"></p>
+            <button type="button" class="char-from-image-cta__btn char-from-image-cta__btn--mouth" data-gen-ai-char-mode-mouth-estimate-btn disabled>
+              口位置を自動推定
+            </button>
+            <p class="char-from-image-cta__mouth-status" data-gen-ai-char-mode-mouth-estimate-status aria-live="polite"></p>
+            <button type="button" class="char-from-image-cta__btn" data-gen-ai-char-from-image-btn>この画像でマイキャラを作成</button>
+            <p class="char-from-image-cta__hint">画像生成API未設定時は、アップロード画像をそのままキャラ画像として使います。</p>
+            <p class="char-from-image-cta__status" data-gen-ai-char-mode-status aria-live="polite"></p>
+          </div>
+
+          <div class="chat-area__messages" data-gen-ai-messages role="log" aria-live="polite"></div>
+          <form class="chat-area__form" data-gen-ai-form>
+            <input
+              type="text"
+              class="chat-area__input"
+              data-gen-ai-input
+              placeholder="メッセージを入力…"
+              autocomplete="off"
+              maxlength="4000"
+              required
+            >
+            <input
+              type="file"
+              data-gen-ai-file
+              accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+              hidden
+              aria-hidden="true"
+            >
+            <button type="button" class="chat-area__attach" data-gen-ai-attach aria-label="画像またはPDFを添付">添付</button>
+            <button
+              type="button"
+              class="chat-area__attach chat-area__mic-btn"
+              data-gen-ai-mic
+              data-gen-ai-mic-form
+              data-voice-status="idle"
+              aria-label="🎙 話す"
+              aria-pressed="false"
+              title="音声入力（Web Speech API）"
+            ><span data-gen-ai-mic-label>🎙 話す</span></button>
+            <button type="submit" class="chat-area__send" data-gen-ai-send>送信</button>
+            <span class="chat-area__file-name" data-gen-ai-file-name></span>
+            <span class="chat-area__voice-status" data-gen-ai-voice-status-form data-voice-status="idle" aria-live="polite"></span>
+          </form>
+        </div>
+
+        <aside class="gen-ai-character-panel" data-gen-ai-character-panel hidden aria-label="AIキャラクター">
+          <div id="character-stage" class="ai-character-stage ai-character-stage--2d" data-ai-character-stage>
+            <div class="ai-character-stage__renderer-toggle" role="group" aria-label="キャラ表示モード">
+              <button type="button" class="ai-character-stage__renderer-btn is-active" data-gen-ai-stage-renderer="2d" aria-pressed="true">2D</button>
+              <button type="button" class="ai-character-stage__renderer-btn" data-gen-ai-stage-renderer="live" aria-pressed="false">画像アニメ</button>
+              <button type="button" class="ai-character-stage__renderer-btn" data-gen-ai-stage-renderer="3d" aria-pressed="false">3D</button>
+            </div>
+            <div class="ai-character-stage__visual-stack" data-gen-ai-stage-visual-stack>
+              <div class="ai-character-stage__layer ai-character-stage__layer--2d" data-gen-ai-stage-layer-2d>
+                <img
+                  class="ai-character-stage__img"
+                  data-ai-character-img
+                  src="images/signup-ai-character.png"
+                  alt="TASFUL AI"
+                  width="240"
+                  height="320"
+                  decoding="async"
+                >
+              </div>
+              <div class="ai-character-stage__layer ai-character-stage__layer--live" data-gen-ai-stage-layer-live hidden>
+                <div class="ai-character-stage__live-breathe" data-gen-ai-stage-live-breathe>
+                  <img
+                    class="ai-character-stage__img ai-character-stage__img--live"
+                    data-gen-ai-char-live-img
+                    src="images/signup-ai-character.png"
+                    alt="TASFUL AI"
+                    width="240"
+                    height="320"
+                    decoding="async"
+                  >
+                  <div class="ai-character-stage__blink ai-character-stage__blink--left" data-gen-ai-char-blink-left aria-hidden="true"></div>
+                  <div class="ai-character-stage__blink ai-character-stage__blink--right" data-gen-ai-char-blink-right aria-hidden="true"></div>
+                </div>
+              </div>
+              <canvas
+                class="ai-character-stage__layer ai-character-stage__layer--3d"
+                data-gen-ai-char-3d-canvas
+                hidden
+                aria-label="3Dキャラクタープレビュー"
+              ></canvas>
+              <div
+                id="character-mouth"
+                class="character-mouth"
+                data-character-mouth
+                aria-hidden="true"
+              ></div>
+            </div>
+            <p class="ai-character-stage__status" data-gen-ai-stage-3d-status hidden aria-live="polite"></p>
+            <div class="ai-character-stage__3d-actions" data-gen-ai-3d-actions hidden>
+              <button
+                type="button"
+                class="ai-character-stage__3d-btn ai-character-stage__3d-btn--primary"
+                data-gen-ai-3d-generate-ticket
+                hidden
+              >
+                3Dモデルを生成する
+              </button>
+              <button
+                type="button"
+                class="ai-character-stage__3d-btn"
+                data-gen-ai-3d-buy-ticket
+                hidden
+              >
+                3D生成チケットを購入
+              </button>
+              <button
+                type="button"
+                class="ai-character-stage__3d-btn"
+                data-gen-ai-3d-load-glb
+                hidden
+              >
+                保存済み3Dモデルを表示
+              </button>
+              <div class="ai-character-stage__vrm-poc" data-gen-ai-vrm-poc>
+                <p class="ai-character-stage__vrm-poc-lead">
+                  VRM PoC — Neural4D で書き出した .vrm を読み込み。
+                  参照画像: <code>images/ai-character-neural4d-source.png</code>
+                </p>
+                <div class="ai-character-stage__vrm-poc-row">
+                  <button type="button" class="ai-character-stage__3d-btn" data-gen-ai-vrm-load-sample>
+                    サンプルVRMを表示
+                  </button>
+                  <button type="button" class="ai-character-stage__3d-btn" data-gen-ai-vrm-pick-file>
+                    VRMファイルを選択
+                  </button>
+                  <input type="file" accept=".vrm,model/vnd.vrm" data-gen-ai-vrm-file hidden>
+                </div>
+                <div class="ai-character-stage__vrm-poc-row">
+                  <input
+                    type="url"
+                    class="ai-character-stage__vrm-url-input"
+                    data-gen-ai-vrm-url-input
+                    placeholder="VRMのURL（Neural4Dエクスポート先など）"
+                  >
+                  <button type="button" class="ai-character-stage__3d-btn" data-gen-ai-vrm-load-url>
+                    URL読込
+                  </button>
+                </div>
+                <button type="button" class="ai-character-stage__3d-btn ai-character-stage__3d-btn--dev" data-gen-ai-vrm-inspect>
+                  表情・口形を検証（コンソール）
+                </button>
+                <p class="ai-character-stage__vrm-poc-note" data-gen-ai-vrm-poc-note aria-live="polite"></p>
+              </div>
+              <div class="ai-character-stage__3d-dev-only" data-gen-ai-3d-dev-only hidden>
+                <button
+                  type="button"
+                  class="ai-character-stage__3d-btn ai-character-stage__3d-btn--dev"
+                  data-gen-ai-3d-health-check
+                  disabled
+                >
+                  Tripo接続確認
+                </button>
+                <button
+                  type="button"
+                  class="ai-character-stage__3d-btn ai-character-stage__3d-btn--dev"
+                  data-gen-ai-3d-test-generate
+                  disabled
+                >
+                  初回3Dテスト生成
+                </button>
+                <button
+                  type="button"
+                  class="ai-character-stage__3d-btn ai-character-stage__3d-btn--dev"
+                  data-gen-ai-3d-refresh-url
+                >
+                  taskIdから再取得
+                </button>
+                <label class="ai-character-stage__3d-taskid">
+                  <span class="ai-character-stage__3d-taskid-label">taskId（開発）</span>
+                  <input
+                    type="text"
+                    class="ai-character-stage__3d-taskid-input"
+                    data-gen-ai-3d-task-id-input
+                    placeholder="Tripo task UUID"
+                    spellcheck="false"
+                    autocomplete="off"
+                  />
+                </label>
+                <div class="ai-character-stage__3d-rotation-dev" data-gen-ai-3d-rotation-dev>
+                  <span class="ai-character-stage__3d-rotation-label">向き調整（開発）</span>
+                  <div class="ai-character-stage__3d-rotation-btns">
+                    <button
+                      type="button"
+                      class="ai-character-stage__3d-btn ai-character-stage__3d-btn--dev"
+                      data-gen-ai-3d-rotate-left
+                    >
+                      ← 90°
+                    </button>
+                    <button
+                      type="button"
+                      class="ai-character-stage__3d-btn ai-character-stage__3d-btn--dev"
+                      data-gen-ai-3d-rotate-right
+                    >
+                      → 90°
+                    </button>
+                    <button
+                      type="button"
+                      class="ai-character-stage__3d-btn ai-character-stage__3d-btn--dev"
+                      data-gen-ai-3d-rotate-reset
+                    >
+                      正面リセット
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <p class="ai-character-stage__3d-note" data-gen-ai-3d-prepare-status aria-live="polite"></p>
+              <div class="ai-character-stage__3d-result" data-gen-ai-3d-result-panel hidden>
+                <div data-gen-ai-3d-result-summary></div>
+                <button
+                  type="button"
+                  class="ai-character-stage__3d-details-toggle"
+                  data-gen-ai-3d-details-toggle
+                  hidden
+                  aria-expanded="false"
+                >
+                  詳細を表示
+                </button>
+                <div
+                  class="ai-character-stage__3d-details"
+                  data-gen-ai-3d-details
+                  hidden
+                ></div>
+              </div>
+            </div>
+            <p class="ai-character-stage__hint" data-ai-character-stage-hint></p>
+            <p class="ai-character-stage__active-name" data-gen-ai-stage-char-name hidden></p>
+          </div>
+          <div class="ai-voice-control" data-ai-voice-control>
+            <label class="ai-voice-control__label">
+              <input type="checkbox" class="ai-voice-control__toggle" data-ai-voice-toggle checked>
+              <span class="ai-voice-control__text">音声読み上げ</span>
+            </label>
+            <div class="ai-voice-input" data-gen-ai-voice-input>
+              <button type="button" class="chat-area__attach chat-area__mic-btn" data-gen-ai-mic data-gen-ai-mic-panel data-voice-status="idle" aria-label="🎙 話す" aria-pressed="false"><span data-gen-ai-mic-label>🎙 話す</span></button>
+              <label class="ai-voice-control__label">
+                <input type="checkbox" class="ai-voice-control__toggle" data-gen-ai-auto-send-voice checked>
+                <span class="ai-voice-control__text">認識後に自動送信</span>
+              </label>
+              <p class="ai-voice-control__note chat-area__voice-status" data-gen-ai-voice-status data-voice-status="idle" aria-live="polite"></p>
+            </div>
+            <p class="ai-voice-control__note" data-gen-ai-voice-unsupported hidden>iPhone Safari などは音声入力非対応です。テキスト入力はご利用いただけます。</p>
+            <p class="ai-voice-control__note">Web Speech API（ブラウザ標準）</p>
+            <p
+              class="gen-ai-voice-debug"
+              data-gen-ai-voice-debug
+              hidden
+              aria-live="polite"
+              title="開発用: URL に voice_debug=1"
+            ></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <div class="gen-ai-plan-panel" data-gen-ai-plan-panel hidden role="dialog" aria-modal="true" aria-labelledby="genAiPlanPanelTitle">
+    <div class="gen-ai-plan-panel__inner">
+      <div class="gen-ai-plan-panel__head">
+        <h2 class="gen-ai-plan-panel__title" id="genAiPlanPanelTitle">生成AIプラン</h2>
+        <button type="button" class="gen-ai-plan-panel__close" data-gen-ai-plan-close aria-label="閉じる">×</button>
+      </div>
+      <p class="gen-ai-plan-panel__status" data-gen-ai-plan-status aria-live="polite"></p>
+      <div class="gen-ai-plan-panel__cards" data-gen-ai-plan-cards></div>
+      <h3 class="gen-ai-plan-panel__section-title">オプション</h3>
+      <div class="gen-ai-plan-panel__cards gen-ai-plan-panel__cards--addons" data-gen-ai-plan-addon-cards></div>
+      <div class="gen-ai-plan-panel__portal" data-gen-ai-plan-portal-wrap hidden>
+        <p class="gen-ai-plan-panel__portal-lead">プラン変更・解約・支払い方法変更・請求履歴は Stripe の管理画面から行えます。</p>
+        <button type="button" class="gen-ai-plan-card__btn gen-ai-plan-card__btn--portal" data-gen-ai-plan-portal>プラン管理</button>
+      </div>
+      <p class="gen-ai-plan-panel__note">決済は Stripe Checkout で安全に処理されます。決済に失敗しても AI 機能は停止しません。</p>
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="stripe-genai-config.js"></script>
+  <script src="tripo-genai-config.js"></script>
+  <script src="gen-ai-character-expression.js"></script>
+  <script src="search-intent-detector.js" defer></script>
+  <script src="serper-search-service.js" defer></script>
+  <script src="ai-interaction-log.js" defer></script>
+  <script src="ai-plan-models.js" defer></script>
+  <script src="ai-model-gateway.js" defer></script>
+  <script src="ai-search-orchestrator.js" defer></script>
+  <script src="ai-model-selector.js" defer></script>
+  <script src="ai-concierge.js" defer></script>
+  <script type="module" src="gen-ai-character-3d.js"></script>
+  <script type="module" src="gen-ai-character-vrm.js"></script>
+  <script src="gen-ai-workspace.js" defer></script>
+</body>
+</html>

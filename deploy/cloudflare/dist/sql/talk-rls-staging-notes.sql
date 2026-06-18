@@ -1,0 +1,13 @@
+-- TASFUL TALK — RLS ステージング確認メモ
+--
+-- talk-sync-schema.sql / talk-follow-subscriptions.sql は *_dev ポリシー（using true）を作成します。
+-- 本番公開前に sql/talk-rls-production.sql を適用し、末尾の dev ポリシー削除を実行してください。
+--
+-- 現行 MVP（anon + ?userId=）ではクライアントが .eq('user_id', uid) でフィルタします。
+-- DB 層の厳密分離には JWT の talk_user_id クレーム連携が必要です（talk-rls-production.sql 参照）。
+
+-- 開発ポリシー一覧確認:
+-- select tablename, policyname, cmd, qual, with_check
+-- from pg_policies
+-- where schemaname = 'public' and tablename like 'talk_%'
+-- order by tablename, policyname;

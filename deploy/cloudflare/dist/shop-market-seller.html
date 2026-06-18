@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>出品者 | TASFUL市場</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-product-grid.css">
+  <link rel="stylesheet" href="shop-market-seller.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-seller-page" data-page="shop_market_seller">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ"><span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span><span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span></a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ"><span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span><span class="tasful-market-mall-header__account-label">マイページ</span></a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート"><span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span><span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span><span class="tasful-market-mall-header__cart-label">カート</span></a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ"><div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div></nav>
+  </header>
+
+  <main class="tasful-market-seller-main" aria-label="出品者">
+    <div class="tasful-market-seller-hero" data-tasful-seller-hero hidden>
+      <h1 class="tasful-market-seller-hero__name" data-tasful-seller-name></h1>
+      <p class="tasful-market-seller-hero__stats">
+        <span class="tasful-market-seller-hero__rating" data-tasful-seller-rating></span>
+        <span data-tasful-seller-reviews></span>
+        <span data-tasful-seller-sales></span>
+      </p>
+      <p data-tasful-seller-connect hidden><span class="tasful-market-seller-hero__connect">✓ Connect認証済み</span></p>
+      <div class="tasful-market-seller-hero__actions">
+        <a href="#" class="tasful-market-seller-hero__btn tasful-market-seller-hero__btn--primary" data-tasful-seller-orders-link>注文管理</a>
+        <a href="shop-market-mypage.html" class="tasful-market-seller-hero__btn">マイページ</a>
+      </div>
+    </div>
+    <p data-tasful-seller-status hidden></p>
+    <section aria-labelledby="seller-products-heading">
+      <div class="tasful-market-seller-products__head">
+        <h2 id="seller-products-heading" class="tasful-market-seller-products__title">商品一覧</h2>
+        <a href="#" class="tasful-market-seller-products__add" data-tasful-seller-add-product-inline>＋ 商品を追加</a>
+      </div>
+      <div class="tasful-market-grid" data-tasful-seller-products></div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-seller.js"></script>
+</body>
+</html>

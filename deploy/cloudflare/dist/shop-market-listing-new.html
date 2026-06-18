@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>商品を出品 | TASFUL市場</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-listing-new.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-listing-new-page" data-page="shop_market_listing_new">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ">
+          <span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span>
+          <span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span>
+        </a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ">
+            <span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span>
+            <span class="tasful-market-mall-header__account-label">マイページ</span>
+          </a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート">
+            <span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span>
+            <span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span>
+            <span class="tasful-market-mall-header__cart-label">カート</span>
+          </a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ">
+      <div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div>
+    </nav>
+  </header>
+
+  <main class="tasful-market-listing-main" aria-label="商品出品">
+    <header class="tasful-market-listing-main__head">
+      <h1 class="tasful-market-listing-main__title">商品を出品</h1>
+      <p class="tasful-market-listing-main__step" data-tasful-listing-step-label>ステップ 1 / 2 — 商品情報の入力</p>
+    </header>
+
+    <p class="tasful-market-listing-main__error" data-tasful-listing-error hidden role="alert"></p>
+
+    <form class="tasful-market-listing-form" data-tasful-listing-form novalidate>
+      <section class="tasful-market-listing-section" aria-labelledby="listing-basic-heading">
+        <h2 id="listing-basic-heading" class="tasful-market-listing-section__title">基本情報</h2>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">商品名 <em class="tasful-market-listing-field__req">必須</em></span>
+          <input type="text" name="title" class="tasful-market-listing-field__input" data-tasful-listing-title required maxlength="120" placeholder="例：手作りジャム 200g">
+        </label>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">商品カテゴリ <em class="tasful-market-listing-field__req">必須</em></span>
+          <select name="category" class="tasful-market-listing-field__input" data-tasful-listing-category required></select>
+        </label>
+
+        <fieldset class="tasful-market-listing-field tasful-market-listing-field--fieldset">
+          <legend class="tasful-market-listing-field__label">商品状態 <em class="tasful-market-listing-field__req">必須</em></legend>
+          <div class="tasful-market-listing-radio-group" data-tasful-listing-condition></div>
+        </fieldset>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">商品説明</span>
+          <textarea name="description" class="tasful-market-listing-field__textarea" data-tasful-listing-description rows="4" maxlength="800" placeholder="素材・サイズ・使い方など"></textarea>
+        </label>
+      </section>
+
+      <section class="tasful-market-listing-section" aria-labelledby="listing-price-heading">
+        <h2 id="listing-price-heading" class="tasful-market-listing-section__title">価格・配送</h2>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">価格（円） <em class="tasful-market-listing-field__req">必須</em></span>
+          <input type="number" name="priceYen" class="tasful-market-listing-field__input" data-tasful-listing-price min="1" step="1" inputmode="numeric" placeholder="1280">
+        </label>
+
+        <label class="tasful-market-listing-check">
+          <input type="checkbox" name="taxIncluded" data-tasful-listing-tax checked>
+          <span>税込表示</span>
+        </label>
+
+        <label class="tasful-market-listing-check">
+          <input type="checkbox" name="freeShipping" data-tasful-listing-free-shipping>
+          <span>送料無料</span>
+        </label>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">発送目安 <em class="tasful-market-listing-field__req">必須</em></span>
+          <select name="shipDaysKey" class="tasful-market-listing-field__input" data-tasful-listing-ship required></select>
+        </label>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">在庫数 <em class="tasful-market-listing-field__req">必須</em></span>
+          <input type="number" name="stock" class="tasful-market-listing-field__input" data-tasful-listing-stock min="0" step="1" inputmode="numeric" value="10">
+        </label>
+      </section>
+
+      <section class="tasful-market-listing-section" aria-labelledby="listing-image-heading">
+        <h2 id="listing-image-heading" class="tasful-market-listing-section__title">画像</h2>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">商品画像URL <em class="tasful-market-listing-field__req">必須</em></span>
+          <input type="url" name="imageUrl" class="tasful-market-listing-field__input" data-tasful-listing-image required placeholder="https://images.unsplash.com/...">
+        </label>
+        <div class="tasful-market-listing-preview" data-tasful-listing-image-preview hidden>
+          <img src="" alt="" width="120" height="120" decoding="async" data-tasful-listing-preview-img>
+        </div>
+
+        <p class="tasful-market-listing-field__hint">サブ画像URL（3〜5枚・任意）</p>
+        <div class="tasful-market-listing-sub-images" data-tasful-listing-sub-images></div>
+      </section>
+
+      <section class="tasful-market-listing-section" aria-labelledby="listing-seller-heading">
+        <h2 id="listing-seller-heading" class="tasful-market-listing-section__title">出品者</h2>
+
+        <label class="tasful-market-listing-field">
+          <span class="tasful-market-listing-field__label">出品者名 <em class="tasful-market-listing-field__req">必須</em></span>
+          <input type="text" name="sellerName" class="tasful-market-listing-field__input" data-tasful-listing-seller-name required maxlength="60" placeholder="例：TASFUL Bakery">
+        </label>
+
+        <label class="tasful-market-listing-check">
+          <input type="checkbox" name="connectVerified" data-tasful-listing-connect>
+          <span>Connect認証済み出品者として表示</span>
+        </label>
+      </section>
+
+      <div class="tasful-market-listing-form__actions">
+        <button type="button" class="tasful-market-listing-btn tasful-market-listing-btn--primary" data-tasful-listing-to-confirm>入力内容を確認する</button>
+        <a href="shop-market-mypage.html" class="tasful-market-listing-btn tasful-market-listing-btn--outline">キャンセル</a>
+      </div>
+    </form>
+
+    <section class="tasful-market-listing-confirm" data-tasful-listing-confirm hidden aria-label="出品内容の確認">
+      <div class="tasful-market-listing-confirm__card">
+        <div class="tasful-market-listing-confirm__image-wrap">
+          <img src="" alt="" width="160" height="160" decoding="async" data-tasful-listing-confirm-image>
+        </div>
+        <dl class="tasful-market-listing-confirm__list" data-tasful-listing-confirm-body></dl>
+      </div>
+      <div class="tasful-market-listing-form__actions">
+        <button type="button" class="tasful-market-listing-btn tasful-market-listing-btn--primary" data-tasful-listing-publish>この内容で公開する</button>
+        <button type="button" class="tasful-market-listing-btn tasful-market-listing-btn--outline" data-tasful-listing-back>入力に戻る</button>
+      </div>
+    </section>
+
+    <section class="tasful-market-listing-done" data-tasful-listing-done hidden aria-label="公開完了">
+      <div class="tasful-market-listing-done__card">
+        <p class="tasful-market-listing-done__icon" aria-hidden="true">✓</p>
+        <h2 class="tasful-market-listing-done__title">出品を公開しました</h2>
+        <p class="tasful-market-listing-done__lead" data-tasful-listing-done-message>市場TOP・検索・出品者ページに反映されます。</p>
+      </div>
+      <div class="tasful-market-listing-form__actions">
+        <a href="#" class="tasful-market-listing-btn tasful-market-listing-btn--primary" data-tasful-listing-done-seller>出品者ページを見る</a>
+        <a href="shop-store.html" class="tasful-market-listing-btn tasful-market-listing-btn--outline">市場TOPへ</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="shop-market-product-data.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-listing-new.js"></script>
+</body>
+</html>

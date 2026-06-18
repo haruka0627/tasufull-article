@@ -1,0 +1,266 @@
+/* 上位掲載 — 出品者向けボタン・モーダル・ステータス */
+
+.listing-featured-owner {
+  margin: 0 0 1.25rem;
+  padding: 0;
+}
+
+.listing-featured-owner__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.listing-featured-owner__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.65rem 1.35rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #3d392f;
+  background: linear-gradient(145deg, #f4d06f, #e8c05a);
+  border: 1px solid rgba(154, 123, 46, 0.45);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(120, 98, 42, 0.12);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.15s ease;
+}
+
+.listing-featured-owner__btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(120, 98, 42, 0.16);
+}
+
+.listing-featured-owner__btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+.listing-featured-owner__toast {
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 28rem;
+}
+
+.listing-featured-owner__toast--success {
+  color: #1b4332;
+  background: rgba(212, 237, 218, 0.95);
+  border: 1px solid rgba(45, 106, 79, 0.25);
+}
+
+.listing-featured-owner__toast--error {
+  color: #7f1d1d;
+  background: rgba(254, 226, 226, 0.95);
+  border: 1px solid rgba(180, 35, 24, 0.2);
+}
+
+.listing-featured-status {
+  padding: 1rem 1.15rem;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(255, 251, 240, 0.95), rgba(252, 246, 232, 0.88));
+  border: 1px solid rgba(193, 168, 88, 0.32);
+  width: 100%;
+  max-width: 28rem;
+}
+
+.listing-featured-status__badge {
+  display: inline-block;
+  margin-bottom: 0.35rem;
+  padding: 0.15rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #7a5710;
+  background: rgba(244, 208, 111, 0.35);
+  border-radius: 999px;
+}
+
+.listing-featured-status__badge--pr {
+  color: #5a4a8a;
+  background: rgba(210, 200, 240, 0.45);
+}
+
+.listing-featured-status__text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #5a5954;
+  line-height: 1.5;
+}
+
+.listing-featured-upsell-section {
+  max-width: 100%;
+}
+
+/* ── モーダル ── */
+.listing-featured-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.listing-featured-modal[hidden] {
+  display: none !important;
+}
+
+.listing-featured-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 28, 24, 0.45);
+  cursor: pointer;
+}
+
+.listing-featured-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 26rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  padding: 1.35rem 1.25rem 1.25rem;
+  border-radius: 14px;
+  background: #fffdf8;
+  border: 1px solid rgba(193, 168, 88, 0.35);
+  box-shadow: 0 20px 50px rgba(60, 50, 30, 0.18);
+}
+
+.listing-featured-modal__close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: #6b665c;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.listing-featured-modal__close:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.listing-featured-modal__eyebrow {
+  margin: 0 0 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #9a7b2e;
+}
+
+.listing-featured-modal__title {
+  margin: 0 2rem 0.5rem 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #3d392f;
+  line-height: 1.4;
+}
+
+.listing-featured-modal__lead {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: #6b665c;
+}
+
+.listing-featured-modal__plans {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.listing-featured-modal__plan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  text-align: left;
+  font: inherit;
+  color: #3d392f;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(193, 168, 88, 0.4);
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.listing-featured-modal__plan:hover:not(:disabled) {
+  border-color: rgba(154, 123, 46, 0.6);
+  box-shadow: 0 4px 12px rgba(120, 98, 42, 0.1);
+}
+
+.listing-featured-modal__plan:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.listing-featured-modal__plan--pr {
+  border-color: rgba(120, 100, 180, 0.35);
+}
+
+.listing-featured-modal__plan-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.listing-featured-modal__plan-price {
+  flex-shrink: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #7a5710;
+}
+
+.listing-featured-modal__plan--pr .listing-featured-modal__plan-price {
+  color: #5a4a8a;
+}
+
+.listing-featured-modal__note {
+  margin: 0.75rem 0 0;
+  font-size: 0.75rem;
+  color: #8a8578;
+  line-height: 1.5;
+}
+
+.listing-featured-modal__note.is-error {
+  color: #b42318;
+}
+
+.listing-featured-modal__note.is-busy {
+  color: #5a5954;
+}
+
+body.listing-featured-modal-open {
+  overflow: hidden;
+}
+
+/* 投稿完了モーダル内 */
+.post-modal__dialog .listing-featured-owner {
+  margin-top: 0.75rem;
+}
+
+.post-modal__dialog .listing-featured-owner__btn {
+  width: 100%;
+  max-width: none;
+}

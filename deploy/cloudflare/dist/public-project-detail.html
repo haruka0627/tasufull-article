@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>案件詳細 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            page: '#F8F9FA',
+            gold: { DEFAULT: '#F4D06F', dark: '#D4A63A', light: '#FFE7A3' },
+          },
+          fontFamily: {
+            sans: ['"Noto Sans JP"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="listing-detail-page.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+  <link rel="stylesheet" href="detail-job.css">
+</head>
+<body class="job-detail-page job-detail-sticky-footer min-h-screen bg-page font-sans text-gray-800 antialiased" data-page="public-project-detail">
+
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットフォームへようこそ　
+      <a href="public-projects.html" class="link">案件一覧へ</a>
+    </div>
+  </div>
+
+  <div class="job-detail-wrap skill-detail-wrap mx-auto w-full max-w-[1400px] px-4 py-6 sm:px-6 lg:px-8">
+    <header class="page-subheader mb-5 flex items-center justify-between">
+      <a href="public-projects.html" class="text-sm text-gray-500 transition hover:text-gold-dark" data-public-project-back-link>← 案件一覧に戻る</a>
+      <span class="text-sm font-bold text-gold-dark">TASFUL 案件</span>
+    </header>
+
+    <main class="job-detail-main skill-detail-main w-full max-w-none detail-page-main">
+      <div class="job-detail-layout job-main-cards">
+
+        <section class="job-top-card job-hero-section skill-hero-section job-panel-card" aria-label="案件概要">
+          <div class="job-top-card__grid skill-hero-premium__grid">
+            <div class="job-top-card__main job-hero-premium__center skill-hero-premium__center" style="grid-column: 1 / -1;">
+              <span class="job-top-card__category skill-hero-premium__category">一般案件</span>
+              <h1 class="skill-hero-premium__title" data-public-project-title>案件詳細</h1>
+              <p class="job-hero-summary job-hero-fv-summary skill-hero-premium__subtitle" data-public-project-summary>—</p>
+              <div class="job-top-card__tags job-hero-tags skill-hero-premium__tags" data-public-project-tags aria-label="案件タグ"></div>
+            </div>
+
+            <aside class="job-top-card__cta job-hero-premium__cta skill-hero-premium__cta" data-public-project-cta>
+              <div class="job-top-cta job-cta-panel skill-cta-panel">
+                <p class="skill-cta-panel__label">報酬</p>
+                <p class="skill-cta-panel__price job-cta-panel__price">
+                  <span data-public-project-reward>応相談</span>
+                </p>
+                <p class="skill-cta-panel__label skill-cta-panel__label--actions">ご応募</p>
+                <button type="button" class="job-top-cta__apply hero-apply-btn" data-public-project-apply id="apply">この案件に応募する</button>
+                <p class="text-sm text-gray-500 mt-3" data-public-project-apply-status hidden></p>
+              </div>
+            </aside>
+          </div>
+
+          <div class="job-top-card__metrics job-top-metrics" aria-label="条件サマリー">
+            <div class="job-top-metrics__grid" data-public-project-metrics></div>
+          </div>
+        </section>
+
+        <section id="section-overview" class="section-anchor job-section job-content-card job-panel-card job-detail-section" aria-labelledby="projectOverviewTitle">
+          <div class="job-content-card__layout">
+            <div class="job-content-card__main">
+              <h2 id="projectOverviewTitle" class="job-content-card__title">案件概要</h2>
+              <div class="job-content-card__body" data-public-project-overview>—</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-work" class="section-anchor job-section job-content-card job-panel-card job-detail-section" aria-labelledby="projectWorkTitle">
+          <div class="job-content-card__layout">
+            <div class="job-content-card__main">
+              <h2 id="projectWorkTitle" class="job-content-card__title">作業内容</h2>
+              <div class="job-content-card__body" data-public-project-work>—</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-trades" class="section-anchor job-section job-content-card job-panel-card job-detail-section" aria-labelledby="projectTradesTitle">
+          <div class="job-content-card__layout">
+            <div class="job-content-card__main">
+              <h2 id="projectTradesTitle" class="job-content-card__title">募集職種</h2>
+              <div class="job-top-card__tags" data-public-project-trades></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-attachments" class="section-anchor job-section job-content-card job-panel-card job-detail-section" aria-labelledby="projectAttachTitle">
+          <div class="job-content-card__layout">
+            <div class="job-content-card__main">
+              <h2 id="projectAttachTitle" class="job-content-card__title">添付資料</h2>
+              <ul class="job-content-card__body" data-public-project-attachments style="list-style:none;padding:0;margin:0;"></ul>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="job-detail-footer pb-8 text-center text-xs text-gray-400">© TASFUL — 案件マーケットプレイス</footer>
+  </div>
+
+  <div class="job-bottom-dock" data-public-project-bottom-dock>
+    <div class="job-bottom-dock__inner">
+      <div class="job-bottom-dock__actions" aria-label="応募アクション">
+        <button type="button" class="job-bottom-dock__apply" data-public-project-dock-apply>応募する</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="public-project-detail-page.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>

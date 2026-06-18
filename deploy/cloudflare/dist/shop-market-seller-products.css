@@ -1,0 +1,103 @@
+/* TASFUL市場 — 出品商品管理 */
+body.tasful-market-seller-products-page {
+  padding-top: calc(var(--tasful-market-header-total-h, 152px) + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+  background: var(--tasful-market-bg, #f3f4f6);
+}
+
+.tasful-market-seller-products-main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px 16px 0;
+}
+
+.tasful-market-seller-products-main__head {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tasful-market-seller-products-main__title {
+  margin: 0 0 4px;
+  font-size: 1.125rem;
+  font-weight: 900;
+  color: #111827;
+}
+
+.tasful-market-seller-products-main__lead {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.tasful-market-seller-products-main__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  width: 100%;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #ffd814;
+  border: 1px solid #e6c200;
+  color: #111;
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tasful-market-seller-products-empty {
+  padding: 28px 16px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid var(--tasful-market-border, #e5e7eb);
+  border-radius: 12px;
+}
+
+.tasful-market-seller-products-empty__icon {
+  margin: 0 0 10px;
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.tasful-market-seller-products-empty__title {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 900;
+  color: #111827;
+}
+
+.tasful-market-seller-products-empty__text {
+  margin: 0 0 16px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #6b7280;
+}
+
+.tasful-market-seller-products-empty__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 180px;
+  margin: 0 auto;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: #ffd814;
+  border: 1px solid #e6c200;
+  color: #111;
+  font-size: 0.875rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.tasful-market-seller-products-empty__link {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #007185;
+  text-decoration: none;
+}

@@ -1,0 +1,2832 @@
+/* TASFUL市場 — 商品詳細（Amazon型・390px基準） */
+body.tasful-market-product-page {
+  padding-top: calc(var(--tasful-market-header-total-h, 152px) + env(safe-area-inset-top, 0px)) !important;
+  padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)) !important;
+  background: var(--tasful-market-bg);
+}
+
+body.tasful-market-product-page .tasu-banner {
+  display: none !important;
+}
+
+.tasful-market-product-shell {
+  min-height: 0;
+}
+
+.tasful-market-product-main {
+  background: #fff;
+}
+
+.tasful-market-product-status {
+  margin: 0;
+  padding: 24px 16px;
+  text-align: center;
+  color: var(--tasful-market-muted);
+  font-size: 0.875rem;
+}
+
+/* ファーストビュー */
+.tasful-market-product-hero {
+  padding: 0 0 16px;
+  background: #fff;
+}
+
+.tasful-market-product-gallery,
+.tasful-market-product-hero__media {
+  padding: 10px 12px 0;
+}
+
+.tasful-market-product-hero__figure {
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f3f4f6;
+}
+
+.tasful-market-product-hero__figure img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tasful-market-product-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 0 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tasful-market-product-thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.tasful-market-product-thumbs__btn {
+  flex: 0 0 56px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  border: 2px solid var(--tasful-market-border);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tasful-market-product-thumbs__btn.is-active {
+  border-color: #c45500;
+}
+
+.tasful-market-product-thumbs__btn img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tasful-market-product-thumbs__caption {
+  margin: 0;
+  padding: 0 0 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--tasful-market-muted);
+  text-align: center;
+}
+
+.tasful-market-search-mini--placeholder {
+  pointer-events: none;
+  opacity: 0.92;
+}
+
+.tasful-market-search-mini--placeholder .tasful-market-search-mini__title,
+.tasful-market-search-mini--placeholder .tasful-market-search-mini__price {
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-product-hero__body {
+  padding: 12px 12px 0;
+}
+
+.tasful-market-product-hero__title {
+  margin: 0 0 8px;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: var(--tasful-market-text);
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.tasful-market-product-hero__condition {
+  display: inline-block;
+  margin: 0 0 8px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f3f4f6;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  color: #374151;
+}
+
+.tasful-market-product-hero__condition--handmade {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.tasful-market-product-hero__condition--local {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.tasful-market-product-hero__condition--used {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.tasful-market-product-hero__condition--likeNew {
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+
+.tasful-market-product-hero__rating {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  color: #007185;
+  font-weight: 600;
+  line-height: 1.5;
+  word-break: normal;
+}
+
+.tasful-market-product-hero__rating a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tasful-market-product-hero__price {
+  margin: 0 0 4px;
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: #b12704;
+  line-height: 1.2;
+}
+
+.tasful-market-product-hero__price-tax {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-product-hero__ship-free {
+  margin: 0 0 4px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #067d62;
+}
+
+.tasful-market-product-hero__ship-days {
+  margin: 0 0 2px;
+  font-size: 0.8125rem;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-product-hero__ship-deadline {
+  margin: 0 0 8px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-product-hero__stock {
+  margin: 0 0 10px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #067d62;
+}
+
+.tasful-market-product-hero__stock.is-low {
+  color: #b45309;
+}
+
+.tasful-market-product-hero__connect {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #067d62;
+}
+
+/* おすすめポイント */
+.tasful-market-product-points {
+  margin: 0 0 14px;
+  padding: 10px 10px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background: #fafafa;
+}
+
+.tasful-market-product-points__title {
+  margin: 0 0 8px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-product-points__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tasful-market-product-points__list li {
+  position: relative;
+  padding: 4px 0 4px 18px;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-product-points__list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  color: #067d62;
+  font-weight: 800;
+}
+
+.tasful-market-product-hero__qty {
+  margin: 0 0 12px;
+}
+
+.tasful-market-product-hero__qty label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.tasful-market-product-hero__qty-select {
+  width: 72px;
+  height: 36px;
+  padding: 0 8px;
+  border: 1px solid #888;
+  border-radius: 8px;
+  background: #f0f2f2;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.tasful-market-product-hero__actions {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.tasful-market-product-hero__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 999px;
+  border: none;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.tasful-market-product-hero__btn--cart {
+  background: #ffd814;
+  color: #111;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.tasful-market-product-hero__btn--buy {
+  background: #ffa41c;
+  color: #111;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.tasful-market-product-hero__btn--fav {
+  background: #fff;
+  color: var(--tasful-market-text);
+  border: 1px solid var(--tasful-market-border);
+}
+
+.tasful-market-product-hero__btn--fav.is-active {
+  border-color: #e11d48;
+  color: #e11d48;
+}
+
+/* 出品者カード */
+.tasful-market-product-seller {
+  padding: 14px 12px;
+  background: #fff;
+  border-top: 8px solid var(--tasful-market-bg);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+
+.tasful-market-product-seller__heading {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tasful-market-product-seller__name {
+  margin: 0 0 10px;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #007185;
+}
+
+.tasful-market-product-seller__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.tasful-market-product-seller__stat {
+  padding: 8px 6px;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 8px;
+  background: #fafafa;
+  text-align: center;
+}
+
+.tasful-market-product-seller__stat dt {
+  margin: 0 0 4px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-product-seller__stat dd {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--tasful-market-text);
+  line-height: 1.3;
+}
+
+.tasful-market-product-seller__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  list-style: none;
+}
+
+.tasful-market-product-seller__badges li {
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #047857;
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.tasful-market-product-seller__actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tasful-market-product-seller__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.tasful-market-product-seller__btn--view {
+  background: #fff;
+  color: var(--tasful-market-text);
+  border: 1px solid var(--tasful-market-border);
+}
+
+.tasful-market-product-seller__btn--follow {
+  background: #232f3e;
+  color: #fff;
+  border: none;
+}
+
+.tasful-market-product-seller__btn--follow.is-active {
+  background: #fff;
+  color: #232f3e;
+  border: 1px solid #232f3e;
+}
+
+.tasful-market-product-trust__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tasful-market-product-trust__list li {
+  padding: 6px 0;
+  border-bottom: 1px solid #f3f4f6;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-product-trust__list li:last-child {
+  border-bottom: 0;
+}
+
+/* この商品について */
+.tasful-market-product-about {
+  padding: 14px 12px 16px;
+  background: #fff;
+  border-top: 8px solid var(--tasful-market-bg);
+}
+
+.tasful-market-product-about__title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tasful-market-product-about__list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--tasful-market-text);
+}
+
+.tasful-market-product-about__list li + li {
+  margin-top: 6px;
+}
+
+/* 商品情報アコーディオン */
+.tasful-market-product-specs {
+  background: #fff;
+  border-top: 8px solid var(--tasful-market-bg);
+}
+
+.tasful-market-product-specs__title {
+  margin: 0;
+  padding: 14px 12px 8px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tasful-market-product-specs__item {
+  border-top: 1px solid var(--tasful-market-border);
+}
+
+.tasful-market-product-specs__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.tasful-market-product-specs__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.tasful-market-product-specs__item summary::after {
+  content: "›";
+  font-size: 1.125rem;
+  color: var(--tasful-market-muted);
+  transform: rotate(90deg);
+}
+
+.tasful-market-product-specs__item[open] summary::after {
+  transform: rotate(-90deg);
+}
+
+.tasful-market-product-specs__body {
+  padding: 0 12px 12px;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--tasful-market-muted);
+}
+
+/* レビュー */
+.tasful-market-product-reviews {
+  padding: 14px 12px 16px;
+  background: #fff;
+  border-top: 8px solid var(--tasful-market-bg);
+}
+
+.tasful-market-product-reviews__layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.tasful-market-product-reviews__sidebar {
+  min-width: 0;
+}
+
+.tasful-market-product-reviews__main {
+  min-width: 0;
+}
+
+.tasful-market-product-reviews__title {
+  margin: 0 0 12px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.tasful-market-product-reviews__score-block {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
+.tasful-market-product-reviews__score-main {
+  text-align: left;
+}
+
+.tasful-market-product-reviews__write-cta {
+  margin-bottom: 16px;
+  padding-top: 4px;
+}
+
+.tasful-market-product-reviews__write-title {
+  margin: 0 0 4px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.tasful-market-product-reviews__write-lead {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: #565959;
+}
+
+.tasful-market-product-reviews__compose {
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid #fdba74;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fff7ed 0%, #fff 100%);
+  scroll-margin-top: calc(var(--tasful-market-header-total-h, 152px) + 12px);
+}
+
+.tasful-market-product-reviews__compose.is-open {
+  box-shadow: 0 4px 16px rgba(234, 88, 12, 0.12);
+}
+
+.tasful-market-product-reviews__compose-title {
+  margin: 0 0 4px;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #9a3412;
+}
+
+.tasful-market-product-reviews__compose-lead {
+  margin: 0 0 10px;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.tasful-market-product-reviews__compose-stars {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.tasful-market-product-reviews__star-btn {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+  background: #fff;
+  color: #cbd5e1;
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.tasful-market-product-reviews__star-btn.is-active,
+.tasful-market-product-reviews__star-btn.is-filled {
+  color: #ffa41c;
+  border-color: #fdba74;
+  background: #fffbeb;
+}
+
+.tasful-market-product-reviews__compose-field {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.tasful-market-product-reviews__compose-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.tasful-market-product-reviews__compose-input,
+.tasful-market-product-reviews__compose-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--tasful-market-border);
+  border-radius: 10px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  box-sizing: border-box;
+}
+
+.tasful-market-product-reviews__compose-textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.tasful-market-product-reviews__compose-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  margin: 0;
+  padding: 0.55rem 0.875rem;
+  border: none;
+  border-radius: 999px;
+  background: #ea580c;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tasful-market-product-reviews__compose-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.tasful-market-product-reviews__compose-done {
+  margin: 10px 0 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #15803d;
+}
+
+.tasful-market-product-reviews__compose[hidden],
+.tasful-market-product-reviews__compose-open[hidden] {
+  display: none !important;
+}
+
+.tasful-market-product-reviews__compose-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 160px;
+  max-width: 100%;
+  min-height: 32px;
+  margin: 0;
+  padding: 0.4rem 1.125rem;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #f7f8f8 0%, #e3e6e6 100%);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  color: #0f1111;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tasful-market-product-reviews__compose-open:hover {
+  background: linear-gradient(180deg, #edf0f0 0%, #d5d9d9 100%);
+}
+
+.tasful-market-product-reviews__stars-big {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  color: #ffa41c;
+  letter-spacing: 1px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.tasful-market-product-reviews__score-outof,
+.tasful-market-product-reviews__score-value {
+  margin: 0 0 4px;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #0f1111;
+  line-height: 1.2;
+}
+
+.tasful-market-product-reviews__score-outof .tasful-market-product-reviews__score-value {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.tasful-market-product-reviews__score-count {
+  margin: 0 0 12px;
+  font-size: 0.875rem;
+  color: #007185;
+  font-weight: 400;
+}
+
+.tasful-market-product-reviews__opinions {
+  margin-bottom: 24px;
+}
+
+.tasful-market-product-reviews__opinions-title,
+.tasful-market-product-reviews__media-title,
+.tasful-market-product-reviews__top-title {
+  margin: 0 0 12px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.tasful-market-product-reviews__opinions-summary {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #0f1111;
+}
+
+.tasful-market-product-reviews__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tasful-market-product-reviews__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px;
+  border: 1px solid #d5d9d9;
+  border-radius: 999px;
+  background: #fff;
+  color: #0f1111;
+  font: inherit;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.tasful-market-product-reviews__tag-label {
+  font-weight: 600;
+}
+
+.tasful-market-product-reviews__tag-count {
+  color: #565959;
+}
+
+.tasful-market-product-reviews__media-section {
+  margin-bottom: 28px;
+}
+
+.tasful-market-product-reviews__media-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tasful-market-product-reviews__media-all {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: #007185;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.tasful-market-product-reviews__media-all:hover {
+  text-decoration: underline;
+  color: #c7511f;
+}
+
+.tasful-market-product-reviews__photos {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.tasful-market-product-reviews__photo-slot {
+  position: relative;
+  flex: 0 0 120px;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  border: 1px solid #d5d9d9;
+  border-radius: 4px;
+  background: #f3f4f6;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.tasful-market-product-reviews__photo-slot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tasful-market-product-reviews__media-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(15, 17, 17, 0.72);
+  color: #fff;
+  font-size: 0.75rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.tasful-market-product-reviews__media-duration {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: rgba(15, 17, 17, 0.72);
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.2;
+  pointer-events: none;
+}
+
+.tasful-market-product-reviews__media-stars {
+  position: absolute;
+  left: 6px;
+  bottom: 6px;
+  color: #ffa41c;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.tasful-market-product-reviews__photo-slot.is-video::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 17, 17, 0.08);
+  pointer-events: none;
+}
+
+.tasful-market-product-reviews__top-title {
+  margin-bottom: 16px;
+  padding-top: 4px;
+  border-top: 1px solid #e7e7e7;
+}
+
+.tasful-market-product-reviews__list {
+  display: grid;
+  gap: 0;
+}
+
+.tasful-market-product-reviews__item {
+  padding: 18px 0;
+  border-bottom: 1px solid #e7e7e7;
+}
+
+.tasful-market-product-reviews__item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.tasful-market-product-reviews__item-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.tasful-market-product-reviews__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e3e6e6;
+  color: #565959;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.tasful-market-product-reviews__author {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.tasful-market-product-reviews__stars {
+  margin: 0 0 4px;
+  font-size: 0.875rem;
+  color: #ffa41c;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.tasful-market-product-reviews__item-title {
+  color: #0f1111;
+  font-weight: 700;
+}
+
+.tasful-market-product-reviews__meta,
+.tasful-market-product-reviews__variant {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  color: #565959;
+  line-height: 1.45;
+}
+
+.tasful-market-product-reviews__item-body {
+  margin: 10px 0 8px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #0f1111;
+}
+
+.tasful-market-product-reviews__helpful {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #565959;
+}
+
+.tasful-market-product-reviews__more {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #007185;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tasful-market-product-reviews__more[disabled] {
+  opacity: 0.5;
+  cursor: default;
+  text-decoration: none;
+}
+
+/* ヒーロー再構成（モバイル基準） */
+.tasful-market-product-hero__layout {
+  display: block;
+}
+
+.tasful-market-product-hero__info {
+  padding: 12px 12px 0;
+}
+
+.tasful-market-product-hero__brand {
+  margin: 0 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.tasful-market-product-hero__brand a {
+  color: #007185;
+  text-decoration: none;
+}
+
+.tasful-market-product-hero__brand a:hover {
+  text-decoration: underline;
+}
+
+.tasful-market-product-hero__rating-stars {
+  color: #ffa41c;
+  margin-right: 2px;
+}
+
+.tasful-market-product-hero__rating-score {
+  font-weight: 700;
+}
+
+.tasful-market-product-hero__rating-count {
+  font-weight: 600;
+}
+
+.tasful-market-product-hero__reviews-link {
+  display: inline-block;
+  margin-left: 8px;
+  color: #007185;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.tasful-market-product-hero__reviews-link:hover {
+  text-decoration: underline;
+}
+
+.tasful-market-product-hero__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+}
+
+.tasful-market-product-trust__line {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #6b7280;
+}
+
+.tasful-market-product-trust__line--verify {
+  color: #047857;
+  font-weight: 600;
+}
+
+.tasful-market-product-trust__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.tasful-market-product-trust__badge--connect {
+  background: #e8f4fd;
+  color: #007185;
+}
+
+.tasful-market-product-trust__badge--identity {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+.tasful-market-product-trust__badge-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tasful-market-product-trust__help {
+  display: none;
+}
+
+.tasful-market-product-trust__tooltip {
+  display: none;
+}
+
+.tasful-market-product-trust__meta {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: #6b7280;
+}
+
+.tasful-market-product-rating-line {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 6px;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #0f1111;
+}
+
+.tasful-market-product-rating-line__stars {
+  color: #ffa41c;
+  letter-spacing: 0.5px;
+}
+
+.tasful-market-product-rating-line__score {
+  font-weight: 600;
+}
+
+.tasful-market-product-rating-line__reviews {
+  color: #007185;
+  font-size: 0.8125rem;
+  font-weight: 400;
+}
+
+.tasful-market-product-verify__item {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #047857;
+}
+
+.tasful-market-product-deals-line {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: #565959;
+}
+
+.tasful-market-product-reviews__overview {
+  display: grid;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.tasful-market-product-hero__center-commerce {
+  display: none;
+}
+
+.tasful-market-product-buybox {
+  display: none;
+}
+
+.tasful-market-product-page-grid {
+  display: block;
+}
+
+.tasful-market-product-page-col {
+  min-width: 0;
+}
+
+.tasful-market-product-section-nav {
+  display: block;
+  margin: 0 0 4px;
+  background: #fff;
+  border-top: 1px solid #e3e6e6;
+  border-bottom: 1px solid #e3e6e6;
+}
+
+.tasful-market-product-section-nav__inner {
+  overflow: visible;
+}
+
+.tasful-market-product-section-nav__list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tasful-market-product-section-nav__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 4px;
+  border: none;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #565959;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  text-decoration: none;
+  white-space: normal;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tasful-market-product-section-nav__link:hover,
+.tasful-market-product-section-nav__link:focus-visible {
+  color: #007185;
+  background: #f7fbff;
+  border-bottom-color: #b8d4e0;
+  outline: none;
+}
+
+.tasful-market-product-section-nav__link.is-active {
+  color: #007185;
+  font-weight: 700;
+  background: #fff;
+  border-bottom-color: #007185;
+}
+
+.tasful-market-product-section-nav__link.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+  cursor: default;
+}
+
+.tasful-market-product-section-nav__list > li[hidden] {
+  display: none;
+}
+
+#product-about,
+#product-bundle,
+#product-description,
+#product-shipping,
+#product-info,
+#product-reviews,
+#product-related {
+  scroll-margin-top: calc(var(--tasful-market-header-total-h, 112px) + 56px);
+}
+
+.tasful-market-product-shipping {
+  padding: 14px 12px 16px;
+  background: #fff;
+  border-top: 8px solid #f3f3f3;
+}
+
+.tasful-market-product-shipping__title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.tasful-market-product-shipping__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.tasful-market-product-shipping__item {
+  display: grid;
+  grid-template-columns: minmax(88px, 34%) minmax(0, 1fr);
+  gap: 8px 12px;
+  align-items: start;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+}
+
+.tasful-market-product-shipping__label {
+  font-weight: 700;
+  color: #565959;
+}
+
+.tasful-market-product-shipping__value {
+  color: #0f1111;
+}
+
+.tasful-market-product-hero__btn--fav-gallery {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.tasful-market-product-specs-mini {
+  margin: 0 0 14px;
+  display: none;
+}
+
+.tasful-market-product-specs-mini__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.tasful-market-product-specs-mini__table th,
+.tasful-market-product-specs-mini__table td {
+  padding: 6px 8px;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: top;
+}
+
+.tasful-market-product-specs-mini__table th {
+  width: 34%;
+  background: #f9fafb;
+  font-weight: 700;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-product-specs__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.tasful-market-product-specs__table th,
+.tasful-market-product-specs__table td {
+  padding: 10px 12px;
+  border-top: 1px solid #e5e7eb;
+  text-align: left;
+  vertical-align: top;
+}
+
+.tasful-market-product-specs__table th {
+  width: 32%;
+  font-weight: 700;
+  color: var(--tasful-market-muted);
+  background: #fafafa;
+}
+
+.tasful-market-product-specs [data-tasful-product-specs] {
+  padding: 0 12px 14px;
+}
+
+/* よく一緒に購入 */
+.tasful-market-product-bundle {
+  padding: 14px 12px 16px;
+  background: #fff;
+  border-top: 8px solid var(--tasful-market-bg);
+}
+
+.tasful-market-product-bundle__title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tasful-market-product-bundle__items {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tasful-market-product-bundle__picker {
+  display: none;
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+  gap: 10px;
+}
+
+.tasful-market-product-bundle__picker-row {
+  margin: 0;
+}
+
+.tasful-market-product-bundle__picker-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.tasful-market-product-bundle__picker-row.is-locked .tasful-market-product-bundle__picker-label {
+  cursor: default;
+}
+
+.tasful-market-product-bundle__check {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: #007185;
+}
+
+.tasful-market-product-bundle__picker-thumb {
+  display: none;
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #d5d9d9;
+  background: #f3f4f6;
+  flex-shrink: 0;
+}
+
+.tasful-market-product-bundle__picker-text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 10px;
+  min-width: 0;
+}
+
+.tasful-market-product-bundle__picker-title {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #0f1111;
+}
+
+.tasful-market-product-bundle__picker-price {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #b12704;
+  white-space: nowrap;
+}
+
+.tasful-market-product-bundle__items--legacy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.tasful-market-product-bundle__item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 96px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.tasful-market-product-bundle__item img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+}
+
+.tasful-market-product-bundle__item-title {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tasful-market-product-bundle__item-price {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #b12704;
+}
+
+.tasful-market-product-bundle__plus {
+  align-self: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--tasful-market-muted);
+  padding: 0 2px;
+}
+
+.tasful-market-product-bundle__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+}
+
+.tasful-market-product-bundle__total {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.tasful-market-product-bundle__total strong {
+  font-size: 1.125rem;
+  color: #b12704;
+}
+
+.tasful-market-product-bundle__total span {
+  font-size: 0.75rem;
+  color: var(--tasful-market-muted);
+}
+
+.tasful-market-product-bundle__btn {
+  min-height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 999px;
+  background: #ffd814;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+/* 関連商品 */
+.tasful-market-product-related {
+  padding: 14px 12px 16px;
+  background: #fff;
+  border-top: 8px solid var(--tasful-market-bg);
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tasful-market-product-related__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tasful-market-product-related__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tasful-market-product-related__grid .tasful-market-search-mini {
+  flex: none;
+  width: auto;
+  min-width: 0;
+  border-radius: 8px;
+}
+
+.tasful-market-product-related__grid .tasful-market-search-mini.is-related-hidden {
+  display: none !important;
+}
+
+.tasful-market-product-related__grid .tasful-market-search-mini__body {
+  gap: 3px;
+  padding: 5px 6px 6px;
+}
+
+.tasful-market-product-related__grid .tasful-market-search-mini__title {
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  -webkit-line-clamp: 2;
+}
+
+.tasful-market-product-related__grid .tasful-market-search-mini__rating {
+  font-size: 0.5625rem;
+  line-height: 1.2;
+}
+
+.tasful-market-product-related__grid .tasful-market-search-mini__price {
+  font-size: 0.6875rem;
+  line-height: 1.25;
+}
+
+.tasful-market-product-related__grid .tasful-market-search-mini__condition {
+  font-size: 0.5rem;
+  padding: 1px 4px;
+}
+
+.tasful-market-product-related__more {
+  display: inline-flex;
+  margin-top: 10px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: #007185;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.tasful-market-product-related__more:hover,
+.tasful-market-product-related__more:focus-visible {
+  color: #c7511f;
+  outline: none;
+}
+
+.tasful-market-product-related__more[disabled] {
+  opacity: 0.5;
+  cursor: default;
+  text-decoration: none;
+}
+
+@media (min-width: 768px) {
+  .tasful-market-product-related__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .tasful-market-product-related__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+/* 商品の説明 — Amazon型 交互セクション */
+.tasful-market-product-description {
+  padding: 14px 12px 16px;
+  background: #fff;
+  border-top: 8px solid var(--tasful-market-bg);
+}
+
+.tasful-market-product-description__title {
+  margin: 0 0 16px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.tasful-market-product-description__sections {
+  display: grid;
+  gap: 24px;
+}
+
+.tasful-market-product-description__section {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.tasful-market-product-description__media {
+  margin: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f3f4f6;
+  aspect-ratio: 4 / 3;
+}
+
+.tasful-market-product-description__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tasful-market-product-description__copy {
+  min-width: 0;
+}
+
+.tasful-market-product-description__section-title {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #0f1111;
+}
+
+.tasful-market-product-description__section-body {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #0f1111;
+}
+
+/* レビュー分布 */
+.tasful-market-product-reviews__distribution {
+  display: grid;
+  gap: 4px;
+}
+
+.tasful-market-product-reviews__dist-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+}
+
+.tasful-market-product-reviews__dist-label {
+  color: #007185;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.tasful-market-product-reviews__dist-bar {
+  height: 16px;
+  border-radius: 3px;
+  background: #e3e6e6;
+  overflow: hidden;
+}
+
+.tasful-market-product-reviews__dist-bar span {
+  display: block;
+  height: 100%;
+  min-width: 2px;
+  background: #ffa41c;
+  border-radius: 3px;
+}
+
+.tasful-market-product-reviews__dist-pct {
+  text-align: right;
+  color: #565959;
+  font-weight: 400;
+  font-size: 0.8125rem;
+}
+
+.tasful-market-product-hero__about {
+  display: none;
+}
+
+.tasful-market-product-hero__about-title {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f1111;
+}
+
+.tasful-market-product-hero__about-list {
+  margin: 0;
+  padding: 0 0 0 1.15em;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: #0f1111;
+}
+
+.tasful-market-product-hero__about-list li + li {
+  margin-top: 4px;
+}
+
+/* PC 1025px+ — Amazon型フラット本文（白カード化しない）
+   shop-market-pc.css の後に読み込み。hero 3カラムは本ファイルのみが定義する。 */
+@media (min-width: 1025px) {
+  body.tasful-market-product-page {
+    padding-top: calc(var(--tasful-market-header-total-h, 112px) + env(safe-area-inset-top, 0px)) !important;
+    overflow-x: clip;
+    background: #fff;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-shell,
+  body.tasful-market-product-page .tasful-market-product-shell--flat {
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible;
+    box-sizing: border-box;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-main {
+    box-sizing: border-box;
+    max-width: 1240px;
+    width: calc(100% - 48px);
+    margin: 0 auto;
+    padding: 0 20px;
+    overflow: visible;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+    width: 100%;
+    max-width: none;
+    overflow: visible;
+    padding: 16px 0 24px;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-page-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-page-col {
+    min-width: 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__layout {
+    display: contents;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__media {
+    padding: 0;
+    position: static;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__figure {
+    border-radius: 0;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-thumbs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-top: 10px;
+    max-width: 500px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-thumbs__btn {
+    flex: 0 0 60px;
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    border-width: 2px;
+    opacity: 0.65;
+    transition: opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-thumbs__btn:hover {
+    opacity: 1;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-thumbs__btn.is-active {
+    opacity: 1;
+    border: 3px solid var(--tasful-market-gold, #c4a24a);
+    box-shadow: 0 0 0 1px rgba(196, 162, 74, 0.28), 0 2px 8px rgba(196, 162, 74, 0.32);
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__btn--fav-gallery {
+    display: none;
+  }
+
+  /* 中央カラム */
+  body.tasful-market-product-page .tasful-market-product-info,
+  body.tasful-market-product-page .tasful-market-product-hero__info {
+    padding: 0;
+    min-width: 0;
+    width: 100%;
+    overflow: visible;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__brand {
+    margin: 0 0 4px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-title,
+  body.tasful-market-product-page .tasful-market-product-hero__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0 0 8px;
+    color: #0f1111;
+    word-break: normal;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__condition {
+    display: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2px 8px;
+    font-size: 0.8125rem;
+    margin: 0 0 10px;
+    color: #007185;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-hero__reviews-link {
+    margin-left: 0;
+    white-space: nowrap;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust,
+  body.tasful-market-product-page .tasful-market-product-hero__trust {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 8px;
+    margin: 0 0 12px;
+    padding: 0;
+    border: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__badge {
+    font-size: 11px;
+    padding: 4px 9px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__help {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #c7d8e8;
+    border-radius: 50%;
+    background: #f7fbff;
+    color: #007185;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    cursor: help;
+    flex-shrink: 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__help::before {
+    content: "";
+    position: absolute;
+    inset: -8px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__help:hover,
+  body.tasful-market-product-page .tasful-market-product-trust__help:focus-visible {
+    background: #e8f4fd;
+    border-color: #007185;
+    outline: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__badge-group {
+    position: relative;
+    z-index: 1;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__badge-group:hover,
+  body.tasful-market-product-page .tasful-market-product-trust__badge-group:focus-within {
+    z-index: 30;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__tooltip {
+    display: block;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: min(260px, 42vw);
+    padding: 10px 12px;
+    border: 1px solid #c7d8e8;
+    border-radius: 8px;
+    background: #f7fbff;
+    color: #0f1111;
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.55;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+    z-index: 40;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__badge-group:hover .tasful-market-product-trust__tooltip,
+  body.tasful-market-product-page .tasful-market-product-trust__badge-group:focus-within .tasful-market-product-trust__tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__badge-group:has(.tasful-market-product-trust__badge--identity) .tasful-market-product-trust__help {
+    border-color: #a7d9c5;
+    background: #f6fffb;
+    color: #047857;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__badge-group:has(.tasful-market-product-trust__badge--identity) .tasful-market-product-trust__tooltip {
+    border-color: #a7d9c5;
+    background: #f6fffb;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__meta {
+    font-size: 11px;
+    color: #565959;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__meta ~ .tasful-market-product-trust__meta {
+    display: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-trust__line {
+    display: none;
+  }
+
+  .tasful-market-product-hero__center-commerce {
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .tasful-market-product-hero__center-commerce .tasful-market-product-hero__price {
+    margin: 0 0 4px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #b12704;
+    line-height: 1.2;
+  }
+
+  .tasful-market-product-hero__center-commerce .tasful-market-product-hero__price-tax {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: #565959;
+  }
+
+  .tasful-market-product-hero__center-commerce .tasful-market-product-hero__ship-free,
+  .tasful-market-product-hero__center-commerce .tasful-market-product-hero__ship-days {
+    font-size: 0.8125rem;
+    margin: 0 0 3px;
+  }
+
+  .tasful-market-product-hero__about {
+    display: block;
+    margin-bottom: 14px;
+  }
+
+  .tasful-market-product-hero__about-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .tasful-market-product-hero__about-list {
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-section-nav {
+    display: block;
+    position: sticky;
+    top: var(--tasful-market-header-total-h, 112px);
+    z-index: 4;
+    margin: 0 0 6px;
+    background: #fff;
+    border-bottom: 1px solid #e3e6e6;
+    box-shadow: 0 1px 0 rgba(15, 17, 17, 0.04);
+  }
+
+  body.tasful-market-product-page .tasful-market-product-section-nav__inner {
+    overflow: visible;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-section-nav__list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-width: 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-section-nav__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 8px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #565959;
+    font: inherit;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    text-decoration: none;
+    white-space: normal;
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-section-nav__link:hover,
+  body.tasful-market-product-page .tasful-market-product-section-nav__link:focus-visible {
+    color: #007185;
+    background: #f7fbff;
+    border-bottom-color: #b8d4e0;
+    outline: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-section-nav__link.is-active {
+    color: #007185;
+    font-weight: 700;
+    background: #fff;
+    border-bottom-color: #007185;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-section-nav__link.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  body.tasful-market-product-page #product-about,
+  body.tasful-market-product-page #product-bundle,
+  body.tasful-market-product-page #product-description,
+  body.tasful-market-product-page #product-shipping,
+  body.tasful-market-product-page #product-info,
+  body.tasful-market-product-page #product-reviews,
+  body.tasful-market-product-page #product-related {
+    scroll-margin-top: calc(var(--tasful-market-header-total-h, 112px) + 60px);
+  }
+
+  .tasful-market-product-shipping {
+    border-top: none;
+    padding: 0 0 24px;
+  }
+
+  .tasful-market-product-shipping__title {
+    font-size: 1.125rem;
+    margin-bottom: 12px;
+  }
+
+  .tasful-market-product-shipping__item {
+    grid-template-columns: 160px minmax(0, 1fr);
+    font-size: 0.875rem;
+  }
+
+  .tasful-market-product-hero__mobile-commerce {
+    display: none !important;
+  }
+
+  .tasful-market-product-points,
+  .tasful-market-product-points--mobile {
+    display: none !important;
+  }
+
+  .tasful-market-product-specs-mini {
+    display: none !important;
+    margin-bottom: 0;
+  }
+
+  .tasful-market-product-specs-mini__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .tasful-market-product-specs-mini__table th,
+  .tasful-market-product-specs-mini__table td {
+    padding: 6px 10px;
+    border: 1px solid #e3e6e6;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .tasful-market-product-specs-mini__table th {
+    width: 34%;
+    background: #f0f2f2;
+    font-weight: 400;
+    color: #0f1111;
+  }
+
+  /* 右購入BOX */
+  body.tasful-market-product-page .tasful-market-product-buybox {
+    display: block;
+    position: sticky;
+    top: calc(var(--tasful-market-header-total-h, 112px) + 20px);
+    align-self: start;
+    z-index: 5;
+    width: 280px;
+    min-width: 280px;
+    max-width: 280px;
+    flex-shrink: 0;
+  }
+
+  .tasful-market-product-buybox__inner {
+    padding: 16px 18px 14px;
+    border: 1px solid #d5d9d9;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .tasful-market-product-buybox__price {
+    margin: 0 0 6px;
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: #b12704;
+    line-height: 1.2;
+  }
+
+  .tasful-market-product-buybox__ship {
+    margin: 0 0 8px;
+    font-size: 0.8125rem;
+    color: #0f1111;
+    line-height: 1.45;
+  }
+
+  .tasful-market-product-buybox__stock {
+    margin: 0 0 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #067d62;
+  }
+
+  .tasful-market-product-buybox__stock.is-low {
+    color: #b45309;
+  }
+
+  .tasful-market-product-buybox__qty {
+    margin-bottom: 12px;
+  }
+
+  .tasful-market-product-buybox__qty label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #0f1111;
+  }
+
+  .tasful-market-product-buybox__qty .tasful-market-product-hero__qty-select {
+    width: 100%;
+    min-height: 32px;
+    border-radius: 6px;
+    border: 1px solid #888c8c;
+    background: #f0f2f2;
+    font-size: 0.8125rem;
+  }
+
+  .tasful-market-product-buybox__actions {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .tasful-market-product-buybox .tasful-market-product-hero__btn {
+    min-height: 42px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .tasful-market-product-buybox .tasful-market-product-hero__btn--cart {
+    background: #ffd814;
+    color: #111;
+    border: 1px solid #e7b500;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  .tasful-market-product-buybox .tasful-market-product-hero__btn--buy {
+    background: #ffa41c;
+    color: #111;
+    border: 1px solid #e47900;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__layout {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 48px;
+    align-items: start;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__main {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__sidebar {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__overview {
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__score-block {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+    margin-bottom: 20px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__stars-big {
+    font-size: 1.75rem;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__score-outof {
+    font-size: 1.5rem;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__write-cta {
+    margin-bottom: 0;
+    padding-top: 8px;
+    border-top: 1px solid #e7e7e7;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__compose {
+    margin-top: 16px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__item-body {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__item {
+    padding: 20px 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__compose-open {
+    min-width: 168px;
+    margin-bottom: 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__dist-row {
+    grid-template-columns: 56px minmax(0, 1fr) 44px;
+    gap: 10px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__dist-bar {
+    height: 18px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__top-title {
+    border-top: 1px solid #e7e7e7;
+    padding-top: 20px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__photo-slot {
+    flex-basis: 132px;
+    width: 132px;
+    height: 132px;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__opinions-title,
+  body.tasful-market-product-page .tasful-market-product-reviews__media-title {
+    font-size: 1.125rem;
+  }
+
+  .tasful-market-product-buybox__cart-link {
+    display: inline-block;
+    margin-bottom: 10px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #007185;
+    text-decoration: none;
+  }
+
+  .tasful-market-product-buybox__cart-link:hover {
+    text-decoration: underline;
+  }
+
+  .tasful-market-product-buybox__safety {
+    display: none;
+  }
+
+  .tasful-market-product-buybox__trust {
+    margin-bottom: 10px;
+    padding: 8px 0 2px;
+    border-top: 1px solid #e3e6e6;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: #565959;
+  }
+
+  .tasful-market-product-buybox__trust-badges {
+    display: grid;
+    gap: 2px;
+    margin-bottom: 6px;
+  }
+
+  .tasful-market-product-buybox__trust .tasful-market-product-verify__item {
+    font-size: 0.6875rem;
+    font-weight: 600;
+  }
+
+  .tasful-market-product-buybox__trust-rating {
+    margin: 0 0 2px;
+  }
+
+  .tasful-market-product-buybox__trust-rating .tasful-market-product-rating-line {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    font-size: 0.75rem;
+  }
+
+  .tasful-market-product-buybox__trust-deals {
+    margin: 0;
+  }
+
+  .tasful-market-product-buybox__store {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #e3e6e6;
+  }
+
+  .tasful-market-product-buybox__store-name {
+    margin: 0 0 6px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .tasful-market-product-buybox__store-name a {
+    color: #007185;
+    text-decoration: none;
+  }
+
+  .tasful-market-product-buybox__store-name a:hover {
+    text-decoration: underline;
+    color: #c7511f;
+  }
+
+  .tasful-market-product-buybox__store-rating {
+    margin: 0 0 4px;
+  }
+
+  .tasful-market-product-buybox__store-rating .tasful-market-product-rating-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    font-size: 0.75rem;
+  }
+
+  .tasful-market-product-buybox__store-meta {
+    margin: 0 0 8px;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: #565959;
+  }
+
+  .tasful-market-product-buybox__store-reviews {
+    color: #007185;
+  }
+
+  .tasful-market-product-buybox__store-badges {
+    display: grid;
+    gap: 2px;
+    margin-bottom: 10px;
+  }
+
+  .tasful-market-product-buybox__store-badges .tasful-market-product-verify__item {
+    font-size: 0.6875rem;
+  }
+
+  .tasful-market-product-buybox__store-actions {
+    display: grid;
+    gap: 6px;
+  }
+
+  .tasful-market-product-buybox__store-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 0 10px;
+    border: 1px solid #d5d9d9;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #f7f8f8 0%, #e3e6e6 100%);
+    color: #0f1111;
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  }
+
+  .tasful-market-product-buybox__store-btn:hover {
+    background: linear-gradient(180deg, #edf0f0 0%, #d5d9d9 100%);
+    color: #0f1111;
+    text-decoration: none;
+  }
+
+  .tasful-market-product-buybox__store-btn--follow {
+    background: #232f3e;
+    border-color: #232f3e;
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .tasful-market-product-buybox__store-btn--follow:hover {
+    background: #37475a;
+    color: #fff;
+  }
+
+  .tasful-market-product-buybox__store-btn--follow.is-active {
+    background: #fff;
+    border-color: #232f3e;
+    color: #232f3e;
+  }
+
+  .tasful-market-product-buybox__store-btn--follow.is-active:hover {
+    background: #f7f8f8;
+  }
+
+  .tasful-market-product-seller--mobile,
+  .tasful-market-product-about--mobile,
+  .tasful-market-product-shelf--mobile {
+    display: none;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-bundle,
+  body.tasful-market-product-page .tasful-market-product-related,
+  body.tasful-market-product-page .tasful-market-product-specs,
+  body.tasful-market-product-page .tasful-market-product-description,
+  body.tasful-market-product-page .tasful-market-product-reviews {
+    padding: 28px 0;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    border-top: 1px solid #d5d9d9;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-reviews__score-block {
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-product-bundle__title,
+  body.tasful-market-product-page .tasful-market-product-related__title,
+  body.tasful-market-product-page .tasful-market-product-specs__title,
+  body.tasful-market-product-page .tasful-market-product-description__title,
+  body.tasful-market-product-page .tasful-market-product-reviews__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #0f1111;
+  }
+
+  .tasful-market-product-bundle__picker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+    margin-bottom: 16px;
+  }
+
+  .tasful-market-product-bundle__picker-row {
+    flex: 1 1 140px;
+    max-width: 168px;
+    min-width: 120px;
+  }
+
+  .tasful-market-product-bundle__picker-plus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0 2px;
+    list-style: none;
+  }
+
+  .tasful-market-product-bundle__picker-plus span {
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #565959;
+  }
+
+  .tasful-market-product-bundle__picker-label {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    padding: 10px 8px;
+    border: 1px solid #e3e6e6;
+    border-radius: 8px;
+    background: #fff;
+    min-height: 100%;
+  }
+
+  .tasful-market-product-bundle__picker-row.is-locked .tasful-market-product-bundle__picker-label {
+    border-color: #d5d9d9;
+    background: #fafafa;
+  }
+
+  .tasful-market-product-bundle__picker-text {
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .tasful-market-product-bundle__picker-title {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+  }
+
+  .tasful-market-product-bundle__items--legacy {
+    display: none !important;
+  }
+
+  .tasful-market-product-bundle__picker-price {
+    font-size: 0.875rem;
+  }
+
+  .tasful-market-product-bundle__picker-thumb {
+    display: block;
+    width: 72px;
+    height: 72px;
+  }
+
+  .tasful-market-product-bundle__footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .tasful-market-product-bundle__total {
+    font-size: 0.9375rem;
+  }
+
+  .tasful-market-product-bundle__btn {
+    min-width: 220px;
+  }
+
+  .tasful-market-product-bundle__items {
+    flex-wrap: wrap;
+    align-items: center;
+    overflow: visible;
+    gap: 12px;
+  }
+
+  .tasful-market-product-bundle__item {
+    width: 140px;
+  }
+
+  .tasful-market-product-bundle__item img {
+    width: 140px;
+    height: 140px;
+  }
+
+  .tasful-market-product-bundle__item-title {
+    font-size: 0.75rem;
+  }
+
+  .tasful-market-product-bundle__item-price {
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .tasful-market-product-related__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    overflow: visible;
+    padding-top: 4px;
+  }
+
+  .tasful-market-product-related__grid .tasful-market-search-mini {
+    flex: none;
+    width: auto;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .tasful-market-product-related__grid .tasful-market-search-mini__body {
+    padding: 8px 0 0;
+    gap: 4px;
+  }
+
+  .tasful-market-product-related__grid .tasful-market-search-mini__title {
+    font-size: 0.8125rem;
+    line-height: 1.35;
+  }
+
+  .tasful-market-product-related__grid .tasful-market-search-mini__price {
+    font-size: 0.875rem;
+    font-weight: 700;
+  }
+
+  .tasful-market-product-related__more {
+    margin-top: 12px;
+    font-size: 0.875rem;
+  }
+
+  .tasful-market-product-specs__table th,
+  .tasful-market-product-specs__table td {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .tasful-market-product-description__sections {
+    gap: 36px;
+  }
+
+  .tasful-market-product-description__section {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  .tasful-market-product-description__section.is-reverse .tasful-market-product-description__media {
+    order: 2;
+  }
+
+  .tasful-market-product-description__section.is-reverse .tasful-market-product-description__copy {
+    order: 1;
+  }
+
+  .tasful-market-product-description__section-title {
+    font-size: 1.125rem;
+    margin-bottom: 12px;
+  }
+
+  .tasful-market-product-description__section-body {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .tasful-market-product-specs [data-tasful-product-specs] {
+    padding: 0 0 8px;
+  }
+
+  /* フッター — 検索/TOPと同じPC構成 */
+  body.tasful-market-product-page .tasful-market-footer--product {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: none;
+    margin: 32px 0 0;
+    padding: 0;
+    border-radius: 0;
+    background: #1f2937;
+  }
+
+  body.tasful-market-product-page .tasful-market-footer--product .tasful-market-footer__inner {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: min(96vw, 1600px);
+    margin: 0 auto;
+    padding: 32px 16px 24px;
+    display: grid;
+    grid-template-columns: minmax(200px, 1.2fr) repeat(2, minmax(0, 1fr));
+    gap: 28px 32px;
+    align-items: start;
+  }
+
+  body.tasful-market-product-page .tasful-market-footer--product .tasful-market-footer__brand-block,
+  body.tasful-market-product-page .tasful-market-footer--product .tasful-market-footer__block {
+    padding: 0;
+    border-bottom: 0;
+  }
+
+  body.tasful-market-product-page .tasful-market-footer--product .tasful-market-footer__copy {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+    text-align: left;
+  }
+}
+
+@media (min-width: 1280px) {
+  body.tasful-market-product-page .tasful-market-product-hero {
+    grid-template-columns: 500px minmax(360px, 1fr);
+  }
+
+  body.tasful-market-product-page .tasful-market-product-related__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+/* P1-5 — 市場商品 戻る導線（ヘッダーロゴ経由） */
+body.tasful-market-product-page .tasful-market-mall-header__logo,
+body.tasful-market-page .tasful-market-mall-header__logo {
+  min-height: var(--tasful-back-link-min-h, 36px);
+  padding-block: 3px;
+  box-sizing: border-box;
+}

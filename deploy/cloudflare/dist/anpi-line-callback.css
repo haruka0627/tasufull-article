@@ -1,0 +1,60 @@
+.anpi-line-callback-page {
+  min-height: 100vh;
+  background: #f1f5f9;
+}
+
+.anpi-line-callback {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+}
+
+.anpi-line-callback__card {
+  width: 100%;
+  max-width: 420px;
+  padding: 24px 20px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+.anpi-line-callback__title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.anpi-line-callback__status {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #334155;
+}
+
+.anpi-line-callback__detail {
+  margin: 0 0 16px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.anpi-line-callback__back {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #06c755;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.anpi-line-callback__back:hover {
+  background: #05a847;
+}

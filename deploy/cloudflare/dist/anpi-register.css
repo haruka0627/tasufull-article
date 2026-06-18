@@ -1,0 +1,590 @@
+.anpi-register-page .anpi-register-main {
+  max-width: 720px;
+}
+
+/* PC — フォーム・設定コンテンツ幅（1025px以上。SP・タブレットは 720px のまま） */
+@media (min-width: 1025px) {
+  .anpi-register-page .anpi-register-main {
+    max-width: 1100px;
+    width: min(100%, 1100px);
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+
+  .anpi-register-page .anpi-register-form {
+    gap: 20px;
+  }
+
+  .anpi-register-page .anpi-register-section {
+    width: 100%;
+    padding: 20px 24px;
+    box-sizing: border-box;
+  }
+
+  .anpi-register-page .anpi-register-grid {
+    gap: 16px 24px;
+  }
+
+  .anpi-register-page .anpi-register-section__title {
+    margin-bottom: 14px;
+    font-size: 16px;
+  }
+
+  .anpi-register-page .anpi-register-success {
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.anpi-register-edit-note {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  font-size: 12px;
+  color: #1e40af;
+}
+
+.anpi-register-errors {
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  font-size: 13px;
+}
+
+.anpi-register-errors ul {
+  margin: 0;
+  padding-left: 1.2em;
+}
+
+.anpi-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.anpi-register-section {
+  margin: 0;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.anpi-register-section--consent {
+  background: #f8fafc;
+}
+
+.anpi-register-section--line {
+  background: #f8fafc;
+  border-color: #d1fae5;
+}
+
+.anpi-register-line-prod-lead {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #334155;
+}
+
+.anpi-register-line-prod {
+  margin-bottom: 14px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #bbf7d0;
+}
+
+.anpi-register-line-linked-meta {
+  margin: 0 0 6px;
+  font-size: 11px;
+  color: #475569;
+}
+
+.anpi-register-line-linked-meta__label {
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+.anpi-register-line-auth-pending,
+.anpi-register-line-exchange-loading {
+  margin: 8px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #eff6ff;
+  color: #1e40af;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.anpi-register-line-exchange-loading {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.anpi-register-line-feedback.is-error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.anpi-register-line-config-warn {
+  margin: 8px 0 0;
+  font-size: 10px;
+  color: #b45309;
+}
+
+.anpi-register-line-login {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: #06c755;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.anpi-register-line-login:hover:not(:disabled) {
+  background: #05a847;
+}
+
+.anpi-register-line-login:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: #94a3b8;
+}
+
+.anpi-register-line-unlink {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 9px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.anpi-register-line-unlink:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #334155;
+}
+
+.anpi-register-line-dev {
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px dashed #e2e8f0;
+}
+
+.anpi-register-line-status {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.anpi-register-line-status__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.anpi-register-line-status__value {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.anpi-register-line-status__value.is-linked {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.anpi-register-line-status__value.is-unlinked {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.anpi-register-line-id {
+  margin: 0 0 8px;
+  font-size: 11px;
+  color: #475569;
+}
+
+.anpi-register-line-id__value {
+  display: block;
+  margin-top: 4px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  font-size: 11px;
+  word-break: break-all;
+}
+
+.anpi-register-line-hint {
+  margin: 0 0 10px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.anpi-register-line-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.anpi-register-line-radio.is-disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.anpi-register-line-radio.is-disabled input {
+  cursor: not-allowed;
+}
+
+.anpi-register-line-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.anpi-register-line-test,
+.anpi-register-line-demo {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.anpi-register-line-test {
+  border: 1px solid #86efac;
+  background: #fff;
+  color: #166534;
+}
+
+.anpi-register-line-test:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.anpi-register-line-test.is-ok:not(:disabled) {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+
+.anpi-register-line-demo {
+  border: 1px dashed #cbd5e1;
+  background: transparent;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 10px;
+}
+
+.anpi-register-line-feedback {
+  margin: 10px 0 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.anpi-register-line-feedback.is-info {
+  background: #eff6ff;
+  color: #1e40af;
+}
+
+.anpi-register-line-feedback.is-success {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.anpi-register-section__title {
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.anpi-register-section__title em {
+  font-style: normal;
+  color: #dc2626;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.anpi-register-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.anpi-register-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 0;
+}
+
+.anpi-register-field--full {
+  grid-column: 1 / -1;
+}
+
+.anpi-register-label {
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.anpi-register-label em {
+  font-style: normal;
+  color: #dc2626;
+}
+
+.anpi-register-field input,
+.anpi-register-field select,
+.anpi-register-field textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.anpi-register-field input[type="text"],
+.anpi-register-field input[type="tel"],
+.anpi-register-field input[type="email"] {
+  min-height: 40px;
+  box-sizing: border-box;
+}
+
+.anpi-register-field input:focus,
+.anpi-register-field select:focus,
+.anpi-register-field textarea:focus {
+  outline: 2px solid #93c5fd;
+  border-color: #3b82f6;
+}
+
+.anpi-register-hint {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.anpi-register-channels,
+.anpi-register-levels {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.anpi-register-check,
+.anpi-register-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #334155;
+  cursor: pointer;
+}
+
+.anpi-register-radio strong {
+  font-weight: 800;
+}
+
+.anpi-register-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.anpi-register-submit {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.anpi-register-submit:hover {
+  background: #1d4ed8;
+}
+
+.anpi-register-success {
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+}
+
+.anpi-register-success__title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #166534;
+}
+
+.anpi-register-success__meta {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: #15803d;
+}
+
+.anpi-register-success__links {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.anpi-register-success__link {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fff;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+}
+
+.anpi-register-success__link--ghost {
+  background: transparent;
+  border-color: #86efac;
+}
+
+@media (max-width: 520px) {
+  .anpi-register-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* スマホプレビュー — 390pxコンテナ全体を中央寄せ（登録画面のみ） */
+@media (max-width: 960px) {
+  body.dash-body.anpi-register-page.tasu-app-mobile-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page > .dash-app {
+    width: 100%;
+    max-width: 390px;
+    margin-left: auto;
+    margin-right: auto;
+    flex: 1 0 auto;
+    min-height: 0;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page > .tasu-app-tabbar[data-tasu-app-tabbar-injected] {
+    width: min(100%, 390px);
+    max-width: 390px;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-main {
+    width: 100%;
+    max-width: none;
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    box-sizing: border-box;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .register-card-container {
+    width: 100%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-form {
+    gap: 12px;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-grid {
+    gap: 8px;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-field {
+    margin-bottom: 12px !important;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-grid .anpi-register-field:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-field input,
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-field select,
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-field textarea {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .terms-agreement-box {
+    max-height: 90px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    padding-top: 12px;
+    padding-bottom: 10px;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .terms-agreement-box .anpi-register-check {
+    gap: 6px;
+    line-height: 1.35;
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .terms-agreement-box .anpi-register-check:last-child {
+    margin-bottom: 0;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .dash-header__logo {
+    display: flex;
+  }
+
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .dash-member-page-head,
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-edit-note,
+  body.dash-body.anpi-register-page.tasu-app-mobile-page .anpi-register-errors {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+  }
+}

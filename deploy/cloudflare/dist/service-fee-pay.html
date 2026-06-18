@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TASFUL 成約手数料のお支払い</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="business-service-flow.css">
+  <link rel="stylesheet" href="shop-checkout-page.css">
+  <link rel="stylesheet" href="site-member-nav.css">
+</head>
+<body class="shop-checkout-page" data-page="service_fee_pay">
+
+  <div class="tasu-banner">
+    <div class="tasu-text">TASFUL — プラットフォーム利用料（成約手数料）</div>
+  </div>
+
+  <nav class="page-subnav" aria-label="戻るリンク">
+    <a class="page-subnav__link" href="dashboard.html">← 会員ページへ戻る</a>
+    <a class="page-subnav__link page-subnav__link--ghost" href="business.html">業務サービス一覧</a>
+  </nav>
+
+  <main class="shop-checkout">
+    <h1 class="shop-checkout__title">成約手数料のお支払い</h1>
+    <p class="shop-checkout__status" data-fee-status>読み込み中…</p>
+
+    <section class="shop-checkout__card" data-fee-card hidden>
+      <dl class="shop-checkout__summary">
+        <div><dt>取引ID</dt><dd data-fee-deal-id>—</dd></div>
+        <div><dt>成約金額</dt><dd data-fee-agreed>—</dd></div>
+        <div class="shop-checkout__total-row"><dt>TASFUL手数料（5%）</dt><dd data-fee-amount>—</dd></div>
+      </dl>
+      <p class="shop-checkout__note">商品・作業の代金は掲載者と依頼者の間でお支払い済みである前提です。ここではTASFULの成約手数料のみお支払いいただきます。</p>
+
+      <div class="shop-checkout__actions">
+        <button type="button" class="shop-checkout__btn shop-checkout__btn--primary" data-fee-stripe-pay>Stripeで支払う</button>
+      </div>
+
+      <div class="bsf-payment__block" style="margin-top:16px">
+        <h3 class="bsf-payment__label">銀行振込（TASFUL法人口座）</h3>
+        <pre class="bsf-payment__note" data-fee-bank style="white-space:pre-wrap;font-family:inherit"></pre>
+      </div>
+    </section>
+  </main>
+
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="stripe-featured-config.js"></script>
+  <script src="stripe-service-fee-config.js"></script>
+  <script src="service-deals-db.js"></script>
+  <script src="service-deal-fee-payment.js"></script>
+  <script src="service-fee-pay.js"></script>
+</body>
+</html>

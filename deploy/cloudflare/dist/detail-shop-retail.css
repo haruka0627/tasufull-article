@@ -1,0 +1,818 @@
+/* 小売・物販（retail）専用 — 雑貨・インテリアEC風（白×ゴールド×木目） */
+
+body.shop-detail-page[data-shop-category-profile="retail"],
+body.shop-detail-page[data-shop-category-profile="goods_interior"],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] {
+  background: #faf8f4;
+  --retail-gold: #d4a62a;
+  --retail-gold-deep: #c89b1f;
+  --retail-gold-soft: #e8c86a;
+  --retail-ink: #111827;
+  --retail-muted: #6b7280;
+  --retail-border: #e5e7eb;
+  --retail-card: #ffffff;
+  --retail-shadow: 0 14px 40px rgba(17, 24, 39, 0.06);
+}
+
+/* 上部（通常）タブナビは小売では非表示（下部追従ナビをメインにする） */
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-tabs-sticky-wrap,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-tabs-sticky-wrap,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-tabs-sticky-wrap,
+body.shop-detail-page[data-shop-category-profile="retail"] nav.shop-restaurant-tabs[data-shop-restaurant-tabs],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] nav.shop-restaurant-tabs[data-shop-restaurant-tabs],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] nav.shop-restaurant-tabs[data-shop-restaurant-tabs]{
+  display: none !important;
+}
+
+/* 上部タブが消えるので、間延びしないよう余白を微調整 */
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-breadcrumb,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-breadcrumb,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-breadcrumb{
+  margin-top: 14px;
+  margin-bottom: 16px;
+}
+
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv{
+  margin-top: 0;
+  margin-bottom: 32px;
+}
+
+/* TOP（リラクの3カラム構造を流用しつつ色味だけ変更） */
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside {
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 2px;
+}
+
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .shop-restaurant-points,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .shop-restaurant-points,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .shop-restaurant-points {
+  margin-top: 0;
+  width: 100%;
+}
+
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .retail-points,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .retail-points,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .retail-points {
+  margin-top: 0;
+}
+
+/* デスクトップの列定義は @media (min-width: 961px) で flex に統一（下記） */
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv {
+  max-width: 1240px;
+  padding: 44px 48px;
+  border-radius: 24px;
+  background: var(--retail-card);
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: var(--retail-shadow);
+  box-sizing: border-box;
+}
+
+/* 左：メイン画像 / サムネ */
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure]{
+  width: 430px;
+  height: 286px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-img],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-img],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-img]{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery]{
+  width: 430px;
+  display: grid;
+  grid-template-columns: repeat(6, 54px);
+  gap: 12px;
+  margin-top: 16px; /* メイン画像との余白を増やす */
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .shop-thumb-btn,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .shop-thumb-btn,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .shop-thumb-btn{
+  width: 54px;
+  height: 54px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  background: #f3f4f6;
+}
+
+/* 中央：情報の並び（カテゴリタグ→店名→評価→エリア→営業時間→タグ→説明→CTA） */
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .shop-detail-main-info,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .shop-detail-main-info,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .shop-detail-main-info{
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 2px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-genre-tags],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-genre-tags],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-genre-tags]{
+  order: 0;
+  margin: 0 0 14px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-title],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-title],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-title]{
+  order: 1;
+  margin: 0 0 14px;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-row],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-row],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-row]{
+  order: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-weight: 800;
+  color: var(--retail-muted);
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-stars],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-stars],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-stars]{
+  color: var(--retail-gold);
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-quick],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-quick],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-quick]{
+  order: 3;
+  margin: 0;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-top-hours,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-top-hours,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-top-hours{
+  order: 4;
+  margin: 0;
+  font-weight: 900;
+  color: var(--retail-ink);
+}
+
+/* エリア + 営業時間を横並びで収める */
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-quick],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-quick],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-quick]{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 0 0 12px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .relax-top-area,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .relax-top-area,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .relax-top-area{
+  margin: 0;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .retail-top-hours,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .retail-top-hours,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .retail-top-hours{
+  margin: 0;
+  color: var(--retail-muted);
+  font-weight: 900;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-condition-tags],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-condition-tags],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-condition-tags]{
+  order: 5;
+  margin: 14px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 10px;
+  max-width: 520px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-lead],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-lead],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-lead]{
+  order: 6;
+  margin: 14px 0 0;
+  line-height: 1.85;
+  max-width: 560px;
+  color: #374151;
+  font-weight: 600;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-shop-restaurant-ctas],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-shop-restaurant-ctas],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-shop-restaurant-ctas]{
+  order: 7;
+  width: 100%;
+  margin-top: 16px;
+}
+
+/* CTA（ゴールド） */
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-ctas,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-ctas,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-ctas{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* 情報エリア左揃え */
+  gap: 14px;
+  flex-wrap: nowrap;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-cta,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-cta,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-cta{
+  height: 52px;
+  min-height: 52px;
+  padding: 0 22px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* icon gap */
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  background: #fff;
+  color: var(--retail-ink);
+  box-sizing: border-box;
+  white-space: nowrap; /* 文字折り返し禁止 */
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-cta--primary,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-cta--primary,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-cta--primary{
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--retail-gold), var(--retail-gold-deep));
+  color: #1a1a1a;
+  box-shadow: 0 10px 24px rgba(200, 155, 31, 0.22);
+  width: 180px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-cta--line,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-cta--line,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-cta--line{
+  border-color: rgba(200, 155, 31, 0.35);
+  width: 180px;
+  color: #7a5e10;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-ctas [data-retail-fav-cta],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-ctas [data-retail-fav-cta],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-ctas [data-retail-fav-cta]{
+  width: 150px;
+  border-color: rgba(17, 24, 39, 0.14);
+  color: #374151;
+}
+
+/* 右：お店のこだわり（薄ベージュ） */
+body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-sidebar__sticky,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-sidebar__sticky,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-sidebar__sticky{
+  display: none;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-points,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-points,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-points {
+  width: 100%;
+  max-width: 280px;
+  padding: 24px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(232, 200, 106, 0.22), rgba(248, 243, 235, 0.9));
+  border: 1px solid rgba(200, 155, 31, 0.18);
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.05);
+  box-sizing: border-box;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-points__title,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-points__title,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-points__title{
+  margin: 0 0 12px;
+  font-weight: 1000;
+  font-size: 15px;
+  color: var(--retail-ink);
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-points__list,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-points__list,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-points__list{
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-points__item,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-points__item,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-points__item{
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 10px;
+  align-items: start;
+  color: #374151;
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.75;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-points__icon,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-points__icon,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-points__icon{
+  width: 22px;
+  height: 22px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(212, 166, 42, 0.18);
+  color: #7a5e10;
+  font-weight: 1000;
+}
+
+/* タブ（アクティブ：ゴールド）— 既存pill navを流用 */
+body.shop-detail-page[data-shop-category-profile="retail"] .shop-restaurant-tab.is-active,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .shop-restaurant-tab.is-active,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .shop-restaurant-tab.is-active{
+  color: #7a5e10;
+  background: rgba(232, 200, 106, 0.28);
+  border-color: rgba(200, 155, 31, 0.22);
+}
+
+/* リラク側の緑を小売では完全に上書き */
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-top-area__icon,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-top-area__icon,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-top-area__icon,
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-side-btn,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-side-btn,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-side-btn,
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-side-btn--primary,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-side-btn--primary,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-side-btn--primary,
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-review-bar__track,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-review-bar__track,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-review-bar__track,
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-review-bar__fill,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-review-bar__fill,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-review-bar__fill{
+  color: inherit;
+}
+
+/* おすすめ商品（4枚 / 画像は横長） */
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-grid,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-grid,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-grid{
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 12px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card{
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  box-shadow: 0 6px 16px rgba(17, 24, 39, 0.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  position: relative;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card:hover,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card:hover,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card:hover{
+  transform: translateY(-2px);
+  border-color: rgba(200, 155, 31, 0.28);
+  box-shadow: 0 10px 26px rgba(17, 24, 39, 0.08);
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card__img img,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card__img img,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card__img img{
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+/* 本文2カラム（参考UIの右サイド復活） */
+body.shop-detail-page[data-shop-category-profile="retail"] .shop-restaurant-body,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .shop-restaurant-body,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .shop-restaurant-body{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 320px);
+  gap: 18px 22px;
+  align-items: start;
+  margin-bottom: 28px;
+}
+
+body.shop-detail-page[data-shop-category-profile="retail"] .shop-restaurant-sidebar,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .shop-restaurant-sidebar,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .shop-restaurant-sidebar{
+  position: sticky;
+  top: 92px;
+  display: grid;
+  gap: 14px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card__fav,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card__fav,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card__fav{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(17, 24, 39, 0.10);
+  display: grid;
+  place-items: center;
+  color: #8b7a4a;
+  font-weight: 900;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card__body,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card__body,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card__body{
+  padding: 12px 12px 14px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card__name,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card__name,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card__name{
+  font-size: 0.92rem;
+  font-weight: 950;
+  line-height: 1.35;
+  color: var(--retail-ink);
+  margin: 0 0 6px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card__sub,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card__sub,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card__sub{
+  margin: 0 0 10px;
+  color: var(--retail-muted);
+  font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card__price,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card__price,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card__price{
+  margin: 0;
+  font-weight: 1000;
+  color: #7a5e10;
+}
+
+/* お知らせ */
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-news,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-news,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-news{
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-news__item,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-news__item,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-news__item{
+  display: grid;
+  grid-template-columns: 110px 1fr 18px;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(17, 24, 39, 0.06);
+  background: #fff;
+  transition: background-color 0.18s ease, border-color 0.18s ease;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-news__item:hover,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-news__item:hover,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-news__item:hover{
+  background: rgba(232, 200, 106, 0.12);
+  border-color: rgba(200, 155, 31, 0.18);
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-news__date,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-news__date,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-news__date{
+  color: #7a5e10;
+  font-weight: 900;
+  font-size: 0.85rem;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-news__title,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-news__title,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-news__title{
+  color: var(--retail-ink);
+  font-weight: 800;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .retail-news__arrow,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-news__arrow,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-news__arrow{
+  color: rgba(122, 94, 16, 0.8);
+  font-weight: 1000;
+}
+
+/* 口コミ：星/ゲージをゴールドへ */
+body.shop-detail-page[data-shop-category-profile="retail"] .beauty-review-score__stars,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .beauty-review-score__stars,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .beauty-review-score__stars,
+body.shop-detail-page[data-shop-category-profile="retail"] .beauty-review-stars,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .beauty-review-stars,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .beauty-review-stars,
+body.shop-detail-page[data-shop-category-profile="retail"] .beauty-review-card__head .beauty-review-stars,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .beauty-review-card__head .beauty-review-stars,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .beauty-review-card__head .beauty-review-stars,
+body.shop-detail-page[data-shop-category-profile="retail"] .detail-gold-stars,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .detail-gold-stars,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .detail-gold-stars{
+  color: var(--retail-gold);
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-review-bar__fill,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-review-bar__fill,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-review-bar__fill{
+  background: linear-gradient(90deg, rgba(212, 166, 42, 0.35), rgba(200, 155, 31, 0.95));
+}
+
+/* 右サイド固定カード：ボタンをゴールド系に */
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-side-btn--primary,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-side-btn--primary,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-side-btn--primary{
+  background: linear-gradient(135deg, var(--retail-gold), var(--retail-gold-deep));
+  color: #1a1a1a;
+}
+body.shop-detail-page[data-shop-category-profile="retail"] .relax-side-btn,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .relax-side-btn,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .relax-side-btn{
+  border-color: rgba(200, 155, 31, 0.35);
+}
+
+/* PC：画像 | 店舗情報 | お店のこだわり を一体の情報ブロックとして並べる
+   detail-business.css の store-shop グリッド（display:grid !important）を上書き */
+@media (min-width: 961px) {
+  body.biz-detail-page--store-shop.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-hero.biz-detail-fv.retail-top-fv,
+  body.biz-detail-page--store-shop.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-hero.biz-detail-fv.retail-top-fv,
+  body.biz-detail-page--store-shop.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-hero.biz-detail-fv.retail-top-fv,
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    gap: 28px !important;
+    grid-template-columns: none !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__media,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__media,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__media,
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-hero__media,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-hero__media,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-hero__media {
+    flex: 0 0 430px;
+    width: 430px;
+    min-width: 430px;
+    max-width: 430px;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main,
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .shop-detail-main-info,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .shop-detail-main-info,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .shop-detail-main-info {
+    flex: 0 1 auto;
+    min-width: 0;
+    width: auto;
+    max-width: none;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside {
+    flex: 0 0 280px !important;
+    width: 280px !important;
+    min-width: 280px;
+    max-width: 280px !important;
+    margin-left: 0 !important;
+    align-self: flex-start;
+    position: static;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-shop-restaurant-points] .retail-points,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-shop-restaurant-points] .retail-points,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-shop-restaurant-points] .retail-points,
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .retail-points,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .retail-points,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .retail-points {
+    position: static;
+    right: auto;
+    margin-left: 0;
+    width: 100%;
+    max-width: 280px;
+  }
+
+  /* detail-business（store）の余白上書きを打ち消し、PC原型の3カラムを固定 */
+  body.biz-detail-page--store.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv,
+  body.biz-detail-page--store.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv,
+  body.biz-detail-page--store.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv {
+    gap: 28px !important;
+    margin-bottom: 32px !important;
+    padding: 44px 48px !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__media,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__media,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__media,
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-hero__media,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-hero__media,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-hero__media {
+    margin-right: 0 !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main,
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .shop-detail-main-info,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .shop-detail-main-info,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .shop-detail-main-info {
+    margin-right: 0 !important;
+    max-width: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* スマホDOM復帰漏れ：FV直下に残ったカテゴリバッジはPCでは非表示 */
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv > [data-biz-detail-hero-genre-tags],
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv > [data-biz-detail-hero-genre-tags],
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv > [data-biz-detail-hero-genre-tags] {
+    display: none !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .shop-detail-main-info [data-biz-detail-hero-genre-tags],
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .shop-detail-main-info [data-biz-detail-hero-genre-tags],
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .shop-detail-main-info [data-biz-detail-hero-genre-tags],
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main [data-biz-detail-hero-genre-tags],
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main [data-biz-detail-hero-genre-tags],
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__main [data-biz-detail-hero-genre-tags] {
+    display: flex !important;
+    flex-flow: row wrap !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 0 14px !important;
+    order: 0 !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .food-category-badge,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .food-category-badge,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .food-category-badge {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 26px !important;
+    padding: 0 12px !important;
+    white-space: nowrap !important;
+    writing-mode: horizontal-tb !important;
+    letter-spacing: normal !important;
+    line-height: 1.2 !important;
+    flex-shrink: 0 !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-title],
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-title],
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-title] {
+    order: 1 !important;
+    font-size: 36px !important;
+    line-height: 1.15 !important;
+    margin: 0 0 14px !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-row],
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-row],
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-rating-row] {
+    order: 2 !important;
+    display: flex !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-hero__company-row,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-hero__company-row,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-hero__company-row {
+    order: 2 !important;
+  }
+
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .biz-detail-fv__aside {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 960px) {
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv,
+  body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv,
+  body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure],
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure],
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure],
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery]{
+    width: 100%;
+  }
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-hero-figure]{
+    height: 240px;
+  }
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv [data-biz-detail-gallery]{
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  body.shop-detail-page[data-shop-category-profile="retail"] .biz-detail-fv.retail-top-fv .shop-thumb-btn,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .biz-detail-fv.retail-top-fv .shop-thumb-btn,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .biz-detail-fv.retail-top-fv .shop-thumb-btn{
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 14px;
+  }
+  /* スマホ：おすすめ商品を横スクロールカード化 */
+  body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-grid,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-grid,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-grid{
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  body.shop-detail-page[data-shop-category-profile="retail"] .retail-prod-card,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-prod-card,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-prod-card{
+    flex: 0 0 72%;
+    max-width: 320px;
+    scroll-snap-align: start;
+  }
+
+  /* スマホ：CTAは自然に折り返し（1〜2列） */
+  body.shop-detail-page[data-shop-category-profile="retail"] .retail-ctas,
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-ctas,
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-ctas{
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  body.shop-detail-page[data-shop-category-profile="retail"] .retail-cta,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-cta,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-cta,
+  body.shop-detail-page[data-shop-category-profile="retail"] .retail-cta--primary,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-cta--primary,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-cta--primary,
+  body.shop-detail-page[data-shop-category-profile="retail"] .retail-cta--line,
+
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-cta--line,
+
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-cta--line,
+  body.shop-detail-page[data-shop-category-profile="retail"] .retail-ctas [data-retail-fav-cta],
+body.shop-detail-page[data-shop-category-profile="goods_interior"] .retail-ctas [data-retail-fav-cta],
+body.shop-detail-page[data-shop-category-profile="vintage_brand"] .retail-ctas [data-retail-fav-cta]{
+    width: auto;
+    flex: 1 1 46%;
+    min-width: 160px;
+  }
+}
+

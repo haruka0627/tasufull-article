@@ -1,0 +1,27 @@
+.listing-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ede9fe 0%, #dbeafe 100%);
+  border: 1px solid #c4b5fd;
+  color: #5b21b6;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.lm-card__head .listing-ai-badge {
+  margin-left: 0;
+  margin-top: 0.35rem;
+}
+
+[data-biz-detail-title-badges] .listing-ai-badge {
+  margin-left: 0;
+  margin-right: 0.35rem;
+}

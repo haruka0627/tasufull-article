@@ -1,0 +1,133 @@
+/* 店舗販売 — 注文確認（390px 固定CTA余白） */
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] header.shop-market-header[data-shop-store-market-header],
+body.shop-store-flow-page[data-page="shop_store_complete"] header.shop-market-header[data-shop-store-market-header] {
+  display: block !important;
+  position: sticky;
+  top: 0;
+  z-index: 10001;
+  width: 100%;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__inner,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  max-width: min(100% - 1.5rem, 1760px);
+  margin: 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__actions,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__actions {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__action,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-width: 2.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__action-icon,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__action-icon {
+  font-size: 1.125rem;
+  line-height: 1;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-store-checkout-summary {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-store-checkout-summary .tasful-market-checkout-section {
+  margin-bottom: 0;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-store-checkout-payment-section {
+  scroll-margin-bottom: calc(148px + env(safe-area-inset-bottom, 0px));
+}
+
+@media (max-width: 960px) {
+  body.shop-store-flow-page[data-page="shop_store_checkout"].content-bottom-padding {
+    /* tasu-banner.css の body { padding: 0 !important } より優先 */
+    padding-bottom: calc(148px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"].content-bottom-padding .tasful-market-checkout-main {
+    padding-bottom: 32px;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__inner,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__inner {
+    flex-wrap: nowrap;
+    gap: 8px;
+    padding: 0 16px;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__logo,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__logo {
+    min-width: 0;
+    flex: 0 1 auto;
+    max-width: calc(100% - 3.5rem);
+    overflow: hidden;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__actions,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__actions {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__action-label,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__action-label {
+    display: none;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .tasful-ai-logo-text .sub {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 961px) {
+  body.shop-store-flow-page[data-page="shop_store_checkout"].content-bottom-padding {
+    padding-bottom: 0 !important;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__inner,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__inner {
+    flex-wrap: nowrap;
+    gap: 12px;
+    padding: 0 24px;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__logo,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__logo {
+    min-width: 0;
+    flex: 0 1 auto;
+    max-width: none;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__actions,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__actions {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+  }
+}

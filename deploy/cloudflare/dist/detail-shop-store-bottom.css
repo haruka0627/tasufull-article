@@ -1,0 +1,812 @@
+/* detail-shop.html — 下部専用（完成イメージ準拠） */
+
+body.shop-detail-page {
+  --shop-store-content: 1220px;
+  --shop-store-gold: #c9a227;
+  --shop-store-gold-deep: #9a7209;
+  --shop-store-gold-border: #d4af37;
+  --shop-store-gold-soft: #f8f3e8;
+  --shop-store-card-border: #eee;
+  --shop-store-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+}
+
+/* ── 下部シェル（中央・同幅） ── */
+.shop-store-bottom-shell {
+  width: 100%;
+  max-width: var(--shop-store-content);
+  margin: 2.5rem auto 3rem;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── 1. 店舗情報・地図・お知らせ 白カード ── */
+.shop-store-bottom-block {
+  margin: 0;
+}
+
+/* 外側ラッパー（薄グレー） */
+.shop-store-bottom-card {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 22px 22px;
+  background: #f3f5f7;
+  border: 1px solid #e8ecef;
+  border-radius: 18px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+body.shop-detail-page .shop-store-bottom-grid,
+body.shop-detail-page .biz-detail-page--store-shop .shop-store-bottom-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1fr) !important;
+  gap: 20px !important;
+  align-items: stretch !important;
+}
+
+.shop-store-bottom-col {
+  min-width: 0;
+  min-height: 100%;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 内側カード（3枚独立） */
+.shop-store-inner-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100%;
+  padding: 22px 24px 24px;
+  background: #fff;
+  border: 1px solid #eef1f4;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  box-sizing: border-box;
+}
+
+.shop-store-inner-card--map {
+  padding-bottom: 20px;
+}
+
+.shop-store-inner-card--news {
+  padding-bottom: 22px;
+}
+
+.shop-store-inner-card--news .shop-store-news-more-wrap {
+  margin-top: auto;
+  padding-top: 0.5rem;
+}
+
+.shop-store-bottom__title,
+body.shop-detail-page .biz-detail-shop-bottom__title.shop-store-bottom__title {
+  margin: 0 0 1.15rem;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+}
+
+/* 店舗情報 */
+.shop-store-info-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shop-store-info-list__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.6rem 0;
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: #334155;
+}
+
+.shop-store-info-list__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.375rem;
+  height: 1.375rem;
+  font-size: 0.6875rem;
+  line-height: 1;
+  border-radius: 50%;
+  filter: none;
+}
+
+.shop-store-info-list__item:nth-child(1) .shop-store-info-list__icon {
+  background: #ffebee;
+  color: #e53935;
+}
+
+.shop-store-info-list__item:nth-child(2) .shop-store-info-list__icon {
+  background: #fef9e7;
+  color: #b8860b;
+}
+
+.shop-store-info-list__item:nth-child(3) .shop-store-info-list__icon {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.shop-store-info-list__item:nth-child(4) .shop-store-info-list__icon {
+  background: #fdf2f8;
+  color: #db2777;
+}
+
+.shop-store-info-list__item:nth-child(5) .shop-store-info-list__icon,
+.shop-store-info-list__item:nth-child(6) .shop-store-info-list__icon,
+.shop-store-info-list__item:nth-child(7) .shop-store-info-list__icon {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.shop-store-info-list__line {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+}
+
+.shop-store-info-list__label {
+  font-weight: 700;
+  color: #475569;
+}
+
+.shop-store-info-list__sub {
+  display: inline;
+  margin-left: 0.1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.shop-store-info-note {
+  margin: 0.75rem 0 0;
+  padding-top: 0;
+  border-top: none;
+  font-size: 0.6875rem;
+  color: #94a3b8;
+  line-height: 1.55;
+}
+
+/* 地図 */
+.shop-store-inner-card--map .shop-store-bottom__title {
+  flex-shrink: 0;
+}
+
+.shop-store-inner-card--map .shop-store-map-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 252px;
+  margin-top: 0.15rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e9ed;
+  background: #e8eef4;
+}
+
+.shop-store-inner-card--map .shop-store-map-wrap .biz-detail-map-embed {
+  flex: 1;
+  display: flex;
+  min-height: 252px;
+}
+
+.shop-store-map-wrap .biz-detail-map-embed iframe {
+  display: block;
+  width: 100%;
+  flex: 1;
+  min-height: 252px;
+  height: 100%;
+  border: 0;
+}
+
+.shop-store-map-visual {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 252px;
+  height: 100%;
+  background-color: #d4dde6;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.1)),
+    url("https://images.unsplash.com/photo-1524661136854-998dce7aecd4?auto=format&fit=crop&w=1200&q=80");
+  background-size: cover;
+  background-position: center;
+}
+
+.shop-store-map-visual[data-shop-store-map-fallback] {
+  display: none;
+}
+
+.shop-store-map-pin {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  background: #e53935;
+  border: 3px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: translate(-50%, -100%) rotate(-45deg);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3);
+}
+
+.shop-store-map-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  background: #fff;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.shop-store-map-wrap .biz-detail-map-placeholder,
+.shop-store-map-wrap .biz-detail-map-note {
+  display: none;
+}
+
+/* お知らせ */
+.shop-store-news-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shop-store-news-list .shop-store-news-item,
+.shop-store-news-list .biz-detail-shop-news-item {
+  padding: 0.95rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.shop-store-news-list .shop-store-news-item:last-of-type,
+.shop-store-news-list .biz-detail-shop-news-item:last-of-type {
+  border-bottom: none;
+}
+
+.shop-store-news-item__date,
+.biz-detail-shop-news-item__date {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.shop-store-news-item__title,
+.biz-detail-shop-news-item__title {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.45;
+}
+
+.shop-store-news-item__desc {
+  margin: 0.35rem 0 0;
+  font-size: 0.75rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.shop-store-news-more-wrap {
+  margin: 1rem 0 0;
+}
+
+.shop-store-news-more-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.625rem;
+  padding: 0.65rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--shop-store-gold-deep);
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid var(--shop-store-gold-border);
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.shop-store-news-more-btn:hover {
+  background: var(--shop-store-gold-soft);
+  color: var(--shop-store-gold-deep);
+}
+
+/* ── 2. AI相談 CTA帯（+24px） ── */
+.shop-store-ai-band {
+  margin-top: 24px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(90deg, #faf6ec 0%, #f5edd8 50%, #faf6ec 100%);
+  border: 1px solid #ebe4d0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.shop-store-ai-band__inner {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 1rem 1.25rem;
+  min-height: 76px;
+  max-height: 82px;
+  padding: 0 1.5rem;
+  box-sizing: border-box;
+}
+
+.shop-store-ai-band__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  color: var(--shop-store-gold);
+}
+
+.shop-store-ai-band__text {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #334155;
+  line-height: 1.5;
+}
+
+.shop-store-ai-band__btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 11rem;
+  min-height: 2.75rem;
+  padding: 0.7rem 1.6rem;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  white-space: nowrap;
+  background: linear-gradient(135deg, #e8c547 0%, var(--shop-store-gold) 50%, #a67c00 100%);
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(154, 114, 9, 0.28);
+}
+
+.shop-store-ai-band__btn:hover {
+  color: #fff;
+  filter: brightness(1.03);
+}
+
+/* ── 3. フッターカード（+24px） ── */
+body.shop-detail-page .shop-store-site-footer.shop-market-footer {
+  margin: 24px 0 0;
+  padding: 0;
+  width: 100%;
+  max-width: none;
+  background: transparent;
+  border: none;
+}
+
+.shop-store-footer-card {
+  width: 100%;
+  padding: 32px 32px 24px;
+  background: #fff;
+  border: 1px solid var(--shop-store-card-border);
+  border-radius: 18px;
+  box-shadow: var(--shop-store-card-shadow);
+  box-sizing: border-box;
+}
+
+body.shop-detail-page .shop-store-site-footer .shop-store-site-footer__grid,
+body.shop-detail-page .shop-store-site-footer .shop-market-footer__grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.8fr) minmax(0, 0.95fr) minmax(0, 0.8fr) minmax(0, 1.1fr) !important;
+  gap: 20px 28px !important;
+  align-items: flex-start !important;
+  max-width: none;
+  margin: 0;
+}
+
+.shop-store-site-footer__brand {
+  min-width: 0;
+}
+
+.shop-store-site-footer__col {
+  min-width: 0;
+}
+
+.shop-store-site-footer__ai {
+  min-width: 0;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.shop-store-site-footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.7rem;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.shop-store-site-footer__logo-mark {
+  width: 1.3rem;
+  height: 1.3rem;
+  background: linear-gradient(135deg, #e8c547, var(--shop-store-gold));
+  transform: rotate(45deg);
+  border-radius: 3px;
+}
+
+.shop-store-site-footer__tagline {
+  margin: 0;
+  font-size: 0.75rem;
+  line-height: 1.65;
+  color: #64748b;
+}
+
+.shop-store-site-footer__sns {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.shop-store-sns-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  color: #fff;
+  text-decoration: none;
+  background: #1a1a1a;
+  border-radius: 50%;
+  transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.shop-store-sns-btn__icon {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.shop-store-sns-btn__icon--x {
+  width: 15px;
+  height: 15px;
+}
+
+.shop-store-sns-btn__icon--fb {
+  width: 17px;
+  height: 17px;
+}
+
+.shop-store-sns-btn:hover {
+  color: #fff;
+  background: #3d3428;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 162, 39, 0.28);
+}
+
+.shop-store-site-footer__col h3 {
+  margin: 0 0 0.8rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.shop-store-site-footer__col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.shop-store-site-footer__col li {
+  margin: 0 0 0.45rem;
+}
+
+.shop-store-site-footer__col a {
+  font-size: 0.75rem;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.shop-store-site-footer__col a:hover {
+  color: var(--shop-store-gold-deep);
+}
+
+.shop-store-site-footer__ai-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 12px;
+}
+
+.shop-store-site-footer__ai-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.35rem;
+}
+
+.shop-store-site-footer__ai-title {
+  margin: 0 0 0.3rem;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+
+.shop-store-site-footer__ai-lead {
+  margin: 0;
+  font-size: 0.625rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.shop-store-site-footer__ai-avatar {
+  flex-shrink: 0;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.shop-store-site-footer__ai-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2rem;
+  padding: 0.4rem 0.5rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: var(--shop-store-gold-deep);
+  text-decoration: none;
+  background: #fff;
+  border: 1px solid var(--shop-store-gold-border);
+  border-radius: 8px;
+}
+
+.shop-store-site-footer__ai-cta:hover {
+  background: var(--shop-store-gold-soft);
+}
+
+.shop-store-site-footer__copy {
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f0f0f0;
+  text-align: center;
+  font-size: 0.6875rem;
+  color: #94a3b8;
+}
+
+body.shop-detail-page .biz-detail-disclaimer[hidden] {
+  display: none !important;
+}
+
+/* ── レスポンシブ：タブレット（2カラム＋お知らせ下段） ── */
+@media (max-width: 1024px) {
+  .shop-store-bottom-shell {
+    max-width: 100%;
+    padding: 0 4px;
+  }
+
+  .shop-store-bottom-card {
+    padding: 16px 18px;
+  }
+
+  .shop-store-footer-card {
+    padding: 24px 22px;
+  }
+
+  body.shop-detail-page .shop-store-bottom-grid,
+  body.shop-detail-page .biz-detail-page--store-shop .shop-store-bottom-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) !important;
+    gap: 16px !important;
+  }
+
+  .shop-store-bottom-col--news {
+    grid-column: 1 / -1;
+  }
+
+  .shop-store-inner-card--map .shop-store-map-wrap,
+  .shop-store-map-visual,
+  .shop-store-map-wrap .biz-detail-map-embed iframe {
+    min-height: 220px;
+  }
+
+  body.shop-detail-page .shop-store-site-footer .shop-store-site-footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 20px 24px !important;
+  }
+
+  .shop-store-site-footer__brand {
+    grid-column: 1 / -1;
+  }
+
+  .shop-store-site-footer__ai {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
+    max-width: 240px;
+  }
+}
+
+/* ── レスポンシブ：SP ── */
+@media (max-width: 768px) {
+  .shop-store-bottom-shell {
+    margin-top: 1.75rem;
+    margin-bottom: 2rem;
+  }
+
+  .shop-store-bottom-card,
+  .shop-store-footer-card {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  body.shop-detail-page .shop-store-bottom-grid,
+  body.shop-detail-page .biz-detail-page--store-shop .shop-store-bottom-grid {
+    grid-template-columns: 1fr !important;
+    gap: 0 !important;
+  }
+
+  body.shop-detail-page .shop-store-bottom-grid,
+  body.shop-detail-page .biz-detail-page--store-shop .shop-store-bottom-grid {
+    gap: 16px !important;
+  }
+
+  .shop-store-inner-card--map .shop-store-map-wrap,
+  .shop-store-map-visual,
+  .shop-store-map-wrap .biz-detail-map-embed iframe {
+    min-height: 200px;
+  }
+
+  .shop-store-ai-band__inner {
+    flex-wrap: wrap;
+    min-height: 0;
+    max-height: none;
+    padding: 14px 16px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .shop-store-ai-band__text {
+    flex: 1 1 100%;
+    font-size: 0.875rem;
+  }
+
+  .shop-store-ai-band__btn {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body.shop-detail-page .shop-store-site-footer .shop-store-site-footer__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .shop-store-site-footer__ai {
+    grid-column: auto;
+    grid-row: auto;
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .shop-other-overview__text {
+    line-height: 1.75;
+    white-space: pre-line;
+    margin: 0;
+    color: #334155;
+  }
+
+  .shop-other-handling__list {
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .shop-other-handling__row {
+    display: grid;
+    grid-template-columns: minmax(7rem, 28%) 1fr;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid #e8edf3;
+  }
+
+  .shop-other-handling__row:last-child {
+    border-bottom: none;
+  }
+
+  .shop-other-handling__key {
+    margin: 0;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  .shop-other-handling__val {
+    margin: 0;
+    color: #0f172a;
+  }
+}
+
+/* UI smoke P2: 店舗詳細フッター高さ（SPはコピーのみ、PCはコンパクト） */
+body.shop-detail-page .shop-store-site-footer .shop-store-sns-btn__icon {
+  width: 18px;
+  height: 18px;
+  max-width: 18px;
+  max-height: 18px;
+}
+
+body.shop-detail-page .shop-store-site-footer .shop-store-sns-btn__icon--x {
+  width: 15px;
+  height: 15px;
+  max-width: 15px;
+  max-height: 15px;
+}
+
+body.shop-detail-page .shop-store-site-footer .shop-store-sns-btn__icon--fb {
+  width: 17px;
+  height: 17px;
+  max-width: 17px;
+  max-height: 17px;
+}
+
+@media (max-width: 900px) {
+  body.shop-detail-page .shop-store-site-footer .shop-store-site-footer__grid,
+  body.shop-detail-page .shop-store-site-footer .shop-market-footer__grid {
+    display: none !important;
+  }
+
+  body.shop-detail-page .shop-store-site-footer .shop-store-site-footer__sns {
+    display: none !important;
+  }
+
+  body.shop-detail-page .shop-store-footer-card {
+    padding: 16px 20px 14px;
+  }
+
+  body.shop-detail-page .shop-store-site-footer.shop-market-footer.shop-card {
+    padding: 0;
+  }
+
+  body.shop-detail-page .shop-store-site-footer__copy {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+@media (min-width: 901px) {
+  body.shop-detail-page .shop-store-site-footer__ai,
+  body.shop-detail-page .shop-market-footer__ai {
+    display: none;
+  }
+
+  body.shop-detail-page .shop-store-site-footer .shop-store-site-footer__grid,
+  body.shop-detail-page .shop-store-site-footer .shop-market-footer__grid {
+    grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px 20px !important;
+    align-items: start !important;
+  }
+
+  body.shop-detail-page .shop-store-footer-card {
+    padding: 20px 24px 16px;
+  }
+
+  body.shop-detail-page .shop-store-site-footer.shop-market-footer.shop-card {
+    padding: 0;
+  }
+}

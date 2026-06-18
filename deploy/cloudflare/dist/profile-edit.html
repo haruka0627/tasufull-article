@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>プロフィール編集 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+</head>
+<body class="dash-body" data-page="profile-edit">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ"></nav>
+    </aside>
+    <div class="dash-main">
+      <header class="dash-header dash-header--member">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="dash-header__heading">
+              <h1 class="dash-header__title">プロフィール編集</h1>
+            </div>
+          </div>
+        </div>
+      </header>
+      <main class="dash-content dash-shell">
+        <header class="tasu-mobile-page-head tasu-mobile-page-head--sub">
+          <button type="button" class="tasu-mobile-page-head__back" data-tasu-mobile-back aria-label="戻る">←</button>
+          <h1 class="tasu-mobile-page-head__title">プロフィール編集</h1>
+        </header>
+        <section class="dash-card dash-settings" id="profileSettingsForm" aria-labelledby="profileSettingsTitle">
+          <div class="dash-card__head tasu-pc-only-head">
+            <h2 class="dash-card__title" id="profileSettingsTitle">プロフィール編集</h2>
+          </div>
+          <div class="dash-card__body dash-card__body--padded">
+            <p class="dash-settings__lead">プロフィール画像や表示名を編集できます。</p>
+            <div class="dash-profile-avatar" data-profile-avatar-block>
+              <div class="dash-profile-avatar__preview-wrap">
+                <img class="dash-profile-avatar__img" data-profile-avatar-preview src="https://placehold.co/128x128/f3ead4/967622?text=ME" width="128" height="128" alt="プロフィール画像">
+              </div>
+              <div class="dash-profile-avatar__body">
+                <p class="dash-field__label" id="profileAvatarLabel">プロフィール画像</p>
+                <div class="dash-profile-avatar__actions">
+                  <button type="button" class="dash-btn dash-btn--secondary" data-profile-avatar-upload>画像をアップロード</button>
+                  <button type="button" class="dash-btn dash-btn--secondary" data-profile-avatar-change hidden>画像を変更</button>
+                </div>
+                <input type="file" class="dash-profile-avatar__input" data-profile-avatar-input accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" hidden>
+                <p class="dash-field__hint">JPG / JPEG / PNG / WebP · 推奨サイズ 512×512</p>
+                <p class="dash-field__error" data-profile-avatar-error hidden></p>
+              </div>
+            </div>
+            <form class="dash-settings__form" data-profile-form novalidate>
+              <div class="dash-field">
+                <label class="dash-field__label" for="profileNickname">ニックネーム</label>
+                <input class="dash-field__input" id="profileNickname" type="text" name="nickname" data-profile-nickname autocomplete="nickname" required>
+              </div>
+              <div class="dash-field">
+                <label class="dash-field__label" for="profileEmail">メールアドレス</label>
+                <input class="dash-field__input" id="profileEmail" type="email" data-profile-email readonly aria-readonly="true">
+                <p class="dash-field__hint">メールアドレスの変更は別途お問い合わせください。</p>
+              </div>
+              <p class="dash-field__error" data-profile-error hidden></p>
+              <div class="dash-settings__actions">
+                <button type="submit" class="dash-btn dash-btn--primary" data-profile-submit>保存する</button>
+              </div>
+            </form>
+            <p class="dash-settings__toast" data-profile-toast hidden role="status"></p>
+          </div>
+        </section>
+        <nav class="tasu-app-tabbar" data-tasu-app-tabbar aria-label="アプリメニュー">
+          <a class="tasu-app-tabbar__item" href="dashboard.html" data-tasu-app-tab="home"><span class="tasu-app-tabbar__icon" aria-hidden="true">🏠</span><span class="tasu-app-tabbar__label">ホーム</span></a>
+          <a class="tasu-app-tabbar__item" href="talk-home.html?tab=chat" data-tasu-app-tab="chat"><span class="tasu-app-tabbar__icon" aria-hidden="true">💬</span><span class="tasu-app-tabbar__label">TALK</span></a>
+          <a class="tasu-app-tabbar__item" href="talk-home.html?tab=notify" data-tasu-app-tab="notify"><span class="tasu-app-tabbar__icon" aria-hidden="true">🔔</span><span class="tasu-app-tabbar__label">通知</span></a>
+          <a class="tasu-app-tabbar__item" href="talk-home.html?tab=ai" data-tasu-app-tab="ai"><span class="tasu-app-tabbar__icon" aria-hidden="true">✨</span><span class="tasu-app-tabbar__label">AI</span></a>
+          <a class="tasu-app-tabbar__item is-active" href="profile-settings.html" data-tasu-app-tab="mypage"><span class="tasu-app-tabbar__icon" aria-hidden="true">👤</span><span class="tasu-app-tabbar__label">マイページ</span></a>
+        </nav>
+      </main>
+    </div>
+  </div>
+  <script src="dashboard-guard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="dashboard-data.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="tasful-app-mobile.js"></script>
+  <script src="profile-settings.js"></script>
+  <script>window.TasufulAppMobile?.init?.({ active: "mypage" });</script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+{
+  "at": "2026-06-18T09:50:52.114Z",
+  "project": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "results": {
+    "anonPublicView": {
+      "status": 200,
+      "rows": 0
+    },
+    "authPublicViewOther": {
+      "status": 200,
+      "rows": 0
+    },
+    "authBaseAll": {
+      "status": 200,
+      "rows": 0,
+      "count": "0"
+    },
+    "authBaseOther": {
+      "status": 200,
+      "rows": 0
+    },
+    "clientUpsert": {
+      "status": 403,
+      "denied": true
+    },
+    "anonBase": {
+      "status": 200,
+      "rows": 0
+    }
+  },
+  "passes": [
+    "tautology policy removed",
+    "review_scores_select_own (functional proxy via base other denied)",
+    "anon public_review_scores readable",
+    "auth public_review_scores other readable",
+    "auth base not full-table read",
+    "auth base other denied",
+    "client direct upsert denied",
+    "anon base direct denied"
+  ],
+  "errors": [],
+  "pass": true
+}

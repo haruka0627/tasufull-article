@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>出品者注文管理 | TASFUL市場</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-market-top.css">
+  <link rel="stylesheet" href="shop-market-header.css">
+  <link rel="stylesheet" href="shop-market-product-grid.css">
+  <link rel="stylesheet" href="shop-market-seller.css">
+  <link rel="stylesheet" href="shop-market-pc.css">
+</head>
+<body class="tasful-market-page tasful-market-seller-orders-page" data-page="shop_market_seller_orders">
+  <header class="tasful-market-mall-header" data-tasful-market-header aria-label="TASFUL市場">
+    <div class="tasful-market-mall-header__stack">
+      <div class="tasful-market-mall-header__top">
+        <a href="shop-store.html" class="tasful-market-mall-header__logo" aria-label="TASFUL市場トップ"><span class="tasful-market-mall-header__logo-mark" aria-hidden="true">T</span><span class="tasful-market-mall-header__logo-text">TASFUL<em>市場</em></span></a>
+        <div class="tasful-market-mall-header__actions">
+          <a href="shop-market-mypage.html" class="tasful-market-mall-header__account" aria-label="マイページ"><span class="tasful-market-mall-header__account-icon" aria-hidden="true">👤</span><span class="tasful-market-mall-header__account-label">マイページ</span></a>
+          <a href="shop-market-cart.html" class="tasful-market-mall-header__cart" aria-label="カート"><span class="tasful-market-mall-header__cart-icon" aria-hidden="true">🛒</span><span class="tasful-market-mall-header__cart-badge" data-tasful-market-cart-count hidden>0</span><span class="tasful-market-mall-header__cart-label">カート</span></a>
+        </div>
+      </div>
+      <div class="tasful-market-mall-header__search-row">
+        <form class="tasful-market-mall-header__search" role="search" data-tasful-market-search-form action="shop-search.html" method="get">
+          <input type="search" name="keyword" class="tasful-market-mall-header__search-input" data-tasful-market-search-input placeholder="商品名・キーワードで検索" aria-label="商品名・キーワードで検索">
+          <button type="submit" class="tasful-market-mall-header__search-btn" aria-label="検索"><span aria-hidden="true">🔍</span></button>
+        </form>
+      </div>
+    </div>
+    <nav class="tasful-market-mall-header__nav" aria-label="市場カテゴリ"><div class="tasful-market-mall-header__nav-scroll" data-tasful-market-nav></div></nav>
+  </header>
+
+  <main class="tasful-market-seller-orders-main" aria-label="出品者注文管理">
+    <h1 class="tasful-market-seller-orders-main__title">出品者注文管理</h1>
+    <p class="tasful-market-seller-orders-main__lead" data-tasful-seller-orders-lead></p>
+    <div class="tasful-market-catalog-empty" data-tasful-seller-orders-empty hidden>
+      <p class="tasful-market-catalog-empty__icon" aria-hidden="true">📋</p>
+      <p class="tasful-market-catalog-empty__text">このショップの注文はまだありません</p>
+      <a href="shop-market-seller.html" class="tasful-market-catalog-empty__btn" data-tasful-seller-back>出品者ページへ</a>
+    </div>
+    <div class="tasful-market-seller-orders-list" data-tasful-seller-orders-list hidden></div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="detail-shop-store-loader.js"></script>
+  <script src="shop-market-product-data.js"></script>
+  <script src="platform-notify-action-labels.js"></script>
+  <script src="talk-official-rooms.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="shop-market-notify.js"></script>
+  <script src="shop-market-header.js"></script>
+  <script src="shop-market-seller-orders.js"></script>
+</body>
+</html>

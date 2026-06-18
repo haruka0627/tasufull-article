@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ご注文完了 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="shop-checkout-page.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+</head>
+<body class="shop-checkout-page shop-order-complete-page" data-page="shop_order_complete">
+
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span> — ご注文ありがとうございます
+    </div>
+  </div>
+
+  <main class="shop-checkout shop-order-complete">
+    <div class="shop-order-complete__icon" aria-hidden="true">✓</div>
+    <h1 class="shop-checkout__title">ご注文が完了しました</h1>
+    <p class="shop-checkout__status" data-order-complete-status>確認中…</p>
+
+    <section class="shop-checkout__card" data-order-complete-card hidden>
+      <dl class="shop-checkout__summary">
+        <div><dt>注文番号</dt><dd data-order-id>—</dd></div>
+        <div><dt>商品</dt><dd data-order-product-name>—</dd></div>
+        <div><dt>数量</dt><dd data-order-quantity>—</dd></div>
+        <div class="shop-checkout__total-row"><dt>お支払い金額</dt><dd data-order-total>—</dd></div>
+        <div><dt>店舗売上</dt><dd data-order-seller-amount>—</dd></div>
+        <div><dt>TASFUL手数料</dt><dd data-order-platform-fee>—</dd></div>
+      </dl>
+      <p class="shop-checkout__note">商品代金は店舗の売上として記録され、店舗へ注文が通知されます。発送・受取の詳細は店舗からご連絡があります。</p>
+      <div class="shop-checkout__actions">
+        <a class="shop-checkout__btn shop-checkout__btn--primary" data-order-shop-link href="shop-store.html">店舗ページへ</a>
+        <a class="shop-checkout__btn shop-checkout__btn--secondary" href="index.html">トップへ戻る</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="stripe-featured-config.js"></script>
+  <script src="stripe-shop-config.js"></script>
+  <script src="shop-payout.js"></script>
+  <script src="talk-category-normalize.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="shop-checkout.js"></script>
+  <script src="order-complete-page.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>
