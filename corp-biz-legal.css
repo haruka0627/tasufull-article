@@ -1,0 +1,212 @@
+/* ===== IWASHO 規約ページ（会社概要ページと同一トークン・カード体系） ===== */
+.iwasho-company-page.iwasho-legal-page {
+  background: #ffffff;
+}
+
+.iwasho-legal-page .iw-legal-hero {
+  width: 100%;
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.iwasho-legal-page .iw-legal-hero__inner {
+  width: calc(100% - 80px);
+  max-width: var(--iw-co-container);
+  margin: 0 auto;
+  padding: 48px 56px;
+  border-radius: var(--iw-co-radius);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(244, 247, 251, 0.96) 50%,
+    rgba(238, 242, 247, 0.92) 100%
+  );
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.08);
+}
+
+.iwasho-legal-page .iw-legal-hero__title {
+  margin: 0 0 16px;
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 900;
+  line-height: 1.15;
+  color: #062047;
+  letter-spacing: -0.02em;
+}
+
+.iwasho-legal-page .iw-legal-hero__lead {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.8;
+  color: var(--iw-co-text);
+}
+
+.iwasho-legal-page .iw-legal-body {
+  padding: 0 0 52px;
+}
+
+.iwasho-legal-page .iw-legal-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.iwasho-legal-page .iw-legal-toc {
+  padding: 24px 28px;
+}
+
+.iwasho-legal-page .iw-legal-toc__title {
+  margin: 0 0 14px;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--iw-co-navy);
+}
+
+.iwasho-legal-page .iw-legal-toc__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.iwasho-legal-page .iw-legal-toc__list a {
+  display: block;
+  padding: 8px 0 8px 16px;
+  position: relative;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--iw-co-navy);
+  text-decoration: none;
+}
+
+.iwasho-legal-page .iw-legal-toc__list a::before {
+  content: "・";
+  position: absolute;
+  left: 0;
+  color: var(--iw-co-navy);
+  font-weight: 800;
+}
+
+.iwasho-legal-page .iw-legal-toc__list a:hover,
+.iwasho-legal-page .iw-legal-toc__list a:focus-visible {
+  color: var(--iw-co-navy-dark);
+  text-decoration: underline;
+}
+
+.iwasho-legal-page .iw-legal-related {
+  margin-top: 4px;
+  padding-top: 16px;
+  border-top: 1px solid #e6edf5;
+}
+
+.iwasho-legal-page .iw-legal-related__label {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--iw-co-muted);
+  letter-spacing: 0.04em;
+}
+
+.iwasho-legal-page .iw-legal-related__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+
+.iwasho-legal-page .iw-legal-related__links a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--iw-co-navy);
+  text-decoration: none;
+}
+
+.iwasho-legal-page .iw-legal-related__links a:hover,
+.iwasho-legal-page .iw-legal-related__links a:focus-visible {
+  text-decoration: underline;
+}
+
+.iwasho-legal-page .iw-legal-article {
+  padding: 28px 28px 30px;
+  scroll-margin-top: 96px;
+}
+
+.iwasho-legal-page .iw-legal-article__title {
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e6edf5;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--iw-co-navy);
+  line-height: 1.45;
+}
+
+.iwasho-legal-page .iw-legal-article__body {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.85;
+  color: var(--iw-co-text);
+}
+
+.iwasho-legal-page .iw-legal-article__body p {
+  margin: 0 0 12px;
+}
+
+.iwasho-legal-page .iw-legal-article__body p:last-child {
+  margin-bottom: 0;
+}
+
+.iwasho-legal-page .iw-legal-article__body ul,
+.iwasho-legal-page .iw-legal-article__body ol {
+  margin: 0 0 12px;
+  padding-left: 1.4em;
+}
+
+.iwasho-legal-page .iw-legal-article__body li {
+  margin-bottom: 6px;
+}
+
+.iwasho-legal-page .iw-legal-article__body a {
+  color: var(--iw-co-navy);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.iwasho-legal-page .iw-legal-updated {
+  margin: 8px 0 0;
+  padding: 16px 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--iw-co-muted);
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .iwasho-legal-page .iw-legal-hero {
+    padding: 20px 0;
+  }
+
+  .iwasho-legal-page .iw-legal-hero__inner {
+    width: calc(100% - 40px);
+    padding: 36px 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .iwasho-legal-page .iw-legal-hero__inner {
+    width: calc(100% - 36px);
+    padding: 28px 20px;
+  }
+
+  .iwasho-legal-page .iw-legal-toc,
+  .iwasho-legal-page .iw-legal-article {
+    padding: 22px 18px;
+  }
+
+  .iwasho-legal-page .iw-legal-updated {
+    text-align: left;
+  }
+}

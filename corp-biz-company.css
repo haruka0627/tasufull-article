@@ -1,0 +1,604 @@
+/* ===== IWASHO 会社概要ページ ===== */
+.iwasho-company-page {
+  --iw-co-navy: #082a67;
+  --iw-co-navy-dark: #061f4d;
+  --iw-co-navy-cta: #0b2f6e;
+  --iw-co-text: #1e293b;
+  --iw-co-muted: #64748b;
+  --iw-co-line: #c8d5e4;
+  --iw-co-table-head: #eef4fa;
+  --iw-co-radius: 12px;
+  --iw-co-shadow: 0 4px 16px rgba(8, 42, 103, 0.08);
+  --iw-co-container: 1240px;
+  --iw-co-pad: 32px;
+  --iw-co-section-y: 44px;
+  --iw-co-heading-gap: 28px;
+  --iw-co-blue-soft: #eef5fb;
+  --iw-co-blue-hero: #f3f8fc;
+  background: #ffffff;
+  color: var(--iw-co-text);
+}
+
+.iwasho-company-page main {
+  overflow-x: hidden;
+}
+
+.iwasho-company-page .iw-co-container {
+  width: 100%;
+  max-width: var(--iw-co-container);
+  margin-inline: auto;
+  padding-inline: var(--iw-co-pad);
+}
+
+.iwasho-company-page .iw-co-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: var(--iw-co-heading-gap);
+}
+
+.iwasho-company-page .iw-co-heading__line {
+  flex: 1;
+  max-width: 160px;
+  height: 1px;
+  background: var(--iw-co-line);
+}
+
+.iwasho-company-page .iw-co-heading__title {
+  margin: 0;
+  font-size: clamp(22px, 2.2vw, 26px);
+  font-weight: 800;
+  color: var(--iw-co-navy);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+/* ----- Company info ----- */
+.iwasho-company-page .iw-co-info {
+  padding: var(--iw-co-section-y) 0;
+}
+
+.iwasho-company-page .iw-co-info__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.iwasho-company-page .iw-co-table {
+  width: 100%;
+  height: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #dbe4f0;
+  border-radius: var(--iw-co-radius);
+  overflow: hidden;
+  box-shadow: var(--iw-co-shadow);
+  background: #ffffff;
+}
+
+.iwasho-company-page .iw-co-table th,
+.iwasho-company-page .iw-co-table td {
+  padding: 18px 20px;
+  font-size: 15px;
+  line-height: 1.65;
+  vertical-align: middle;
+  border-bottom: 1px solid #e6edf5;
+}
+
+.iwasho-company-page .iw-co-table tr:last-child th,
+.iwasho-company-page .iw-co-table tr:last-child td {
+  border-bottom: none;
+}
+
+.iwasho-company-page .iw-co-table th {
+  width: 32%;
+  background: var(--iw-co-table-head);
+  color: var(--iw-co-navy);
+  font-weight: 800;
+  text-align: left;
+}
+
+.iwasho-company-page .iw-co-table td {
+  color: var(--iw-co-text);
+  font-weight: 500;
+}
+
+.iwasho-company-page .iw-co-biz-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  min-height: 100%;
+  padding: 24px 28px;
+  background: #ffffff;
+  border: 1px solid #dbe4f0;
+  border-radius: var(--iw-co-radius);
+  box-shadow: var(--iw-co-shadow);
+}
+
+.iwasho-company-page .iw-co-biz-card__title {
+  margin: 0 0 16px;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--iw-co-navy);
+}
+
+.iwasho-company-page .iw-co-biz-card__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iwasho-company-page .iw-co-biz-card__list li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.75;
+  color: var(--iw-co-text);
+}
+
+.iwasho-company-page .iw-co-biz-card__list li::before {
+  content: "・";
+  position: absolute;
+  left: 0;
+  color: var(--iw-co-navy);
+  font-weight: 800;
+}
+
+/* ----- History ----- */
+.iwasho-company-page .iw-co-history {
+  padding: var(--iw-co-section-y) 0;
+  background: #fafbfd;
+}
+
+.iwasho-company-page .iw-co-history__grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  min-height: 300px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(244, 247, 251, 0.96) 35%,
+    rgba(238, 242, 247, 0.92) 100%
+  );
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.05);
+}
+
+.iwasho-company-page .iw-co-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 45%;
+  flex-shrink: 0;
+  padding: 28px 20px 28px 32px;
+}
+
+.iwasho-company-page .iw-co-timeline__item {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.iwasho-company-page .iw-co-timeline__icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--iw-co-navy);
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.iwasho-company-page .iw-co-timeline__icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iwasho-company-page .iw-co-timeline__item:not(:last-child) .iw-co-timeline__icon::after {
+  content: "";
+  position: absolute;
+  top: 58px;
+  left: 50%;
+  width: 2px;
+  height: calc(100% + 22px);
+  transform: translateX(-50%);
+  background: #c8d5e4;
+}
+
+.iwasho-company-page .iw-co-timeline__title {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--iw-co-navy);
+  line-height: 1.45;
+}
+
+.iwasho-company-page .iw-co-timeline__desc {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.iwasho-company-page .iw-co-history__visual {
+  width: 55%;
+  height: 300px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.iwasho-company-page .iw-co-history__visual-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.iwasho-company-page .iw-co-history__visual-wrap::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 180px;
+  background: linear-gradient(
+    90deg,
+    rgba(244, 247, 251, 1) 0%,
+    rgba(244, 247, 251, 0.75) 40%,
+    rgba(244, 247, 251, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.iwasho-company-page .iw-co-history__visual img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ----- Philosophy ----- */
+.iwasho-company-page .iw-co-philosophy {
+  padding: var(--iw-co-section-y) 0;
+}
+
+.iwasho-company-page .iw-co-philosophy__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.iwasho-company-page .iw-co-philosophy-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 220px;
+  padding: 24px 20px 26px;
+  text-align: center;
+  background: #ffffff;
+  border: 1px solid #dbe4f0;
+  border-radius: var(--iw-co-radius);
+  box-shadow: var(--iw-co-shadow);
+}
+
+.iwasho-company-page .iw-co-philosophy-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  background: var(--iw-co-blue-soft);
+  color: var(--iw-co-navy);
+}
+
+.iwasho-company-page .iw-co-philosophy-card__icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iwasho-company-page .iw-co-philosophy-card__title {
+  margin: 0 0 10px;
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--iw-co-navy);
+}
+
+.iwasho-company-page .iw-co-philosophy-card__desc {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: #475569;
+}
+
+/* ----- CTA ----- */
+.iwasho-company-page .iw-co-cta {
+  padding: 44px 0 52px;
+  background: #ffffff;
+}
+
+.iwasho-company-page .iw-co-cta__card {
+  width: calc(100% - 80px);
+  max-width: 1560px;
+  margin: 0 auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.08);
+}
+
+.iwasho-company-page .iw-co-cta__main {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  min-height: 260px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(244, 247, 251, 0.96) 42%,
+    rgba(238, 242, 247, 0.92) 100%
+  );
+}
+
+.iwasho-company-page .iw-co-cta__content {
+  width: 48%;
+  flex-shrink: 0;
+  padding: 40px 24px 36px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.iwasho-company-page .iw-co-cta__title {
+  margin: 0 0 14px;
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-weight: 800;
+  line-height: 1.55;
+  color: var(--iw-co-navy);
+}
+
+.iwasho-company-page .iw-co-cta__lead {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.8;
+  color: var(--iw-co-text);
+}
+
+.iwasho-company-page .iw-co-cta__visual {
+  width: 52%;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.iwasho-company-page .iw-co-cta__visual-wrap {
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+  position: relative;
+  overflow: hidden;
+}
+
+.iwasho-company-page .iw-co-cta__visual-wrap::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(244, 247, 251, 0.85) 35%,
+    rgba(244, 247, 251, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.iwasho-company-page .iw-co-cta__visual img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.iwasho-company-page .iw-co-cta__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 40px;
+  background: var(--iw-co-navy-cta);
+}
+
+.iwasho-company-page .iw-co-cta__bar-text {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.65;
+  color: #ffffff;
+}
+
+.iwasho-company-page .iw-co-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 32px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--iw-co-navy);
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.iwasho-company-page .iw-co-cta__btn:hover,
+.iwasho-company-page .iw-co-cta__btn:focus-visible {
+  background: #f8fbff;
+  color: var(--iw-co-navy-dark);
+}
+
+@media (max-width: 900px) {
+  .iwasho-company-page {
+    --iw-co-pad: 24px;
+    --iw-co-section-y: 40px;
+    --iw-co-heading-gap: 24px;
+  }
+
+  .iwasho-company-page .iw-co-info__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-company-page .iw-co-cta__card {
+    width: calc(100% - 40px);
+  }
+
+  .iwasho-company-page .iw-co-cta__main {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .iwasho-company-page .iw-co-cta__content {
+    width: 100%;
+    padding: 32px 24px 28px;
+  }
+
+  .iwasho-company-page .iw-co-cta__visual {
+    width: 100%;
+  }
+
+  .iwasho-company-page .iw-co-cta__visual-wrap {
+    min-height: 220px;
+  }
+
+  .iwasho-company-page .iw-co-cta__visual-wrap::before {
+    width: 100%;
+    height: 90px;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
+  .iwasho-company-page .iw-co-cta__bar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 24px;
+  }
+
+  .iwasho-company-page .iw-co-history__grid {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .iwasho-company-page .iw-co-timeline {
+    width: 100%;
+    padding: 32px 24px 24px;
+  }
+
+  .iwasho-company-page .iw-co-history__visual {
+    width: 100%;
+    height: 260px;
+  }
+
+  .iwasho-company-page .iw-co-history__visual-wrap::before {
+    width: 100%;
+    height: 100px;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: auto;
+    background: linear-gradient(
+      180deg,
+      rgba(244, 247, 251, 1) 0%,
+      rgba(244, 247, 251, 0) 100%
+    );
+  }
+
+  .iwasho-company-page .iw-co-philosophy__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-company-page .iw-co-philosophy-card {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .iwasho-company-page {
+    --iw-co-pad: 18px;
+  }
+
+  .iwasho-company-page .iw-co-heading__line {
+    max-width: 48px;
+  }
+
+  .iwasho-company-page .iw-co-table th,
+  .iwasho-company-page .iw-co-table td {
+    display: block;
+    width: 100%;
+    padding: 12px 16px;
+  }
+
+  .iwasho-company-page .iw-co-table th {
+    border-bottom: none;
+    padding-bottom: 4px;
+  }
+
+  .iwasho-company-page .iw-co-cta__card {
+    width: calc(100% - 36px);
+  }
+
+  .iwasho-company-page .iw-co-cta__content {
+    padding: 28px 18px 24px;
+  }
+
+  .iwasho-company-page .iw-co-cta__bar {
+    padding: 18px 18px;
+  }
+
+  .iwasho-company-page .iw-co-cta__btn {
+    width: 100%;
+  }
+}

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>会社概要 | IWASHO × TASFUL</title>
+  <meta name="description" content="合同会社IWASHOの会社概要。現場品質管理支援・パートナー支援・DX支援・AI活用支援を通じて、協力会社様と共に成長します。" />
+  <link rel="stylesheet" href="/tas-top-page.css" />
+  <link rel="stylesheet" href="/corp-company-hp.css" />
+<link rel="stylesheet" href="/corp-layout.css" />
+<link rel="stylesheet" href="/corp-biz-home.css" />
+  <link rel="stylesheet" href="/corp-biz-company.css" />
+  <link rel="stylesheet" href="/corp-biz-mobile.css" />
+</head>
+<body class="corp-body corp-body--iwasho-company" data-corp="iwasho">
+  <div class="iwasho-home-page iwasho-company-page">
+<header class="iw-site-header">
+  <div class="iw-site-header__inner">
+    <a class="iw-site-header__brand" href="/iwasho/">
+      <span class="iw-site-header__logo">IWASHO <span class="iw-site-header__times">&times;</span> TASFUL</span>
+      <span class="iw-site-header__tagline">現場をつなぐ、未来をつくる</span>
+    </a>
+    <div class="iw-site-header__nav-and-btn">
+      <nav class="iw-site-header__nav" aria-label="メインナビゲーション">
+            <a href="/iwasho/">ホーム</a>
+            <a href="/iwasho/about.html">事業内容</a>
+            <a href="/iwasho/services.html">対応業務</a>
+            <a href="/iwasho/partners.html">パートナー募集</a>
+            <a href="/iwasho/team.html">チーム紹介</a>
+            <a href="/iwasho/company.html" class="is-active">会社概要</a>
+            <a href="/iwasho/contact.html">お問い合わせ</a>
+      </nav>
+      <div class="iw-site-header__actions">
+        <a class="iw-site-header__btn iw-site-header__btn--primary" href="/iwasho/partners.html#partner">
+          協力パートナー募集
+          <span class="iw-site-header__btn-arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+    <button type="button" class="iw-site-header__menu-btn" aria-label="メニューを開く" aria-expanded="false" data-iw-menu-toggle>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+<main>
+      <div class="iwasho-about">
+        <div class="iwasho-about__inner">
+          <div class="iwasho-about__content">
+            <h1 class="iwasho-about__title">会社概要</h1>
+            <p class="iwasho-about__lead">
+              IWASHOとTASFULは、<br>
+              現場品質向上と業務効率化を通じて<br>
+              協力会社様と共に成長します。
+            </p>
+          </div>
+
+          <div class="iwasho-about__graphic">
+            <div class="iwasho-about__graphic-wrap">
+              <img src="/iwasho/images/company/hero-company.png" alt="会社概要イメージ">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        /* 既存のサイトを絶対に壊さない局所リセット */
+        .iwasho-about,
+        .iwasho-about * {
+          box-sizing: border-box;
+        }
+
+        .iwasho-about h1,
+        .iwasho-about p {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
+
+        /* 【修正】外側親コンテナ自体の全幅グレーを廃止し、透明なベース枠に変更 */
+        .iwasho-about {
+          width: 100%;
+          padding: 40px 0; /* 上下に程よい余白を持たせる */
+          background: transparent; /* 背景を透明にしてWixのベースに馴染ませる */
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        /* 【重要修正】
+           このインナーコンテナ自体に薄いグレーの裏背景を設定しました。
+           これにより、裏背景の右端と、そこに含まれる写真の右端が物理的にパツッと綺麗に重なります！
+        */
+        .iwasho-about__inner {
+          width: calc(100% - 80px);
+          max-width: 1600px; /* バナー自体の横幅の上限をここで固定 */
+          height: 380px;
+          margin: 0 auto;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 0; /* 隙間をゼロにして完全に右端まで写真を敷き詰める */
+
+          /* 2枚目に合わせて調整した、インナーに閉じた裏背景グラデーション */
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(244, 247, 251, 0.96) 35%,
+            rgba(238, 242, 247, 0.92) 100%
+          );
+
+          /* カードの輪郭を綺麗に保つための設定 */
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 30px 80px rgba(15, 23, 42, 0.08); /* 浮き出すぎない上品な影 */
+        }
+
+        /* 左側：テキストエリア */
+        .iwasho-about__content {
+          width: 38%;
+          min-width: 440px;
+          height: 100%;
+          padding: 20px 20px 20px 60px; /* 左側の点線に文字位置が綺麗に収まる余白 */
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          text-align: left;
+          flex-shrink: 0;
+          z-index: 3;
+        }
+
+        /* タイトル（72px / nowrap） */
+        .iwasho-about__title {
+          font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+          font-size: 72px !important;
+          color: #062047;
+          font-weight: 900 !important;
+          line-height: 1.1 !important;
+          margin-bottom: 36px !important;
+          letter-spacing: -1px;
+          white-space: nowrap !important;
+        }
+
+        /* リード文 */
+        .iwasho-about__lead {
+          font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+          font-size: 18px;
+          color: #062047;
+          line-height: 1.8;
+          font-weight: bold;
+          letter-spacing: 0.5px;
+        }
+
+        /* 右側：画像エリア（裏背景の右端ぴったりまで100%密着させます） */
+        .iwasho-about__graphic {
+          width: 62%;
+          height: 100%;
+          position: relative;
+          z-index: 1;
+        }
+
+        /* 画像ラッパー */
+        .iwasho-about__graphic-wrap {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          overflow: hidden;
+        }
+
+        /* つなぎ目の影（フェード） */
+        .iwasho-about__graphic-wrap::before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 220px;
+          background: linear-gradient(
+            90deg,
+            rgba(244, 247, 251, 1) 0%,
+            rgba(244, 247, 251, 0.8) 35%,
+            rgba(244, 247, 251, 0) 100%
+          );
+          pointer-events: none;
+          z-index: 2;
+        }
+
+        /* 画像本体：高さ100%を維持し、右端基準で表示 */
+        .iwasho-about__graphic img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: right center;
+        }
+
+        /* ─── レスポンシブ対応（画面幅が狭まった際も崩れない調整） ─── */
+        @media (max-width: 1280px) {
+          .iwasho-about__title {
+            font-size: 60px !important;
+          }
+          .iwasho-about__content {
+            min-width: 380px;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .iwasho-about {
+            padding: 20px;
+          }
+          .iwasho-about__inner {
+            flex-direction: column-reverse;
+            height: auto;
+          }
+          .iwasho-about__content {
+            width: 100%;
+            min-width: 100%;
+            padding: 40px 20px !important;
+            text-align: center;
+          }
+          .iwasho-about__title {
+            font-size: 44px !important;
+            white-space: normal !important;
+            margin-bottom: 24px !important;
+          }
+          .iwasho-about__graphic {
+            width: 100%;
+            height: 320px;
+          }
+          .iwasho-about__graphic-wrap::before {
+            width: 100%;
+            height: 120px;
+            left: 0;
+            top: 0;
+            right: 0;
+            background: linear-gradient(
+              180deg,
+              rgba(255, 255, 255, 1) 0%,
+              rgba(255, 255, 255, 0) 100%
+            );
+          }
+        }
+      </style>
+
+      <section class="iw-co-info" aria-labelledby="iw-co-info-title">
+        <div class="iw-co-container">
+          <div class="iw-co-heading">
+            <span class="iw-co-heading__line" aria-hidden="true"></span>
+            <h2 id="iw-co-info-title" class="iw-co-heading__title">会社情報</h2>
+            <span class="iw-co-heading__line" aria-hidden="true"></span>
+          </div>
+
+          <div class="iw-co-info__grid">
+            <table class="iw-co-table">
+              <tbody>
+                <tr>
+                  <th scope="row">会社名</th>
+                  <td>合同会社IWASHO</td>
+                </tr>
+                <tr>
+                  <th scope="row">代表</th>
+                  <td>IWASHO</td>
+                </tr>
+                <tr>
+                  <th scope="row">設立</th>
+                  <td>2026年</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="iw-co-biz-card">
+              <h3 class="iw-co-biz-card__title">事業内容</h3>
+              <ul class="iw-co-biz-card__list">
+                <li>現場品質管理支援</li>
+                <li>パートナー支援</li>
+                <li>DX支援</li>
+                <li>AI活用支援</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="iw-co-history" aria-labelledby="iw-co-history-title">
+        <div class="iw-co-container">
+          <div class="iw-co-heading">
+            <span class="iw-co-heading__line" aria-hidden="true"></span>
+            <h2 id="iw-co-history-title" class="iw-co-heading__title">IWASHOの歩み</h2>
+            <span class="iw-co-heading__line" aria-hidden="true"></span>
+          </div>
+
+          <div class="iw-co-history__grid">
+            <div class="iw-co-timeline">
+              <article class="iw-co-timeline__item">
+                <div class="iw-co-timeline__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+                </div>
+                <div>
+                  <h3 class="iw-co-timeline__title">40年以上の現場経験</h3>
+                  <p class="iw-co-timeline__desc">個人事業として40年以上、建設業界の現場に携わり、品質管理や工程管理に取り組んできた実績を掲載</p>
+                </div>
+              </article>
+
+              <article class="iw-co-timeline__item">
+                <div class="iw-co-timeline__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M4 20h16"/><path d="M6 20V9l6-4 6 4v11"/><path d="M9 20v-5h6v5"/></svg>
+                </div>
+                <div>
+                  <h3 class="iw-co-timeline__title">2026年　合同会社IWASHO設立</h3>
+                  <p class="iw-co-timeline__desc">現場品質管理とパートナー支援を軸に、合同会社として活動を開始しました。</p>
+                </div>
+              </article>
+
+              <article class="iw-co-timeline__item">
+                <div class="iw-co-timeline__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M4 18c.6-2.2 2.4-4 4-4s3.4 1.8 4 4"/><path d="M12 18c.6-2.2 2.4-4 4-4s3.4 1.8 4 4"/></svg>
+                </div>
+                <div>
+                  <h3 class="iw-co-timeline__title">2026年　パートナー募集開始</h3>
+                  <p class="iw-co-timeline__desc">協力会社様との連携を強化するため、パートナー募集を開始しました。</p>
+                </div>
+              </article>
+
+              <article class="iw-co-timeline__item">
+                <div class="iw-co-timeline__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 20h8"/><path d="M12 18v2"/></svg>
+                </div>
+                <div>
+                  <h3 class="iw-co-timeline__title">2026年　TASFUL事業開始</h3>
+                  <p class="iw-co-timeline__desc">DX・AIを活用した業務支援サービスの提供を開始しました。</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="iw-co-history__visual" aria-hidden="true">
+              <div class="iw-co-history__visual-wrap">
+                <img src="/iwasho/images/company/history-company.png" alt="" width="520" height="330" loading="lazy" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="iw-co-philosophy" aria-labelledby="iw-co-philosophy-title">
+        <div class="iw-co-container">
+          <div class="iw-co-heading">
+            <span class="iw-co-heading__line" aria-hidden="true"></span>
+            <h2 id="iw-co-philosophy-title" class="iw-co-heading__title">経営理念</h2>
+            <span class="iw-co-heading__line" aria-hidden="true"></span>
+          </div>
+
+          <div class="iw-co-philosophy__grid">
+            <article class="iw-co-philosophy-card">
+              <div class="iw-co-philosophy-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M4 18c.6-2.2 2.4-4 4-4s3.4 1.8 4 4"/><path d="M12 18c.6-2.2 2.4-4 4-4s3.4 1.8 4 4"/></svg>
+              </div>
+              <h3 class="iw-co-philosophy-card__title">信頼をつくる</h3>
+              <p class="iw-co-philosophy-card__desc">誠実な対応と透明性の高い運営で、パートナー様との信頼関係を築きます。</p>
+            </article>
+
+            <article class="iw-co-philosophy-card">
+              <div class="iw-co-philosophy-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 18h16"/><path d="M6 16V8"/><path d="M10 16V6"/><path d="M14 16v-4"/><path d="M18 16V10"/><path d="M16 4 18 6 22 2"/></svg>
+              </div>
+              <h3 class="iw-co-philosophy-card__title">価値を高める</h3>
+              <p class="iw-co-philosophy-card__desc">現場品質の向上と業務効率化を通じて、パートナー様の価値創出を支援します。</p>
+            </article>
+
+            <article class="iw-co-philosophy-card">
+              <div class="iw-co-philosophy-card__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="16" cy="9" r="2.5"/><path d="M4 18c.8-2 2.2-3.5 5-3.5S13.2 16 14 18"/><path d="M14 18c.6-1.8 1.8-3 3.5-3 1.8 0 3.2 1.2 4 3"/></svg>
+              </div>
+              <h3 class="iw-co-philosophy-card__title">未来を支える</h3>
+              <p class="iw-co-philosophy-card__desc">DX・AI活用を通じて、建設業界の未来を支え続けます。</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="iw-co-cta" aria-label="パートナー募集">
+        <div class="iw-co-cta__card">
+          <div class="iw-co-cta__main">
+            <div class="iw-co-cta__content">
+              <h2 class="iw-co-cta__title">信頼できるパートナー様とともに、<br>より良い現場づくりを目指して。</h2>
+              <p class="iw-co-cta__lead">IWASHOとTASFULは、現場の品質向上と働きやすい環境づくりを追求し、<br>パートナー様と共に成長し続けます。</p>
+            </div>
+            <div class="iw-co-cta__visual" aria-hidden="true">
+              <div class="iw-co-cta__visual-wrap">
+                <img src="/iwasho/images/company/cta-company.png" alt="" width="520" height="218" loading="lazy" />
+              </div>
+            </div>
+          </div>
+          <div class="iw-co-cta__bar">
+            <p class="iw-co-cta__bar-text">協力会社様との強固なパートナーシップで、未来の現場を支えていきます。</p>
+            <a class="iw-co-cta__btn" href="/iwasho/partners.html">パートナー募集はこちら &gt;</a>
+          </div>
+        </div>
+      </section>
+    </main>
+<div class="footer-wrapper">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4 class="footer-col-title">IWASHO合同会社</h4>
+      <div class="company-desc">
+        <p class="footer-text">新築・中古・リフォームの現場管理</p>
+        <p class="footer-text">パートナーネットワーク事業</p>
+      </div>
+      <div class="sns-group">
+        <a href="#" class="sns-link" aria-label="Facebook">
+          <svg class="sns-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="#" class="sns-link" aria-label="Instagram">
+          <svg class="sns-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        </a>
+        <a href="#" class="sns-link" aria-label="X">
+          <svg class="sns-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 3.746 8.502 11.24H16.17l-5.214-6.817L4.99 17.25H1.68l7.73-4.035L1.25 2.25h6.84l4.697 6.21 5.457-6.21zm-1.161 13.02h1.833L7.084 4.126H5.117L17.083 15.27z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">事業内容</h4>
+      <ul class="footer-links">
+        <li><a href="/iwasho/about.html">・IWASHO事業（メーカー案件）</a></li>
+        <li><a href="/service">・TASFUL事業（業者検索・支援）</a></li>
+        <li><a href="/builder/">・Builder（業務支援ツール）</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">対応業務</h4>
+      <ul class="footer-links">
+        <li><a href="/iwasho/services.html">・対応カテゴリ一覧</a></li>
+        <li><a href="/iwasho/services.html#iw-svc-realm-title">・除外対象工事</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">パートナー募集</h4>
+      <ul class="footer-links">
+        <li><a href="/iwasho/partners.html#partner">・パートナー登録の流れ</a></li>
+        <li><a href="/iwasho/partners.html#iw-ptn-benefits-title">・利用できるツール</a></li>
+        <li><a href="/company/faq.html">・よくあるご質問</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">法務</h4>
+      <ul class="footer-links">
+        <li><a href="/iwasho/terms.html">・利用規約</a></li>
+        <li><a href="/iwasho/partner-terms.html">・協力パートナー利用規約</a></li>
+        <li><a href="/iwasho/privacy.html">・プライバシーポリシー</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4 class="footer-col-title">お問い合わせ</h4>
+      <div class="contact-box">
+        <p class="footer-text">ご相談・ご質問など</p>
+        <p class="footer-text">お気軽にご連絡ください。</p>
+        <a href="/iwasho/contact.html" class="contact-btn">
+          <span>お問い合わせはこちら</span>
+          <svg class="btn-mail-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="copyright">&copy; 2026 IWASHO合同会社 All Rights Reserved.</div>
+</div>
+<script src="/iwasho/iwasho-home.js" defer></script>
+</div>
+</body>
+</html>
