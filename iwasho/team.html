@@ -3,59 +3,258 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>チーム | IWASHO</title>
-  <meta name="description" content="IWASHO チーム" />
-  <meta name="robots" content="noindex, nofollow" />
-  <link rel="stylesheet" href="/corp-layout.css" />
-  <link rel="stylesheet" href="/corp-header.css" />
-  <link rel="stylesheet" href="/corp-footer.css" />
+<title>チーム紹介 | IWASHO × TASFUL</title>
+  <meta name="description" content="IWASHOチームとTASFULチームをご紹介します。現場品質・パートナー対応・DX推進など、それぞれの役割を担うメンバーが連携しながら協力会社様をサポートしています。" />
+  <link rel="stylesheet" href="/tas-top-page.css" />
+  <link rel="stylesheet" href="/corp-company-hp.css" />
 </head>
 <body class="corp-body" data-corp="iwasho">
-  <header class="corp-header">
-      <div class="corp-container corp-header__inner">
-        <a class="corp-header__brand" href="/iwasho/index.html">
-          <img class="corp-header__logo" src="/images/corp/iwasho/logo.jpg" alt="" width="40" height="40" />
-          <span class="corp-header__brand-main">IWASHO</span>
-          <span class="corp-header__brand-sub">建設・施工</span>
-        </a>
-        <details class="corp-nav">
-          <summary class="corp-nav__toggle" aria-label="メニューを開く">
-            <span class="corp-nav__toggle-icon" aria-hidden="true"></span>
-          </summary>
-          <ul class="corp-nav__list">
-            <li><a class="corp-nav__link" href="/iwasho/index.html">ホーム</a></li>
-            <li><a class="corp-nav__link" href="/iwasho/services.html">サービス</a></li>
-            <li><a class="corp-nav__link" href="/iwasho/about.html">会社概要</a></li>
-            <li><a class="corp-nav__link" href="/iwasho/partners.html">パートナー</a></li>
-            <li><a class="corp-nav__link" href="/iwasho/contact.html">お問い合わせ</a></li>
-          </ul>
-        </details>
+  <style>
+/* --- 1. ベース設定 --- */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; width: 100%; background-color: #010409; overflow-x: hidden; }
+
+.team-clear-wrap {
+  width: 100%; min-height: 100vh;
+  padding: 100px 20px 60px; color: #fff;
+  font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+  position: relative; overflow: hidden;
+  background-color: #010409;
+  background-image:
+    linear-gradient(180deg, rgba(2, 8, 25, 0.25), rgba(2, 8, 25, 0.45)),
+    url("/images/tasful/team/team-cyber-bg-hq.png");
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+}
+
+/* --- 2. タイトルのエフェクト（高電圧アップグレード） --- */
+.tm-header { text-align: center; margin-bottom: 80px; position: relative; z-index: 5; width: 100%; }
+
+/* サブタイトル：フリッカー点滅 */
+.tm-profile-eng-sub { 
+  font-size: 13px; font-weight: 800; color: #3b82f6; letter-spacing: 0.4em; 
+  display: block; margin-bottom: 15px; 
+  text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6;
+  animation: text-flicker 0.1s infinite alternate; 
+}
+@keyframes text-flicker { 
+  0%, 100% { opacity: 1; text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 30px #22d3ee; } 
+  50% { opacity: 0.8; text-shadow: 0 0 5px #3b82f6; } 
+}
+
+.tm-title-flex-container { display: flex; justify-content: center; align-items: center; width: 100%; }
+.tm-title-spark-wrapper { position: relative; display: inline-block; }
+
+/* メインタイトル：強発光＋グリッチ */
+.tm-profile-main-title { 
+  font-size: clamp(30px, 5vw, 50px); font-weight: 900; letter-spacing: 0.15em; 
+  text-shadow: 0 0 15px #fff, 0 0 30px #22d3ee, 0 0 50px #3b82f6; 
+  animation: title-glitch 2s steps(2) infinite; 
+  margin: 0; color: #fff;
+}
+@keyframes title-glitch { 
+  0%, 90%, 100% { transform: translate(0,0); } 
+  92% { transform: translate(-2px, 1px); color: #fff; } 
+  94% { transform: translate(2px, -1px); color: #22d3ee; } 
+}
+
+/* ダブルスパーク（左右） */
+.tm-title-spark-wrapper::before,
+.tm-title-spark-wrapper::after {
+  content: ''; position: absolute; width: 6px; height: 6px; background: #fbbf24; border-radius: 50%;
+  box-shadow: 0 0 15px #fbbf24; opacity: 0; z-index: 10;
+}
+.tm-title-spark-wrapper::before { top: 10px; left: -35px; animation: spark-left 1.5s linear infinite; }
+.tm-title-spark-wrapper::after { bottom: 10px; right: -35px; animation: spark-right 1.5s linear infinite; animation-delay: 0.7s; }
+
+@keyframes spark-left { 
+  0% { transform: translate(0,0) scale(0); opacity: 1; } 
+  50% { transform: translate(-40px, -20px) scale(1.8); } 
+  100% { transform: translate(-60px, -40px) scale(0); opacity: 0; } 
+}
+@keyframes spark-right { 
+  0% { transform: translate(0,0) scale(0); opacity: 1; } 
+  50% { transform: translate(40px, 20px) scale(1.8); } 
+  100% { transform: translate(60px, 40px) scale(0); opacity: 0; } 
+}
+
+/* アンダーライン：脈動 */
+.tm-profile-title-line { 
+  width: 120px; height: 4px; background: #fff; margin: 40px auto 0; border-radius: 4px;
+  box-shadow: 0 0 15px #fff, 0 0 30px #22d3ee, 0 0 60px #3b82f6;
+  animation: line-pulse 1s ease-in-out infinite alternate;
+}
+@keyframes line-pulse { 0% { transform: scaleX(1); opacity: 1; } 100% { transform: scaleX(0.8); opacity: 0.6; } }
+
+/* --- 3. レイアウト設定 --- */
+.tm-ceo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; width: 100%; max-width: 1000px; margin: 0 auto 60px; position: relative; z-index: 5; }
+.tm-director-center { width: 100%; max-width: 1000px; margin: 0 auto 100px; display: flex; justify-content: center; position: relative; z-index: 5; }
+.tm-director-center .tm-ceo-card { width: calc(50% - 15px); }
+.tm-support-area { width: 100%; max-width: 1280px; margin: 0 auto; position: relative; z-index: 5; }
+.tm-support-grid-layout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px 36px; }
+
+/* --- 4. 代表者・ディレクター用カード（エフェクトあり） --- */
+.tm-ceo-card {
+  position: relative; border-radius: 20px; overflow: hidden; box-sizing: border-box;
+  background: rgba(10, 25, 50, 0.7); backdrop-filter: blur(15px);
+  padding: 50px 30px; text-align: center;
+  transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tm-ceo-card:hover { transform: translateY(-10px) scale(1.02); border-color: rgba(255,255,255,0.4); }
+
+.tm-iwasho { background: linear-gradient(135deg, rgba(225, 29, 72, 0.8), rgba(251, 113, 133, 0.8)); }
+.tm-tasful { background: linear-gradient(135deg, rgba(30, 58, 138, 0.8), rgba(59, 130, 246, 0.8)); }
+.tm-director { background: rgba(10, 30, 60, 0.9); border-color: #22d3ee; }
+
+/* 流れるネオン枠 */
+.tm-ceo-card::after {
+  content: ''; position: absolute; inset: -1px; border: 2px solid transparent; border-radius: inherit;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude; -webkit-mask-composite: xor;
+  background-size: 200% auto; animation: border-flow 3s linear infinite;
+}
+@keyframes border-flow { 0% { background-position: 200% center; } 100% { background-position: 0% center; } }
+.neon-flow-orange::after { background-image: linear-gradient(90deg, transparent, #ffcc00, #fff, #ffcc00, transparent); }
+.neon-flow-blue::after { background-image: linear-gradient(90deg, transparent, #22d3ee, #fff, #22d3ee, transparent); }
+.neon-flow-cyan::after { background-image: linear-gradient(90deg, transparent, #22d3ee, #fff, #22d3ee, transparent); }
+
+.tm-shine {
+  position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
+  transform: rotate(25deg); animation: shine-tm 10s linear infinite;
+  pointer-events: none;
+}
+@keyframes shine-tm { 0% { transform: translateX(-100%) rotate(25deg); } 100% { transform: translateX(100%) rotate(25deg); } }
+
+/* --- 5. サポート用カード（シンプル） --- */
+.tm-support-card-simple {
+  position: relative; border-radius: 20px; overflow: hidden; box-sizing: border-box;
+  background: linear-gradient(180deg, rgba(8, 18, 40, 0.95), rgba(5, 10, 25, 0.98));
+  backdrop-filter: blur(15px);
+  padding: 48px 32px; text-align: center;
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.08), 0 0 32px rgba(0, 255, 255, 0.05);
+  display: flex; flex-direction: column; align-items: center; gap: 15px;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.tm-support-card-simple:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.18), 0 0 60px rgba(0, 255, 255, 0.12);
+}
+
+/* 文字デザイン */
+.tm-ceo-role { font-size: 11px; font-weight: 800; color: #fff; margin-bottom: 8px; opacity: 0.9; letter-spacing: 0.1em; }
+.tm-ceo-name { font-size: 28px; font-weight: 900; margin-bottom: 12px; }
+.tm-ceo-bio { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.7; margin: 0; }
+.tm-grid-bio { font-size: 14px; color: rgba(255,255,255,0.88); line-height: 1.75; margin: 0; font-weight: 500; }
+.tm-name-grid { font-size: 26px; font-weight: 900; color: #fff; letter-spacing: 0.04em; }
+.tm-tag-support { font-size: 9px; font-weight: 900; background: rgba(255,255,255,0.15); color: #fff; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.1em; }
+.tm-bg-txt { position: absolute; right: -5px; bottom: -20px; font-size: 150px; font-weight: 900; color: rgba(255,255,255,0.03); pointer-events: none; }
+
+@media (max-width: 900px) {
+  .tm-ceo-grid, .tm-support-grid-layout { grid-template-columns: 1fr; }
+  .tm-director-center .tm-ceo-card { width: 100%; }
+}
+</style>
+
+<div class="team-clear-wrap">
+
+  <div class="tm-header">
+    <span class="tm-profile-eng-sub">MANAGEMENT SYSTEM v4.5</span>
+    
+    <div class="tm-title-flex-container">
+      <div class="tm-title-spark-wrapper">
+        <h1 class="tm-profile-main-title">チーム紹介</h1>
       </div>
-    </header>
-  <main class="corp-main">
-    <section class="corp-section">
-      <div class="corp-container corp-container--wide corp-biz-page">
-<p class="corp-placeholder-note">チーム紹介コンテンツは Wix 原文未回収のため準備中です。URL 直アクセスのみ。</p>
+    </div>
+
+    <p class="tm-lead">
+      IWASHO・TASFULを支えるメンバー紹介
+    </p>
+    <div class="tm-profile-title-line"></div>
+  </div>
+
+  <!-- 1. 代表者 -->
+  <div class="tm-ceo-grid">
+    <div class="tm-ceo-card tm-iwasho neon-flow-pink"> <!-- ピンクに変更 -->
+      <div class="tm-bg-txt">I</div>
+      <div class="tm-ceo-content">
+        <div class="tm-ceo-role">代表取締役 / IWASHO</div>
+        <div class="tm-ceo-name">川島 千鶴</div>
+        <p class="tm-ceo-bio">建設業界の次世代ネットワーク構築を牽引。現場力とデジタルの融合を推進しています。</p>
       </div>
-    </section>
-  </main>
-  <footer class="corp-footer">
-      <div class="corp-container corp-footer__inner">
-        <div>
-          <p class="corp-footer__brand">IWASHO</p>
-          <p class="corp-footer__tagline">関東エリアの建設・外構・足場 — 現場力とネットワーク</p>
-        </div>
-        <nav class="corp-footer__nav" aria-label="フッターナビ">
-          <a class="corp-footer__link" href="/iwasho/services.html">サービス</a>
-          <a class="corp-footer__link" href="/iwasho/about.html">会社概要</a>
-          <a class="corp-footer__link" href="/iwasho/partners.html">パートナー</a>
-          <a class="corp-footer__link" href="/iwasho/contact.html">お問い合わせ</a>
-        </nav>
-        <nav class="corp-footer__legal" aria-label="法務">
-          <a class="corp-footer__legal-link" href="/iwasho/privacy.html">プライバシーポリシー</a>
-        </nav>
-        <p class="corp-footer__copy">&copy; 2026 IWASHO</p>
+      <div class="tm-shine"></div>
+    </div>
+
+    <div class="tm-ceo-card tm-tasful neon-flow-blue">
+      <div class="tm-bg-txt">T</div>
+      <div class="tm-ceo-content">
+        <div class="tm-ceo-role">代表 / TASFUL</div>
+        <div class="tm-ceo-name">川島 浩輝</div>
+        <p class="tm-ceo-bio">プラットフォーム運営およびAI戦略を統括。「人・スキル・AI」をつなぐ新しい価値を創造します。</p>
       </div>
-    </footer>
+      <div class="tm-shine"></div>
+    </div>
+  </div>
+
+  <!-- 2. ディレクター -->
+  <div class="tm-director-center">
+    <div class="tm-ceo-card tm-director neon-flow-cyan">
+      <div class="tm-bg-txt">D</div>
+      <div class="tm-ceo-content">
+        <div class="tm-ceo-role">建設部門統括 / DIRECTOR</div>
+        <div class="tm-ceo-name">川島 勝利</div>
+        <p class="tm-ceo-bio">高品質な現場体制を構築。協力会社の技術指導とネットワーク拡大に注力しています。</p>
+      </div>
+      <div class="tm-shine"></div>
+    </div>
+  </div>
+
+  <!-- 3. サポート陣 -->
+  <div class="tm-support-area">
+    <div class="tm-support-grid-layout">
+      <div class="tm-support-card-simple">
+        <span class="tm-tag-support">SUPPORT</span>
+        <div class="tm-name-grid">高田 真由美</div>
+        <p class="tm-grid-bio">業務支援やクライアント対応、プロジェクトの進行をサポートします。</p>
+      </div>
+      <div class="tm-support-card-simple">
+        <span class="tm-tag-support">SUPPORT</span>
+        <div class="tm-name-grid">高田 由香里</div>
+        <p class="tm-grid-bio">バックオフィス業務を中心に、チーム全体の効率化に貢献します。</p>
+      </div>
+      <div class="tm-support-card-simple">
+        <span class="tm-tag-support">SUPPORT</span>
+        <div class="tm-name-grid">高田 翔太</div>
+        <p class="tm-grid-bio">現場と事務の橋渡し役として、迅速な対応を心掛けます。</p>
+      </div>
+      <div class="tm-support-card-simple">
+        <span class="tm-tag-support">SUPPORT</span>
+        <div class="tm-name-grid">松坂 大輔</div>
+        <p class="tm-grid-bio">専門的な知見からプロジェクトを支え、最適な運営環境を構築します。</p>
+      </div>
+      <div class="tm-support-card-simple">
+        <span class="tm-tag-support">SUPPORT</span>
+        <div class="tm-name-grid">松井 秀喜</div>
+        <p class="tm-grid-bio">多角的な視点で業務を分析し、チームのパフォーマンス向上を支援します。</p>
+      </div>
+      <div class="tm-support-card-simple">
+        <span class="tm-tag-support">SUPPORT</span>
+        <div class="tm-name-grid">坂本 勇人</div>
+        <p class="tm-grid-bio">柔軟な発想で課題を解決し、安定した運営体制の維持をサポートします。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/iwasho/iwasho-home.js" defer></script>
+</div>
+
+<script src="/iwasho/iwasho-home.js" defer></script>
+
+
+
 </body>
 </html>

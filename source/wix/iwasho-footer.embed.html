@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* 全体リセット */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    }
+
+    html, body {
+      width: 100%;
+      background-color: transparent;
+      overflow: hidden;
+    }
+
+    /* フッター全体のコンテナ（美しい濃紺グラデーション） */
+    .footer-wrapper {
+      width: 100%;
+      background: linear-gradient(180deg, #001a43 0%, #001130 100%);
+      padding: 60px 0 30px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* 内部の最大幅制限（他のすべてのセクションと完全同期） */
+    .footer-inner {
+      width: 100%;
+      max-width: 1440px;
+      padding: 0 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 50px;
+    }
+
+    /* フッターの各列共通スタイル */
+    .footer-col {
+      flex: 1;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* 列ごとの幅比率の微調整 */
+    .footer-col:first-child { padding-left: 0; flex: 1.2; }
+    .footer-col:last-child { padding-right: 0; flex: 1.1; }
+
+    /* スクショにある縦の美しい区切り線を再現 */
+    .footer-col::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 4px;
+      width: 1px;
+      height: 110px;
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .footer-col:last-child::after {
+      display: none; /* 最後の列の右側には線を引かない */
+    }
+
+    /* 各列の見出し */
+    .footer-col-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    /* テキスト・リンク共通のスタイル */
+    .footer-text, .footer-links a {
+      font-size: 14px;
+      font-weight: 600;
+      color: #cbd5e1;
+      line-height: 1.8;
+      text-decoration: none;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a:hover {
+      color: #ffffff;
+    }
+
+    /* ==========================================
+       左端：会社名 ＆ SNSエリア
+    ========================================== */
+    .company-desc {
+      margin-bottom: 24px;
+    }
+
+    .sns-group {
+      display: flex;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    /* 丸型SNSアイコンボタン */
+    .sns-link {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.15);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.2s;
+    }
+    .sns-link:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .sns-icon {
+      width: 16px;
+      height: 16px;
+      fill: #ffffff;
+    }
+
+    /* ==========================================
+       右端：お問い合わせボタンエリア
+    ========================================== */
+    .contact-box {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .contact-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: #ffffff;
+      color: #002255;
+      font-size: 14px;
+      font-weight: 800;
+      text-decoration: none;
+      width: 100%;
+      max-width: 240px;
+      height: 48px;
+      border-radius: 6px;
+      margin-top: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.2s;
+    }
+    .contact-btn:hover {
+      background-color: #f8fafc;
+    }
+
+    .btn-mail-icon {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: #002255;
+      stroke-width: 2.2;
+    }
+
+    /* ==========================================
+       最下部：コピーライトエリア
+    ========================================== */
+    .copyright {
+      width: 100%;
+      max-width: 1440px;
+      padding: 0 40px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 24px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    /* レスポンシブ対応 */
+    @media (max-width: 1024px) {
+      .footer-inner { flex-direction: column; gap: 40px; padding: 0 24px; }
+      .footer-col { width: 100%; padding: 0; margin-bottom: 20px; }
+      .footer-col::after { display: none; }
+      .contact-btn { max-width: 100%; }
+      .copyright { padding: 24px 24px 0 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="footer-wrapper">
+    <div class="footer-inner">
+      
+      <div class="footer-col">
+        <h4 class="footer-col-title">IWASHO合同会社</h4>
+        <div class="company-desc">
+          <p class="footer-text">新築・中古・リフォームの現場管理</p>
+          <p class="footer-text">パートナーネットワーク事業</p>
+        </div>
+        
+        <div class="sns-group">
+          <a href="#" class="sns-link" aria-label="Facebook">
+            <svg class="sns-icon" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="#" class="sns-link" aria-label="Instagram">
+            <svg class="sns-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          </a>
+          <a href="#" class="sns-link" aria-label="X">
+            <svg class="sns-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 3.746 8.502 11.24H16.17l-5.214-6.817L4.99 17.25H1.68l7.73-4.035L1.25 2.25h6.84l4.697 6.21 5.457-6.21zm-1.161 13.02h1.833L7.084 4.126H5.117L17.083 15.27z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">事業内容</h4>
+        <ul class="footer-links">
+          <li><a href="#">・IWASHO事業（メーカー案件）</a></li>
+          <li><a href="#">・TASFUL事業（業者検索・支援）</a></li>
+          <li><a href="#">・Builder（業務支援ツール）</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">対応業務</h4>
+        <ul class="footer-links">
+          <li><a href="#">・対応カテゴリ一覧</a></li>
+          <li><a href="#">・除外対象工事</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">パートナー募集</h4>
+        <ul class="footer-links">
+          <li><a href="#">・パートナー登録の流れ</a></li>
+          <li><a href="#">・利用できるツール</a></li>
+          <li><a href="#">・よくあるご質問</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4 class="footer-col-title">お問い合わせ</h4>
+        <div class="contact-box">
+          <p class="footer-text">ご相談・ご質問など</p>
+          <p class="footer-text">お気軽にご連絡ください。</p>
+          <a href="#" class="contact-btn">
+            <span>お問い合わせはこちら</span>
+            <svg class="btn-mail-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="copyright">
+      &copy; 2026 IWASHO LLC. All Rights Reserved.
+    </div>
+  </div>
+
+</body>
+</html>

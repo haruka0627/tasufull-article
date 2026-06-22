@@ -1,18 +1,40 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>プライバシーポリシー | IWASHO</title>
-  <meta name="description" content="IWASHO プライバシーポリシー" />
-  <link rel="stylesheet" href="/tas-top-page.css" />
-  <link rel="stylesheet" href="/corp-company-hp.css" />
-<link rel="stylesheet" href="/corp-layout.css" />
-  <link rel="stylesheet" href="/corp-biz-home.css" />
-</head>
-<body class="corp-body" data-corp="iwasho">
-  <div class="iwasho-home-page iwasho-privacy-page">
-<header class="iw-site-header">
+/**
+ * IWASHO 専用サイトシェル（完成版）
+ * 復元元: corp-biz-home.css (.iw-site-header / .footer-wrapper)
+ *         source/wix/iwasho-footer.embed.html
+ *         iwasho/contact.html（agent transcript 完成版）
+ */
+
+export const IWASHO_NAV = [
+  { id: "home", href: "/iwasho/", label: "ホーム" },
+  { id: "about", href: "/iwasho/about.html", label: "事業内容" },
+  { id: "services", href: "/iwasho/services.html", label: "対応業務" },
+  { id: "partners", href: "/iwasho/partners.html", label: "パートナー募集" },
+  { id: "team", href: "/iwasho/team.html", label: "チーム紹介" },
+  { id: "company", href: "/iwasho/company.html", label: "会社概要" },
+  { id: "contact", href: "/iwasho/contact.html", label: "お問い合わせ" },
+];
+
+export const PAGE_ACTIVE = {
+  "index.html": "home",
+  "about.html": "about",
+  "services.html": "services",
+  "partners.html": "partners",
+  "team.html": "team",
+  "company.html": "company",
+  "contact.html": "contact",
+  "privacy.html": null,
+};
+
+function navLink(item, activeId) {
+  const active = item.id === activeId ? ' class="is-active"' : "";
+  return `<a href="${item.href}"${active}>${item.label}</a>`;
+}
+
+export function renderIwashoHeader(activeId) {
+  const links = IWASHO_NAV.map((item) => navLink(item, activeId)).join("\n            ");
+
+  return `<header class="iw-site-header">
   <div class="iw-site-header__inner">
     <a class="iw-site-header__brand" href="/iwasho/">
       <span class="iw-site-header__logo">IWASHO <span class="iw-site-header__times">&times;</span> TASFUL</span>
@@ -20,13 +42,7 @@
     </a>
     <div class="iw-site-header__nav-and-btn">
       <nav class="iw-site-header__nav" aria-label="メインナビゲーション">
-            <a href="/iwasho/">ホーム</a>
-            <a href="/iwasho/about.html">事業内容</a>
-            <a href="/iwasho/services.html">対応業務</a>
-            <a href="/iwasho/partners.html">パートナー募集</a>
-            <a href="/iwasho/team.html">チーム紹介</a>
-            <a href="/iwasho/company.html">会社概要</a>
-            <a href="/iwasho/contact.html">お問い合わせ</a>
+            ${links}
       </nav>
       <div class="iw-site-header__actions">
         <a class="iw-site-header__btn iw-site-header__btn--primary" href="/iwasho/partners.html#partner">
@@ -39,25 +55,11 @@
       <span></span><span></span><span></span>
     </button>
   </div>
-</header>
-<main class="corp-main">
-    <section class="corp-section">
-      <div class="corp-container corp-prose">
-        <p class="corp-legal-meta">最終更新: 2025年（Wix 原文ベース · 個人事業者名等は要確認）</p>
-        <h1 class="corp-section__title">プライバシーポリシー</h1>
-        <p>IWASHO（以下「当社」）は、お問い合わせ・協力パートナー募集等を通じて取得する個人情報を、適切に管理します。</p>
-        <h2>1. 取得する情報</h2>
-        <p>氏名、会社名、連絡先、お問い合わせ内容、施工に関する情報等。</p>
-        <h2>2. 利用目的</h2>
-        <p>お問い合わせ対応、見積・施工の検討、協力パートナー連絡、法令対応。</p>
-        <h2>3. 第三者提供</h2>
-        <p>法令に基づく場合を除き、同意なく第三者に提供しません。</p>
-        <h2>4. お問い合わせ</h2>
-        <p><a href="/iwasho/contact.html">お問い合わせページ</a>よりご連絡ください。</p>
-      </div>
-    </section>
-  </main>
-<div class="footer-wrapper">
+</header>`;
+}
+
+export function renderIwashoFooter() {
+  return `<div class="footer-wrapper">
   <div class="footer-inner">
     <div class="footer-col">
       <h4 class="footer-col-title">IWASHO合同会社</h4>
@@ -113,8 +115,5 @@
     </div>
   </div>
   <div class="copyright">&copy; 2026 IWASHO合同会社 All Rights Reserved.</div>
-</div>
-<script src="/iwasho/iwasho-home.js" defer></script>
-</div>
-</body>
-</html>
+</div>`;
+}

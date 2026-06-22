@@ -1,29 +1,22 @@
 /**
- * HP-MIGRATION-5 — IWASHO TOP hero timeline
+ * IWASHO TOP — モバイルメニュー
  */
 (function () {
-  const root = document.querySelector(".iwasho-home-page");
-  if (!root) return;
+  var header = document.querySelector(".iw-site-header");
+  var toggle = document.querySelector("[data-iw-menu-toggle]");
+  if (!header || !toggle) return;
 
-  const lines = [...root.querySelectorAll(".iwasho-home-hero__line")];
-  const logo = root.querySelector(".iwasho-home-hero__logo-reveal");
-  if (!lines.length || !logo) return;
-
-  const LINE_MS = 3500;
-  const LOGO_MS = 14000;
-
-  lines.forEach((line, i) => {
-    window.setTimeout(() => {
-      line.classList.add("is-visible");
-    }, i * LINE_MS);
+  toggle.addEventListener("click", function () {
+    var open = header.classList.toggle("is-menu-open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
   });
 
-  window.setTimeout(() => {
-    lines.forEach((line) => {
-      line.classList.remove("is-visible");
-      line.classList.add("is-hidden");
+  header.querySelectorAll(".iw-site-header__nav a, .iw-site-header__btn").forEach(function (link) {
+    link.addEventListener("click", function () {
+      header.classList.remove("is-menu-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "メニューを開く");
     });
-    logo.classList.add("is-visible");
-    logo.removeAttribute("hidden");
-  }, LOGO_MS);
+  });
 })();

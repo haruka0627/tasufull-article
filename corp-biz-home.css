@@ -1,526 +1,1505 @@
 /**
- * HP-MIGRATION-5 — IWASHO TOP (Wix embed 相当)
- * すべて .iwasho-home-page 配下にスコープ
+ * IWASHO TOP — モックアップ準拠（1280px基準）
  */
 body.corp-body--iwasho-home {
-  background: #0a0a0f;
+  background: #ffffff;
 }
 
 .iwasho-home-page {
-  --ih-header-h: 90px;
-  --ih-near-black: #0a0a0f;
-  --ih-navy: #0b1220;
-  --ih-glass: rgba(255, 255, 255, 0.08);
-  --ih-glass-border: rgba(255, 255, 255, 0.14);
-  --ih-accent-blue: #3b82f6;
-  --ih-text: #f1f5f9;
-  --ih-muted: #94a3b8;
-  --ih-max: 72rem;
-  --ih-gutter: clamp(1rem, 4vw, 2rem);
-  color: var(--ih-text);
-  background: var(--ih-near-black);
-}
-
-@media (min-width: 900px) {
-  .iwasho-home-page {
-    --ih-header-h: 140px;
-  }
+  --iw-navy: #0f2d66;
+  --iw-navy-dark: #0a224f;
+  --iw-blue: #2563eb;
+  --iw-text: #1a1a1a;
+  --iw-muted: #64748b;
+  --iw-border: #e5e7eb;
+  --iw-border-btn: #d1d5db;
+  --iw-surface: #f5f7fa;
+  --iw-max: 1280px;
+  --iw-header-h: 88px;
+  --iw-hero-h: clamp(560px, 65vh, 660px);
+  color: var(--iw-text);
+  background: #ffffff;
+  font-family: "Noto Sans JP", "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .iwasho-home-page *,
 .iwasho-home-page *::before,
 .iwasho-home-page *::after {
   box-sizing: border-box;
-}
-
-/* ===== Wix custom-header (TOP only) ===== */
-.iwasho-home-page .custom-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 9999;
-  height: var(--ih-header-h);
-  background: rgba(10, 10, 10, 0.96);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  overflow: hidden;
-}
-
-.iwasho-home-page .custom-header::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(
-    105deg,
-    transparent 0%,
-    transparent 38%,
-    rgba(255, 0, 128, 0.1) 44%,
-    rgba(255, 140, 0, 0.14) 50%,
-    rgba(255, 255, 0, 0.1) 56%,
-    rgba(0, 255, 128, 0.1) 62%,
-    rgba(0, 128, 255, 0.14) 68%,
-    rgba(128, 0, 255, 0.1) 74%,
-    transparent 80%
-  );
-  background-size: 200% 100%;
-  animation: ih-rainbow-shine 8s linear infinite;
-}
-
-@keyframes ih-rainbow-shine {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-.iwasho-home-page .custom-header .header-inner {
-  position: relative;
-  z-index: 1;
-  max-width: 1250px;
-  height: 100%;
-  margin: 0 auto;
-  padding: 0 40px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.iwasho-home-page .custom-header .logo {
   margin: 0;
   padding: 0;
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  line-height: 1.2;
-  color: #fff;
-  white-space: nowrap;
-  position: relative;
-  background: linear-gradient(
-    90deg,
-    #ffffff 0%,
-    #ffffff 30%,
-    #f472b6 38%,
-    #fbbf24 44%,
-    #a3e635 50%,
-    #38bdf8 56%,
-    #c084fc 62%,
-    #ffffff 70%,
-    #ffffff 100%
-  );
-  background-size: 220% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: ih-logo-rainbow 6s linear infinite;
 }
 
-@keyframes ih-logo-rainbow {
-  0% {
-    background-position: 0% center;
-  }
-  100% {
-    background-position: 220% center;
-  }
+.iwasho-home-page img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-.iwasho-home-page .custom-header .logo span {
-  -webkit-text-fill-color: rgba(255, 255, 255, 0.6);
-  color: rgba(255, 255, 255, 0.6);
-  background: none;
-  opacity: 0.6;
-  font-size: 18px;
-  font-weight: 400;
-  margin-inline: 0.35em;
+.iwasho-home-page main a:not(.iw-site-header__btn):not(.iw-btn):not(.iw-hero__btn):not(.banner-btn):not(.iw-ptn-btn):not(.iwasho-btn):not(.iwasho-cta-btn) {
+  color: inherit;
 }
 
-@media (min-width: 900px) {
-  .iwasho-home-page .custom-header .logo {
-    font-size: 30px;
-  }
-}
-
-/* ===== Hero ===== */
-.iwasho-home-page .iwasho-home-hero {
-  position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: calc(var(--ih-header-h) + 2rem) var(--ih-gutter) 3rem;
-  text-align: center;
-}
-
-.iwasho-home-page .iwasho-home-hero__media {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.iwasho-home-page .iwasho-home-hero__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.45;
-}
-
-.iwasho-home-page .iwasho-home-hero__overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, rgba(10, 10, 15, 0.55) 0%, rgba(11, 18, 32, 0.85) 100%);
-}
-
-.iwasho-home-page .iwasho-home-hero__stars {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.7), transparent),
-    radial-gradient(1px 1px at 30% 65%, rgba(255, 255, 255, 0.5), transparent),
-    radial-gradient(1.5px 1.5px at 55% 15%, rgba(255, 255, 255, 0.6), transparent),
-    radial-gradient(1px 1px at 70% 45%, rgba(255, 255, 255, 0.45), transparent),
-    radial-gradient(1px 1px at 85% 75%, rgba(255, 255, 255, 0.55), transparent),
-    radial-gradient(1px 1px at 45% 88%, rgba(255, 255, 255, 0.4), transparent);
-  background-size: 100% 100%;
-  animation: ih-stars-drift 120s linear infinite;
-  opacity: 0.8;
-}
-
-@keyframes ih-stars-drift {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-8%);
-  }
-}
-
-.iwasho-home-page .iwasho-home-hero__nebula {
-  position: absolute;
-  inset: -20%;
-  background:
-    radial-gradient(ellipse at 30% 40%, rgba(59, 130, 246, 0.25), transparent 55%),
-    radial-gradient(ellipse at 70% 60%, rgba(139, 92, 246, 0.2), transparent 50%);
-  animation: ih-nebula-pulse 8s ease-in-out infinite alternate;
-}
-
-@keyframes ih-nebula-pulse {
-  0% {
-    opacity: 0.45;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0.85;
-    transform: scale(1.08);
-  }
-}
-
-.iwasho-home-page .iwasho-home-hero__stage {
-  position: relative;
-  z-index: 1;
-  max-width: 42rem;
-  min-height: 12rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-}
-
-.iwasho-home-page .iwasho-home-hero__line {
-  margin: 0;
-  font-size: clamp(1.375rem, 5vw, 2.5rem);
-  font-weight: 800;
-  line-height: 1.45;
-  letter-spacing: 0.04em;
-  color: var(--ih-text);
-  opacity: 0;
-  transform: translateY(1.25rem);
-  transition: opacity 0.9s ease, transform 0.9s ease;
-}
-
-.iwasho-home-page .iwasho-home-hero__line.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.iwasho-home-page .iwasho-home-hero__line.is-hidden {
-  opacity: 0;
-  transform: translateY(-0.75rem);
-}
-
-.iwasho-home-page .iwasho-home-hero__logo-reveal {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  animation: ih-logo-in 1.2s ease forwards;
-}
-
-.iwasho-home-page .iwasho-home-hero__logo-reveal.is-visible {
-  display: flex;
-}
-
-.iwasho-home-page .iwasho-home-hero__logo-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.iwasho-home-page .iwasho-home-hero__logo-row img {
-  width: clamp(3rem, 10vw, 5rem);
-  height: clamp(3rem, 10vw, 5rem);
-  object-fit: contain;
-  border-radius: 0.5rem;
-}
-
-.iwasho-home-page .iwasho-home-hero__logo-x {
-  font-size: 1.5rem;
-  font-weight: 300;
-  opacity: 0.6;
-}
-
-.iwasho-home-page .iwasho-home-hero__logo-label {
-  margin: 0;
-  font-size: clamp(1rem, 3vw, 1.375rem);
-  font-weight: 800;
-  letter-spacing: 0.2em;
-}
-
-@keyframes ih-logo-in {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* ===== ADVANTAGE ===== */
-.iwasho-home-page .iwasho-home-advantage {
-  position: relative;
-  padding: clamp(3rem, 8vw, 5.5rem) var(--ih-gutter);
-  background: radial-gradient(ellipse at 50% 0%, #1e293b 0%, var(--ih-navy) 45%, #020617 100%);
-}
-
-.iwasho-home-page .iwasho-home-advantage__inner {
-  width: min(100%, var(--ih-max));
+.iw-container {
+  width: min(100%, var(--iw-max));
   margin-inline: auto;
+  padding-inline: 32px;
 }
 
-.iwasho-home-page .iwasho-home-section-title {
-  margin: 0 0 0.5rem;
-  font-size: clamp(0.75rem, 2vw, 0.875rem);
-  font-weight: 700;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--ih-accent-blue);
-}
+.iw-br-pc { display: none; }
 
-.iwasho-home-page .iwasho-home-section-headline {
-  margin: 0 0 2rem;
-  font-size: clamp(1.5rem, 4vw, 2.25rem);
-  font-weight: 900;
-  line-height: 1.35;
-}
-
-.iwasho-home-page .iwasho-home-glass-grid {
-  display: grid;
-  gap: 1.25rem;
-}
-
-@media (min-width: 768px) {
-  .iwasho-home-page .iwasho-home-glass-grid--3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.iwasho-home-page .iwasho-home-glass-card {
-  padding: 1.75rem 1.5rem;
-  border-radius: 1.25rem;
-  background: var(--ih-glass);
-  border: 1px solid var(--ih-glass-border);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
-}
-
-.iwasho-home-page .iwasho-home-glass-card:hover {
-  border-color: rgba(59, 130, 246, 0.45);
-  box-shadow: 0 0 40px rgba(59, 130, 246, 0.2), 0 12px 40px rgba(0, 0, 0, 0.25);
-  transform: translateY(-4px);
-}
-
-.iwasho-home-page .iwasho-home-glass-card__icon {
-  width: 3rem;
-  height: 3rem;
-  margin-bottom: 1rem;
-  color: var(--ih-accent-blue);
-}
-
-.iwasho-home-page .iwasho-home-glass-card__title {
-  margin: 0 0 0.625rem;
-  font-size: 1.125rem;
-  font-weight: 800;
-  color: var(--ih-text);
-}
-
-.iwasho-home-page .iwasho-home-glass-card__text {
-  margin: 0;
-  font-size: 0.9375rem;
-  line-height: 1.65;
-  color: var(--ih-muted);
-}
-
-/* ===== INFO ===== */
-.iwasho-home-page .iwasho-home-info {
-  padding: clamp(3rem, 8vw, 5rem) var(--ih-gutter);
-  background: var(--ih-near-black);
-}
-
-.iwasho-home-page .iwasho-home-info__inner {
-  width: min(100%, var(--ih-max));
-  margin-inline: auto;
-}
-
-.iwasho-home-page .iwasho-home-info-grid {
-  display: grid;
-  gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  .iwasho-home-page .iwasho-home-info-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1100px) {
-  .iwasho-home-page .iwasho-home-info-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-.iwasho-home-page .iwasho-home-info-card {
-  display: flex;
-  flex-direction: column;
-  padding: 1.375rem 1.25rem 1.25rem;
-  border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 4px solid var(--ih-accent-blue);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.iwasho-home-page .iwasho-home-info-card__title {
-  margin: 0 0 0.5rem;
-  font-size: 1.0625rem;
-  font-weight: 800;
-  color: var(--ih-text);
-}
-
-.iwasho-home-page .iwasho-home-info-card__text {
-  margin: 0 0 1rem;
-  flex: 1;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  color: var(--ih-muted);
-}
-
-.iwasho-home-page .iwasho-home-info-card__btn {
-  align-self: flex-start;
+/* ===== Buttons ===== */
+.iw-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.5rem 1rem;
-  border-radius: 999px;
-  font-size: 0.8125rem;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 13px;
   font-weight: 700;
   text-decoration: none;
-  color: var(--ih-text);
-  background: rgba(59, 130, 246, 0.2);
-  border: 1px solid rgba(59, 130, 246, 0.45);
+  border: 1px solid transparent;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.iw-btn svg {
+  flex-shrink: 0;
+}
+
+.iw-btn--navy {
+  background: #0f2d66;
+  color: #ffffff;
+  border-color: #0f2d66;
+  font-weight: 700;
+}
+
+.iw-btn--navy:hover {
+  background: var(--iw-navy-dark);
+  border-color: var(--iw-navy-dark);
+  color: #ffffff;
+}
+
+.iwasho-home-page a.iw-btn--navy,
+.iwasho-home-page a.iw-btn--navy:hover {
+  color: #ffffff;
+}
+
+.iwasho-home-page a.iw-btn--navy svg {
+  color: #ffffff;
+  stroke: currentColor;
+}
+
+.iw-btn--outline {
+  background: #ffffff;
+  color: var(--iw-navy);
+  border-color: var(--iw-navy);
+}
+
+.iw-btn--outline:hover {
+  background: #f9fafb;
+}
+
+.iw-btn--on-dark {
+  background: #ffffff;
+  color: var(--iw-navy);
+  border-color: #ffffff;
+}
+
+.iw-btn--sm {
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+.iw-btn--hero {
+  height: 54px;
+  padding: 0 32px;
+  font-size: 16px;
+  border-radius: 4px;
+  gap: 8px;
+}
+
+.iw-btn--hero svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== Header · Wix版完全再現 ===== */
+.iw-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #ffffff;
+}
+
+.iw-site-header__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1440px;
+  min-height: var(--iw-header-h);
+  margin-inline: auto;
+  padding: 0 40px;
+}
+
+.iw-site-header__brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-decoration: none;
+  min-width: 0;
+  flex-shrink: 0;
+}
+
+.iw-site-header__logo {
+  font-size: 34px;
+  font-weight: 900;
+  color: #002255;
+  letter-spacing: 0.3px;
+  line-height: 1.1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.iw-site-header__times {
+  font-size: 24px;
+  font-weight: 400;
+  color: #002255;
+  position: relative;
+  top: -1px;
+}
+
+.iw-site-header__tagline {
+  font-size: 14px;
+  font-weight: 800;
+  color: #002255;
+  margin-top: 6px;
+  letter-spacing: 0.8px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.iw-site-header__nav-and-btn {
+  display: none;
+  align-items: center;
+  gap: 35px;
+  flex-shrink: 0;
+}
+
+.iw-site-header__nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.iw-site-header__nav a {
+  font-size: 15px;
+  font-weight: 800;
+  color: #002255;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.iw-site-header__nav a:hover,
+.iw-site-header__nav a.is-active {
+  color: #1a4a88;
+}
+
+.iw-site-header__actions {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.iw-site-header__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  border: none;
+  box-sizing: border-box;
   transition: background 0.2s ease;
 }
 
-.iwasho-home-page .iwasho-home-info-card__btn:hover {
-  background: rgba(59, 130, 246, 0.35);
+.iw-site-header__btn-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
-/* ===== Footer ===== */
-.iwasho-home-page .iwasho-home-footer {
-  padding: clamp(2.5rem, 6vw, 4rem) var(--ih-gutter) 2rem;
-  background: #030712;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+.iw-site-header__btn--primary {
+  background: #002561;
+  color: #ffffff;
 }
 
-.iwasho-home-page .iwasho-home-footer__inner {
-  width: min(100%, var(--ih-max));
-  margin-inline: auto;
-  display: grid;
-  gap: 2rem;
+.iw-site-header__btn--primary:hover {
+  background: #003080;
+  color: #ffffff;
 }
 
-@media (min-width: 768px) {
-  .iwasho-home-page .iwasho-home-footer__inner {
-    grid-template-columns: 1.2fr 1fr 1fr;
-    align-items: start;
+.iwasho-home-page a.iw-site-header__btn--primary,
+.iwasho-home-page a.iw-site-header__btn--primary:hover {
+  color: #ffffff;
+}
+
+.iw-site-header__menu-btn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.iw-site-header__menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #002255;
+}
+
+.iw-site-header.is-menu-open {
+  height: auto;
+}
+
+.iw-site-header.is-menu-open .iw-site-header__inner {
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding-top: 14px;
+  padding-bottom: 16px;
+}
+
+.iw-site-header.is-menu-open .iw-site-header__brand {
+  max-width: calc(100% - 52px);
+}
+
+.iw-site-header.is-menu-open .iw-site-header__menu-btn span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.iw-site-header.is-menu-open .iw-site-header__menu-btn span:nth-child(2) {
+  opacity: 0;
+}
+
+.iw-site-header.is-menu-open .iw-site-header__menu-btn span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.iw-site-header.is-menu-open .iw-site-header__nav-and-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.iw-site-header.is-menu-open .iw-site-header__nav {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+}
+
+.iw-site-header.is-menu-open .iw-site-header__nav a {
+  padding: 10px 0;
+}
+
+.iw-site-header.is-menu-open .iw-site-header__actions {
+  width: 100%;
+}
+
+.iw-site-header.is-menu-open .iw-site-header__btn {
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .iw-site-header__inner {
+    padding: 0 24px;
+  }
+
+  .iw-site-header__logo {
+    font-size: 28px;
+  }
+
+  .iw-site-header__times {
+    font-size: 20px;
   }
 }
 
-.iwasho-home-page .iwasho-home-footer__brand {
-  margin: 0 0 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+@media (max-width: 1023px) {
+  .iw-site-header__nav-and-btn {
+    gap: 20px;
+  }
+
+  .iw-site-header__nav {
+    gap: 16px;
+  }
 }
 
-.iwasho-home-page .iwasho-home-footer__tagline {
-  margin: 0;
-  font-size: 0.875rem;
-  color: var(--ih-muted);
-  line-height: 1.6;
+@media (min-width: 1024px) {
+  .iw-site-header__nav-and-btn {
+    display: flex;
+  }
+
+  .iw-site-header__menu-btn {
+    display: none;
+  }
 }
 
-.iwasho-home-page .iwasho-home-footer__col-title {
-  margin: 0 0 0.75rem;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ih-muted);
+/* ===== Hero · Wix版完全再現 ===== */
+.iw-hero {
+  position: relative;
+  height: var(--iw-hero-h);
+  min-height: 0;
+  overflow: hidden;
 }
 
-.iwasho-home-page .iwasho-home-footer__links {
+.iw-hero-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url("/iwasho/images/hero-bg-wix.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.iw-hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.98) 25%,
+    rgba(255, 255, 255, 0.9) 45%,
+    rgba(255, 255, 255, 0.3) 70%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.iw-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1440px;
+  height: 100%;
+  margin-inline: auto;
+  padding: 20px 40px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iw-hero__left {
+  max-width: 700px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  margin-left: -65px;
+  flex-shrink: 1;
+  min-width: 0;
 }
 
-.iwasho-home-page .iwasho-home-footer__link {
-  font-size: 0.875rem;
+.iw-hero__brand {
+  font-size: 76px;
+  font-weight: 900;
+  color: #061a3c;
+  line-height: 1.05;
+  margin: 0 0 24px;
+  letter-spacing: -1px;
+}
+
+.iw-hero__times {
+  font-size: 46px;
+  font-weight: 300;
+  margin: 0 14px;
+}
+
+.iw-hero__title {
+  font-size: 44px;
+  font-weight: 900;
+  color: #061a3c;
+  line-height: 1.35;
+  margin: 0 0 32px;
+  letter-spacing: 0.5px;
+}
+
+.iw-hero__lead {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111111;
+  line-height: 1.8;
+  margin: 0 0 40px;
+  letter-spacing: 0.3px;
+}
+
+.iw-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.iw-hero__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 16px;
+  font-weight: 800;
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-sizing: border-box;
+}
+
+.iw-hero__btn--primary {
+  background: #002561;
+  color: #ffffff;
+  width: 230px;
+  height: 54px;
+}
+
+.iw-hero__btn--primary::after {
+  content: "→";
+  font-size: 18px;
+  margin-left: 4px;
+}
+
+.iw-hero__btn--secondary {
+  background: #ffffff;
+  color: #002255;
+  border: 1.5px solid #002255;
+  width: 240px;
+  height: 54px;
+}
+
+.iw-hero__btn--secondary::after {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23002255' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='8.5' cy='7' r='4'/%3E%3Cline x1='20' y1='8' x2='20' y2='14'/%3E%3Cline x1='17' y1='11' x2='23' y2='11'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-left: 4px;
+}
+
+.iwasho-home-page a.iw-hero__btn.iw-hero__btn--primary,
+.iwasho-home-page a.iw-hero__btn.iw-hero__btn--primary:hover,
+.iwasho-home-page a.iw-hero__btn.iw-hero__btn--primary:focus,
+.iwasho-home-page a.iw-hero__btn.iw-hero__btn--primary:focus-visible {
+  color: #ffffff;
+}
+
+.iwasho-home-page a.iw-hero__btn.iw-hero__btn--primary::after {
+  color: #ffffff;
+}
+
+.iw-hero__panel {
+  width: 460px;
+  flex-shrink: 0;
+  background: rgba(6, 26, 60, 0.9);
+  border-radius: 16px;
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+}
+
+.iw-hero__feature {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.iw-hero__feature-icon {
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.iw-hero__feature-icon--shield {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3Cpath d='m9 11 2 2 4-4'/%3E%3C/svg%3E");
+}
+
+.iw-hero__feature-icon--users {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M23 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E");
+}
+
+.iw-hero__feature-icon--shake {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M10 14 5 9M19 9l-5 5M14 14l3.5 3.5a2.12 2.12 0 0 1-3 3L11 17M10 14 6.5 17.5a2.12 2.12 0 0 0 3 3L13 17'/%3E%3Cpath d='m14 14-5-5 2-2 5 5z'/%3E%3C/svg%3E");
+}
+
+.iw-hero__feature-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.iw-hero__feature-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  margin: 0;
+  line-height: 1.35;
+}
+
+.iw-hero__feature-desc {
+  font-size: 14px;
+  font-weight: 600;
+  color: #cccccc;
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 1200px) {
+  .iw-hero__inner {
+    padding: 0 30px;
+  }
+
+  .iw-hero__left {
+    margin-left: 0;
+  }
+
+  .iw-hero__brand {
+    font-size: 56px;
+  }
+
+  .iw-hero__times {
+    font-size: 36px;
+  }
+
+  .iw-hero__title {
+    font-size: 32px;
+  }
+
+  .iw-hero__panel {
+    width: 400px;
+    padding: 32px 24px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .iw-hero {
+    height: auto;
+    min-height: 0;
+  }
+
+  .iw-hero__overlay {
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .iw-hero__inner {
+    flex-direction: column;
+    justify-content: center;
+    gap: 32px;
+    padding: 36px 20px;
+    height: auto;
+    min-height: 0;
+  }
+
+  .iw-hero__left {
+    max-width: none;
+    width: 100%;
+  }
+
+  .iw-hero__panel {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .iw-hero__brand {
+    font-size: 44px;
+  }
+
+  .iw-hero__times {
+    font-size: 28px;
+  }
+
+  .iw-hero__title {
+    font-size: 28px;
+  }
+
+  .iw-hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .iw-hero__btn--primary,
+  .iw-hero__btn--secondary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .iw-hero__inner {
+    padding: 32px 20px;
+    min-height: auto;
+  }
+
+  .iw-hero__brand {
+    font-size: 36px;
+  }
+
+  .iw-hero__times {
+    font-size: 24px;
+    margin: 0 10px;
+  }
+
+  .iw-hero__title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .iw-hero__lead {
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .iw-hero__panel {
+    padding: 28px 20px;
+    gap: 28px;
+  }
+
+  .iw-hero__feature-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .iw-hero__feature-title {
+    font-size: 18px;
+  }
+
+  .iw-hero__feature-desc {
+    font-size: 13px;
+  }
+}
+
+/* ===== Section head ===== */
+.iw-section-head {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.iw-section-head__title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--iw-navy);
+  margin-bottom: 8px;
+}
+
+.iw-section-head__sub {
+  font-size: 12px;
+  color: var(--iw-muted);
+}
+
+/* ===== Categories · Wix版完全再現 ===== */
+.iw-categories {
+  padding: 40px 0 32px;
+  background: #ffffff;
+}
+
+.iw-categories__inner {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.iw-categories__title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #002255;
+  margin: 0 0 16px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.iw-categories__subtitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #002255;
+  margin: 0 0 40px;
+  letter-spacing: 0.3px;
+  text-align: center;
+}
+
+.iw-categories__grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 36px;
+}
+
+.iw-category-card {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.07);
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.iw-category-card__content {
+  padding: 24px 20px;
+  flex-grow: 1;
+}
+
+.iw-category-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.iw-category-card__icon {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.iw-category-card__title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #002255;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  margin: 0;
+}
+
+.iw-category-card__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.iw-category-card__list li {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 14px;
+  padding-left: 14px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.iw-category-card__list li:last-child {
+  margin-bottom: 0;
+}
+
+.iw-category-card__list li::before {
+  content: "・";
+  position: absolute;
+  left: -2px;
+  color: #333333;
+}
+
+.iw-category-card__image {
+  width: 100%;
+  height: 140px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.iw-category-card__image--arch {
+  background-image: url("/iwasho/images/categories/thumb-arch.png");
+}
+
+.iw-category-card__image--equip {
+  background-image: url("/iwasho/images/categories/thumb-equip.png");
+}
+
+.iw-category-card__image--electric {
+  background-image: url("/iwasho/images/categories/thumb-electric.png");
+}
+
+.iw-category-card__image--maint {
+  background-image: url("/iwasho/images/categories/thumb-maint.png");
+}
+
+.iw-category-card__image--exterior {
+  background-image: url("/iwasho/images/categories/thumb-exterior.png");
+}
+
+.iw-categories__banner {
+  width: 100%;
+  background: #f4f7fc;
+  border-radius: 8px;
+  padding: 28px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+}
+
+.iw-categories__banner-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.iw-categories__banner-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.iw-categories__banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.iw-categories__banner-main {
+  font-size: 21px;
+  font-weight: 800;
+  color: #002255;
+  margin: 0;
+}
+
+.iw-categories__banner-sub {
+  font-size: 15px;
+  font-weight: 700;
+  color: #444444;
+  margin: 0;
+}
+
+.iw-categories__banner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: #ffffff;
+  color: #002255;
+  border: 1.5px solid #002255;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 800;
+  width: 200px;
+  height: 52px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.iw-categories__banner-btn::after {
+  content: "＞";
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.iwasho-home-page a.iw-categories__banner-btn,
+.iwasho-home-page a.iw-categories__banner-btn:hover {
+  color: #002255;
+}
+
+@media (max-width: 1200px) {
+  .iw-categories__inner {
+    padding: 0 30px;
+  }
+
+  .iw-categories__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .iw-categories__banner {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .iw-categories__banner-left {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .iw-categories {
+    padding: 32px 0 28px;
+  }
+
+  .iw-categories__subtitle {
+    margin-bottom: 28px;
+  }
+
+  .iw-categories__grid {
+    grid-template-columns: 1fr;
+    margin-bottom: 28px;
+  }
+
+  .iwasho-home-page .section-container {
+    padding: 24px 24px 32px;
+  }
+}
+
+/* ===============================
+Wix パートナー + 施工イメージ embed 原文（scope のみ変更）
+=============================== */
+
+.iwasho-home-page .section-container,
+.iwasho-home-page .section-container * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+.iwasho-home-page .section-container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 40px 44px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+/* ==========================================
+   上部：2カラム案内セクション
+========================================== */
+.iwasho-home-page .section-container .info-twin-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  width: 100%;
+  margin-bottom: 48px;
+}
+
+/* カード単体共通設定 */
+.iwasho-home-page .section-container .info-card {
+  border-radius: 12px;
+  padding: 44px 36px;
+  background-size: cover;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 390px;
+}
+
+/* 左側カード：背景を中央基準に */
+.iwasho-home-page .section-container .card-left-bg {
+  background-image: url("/iwasho/images/partner/card-partner-bg.png");
+  background-position: center center;
+}
+
+/* 右側カード：女性が100%綺麗に入るように右側を基準に固定 */
+.iwasho-home-page .section-container .card-right-bg {
+  background-image: url("/iwasho/images/partner/card-customer-bg.png");
+  background-position: right center; /* 右端を削らずに女性全体を表示 */
+}
+
+.iwasho-home-page .section-container .card-top-content {
+  width: 100%;
+}
+
+.iwasho-home-page .section-container .info-card-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #002255;
+  margin-bottom: 14px;
+  letter-spacing: 0.5px;
+}
+
+.iwasho-home-page .section-container .info-card-desc {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333333;
+  line-height: 1.6;
+  margin-bottom: 45px;
+}
+
+/* メリット・ステップの横並び領域 */
+.iwasho-home-page .section-container .feature-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+.iwasho-home-page .section-container .feature-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+/* ステップ間の矢印（➔） */
+.iwasho-home-page .section-container .feature-item-step::after {
+  content: "➔";
+  position: absolute;
+  right: -10px;
+  top: 14px;
+  font-size: 16px;
   color: #cbd5e1;
+}
+.iwasho-home-page .section-container .feature-item-step:last-child::after {
+  display: none;
+}
+
+/* アイコンリング */
+.iwasho-home-page .section-container .icon-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.iwasho-home-page .section-container .feature-icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: #002561;
+  stroke-width: 2.0;
+}
+
+.iwasho-home-page .section-container .feature-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #002255;
+  margin-bottom: 8px;
+  white-space: nowrap;
+}
+
+.iwasho-home-page .section-container .feature-desc {
+  font-size: 13px;
+  font-weight: 700;
+  color: #444444;
+  line-height: 1.5;
+}
+
+/* ボタンエリア */
+.iwasho-home-page .section-container .card-btn-area {
+  width: 100%;
+}
+
+/* ボタンサイズ */
+.iwasho-home-page .section-container .banner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 800;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 420px;
+  height: 54px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+/* 左ボタン：濃紺背景 */
+.iwasho-home-page .section-container .btn-navy {
+  background-color: #002561;
+  color: #ffffff;
+}
+.iwasho-home-page .section-container .btn-navy .btn-main-text {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.iwasho-home-page a.banner-btn.btn-navy,
+.iwasho-home-page a.banner-btn.btn-navy:hover,
+.iwasho-home-page a.banner-btn.btn-navy:visited,
+.iwasho-home-page a.banner-btn.btn-navy:focus,
+.iwasho-home-page a.banner-btn.btn-navy:focus-visible,
+.iwasho-home-page a.banner-btn.btn-navy:active {
+  color: #ffffff;
+}
+
+.iwasho-home-page a.banner-btn.btn-navy .btn-main-text,
+.iwasho-home-page a.banner-btn.btn-navy svg {
+  color: #ffffff;
+}
+
+/* 右ボタン：白背景・紺枠 */
+.iwasho-home-page .section-container .btn-white {
+  background-color: #ffffff;
+  color: #002255;
+  border: 1.5px solid #002255;
+}
+.iwasho-home-page .section-container .btn-white .btn-main-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+}
+.iwasho-home-page .section-container .btn-white .btn-icon-svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #002255;
+  stroke-width: 2.2;
+}
+
+.iwasho-home-page a.banner-btn.btn-white,
+.iwasho-home-page a.banner-btn.btn-white:hover {
+  color: #002255;
+}
+
+/* 右端の矢印「＞」 */
+.iwasho-home-page .section-container .btn-arrow-right {
+  position: absolute;
+  right: 24px;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+/* ==========================================
+   下部：施工イメージ
+========================================== */
+.iwasho-home-page .section-container .gallery-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.iwasho-home-page .section-container .gallery-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #002255;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.iwasho-home-page .section-container .gallery-subtitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: #555555;
+  margin-bottom: 28px;
+}
+
+/* 5連画像グリッド */
+.iwasho-home-page .section-container .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.iwasho-home-page .section-container .gallery-item {
+  width: 100%;
+  height: 175px;
+  border-radius: 8px;
+  background-size: cover;
+  background-position: center center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+}
+
+/* PC: 横幅を広く使う（カード + 施工イメージ） */
+@media (min-width: 1280px) {
+  .iwasho-home-page .section-container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .iwasho-home-page .section-container .info-twin-cols,
+  .iwasho-home-page .section-container .gallery-grid {
+    width: calc(100% + 16px);
+    max-width: 1440px;
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+
+  .iwasho-home-page .section-container .info-twin-cols {
+    gap: 20px;
+    align-items: stretch;
+  }
+
+  .iwasho-home-page .section-container .gallery-grid {
+    gap: 20px;
+  }
+
+  /* 横長カード：幅拡大・高さ約10%縮小・2枚同高 */
+  .iwasho-home-page .section-container .info-card {
+    min-height: 352px;
+    height: 100%;
+    padding: 32px 38px;
+    background-size: cover;
+  }
+
+  .iwasho-home-page .section-container .card-left-bg {
+    background-position: center center;
+  }
+
+  .iwasho-home-page .section-container .card-right-bg {
+    background-position: right center;
+  }
+
+  .iwasho-home-page .section-container .info-card-desc {
+    margin-bottom: 28px;
+  }
+
+  .iwasho-home-page .section-container .feature-row {
+    margin-bottom: 26px;
+  }
+
+  .iwasho-home-page .section-container .icon-circle {
+    margin-bottom: 12px;
+  }
+
+  .iwasho-home-page .section-container .gallery-item {
+    height: 136px;
+    background-position: center center;
+    background-size: cover;
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1200px) {
+  .iwasho-home-page .section-container .info-twin-cols { grid-template-columns: 1fr; gap: 30px; }
+  .iwasho-home-page .section-container .banner-btn { width: 100%; max-width: 400px; }
+  .iwasho-home-page .section-container .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 12px; }
+}
+@media (max-width: 768px) {
+  .iwasho-home-page .section-container .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+  .iwasho-home-page .section-container .feature-row { flex-direction: column; gap: 24px; }
+  .iwasho-home-page .section-container .feature-item-step::after { display: none; }
+}
+
+/* ===============================
+Wix FOOTER embed 原文（scope のみ変更）
+=============================== */
+
+.iwasho-home-page .footer-wrapper,
+.iwasho-home-page .footer-wrapper * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+/* フッター全体のコンテナ（美しい濃紺グラデーション） */
+.iwasho-home-page .footer-wrapper {
+  width: 100%;
+  background: linear-gradient(180deg, #001a43 0%, #001130 100%);
+  padding: 48px 0 30px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* 内部の最大幅制限（他のすべてのセクションと完全同期） */
+.iwasho-home-page .footer-wrapper .footer-inner {
+  width: 100%;
+  max-width: 1440px;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 50px;
+}
+
+/* フッターの各列共通スタイル */
+.iwasho-home-page .footer-wrapper .footer-col {
+  flex: 1;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* 列ごとの幅比率の微調整 */
+.iwasho-home-page .footer-wrapper .footer-col:first-child { padding-left: 0; flex: 1.2; }
+.iwasho-home-page .footer-wrapper .footer-col:last-child { padding-right: 0; flex: 1.1; }
+
+/* スクショにある縦の美しい区切り線を再現 */
+.iwasho-home-page .footer-wrapper .footer-col::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 4px;
+  width: 1px;
+  height: 110px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.iwasho-home-page .footer-wrapper .footer-col:last-child::after {
+  display: none; /* 最後の列の右側には線を引かない */
+}
+
+/* 各列の見出し */
+.iwasho-home-page .footer-wrapper .footer-col-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* テキスト・リンク共通のスタイル */
+.iwasho-home-page .footer-wrapper .footer-text,
+.iwasho-home-page .footer-wrapper .company-desc,
+.iwasho-home-page .footer-wrapper .footer-links li {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
   text-decoration: none;
 }
 
-.iwasho-home-page .iwasho-home-footer__link:hover {
-  color: #fff;
-  text-decoration: underline;
+.iwasho-home-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn),
+.iwasho-home-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):hover,
+.iwasho-home-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):visited,
+.iwasho-home-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):focus,
+.iwasho-home-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):focus-visible,
+.iwasho-home-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):active {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  opacity: 1;
+  line-height: 1.8;
+  text-decoration: none;
 }
 
-.iwasho-home-page .iwasho-home-footer__copy {
-  grid-column: 1 / -1;
-  margin: 1rem 0 0;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  font-size: 0.75rem;
-  color: #64748b;
+.iwasho-home-page .footer-wrapper .footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.iwasho-home-page .footer-wrapper .company-desc {
+  margin-bottom: 24px;
+}
+
+.iwasho-home-page .footer-wrapper .sns-group {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+/* 丸型SNSアイコンボタン */
+.iwasho-home-page .footer-wrapper .sns-link {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+.iwasho-home-page .footer-wrapper .sns-link:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.iwasho-home-page .footer-wrapper .sns-icon {
+  width: 16px;
+  height: 16px;
+  fill: #ffffff;
+}
+
+/* ==========================================
+   右端：お問い合わせボタンエリア
+========================================== */
+.iwasho-home-page .footer-wrapper .contact-box {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.iwasho-home-page .footer-wrapper .contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #ffffff;
+  color: #002255;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  width: 100%;
+  max-width: 240px;
+  height: 48px;
+  border-radius: 6px;
+  margin-top: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s;
+}
+.iwasho-home-page .footer-wrapper .contact-btn:hover {
+  background-color: #f8fafc;
+}
+
+.iwasho-home-page .footer-wrapper .btn-mail-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: #002255;
+  stroke-width: 2.2;
+}
+
+/* ==========================================
+   最下部：コピーライトエリア
+========================================== */
+.iwasho-home-page .footer-wrapper .copyright {
+  width: 100%;
+  max-width: 1440px;
+  padding: 0 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 24px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 1024px) {
+  .iwasho-home-page .footer-wrapper .footer-inner { flex-direction: column; gap: 40px; padding: 0 24px; }
+  .iwasho-home-page .footer-wrapper .footer-col { width: 100%; padding: 0; margin-bottom: 20px; }
+  .iwasho-home-page .footer-wrapper .footer-col::after { display: none; }
+  .iwasho-home-page .footer-wrapper .contact-btn { max-width: 100%; }
+  .iwasho-home-page .footer-wrapper .copyright { padding: 24px 24px 0 24px; }
+}
+
+@media (max-width: 767px) {
+  .iw-br-pc { display: none; }
 }
