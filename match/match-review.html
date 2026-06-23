@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>MATCH レビュー一覧 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-review">
+<div class="match-app match-app--phone">
+    <header class="match-header" aria-label="ヘッダー">
+      <a class="match-brand" href="match-top.html">
+        <span class="match-brand__heart" aria-hidden="true">♥</span>
+        <span class="match-brand__text">
+          <span class="match-brand__main">TASFUL MATCH</span>
+          <span class="match-brand__sub">実機レビュー用</span>
+        </span>
+      </a>
+    </header>
+
+    <main class="match-main match-main--no-tab">
+      <section class="match-review-hero">
+        <h1>UIモック レビュー一覧</h1>
+        <p>スマホ実機で Phase1 / Phase2 の全画面を順に確認できます。認証・DB・API は未接続です。</p>
+      </section>
+
+      <div class="match-review-note match-review-api-status" aria-live="polite">
+        <strong>開発確認</strong><br />
+        API mode: <span data-match-api-mode>—</span><br />
+        Edge fetch mode: <span data-match-api-edge-mode>—</span><br />
+        Functions base URL: <span data-match-api-base-url>—</span><br />
+        <span data-match-api-available>window.TasfulMatchAPI: checking…</span>
+      </div>
+
+      <div class="match-review-note match-review-auth-status" aria-live="polite">
+        <strong>Auth boundary</strong><br />
+        Auth mode: <span data-match-auth-mode>—</span><br />
+        Match user id: <span data-match-auth-user-id>—</span><br />
+        Talk user id: <span data-match-auth-talk-id>—</span><br />
+        Profile status: <span data-match-auth-profile-status>—</span><br />
+        Verification status: <span data-match-auth-verification-status>—</span><br />
+        Sanction status: <span data-match-auth-sanction-status>—</span><br />
+        API auth provider: <span data-match-auth-provider-status>—</span>
+      </div>
+
+      <div class="match-review-note match-review-data-status" aria-live="polite">
+        <strong>Data source</strong><br />
+        Data source: <span data-match-data-source>match-data-stub</span><br />
+        Current user: <span data-match-data-current-user>—</span><br />
+        Swipe profiles: <span data-match-data-swipe-count>—</span> 件<br />
+        Pairs: <span data-match-data-pair-count>—</span> 件<br />
+        Blocked users: <span data-match-data-block-count>—</span> 件<br />
+        Reports: <span data-match-data-report-count>—</span> 件
+      </div>
+
+      <div class="match-review-note match-review-wiring-status" aria-live="polite">
+        <strong>UI wiring</strong><br />
+        <span data-match-wiring-status>client_stub connected</span>
+        <ul class="match-review-wiring-list" data-match-wiring-pages>
+          <li>match-swipe.html — recordSwipe, blockUser</li>
+          <li>match-talk-bridge.html — ensureTalkRoom</li>
+          <li>match-list.html — ensureTalkRoom</li>
+          <li>match-report.html — submitReport</li>
+          <li>match-block.html — blockUser（解除は次フェーズ）</li>
+          <li>match-verify.html — submitVerification</li>
+        </ul>
+      </div>
+
+      <div class="match-review-note match-review-p15-status" aria-live="polite">
+        <strong>P15 UI</strong><br />
+        P15 API methods: <span data-match-p15-api-count>—</span><br />
+        AI CTA helper: <span data-match-ai-cta-status>—</span>
+      </div>
+
+      <section class="match-review-phase" aria-labelledby="p15-title">
+        <div class="match-review-phase__head">
+          <span class="match-review-phase__badge match-review-phase__badge--p1">P15</span>
+          <h2 class="match-review-phase__title" id="p15-title">追加機能</h2>
+        </div>
+        <ul class="match-review-list">
+          <li><a class="match-review-card" href="match-favorites.html"><div class="match-review-card__top"><span class="match-review-card__name">お気に入り</span><span class="match-review-card__file">match-favorites.html</span></div></a></li>
+          <li><a class="match-review-card" href="match-footprints.html"><div class="match-review-card__top"><span class="match-review-card__name">足あと</span><span class="match-review-card__file">match-footprints.html</span></div></a></li>
+          <li><a class="match-review-card" href="match-search-saved.html"><div class="match-review-card__top"><span class="match-review-card__name">検索条件保存</span><span class="match-review-card__file">match-search-saved.html</span></div></a></li>
+        </ul>
+      </section>
+
+      <section class="match-review-phase" aria-labelledby="p16-title">
+        <div class="match-review-phase__head">
+          <span class="match-review-phase__badge match-review-phase__badge--p1">P16</span>
+          <h2 class="match-review-phase__title" id="p16-title">AI Landing Pages</h2>
+        </div>
+        <ul class="match-review-list">
+          <li><a class="match-review-card" href="match-ai-love-advice.html"><div class="match-review-card__top"><span class="match-review-card__name">AI恋愛相談</span><span class="match-review-card__file">match-ai-love-advice.html</span></div></a></li>
+          <li><a class="match-review-card" href="match-ai-marriage-advice.html"><div class="match-review-card__top"><span class="match-review-card__name">AI婚活相談</span><span class="match-review-card__file">match-ai-marriage-advice.html</span></div></a></li>
+          <li><a class="match-review-card" href="match-ai-profile-coach.html"><div class="match-review-card__top"><span class="match-review-card__name">AIプロフィール改善</span><span class="match-review-card__file">match-ai-profile-coach.html</span></div></a></li>
+          <li><a class="match-review-card" href="match-ai-message-coach.html"><div class="match-review-card__top"><span class="match-review-card__name">AIメッセージ相談</span><span class="match-review-card__file">match-ai-message-coach.html</span></div></a></li>
+          <li><a class="match-review-card" href="match-ai-compatibility-detail.html"><div class="match-review-card__top"><span class="match-review-card__name">AI相性分析</span><span class="match-review-card__file">match-ai-compatibility-detail.html</span></div></a></li>
+          <li><a class="match-review-card" href="match-ai-date-coach.html"><div class="match-review-card__top"><span class="match-review-card__name">AIデート相談</span><span class="match-review-card__file">match-ai-date-coach.html</span></div></a></li>
+        </ul>
+      </section>
+
+      <section class="match-review-phase" aria-labelledby="phase1-title">
+        <div class="match-review-phase__head">
+          <span class="match-review-phase__badge match-review-phase__badge--p1">Phase 1</span>
+          <h2 class="match-review-phase__title" id="phase1-title">コア体験</h2>
+        </div>
+        <ul class="match-review-list">
+          <li>
+            <a class="match-review-card" href="match-top.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">TOP（ランディング）</span>
+                <span class="match-review-card__file">match-top.html</span>
+              </div>
+              <p class="match-review-card__desc">ヒーロー「安心して、出会える。」と安心カード。CTA「無料ではじめる」。</p>
+              <span class="match-review-card__flow">→ プロフィール作成</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-profile-create.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">プロフィール作成（4ステップ）</span>
+                <span class="match-review-card__file">match-profile-create.html</span>
+              </div>
+              <p class="match-review-card__desc">基本情報・写真・自己紹介・趣味。完了でスワイプへ遷移。</p>
+              <span class="match-review-card__flow">→ スワイプ</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-swipe.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">スワイプ</span>
+                <span class="match-review-card__file">match-swipe.html</span>
+              </div>
+              <p class="match-review-card__desc">写真優先のプロフィールカード。スキップ / いいね / 詳細。下部ナビ4タブ。</p>
+              <span class="match-review-card__flow">→ マッチ一覧・安心・マイページ</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-list.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">マッチ一覧</span>
+                <span class="match-review-card__file">match-list.html</span>
+              </div>
+              <p class="match-review-card__desc">LINE風リスト。未読バッジと「TASFUL TALKで話す」CTA。</p>
+              <span class="match-review-card__flow">→ TALK接続</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-talk-bridge.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">TALK接続</span>
+                <span class="match-review-card__file">match-talk-bridge.html</span>
+              </div>
+              <p class="match-review-card__desc">マッチ成立後、既存 TASFUL TALK へ誘導（新規チャットUIなし）。</p>
+              <span class="match-review-card__flow">→ TASFUL TALK（外部モック）</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-safety.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">安心・安全</span>
+                <span class="match-review-card__file">match-safety.html</span>
+              </div>
+              <p class="match-review-card__desc">本人確認・通報・ブロック・AI監視・24時間対応をカード表示。</p>
+              <span class="match-review-card__flow">→ 本人確認 / 通報 / ブロック管理</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="match-review-phase" aria-labelledby="phase2-title">
+        <div class="match-review-phase__head">
+          <span class="match-review-phase__badge match-review-phase__badge--p2">Phase 2</span>
+          <h2 class="match-review-phase__title" id="phase2-title">安全機能・マイページ</h2>
+        </div>
+        <ul class="match-review-list">
+          <li>
+            <a class="match-review-card" href="match-mypage.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">マイページ</span>
+                <span class="match-review-card__file">match-mypage.html</span>
+              </div>
+              <p class="match-review-card__desc">プロフィール編集・本人確認状況・ブロック一覧・通報履歴・設定。</p>
+              <span class="match-review-card__flow">→ 各サブ画面へ</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-verify.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">本人確認</span>
+                <span class="match-review-card__file">match-verify.html</span>
+              </div>
+              <p class="match-review-card__desc">電話番号認証 → 身分証提出 → 審査中 → 認証完了のステップモック。</p>
+              <span class="match-review-card__flow">→ スワイプ / マイページ</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-report.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">通報</span>
+                <span class="match-review-card__file">match-report.html</span>
+              </div>
+              <p class="match-review-card__desc">通報理由4種・詳細入力・送信完了モック・通報履歴一覧。</p>
+              <span class="match-review-card__flow">→ ブロック管理</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-review-card" href="match-block.html">
+              <div class="match-review-card__top">
+                <span class="match-review-card__name">ブロック管理</span>
+                <span class="match-review-card__file">match-block.html</span>
+              </div>
+              <p class="match-review-card__desc">ブロックユーザー一覧と解除ボタン（モック）。</p>
+              <span class="match-review-card__flow">→ 通報履歴</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <div class="match-review-note">
+        <strong>推奨レビュー順</strong><br />
+        TOP → プロフィール作成 → スワイプ → マッチ一覧 → TALK接続 → 安心 → マイページ → 本人確認 → 通報 → ブロック管理
+      </div>
+
+      <dl class="match-review-cta-list" aria-label="主要CTA表記">
+        <dt>統一CTA</dt>
+        <dd>無料ではじめる / プロフィールを作成 / 本人確認をする / 通報する / ブロックする / TASFUL TALKで話す / マイページ</dd>
+      </dl>
+
+      <div class="match-cta-stack" style="margin-top:20px">
+        <a class="match-btn match-btn--primary match-btn--block" href="match-top.html">レビューを開始（TOP）</a>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-data-render.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="../ai-workspace-links.js"></script>
+  <script src="match-ai-cta.js"></script>
+  <script src="match-p15-render.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-wiring.js"></script>
+  <script src="match-p15-wiring.js"></script>
+  <script>
+    (function () {
+      var modeEl = document.querySelector("[data-match-api-mode]");
+      var edgeModeEl = document.querySelector("[data-match-api-edge-mode]");
+      var baseUrlEl = document.querySelector("[data-match-api-base-url]");
+      var availEl = document.querySelector("[data-match-api-available]");
+      var api = window.TasfulMatchAPI;
+      if (modeEl) modeEl.textContent = api && api.mode ? api.mode : "unavailable";
+      if (edgeModeEl) {
+        edgeModeEl.textContent =
+          api && api.mode === "edge_stub" ? "enabled" : "available but disabled";
+      }
+      if (baseUrlEl) {
+        var cfg = api && typeof api.getConfig === "function" ? api.getConfig() : null;
+        baseUrlEl.textContent =
+          cfg && cfg.functionsBaseUrl ? cfg.functionsBaseUrl : "not configured";
+      }
+      if (availEl) {
+        availEl.textContent = api
+          ? "window.TasfulMatchAPI available"
+          : "window.TasfulMatchAPI unavailable";
+      }
+
+      var stub = window.TasfulMatchDataStub;
+      var auth = window.TasfulMatchAuth;
+      var authModeEl = document.querySelector("[data-match-auth-mode]");
+      var authUserEl = document.querySelector("[data-match-auth-user-id]");
+      var authTalkEl = document.querySelector("[data-match-auth-talk-id]");
+      var authProfileEl = document.querySelector("[data-match-auth-profile-status]");
+      var authVerifyEl = document.querySelector("[data-match-auth-verification-status]");
+      var authSanctionEl = document.querySelector("[data-match-auth-sanction-status]");
+      var authProviderEl = document.querySelector("[data-match-auth-provider-status]");
+
+      if (auth) {
+        var authState = auth.getState();
+        if (authModeEl) authModeEl.textContent = authState.mode || "—";
+        if (authUserEl) authUserEl.textContent = auth.getMatchUserId();
+        if (authTalkEl) authTalkEl.textContent = auth.getTalkUserId();
+        if (authProfileEl) authProfileEl.textContent = authState.profileStatus || "—";
+        if (authVerifyEl) authVerifyEl.textContent = authState.verificationStatus || "—";
+        if (authSanctionEl) authSanctionEl.textContent = authState.sanctionStatus || "—";
+      }
+
+      if (authProviderEl) {
+        var provider = api && typeof api.getAuthHeadersProvider === "function"
+          ? api.getAuthHeadersProvider()
+          : null;
+        authProviderEl.textContent = provider ? "connected" : "disconnected";
+      }
+
+      var userEl = document.querySelector("[data-match-data-current-user]");
+      var swipeEl = document.querySelector("[data-match-data-swipe-count]");
+      var pairEl = document.querySelector("[data-match-data-pair-count]");
+      var blockEl = document.querySelector("[data-match-data-block-count]");
+      var reportEl = document.querySelector("[data-match-data-report-count]");
+      if (stub) {
+        if (userEl) userEl.textContent = stub.getCurrentUser().user_id;
+        if (swipeEl) swipeEl.textContent = String(stub.getSwipeProfiles().length);
+        if (pairEl) pairEl.textContent = String(stub.getPairs().length);
+        if (blockEl) blockEl.textContent = String(stub.getBlockedUsers().length);
+        if (reportEl) reportEl.textContent = String(stub.getReports().length);
+      }
+
+      var p15Methods = [
+        "favoriteUser", "unfavoriteUser", "listFavorites", "recordProfileView",
+        "listProfileViews", "saveSearch", "listSavedSearches", "deleteSavedSearch",
+        "getCompatibility", "getProfileCompleteness", "updateActivity",
+      ];
+      var p15CountEl = document.querySelector("[data-match-p15-api-count]");
+      if (p15CountEl && api) {
+        var found = p15Methods.filter(function (m) { return typeof api[m] === "function"; }).length;
+        p15CountEl.textContent = found + " / 11";
+      }
+      var aiCtaEl = document.querySelector("[data-match-ai-cta-status]");
+      if (aiCtaEl) {
+        aiCtaEl.textContent = window.TasuAiWorkspaceLinks?.buildMatchCtaUrl ? "ready" : "missing";
+      }
+    })();
+  </script>
+</body>
+</html>

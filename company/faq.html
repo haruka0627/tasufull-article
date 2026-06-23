@@ -3,67 +3,411 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FAQ | TASFUL</title>
-  <meta name="description" content="TASFUL よくある質問" />
-  <link rel="stylesheet" href="/corp-layout.css" />
-  <link rel="stylesheet" href="/corp-header.css" />
-  <link rel="stylesheet" href="/corp-footer.css" />
+<title>Q&amp;A | TASFUL HELP CENTER</title>
+  <meta name="description" content="TASFUL HELP CENTER — サービス利用・料金・AI機能など、よくあるご質問をまとめています。" />
+  <link rel="stylesheet" href="/tas-top-page.css" />
+  <link rel="stylesheet" href="/corp-company-hp.css" />
+<link rel="stylesheet" href="/corp-layout.css" />
 </head>
-<body class="corp-body" data-corp="tasful">
-  <header class="corp-header">
-      <div class="corp-container corp-header__inner">
-        <a class="corp-header__brand" href="/company/index.html">
-          <img class="corp-header__logo" src="/images/corp/tasful/1.png" alt="" width="40" height="40" />
-          <span class="corp-header__brand-main">TASFUL</span>
-          <span class="corp-header__brand-sub">Corporate</span>
-        </a>
-        <details class="corp-nav">
-          <summary class="corp-nav__toggle" aria-label="メニューを開く">
-            <span class="corp-nav__toggle-icon" aria-hidden="true"></span>
-          </summary>
-          <ul class="corp-nav__list">
-            <li><a class="corp-nav__link" href="/company/index.html">ホーム</a></li>
-            <li><a class="corp-nav__link" href="/company/services.html">サービス</a></li>
-            <li><a class="corp-nav__link" href="/company/vision.html">ビジョン</a></li>
-            <li><a class="corp-nav__link" href="/company/about.html">会社概要</a></li>
-            <li><a class="corp-nav__link" href="/company/faq.html" aria-current="page">FAQ</a></li>
-            <li><a class="corp-nav__link" href="/company/contact.html">お問い合わせ</a></li>
-          </ul>
-        </details>
+<body class="corp-body corp-body--tasful-hp" data-corp="tasful">
+  <header class="custom-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="logo-image-wrap">
+          <span class="logo-globe">
+            <img src="/images/tasful/tasful-globe-logo.png" alt="TASFUL ロゴ" class="logo-image">
+          </span>
+        </span>
+        <div class="logo">
+          TASFUL
+        </div>
       </div>
-    </header>
-  <main class="corp-main">
-    <section class="corp-section">
-      <div class="corp-container corp-container--wide corp-biz-page">
-<div class="corp-faq">
-          <details><summary>TASFUL とは何ですか？</summary><div class="corp-faq__body">依頼・求人・スキル販売をつなぐマッチングプラットフォームです。LINE ベースで登録・連絡・通知が完結します。</div></details>
-          <details><summary>IWASHO との関係は？</summary><div class="corp-faq__body">建設・現場施工を担う事業ブランドです。TASFUL プラットフォームと連携し、現場力とデジタルを組み合わせています。</div></details>
-          <details><summary>決済前に連絡先を交換できますか？</summary><div class="corp-faq__body">利用規約により、決済完了前の連絡先交換は禁止されています。</div></details>
-          <details><summary>お問い合わせ方法は？</summary><div class="corp-faq__body"><a href="/company/contact.html">お問い合わせページ</a>の外部フォーム（暫定）をご利用ください。</div></details>
+      <nav class="tas-hp-header__nav" aria-label="メインナビ">
+        <a href="/company/">ホーム</a>
+        <a href="/company/services.html">サービス一覧</a>
+        <a href="/company/contact.html">協力パートナー</a>
+        <a href="/iwasho/team.html">チーム紹介</a>
+        <a href="/company/about.html">会社概要</a>
+        <a href="/company/faq.html" aria-current="page">Q&A</a>
+      </nav>
+      <a class="tas-hp-header__line-btn" href="/service" aria-label="TASFUL PLATFORM"><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--full">TASFUL PLATFORM</span><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--short" aria-hidden="true">PLATFORM</span></a>
+      <button type="button" class="tas-hp-header__menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="tas-hp-mobile-nav"><span class="tas-hp-header__menu-btn-icon" aria-hidden="true">☰</span></button>
+    </div>
+    <div class="tas-hp-header__mobile-panel" id="tas-hp-mobile-nav" aria-hidden="true">
+      <button type="button" class="tas-hp-header__mobile-backdrop" data-tas-hp-menu-close aria-label="メニューを閉じる"></button>
+      <div class="tas-hp-header__mobile-drawer">
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--primary" aria-label="メインナビ">
+          <a href="/company/">ホーム</a>
+          <a href="/iwasho/services.html">建設・サービス業</a>
+          <a href="/company/contact.html">協力パートナー</a>
+          <a href="/iwasho/team.html">チーム紹介</a>
+          <a href="/company/about.html">会社概要</a>
+          <a href="/company/faq.html" aria-current="page">Q&A</a>
+        </nav>
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--legal" aria-label="法的情報">
+          <p class="tas-hp-header__mobile-nav-label">法的情報</p>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/company/legal/tokushoho.html">特定商取引法</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+<main class="corp-main company-faq-main">
+    <section class="tasful-help-hero" id="company-faq-hero" aria-label="TASFUL HELP CENTER">
+      <div class="tasful-help-hero__bg" aria-hidden="true"></div>
+      <div class="tasful-help-hero__inner">
+        <p class="tasful-help-hero__eyebrow">HELP CENTER</p>
+        <h1 class="tasful-help-hero__title">Q&amp;A</h1>
+        <p class="tasful-help-hero__lead">知りたいことを、すぐに検索。</p>
+        <p class="tasful-help-hero__desc">サービス利用・料金・AI機能など、<br>よくあるご質問をまとめています。</p>
+        <form class="tasful-help-hero__search" id="faq-search-form" role="search">
+          <label class="tasful-help-hero__search-label" for="faq-search-input">FAQ検索</label>
+          <span class="tasful-help-hero__search-leading" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </span>
+          <input type="search" id="faq-search-input" class="tasful-help-hero__search-input" placeholder="キーワードで検索（例：料金、利用方法、AI、求人…）" autocomplete="off">
+          <button type="submit" class="tasful-help-hero__search-btn" aria-label="検索">
+            <svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+        </form>
+        <div class="tasful-help-hero__categories">
+          <button type="button" class="tasful-help-hero__chip is-active" data-faq-filter="service">サービス・料金</button>
+          <button type="button" class="tasful-help-hero__chip" data-faq-filter="ai">AI・オプション</button>
         </div>
       </div>
     </section>
   </main>
-  <footer class="corp-footer">
-      <div class="corp-container corp-footer__inner">
-        <div>
-          <p class="corp-footer__brand">TASFUL</p>
-          <p class="corp-footer__tagline">建設 × プラットフォーム × AI — 依頼から解決まで</p>
+  <style>
+#company-faq-hero,
+#company-faq-hero * {
+  box-sizing: border-box;
+}
+
+.company-faq-main {
+  flex: 0 0 auto;
+  min-height: 0;
+  background: #010409;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+#company-faq-hero.tasful-help-hero {
+  position: relative;
+  width: 100%;
+  min-height: 750px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px 96px;
+  margin-bottom: clamp(20px, 2.5vw, 40px);
+  background: #010409;
+}
+
+#company-faq-hero .tasful-help-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#company-faq-hero .tasful-help-hero__bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.30)),
+    url("/images/tasful/faq/help-center-cyber-bg.png");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+#company-faq-hero .tasful-help-hero__bg::after {
+  content: none;
+}
+
+#company-faq-hero .tasful-help-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 920px);
+  text-align: center;
+  color: #e2e8f0;
+}
+
+#company-faq-hero .tasful-help-hero__eyebrow {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  color: #22d3ee;
+  text-shadow: 0 0 12px rgba(34, 211, 238, 0.45);
+}
+
+#company-faq-hero .tasful-help-hero__title {
+  margin: 0 0 22px;
+  font-size: clamp(72px, 12vw, 128px);
+  line-height: 0.95;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #67e8f9;
+  text-shadow:
+    0 0 10px rgba(34, 211, 238, 0.85),
+    0 0 28px rgba(34, 211, 238, 0.65),
+    0 0 56px rgba(56, 189, 248, 0.45);
+}
+
+#company-faq-hero .tasful-help-hero__lead {
+  margin: 0 0 14px;
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 0.04em;
+}
+
+#company-faq-hero .tasful-help-hero__desc {
+  margin: 0 0 34px;
+  font-size: clamp(14px, 1.8vw, 18px);
+  line-height: 1.8;
+  color: rgba(226, 232, 240, 0.88);
+}
+
+#company-faq-hero .tasful-help-hero__search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: min(100%, 760px);
+  margin: 0 auto 22px;
+  padding: 8px 8px 8px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  background: rgba(2, 8, 23, 0.72);
+  box-shadow:
+    0 0 20px rgba(34, 211, 238, 0.18),
+    inset 0 0 24px rgba(34, 211, 238, 0.06);
+  backdrop-filter: blur(10px);
+}
+
+#company-faq-hero .tasful-help-hero__search-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#company-faq-hero .tasful-help-hero__search-leading {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  margin-right: 12px;
+  color: rgba(148, 163, 184, 0.9);
+  flex-shrink: 0;
+}
+
+#company-faq-hero .tasful-help-hero__search-leading svg,
+#company-faq-hero .tasful-help-hero__search-btn svg {
+  width: 100%;
+  height: 100%;
+}
+
+#company-faq-hero .tasful-help-hero__search-input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: #f8fafc;
+  font-size: 15px;
+  outline: none;
+}
+
+#company-faq-hero .tasful-help-hero__search-input::placeholder {
+  color: rgba(148, 163, 184, 0.85);
+}
+
+#company-faq-hero .tasful-help-hero__search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb 0%, #0891b2 100%);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(37, 99, 235, 0.45);
+  flex-shrink: 0;
+}
+
+#company-faq-hero .tasful-help-hero__categories {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+#company-faq-hero .tasful-help-hero__chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 180px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  background: rgba(2, 8, 23, 0.55);
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+#company-faq-hero .tasful-help-hero__chip.is-active {
+  border-color: rgba(34, 211, 238, 0.85);
+  background: rgba(8, 47, 73, 0.55);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.22);
+}
+
+@media (max-width: 900px) {
+  #company-faq-hero.tasful-help-hero {
+    min-height: 550px;
+    padding: 56px 20px 80px;
+  }
+
+  #company-faq-hero .tasful-help-hero__search {
+    padding-left: 16px;
+  }
+
+  #company-faq-hero .tasful-help-hero__chip {
+    min-width: 0;
+    width: calc(50% - 7px);
+  }
+}
+</style>
+
+<script>
+(function () {
+  var input = document.getElementById("faq-search-input");
+  var form = document.getElementById("faq-search-form");
+  var items = [];
+  var chips = Array.prototype.slice.call(document.querySelectorAll("[data-faq-filter]"));
+  var activeFilter = "service";
+
+  function itemText(details) {
+    return (details.querySelector("summary")?.textContent || "") + " " + (details.querySelector(".corp-faq__body")?.textContent || "");
+  }
+
+  function matchesFilter(text, filter) {
+    if (filter === "ai") {
+      return /AI|ai|タスフルAI|オプション/i.test(text);
+    }
+    return true;
+  }
+
+  function applyFilters() {
+    var query = (input?.value || "").trim().toLowerCase();
+    items.forEach(function (details) {
+      var text = itemText(details);
+      var visible = matchesFilter(text, activeFilter) && (!query || text.toLowerCase().indexOf(query) !== -1);
+      details.hidden = !visible;
+    });
+  }
+
+  chips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      activeFilter = chip.getAttribute("data-faq-filter") || "service";
+      chips.forEach(function (c) { c.classList.toggle("is-active", c === chip); });
+      applyFilters();
+    });
+  });
+
+  if (input) {
+    input.addEventListener("input", applyFilters);
+  }
+
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      applyFilters();
+    });
+  }
+
+  applyFilters();
+})();
+</script>
+<footer class="modern-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-main">
+      <div class="footer-brand">
+        <h2 class="footer-logo">TASFUL</h2>
+        <div class="company-info">
+          <p class="name">IWASHO合同会社</p>
+          <p class="desc">事業内容：建設関連工事・美装・防蟻・業務委託調整</p>
         </div>
-        <nav class="corp-footer__nav" aria-label="フッターナビ">
-          <a class="corp-footer__link" href="/company/services.html">サービス</a>
-          <a class="corp-footer__link" href="/company/vision.html">ビジョン</a>
-          <a class="corp-footer__link" href="/company/about.html">会社概要</a>
-          <a class="corp-footer__link" href="/company/faq.html">FAQ</a>
-          <a class="corp-footer__link" href="/company/contact.html">お問い合わせ</a>
-        </nav>
-        <nav class="corp-footer__legal" aria-label="法務">
-          <a class="corp-footer__legal-link" href="/company/legal/terms.html">利用規約</a>
-          <a class="corp-footer__legal-link" href="/company/legal/privacy.html">プライバシーポリシー</a>
-          <a class="corp-footer__legal-link" href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
-        </nav>
-        <p class="corp-footer__copy">&copy; 2026 TASFUL</p>
       </div>
-    </footer>
+
+      <div class="footer-nav">
+        <div class="link-col link-col--company">
+          <h4>企業情報</h4>
+          <div class="link-list">
+            <a href="/company/about.html">会社概要</a>
+            <a href="/iwasho/team.html">チーム紹介</a>
+            <a href="/iwasho/partners.html">協力パートナー</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--services">
+          <h4>サービス</h4>
+          <div class="link-list">
+            <a href="/company/services.html" class="footer-link--sp-only">サービス一覧</a>
+            <a href="/iwasho/services.html">建設・サービス業</a>
+            <a href="/service">プラットフォーム</a>
+            <a href="/gen-ai-workspace.html">TASFUL AI</a>
+            <a href="/talk-home.html">TASFUL TALK</a>
+            <a href="/builder/">TASFUL BUILDER</a>
+            <a href="#">TASFUL SOUND</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--forms">
+          <h4>各種フォーム</h4>
+          <div class="link-list">
+            <a href="/iwasho/contact.html">お問い合わせ</a>
+            <a href="/company/contact.html">協力パートナー登録</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--legal-sp footer-link--sp-only">
+          <h4>規約・ポリシー</h4>
+          <div class="link-list">
+            <a href="/company/legal/terms.html">利用規約</a>
+            <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+            <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="note">※ IWASHOは美装・防蟻、TASFULは建設業務委託・調整ユニットとして運営しています。</p>
+      <div class="link-list footer-bottom-legal footer-link--pc-only">
+        <a href="/company/legal/terms.html">利用規約</a>
+        <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+        <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+      </div>
+      <p class="copy">&copy; 2026 IWASHO合同会社 All Rights Reserved.</p>
+    </div>
+
+  </div>
+</footer>
+<script src="/tas-hp-header-menu.js" defer></script>
+
 </body>
 </html>

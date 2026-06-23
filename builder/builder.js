@@ -3522,6 +3522,43 @@
     if (backdrop) backdrop.hidden = true;
   }
 
+  function syncSidebarNavActive() {
+    const nav = document.querySelector(".builder-partner-sidebar__nav");
+    if (!nav) return;
+
+    const path = window.location.pathname || "";
+    const file = (path.split("/").pop() || "").split("?")[0].toLowerCase();
+    const base = file.replace(/\.html$/, "");
+    const onConstructionTools =
+      base === "construction-tools" || (base.startsWith("tool-") && /\/builder\//i.test(path));
+
+    const hrefLinks = Array.from(nav.querySelectorAll("a.builder-partner-sidebar__link[href]"));
+    let matchedHref = false;
+
+    hrefLinks.forEach((link) => {
+      const href = (link.getAttribute("href") || "").split("?")[0];
+      const linkFile = (href.split("/").pop() || "").toLowerCase();
+      const linkBase = linkFile.replace(/\.html$/, "");
+      const key = link.getAttribute("data-builder-sidebar-key");
+      let active = false;
+
+      if (key === "construction-tools" || linkFile === "construction-tools.html") {
+        active = onConstructionTools;
+      } else if (linkFile && (file === linkFile || base === linkBase)) {
+        active = true;
+      }
+
+      link.classList.toggle("is-active", active);
+      if (active) matchedHref = true;
+    });
+
+    if (matchedHref) {
+      nav.querySelectorAll("button.builder-partner-sidebar__link.is-active").forEach((btn) => {
+        btn.classList.remove("is-active");
+      });
+    }
+  }
+
   function closePartnerSidebar() {
     closeDashSidebar();
   }
@@ -3549,6 +3586,8 @@
     document.querySelector("[data-builder-dash-logout]")?.addEventListener("click", () => {
       window.location.href = opts.logoutHref || "../dashboard.html";
     });
+
+    syncSidebarNavActive();
   }
 
   function renderPartnerCalendarToolbar() {
@@ -12054,6 +12093,7 @@
 
   function renderMvpProjectNewPage() {
     initMvpProjectFormPage({ applyTemplate: false });
+    // TALK AI 下書き連携（現状維持）— TASFUL AI 導線ではない。Builder AI 本実装時に専用下書きへ移行予定。
     try {
       window.TasuTalkAiDraftApply?.tryApplyProjectPage?.();
     } catch (err) {

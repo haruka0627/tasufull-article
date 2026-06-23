@@ -792,7 +792,7 @@
       return (
         "【問い合わせ】\n" +
         "・お問い合わせページ: /contact\n" +
-        "・取引チャット: 成約後のやり取りはチャット一覧（chat-list.html）\n" +
+        "・取引チャット: 成約後のやり取りは TASFUL TALK（talk-home.html?tab=chat）\n" +
         "・AI相談の概要: ai-top.html\n\n" +
         "お急ぎの場合は問い合わせページからご連絡ください。"
       );

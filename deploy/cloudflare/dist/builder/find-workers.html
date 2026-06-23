@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>職人を探す | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-find-workers">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./builder-top.html" aria-label="Builder TOPへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">職人を探す</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">職人を探す</h1>
+          <p class="builder-header__sub">職種・エリア・資格などの条件から職人を検索</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main builder-fw-main">
+      <section class="builder-fw-hero" aria-label="職人検索概要">
+        <div class="builder-fw-hero__inner">
+          <p class="builder-fw-hero__kicker">Builder · 職人データベース（準備中）</p>
+          <h2 class="builder-fw-hero__title">職人を探す</h2>
+          <p class="builder-fw-hero__desc">対応エリアや職種、資格などの条件から職人を探せます。現在は検索UIのプレビュー表示です。</p>
+        </div>
+      </section>
+
+      <section class="builder-panel builder-fw-search" aria-label="検索条件">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">検索条件</h2>
+          <span class="builder-kpi">demo</span>
+        </div>
+
+        <form class="builder-form builder-fw-form" data-builder-fw-search-form novalidate>
+          <div class="builder-fw-form__grid">
+            <label class="builder-field">
+              <span class="builder-field__label">職種</span>
+              <select class="builder-select" name="trade" data-builder-fw-trade>
+                <option value="">指定なし</option>
+                <option value="electric">電気</option>
+                <option value="equipment">設備</option>
+                <option value="wallpaper">クロス</option>
+                <option value="carpenter">大工</option>
+                <option value="painting">塗装</option>
+                <option value="roof">屋根</option>
+                <option value="cleaning">クリーニング</option>
+                <option value="repair">補修</option>
+              </select>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">対応エリア</span>
+              <input class="builder-input" type="text" name="area" placeholder="例：東京都23区、神奈川県" data-builder-fw-area />
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">経験年数</span>
+              <select class="builder-select" name="experience" data-builder-fw-experience>
+                <option value="">指定なし</option>
+                <option value="lt1">1年未満</option>
+                <option value="1-3">1〜3年</option>
+                <option value="3-5">3〜5年</option>
+                <option value="5-10">5〜10年</option>
+                <option value="10+">10年以上</option>
+              </select>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">資格</span>
+              <input class="builder-input" type="text" name="license" placeholder="例：第一種電気工事士" data-builder-fw-license />
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">法人 / 個人</span>
+              <select class="builder-select" name="entity" data-builder-fw-entity>
+                <option value="">指定なし</option>
+                <option value="company">法人</option>
+                <option value="individual">個人</option>
+              </select>
+            </label>
+          </div>
+
+          <fieldset class="builder-fw-checks">
+            <legend class="builder-fw-checks__title">対応条件</legend>
+            <label class="builder-settings-check">
+              <input type="checkbox" name="support" data-builder-fw-support />
+              <span>応援可能</span>
+            </label>
+            <label class="builder-settings-check">
+              <input type="checkbox" name="travel" data-builder-fw-travel />
+              <span>出張可能</span>
+            </label>
+            <label class="builder-settings-check">
+              <input type="checkbox" name="night" data-builder-fw-night />
+              <span>夜間対応</span>
+            </label>
+          </fieldset>
+
+          <div class="builder-form__actions">
+            <button type="submit" class="builder-btn builder-btn--primary">職人を探す</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="builder-panel builder-fw-results" id="builder-fw-results" data-builder-fw-results hidden aria-label="検索結果">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">検索結果</h2>
+          <span class="builder-kpi" data-builder-fw-results-count>0件</span>
+        </div>
+        <p class="builder-fw-results__note" data-builder-fw-results-note>デモ用のサンプル職人を表示しています。</p>
+        <div class="builder-fw-grid" data-builder-fw-results-grid></div>
+      </section>
+
+      <section class="builder-panel builder-fw-coming-soon" id="builder-fw-coming-soon" aria-label="今後追加予定" tabindex="-1">
+        <h2 class="builder-fw-coming-soon__title">今後追加予定</h2>
+        <ul class="builder-fw-coming-soon__list">
+          <li>職人検索</li>
+          <li>協力会社検索</li>
+          <li>Builder AI推薦</li>
+          <li>案件との自動マッチング</li>
+          <li>対応可能日管理</li>
+        </ul>
+        <p class="builder-fw-coming-soon__desc">職人データベース・応募・課金連携は今後順次追加します。</p>
+      </section>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-runtime.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="builder-actor-identity.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder.js" defer></script>
+  <script>
+    (function () {
+      var DEMO_WORKERS = [
+        { id: "w1", name: "山本 電工", trade: "電気", area: "東京都23区", experience: "10年以上", license: "第一種電気工事士", entity: "法人", rating: "4.8", tags: ["応援可能", "出張可能"] },
+        { id: "w2", name: "佐藤 クロス", trade: "クロス", area: "神奈川県", experience: "5〜10年", license: "壁装技能士", entity: "個人", rating: "4.6", tags: ["出張可能"] },
+        { id: "w3", name: "鈴木 工務", trade: "大工", area: "埼玉県", experience: "3〜5年", license: "—", entity: "個人", rating: "4.5", tags: ["応援可能"] },
+        { id: "w4", name: "田中 塗装", trade: "塗装", area: "千葉県", experience: "10年以上", license: "1級塗装技能士", entity: "法人", rating: "4.9", tags: ["夜間対応", "出張可能"] },
+        { id: "w5", name: "伊藤 設備", trade: "設備", area: "東京都", experience: "1〜3年", license: "給排水施工管理技士", entity: "法人", rating: "4.3", tags: ["応援可能", "夜間対応"] },
+        { id: "w6", name: "高橋 清掃", trade: "クリーニング", area: "東京都", experience: "3〜5年", license: "—", entity: "個人", rating: "4.7", tags: ["出張可能"] }
+      ];
+
+      var form = document.querySelector("[data-builder-fw-search-form]");
+      var resultsSection = document.querySelector("[data-builder-fw-results]");
+      var resultsGrid = document.querySelector("[data-builder-fw-results-grid]");
+      var resultsCount = document.querySelector("[data-builder-fw-results-count]");
+      var comingSoon = document.getElementById("builder-fw-coming-soon");
+
+      function esc(text) {
+        return String(text || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function scrollToComingSoon() {
+        if (!comingSoon) return;
+        comingSoon.scrollIntoView({ behavior: "smooth", block: "start" });
+        comingSoon.focus({ preventScroll: true });
+      }
+
+      function renderStars(rating) {
+        return "★ " + esc(rating);
+      }
+
+      function renderCard(worker) {
+        var tags = (worker.tags || [])
+          .map(function (t) {
+            return '<span class="builder-fw-tag">' + esc(t) + "</span>";
+          })
+          .join("");
+
+        return (
+          '<article class="builder-fw-card" data-builder-fw-card="' + esc(worker.id) + '">' +
+          '<div class="builder-fw-card__head">' +
+          '<h3 class="builder-fw-card__name">' + esc(worker.name) + "</h3>" +
+          '<span class="builder-fw-card__rating" aria-label="評価 ' + esc(worker.rating) + '">' + renderStars(worker.rating) + "</span>" +
+          "</div>" +
+          '<dl class="builder-fw-card__meta">' +
+          "<div><dt>職種</dt><dd>" + esc(worker.trade) + "</dd></div>" +
+          "<div><dt>対応エリア</dt><dd>" + esc(worker.area) + "</dd></div>" +
+          "<div><dt>経験年数</dt><dd>" + esc(worker.experience) + "</dd></div>" +
+          "<div><dt>資格</dt><dd>" + esc(worker.license) + "</dd></div>" +
+          "<div><dt>法人/個人</dt><dd>" + esc(worker.entity) + "</dd></div>" +
+          "</dl>" +
+          (tags ? '<div class="builder-fw-card__tags">' + tags + "</div>" : "") +
+          '<div class="builder-fw-card__actions">' +
+          '<button type="button" class="builder-btn builder-btn--ghost" data-builder-fw-demo>詳細を見る</button>' +
+          '<button type="button" class="builder-btn builder-btn--primary" data-builder-fw-demo>お気に入り</button>' +
+          "</div>" +
+          "</article>"
+        );
+      }
+
+      function showResults() {
+        if (!resultsSection || !resultsGrid) return;
+        resultsGrid.innerHTML = DEMO_WORKERS.map(renderCard).join("");
+        resultsCount.textContent = DEMO_WORKERS.length + "件";
+        resultsSection.hidden = false;
+        resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      if (form) {
+        form.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+          showResults();
+        });
+      }
+
+      document.addEventListener("click", function (ev) {
+        var btn = ev.target.closest("[data-builder-fw-demo]");
+        if (!btn) return;
+        ev.preventDefault();
+        scrollToComingSoon();
+      });
+    })();
+  </script>
+</body>
+</html>

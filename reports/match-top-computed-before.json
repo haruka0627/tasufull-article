@@ -1,0 +1,72 @@
+{
+  "bottom": {
+    "sel": ".match-top-bottom",
+    "marginTop": "10px",
+    "marginBottom": "0px",
+    "paddingTop": "20px",
+    "paddingBottom": "6px",
+    "fontSize": "15px",
+    "gap": "normal",
+    "top": 515,
+    "height": 326
+  },
+  "values": {
+    "sel": ".match-top-values",
+    "marginTop": "0px",
+    "marginBottom": "0px",
+    "paddingTop": "0px",
+    "paddingBottom": "0px",
+    "fontSize": "15px",
+    "gap": "normal",
+    "top": 535,
+    "height": 271
+  },
+  "title": {
+    "sel": ".match-top-values__title",
+    "marginTop": "0px",
+    "marginBottom": "0px",
+    "paddingTop": "0px",
+    "paddingBottom": "0px",
+    "fontSize": "20px",
+    "gap": "normal",
+    "top": 535,
+    "height": 30
+  },
+  "firstItem": {
+    "sel": ".match-top-values__item",
+    "marginTop": "0px",
+    "marginBottom": "0px",
+    "paddingTop": "14px",
+    "paddingBottom": "14px",
+    "fontSize": "15px",
+    "gap": "7px",
+    "top": 608,
+    "height": 51
+  },
+  "badges": {
+    "sel": ".match-top-trust-badges",
+    "marginTop": "12px",
+    "marginBottom": "0px",
+    "paddingTop": "0px",
+    "paddingBottom": "6px",
+    "fontSize": "15px",
+    "gap": "7px",
+    "top": 817,
+    "height": 18
+  },
+  "footer": {
+    "sel": ".match-footer--top",
+    "marginTop": "18px",
+    "marginBottom": "0px",
+    "paddingTop": "0px",
+    "paddingBottom": "0px",
+    "fontSize": "11px",
+    "gap": "normal",
+    "top": 876,
+    "height": 46
+  },
+  "cssHref": [
+    "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap",
+    "http://127.0.0.1:8788/match/match.css"
+  ]
+}

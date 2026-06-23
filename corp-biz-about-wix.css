@@ -1,0 +1,262 @@
+/* ===== Section 2: Business Intro (Wix export) ===== */
+.iwasho-about-page .iw-about-wix-business,
+.iwasho-about-page .iw-about-wix-business * {
+  box-sizing: border-box;
+}
+
+.iwasho-about-page .iw-about-wix-business {
+  padding: 0 0 80px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+.iwasho-about-page .iw-about-wix-business .section-container {
+  width: 100%;
+  max-width: 1385px;
+  margin-inline: auto;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.iwasho-about-page .iw-about-wix-business .business-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+.iwasho-about-page .iw-about-wix-business .business-card {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  height: 500px;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho {
+  background-color: #002255;
+  color: #ffffff;
+}
+
+.iwasho-about-page .iw-about-wix-business .iwasho-img {
+  width: 40%;
+  background-image: url("/iwasho/images/about/biz-iwasho.png");
+  background-size: cover;
+  background-position: left 15% center;
+  flex-shrink: 0;
+}
+
+.iwasho-about-page .iw-about-wix-business .iwasho-body {
+  padding: 44px 32px;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful {
+  background-color: #ffffff;
+  color: #333333;
+}
+
+.iwasho-about-page .iw-about-wix-business .tasful-body {
+  padding: 44px 32px;
+  width: 62%;
+  display: flex;
+  flex-direction: column;
+}
+
+.iwasho-about-page .iw-about-wix-business .tasful-img {
+  width: 38%;
+  background-image: url("/iwasho/images/about/biz-tasful-phone.png");
+  background-size: 92%;
+  background-repeat: no-repeat;
+  background-position: center right 15px;
+  flex-shrink: 0;
+}
+
+.iwasho-about-page .iw-about-wix-business .biz-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.iwasho-about-page .iw-about-wix-business .biz-number {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho .biz-number {
+  color: #38bdf8;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful .biz-number {
+  color: #3b82f6;
+}
+
+.iwasho-about-page .iw-about-wix-business .biz-tag {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho .biz-tag {
+  color: #ffffff;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful .biz-tag {
+  color: #002255;
+}
+
+.iwasho-about-page .iw-about-wix-business .biz-catch {
+  font-size: 25px;
+  font-weight: 800;
+  line-height: 1.4;
+  margin: 0 0 20px;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho .biz-catch {
+  color: #ffffff;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful .biz-catch {
+  color: #002255;
+}
+
+.iwasho-about-page .iw-about-wix-business .biz-desc {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 0 0 30px;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho .biz-desc {
+  color: #cbd5e1;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful .biz-desc {
+  color: #475569;
+}
+
+.iwasho-about-page .iw-about-wix-business .biz-features {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.iwasho-about-page .iw-about-wix-business .feature-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.iwasho-about-page .iw-about-wix-business .feature-icon-svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  margin-bottom: 12px;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho .feature-icon-svg {
+  stroke: #ffffff;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful .feature-icon-svg {
+  stroke: #002255;
+}
+
+.iwasho-about-page .iw-about-wix-business .feature-title {
+  font-size: 13px;
+  font-weight: 800;
+  margin: 0 0 6px;
+  white-space: nowrap;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho .feature-title {
+  color: #ffffff;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful .feature-title {
+  color: #002255;
+}
+
+.iwasho-about-page .iw-about-wix-business .feature-text {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  margin: 4px 0 2px;
+  padding: 0 2px;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-iwasho .feature-text {
+  color: #cbd5e1;
+  line-height: 1.65;
+  margin-top: 5px;
+}
+
+.iwasho-about-page .iw-about-wix-business .card-tasful .feature-text {
+  color: #64748b;
+  line-height: 1.58;
+  margin-top: 4px;
+}
+
+@media (max-width: 1200px) {
+  .iwasho-about-page .iw-about-wix-business .business-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-about-page .iw-about-wix-business .business-card {
+    height: auto;
+    min-height: 460px;
+  }
+
+  .iwasho-about-page .iw-about-wix-business .tasful-img {
+    background-position: center;
+    background-size: contain;
+  }
+}
+
+@media (max-width: 768px) {
+  .iwasho-about-page .iw-about-wix-business .section-container {
+    padding: 0 var(--iw-about-pad);
+    max-width: var(--iw-about-container);
+  }
+}
+
+@media (max-width: 640px) {
+  .iwasho-about-page .iw-about-wix-business .business-card {
+    flex-direction: column;
+  }
+
+  .iwasho-about-page .iw-about-wix-business .iwasho-body,
+  .iwasho-about-page .iw-about-wix-business .tasful-body {
+    width: 100%;
+    padding: 30px 20px;
+  }
+
+  .iwasho-about-page .iw-about-wix-business .iwasho-img,
+  .iwasho-about-page .iw-about-wix-business .tasful-img {
+    width: 100%;
+    height: 220px;
+  }
+
+  .iwasho-about-page .iw-about-wix-business .biz-features {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .iwasho-about-page .iw-about-wix-business .section-container {
+    padding: 0 var(--iw-about-pad);
+  }
+}

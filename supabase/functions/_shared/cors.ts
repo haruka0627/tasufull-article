@@ -2,12 +2,18 @@
  * Edge Functions 共通 CORS（localhost / 127.0.0.1 / 開発サーバ対応）
  */
 const ALLOW_HEADERS =
-  "authorization, x-client-info, apikey, content-type, accept, x-requested-with, x-supabase-api-version";
+  "authorization, x-client-info, apikey, content-type, accept, x-requested-with, x-supabase-api-version, x-supabase-authorization, x-partner-role, x-partner-user-id";
 
 const ALLOW_METHODS = "POST, GET, OPTIONS";
 
 /** 常に許可する開発オリジン（ポート任意・8765 含む） */
 const DEV_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
+
+/** Cloudflare Pages — production + preview deploys */
+function isTasufullArticlePagesHost(host: string): boolean {
+  const h = host.toLowerCase();
+  return h === "tasufull-article.pages.dev" || h.endsWith(".tasufull-article.pages.dev");
+}
 
 function parseExtraOrigins(): string[] {
   const raw = Deno.env.get("TASU_CORS_ALLOWED_ORIGINS") || "";
@@ -27,6 +33,7 @@ export function isAllowedOrigin(origin: string): boolean {
     const u = new URL(o);
     const host = u.hostname.toLowerCase();
     if (DEV_HOSTS.has(host)) return true;
+    if (isTasufullArticlePagesHost(host)) return true;
     const extras = parseExtraOrigins();
     if (extras.includes(o)) return true;
     if (/\.(tasufull|tasu)\./i.test(host) || /vercel\.app$/i.test(host)) return true;

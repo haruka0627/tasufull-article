@@ -166,7 +166,7 @@ async function run() {
   if (completeUi.listingLabel !== "対象ページへ戻る") {
     errors.push(`complete listing CTA: ${completeUi.listingLabel}`);
   }
-  if (!completeUi.chatHref.includes("chat-detail.html") && !completeUi.chatHref.includes("chat-list.html")) {
+  if (!completeUi.chatHref.includes("chat-detail.html") && !completeUi.chatHref.includes("talk-home.html")) {
     errors.push(`complete chat href: ${completeUi.chatHref}`);
   }
 

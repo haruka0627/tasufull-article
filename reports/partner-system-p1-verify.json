@@ -1,0 +1,224 @@
+{
+  "checkedAt": "2026-06-22T23:25:12.993Z",
+  "base": "http://127.0.0.1:8788",
+  "liveApi": true,
+  "summary": {
+    "total": 53,
+    "passed": 53,
+    "failed": 0
+  },
+  "results": [
+    {
+      "ok": true,
+      "message": "file exists: supabase/migrations/20260630100000_partner_p1_schema.sql"
+    },
+    {
+      "ok": true,
+      "message": "file exists: supabase/functions/_shared/partner.ts"
+    },
+    {
+      "ok": true,
+      "message": "file exists: supabase/functions/partner-create/index.ts"
+    },
+    {
+      "ok": true,
+      "message": "file exists: supabase/functions/partner-list/index.ts"
+    },
+    {
+      "ok": true,
+      "message": "file exists: supabase/functions/partner-get/index.ts"
+    },
+    {
+      "ok": true,
+      "message": "file exists: supabase/functions/partner-review/index.ts"
+    },
+    {
+      "ok": true,
+      "message": "file exists: supabase/functions/partner-document-verify/index.ts"
+    },
+    {
+      "ok": true,
+      "message": "file exists: partner-api.js"
+    },
+    {
+      "ok": true,
+      "message": "file exists: partner-register-form.js"
+    },
+    {
+      "ok": true,
+      "message": "file exists: builder/partner-management.html"
+    },
+    {
+      "ok": true,
+      "message": "file exists: builder/partner-management.js"
+    },
+    {
+      "ok": true,
+      "message": "file exists: builder/partner-detail.html"
+    },
+    {
+      "ok": true,
+      "message": "file exists: builder/partner-detail.js"
+    },
+    {
+      "ok": true,
+      "message": "migration contains partner_profiles"
+    },
+    {
+      "ok": true,
+      "message": "migration contains partner_documents"
+    },
+    {
+      "ok": true,
+      "message": "migration contains partner_reviews"
+    },
+    {
+      "ok": true,
+      "message": "migration excludes partner_audit_log (P1)"
+    },
+    {
+      "ok": true,
+      "message": "UI load iwasho-register@390"
+    },
+    {
+      "ok": true,
+      "message": "console 0 iwasho-register@390"
+    },
+    {
+      "ok": true,
+      "message": "UI load iwasho-register@768"
+    },
+    {
+      "ok": true,
+      "message": "console 0 iwasho-register@768"
+    },
+    {
+      "ok": true,
+      "message": "UI load iwasho-register@1280"
+    },
+    {
+      "ok": true,
+      "message": "console 0 iwasho-register@1280"
+    },
+    {
+      "ok": true,
+      "message": "UI load tasful-register@390"
+    },
+    {
+      "ok": true,
+      "message": "console 0 tasful-register@390"
+    },
+    {
+      "ok": true,
+      "message": "UI load tasful-register@768"
+    },
+    {
+      "ok": true,
+      "message": "console 0 tasful-register@768"
+    },
+    {
+      "ok": true,
+      "message": "UI load tasful-register@1280"
+    },
+    {
+      "ok": true,
+      "message": "console 0 tasful-register@1280"
+    },
+    {
+      "ok": true,
+      "message": "UI load builder-mgmt-mock@390"
+    },
+    {
+      "ok": true,
+      "message": "console 0 builder-mgmt-mock@390"
+    },
+    {
+      "ok": true,
+      "message": "UI load builder-mgmt-mock@768"
+    },
+    {
+      "ok": true,
+      "message": "console 0 builder-mgmt-mock@768"
+    },
+    {
+      "ok": true,
+      "message": "UI load builder-mgmt-mock@1280"
+    },
+    {
+      "ok": true,
+      "message": "console 0 builder-mgmt-mock@1280"
+    },
+    {
+      "ok": true,
+      "message": "UI load builder-detail-mock@390"
+    },
+    {
+      "ok": true,
+      "message": "console 0 builder-detail-mock@390"
+    },
+    {
+      "ok": true,
+      "message": "UI load builder-detail-mock@768"
+    },
+    {
+      "ok": true,
+      "message": "console 0 builder-detail-mock@768"
+    },
+    {
+      "ok": true,
+      "message": "UI load builder-detail-mock@1280"
+    },
+    {
+      "ok": true,
+      "message": "console 0 builder-detail-mock@1280"
+    },
+    {
+      "ok": true,
+      "message": "required fields return 400"
+    },
+    {
+      "ok": true,
+      "message": "partner-create iwasho (201)"
+    },
+    {
+      "ok": true,
+      "message": "partner-create returns partner_id"
+    },
+    {
+      "ok": true,
+      "message": "partner-create tasful (201)"
+    },
+    {
+      "ok": true,
+      "message": "partner-list (200)"
+    },
+    {
+      "ok": true,
+      "message": "partner-get (200)"
+    },
+    {
+      "ok": true,
+      "message": "pending → hold (200)"
+    },
+    {
+      "ok": true,
+      "message": "pending → approved (200)"
+    },
+    {
+      "ok": true,
+      "message": "pending → rejected (200)"
+    },
+    {
+      "ok": true,
+      "message": "partner_reviews history persisted"
+    },
+    {
+      "ok": true,
+      "message": "partner-document-verify"
+    },
+    {
+      "ok": true,
+      "message": "unauthorized partner-list denied"
+    }
+  ]
+}

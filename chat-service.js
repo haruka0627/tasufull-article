@@ -856,10 +856,28 @@
 
   function mergeConsultThreadsFirst(baseThreads) {
     const local = loadLocalConsultThreads();
-    if (!local.length) return baseThreads;
-    const localIds = new Set(local.map((t) => String(t.id)));
+    const legacyLs =
+      (typeof window !== "undefined" ? window : global).TasuChatThreadStore?.getAllForChatList?.().filter((t) =>
+        /^chat-/i.test(String(t?.id || ""))
+      ) || [];
+    const mergedLocal = [...local];
+    const seen = new Set(mergedLocal.map((t) => String(t.id)));
+    for (const row of legacyLs) {
+      const id = String(row.id || "");
+      if (!id || seen.has(id)) continue;
+      const dupRemote = (baseThreads || []).some(
+        (r) =>
+          String(r.contactId || r.contact_id || "") &&
+          String(r.contactId || r.contact_id) === String(row.contactId || row.contact_id)
+      );
+      if (dupRemote) continue;
+      mergedLocal.push(row);
+      seen.add(id);
+    }
+    if (!mergedLocal.length) return baseThreads;
+    const localIds = new Set(mergedLocal.map((t) => String(t.id)));
     const rest = (baseThreads || []).filter((t) => !localIds.has(String(t.id)));
-    return [...local, ...rest];
+    return [...mergedLocal, ...rest];
   }
 
   function loadThreadsDummy() {

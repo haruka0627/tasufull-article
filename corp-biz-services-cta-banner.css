@@ -1,0 +1,201 @@
+/* 全体のコンテナ設定 */
+.banner-container {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  background-color: #00193d; 
+  border-radius: 16px;
+  overflow: hidden;
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+  color: #ffffff;
+  box-sizing: border-box;
+  width: 100%;
+  /* ★全体を左右に伸ばすため、最大横幅を 1100px から 1200px へ拡張★ */
+  max-width: 1200px; 
+  margin: 0 auto;
+  position: relative;
+  height: 310px;
+}
+
+/* 左側：テキストエリア */
+.banner-left {
+  flex: 1;
+  /* 横に広がった分、左側の余白もお手本に合わせて少し広め（55px）に設定 */
+  padding: 45px 0 45px 55px; 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 3;
+  position: relative;
+}
+.banner-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 15px 0;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+.banner-text {
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin: 0 0 25px 0;
+  opacity: 0.9;
+}
+.banner-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff;
+  color: #001C48;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 14.5px;
+  width: 240px;
+  height: 48px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+.banner-btn:hover {
+  background-color: #f5f5f5;
+}
+.btn-arrow {
+  margin-left: 12px;
+  font-size: 16px;
+}
+
+/* 右側複合エリア */
+.banner-right-wrap {
+  flex: 2.3; 
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+/* ソファ画像エリア */
+.sofa-container-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%; 
+  height: 100%;
+  z-index: 1;
+  background-image: url('/iwasho/images/about/cta-interior.png');
+  background-repeat: no-repeat;
+  background-size: auto 82%; 
+  background-position: right bottom; 
+}
+
+/* グラデーションと影の設定 */
+.sofa-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* 全体が横に伸びたので、グラデーションの溶け込みが不自然にならないよう、
+     開始位置を45%から50%へと滑らかに引き延ばしました */
+  background: linear-gradient(90deg, #00193d 0%, #00193d 50%, rgba(0, 25, 61, 0.4) 68%, rgba(0, 0, 0, 0) 85%),
+              linear-gradient(180deg, rgba(0, 5, 20, 0.8) 0%, rgba(0, 5, 20, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
+  z-index: 2;
+}
+
+/* デバイス画像エリア */
+.banner-center {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  padding-bottom: 0;
+  display: flex;
+  justify-content: flex-start; 
+  padding-left: 20px; 
+}
+.device-mockups {
+  display: flex;
+  align-items: flex-end;
+  gap: 15px;
+}
+.img-smartphone {
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin-bottom: -2px;
+}
+.img-pc {
+  width: 265px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin-bottom: -2px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 950px) {
+  .banner-container {
+    flex-direction: column;
+    height: auto;
+    align-items: stretch;
+    text-align: center;
+    max-width: 450px;
+  }
+  .banner-left {
+    padding: 35px 20px 20px 20px;
+    align-items: center;
+  }
+  .banner-title {
+    font-size: 22px;
+    white-space: normal;
+  }
+  .banner-text {
+    font-size: 13px;
+  }
+  .banner-text br {
+    display: none;
+  }
+  .banner-btn {
+    width: 100%;
+    max-width: 240px;
+  }
+  .banner-right-wrap {
+    flex: none;
+    height: 300px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .sofa-container-bg {
+    width: 100%;
+    height: 150px;
+    bottom: 0;
+    top: auto;
+    background-size: cover;
+    background-position: center;
+  }
+  .banner-center {
+    justify-content: center;
+    padding-left: 0;
+    margin-bottom: 160px;
+  }
+  .img-smartphone {
+    width: 95px;
+  }
+  .img-pc {
+    width: 210px;
+  }
+  .sofa-overlay {
+    background: linear-gradient(180deg, rgba(0,21,56,1) 0%, rgba(0,21,56,0) 40%);
+  }
+}
+
+/* CTAセクション下余白（フッターとの間隔） */
+.iwasho-services-page .iw-svc-cta-banner {
+  padding-bottom: 64px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .iwasho-services-page .iw-svc-cta-banner {
+    padding-bottom: 40px;
+  }
+}

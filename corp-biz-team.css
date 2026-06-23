@@ -1,0 +1,732 @@
+/* ===== IWASHO チーム紹介ページ（参考モック準拠） ===== */
+.iwasho-team-page {
+  --iw-team-navy: #082a67;
+  --iw-team-navy-dark: #061f4d;
+  --iw-team-navy-cta: #0b2f6e;
+  --iw-team-text: #1e293b;
+  --iw-team-muted: #64748b;
+  --iw-team-line: #c8d5e4;
+  --iw-team-radius: 12px;
+  --iw-team-shadow-card: 0 4px 16px rgba(8, 42, 103, 0.08);
+  --iw-team-container: 1200px;
+  --iw-team-cards-container: 1440px;
+  --iw-team-bottom-width: 1340px;
+  --iw-team-pad: 40px;
+  --iw-team-section-y: 72px;
+  --iw-team-teal: #0a5f6b;
+  --iw-team-blue-soft: #eef5fb;
+  --iw-team-blue-hero: #f3f8fc;
+  background: #ffffff;
+  color: var(--iw-team-text);
+}
+
+.iwasho-team-page main {
+  overflow-x: hidden;
+}
+
+.iwasho-team-page .iw-team-container {
+  width: 100%;
+  max-width: var(--iw-team-container);
+  margin-inline: auto;
+  padding-inline: var(--iw-team-pad);
+}
+
+/* ----- Section heading with lines ----- */
+.iwasho-team-page .iw-team-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.iwasho-team-page .iw-team-heading__line {
+  flex: 1;
+  max-width: 200px;
+  height: 1px;
+  background: var(--iw-team-line);
+}
+
+.iwasho-team-page .iw-team-heading__line--after {
+  flex: 0 0 32px;
+  max-width: 32px;
+}
+
+.iwasho-team-page .iw-team-heading__title {
+  margin: 0;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 800;
+  color: var(--iw-team-navy);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.iwasho-team-page .iw-team-heading__sub {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--iw-team-muted);
+  white-space: nowrap;
+}
+
+.iwasho-team-page .iw-team-group--tasful .iw-team-heading__title {
+  color: var(--iw-team-teal);
+}
+
+/* ----- Hero (参考画像準拠・PC作り直し) ----- */
+.iwasho-team-page .iw-team-hero {
+  width: 100%;
+  min-height: 330px;
+  padding: 0;
+  margin: 0;
+  background: #ffffff;
+  overflow: visible;
+}
+
+.iwasho-team-page .iw-team-hero .iw-team-container {
+  width: 100%;
+  max-width: 1440px;
+  height: 330px;
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  background: linear-gradient(90deg, #ffffff 0%, #ffffff 28%, #f4fbff 55%, #e8f6ff 100%);
+}
+
+@media (min-width: 901px) {
+  .iwasho-team-page .iw-team-hero__grid {
+    display: grid;
+    grid-template-columns: 34% 66%;
+    gap: 0;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+  }
+
+  .iwasho-team-page .iw-team-hero__content {
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+    padding: 0 0 0 72px;
+    box-sizing: border-box;
+  }
+
+  .iwasho-team-page .iw-team-hero__title {
+    margin: 0 0 32px;
+    font-size: 52px;
+    font-weight: 800;
+    color: #062047;
+    line-height: 1.15;
+    letter-spacing: 0.04em;
+  }
+
+  .iwasho-team-page .iw-team-hero__lead {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 2;
+    color: #062047;
+  }
+
+  .iwasho-team-page .iw-team-hero__visual {
+    position: relative;
+    height: 100%;
+    min-height: 330px;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+
+  .iwasho-team-page .iw-team-hero__visual img {
+    width: 130%;
+    height: 100%;
+    max-width: none;
+    display: block;
+    margin: 0;
+    object-fit: cover;
+    object-position: 40% bottom;
+    transform: translateX(-32px) scale(1.04);
+    transform-origin: right bottom;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .iwasho-team-page .iw-team-hero__grid::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0.95) 26%,
+      rgba(255, 255, 255, 0.4) 36%,
+      rgba(255, 255, 255, 0) 44%
+    );
+  }
+}
+
+@media (max-width: 900px) {
+  .iwasho-team-page .iw-team-hero {
+    min-height: 0;
+    background: #ffffff;
+  }
+
+  .iwasho-team-page .iw-team-hero .iw-team-container {
+    max-width: none;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+    background: transparent;
+  }
+
+  .iwasho-team-page .iw-team-hero__grid::after {
+    display: none;
+  }
+
+  .iwasho-team-page .iw-team-hero__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 40px 0 48px;
+    background: linear-gradient(180deg, var(--iw-team-blue-hero) 0%, #ffffff 100%);
+  }
+
+  .iwasho-team-page .iw-team-hero__content {
+    padding-inline: var(--iw-team-pad);
+  }
+
+  .iwasho-team-page .iw-team-hero__title {
+    margin: 0 0 20px;
+    font-size: clamp(32px, 7vw, 40px);
+    font-weight: 900;
+    color: #062047;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
+  }
+
+  .iwasho-team-page .iw-team-hero__lead {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.85;
+    color: #062047;
+  }
+
+  .iwasho-team-page .iw-team-hero__visual {
+    position: relative;
+    width: 100%;
+    padding-inline: var(--iw-team-pad);
+    box-sizing: border-box;
+  }
+
+  .iwasho-team-page .iw-team-hero__visual img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0;
+    object-fit: contain;
+    object-position: center;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* ----- Team groups ----- */
+.iwasho-team-page .iw-team-group {
+  padding: 56px 0 28px;
+}
+
+.iwasho-team-page .iw-team-group + .iw-team-group {
+  padding-top: 16px;
+  padding-bottom: 24px;
+}
+
+.iwasho-team-page .iw-team-cards {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.iwasho-team-page .iw-team-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+  padding: 26px 18px 24px;
+  background: #ffffff;
+  border: 1px solid #e6edf5;
+  border-radius: 14px;
+  box-shadow: var(--iw-team-shadow-card);
+  text-align: center;
+}
+
+.iwasho-team-page .iw-team-card__role {
+  margin: 0 0 16px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--iw-team-navy);
+  line-height: 1.4;
+}
+
+.iwasho-team-page .iw-team-group--tasful .iw-team-card__role,
+.iwasho-team-page .iw-team-group--tasful .iw-team-card__icon {
+  color: var(--iw-team-teal);
+}
+
+.iwasho-team-page .iw-team-card__portrait {
+  width: 148px;
+  height: 148px;
+  margin-bottom: 16px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #dce9f8 0%, #eef5fb 70%);
+  flex-shrink: 0;
+}
+
+.iwasho-team-page .iw-team-group--tasful .iw-team-card__portrait {
+  background: radial-gradient(circle at 50% 35%, #d4ecef 0%, #eaf6f8 70%);
+}
+
+.iwasho-team-page .iw-team-card__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  display: block;
+}
+
+.iwasho-team-page .iw-team-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 14px;
+  color: var(--iw-team-navy);
+}
+
+.iwasho-team-page .iw-team-card__icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iwasho-team-page .iw-team-card__desc {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.75;
+  color: var(--iw-team-muted);
+}
+
+@media (min-width: 901px) {
+  .iwasho-team-page .iw-team-group .iw-team-container {
+    max-width: var(--iw-team-cards-container);
+    padding-inline: 32px;
+  }
+
+  .iwasho-team-page .iw-team-card {
+    padding: 28px 20px 26px;
+  }
+
+  .iwasho-team-page .iw-team-card__portrait {
+    width: 156px;
+    height: 156px;
+  }
+
+  .iwasho-team-page .iw-team-card__role {
+    font-size: 18px;
+    margin-bottom: 18px;
+  }
+
+  .iwasho-team-page .iw-team-card__desc {
+    font-size: 13px;
+    line-height: 1.8;
+  }
+}
+
+@media (min-width: 901px) {
+  .iwasho-team-page .iw-team-bottom__inner {
+    padding-inline: 32px;
+  }
+}
+
+.iwasho-team-page .iw-team-bottom {
+  padding: 52px 0 56px;
+  background: #ffffff;
+}
+
+.iwasho-team-page .iw-team-bottom__inner {
+  width: 100%;
+  max-width: var(--iw-team-bottom-width);
+  margin-inline: auto;
+  padding-inline: var(--iw-team-pad);
+}
+
+.iwasho-team-page .iw-team-bottom .iw-team-heading {
+  margin-bottom: 32px;
+}
+
+.iwasho-team-page .iw-team-initiatives__panel {
+  display: flex;
+  align-items: stretch;
+  min-height: 150px;
+  background: #ffffff;
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.iwasho-team-page .iw-team-initiative {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 34px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  text-align: left;
+}
+
+.iwasho-team-page .iw-team-initiative + .iw-team-initiative {
+  border-left: 1px solid #edf2f7;
+}
+
+.iwasho-team-page .iw-team-initiative__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: #edf5ff;
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+.iwasho-team-page .iw-team-initiative__icon img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  display: block;
+}
+
+.iwasho-team-page .iw-team-initiative__body {
+  min-width: 0;
+}
+
+.iwasho-team-page .iw-team-initiative__title {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--iw-team-navy);
+  line-height: 1.35;
+}
+
+.iwasho-team-page .iw-team-initiative__desc {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.8;
+  color: var(--iw-team-muted);
+}
+
+.iwasho-team-page .iw-team-cta__panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 24px;
+}
+
+.iwasho-team-page .iw-team-cta__main {
+  display: grid;
+  grid-template-columns: 48% 52%;
+  gap: 0;
+  align-items: stretch;
+  min-height: 270px;
+  background: linear-gradient(90deg, #eef7ff 0%, #f7fcff 42%, #eaf6ff 100%);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.iwasho-team-page .iw-team-cta__content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 36px 16px 36px 36px;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.iwasho-team-page .iw-team-cta__title {
+  margin: 0 0 16px;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.55;
+  color: var(--iw-team-navy);
+}
+
+.iwasho-team-page .iw-team-cta__lead {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.9;
+  color: var(--iw-team-text);
+}
+
+.iwasho-team-page .iw-team-cta__visual {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 270px;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  overflow: hidden;
+  align-self: stretch;
+}
+
+.iwasho-team-page .iw-team-cta__visual img {
+  width: 120%;
+  height: 100%;
+  max-width: none;
+  display: block;
+  margin: 0;
+  object-fit: cover;
+  object-position: 50% bottom;
+  transform: scale(1.1);
+  transform-origin: right bottom;
+}
+
+.iwasho-team-page .iw-team-cta__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 78px;
+  padding: 0 36px;
+  background: var(--iw-team-navy-cta);
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.iwasho-team-page .iw-team-cta__bar-text {
+  margin: 0;
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.7;
+  color: #ffffff;
+}
+
+.iwasho-team-page .iw-team-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 50px;
+  padding: 0 28px;
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--iw-team-navy);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.iwasho-team-page .iw-team-cta__btn-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.iwasho-team-page .iw-team-cta__btn:hover,
+.iwasho-team-page .iw-team-cta__btn:focus-visible {
+  background: #f8fbff;
+  color: var(--iw-team-navy-dark);
+}
+
+/* 濃紺CTA帯から自然につなぐ（ページ別微調整） */
+.iwasho-team-page .footer-wrapper {
+  padding-top: 36px;
+}
+
+@media (max-width: 900px) {
+  .iwasho-team-page {
+    --iw-team-pad: 24px;
+    --iw-team-section-y: 56px;
+  }
+
+  .iwasho-team-page .iw-team-group {
+    padding: 48px 0 24px;
+  }
+
+  .iwasho-team-page .iw-team-group + .iw-team-group {
+    padding-top: 12px;
+    padding-bottom: 20px;
+  }
+
+  .iwasho-team-page .iw-team-heading {
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    margin-bottom: 28px;
+  }
+
+  .iwasho-team-page .iw-team-heading__line {
+    max-width: 48px;
+  }
+
+  .iwasho-team-page .iw-team-heading__line--after {
+    flex: 0 0 24px;
+    max-width: 24px;
+  }
+
+  .iwasho-team-page .iw-team-heading__sub {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .iwasho-team-page .iw-team-bottom {
+    padding-top: 44px;
+    padding-bottom: 48px;
+  }
+
+  .iwasho-team-page .iw-team-initiatives__panel {
+    flex-direction: column;
+  }
+
+  .iwasho-team-page .iw-team-initiative {
+    flex: 1 1 auto;
+  }
+
+  .iwasho-team-page .iw-team-initiative + .iw-team-initiative {
+    border-left: none;
+    border-top: 1px solid #e8edf3;
+  }
+
+  .iwasho-team-page .iw-team-cta__panel {
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .iwasho-team-page .iw-team-cta__title {
+    font-size: clamp(20px, 5vw, 26px);
+    line-height: 1.65;
+  }
+
+  .iwasho-team-page .iw-team-cta__lead {
+    font-size: 13px;
+    line-height: 1.85;
+  }
+
+  .iwasho-team-page .iw-team-cta__main {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .iwasho-team-page .iw-team-cta__content {
+    padding: 32px 24px 0;
+  }
+
+  .iwasho-team-page .iw-team-cta__visual {
+    min-height: 180px;
+    height: 180px;
+  }
+
+  .iwasho-team-page .iw-team-cta__visual img {
+    width: 100%;
+    object-fit: contain;
+    object-position: center bottom;
+    transform: none;
+  }
+
+  .iwasho-team-page .iw-team-cta__bar {
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 0;
+    padding: 20px 24px;
+  }
+
+  .iwasho-team-page .iw-team-cta__btn {
+    min-height: 44px;
+  }
+
+  .iwasho-team-page .iw-team-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .iwasho-team-page .iw-team-card {
+    padding: 22px 16px 22px;
+  }
+
+  .iwasho-team-page .iw-team-card__portrait {
+    width: 112px;
+    height: 112px;
+  }
+
+  .iwasho-team-page .iw-team-card__role {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  .iwasho-team-page .iw-team-card__desc {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .iwasho-team-page {
+    --iw-team-pad: 18px;
+  }
+
+  .iwasho-team-page .iw-team-heading__line {
+    max-width: 48px;
+  }
+
+  .iwasho-team-page .iw-team-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-team-page .iw-team-card__portrait {
+    width: 120px;
+    height: 120px;
+  }
+
+  .iwasho-team-page .iw-team-cta__bar {
+    padding: 20px 20px;
+  }
+
+  .iwasho-team-page .iw-team-cta__btn {
+    width: 100%;
+  }
+}

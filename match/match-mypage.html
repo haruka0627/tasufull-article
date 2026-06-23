@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>マイページ | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-mypage" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header" aria-label="ヘッダー">
+      <h1 class="match-header__title">マイページ</h1>
+    </header>
+
+    <main class="match-main">
+      <div class="match-mypage-profile">
+        <span class="match-mypage-profile__avatar" aria-hidden="true">🌸</span>
+        <div class="match-mypage-profile__body">
+          <p class="match-mypage-profile__name">さくら 27歳</p>
+          <p class="match-mypage-profile__meta">東京都 · 恋活・婚活</p>
+          <span class="match-status-badge match-status-badge--review">本人確認：審査中</span>
+        </div>
+        <a class="match-btn match-btn--secondary match-btn--sm" href="match-profile-create.html">編集</a>
+      </div>
+
+      <div class="match-p15-panel" data-match-p15-section>
+        <p class="match-p15-panel__title">プロフィール完成度</p>
+        <p class="match-completeness-text" data-match-completeness-text>プロフィール完成度 —%</p>
+        <div class="match-completeness-bar" data-match-completeness-bar role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="match-completeness-bar__fill"></span>
+        </div>
+        <ul class="match-completeness-items" data-match-completeness-items></ul>
+        <a class="match-ai-cta match-ai-cta--lavender" data-match-ai-cta data-match-completeness-ai-cta data-ai-mode="match-profile-coach" data-ai-q-template="マッチング用プロフィールを改善したいです。現在の完成度は{percent}%です。" href="#">TASFUL AI でプロフィール改善</a>
+      </div>
+
+      <div class="match-menu-group" data-match-p15-section>
+        <p class="match-menu-group__title">マッチング</p>
+        <ul class="match-menu-list">
+          <li>
+            <a class="match-menu-item" href="match-favorites.html">
+              <span class="match-menu-item__icon match-menu-item__icon--pink" aria-hidden="true">♡</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">お気に入り</span>
+                <span class="match-menu-item__sub">気になる相手を保存</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-menu-item" href="match-footprints.html">
+              <span class="match-menu-item__icon match-menu-item__icon--lavender" aria-hidden="true">👣</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">足あと</span>
+                <span class="match-menu-item__sub">プロフィールを見た人</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-menu-item" href="match-search-saved.html">
+              <span class="match-menu-item__icon" aria-hidden="true">☰</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">保存した検索条件</span>
+                <span class="match-menu-item__sub">前回の条件を再利用</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="match-menu-group">
+        <p class="match-menu-group__title">プロフィール</p>
+        <ul class="match-menu-list">
+          <li>
+            <a class="match-menu-item" href="match-profile-create.html">
+              <span class="match-menu-item__icon" aria-hidden="true">✎</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">プロフィール編集</span>
+                <span class="match-menu-item__sub">写真・自己紹介・趣味タグ</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-menu-item" href="match-verify.html">
+              <span class="match-menu-item__icon match-menu-item__icon--pink" aria-hidden="true">🪪</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">本人確認状況</span>
+                <span class="match-menu-item__sub">電話番号・身分証の確認</span>
+              </span>
+              <span class="match-menu-item__badge">審査中</span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="match-p15-panel" data-match-p15-section>
+        <p class="match-p15-panel__title">TASFUL AI 相談</p>
+        <p class="match-p15-list-item__meta" style="margin:0 0 8px">MATCH内にAI機能はありません。詳しい相談は TASFUL AI へ。</p>
+        <ul class="match-menu-list" style="margin-bottom:12px">
+          <li><a class="match-menu-item" href="match-ai-love-advice.html"><span class="match-menu-item__icon match-menu-item__icon--pink" aria-hidden="true">♥</span><span class="match-menu-item__body"><span class="match-menu-item__label">AI恋愛相談</span><span class="match-menu-item__sub">恋愛の悩み</span></span><span class="match-menu-item__chevron" aria-hidden="true">›</span></a></li>
+          <li><a class="match-menu-item" href="match-ai-marriage-advice.html"><span class="match-menu-item__icon match-menu-item__icon--mint" aria-hidden="true">💍</span><span class="match-menu-item__body"><span class="match-menu-item__label">AI婚活相談</span><span class="match-menu-item__sub">婚活のアドバイス</span></span><span class="match-menu-item__chevron" aria-hidden="true">›</span></a></li>
+          <li><a class="match-menu-item" href="match-ai-profile-coach.html"><span class="match-menu-item__icon match-menu-item__icon--lavender" aria-hidden="true">✎</span><span class="match-menu-item__body"><span class="match-menu-item__label">AIプロフィール改善</span><span class="match-menu-item__sub">写真・自己紹介</span></span><span class="match-menu-item__chevron" aria-hidden="true">›</span></a></li>
+          <li><a class="match-menu-item" href="match-ai-message-coach.html"><span class="match-menu-item__icon" aria-hidden="true">💬</span><span class="match-menu-item__body"><span class="match-menu-item__label">AIメッセージ相談</span><span class="match-menu-item__sub">返信の書き方</span></span><span class="match-menu-item__chevron" aria-hidden="true">›</span></a></li>
+          <li><a class="match-menu-item" href="match-ai-compatibility-detail.html"><span class="match-menu-item__icon match-menu-item__icon--pink" aria-hidden="true">◎</span><span class="match-menu-item__body"><span class="match-menu-item__label">AI相性分析</span><span class="match-menu-item__sub">詳しい相性</span></span><span class="match-menu-item__chevron" aria-hidden="true">›</span></a></li>
+          <li><a class="match-menu-item" href="match-ai-date-coach.html"><span class="match-menu-item__icon match-menu-item__icon--mint" aria-hidden="true">☕</span><span class="match-menu-item__body"><span class="match-menu-item__label">AIデート相談</span><span class="match-menu-item__sub">初デートのプラン</span></span><span class="match-menu-item__chevron" aria-hidden="true">›</span></a></li>
+        </ul>
+      </div>
+
+      <div class="match-menu-group">
+        <p class="match-menu-group__title">安全</p>
+        <ul class="match-menu-list">
+          <li>
+            <a class="match-menu-item" href="match-block.html">
+              <span class="match-safety-icon" aria-hidden="true">🚫</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">ブロック一覧</span>
+                <span class="match-menu-item__sub">ブロックしたユーザーを管理</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+          <li>
+            <a class="match-menu-item" href="match-report.html">
+              <span class="match-safety-icon match-safety-icon--lavender" aria-hidden="true">🚨</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">通報履歴</span>
+                <span class="match-menu-item__sub">過去の通報内容を確認</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="match-menu-group">
+        <p class="match-menu-group__title">設定</p>
+        <ul class="match-menu-list">
+          <li>
+            <button type="button" class="match-menu-item" data-match-mock-toast="通知設定は Phase 2 で実装予定です">
+              <span class="match-menu-item__icon match-menu-item__icon--pink" aria-hidden="true">💌</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">通知設定</span>
+                <span class="match-menu-item__sub">マッチ・メッセージの通知</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </button>
+          </li>
+          <li>
+            <button type="button" class="match-menu-item" data-match-mock-toast="アカウント設定は Phase 2 で実装予定です">
+              <span class="match-menu-item__icon match-menu-item__icon--lavender" aria-hidden="true">👤</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">アカウント設定</span>
+                <span class="match-menu-item__sub">メール・パスワード・退会</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </button>
+          </li>
+          <li>
+            <a class="match-menu-item" href="match-safety.html">
+              <span class="match-menu-item__icon match-menu-item__icon--mint" aria-hidden="true">🛡️</span>
+              <span class="match-menu-item__body">
+                <span class="match-menu-item__label">安心・安全について</span>
+                <span class="match-menu-item__sub">本人確認・通報・AI監視</span>
+              </span>
+              <span class="match-menu-item__chevron" aria-hidden="true">›</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </main>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link" href="match-swipe.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💘</span>
+          <span>スワイプ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-list.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💞</span>
+          <span>マッチ</span>
+          <span class="match-tabbar__badge">2</span>
+        </a>
+        <a class="match-tabbar__link" href="match-safety.html">
+          <span class="match-tabbar__icon" aria-hidden="true">🛡️</span>
+          <span>安心</span>
+        </a>
+        <a class="match-tabbar__link is-active" href="match-mypage.html">
+          <span class="match-tabbar__icon" aria-hidden="true">👤</span>
+          <span>マイページ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="../ai-workspace-links.js"></script>
+  <script src="match-ai-cta.js"></script>
+  <script src="match-p15-render.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-p15-wiring.js"></script>
+</body>
+</html>

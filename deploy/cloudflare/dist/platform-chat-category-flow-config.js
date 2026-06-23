@@ -81,7 +81,7 @@
       },
       expectedCta: {
         applyA: "応募者を確認する",
-        hiredB: "やり取りチャットを開く",
+        hiredB: "TALKを開く",
         review: "レビューする",
       },
       completionFlow: { type: "job_end_two_step", skipsPostChatCompletionFlow: true },
@@ -148,7 +148,7 @@
       },
       expectedCta: {
         requestA: "応募者/依頼者を確認する",
-        chat: "チャットを開く",
+        chat: "TALKを開く",
         review: "レビューする",
       },
       completionFlow: { type: "request_approve", requesterSide: "B", approverSide: "A" },
@@ -201,7 +201,7 @@
       },
       expectedCta: {
         purchase: /確認する/,
-        chat: "チャットを開く",
+        chat: "TALKを開く",
         review: "レビューする",
       },
       completionFlow: { type: "request_approve", requesterSide: "B", approverSide: "A", manualTransfer: true },

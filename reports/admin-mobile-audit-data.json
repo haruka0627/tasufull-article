@@ -1,0 +1,2348 @@
+{
+  "pages": [
+    {
+      "id": "builder-admin-dash",
+      "path": "/builder-admin/admin-index.html",
+      "label": "Builder Admin ダッシュボード",
+      "cat": "builder-admin",
+      "status": "スマホ未対応",
+      "highMobile": 2,
+      "midMobile": 2,
+      "overflow390": false
+    },
+    {
+      "id": "builder-admin-threads",
+      "path": "/builder-admin/threads.html",
+      "label": "Builder Admin スレッド管理",
+      "cat": "builder-admin",
+      "status": "対応済み（軽微のみ）",
+      "highMobile": 0,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "admin-applications",
+      "path": "/builder/admin-applications.html",
+      "label": "Builder 応募管理",
+      "cat": "builder-admin",
+      "status": "概ね対応（MID残）",
+      "highMobile": 0,
+      "midMobile": 2,
+      "overflow390": false
+    },
+    {
+      "id": "admin-partners",
+      "path": "/builder/admin-partners.html",
+      "label": "Builder パートナー検索",
+      "cat": "builder-admin",
+      "status": "概ね対応（MID残）",
+      "highMobile": 0,
+      "midMobile": 2,
+      "overflow390": false
+    },
+    {
+      "id": "admin-dispatch",
+      "path": "/builder/admin-dispatch.html",
+      "label": "Builder 案件手配",
+      "cat": "builder-admin",
+      "status": "スマホ未対応",
+      "highMobile": 2,
+      "midMobile": 2,
+      "overflow390": false
+    },
+    {
+      "id": "admin-calendar",
+      "path": "/builder/admin-calendar.html",
+      "label": "Builder 案件カレンダー",
+      "cat": "builder-admin",
+      "status": "部分対応（要改善）",
+      "highMobile": 0,
+      "midMobile": 4,
+      "overflow390": false
+    },
+    {
+      "id": "admin-notifications",
+      "path": "/builder/admin-notifications.html",
+      "label": "Builder 通知送信",
+      "cat": "builder-admin",
+      "status": "対応済み（軽微のみ）",
+      "highMobile": 0,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "admin-reviews",
+      "path": "/builder/admin-reviews.html",
+      "label": "Builder 審査管理",
+      "cat": "builder-admin",
+      "status": "概ね対応（MID残）",
+      "highMobile": 0,
+      "midMobile": 2,
+      "overflow390": false
+    },
+    {
+      "id": "admin-partner-evaluations",
+      "path": "/builder/admin-partner-evaluations.html",
+      "label": "Builder パートナー評価",
+      "cat": "builder-admin",
+      "status": "対応済み（軽微のみ）",
+      "highMobile": 0,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "ops-dashboard",
+      "path": "/admin-operations-dashboard.html",
+      "label": "AI運営司令塔",
+      "cat": "ops",
+      "status": "スマホ未対応",
+      "highMobile": 4,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "ai-ops-center",
+      "path": "/admin-ai-operations-center.html",
+      "label": "AI運営センター (API)",
+      "cat": "ops",
+      "status": "スマホ未対応",
+      "highMobile": 2,
+      "midMobile": 2,
+      "overflow390": false
+    },
+    {
+      "id": "talk-ops-room",
+      "path": "/talk-ops-room.html",
+      "label": "運営TALKルーム (旧)",
+      "cat": "ops",
+      "status": "スマホ未対応",
+      "highMobile": 2,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "support-trouble",
+      "path": "/support-trouble-center.html",
+      "label": "重要問い合わせセンター",
+      "cat": "support",
+      "status": "スマホ未対応",
+      "highMobile": 2,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "anpi-dashboard",
+      "path": "/anpi-dashboard.html",
+      "label": "安否ダッシュボード",
+      "cat": "anpi",
+      "status": "スマホ未対応",
+      "highMobile": 2,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "anpi-line-admin",
+      "path": "/anpi-line-admin.html",
+      "label": "LINE運用 (管理者)",
+      "cat": "anpi",
+      "status": "スマホ未対応",
+      "highMobile": 2,
+      "midMobile": 0,
+      "overflow390": false
+    },
+    {
+      "id": "anpi-notifications",
+      "path": "/anpi-notifications.html",
+      "label": "安否通知センター",
+      "cat": "anpi",
+      "status": "スマホ未対応",
+      "highMobile": 4,
+      "midMobile": 0,
+      "overflow390": false
+    }
+  ],
+  "issues": [
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（390px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder-admin/admin-index.html",
+      "width": 390,
+      "page": "Builder Admin ダッシュボード",
+      "pageId": "builder-admin-dash",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 1 件 — [{\"text\":\"利用者Builderへ\",\"w\":91,\"h\":17,\"cls\":\"builder-admin-back\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/builder-admin/admin-index.html",
+      "width": 390,
+      "page": "Builder Admin ダッシュボード",
+      "pageId": "builder-admin-dash",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "LOW",
+      "area": "ボタン",
+      "detail": "44px未満 1 件",
+      "fix": "主要操作のみ 44px 確保",
+      "priority": 5,
+      "url": "/builder-admin/threads.html",
+      "width": 390,
+      "page": "Builder Admin スレッド管理",
+      "pageId": "builder-admin-threads",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（390px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder/admin-applications.html",
+      "width": 390,
+      "page": "Builder 応募管理",
+      "pageId": "admin-applications",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "LOW",
+      "area": "ボタン",
+      "detail": "44px未満 3 件",
+      "fix": "主要操作のみ 44px 確保",
+      "priority": 5,
+      "url": "/builder/admin-applications.html",
+      "width": 390,
+      "page": "Builder 応募管理",
+      "pageId": "admin-applications",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "ボタン",
+      "detail": "44px未満 8 件",
+      "fix": "主要CTA・戻る・検索に min-height:44px",
+      "priority": 4,
+      "url": "/builder/admin-partners.html",
+      "width": 390,
+      "page": "Builder パートナー検索",
+      "pageId": "admin-partners",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（390px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder/admin-dispatch.html",
+      "width": 390,
+      "page": "Builder 案件手配",
+      "pageId": "admin-dispatch",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 3 件 — [{\"text\":\"案件詳細 ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"},{\"text\":\"スレッド ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/builder/admin-dispatch.html",
+      "width": 390,
+      "page": "Builder 案件手配",
+      "pageId": "admin-dispatch",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "ボタン",
+      "detail": "44px未満 8 件",
+      "fix": "主要CTA・戻る・検索に min-height:44px",
+      "priority": 4,
+      "url": "/builder/admin-calendar.html",
+      "width": 390,
+      "page": "Builder 案件カレンダー",
+      "pageId": "admin-calendar",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "タブ/フィルター",
+      "detail": "高さ40px未満 3 件",
+      "fix": "min-height:44px、横スクロール tablist",
+      "priority": 4,
+      "url": "/builder/admin-calendar.html",
+      "width": 390,
+      "page": "Builder 案件カレンダー",
+      "pageId": "admin-calendar",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "LOW",
+      "area": "ボタン",
+      "detail": "44px未満 3 件",
+      "fix": "主要操作のみ 44px 確保",
+      "priority": 5,
+      "url": "/builder/admin-notifications.html",
+      "width": 390,
+      "page": "Builder 通知送信",
+      "pageId": "admin-notifications",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（390px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder/admin-reviews.html",
+      "width": 390,
+      "page": "Builder 審査管理",
+      "pageId": "admin-reviews",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "LOW",
+      "area": "ボタン",
+      "detail": "44px未満 3 件",
+      "fix": "主要操作のみ 44px 確保",
+      "priority": 5,
+      "url": "/builder/admin-reviews.html",
+      "width": 390,
+      "page": "Builder 審査管理",
+      "pageId": "admin-reviews",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "LOW",
+      "area": "ボタン",
+      "detail": "44px未満 3 件",
+      "fix": "主要操作のみ 44px 確保",
+      "priority": 5,
+      "url": "/builder/admin-partner-evaluations.html",
+      "width": 390,
+      "page": "Builder パートナー評価",
+      "pageId": "admin-partner-evaluations",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "HIGH",
+      "area": "サイドバー",
+      "detail": "sidebar full-screen 390px — no backdrop?",
+      "fix": "768px以下で off-canvas + ハンバーガー、デフォルト非表示",
+      "priority": 1,
+      "url": "/admin-operations-dashboard.html",
+      "width": 390,
+      "page": "AI運営司令塔",
+      "pageId": "ops-dashboard",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 4 件 — [{\"text\":\"✉\\n          問い合わせ\\n      \",\"w\":103,\"h\":35,\"cls\":\"ops-ai-nav__item\"},{\"text\":\"⚠\\n          通報\\n         \",\"w\":67,\"h\":35,\"cls\":\"ops-ai-nav__item\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/admin-operations-dashboard.html",
+      "width": 390,
+      "page": "AI運営司令塔",
+      "pageId": "ops-dashboard",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 6 件 — [{\"text\":\"← Builder Admin\",\"w\":110,\"h\":20,\"cls\":\"ai-ops-back\"},{\"text\":\"問い合わせ\",\"w\":91,\"h\":35,\"cls\":\"ai-ops-tab\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/admin-ai-operations-center.html",
+      "width": 390,
+      "page": "AI運営センター (API)",
+      "pageId": "ai-ops-center",
+      "cat": "ops"
+    },
+    {
+      "severity": "MID",
+      "area": "タブ/フィルター",
+      "detail": "高さ40px未満 8 件",
+      "fix": "min-height:44px、横スクロール tablist",
+      "priority": 4,
+      "url": "/admin-ai-operations-center.html",
+      "width": 390,
+      "page": "AI運営センター (API)",
+      "pageId": "ai-ops-center",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 1 件 — [{\"text\":\"AI運営司令塔\",\"w\":78,\"h\":19,\"cls\":\"\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/talk-ops-room.html",
+      "width": 390,
+      "page": "運営TALKルーム (旧)",
+      "pageId": "talk-ops-room",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 2 件 — [{\"text\":\"TASFUL Admin\",\"w\":85,\"h\":17,\"cls\":\"support-trouble-crumb__link\"},{\"text\":\"AI運営司令塔\",\"w\":71,\"h\":17,\"cls\":\"support-trouble-crumb__link\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/support-trouble-center.html",
+      "width": 390,
+      "page": "重要問い合わせセンター",
+      "pageId": "support-trouble",
+      "cat": "support"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 3 件 — [{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"},{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/anpi-dashboard.html",
+      "width": 390,
+      "page": "安否ダッシュボード",
+      "pageId": "anpi-dashboard",
+      "cat": "anpi"
+    },
+    {
+      "severity": "HIGH",
+      "area": "固定ヘッダー/CTA",
+      "detail": "fixed header+CTA gap ~-61px",
+      "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+      "priority": 2,
+      "url": "/anpi-line-admin.html",
+      "width": 390,
+      "page": "LINE運用 (管理者)",
+      "pageId": "anpi-line-admin",
+      "cat": "anpi"
+    },
+    {
+      "severity": "LOW",
+      "area": "ボタン",
+      "detail": "44px未満 3 件",
+      "fix": "主要操作のみ 44px 確保",
+      "priority": 5,
+      "url": "/anpi-line-admin.html",
+      "width": 390,
+      "page": "LINE運用 (管理者)",
+      "pageId": "anpi-line-admin",
+      "cat": "anpi"
+    },
+    {
+      "severity": "HIGH",
+      "area": "固定ヘッダー/CTA",
+      "detail": "fixed header+CTA gap ~-61px",
+      "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+      "priority": 2,
+      "url": "/anpi-notifications.html",
+      "width": 390,
+      "page": "安否通知センター",
+      "pageId": "anpi-notifications",
+      "cat": "anpi"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 1 件 — [{\"text\":\"更新\",\"w\":50,\"h\":32,\"cls\":\"anpi-notifications-refresh\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/anpi-notifications.html",
+      "width": 390,
+      "page": "安否通知センター",
+      "pageId": "anpi-notifications",
+      "cat": "anpi"
+    },
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（430px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder-admin/admin-index.html",
+      "width": 430,
+      "page": "Builder Admin ダッシュボード",
+      "pageId": "builder-admin-dash",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 1 件 — [{\"text\":\"利用者Builderへ\",\"w\":91,\"h\":17,\"cls\":\"builder-admin-back\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/builder-admin/admin-index.html",
+      "width": 430,
+      "page": "Builder Admin ダッシュボード",
+      "pageId": "builder-admin-dash",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（430px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder/admin-applications.html",
+      "width": 430,
+      "page": "Builder 応募管理",
+      "pageId": "admin-applications",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "ボタン",
+      "detail": "44px未満 8 件",
+      "fix": "主要CTA・戻る・検索に min-height:44px",
+      "priority": 4,
+      "url": "/builder/admin-partners.html",
+      "width": 430,
+      "page": "Builder パートナー検索",
+      "pageId": "admin-partners",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（430px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder/admin-dispatch.html",
+      "width": 430,
+      "page": "Builder 案件手配",
+      "pageId": "admin-dispatch",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 3 件 — [{\"text\":\"案件詳細 ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"},{\"text\":\"スレッド ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/builder/admin-dispatch.html",
+      "width": 430,
+      "page": "Builder 案件手配",
+      "pageId": "admin-dispatch",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "ボタン",
+      "detail": "44px未満 8 件",
+      "fix": "主要CTA・戻る・検索に min-height:44px",
+      "priority": 4,
+      "url": "/builder/admin-calendar.html",
+      "width": 430,
+      "page": "Builder 案件カレンダー",
+      "pageId": "admin-calendar",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "タブ/フィルター",
+      "detail": "高さ40px未満 3 件",
+      "fix": "min-height:44px、横スクロール tablist",
+      "priority": 4,
+      "url": "/builder/admin-calendar.html",
+      "width": 430,
+      "page": "Builder 案件カレンダー",
+      "pageId": "admin-calendar",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "MID",
+      "area": "数値カード",
+      "detail": "stat/KPI grid が 2 列（430px）",
+      "fix": "640px以下で grid-template-columns:1fr",
+      "priority": 3,
+      "url": "/builder/admin-reviews.html",
+      "width": 430,
+      "page": "Builder 審査管理",
+      "pageId": "admin-reviews",
+      "cat": "builder-admin"
+    },
+    {
+      "severity": "HIGH",
+      "area": "サイドバー",
+      "detail": "sidebar full-screen 430px — no backdrop?",
+      "fix": "768px以下で off-canvas + ハンバーガー、デフォルト非表示",
+      "priority": 1,
+      "url": "/admin-operations-dashboard.html",
+      "width": 430,
+      "page": "AI運営司令塔",
+      "pageId": "ops-dashboard",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 4 件 — [{\"text\":\"✉\\n          問い合わせ\\n      \",\"w\":103,\"h\":35,\"cls\":\"ops-ai-nav__item\"},{\"text\":\"⚠\\n          通報\\n         \",\"w\":67,\"h\":35,\"cls\":\"ops-ai-nav__item\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/admin-operations-dashboard.html",
+      "width": 430,
+      "page": "AI運営司令塔",
+      "pageId": "ops-dashboard",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 6 件 — [{\"text\":\"← Builder Admin\",\"w\":110,\"h\":20,\"cls\":\"ai-ops-back\"},{\"text\":\"問い合わせ\",\"w\":91,\"h\":35,\"cls\":\"ai-ops-tab\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/admin-ai-operations-center.html",
+      "width": 430,
+      "page": "AI運営センター (API)",
+      "pageId": "ai-ops-center",
+      "cat": "ops"
+    },
+    {
+      "severity": "MID",
+      "area": "タブ/フィルター",
+      "detail": "高さ40px未満 8 件",
+      "fix": "min-height:44px、横スクロール tablist",
+      "priority": 4,
+      "url": "/admin-ai-operations-center.html",
+      "width": 430,
+      "page": "AI運営センター (API)",
+      "pageId": "ai-ops-center",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 1 件 — [{\"text\":\"AI運営司令塔\",\"w\":78,\"h\":19,\"cls\":\"\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/talk-ops-room.html",
+      "width": 430,
+      "page": "運営TALKルーム (旧)",
+      "pageId": "talk-ops-room",
+      "cat": "ops"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 2 件 — [{\"text\":\"TASFUL Admin\",\"w\":85,\"h\":17,\"cls\":\"support-trouble-crumb__link\"},{\"text\":\"AI運営司令塔\",\"w\":71,\"h\":17,\"cls\":\"support-trouble-crumb__link\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/support-trouble-center.html",
+      "width": 430,
+      "page": "重要問い合わせセンター",
+      "pageId": "support-trouble",
+      "cat": "support"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 3 件 — [{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"},{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/anpi-dashboard.html",
+      "width": 430,
+      "page": "安否ダッシュボード",
+      "pageId": "anpi-dashboard",
+      "cat": "anpi"
+    },
+    {
+      "severity": "HIGH",
+      "area": "固定ヘッダー/CTA",
+      "detail": "fixed header+CTA gap ~-61px",
+      "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+      "priority": 2,
+      "url": "/anpi-line-admin.html",
+      "width": 430,
+      "page": "LINE運用 (管理者)",
+      "pageId": "anpi-line-admin",
+      "cat": "anpi"
+    },
+    {
+      "severity": "HIGH",
+      "area": "固定ヘッダー/CTA",
+      "detail": "fixed header+CTA gap ~-61px",
+      "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+      "priority": 2,
+      "url": "/anpi-notifications.html",
+      "width": 430,
+      "page": "安否通知センター",
+      "pageId": "anpi-notifications",
+      "cat": "anpi"
+    },
+    {
+      "severity": "HIGH",
+      "area": "ボタン/リンク",
+      "detail": "極小タップ 1 件 — [{\"text\":\"更新\",\"w\":50,\"h\":32,\"cls\":\"anpi-notifications-refresh\"}]",
+      "fix": "インライン link を block 化、min-height:44px",
+      "priority": 1,
+      "url": "/anpi-notifications.html",
+      "width": 430,
+      "page": "安否通知センター",
+      "pageId": "anpi-notifications",
+      "cat": "anpi"
+    }
+  ],
+  "results": [
+    {
+      "id": "builder-admin-dash",
+      "path": "/builder-admin/admin-index.html",
+      "label": "Builder Admin ダッシュボード",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（390px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder-admin/admin-index.html",
+          "width": 390,
+          "page": "Builder Admin ダッシュボード",
+          "pageId": "builder-admin-dash",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 1 件 — [{\"text\":\"利用者Builderへ\",\"w\":91,\"h\":17,\"cls\":\"builder-admin-back\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/builder-admin/admin-index.html",
+          "width": 390,
+          "page": "Builder Admin ダッシュボード",
+          "pageId": "builder-admin-dash",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-dash-390.png"
+    },
+    {
+      "id": "builder-admin-threads",
+      "path": "/builder-admin/threads.html",
+      "label": "Builder Admin スレッド管理",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "LOW",
+          "area": "ボタン",
+          "detail": "44px未満 1 件",
+          "fix": "主要操作のみ 44px 確保",
+          "priority": 5,
+          "url": "/builder-admin/threads.html",
+          "width": 390,
+          "page": "Builder Admin スレッド管理",
+          "pageId": "builder-admin-threads",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-threads-390.png"
+    },
+    {
+      "id": "admin-applications",
+      "path": "/builder/admin-applications.html",
+      "label": "Builder 応募管理",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（390px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder/admin-applications.html",
+          "width": 390,
+          "page": "Builder 応募管理",
+          "pageId": "admin-applications",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "LOW",
+          "area": "ボタン",
+          "detail": "44px未満 3 件",
+          "fix": "主要操作のみ 44px 確保",
+          "priority": 5,
+          "url": "/builder/admin-applications.html",
+          "width": 390,
+          "page": "Builder 応募管理",
+          "pageId": "admin-applications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-applications-390.png"
+    },
+    {
+      "id": "admin-partners",
+      "path": "/builder/admin-partners.html",
+      "label": "Builder パートナー検索",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "ボタン",
+          "detail": "44px未満 8 件",
+          "fix": "主要CTA・戻る・検索に min-height:44px",
+          "priority": 4,
+          "url": "/builder/admin-partners.html",
+          "width": 390,
+          "page": "Builder パートナー検索",
+          "pageId": "admin-partners",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partners-390.png"
+    },
+    {
+      "id": "admin-dispatch",
+      "path": "/builder/admin-dispatch.html",
+      "label": "Builder 案件手配",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（390px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder/admin-dispatch.html",
+          "width": 390,
+          "page": "Builder 案件手配",
+          "pageId": "admin-dispatch",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 3 件 — [{\"text\":\"案件詳細 ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"},{\"text\":\"スレッド ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/builder/admin-dispatch.html",
+          "width": 390,
+          "page": "Builder 案件手配",
+          "pageId": "admin-dispatch",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-dispatch-390.png"
+    },
+    {
+      "id": "admin-calendar",
+      "path": "/builder/admin-calendar.html",
+      "label": "Builder 案件カレンダー",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "ボタン",
+          "detail": "44px未満 8 件",
+          "fix": "主要CTA・戻る・検索に min-height:44px",
+          "priority": 4,
+          "url": "/builder/admin-calendar.html",
+          "width": 390,
+          "page": "Builder 案件カレンダー",
+          "pageId": "admin-calendar",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "MID",
+          "area": "タブ/フィルター",
+          "detail": "高さ40px未満 3 件",
+          "fix": "min-height:44px、横スクロール tablist",
+          "priority": 4,
+          "url": "/builder/admin-calendar.html",
+          "width": 390,
+          "page": "Builder 案件カレンダー",
+          "pageId": "admin-calendar",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-calendar-390.png"
+    },
+    {
+      "id": "admin-notifications",
+      "path": "/builder/admin-notifications.html",
+      "label": "Builder 通知送信",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "LOW",
+          "area": "ボタン",
+          "detail": "44px未満 3 件",
+          "fix": "主要操作のみ 44px 確保",
+          "priority": 5,
+          "url": "/builder/admin-notifications.html",
+          "width": 390,
+          "page": "Builder 通知送信",
+          "pageId": "admin-notifications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-notifications-390.png"
+    },
+    {
+      "id": "admin-reviews",
+      "path": "/builder/admin-reviews.html",
+      "label": "Builder 審査管理",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（390px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder/admin-reviews.html",
+          "width": 390,
+          "page": "Builder 審査管理",
+          "pageId": "admin-reviews",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "LOW",
+          "area": "ボタン",
+          "detail": "44px未満 3 件",
+          "fix": "主要操作のみ 44px 確保",
+          "priority": 5,
+          "url": "/builder/admin-reviews.html",
+          "width": 390,
+          "page": "Builder 審査管理",
+          "pageId": "admin-reviews",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-reviews-390.png"
+    },
+    {
+      "id": "admin-partner-evaluations",
+      "path": "/builder/admin-partner-evaluations.html",
+      "label": "Builder パートナー評価",
+      "cat": "builder-admin",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "LOW",
+          "area": "ボタン",
+          "detail": "44px未満 3 件",
+          "fix": "主要操作のみ 44px 確保",
+          "priority": 5,
+          "url": "/builder/admin-partner-evaluations.html",
+          "width": 390,
+          "page": "Builder パートナー評価",
+          "pageId": "admin-partner-evaluations",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partner-evaluations-390.png"
+    },
+    {
+      "id": "ops-dashboard",
+      "path": "/admin-operations-dashboard.html",
+      "label": "AI運営司令塔",
+      "cat": "ops",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "サイドバー",
+          "detail": "sidebar full-screen 390px — no backdrop?",
+          "fix": "768px以下で off-canvas + ハンバーガー、デフォルト非表示",
+          "priority": 1,
+          "url": "/admin-operations-dashboard.html",
+          "width": 390,
+          "page": "AI運営司令塔",
+          "pageId": "ops-dashboard",
+          "cat": "ops"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 4 件 — [{\"text\":\"✉\\n          問い合わせ\\n      \",\"w\":103,\"h\":35,\"cls\":\"ops-ai-nav__item\"},{\"text\":\"⚠\\n          通報\\n         \",\"w\":67,\"h\":35,\"cls\":\"ops-ai-nav__item\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/admin-operations-dashboard.html",
+          "width": 390,
+          "page": "AI運営司令塔",
+          "pageId": "ops-dashboard",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ops-dashboard-390.png"
+    },
+    {
+      "id": "ai-ops-center",
+      "path": "/admin-ai-operations-center.html",
+      "label": "AI運営センター (API)",
+      "cat": "ops",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 6 件 — [{\"text\":\"← Builder Admin\",\"w\":110,\"h\":20,\"cls\":\"ai-ops-back\"},{\"text\":\"問い合わせ\",\"w\":91,\"h\":35,\"cls\":\"ai-ops-tab\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/admin-ai-operations-center.html",
+          "width": 390,
+          "page": "AI運営センター (API)",
+          "pageId": "ai-ops-center",
+          "cat": "ops"
+        },
+        {
+          "severity": "MID",
+          "area": "タブ/フィルター",
+          "detail": "高さ40px未満 8 件",
+          "fix": "min-height:44px、横スクロール tablist",
+          "priority": 4,
+          "url": "/admin-ai-operations-center.html",
+          "width": 390,
+          "page": "AI運営センター (API)",
+          "pageId": "ai-ops-center",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ai-ops-center-390.png"
+    },
+    {
+      "id": "talk-ops-room",
+      "path": "/talk-ops-room.html",
+      "label": "運営TALKルーム (旧)",
+      "cat": "ops",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 1 件 — [{\"text\":\"AI運営司令塔\",\"w\":78,\"h\":19,\"cls\":\"\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/talk-ops-room.html",
+          "width": 390,
+          "page": "運営TALKルーム (旧)",
+          "pageId": "talk-ops-room",
+          "cat": "ops"
+        }
+      ],
+      "shot": "talk-ops-room-390.png"
+    },
+    {
+      "id": "support-trouble",
+      "path": "/support-trouble-center.html",
+      "label": "重要問い合わせセンター",
+      "cat": "support",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 2 件 — [{\"text\":\"TASFUL Admin\",\"w\":85,\"h\":17,\"cls\":\"support-trouble-crumb__link\"},{\"text\":\"AI運営司令塔\",\"w\":71,\"h\":17,\"cls\":\"support-trouble-crumb__link\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/support-trouble-center.html",
+          "width": 390,
+          "page": "重要問い合わせセンター",
+          "pageId": "support-trouble",
+          "cat": "support"
+        }
+      ],
+      "shot": "support-trouble-390.png"
+    },
+    {
+      "id": "anpi-dashboard",
+      "path": "/anpi-dashboard.html",
+      "label": "安否ダッシュボード",
+      "cat": "anpi",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 3 件 — [{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"},{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/anpi-dashboard.html",
+          "width": 390,
+          "page": "安否ダッシュボード",
+          "pageId": "anpi-dashboard",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-dashboard-390.png"
+    },
+    {
+      "id": "anpi-line-admin",
+      "path": "/anpi-line-admin.html",
+      "label": "LINE運用 (管理者)",
+      "cat": "anpi",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "固定ヘッダー/CTA",
+          "detail": "fixed header+CTA gap ~-61px",
+          "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+          "priority": 2,
+          "url": "/anpi-line-admin.html",
+          "width": 390,
+          "page": "LINE運用 (管理者)",
+          "pageId": "anpi-line-admin",
+          "cat": "anpi"
+        },
+        {
+          "severity": "LOW",
+          "area": "ボタン",
+          "detail": "44px未満 3 件",
+          "fix": "主要操作のみ 44px 確保",
+          "priority": 5,
+          "url": "/anpi-line-admin.html",
+          "width": 390,
+          "page": "LINE運用 (管理者)",
+          "pageId": "anpi-line-admin",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-line-admin-390.png"
+    },
+    {
+      "id": "anpi-notifications",
+      "path": "/anpi-notifications.html",
+      "label": "安否通知センター",
+      "cat": "anpi",
+      "width": 390,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "固定ヘッダー/CTA",
+          "detail": "fixed header+CTA gap ~-61px",
+          "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+          "priority": 2,
+          "url": "/anpi-notifications.html",
+          "width": 390,
+          "page": "安否通知センター",
+          "pageId": "anpi-notifications",
+          "cat": "anpi"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 1 件 — [{\"text\":\"更新\",\"w\":50,\"h\":32,\"cls\":\"anpi-notifications-refresh\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/anpi-notifications.html",
+          "width": 390,
+          "page": "安否通知センター",
+          "pageId": "anpi-notifications",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-notifications-390.png"
+    },
+    {
+      "id": "builder-admin-dash",
+      "path": "/builder-admin/admin-index.html",
+      "label": "Builder Admin ダッシュボード",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（430px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder-admin/admin-index.html",
+          "width": 430,
+          "page": "Builder Admin ダッシュボード",
+          "pageId": "builder-admin-dash",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 1 件 — [{\"text\":\"利用者Builderへ\",\"w\":91,\"h\":17,\"cls\":\"builder-admin-back\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/builder-admin/admin-index.html",
+          "width": 430,
+          "page": "Builder Admin ダッシュボード",
+          "pageId": "builder-admin-dash",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-dash-430.png"
+    },
+    {
+      "id": "builder-admin-threads",
+      "path": "/builder-admin/threads.html",
+      "label": "Builder Admin スレッド管理",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder-admin/threads.html",
+          "width": 430,
+          "page": "Builder Admin スレッド管理",
+          "pageId": "builder-admin-threads",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-threads-430.png"
+    },
+    {
+      "id": "admin-applications",
+      "path": "/builder/admin-applications.html",
+      "label": "Builder 応募管理",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（430px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder/admin-applications.html",
+          "width": 430,
+          "page": "Builder 応募管理",
+          "pageId": "admin-applications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-applications-430.png"
+    },
+    {
+      "id": "admin-partners",
+      "path": "/builder/admin-partners.html",
+      "label": "Builder パートナー検索",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "ボタン",
+          "detail": "44px未満 8 件",
+          "fix": "主要CTA・戻る・検索に min-height:44px",
+          "priority": 4,
+          "url": "/builder/admin-partners.html",
+          "width": 430,
+          "page": "Builder パートナー検索",
+          "pageId": "admin-partners",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partners-430.png"
+    },
+    {
+      "id": "admin-dispatch",
+      "path": "/builder/admin-dispatch.html",
+      "label": "Builder 案件手配",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（430px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder/admin-dispatch.html",
+          "width": 430,
+          "page": "Builder 案件手配",
+          "pageId": "admin-dispatch",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 3 件 — [{\"text\":\"案件詳細 ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"},{\"text\":\"スレッド ›\",\"w\":55,\"h\":17,\"cls\":\"builder-admin-notification-link\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/builder/admin-dispatch.html",
+          "width": 430,
+          "page": "Builder 案件手配",
+          "pageId": "admin-dispatch",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-dispatch-430.png"
+    },
+    {
+      "id": "admin-calendar",
+      "path": "/builder/admin-calendar.html",
+      "label": "Builder 案件カレンダー",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "ボタン",
+          "detail": "44px未満 8 件",
+          "fix": "主要CTA・戻る・検索に min-height:44px",
+          "priority": 4,
+          "url": "/builder/admin-calendar.html",
+          "width": 430,
+          "page": "Builder 案件カレンダー",
+          "pageId": "admin-calendar",
+          "cat": "builder-admin"
+        },
+        {
+          "severity": "MID",
+          "area": "タブ/フィルター",
+          "detail": "高さ40px未満 3 件",
+          "fix": "min-height:44px、横スクロール tablist",
+          "priority": 4,
+          "url": "/builder/admin-calendar.html",
+          "width": 430,
+          "page": "Builder 案件カレンダー",
+          "pageId": "admin-calendar",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-calendar-430.png"
+    },
+    {
+      "id": "admin-notifications",
+      "path": "/builder/admin-notifications.html",
+      "label": "Builder 通知送信",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-notifications.html",
+          "width": 430,
+          "page": "Builder 通知送信",
+          "pageId": "admin-notifications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-notifications-430.png"
+    },
+    {
+      "id": "admin-reviews",
+      "path": "/builder/admin-reviews.html",
+      "label": "Builder 審査管理",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "MID",
+          "area": "数値カード",
+          "detail": "stat/KPI grid が 2 列（430px）",
+          "fix": "640px以下で grid-template-columns:1fr",
+          "priority": 3,
+          "url": "/builder/admin-reviews.html",
+          "width": 430,
+          "page": "Builder 審査管理",
+          "pageId": "admin-reviews",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-reviews-430.png"
+    },
+    {
+      "id": "admin-partner-evaluations",
+      "path": "/builder/admin-partner-evaluations.html",
+      "label": "Builder パートナー評価",
+      "cat": "builder-admin",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-partner-evaluations.html",
+          "width": 430,
+          "page": "Builder パートナー評価",
+          "pageId": "admin-partner-evaluations",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partner-evaluations-430.png"
+    },
+    {
+      "id": "ops-dashboard",
+      "path": "/admin-operations-dashboard.html",
+      "label": "AI運営司令塔",
+      "cat": "ops",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "サイドバー",
+          "detail": "sidebar full-screen 430px — no backdrop?",
+          "fix": "768px以下で off-canvas + ハンバーガー、デフォルト非表示",
+          "priority": 1,
+          "url": "/admin-operations-dashboard.html",
+          "width": 430,
+          "page": "AI運営司令塔",
+          "pageId": "ops-dashboard",
+          "cat": "ops"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 4 件 — [{\"text\":\"✉\\n          問い合わせ\\n      \",\"w\":103,\"h\":35,\"cls\":\"ops-ai-nav__item\"},{\"text\":\"⚠\\n          通報\\n         \",\"w\":67,\"h\":35,\"cls\":\"ops-ai-nav__item\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/admin-operations-dashboard.html",
+          "width": 430,
+          "page": "AI運営司令塔",
+          "pageId": "ops-dashboard",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ops-dashboard-430.png"
+    },
+    {
+      "id": "ai-ops-center",
+      "path": "/admin-ai-operations-center.html",
+      "label": "AI運営センター (API)",
+      "cat": "ops",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 6 件 — [{\"text\":\"← Builder Admin\",\"w\":110,\"h\":20,\"cls\":\"ai-ops-back\"},{\"text\":\"問い合わせ\",\"w\":91,\"h\":35,\"cls\":\"ai-ops-tab\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/admin-ai-operations-center.html",
+          "width": 430,
+          "page": "AI運営センター (API)",
+          "pageId": "ai-ops-center",
+          "cat": "ops"
+        },
+        {
+          "severity": "MID",
+          "area": "タブ/フィルター",
+          "detail": "高さ40px未満 8 件",
+          "fix": "min-height:44px、横スクロール tablist",
+          "priority": 4,
+          "url": "/admin-ai-operations-center.html",
+          "width": 430,
+          "page": "AI運営センター (API)",
+          "pageId": "ai-ops-center",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ai-ops-center-430.png"
+    },
+    {
+      "id": "talk-ops-room",
+      "path": "/talk-ops-room.html",
+      "label": "運営TALKルーム (旧)",
+      "cat": "ops",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 1 件 — [{\"text\":\"AI運営司令塔\",\"w\":78,\"h\":19,\"cls\":\"\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/talk-ops-room.html",
+          "width": 430,
+          "page": "運営TALKルーム (旧)",
+          "pageId": "talk-ops-room",
+          "cat": "ops"
+        }
+      ],
+      "shot": "talk-ops-room-430.png"
+    },
+    {
+      "id": "support-trouble",
+      "path": "/support-trouble-center.html",
+      "label": "重要問い合わせセンター",
+      "cat": "support",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 2 件 — [{\"text\":\"TASFUL Admin\",\"w\":85,\"h\":17,\"cls\":\"support-trouble-crumb__link\"},{\"text\":\"AI運営司令塔\",\"w\":71,\"h\":17,\"cls\":\"support-trouble-crumb__link\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/support-trouble-center.html",
+          "width": 430,
+          "page": "重要問い合わせセンター",
+          "pageId": "support-trouble",
+          "cat": "support"
+        }
+      ],
+      "shot": "support-trouble-430.png"
+    },
+    {
+      "id": "anpi-dashboard",
+      "path": "/anpi-dashboard.html",
+      "label": "安否ダッシュボード",
+      "cat": "anpi",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 3 件 — [{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"},{\"text\":\"詳細を見る ›\",\"w\":95,\"h\":34,\"cls\":\"anpi-stat-card__action\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/anpi-dashboard.html",
+          "width": 430,
+          "page": "安否ダッシュボード",
+          "pageId": "anpi-dashboard",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-dashboard-430.png"
+    },
+    {
+      "id": "anpi-line-admin",
+      "path": "/anpi-line-admin.html",
+      "label": "LINE運用 (管理者)",
+      "cat": "anpi",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "固定ヘッダー/CTA",
+          "detail": "fixed header+CTA gap ~-61px",
+          "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+          "priority": 2,
+          "url": "/anpi-line-admin.html",
+          "width": 430,
+          "page": "LINE運用 (管理者)",
+          "pageId": "anpi-line-admin",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-line-admin-430.png"
+    },
+    {
+      "id": "anpi-notifications",
+      "path": "/anpi-notifications.html",
+      "label": "安否通知センター",
+      "cat": "anpi",
+      "width": 430,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "HIGH",
+          "area": "固定ヘッダー/CTA",
+          "detail": "fixed header+CTA gap ~-61px",
+          "fix": "main に padding-bottom、sticky CTA の高さ分確保",
+          "priority": 2,
+          "url": "/anpi-notifications.html",
+          "width": 430,
+          "page": "安否通知センター",
+          "pageId": "anpi-notifications",
+          "cat": "anpi"
+        },
+        {
+          "severity": "HIGH",
+          "area": "ボタン/リンク",
+          "detail": "極小タップ 1 件 — [{\"text\":\"更新\",\"w\":50,\"h\":32,\"cls\":\"anpi-notifications-refresh\"}]",
+          "fix": "インライン link を block 化、min-height:44px",
+          "priority": 1,
+          "url": "/anpi-notifications.html",
+          "width": 430,
+          "page": "安否通知センター",
+          "pageId": "anpi-notifications",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-notifications-430.png"
+    },
+    {
+      "id": "builder-admin-dash",
+      "path": "/builder-admin/admin-index.html",
+      "label": "Builder Admin ダッシュボード",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder-admin/admin-index.html",
+          "width": 768,
+          "page": "Builder Admin ダッシュボード",
+          "pageId": "builder-admin-dash",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-dash-768.png"
+    },
+    {
+      "id": "builder-admin-threads",
+      "path": "/builder-admin/threads.html",
+      "label": "Builder Admin スレッド管理",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder-admin/threads.html",
+          "width": 768,
+          "page": "Builder Admin スレッド管理",
+          "pageId": "builder-admin-threads",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-threads-768.png"
+    },
+    {
+      "id": "admin-applications",
+      "path": "/builder/admin-applications.html",
+      "label": "Builder 応募管理",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-applications.html",
+          "width": 768,
+          "page": "Builder 応募管理",
+          "pageId": "admin-applications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-applications-768.png"
+    },
+    {
+      "id": "admin-partners",
+      "path": "/builder/admin-partners.html",
+      "label": "Builder パートナー検索",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-partners.html",
+          "width": 768,
+          "page": "Builder パートナー検索",
+          "pageId": "admin-partners",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partners-768.png"
+    },
+    {
+      "id": "admin-dispatch",
+      "path": "/builder/admin-dispatch.html",
+      "label": "Builder 案件手配",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-dispatch.html",
+          "width": 768,
+          "page": "Builder 案件手配",
+          "pageId": "admin-dispatch",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-dispatch-768.png"
+    },
+    {
+      "id": "admin-calendar",
+      "path": "/builder/admin-calendar.html",
+      "label": "Builder 案件カレンダー",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-calendar.html",
+          "width": 768,
+          "page": "Builder 案件カレンダー",
+          "pageId": "admin-calendar",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-calendar-768.png"
+    },
+    {
+      "id": "admin-notifications",
+      "path": "/builder/admin-notifications.html",
+      "label": "Builder 通知送信",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-notifications.html",
+          "width": 768,
+          "page": "Builder 通知送信",
+          "pageId": "admin-notifications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-notifications-768.png"
+    },
+    {
+      "id": "admin-reviews",
+      "path": "/builder/admin-reviews.html",
+      "label": "Builder 審査管理",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-reviews.html",
+          "width": 768,
+          "page": "Builder 審査管理",
+          "pageId": "admin-reviews",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-reviews-768.png"
+    },
+    {
+      "id": "admin-partner-evaluations",
+      "path": "/builder/admin-partner-evaluations.html",
+      "label": "Builder パートナー評価",
+      "cat": "builder-admin",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-partner-evaluations.html",
+          "width": 768,
+          "page": "Builder パートナー評価",
+          "pageId": "admin-partner-evaluations",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partner-evaluations-768.png"
+    },
+    {
+      "id": "ops-dashboard",
+      "path": "/admin-operations-dashboard.html",
+      "label": "AI運営司令塔",
+      "cat": "ops",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/admin-operations-dashboard.html",
+          "width": 768,
+          "page": "AI運営司令塔",
+          "pageId": "ops-dashboard",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ops-dashboard-768.png"
+    },
+    {
+      "id": "ai-ops-center",
+      "path": "/admin-ai-operations-center.html",
+      "label": "AI運営センター (API)",
+      "cat": "ops",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/admin-ai-operations-center.html",
+          "width": 768,
+          "page": "AI運営センター (API)",
+          "pageId": "ai-ops-center",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ai-ops-center-768.png"
+    },
+    {
+      "id": "talk-ops-room",
+      "path": "/talk-ops-room.html",
+      "label": "運営TALKルーム (旧)",
+      "cat": "ops",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/talk-ops-room.html",
+          "width": 768,
+          "page": "運営TALKルーム (旧)",
+          "pageId": "talk-ops-room",
+          "cat": "ops"
+        }
+      ],
+      "shot": "talk-ops-room-768.png"
+    },
+    {
+      "id": "support-trouble",
+      "path": "/support-trouble-center.html",
+      "label": "重要問い合わせセンター",
+      "cat": "support",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/support-trouble-center.html",
+          "width": 768,
+          "page": "重要問い合わせセンター",
+          "pageId": "support-trouble",
+          "cat": "support"
+        }
+      ],
+      "shot": "support-trouble-768.png"
+    },
+    {
+      "id": "anpi-dashboard",
+      "path": "/anpi-dashboard.html",
+      "label": "安否ダッシュボード",
+      "cat": "anpi",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/anpi-dashboard.html",
+          "width": 768,
+          "page": "安否ダッシュボード",
+          "pageId": "anpi-dashboard",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-dashboard-768.png"
+    },
+    {
+      "id": "anpi-line-admin",
+      "path": "/anpi-line-admin.html",
+      "label": "LINE運用 (管理者)",
+      "cat": "anpi",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/anpi-line-admin.html",
+          "width": 768,
+          "page": "LINE運用 (管理者)",
+          "pageId": "anpi-line-admin",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-line-admin-768.png"
+    },
+    {
+      "id": "anpi-notifications",
+      "path": "/anpi-notifications.html",
+      "label": "安否通知センター",
+      "cat": "anpi",
+      "width": 768,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/anpi-notifications.html",
+          "width": 768,
+          "page": "安否通知センター",
+          "pageId": "anpi-notifications",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-notifications-768.png"
+    },
+    {
+      "id": "builder-admin-dash",
+      "path": "/builder-admin/admin-index.html",
+      "label": "Builder Admin ダッシュボード",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder-admin/admin-index.html",
+          "width": 1280,
+          "page": "Builder Admin ダッシュボード",
+          "pageId": "builder-admin-dash",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-dash-1280.png"
+    },
+    {
+      "id": "builder-admin-threads",
+      "path": "/builder-admin/threads.html",
+      "label": "Builder Admin スレッド管理",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder-admin/threads.html",
+          "width": 1280,
+          "page": "Builder Admin スレッド管理",
+          "pageId": "builder-admin-threads",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "builder-admin-threads-1280.png"
+    },
+    {
+      "id": "admin-applications",
+      "path": "/builder/admin-applications.html",
+      "label": "Builder 応募管理",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-applications.html",
+          "width": 1280,
+          "page": "Builder 応募管理",
+          "pageId": "admin-applications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-applications-1280.png"
+    },
+    {
+      "id": "admin-partners",
+      "path": "/builder/admin-partners.html",
+      "label": "Builder パートナー検索",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-partners.html",
+          "width": 1280,
+          "page": "Builder パートナー検索",
+          "pageId": "admin-partners",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partners-1280.png"
+    },
+    {
+      "id": "admin-dispatch",
+      "path": "/builder/admin-dispatch.html",
+      "label": "Builder 案件手配",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-dispatch.html",
+          "width": 1280,
+          "page": "Builder 案件手配",
+          "pageId": "admin-dispatch",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-dispatch-1280.png"
+    },
+    {
+      "id": "admin-calendar",
+      "path": "/builder/admin-calendar.html",
+      "label": "Builder 案件カレンダー",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-calendar.html",
+          "width": 1280,
+          "page": "Builder 案件カレンダー",
+          "pageId": "admin-calendar",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-calendar-1280.png"
+    },
+    {
+      "id": "admin-notifications",
+      "path": "/builder/admin-notifications.html",
+      "label": "Builder 通知送信",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-notifications.html",
+          "width": 1280,
+          "page": "Builder 通知送信",
+          "pageId": "admin-notifications",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-notifications-1280.png"
+    },
+    {
+      "id": "admin-reviews",
+      "path": "/builder/admin-reviews.html",
+      "label": "Builder 審査管理",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-reviews.html",
+          "width": 1280,
+          "page": "Builder 審査管理",
+          "pageId": "admin-reviews",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-reviews-1280.png"
+    },
+    {
+      "id": "admin-partner-evaluations",
+      "path": "/builder/admin-partner-evaluations.html",
+      "label": "Builder パートナー評価",
+      "cat": "builder-admin",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/builder/admin-partner-evaluations.html",
+          "width": 1280,
+          "page": "Builder パートナー評価",
+          "pageId": "admin-partner-evaluations",
+          "cat": "builder-admin"
+        }
+      ],
+      "shot": "admin-partner-evaluations-1280.png"
+    },
+    {
+      "id": "ops-dashboard",
+      "path": "/admin-operations-dashboard.html",
+      "label": "AI運営司令塔",
+      "cat": "ops",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/admin-operations-dashboard.html",
+          "width": 1280,
+          "page": "AI運営司令塔",
+          "pageId": "ops-dashboard",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ops-dashboard-1280.png"
+    },
+    {
+      "id": "ai-ops-center",
+      "path": "/admin-ai-operations-center.html",
+      "label": "AI運営センター (API)",
+      "cat": "ops",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/admin-ai-operations-center.html",
+          "width": 1280,
+          "page": "AI運営センター (API)",
+          "pageId": "ai-ops-center",
+          "cat": "ops"
+        }
+      ],
+      "shot": "ai-ops-center-1280.png"
+    },
+    {
+      "id": "talk-ops-room",
+      "path": "/talk-ops-room.html",
+      "label": "運営TALKルーム (旧)",
+      "cat": "ops",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/talk-ops-room.html",
+          "width": 1280,
+          "page": "運営TALKルーム (旧)",
+          "pageId": "talk-ops-room",
+          "cat": "ops"
+        }
+      ],
+      "shot": "talk-ops-room-1280.png"
+    },
+    {
+      "id": "support-trouble",
+      "path": "/support-trouble-center.html",
+      "label": "重要問い合わせセンター",
+      "cat": "support",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/support-trouble-center.html",
+          "width": 1280,
+          "page": "重要問い合わせセンター",
+          "pageId": "support-trouble",
+          "cat": "support"
+        }
+      ],
+      "shot": "support-trouble-1280.png"
+    },
+    {
+      "id": "anpi-dashboard",
+      "path": "/anpi-dashboard.html",
+      "label": "安否ダッシュボード",
+      "cat": "anpi",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/anpi-dashboard.html",
+          "width": 1280,
+          "page": "安否ダッシュボード",
+          "pageId": "anpi-dashboard",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-dashboard-1280.png"
+    },
+    {
+      "id": "anpi-line-admin",
+      "path": "/anpi-line-admin.html",
+      "label": "LINE運用 (管理者)",
+      "cat": "anpi",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/anpi-line-admin.html",
+          "width": 1280,
+          "page": "LINE運用 (管理者)",
+          "pageId": "anpi-line-admin",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-line-admin-1280.png"
+    },
+    {
+      "id": "anpi-notifications",
+      "path": "/anpi-notifications.html",
+      "label": "安否通知センター",
+      "cat": "anpi",
+      "width": 1280,
+      "status": 200,
+      "issues": [
+        {
+          "severity": "PASS",
+          "area": "総合",
+          "detail": "主要チェッククリア",
+          "fix": "—",
+          "priority": 99,
+          "url": "/anpi-notifications.html",
+          "width": 1280,
+          "page": "安否通知センター",
+          "pageId": "anpi-notifications",
+          "cat": "anpi"
+        }
+      ],
+      "shot": "anpi-notifications-1280.png"
+    }
+  ]
+}

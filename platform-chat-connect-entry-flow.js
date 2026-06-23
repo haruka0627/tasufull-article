@@ -207,7 +207,7 @@
     return Notify?.notifyListingPurchased?.(detail, { type: cat });
   }
 
-  function activateConnectEntryAfterPayment(ctx) {
+  async function activateConnectEntryAfterPayment(ctx) {
     const Fee = global.TasuPlatformChatFee;
     const feeRow = Fee?.getFeeRecordByContext?.(ctx);
     const feeKey = pickStr(feeRow?.threadId);
@@ -225,7 +225,9 @@
       const contact = Contacts?.findById?.(contactId);
       if (!contact) return { ok: false, reason: "contact_not_found" };
       listing = Contacts.resolveListing(contact.listing_id);
-      threadResult = threadStore.createThreadFromContact?.(listing, contact);
+      threadResult = await Promise.resolve(
+        threadStore.createThreadFromContact?.(listing, contact, { feePending: false })
+      );
       if (!threadResult?.ok || !threadResult.thread) return threadResult || { ok: false };
       Contacts.finalizeContactAfterPayment?.(contactId, threadResult.thread.id);
     } else if (requestId) {
@@ -233,7 +235,9 @@
       listing = workerStore?.resolveListing?.(listingId);
       const req = workerStore?.findRequest?.(listingId, requestId);
       if (!listing || !req) return { ok: false, reason: "request_not_found" };
-      threadResult = threadStore.createWorkerRequestThread?.(listing, req, { feePending: false });
+      threadResult = await Promise.resolve(
+        threadStore.createWorkerRequestThread?.(listing, req, { feePending: false })
+      );
       if (!threadResult?.ok || !threadResult.thread) return threadResult || { ok: false };
       workerStore.finalizeRequestAfterPayment?.(requestId, threadResult.thread.id);
     } else {
@@ -290,7 +294,7 @@
       };
     }
 
-    const activated = threadStore.activateThreadAfterFeePaid?.(realThreadId);
+    const activated = await Promise.resolve(threadStore.activateThreadAfterFeePaid?.(realThreadId));
     if (!activated?.ok) return activated || { ok: false, reason: "activate_failed" };
 
     try {

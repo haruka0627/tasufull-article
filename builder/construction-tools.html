@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>建設ツール | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-construction-tools">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./builder-top.html" aria-label="Builder TOPへ">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">建設ツール</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">建設ツール</h1>
+          <p class="builder-header__sub">見積・人工・材料計算を Builder 上で素早く確認</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main builder-ct-main">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <section class="builder-ct-summary" aria-label="建設ツール概要">
+        <div class="builder-ct-summary__inner">
+          <p class="builder-ct-summary__kicker">Builder · 建設専用</p>
+          <h2 class="builder-ct-summary__title">建設業向け計算・見積ツール</h2>
+          <p class="builder-ct-summary__desc">現場で使う計算・見積ツールをすぐに利用できます。Builder AIの4機能はすべてルールベース診断β版として利用できます。</p>
+
+          <div class="builder-ct-summary-stats">
+            <article class="builder-ct-stat-card builder-ct-stat-card--ready">
+              <p class="builder-ct-stat-card__label">利用可能</p>
+              <p class="builder-ct-stat-card__value" aria-label="利用可能なツール数">4</p>
+            </article>
+            <article class="builder-ct-stat-card builder-ct-stat-card--beta">
+              <p class="builder-ct-stat-card__label">Builder AI β版</p>
+              <p class="builder-ct-stat-card__value" aria-label="Builder AI β版のツール数">4</p>
+            </article>
+            <article class="builder-ct-stat-card builder-ct-stat-card--soon">
+              <p class="builder-ct-stat-card__label">準備中</p>
+              <p class="builder-ct-stat-card__value" aria-label="準備中のツール数">0</p>
+            </article>
+          </div>
+
+          <div class="builder-ct-summary__actions">
+            <a class="builder-btn builder-btn--primary" href="#builder-ct-available">利用可能なツール</a>
+            <a class="builder-btn builder-btn--ghost" href="#builder-ct-ai">Builder AI</a>
+          </div>
+        </div>
+      </section>
+
+      <div class="builder-ct-groups">
+      <section class="builder-panel builder-ct-section builder-ct-section--available" id="builder-ct-available" aria-label="利用可能ツール">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">利用可能ツール</h2>
+          <span class="builder-kpi builder-ct-section__kpi builder-ct-section__kpi--ready">4ツール</span>
+        </div>
+        <p class="builder-ct-section__lead">人工・材料・粗利・見積の現場計算を、そのまま使える通常ツールです。</p>
+
+        <div class="builder-ct-grid">
+          <article class="builder-ct-card builder-ct-card--available">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--orange" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__status builder-ct-card__status--ready">利用可能</span>
+            </div>
+            <h3 class="builder-ct-card__title">人工計算</h3>
+            <p class="builder-ct-card__desc">作業人数・日数・単価から概算人工を計算</p>
+            <a class="builder-btn builder-btn--primary builder-ct-card__action" href="tool-manpower-calculator.html">今すぐ使う</a>
+          </article>
+
+          <article class="builder-ct-card builder-ct-card--available">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--slate" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  <path d="M3.3 7 12 12l8.7-5" />
+                  <path d="M12 22V12" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__status builder-ct-card__status--ready">利用可能</span>
+            </div>
+            <h3 class="builder-ct-card__title">材料計算</h3>
+            <p class="builder-ct-card__desc">面積や数量から必要材料の目安を確認</p>
+            <a class="builder-btn builder-btn--primary builder-ct-card__action" href="tool-material-calculator.html">今すぐ使う</a>
+          </article>
+
+          <article class="builder-ct-card builder-ct-card--available">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--orange" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 1v22" />
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__status builder-ct-card__status--ready">利用可能</span>
+            </div>
+            <h3 class="builder-ct-card__title">粗利計算</h3>
+            <p class="builder-ct-card__desc">売上・原価・外注費から利益率を確認</p>
+            <a class="builder-btn builder-btn--primary builder-ct-card__action" href="tool-profit-calculator.html">今すぐ使う</a>
+          </article>
+
+          <article class="builder-ct-card builder-ct-card--available">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--amber" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <path d="M14 2v6h6" />
+                  <path d="M8 13h8" />
+                  <path d="M8 17h5" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__status builder-ct-card__status--ready">利用可能</span>
+            </div>
+            <h3 class="builder-ct-card__title">見積補助</h3>
+            <p class="builder-ct-card__desc">工事項目ごとの概算見積を整理</p>
+            <a class="builder-btn builder-btn--primary builder-ct-card__action" href="tool-estimate-helper.html">今すぐ使う</a>
+          </article>
+        </div>
+      </section>
+
+      <hr class="builder-ct-groups__divider" aria-hidden="true" />
+
+      <section class="builder-panel builder-ct-section builder-ct-section--ai" id="builder-ct-ai" aria-label="Builder AI β版ツール">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">Builder AI β版</h2>
+          <span class="builder-kpi builder-ct-section__kpi builder-ct-section__kpi--beta">4ツール</span>
+        </div>
+
+        <p class="builder-ct-section__lead">ルールベース診断の AI 補助ツールです。API 接続なしで β版として利用できます。</p>
+        <p class="builder-ct-section-note">AI見積作成・AI原価分析・AI積算補助・AI工程提案は、APIを使わないルールベース診断β版として利用できます。</p>
+
+        <div class="builder-ct-grid">
+          <article class="builder-ct-card builder-ct-card--beta">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--purple" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <path d="M14 2v6h6" />
+                  <path d="M8 13h8" />
+                  <path d="M8 17h5" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__badges">
+                <span class="builder-ct-card__status builder-ct-card__status--ai">Builder AI</span>
+                <span class="builder-ct-card__status builder-ct-card__status--beta">β版</span>
+              </span>
+            </div>
+            <h3 class="builder-ct-card__title">AI見積作成</h3>
+            <p class="builder-ct-card__desc">条件や計算結果をもとに、見積内容を自動計算し、抜け漏れを簡易診断できます。</p>
+            <a class="builder-btn builder-btn--beta builder-ct-card__action" href="tool-ai-estimate.html">β版を使う</a>
+          </article>
+
+          <article class="builder-ct-card builder-ct-card--beta">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--purple" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="4" y="4" width="16" height="16" rx="2" />
+                  <path d="M8 8h8" />
+                  <path d="M8 12h8" />
+                  <path d="M8 16h5" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__badges">
+                <span class="builder-ct-card__status builder-ct-card__status--ai">Builder AI</span>
+                <span class="builder-ct-card__status builder-ct-card__status--beta">β版</span>
+              </span>
+            </div>
+            <h3 class="builder-ct-card__title">AI積算補助</h3>
+            <p class="builder-ct-card__desc">面積・使用量・ロス率・単価をもとに、必要数量と概算材料費を簡易診断できます。</p>
+            <a class="builder-btn builder-btn--beta builder-ct-card__action" href="tool-ai-quantity-support.html">β版を使う</a>
+          </article>
+
+          <article class="builder-ct-card builder-ct-card--beta">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--purple" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M8 2v4" />
+                  <path d="M16 2v4" />
+                  <rect x="3" y="6" width="18" height="16" rx="2" />
+                  <path d="M3 11h18" />
+                  <path d="M8 15h3" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__badges">
+                <span class="builder-ct-card__status builder-ct-card__status--ai">Builder AI</span>
+                <span class="builder-ct-card__status builder-ct-card__status--beta">β版</span>
+              </span>
+            </div>
+            <h3 class="builder-ct-card__title">AI工程提案</h3>
+            <p class="builder-ct-card__desc">工事内容・人数・日数をもとに、終了予定日と総人工を簡易診断できます。</p>
+            <a class="builder-btn builder-btn--beta builder-ct-card__action" href="tool-ai-schedule-suggest.html">β版を使う</a>
+          </article>
+
+          <article class="builder-ct-card builder-ct-card--beta">
+            <div class="builder-ct-card__head">
+              <span class="builder-ct-card__icon builder-ct-card__icon--purple" aria-hidden="true">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 3v18h18" />
+                  <path d="M7 14l4-4 3 3 5-6" />
+                </svg>
+              </span>
+              <span class="builder-ct-card__badges">
+                <span class="builder-ct-card__status builder-ct-card__status--ai">Builder AI</span>
+                <span class="builder-ct-card__status builder-ct-card__status--beta">β版</span>
+              </span>
+            </div>
+            <h3 class="builder-ct-card__title">AI原価分析</h3>
+            <p class="builder-ct-card__desc">請負金額・原価・粗利率をもとに、採算や原価比率を簡易診断できます。</p>
+            <a class="builder-btn builder-btn--beta builder-ct-card__action" href="tool-ai-cost-analysis.html">β版を使う</a>
+          </article>
+        </div>
+      </section>
+      </div>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-runtime.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="builder-actor-identity.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-ai-engine.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

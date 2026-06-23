@@ -1,0 +1,74 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>ブロック管理 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-block" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header match-header--sub" aria-label="ヘッダー">
+      <a class="match-header__back" href="match-mypage.html" aria-label="戻る">←</a>
+      <span class="match-safety-icon" aria-hidden="true">🚫</span>
+      <h1 class="match-header__title">ブロック管理</h1>
+    </header>
+
+    <main class="match-main">
+      <p class="match-form-subtitle" style="margin:0 0 16px">ブロックしたユーザーは、お互いに表示されずメッセージも届きません。</p>
+
+      <div class="match-block-list" data-match-block-list></div>
+
+      <div class="match-empty-state" data-block-empty hidden>
+        <p>ブロック中のユーザーはいません</p>
+      </div>
+
+      <div class="match-cta-stack" style="margin-top:24px">
+        <a class="match-btn match-btn--secondary match-btn--block" href="match-report.html">通報履歴を見る</a>
+        <a class="match-btn match-btn--text match-btn--block" href="match-safety.html">安心・安全について</a>
+      </div>
+    </main>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link" href="match-swipe.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💘</span>
+          <span>スワイプ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-list.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💞</span>
+          <span>マッチ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-safety.html">
+          <span class="match-tabbar__icon" aria-hidden="true">🛡️</span>
+          <span>安心</span>
+        </a>
+        <a class="match-tabbar__link is-active" href="match-mypage.html">
+          <span class="match-tabbar__icon" aria-hidden="true">👤</span>
+          <span>マイページ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-data-render.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-wiring.js"></script>
+</body>
+</html>

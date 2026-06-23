@@ -1,0 +1,74 @@
+[
+  {
+    "page": "iwasho-register",
+    "viewport": "390",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "iwasho-register",
+    "viewport": "768",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "iwasho-register",
+    "viewport": "1280",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "tasful-register",
+    "viewport": "390",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "tasful-register",
+    "viewport": "768",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "tasful-register",
+    "viewport": "1280",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "builder-mgmt-mock",
+    "viewport": "390",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "builder-mgmt-mock",
+    "viewport": "768",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "builder-mgmt-mock",
+    "viewport": "1280",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "builder-detail-mock",
+    "viewport": "390",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "builder-detail-mock",
+    "viewport": "768",
+    "loadOk": true,
+    "consoleErrors": []
+  },
+  {
+    "page": "builder-detail-mock",
+    "viewport": "1280",
+    "loadOk": true,
+    "consoleErrors": []
+  }
+]

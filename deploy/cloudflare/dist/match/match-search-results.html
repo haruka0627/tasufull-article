@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>検索結果 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-search-results" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header" aria-label="ヘッダー">
+      <a class="match-brand" href="match-search.html">
+        <span class="match-brand__text">
+          <span class="match-brand__main">検索結果</span>
+          <span class="match-brand__sub">TASFUL MATCH</span>
+        </span>
+      </a>
+      <div class="match-header__actions">
+        <a class="match-icon-btn match-icon-btn--link" href="match-search.html" aria-label="条件を変更">✎</a>
+      </div>
+    </header>
+
+    <main class="match-main match-main--search-results" data-match-p15-section>
+      <p class="match-search-results-count" data-match-search-count>—</p>
+
+      <div class="match-search-results-chips" data-match-search-chips aria-label="検索条件"></div>
+
+      <div class="match-search-sort">
+        <label class="match-search-sort__label" for="match-search-sort-select">並び替え</label>
+        <select id="match-search-sort-select" class="match-select match-search-sort__select" data-match-search-sort aria-label="並び替え">
+          <option value="recommended">おすすめ順</option>
+          <option value="newest">新着順</option>
+          <option value="online">オンライン順</option>
+        </select>
+      </div>
+
+      <div class="match-search-results-list" data-match-search-results-list></div>
+
+      <div class="match-search-results-empty" data-match-search-empty hidden>
+        <p class="match-search-results-empty__text">条件に合う相手が見つかりませんでした</p>
+        <a class="match-btn match-btn--primary match-btn--block" href="match-search.html">条件を変更する</a>
+      </div>
+    </main>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link" href="match-swipe.html"><span class="match-tabbar__icon" aria-hidden="true">💘</span><span>スワイプ</span></a>
+        <a class="match-tabbar__link" href="match-list.html"><span class="match-tabbar__icon" aria-hidden="true">💞</span><span>マッチ</span></a>
+        <a class="match-tabbar__link" href="match-safety.html"><span class="match-tabbar__icon" aria-hidden="true">🛡️</span><span>安心</span></a>
+        <a class="match-tabbar__link" href="match-mypage.html"><span class="match-tabbar__icon" aria-hidden="true">👤</span><span>マイページ</span></a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="../ai-workspace-links.js"></script>
+  <script src="match-ai-cta.js"></script>
+  <script src="match-p15-render.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-p15-wiring.js"></script>
+</body>
+</html>

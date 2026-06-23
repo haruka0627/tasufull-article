@@ -8,7 +8,7 @@
   const BUSINESS = "business.html";
   const SHOP_STORE = "shop-store.html";
   const DASHBOARD = "dashboard.html";
-  const BUILDER_HOME = "builder/index.html";
+  const BUILDER_HOME = "builder-top.html";
 
   /** @typedef {{ label: string, href?: string }} BreadcrumbItem */
 
@@ -21,10 +21,20 @@
     const path = String(location.pathname || loc || "").replace(/\\/g, "/");
     const parts = path.split("/").filter(Boolean);
     if (!parts.length) return "index.html";
-    if (parts.length >= 2 && parts[parts.length - 2] === "builder") {
-      return `builder/${parts[parts.length - 1]}`;
+    let file = parts[parts.length - 1];
+    if (!/\.[a-z0-9]+$/i.test(file)) {
+      file = `${file}.html`;
     }
-    return parts[parts.length - 1];
+    if (parts.length >= 2 && parts[parts.length - 2] === "builder") {
+      return `builder/${file}`;
+    }
+    if (parts.length >= 2 && parts[parts.length - 2] === "builder-admin") {
+      return `builder-admin/${file}`;
+    }
+    if (parts.length >= 2 && parts[parts.length - 2] === "live") {
+      return `live/${file}`;
+    }
+    return file;
   }
 
   /**
@@ -90,7 +100,7 @@
     "post.html": "掲載する",
     "edit-post.html": "掲載を編集",
     "chat-detail.html": "チャット",
-    "chat-list.html": "すべてのやりとり",
+    "chat-list.html": "TASFUL TALK",
     "talk-home.html": "TALK",
     "favorites-list.html": "お気に入り",
     "listing-management.html": "掲載管理",
@@ -107,6 +117,29 @@
     "builder/board-threads.html": "やりとり一覧",
     "builder/mvp-threads.html": "やりとり一覧",
     "builder/mvp-project-new.html": "案件を投稿",
+    "builder/construction-tools.html": "建設ツール",
+    "builder/tool-manpower-calculator.html": "人工計算",
+    "builder/tool-profit-calculator.html": "粗利計算",
+    "builder/tool-material-calculator.html": "材料計算",
+    "builder/tool-estimate-helper.html": "見積補助",
+    "builder/tool-ai-estimate.html": "AI見積作成",
+    "builder/tool-ai-cost-analysis.html": "AI原価分析",
+    "builder/tool-ai-quantity-support.html": "AI積算補助",
+    "builder/tool-ai-schedule-suggest.html": "AI工程提案",
+    "builder/find-workers.html": "職人を探す",
+    "builder/partner-management.html": "協力パートナー管理",
+    "builder/partner-detail.html": "パートナー詳細",
+    "builder-admin/admin-index.html": "運営ダッシュボード",
+    "live/index.html": "LIVE",
+    "live/profile.html": "クリエイタープロフィール",
+    "live/settings.html": "クリエイター設定",
+    "live/shorts.html": "ショートフィード",
+    "live/short-upload.html": "ショート投稿",
+    "live/watch.html": "ライブ視聴",
+    "live/create.html": "配信作成",
+    "live/studio.html": "配信スタジオ",
+    "live/gifts.html": "ギフト",
+    "live/tips.html": "応援履歴",
     "shop-market-cart.html": "カート",
     "shop-market-checkout.html": "購入手続き",
     "shop-market-order-history.html": "注文履歴",
@@ -310,10 +343,7 @@
     {
       paths: ["chat-list.html"],
       theme: "talk",
-      trail: () => [
-        { label: "TALK", href: "talk-home.html?tab=chat" },
-        { label: "すべてのやりとり" },
-      ],
+      trail: () => [{ label: "TALK", href: "talk-home.html?tab=chat" }],
     },
     {
       paths: ["talk-home.html"],
@@ -389,6 +419,196 @@
       trail: () => [
         { label: "Builder", href: BUILDER_HOME },
         { label: "案件を投稿" },
+      ],
+    },
+    {
+      paths: ["builder/construction-tools.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール" },
+      ],
+    },
+    {
+      paths: ["builder/tool-manpower-calculator.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "人工計算" },
+      ],
+    },
+    {
+      paths: ["builder/tool-profit-calculator.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "粗利計算" },
+      ],
+    },
+    {
+      paths: ["builder/tool-material-calculator.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "材料計算" },
+      ],
+    },
+    {
+      paths: ["builder/tool-estimate-helper.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "見積補助" },
+      ],
+    },
+    {
+      paths: ["builder/tool-ai-estimate.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "AI見積作成" },
+      ],
+    },
+    {
+      paths: ["builder/tool-ai-cost-analysis.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "AI原価分析" },
+      ],
+    },
+    {
+      paths: ["builder/tool-ai-quantity-support.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "AI積算補助" },
+      ],
+    },
+    {
+      paths: ["builder/tool-ai-schedule-suggest.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "Builder", href: BUILDER_HOME },
+        { label: "建設ツール", href: "construction-tools.html" },
+        { label: "AI工程提案" },
+      ],
+    },
+    {
+      paths: ["builder/partner-management.html"],
+      theme: "builder",
+      trail: () => [
+        { label: "運営ダッシュボード", href: "../builder-admin/admin-index.html" },
+        { label: "協力パートナー管理" },
+      ],
+    },
+    {
+      paths: ["builder/partner-detail.html"],
+      theme: "builder",
+      trail: ({ loc }) => {
+        const mock = String(loc?.search || "").includes("mock=1") ? "?mock=1" : "";
+        return [
+          { label: "運営ダッシュボード", href: "../builder-admin/admin-index.html" },
+          { label: "協力パートナー管理", href: `partner-management.html${mock}` },
+          { label: "パートナー詳細" },
+        ];
+      },
+    },
+    {
+      paths: ["live/index.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE" },
+      ],
+    },
+    {
+      paths: ["live/profile.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "クリエイタープロフィール" },
+      ],
+    },
+    {
+      paths: ["live/settings.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "クリエイター設定" },
+      ],
+    },
+    {
+      paths: ["live/shorts.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "ショートフィード" },
+      ],
+    },
+    {
+      paths: ["live/short-upload.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "ショートフィード", href: "shorts.html" },
+        { label: "ショート投稿" },
+      ],
+    },
+    {
+      paths: ["live/watch.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "ライブ視聴" },
+      ],
+    },
+    {
+      paths: ["live/create.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "配信作成" },
+      ],
+    },
+    {
+      paths: ["live/studio.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "配信スタジオ" },
+      ],
+    },
+    {
+      paths: ["live/gifts.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "ギフト" },
+      ],
+    },
+    {
+      paths: ["live/tips.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "応援履歴" },
       ],
     },
     {

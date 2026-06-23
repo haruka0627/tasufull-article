@@ -35,7 +35,7 @@ const PAGES = [
     extra: "genAi",
   },
   { id: "ai-workspace", path: "ai-workspace.html", group: "ai", cta: "[data-ai-chat-send], .ai-chat__send" },
-  { id: "chat-list", path: "chat-list.html", group: "talk", cta: "[data-chat-back-dashboard], #chatThreadList, .chat-list" },
+  { id: "chat-list", path: "chat-list.html", group: "talk", cta: "[data-talk-root], #talkChatThreadList, .talk-line-list" },
   {
     id: "chat-detail",
     path: "chat-detail.html?thread=plat-ui-smoke",

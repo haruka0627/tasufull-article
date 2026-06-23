@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0814" />
+  <title>ギフト | TASFUL LIVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+  <link rel="stylesheet" href="live.css" />
+</head>
+<body class="live-body" data-page="live-gifts">
+  <div class="live-shell">
+    <header class="live-header">
+      <a class="live-header__back" href="index.html">← LIVE トップ</a>
+      <div>
+        <h1 class="live-header__title">ギフト</h1>
+        <p class="live-header__sub">stub決済 · テスト用応援</p>
+      </div>
+    </header>
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+    <main class="live-main" data-live-gifts-root>
+      <p class="live-loading">ギフトを準備中…</p>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../talk-runtime.js" defer></script>
+  <script src="../auth-current-user.js" defer></script>
+  <script src="../tasu-supabase-client.js" defer></script>
+  <script src="../chat-user-identity.js" defer></script>
+  <script src="../breadcrumb-config.js" defer></script>
+  <script src="../common-breadcrumb.js" defer></script>
+  <script src="live-config.js" defer></script>
+  <script src="live-notify.js" defer></script>
+  <script src="live-broadcasts.js" defer></script>
+  <script src="live-tips.js" defer></script>
+  <script src="live-gifts.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const root = document.querySelector("[data-live-gifts-root]");
+      if (root && window.TasuLiveGifts?.mountGiftsPage) {
+        window.TasuLiveGifts.mountGiftsPage(root);
+      }
+    });
+  </script>
+</body>
+</html>

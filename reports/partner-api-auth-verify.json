@@ -1,0 +1,52 @@
+{
+  "checkedAt": "2026-06-23T00:37:13.190Z",
+  "scenarios": [
+    {
+      "name": "anon_key_as_bearer",
+      "httpStatus": 401,
+      "message": "Authentication required",
+      "itemCount": null
+    },
+    {
+      "name": "session_jwt",
+      "skipped": true,
+      "reason": "PARTNER_OPS_EMAIL / PARTNER_OPS_PASSWORD not set in .env"
+    }
+  ],
+  "anonBearerAllEndpoints": [
+    {
+      "endpoint": "partner-list",
+      "httpStatus": 401,
+      "message": "Authentication required"
+    },
+    {
+      "endpoint": "partner-get",
+      "httpStatus": 401,
+      "message": "Authentication required"
+    },
+    {
+      "endpoint": "partner-review",
+      "httpStatus": 401,
+      "message": "Authentication required"
+    },
+    {
+      "endpoint": "partner-document-verify",
+      "httpStatus": 401,
+      "message": "Authentication required"
+    }
+  ],
+  "dbReference": {
+    "partner_profiles": 3,
+    "partner_documents": 1,
+    "partner_reviews": 6,
+    "statsByStatus": {
+      "pending": 0,
+      "hold": 1,
+      "approved": 1,
+      "rejected": 1,
+      "contracted": 0
+    },
+    "source": "reports/partner-mgmt-investigation.json (2026-06-22)"
+  },
+  "usersWithPartnerRole": []
+}

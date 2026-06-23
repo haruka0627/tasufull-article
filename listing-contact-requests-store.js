@@ -188,7 +188,7 @@
     return { ok: true, contact: row, created: true };
   }
 
-  function activateShopConnectPurchaseChat(listing, contact) {
+  async function activateShopConnectPurchaseChat(listing, contact) {
     const Category = global.TasuPlatformChatCategoryFlow;
     const cat = global.TasuPlatformChatFee?.resolveCategoryKey?.(listing) || "";
     if (!Category?.isShopStoreCategory?.(cat)) return { ok: false, reason: "not_shop" };
@@ -222,7 +222,9 @@
       listing_type: pickStr(listing?.listing_type, listing?.listingType, "shop_store"),
       listingType: pickStr(listing?.listingType, listing?.listing_type, "shop_store"),
     };
-    const threadResult = threadStore.createThreadFromContact(enriched, contact);
+    const threadResult = await Promise.resolve(
+      threadStore.createThreadFromContact(enriched, contact, { feePending: false })
+    );
     if (!threadResult?.ok || !threadResult.thread) {
       return threadResult || { ok: false, reason: "thread_create_failed" };
     }
@@ -253,7 +255,7 @@
     }
 
     finalizeContactAfterPayment(contact.contact_id, threadId);
-    const activated = threadStore.activateThreadAfterFeePaid(threadId);
+    const activated = await Promise.resolve(threadStore.activateThreadAfterFeePaid(threadId));
     if (!activated?.ok) return activated || { ok: false, reason: "activate_failed" };
 
     try {

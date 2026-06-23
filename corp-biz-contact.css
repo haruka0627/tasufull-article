@@ -1,0 +1,486 @@
+/* ===== IWASHO お問い合わせページ ===== */
+.iwasho-contact-page {
+  --iw-ct-navy: #062047;
+  --iw-ct-navy-btn: #0b2f6e;
+  --iw-ct-text: #334155;
+  --iw-ct-muted: #64748b;
+  --iw-ct-border: #dbe4f0;
+  --iw-ct-bg: #f4f8fc;
+  --iw-ct-accent: #5b9fd4;
+  --iw-ct-accent-soft: #e8f2fc;
+  --iw-ct-radius: 14px;
+  --iw-ct-shadow: 0 8px 32px rgba(15, 23, 42, 0.06);
+  --iw-ct-hero-bg: #eef2f6;
+  background: var(--iw-ct-bg);
+  color: var(--iw-ct-text);
+}
+
+.iwasho-contact-page main {
+  overflow-x: hidden;
+}
+
+/* ----- Hero (.contact-hero 相当 → 実HTML class に適用) ----- */
+.iwasho-contact-page .iw-contact-hero {
+  padding: 0 !important;
+  background: transparent !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__inner {
+  position: relative !important;
+  max-width: 1560px !important;
+  width: calc(100% - 80px) !important;
+  height: 400px !important;
+  margin: 40px auto 56px !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+  background: linear-gradient(90deg, #eef6ff 0%, #f8fbff 45%, #ffffff 100%) !important;
+  box-shadow: 0 28px 70px rgba(15, 23, 42, 0.08) !important;
+  display: flex !important;
+  align-items: stretch !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__content {
+  width: 40% !important;
+  height: 100% !important;
+  padding: 0 56px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  position: relative !important;
+  z-index: 3 !important;
+  flex-shrink: 0 !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__title {
+  font-size: 60px !important;
+  line-height: 1.1 !important;
+  font-weight: 900 !important;
+  color: #062047 !important;
+  margin: 0 0 28px !important;
+  letter-spacing: -0.04em !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__lead {
+  font-size: 17px !important;
+  line-height: 1.9 !important;
+  font-weight: 700 !important;
+  color: #062047 !important;
+  margin: 0 !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__graphic {
+  width: 60% !important;
+  height: 100% !important;
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__graphic-wrap {
+  width: 100% !important;
+  height: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__graphic-wrap::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 300px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(248, 251, 255, 1) 0%,
+    rgba(248, 251, 255, 0.82) 36%,
+    rgba(248, 251, 255, 0) 100%
+  ) !important;
+  z-index: 2 !important;
+  pointer-events: none !important;
+}
+
+.iwasho-contact-page .iw-contact-hero__graphic img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: 42% center !important;
+}
+
+/* ----- Main grid ----- */
+.iwasho-contact-page .iw-contact-main {
+  padding: 40px 0 56px;
+  background: var(--iw-ct-bg);
+}
+
+.iwasho-contact-page .iw-contact-main__inner {
+  width: calc(100% - 80px);
+  max-width: 1560px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+  gap: 32px;
+  align-items: start;
+}
+
+/* ----- Cards ----- */
+.iwasho-contact-page .iw-contact-card {
+  background: #ffffff;
+  border: 1px solid var(--iw-ct-border);
+  border-radius: var(--iw-ct-radius);
+  box-shadow: var(--iw-ct-shadow);
+  padding: 36px 40px 40px;
+}
+
+.iwasho-contact-page .iw-contact-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.iwasho-contact-page .iw-contact-card__bar {
+  width: 4px;
+  height: 28px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: var(--iw-ct-accent);
+  flex-shrink: 0;
+}
+
+.iwasho-contact-page .iw-contact-card__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: var(--iw-ct-navy);
+}
+
+.iwasho-contact-page .iw-contact-card__lead {
+  margin: 0 0 28px;
+  padding-left: 18px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--iw-ct-muted);
+}
+
+.iwasho-contact-page .iw-contact-alt .iw-contact-card__lead {
+  padding-left: 0;
+}
+
+/* ----- Form ----- */
+.iwasho-contact-page .iw-contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.iwasho-contact-page .iw-contact-field {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 16px 24px;
+  align-items: center;
+}
+
+.iwasho-contact-page .iw-contact-field--textarea {
+  align-items: start;
+}
+
+.iwasho-contact-page .iw-contact-field label {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--iw-ct-navy);
+}
+
+.iwasho-contact-page .iw-contact-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--iw-ct-accent-soft);
+  color: var(--iw-ct-accent);
+  font-size: 11px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+
+.iwasho-contact-page .iw-contact-input,
+.iwasho-contact-page .iw-contact-select,
+.iwasho-contact-page .iw-contact-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--iw-ct-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--iw-ct-text);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  transition: border-color 0.15s ease;
+}
+
+.iwasho-contact-page .iw-contact-input,
+.iwasho-contact-page .iw-contact-select {
+  height: 46px;
+  padding: 0 14px;
+}
+
+.iwasho-contact-page .iw-contact-textarea {
+  min-height: 120px;
+  padding: 12px 14px;
+  resize: vertical;
+}
+
+.iwasho-contact-page .iw-contact-input:focus,
+.iwasho-contact-page .iw-contact-select:focus,
+.iwasho-contact-page .iw-contact-textarea:focus {
+  outline: none;
+  border-color: var(--iw-ct-accent);
+}
+
+.iwasho-contact-page .iw-contact-input::placeholder,
+.iwasho-contact-page .iw-contact-textarea::placeholder {
+  color: #94a3b8;
+}
+
+.iwasho-contact-page .iw-contact-submit-wrap {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+}
+
+.iwasho-contact-page .iw-contact-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: min(100%, 420px);
+  height: 52px;
+  padding: 0 32px;
+  border: none;
+  border-radius: 8px;
+  background: var(--iw-ct-navy-btn);
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.iwasho-contact-page .iw-contact-submit:hover,
+.iwasho-contact-page .iw-contact-submit:focus-visible {
+  background: var(--iw-ct-navy);
+}
+
+/* ----- Alt contact methods ----- */
+.iwasho-contact-page .iw-contact-alt__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.iwasho-contact-page .iw-contact-alt__item {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  padding: 24px 0;
+  border-bottom: 1px solid #e8eef5;
+}
+
+.iwasho-contact-page .iw-contact-alt__item:first-child {
+  padding-top: 8px;
+}
+
+.iwasho-contact-page .iw-contact-alt__item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.iwasho-contact-page .iw-contact-alt__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--iw-ct-accent-soft);
+  color: var(--iw-ct-navy);
+  flex-shrink: 0;
+}
+
+.iwasho-contact-page .iw-contact-alt__icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iwasho-contact-page .iw-contact-alt__title {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.45;
+  color: var(--iw-ct-navy);
+}
+
+.iwasho-contact-page .iw-contact-alt__value {
+  margin: 0 0 6px;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.35;
+  color: var(--iw-ct-navy);
+}
+
+.iwasho-contact-page .iw-contact-alt__value--link {
+  font-size: 17px;
+}
+
+.iwasho-contact-page .iw-contact-alt__note {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.65;
+  color: var(--iw-ct-muted);
+}
+
+.iwasho-contact-page .iw-contact-alt__link {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--iw-ct-accent);
+  text-decoration: none;
+}
+
+.iwasho-contact-page .iw-contact-alt__link:hover,
+.iwasho-contact-page .iw-contact-alt__link:focus-visible {
+  text-decoration: underline;
+}
+
+/* ----- Privacy ----- */
+.iwasho-contact-page .iw-contact-privacy {
+  padding: 0 0 64px;
+  background: var(--iw-ct-bg);
+  text-align: center;
+}
+
+.iwasho-contact-page .iw-contact-privacy__inner {
+  width: calc(100% - 80px);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.iwasho-contact-page .iw-contact-privacy__title {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--iw-ct-navy);
+}
+
+.iwasho-contact-page .iw-contact-privacy__text {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.85;
+  color: var(--iw-ct-muted);
+}
+
+.iwasho-contact-page .iw-contact-privacy__text a {
+  color: var(--iw-ct-accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.iwasho-contact-page .iw-contact-privacy__text a:hover,
+.iwasho-contact-page .iw-contact-privacy__text a:focus-visible {
+  text-decoration: underline;
+}
+
+.iwasho-contact-page .iw-site-header__nav a.is-active {
+  color: var(--iw-navy);
+  font-weight: 700;
+}
+
+@media (max-width: 1024px) {
+  .iwasho-contact-page .iw-contact-hero__inner,
+  .iwasho-contact-page .iw-contact-main__inner,
+  .iwasho-contact-page .iw-contact-privacy__inner {
+    width: calc(100% - 40px);
+  }
+
+  .iwasho-contact-page .iw-contact-hero__inner {
+    flex-direction: column !important;
+    height: auto !important;
+    margin: 32px auto 40px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__content {
+    width: 100% !important;
+    height: auto !important;
+    padding: 32px 24px 24px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__title {
+    font-size: clamp(40px, 9vw, 64px) !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__graphic {
+    width: 100% !important;
+    height: 260px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__graphic-wrap::before {
+    width: 100% !important;
+    height: 96px !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: auto !important;
+    background: linear-gradient(
+      180deg,
+      rgba(248, 251, 255, 1) 0%,
+      rgba(248, 251, 255, 0) 100%
+    ) !important;
+  }
+
+  .iwasho-contact-page .iw-contact-main__inner {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-contact-page .iw-contact-card {
+    padding: 28px 24px 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .iwasho-contact-page .iw-contact-hero__inner,
+  .iwasho-contact-page .iw-contact-main__inner,
+  .iwasho-contact-page .iw-contact-privacy__inner {
+    width: calc(100% - 36px);
+  }
+
+  .iwasho-contact-page .iw-contact-field {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .iwasho-contact-page .iw-contact-card__lead {
+    padding-left: 0;
+  }
+
+  .iwasho-contact-page .iw-contact-submit {
+    width: 100%;
+    min-width: 0;
+  }
+}

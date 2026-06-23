@@ -3,8 +3,7 @@ import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browse
 /**
  * NB-1B — Cloudflare Pages smoke (*.pages.dev or local dist)
  *
- *   # local dist (start static server first on 8788)
- *   npx --yes serve deploy/cloudflare/dist -p 8788
+ *   # local (wrangler pages dev — npm run dev)
  *   node scripts/smoke-cloudflare-pages.mjs --base http://127.0.0.1:8788
  *
  *   # after CF deploy
@@ -27,12 +26,15 @@ const PAGES = [
   { path: "/ai-workspace.html" },
 ];
 
+const DEFAULT_BASE = "http://127.0.0.1:8788";
+
 function parseArgs() {
   const i = process.argv.indexOf("--base");
-  const base = i >= 0 ? process.argv[i + 1] : process.env.PAGES_BASE_URL || "";
+  const base =
+    i >= 0 ? process.argv[i + 1] : process.env.PAGES_BASE_URL || process.env.BASE_URL || DEFAULT_BASE;
   if (!base) {
-    console.error("Usage: node scripts/smoke-cloudflare-pages.mjs --base <origin>");
-        process.exit(2);
+    console.error(`Usage: node scripts/smoke-cloudflare-pages.mjs [--base ${DEFAULT_BASE}]`);
+    process.exit(2);
   }
   return base.replace(/\/$/, "");
 }

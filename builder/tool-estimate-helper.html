@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>見積補助 | 建設ツール | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-tool-estimate-helper">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./construction-tools.html" aria-label="建設ツールへ戻る">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">見積補助</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">見積補助</h1>
+          <p class="builder-header__sub">工事項目・数量・単価を入力して、概算見積を整理できます</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main builder-est-main" data-builder-est-root data-builder-tool="estimate-helper">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <section class="builder-est-hero" aria-label="見積補助概要">
+        <div class="builder-est-hero__inner">
+          <p class="builder-est-hero__kicker">建設ツール · 見積補助</p>
+          <h2 class="builder-est-hero__title">概算見積をその場で整理</h2>
+          <p class="builder-est-hero__desc">人工計算・材料計算・粗利計算で出した内容を項目として追加し、小計・消費税・税込合計を確認できます。正式な見積書発行や保存機能は含みません。</p>
+        </div>
+      </section>
+
+      <div class="builder-est-layout">
+        <section class="builder-panel builder-est-items-panel" aria-label="見積項目">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">見積項目</h2>
+            <span class="builder-kpi">リアルタイム</span>
+          </div>
+
+          <div class="builder-est-items-header" aria-hidden="true">
+            <span>項目名</span>
+            <span>数量</span>
+            <span>単位</span>
+            <span>単価</span>
+            <span>小計</span>
+            <span></span>
+          </div>
+
+          <div class="builder-est-items" data-builder-est-items>
+            <article class="builder-est-row" data-builder-est-row>
+              <label class="builder-est-field builder-est-field--name">
+                <span class="builder-est-field__label">項目名</span>
+                <input class="builder-input builder-est-input" type="text" name="name" value="人工費" placeholder="例：人工費" data-builder-est-input data-builder-est-name />
+              </label>
+              <label class="builder-est-field builder-est-field--qty">
+                <span class="builder-est-field__label">数量</span>
+                <input class="builder-input builder-est-input" type="number" name="quantity" inputmode="decimal" min="0" step="0.1" value="3" data-builder-est-input data-builder-est-quantity />
+              </label>
+              <label class="builder-est-field builder-est-field--unit">
+                <span class="builder-est-field__label">単位</span>
+                <input class="builder-input builder-est-input" type="text" name="unit" value="人日" placeholder="式" list="builder-est-unit-options" data-builder-est-input data-builder-est-unit />
+              </label>
+              <label class="builder-est-field builder-est-field--price">
+                <span class="builder-est-field__label">単価</span>
+                <input class="builder-input builder-est-input" type="number" name="unitPrice" inputmode="decimal" min="0" step="100" value="25000" data-builder-est-input data-builder-est-unit-price />
+              </label>
+              <div class="builder-est-field builder-est-field--line">
+                <span class="builder-est-field__label">小計</span>
+                <p class="builder-est-line-total" data-builder-est-line-total>¥75,000</p>
+              </div>
+              <div class="builder-est-field builder-est-field--action">
+                <button type="button" class="builder-btn builder-btn--ghost builder-est-remove" data-builder-est-remove aria-label="この項目を削除">削除</button>
+              </div>
+            </article>
+
+            <article class="builder-est-row" data-builder-est-row>
+              <label class="builder-est-field builder-est-field--name">
+                <span class="builder-est-field__label">項目名</span>
+                <input class="builder-input builder-est-input" type="text" name="name" value="材料費" placeholder="例：材料費" data-builder-est-input data-builder-est-name />
+              </label>
+              <label class="builder-est-field builder-est-field--qty">
+                <span class="builder-est-field__label">数量</span>
+                <input class="builder-input builder-est-input" type="number" name="quantity" inputmode="decimal" min="0" step="0.1" value="1" data-builder-est-input data-builder-est-quantity />
+              </label>
+              <label class="builder-est-field builder-est-field--unit">
+                <span class="builder-est-field__label">単位</span>
+                <input class="builder-input builder-est-input" type="text" name="unit" value="式" placeholder="式" list="builder-est-unit-options" data-builder-est-input data-builder-est-unit />
+              </label>
+              <label class="builder-est-field builder-est-field--price">
+                <span class="builder-est-field__label">単価</span>
+                <input class="builder-input builder-est-input" type="number" name="unitPrice" inputmode="decimal" min="0" step="100" value="80000" data-builder-est-input data-builder-est-unit-price />
+              </label>
+              <div class="builder-est-field builder-est-field--line">
+                <span class="builder-est-field__label">小計</span>
+                <p class="builder-est-line-total" data-builder-est-line-total>¥80,000</p>
+              </div>
+              <div class="builder-est-field builder-est-field--action">
+                <button type="button" class="builder-btn builder-btn--ghost builder-est-remove" data-builder-est-remove aria-label="この項目を削除">削除</button>
+              </div>
+            </article>
+
+            <article class="builder-est-row" data-builder-est-row>
+              <label class="builder-est-field builder-est-field--name">
+                <span class="builder-est-field__label">項目名</span>
+                <input class="builder-input builder-est-input" type="text" name="name" value="外注費" placeholder="例：外注費" data-builder-est-input data-builder-est-name />
+              </label>
+              <label class="builder-est-field builder-est-field--qty">
+                <span class="builder-est-field__label">数量</span>
+                <input class="builder-input builder-est-input" type="number" name="quantity" inputmode="decimal" min="0" step="0.1" value="1" data-builder-est-input data-builder-est-quantity />
+              </label>
+              <label class="builder-est-field builder-est-field--unit">
+                <span class="builder-est-field__label">単位</span>
+                <input class="builder-input builder-est-input" type="text" name="unit" value="式" placeholder="式" list="builder-est-unit-options" data-builder-est-input data-builder-est-unit />
+              </label>
+              <label class="builder-est-field builder-est-field--price">
+                <span class="builder-est-field__label">単価</span>
+                <input class="builder-input builder-est-input" type="number" name="unitPrice" inputmode="decimal" min="0" step="100" value="0" data-builder-est-input data-builder-est-unit-price />
+              </label>
+              <div class="builder-est-field builder-est-field--line">
+                <span class="builder-est-field__label">小計</span>
+                <p class="builder-est-line-total" data-builder-est-line-total>¥0</p>
+              </div>
+              <div class="builder-est-field builder-est-field--action">
+                <button type="button" class="builder-btn builder-btn--ghost builder-est-remove" data-builder-est-remove aria-label="この項目を削除">削除</button>
+              </div>
+            </article>
+          </div>
+
+          <datalist id="builder-est-unit-options">
+            <option value="式"></option>
+            <option value="人"></option>
+            <option value="人日"></option>
+            <option value="日"></option>
+            <option value="㎡"></option>
+            <option value="m"></option>
+            <option value="枚"></option>
+            <option value="缶"></option>
+            <option value="箱"></option>
+          </datalist>
+
+          <div class="builder-est-items-actions">
+            <button type="button" class="builder-btn builder-btn--primary builder-est-add" data-builder-est-add>項目を追加</button>
+          </div>
+        </section>
+
+        <section class="builder-panel builder-est-summary" aria-label="計算結果" aria-live="polite">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">合計</h2>
+          </div>
+
+          <input type="hidden" value="0.1" data-builder-est-tax-rate />
+
+          <dl class="builder-est-summary__list">
+            <div class="builder-est-summary__row">
+              <dt>小計合計</dt>
+              <dd data-builder-est-subtotal>¥155,000</dd>
+            </div>
+            <div class="builder-est-summary__row">
+              <dt>消費税（<span data-builder-est-tax-rate-label>10%</span>）</dt>
+              <dd data-builder-est-tax>¥15,500</dd>
+            </div>
+            <div class="builder-est-summary__row builder-est-summary__row--total">
+              <dt>税込合計</dt>
+              <dd data-builder-est-total>¥170,500</dd>
+            </div>
+          </dl>
+
+          <div class="builder-est-formula-note" aria-label="計算式">
+            <p class="builder-est-formula-note__title">計算式</p>
+            <ul class="builder-est-formula-note__list">
+              <li><strong>小計</strong> = 数量 × 単価</li>
+              <li><strong>小計合計</strong> = 各行の小計合計</li>
+              <li><strong>消費税</strong> = 小計合計 × 10%</li>
+              <li><strong>税込合計</strong> = 小計合計 + 消費税</li>
+            </ul>
+            <p class="builder-est-formula-note__note">※ 概算見積補助です。正式な見積書・PDF出力・保存機能は含みません。</p>
+          </div>
+
+          <aside class="builder-ai-comment" data-builder-ai-comment aria-live="polite">
+            <div class="builder-ai-comment__head">
+              <h3 class="builder-ai-comment__title">Builder AI コメント</h3>
+              <span class="builder-ai-comment__badge" data-builder-ai-comment-badge>準備中</span>
+            </div>
+            <p class="builder-ai-comment__body" data-builder-ai-comment-body>計算すると、AI分析コメントがここに表示されます。</p>
+            <p class="builder-ai-comment__meta" data-builder-ai-comment-meta hidden></p>
+          </aside>
+        </section>
+      </div>
+
+      <template data-builder-est-row-template>
+        <article class="builder-est-row" data-builder-est-row>
+          <label class="builder-est-field builder-est-field--name">
+            <span class="builder-est-field__label">項目名</span>
+            <input class="builder-input builder-est-input" type="text" name="name" placeholder="例：諸経費" data-builder-est-input data-builder-est-name />
+          </label>
+          <label class="builder-est-field builder-est-field--qty">
+            <span class="builder-est-field__label">数量</span>
+            <input class="builder-input builder-est-input" type="number" name="quantity" inputmode="decimal" min="0" step="0.1" value="1" data-builder-est-input data-builder-est-quantity />
+          </label>
+          <label class="builder-est-field builder-est-field--unit">
+            <span class="builder-est-field__label">単位</span>
+            <input class="builder-input builder-est-input" type="text" name="unit" value="式" placeholder="式" list="builder-est-unit-options" data-builder-est-input data-builder-est-unit />
+          </label>
+          <label class="builder-est-field builder-est-field--price">
+            <span class="builder-est-field__label">単価</span>
+            <input class="builder-input builder-est-input" type="number" name="unitPrice" inputmode="decimal" min="0" step="100" value="0" data-builder-est-input data-builder-est-unit-price />
+          </label>
+          <div class="builder-est-field builder-est-field--line">
+            <span class="builder-est-field__label">小計</span>
+            <p class="builder-est-line-total" data-builder-est-line-total>¥0</p>
+          </div>
+          <div class="builder-est-field builder-est-field--action">
+            <button type="button" class="builder-btn builder-btn--ghost builder-est-remove" data-builder-est-remove aria-label="この項目を削除">削除</button>
+          </div>
+        </article>
+      </template>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-runtime.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="builder-actor-identity.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-ai-engine.js"></script>
+  <script src="builder-construction-tools.js"></script>
+  <script src="builder-tool-manpower-calculator.js"></script>
+  <script src="builder-tool-profit-calculator.js"></script>
+  <script src="builder-tool-material-calculator.js"></script>
+  <script src="builder-tool-estimate-helper.js"></script>
+  <script src="builder.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var tool = window.BuilderConstructionTools && window.BuilderConstructionTools.get
+        ? window.BuilderConstructionTools.get("estimate-helper")
+        : null;
+      if (tool && typeof tool.mount === "function") {
+        tool.mount();
+      }
+    });
+  </script>
+</body>
+</html>

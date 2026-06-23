@@ -66,7 +66,7 @@
         { id: "search", label: "業務サービスを探す", href: "business.html", icon: "search" },
         { id: "favorites", label: "お気に入り", href: "favorites-list.html", icon: "heart" },
         { id: "talk", label: "TASFUL TALK", href: "talk-home.html", icon: "message" },
-        { id: "chats", label: "すべてのやりとり", href: "chat-list.html", icon: "inbox" },
+        { id: "chats", label: "すべてのやりとり", href: "talk-home.html?tab=chat", icon: "inbox" },
       ],
     },
     {
@@ -180,7 +180,7 @@
       label: "やりとり",
       items: [
         { label: "TASFUL TALK", href: "talk-home.html", icon: "message" },
-        { label: "すべてのやりとり", href: "chat-list.html", icon: "inbox" },
+        { label: "すべてのやりとり", href: "talk-home.html?tab=chat", icon: "inbox" },
         { label: "AI相談", href: "ai-workspace.html", icon: "sparkles" },
       ],
     },
@@ -250,7 +250,9 @@
     }
     if (item.id === "favorites") return path === "favorites-list.html";
     if (item.id === "talk") return path === "talk-home.html";
-    if (item.id === "chats") return path === "chat-list.html";
+    if (item.id === "chats") {
+      return path === "talk-home.html" || path === "chat-list.html";
+    }
     if (item.id === "listed") return path === "my-listings.html";
     if (item.id === "manage") return path === "listing-management.html";
     if (item.id === "sales") return path === "sales-fees.html";

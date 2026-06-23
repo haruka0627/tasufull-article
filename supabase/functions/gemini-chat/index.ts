@@ -476,20 +476,20 @@ Deno.serve(async (req) => {
   if (options) return options;
 
   if (req.method !== "POST") {
-    return jsonResponse({ error: "Method not allowed", reply: "" }, 405);
+    return jsonResponse({ error: "Method not allowed", reply: "" }, 405, req);
   }
 
   const apiKey = Deno.env.get("GEMINI_API_KEY")?.trim();
   if (!apiKey) {
     console.error("[gemini-chat] GEMINI_API_KEY not configured");
-    return jsonResponse({ error: "GEMINI_API_KEY not configured", reply: "" }, 503);
+    return jsonResponse({ error: "GEMINI_API_KEY not configured", reply: "" }, 503, req);
   }
 
   let body: RequestBody;
   try {
     body = await req.json();
   } catch {
-    return jsonResponse({ error: "Invalid JSON body", reply: "" }, 400);
+    return jsonResponse({ error: "Invalid JSON body", reply: "" }, 400, req);
   }
 
   const message = trimText(body.message, 2000);
@@ -497,7 +497,7 @@ Deno.serve(async (req) => {
   const history = Array.isArray(body.history) ? body.history : [];
 
   if (!message && history.length === 0) {
-    return jsonResponse({ error: "message is required", reply: "" }, 400);
+    return jsonResponse({ error: "message is required", reply: "" }, 400, req);
   }
 
   const intent = resolveIntent(body.intent, message, body.mode);
@@ -531,12 +531,16 @@ Deno.serve(async (req) => {
     const outcome = await callGeminiWithRetry(geminiUrl, geminiPayload);
 
     if (outcome.ok) {
-      return jsonResponse({
-        reply: outcome.reply,
-        usedGemini: true,
-        retryCount: outcome.retryCount,
-        intent,
-      });
+      return jsonResponse(
+        {
+          reply: outcome.reply,
+          usedGemini: true,
+          retryCount: outcome.retryCount,
+          intent,
+        },
+        200,
+        req
+      );
     }
 
     const httpStatus = outcome.status >= 400 && outcome.status < 500 ? outcome.status : 502;
@@ -548,7 +552,8 @@ Deno.serve(async (req) => {
         retryCount: GEMINI_MAX_ATTEMPTS - 1,
         intent,
       },
-      httpStatus
+      httpStatus,
+      req
     );
   } catch (err) {
     console.error("[gemini-chat] request failed:", err);
@@ -558,7 +563,8 @@ Deno.serve(async (req) => {
         usedGemini: false,
         error: err instanceof Error ? err.message : "Gemini request failed",
       },
-      502
+      502,
+      req
     );
   }
 });

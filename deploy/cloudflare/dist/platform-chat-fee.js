@@ -434,11 +434,13 @@
 
   function buildChatUrl(thread) {
     const threadId = pickStr(thread?.id, thread);
-    if (!threadId) return "chat-list.html";
+    if (!threadId) {
+      return global.TasuTalkChatEntryUrl?.buildTalkChatHubUrl?.() || "talk-home.html?tab=chat";
+    }
     if (global.TasuChatThreadStore?.chatListUrl) {
       return global.TasuChatThreadStore.chatListUrl(threadId);
     }
-    return `chat-list.html?thread=${encodeURIComponent(threadId)}`;
+    return `talk-home.html?tab=chat&thread=${encodeURIComponent(threadId)}`;
   }
 
   function buildChatDetailUrl(detail) {
@@ -792,7 +794,7 @@
     });
   }
 
-  function activateDeferredAfterPayment(ctx) {
+  async function activateDeferredAfterPayment(ctx) {
     const feeRow = getFeeRecordByContext(ctx);
     const feeKey = pickStr(feeRow?.threadId);
     const contactId = pickStr(ctx?.contactId, feeRow?.contactId);
@@ -819,7 +821,9 @@
       const contact = Contacts?.findById?.(contactId);
       if (!contact) return { ok: false, reason: "contact_not_found" };
       const listing = Contacts.resolveListing(contact.listing_id);
-      threadResult = threadStore.createThreadFromContact?.(listing, contact);
+      threadResult = await Promise.resolve(
+        threadStore.createThreadFromContact?.(listing, contact, { feePending: false })
+      );
       if (!threadResult?.ok || !threadResult.thread) return threadResult || { ok: false };
       Contacts.finalizeContactAfterPayment(contactId, threadResult.thread.id);
     } else if (applicationId) {
@@ -827,7 +831,9 @@
       const listing = jobStore?.resolveListing?.(listingId);
       const app = jobStore?.findApplication?.(listingId, applicationId);
       if (!listing || !app) return { ok: false, reason: "application_not_found" };
-      threadResult = threadStore.createHireThread?.(listing, app, { feePending: false });
+      threadResult = await Promise.resolve(
+        threadStore.createHireThread?.(listing, app, { feePending: false })
+      );
       if (!threadResult?.ok || !threadResult.thread) return threadResult || { ok: false };
       jobStore.finalizeHireAfterPayment?.(threadResult.thread);
     } else if (requestId) {
@@ -835,7 +841,9 @@
       const listing = workerStore?.resolveListing?.(listingId);
       const req = workerStore?.findRequest?.(listingId, requestId);
       if (!listing || !req) return { ok: false, reason: "request_not_found" };
-      threadResult = threadStore.createWorkerRequestThread?.(listing, req, { feePending: false });
+      threadResult = await Promise.resolve(
+        threadStore.createWorkerRequestThread?.(listing, req, { feePending: false })
+      );
       if (!threadResult?.ok || !threadResult.thread) return threadResult || { ok: false };
       workerStore.finalizeRequestAfterPayment?.(requestId, threadResult.thread.id);
     } else {
@@ -846,7 +854,7 @@
     if (feeKey) migrateFeeRecordToThread(feeKey, realThreadId);
     else markFeePaid(realThreadId, { activatedAt: new Date().toISOString() });
 
-    const activated = threadStore.activateThreadAfterFeePaid?.(realThreadId);
+    const activated = await Promise.resolve(threadStore.activateThreadAfterFeePaid?.(realThreadId));
     if (!activated?.ok) {
       pushJobHireFlowDiag("activateDeferredAfterPayment:fail", {
         reason: activated?.reason || "activate_failed",

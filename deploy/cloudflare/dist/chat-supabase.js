@@ -803,8 +803,192 @@
       unreadCount: 0,
       serviceDealId: dealId,
     };
-    registerLocalConsultRoom(thread, []);
+    registerLocalConsultRoom(seed);
     return { id: localId, row: thread, local: true };
+  }
+
+  async function findRoomByContactId(contactId) {
+    const cid = String(contactId || "").trim();
+    if (!cid || !isConfigured()) return null;
+    const sb = getClient();
+    const { data, error } = await sb
+      .from("transaction_rooms")
+      .select("*")
+      .eq("contact_id", cid)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (error) {
+      if (!/column|schema cache/i.test(error.message)) {
+        logSupabaseError("findRoomByContactId", error);
+      }
+      return null;
+    }
+    return data || null;
+  }
+
+  async function findRoomByServiceRef(serviceType, serviceRefId) {
+    const st = String(serviceType || "").trim();
+    const ref = String(serviceRefId || "").trim();
+    if (!st || !ref || !isConfigured()) return null;
+    const sb = getClient();
+    const { data, error } = await sb
+      .from("transaction_rooms")
+      .select("*")
+      .eq("service_type", st)
+      .eq("service_ref_id", ref)
+      .order("created_at", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (error) {
+      if (!/column|schema cache/i.test(error.message)) {
+        logSupabaseError("findRoomByServiceRef", error);
+      }
+      return null;
+    }
+    return data || null;
+  }
+
+  /**
+   * 汎用 listing TALK ルーム ensure（クライアント fallback · RLS 許可時）
+   */
+  async function createListingTalkRoom(input) {
+    const payload = input && typeof input === "object" ? input : {};
+    const listingId = String(payload.listing_id || "").trim();
+    const listingType = String(payload.listing_type || "").trim();
+    const buyerId = String(payload.buyer_id || "").trim();
+    const sellerId = String(payload.seller_id || "").trim();
+    const title = String(payload.title || "やりとり").trim();
+    if (!listingId || !listingType || !buyerId || !sellerId) {
+      throw new Error("createListingTalkRoom: missing required fields");
+    }
+
+    const contactId = String(payload.contact_id || "").trim();
+    if (contactId) {
+      const existing = await findRoomByContactId(contactId);
+      if (existing?.id) {
+        return { id: String(existing.id), row: existing, created: false, reused: true };
+      }
+    }
+
+    const serviceType = String(payload.service_type || "").trim();
+    const serviceRefId = String(payload.service_ref_id || "").trim();
+    if (serviceType && serviceRefId) {
+      const existing = await findRoomByServiceRef(serviceType, serviceRefId);
+      if (existing?.id) {
+        return { id: String(existing.id), row: existing, created: false, reused: true };
+      }
+    }
+
+    const expiresAt =
+      String(payload.expires_at || "").trim() ||
+      new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString();
+    const status = String(payload.status || "fee_pending").trim() || "fee_pending";
+
+    const basePayload = {
+      listing_id: listingId,
+      listing_type: listingType,
+      buyer_id: buyerId,
+      seller_id: sellerId,
+      expires_at: expiresAt,
+      status,
+    };
+    const metaPayload = { ...basePayload };
+    const cid = String(payload.contact_id || "").trim();
+    if (cid) metaPayload.contact_id = cid;
+    const source = String(payload.source || "").trim();
+    if (source) metaPayload.source = source;
+    if (serviceType) metaPayload.service_type = serviceType;
+    if (serviceRefId) metaPayload.service_ref_id = serviceRefId;
+    const dealId = String(payload.service_deal_id || "").trim();
+    if (dealId && !dealId.startsWith("local-")) metaPayload.service_deal_id = dealId;
+
+    const richPayload = { ...metaPayload, title, partner_id: sellerId };
+    const candidates = [richPayload, metaPayload, basePayload];
+
+    if (isConfigured() && window.location.protocol !== "file:") {
+      const sb = getClient();
+      for (const row of candidates) {
+        const { data, error } = await sb
+          .from("transaction_rooms")
+          .insert(row)
+          .select("*")
+          .single();
+        if (!error && data?.id) {
+          return { id: String(data.id), row: data, created: true, reused: false };
+        }
+        if (error && !/could not find|column|schema cache/i.test(error.message)) {
+          logSupabaseError("createListingTalkRoom", error);
+          break;
+        }
+        if (error) logSupabaseError("createListingTalkRoom", error);
+      }
+    }
+
+    return { ok: false, reason: "insert_failed" };
+  }
+
+  /**
+   * 手数料支払い後 — transaction_rooms.status を active に
+   */
+  async function activateTransactionRoom(roomId) {
+    const id = normalizeRoomId(roomId);
+    if (!id) throw new Error("roomId is required");
+    if (isLocalRoomId(id)) {
+      return { id, local: true };
+    }
+    const sb = getClient();
+    const now = nowIso();
+    const { data, error } = await sb
+      .from("transaction_rooms")
+      .update({ status: "active", updated_at: now })
+      .eq("id", id)
+      .select("*")
+      .single();
+    if (error) {
+      logSupabaseError("activate transaction_rooms", error);
+      throw error;
+    }
+    return mapRoomRowToThread(data);
+  }
+
+  async function createBusinessConsultRoomViaEnsure({ listing, deal }) {
+    const serviceId = String(
+      listing?.id || listing?.demo_id || listing?.form_data?.demo_id || ""
+    ).trim();
+    const clientId = getCurrentUserId();
+    const providerId = String(
+      listing?.user_id || listing?.seller_user_id || `provider_${serviceId}`
+    ).trim();
+    const company = String(
+      listing?.company_name ||
+        listing?.category_extra?.shop_store?.shop_name ||
+        listing?.title ||
+        "掲載者"
+    ).trim();
+    const title = String(listing?.title || company || "業務サービス相談").trim();
+    const dealId = String(deal?.id || "").trim();
+
+    const Ensure = window.TasuTalkRoomEnsure;
+    if (Ensure?.ensureTalkRoom) {
+      const ensured = await Ensure.ensureTalkRoom({
+        listing_type: "business",
+        listing_id: serviceId,
+        title: `【業務】${title}`,
+        buyer_id: clientId,
+        seller_id: providerId,
+        service_deal_id: dealId && !dealId.startsWith("local-") ? dealId : undefined,
+        source: "business-consult",
+        status: "active",
+        from: "business",
+      });
+      if (ensured?.ok && ensured.room_id) {
+        const row = await fetchRoomById(ensured.room_id).catch(() => null);
+        return { id: ensured.room_id, row, created: ensured.created, reused: ensured.reused };
+      }
+    }
+
+    return createBusinessConsultRoom({ listing, deal });
   }
 
   async function fetchRoomById(roomId) {
@@ -1410,6 +1594,11 @@
     formatMessagePreview,
     fetchRoomById,
     createBusinessConsultRoom,
+    createBusinessConsultRoomViaEnsure,
+    createListingTalkRoom,
+    findRoomByContactId,
+    findRoomByServiceRef,
+    activateTransactionRoom,
     registerLocalConsultRoom,
     touchLocalRoomActivity,
     insertLocalRoomMessage,

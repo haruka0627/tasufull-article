@@ -33,7 +33,7 @@
         <nav class="builder-top-nav" aria-label="グローバルナビ">
           <a class="builder-top-nav__link" href="../public-board.html">案件を探す</a>
           <a class="builder-top-nav__link" href="mvp-project-new.html">案件を投稿する</a>
-          <a class="builder-top-nav__link" href="mvp-partner-register.html">協力会社登録</a>
+          <a class="builder-top-nav__link" href="/partner-register.html?source=builder">協力パートナー登録</a>
           <a class="builder-top-nav__btn" href="#" onclick="alert('demo: ログインは未実装です'); return false;">ログイン</a>
         </nav>
 
@@ -66,7 +66,7 @@
             <a class="builder-top-drawer__link builder-top-drawer__link--accent" href="#" onclick="alert('demo: ログインは未実装です'); return false;">ログイン</a>
             <a class="builder-top-drawer__link" href="../public-board.html">案件を探す</a>
             <a class="builder-top-drawer__link" href="mvp-project-new.html">案件を投稿する</a>
-            <a class="builder-top-drawer__link" href="mvp-partner-register.html">協力会社登録</a>
+            <a class="builder-top-drawer__link" href="/partner-register.html?source=builder">協力パートナー登録</a>
           </nav>
         </aside>
       </div>
@@ -101,7 +101,7 @@
           <div class="builder-top-hero__cta" aria-label="主要導線">
             <a class="builder-top-btn builder-top-btn--primary" href="../public-board.html">案件を探す</a>
             <a class="builder-top-btn builder-top-btn--dark" href="mvp-project-new.html">案件を投稿する</a>
-            <a class="builder-top-btn builder-top-btn--outline" href="mvp-partner-register.html">協力会社登録</a>
+            <a class="builder-top-btn builder-top-btn--outline" href="/partner-register.html?source=builder">協力パートナー登録</a>
           </div>
 
           <div class="builder-top-stats" aria-label="統計">
@@ -125,6 +125,88 @@
       </section>
 
       <div class="builder-shell">
+      <section class="builder-top-section builder-top-section--frame builder-top-ct" aria-label="建設ツール">
+        <div class="builder-top-section__head">
+          <div class="builder-top-section__title">
+            <h2 class="builder-top-h2">建設ツール</h2>
+            <p class="builder-top-hint">人工計算・材料計算・粗利計算・見積補助に加え、Builder AI β版ツールを利用できます。</p>
+          </div>
+        </div>
+
+        <div class="builder-top-ct__stats" aria-label="ツールステータス">
+          <article class="builder-top-ct-stat builder-top-ct-stat--ready">
+            <p class="builder-top-ct-stat__label">利用可能</p>
+            <p class="builder-top-ct-stat__value" aria-label="利用可能なツール数">4</p>
+          </article>
+          <article class="builder-top-ct-stat builder-top-ct-stat--beta">
+            <p class="builder-top-ct-stat__label">Builder AI β版</p>
+            <p class="builder-top-ct-stat__value" aria-label="Builder AI β版のツール数">4</p>
+          </article>
+        </div>
+
+        <ul class="builder-top-ct__tools" aria-label="ツール一覧">
+          <li><a class="builder-top-ct-tool" href="tool-manpower-calculator.html">人工計算</a></li>
+          <li><a class="builder-top-ct-tool" href="tool-material-calculator.html">材料計算</a></li>
+          <li><a class="builder-top-ct-tool" href="tool-profit-calculator.html">粗利計算</a></li>
+          <li><a class="builder-top-ct-tool" href="tool-estimate-helper.html">見積補助</a></li>
+          <li>
+            <a class="builder-top-ct-tool builder-top-ct-tool--beta" href="tool-ai-estimate.html">
+              AI見積作成 <span class="builder-top-ct-tool__badge">β</span>
+            </a>
+          </li>
+          <li>
+            <a class="builder-top-ct-tool builder-top-ct-tool--beta" href="tool-ai-cost-analysis.html">
+              AI原価分析 <span class="builder-top-ct-tool__badge">β</span>
+            </a>
+          </li>
+          <li>
+            <a class="builder-top-ct-tool builder-top-ct-tool--beta" href="tool-ai-quantity-support.html">
+              AI積算補助 <span class="builder-top-ct-tool__badge">β</span>
+            </a>
+          </li>
+          <li>
+            <a class="builder-top-ct-tool builder-top-ct-tool--beta" href="tool-ai-schedule-suggest.html">
+              AI工程提案 <span class="builder-top-ct-tool__badge">β</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="builder-top-ct__cta">
+          <a class="builder-top-btn builder-top-btn--primary" href="construction-tools.html">建設ツールを開く</a>
+        </div>
+      </section>
+
+      <section class="builder-top-section builder-top-section--frame" aria-label="主要機能">
+        <div class="builder-top-section__head">
+          <div class="builder-top-section__title">
+            <h2 class="builder-top-h2">主要機能</h2>
+            <p class="builder-top-hint">案件・ツール・職人検索を Builder から</p>
+          </div>
+        </div>
+        <div class="builder-top-feature-grid builder-top-feature-grid--major">
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="../public-board.html">
+            <div class="builder-top-card__icon" aria-hidden="true">🔍</div>
+            <h3 class="builder-top-h3">案件を探す</h3>
+            <p class="builder-top-p">公開案件から協力会社・職人を募集。</p>
+          </a>
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="mvp-project-new.html">
+            <div class="builder-top-card__icon" aria-hidden="true">📝</div>
+            <h3 class="builder-top-h3">案件を掲載する</h3>
+            <p class="builder-top-p">新規案件を投稿して応募を受け付け。</p>
+          </a>
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="construction-tools.html">
+            <div class="builder-top-card__icon" aria-hidden="true">🧮</div>
+            <h3 class="builder-top-h3">建設ツール</h3>
+            <p class="builder-top-p">人工・材料・見積・Builder AI。</p>
+          </a>
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="find-workers.html">
+            <div class="builder-top-card__icon" aria-hidden="true">🧑‍🔧</div>
+            <h3 class="builder-top-h3">職人を探す</h3>
+            <p class="builder-top-p">職種・エリア・資格から職人を検索。</p>
+          </a>
+        </div>
+      </section>
+
       <section class="builder-top-section builder-top-section--frame" aria-label="最新の案件">
         <div class="builder-top-section__head">
           <div class="builder-top-section__title">
@@ -178,6 +260,16 @@
             <h3 class="builder-top-h3">完了報告・写真・PDF</h3>
             <p class="builder-top-p">報告書プレビュー、PDF生成履歴まで。</p>
           </article>
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="construction-tools.html">
+            <div class="builder-top-card__icon" aria-hidden="true">🧮</div>
+            <h3 class="builder-top-h3">建設ツール</h3>
+            <p class="builder-top-p">人工・材料・見積・粗利計算を Builder 上で確認。</p>
+          </a>
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="find-workers.html">
+            <div class="builder-top-card__icon" aria-hidden="true">🧑‍🔧</div>
+            <h3 class="builder-top-h3">職人を探す</h3>
+            <p class="builder-top-p">職種・エリア・資格から職人を検索。</p>
+          </a>
         </div>
       </section>
 
@@ -256,7 +348,7 @@
             <p class="builder-top-footer__title builder-top-footer__title--bar">サービス</p>
             <a class="builder-top-footer__link" href="../public-board.html">案件一覧</a>
             <a class="builder-top-footer__link" href="mvp-project-new.html">案件を投稿する</a>
-            <a class="builder-top-footer__link" href="mvp-partner-register.html">協力会社登録</a>
+            <a class="builder-top-footer__link" href="/partner-register.html?source=builder">協力パートナー登録</a>
             <a class="builder-top-footer__link" href="user-dashboard.html">一般ダッシュボード</a>
             <a class="builder-top-footer__link" href="index.html">パートナーダッシュボード</a>
           </div>

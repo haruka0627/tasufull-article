@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>本人確認 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-verify" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header match-header--sub" aria-label="ヘッダー">
+      <a class="match-header__back" href="match-mypage.html" aria-label="戻る">←</a>
+      <h1 class="match-header__title">本人確認</h1>
+    </header>
+
+    <main class="match-main" data-match-verify-flow>
+      <p class="match-form-subtitle" style="margin:0 0 16px">安心して出会うために、電話番号と身分証で本人確認を行います。</p>
+
+      <div class="match-verify-flow" aria-label="確認ステップ">
+        <article class="match-verify-step is-done" data-verify-step="0">
+          <span class="match-verify-step__num" aria-hidden="true">✓</span>
+          <div class="match-verify-step__body">
+            <h3>電話番号認証</h3>
+            <p>SMSで届いたコードを入力して認証します。</p>
+          </div>
+        </article>
+        <article class="match-verify-step is-active" data-verify-step="1">
+          <span class="match-verify-step__num" aria-hidden="true">2</span>
+          <div class="match-verify-step__body">
+            <h3>身分証提出</h3>
+            <p>運転免許証・マイナンバーカード等を撮影して提出します。</p>
+          </div>
+        </article>
+        <article class="match-verify-step" data-verify-step="2">
+          <span class="match-verify-step__num" aria-hidden="true">3</span>
+          <div class="match-verify-step__body">
+            <h3>審査中</h3>
+            <p>通常1〜3営業日で審査します。完了までスワイプは制限されます。</p>
+          </div>
+        </article>
+        <article class="match-verify-step" data-verify-step="3">
+          <span class="match-verify-step__num" aria-hidden="true">4</span>
+          <div class="match-verify-step__body">
+            <h3>認証完了</h3>
+            <p>プロフィールに「本人確認済み」バッジが表示されます。</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="match-verify-panel is-active" data-verify-panel="1">
+        <h2 class="match-verify-panel__title">身分証を提出</h2>
+        <label class="match-field">
+          <span class="match-field__label">書類の種類</span>
+          <select class="match-select" data-verify-doc-type>
+            <option>運転免許証</option>
+            <option>マイナンバーカード</option>
+            <option>パスポート</option>
+            <option>在留カード</option>
+          </select>
+        </label>
+        <p class="match-field__hint" style="margin-top:12px">MVPでは書類画像は送信せず、申請情報のみ受け付けます。審査は運営が手動で行います。</p>
+        <button type="button" class="match-btn match-btn--primary match-btn--block" style="margin-top:16px" data-verify-submit-identity data-verify-type="identity">本人確認を申請する</button>
+
+        <div class="match-verify-age-box" style="margin-top:24px">
+          <h2 class="match-verify-panel__title">年齢確認</h2>
+          <p class="match-field__hint">プロフィールの生年月日をもとに、運営が年齢確認を行います。生年月日などの追加情報は送信しません。</p>
+          <button type="button" class="match-btn match-btn--secondary match-btn--block" style="margin-top:12px" data-verify-submit-age data-verify-type="age">年齢確認を申請する</button>
+        </div>
+      </div>
+
+      <div class="match-verify-panel" data-verify-panel="2">
+        <div class="match-verify-done">
+          <div class="match-verify-done__icon" aria-hidden="true">⏳</div>
+          <h2>審査中です</h2>
+          <p>身分証を受け付けました。審査が完了するとプッシュ通知とメールでお知らせします。</p>
+        </div>
+        <button type="button" class="match-btn match-btn--secondary match-btn--block" data-verify-next>審査完了をシミュレート</button>
+      </div>
+
+      <div class="match-verify-panel" data-verify-panel="3">
+        <div class="match-verify-done">
+          <div class="match-verify-done__icon" aria-hidden="true">✓</div>
+          <h2>認証が完了しました</h2>
+          <p>本人確認済みバッジが付与されました。安心してスワイプをお楽しみください。</p>
+        </div>
+        <a class="match-btn match-btn--primary match-btn--block" href="match-swipe.html">スワイプをはじめる</a>
+        <a class="match-btn match-btn--text match-btn--block" href="match-mypage.html">マイページ</a>
+      </div>
+    </main>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link" href="match-swipe.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💘</span>
+          <span>スワイプ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-list.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💞</span>
+          <span>マッチ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-safety.html">
+          <span class="match-tabbar__icon" aria-hidden="true">🛡️</span>
+          <span>安心</span>
+        </a>
+        <a class="match-tabbar__link is-active" href="match-mypage.html">
+          <span class="match-tabbar__icon" aria-hidden="true">👤</span>
+          <span>マイページ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-data-render.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-wiring.js"></script>
+  <script src="match-p15-wiring.js"></script>
+  <script src="match-verification-wiring.js"></script>
+</body>
+</html>

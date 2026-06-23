@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>協力パートナー詳細 | Builder Admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-partner-detail">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder Admin ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="../builder-admin/admin-index.html" aria-label="Builder Adminダッシュボード">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18" />
+                <path d="M7 21V7l8-4v18" />
+                <path d="M17 21V11l-6-4" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder Admin</span>
+              <span class="builder-brand__sub">TASFUL 運営</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title" data-prt-detail-title>協力パートナー詳細</h1>
+          <p class="builder-header__sub">基本情報・審査・書類（P1）</p>
+          <a class="builder-admin-back" href="partner-management.html">協力パートナー一覧へ</a>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=AD" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>運営</span>
+            <span class="builder-account__sub" data-builder-member-type>TASFUL運営</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main" data-builder-main>
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <p class="builder-prt-loading" data-prt-detail-loading>読み込み中…</p>
+
+      <div data-prt-detail-content hidden>
+        <div class="builder-prt-tabs" role="tablist" aria-label="詳細タブ">
+          <button type="button" class="builder-prt-tab is-active" data-prt-detail-tab="basic">基本情報</button>
+          <button type="button" class="builder-prt-tab" data-prt-detail-tab="review">審査</button>
+          <button type="button" class="builder-prt-tab" data-prt-detail-tab="documents">書類</button>
+          <button type="button" class="builder-prt-tab builder-prt-tab--soon" disabled>反社（Coming soon）</button>
+          <button type="button" class="builder-prt-tab builder-prt-tab--soon" disabled>契約（Coming soon）</button>
+          <button type="button" class="builder-prt-tab builder-prt-tab--soon" disabled>案件紹介（Coming soon）</button>
+          <button type="button" class="builder-prt-tab builder-prt-tab--soon" disabled>評価（Coming soon）</button>
+          <button type="button" class="builder-prt-tab builder-prt-tab--soon" disabled>期限（Coming soon）</button>
+          <button type="button" class="builder-prt-tab builder-prt-tab--soon" disabled>トラブル（Coming soon）</button>
+          <button type="button" class="builder-prt-tab builder-prt-tab--soon" disabled>履歴（Coming soon）</button>
+        </div>
+
+        <section class="builder-panel" data-prt-detail-panel="basic" aria-label="基本情報">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">基本情報</h2>
+          </div>
+          <div class="builder-prt-kv-grid" data-prt-detail-basic></div>
+        </section>
+
+        <section class="builder-panel" data-prt-detail-panel="review" hidden aria-label="審査">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">審査</h2>
+          </div>
+          <div class="builder-prt-review-form" data-prt-detail-review-form></div>
+          <h3 class="builder-section-title" style="font-size:15px;margin:0 0 12px">審査履歴</h3>
+          <div data-prt-detail-reviews></div>
+        </section>
+
+        <section class="builder-panel" data-prt-detail-panel="documents" hidden aria-label="書類">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">書類</h2>
+          </div>
+          <div data-prt-detail-documents></div>
+        </section>
+      </div>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL inc. All rights reserved. Builder Admin</p>
+      </footer>
+    </main>
+  </div>
+
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../partner-api.js"></script>
+  <script src="partner-mock-data.js"></script>
+  <script src="partner-detail.js" defer></script>
+</body>
+</html>

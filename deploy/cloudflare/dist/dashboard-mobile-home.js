@@ -132,7 +132,7 @@
       description: "TALK・チャット・AI",
       items: [
         { label: "TASFUL TALK", hint: "通知・連絡のホーム", href: "talk-home.html", icon: "💬" },
-        { label: "すべてのやりとり", hint: "相談・見積・取引チャット", href: "chat-list.html", icon: "📨" },
+        { label: "すべてのやりとり", hint: "相談・見積・取引チャット", href: "talk-home.html?tab=chat", icon: "📨" },
         { label: "AI相談", hint: "AIに相談する", href: "ai-workspace.html", icon: "🤖" },
       ],
     },

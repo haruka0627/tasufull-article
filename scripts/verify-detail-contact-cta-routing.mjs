@@ -119,7 +119,10 @@ async function runCase(browser, spec) {
 
     result.threadListingType = threadMeta.listingType;
 
-    if (!result.chatUrl.includes("chat-list.html") && !result.chatUrl.includes("chat-detail.html")) {
+    if (
+      !result.chatUrl.includes("talk-home.html") &&
+      !result.chatUrl.includes("chat-detail.html")
+    ) {
       result.errors.push(`unexpected url: ${result.chatUrl}`);
     }
     if (!result.threadId) {

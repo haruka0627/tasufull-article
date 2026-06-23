@@ -1,0 +1,90 @@
+{
+  "checkedAt": "2026-06-22T23:49:53.127Z",
+  "base": "http://127.0.0.1:8788",
+  "mockCount": 28,
+  "results": [
+    {
+      "page": "mgmt",
+      "viewport": "390",
+      "loadOk": true,
+      "consoleErrors": [],
+      "screenshot": "reports\\screenshots\\partner-mgmt-ui\\mock-data\\mgmt-390.png",
+      "metrics": {
+        "cardCount": 28,
+        "countLabel": "28件",
+        "horizontalScroll": false,
+        "mockMode": true
+      }
+    },
+    {
+      "page": "mgmt",
+      "viewport": "768",
+      "loadOk": true,
+      "consoleErrors": [],
+      "screenshot": "reports\\screenshots\\partner-mgmt-ui\\mock-data\\mgmt-768.png",
+      "metrics": {
+        "cardCount": 28,
+        "countLabel": "28件",
+        "horizontalScroll": false,
+        "mockMode": true
+      }
+    },
+    {
+      "page": "mgmt",
+      "viewport": "1280",
+      "loadOk": true,
+      "consoleErrors": [],
+      "screenshot": "reports\\screenshots\\partner-mgmt-ui\\mock-data\\mgmt-1280.png",
+      "metrics": {
+        "cardCount": 28,
+        "countLabel": "28件",
+        "horizontalScroll": false,
+        "mockMode": true
+      }
+    },
+    {
+      "page": "detail",
+      "viewport": "390",
+      "loadOk": true,
+      "consoleErrors": [],
+      "screenshot": "reports\\screenshots\\partner-mgmt-ui\\mock-data\\detail-390.png",
+      "metrics": {
+        "cardCount": 0,
+        "countLabel": null,
+        "horizontalScroll": false,
+        "mockMode": false
+      }
+    },
+    {
+      "page": "detail",
+      "viewport": "768",
+      "loadOk": true,
+      "consoleErrors": [],
+      "screenshot": "reports\\screenshots\\partner-mgmt-ui\\mock-data\\detail-768.png",
+      "metrics": {
+        "cardCount": 0,
+        "countLabel": null,
+        "horizontalScroll": false,
+        "mockMode": false
+      }
+    },
+    {
+      "page": "detail",
+      "viewport": "1280",
+      "loadOk": true,
+      "consoleErrors": [],
+      "screenshot": "reports\\screenshots\\partner-mgmt-ui\\mock-data\\detail-1280.png",
+      "metrics": {
+        "cardCount": 0,
+        "countLabel": null,
+        "horizontalScroll": false,
+        "mockMode": false
+      }
+    }
+  ],
+  "summary": {
+    "total": 6,
+    "loadFailures": 0,
+    "consoleErrorCount": 0
+  }
+}

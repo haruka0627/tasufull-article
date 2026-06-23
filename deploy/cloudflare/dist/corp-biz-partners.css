@@ -1,0 +1,1059 @@
+/* ===== IWASHO パートナー募集ページ ===== */
+.iwasho-partners-page {
+  --iw-ptn-navy: #001f3f;
+  --iw-ptn-navy-mid: #082a67;
+  --iw-ptn-navy-light: #1a4a88;
+  --iw-ptn-text: #1e293b;
+  --iw-ptn-muted: #64748b;
+  --iw-ptn-container: 1280px;
+  --iw-ptn-pad: 32px;
+  --iw-ptn-radius: 20px;
+  --iw-ptn-section-gap: 88px;
+  --iw-ptn-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --iw-ptn-shadow-card: 0 10px 30px rgba(15, 23, 42, 0.06);
+  --iw-ptn-shadow-faq: 0 6px 20px rgba(15, 23, 42, 0.04);
+  --iw-ptn-shadow-cta: 0 8px 24px rgba(15, 23, 42, 0.04);
+  --iw-ptn-shadow-hero: 0 24px 60px rgba(15, 23, 42, 0.12);
+  --iw-ptn-border-soft: #eef2f7;
+  --iw-ptn-blue-soft: #f3f7ff;
+  --iw-ptn-blue-flow: #f8fbff;
+  --iw-ptn-blue-cta: #f4f8fd;
+  background: #ffffff;
+  color: var(--iw-ptn-text);
+}
+
+.iwasho-partners-page main {
+  overflow-x: hidden;
+}
+
+.iwasho-partners-page .iw-ptn-container {
+  width: 100%;
+  max-width: var(--iw-ptn-container);
+  margin-inline: auto;
+  padding-inline: var(--iw-ptn-pad);
+}
+
+.iwasho-partners-page .iw-ptn-section-title {
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-weight: 900;
+  color: var(--iw-ptn-navy);
+  text-align: center;
+  margin: 0 0 48px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+.iwasho-partners-page .iw-ptn-lucide,
+.iwasho-partners-page .iw-svc-lucide {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  color: var(--iw-ptn-navy);
+}
+
+.iwasho-partners-page .iw-ptn-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.iwasho-partners-page a.iw-ptn-btn--primary,
+.iwasho-partners-page a.iw-ptn-btn--primary:hover,
+.iwasho-partners-page a.iw-ptn-btn--primary:visited,
+.iwasho-partners-page a.iw-ptn-btn--primary:active,
+.iwasho-partners-page a.iw-ptn-btn--primary:focus,
+.iwasho-partners-page a.iw-ptn-btn--primary:focus-visible {
+  background: var(--iw-ptn-navy);
+  color: #ffffff !important;
+  border: 2px solid var(--iw-ptn-navy);
+}
+
+.iwasho-partners-page a.iw-ptn-btn--primary:hover,
+.iwasho-partners-page a.iw-ptn-btn--primary:focus-visible {
+  background: var(--iw-ptn-navy-mid);
+  border-color: var(--iw-ptn-navy-mid);
+}
+
+.iwasho-partners-page a.iw-ptn-btn--primary *,
+.iwasho-partners-page a.iw-ptn-btn--primary:hover *,
+.iwasho-partners-page a.iw-ptn-btn--primary:visited *,
+.iwasho-partners-page a.iw-ptn-btn--primary:active *,
+.iwasho-partners-page a.iw-ptn-btn--primary:focus *,
+.iwasho-partners-page a.iw-ptn-btn--primary:focus-visible * {
+  color: #ffffff !important;
+}
+
+.iwasho-partners-page a.iw-ptn-btn--ghost {
+  background: #ffffff;
+  color: var(--iw-ptn-navy);
+  border: 2px solid #d1d5db;
+}
+
+.iwasho-partners-page a.iw-ptn-btn--ghost:hover {
+  background: #f8fafc;
+  color: var(--iw-ptn-navy);
+}
+
+/* ----- Benefits ----- */
+.iwasho-partners-page .iw-ptn-benefits {
+  padding: 48px 0 var(--iw-ptn-section-gap);
+  background: #ffffff;
+}
+
+.iwasho-partners-page .iw-ptn-benefits .iw-ptn-container {
+  max-width: 1420px;
+}
+
+.iwasho-partners-page .iw-ptn-benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card {
+  background: #ffffff;
+  border: 1px solid #e6ebf3;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card__media {
+  height: 240px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #eef3f8;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card__body {
+  padding: 18px 20px 22px;
+  text-align: left;
+  flex: 1;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card__heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #e8f1fb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--iw-ptn-navy);
+}
+
+.iwasho-partners-page .iw-ptn-benefit-icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ----- Trades (幅広い協力会社募集) ----- */
+.iwasho-partners-page .iw-ptn-trades {
+  padding: 0 0 var(--iw-ptn-section-gap);
+  background: #ffffff;
+}
+
+.iwasho-partners-page .iw-ptn-trades .iw-ptn-container {
+  max-width: 1500px;
+  padding-inline: 20px;
+}
+
+.iwasho-partners-page .iw-ptn-trades__panel {
+  background: var(--iw-ptn-blue-flow);
+  border: 1px solid #e3ebf3;
+  border-radius: 28px;
+  padding: 58px 24px 46px;
+  box-shadow: var(--iw-ptn-shadow-cta);
+}
+
+.iwasho-partners-page .iw-ptn-trades__header {
+  text-align: center;
+  margin-bottom: 44px;
+}
+
+.iwasho-partners-page .iw-ptn-trades__title {
+  font-size: clamp(28px, 3.4vw, 44px);
+  font-weight: 900;
+  color: var(--iw-ptn-navy);
+  margin: 0 0 18px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+.iwasho-partners-page .iw-ptn-trades__lead {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--iw-ptn-text);
+  line-height: 1.75;
+  margin: 0;
+}
+
+.iwasho-partners-page .iw-ptn-trades__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  margin-bottom: 36px;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card {
+  background: #ffffff;
+  border: 1px solid #e8edf3;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 400px;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card__media {
+  aspect-ratio: 4 / 3;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #eef3f8;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card--other .iw-ptn-trades-card__media img {
+  object-position: 56% 44%;
+  transform: scale(0.9);
+  transform-origin: center center;
+  filter: brightness(0.95) contrast(1.05) saturate(1.08);
+}
+
+.iwasho-partners-page .iw-ptn-trades-card__body {
+  padding: 22px 18px 26px;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card__heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e8f1fb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--iw-ptn-navy);
+}
+
+.iwasho-partners-page .iw-ptn-trades-icon {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iwasho-partners-page .iw-ptn-trades-icon-img {
+  width: 21px;
+  height: 21px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  flex-shrink: 0;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card__title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--iw-ptn-navy);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.iwasho-partners-page .iw-ptn-trades-card__desc {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--iw-ptn-muted);
+  line-height: 1.7;
+  margin: 0;
+  flex: 1;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 30%);
+  align-items: stretch;
+  margin-top: 0;
+  max-height: 172px;
+  background: #ffffff;
+  border: 1px solid #d5e0ec;
+  border-radius: 20px;
+  box-shadow: 0 6px 22px rgba(15, 23, 42, 0.06);
+  overflow: hidden;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 32px;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-media {
+  min-height: 0;
+  max-height: 172px;
+  background: #eef3f8;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 55%;
+  display: block;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--iw-ptn-navy);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--iw-ptn-navy);
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-icon .iw-ptn-trades-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.5;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--iw-ptn-navy);
+  margin: 0 0 4px;
+  line-height: 1.35;
+}
+
+.iwasho-partners-page .iw-ptn-trades__consult-desc {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--iw-ptn-muted);
+  line-height: 1.55;
+  margin: 0;
+  max-width: none;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card__title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--iw-ptn-navy);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.iwasho-partners-page .iw-ptn-benefit-card__desc {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--iw-ptn-muted);
+  line-height: 1.85;
+  margin: 0;
+}
+
+/* ----- Flow / Topics（iw-svc-* マークアップ共用） ----- */
+.iwasho-partners-page .iw-svc-container {
+  width: 100%;
+  max-width: var(--iw-ptn-container);
+  margin-inline: auto;
+  padding-inline: var(--iw-ptn-pad);
+}
+
+.iwasho-partners-page .iw-svc-section-title {
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-weight: 900;
+  color: var(--iw-ptn-navy);
+  text-align: center;
+  margin: 0 0 48px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+.iwasho-partners-page .iw-svc-flow {
+  padding: var(--iw-ptn-section-gap) 0;
+  background: #ffffff;
+}
+
+.iwasho-partners-page .iw-svc-flow .iw-svc-container {
+  background: var(--iw-ptn-blue-flow);
+  border: 1px solid #eef3f8;
+  border-radius: 24px;
+  padding: 56px 48px;
+  box-sizing: border-box;
+}
+
+.iwasho-partners-page .iw-svc-flow__track {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.iwasho-partners-page .iw-svc-flow__step {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.iwasho-partners-page .iw-svc-flow__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--iw-ptn-navy);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.iwasho-partners-page .iw-svc-flow__icon {
+  width: 96px;
+  height: 96px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--iw-ptn-navy);
+  background: #ffffff;
+}
+
+.iwasho-partners-page .iw-svc-flow__icon .iw-ptn-flow-img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  flex-shrink: 0;
+}
+
+.iwasho-partners-page .iw-svc-flow__title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--iw-ptn-navy);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.iwasho-partners-page .iw-svc-flow__desc {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--iw-ptn-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.iwasho-partners-page .iw-svc-flow__arrow {
+  flex-shrink: 0;
+  width: 20px;
+  padding-top: 98px;
+  color: rgba(6, 32, 71, 0.4);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+/* ----- FAQ ----- */
+.iwasho-partners-page .iw-ptn-faq {
+  padding: var(--iw-ptn-section-gap) 0;
+  background: #ffffff;
+}
+
+.iwasho-partners-page .iw-ptn-faq__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 960px;
+  margin-inline: auto;
+}
+
+.iwasho-partners-page .iw-ptn-faq__item {
+  border: 1px solid var(--iw-ptn-border-soft);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: var(--iw-ptn-shadow-faq);
+  overflow: hidden;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.iwasho-partners-page .iw-ptn-faq__item:hover {
+  background: #f8fafc;
+  border-color: #dbe3ee;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+  transform: translateY(-2px);
+}
+
+.iwasho-partners-page .iw-ptn-faq__item[open]:hover {
+  background: #ffffff;
+  transform: none;
+}
+
+.iwasho-partners-page .iw-ptn-faq__item summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 22px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--iw-ptn-navy);
+  line-height: 1.5;
+}
+
+.iwasho-partners-page .iw-ptn-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.iwasho-partners-page .iw-ptn-faq__chevron {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--iw-ptn-navy-light);
+  transition: transform 0.2s ease;
+}
+
+.iwasho-partners-page .iw-ptn-faq__item[open] .iw-ptn-faq__chevron {
+  transform: rotate(180deg);
+}
+
+.iwasho-partners-page .iw-ptn-faq__answer {
+  padding: 0 22px 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--iw-ptn-muted);
+  line-height: 1.8;
+  margin: 0;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 16px;
+}
+
+/* ----- Final CTA ----- */
+.iwasho-partners-page .iw-ptn-cta {
+  padding: 0 0 var(--iw-ptn-section-gap);
+  background: #ffffff;
+}
+
+.iwasho-partners-page .iw-ptn-cta__inner {
+  display: flex;
+  align-items: stretch;
+  padding: 0;
+  background: var(--iw-ptn-blue-cta);
+  border: 1px solid #e6edf5;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+  overflow: hidden;
+  min-height: 112px;
+  max-height: 120px;
+}
+
+.iwasho-partners-page .iw-ptn-cta__media {
+  flex: 0 0 38%;
+  width: 38%;
+  background: #e8eef5;
+  position: relative;
+  overflow: hidden;
+  align-self: stretch;
+  min-height: 0;
+}
+
+.iwasho-partners-page .iw-ptn-cta__photo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: calc(100% - 12px);
+  max-height: calc(100% - 8px);
+  object-fit: contain;
+  object-position: center center;
+}
+
+.iwasho-partners-page .iw-ptn-cta__body {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: 16px 28px 16px 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.iwasho-partners-page .iw-ptn-cta__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.iwasho-partners-page .iw-ptn-cta__action {
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-height: 44px;
+  padding: 0 20px;
+  font-size: 14px;
+  border-radius: 6px;
+  gap: 8px;
+}
+
+.iwasho-partners-page .iw-ptn-cta__title {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 900;
+  color: var(--iw-ptn-navy);
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+
+.iwasho-partners-page .iw-ptn-cta__lead {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--iw-ptn-text);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ----- Footer（ネイビー背景・白文字） ----- */
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-col-title {
+  color: #ffffff;
+}
+
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-text,
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .company-desc,
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-links li,
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .copyright {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn),
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):hover,
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):visited,
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):focus,
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):focus-visible,
+.iwasho-home-page.iwasho-partners-page .footer-wrapper .footer-inner .footer-col .footer-links a:not(.contact-btn):active {
+  color: #ffffff;
+  opacity: 1;
+}
+
+/* Header active */
+.iwasho-partners-page .iw-site-header__nav a.is-active {
+  color: var(--iw-ptn-navy-light);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* PC拡大 */
+@media (min-width: 1280px) {
+  .iwasho-partners-page {
+    --iw-ptn-section-gap: 96px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefits {
+    padding-top: 56px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefits__grid {
+    gap: 28px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefit-card__media {
+    height: 250px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefit-card__body {
+    padding: 20px 22px 24px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefit-card__title {
+    font-size: 16px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefit-card__desc {
+    font-size: 12px;
+    line-height: 1.9;
+  }
+
+  .iwasho-partners-page .iw-svc-flow .iw-svc-container {
+    max-width: 1320px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades .iw-ptn-container {
+    max-width: 1540px;
+    padding-inline: 16px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__panel {
+    padding: 64px 20px 52px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__title {
+    font-size: 44px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__lead {
+    font-size: 20px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__grid {
+    gap: 26px;
+    margin-bottom: 38px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card {
+    min-height: 430px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__body {
+    padding: 24px 20px 28px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__title {
+    font-size: 21px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__desc {
+    font-size: 16px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult {
+    max-height: 168px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult-main {
+    padding: 18px 36px;
+    gap: 16px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult-media {
+    max-height: 168px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult-title {
+    font-size: 19px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult-desc {
+    font-size: 14px;
+  }
+
+  .iwasho-partners-page .iw-ptn-faq__grid {
+    max-width: 100%;
+    gap: 14px;
+  }
+
+  .iwasho-partners-page .iw-ptn-faq__item summary {
+    font-size: 15px;
+    padding: 18px 22px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__track {
+    gap: 14px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__step {
+    flex: 1 1 0;
+    min-width: 148px;
+    padding: 0 6px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__num {
+    width: 43px;
+    height: 43px;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__icon {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 16px;
+    border-width: 2.5px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__icon .iw-ptn-flow-img {
+    width: 62px;
+    height: 62px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__title {
+    font-size: 17px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    line-height: 1.45;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__desc {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__arrow {
+    width: 26px;
+    padding-top: 108px;
+    font-size: 27px;
+    color: rgba(6, 32, 71, 0.42);
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__media {
+    flex: 0 0 36%;
+    width: 36%;
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__inner {
+    min-height: 118px;
+    max-height: 124px;
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__body {
+    padding: 18px 32px 18px 28px;
+    gap: 24px;
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__title {
+    font-size: 22px;
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__lead {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .iwasho-partners-page .iw-svc-flow__track {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 12px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__arrow {
+    display: none;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__step {
+    flex: 0 1 calc(33.333% - 16px);
+  }
+
+  .iwasho-partners-page .iw-ptn-benefits__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .iwasho-partners-page {
+    --iw-ptn-pad: 24px;
+    --iw-ptn-section-gap: 72px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__panel {
+    padding: 32px 20px 28px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card {
+    min-height: 0;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__heading {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__title {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__desc {
+    font-size: 13px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult {
+    margin-top: 16px;
+    grid-template-columns: 1fr;
+    max-height: none;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult-main {
+    padding: 18px 20px;
+    align-items: flex-start;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades__consult-media {
+    min-height: 120px;
+    max-height: 140px;
+  }
+
+  .iwasho-partners-page .iw-ptn-faq__item summary {
+    min-height: 48px;
+    padding: 16px 18px;
+    font-size: 14px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefits,
+  .iwasho-partners-page .iw-ptn-faq,
+  .iwasho-partners-page .iw-svc-flow {
+    padding-block: var(--iw-ptn-section-gap);
+  }
+
+  .iwasho-partners-page .iw-svc-flow .iw-svc-container {
+    padding: 40px 24px;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades {
+    padding-bottom: var(--iw-ptn-section-gap);
+  }
+
+  .iwasho-partners-page .iw-ptn-cta {
+    padding-bottom: var(--iw-ptn-section-gap);
+  }
+
+  .iwasho-partners-page .iw-ptn-section-title,
+  .iwasho-partners-page .iw-svc-section-title {
+    margin-bottom: 32px;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__step {
+    flex: 0 1 calc(50% - 12px);
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__inner {
+    flex-direction: column;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__media {
+    width: 100%;
+    flex: none;
+    aspect-ratio: 21 / 10;
+    max-height: 120px;
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__photo {
+    max-width: calc(100% - 16px);
+    max-height: calc(100% - 10px);
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__body {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px 24px;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .iwasho-partners-page .iw-ptn-cta__action {
+    align-self: center;
+    min-height: 42px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .iwasho-partners-page {
+    --iw-ptn-pad: 20px;
+  }
+
+  .iwasho-partners-page .iw-ptn-benefits__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-partners-page .iw-svc-flow__step {
+    flex: 0 1 100%;
+  }
+}

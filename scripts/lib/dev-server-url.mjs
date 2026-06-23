@@ -1,8 +1,11 @@
 /**
  * ローカル dev サーバー URL（Playwright / 手動確認共通）
- * file:// 直開きは不可。http://localhost または http://127.0.0.1 のみ許可。
+ * 標準: http://127.0.0.1:8788 （wrangler pages dev / Cloudflare Pages dist）
+ * file:// 直開きは不可。
  */
-export const DEFAULT_DEV_SERVER_PORTS = Object.freeze([5173, 5500, 5174, 5176, 5199, 5200, 5188]);
+export const STANDARD_LOCAL_BASE = "http://127.0.0.1:8788";
+
+export const DEFAULT_DEV_SERVER_PORTS = Object.freeze([8788]);
 
 export function isAllowedLocalHttpUrl(url) {
   try {
@@ -18,7 +21,7 @@ export function assertLocalHttpUrl(url, label = "URL") {
   const value = String(url || "");
   if (value.startsWith("file:")) {
     throw new Error(
-      `${label} must not use file://. Run \`npm run dev\` and open http://localhost:5173/...`
+      `${label} must not use file://. Start \`npm run dev\` and open ${STANDARD_LOCAL_BASE}/...`
     );
   }
   if (!isAllowedLocalHttpUrl(value)) {
@@ -37,9 +40,20 @@ export function buildLocalPageUrl(base, pagePath, search = "") {
  * @param {{ ports?: number[], probePath?: string, hosts?: string[] }} [options]
  */
 export async function findDevServerBaseUrl(options = {}) {
-  const ports = options.ports || DEFAULT_DEV_SERVER_PORTS;
   const probePath = String(options.probePath || "index.html").replace(/^\//, "");
-  const hosts = options.hosts || ["http://localhost", "http://127.0.0.1"];
+  const ports = options.ports || DEFAULT_DEV_SERVER_PORTS;
+  const hosts = options.hosts || ["http://127.0.0.1", "http://localhost"];
+
+  for (const envKey of ["BASE_URL", "PAGES_BASE_URL", "BENCH_BASE_URL"]) {
+    const envBase = String(process.env[envKey] || "").replace(/\/$/, "");
+    if (!envBase || !isAllowedLocalHttpUrl(envBase)) continue;
+    try {
+      const res = await fetch(`${envBase}/${probePath}`, { method: "GET" });
+      if (res.ok) return envBase;
+    } catch {
+      /* fall through to port scan */
+    }
+  }
 
   for (const host of hosts) {
     for (const port of ports) {
@@ -56,9 +70,9 @@ export async function findDevServerBaseUrl(options = {}) {
   throw new Error(
     [
       "No local dev server found.",
-      "Run: npm run dev",
-      `Then open: http://localhost:5173/${probePath}`,
-      "(Live Server の場合は http://localhost:5500/... も可)",
+      "1) npm run build:pages",
+      "2) npm run dev",
+      `3) open ${STANDARD_LOCAL_BASE}/${probePath}`,
     ].join("\n")
   );
 }

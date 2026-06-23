@@ -700,11 +700,18 @@
       return `#thread=${encodeURIComponent(thread.id)}`;
     }
     const isLocal = Boolean(thread._localConsult);
+    const isUuid =
+      global.TasuTalkRoomEnsure?.isUuidRoomId?.(thread.id) === true ||
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        String(thread.id || "")
+      );
     const base =
       global.TasuChatService?.chatDetailUrl?.(thread.id) ||
       (isLocal
         ? `chat-detail.html?thread=${encodeURIComponent(thread.id)}`
-        : `chat-detail.html?roomId=${encodeURIComponent(thread.id)}`);
+        : isUuid
+          ? `chat-detail.html?roomId=${encodeURIComponent(thread.id)}&room=${encodeURIComponent(thread.id)}`
+          : `chat-detail.html?roomId=${encodeURIComponent(thread.id)}`);
     return global.TasuChatThreadStore?.appendChatDetailFromParam?.(base, "talk") || base;
   }
 

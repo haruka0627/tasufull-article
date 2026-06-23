@@ -1,0 +1,714 @@
+/* ===== IWASHO 事業内容ページ ===== */
+.iwasho-about-page {
+  --iw-about-navy: #082a67;
+  --iw-about-navy-dark: #061f4d;
+  --iw-about-navy-light: #1a4a88;
+  --iw-about-accent: #3b82f6;
+  --iw-about-text: #1e293b;
+  --iw-about-muted: #64748b;
+  --iw-about-radius: 14px;
+  --iw-about-shadow: 0 4px 24px rgba(8, 42, 103, 0.08);
+  --iw-about-container: 1500px;
+  --iw-about-pad: 28px;
+  background: #ffffff;
+  color: var(--iw-about-text);
+}
+
+.iwasho-about-page main {
+  overflow-x: hidden;
+}
+
+.iwasho-about-page .iw-about-container {
+  width: 100%;
+  max-width: var(--iw-about-container);
+  margin-inline: auto;
+  padding-inline: var(--iw-about-pad);
+}
+
+/* ----- Breadcrumb ----- */
+.iwasho-about-page .iw-about-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--iw-about-muted);
+}
+
+.iwasho-about-page .iw-about-breadcrumb a {
+  color: var(--iw-about-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.iwasho-about-page .iw-about-breadcrumb a:hover {
+  color: var(--iw-about-navy);
+}
+
+.iwasho-about-page .iw-about-breadcrumb__sep {
+  color: #cbd5e1;
+}
+
+.iwasho-about-page .iw-about-breadcrumb__current {
+  color: var(--iw-about-navy);
+}
+
+/* ===== Section 1: Hero ===== */
+.iwasho-about-page .iw-about-hero {
+  padding: 56px 0 72px;
+  background: #ffffff;
+}
+
+.iwasho-about-page .iw-about-hero__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.iwasho-about-page .iw-about-hero__title {
+  font-size: clamp(36px, 4vw, 48px);
+  font-weight: 900;
+  color: var(--iw-about-navy);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  margin: 0 0 28px;
+}
+
+.iwasho-about-page .iw-about-hero__lead {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 2;
+  color: var(--iw-about-text);
+  margin: 0 0 16px;
+}
+
+.iwasho-about-page .iw-about-hero__lead:last-of-type {
+  margin-bottom: 0;
+}
+
+.iwasho-about-page .iw-about-hero__visual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.iwasho-about-page .iw-about-hero__photo {
+  position: relative;
+  border-radius: var(--iw-about-radius);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  box-shadow: var(--iw-about-shadow);
+}
+
+.iwasho-about-page .iw-about-hero__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iwasho-about-page .iw-about-hero__img--shinchiku {
+  object-position: center center;
+}
+
+.iwasho-about-page .iw-about-hero__img--chuko {
+  object-position: center 42%;
+}
+
+.iwasho-about-page .iw-about-hero__img--reform {
+  object-position: center center;
+}
+
+.iwasho-about-page .iw-about-hero__label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px 8px;
+  background: var(--iw-about-navy);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 0.08em;
+}
+
+/* ===== Section 3: Stats ===== */
+.iwasho-about-page .iw-about-stats {
+  padding: 0 0 80px;
+}
+
+.iwasho-about-page .iw-about-section-title {
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 900;
+  color: var(--iw-about-navy);
+  text-align: center;
+  margin: 0 0 40px;
+  letter-spacing: 0.02em;
+}
+
+.iwasho-about-page .iw-about-stats__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.iwasho-about-page .iw-about-stat-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 20px;
+  row-gap: 4px;
+  background: #ffffff;
+  border-radius: var(--iw-about-radius);
+  box-shadow: var(--iw-about-shadow);
+  border: 1px solid #f1f5f9;
+  padding: 28px 32px;
+  text-align: left;
+}
+
+.iwasho-about-page .iw-about-stat-card__icon {
+  grid-row: 1 / 3;
+  width: 52px;
+  height: 52px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--iw-about-navy);
+  flex-shrink: 0;
+}
+
+.iwasho-about-page .iw-about-stat-card__icon svg {
+  width: 36px;
+  height: 36px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iwasho-about-page .iw-about-stat-card__value {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--iw-about-navy);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.iwasho-about-page .iw-about-stat-card__label {
+  grid-column: 2;
+  grid-row: 2;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--iw-about-muted);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===== Section 4: Services ===== */
+.iwasho-about-page .iw-about-services {
+  padding: 0 0 80px;
+}
+
+.iwasho-about-page .iw-about-services .iw-about-section-title {
+  margin-bottom: 16px;
+}
+
+.iwasho-about-page .iw-about-services__lead {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--iw-about-muted);
+  text-align: center;
+  line-height: 1.8;
+  margin: 0 auto 40px;
+  max-width: 640px;
+}
+
+.iwasho-about-page .iw-about-services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.iwasho-about-page .iw-about-service-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: var(--iw-about-shadow);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.iwasho-about-page .iw-about-service-card:hover {
+  box-shadow: 0 8px 32px rgba(8, 42, 103, 0.12);
+}
+
+.iwasho-about-page .iw-about-service-card__image {
+  height: 108px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.iwasho-about-page .iw-about-service-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iwasho-about-page .iw-about-service-card__image--other {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.iwasho-about-page .iw-about-service-card__dots {
+  display: flex;
+  gap: 8px;
+}
+
+.iwasho-about-page .iw-about-service-card__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--iw-about-navy);
+  opacity: 0.35;
+}
+
+.iwasho-about-page .iw-about-service-card__dots span:first-child {
+  opacity: 1;
+}
+
+.iwasho-about-page .iw-about-service-card__body {
+  padding: 16px 18px 18px;
+}
+
+.iwasho-about-page .iw-about-service-card__title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--iw-about-navy);
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+
+.iwasho-about-page .iw-about-service-card__desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--iw-about-muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ===== Section 5: Reasons ===== */
+.iwasho-about-page .iw-about-reasons {
+  padding: 0 0 80px;
+}
+
+.iwasho-about-page .iw-about-reasons__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.iwasho-about-page .iw-about-reason-card {
+  display: grid;
+  grid-template-columns: 48% 52%;
+  align-items: stretch;
+  min-height: 0;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(8, 42, 103, 0.06);
+  border: 1px solid #e5e7eb;
+  padding: 0;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.iwasho-about-page .iw-about-reason-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(8, 42, 103, 0.12);
+}
+
+.iwasho-about-page .iw-about-reason-card__thumb {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.iwasho-about-page .iw-about-reason-card__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iwasho-about-page .iw-about-reason-card > div:not(.iw-about-reason-card__thumb) {
+  padding: 16px 14px 16px 12px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.iwasho-about-page .iw-about-reason-card__num {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--iw-about-accent);
+  margin: 0 0 4px;
+}
+
+.iwasho-about-page .iw-about-reason-card__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--iw-about-navy);
+  margin: 0 0 6px;
+  line-height: 1.4;
+}
+
+.iwasho-about-page .iw-about-reason-card__desc {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--iw-about-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ===== Bottom CTA ===== */
+.iwasho-about-page .iw-about-cta {
+  padding: 0 0 64px;
+  background: #ffffff;
+}
+
+.iwasho-about-page .iw-about-cta__card {
+  display: grid;
+  grid-template-columns: minmax(0, 30%) max-content minmax(0, 61%);
+  align-items: stretch;
+  min-height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--iw-about-navy) 0%, var(--iw-about-navy-dark) 52%, #0a3268 100%);
+  box-shadow: 0 8px 32px rgba(8, 42, 103, 0.12);
+}
+
+.iwasho-about-page .iw-about-cta__text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px 20px 28px 32px;
+}
+
+.iwasho-about-page .iw-about-cta__title {
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.iwasho-about-page .iw-about-cta__lead {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.88);
+  margin: 0;
+  line-height: 1.8;
+}
+
+.iwasho-about-page .iw-about-cta__action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  background: transparent;
+}
+
+.iwasho-about-page .iw-about-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--iw-about-navy);
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.iwasho-about-page .iw-about-cta__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  color: var(--iw-about-navy);
+}
+
+.iwasho-about-page .iw-about-cta__btn-icon,
+.iwasho-about-page .iw-about-cta__btn-arrow {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.iwasho-about-page .iw-about-cta__visual {
+  position: relative;
+  min-height: 220px;
+  overflow: hidden;
+}
+
+.iwasho-about-page .iw-about-cta__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+.iwasho-about-page .iw-about-cta__visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 42, 103, 0.82) 0%, rgba(8, 42, 103, 0.35) 45%, rgba(8, 42, 103, 0.12) 100%);
+  pointer-events: none;
+}
+
+/* Header active on about page */
+.iwasho-about-page .iw-site-header__nav a.is-active {
+  color: var(--iw-about-navy-light);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ===== Responsive: Tablet 768px ===== */
+@media (max-width: 1024px) {
+  .iwasho-about-page {
+    --iw-about-pad: 32px;
+  }
+
+  .iwasho-about-page .iw-about-hero__grid {
+    gap: 36px;
+  }
+
+  .iwasho-about-page .iw-about-stats__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .iwasho-about-page .iw-about-stat-card {
+    padding: 22px 20px;
+    column-gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .iwasho-about-page {
+    --iw-about-pad: 24px;
+  }
+
+  .iwasho-about-page .iw-about-hero {
+    padding: 40px 0 56px;
+  }
+
+  .iwasho-about-page .iw-about-hero__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .iwasho-about-page .iw-about-hero__visual {
+    gap: 12px;
+  }
+
+  .iwasho-about-page .iw-about-hero__photo {
+    aspect-ratio: 4 / 5;
+  }
+
+  .iwasho-about-page .iw-about-stats__grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .iwasho-about-page .iw-about-services__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .iwasho-about-page .iw-about-service-card__image {
+    height: 88px;
+  }
+
+  .iwasho-about-page .iw-about-reasons__grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .iwasho-about-page .iw-about-reason-card {
+    grid-template-columns: 48% 52%;
+  }
+
+  .iwasho-about-page .iw-about-reason-card__thumb {
+    min-height: 112px;
+  }
+
+  .iwasho-about-page .iw-about-reason-card > div:not(.iw-about-reason-card__thumb) {
+    padding: 12px;
+  }
+
+  .iwasho-about-page .iw-about-cta {
+    padding: 0 0 48px;
+  }
+
+  .iwasho-about-page .iw-about-cta__card {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    min-height: 0;
+  }
+
+  .iwasho-about-page .iw-about-cta__visual {
+    order: -1;
+    min-height: 180px;
+  }
+
+  .iwasho-about-page .iw-about-cta__text {
+    padding: 28px 24px 12px;
+  }
+
+  .iwasho-about-page .iw-about-cta__action {
+    padding: 0 24px 28px;
+    justify-content: flex-start;
+  }
+}
+
+/* ===== Responsive: SP 390px ===== */
+@media (max-width: 480px) {
+  .iwasho-about-page {
+    --iw-about-pad: 20px;
+  }
+
+  .iwasho-about-page .iw-about-breadcrumb {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+
+  .iwasho-about-page .iw-about-hero__title {
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+
+  .iwasho-about-page .iw-about-hero__lead {
+    font-size: 14px;
+    line-height: 1.85;
+  }
+
+  .iwasho-about-page .iw-about-hero__visual {
+    gap: 10px;
+  }
+
+  .iwasho-about-page .iw-about-hero__label {
+    font-size: 11px;
+    padding: 8px 4px;
+  }
+
+  .iwasho-about-page .iw-about-stats__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-about-page .iw-about-stat-card {
+    padding: 20px 18px;
+  }
+
+  .iwasho-about-page .iw-about-services__grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .iwasho-about-page .iw-about-service-card__image {
+    height: 84px;
+  }
+
+  .iwasho-about-page .iw-about-service-card__body {
+    padding: 12px 10px 14px;
+  }
+
+  .iwasho-about-page .iw-about-reasons__grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .iwasho-about-page .iw-about-reason-card {
+    grid-template-columns: 48% 52%;
+  }
+
+  .iwasho-about-page .iw-about-reason-card__thumb {
+    min-height: 100px;
+  }
+
+  .iwasho-about-page .iw-about-reason-card__title {
+    font-size: 14px;
+  }
+
+  .iwasho-about-page .iw-about-reason-card__desc {
+    font-size: 11px;
+    line-height: 1.65;
+  }
+
+  .iwasho-about-page .iw-about-cta {
+    padding: 0 0 40px;
+  }
+
+  .iwasho-about-page .iw-about-cta__card {
+    position: relative;
+    display: block;
+    min-height: 280px;
+    background: var(--iw-about-navy);
+  }
+
+  .iwasho-about-page .iw-about-cta__visual {
+    position: absolute;
+    inset: 0;
+    min-height: 100%;
+    order: unset;
+  }
+
+  .iwasho-about-page .iw-about-cta__visual::after {
+    background: linear-gradient(180deg, rgba(8, 42, 103, 0.9) 0%, rgba(8, 42, 103, 0.82) 100%);
+  }
+
+  .iwasho-about-page .iw-about-cta__text,
+  .iwasho-about-page .iw-about-cta__action {
+    position: relative;
+    z-index: 1;
+  }
+
+  .iwasho-about-page .iw-about-cta__text {
+    padding: 28px 20px 16px;
+  }
+
+  .iwasho-about-page .iw-about-cta__action {
+    padding: 0 20px 28px;
+  }
+
+  .iwasho-about-page .iw-about-cta__btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}

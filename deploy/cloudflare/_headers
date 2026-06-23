@@ -5,6 +5,7 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  X-Robots-Tag: noindex, nofollow, noarchive
 
 # Auth / 境界ロジック — デプロイ直後に最新を配信（Phase A-6）
 /auth-current-user.js

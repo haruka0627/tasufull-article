@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>安心・安全 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-safety" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header" aria-label="ヘッダー">
+      <a class="match-brand" href="match-top.html">
+        <span class="match-brand__text">
+          <span class="match-brand__main">安心・安全</span>
+          <span class="match-brand__sub">TASFUL MATCH</span>
+        </span>
+      </a>
+    </header>
+
+    <main class="match-main">
+      <section class="match-safety-hero">
+        <img class="match-safety-hero__visual" src="images/safety/hero-mascot.png" alt="" width="84" height="84" decoding="async" />
+        <h2>安心して使える理由</h2>
+        <p>恋活・婚活を、安全に。TASFUL MATCH は本人確認とAI監視を標準装備しています。</p>
+      </section>
+
+      <article class="match-safety-card">
+        <div class="match-safety-card__head">
+          <span class="match-safety-card__icon" aria-hidden="true">🪪</span>
+          <h3>本人確認</h3>
+        </div>
+        <p>公的書類による年齢・身元確認を行います。確認済みバッジで、安心して出会えます。</p>
+        <a class="match-btn match-btn--secondary match-btn--block" style="margin-top:12px" href="match-verify.html">本人確認をする</a>
+      </article>
+
+      <article class="match-safety-card">
+        <div class="match-safety-card__head">
+          <span class="match-safety-card__icon match-safety-card__icon--lavender" aria-hidden="true">🚨</span>
+          <h3>通報</h3>
+        </div>
+        <p>プロフィール・マッチ一覧・TASFUL TALK から、いつでも通報できます。運営が内容を確認します。</p>
+        <a class="match-btn match-btn--secondary match-btn--block" style="margin-top:12px" href="match-report.html">通報する</a>
+      </article>
+
+      <article class="match-safety-card">
+        <div class="match-safety-card__head">
+          <span class="match-safety-card__icon" aria-hidden="true">🚫</span>
+          <h3>ブロック</h3>
+        </div>
+        <p>気になる相手をブロックすると、お互いに表示されなくなり、メッセージも停止します。</p>
+        <a class="match-btn match-btn--secondary match-btn--block" style="margin-top:12px" href="match-block.html">ブロック管理</a>
+      </article>
+
+      <article class="match-safety-card">
+        <div class="match-safety-card__head">
+          <span class="match-safety-card__icon match-safety-card__icon--mint" aria-hidden="true">🛡️</span>
+          <h3>AI監視</h3>
+        </div>
+        <p>プロフィール文・チャットをAIが監視。連絡先の交換や不適切な内容を検知します。</p>
+      </article>
+
+      <article class="match-safety-card">
+        <div class="match-safety-card__head">
+          <span class="match-safety-card__icon match-safety-card__icon--lavender" aria-hidden="true">🕐</span>
+          <h3>24時間対応</h3>
+        </div>
+        <p>通報は24時間受付。専門スタッフによるパトロール体制を整えています（将来実装）。</p>
+      </article>
+
+      <article class="match-safety-card match-safety-card--highlight">
+        <div class="match-safety-card__head">
+          <span class="match-safety-card__icon" aria-hidden="true">💖</span>
+          <h3>基本無料で、安心を標準装備</h3>
+        </div>
+        <p>スワイプ・マッチ・チャット開始は無料。安全機能は追加料金なしでご利用いただけます。</p>
+      </article>
+
+      <div class="match-cta-stack">
+        <a class="match-btn match-btn--primary match-btn--block" href="match-profile-create.html">無料ではじめる</a>
+        <a class="match-btn match-btn--secondary match-btn--block" href="match-swipe.html">スワイプ画面を見る</a>
+        <a class="match-ai-cta" data-match-p15-section data-match-ai-cta data-ai-mode="match-love-advice" data-ai-q-template="恋愛の悩みを相談したいです。" href="#">TASFUL AI で恋愛相談</a>
+      </div>
+    </main>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link" href="match-swipe.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💘</span>
+          <span>スワイプ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-list.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💞</span>
+          <span>マッチ</span>
+        </a>
+        <a class="match-tabbar__link is-active" href="match-safety.html">
+          <span class="match-tabbar__icon" aria-hidden="true">🛡️</span>
+          <span>安心</span>
+        </a>
+        <a class="match-tabbar__link" href="match-mypage.html">
+          <span class="match-tabbar__icon" aria-hidden="true">👤</span>
+          <span>マイページ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="../ai-workspace-links.js"></script>
+  <script src="match-ai-cta.js"></script>
+  <script src="match-mock.js"></script>
+</body>
+</html>

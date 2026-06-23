@@ -76,7 +76,7 @@
       id: "guide-dashboard",
       category: "ガイド",
       title: "マイページ・通知",
-      body: "dashboard.html から通知・プロフィール・各種設定にアクセスできます。取引中のやり取りは chat-list.html をご確認ください。",
+      body: "dashboard.html から通知・プロフィール・各種設定にアクセスできます。取引中のやり取りは TASFUL TALK（talk-home.html?tab=chat）をご確認ください。",
       href: "dashboard.html",
       tags: ["ログイン", "マイページ", "ダッシュボード", "通知"],
     },

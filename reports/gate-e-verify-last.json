@@ -1,0 +1,159 @@
+{
+  "at": "2026-06-22T19:14:15.265Z",
+  "stripeMode": "test",
+  "webhookUrl": "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/stripe-webhook",
+  "productionOrigin": "https://tasufull-article.pages.dev",
+  "allowedEmail": "rubi.hiro0613@gmail.com",
+  "rows": [
+    {
+      "id": "secret:STRIPE_SECRET_KEY",
+      "status": "PASS",
+      "detail": "digest listed"
+    },
+    {
+      "id": "secret:STRIPE_WEBHOOK_SECRET",
+      "status": "PASS",
+      "detail": "digest listed"
+    },
+    {
+      "id": "secret:STRIPE_GENAI_PRICE_BASIC_300",
+      "status": "PASS",
+      "detail": "digest listed"
+    },
+    {
+      "id": "secret:STRIPE_GENAI_PRICE_PRO_980",
+      "status": "PASS",
+      "detail": "digest listed"
+    },
+    {
+      "id": "secret:STRIPE_GENAI_PRICE_2D_LIVE_300",
+      "status": "PASS",
+      "detail": "digest listed"
+    },
+    {
+      "id": "secret:STRIPE_GENAI_PRICE_3D_GENERATE_500",
+      "status": "PASS",
+      "detail": "digest listed"
+    },
+    {
+      "id": "stripe:mode",
+      "status": "PASS",
+      "detail": "test"
+    },
+    {
+      "id": "checkout:genai-basic",
+      "status": "PASS",
+      "detail": "mode=subscription"
+    },
+    {
+      "id": "checkout:genai-3d-ticket",
+      "status": "PASS",
+      "detail": "has url"
+    },
+    {
+      "id": "checkout:featured",
+      "status": "HOLD",
+      "detail": "掲載が見つかりません"
+    },
+    {
+      "id": "webhook:no-signature",
+      "status": "PASS",
+      "detail": "status=400"
+    },
+    {
+      "id": "webhook:invalid-signature",
+      "status": "PASS",
+      "detail": "status=400"
+    },
+    {
+      "id": "webhook:catalog-setup",
+      "status": "PASS",
+      "detail": "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/stripe-webhook"
+    },
+    {
+      "id": "webhook:url-match",
+      "status": "PASS",
+      "detail": "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/stripe-webhook"
+    },
+    {
+      "id": "webhook:event-checkout-completed",
+      "status": "PASS",
+      "detail": "checkout.session.completed,customer.subscription.updated,customer.subscription.deleted"
+    },
+    {
+      "id": "checkout:e2e-pay-3d",
+      "status": "HOLD",
+      "detail": "payment_intent が見つかりません。Checkout ページを開いてから stripe-e2e-pay-genai-checkout を呼んでください。"
+    },
+    {
+      "id": "db:confirm-genai-1",
+      "status": "HOLD",
+      "detail": "決済が完了していません"
+    },
+    {
+      "id": "db:confirm-idempotent",
+      "status": "HOLD",
+      "detail": "決済が完了していません"
+    },
+    {
+      "id": "db:get-plan-after-pay",
+      "status": "PASS",
+      "detail": "tickets3d=0"
+    },
+    {
+      "id": "ops:url-leak-html-js",
+      "status": "PASS",
+      "detail": "none"
+    },
+    {
+      "id": "connect:client-sim-only",
+      "status": "PASS",
+      "detail": "no server Connect webhook — browser ingest + ops notify"
+    },
+    {
+      "id": "connect:no-external-broadcast",
+      "status": "PASS",
+      "detail": "admin notify via localStorage / support-admin"
+    },
+    {
+      "id": "notify:live-dedupe",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "notify:talk_notifications",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "notify:admin-local",
+      "status": "PASS",
+      "detail": "LINE/email hooks planned — not production SMTP"
+    },
+    {
+      "id": "notify:email-smtp",
+      "status": "HOLD",
+      "detail": "no production payment receipt email sender in codebase — expected gap"
+    },
+    {
+      "id": "notify:ai-secretary-hub",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "audit:stripe-ingest-log",
+      "status": "PASS",
+      "detail": "localStorage audit — server webhook has no DB audit table"
+    },
+    {
+      "id": "ops:allowed-email",
+      "status": "PASS",
+      "detail": "rubi.hiro0613@gmail.com"
+    }
+  ],
+  "summary": {
+    "pass": 24,
+    "hold": 5,
+    "fail": 0
+  }
+}

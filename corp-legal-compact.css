@@ -1,0 +1,342 @@
+/* 法務3ページ共通 — terms / privacy / tokushoho リーガルUI */
+
+html:has(body .terms-container),
+html:has(body .policy-container) {
+  background: #050816;
+}
+
+body.corp-body--tasful-hp:has(.terms-container),
+body.corp-body--tasful-hp:has(.policy-container) {
+  background: linear-gradient(
+    180deg,
+    #050816 0%,
+    #071226 40%,
+    #08192f 100%
+  ) !important;
+  min-height: 100vh;
+}
+
+.terms-container,
+.policy-container {
+  padding: 22px 26px 18px !important;
+  margin: clamp(40px, 4.5vw, 52px) auto clamp(40px, 4.5vw, 52px) !important;
+  max-width: 960px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* ── 見出し・強調 — シアン〜ブルー系（ピンク発光を抑制） ── */
+.terms-container .policy-header,
+.policy-container .policy-header {
+  border-bottom: 2px solid rgba(56, 189, 248, 0.42) !important;
+  margin-bottom: 12px !important;
+  padding-bottom: 10px !important;
+}
+
+.terms-container .policy-header h1,
+.policy-container .policy-header h1 {
+  color: #e0f2fe !important;
+  line-height: 1.25 !important;
+  text-shadow: 0 0 8px rgba(34, 211, 238, 0.18) !important;
+}
+
+.terms-container h2,
+.policy-container h2 {
+  color: #38bdf8 !important;
+  border-left: 4px solid #22d3ee !important;
+  text-shadow: none !important;
+  margin: 22px 0 12px !important;
+  padding-left: 12px !important;
+  line-height: 1.45 !important;
+}
+
+.terms-container h3,
+.policy-container h3 {
+  color: #67e8f9 !important;
+  text-shadow: none !important;
+  margin: 16px 0 8px !important;
+  line-height: 1.45 !important;
+}
+
+.terms-container strong,
+.policy-container strong {
+  color: #7dd3fc !important;
+  text-shadow: none !important;
+  font-weight: 700;
+}
+
+.update-date {
+  margin-top: 6px !important;
+  margin-bottom: 0 !important;
+  color: rgba(148, 163, 184, 0.92) !important;
+}
+
+/* ── 本文 ── */
+.policy-body,
+.terms-body {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.policy-body > .intro,
+.terms-body > .intro {
+  margin-top: 10px !important;
+  margin-bottom: 14px !important;
+  line-height: 1.75 !important;
+}
+
+.terms-container section,
+.policy-container section {
+  margin: 0 !important;
+}
+
+.terms-container section + section,
+.policy-container section + section {
+  margin-top: 6px !important;
+}
+
+.terms-container .terms-body > section:first-child h2,
+.policy-container .policy-body > section:first-child h2 {
+  margin-top: 14px !important;
+}
+
+.terms-container p,
+.policy-container p {
+  margin-bottom: 12px !important;
+  line-height: 1.75 !important;
+  color: #e2e8f0 !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.terms-body > div[style*="height"],
+.policy-body > div[style*="height"] {
+  height: 28px !important;
+}
+
+/* ── 表（tokushoho 基準で privacy / terms も統一） ── */
+.terms-container .info-table,
+.policy-container .info-table {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  margin: 12px 0 16px !important;
+  border: 1px solid rgba(56, 189, 248, 0.22) !important;
+}
+
+.terms-container .table-header,
+.policy-container .table-header {
+  background: rgba(34, 211, 238, 0.12) !important;
+  padding: 9px 12px !important;
+  color: #67e8f9 !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.28) !important;
+}
+
+.terms-container .info-table > .row,
+.policy-container .info-table > .row,
+.terms-container section .info-table .row,
+.policy-container section .info-table .row {
+  display: flex;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.85);
+  padding: 12px !important;
+  line-height: 1.75;
+  gap: 8px;
+}
+
+.terms-container .info-table > .row:last-child,
+.policy-container .info-table > .row:last-child,
+.terms-container section .info-table .row:last-child,
+.policy-container section .info-table .row:last-child {
+  border-bottom: none;
+}
+
+.terms-container .label,
+.policy-container .label {
+  width: 160px;
+  flex-shrink: 0;
+  color: #22d3ee !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+}
+
+.terms-container .val,
+.policy-container .val {
+  flex: 1;
+  font-size: 14px !important;
+  line-height: 1.75 !important;
+  min-width: 0;
+}
+
+.terms-container section .info-table,
+.policy-container section .info-table {
+  padding: 10px !important;
+}
+
+.terms-container section .info-table .row,
+.policy-container section .info-table .row {
+  padding: 10px 0 !important;
+}
+
+.terms-container section .info-table .val,
+.policy-container section .info-table .val {
+  line-height: 1.75 !important;
+}
+
+.terms-container .val a,
+.policy-container .val a {
+  color: #7dd3fc !important;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.terms-container .val a:hover,
+.policy-container .val a:hover {
+  color: #bae6fd !important;
+}
+
+.terms-container small,
+.policy-container small {
+  display: block;
+  margin-top: 6px !important;
+  color: rgba(148, 163, 184, 0.9) !important;
+  line-height: 1.65 !important;
+}
+
+.terms-container .info-table > .row .val strong,
+.policy-container .info-table > .row .val strong {
+  color: #7dd3fc !important;
+  text-shadow: none !important;
+}
+
+/* ── 640px 以下：スマホUI（tokushoho 調整方針を3ページ共通） ── */
+@media (max-width: 640px) {
+  body.corp-body--tasful-hp:has(.terms-container),
+  body.corp-body--tasful-hp:has(.policy-container) {
+    overflow-x: hidden;
+  }
+
+  .terms-container,
+  .policy-container {
+    width: calc(100% - 32px) !important;
+    max-width: none !important;
+    padding: 18px 16px 16px !important;
+    margin: 24px auto 28px !important;
+    overflow-x: hidden;
+    box-shadow: 0 0 12px rgba(34, 211, 238, 0.12) !important;
+    border-color: rgba(56, 189, 248, 0.45) !important;
+  }
+
+  .terms-container .policy-header h1,
+  .policy-container .policy-header h1 {
+    font-size: 22px !important;
+    text-shadow: none !important;
+  }
+
+  .update-date {
+    font-size: 12px !important;
+    line-height: 1.55 !important;
+  }
+
+  .policy-body > .intro,
+  .terms-body > .intro {
+    font-size: 14px !important;
+    line-height: 1.75 !important;
+    margin-bottom: 16px !important;
+  }
+
+  .terms-container p,
+  .policy-container p,
+  .terms-container .val,
+  .policy-container .val {
+    line-height: 1.75 !important;
+    font-size: 14px !important;
+  }
+
+  .terms-container h2,
+  .policy-container h2 {
+    font-size: 16px !important;
+    margin: 28px 0 12px !important;
+    padding-left: 10px !important;
+    border-left-width: 3px !important;
+  }
+
+  .terms-container .terms-body > section:first-child h2,
+  .policy-container .policy-body > section:first-child h2 {
+    margin-top: 18px !important;
+  }
+
+  .terms-container section + section,
+  .policy-container section + section {
+    margin-top: 10px !important;
+  }
+
+  .terms-container p,
+  .policy-container p {
+    margin-bottom: 14px !important;
+  }
+
+  .terms-container h3,
+  .policy-container h3 {
+    font-size: 15px !important;
+    margin: 20px 0 10px !important;
+  }
+
+  /* 表：縦積み + tokushoho 同等の行間 */
+  .terms-container .info-table > .row,
+  .policy-container .info-table > .row,
+  .terms-container section .info-table .row,
+  .policy-container section .info-table .row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+    padding: 14px 0 !important;
+    line-height: 1.75 !important;
+  }
+
+  .terms-container .label,
+  .policy-container .label {
+    width: 100% !important;
+    font-size: 13px !important;
+  }
+
+  .terms-container .val,
+  .policy-container .val {
+    width: 100% !important;
+  }
+
+  .terms-container section .info-table .val,
+  .policy-container section .info-table .val,
+  .terms-container section .info-table .val small,
+  .policy-container section .info-table .val small,
+  .terms-container .info-table > .row .val,
+  .policy-container .info-table > .row .val,
+  .terms-container .info-table > .row .val small,
+  .policy-container .info-table > .row .val small {
+    line-height: 1.75 !important;
+  }
+
+  .terms-container .info-table,
+  .policy-container .info-table {
+    margin: 12px 0 18px !important;
+  }
+
+  .terms-container .table-header,
+  .policy-container .table-header {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    padding: 10px 12px !important;
+  }
+
+  .policy-container .policy-header {
+    text-align: left !important;
+  }
+
+  .terms-body > div[style*="height"],
+  .policy-body > div[style*="height"] {
+    height: 16px !important;
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "shell": {
+    "sel": ".match-top-shell",
+    "top": 14,
+    "bottom": 833,
+    "height": 819
+  },
+  "badges": {
+    "sel": ".match-top-trust-badges",
+    "top": 814,
+    "bottom": 826,
+    "height": 12
+  },
+  "footerExists": false,
+  "footerDisplay": null,
+  "pageHeight": 833,
+  "documentHeight": 844,
+  "scrollBeyond844": 0,
+  "lastElementIsBadges": true
+}

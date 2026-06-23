@@ -19,6 +19,11 @@ window.TASU_CHAT_SUPABASE_CONFIG = {
   },
 };
 
+/** MATCH Edge Functions base — override per environment if needed */
+window.__MATCH_FUNCTIONS_BASE__ =
+  window.__MATCH_FUNCTIONS_BASE__ ||
+  "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1";
+
 /** TALK 音声通話 — Web Push / ICE（公開鍵のみ · 秘密鍵は Supabase secrets） */
 window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {
   webPushVapidPublicKey: "BJb_vSGMXgVdjzk8LQJMnCVxb5nO6zsn857RDTBq3iT00n7R4dde1nON0LkQ2fTX5I9VYg_0NSq3B3iMzXwSjWA",

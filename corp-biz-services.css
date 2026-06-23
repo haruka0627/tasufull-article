@@ -1,0 +1,609 @@
+/* ===== IWASHO 対応業務ページ ===== */
+.iwasho-services-page {
+  --iw-svc-navy: #001f3f;
+  --iw-svc-navy-dark: #061f4d;
+  --iw-svc-navy-light: #1a4a88;
+  --iw-svc-accent: #3b82f6;
+  --iw-svc-purple: #7c3aed;
+  --iw-svc-text: #1e293b;
+  --iw-svc-muted: #64748b;
+  --iw-svc-container: 1280px;
+  --iw-svc-pad: 32px;
+  --iw-svc-radius: 20px;
+  --iw-svc-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  background: #ffffff;
+  color: var(--iw-svc-text);
+}
+
+.iwasho-services-page main {
+  overflow-x: hidden;
+}
+
+.iwasho-services-page .iw-svc-container {
+  width: 100%;
+  max-width: var(--iw-svc-container);
+  margin-inline: auto;
+  padding-inline: var(--iw-svc-pad);
+}
+
+.iwasho-services-page .iw-svc-section-title {
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-weight: 900;
+  color: var(--iw-svc-navy);
+  text-align: center;
+  margin: 0 0 16px;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+}
+
+.iwasho-services-page .iw-svc-section-lead {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--iw-svc-muted);
+  text-align: center;
+  line-height: 1.8;
+  margin: 0 auto 40px;
+  max-width: 820px;
+}
+
+.iwasho-services-page .iw-svc-section-note {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--iw-svc-muted);
+  text-align: center;
+  line-height: 1.7;
+  margin: 28px 0 0;
+}
+
+/* ----- Breadcrumb ----- */
+.iwasho-services-page .iw-svc-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 28px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--iw-svc-muted);
+}
+
+.iwasho-services-page .iw-svc-breadcrumb a {
+  color: var(--iw-svc-muted);
+  text-decoration: none;
+}
+
+.iwasho-services-page .iw-svc-breadcrumb a:hover {
+  color: var(--iw-svc-navy);
+}
+
+.iwasho-services-page .iw-svc-breadcrumb__sep {
+  color: #cbd5e1;
+}
+
+.iwasho-services-page .iw-svc-breadcrumb__current {
+  color: var(--iw-svc-navy);
+}
+
+/* ===== Section 1: Hero (wide visual) ===== */
+.iwasho-services-page .iw-svc-hero {
+  padding: 0;
+  background: #ffffff;
+}
+
+.iwasho-services-page .iw-svc-hero__banner {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(340px, 38vw, 460px);
+}
+
+.iwasho-services-page .iw-svc-hero__backdrop {
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+}
+
+.iwasho-services-page .iw-svc-hero__photo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 58%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 58% center;
+  display: block;
+}
+
+.iwasho-services-page .iw-svc-hero__fade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ffffff 38%,
+    rgba(255, 255, 255, 0.96) 42%,
+    rgba(255, 255, 255, 0.78) 48%,
+    rgba(255, 255, 255, 0.42) 54%,
+    rgba(255, 255, 255, 0.12) 60%,
+    rgba(255, 255, 255, 0) 68%
+  );
+  pointer-events: none;
+}
+
+.iwasho-services-page .iw-svc-hero__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  min-height: clamp(340px, 38vw, 460px);
+  padding-block: 48px 56px;
+}
+
+/* ヘッダー .iw-site-header__inner と同じ水平基準（max-width 1440 + gutter） */
+.iwasho-services-page .iw-svc-hero__rail.iw-site-header__inner {
+  min-height: 0;
+  display: block;
+  padding-block: 0;
+}
+
+.iwasho-services-page .iw-svc-hero__content {
+  width: 100%;
+  max-width: 620px;
+  min-width: 0;
+  margin: 0;
+}
+
+/* PC: テキストブロックを左へ（ロゴ左端とは一致させない） */
+@media (min-width: 1280px) {
+  .iwasho-services-page .iw-svc-hero__rail.iw-site-header__inner {
+    overflow: visible;
+    padding-left: 0;
+  }
+
+  .iwasho-services-page .iw-svc-hero__content {
+    margin-left: 0;
+  }
+}
+
+@media (min-width: 1600px) {
+  .iwasho-services-page .iw-svc-hero__rail.iw-site-header__inner {
+    padding-left: 40px;
+  }
+
+  .iwasho-services-page .iw-svc-hero__content {
+    margin-left: -120px;
+  }
+}
+
+.iwasho-services-page .iw-svc-hero__title {
+  font-size: clamp(36px, 4vw, 48px);
+  font-weight: 900;
+  color: var(--iw-svc-navy);
+  line-height: 1.2;
+  margin: 0 0 28px;
+}
+
+.iwasho-services-page .iw-svc-hero__lead {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--iw-svc-text);
+  line-height: 1.9;
+  margin: 0 0 16px;
+}
+
+.iwasho-services-page .iw-svc-hero__lead:last-of-type {
+  margin-bottom: 0;
+}
+
+/* ===== Section 2: IWASHO対応領域（事業内容ページと同一UI） ===== */
+.iwasho-services-page .iw-about-services {
+  padding: 0 0 80px;
+}
+
+.iwasho-services-page .iw-about-section-title {
+  font-size: clamp(24px, 2.8vw, 32px);
+  font-weight: 900;
+  color: var(--iw-svc-navy);
+  text-align: center;
+  margin: 0 0 16px;
+  letter-spacing: 0.02em;
+}
+
+.iwasho-services-page .iw-about-services__lead {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--iw-svc-muted);
+  text-align: center;
+  line-height: 1.8;
+  margin: 0 auto 40px;
+  max-width: 640px;
+}
+
+.iwasho-services-page .iw-about-services__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.iwasho-services-page .iw-about-service-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: var(--iw-svc-shadow);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+}
+
+.iwasho-services-page .iw-about-service-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 31, 63, 0.12);
+}
+
+.iwasho-services-page .iw-about-service-card__image {
+  height: 108px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.iwasho-services-page .iw-about-service-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.iwasho-services-page .iw-about-service-card__image--other {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.iwasho-services-page .iw-about-service-card__dots {
+  display: flex;
+  gap: 8px;
+}
+
+.iwasho-services-page .iw-about-service-card__dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--iw-svc-navy);
+  opacity: 0.35;
+}
+
+.iwasho-services-page .iw-about-service-card__dots span:first-child {
+  opacity: 1;
+}
+
+.iwasho-services-page .iw-about-service-card__body {
+  padding: 16px 18px 18px;
+}
+
+.iwasho-services-page .iw-about-service-card__title {
+  font-size: 15px;
+  font-weight: 900;
+  color: var(--iw-svc-navy);
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+
+.iwasho-services-page .iw-about-service-card__desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--iw-svc-muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ===== Section 4: Flow ===== */
+.iwasho-services-page .iw-svc-flow {
+  padding: 80px 0;
+  background: #ffffff;
+}
+
+.iwasho-services-page .iw-svc-flow__track {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.iwasho-services-page .iw-svc-flow__step {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+}
+
+.iwasho-services-page .iw-svc-flow__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--iw-svc-navy);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.iwasho-services-page .iw-svc-flow__icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--iw-svc-navy);
+  background: #ffffff;
+}
+
+.iwasho-services-page .iw-svc-lucide {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+  color: var(--iw-svc-navy);
+}
+
+.iwasho-services-page .iw-svc-flow__title {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--iw-svc-navy);
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.iwasho-services-page .iw-svc-flow__desc {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--iw-svc-muted);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.iwasho-services-page .iw-svc-flow__arrow {
+  flex-shrink: 0;
+  width: 20px;
+  padding-top: 72px;
+  color: #cbd5e1;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+/* PC: ご利用の流れ・よくあるご相談内容 拡大 */
+@media (min-width: 1280px) {
+  .iwasho-services-page .iw-svc-flow {
+    padding: 92px 0;
+  }
+
+  .iwasho-services-page .iw-svc-flow .iw-svc-container {
+    max-width: 1320px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__track {
+    gap: 14px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__step {
+    flex: 1 1 0;
+    min-width: 148px;
+    padding: 0 6px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__num {
+    width: 43px;
+    height: 43px;
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__icon {
+    width: 62px;
+    height: 62px;
+    margin-bottom: 15px;
+    border-width: 2.5px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__icon .iw-svc-lucide {
+    width: 28px;
+    height: 28px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__title {
+    font-size: 17px;
+    margin-bottom: 10px;
+    line-height: 1.45;
+  }
+
+  .iwasho-services-page .iw-svc-flow__desc {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .iwasho-services-page .iw-svc-flow__arrow {
+    width: 26px;
+    padding-top: 88px;
+    font-size: 27px;
+  }
+
+  .iwasho-services-page .iw-svc-topics {
+    padding-bottom: 92px;
+  }
+
+  .iwasho-services-page .iw-svc-topics .iw-svc-container {
+    max-width: 1320px;
+  }
+
+  .iwasho-services-page .iw-svc-topics__chips {
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .iwasho-services-page .iw-svc-topics__chip {
+    gap: 11px;
+    padding: 19px 28px;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .iwasho-services-page .iw-svc-topics__chip .iw-svc-lucide {
+    width: 32px;
+    height: 32px;
+  }
+
+  .iwasho-services-page .iw-about-service-card__body {
+    padding: 22px 18px 26px;
+  }
+
+  .iwasho-services-page .iw-about-service-card__title {
+    margin-bottom: 12px;
+  }
+
+  .iwasho-services-page .iw-about-service-card__desc {
+    line-height: 1.85;
+  }
+}
+
+/* ===== Section 5: Topics ===== */
+.iwasho-services-page .iw-svc-topics {
+  padding: 0 0 80px;
+  background: #ffffff;
+}
+
+.iwasho-services-page .iw-svc-topics__chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.iwasho-services-page .iw-svc-topics__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  box-shadow: var(--iw-svc-shadow);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--iw-svc-navy);
+  white-space: nowrap;
+}
+
+/* Header active */
+.iwasho-services-page .iw-site-header__nav a.is-active {
+  color: var(--iw-svc-navy-light);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 1100px) {
+  .iwasho-services-page .iw-svc-flow__track {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px 12px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__arrow {
+    display: none;
+  }
+
+  .iwasho-services-page .iw-svc-flow__step {
+    flex: 0 1 calc(33.333% - 16px);
+  }
+}
+
+@media (max-width: 768px) {
+  .iwasho-services-page {
+    --iw-svc-pad: 24px;
+  }
+
+  .iwasho-services-page .iw-svc-hero__banner {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .iwasho-services-page .iw-svc-hero__backdrop {
+    order: -1;
+  }
+
+  .iwasho-services-page .iw-svc-hero__inner {
+    min-height: 0;
+    padding-block: 40px 48px;
+  }
+
+  .iwasho-services-page .iw-svc-hero__content {
+    width: 100%;
+    max-width: none;
+  }
+
+  .iwasho-services-page .iw-svc-hero__photo {
+    width: 100%;
+    height: 260px;
+    position: relative;
+    object-position: 65% center;
+  }
+
+  .iwasho-services-page .iw-svc-hero__backdrop {
+    position: relative;
+    min-height: 260px;
+  }
+
+  .iwasho-services-page .iw-svc-hero__fade {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.55) 72%,
+      #ffffff 100%
+    );
+  }
+
+  .iwasho-services-page .iw-about-services__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .iwasho-services-page .iw-about-service-card__image {
+    height: 88px;
+  }
+
+  .iwasho-services-page .iw-svc-flow__step {
+    flex: 0 1 calc(50% - 12px);
+  }
+
+}
+
+@media (max-width: 480px) {
+  .iwasho-services-page {
+    --iw-svc-pad: 20px;
+  }
+
+  .iwasho-services-page .iw-about-services__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .iwasho-services-page .iw-svc-flow__step {
+    flex: 0 1 100%;
+  }
+
+  .iwasho-services-page .iw-svc-topics__chip {
+    font-size: 12px;
+    padding: 10px 14px;
+  }
+}

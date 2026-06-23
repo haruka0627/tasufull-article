@@ -1,0 +1,217 @@
+/* その他の工事もご相談ください — provided stylesheet (verbatim) */
+.iw-svc-wix-alt,
+.iw-svc-wix-alt * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+}
+
+.iw-svc-wix-alt {
+  background-color: #ffffff;
+  padding: 40px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.iw-svc-wix-alt .section-container {
+  width: 100%;
+  max-width: 1440px;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.iw-svc-wix-alt .app-section-box {
+  width: 100%;
+  background-color: #f3f7ff;
+  border-radius: 16px;
+  padding: 55px 44px 0 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.iw-svc-wix-alt .app-section-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #002255;
+  margin-bottom: 16px;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.iw-svc-wix-alt .app-section-subtitle {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 50px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.iw-svc-wix-alt .app-flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  gap: 20px;
+}
+
+.iw-svc-wix-alt .phone-col-left {
+  width: 19%;
+  height: 380px;
+}
+
+.iw-svc-wix-alt .text-col-left {
+  width: 28%;
+}
+
+.iw-svc-wix-alt .phone-col-right {
+  width: 19%;
+  height: 380px;
+}
+
+.iw-svc-wix-alt .text-col-right {
+  width: 28%;
+}
+
+.iw-svc-wix-alt .app-info {
+  padding-bottom: 55px;
+  display: flex;
+  flex-direction: column;
+}
+
+.iw-svc-wix-alt .app-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+.iw-svc-wix-alt .app-logo-img {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.iw-svc-wix-alt .app-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #002255;
+}
+
+.iw-svc-wix-alt .app-checklist {
+  list-style: none;
+  margin-bottom: 34px;
+}
+
+.iw-svc-wix-alt .app-checklist li {
+  font-size: 16px;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.iw-svc-wix-alt .check-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.iw-svc-wix-alt .color-builder {
+  color: #3b82f6;
+}
+
+.iw-svc-wix-alt .color-tasful {
+  color: #4f46e5;
+}
+
+.iw-svc-wix-alt .app-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 800;
+  color: #ffffff;
+  width: 100%;
+  max-width: 290px;
+  height: 52px;
+  border-radius: 6px;
+  transition: opacity 0.2s;
+}
+
+.iwasho-services-page .iw-svc-wix-alt a.app-btn,
+.iwasho-services-page .iw-svc-wix-alt a.app-btn:hover,
+.iwasho-services-page .iw-svc-wix-alt a.app-btn:visited,
+.iwasho-services-page .iw-svc-wix-alt a.app-btn:focus,
+.iwasho-services-page .iw-svc-wix-alt a.app-btn:focus-visible,
+.iwasho-services-page .iw-svc-wix-alt a.app-btn:active,
+.iwasho-services-page .iw-svc-wix-alt a.app-btn span {
+  color: #ffffff;
+}
+
+.iw-svc-wix-alt .app-btn:hover {
+  opacity: 0.9;
+}
+
+.iwasho-services-page .iw-svc-wix-alt a.app-btn:hover,
+.iwasho-services-page .iw-svc-wix-alt a.app-btn:focus-visible {
+  color: #ffffff;
+}
+
+.iw-svc-wix-alt .btn-builder {
+  background-color: #002561;
+}
+
+.iw-svc-wix-alt .btn-tasful {
+  background-color: #4338ca;
+}
+
+.iw-svc-wix-alt .app-phone-img {
+  background-color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .iw-svc-wix-alt .app-flex-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .iw-svc-wix-alt .phone-col-left,
+  .iw-svc-wix-alt .text-col-left,
+  .iw-svc-wix-alt .phone-col-right,
+  .iw-svc-wix-alt .text-col-right {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .iw-svc-wix-alt .app-info {
+    padding-bottom: 10px;
+    align-items: center;
+    text-align: center;
+  }
+
+  .iw-svc-wix-alt .app-header {
+    justify-content: center;
+  }
+
+  .iw-svc-wix-alt .app-phone-img {
+    height: 320px;
+    order: 2;
+  }
+}

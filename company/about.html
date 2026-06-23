@@ -3,71 +3,438 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>会社概要 | TASFUL</title>
+<title>会社概要 | TASFUL</title>
   <meta name="description" content="TASFUL 会社概要" />
-  <link rel="stylesheet" href="/corp-layout.css" />
-  <link rel="stylesheet" href="/corp-header.css" />
-  <link rel="stylesheet" href="/corp-footer.css" />
+  <link rel="stylesheet" href="/tas-top-page.css" />
+  <link rel="stylesheet" href="/corp-company-hp.css" />
+<link rel="stylesheet" href="/corp-layout.css" />
 </head>
-<body class="corp-body" data-corp="tasful">
-  <header class="corp-header">
-      <div class="corp-container corp-header__inner">
-        <a class="corp-header__brand" href="/company/index.html">
-          <img class="corp-header__logo" src="/images/corp/tasful/1.png" alt="" width="40" height="40" />
-          <span class="corp-header__brand-main">TASFUL</span>
-          <span class="corp-header__brand-sub">Corporate</span>
-        </a>
-        <details class="corp-nav">
-          <summary class="corp-nav__toggle" aria-label="メニューを開く">
-            <span class="corp-nav__toggle-icon" aria-hidden="true"></span>
-          </summary>
-          <ul class="corp-nav__list">
-            <li><a class="corp-nav__link" href="/company/index.html">ホーム</a></li>
-            <li><a class="corp-nav__link" href="/company/services.html">サービス</a></li>
-            <li><a class="corp-nav__link" href="/company/vision.html">ビジョン</a></li>
-            <li><a class="corp-nav__link" href="/company/about.html" aria-current="page">会社概要</a></li>
-            <li><a class="corp-nav__link" href="/company/faq.html">FAQ</a></li>
-            <li><a class="corp-nav__link" href="/company/contact.html">お問い合わせ</a></li>
-          </ul>
-        </details>
-      </div>
-    </header>
-  <main class="corp-main">
-    <section class="corp-section">
-      <div class="corp-container corp-container--wide corp-biz-page">
-<div class="corp-biz-head"><span class="corp-biz-head__bar" aria-hidden="true"></span><h2 class="corp-biz-head__title">運営会社</h2></div>
-        <div class="corp-contact-box">
-          <dl>
-            <div><dt>法人名</dt><dd>〇〇株式会社（Wix 原文 · 正式表記要確認）</dd></div>
-            <div><dt>サービス名</dt><dd>タスフル（TASFUL）</dd></div>
-            <div><dt>事業内容</dt><dd>オンラインプラットフォーム運営 · 建設関連事業（IWASHO）· AI 支援</dd></div>
-            <div><dt>お問い合わせ</dt><dd>フォームのみ（電話対応なし）</dd></div>
-          </dl>
+<body class="corp-body corp-body--tasful-hp" data-corp="tasful">
+  <header class="custom-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="logo-image-wrap">
+          <span class="logo-globe">
+            <img src="/images/tasful/tasful-globe-logo.png" alt="TASFUL ロゴ" class="logo-image">
+          </span>
+        </span>
+        <div class="logo">
+          TASFUL
         </div>
-        <p class="corp-placeholder-note corp-placeholder-note--spaced">所在地・代表者名は Wix / 特商法表記と同期して更新してください。</p>
       </div>
-    </section>
-  </main>
-  <footer class="corp-footer">
-      <div class="corp-container corp-footer__inner">
+      <nav class="tas-hp-header__nav" aria-label="メインナビ">
+        <a href="/company/">ホーム</a>
+        <a href="/company/services.html">サービス一覧</a>
+        <a href="/company/contact.html">協力パートナー</a>
+        <a href="/iwasho/team.html">チーム紹介</a>
+        <a href="/company/about.html" aria-current="page">会社概要</a>
+        <a href="/company/faq.html">Q&A</a>
+      </nav>
+      <a class="tas-hp-header__line-btn" href="/service" aria-label="TASFUL PLATFORM"><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--full">TASFUL PLATFORM</span><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--short" aria-hidden="true">PLATFORM</span></a>
+      <button type="button" class="tas-hp-header__menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="tas-hp-mobile-nav"><span class="tas-hp-header__menu-btn-icon" aria-hidden="true">☰</span></button>
+    </div>
+    <div class="tas-hp-header__mobile-panel" id="tas-hp-mobile-nav" aria-hidden="true">
+      <button type="button" class="tas-hp-header__mobile-backdrop" data-tas-hp-menu-close aria-label="メニューを閉じる"></button>
+      <div class="tas-hp-header__mobile-drawer">
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--primary" aria-label="メインナビ">
+          <a href="/company/">ホーム</a>
+          <a href="/iwasho/services.html">建設・サービス業</a>
+          <a href="/company/contact.html">協力パートナー</a>
+          <a href="/iwasho/team.html">チーム紹介</a>
+          <a href="/company/about.html" aria-current="page">会社概要</a>
+          <a href="/company/faq.html">Q&A</a>
+        </nav>
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--legal" aria-label="法的情報">
+          <p class="tas-hp-header__mobile-nav-label">法的情報</p>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/company/legal/tokushoho.html">特定商取引法</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+<style>
+/* ===============================
+1. ベース：高電圧・サイバー空間（全エフェクト維持）
+=============================== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body, html { width: 100%; height: auto; background-color: #010409; color: #fff; scrollbar-width: none; }
+body::-webkit-scrollbar { display: none; }
+
+.neon-profile-vibe-wrap {
+  width: 100%; min-height: 100vh;
+  padding: 80px 4%;
+  font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+  position: relative;
+  background: radial-gradient(circle at 50% 0%, #0d1a33 0%, #010409 100%);
+  overflow: hidden;
+}
+
+/* スキャンライン（横線アニメ） */
+.neon-profile-vibe-wrap::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,0.3) 0px, rgba(0,0,0,0.3) 1px, transparent 1px, transparent 2px);
+  animation: scanline 10s linear infinite;
+  pointer-events: none; z-index: 1;
+}
+
+@keyframes scanline {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+/* デジタルノイズ */
+.neon-profile-vibe-wrap::after {
+  content: ''; position: absolute; inset: 0;
+  background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4uUzAAAABlBMVEUAAAD///+l2Z/dAAAAbUlEQVQ4y2P4jwYwSjEwMDAyMv4fAByIn5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX58fX58fX58fX68fX58fX4+fn5+fny+fn58fX5+fn5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn5+fn68fX58fX4+fn5+fny+fn58fX5+fn5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn5+fny+fn58fX5+fn5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn58fX5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn+fn58fX5+fn5+fn5+fn5+fn5+fn5+fn+f//8Ad4AX+N9uAAAAAElFTkSuQmCC');
+  opacity: 0.05; pointer-events: none; z-index: 1;
+}
+
+/* ===============================
+2. ヘッダー：IWASHO × TASFUL 
+============================== */
+.tm-profile-header {
+  text-align: center; margin-bottom: 70px;
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+.tm-profile-eng-sub {
+  font-size: 13px; font-weight: 800; color: #3b82f6; letter-spacing: 0.4em; margin-bottom: 15px;
+  display: block;
+  text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 30px #22d3ee;
+  animation: text-flicker 0.1s infinite alternate;
+}
+
+@keyframes text-flicker {
+  0%, 100% { opacity: 1; text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6, 0 0 30px #22d3ee; }
+  50% { opacity: 0.8; text-shadow: 0 0 5px #3b82f6; }
+}
+
+.tm-profile-main-title {
+  font-size: clamp(36px, 6vw, 60px); font-weight: 900; letter-spacing: 0.25em; color: #fff;
+  position: relative; display: inline-block;
+  text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 40px #22d3ee, 0 0 80px #3b82f6;
+  animation: title-glitch 2s steps(2) infinite;
+}
+
+@keyframes title-glitch {
+  0%, 90%, 100% { transform: translate(0, 0); }
+  92% { transform: translate(-2px, 1px); color: #fff; }
+  94% { transform: translate(2px, -1px); color: #22d3ee; }
+  96% { transform: translate(-1px, -2px); }
+}
+
+/* 火花スパーク */
+.tm-profile-main-title::before, .tm-profile-main-title::after {
+  content: ''; position: absolute; width: 4px; height: 4px; background: #fbbf24; border-radius: 50%;
+  box-shadow: 0 0 10px #fbbf24; opacity: 0;
+}
+.tm-profile-main-title::before { top: 20px; left: -20px; animation: spark-left 1.5s linear infinite; }
+.tm-profile-main-title::after { bottom: 20px; right: -20px; animation: spark-right 1.5s linear infinite; animation-delay: 0.7s; }
+
+@keyframes spark-left { 
+  0% { transform: translate(0, 0) scale(0); opacity: 1; }  
+  50% { transform: translate(-40px, -20px) scale(1.5); opacity: 1; }
+  100% { transform: translate(-60px, -40px) scale(0); opacity: 0; }
+}
+@keyframes spark-right { 
+  0% { transform: translate(0, 0) scale(0); opacity: 1; }  
+  50% { transform: translate(40px, 20px) scale(1.5); opacity: 1; }
+  100% { transform: translate(60px, 40px) scale(0); opacity: 0; }
+}
+
+.tm-profile-title-line { 
+  width: 120px; height: 4px; background: #fff; 
+  margin: 40px auto 0; border-radius: 4px;
+  box-shadow: 0 0 15px #fff, 0 0 30px #22d3ee, 0 0 60px #3b82f6;
+  animation: line-pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes line-pulse {
+  0% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(0.8); opacity: 0.6; }
+}
+
+/* ===============================
+3. ネオンカード
+=============================== */
+.tm-profile-container { max-width: 850px; margin: 0 auto; position: relative; z-index: 2; width: 100%; }
+
+.tm-profile-card {
+  background: rgba(10, 20, 40, 0.6);
+  backdrop-filter: blur(15px);
+  border-radius: 4px;
+  padding: 10px 0;
+  position: relative;
+  border: 1px solid rgba(34, 211, 238, 0.8);
+  box-shadow: 0 0 30px rgba(34, 211, 238, 0.6), inset 0 0 20px rgba(34, 211, 238, 0.3);
+  animation: card-pulse 3s ease-in-out infinite;
+}
+
+@keyframes card-pulse {
+  0%, 100% { box-shadow: 0 0 30px rgba(34, 211, 238, 0.6), inset 0 0 20px rgba(34, 211, 238, 0.3); border-color: rgba(34, 211, 238, 0.8); }
+  50% { box-shadow: 0 0 50px rgba(34, 211, 238, 0.9), inset 0 0 30px rgba(34, 211, 238, 0.5); border-color: #fff; }
+}
+
+/* 枠を流れる光 */
+.tm-profile-card::after {
+  content: ''; position: absolute; inset: -5px; border: 2px solid transparent; border-radius: 6px;
+  background: linear-gradient(90deg, transparent, #22d3ee, #fff, #22d3ee, transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  background-size: 200% auto;
+  animation: border-flow 2s linear infinite;
+}
+
+@keyframes border-flow {
+  0% { background-position: 200% center; }
+  100% { background-position: 0% center; }
+}
+
+.tm-profile-info-item { 
+  display: flex; align-items: flex-end; justify-content: space-between; 
+  padding: 30px 6%; position: relative; overflow: hidden; transition: 0.3s;
+}
+
+.tm-profile-info-item::before {
+  content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%); transition: 0.5s; pointer-events: none;
+}
+.tm-profile-info-item:hover::before { transform: translateX(100%); }
+
+.tm-profile-info-item:not(:last-child)::after {
+  content: ''; position: absolute; bottom: 0; left: 6%; right: 6%; 
+  height: 1px; background: rgba(34, 211, 238, 0.3);
+  box-shadow: 0 0 10px #22d3ee;
+}
+
+/* HUD インデックス */
+.tm-profile-item-num-wrap {
+  display: flex; align-items: center; margin-bottom: 5px;
+}
+.tm-profile-item-num {
+  font-family: 'Verdana', sans-serif;
+  font-size: 13px; font-weight: 900; 
+  color: #22d3ee; 
+  text-shadow: 0 0 10px #22d3ee, 0 0 20px #22d3ee;
+  letter-spacing: 0.1em;
+  margin-right: 6px;
+}
+.tm-profile-item-num-eng {
+  font-size: 10px; font-weight: 700; color: #8492a6; text-transform: uppercase;
+}
+
+.tm-profile-item-label { color: #fff; font-weight: 700; font-size: 15px; letter-spacing: 0.1em; }
+.tm-profile-item-value { color: #fff; font-weight: 700; font-size: 20px; transition: 0.2s; text-align: right; }
+
+/* 事業内容エリア */
+.ops-title { font-size: 18px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.ops-sub { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+.ops-detail { font-size: 11px; color: #64748b; font-weight: 700; letter-spacing: 0.05em; line-height: 1.5; }
+
+/* グリッチ */
+.tm-profile-info-item:hover .tm-profile-item-value {
+  animation: item-glitch 0.3s steps(2);
+}
+@keyframes item-glitch {
+  0% { transform: translate(2px, -1px); color: #22d3ee; }
+  50% { transform: translate(-2px, 1px); color: #fff; }
+  100% { transform: translate(0, 0); }
+}
+
+/* ===============================
+4. ネオンボタン
+=============================== */
+.cta-section { margin-top: 60px; text-align: center; position: relative; z-index: 2; }
+
+.cta-btn {
+  display: inline-block;
+  padding: 22px 80px;
+  font-size: 19px; font-weight: 900; letter-spacing: 0.3em;
+  color: #fff; text-decoration: none; border-radius: 4px;
+  background: #000;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 20px #3b82f6, 0 0 40px #22d3ee, inset 0 0 15px rgba(59, 130, 246, 0.6);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  animation: btn-color-change 3s linear infinite;
+}
+
+@keyframes btn-color-change {
+  0% { border-color: #3b82f6; box-shadow: 0 0 20px #3b82f6; }
+  33% { border-color: #8b5cf6; box-shadow: 0 0 20px #8b5cf6; }
+  66% { border-color: #22d3ee; box-shadow: 0 0 20px #22d3ee; }
+  100% { border-color: #3b82f6; box-shadow: 0 0 20px #3b82f6; }
+}
+
+.cta-btn:hover {
+  background: #fff; color: #000;
+  transform: scale(1.05) translateY(-5px);
+  box-shadow: 0 0 60px #fff, 0 0 100px #22d3ee;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .tm-profile-vibe-wrap { padding: 50px 3%; }
+  .tm-profile-main-title { font-size: 32px; }
+  .tm-profile-info-item { flex-direction: column; align-items: flex-start; padding: 25px 5%; }
+  .tm-profile-item-value { margin-top: 10px; font-size: 17px; text-align: left; }
+  .cta-btn { width: 100%; padding: 18px; font-size: 16px; }
+}
+</style>
+
+<div class="neon-profile-vibe-wrap">
+  <div class="tm-profile-header">
+    <span class="tm-profile-eng-sub">IWASHO × TASFUL NETWORK</span>
+    <h1 class="tm-profile-main-title">会社概要</h1>
+    <div class="tm-profile-title-line"></div>
+  </div>
+
+  <div class="tm-profile-container">
+    <div class="tm-profile-card">
+      
+      <!-- 会社名 -->
+      <div class="tm-profile-info-item">
         <div>
-          <p class="corp-footer__brand">TASFUL</p>
-          <p class="corp-footer__tagline">建設 × プラットフォーム × AI — 依頼から解決まで</p>
+          <div class="tm-profile-item-num-wrap">
+            <span class="tm-profile-item-num">01</span>
+            <span class="tm-profile-item-num-eng">COMPANY</span>
+          </div>
+          <span class="tm-profile-item-label">会社名</span>
         </div>
-        <nav class="corp-footer__nav" aria-label="フッターナビ">
-          <a class="corp-footer__link" href="/company/services.html">サービス</a>
-          <a class="corp-footer__link" href="/company/vision.html">ビジョン</a>
-          <a class="corp-footer__link" href="/company/about.html">会社概要</a>
-          <a class="corp-footer__link" href="/company/faq.html">FAQ</a>
-          <a class="corp-footer__link" href="/company/contact.html">お問い合わせ</a>
-        </nav>
-        <nav class="corp-footer__legal" aria-label="法務">
-          <a class="corp-footer__legal-link" href="/company/legal/terms.html">利用規約</a>
-          <a class="corp-footer__legal-link" href="/company/legal/privacy.html">プライバシーポリシー</a>
-          <a class="corp-footer__legal-link" href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
-        </nav>
-        <p class="corp-footer__copy">&copy; 2026 TASFUL</p>
+        <div class="tm-profile-item-value">IWASHO合同会社</div>
       </div>
-    </footer>
+      
+      <!-- 代表者 -->
+      <div class="tm-profile-info-item">
+        <div>
+          <div class="tm-profile-item-num-wrap">
+            <span class="tm-profile-item-num">02</span>
+            <span class="tm-profile-item-num-eng">CEO</span>
+          </div>
+          <span class="tm-profile-item-label">代表者</span>
+        </div>
+        <div class="tm-profile-item-value">川島 千鶴</div>
+      </div>
+
+      <!-- 設立 -->
+      <div class="tm-profile-info-item">
+        <div>
+          <div class="tm-profile-item-num-wrap">
+            <span class="tm-profile-item-num">03</span>
+            <span class="tm-profile-item-num-eng">FOUNDED</span>
+          </div>
+          <span class="tm-profile-item-label">設立</span>
+        </div>
+        <div class="tm-profile-item-value">2026.04.01</div>
+      </div>
+
+      <!-- 所在地 -->
+      <div class="tm-profile-info-item">
+        <div>
+          <div class="tm-profile-item-num-wrap">
+            <span class="tm-profile-item-num">04</span>
+            <span class="tm-profile-item-num-eng">LOCATION</span>
+          </div>
+          <span class="tm-profile-item-label">所在地</span>
+        </div>
+        <div class="tm-profile-item-value">〇〇県 〇〇市</div>
+      </div>
+
+      <!-- 事業内容（画像image_476dbb.pngに完全準拠） -->
+      <div class="tm-profile-info-item">
+        <div>
+          <div class="tm-profile-item-num-wrap">
+            <span class="tm-profile-item-num">05</span>
+            <span class="tm-profile-item-num-eng">OPERATIONS</span>
+          </div>
+          <span class="tm-profile-item-label">事業内容</span>
+        </div>
+        <div style="text-align: right;">
+          <div class="ops-title">建設関連事業</div>
+          <div class="ops-sub">人材・AI・業務支援プラットフォーム運営</div>
+          <div class="ops-detail">TASFUL NETWORK 運営</div>
+          <div class="ops-detail">建設ネットワーク・協力パートナー・AI支援・業務委託調整</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cta-section">
+      <a href="/contact" target="_top" class="cta-btn">SEND INQUIRY</a>
+    </div>
+  </div>
+</div>
+<footer class="modern-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-main">
+      <div class="footer-brand">
+        <h2 class="footer-logo">TASFUL</h2>
+        <div class="company-info">
+          <p class="name">IWASHO合同会社</p>
+          <p class="desc">事業内容：建設関連工事・美装・防蟻・業務委託調整</p>
+        </div>
+      </div>
+
+      <div class="footer-nav">
+        <div class="link-col link-col--company">
+          <h4>企業情報</h4>
+          <div class="link-list">
+            <a href="/company/about.html">会社概要</a>
+            <a href="/iwasho/team.html">チーム紹介</a>
+            <a href="/iwasho/partners.html">協力パートナー</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--services">
+          <h4>サービス</h4>
+          <div class="link-list">
+            <a href="/company/services.html" class="footer-link--sp-only">サービス一覧</a>
+            <a href="/iwasho/services.html">建設・サービス業</a>
+            <a href="/service">プラットフォーム</a>
+            <a href="/gen-ai-workspace.html">TASFUL AI</a>
+            <a href="/talk-home.html">TASFUL TALK</a>
+            <a href="/builder/">TASFUL BUILDER</a>
+            <a href="#">TASFUL SOUND</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--forms">
+          <h4>各種フォーム</h4>
+          <div class="link-list">
+            <a href="/iwasho/contact.html">お問い合わせ</a>
+            <a href="/company/contact.html">協力パートナー登録</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--legal-sp footer-link--sp-only">
+          <h4>規約・ポリシー</h4>
+          <div class="link-list">
+            <a href="/company/legal/terms.html">利用規約</a>
+            <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+            <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="note">※ IWASHOは美装・防蟻、TASFULは建設業務委託・調整ユニットとして運営しています。</p>
+      <div class="link-list footer-bottom-legal footer-link--pc-only">
+        <a href="/company/legal/terms.html">利用規約</a>
+        <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+        <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+      </div>
+      <p class="copy">&copy; 2026 IWASHO合同会社 All Rights Reserved.</p>
+    </div>
+
+  </div>
+</footer>
+<script src="/tas-hp-header-menu.js" defer></script>
+
 </body>
 </html>

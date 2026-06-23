@@ -5,6 +5,9 @@ node_modules/
 .env.local
 chat-supabase-config.local.js
 
+# Gate-D Playwright OTP session (contains Cloudflare Access cookies)
+reports/gate-d-auth-storage.json
+
 # Local backups / regression artifacts (not for deploy)
 backups/
 screenshots/

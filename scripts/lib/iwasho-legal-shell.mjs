@@ -1,5 +1,5 @@
 import { renderIwashoFooter, renderIwashoHeader } from "./iwasho-site-shell.mjs";
-import { LEGAL_ENACTED, LEGAL_UPDATED } from "./iwasho-legal-content.mjs";
+import { LEGAL_ENACTED, LEGAL_NAV, LEGAL_UPDATED } from "./iwasho-legal-content.mjs";
 
 export function renderIwashoLegalPage(page) {
   const updatedDate = page.updatedDate ?? LEGAL_UPDATED;
@@ -7,9 +7,17 @@ export function renderIwashoLegalPage(page) {
     .map((s) => `<li><a href="#${s.id}">${s.title}</a></li>`)
     .join("\n            ");
 
-  const relatedLinks = page.related
-    .map((r) => `<a href="${r.href}">${r.label}</a>`)
-    .join("\n            ");
+  const relatedCards = LEGAL_NAV.map((item) => {
+    if (item.slug === page.slug) {
+      return `<span class="iw-legal-related-card iw-co-biz-card is-current" aria-current="page">
+            <span class="iw-legal-related-card__label">${item.label}</span>
+          </span>`;
+    }
+    return `<a href="${item.href}" class="iw-legal-related-card iw-co-biz-card">
+            <span class="iw-legal-related-card__label">${item.label}</span>
+            <span class="iw-legal-related-card__arrow" aria-hidden="true">→</span>
+          </a>`;
+  }).join("\n            ");
 
   const articles = page.sections
     .map(
@@ -56,8 +64,8 @@ ${renderIwashoHeader(null)}
               </ol>
               <div class="iw-legal-related">
                 <p class="iw-legal-related__label">関連規約</p>
-                <div class="iw-legal-related__links">
-            ${relatedLinks}
+                <div class="iw-legal-related__cards">
+            ${relatedCards}
                 </div>
               </div>
             </nav>

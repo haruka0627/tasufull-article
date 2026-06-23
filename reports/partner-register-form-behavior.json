@@ -1,0 +1,64 @@
+{
+  "checkedAt": "2026-06-23T00:53:01.082Z",
+  "base": "http://127.0.0.1:8788",
+  "pages": [
+    {
+      "url": "/partner-register.html",
+      "consoleErrors": [],
+      "corpVisibleDefault": true,
+      "corpHiddenForSole": true,
+      "nonCorpNoteVisible": true,
+      "corpVisibleAgain": true,
+      "workersLabelsSolo": [
+        "一人親方労災特別加入済み",
+        "未加入"
+      ],
+      "workersLabelsSole": [
+        "未加入",
+        "加入予定",
+        "特別加入済み"
+      ],
+      "invoiceNumberToggle": true,
+      "coverageOtherToggle": true,
+      "submitLabel": "一次登録を送信",
+      "constructionTradeCount": 11,
+      "tagCount": 18,
+      "hasTagsHeading": true,
+      "radioHasBox": {
+        "border": "0px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    },
+    {
+      "url": "/iwasho/partner-register.html",
+      "consoleErrors": [],
+      "corpVisibleDefault": true,
+      "corpHiddenForSole": true,
+      "nonCorpNoteVisible": true,
+      "corpVisibleAgain": true,
+      "workersLabelsSolo": [
+        "一人親方労災特別加入済み",
+        "未加入"
+      ],
+      "workersLabelsSole": [
+        "未加入",
+        "加入予定",
+        "特別加入済み"
+      ],
+      "invoiceNumberToggle": true,
+      "coverageOtherToggle": true,
+      "submitLabel": "一次登録を送信",
+      "constructionTradeCount": 11,
+      "tagCount": 18,
+      "hasTagsHeading": true,
+      "radioHasBox": {
+        "border": "0px",
+        "background": "rgba(0, 0, 0, 0)"
+      }
+    }
+  ],
+  "summary": {
+    "consoleErrorCount": 0,
+    "allBehaviorChecksPass": true
+  }
+}

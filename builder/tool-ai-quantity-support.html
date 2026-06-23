@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>AI積算補助 | 建設ツール | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-tool-ai-quantity-support">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./construction-tools.html" aria-label="建設ツールへ戻る">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">AI積算補助</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">AI積算補助</h1>
+          <p class="builder-header__sub">面積・使用量・ロス率から必要数量と概算材料費を確認します</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main builder-aqs-main" data-builder-aqs-root data-builder-tool="ai-quantity-support">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <section class="builder-aqs-hero" aria-label="AI積算補助概要">
+        <div class="builder-aqs-hero__inner">
+          <p class="builder-aqs-hero__kicker">建設ツール · Builder AI / β版</p>
+          <h2 class="builder-aqs-hero__title">AI積算補助</h2>
+          <p class="builder-aqs-hero__desc">面積・使用量・ロス率・単価をもとに、必要数量と概算材料費を確認できます。現在はAI接続前のルールベース診断β版です。</p>
+        </div>
+      </section>
+
+      <div class="builder-aqs-layout">
+        <section class="builder-panel builder-aqs-inputs" aria-label="入力条件">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">入力</h2>
+            <span class="builder-kpi">リアルタイム</span>
+          </div>
+
+          <form class="builder-form builder-aqs-form" novalidate>
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">工事名</span>
+              <input
+                class="builder-input builder-aqs-input"
+                type="text"
+                name="projectName"
+                value="〇〇邸 外壁塗装工事"
+                placeholder="例：〇〇邸 外壁塗装工事"
+                data-builder-aqs-project-name
+                data-builder-aqs-input
+              />
+            </label>
+
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">積算対象</span>
+              <input
+                class="builder-input builder-aqs-input"
+                type="text"
+                name="targetName"
+                value="外壁塗料"
+                placeholder="例：外壁塗料"
+                data-builder-aqs-target-name
+                data-builder-aqs-input
+              />
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">施工面積</span>
+              <div class="builder-aqs-input-wrap">
+                <input
+                  class="builder-input builder-aqs-input"
+                  type="number"
+                  name="area"
+                  inputmode="decimal"
+                  min="0"
+                  step="0.1"
+                  value="120"
+                  placeholder="例：120"
+                  data-builder-aqs-area
+                  data-builder-aqs-input
+                />
+                <span class="builder-aqs-input-unit" aria-hidden="true">㎡</span>
+              </div>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">単位あたり使用量</span>
+              <div class="builder-aqs-input-wrap">
+                <input
+                  class="builder-input builder-aqs-input"
+                  type="number"
+                  name="usagePerUnit"
+                  inputmode="decimal"
+                  min="0"
+                  step="0.01"
+                  value="0.15"
+                  placeholder="例：0.15"
+                  data-builder-aqs-usage-per-unit
+                  data-builder-aqs-input
+                />
+                <span class="builder-aqs-input-unit" aria-hidden="true">/㎡</span>
+              </div>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">ロス率</span>
+              <div class="builder-aqs-input-wrap">
+                <input
+                  class="builder-input builder-aqs-input"
+                  type="number"
+                  name="lossRate"
+                  inputmode="decimal"
+                  min="0"
+                  step="0.1"
+                  value="10"
+                  placeholder="例：10"
+                  data-builder-aqs-loss-rate
+                  data-builder-aqs-input
+                />
+                <span class="builder-aqs-input-unit" aria-hidden="true">%</span>
+              </div>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">材料単価</span>
+              <div class="builder-aqs-input-wrap">
+                <input
+                  class="builder-input builder-aqs-input"
+                  type="number"
+                  name="unitPrice"
+                  inputmode="decimal"
+                  min="0"
+                  step="100"
+                  value="2500"
+                  placeholder="例：2500"
+                  data-builder-aqs-unit-price
+                  data-builder-aqs-input
+                />
+                <span class="builder-aqs-input-unit" aria-hidden="true">円</span>
+              </div>
+            </label>
+
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">備考</span>
+              <input
+                class="builder-input builder-aqs-input"
+                type="text"
+                name="note"
+                value=""
+                placeholder="例：2回塗り・下塗り込み"
+                data-builder-aqs-note
+                data-builder-aqs-input
+              />
+            </label>
+          </form>
+        </section>
+
+        <section class="builder-panel builder-aqs-results" aria-label="計算結果" aria-live="polite">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">積算結果</h2>
+          </div>
+
+          <div class="builder-aqs-result-grid">
+            <article class="builder-aqs-result-card">
+              <p class="builder-aqs-result-card__label">基準数量</p>
+              <p class="builder-aqs-result-card__value" data-builder-aqs-base-quantity>18</p>
+            </article>
+
+            <article class="builder-aqs-result-card">
+              <p class="builder-aqs-result-card__label">ロス数量</p>
+              <p class="builder-aqs-result-card__value" data-builder-aqs-loss-quantity>1.8</p>
+            </article>
+
+            <article class="builder-aqs-result-card builder-aqs-result-card--primary">
+              <p class="builder-aqs-result-card__label">必要数量</p>
+              <p class="builder-aqs-result-card__value" data-builder-aqs-required-quantity>19.8</p>
+            </article>
+
+            <article class="builder-aqs-result-card builder-aqs-result-card--cost">
+              <p class="builder-aqs-result-card__label">概算材料費</p>
+              <p class="builder-aqs-result-card__value" data-builder-aqs-material-cost>¥49,500</p>
+            </article>
+          </div>
+
+          <div class="builder-aqs-breakdown" aria-label="計算内訳">
+            <p class="builder-aqs-breakdown__title">計算内訳</p>
+            <dl class="builder-aqs-breakdown__list">
+              <div>
+                <dt>基準数量</dt>
+                <dd data-builder-aqs-breakdown-base>120㎡ × 0.15 = 18</dd>
+              </div>
+              <div>
+                <dt>ロス数量</dt>
+                <dd data-builder-aqs-breakdown-loss>18 × 10% = 1.8</dd>
+              </div>
+              <div>
+                <dt>必要数量</dt>
+                <dd data-builder-aqs-breakdown-required>18 + 1.8 = 19.8</dd>
+              </div>
+              <div>
+                <dt>概算材料費</dt>
+                <dd data-builder-aqs-breakdown-cost>19.8 × ¥2,500 = ¥49,500</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="builder-aqs-formula-note" aria-label="計算式">
+            <p class="builder-aqs-formula-note__title">計算式</p>
+            <ul class="builder-aqs-formula-note__list">
+              <li><strong>基準数量</strong> = 施工面積 × 単位あたり使用量</li>
+              <li><strong>ロス数量</strong> = 基準数量 × ロス率 ÷ 100</li>
+              <li><strong>必要数量</strong> = 基準数量 + ロス数量</li>
+              <li><strong>概算材料費</strong> = 必要数量 × 材料単価</li>
+            </ul>
+            <p class="builder-aqs-formula-note__note">※ AI API接続前のルールベース診断β版です。</p>
+          </div>
+
+          <aside class="builder-ai-comment" data-builder-ai-comment aria-live="polite">
+            <div class="builder-ai-comment__head">
+              <h3 class="builder-ai-comment__title">Builder AI コメント</h3>
+              <span class="builder-ai-comment__badge" data-builder-ai-comment-badge>準備中</span>
+            </div>
+            <p class="builder-ai-comment__body" data-builder-ai-comment-body>金額を入力すると、AI積算補助コメントがここに表示されます。</p>
+            <p class="builder-ai-comment__meta" data-builder-ai-comment-meta hidden></p>
+          </aside>
+        </section>
+      </div>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-runtime.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="builder-actor-identity.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-ai-engine.js"></script>
+  <script src="builder-construction-tools.js"></script>
+  <script src="builder-tool-ai-quantity-support.js"></script>
+  <script src="builder.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var tool = window.BuilderConstructionTools && window.BuilderConstructionTools.get
+        ? window.BuilderConstructionTools.get("ai-quantity-support")
+        : window.BuilderToolAiQuantitySupport;
+      if (tool && typeof tool.mount === "function") {
+        tool.mount();
+      }
+    });
+  </script>
+</body>
+</html>

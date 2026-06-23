@@ -5262,7 +5262,9 @@
           q,
           roomId: "",
         });
-        window.location.href = "chat-list.html";
+        window.location.href =
+          window.TasuTalkChatEntryUrl?.buildTalkChatHubUrl?.({ from: "chat" }) ||
+          "talk-home.html?tab=chat&from=chat";
         return;
       }
 

@@ -29,6 +29,7 @@
    *   listingId?: string,
    *   listingType?: string,
    *   send?: boolean,
+   *   returnTo?: string,
    *   basePath?: string,
    *   fromBuilder?: boolean,
    * }} [opts]
@@ -46,8 +47,30 @@
     const listingType = pickStr(o.listingType);
     if (listingType) params.set("listingType", listingType);
     if (o.send === true) params.set("send", "1");
+    const returnTo = pickStr(o.returnTo);
+    if (returnTo) params.set("returnTo", returnTo);
     const qs = params.toString();
     return qs ? `${base}?${qs}` : base;
+  }
+
+  /**
+   * MATCH から TASFUL AI への CTA URL
+   * @param {{ mode?: string, q?: string, returnTo?: string, send?: boolean, basePath?: string }} [opts]
+   */
+  function buildMatchCtaUrl(opts) {
+    const o = opts || {};
+    const returnTo =
+      pickStr(o.returnTo) ||
+      (typeof global.location !== "undefined"
+        ? global.location.pathname + global.location.search
+        : "");
+    return buildUrl({
+      basePath: pickStr(o.basePath) || "../ai-workspace.html",
+      mode: pickStr(o.mode) || "match-profile-coach",
+      q: pickStr(o.q),
+      returnTo,
+      send: o.send === true,
+    });
   }
 
   /**
@@ -78,6 +101,7 @@
     DEFAULT_PAGE,
     DEFAULT_MODE,
     buildUrl,
+    buildMatchCtaUrl,
     buildListingConsultUrl,
   };
 })(typeof window !== "undefined" ? window : globalThis);

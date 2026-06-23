@@ -1,0 +1,29 @@
+{
+  "headerInHero": true,
+  "header": {
+    "top": 15,
+    "bottom": 77,
+    "height": 62,
+    "position": "absolute",
+    "bg": "rgba(0, 0, 0, 0)",
+    "z": "3"
+  },
+  "hero": {
+    "top": 15,
+    "bottom": 578.109375,
+    "height": 563.109375,
+    "position": "relative",
+    "bg": "rgba(0, 0, 0, 0)",
+    "z": "auto"
+  },
+  "img": {
+    "top": 15,
+    "bottom": 582.5779418945312,
+    "height": 567.5779418945312,
+    "position": "relative",
+    "bg": "rgba(0, 0, 0, 0)",
+    "z": "0"
+  },
+  "imgStartsAtOrAboveHeaderBottom": true,
+  "shellInnerFirstChild": "match-top-hero-shell"
+}

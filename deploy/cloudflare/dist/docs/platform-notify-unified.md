@@ -61,8 +61,8 @@
 
 | 通知タイトル（例） | CTA | 遷移先 |
 |-------------------|-----|--------|
-| この求人に応募がありました | **応募を見る** | `detail-job.html#applications` |
-| 掲載者/応募者とのやりとりを開始 | **チャットを開く** | `chat-detail.html` |
+| この求人に応募がありました | **応募を見る** | `detail-job.html#applications`（案件） |
+| 掲載者/応募者とのやりとりを開始 | **TALKを開く** | `chat-detail.html` / `talk-home.html?tab=chat` |
 | やりとり完了の申請がありました | **承認する** | `chat-detail.html`（承認カード） |
 | やりとりが完了しました | **評価する** | `chat-detail.html`（レビュー導線） |
 | 評価をお願いします | **評価する** | `chat-detail.html` |

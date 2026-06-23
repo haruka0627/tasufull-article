@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0814" />
+  <title>TASFUL LIVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+  <link rel="stylesheet" href="live.css" />
+</head>
+<body class="live-body" data-page="live-index">
+  <div class="live-shell" data-live-hub>
+    <header class="live-header">
+      <a class="live-header__back" href="../dashboard.html">← ダッシュボード</a>
+    </header>
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+    <main class="live-main">
+      <section class="live-hero" aria-label="TASFUL LIVE">
+        <p class="live-hero__kicker">TASFUL LIVE</p>
+        <h1 class="live-header__title live-hero__title">ショート &amp; ライブ</h1>
+        <p class="live-hero__desc">Phase 6: ショート・ライブ配信・ギフト stub。実決済は次 Phase です。</p>
+      </section>
+      <section class="live-hub-section" aria-label="ライブ配信">
+        <div class="live-hub-section__head">
+          <h2 class="live-hub-section__title">ライブ配信</h2>
+          <div class="live-hub-section__actions">
+            <a class="live-btn live-btn--ghost" href="create.html">配信作成</a>
+            <a class="live-btn live-btn--ghost" href="studio.html">スタジオ</a>
+          </div>
+        </div>
+        <div data-live-broadcasts-root>
+          <p class="live-loading">ライブ配信を読み込み中…</p>
+        </div>
+      </section>
+      <div class="live-grid">
+        <a class="live-card" href="settings.html" data-live-link-settings>
+          <h2 class="live-card__title">クリエイター設定</h2>
+          <p class="live-card__text">LIVE プロフィールの作成・更新、通知設定</p>
+          <span class="live-card__tag">Phase 1</span>
+        </a>
+        <a class="live-card" href="profile.html" data-live-link-profile id="live-hub-profile-link">
+          <h2 class="live-card__title">自分のプロフィール</h2>
+          <p class="live-card__text">公開ステータス・フォロワー数を確認</p>
+          <span class="live-card__tag">Phase 1</span>
+        </a>
+        <a class="live-card" href="shorts.html">
+          <h2 class="live-card__title">ショートフィード</h2>
+          <p class="live-card__text">公開中の縦型動画を視聴・いいね</p>
+          <span class="live-card__tag">Phase 3</span>
+        </a>
+        <a class="live-card" href="short-upload.html">
+          <h2 class="live-card__title">ショート投稿</h2>
+          <p class="live-card__text">MP4 をアップロードして公開</p>
+          <span class="live-card__tag">Phase 3</span>
+        </a>
+        <a class="live-card" href="watch.html?broadcast_id=stub&talkDev=1">
+          <h2 class="live-card__title">ライブ視聴</h2>
+          <p class="live-card__text">配信中・終了したライブを視聴</p>
+          <span class="live-card__tag">Phase 5</span>
+        </a>
+        <a class="live-card" href="create.html">
+          <h2 class="live-card__title">配信作成</h2>
+          <p class="live-card__text">タイトル・予定日時を設定</p>
+          <span class="live-card__tag">Phase 5</span>
+        </a>
+        <a class="live-card" href="studio.html">
+          <h2 class="live-card__title">配信スタジオ</h2>
+          <p class="live-card__text">開始 / 終了（スタブ）</p>
+          <span class="live-card__tag">Phase 5</span>
+        </a>
+        <a class="live-card" href="gifts.html?broadcast_id=stub&creator_user_id=u_creator&talkDev=1">
+          <h2 class="live-card__title">ギフト</h2>
+          <p class="live-card__text">stub 投げ銭 · テスト用</p>
+          <span class="live-card__tag">Phase 6</span>
+        </a>
+        <a class="live-card" href="tips.html?talkDev=1">
+          <h2 class="live-card__title">応援履歴</h2>
+          <p class="live-card__text">送った · 受け取った応援</p>
+          <span class="live-card__tag">Phase 6</span>
+        </a>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../talk-runtime.js" defer></script>
+  <script src="../auth-current-user.js" defer></script>
+  <script src="../tasu-supabase-client.js" defer></script>
+  <script src="../chat-user-identity.js" defer></script>
+  <script src="../breadcrumb-config.js" defer></script>
+  <script src="../common-breadcrumb.js" defer></script>
+  <script src="live-config.js" defer></script>
+  <script src="live-broadcasts.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const cfg = window.TasuLiveConfig;
+      const id = cfg?.getTalkUserId?.() || "u_me";
+      const link = document.getElementById("live-hub-profile-link");
+      if (link && cfg?.profileUrl) link.href = cfg.profileUrl(id);
+      const liveRoot = document.querySelector("[data-live-broadcasts-root]");
+      if (liveRoot && window.TasuLiveBroadcasts?.mountHubLiveSection) {
+        window.TasuLiveBroadcasts.mountHubLiveSection(liveRoot);
+      }
+    });
+  </script>
+</body>
+</html>

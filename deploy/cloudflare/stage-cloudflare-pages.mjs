@@ -99,8 +99,39 @@ window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {};
   fs.writeFileSync(path.join(OUT_DIR, "chat-supabase-config.js"), body, "utf8");
 }
 
+const ROBOTS_META = '<meta name="robots" content="noindex,nofollow,noarchive">';
+const ROBOTS_META_RE = /<meta\s+name=["']robots["'][^>]*\/?>/gi;
+
+function applySearchBlockingToHtml(html) {
+  if (!/<head[\s>]/i.test(html)) return html;
+  if (ROBOTS_META_RE.test(html)) {
+    ROBOTS_META_RE.lastIndex = 0;
+    return html.replace(ROBOTS_META_RE, ROBOTS_META);
+  }
+  return html.replace(/<head(\s[^>]*)?>/i, (m) => `${m}\n  ${ROBOTS_META}`);
+}
+
+function walkHtmlFiles(dir, fn) {
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, ent.name);
+    if (ent.isDirectory()) walkHtmlFiles(p, fn);
+    else if (ent.name.endsWith(".html")) fn(p);
+  }
+}
+
+function applySearchBlockingToDist() {
+  let htmlCount = 0;
+  walkHtmlFiles(OUT_DIR, (filePath) => {
+    const raw = fs.readFileSync(filePath, "utf8");
+    const next = applySearchBlockingToHtml(raw);
+    if (next !== raw) fs.writeFileSync(filePath, next, "utf8");
+    htmlCount += 1;
+  });
+  console.log(`[stage-cloudflare-pages] search-blocking: ${htmlCount} HTML files (meta robots)`);
+}
+
 function copyCfMeta() {
-  for (const name of ["_redirects", "_headers"]) {
+  for (const name of ["_redirects", "_headers", "robots.txt"]) {
     const src = path.join(__dirname, name);
     if (fs.existsSync(src)) {
       fs.copyFileSync(src, path.join(OUT_DIR, name));
@@ -124,6 +155,7 @@ function main() {
   }
 
   writeChatSupabaseConfig();
+  applySearchBlockingToDist();
   copyCfMeta();
 
   console.log(`[stage-cloudflare-pages] OK → ${OUT_DIR}`);

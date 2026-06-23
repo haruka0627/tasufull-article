@@ -307,16 +307,38 @@
 
   function buildHistoryTrail() {
     const pending = readPending();
-    const cfg = global.TasuBreadcrumbConfig?.resolveCurrentMeta?.(global.location) || resolveStaticTrail();
-    const theme = cfg?.theme || "platform";
+    const staticCfg = resolveStaticTrail();
+    const cfg = global.TasuBreadcrumbConfig?.resolveCurrentMeta?.(global.location) || staticCfg;
+    const theme = staticCfg?.theme || cfg?.theme || "platform";
+
+    if (staticCfg?.trail?.length && !staticCfg.dynamic) {
+      writePending(null);
+      const trail = staticCfg.trail.map((item) => ({
+        label: String(item.label || "").trim(),
+        href: item.href ? String(item.href).trim() : "",
+      }));
+      writeStack(
+        trail.map((item, idx) => {
+          const href =
+            item.href ||
+            (idx === trail.length - 1 ? resolveFullHref(global.location.href) : "");
+          return {
+            key: href ? pageKeyFromHref(href) : `static-${idx}`,
+            label: item.label,
+            href,
+          };
+        })
+      );
+      return { mode: "static", trail, theme };
+    }
 
     if (isDirectAccess(pending)) {
       writePending(null);
-      const staticCfg = resolveStaticTrail();
-      if (staticCfg?.trail?.length) {
+      const directStaticCfg = resolveStaticTrail();
+      if (directStaticCfg?.trail?.length) {
         writeStack(
-          staticCfg.trail.map((item, idx) => {
-            const href = item.href || (idx === staticCfg.trail.length - 1 ? resolveFullHref(global.location.href) : "");
+          directStaticCfg.trail.map((item, idx) => {
+            const href = item.href || (idx === directStaticCfg.trail.length - 1 ? resolveFullHref(global.location.href) : "");
             return {
               key: href ? pageKeyFromHref(href) : `static-${idx}`,
               label: item.label,
@@ -324,10 +346,10 @@
             };
           })
         );
-        return { mode: "static", trail: staticCfg.trail, theme: staticCfg.theme || theme };
+        return { mode: "static", trail: directStaticCfg.trail, theme: directStaticCfg.theme || theme };
       }
-      if (staticCfg?.dynamic) {
-        const placeholder = staticCfg.defaultLabel || cfg?.defaultLabel || "詳細";
+      if (directStaticCfg?.dynamic) {
+        const placeholder = directStaticCfg.defaultLabel || cfg?.defaultLabel || "詳細";
         writeStack([stackEntry(placeholder, global.location.href)]);
         return { mode: "history", trail: [{ label: placeholder }], theme };
       }

@@ -3,6 +3,11 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import {
+  SHELL_CSS,
+  renderTasfulFooter,
+  renderTasfulHeader,
+} from "./tasful-site-shell.mjs";
 
 export const CSS = ["/corp-layout.css", "/corp-header.css", "/corp-footer.css"];
 
@@ -68,12 +73,20 @@ export function renderFooter(brand, base, navItems, legalLinks) {
     </footer>`;
 }
 
-export function renderPage({ corp, title, desc, brand, base, nav, footerNav, footerLegal, current, body, robots }) {
-  const cssLinks = CSS.map((href) => `  <link rel="stylesheet" href="${href}" />`).join("\n");
+export function renderPage({ corp, title, desc, brand, base, nav, footerNav, footerLegal, current, body, robots, extraCss = [] }) {
+  const useTasfulShell = corp === "tasful";
+  const cssLinks = (useTasfulShell ? [...SHELL_CSS, ...extraCss] : CSS)
+    .map((href) => `  <link rel="stylesheet" href="${href}" />`)
+    .join("\n");
   const robotsTag =
     robots === "index"
       ? ""
       : '  <meta name="robots" content="noindex, nofollow" />\n';
+  const header = useTasfulShell ? renderTasfulHeader(current) : renderNav(brand, base, nav, current);
+  const footer = useTasfulShell
+    ? renderTasfulFooter()
+    : renderFooter(brand, base, footerNav || nav, footerLegal);
+  const bodyClass = useTasfulShell ? "corp-body corp-body--tasful-hp" : "corp-body";
   return `<!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -83,12 +96,12 @@ export function renderPage({ corp, title, desc, brand, base, nav, footerNav, foo
   <meta name="description" content="${esc(desc)}" />
 ${robotsTag}${cssLinks}
 </head>
-<body class="corp-body" data-corp="${corp}">
-  ${renderNav(brand, base, nav, current)}
+<body class="${bodyClass}" data-corp="${corp}">
+  ${header}
   <main class="corp-main">
 ${body}
   </main>
-  ${renderFooter(brand, base, footerNav || nav, footerLegal)}
+  ${footer}
 </body>
 </html>
 `;

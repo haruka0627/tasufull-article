@@ -114,7 +114,11 @@
       });
     }
 
-    const room = await window.TasuChatSupabase?.createBusinessConsultRoom?.({
+    const room = await window.TasuChatSupabase?.createBusinessConsultRoomViaEnsure?.({
+      listing,
+      deal,
+      intent,
+    }) || await window.TasuChatSupabase?.createBusinessConsultRoom?.({
       listing,
       deal,
       intent,

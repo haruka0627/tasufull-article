@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>AI工程提案 | 建設ツール | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-tool-ai-schedule-suggest">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./construction-tools.html" aria-label="建設ツールへ戻る">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">AI工程提案</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">AI工程提案</h1>
+          <p class="builder-header__sub">工事内容・人数・日数から終了予定日と総人工を確認します</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main builder-ass-main" data-builder-ass-root data-builder-tool="ai-schedule-suggest">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <section class="builder-ass-hero" aria-label="AI工程提案概要">
+        <div class="builder-ass-hero__inner">
+          <p class="builder-ass-hero__kicker">建設ツール · Builder AI / β版</p>
+          <h2 class="builder-ass-hero__title">AI工程提案</h2>
+          <p class="builder-ass-hero__desc">工事内容・人数・開始日・想定日数から、簡易工程と注意コメントを表示します。現在はAI接続前のルールベース診断β版です。</p>
+        </div>
+      </section>
+
+      <div class="builder-ass-layout">
+        <section class="builder-panel builder-ass-inputs" aria-label="入力条件">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">入力</h2>
+            <span class="builder-kpi">リアルタイム</span>
+          </div>
+
+          <form class="builder-form builder-ass-form" novalidate>
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">工事名</span>
+              <input
+                class="builder-input builder-ass-input"
+                type="text"
+                name="projectName"
+                value="〇〇邸 外壁塗装工事"
+                placeholder="例：〇〇邸 外壁塗装工事"
+                data-builder-ass-project-name
+                data-builder-ass-input
+              />
+            </label>
+
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">工事種別</span>
+              <input
+                class="builder-input builder-ass-input"
+                type="text"
+                name="workType"
+                value="外壁塗装"
+                placeholder="例：外壁塗装"
+                data-builder-ass-work-type
+                data-builder-ass-input
+              />
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">開始日</span>
+              <input
+                class="builder-input builder-ass-input"
+                type="date"
+                name="startDate"
+                value="2026-06-21"
+                data-builder-ass-start-date
+                data-builder-ass-input
+              />
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">想定作業日数</span>
+              <div class="builder-ass-input-wrap">
+                <input
+                  class="builder-input builder-ass-input"
+                  type="number"
+                  name="workDays"
+                  inputmode="numeric"
+                  min="0"
+                  step="1"
+                  value="5"
+                  placeholder="例：5"
+                  data-builder-ass-work-days
+                  data-builder-ass-input
+                />
+                <span class="builder-ass-input-unit" aria-hidden="true">日</span>
+              </div>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">作業人数</span>
+              <div class="builder-ass-input-wrap">
+                <input
+                  class="builder-input builder-ass-input"
+                  type="number"
+                  name="workers"
+                  inputmode="numeric"
+                  min="0"
+                  step="1"
+                  value="3"
+                  placeholder="例：3"
+                  data-builder-ass-workers
+                  data-builder-ass-input
+                />
+                <span class="builder-ass-input-unit" aria-hidden="true">人</span>
+              </div>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">休工日数</span>
+              <div class="builder-ass-input-wrap">
+                <input
+                  class="builder-input builder-ass-input"
+                  type="number"
+                  name="offDays"
+                  inputmode="numeric"
+                  min="0"
+                  step="1"
+                  value="1"
+                  placeholder="例：1"
+                  data-builder-ass-off-days
+                  data-builder-ass-input
+                />
+                <span class="builder-ass-input-unit" aria-hidden="true">日</span>
+              </div>
+            </label>
+
+            <label class="builder-field builder-field--full">
+              <span class="builder-field__label">備考</span>
+              <input
+                class="builder-input builder-ass-input"
+                type="text"
+                name="note"
+                value=""
+                placeholder="例：雨天時は作業中止"
+                data-builder-ass-note
+                data-builder-ass-input
+              />
+            </label>
+          </form>
+        </section>
+
+        <section class="builder-panel builder-ass-results" aria-label="工程結果" aria-live="polite">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">簡易工程</h2>
+          </div>
+
+          <div class="builder-ass-result-grid">
+            <article class="builder-ass-result-card builder-ass-result-card--primary">
+              <p class="builder-ass-result-card__label">終了予定日</p>
+              <p class="builder-ass-result-card__value" data-builder-ass-end-date>2026年6月26日</p>
+            </article>
+
+            <article class="builder-ass-result-card">
+              <p class="builder-ass-result-card__label">総人工</p>
+              <p class="builder-ass-result-card__value" data-builder-ass-total-man-days>15 人日</p>
+            </article>
+
+            <article class="builder-ass-result-card builder-ass-result-card--worker">
+              <p class="builder-ass-result-card__label">1人あたり作業日数</p>
+              <p class="builder-ass-result-card__value" data-builder-ass-days-per-worker>5 日</p>
+            </article>
+          </div>
+
+          <div class="builder-ass-breakdown" aria-label="計算内訳">
+            <p class="builder-ass-breakdown__title">計算内訳</p>
+            <dl class="builder-ass-breakdown__list">
+              <div>
+                <dt>終了予定日</dt>
+                <dd data-builder-ass-breakdown-end>2026年6月21日 + 5日 + 休工1日 - 1日 = 2026年6月26日</dd>
+              </div>
+              <div>
+                <dt>総人工</dt>
+                <dd data-builder-ass-breakdown-total>5日 × 3人 = 15 人日</dd>
+              </div>
+              <div>
+                <dt>1人あたり作業日数</dt>
+                <dd data-builder-ass-breakdown-per-worker>15 人日 ÷ 3人 = 5 日</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="builder-ass-formula-note" aria-label="計算式">
+            <p class="builder-ass-formula-note__title">計算式</p>
+            <ul class="builder-ass-formula-note__list">
+              <li><strong>終了予定日</strong> = 開始日 + 想定作業日数 + 休工日数 - 1日</li>
+              <li><strong>総人工</strong> = 想定作業日数 × 作業人数</li>
+              <li><strong>1人あたり作業日数</strong> = 総人工 ÷ 作業人数</li>
+            </ul>
+            <p class="builder-ass-formula-note__note">※ AI API接続前のルールベース診断β版です。</p>
+          </div>
+
+          <aside class="builder-ai-comment" data-builder-ai-comment aria-live="polite">
+            <div class="builder-ai-comment__head">
+              <h3 class="builder-ai-comment__title">Builder AI コメント</h3>
+              <span class="builder-ai-comment__badge" data-builder-ai-comment-badge>準備中</span>
+            </div>
+            <p class="builder-ai-comment__body" data-builder-ai-comment-body>工程を入力すると、AI工程提案コメントがここに表示されます。</p>
+            <p class="builder-ai-comment__meta" data-builder-ai-comment-meta hidden></p>
+          </aside>
+        </section>
+      </div>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-runtime.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="builder-actor-identity.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-ai-engine.js"></script>
+  <script src="builder-construction-tools.js"></script>
+  <script src="builder-tool-ai-schedule-suggest.js"></script>
+  <script src="builder.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var tool = window.BuilderConstructionTools && window.BuilderConstructionTools.get
+        ? window.BuilderConstructionTools.get("ai-schedule-suggest")
+        : window.BuilderToolAiScheduleSuggest;
+      if (tool && typeof tool.mount === "function") {
+        tool.mount();
+      }
+    });
+  </script>
+</body>
+</html>

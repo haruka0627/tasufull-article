@@ -25,3 +25,25 @@ verify_jwt = false
 
 [functions.gemini-chat-diagnose]
 verify_jwt = false
+
+# L6: Custom Access Token Hook (linked ref ddojquacsyqesrjhcvmn)
+# Enable via: npx supabase config push --project-ref ddojquacsyqesrjhcvmn --yes
+# Rollback: set enabled = false and push again
+[auth.hook.custom_access_token]
+enabled = true
+uri = "pg-functions://postgres/public/custom_access_token_hook"
+
+[functions.partner-create]
+verify_jwt = false
+
+[functions.partner-list]
+verify_jwt = false
+
+[functions.partner-get]
+verify_jwt = false
+
+[functions.partner-review]
+verify_jwt = false
+
+[functions.partner-document-verify]
+verify_jwt = false

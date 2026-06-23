@@ -68,7 +68,7 @@
     },
     chat: {
       label: "チャット一覧",
-      href: "chat-list.html",
+      href: "talk-home.html?tab=chat",
       desc: "取引・問い合わせのメッセージ一覧です。",
     },
     favorites: {
@@ -120,7 +120,7 @@
 
   const CONTACT_NAV_LINKS = [
     { label: "お問い合わせページ", href: "/contact" },
-    { label: "チャット一覧", href: "chat-list.html" },
+    { label: "TALK", href: "talk-home.html?tab=chat" },
     { label: "業務サービスを探す", href: "business.html" },
     { label: "店舗・販売を探す", href: "shop-store.html" },
   ];

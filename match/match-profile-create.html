@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>プロフィール作成 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-profile-create" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header" aria-label="ヘッダー">
+      <a class="match-brand" href="match-top.html" aria-label="戻る">
+        <span class="match-brand__text">
+          <span class="match-brand__main">プロフィール作成</span>
+          <span class="match-brand__sub">TASFUL MATCH</span>
+        </span>
+      </a>
+    </header>
+
+    <div class="match-progress-wrap" aria-label="進捗">
+      <div class="match-progress-dots" data-match-progress-dots>
+        <span class="match-progress-dots__item is-active" data-step-dot="0"><span class="match-progress-dots__dot"></span></span>
+        <span class="match-progress-dots__item" data-step-dot="1"><span class="match-progress-dots__dot"></span></span>
+        <span class="match-progress-dots__item" data-step-dot="2"><span class="match-progress-dots__dot"></span></span>
+        <span class="match-progress-dots__item" data-step-dot="3"><span class="match-progress-dots__dot"></span></span>
+      </div>
+      <p class="match-progress__label" data-match-progress-label>ステップ 1 / 4 — 基本情報</p>
+    </div>
+
+    <main class="match-main match-main--no-tab" data-match-profile-wizard>
+      <div class="match-p15-panel" data-match-p15-section>
+        <p class="match-completeness-text" data-match-completeness-text>プロフィール完成度 —%</p>
+        <div class="match-completeness-bar" data-match-completeness-bar role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <span class="match-completeness-bar__fill"></span>
+        </div>
+        <a class="match-ai-cta match-ai-cta--lavender" data-match-ai-cta data-ai-mode="match-profile-coach" data-ai-q-template="マッチング用プロフィールを改善したいです。現在の完成度は{percent}%です。" href="#">TASFUL AI でプロフィール改善</a>
+      </div>
+
+      <section class="match-form-step is-active" data-match-step aria-label="基本情報">
+        <h2 class="match-form-title">基本情報を入力しましょう</h2>
+        <p class="match-form-subtitle">はじめに、あなたのことを教えてください</p>
+        <label class="match-field">
+          <span class="match-field__label">ニックネーム</span>
+          <input class="match-input" type="text" placeholder="例：さくら" value="さくら" maxlength="20" data-profile-field="nickname" />
+        </label>
+        <label class="match-field">
+          <span class="match-field__label">性別</span>
+          <select class="match-select" data-profile-field="gender">
+            <option value="女性">女性</option>
+            <option value="男性">男性</option>
+            <option value="その他">その他</option>
+            <option value="非公開">非公開</option>
+          </select>
+        </label>
+        <label class="match-field">
+          <span class="match-field__label">生年月日</span>
+          <input class="match-input" type="date" value="1998-04-12" data-profile-field="birth_date" />
+          <span class="match-field__hint">18歳未満は登録できません</span>
+        </label>
+        <label class="match-field">
+          <span class="match-field__label">居住地</span>
+          <select class="match-select" data-profile-field="prefecture">
+            <option>東京都</option>
+            <option>神奈川県</option>
+            <option>大阪府</option>
+          </select>
+        </label>
+        <label class="match-field">
+          <span class="match-field__label">市区町村（任意）</span>
+          <input class="match-input" type="text" placeholder="例：渋谷区" value="渋谷区" data-profile-field="city" />
+        </label>
+      </section>
+
+      <section class="match-form-step" data-match-step aria-label="写真">
+        <h2 class="match-form-title">写真を登録しましょう</h2>
+        <p class="match-form-subtitle">メイン写真1枚が必須です</p>
+        <div class="match-photo-grid">
+          <div class="match-photo-slot match-photo-slot--main" data-profile-photo-slot>メイン写真を追加</div>
+          <div class="match-photo-slot" data-profile-photo-slot>＋ 追加</div>
+          <div class="match-photo-slot" data-profile-photo-slot>＋ 追加</div>
+          <div class="match-photo-slot" data-profile-photo-slot>＋ 追加</div>
+          <div class="match-photo-slot" data-profile-photo-slot>＋ 追加</div>
+        </div>
+        <p class="match-field__hint" style="margin-top:14px">顔がわかる写真がおすすめです</p>
+      </section>
+
+      <section class="match-form-step" data-match-step aria-label="自己紹介">
+        <h2 class="match-form-title">自己紹介を書きましょう</h2>
+        <p class="match-form-subtitle">あなたの魅力を伝えてください</p>
+        <label class="match-field">
+          <span class="match-field__label">自己紹介文</span>
+          <textarea class="match-textarea" placeholder="あなたのことを教えてください" data-profile-field="bio">カフェと散歩が好きです。落ち着いて話せる方と出会えたら嬉しいです。</textarea>
+          <span class="match-field__hint">0〜500文字・連絡先の記載はできません</span>
+        </label>
+      </section>
+
+      <section class="match-form-step" data-match-step aria-label="趣味・本人確認">
+        <h2 class="match-form-title">趣味を選びましょう</h2>
+        <p class="match-form-subtitle">最大5つまで選択できます</p>
+        <div class="match-chip-grid">
+          <button type="button" class="match-chip is-selected" data-match-hobby-chip data-hobby-slug="cafe">カフェ</button>
+          <button type="button" class="match-chip is-selected" data-match-hobby-chip data-hobby-slug="travel">旅行</button>
+          <button type="button" class="match-chip" data-match-hobby-chip data-hobby-slug="movies">映画</button>
+          <button type="button" class="match-chip" data-match-hobby-chip data-hobby-slug="cooking">料理</button>
+          <button type="button" class="match-chip" data-match-hobby-chip data-hobby-slug="sports">スポーツ</button>
+          <button type="button" class="match-chip" data-match-hobby-chip data-hobby-slug="reading">読書</button>
+        </div>
+        <div class="match-verify-box" role="note">
+          <p class="match-verify-box__title">本人確認のご案内</p>
+          <p>プロフィール公開後、本人確認を完了するとスワイプ機能が利用できます。安心・安全のため、年齢と身元の確認を行います。</p>
+          <a class="match-btn match-btn--secondary match-btn--block" style="margin-top:12px" href="match-verify.html">本人確認をする</a>
+        </div>
+      </section>
+
+      <div class="match-form-actions">
+        <button type="button" class="match-btn match-btn--primary match-btn--block" data-match-step-next>次へ</button>
+        <button type="button" class="match-btn match-btn--text match-btn--block" data-match-step-back>戻る</button>
+      </div>
+    </main>
+  </div>
+
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="../ai-workspace-links.js"></script>
+  <script src="match-ai-cta.js"></script>
+  <script src="match-p15-render.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-profile-wiring.js"></script>
+  <script src="match-p15-wiring.js"></script>
+</body>
+</html>

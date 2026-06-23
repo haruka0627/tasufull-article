@@ -28,6 +28,23 @@
     return `chat-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   }
 
+  function isUuidThreadId(threadId) {
+    return global.TasuTalkRoomEnsure?.isUuidRoomId?.(threadId) === true ||
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+        String(threadId || "").trim()
+      );
+  }
+
+  function isLegacyLsThreadId(threadId) {
+    return /^chat-/i.test(String(threadId || "").trim());
+  }
+
+  function shouldUseSupabaseEnsure() {
+    return global.TasuTalkRoomEnsure?.shouldPreferEdgeEnsure?.() === true ||
+      (global.TasuChatSupabase?.isConfigured?.() === true &&
+        global.TasuTalkRoomEnsure?.isTalkDevStubMode?.() !== true);
+  }
+
   function readAll() {
     try {
       const raw = global.localStorage.getItem(STORAGE_KEY);
@@ -1181,9 +1198,9 @@
   }
 
   /**
-   * 550円支払い完了後 — 購入者 / 問い合わせからチャットを生成
+   * 550円支払い完了後 — LS fallback（P1: 新規は createThreadFromContactAsync 優先）
    */
-  function createThreadFromContact(listing, contact) {
+  function createThreadFromContactLs(listing, contact) {
     if (!listing || typeof listing !== "object") {
       return { ok: false, reason: "invalid_listing" };
     }
@@ -1250,15 +1267,182 @@
     const list = readAll();
     list.unshift(normalized);
     writeAll(list);
-    return { ok: true, created: true, thread: normalized, feePending: true };
+    return { ok: true, created: true, thread: normalized, feePending: true, storage: "localStorage" };
   }
 
-  function activateThreadAfterFeePaid(threadId) {
+  function buildThreadRowFromEnsure(listing, contact, ensureResult, options) {
+    const listingId = pickStr(listing.id, listing.listing_id);
+    const contactId = pickStr(contact?.contact_id);
+    const buyerId = pickStr(contact?.requester_id);
+    const { sellerId, sellerName } = resolveSeller(listing);
+    const listingType =
+      pickStr(listing.listing_type, listing.listingType, contact?.listing_type, contact?.listingType) ||
+      resolveListingTypeKey(listing);
+    const now = new Date().toISOString();
+    const buyerName = pickStr(contact?.requester_name) || "購入者";
+    const listingTitle = pickStr(listing.title, listing.company_name, listing.service_name) || listingId;
+    const roomId = pickStr(ensureResult?.room_id);
+    const feePending = options?.feePending !== false;
+    const thread = {
+      id: roomId,
+      roomId,
+      chatDomain: "work",
+      threadKind: pickStr(options?.threadKind, "listing_inquiry"),
+      contactId,
+      listingId,
+      listingType,
+      listingTitle,
+      category: pickStr(
+        listing.category,
+        listing.categoryLabel,
+        listing.normalized_store_category,
+        listing.business_subcategory
+      ),
+      image: pickImageUrl(listing),
+      detailUrl: buildDetailUrl(listing),
+      sellerId,
+      sellerName,
+      partnerUserId: sellerId,
+      buyerId,
+      buyerName,
+      status: feePending ? "fee_pending" : "open",
+      roomStatus: feePending ? "fee_pending" : "active",
+      platformContactKind: pickStr(contact?.contact_kind, "purchase"),
+      source: pickStr(options?.source, "listing-contact-paid"),
+      lastMessage: resolveInitialMessage(listing, { intent: contact?.contact_kind }),
+      createdAt: now,
+      updatedAt: now,
+      _feePending: feePending,
+      _supabaseRoom: true,
+    };
+
+    if (options?.applicationId) thread.applicationId = pickStr(options.applicationId);
+    if (options?.requestId) thread.requestId = pickStr(options.requestId);
+
+    if (global.TasuPlatformChatCategoryFlow?.isProductPurchaseFlowEnabled?.(listing) === true) {
+      const Purchase = global.TasuPlatformChatPurchasePaymentFlow;
+      if (Purchase?.createInitialPurchaseThreadFields) {
+        const method = Purchase.resolvePaymentMethodFromContext?.({});
+        Object.assign(thread, Purchase.createInitialPurchaseThreadFields(method));
+      }
+    }
+
+    return global.TasuPlatformChatDualWindowDemo?.normalizeThreadPartnerIdsForBench?.(thread) || thread;
+  }
+
+  async function createThreadFromContactAsync(listing, contact, options) {
+    if (!listing || typeof listing !== "object") {
+      return { ok: false, reason: "invalid_listing" };
+    }
+    const listingId = pickStr(listing.id, listing.listing_id);
+    const contactId = pickStr(contact?.contact_id);
+    const buyerId = pickStr(contact?.requester_id);
+    if (!listingId || !contactId || !buyerId) {
+      return { ok: false, reason: "missing_contact_context" };
+    }
+
+    const existingLs = findContactThread(listingId, contactId);
+    if (existingLs) {
+      return { ok: true, created: false, thread: existingLs, storage: "localStorage" };
+    }
+
+    const existingRoomId = pickStr(contact?.thread_id);
+    if (existingRoomId && isUuidThreadId(existingRoomId)) {
+      const row = await global.TasuChatSupabase?.fetchRoomById?.(existingRoomId).catch(() => null);
+      if (row) {
+        const thread = buildThreadRowFromEnsure(listing, contact, { room_id: existingRoomId }, options);
+        return { ok: true, created: false, thread, storage: "supabase", reused: true };
+      }
+    }
+
+    if (shouldUseSupabaseEnsure() && global.TasuTalkRoomEnsure?.ensureTalkRoom) {
+      const { sellerId } = resolveSeller(listing);
+      const listingType =
+        pickStr(listing.listing_type, listing.listingType, contact?.listing_type, contact?.listingType) ||
+        resolveListingTypeKey(listing);
+      const title =
+        pickStr(listing.title, listing.company_name, listing.service_name, "やりとり") || listingId;
+      const ensured = await global.TasuTalkRoomEnsure.ensureTalkRoom({
+        listing,
+        contact,
+        listing_type: listingType,
+        listing_id: listingId,
+        buyer_id: buyerId,
+        seller_id: sellerId,
+        title: `【${listingType}】${title}`,
+        contact_id: contactId,
+        source: pickStr(options?.source, "listing-contact-paid"),
+        service_type: pickStr(options?.service_type),
+        service_ref_id: pickStr(options?.service_ref_id),
+        status: options?.feePending === false ? "active" : "fee_pending",
+        from: pickStr(options?.from, "contact"),
+      });
+      if (ensured?.ok && ensured.room_id) {
+        const thread = buildThreadRowFromEnsure(listing, contact, ensured, options);
+        return {
+          ok: true,
+          created: Boolean(ensured.created),
+          reused: Boolean(ensured.reused),
+          thread,
+          feePending: options?.feePending !== false,
+          storage: "supabase",
+          mode: ensured.mode,
+        };
+      }
+    }
+
+    return createThreadFromContactLs(listing, contact);
+  }
+
+  function createThreadFromContact(listing, contact, options) {
+    if (shouldUseSupabaseEnsure() && global.TasuTalkRoomEnsure?.ensureTalkRoom) {
+      return createThreadFromContactAsync(listing, contact, options);
+    }
+    return createThreadFromContactLs(listing, contact);
+  }
+
+  async function activateThreadAfterFeePaidAsync(threadId) {
     const id = String(threadId || "").trim();
     if (!id) return { ok: false, reason: "missing_thread_id" };
 
     const list = readAll();
     const idx = list.findIndex((row) => String(row.id) === id);
+
+    if (idx < 0 && isUuidThreadId(id) && global.TasuChatSupabase?.activateTransactionRoom) {
+      try {
+        const activatedRow = await global.TasuChatSupabase.activateTransactionRoom(id);
+        const synthetic =
+          activatedRow && typeof activatedRow === "object"
+            ? {
+                id,
+                roomId: id,
+                chatDomain: "work",
+                listingId: pickStr(activatedRow.listing?.id, activatedRow.listing_id),
+                listingType: pickStr(activatedRow.listing?.type, activatedRow.listing_type),
+                listingTitle: pickStr(activatedRow.listing?.title, activatedRow.title),
+                buyerId: pickStr(activatedRow.buyerId, activatedRow.buyer_id),
+                sellerId: pickStr(activatedRow.sellerId, activatedRow.seller_id),
+                status: "open",
+                roomStatus: "active",
+                _supabaseRoom: true,
+              }
+            : { id, roomId: id, status: "open", roomStatus: "active", _supabaseRoom: true };
+        return { ok: true, thread: synthetic, activated: true, storage: "supabase" };
+      } catch (err) {
+        console.warn("[TasuChatThreadStore] activateTransactionRoom failed:", err);
+        return { ok: false, reason: "supabase_activate_failed" };
+      }
+    }
+
+    if (idx < 0) return { ok: false, reason: "thread_not_found" };
+    return activateThreadAfterFeePaidLs(id, idx, list);
+  }
+
+  function activateThreadAfterFeePaidLs(threadId, idx, list) {
+    const id = String(threadId || "").trim();
+    if (idx == null || idx < 0) {
+      idx = list.findIndex((row) => String(row.id) === id);
+    }
     if (idx < 0) return { ok: false, reason: "thread_not_found" };
 
     const row = list[idx];
@@ -1299,7 +1483,17 @@
     };
     list[idx] = next;
     writeAll(list);
-    return { ok: true, thread: next, activated: String(row.status) === "fee_pending" };
+    return { ok: true, thread: next, activated: String(row.status) === "fee_pending", storage: "localStorage" };
+  }
+
+  function activateThreadAfterFeePaid(threadId) {
+    const id = String(threadId || "").trim();
+    if (isUuidThreadId(id) && shouldUseSupabaseEnsure()) {
+      return activateThreadAfterFeePaidAsync(threadId);
+    }
+    const list = readAll();
+    const idx = list.findIndex((row) => String(row.id) === id);
+    return activateThreadAfterFeePaidLs(threadId, idx, list);
   }
 
   function buildHireThreadRow(threadId, listing, application, options = {}) {
@@ -1353,7 +1547,64 @@
       createdAt: now,
       updatedAt: now,
       _feePending: feePending,
+      _supabaseRoom: options._supabaseRoom === true,
     };
+  }
+
+  async function createHireThreadAsync(listing, application, options = {}) {
+    const diag = options._diag || null;
+    const preferredThreadId = pickStr(options.preferredThreadId);
+    if (!listing || typeof listing !== "object") {
+      return { ok: false, reason: "invalid_listing" };
+    }
+    const listingId = pickStr(listing.id, listing.listing_id);
+    const applicationId = pickStr(application?.application_id);
+    const buyerId = pickStr(application?.applicant_id);
+    if (!listingId || !applicationId || !buyerId) {
+      return { ok: false, reason: "missing_hire_context" };
+    }
+
+    const feePending = options.feePending === true;
+    const existing = recordFindHireThreadDiag(diag, listingId, applicationId);
+    if (existing && !isUuidThreadId(existing.id)) {
+      return { ok: true, created: false, thread: existing, feePending: feePending && existing._feePending };
+    }
+
+    if (shouldUseSupabaseEnsure() && global.TasuTalkRoomEnsure?.ensureTalkRoom) {
+      const { sellerId } = resolveSeller(listing);
+      const listingType = resolveListingTypeKey(listing);
+      const title = pickStr(listing.title, listing.company_name) || listingId;
+      const ensured = await global.TasuTalkRoomEnsure.ensureTalkRoom({
+        listing,
+        application,
+        listing_type: listingType || "job",
+        listing_id: listingId,
+        buyer_id: buyerId,
+        seller_id: sellerId,
+        title: `【求人】${title}`,
+        service_type: "job_application",
+        service_ref_id: applicationId,
+        source: feePending ? "job-hire-fee-pending" : "job-hire",
+        status: feePending ? "fee_pending" : "active",
+        from: "job-hire",
+      });
+      if (ensured?.ok && ensured.room_id) {
+        const thread = buildHireThreadRow(ensured.room_id, listing, application, {
+          feePending,
+          _supabaseRoom: true,
+        });
+        return {
+          ok: true,
+          created: Boolean(ensured.created),
+          reused: Boolean(ensured.reused),
+          thread,
+          feePending,
+          storage: "supabase",
+        };
+      }
+    }
+
+    return createHireThread(listing, application, options);
   }
 
   /** URL / application の thread_id で欠落している hire thread を復元（別 ID は作らない） */
@@ -1407,6 +1658,9 @@
    * @param {{ feePending?: boolean, preferredThreadId?: string }} [options]
    */
   function createHireThread(listing, application, options = {}) {
+    if (shouldUseSupabaseEnsure() && global.TasuTalkRoomEnsure?.ensureTalkRoom) {
+      return createHireThreadAsync(listing, application, options);
+    }
     const diag = options._diag || null;
     const preferredThreadId = pickStr(options.preferredThreadId);
     if (diag) {
@@ -1475,7 +1729,98 @@
    * @param {object} listing
    * @param {{ request_id?: string, requester_id?: string, requester_name?: string }} request
    */
+  async function createWorkerRequestThreadAsync(listing, request, options = {}) {
+    if (!listing || typeof listing !== "object") {
+      return { ok: false, reason: "invalid_listing" };
+    }
+    const listingId = pickStr(listing.id, listing.listing_id);
+    const requestId = pickStr(request?.request_id);
+    const buyerId = pickStr(request?.requester_id);
+    if (!listingId || !requestId || !buyerId) {
+      return { ok: false, reason: "missing_request_context" };
+    }
+
+    const existing = findWorkerRequestThread(listingId, requestId);
+    if (existing && !isUuidThreadId(existing.id)) {
+      return { ok: true, created: false, thread: existing };
+    }
+
+    const feeGate =
+      options.feePending === true ||
+      (options.feePending !== false && global.TasuPlatformChatFee?.shouldGateChatStart?.(listing) === true);
+
+    if (shouldUseSupabaseEnsure() && global.TasuTalkRoomEnsure?.ensureTalkRoom) {
+      const { sellerId } = resolveSeller(listing);
+      const listingType = resolveListingTypeKey(listing);
+      const title = pickStr(listing.title) || listingId;
+      const ensured = await global.TasuTalkRoomEnsure.ensureTalkRoom({
+        listing,
+        request,
+        listing_type: listingType || "worker",
+        listing_id: listingId,
+        buyer_id: buyerId,
+        seller_id: sellerId,
+        title: `【ワーカー】${title}`,
+        service_type: "worker_request",
+        service_ref_id: requestId,
+        source: "worker-request",
+        status: feeGate ? "fee_pending" : "active",
+        from: "worker-request",
+      });
+      if (ensured?.ok && ensured.room_id) {
+        const lsResult = createWorkerRequestThread(listing, request, {
+          ...options,
+          _preferredRoomId: ensured.room_id,
+          _skipLsWrite: true,
+        });
+        if (lsResult?.ok && lsResult.thread) {
+          lsResult.thread.id = ensured.room_id;
+          lsResult.thread.roomId = ensured.room_id;
+          lsResult.thread._supabaseRoom = true;
+          lsResult.storage = "supabase";
+          lsResult.created = Boolean(ensured.created);
+          lsResult.reused = Boolean(ensured.reused);
+          return lsResult;
+        }
+        const now = new Date().toISOString();
+        const thread = {
+          id: ensured.room_id,
+          roomId: ensured.room_id,
+          chatDomain: "work",
+          threadKind: "worker_request",
+          requestId,
+          listingId,
+          listingType,
+          listingTitle: title,
+          buyerId,
+          sellerId,
+          status: feeGate ? "fee_pending" : "open",
+          roomStatus: feeGate ? "fee_pending" : "active",
+          _supabaseRoom: true,
+          createdAt: now,
+          updatedAt: now,
+        };
+        return {
+          ok: true,
+          created: Boolean(ensured.created),
+          reused: Boolean(ensured.reused),
+          thread,
+          storage: "supabase",
+        };
+      }
+    }
+
+    return createWorkerRequestThreadLs(listing, request, options);
+  }
+
   function createWorkerRequestThread(listing, request, options = {}) {
+    if (shouldUseSupabaseEnsure() && global.TasuTalkRoomEnsure?.ensureTalkRoom && !options._skipLsWrite) {
+      return createWorkerRequestThreadAsync(listing, request, options);
+    }
+    return createWorkerRequestThreadLs(listing, request, options);
+  }
+
+  function createWorkerRequestThreadLs(listing, request, options = {}) {
     if (!listing || typeof listing !== "object") {
       return { ok: false, reason: "invalid_listing" };
     }
@@ -1502,7 +1847,7 @@
       : "依頼を受諾しました。条件確認・日程調整はこのチャットで進めてください。";
 
     const thread = {
-      id: newThreadId(),
+      id: pickStr(options._preferredRoomId) || newThreadId(),
       chatDomain: "work",
       threadKind: "worker_request",
       requestId,
@@ -1529,10 +1874,12 @@
     };
 
     const list = readAll();
-    list.unshift(thread);
-    writeAll(list);
+    if (!options._skipLsWrite) {
+      list.unshift(thread);
+      writeAll(list);
+    }
 
-    if (!feeGate) {
+    if (!feeGate && !options._skipLsWrite) {
       const map = readMessagesMap();
       map[thread.id] = [
         {
@@ -1787,9 +2134,12 @@
   }
 
   function chatListUrl(threadId) {
-    const u = new URL("chat-list.html", global.location.href);
-    u.searchParams.set("thread", String(threadId || "").trim());
-    return u.pathname + u.search;
+    if (global.TasuTalkChatEntryUrl?.buildTalkChatHubUrl) {
+      return global.TasuTalkChatEntryUrl.buildTalkChatHubUrl({ threadId });
+    }
+    const id = String(threadId || "").trim();
+    if (!id) return "talk-home.html?tab=chat";
+    return `talk-home.html?tab=chat&thread=${encodeURIComponent(id)}`;
   }
 
   function chatDetailUrl(threadId, options) {
@@ -1797,11 +2147,22 @@
     if (!id) return "chat-detail.html";
     try {
       const u = new URL("chat-detail.html", global.location.href);
-      u.searchParams.set("thread", id);
+      if (isUuidThreadId(id)) {
+        u.searchParams.set("roomId", id);
+        u.searchParams.set("room", id);
+      } else {
+        u.searchParams.set("thread", id);
+      }
       const from = String(options?.from || "").trim();
       if (from) u.searchParams.set("from", from);
       return u.pathname + u.search;
     } catch {
+      if (isUuidThreadId(id)) {
+        let url = `chat-detail.html?room=${encodeURIComponent(id)}&roomId=${encodeURIComponent(id)}`;
+        const from = String(options?.from || "").trim();
+        if (from) url += `&from=${encodeURIComponent(from)}`;
+        return url;
+      }
       let url = `chat-detail.html?thread=${encodeURIComponent(id)}`;
       const from = String(options?.from || "").trim();
       if (from) url += `&from=${encodeURIComponent(from)}`;
@@ -1921,9 +2282,15 @@
     findContactThread,
     createOrOpenThread,
     createThreadFromContact,
+    createThreadFromContactAsync,
     activateThreadAfterFeePaid,
+    activateThreadAfterFeePaidAsync,
     createHireThread,
+    createHireThreadAsync,
     createWorkerRequestThread,
+    createWorkerRequestThreadAsync,
+    isUuidThreadId,
+    isLegacyLsThreadId,
     getAllForChatList,
     loadRoom,
     applyViewerToThread,

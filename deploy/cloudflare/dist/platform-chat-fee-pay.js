@@ -413,7 +413,7 @@
     return false;
   }
 
-  function completePayment(params, feeRow, category, amount) {
+  async function completePayment(params, feeRow, category, amount) {
     const Fee = window.TasuPlatformChatFee;
     if (!Fee) throw new Error("手数料モジュールが読み込まれていません。");
 
@@ -452,18 +452,22 @@
       });
 
       const activated = isConnectEntry
-        ? window.TasuPlatformChatConnectEntryFlow?.activateConnectEntryAfterPayment?.({
-            contactId: params.contactId,
-            applicationId: params.applicationId,
-            requestId: params.requestId,
-            listingId: pickStr(feeRow?.listingId, params.listingId),
-          })
-        : Fee.activateDeferredAfterPayment?.({
-            contactId: params.contactId,
-            applicationId: params.applicationId,
-            requestId: params.requestId,
-            listingId: pickStr(feeRow?.listingId, params.listingId),
-          });
+        ? await Promise.resolve(
+            window.TasuPlatformChatConnectEntryFlow?.activateConnectEntryAfterPayment?.({
+              contactId: params.contactId,
+              applicationId: params.applicationId,
+              requestId: params.requestId,
+              listingId: pickStr(feeRow?.listingId, params.listingId),
+            })
+          )
+        : await Promise.resolve(
+            Fee.activateDeferredAfterPayment?.({
+              contactId: params.contactId,
+              applicationId: params.applicationId,
+              requestId: params.requestId,
+              listingId: pickStr(feeRow?.listingId, params.listingId),
+            })
+          );
       Fee.pushJobHireFlowDiag?.("completePayment:deferred:activated", {
         ok: activated?.ok === true,
         threadId: pickStr(activated?.threadId, activated?.thread?.id),
@@ -482,7 +486,7 @@
         notifyId: params.notifyId,
       });
 
-      const activated = Fee.activateThreadAfterPayment?.(params.threadId);
+      const activated = await Promise.resolve(Fee.activateThreadAfterPayment?.(params.threadId));
       if (!activated?.ok) {
         throw new Error("やりとりチャットの開始に失敗しました。");
       }
@@ -555,7 +559,7 @@
           return;
         }
 
-        completePayment(params, feeRow, category, amount);
+        await completePayment(params, feeRow, category, amount);
         return;
       } catch (err) {
         setStatus(err?.message || "お支払い後の処理に失敗しました。", true);
@@ -740,7 +744,7 @@
               : "デモ環境: Stripe未設定のため、手数料支払い済みとして記録しやりとりチャットを開始しますか？"
           );
         if (demoPayOk) {
-          completePayment(params, feeRow, category, amount);
+          await completePayment(params, feeRow, category, amount);
           return;
         }
         if (btn) {

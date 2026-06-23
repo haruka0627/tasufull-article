@@ -1,0 +1,126 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>条件検索 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-search" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header" aria-label="ヘッダー">
+      <a class="match-brand" href="match-swipe.html">
+        <span class="match-brand__text">
+          <span class="match-brand__main">条件検索</span>
+          <span class="match-brand__sub">TASFUL MATCH</span>
+        </span>
+      </a>
+      <div class="match-header__actions">
+        <a class="match-icon-btn match-icon-btn--link" href="match-search-saved.html" aria-label="保存した検索">☰</a>
+      </div>
+    </header>
+
+    <main class="match-main match-main--search" data-match-p15-section>
+      <p class="match-list-banner match-list-banner--search">💕 あなたに合う人を見つけよう</p>
+
+      <form class="match-search-form" data-match-search-form novalidate>
+        <fieldset class="match-search-fieldset">
+          <legend class="match-field__label">年齢</legend>
+          <div class="match-search-age-row">
+            <label class="match-search-age">
+              <span class="match-search-age__label">下限</span>
+              <select class="match-select" name="age_min" data-match-search-age-min aria-label="年齢下限">
+                <option value="">指定なし</option>
+              </select>
+            </label>
+            <span class="match-search-age__sep" aria-hidden="true">〜</span>
+            <label class="match-search-age">
+              <span class="match-search-age__label">上限</span>
+              <select class="match-select" name="age_max" data-match-search-age-max aria-label="年齢上限">
+                <option value="">指定なし</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+
+        <label class="match-field">
+          <span class="match-field__label">地域</span>
+          <select class="match-select" name="prefecture" data-match-search-prefecture aria-label="地域">
+            <option value="">指定なし</option>
+            <option value="東京都">東京都</option>
+            <option value="神奈川県">神奈川県</option>
+            <option value="埼玉県">埼玉県</option>
+            <option value="千葉県">千葉県</option>
+          </select>
+        </label>
+
+        <fieldset class="match-search-fieldset">
+          <legend class="match-field__label">利用目的</legend>
+          <div class="match-chip-grid" data-match-search-purpose>
+            <button type="button" class="match-chip match-chip--purpose" data-purpose="love">💘 恋愛</button>
+            <button type="button" class="match-chip match-chip--purpose" data-purpose="marriage">💍 婚活</button>
+            <button type="button" class="match-chip match-chip--purpose" data-purpose="friends">🌷 友達から</button>
+          </div>
+        </fieldset>
+
+        <div class="match-search-options">
+          <label class="match-search-card-toggle">
+            <input type="checkbox" name="verified_only" data-match-search-verified />
+            <span class="match-search-card-toggle__icon" aria-hidden="true">🩷</span>
+            <span class="match-search-card-toggle__text">本人確認済みのみ表示</span>
+            <span class="match-search-card-toggle__state" aria-hidden="true">
+              <span class="match-search-card-toggle__state-off">OFF</span>
+              <span class="match-search-card-toggle__state-on">ON</span>
+            </span>
+          </label>
+          <label class="match-search-card-toggle">
+            <input type="checkbox" name="online_only" data-match-search-online />
+            <span class="match-search-card-toggle__icon" aria-hidden="true">🟢</span>
+            <span class="match-search-card-toggle__text">オンライン中のみ表示</span>
+            <span class="match-search-card-toggle__state" aria-hidden="true">
+              <span class="match-search-card-toggle__state-off">OFF</span>
+              <span class="match-search-card-toggle__state-on">ON</span>
+            </span>
+          </label>
+        </div>
+
+        <div class="match-search-form__actions">
+          <button type="submit" class="match-btn match-btn--primary match-btn--block" data-match-search-submit>検索する</button>
+          <button type="button" class="match-btn match-btn--secondary match-btn--block" data-match-search-save>条件を保存</button>
+        </div>
+      </form>
+    </main>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link" href="match-swipe.html"><span class="match-tabbar__icon" aria-hidden="true">💘</span><span>スワイプ</span></a>
+        <a class="match-tabbar__link" href="match-list.html"><span class="match-tabbar__icon" aria-hidden="true">💞</span><span>マッチ</span></a>
+        <a class="match-tabbar__link" href="match-safety.html"><span class="match-tabbar__icon" aria-hidden="true">🛡️</span><span>安心</span></a>
+        <a class="match-tabbar__link" href="match-mypage.html"><span class="match-tabbar__icon" aria-hidden="true">👤</span><span>マイページ</span></a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="../ai-workspace-links.js"></script>
+  <script src="match-ai-cta.js"></script>
+  <script src="match-p15-render.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-p15-wiring.js"></script>
+</body>
+</html>

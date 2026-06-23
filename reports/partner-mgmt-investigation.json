@@ -1,0 +1,53 @@
+﻿{
+  "checkedAt": "2026-06-22T23:59:56.184Z",
+  "supabaseProject": "ddojquacsyqesrjhcvmn",
+  "conclusion": {
+    "isDbEmpty": false,
+    "isAuthError": true,
+    "uiShowsZeroBecause": "partner-list returns 401; initApi() fails before updateStats(); HTML defaults remain 0",
+    "mockDataExists": true
+  },
+  "dbCounts": {
+    "partner_profiles": 3,
+    "partner_documents": 1,
+    "partner_reviews": 6
+  },
+  "partner_profilesByStatus": {
+    "pending": 0,
+    "hold": 1,
+    "approved": 1,
+    "rejected": 1,
+    "contracted": 0
+  },
+  "partnerListResponses": {
+    "browserDefault": {
+      "httpStatus": 401,
+      "code": "unauthorized",
+      "message": "Authentication required"
+    },
+    "browserWithDevHeaders": {
+      "httpStatus": 401,
+      "code": "unauthorized",
+      "message": "Authentication required",
+      "note": "PARTNER_ALLOW_DEV_HEADER is unset on production; X-Partner-Role is ignored"
+    }
+  },
+  "loggedInUserPartnerRole": {
+    "usedByUi": false,
+    "note": "partner-api.js always sends Authorization: Bearer <anon_key>, not the Supabase user session JWT. partner_role in app_metadata is never read client-side for this screen."
+  },
+  "mockMode": {
+    "url": "partner-management.html?mock=1",
+    "modeChip": "モック",
+    "listCount": 28,
+    "stats": {
+      "pending": 7,
+      "hold": 5,
+      "approved": 6,
+      "contracted": 6,
+      "rejected": 4
+    },
+    "source": "builder/partner-mock-data.js (local UI only, not in DB)"
+  },
+  "liveApplyNote": "P1 live verify (2026-06-23) created smoke-test rows (@example.test). Current 3 profiles match that pattern."
+}

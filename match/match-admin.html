@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>運営管理 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-admin">
+<div class="match-app match-app--phone match-app--admin">
+  <header class="match-header match-header--sub" aria-label="ヘッダー">
+    <a class="match-header__back" href="match-top.html" aria-label="戻る">←</a>
+    <h1 class="match-header__title">運営管理</h1>
+  </header>
+
+  <main class="match-main match-admin-main" data-match-admin-root>
+    <p class="match-form-subtitle match-admin-intro" data-admin-status>管理者ログインが必要です（edge モード）。</p>
+
+    <div class="match-admin-tabs" role="tablist" aria-label="管理メニュー">
+      <button type="button" class="match-admin-tab is-active" role="tab" aria-selected="true" data-admin-tab="reports">通報</button>
+      <button type="button" class="match-admin-tab" role="tab" aria-selected="false" data-admin-tab="identity">本人確認</button>
+      <button type="button" class="match-admin-tab" role="tab" aria-selected="false" data-admin-tab="age">年齢確認</button>
+      <button type="button" class="match-admin-tab" role="tab" aria-selected="false" data-admin-tab="profiles">プロフィール</button>
+    </div>
+
+    <section class="match-admin-panel is-active" data-admin-panel="reports" role="tabpanel">
+      <div class="match-admin-panel__head">
+        <h2>通報キュー</h2>
+        <button type="button" class="match-btn match-btn--secondary match-btn--sm" data-admin-refresh="reports">更新</button>
+      </div>
+      <div class="match-admin-list" data-admin-list="reports" aria-live="polite"></div>
+    </section>
+
+    <section class="match-admin-panel" data-admin-panel="identity" role="tabpanel" hidden>
+      <div class="match-admin-panel__head">
+        <h2>本人確認（pending）</h2>
+        <button type="button" class="match-btn match-btn--secondary match-btn--sm" data-admin-refresh="identity">更新</button>
+      </div>
+      <div class="match-admin-list" data-admin-list="identity"></div>
+    </section>
+
+    <section class="match-admin-panel" data-admin-panel="age" role="tabpanel" hidden>
+      <div class="match-admin-panel__head">
+        <h2>年齢確認（pending）</h2>
+        <button type="button" class="match-btn match-btn--secondary match-btn--sm" data-admin-refresh="age">更新</button>
+      </div>
+      <div class="match-admin-list" data-admin-list="age"></div>
+    </section>
+
+    <section class="match-admin-panel" data-admin-panel="profiles" role="tabpanel" hidden>
+      <div class="match-admin-panel__head">
+        <h2>プロフィール停止</h2>
+        <button type="button" class="match-btn match-btn--secondary match-btn--sm" data-admin-refresh="profiles">更新</button>
+      </div>
+      <div class="match-admin-list" data-admin-list="profiles"></div>
+    </section>
+  </main>
+</div>
+<div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+<script src="match-auth.js"></script>
+<script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+<script src="match-admin-wiring.js"></script>
+</body>
+</html>

@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>通報 | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-report" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header match-header--sub" aria-label="ヘッダー">
+      <a class="match-header__back" href="match-mypage.html" aria-label="戻る">←</a>
+      <span class="match-safety-icon match-safety-icon--lavender" aria-hidden="true">🚨</span>
+      <h1 class="match-header__title">通報</h1>
+    </header>
+
+    <main class="match-main" data-match-report-form>
+      <div class="match-report-target">
+        <span class="match-report-target__avatar" aria-hidden="true">🌸</span>
+        <div>
+          <p class="match-report-target__name">ゆい 26歳</p>
+          <p class="match-report-target__sub">通報対象</p>
+        </div>
+      </div>
+
+      <h2 class="match-section-title">通報理由を選択</h2>
+      <div class="match-report-options" role="radiogroup" aria-label="通報理由">
+        <button type="button" class="match-report-option is-selected" data-report-reason="message">
+          <span class="match-report-option__radio" aria-hidden="true"></span>
+          <span>
+            <span class="match-report-option__label">不適切なメッセージ</span>
+            <span class="match-report-option__sub">性的・暴力的な内容、連絡先の強要など</span>
+          </span>
+        </button>
+        <button type="button" class="match-report-option" data-report-reason="impersonation">
+          <span class="match-report-option__radio" aria-hidden="true"></span>
+          <span>
+            <span class="match-report-option__label">なりすまし</span>
+            <span class="match-report-option__sub">他人の写真・プロフィールの不正利用</span>
+          </span>
+        </button>
+        <button type="button" class="match-report-option" data-report-reason="harassment">
+          <span class="match-report-option__radio" aria-hidden="true"></span>
+          <span>
+            <span class="match-report-option__label">迷惑行為</span>
+            <span class="match-report-option__sub">しつこい連絡、営業・勧誘、金銭要求など</span>
+          </span>
+        </button>
+        <button type="button" class="match-report-option" data-report-reason="other">
+          <span class="match-report-option__radio" aria-hidden="true"></span>
+          <span>
+            <span class="match-report-option__label">その他</span>
+            <span class="match-report-option__sub">上記に当てはまらない違反行為</span>
+          </span>
+        </button>
+      </div>
+
+      <label class="match-field">
+        <span class="match-field__label">詳細（任意）</span>
+        <textarea class="match-textarea" placeholder="状況を具体的に記入してください" rows="3"></textarea>
+      </label>
+
+      <button type="button" class="match-btn match-btn--primary match-btn--block" data-report-submit>通報する</button>
+      <a class="match-btn match-btn--text match-btn--block" href="match-block.html">ブロックする</a>
+
+      <h2 class="match-section-title">通報履歴</h2>
+      <div class="match-history-list" data-report-history></div>
+    </main>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link" href="match-swipe.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💘</span>
+          <span>スワイプ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-list.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💞</span>
+          <span>マッチ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-safety.html">
+          <span class="match-tabbar__icon" aria-hidden="true">🛡️</span>
+          <span>安心</span>
+        </a>
+        <a class="match-tabbar__link is-active" href="match-mypage.html">
+          <span class="match-tabbar__icon" aria-hidden="true">👤</span>
+          <span>マイページ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-data-render.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-wiring.js"></script>
+</body>
+</html>

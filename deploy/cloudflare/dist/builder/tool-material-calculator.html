@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>材料計算 | 建設ツール | Builder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-tool-material-calculator">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder ヘッダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./construction-tools.html" aria-label="建設ツールへ戻る">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5" />
+                <path d="m12 19-7-7 7-7" />
+              </svg>
+            </span>
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">材料計算</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">材料計算</h1>
+          <p class="builder-header__sub">施工面積と材料の施工可能面積から必要数量を計算します</p>
+        </div>
+
+        <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
+          <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=BU" width="40" height="40" alt="" />
+          <span class="builder-account__text">
+            <span class="builder-account__name" data-dash-user-name>会員</span>
+            <span class="builder-account__sub" data-builder-member-type>建設パートナー</span>
+          </span>
+          <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </a>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main builder-mat-main" data-builder-mat-root data-builder-tool="material-calculator">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <section class="builder-mat-hero" aria-label="材料計算概要">
+        <div class="builder-mat-hero__inner">
+          <p class="builder-mat-hero__kicker">建設ツール · 材料計算</p>
+          <h2 class="builder-mat-hero__title">必要数量をすぐ確認</h2>
+          <p class="builder-mat-hero__desc">施工面積と1単位あたりの施工可能面積を入力すると、必要数量を切り上げで計算します。クロス・塗装・床・ボードなど業種別の専用計算は順次追加予定です。</p>
+        </div>
+      </section>
+
+      <section class="builder-panel builder-mat-templates" aria-label="業種テンプレ">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">業種テンプレ</h2>
+          <span class="builder-kpi">将来拡張</span>
+        </div>
+
+        <div class="builder-mat-template-grid" role="listbox" aria-label="業種クイック選択">
+          <button type="button" class="builder-mat-template" data-builder-mat-template="wallpaper" role="option" aria-selected="false">クロス</button>
+          <button type="button" class="builder-mat-template" data-builder-mat-template="paint" role="option" aria-selected="false">塗装</button>
+          <button type="button" class="builder-mat-template" data-builder-mat-template="floor" role="option" aria-selected="false">床</button>
+          <button type="button" class="builder-mat-template" data-builder-mat-template="board" role="option" aria-selected="false">ボード</button>
+        </div>
+
+        <p class="builder-mat-template-note" data-builder-mat-template-note hidden></p>
+      </section>
+
+      <div class="builder-mat-layout">
+        <section class="builder-panel builder-mat-inputs" aria-label="入力条件">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">入力</h2>
+            <span class="builder-kpi">リアルタイム</span>
+          </div>
+
+          <form class="builder-form builder-mat-form" data-builder-mat-form novalidate>
+            <label class="builder-field">
+              <span class="builder-field__label">施工面積</span>
+              <div class="builder-mat-input-wrap">
+                <input
+                  class="builder-input builder-mat-input"
+                  type="number"
+                  name="area"
+                  inputmode="decimal"
+                  min="0"
+                  step="0.1"
+                  value="100"
+                  placeholder="例：100"
+                  data-builder-mat-input
+                  data-builder-mat-area
+                  aria-describedby="builder-mat-area-hint"
+                />
+                <span class="builder-mat-input-unit" aria-hidden="true">㎡</span>
+              </div>
+              <span class="builder-field__hint" id="builder-mat-area-hint">施工する面積の合計</span>
+            </label>
+
+            <label class="builder-field">
+              <span class="builder-field__label">1単位あたり施工可能面積</span>
+              <div class="builder-mat-input-wrap">
+                <input
+                  class="builder-input builder-mat-input"
+                  type="number"
+                  name="coverage"
+                  inputmode="decimal"
+                  min="0"
+                  step="0.1"
+                  value="25"
+                  placeholder="例：25"
+                  data-builder-mat-input
+                  data-builder-mat-coverage
+                  aria-describedby="builder-mat-coverage-hint"
+                />
+                <span class="builder-mat-input-unit" aria-hidden="true">㎡</span>
+              </div>
+              <span class="builder-field__hint" id="builder-mat-coverage-hint">例：クロス1本50㎡、塗料1缶25㎡、床材1箱12㎡</span>
+            </label>
+          </form>
+        </section>
+
+        <section class="builder-panel builder-mat-results" aria-label="計算結果" aria-live="polite">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">計算結果</h2>
+          </div>
+
+          <div class="builder-mat-result-grid">
+            <article class="builder-mat-result-card">
+              <p class="builder-mat-result-card__label">施工面積</p>
+              <p class="builder-mat-result-card__value" data-builder-mat-result-area>100 ㎡</p>
+            </article>
+
+            <article class="builder-mat-result-card">
+              <p class="builder-mat-result-card__label">施工可能面積</p>
+              <p class="builder-mat-result-card__value" data-builder-mat-result-coverage>25 ㎡</p>
+            </article>
+
+            <article class="builder-mat-result-card builder-mat-result-card--primary">
+              <p class="builder-mat-result-card__label">必要数量</p>
+              <p class="builder-mat-result-card__value" data-builder-mat-result-quantity>4 単位</p>
+            </article>
+          </div>
+
+          <div class="builder-mat-breakdown" aria-label="計算内訳">
+            <p class="builder-mat-breakdown__title">計算内訳</p>
+            <dl class="builder-mat-breakdown__list">
+              <div>
+                <dt>施工面積</dt>
+                <dd data-builder-mat-breakdown-area>100 ㎡</dd>
+              </div>
+              <div>
+                <dt>施工可能面積</dt>
+                <dd data-builder-mat-breakdown-coverage>25 ㎡</dd>
+              </div>
+              <div>
+                <dt>必要数量</dt>
+                <dd data-builder-mat-breakdown-quantity>4 単位</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="builder-mat-formula-note" aria-label="計算式">
+            <p class="builder-mat-formula-note__title">計算式</p>
+            <p class="builder-mat-formula-note__formula" data-builder-mat-formula>100 ㎡ ÷ 25 ㎡ = 4 単位（切り上げ）</p>
+            <ul class="builder-mat-formula-note__list">
+              <li><strong>必要数量</strong> = 施工面積 ÷ 1単位あたり施工可能面積</li>
+              <li>小数点以下は切り上げ</li>
+            </ul>
+          </div>
+
+          <aside class="builder-ai-comment" data-builder-ai-comment aria-live="polite">
+            <div class="builder-ai-comment__head">
+              <h3 class="builder-ai-comment__title">Builder AI コメント</h3>
+              <span class="builder-ai-comment__badge" data-builder-ai-comment-badge>準備中</span>
+            </div>
+            <p class="builder-ai-comment__body" data-builder-ai-comment-body>計算すると、AI分析コメントがここに表示されます。</p>
+            <p class="builder-ai-comment__meta" data-builder-ai-comment-meta hidden></p>
+          </aside>
+        </section>
+      </div>
+
+      <footer class="builder-footer" aria-label="フッター">
+        <p>© 2024 TASFUL. All rights reserved.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("./service-worker.js", { scope: "./" }).catch(function () {});
+      });
+    }
+  </script>
+  <script src="../talk-runtime.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="builder-actor-identity.js"></script>
+  <script src="builder-general-flow.js"></script>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-ai-engine.js"></script>
+  <script src="builder-construction-tools.js"></script>
+  <script src="builder-tool-manpower-calculator.js"></script>
+  <script src="builder-tool-profit-calculator.js"></script>
+  <script src="builder-tool-material-calculator.js"></script>
+  <script src="builder.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var tool = window.BuilderConstructionTools && window.BuilderConstructionTools.get
+        ? window.BuilderConstructionTools.get("material-calculator")
+        : null;
+      if (tool && typeof tool.mount === "function") {
+        tool.mount();
+      }
+    });
+  </script>
+</body>
+</html>

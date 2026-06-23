@@ -1,0 +1,1641 @@
+/* /company/ — TASFUL HP（参考画像ベース・PC優先） */
+
+body.corp-body--tasful-hp {
+  --tas-top-bg: #020817;
+  --tas-top-bg-mid: #06122a;
+  --tas-top-cyan: #22d3ee;
+  --tas-top-blue: #38bdf8;
+  --tas-top-purple: #a855f7;
+  --tas-top-text: #e2e8f0;
+  --tas-top-muted: #94a3b8;
+  --tas-top-card-bg: rgba(6, 18, 42, 0.72);
+  --tas-top-max: 1280px;
+  background: var(--tas-top-bg);
+  color: var(--tas-top-text);
+  padding-top: 140px;
+}
+
+html,
+body.corp-body--tasful-hp {
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+  max-height: none;
+}
+
+body.corp-body--tasful-hp .corp-main.top-main {
+  background: linear-gradient(180deg, var(--tas-top-bg) 0%, var(--tas-top-bg-mid) 18%, #030b18 100%);
+  overflow-x: hidden;
+  overflow-y: visible;
+  height: auto;
+  min-height: 0;
+}
+
+/* ── Header（custom-header・添付コードそのまま） ── */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+.custom-header {
+  width: 100%;
+  height: 140px;
+  background: rgba(10, 10, 10, 0.96);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+}
+
+.header-inner {
+  max-width: 1250px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 50px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.logo-image-wrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-right: -58px;
+}
+
+.logo-globe {
+  display: block;
+  transform-origin: center center;
+  animation: globeFloat 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.logo-image {
+  height: 144px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+  transform-origin: center center;
+  animation: globeGlow 3s ease-in-out infinite;
+  transition: transform 0.45s ease;
+}
+
+.header-brand:hover .logo-image {
+  transform: scale(1.05);
+  animation: globeGlowStrong 3.5s ease-in-out infinite;
+}
+
+@keyframes globeFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes globeGlow {
+  0%,
+  100% {
+    filter:
+      drop-shadow(0 0 5px rgba(37, 99, 235, 0.42))
+      drop-shadow(0 0 10px rgba(34, 211, 238, 0.36));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 9px rgba(37, 99, 235, 0.58))
+      drop-shadow(0 0 16px rgba(34, 211, 238, 0.52));
+  }
+}
+
+@keyframes globeGlowStrong {
+  0%,
+  100% {
+    filter:
+      drop-shadow(0 0 7px rgba(37, 99, 235, 0.52))
+      drop-shadow(0 0 14px rgba(34, 211, 238, 0.46));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 11px rgba(37, 99, 235, 0.66))
+      drop-shadow(0 0 20px rgba(34, 211, 238, 0.58));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-globe {
+    animation: none;
+  }
+
+  .logo-image {
+    animation: none;
+    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.32));
+  }
+
+  .header-brand:hover .logo-image {
+    transform: none;
+    animation: none;
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.4));
+  }
+
+  .logo {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
+  .modern-footer .footer-logo {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
+.logo {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  margin-left: 0;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  background: linear-gradient(
+    90deg,
+    #00e5ff,
+    #4f7cff,
+    #8b5cf6,
+    #e879f9,
+    #00e5ff
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: tasfulRainbow 8s linear infinite;
+  text-shadow:
+    0 0 8px rgba(0, 229, 255, 0.3),
+    0 0 16px rgba(139, 92, 246, 0.22),
+    0 0 24px rgba(232, 121, 249, 0.16);
+  filter:
+    drop-shadow(0 0 8px rgba(0, 229, 255, 0.3))
+    drop-shadow(0 0 16px rgba(139, 92, 246, 0.22))
+    drop-shadow(0 0 24px rgba(232, 121, 249, 0.16));
+}
+
+@keyframes tasfulRainbow {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 300% 50%;
+  }
+}
+
+@media (max-width: 1000px) {
+  .custom-header { height: 90px; }
+  .header-inner { padding: 0 20px; }
+  .header-brand {
+    gap: 3px;
+  }
+  .logo-image-wrap {
+    margin-right: -38px;
+  }
+  .logo-image {
+    height: 88px;
+  }
+  .logo {
+    font-size: 24px;
+    letter-spacing: 0.05em;
+    margin-left: 0;
+  }
+}
+
+/* fixed header 分の余白 + 既存ナビ */
+.custom-header .header-inner .tas-hp-header__nav {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 1.5vw, 22px);
+  flex: 1;
+  min-width: 0;
+  margin-left: clamp(12px, 2.5vw, 32px);
+}
+
+.custom-header .header-inner .tas-hp-header__nav a {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(226, 232, 240, 0.88);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.custom-header .header-inner .tas-hp-header__nav a:hover,
+.custom-header .header-inner .tas-hp-header__nav a[aria-current="page"] {
+  color: #fff;
+}
+
+.tas-hp-header__line-btn-label--short {
+  display: none;
+}
+
+.tas-hp-header__menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-left: auto;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #f8fafc;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.tas-hp-header__menu-btn-icon {
+  display: block;
+  font-size: 22px;
+  line-height: 1;
+  transform: translateY(-1px);
+}
+
+.tas-hp-header__menu-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(56, 189, 248, 0.42);
+}
+
+.tas-hp-header__mobile-panel {
+  display: none;
+}
+
+.custom-header .header-inner .tas-hp-header__line-btn {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(168, 85, 247, 0.55);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.85) 0%, rgba(56, 189, 248, 0.75) 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow:
+    0 0 14px rgba(168, 85, 247, 0.24),
+    0 0 24px rgba(56, 189, 248, 0.14);
+  flex-shrink: 0;
+  margin-left: auto;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  animation: ctaGlowPulse 2.8s ease-in-out infinite;
+}
+
+.custom-header .header-inner .tas-hp-header__line-btn::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  border: 1px solid rgba(139, 92, 246, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  animation: ctaRingExpand 3s ease-out infinite;
+}
+
+.custom-header .header-inner .tas-hp-header__line-btn:hover {
+  transform: scale(1.03);
+  filter: brightness(1.08);
+  border-color: rgba(168, 85, 247, 0.72);
+  box-shadow:
+    0 0 22px rgba(168, 85, 247, 0.38),
+    0 0 36px rgba(56, 189, 248, 0.24);
+}
+
+@keyframes ctaGlowPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 14px rgba(168, 85, 247, 0.22),
+      0 0 24px rgba(56, 189, 248, 0.12);
+  }
+  50% {
+    box-shadow:
+      0 0 22px rgba(168, 85, 247, 0.36),
+      0 0 34px rgba(56, 189, 248, 0.22);
+  }
+}
+
+@keyframes ctaRingExpand {
+  0% {
+    transform: scale(1);
+    opacity: 0.32;
+  }
+  75%,
+  100% {
+    transform: scale(1.16);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .custom-header .header-inner .tas-hp-header__line-btn {
+    animation: none;
+  }
+
+  .custom-header .header-inner .tas-hp-header__line-btn::after {
+    animation: none;
+    opacity: 0;
+  }
+
+  .custom-header .header-inner .tas-hp-header__line-btn:hover {
+    transform: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .custom-header .header-inner .tas-hp-header__nav {
+    display: flex;
+  }
+}
+
+@media (max-width: 1000px) {
+  body.corp-body--tasful-hp {
+    padding-top: 90px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .custom-header .header-inner .tas-hp-header__line-btn {
+    display: none;
+  }
+
+  .custom-header .header-inner .tas-hp-header__menu-btn {
+    display: inline-flex;
+    position: relative;
+    z-index: 10001;
+  }
+
+  .custom-header.is-menu-open .header-inner {
+    position: relative;
+    z-index: 10001;
+  }
+
+  .tas-hp-header__mobile-panel {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    pointer-events: none;
+    visibility: hidden;
+  }
+
+  .custom-header.is-menu-open .tas-hp-header__mobile-panel {
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  .tas-hp-header__mobile-backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    padding: 0;
+    background: rgba(2, 6, 23, 0.72);
+    opacity: 0;
+    transition: opacity 0.24s ease;
+    cursor: pointer;
+  }
+
+  .custom-header.is-menu-open .tas-hp-header__mobile-backdrop {
+    opacity: 1;
+  }
+
+  .tas-hp-header__mobile-drawer {
+    position: absolute;
+    top: 90px;
+    right: 0;
+    width: min(100%, 320px);
+    height: calc(100% - 90px);
+    height: calc(100dvh - 90px);
+    padding: 18px 20px 24px;
+    background: linear-gradient(180deg, rgba(8, 12, 24, 0.98) 0%, rgba(5, 8, 18, 0.99) 100%);
+    border-left: 1px solid rgba(148, 163, 184, 0.14);
+    box-shadow: -12px 0 40px rgba(0, 0, 0, 0.42);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+  }
+
+  .custom-header.is-menu-open .tas-hp-header__mobile-drawer {
+    transform: translateX(0);
+  }
+
+  .tas-hp-header__mobile-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .tas-hp-header__mobile-nav-label {
+    margin: 0 0 6px;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: rgba(148, 163, 184, 0.78);
+  }
+
+  .tas-hp-header__mobile-nav--primary a {
+    font-size: 15px;
+    font-weight: 700;
+    padding: 13px 12px;
+  }
+
+  .tas-hp-header__mobile-nav a {
+    display: block;
+    padding: 13px 12px;
+    border-radius: 10px;
+    color: rgba(226, 232, 240, 0.92);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .tas-hp-header__mobile-nav a:hover,
+  .tas-hp-header__mobile-nav a[aria-current="page"] {
+    background: rgba(56, 189, 248, 0.1);
+    color: #fff;
+  }
+
+  .tas-hp-header__mobile-nav--legal {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(148, 163, 184, 0.16);
+  }
+
+  .tas-hp-header__mobile-nav--legal a {
+    padding: 11px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(148, 163, 184, 0.92);
+  }
+
+  .custom-header.is-menu-open .tas-hp-header__menu-btn {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.45);
+  }
+}
+
+html.tas-hp-menu-open {
+  overflow: hidden;
+}
+
+/* ── サービス紹介 / 事業紹介 セクション間余白 ── */
+#company-service-intro {
+  margin-bottom: 0;
+  position: relative;
+}
+
+#company-service-intro::after {
+  content: "";
+  display: block;
+  height: 150px;
+  background:
+    radial-gradient(
+      ellipse 82% 68% at 50% 50%,
+      rgba(56, 189, 248, 0.1) 0%,
+      rgba(34, 211, 238, 0.04) 44%,
+      transparent 72%
+    ),
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(34, 211, 238, 0.22) 18%,
+      rgba(56, 189, 248, 0.48) 50%,
+      rgba(34, 211, 238, 0.22) 82%,
+      transparent
+    ) center / min(88%, 1160px) 1px no-repeat,
+    linear-gradient(
+      180deg,
+      rgba(2, 12, 40, 0.95),
+      rgba(4, 18, 60, 1),
+      rgba(2, 12, 40, 0.95)
+    );
+  box-shadow:
+    inset 0 0 48px rgba(56, 189, 248, 0.06),
+    0 0 32px rgba(34, 211, 238, 0.05);
+}
+
+#company-business-intro {
+  margin-top: 0;
+  margin-bottom: 0;
+  position: relative;
+}
+
+#company-business-intro::after {
+  content: "";
+  display: block;
+  height: 200px;
+  background:
+    radial-gradient(
+      ellipse 85% 72% at 50% 50%,
+      rgba(56, 189, 248, 0.14) 0%,
+      rgba(34, 211, 238, 0.05) 42%,
+      transparent 72%
+    ),
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(34, 211, 238, 0.28) 18%,
+      rgba(56, 189, 248, 0.62) 50%,
+      rgba(34, 211, 238, 0.28) 82%,
+      transparent
+    ) center / min(88%, 1160px) 1px no-repeat,
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(34, 211, 238, 0.1) 22%,
+      rgba(56, 189, 248, 0.18) 50%,
+      rgba(34, 211, 238, 0.1) 78%,
+      transparent
+    ) top / 100% 1px no-repeat,
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(34, 211, 238, 0.1) 22%,
+      rgba(56, 189, 248, 0.18) 50%,
+      rgba(34, 211, 238, 0.1) 78%,
+      transparent
+    ) bottom / 100% 1px no-repeat,
+    linear-gradient(
+      180deg,
+      rgba(2, 12, 40, 0.95),
+      rgba(4, 18, 60, 1),
+      rgba(2, 12, 40, 0.95)
+    );
+  box-shadow:
+    inset 0 0 64px rgba(56, 189, 248, 0.08),
+    0 0 40px rgba(34, 211, 238, 0.06);
+}
+
+#company-partner-recruit {
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  #company-service-intro::after {
+    height: 80px;
+    background:
+      radial-gradient(
+        ellipse 86% 64% at 50% 50%,
+        rgba(56, 189, 248, 0.08) 0%,
+        rgba(34, 211, 238, 0.03) 46%,
+        transparent 72%
+      ),
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(34, 211, 238, 0.18) 15%,
+        rgba(56, 189, 248, 0.4) 50%,
+        rgba(34, 211, 238, 0.18) 85%,
+        transparent
+      ) center / min(92%, 100%) 1px no-repeat,
+      linear-gradient(
+        180deg,
+        rgba(2, 12, 40, 0.95),
+        rgba(4, 18, 60, 1),
+        rgba(2, 12, 40, 0.95)
+      );
+    box-shadow:
+      inset 0 0 36px rgba(56, 189, 248, 0.05),
+      0 0 24px rgba(34, 211, 238, 0.04);
+  }
+
+  #company-business-intro {
+    margin-top: 0;
+  }
+
+  #company-business-intro::after {
+    height: 120px;
+    background:
+      radial-gradient(
+        ellipse 88% 68% at 50% 50%,
+        rgba(56, 189, 248, 0.11) 0%,
+        rgba(34, 211, 238, 0.04) 44%,
+        transparent 72%
+      ),
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(34, 211, 238, 0.22) 15%,
+        rgba(56, 189, 248, 0.52) 50%,
+        rgba(34, 211, 238, 0.22) 85%,
+        transparent
+      ) center / min(92%, 100%) 1px no-repeat,
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(34, 211, 238, 0.08) 20%,
+        rgba(56, 189, 248, 0.14) 50%,
+        rgba(34, 211, 238, 0.08) 80%,
+        transparent
+      ) top / 100% 1px no-repeat,
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(34, 211, 238, 0.08) 20%,
+        rgba(56, 189, 248, 0.14) 50%,
+        rgba(34, 211, 238, 0.08) 80%,
+        transparent
+      ) bottom / 100% 1px no-repeat,
+      linear-gradient(
+        180deg,
+        rgba(2, 12, 40, 0.95),
+        rgba(4, 18, 60, 1),
+        rgba(2, 12, 40, 0.95)
+      );
+    box-shadow:
+      inset 0 0 48px rgba(56, 189, 248, 0.07),
+      0 0 28px rgba(34, 211, 238, 0.05);
+  }
+
+  #company-partner-recruit {
+    margin-top: 0;
+  }
+}
+
+/* ── Hero（参考画像：ワイド表示・画像全体を見せる） ── */
+body.corp-body--tasful-hp .company-hero,
+body.corp-body--tasful-hp .tasful-hero {
+  position: relative;
+  width: 100%;
+  background: #020817;
+  padding: 0;
+  min-height: 0;
+  height: auto;
+  overflow: hidden;
+}
+
+body.corp-body--tasful-hp .corp-main > .tasful-hero {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+body.corp-body--tasful-hp .tasful-hero__inner::before,
+body.corp-body--tasful-hp .tasful-hero__inner::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* 外側：同一画像の拡大・ぼかし背景（左右余白を自然に埋める・控えめ） */
+body.corp-body--tasful-hp .company-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/images/tasful/top/hero-bg-no-text.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(5px);
+  transform: scale(1.06);
+  transform-origin: center center;
+  opacity: 0.32;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body.corp-body--tasful-hp .company-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  pointer-events: none;
+}
+
+body.corp-body--tasful-hp .tasful-hero__overlay {
+  display: none;
+  pointer-events: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.corp-body--tasful-hp .tasful-hero__inner {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 1760px);
+  max-width: 1760px;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+  background: transparent;
+  border-radius: 0;
+}
+
+body.corp-body--tasful-hp .tasful-hero__bg,
+body.corp-body--tasful-hp .company-hero img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  object-position: center center;
+  position: relative;
+  z-index: 0;
+  filter: none;
+}
+
+@media (max-width: 768px) {
+  body.corp-body--tasful-hp .tasful-hero__inner {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* ── TASFULでできること / 選ばれる理由（ネオンカードUI） ── */
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid),
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) {
+  position: relative;
+  padding: clamp(56px, 6vw, 80px) 20px;
+  overflow: visible;
+  border-top: 1px solid rgba(34, 211, 238, 0.14);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) {
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -10%, rgba(34, 211, 238, 0.12) 0%, transparent 58%),
+    radial-gradient(ellipse 50% 40% at 100% 50%, rgba(168, 85, 247, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 35% at 0% 80%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, #020817 0%, #041024 48%, #020817 100%);
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) {
+  margin-top: 0;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(56, 189, 248, 0.1) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 45% at 90% 100%, rgba(251, 146, 60, 0.07) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 35% at 10% 60%, rgba(34, 211, 238, 0.06) 0%, transparent 48%),
+    linear-gradient(180deg, #020817 0%, #030b18 50%, #020817 100%);
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid)::after,
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid)::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  width: min(92%, 1180px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.35) 20%, rgba(56, 189, 248, 0.45) 50%, rgba(34, 211, 238, 0.35) 80%, transparent);
+  box-shadow: 0 0 12px rgba(34, 211, 238, 0.25);
+  pointer-events: none;
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__inner,
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) .tas-top-section__inner {
+  width: min(100%, 1400px);
+  max-width: 1400px;
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__head,
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) .tas-top-section__head {
+  margin-bottom: clamp(36px, 4.5vw, 52px);
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__title,
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) .tas-top-section__title {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(16px, 3vw, 32px);
+  margin: 0 0 14px;
+  font-size: clamp(28px, 3.6vw, 42px);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #fff;
+  text-shadow:
+    0 0 18px rgba(34, 211, 238, 0.55),
+    0 0 36px rgba(34, 211, 238, 0.25),
+    0 2px 4px rgba(0, 0, 0, 0.45);
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__title::before,
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__title::after,
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) .tas-top-section__title::before,
+body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) .tas-top-section__title::after {
+  content: "";
+  flex: 0 0 clamp(36px, 8vw, 110px);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.85), transparent);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.45);
+}
+
+body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__lead {
+  margin: 0;
+  font-size: clamp(14px, 1.6vw, 16px);
+  line-height: 1.75;
+  color: rgba(226, 232, 240, 0.82);
+}
+
+/* ── できること 5カード ── */
+body.corp-body--tasful-hp .tas-can-do-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  min-height: 272px;
+  padding: 34px 20px 30px;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  background: rgba(4, 12, 32, 0.62);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-sizing: border-box;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 92px;
+  margin: 0 0 10px;
+  padding: 8px;
+  border-radius: 18px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  background: rgba(2, 8, 24, 0.75);
+  overflow: hidden;
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .card-icon img {
+  width: 76px;
+  height: 76px;
+  object-fit: contain;
+  display: block;
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card__title {
+  margin: 0;
+  width: 100%;
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card__desc {
+  margin: 0;
+  width: 100%;
+  font-size: clamp(13px, 1.1vw, 14px);
+  line-height: 1.72;
+  color: rgba(226, 232, 240, 0.88);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--cyan {
+  border-color: rgba(34, 211, 238, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.12),
+    0 0 24px rgba(34, 211, 238, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--cyan .card-icon {
+  border: 1px solid rgba(34, 211, 238, 0.55);
+  box-shadow: 0 0 22px rgba(34, 211, 238, 0.35), inset 0 0 16px rgba(34, 211, 238, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--cyan .tas-top-neon-card__title {
+  color: #22d3ee;
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--magenta {
+  border-color: rgba(236, 72, 153, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(236, 72, 153, 0.12),
+    0 0 24px rgba(236, 72, 153, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--magenta .card-icon {
+  border: 1px solid rgba(236, 72, 153, 0.55);
+  box-shadow: 0 0 22px rgba(236, 72, 153, 0.35), inset 0 0 16px rgba(236, 72, 153, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--magenta .tas-top-neon-card__title {
+  color: #f472b6;
+  text-shadow: 0 0 14px rgba(236, 72, 153, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--blue {
+  border-color: rgba(56, 189, 248, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.12),
+    0 0 24px rgba(56, 189, 248, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--blue .card-icon {
+  border: 1px solid rgba(56, 189, 248, 0.55);
+  box-shadow: 0 0 22px rgba(56, 189, 248, 0.35), inset 0 0 16px rgba(56, 189, 248, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--blue .tas-top-neon-card__title {
+  color: #38bdf8;
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--green {
+  border-color: rgba(52, 211, 153, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(52, 211, 153, 0.12),
+    0 0 24px rgba(52, 211, 153, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--green .card-icon {
+  border: 1px solid rgba(52, 211, 153, 0.55);
+  box-shadow: 0 0 22px rgba(52, 211, 153, 0.35), inset 0 0 16px rgba(52, 211, 153, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--green .tas-top-neon-card__title {
+  color: #34d399;
+  text-shadow: 0 0 14px rgba(52, 211, 153, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--orange {
+  border-color: rgba(251, 146, 60, 0.42);
+  box-shadow:
+    0 0 0 1px rgba(251, 146, 60, 0.12),
+    0 0 24px rgba(251, 146, 60, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--orange .card-icon {
+  border: 1px solid rgba(251, 146, 60, 0.55);
+  box-shadow: 0 0 22px rgba(251, 146, 60, 0.35), inset 0 0 16px rgba(251, 146, 60, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card--orange .tas-top-neon-card__title {
+  color: #fb923c;
+  text-shadow: 0 0 14px rgba(251, 146, 60, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--cyan:hover,
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--cyan:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(34, 211, 238, 0.65);
+  box-shadow: 0 0 36px rgba(34, 211, 238, 0.28), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--magenta:hover,
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--magenta:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(236, 72, 153, 0.65);
+  box-shadow: 0 0 36px rgba(236, 72, 153, 0.28), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--blue:hover,
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--blue:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(56, 189, 248, 0.65);
+  box-shadow: 0 0 36px rgba(56, 189, 248, 0.28), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--green:hover,
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--green:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(52, 211, 153, 0.65);
+  box-shadow: 0 0 36px rgba(52, 211, 153, 0.28), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--orange:hover,
+body.corp-body--tasful-hp .tas-can-do-grid a.tas-top-neon-card--orange:focus-visible {
+  transform: translateY(-5px);
+  border-color: rgba(251, 146, 60, 0.65);
+  box-shadow: 0 0 36px rgba(251, 146, 60, 0.28), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+/* ── 選ばれる理由 4カード ── */
+body.corp-body--tasful-hp .tas-reason-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .reason-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  column-gap: 22px;
+  row-gap: 10px;
+  min-height: 168px;
+  padding: 28px 26px;
+  border-radius: 16px;
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  background: rgba(4, 12, 32, 0.62);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.1),
+    0 0 22px rgba(56, 189, 248, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .reason-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 88% 50%, rgba(56, 189, 248, 0.1) 0%, transparent 42%),
+    radial-gradient(circle at 12% 80%, rgba(34, 211, 238, 0.06) 0%, transparent 38%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 48%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .reason-card__image,
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card__title,
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card__desc {
+  position: relative;
+  z-index: 1;
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .reason-card__image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92px;
+  height: 92px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  background: rgba(2, 8, 24, 0.8);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.22), inset 0 0 14px rgba(56, 189, 248, 0.06);
+  overflow: hidden;
+  grid-row: 1 / span 2;
+  grid-column: 1;
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .reason-card__image img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  display: block;
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card__title {
+  margin: 0;
+  grid-column: 2;
+  grid-row: 1;
+  font-size: clamp(19px, 1.7vw, 24px);
+  line-height: 1.35;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card__desc {
+  margin: 0;
+  grid-column: 2;
+  grid-row: 2;
+  font-size: clamp(13px, 1.1vw, 15px);
+  line-height: 1.72;
+  color: rgba(226, 232, 240, 0.88);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-orange {
+  border-color: rgba(251, 146, 60, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(251, 146, 60, 0.1),
+    0 0 22px rgba(251, 146, 60, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-orange::before {
+  background:
+    radial-gradient(circle at 88% 50%, rgba(251, 146, 60, 0.12) 0%, transparent 42%),
+    radial-gradient(circle at 12% 80%, rgba(251, 146, 60, 0.06) 0%, transparent 38%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 48%);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-orange .reason-card__image {
+  border-color: rgba(251, 146, 60, 0.5);
+  box-shadow: 0 0 24px rgba(251, 146, 60, 0.28), inset 0 0 14px rgba(251, 146, 60, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-orange .tas-top-neon-card__title {
+  color: #fb923c;
+  text-shadow: 0 0 14px rgba(251, 146, 60, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-blue {
+  border-color: rgba(56, 189, 248, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(56, 189, 248, 0.1),
+    0 0 22px rgba(56, 189, 248, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-blue .reason-card__image {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 24px rgba(56, 189, 248, 0.28), inset 0 0 14px rgba(56, 189, 248, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-blue .tas-top-neon-card__title {
+  color: #38bdf8;
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-cyan {
+  border-color: rgba(34, 211, 238, 0.38);
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.1),
+    0 0 22px rgba(34, 211, 238, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-cyan::before {
+  background:
+    radial-gradient(circle at 88% 50%, rgba(34, 211, 238, 0.12) 0%, transparent 42%),
+    radial-gradient(circle at 12% 80%, rgba(34, 211, 238, 0.06) 0%, transparent 38%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, transparent 48%);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-cyan .reason-card__image {
+  border-color: rgba(34, 211, 238, 0.5);
+  box-shadow: 0 0 24px rgba(34, 211, 238, 0.28), inset 0 0 14px rgba(34, 211, 238, 0.08);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-cyan .tas-top-neon-card__title {
+  color: #22d3ee;
+  text-shadow: 0 0 14px rgba(34, 211, 238, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .reason-card:hover {
+  transform: translateY(-5px);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-orange:hover {
+  border-color: rgba(251, 146, 60, 0.6);
+  box-shadow: 0 0 34px rgba(251, 146, 60, 0.25), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-blue:hover {
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 34px rgba(56, 189, 248, 0.25), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+body.corp-body--tasful-hp .tas-reason-grid .tas-top-neon-card--reason-cyan:hover {
+  border-color: rgba(34, 211, 238, 0.6);
+  box-shadow: 0 0 34px rgba(34, 211, 238, 0.25), 0 12px 28px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 1100px) {
+  body.corp-body--tasful-hp .tas-can-do-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  body.corp-body--tasful-hp .tas-reason-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  body.corp-body--tasful-hp .tas-can-do-grid,
+  body.corp-body--tasful-hp .tas-reason-grid {
+    grid-template-columns: 1fr;
+  }
+
+  body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__title::before,
+  body.corp-body--tasful-hp .tas-top-section:has(.tas-can-do-grid) .tas-top-section__title::after,
+  body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) .tas-top-section__title::before,
+  body.corp-body--tasful-hp .tas-top-section:has(.tas-reason-grid) .tas-top-section__title::after {
+    flex-basis: 28px;
+  }
+
+  /* TOP SP: 選ばれる理由（スピード・安心・信頼・コスト削減）説明文の行間 */
+  body.corp-body--tasful-hp .tas-reason-grid .reason-card:nth-child(-n + 3) .tas-top-neon-card__desc {
+    line-height: 1.78;
+  }
+
+  /* TOP SP: NEWS カード内テキストの左右安全余白 */
+  body.corp-body--tasful-hp .company-news .news-item {
+    padding-left: 34px;
+    padding-right: 4px;
+  }
+
+  /* TOP SP: TASFULでできること — カード高さ・余白を約17%圧縮（文字・アイコンサイズは維持） */
+  body.corp-body--tasful-hp .tas-can-do-grid .tas-top-neon-card {
+    min-height: 225px;
+    padding: 28px 20px 24px;
+    gap: 9px;
+  }
+
+  body.corp-body--tasful-hp .tas-can-do-grid .card-icon {
+    margin-bottom: 6px;
+  }
+
+  /* TOP SP: NEWS終了 → サービス紹介開始 の縦余白を約40〜50pxに */
+  body.corp-body--tasful-hp .tas-top-section.company-news {
+    padding-bottom: 24px;
+  }
+
+  body.corp-body--tasful-hp .company-news .news-board {
+    margin-bottom: 22px;
+  }
+}
+
+/* ── Section card colors ── */
+.tas-top-neon-card--cyan { border-color: rgba(34, 211, 238, 0.45); }
+.tas-top-neon-card--cyan .tas-top-neon-card__icon { color: #22d3ee; border-color: rgba(34, 211, 238, 0.45); background: rgba(34, 211, 238, 0.1); }
+.tas-top-neon-card--cyan .tas-top-neon-card__title { color: #22d3ee; }
+
+.tas-top-neon-card--magenta { border-color: rgba(236, 72, 153, 0.45); }
+.tas-top-neon-card--magenta .tas-top-neon-card__icon { color: #f472b6; border-color: rgba(236, 72, 153, 0.45); background: rgba(236, 72, 153, 0.1); }
+.tas-top-neon-card--magenta .tas-top-neon-card__title { color: #f472b6; }
+
+.tas-top-neon-card--blue { border-color: rgba(56, 189, 248, 0.45); }
+.tas-top-neon-card--blue .tas-top-neon-card__icon { color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.1); }
+.tas-top-neon-card--blue .tas-top-neon-card__title { color: #38bdf8; }
+
+.tas-top-neon-card--green { border-color: rgba(52, 211, 153, 0.45); }
+.tas-top-neon-card--green .tas-top-neon-card__icon { color: #34d399; border-color: rgba(52, 211, 153, 0.45); background: rgba(52, 211, 153, 0.1); }
+.tas-top-neon-card--green .tas-top-neon-card__title { color: #34d399; }
+
+.tas-top-neon-card--orange { border-color: rgba(251, 146, 60, 0.45); }
+.tas-top-neon-card--orange .tas-top-neon-card__icon { color: #fb923c; border-color: rgba(251, 146, 60, 0.45); background: rgba(251, 146, 60, 0.1); }
+.tas-top-neon-card--orange .tas-top-neon-card__title { color: #fb923c; }
+
+.tas-top-neon-card--reason-orange .tas-top-neon-card__icon { color: #fb923c; border-color: rgba(251, 146, 60, 0.45); background: rgba(251, 146, 60, 0.1); }
+.tas-top-neon-card--reason-blue .tas-top-neon-card__icon { color: #38bdf8; border-color: rgba(56, 189, 248, 0.45); background: rgba(56, 189, 248, 0.1); }
+.tas-top-neon-card--reason-cyan .tas-top-neon-card__icon { color: #22d3ee; border-color: rgba(34, 211, 238, 0.45); background: rgba(34, 211, 238, 0.1); }
+
+/* ── NEWS ── */
+.tas-top-news__panel {
+  border-left: 4px solid var(--tas-top-cyan);
+}
+
+.tas-top-news__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #9333ea, #6366f1);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.tas-top-news__badge-slot {
+  display: block;
+  width: 52px;
+}
+
+.tas-top-news__link {
+  grid-template-columns: 108px 52px 1fr auto;
+}
+
+.tas-top-news__footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 24px 20px;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.tas-top-news__more {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tas-top-cyan);
+  text-decoration: none;
+}
+
+.tas-top-news__more:hover {
+  text-decoration: underline;
+}
+
+/* ── Partner full-bleed ── */
+.tas-top-partner-section {
+  padding: 0 20px clamp(56px, 7vw, 88px);
+}
+
+.tas-top-partner-section__inner {
+  width: min(100%, var(--tas-top-max));
+  margin: 0 auto;
+}
+
+.tas-top-partner__card--full {
+  grid-template-columns: minmax(0, 50%) minmax(0, 50%);
+}
+
+.tas-top-partner__card--full .tas-top-partner__visual {
+  display: block;
+  padding: 0;
+  background: none;
+}
+
+.partner-recruit__media {
+  height: 100%;
+  overflow: hidden;
+}
+
+.partner-recruit__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: none;
+}
+
+.tas-top-partner__btn {
+  border: none;
+  background: linear-gradient(135deg, #9333ea 0%, #6366f1 45%, #2563eb 100%);
+  box-shadow: 0 0 22px rgba(147, 51, 234, 0.28);
+}
+
+/* ── Footer（modern-footer・ホーム同一） ── */
+.modern-footer {
+  background: #0f0f0f;
+  color: #fff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  width: 100%;
+  padding: 60px 5% 40px;
+  box-sizing: border-box;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.modern-footer .footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.modern-footer .footer-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 50px;
+  gap: 40px;
+}
+
+.modern-footer .footer-logo {
+  font-size: 36px;
+  font-weight: 900;
+  margin: 0 0 15px 0;
+  letter-spacing: 0.2em;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  background: linear-gradient(
+    90deg,
+    #00e5ff,
+    #4f7cff,
+    #8b5cf6,
+    #e879f9,
+    #00e5ff
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: tasfulRainbow 8s linear infinite;
+  text-shadow:
+    0 0 8px rgba(0, 229, 255, 0.3),
+    0 0 16px rgba(139, 92, 246, 0.22),
+    0 0 24px rgba(232, 121, 249, 0.16);
+  filter:
+    drop-shadow(0 0 8px rgba(0, 229, 255, 0.3))
+    drop-shadow(0 0 16px rgba(139, 92, 246, 0.22))
+    drop-shadow(0 0 24px rgba(232, 121, 249, 0.16));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modern-footer .footer-logo {
+    animation: none;
+    background-position: 0% 50%;
+  }
+}
+
+.modern-footer .name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.modern-footer .desc {
+  font-size: 14px;
+  opacity: 0.6;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.modern-footer .footer-nav {
+  display: flex;
+  gap: clamp(20px, 5vw, 60px);
+}
+
+.modern-footer .link-col h4 {
+  font-size: 15px;
+  color: #38bdf8;
+  margin: 0 0 20px 0;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.38);
+  padding-bottom: 8px;
+  white-space: nowrap;
+}
+
+.modern-footer .link-list a {
+  display: block;
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.6;
+  margin-bottom: 12px;
+  transition: 0.3s;
+  white-space: nowrap;
+}
+
+.modern-footer .link-list a:hover {
+  opacity: 1;
+  color: #3b82f6;
+  transform: translateX(3px);
+}
+
+.modern-footer .footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 30px;
+  text-align: center;
+}
+
+.modern-footer .note {
+  font-size: 12px;
+  opacity: 0.4;
+  margin: 0 0 15px 0;
+  letter-spacing: 0.02em;
+}
+
+.modern-footer .copy {
+  font-size: 11px;
+  opacity: 0.3;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .modern-footer .footer-main {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    gap: 50px;
+  }
+
+  .modern-footer .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    text-align: left;
+    width: 100%;
+    gap: 30px;
+  }
+
+  .modern-footer .link-col:last-child {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  body.corp-body--tasful-hp .tasful-hero {
+    height: auto;
+    min-height: auto;
+  }
+}
+
+.footer-link--sp-only {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  body.corp-body--tasful-hp .modern-footer {
+    padding: 48px 22px 32px;
+    overflow-x: hidden;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .footer-main {
+    align-items: flex-start;
+    text-align: left;
+    gap: 36px;
+    margin-bottom: 36px;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .footer-brand {
+    width: 100%;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .footer-nav {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 36px;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .link-col--services {
+    order: 1;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .link-col--company {
+    order: 2;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .link-col--forms {
+    order: 3;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .link-col--legal-sp {
+    order: 4;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .link-col:last-child {
+    grid-column: auto;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .link-col h4 {
+    margin-bottom: 14px;
+    white-space: normal;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .link-list a {
+    white-space: normal;
+    word-break: break-word;
+    margin-bottom: 10px;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .footer-link--sp-only {
+    display: block;
+  }
+
+  body.corp-body--tasful-hp .modern-footer a.footer-link--sp-only {
+    display: block;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .footer-bottom-legal {
+    display: none;
+  }
+
+  body.corp-body--tasful-hp .modern-footer .footer-bottom {
+    text-align: left;
+    padding-top: 24px;
+  }
+}

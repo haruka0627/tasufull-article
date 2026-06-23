@@ -3,36 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ビジョン | TASFUL</title>
+<title>ビジョン | TASFUL</title>
   <meta name="description" content="TASFUL ビジョン" />
-  <link rel="stylesheet" href="/corp-layout.css" />
-  <link rel="stylesheet" href="/corp-header.css" />
-  <link rel="stylesheet" href="/corp-footer.css" />
+  <link rel="stylesheet" href="/tas-top-page.css" />
+  <link rel="stylesheet" href="/corp-company-hp.css" />
+<link rel="stylesheet" href="/corp-layout.css" />
 </head>
-<body class="corp-body" data-corp="tasful">
-  <header class="corp-header">
-      <div class="corp-container corp-header__inner">
-        <a class="corp-header__brand" href="/company/index.html">
-          <img class="corp-header__logo" src="/images/corp/tasful/1.png" alt="" width="40" height="40" />
-          <span class="corp-header__brand-main">TASFUL</span>
-          <span class="corp-header__brand-sub">Corporate</span>
-        </a>
-        <details class="corp-nav">
-          <summary class="corp-nav__toggle" aria-label="メニューを開く">
-            <span class="corp-nav__toggle-icon" aria-hidden="true"></span>
-          </summary>
-          <ul class="corp-nav__list">
-            <li><a class="corp-nav__link" href="/company/index.html">ホーム</a></li>
-            <li><a class="corp-nav__link" href="/company/services.html">サービス</a></li>
-            <li><a class="corp-nav__link" href="/company/vision.html" aria-current="page">ビジョン</a></li>
-            <li><a class="corp-nav__link" href="/company/about.html">会社概要</a></li>
-            <li><a class="corp-nav__link" href="/company/faq.html">FAQ</a></li>
-            <li><a class="corp-nav__link" href="/company/contact.html">お問い合わせ</a></li>
-          </ul>
-        </details>
+<body class="corp-body corp-body--tasful-hp" data-corp="tasful">
+  <header class="custom-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="logo-image-wrap">
+          <span class="logo-globe">
+            <img src="/images/tasful/tasful-globe-logo.png" alt="TASFUL ロゴ" class="logo-image">
+          </span>
+        </span>
+        <div class="logo">
+          TASFUL
+        </div>
       </div>
-    </header>
-  <main class="corp-main">
+      <nav class="tas-hp-header__nav" aria-label="メインナビ">
+        <a href="/company/">ホーム</a>
+        <a href="/company/services.html">サービス一覧</a>
+        <a href="/company/contact.html">協力パートナー</a>
+        <a href="/iwasho/team.html">チーム紹介</a>
+        <a href="/company/about.html">会社概要</a>
+        <a href="/company/faq.html">Q&A</a>
+      </nav>
+      <a class="tas-hp-header__line-btn" href="/service" aria-label="TASFUL PLATFORM"><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--full">TASFUL PLATFORM</span><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--short" aria-hidden="true">PLATFORM</span></a>
+      <button type="button" class="tas-hp-header__menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="tas-hp-mobile-nav"><span class="tas-hp-header__menu-btn-icon" aria-hidden="true">☰</span></button>
+    </div>
+    <div class="tas-hp-header__mobile-panel" id="tas-hp-mobile-nav" aria-hidden="true">
+      <button type="button" class="tas-hp-header__mobile-backdrop" data-tas-hp-menu-close aria-label="メニューを閉じる"></button>
+      <div class="tas-hp-header__mobile-drawer">
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--primary" aria-label="メインナビ">
+          <a href="/company/">ホーム</a>
+          <a href="/iwasho/services.html">建設・サービス業</a>
+          <a href="/company/contact.html">協力パートナー</a>
+          <a href="/iwasho/team.html">チーム紹介</a>
+          <a href="/company/about.html">会社概要</a>
+          <a href="/company/faq.html">Q&A</a>
+        </nav>
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--legal" aria-label="法的情報">
+          <p class="tas-hp-header__mobile-nav-label">法的情報</p>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/company/legal/tokushoho.html">特定商取引法</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+<main class="corp-main">
     <section class="corp-biz-hero">
       <div class="corp-container corp-container--wide">
         <p class="corp-biz-badge">VISION</p>
@@ -50,26 +71,73 @@
       </div>
     </section>
   </main>
-  <footer class="corp-footer">
-      <div class="corp-container corp-footer__inner">
-        <div>
-          <p class="corp-footer__brand">TASFUL</p>
-          <p class="corp-footer__tagline">建設 × プラットフォーム × AI — 依頼から解決まで</p>
+<footer class="modern-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-main">
+      <div class="footer-brand">
+        <h2 class="footer-logo">TASFUL</h2>
+        <div class="company-info">
+          <p class="name">IWASHO合同会社</p>
+          <p class="desc">事業内容：建設関連工事・美装・防蟻・業務委託調整</p>
         </div>
-        <nav class="corp-footer__nav" aria-label="フッターナビ">
-          <a class="corp-footer__link" href="/company/services.html">サービス</a>
-          <a class="corp-footer__link" href="/company/vision.html">ビジョン</a>
-          <a class="corp-footer__link" href="/company/about.html">会社概要</a>
-          <a class="corp-footer__link" href="/company/faq.html">FAQ</a>
-          <a class="corp-footer__link" href="/company/contact.html">お問い合わせ</a>
-        </nav>
-        <nav class="corp-footer__legal" aria-label="法務">
-          <a class="corp-footer__legal-link" href="/company/legal/terms.html">利用規約</a>
-          <a class="corp-footer__legal-link" href="/company/legal/privacy.html">プライバシーポリシー</a>
-          <a class="corp-footer__legal-link" href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
-        </nav>
-        <p class="corp-footer__copy">&copy; 2026 TASFUL</p>
       </div>
-    </footer>
+
+      <div class="footer-nav">
+        <div class="link-col link-col--company">
+          <h4>企業情報</h4>
+          <div class="link-list">
+            <a href="/company/about.html">会社概要</a>
+            <a href="/iwasho/team.html">チーム紹介</a>
+            <a href="/iwasho/partners.html">協力パートナー</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--services">
+          <h4>サービス</h4>
+          <div class="link-list">
+            <a href="/company/services.html" class="footer-link--sp-only">サービス一覧</a>
+            <a href="/iwasho/services.html">建設・サービス業</a>
+            <a href="/service">プラットフォーム</a>
+            <a href="/gen-ai-workspace.html">TASFUL AI</a>
+            <a href="/talk-home.html">TASFUL TALK</a>
+            <a href="/builder/">TASFUL BUILDER</a>
+            <a href="#">TASFUL SOUND</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--forms">
+          <h4>各種フォーム</h4>
+          <div class="link-list">
+            <a href="/iwasho/contact.html">お問い合わせ</a>
+            <a href="/company/contact.html">協力パートナー登録</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--legal-sp footer-link--sp-only">
+          <h4>規約・ポリシー</h4>
+          <div class="link-list">
+            <a href="/company/legal/terms.html">利用規約</a>
+            <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+            <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="note">※ IWASHOは美装・防蟻、TASFULは建設業務委託・調整ユニットとして運営しています。</p>
+      <div class="link-list footer-bottom-legal footer-link--pc-only">
+        <a href="/company/legal/terms.html">利用規約</a>
+        <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+        <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+      </div>
+      <p class="copy">&copy; 2026 IWASHO合同会社 All Rights Reserved.</p>
+    </div>
+
+  </div>
+</footer>
+<script src="/tas-hp-header-menu.js" defer></script>
+
 </body>
 </html>

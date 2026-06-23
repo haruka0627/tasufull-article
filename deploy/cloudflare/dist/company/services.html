@@ -5,83 +5,470 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>サービス | TASFUL</title>
   <meta name="description" content="TASFUL サービス — プラットフォームと AI" />
-  <link rel="stylesheet" href="/corp-layout.css" />
-  <link rel="stylesheet" href="/corp-header.css" />
-  <link rel="stylesheet" href="/corp-footer.css" />
+  <link rel="stylesheet" href="/tas-top-page.css" />
+  <link rel="stylesheet" href="/corp-company-hp.css" />
 </head>
-<body class="corp-body" data-corp="tasful">
-  <header class="corp-header">
-      <div class="corp-container corp-header__inner">
-        <a class="corp-header__brand" href="/company/index.html">
-          <img class="corp-header__logo" src="/images/corp/tasful/1.png" alt="" width="40" height="40" />
-          <span class="corp-header__brand-main">TASFUL</span>
-          <span class="corp-header__brand-sub">Corporate</span>
-        </a>
-        <details class="corp-nav">
-          <summary class="corp-nav__toggle" aria-label="メニューを開く">
-            <span class="corp-nav__toggle-icon" aria-hidden="true"></span>
-          </summary>
-          <ul class="corp-nav__list">
-            <li><a class="corp-nav__link" href="/company/index.html">ホーム</a></li>
-            <li><a class="corp-nav__link" href="/company/services.html" aria-current="page">サービス</a></li>
-            <li><a class="corp-nav__link" href="/company/vision.html">ビジョン</a></li>
-            <li><a class="corp-nav__link" href="/company/about.html">会社概要</a></li>
-            <li><a class="corp-nav__link" href="/company/faq.html">FAQ</a></li>
-            <li><a class="corp-nav__link" href="/company/contact.html">お問い合わせ</a></li>
-          </ul>
-        </details>
+<body class="corp-body corp-body--tasful-hp" data-corp="tasful">
+  <header class="custom-header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="logo-image-wrap">
+          <span class="logo-globe">
+            <img src="/images/tasful/tasful-globe-logo.png" alt="TASFUL ロゴ" class="logo-image">
+          </span>
+        </span>
+        <div class="logo">
+          TASFUL
+        </div>
       </div>
-    </header>
-  <main class="corp-main">
-    <section class="corp-section">
-      <div class="corp-container corp-container--wide corp-biz-page">
-<div class="corp-biz-head"><span class="corp-biz-head__bar" aria-hidden="true"></span><h2 class="corp-biz-head__title">TASFUL プラットフォーム</h2></div><div class="corp-biz-card">
-          <div class="corp-biz-label corp-biz-label--blue">PLATFORM</div>
-          <h3 class="corp-biz-card__title">誰でもすぐ使えるシンプルなマッチング</h3>
-          <p class="corp-biz-card__lead">TASFULは「今すぐ」「簡単に」を重視したプラットフォームです。LINEベースの導線により、複雑な操作なしで依頼や応募が可能です。</p>
-          <div class="corp-biz-feature-grid">
-            <div class="corp-biz-feature"><strong class="corp-biz-feature__title">依頼掲載</strong><p class="corp-biz-feature__text">困りごとをすぐ投稿</p></div>
-            <div class="corp-biz-feature"><strong class="corp-biz-feature__title">求人募集</strong><p class="corp-biz-feature__text">人手不足を解決</p></div>
-            <div class="corp-biz-feature"><strong class="corp-biz-feature__title">スキル販売</strong><p class="corp-biz-feature__text">個人・事業者の収益化</p></div>
-            <div class="corp-biz-feature"><strong class="corp-biz-feature__title">LINE完結</strong><p class="corp-biz-feature__text">登録・連絡・通知すべてLINE</p></div>
+      <nav class="tas-hp-header__nav" aria-label="メインナビ">
+        <a href="/company/">ホーム</a>
+        <a href="/company/services.html" aria-current="page">サービス一覧</a>
+        <a href="/company/contact.html">協力パートナー</a>
+        <a href="/iwasho/team.html">チーム紹介</a>
+        <a href="/company/about.html">会社概要</a>
+        <a href="/company/faq.html">Q&A</a>
+      </nav>
+      <a class="tas-hp-header__line-btn" href="/service" aria-label="TASFUL PLATFORM"><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--full">TASFUL PLATFORM</span><span class="tas-hp-header__line-btn-label tas-hp-header__line-btn-label--short" aria-hidden="true">PLATFORM</span></a>
+      <button type="button" class="tas-hp-header__menu-btn" aria-label="メニューを開く" aria-expanded="false" aria-controls="tas-hp-mobile-nav"><span class="tas-hp-header__menu-btn-icon" aria-hidden="true">☰</span></button>
+    </div>
+    <div class="tas-hp-header__mobile-panel" id="tas-hp-mobile-nav" aria-hidden="true">
+      <button type="button" class="tas-hp-header__mobile-backdrop" data-tas-hp-menu-close aria-label="メニューを閉じる"></button>
+      <div class="tas-hp-header__mobile-drawer">
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--primary" aria-label="メインナビ">
+          <a href="/company/">ホーム</a>
+          <a href="/iwasho/services.html">建設・サービス業</a>
+          <a href="/company/contact.html">協力パートナー</a>
+          <a href="/iwasho/team.html">チーム紹介</a>
+          <a href="/company/about.html">会社概要</a>
+          <a href="/company/faq.html">Q&A</a>
+        </nav>
+        <nav class="tas-hp-header__mobile-nav tas-hp-header__mobile-nav--legal" aria-label="法的情報">
+          <p class="tas-hp-header__mobile-nav-label">法的情報</p>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/company/legal/tokushoho.html">特定商取引法</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+<main class="corp-main">
+
+<div class="service-hero">
+
+  <div class="service-bg"></div>
+
+  <div class="service-content">
+    <h1>サービス紹介</h1>
+
+    <p class="sub">
+      今すぐ依頼できる・人が見つかる・すぐ動くプラットフォーム
+    </p>
+
+    <a href="/service" target="_top" class="service-btn">
+      サービスを見る →
+    </a>
+  </div>
+
+</div>
+
+<style>
+.service-hero{
+  position:relative;
+  width:100%;
+  /* ★修正：高さを大きく設定（420px → 550px） */
+  height: 550px; 
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #010409;
+}
+
+/* 背景：画像を入れ切るための調整 */
+.service-bg{
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background-image:url('https://static.wixstatic.com/media/a911fb_06bcd3e948404e70b78d28f19972e0c6~mv2.png');
+  /* ★修正：containではなくcoverを維持しつつ、上下が切れにくいように調整 */
+  background-size: cover;
+  background-position: center 30%; /* 少し上寄りに配置して重要な部分を見せる */
+  filter: none;
+  z-index: 1;
+}
+
+/* 中身 */
+.service-content{
+  position:relative;
+  z-index:3;
+  color:#fff;
+  max-width:900px;
+  padding:0 20px;
+}
+
+/* タイトル：発光強化 */
+.service-content h1{
+  font-size: clamp(32px, 5vw, 52px); /* レスポンシブにサイズ変化 */
+  font-weight: 800;
+  margin:0 0 20px;
+  letter-spacing:0.15em;
+  text-shadow: 
+    0 0 15px rgba(255,255,255,1),
+    0 0 30px rgba(59,130,246,0.8),
+    0 0 50px rgba(59,130,246,0.5);
+}
+
+/* サブテキスト */
+.service-content .sub{
+  font-size: clamp(16px, 2vw, 22px);
+  opacity:1;
+  margin:0 0 40px;
+  line-height:1.7;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  text-shadow: 
+    0 0 10px rgba(255,255,255,0.8),
+    0 2px 10px rgba(0,0,0,1);
+}
+
+/* ボタン：さらに強調 */
+.service-btn{
+  display:inline-block;
+  padding:18px 45px;
+  border:2px solid #3b82f6;
+  color:#fff;
+  text-decoration:none;
+  font-weight:900;
+  border-radius:10px;
+  letter-spacing: 0.2em;
+  transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  background: rgba(1, 4, 9, 0.6);
+  box-shadow: 0 0 20px rgba(59,130,246,0.4);
+  backdrop-filter: blur(8px);
+}
+
+.service-btn:hover{
+  background:#3b82f6;
+  color:#fff;
+  box-shadow:0 0 50px rgba(59,130,246,1);
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* スマホ対応 */
+@media(max-width:767px){
+  .service-hero{
+    /* スマホ時も少し高めに設定（320px → 400px） */
+    height: 400px; 
+  }
+
+  .service-content h1{
+    font-size: 28px;
+  }
+
+  .service-content .sub{
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+}
+</style>
+
+<div id="company-services-cyber">
+<div class="cyber-max-layout-extreme">
+  <div class="global-cyber-grid-bed"></div>
+
+  <div class="cyber-main-container-extreme">
+
+    <div class="cyber-ultra-wide-card-extreme neon-blue">
+      <div class="visual-side-extreme">
+        <div class="device-composition-extreme">
+          <div class="pc-wrap">
+            <img src="https://static.wixstatic.com/media/a911fb_c7b9cefa40084ca8855637c17a5ad733~mv2.png" alt="PC" class="img-pc-extreme">
+          </div>
+          <div class="phone-wrap-extreme">
+            <img src="https://static.wixstatic.com/media/a911fb_0ddb8d91b76f4acc9ed833835e932384~mv2.png" alt="Phone" class="img-phone-extreme">
           </div>
         </div>
       </div>
-    </section>
-    <section class="corp-section">
-      <div class="corp-container corp-container--wide corp-biz-page">
-<div class="corp-biz-head"><span class="corp-biz-head__bar" aria-hidden="true"></span><h2 class="corp-biz-head__title">タスフルAI</h2></div><div class="corp-biz-card">
-          <div class="corp-biz-label corp-biz-label--green">AI SERVICE</div>
-          <h3 class="corp-biz-card__title">相談・整理・生成をサポートするAI</h3>
-          <p class="corp-biz-card__lead">タスフルAIは、依頼内容の整理や相場の把握、文章生成などを通じて、利用者の判断をサポートするAI機能です。</p>
-          <div class="corp-biz-ai-grid">
-            <div class="corp-biz-ai"><h4 class="corp-biz-ai__title">無料AI</h4><p class="corp-biz-ai__text">相談・相場確認</p></div>
-            <div class="corp-biz-ai"><h4 class="corp-biz-ai__title">有料AI</h4><p class="corp-biz-ai__text">生成・業務効率化</p></div>
+      <div class="content-side-extreme">
+        <h2 class="cyber-title-extreme">TASFUL PLATFORM</h2>
+        <p class="lead-text-extreme">人・サービス・商品をつなぐ<br>総合プラットフォーム</p>
+        <div class="detail-texts-extreme">
+          <p>ワーカー探し、業務サービス、マーケット、<br>スキル出品、案件掲載、求人募集などを<br>まとめて利用できます。</p>
+          <p>個人・法人を問わず、<br>必要な人材・サービス・商品を探したり、<br>仕事やサービスを掲載することができます。</p>
+          <p>TASFUL AIやTASFUL TALKとも連携し、<br>やり取りや情報整理もスムーズに行えます。</p>
+        </div>
+        <div class="button-row-extreme">
+          <a href="/service" class="btn-neon-extreme b-blue">サービスを見る</a>
+          <a href="/service" class="btn-neon-extreme b-blue outline">詳細を見る</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cyber-ultra-wide-card-extreme neon-blue">
+      <div class="visual-side-extreme">
+        <div class="device-composition-extreme">
+          <div class="pc-wrap">
+            <img src="https://static.wixstatic.com/media/a911fb_c7b9cefa40084ca8855637c17a5ad733~mv2.png" alt="PC" class="img-pc-extreme">
+          </div>
+          <div class="phone-wrap-extreme">
+            <img src="https://static.wixstatic.com/media/a911fb_0ddb8d91b76f4acc9ed833835e932384~mv2.png" alt="Phone" class="img-phone-extreme">
           </div>
         </div>
       </div>
-    </section>
+      <div class="content-side-extreme">
+        <h2 class="cyber-title-extreme">TASFUL AI</h2>
+        <p class="lead-text-extreme">AIアシスタント・業務支援サービス</p>
+        <div class="detail-texts-extreme">
+          <p>文章作成、調べ物、翻訳、画像生成など、<br>さまざまなAI機能を利用できます。</p>
+          <p>AIアシスタントやAI運営秘書が、<br>情報整理や業務サポートを行い、<br>日常業務から運営管理まで幅広く活用できます。</p>
+          <p>必要な情報や提案を素早く提供し、<br>業務効率化をサポートします。</p>
+        </div>
+        <div class="button-row-extreme">
+          <a href="/gen-ai-workspace.html" class="btn-neon-extreme b-blue">サービスを見る</a>
+          <a href="/gen-ai-workspace.html" class="btn-neon-extreme b-blue outline">詳細を見る</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cyber-ultra-wide-card-extreme neon-blue">
+      <div class="visual-side-extreme">
+        <div class="device-composition-extreme">
+          <div class="pc-wrap">
+            <img src="https://static.wixstatic.com/media/a911fb_c7b9cefa40084ca8855637c17a5ad733~mv2.png" alt="PC" class="img-pc-extreme">
+          </div>
+          <div class="phone-wrap-extreme">
+            <img src="https://static.wixstatic.com/media/a911fb_0ddb8d91b76f4acc9ed833835e932384~mv2.png" alt="Phone" class="img-phone-extreme">
+          </div>
+        </div>
+      </div>
+      <div class="content-side-extreme">
+        <h2 class="cyber-title-extreme">TASFUL TALK</h2>
+        <p class="lead-text-extreme">コミュニケーションサービス</p>
+        <div class="detail-texts-extreme">
+          <p>メッセージ、通知、相談、通話など、<br>利用者同士のやり取りをまとめて利用できます。</p>
+          <p>案件連絡やサービス相談をスムーズにつなぎ、<br>必要な情報を分かりやすく管理できます。</p>
+          <p>安否確認や各種通知にも対応し、<br>仕事から日常まで幅広く活用できます。</p>
+        </div>
+        <div class="button-row-extreme">
+          <a href="/talk-home.html" class="btn-neon-extreme b-blue">サービスを見る</a>
+          <a href="/talk-home.html" class="btn-neon-extreme b-blue outline">詳細を見る</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cyber-ultra-wide-card-extreme neon-blue">
+      <div class="visual-side-extreme">
+        <div class="device-composition-extreme">
+          <div class="pc-wrap">
+            <img src="https://static.wixstatic.com/media/a911fb_c7b9cefa40084ca8855637c17a5ad733~mv2.png" alt="PC" class="img-pc-extreme">
+          </div>
+          <div class="phone-wrap-extreme">
+            <img src="https://static.wixstatic.com/media/a911fb_0ddb8d91b76f4acc9ed833835e932384~mv2.png" alt="Phone" class="img-phone-extreme">
+          </div>
+        </div>
+      </div>
+      <div class="content-side-extreme">
+        <h2 class="cyber-title-extreme">TASFUL BUILDER</h2>
+        <p class="lead-text-extreme">パートナー連携・業務管理サービス</p>
+        <div class="detail-texts-extreme">
+          <p>協力パートナーとのやり取りや、<br>案件管理をサポートするサービスです。</p>
+          <p>案件共有、専用チャット、通知、カレンダー連携、<br>請求書管理や完了報告などを一つにまとめて利用できます。</p>
+          <p>一般利用者も案件掲載や依頼ができ、<br>業者登録を行うことで仕事の受注機会を広げることができます。</p>
+          <p>各種ツールやTASFUL AIとも連携し、<br>業務効率化や情報共有をサポートします。</p>
+        </div>
+        <div class="button-row-extreme">
+          <a href="/builder/" class="btn-neon-extreme b-blue">サービスを見る</a>
+          <a href="/builder/" class="btn-neon-extreme b-blue outline">詳細を見る</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cyber-ultra-wide-card-extreme neon-blue">
+      <div class="visual-side-extreme">
+        <div class="device-composition-extreme">
+          <div class="pc-wrap">
+            <img src="https://static.wixstatic.com/media/a911fb_c7b9cefa40084ca8855637c17a5ad733~mv2.png" alt="PC" class="img-pc-extreme">
+          </div>
+          <div class="phone-wrap-extreme">
+            <img src="https://static.wixstatic.com/media/a911fb_0ddb8d91b76f4acc9ed833835e932384~mv2.png" alt="Phone" class="img-phone-extreme">
+          </div>
+        </div>
+      </div>
+      <div class="content-side-extreme">
+        <h2 class="cyber-title-extreme">TASFUL SOUND</h2>
+        <p class="lead-text-extreme">音楽・BGM・サウンドサービス</p>
+        <div class="detail-texts-extreme">
+          <p>音楽、BGM、効果音など、<br>さまざまなサウンドコンテンツを利用できます。</p>
+          <p>店舗やサービス向けの音楽制作をはじめ、<br>用途に合わせたサウンドを提供します。</p>
+          <p>今後は占いや音声コンテンツなど、<br>新しいサービスにも対応予定です。</p>
+        </div>
+        <div class="button-row-extreme">
+          <a href="#" class="btn-neon-extreme b-blue">サービスを見る</a>
+          <a href="#" class="btn-neon-extreme b-blue outline">詳細を見る</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<style>
+/* ===============================
+全体（弩級サイズ）
+=============================== */
+#company-services-cyber {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+#company-services-cyber .cyber-max-layout-extreme,
+#company-services-cyber .cyber-max-layout-extreme * {
+  box-sizing: border-box;
+}
+
+#company-services-cyber .cyber-max-layout-extreme * {
+  margin: 0;
+  padding: 0;
+}
+
+#company-services-cyber .cyber-max-layout-extreme {
+  width: 100%; background: #010409; color: #fff;
+  font-family: 'Hiragino Sans', 'Meiryo', sans-serif; position: relative; overflow: hidden;
+  padding: 100px 0;
+}
+
+/* 背景グリッド床 */
+#company-services-cyber .global-cyber-grid-bed, #company-services-cyber .global-neon-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(0, 255, 255, 0.08) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(0, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px; transform: perspective(1000px) rotateX(60deg) translateY(20%);
+  mask-image: linear-gradient(to bottom, black, transparent); opacity: 0.5; pointer-events: none;
+}
+
+/* 弩級コンテナ (1900px) */
+#company-services-cyber .cyber-main-container-extreme { 
+  width: 100%; max-width: 1900px; margin: 0 auto; padding: 0 40px; 
+  display: flex; flex-direction: column; gap: 120px; /* カード間の間隔 */
+  position: relative; z-index: 10; 
+}
+
+/* ===============================
+サービス大型カード（統一デザイン）
+=============================== */
+#company-services-cyber .cyber-ultra-wide-card-extreme {
+  display: flex; align-items: center;
+  background: rgba(255, 255, 255, 0.015);
+  backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 30px; padding: 120px 120px;
+  box-shadow: 0 0 80px rgba(0, 0, 0, 0.9), inset 0 0 40px rgba(0, 255, 255, 0.05);
+  gap: 120px;
+}
+
+#company-services-cyber .visual-side-extreme { flex: 1.3; display: flex; justify-content: center; position: relative; }
+#company-services-cyber .device-composition-extreme { position: relative; width: 100%; max-width: 650px; }
+#company-services-cyber .img-pc-extreme { width: 100%; height: auto; filter: drop-shadow(0 0 30px rgba(0, 255, 255, 0.4)); }
+
+#company-services-cyber .phone-wrap-extreme { position: absolute; right: -100px; top: 200px; width: 55%; z-index: 2; }
+#company-services-cyber .img-phone-extreme { width: 100%; height: auto; filter: drop-shadow(0 0 45px rgba(0, 255, 255, 0.8)); }
+
+#company-services-cyber .content-side-extreme { flex: 1; }
+#company-services-cyber .cyber-title-extreme { font-size: 72px; font-weight: 900; margin-bottom: 30px; letter-spacing: 4px; line-height: 1.1; }
+#company-services-cyber .neon-blue .cyber-title-extreme { color: #00ffff; text-shadow: 0 0 20px #00ffff; }
+#company-services-cyber .lead-text-extreme { font-size: 32px; font-weight: 800; line-height: 1.4; margin-bottom: 40px; }
+#company-services-cyber .detail-texts-extreme { font-size: 18px; color: #94a3b8; line-height: 2.0; margin-bottom: 50px; }
+#company-services-cyber .detail-texts-extreme p { margin-bottom: 20px; }
+
+#company-services-cyber .button-row-extreme { display: flex; gap: 30px; }
+#company-services-cyber .btn-neon-extreme { padding: 22px 60px; border-radius: 12px; font-weight: 900; font-size: 20px; text-decoration: none; transition: 0.3s; letter-spacing: 2px; text-align: center; }
+#company-services-cyber .b-blue { background: #00ffff; color: #010409; border: 2px solid #00ffff; }
+#company-services-cyber .b-blue.outline { background: transparent; color: #00ffff; }
+
+/* レスポンシブ */
+@media (max-width: 1100px) {
+  #company-services-cyber .cyber-ultra-wide-card-extreme { flex-direction: column; text-align: center; padding: 60px 40px; }
+  #company-services-cyber .visual-side-extreme { margin-bottom: 150px; }
+  #company-services-cyber .phone-wrap-extreme { width: 45%; top: 150px; right: 0; }
+  #company-services-cyber .button-row-extreme { flex-direction: column; align-items: center; }
+}
+</style>
+
   </main>
-  <footer class="corp-footer">
-      <div class="corp-container corp-footer__inner">
-        <div>
-          <p class="corp-footer__brand">TASFUL</p>
-          <p class="corp-footer__tagline">建設 × プラットフォーム × AI — 依頼から解決まで</p>
+<footer class="modern-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-main">
+      <div class="footer-brand">
+        <h2 class="footer-logo">TASFUL</h2>
+        <div class="company-info">
+          <p class="name">IWASHO合同会社</p>
+          <p class="desc">事業内容：建設関連工事・美装・防蟻・業務委託調整</p>
         </div>
-        <nav class="corp-footer__nav" aria-label="フッターナビ">
-          <a class="corp-footer__link" href="/company/services.html">サービス</a>
-          <a class="corp-footer__link" href="/company/vision.html">ビジョン</a>
-          <a class="corp-footer__link" href="/company/about.html">会社概要</a>
-          <a class="corp-footer__link" href="/company/faq.html">FAQ</a>
-          <a class="corp-footer__link" href="/company/contact.html">お問い合わせ</a>
-        </nav>
-        <nav class="corp-footer__legal" aria-label="法務">
-          <a class="corp-footer__legal-link" href="/company/legal/terms.html">利用規約</a>
-          <a class="corp-footer__legal-link" href="/company/legal/privacy.html">プライバシーポリシー</a>
-          <a class="corp-footer__legal-link" href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
-        </nav>
-        <p class="corp-footer__copy">&copy; 2026 TASFUL</p>
       </div>
-    </footer>
+
+      <div class="footer-nav">
+        <div class="link-col link-col--company">
+          <h4>企業情報</h4>
+          <div class="link-list">
+            <a href="/company/about.html">会社概要</a>
+            <a href="/iwasho/team.html">チーム紹介</a>
+            <a href="/iwasho/partners.html">協力パートナー</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--services">
+          <h4>サービス</h4>
+          <div class="link-list">
+            <a href="/company/services.html" class="footer-link--sp-only">サービス一覧</a>
+            <a href="/iwasho/services.html">建設・サービス業</a>
+            <a href="/service">プラットフォーム</a>
+            <a href="/gen-ai-workspace.html">TASFUL AI</a>
+            <a href="/talk-home.html">TASFUL TALK</a>
+            <a href="/builder/">TASFUL BUILDER</a>
+            <a href="#">TASFUL SOUND</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--forms">
+          <h4>各種フォーム</h4>
+          <div class="link-list">
+            <a href="/iwasho/contact.html">お問い合わせ</a>
+            <a href="/company/contact.html">協力パートナー登録</a>
+          </div>
+        </div>
+
+        <div class="link-col link-col--legal-sp footer-link--sp-only">
+          <h4>規約・ポリシー</h4>
+          <div class="link-list">
+            <a href="/company/legal/terms.html">利用規約</a>
+            <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+            <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="note">※ IWASHOは美装・防蟻、TASFULは建設業務委託・調整ユニットとして運営しています。</p>
+      <div class="link-list footer-bottom-legal footer-link--pc-only">
+        <a href="/company/legal/terms.html">利用規約</a>
+        <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+        <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+      </div>
+      <p class="copy">&copy; 2026 IWASHO合同会社 All Rights Reserved.</p>
+    </div>
+
+  </div>
+</footer>
+<script src="/tas-hp-header-menu.js" defer></script>
+
 </body>
 </html>

@@ -799,6 +799,7 @@
       const tid = String(
         new URLSearchParams(window.location.search).get("thread") ||
           new URLSearchParams(window.location.search).get("roomId") ||
+          new URLSearchParams(window.location.search).get("room") ||
           ""
       ).trim();
       if (!tid && !window.TasuTalkLineRoom?.getActiveThreadId?.()) {
@@ -3591,6 +3592,7 @@
           const threadId = String(
             new URLSearchParams(window.location.search).get("thread") ||
               new URLSearchParams(window.location.search).get("roomId") ||
+              new URLSearchParams(window.location.search).get("room") ||
               ""
           ).trim();
           if (!threadId) resetListScrollPosition("chat");
@@ -6328,6 +6330,7 @@
         ? String(
             new URLSearchParams(window.location.search).get("thread") ||
               new URLSearchParams(window.location.search).get("roomId") ||
+              new URLSearchParams(window.location.search).get("room") ||
               ""
           ).trim()
         : "";

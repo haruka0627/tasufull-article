@@ -1,0 +1,843 @@
+/* ===== IWASHO スマホ最適化（768px以下・PC版は変更しない） ===== */
+
+@media (max-width: 768px) {
+  body.corp-body[data-corp="iwasho"] {
+    overflow-x: hidden;
+  }
+
+  body.corp-body[data-corp="iwasho"] main,
+  .iwasho-home-page {
+    overflow-x: hidden;
+  }
+
+  /* ── 共通パディング・セクション余白 ── */
+  .iwasho-home-page,
+  .iwasho-about-page,
+  .iwasho-services-page,
+  .iwasho-partners-page,
+  .iwasho-team-page,
+  .iwasho-company-page,
+  .iwasho-contact-page {
+    --iw-about-pad: 20px;
+    --iw-svc-pad: 20px;
+    --iw-ptn-pad: 20px;
+    --iw-team-pad: 20px;
+    --iw-co-pad: 20px;
+    --iw-team-section-y: 64px;
+    --iw-ptn-section-gap: 64px;
+    --iw-co-section-y: 64px;
+  }
+
+  /* ── 見出し・本文 ── */
+  .iwasho-home-page h1,
+  .iwasho-about-page h1,
+  .iwasho-services-page h1,
+  .iwasho-partners-page h1,
+  .iwasho-team-page h1,
+  .iwasho-company-page h1,
+  .iwasho-contact-page h1 {
+    font-size: clamp(40px, 10vw, 48px) !important;
+    line-height: 1.15 !important;
+  }
+
+  .iwasho-home-page h2,
+  .iwasho-about-page h2,
+  .iwasho-services-page h2,
+  .iwasho-partners-page h2,
+  .iwasho-team-page h2,
+  .iwasho-company-page h2,
+  .iwasho-contact-page h2,
+  .iw-section-head__title {
+    font-size: clamp(32px, 7vw, 36px) !important;
+    line-height: 1.25 !important;
+  }
+
+  .iwasho-home-page h3,
+  .iwasho-about-page h3,
+  .iwasho-services-page h3,
+  .iwasho-partners-page h3,
+  .iwasho-team-page h3,
+  .iwasho-company-page h3,
+  .iwasho-contact-page h3 {
+    font-size: clamp(24px, 5.5vw, 28px) !important;
+    line-height: 1.35 !important;
+  }
+
+  .iwasho-team-page .iw-team-card__role {
+    font-size: 16px !important;
+    line-height: 1.4 !important;
+  }
+
+  .iwasho-home-page p,
+  .iwasho-about-page p,
+  .iwasho-services-page p,
+  .iwasho-partners-page p,
+  .iwasho-team-page p,
+  .iwasho-company-page p,
+  .iwasho-contact-page p,
+  .iwasho-home-page li,
+  .iwasho-about-page li,
+  .iwasho-services-page li,
+  .iwasho-partners-page li,
+  .iwasho-team-page li,
+  .iwasho-company-page li,
+  .iwasho-contact-page li {
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  /* ── ボタン統一 ── */
+  .iwasho-home-page .iw-btn,
+  .iwasho-home-page .iw-hero__btn,
+  .iwasho-home-page .iw-categories__banner-btn,
+  .iwasho-about-page .iw-btn,
+  .iwasho-services-page .iw-btn,
+  .iwasho-partners-page .iwasho-btn,
+  .iwasho-partners-page .iwasho-cta-btn,
+  .iwasho-partners-page .iw-ptn-btn,
+  .iwasho-team-page .iw-team-cta__btn,
+  .iwasho-company-page .iw-co-cta__btn,
+  .iwasho-contact-page .iw-contact-submit,
+  .iwasho-home-page .section-container .banner-btn,
+  .iwasho-home-page .section-container .card-btn {
+    min-height: 52px !important;
+    height: auto;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    width: 100% !important;
+    max-width: 320px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box;
+  }
+
+  .iwasho-home-page .footer-wrapper .contact-btn {
+    min-height: 52px !important;
+    max-width: 100% !important;
+  }
+
+  .iwasho-partners-page .iwasho-hero__actions,
+  .iwasho-home-page .iw-hero__actions,
+  .iwasho-home-page .section-container .banner-actions,
+  .iwasho-company-page .iw-co-cta__actions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* ── カード ── */
+  .iwasho-home-page .iw-category-card,
+  .iwasho-about-page .iw-about-reason-card,
+  .iwasho-about-page .iw-about-service-card,
+  .iwasho-services-page .iw-svc-card,
+  .iwasho-partners-page .iw-ptn-trades-card,
+  .iwasho-partners-page .iw-ptn-benefit-card,
+  .iwasho-team-page .iw-team-card,
+  .iwasho-company-page .iw-co-table-wrap,
+  .iwasho-contact-page .iw-contact-card {
+    border-radius: 14px !important;
+  }
+
+  .iwasho-home-page .iw-categories__grid,
+  .iwasho-about-page .iw-about-reasons__grid,
+  .iwasho-about-page .iw-about-services__grid,
+  .iwasho-services-page .iw-svc-cards,
+  .iwasho-partners-page .iw-ptn-trades__grid,
+  .iwasho-partners-page .iw-ptn-benefits__grid,
+  .iwasho-team-page .iw-team-cards,
+  .iwasho-team-page .iw-team-initiatives__grid {
+    gap: 16px !important;
+  }
+
+  /* ── 画像 ── */
+  .iwasho-home-page img,
+  .iwasho-about-page img,
+  .iwasho-services-page img,
+  .iwasho-partners-page img,
+  .iwasho-team-page img,
+  .iwasho-company-page img,
+  .iwasho-contact-page img {
+    object-fit: cover;
+    max-width: 100%;
+  }
+
+  /* ── ホーム ── */
+  .iwasho-home-page .iw-categories {
+    padding: 64px 20px !important;
+  }
+
+  .iwasho-home-page .iw-categories__inner {
+    padding-inline: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    align-items: stretch !important;
+  }
+
+  .iwasho-home-page .iw-categories__title {
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  .iwasho-home-page .iw-categories__subtitle {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    line-height: 1.75 !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    margin-bottom: 28px !important;
+  }
+
+  /* 対応カテゴリ「詳しく見る」— 他CTAと同じタップ高さ（font-size 15px 分を padding で補正） */
+  .iwasho-home-page .iw-categories__banner-btn {
+    height: auto !important;
+    min-height: 56px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+  }
+
+  .iwasho-home-page .section-container {
+    padding: 64px 20px !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .iwasho-home-page .section-container .info-card {
+    min-height: 0;
+    padding: 32px 20px;
+  }
+
+  /* ── ホーム：Geminiレビュー最終調整 ── */
+
+  /* 1. パートナー登録カード — 背景画像を確実に表示 */
+  .iwasho-home-page .section-container .card-left-bg {
+    background-color: #eef2f6 !important;
+    background-image: url("/iwasho/images/partner/card-partner-bg.png") !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  /* 2. 一般のお客様へ — タイトル・説明の下に画像、文字は白背景 */
+  .iwasho-home-page .section-container .card-right-bg {
+    background-image: none !important;
+    background-color: #ffffff !important;
+    padding: 28px 20px 24px !important;
+  }
+
+  .iwasho-home-page .section-container .card-right-bg .card-top-content {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  .iwasho-home-page .section-container .card-right-bg .info-card-desc {
+    margin-bottom: 16px !important;
+  }
+
+  .iwasho-home-page .section-container .card-right-bg .feature-row::before {
+    content: "" !important;
+    display: block !important;
+    width: 100%;
+    height: 180px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background-image: url("/iwasho/images/partner/card-customer-bg.png") !important;
+    background-size: cover !important;
+    background-position: right center !important;
+    background-repeat: no-repeat !important;
+  }
+
+  .iwasho-home-page .section-container .card-right-bg .card-btn-area {
+    padding-top: 20px !important;
+  }
+
+  /* 3. ヒーローCTAボタン間隔 */
+  .iwasho-home-page .iw-hero__actions {
+    gap: 18px !important;
+  }
+
+  .iwasho-home-page .iw-hero__btn--primary,
+  .iwasho-home-page .iw-hero__btn--secondary {
+    min-height: 52px !important;
+  }
+
+  /* 4. 施工イメージグリッド余白 */
+  .iwasho-home-page .section-container .gallery-section {
+    padding-top: 32px !important;
+    padding-bottom: 32px !important;
+  }
+
+  .iwasho-home-page .section-container .gallery-subtitle {
+    margin-bottom: 20px !important;
+  }
+
+  .iwasho-home-page .section-container .gallery-grid {
+    gap: 16px !important;
+  }
+
+  .iwasho-home-page .section-container .gallery-item {
+    height: 120px !important;
+    min-height: 120px !important;
+    border-radius: 10px !important;
+    background-size: cover !important;
+    background-position: center center !important;
+  }
+
+  /* 5. フッター余白 */
+  .iwasho-home-page .footer-wrapper {
+    padding: 56px 0 40px !important;
+  }
+
+  .iwasho-home-page .footer-wrapper .footer-inner {
+    gap: 36px !important;
+    margin-bottom: 36px !important;
+  }
+
+  .iwasho-home-page .footer-wrapper .footer-col {
+    margin-bottom: 28px !important;
+  }
+
+  .iwasho-home-page .footer-wrapper .sns-group {
+    margin-top: 20px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .iwasho-home-page .footer-wrapper .company-desc {
+    margin-bottom: 20px !important;
+  }
+
+  .iwasho-home-page .footer-wrapper .copyright {
+    padding-top: 32px !important;
+  }
+
+  /* 6. 強みカード — アイコン上揃え */
+  .iwasho-home-page .iw-hero__feature {
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+
+  .iwasho-home-page .iw-hero__feature-icon {
+    margin-top: 3px !important;
+  }
+
+  /* パートナー/お客様カード — 機能アイコン行 */
+  .iwasho-home-page .section-container .info-twin-cols {
+    gap: 20px !important;
+  }
+
+  .iwasho-home-page .section-container .feature-row {
+    flex-direction: column !important;
+    gap: 20px !important;
+    margin-bottom: 24px !important;
+  }
+
+  .iwasho-home-page .section-container .feature-item {
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+    gap: 14px !important;
+  }
+
+  .iwasho-home-page .section-container .icon-circle {
+    margin-bottom: 0 !important;
+    flex-shrink: 0;
+  }
+
+  .iwasho-home-page .section-container .feature-title {
+    white-space: normal !important;
+  }
+
+  .iwasho-home-page .footer-wrapper .footer-inner,
+  .iwasho-home-page .footer-wrapper .copyright {
+    padding-inline: 20px !important;
+  }
+
+  /* ── 会社概要ヒーロー（テキスト上・画像下） ── */
+  .iwasho-company-page .iwasho-about {
+    padding: 0 20px !important;
+  }
+
+  .iwasho-company-page .iwasho-about__inner {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .iwasho-company-page .iwasho-about__content {
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 32px 20px 24px !important;
+    text-align: left !important;
+  }
+
+  .iwasho-company-page .iwasho-about__title {
+    font-size: clamp(40px, 10vw, 48px) !important;
+    white-space: normal !important;
+    margin-bottom: 20px !important;
+  }
+
+  .iwasho-company-page .iwasho-about__graphic {
+    width: 100% !important;
+    height: 240px !important;
+  }
+
+  .iwasho-company-page .iwasho-about__graphic-wrap::before {
+    width: 100% !important;
+    height: 88px !important;
+    left: 0 !important;
+    top: 0 !important;
+    right: auto !important;
+    bottom: auto !important;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0) 100%
+    ) !important;
+  }
+
+  .iwasho-company-page .iw-co-section {
+    padding-block: 64px !important;
+  }
+
+  .iwasho-company-page .iw-co-inner,
+  .iwasho-company-page .iw-co-cta__card {
+    width: calc(100% - 40px) !important;
+    max-width: none !important;
+    margin-inline: auto;
+  }
+
+  /* 会社概要 — 経営理念カード本文行間（390px） */
+  .iwasho-company-page .iw-co-philosophy-card__desc {
+    line-height: 1.85 !important;
+  }
+
+  /* ── パートナー募集ヒーロー（テキスト上・画像下） ── */
+  .iwasho-partners-page .iwasho-hero {
+    padding: 0 20px 64px !important;
+    min-height: 0 !important;
+  }
+
+  .iwasho-partners-page .iwasho-hero__inner {
+    padding: 0 !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 24px !important;
+    width: 100% !important;
+  }
+
+  .iwasho-partners-page .iwasho-hero__content,
+  .iwasho-partners-page .iwasho-hero__graphic {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .iwasho-partners-page .iwasho-hero__graphic {
+    height: 240px;
+    overflow: hidden;
+    border-radius: 14px;
+  }
+
+  .iwasho-partners-page .iwasho-hero__graphic img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    max-width: none !important;
+    margin: 0 !important;
+    transform: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+  }
+
+  .iwasho-partners-page .iwasho-hero__title {
+    font-size: clamp(40px, 10vw, 48px) !important;
+    white-space: normal !important;
+  }
+
+  .iwasho-partners-page .iw-ptn-section {
+    padding-block: 64px !important;
+  }
+
+  /* パートナー募集 — Geminiレビュー 行間（スマホのみ） */
+  .iwasho-partners-page .iw-ptn-trades-card__desc {
+    line-height: 1.75 !important;
+  }
+
+  .iwasho-partners-page .iw-ptn-trades-card__body {
+    padding-inline: 19px !important;
+  }
+
+  .iwasho-partners-page .iwasho-cta .iwasho-cta__lead {
+    line-height: 1.7 !important;
+  }
+
+  /* ── お問い合わせヒーロー（テキスト上・画像下） ── */
+  .iwasho-contact-page .iw-contact-hero__inner,
+  .iwasho-contact-page .iw-contact-main__inner,
+  .iwasho-contact-page .iw-contact-privacy__inner {
+    width: calc(100% - 40px) !important;
+    max-width: none !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__inner {
+    flex-direction: column !important;
+    height: auto !important;
+    margin: 32px auto 40px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__content {
+    width: 100% !important;
+    padding: 32px 20px 24px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__title {
+    font-size: clamp(40px, 10vw, 48px) !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__graphic {
+    width: 100% !important;
+    height: 240px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-main {
+    padding: 64px 0 !important;
+  }
+
+  .iwasho-contact-page .iw-contact-card {
+    padding: 28px 20px 32px !important;
+  }
+
+  /* ── フォーム ── */
+  .iwasho-contact-page .iw-contact-field {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-input,
+  .iwasho-contact-page .iw-contact-select,
+  .iwasho-contact-page .iw-contact-textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .iwasho-contact-page .iw-contact-form {
+    overflow-x: hidden;
+  }
+
+  .iwasho-contact-page .iw-contact-submit {
+    max-width: 100% !important;
+  }
+
+  /* お問い合わせ — 個人情報リード文行間（390px） */
+  .iwasho-contact-page .iw-contact-privacy__text {
+    line-height: 2 !important;
+  }
+
+  /* ヘッダーハンバーガーはボタン統一ルールから除外 */
+  .iwasho-home-page .iw-site-header__menu-btn {
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* ── 事業内容・対応業務・チーム ── */
+  .iwasho-about-page .iw-about-section,
+  .iwasho-services-page .iw-svc-section,
+  .iwasho-team-page .iw-team-section {
+    padding-block: 64px !important;
+  }
+
+  .iwasho-about-page .iw-about-inner,
+  .iwasho-services-page .iw-svc-inner,
+  .iwasho-team-page .iw-team-inner,
+  .iwasho-partners-page .iw-ptn-inner {
+    padding-inline: 20px !important;
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  .iwasho-team-page .iw-team-hero {
+    padding: 0 !important;
+  }
+
+  .iwasho-team-page .iw-team-hero .iw-team-container {
+    max-width: none !important;
+    padding-inline: 0 !important;
+  }
+
+  .iwasho-team-page .iw-team-hero__grid {
+    padding: 40px 20px 48px !important;
+    gap: 20px !important;
+  }
+
+  .iwasho-team-page .iw-team-hero__content {
+    padding-inline: 0 !important;
+  }
+
+  .iwasho-team-page .iw-team-hero__visual {
+    padding-inline: 0 !important;
+  }
+
+  /* チーム紹介：濃紺CTA帯→フッターのつながり（余白を広げすぎない） */
+  .iwasho-team-page .footer-wrapper {
+    padding-top: 36px !important;
+  }
+
+  /* チーム紹介 — スマホカード（TASFULタイトル被り防止） */
+  .iwasho-team-page .iw-team-card {
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  .iwasho-team-page .iw-team-card__role {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 16px !important;
+  }
+
+  .iwasho-team-page .iw-team-card__portrait {
+    position: relative;
+    z-index: 1;
+    margin-top: 0 !important;
+    height: auto !important;
+    min-height: 96px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+  }
+
+  .iwasho-team-page .iw-team-card__portrait img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    object-fit: cover !important;
+    object-position: center 22% !important;
+  }
+
+  .iwasho-team-page .iw-team-group--tasful .iw-team-card__role {
+    margin-bottom: 20px !important;
+  }
+
+  .iwasho-team-page .iw-team-group--tasful .iw-team-card__portrait img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    clip-path: inset(45% 0 0 0);
+    transform: scale(1.55);
+    transform-origin: center 80%;
+  }
+
+  /* チーム紹介 — 協力会社様との取り組み 説明文行間（390px） */
+  .iwasho-team-page .iw-team-initiative__desc {
+    line-height: 1.85 !important;
+  }
+
+  .iwasho-services-page .iw-svc-hero {
+    padding: 64px 20px !important;
+  }
+
+  /* ── 対応業務ページ 最終調整 ── */
+  /* ヒーロー画像フェード — 白マスクを弱め、建物が自然に見えるよう調整 */
+  .iwasho-services-page .iw-svc-hero__fade {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.08) 84%,
+      rgba(255, 255, 255, 0.28) 93%,
+      rgba(255, 255, 255, 0.62) 100%
+    ) !important;
+  }
+
+  /* Geminiレビュー — 行間（スマホのみ） */
+  .iwasho-services-page .iw-svc-flow__desc {
+    line-height: 1.75 !important;
+  }
+
+  .iwasho-services-page .iw-svc-section-note {
+    line-height: 1.7 !important;
+  }
+
+  /* TASFUL AIボタン — テキストと矢印の間隔（gap のみ） */
+  .iwasho-services-page .iw-svc-wix-alt .app-btn.btn-tasful {
+    gap: 16px !important;
+  }
+
+  .iwasho-services-page .iw-svc-wix-alt .app-btn.btn-tasful span:last-child {
+    margin-left: 0 !important;
+  }
+
+  /* その他工事カード群 → その他の工事もご相談ください セクション間余白 */
+  .iwasho-services-page .iw-about-services {
+    padding-bottom: 56px !important;
+  }
+
+  .iwasho-services-page .iw-svc-wix-alt {
+    padding-top: 32px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .iwasho-services-page .iw-svc-wix-alt .section-container {
+    padding-top: 56px !important;
+    padding-bottom: 20px !important;
+    padding-inline: 20px !important;
+  }
+
+  /* その他工事（wix-alt）→ ご利用の流れ セクション間余白 */
+  .iwasho-services-page .iw-svc-flow {
+    padding-top: 28px !important;
+  }
+
+  .iwasho-about-page .iw-about-hero {
+    padding: 64px 20px !important;
+  }
+
+  /* ── 事業内容ページ 最終調整（CTA・濃紺帯テキスト・フッター） ── */
+  .iwasho-about-page .iw-about-cta__btn {
+    height: auto !important;
+    min-height: 56px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+  }
+
+  .iwasho-about-page .footer-wrapper .contact-btn {
+    min-height: 56px !important;
+    padding-top: 15px !important;
+    padding-bottom: 15px !important;
+  }
+
+  /* 濃紺帯（IWASHOカード・CTA）補足テキスト */
+  .iwasho-about-page .iw-about-wix-business .card-iwasho .biz-desc {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+  }
+
+  .iwasho-about-page .iw-about-wix-business .card-iwasho .feature-text {
+    font-size: 14px !important;
+    line-height: 1.75 !important;
+  }
+
+  .iwasho-about-page .iw-about-cta__lead {
+    font-size: 15px !important;
+    line-height: 1.75 !important;
+  }
+
+  /* フッター余白 */
+  .iwasho-about-page .footer-wrapper {
+    padding-top: 64px !important;
+    padding-bottom: 44px !important;
+  }
+
+  .iwasho-about-page .footer-wrapper .footer-inner {
+    gap: 40px !important;
+    margin-bottom: 40px !important;
+  }
+
+  .iwasho-about-page .footer-wrapper .footer-col {
+    margin-bottom: 32px !important;
+  }
+
+  .iwasho-about-page .footer-wrapper .company-desc {
+    margin-bottom: 24px !important;
+  }
+
+  .iwasho-about-page .footer-wrapper .sns-group {
+    margin-top: 24px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .iwasho-about-page .footer-wrapper .copyright {
+    padding-top: 36px !important;
+  }
+
+  /* TASFUL事業カード — スマホ画像下部見切れ修正 */
+  .iwasho-about-page .iw-about-wix-business .business-card.card-tasful {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .iwasho-about-page .iw-about-wix-business .card-tasful .tasful-img {
+    max-height: none !important;
+    margin-bottom: 0 !important;
+    background-size: contain !important;
+    background-position: center bottom !important;
+    background-repeat: no-repeat !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 縦積み（〜640px） */
+  @media (max-width: 640px) {
+    .iwasho-about-page .iw-about-wix-business .business-card.card-tasful {
+      flex-direction: column !important;
+    }
+
+    .iwasho-about-page .iw-about-wix-business .card-tasful .tasful-body {
+      width: 100% !important;
+    }
+
+    .iwasho-about-page .iw-about-wix-business .card-tasful .tasful-img {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 300px !important;
+      aspect-ratio: 39 / 52 !important;
+      padding: 0 20px 20px !important;
+    }
+  }
+
+  /* 横並びタブレット（641〜768px） */
+  @media (min-width: 641px) and (max-width: 768px) {
+    .iwasho-about-page .iw-about-wix-business .card-tasful .tasful-body {
+      width: 62% !important;
+    }
+
+    .iwasho-about-page .iw-about-wix-business .card-tasful .tasful-img {
+      width: 38% !important;
+      height: auto !important;
+      min-height: 0 !important;
+      aspect-ratio: auto !important;
+      align-self: stretch !important;
+      padding: 12px 10px 16px 4px !important;
+    }
+  }
+
+  /* 選ばれる理由カード本文 */
+  .iwasho-about-page .iw-about-reason-card__desc {
+    line-height: 1.75 !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .iwasho-home-page h1,
+  .iwasho-about-page h1,
+  .iwasho-services-page h1,
+  .iwasho-partners-page h1,
+  .iwasho-team-page h1,
+  .iwasho-company-page h1,
+  .iwasho-contact-page h1 {
+    font-size: 40px !important;
+  }
+
+  .iwasho-contact-page .iw-contact-hero__inner,
+  .iwasho-contact-page .iw-contact-main__inner,
+  .iwasho-contact-page .iw-contact-privacy__inner,
+  .iwasho-company-page .iw-co-inner,
+  .iwasho-company-page .iw-co-cta__card {
+    width: calc(100% - 40px) !important;
+  }
+}

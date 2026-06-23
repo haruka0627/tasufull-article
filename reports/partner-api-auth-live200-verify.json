@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-06-23T00:48:32.452Z",
+  "baseUrl": "http://127.0.0.1:8788",
+  "supabaseProject": "ddojquacsyqesrjhcvmn",
+  "loginEmail": "t***@tasful-dev.test",
+  "checks": {
+    "partnerList200": false,
+    "itemCount3": false,
+    "statsHold1": false,
+    "statsApproved1": false,
+    "statsRejected1": false,
+    "partnerGet200": false,
+    "uiApiMode": true,
+    "uiList3": false,
+    "uiStatsHold1": false,
+    "uiStatsApproved1": false,
+    "consoleError0": true,
+    "jwtPartnerRoleAdmin": false
+  },
+  "api": {
+    "partnerList": {
+      "httpStatus": 401,
+      "itemCount": 0,
+      "total": 0,
+      "stats": {
+        "pending": 0,
+        "hold": 0,
+        "approved": 0,
+        "rejected": 0,
+        "contracted": 0
+      },
+      "message": "Authentication required"
+    },
+    "partnerGet": {
+      "httpStatus": null,
+      "partnerId": null,
+      "skipped": "no list items"
+    }
+  },
+  "ui": {
+    "management": {
+      "mode": "API",
+      "countLabel": "0件",
+      "cardCount": 0,
+      "errorSub": "この操作を行う権限がありません（partner_role: admin / ops / reviewer が必要です）",
+      "stats": {
+        "pending": "0",
+        "hold": "0",
+        "approved": "0",
+        "contracted": "0"
+      }
+    },
+    "partnerListNetwork": []
+  },
+  "consoleErrors": [],
+  "blocked": false,
+  "blockReason": null,
+  "partnerAdminUsers": [],
+  "signInAttempts": [
+    {
+      "email": "t***@tasful-dev.test",
+      "ok": true,
+      "partnerRole": null
+    },
+    {
+      "email": "a***@tasful-dev.test",
+      "ok": true,
+      "partnerRole": null
+    }
+  ],
+  "jwt": {
+    "partnerRole": null,
+    "hasPartnerRoleAdmin": false
+  },
+  "summary": {
+    "allPass": false,
+    "passCount": 2,
+    "totalChecks": 12
+  }
+}

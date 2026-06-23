@@ -1014,8 +1014,12 @@
     const typeActions = {
       job: [
         ["view-job", "求人を見る", listingId ? detailHref("job", listingId) : targetUrl],
-        ["job-applications", "応募管理へ", "chat-list.html"],
-        ["job-chat", "チャットへ", "talk-home.html?tab=chat"],
+        [
+          "job-applications",
+          "応募を見る",
+          listingId ? `${detailHref("job", listingId)}#applications` : targetUrl,
+        ],
+        ["job-chat", "TALKを開く", "talk-home.html?tab=chat"],
       ],
       skill: [
         [

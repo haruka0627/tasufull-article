@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#FFF8FC" />
+  <title>スワイプ | TASFUL MATCH</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="match.css" />
+</head>
+<body class="match-body" data-page="match-swipe" data-match-requires-login="1">
+<div class="match-app match-app--phone">
+    <header class="match-header" aria-label="ヘッダー">
+      <a class="match-brand" href="match-top.html">
+        <span class="match-brand__heart" aria-hidden="true">♥</span>
+        <span class="match-brand__text">
+          <span class="match-brand__main">TASFUL MATCH</span>
+          <span class="match-brand__sub">スワイプ</span>
+        </span>
+      </a>
+      <div class="match-header__actions">
+        <button type="button" class="match-icon-btn" data-match-open-search aria-label="条件検索">🔍</button>
+        <button type="button" class="match-icon-btn" data-match-open-saved-search aria-label="保存した検索">☰</button>
+        <button type="button" class="match-icon-btn match-icon-btn--safety" data-match-open-report aria-label="通報"><span class="match-safety-icon match-safety-icon--lavender" aria-hidden="true">🚨</span></button>
+        <button type="button" class="match-icon-btn match-icon-btn--safety" data-match-open-block aria-label="ブロック"><span class="match-safety-icon" aria-hidden="true">🚫</span></button>
+      </div>
+    </header>
+
+    <div class="match-swipe-stage">
+      <div class="match-swipe-meta">
+        <span>今日のおすすめ</span>
+        <span>1 / 10</span>
+      </div>
+
+      <div class="match-p15-swipe-extra" data-match-p15-section>
+        <span class="match-compat-chip" data-match-compat-score>相性 —%</span>
+        <div class="match-compat-common" data-match-compat-common hidden></div>
+      </div>
+
+      <article class="match-profile-card" aria-label="プロフィールカード" data-match-profile-card>
+        <div class="match-profile-card__photo match-profile-card__photo--empty" aria-hidden="true">
+          <span class="match-profile-card__photo-badge">1 / 10</span>
+          <div class="match-profile-card__photo-placeholder">
+            <span class="match-profile-card__photo-placeholder-icon" aria-hidden="true">🌸</span>
+            <span class="match-profile-card__photo-placeholder-text">写真を登録すると<br />マッチしやすくなります</span>
+          </div>
+        </div>
+        <div class="match-profile-card__body">
+          <h2 class="match-profile-card__name">ゆい <span>26歳</span></h2>
+          <p class="match-profile-card__meta">
+            <span class="match-activity-label" data-match-activity-label>24時間以内に活動</span>
+            · 東京都 · 本人確認済み
+          </p>
+          <div class="match-profile-card__tags">
+            <span class="match-tag">カフェ巡り</span>
+            <span class="match-tag match-tag--lavender">旅行</span>
+            <span class="match-tag">映画</span>
+          </div>
+          <p class="match-profile-card__bio">週末はカフェ巡りが好きです。のんびり話せる方と出会えたら嬉しいです。</p>
+        </div>
+      </article>
+
+      <div class="match-swipe-actions">
+        <button type="button" class="match-btn match-btn--round match-btn--skip" data-match-swipe-action="skip" aria-label="スキップ">
+          ✕
+          <span class="match-btn__label">スキップ</span>
+        </button>
+        <button type="button" class="match-btn match-btn--round match-btn--round-lg match-btn--like" data-match-swipe-action="like" aria-label="いいね">
+          <span class="match-btn__round-icon" aria-hidden="true">♡</span>
+          <span class="match-btn__label">いいね</span>
+        </button>
+        <button type="button" class="match-btn match-btn--round match-btn--favorite" data-match-favorite-toggle data-favorited="0" data-target-user-id="stub-user-yui" aria-label="お気に入り">
+          ⭐
+          <span class="match-btn__label">お気に入り</span>
+        </button>
+        <a class="match-btn match-btn--round match-btn--detail" href="match-safety.html" aria-label="詳細を見る">
+          ☆
+          <span class="match-btn__label">詳細</span>
+        </a>
+      </div>
+
+      <div class="match-empty-state" data-match-swipe-empty hidden>
+        <p>本日のおすすめは以上です。新しいメンバーが増えるまでまたチェックしてみましょう。</p>
+      </div>
+
+      <a class="match-ai-cta match-ai-cta--lavender match-ai-cta--profile" href="match-ai-compatibility-detail.html">プロフィールを見る</a>
+    </div>
+
+    <nav class="match-tabbar" aria-label="メインナビ">
+      <div class="match-tabbar__inner">
+        <a class="match-tabbar__link is-active" href="match-swipe.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💘</span>
+          <span>スワイプ</span>
+        </a>
+        <a class="match-tabbar__link" href="match-list.html">
+          <span class="match-tabbar__icon" aria-hidden="true">💞</span>
+          <span>マッチ</span>
+          <span class="match-tabbar__badge">2</span>
+        </a>
+        <a class="match-tabbar__link" href="match-safety.html">
+          <span class="match-tabbar__icon" aria-hidden="true">🛡️</span>
+          <span>安心</span>
+        </a>
+        <a class="match-tabbar__link" href="match-mypage.html">
+          <span class="match-tabbar__icon" aria-hidden="true">👤</span>
+          <span>マイページ</span>
+        </a>
+      </div>
+    </nav>
+  </div>
+
+  <div class="match-modal-backdrop" data-match-report-modal role="dialog" aria-label="通報">
+    <div class="match-modal">
+      <h3>通報する</h3>
+      <p>不適切なプロフィールや迷惑行為を運営に報告します。</p>
+      <div class="match-modal__actions">
+        <a class="match-btn match-btn--primary match-btn--block" href="match-report.html">通報する</a>
+        <button type="button" class="match-btn match-btn--secondary match-btn--block" data-match-modal-close>キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="match-modal-backdrop" data-match-block-modal role="dialog" aria-label="ブロック">
+    <div class="match-modal">
+      <h3>ブロックしますか？</h3>
+      <p>ゆいさんをブロックすると、お互いに表示されなくなります。</p>
+      <div class="match-modal__actions">
+        <button type="button" class="match-btn match-btn--primary match-btn--block" data-match-block-confirm>ブロックする</button>
+        <button type="button" class="match-btn match-btn--secondary match-btn--block" data-match-modal-close>キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="match-toast" data-match-toast role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+
+  <script src="match-auth.js"></script>
+  <script src="match-data-stub.js"></script>
+  <script src="match-data-render.js"></script>
+  <script src="match-api.js"></script>
+  <script src="match-bootstrap.js"></script>
+  <script src="match-beta-gate.js"></script>
+  <script src="match-login-gate.js"></script>
+  <script src="../ai-workspace-links.js"></script>
+  <script src="match-ai-cta.js"></script>
+  <script src="match-p15-render.js"></script>
+  <script src="match-mock.js"></script>
+  <script src="match-wiring.js"></script>
+  <script src="match-p15-wiring.js"></script>
+  <script src="match-feed-wiring.js"></script>
+</body>
+</html>

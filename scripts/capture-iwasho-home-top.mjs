@@ -17,17 +17,10 @@ const VIEWPORTS = [
   { id: "1280", width: 1280, height: 900 },
 ];
 
+import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
+
 async function findBase() {
-  for (const port of [8788, 5173]) {
-    const base = `http://127.0.0.1:${port}`;
-    try {
-      const res = await fetch(`${base}/iwasho/`, { method: "GET" });
-      if (res.ok) return base;
-    } catch {
-      /* next */
-    }
-  }
-  throw new Error("Serve dist: npx --yes serve deploy/cloudflare/dist -p 8788");
+  return findDevServerBaseUrl({ probePath: "iwasho/index.html" });
 }
 
 const base = await findBase();
@@ -60,7 +53,7 @@ await withPlaywrightBrowser(async (browser) => {
       const audit = await page.evaluate(() => {
         const doc = document.documentElement;
         const header = document.querySelector(".custom-header");
-        const hero = document.querySelector(".iwasho-home-hero");
+        const hero = document.querySelector(".top-hero");
         const footer = document.querySelector(".iwasho-home-footer");
         const headerRect = header?.getBoundingClientRect();
         const heroRect = hero?.getBoundingClientRect();
@@ -79,8 +72,8 @@ await withPlaywrightBrowser(async (browser) => {
           footerVisibleAfterScroll: footerRect ? footerRect.top < window.innerHeight : false,
           bodyOverflow,
           htmlOverflow,
-          hasVideo: !!document.querySelector(".iwasho-home-hero__video"),
-          videoMuted: document.querySelector(".iwasho-home-hero__video")?.muted ?? null,
+          hasVideo: !!document.querySelector(".top-hero .video-background video"),
+          videoMuted: document.querySelector(".top-hero .video-background video")?.muted ?? null,
         };
       });
 
