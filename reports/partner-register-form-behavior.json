@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-06-23T00:53:01.082Z",
+  "checkedAt": "2026-06-23T01:14:05.511Z",
   "base": "http://127.0.0.1:8788",
   "pages": [
     {
@@ -21,13 +21,15 @@
       "invoiceNumberToggle": true,
       "coverageOtherToggle": true,
       "submitLabel": "一次登録を送信",
-      "constructionTradeCount": 11,
-      "tagCount": 18,
-      "hasTagsHeading": true,
-      "radioHasBox": {
-        "border": "0px",
-        "background": "rgba(0, 0, 0, 0)"
-      }
+      "agreeAlign": "flex-start",
+      "fileZoneFullTap": {
+        "inputCoversZone": true,
+        "inputOpacity": "0"
+      },
+      "radioLabelTap": {
+        "checkedAfterTextClick": true
+      },
+      "constructionTradeCount": 11
     },
     {
       "url": "/iwasho/partner-register.html",
@@ -48,13 +50,15 @@
       "invoiceNumberToggle": true,
       "coverageOtherToggle": true,
       "submitLabel": "一次登録を送信",
-      "constructionTradeCount": 11,
-      "tagCount": 18,
-      "hasTagsHeading": true,
-      "radioHasBox": {
-        "border": "0px",
-        "background": "rgba(0, 0, 0, 0)"
-      }
+      "agreeAlign": "flex-start",
+      "fileZoneFullTap": {
+        "inputCoversZone": true,
+        "inputOpacity": "0"
+      },
+      "radioLabelTap": {
+        "checkedAfterTextClick": true
+      },
+      "constructionTradeCount": 11
     }
   ],
   "summary": {

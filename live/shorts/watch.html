@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+  <meta name="theme-color" content="#000000" />
+  <title>ショート視聴 | TASFUL LIVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../common-breadcrumb.css" />
+  <link rel="stylesheet" href="../live.css" />
+</head>
+<body class="live-body live-body--shorts-watch" data-page="live-shorts-watch">
+  <div class="live-shorts-watch" data-live-shorts-watch-root>
+    <p class="live-loading live-shorts-watch__loading">ショートを読み込み中…</p>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../../chat-supabase-config.js"></script>
+  <script src="../../talk-runtime.js" defer></script>
+  <script src="../../auth-current-user.js" defer></script>
+  <script src="../../tasu-supabase-client.js" defer></script>
+  <script src="../../chat-user-identity.js" defer></script>
+  <script src="../live-config.js" defer></script>
+  <script src="../live-notify.js" defer></script>
+  <script src="../live-shorts.js" defer></script>
+  <script src="../live-shorts-watch.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const root = document.querySelector("[data-live-shorts-watch-root]");
+      if (root && window.TasuLiveShortsWatch?.mountShortsWatch) {
+        window.TasuLiveShortsWatch.mountShortsWatch(root);
+      }
+    });
+  </script>
+</body>
+</html>

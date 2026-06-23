@@ -174,7 +174,19 @@
 
       root.innerHTML = `${liveHtml}${otherHtml}`;
     } catch (err) {
-      console.error("[TasuLiveBroadcasts] hub", err);
+      console.warn("[TasuLiveBroadcasts] hub", err);
+      if (cfg.isPublicReadAccessError?.(err)) {
+        root.innerHTML = `
+          <div class="live-empty">
+            <p class="live-empty__title">配信がありません</p>
+            <p class="live-empty__text">現在表示できるライブ配信はありません。</p>
+            <p style="margin-top:16px">
+              <a class="live-btn live-btn--primary" href="create.html">配信を作成</a>
+            </p>
+          </div>
+        `;
+        return;
+      }
       root.innerHTML = `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`;
     }
   }

@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-06-23T01:19:14.408Z",
+  "target": "http://127.0.0.1:8788/builder/partner-management.html",
+  "scenarios": [
+    {
+      "context": "no_auth_clear_storage",
+      "ui": {
+        "mode": "API",
+        "errorText": "ログインしてください",
+        "stats": {
+          "pending": "0",
+          "hold": "0"
+        }
+      },
+      "sessionProbe": {
+        "hasTasuSupabase": true,
+        "hasSupabaseJs": true,
+        "hasPartnerApi": true,
+        "storageKeys": [],
+        "session": {
+          "hasSession": false,
+          "hasAccessToken": false,
+          "userId": null,
+          "email": null,
+          "appMetadataPartnerRole": null,
+          "getSessionError": null
+        },
+        "partnerRole": null,
+        "jwtPartnerRole": null,
+        "rawAuthStorageLength": 0
+      },
+      "partnerListProbe": {
+        "ok": false,
+        "message": "ログインしてください",
+        "code": "not_logged_in",
+        "status": 401
+      },
+      "network": [],
+      "consoleErrors": [],
+      "consoleSample": [
+        "[info] [TasuSupabase] connection config {url: https://ddojquacsyqesrjhcvmn.supabase.co, projectRef: ddojquacsyqesrjhcvmn, anonKeyPrefix: eyJhbGciOiJIUzI1NiIsInR5…, configKeys: Array(4)}",
+        "[info] [TasuSupabase] Supabase Dashboard → Settings → API の Project URL と一致しているか確認: https://ddojquacsyqesrjhcvmn.supabase.co"
+      ]
+    }
+  ],
+  "conclusion": {
+    "uiError": "ログインしてください",
+    "sessionNull": true,
+    "partnerRole": null,
+    "partnerListCalls": [],
+    "consoleErrorCount": 0,
+    "rootCause": "not_logged_in_no_session"
+  }
+}

@@ -39,7 +39,31 @@ async function checkPage(page, url) {
   const coverageOtherVisible = await page.locator("[data-prt-coverage-other]:not([hidden])").count();
 
   const submitLabel = await page.locator(".prt-reg-submit").textContent();
-  const constructionTradeCount = await page.locator(".prt-reg-tags[data-prt-trade-tags] .prt-reg-tag").count();
+  const agreeAlign = await page.evaluate(() => {
+    const row = document.querySelector(".prt-reg-agree .prt-reg-check");
+    return row ? getComputedStyle(row).alignItems : null;
+  });
+
+  const fileZoneFullTap = await page.evaluate(() => {
+    const zone = document.querySelector(".prt-reg-file-zone");
+    const input = zone && zone.querySelector(".prt-reg-file__input");
+    if (!zone || !input) return null;
+    const zr = zone.getBoundingClientRect();
+    const ir = input.getBoundingClientRect();
+    return {
+      inputCoversZone: ir.width >= zr.width - 2 && ir.height >= zr.height - 2,
+      inputOpacity: getComputedStyle(input).opacity,
+    };
+  });
+
+  const radioLabelTap = await page.evaluate(() => {
+    const entity = document.querySelector("#prt-entity_type-sole_proprietor");
+    const label = document.querySelector('label[for="prt-entity_type-sole_proprietor"]');
+    const text = label && label.querySelector(".prt-reg-radio__text");
+    if (!entity || !text) return null;
+    text.click();
+    return { checkedAfterTextClick: entity.checked };
+  });
   const tagCount = await page.locator(".prt-reg-tag").count();
   const hasTagsHeading = (await page.locator(".prt-reg-tags__heading").count()) > 0;
   const radioHasBox = await page.evaluate(() => {
@@ -61,10 +85,10 @@ async function checkPage(page, url) {
     invoiceNumberToggle: invoiceNumberVisible > 0 && invoiceNumberHidden > 0,
     coverageOtherToggle: coverageOtherVisible > 0,
     submitLabel: (submitLabel || "").trim(),
-    constructionTradeCount,
-    tagCount,
-    hasTagsHeading,
-    radioHasBox,
+    agreeAlign,
+    fileZoneFullTap,
+    radioLabelTap,
+    constructionTradeCount: await page.locator(".prt-reg-tags[data-prt-trade-tags] .prt-reg-tag").count(),
   };
 }
 
@@ -88,8 +112,9 @@ async function main() {
         tasful.coverageOtherToggle &&
         tasful.submitLabel === "一次登録を送信" &&
         tasful.constructionTradeCount === 11 &&
-        tasful.hasTagsHeading &&
-        tasful.tagCount === 18,
+        tasful.radioLabelTap?.checkedAfterTextClick &&
+        tasful.agreeAlign === "flex-start" &&
+        tasful.fileZoneFullTap?.inputCoversZone,
     },
   };
 

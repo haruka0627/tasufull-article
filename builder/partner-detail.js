@@ -5,8 +5,38 @@
     pending: "審査待ち",
     hold: "保留",
     approved: "承認",
-    rejected: "否認",
+    rejected: "却下",
     contracted: "契約済み"
+  };
+
+  var ACTION_LABELS = {
+    submit: "申請受付",
+    approve: "承認",
+    reject: "却下",
+    hold: "保留",
+    contract: "契約完了"
+  };
+
+  var REVIEWER_LABELS = {
+    system: "システム",
+    "verify-script": "自動審査",
+    "dev-reviewer": "開発用アカウント"
+  };
+
+  var NOTES_LABELS = {
+    "registration received": "申請を受け付けました"
+  };
+
+  var DOCUMENT_TYPE_LABELS = {
+    insurance_policy: "保険証券",
+    workers_comp_proof: "労災加入証明",
+    license: "許可証・資格証",
+    construction_license: "許可証・資格証",
+    qualification: "許可証・資格証",
+    company_profile: "会社案内",
+    registry: "登記簿謄本",
+    opening_notice: "開業届",
+    other: "その他書類"
   };
 
   var SOURCE_LABELS = { iwasho: "IWASHO", tasful: "TASFUL", builder: "Builder" };
@@ -57,6 +87,61 @@
     return d.toLocaleString("ja-JP");
   }
 
+  function formatReviewDate(iso) {
+    if (!iso) return "—";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return String(iso);
+    return (
+      d.getFullYear() +
+      "/" +
+      String(d.getMonth() + 1).padStart(2, "0") +
+      "/" +
+      String(d.getDate()).padStart(2, "0") +
+      " " +
+      String(d.getHours()).padStart(2, "0") +
+      ":" +
+      String(d.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(d.getSeconds()).padStart(2, "0")
+    );
+  }
+
+  function localizeStatus(status) {
+    var key = String(status || "").trim().toLowerCase();
+    return STATUS_LABELS[key] || status || "—";
+  }
+
+  function localizeAction(action) {
+    var key = String(action || "").trim().toLowerCase();
+    return ACTION_LABELS[key] || localizeStatus(key) || action || "—";
+  }
+
+  function localizeReviewer(reviewerId) {
+    var raw = String(reviewerId || "").trim();
+    if (!raw) return "—";
+    if (REVIEWER_LABELS[raw]) return REVIEWER_LABELS[raw];
+    if (/^ops-/i.test(raw)) return "運営担当者";
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(raw)) {
+      return "運営担当者";
+    }
+    return raw;
+  }
+
+  function localizeNotes(notes) {
+    var raw = String(notes || "").trim();
+    if (!raw) return "";
+    var mapped = NOTES_LABELS[raw.toLowerCase()];
+    return mapped || raw;
+  }
+
+  function formatStatusTransition(rv) {
+    var prev = localizeStatus(rv.previous_status);
+    var next = localizeStatus(rv.new_status);
+    var suffix = rv.reason_code ? "（" + rv.reason_code + "）" : "";
+    if (prev === next) return prev + suffix;
+    return prev + " → " + next + suffix;
+  }
+
   function setActiveTab(name) {
     document.querySelectorAll("[data-prt-detail-tab]").forEach(function (btn) {
       btn.classList.toggle("is-active", btn.getAttribute("data-prt-detail-tab") === name);
@@ -66,31 +151,79 @@
     });
   }
 
+  function renderStatusBadge(status) {
+    var key = String(status || "pending").trim().toLowerCase();
+    var label = STATUS_LABELS[key] || status || "—";
+    return (
+      '<span class="builder-prt-detail-status builder-prt-detail-status--' +
+      escapeHtml(key) +
+      '">' +
+      escapeHtml(label) +
+      "</span>"
+    );
+  }
+
+  function renderKvItem(fieldId, label, valueHtml, opts) {
+    opts = opts || {};
+    var cls = ["builder-prt-kv"];
+    if (opts.accent) cls.push("builder-prt-kv--accent");
+    if (opts.highlight) cls.push("builder-prt-kv--highlight");
+    if (opts.code) cls.push("builder-prt-kv--code");
+    if (opts.company) cls.push("builder-prt-kv--company");
+    return (
+      '<dl class="' +
+      cls.join(" ") +
+      '" data-prt-field="' +
+      escapeHtml(fieldId) +
+      '"><dt>' +
+      escapeHtml(label) +
+      "</dt><dd>" +
+      valueHtml +
+      "</dd></dl>"
+    );
+  }
+
   function renderBasic(profile) {
     var el = document.querySelector("[data-prt-detail-basic]");
     if (!el) return;
-    var rows = [
-      ["申請コード", profile.partner_code],
-      ["流入元", SOURCE_LABELS[profile.source] || profile.source],
-      ["会社名・屋号", profile.company_name],
-      ["代表者", profile.representative_name],
-      ["担当者", profile.contact_name],
-      ["メール", profile.email],
-      ["電話", profile.phone],
-      ["住所", profile.address],
-      ["区分", ENTITY_LABELS[profile.partner_type] || profile.partner_type],
-      ["業種", (profile.business_types || []).join(", ")],
-      ["対応エリア", profile.service_area],
-      ["インボイス", profile.invoice_number || "—"],
-      ["保険", INSURANCE_LABELS[profile.insurance_status] || profile.insurance_status || "—"],
-      ["労災", WORKERS_COMP_LABELS[profile.workers_comp_type] || profile.workers_comp_type || "—"],
-      ["ステータス", STATUS_LABELS[profile.status] || profile.status],
-      ["契約済み", profile.contracted ? "はい" : "いいえ（P1表示のみ）"],
-      ["受付日時", formatDate(profile.created_at)]
-    ];
-    el.innerHTML = rows.map(function (r) {
-      return '<dl class="builder-prt-kv"><dt>' + escapeHtml(r[0]) + '</dt><dd>' + escapeHtml(r[1]) + "</dd></dl>";
-    }).join("");
+    el.innerHTML =
+      renderKvItem("partner_code", "申請コード", escapeHtml(profile.partner_code), { code: true }) +
+      renderKvItem("source", "流入元", escapeHtml(SOURCE_LABELS[profile.source] || profile.source)) +
+      renderKvItem("company_name", "会社名・屋号", escapeHtml(profile.company_name), { accent: true, company: true }) +
+      renderKvItem("representative_name", "代表者", escapeHtml(profile.representative_name)) +
+      renderKvItem("contact_name", "担当者", escapeHtml(profile.contact_name)) +
+      renderKvItem("email", "メール", escapeHtml(profile.email)) +
+      renderKvItem("phone", "電話", escapeHtml(profile.phone)) +
+      renderKvItem("address", "住所", escapeHtml(profile.address)) +
+      renderKvItem("partner_type", "区分", escapeHtml(ENTITY_LABELS[profile.partner_type] || profile.partner_type)) +
+      renderKvItem(
+        "business_types",
+        "業種",
+        escapeHtml((profile.business_types || []).join(", ")),
+        { accent: true, highlight: true }
+      ) +
+      renderKvItem("service_area", "対応エリア", escapeHtml(profile.service_area), { accent: true, highlight: true }) +
+      renderKvItem(
+        "invoice_number",
+        "インボイス",
+        escapeHtml(profile.invoice_number || "—"),
+        { accent: true, highlight: true }
+      ) +
+      renderKvItem(
+        "insurance_status",
+        "保険",
+        escapeHtml(INSURANCE_LABELS[profile.insurance_status] || profile.insurance_status || "—"),
+        { accent: true, highlight: true }
+      ) +
+      renderKvItem(
+        "workers_comp_type",
+        "労災",
+        escapeHtml(WORKERS_COMP_LABELS[profile.workers_comp_type] || profile.workers_comp_type || "—"),
+        { accent: true, highlight: true }
+      ) +
+      renderKvItem("status", "ステータス", renderStatusBadge(profile.status), { accent: true, highlight: true }) +
+      renderKvItem("contracted", "契約済み", escapeHtml(profile.contracted ? "はい" : "いいえ（P1表示のみ）")) +
+      renderKvItem("created_at", "受付日時", escapeHtml(formatDate(profile.created_at)));
   }
 
   function renderReviews(reviews) {
@@ -101,16 +234,50 @@
       return;
     }
     el.innerHTML = reviews.map(function (rv) {
+      var notes = localizeNotes(rv.notes);
       return (
         '<article class="builder-prt-review-item">' +
-        "<p><strong>" + escapeHtml(rv.action) + "</strong> " +
-        escapeHtml(rv.previous_status) + " → " + escapeHtml(rv.new_status) +
-        (rv.reason_code ? " (" + escapeHtml(rv.reason_code) + ")" : "") + "</p>" +
-        "<p>担当: " + escapeHtml(rv.reviewer_id) + " / " + escapeHtml(formatDate(rv.reviewed_at)) + "</p>" +
-        (rv.notes ? "<p>" + escapeHtml(rv.notes) + "</p>" : "") +
+        '<p class="builder-prt-review-item__action"><strong>' + escapeHtml(localizeAction(rv.action)) + "</strong></p>" +
+        '<p class="builder-prt-review-item__transition">' + escapeHtml(formatStatusTransition(rv)) + "</p>" +
+        '<p class="builder-prt-review-item__meta">担当: ' + escapeHtml(localizeReviewer(rv.reviewer_id)) + "</p>" +
+        '<p class="builder-prt-review-item__date">' + escapeHtml(formatReviewDate(rv.reviewed_at)) + "</p>" +
+        (notes ? '<p class="builder-prt-review-item__note">' + escapeHtml(notes) + "</p>" : "") +
         "</article>"
       );
     }).join("");
+  }
+
+  function localizeDocumentType(documentType) {
+    var key = String(documentType || "").trim().toLowerCase();
+    if (DOCUMENT_TYPE_LABELS[key]) return DOCUMENT_TYPE_LABELS[key];
+    if (!key) return "—";
+    return "その他書類";
+  }
+
+  function formatDocumentFileLine(doc) {
+    var url = String(doc.file_url || "").trim();
+    if (/^pending:\/\//i.test(url)) {
+      return "書類提出待ち";
+    }
+    var name = String(doc.file_name || "").trim();
+    if (name && !/\.pending$/i.test(name)) {
+      return name;
+    }
+    if (url && !/^mock:\/\//i.test(url)) {
+      return url;
+    }
+    return "";
+  }
+
+  function renderDocVerifyBadge(verified) {
+    var isVerified = !!verified;
+    return (
+      '<span class="builder-prt-doc-badge builder-prt-doc-badge--' +
+      (isVerified ? "verified" : "unverified") +
+      '">' +
+      escapeHtml(isVerified ? "確認済み" : "未確認") +
+      "</span>"
+    );
   }
 
   function renderDocuments(documents) {
@@ -120,17 +287,26 @@
       el.innerHTML = "<p>提出書類はまだ登録されていません。</p>";
       return;
     }
-    el.innerHTML = documents.map(function (doc) {
-      return (
-        '<div class="builder-prt-doc" data-prt-doc-id="' + escapeHtml(doc.id) + '">' +
-        "<p><strong>" + escapeHtml(doc.document_type) + "</strong></p>" +
-        "<p>" + escapeHtml(doc.file_url) + "</p>" +
-        '<label class="builder-prt-doc-verify">' +
-        '<input type="checkbox" data-prt-doc-verify="' + escapeHtml(doc.id) + '"' +
-        (doc.verified ? " checked" : "") + " /> 確認済み</label>" +
-        "</div>"
-      );
-    }).join("");
+    el.innerHTML = documents
+      .map(function (doc) {
+        var fileLine = formatDocumentFileLine(doc);
+        return (
+          '<article class="builder-prt-doc" data-prt-doc-id="' +
+          escapeHtml(doc.id) +
+          '">' +
+          '<div class="builder-prt-doc__head">' +
+          '<h3 class="builder-prt-doc__type">' +
+          escapeHtml(localizeDocumentType(doc.document_type)) +
+          "</h3>" +
+          renderDocVerifyBadge(doc.verified) +
+          "</div>" +
+          (fileLine
+            ? '<p class="builder-prt-doc__file">' + escapeHtml(fileLine) + "</p>"
+            : "") +
+          "</article>"
+        );
+      })
+      .join("");
   }
 
   function buildReviewForm(profile) {
@@ -213,7 +389,7 @@
         return;
       }
       if (isMockMode()) {
-        showReviewMsg("モックモード: " + action + " を実行しました（DB未更新）", false);
+        showReviewMsg("モックモード: " + localizeAction(action) + " を実行しました（DB未更新）", false);
         return;
       }
       api.partnerReview({

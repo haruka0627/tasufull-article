@@ -134,7 +134,13 @@
     "live/profile.html": "クリエイタープロフィール",
     "live/settings.html": "クリエイター設定",
     "live/shorts.html": "ショートフィード",
+    "live/shorts/watch.html": "ショート視聴",
     "live/short-upload.html": "ショート投稿",
+    "live/videos.html": "動画一覧",
+    "live/my-videos.html": "マイ動画",
+    "live/admin-videos.html": "長尺動画管理",
+    "live/video-upload.html": "長尺動画投稿",
+    "live/watch-video.html": "動画を視聴",
     "live/watch.html": "ライブ視聴",
     "live/create.html": "配信作成",
     "live/studio.html": "配信スタジオ",
@@ -564,6 +570,43 @@
         { label: "LIVE", href: "index.html" },
         { label: "ショートフィード", href: "shorts.html" },
         { label: "ショート投稿" },
+      ],
+    },
+    {
+      paths: ["live/videos.html", "live/watch-video.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "動画一覧", href: "videos.html" },
+      ],
+    },
+    {
+      paths: ["live/admin-videos.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "長尺動画管理" },
+      ],
+    },
+    {
+      paths: ["live/my-videos.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "マイ動画" },
+      ],
+    },
+    {
+      paths: ["live/video-upload.html"],
+      theme: "live",
+      trail: () => [
+        { label: "TASFUL", href: INDEX },
+        { label: "LIVE", href: "index.html" },
+        { label: "マイ動画", href: "my-videos.html" },
+        { label: "長尺動画投稿" },
       ],
     },
     {

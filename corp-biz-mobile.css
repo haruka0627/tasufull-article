@@ -116,7 +116,9 @@
 
   .iwasho-home-page .footer-wrapper .contact-btn {
     min-height: 52px !important;
+    height: auto !important;
     max-width: 100% !important;
+    width: fit-content !important;
   }
 
   .iwasho-partners-page .iwasho-hero__actions,

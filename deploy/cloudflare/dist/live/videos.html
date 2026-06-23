@@ -28,6 +28,7 @@
 
   <div class="tlv-mobile-shell" data-tlv-mobile-shell>
     <div data-tlv-mobile-header-mount></div>
+    <div data-tlv-mobile-chips-mount></div>
     <div data-tlv-mobile-feed-tabs-mount></div>
     <main class="tlv-mobile-content">
       <div data-live-videos-root-mobile>
@@ -47,24 +48,37 @@
   <script src="../chat-user-identity.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
+  <script src="live-shorts.js" defer></script>
   <script src="live-videos.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
       const nav = window.TasuTlvNav;
+      const sidebarApi = window.TasuTlvVideosSidebar;
       const rootDesktop = document.querySelector("[data-live-videos-root-desktop]");
       const rootMobile = document.querySelector("[data-live-videos-root-mobile]");
-      const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
-      const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
       const chipsMount = document.querySelector("[data-tlv-desktop-chips-mount]");
-      const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
+      const mobileChipsMount = document.querySelector("[data-tlv-mobile-chips-mount]");
       const feedTabsMount = document.querySelector("[data-tlv-mobile-feed-tabs-mount]");
       const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
 
-      if (nav) {
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: "videos",
+          headerLayout: "youtube",
+        });
+      } else if (nav) {
+        const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
+        const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
+        const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
         if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("videos");
         if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "動画を探す" });
-        if (chipsMount) chipsMount.innerHTML = nav.renderCategoryChips("");
         if (headerMount) headerMount.innerHTML = nav.renderMobileHeader("VIEW", { showUpload: true });
+      }
+
+      if (nav) {
+        if (chipsMount) chipsMount.innerHTML = nav.renderCategoryChips("");
+        if (mobileChipsMount) mobileChipsMount.innerHTML = nav.renderCategoryChips("");
         if (feedTabsMount) feedTabsMount.innerHTML = nav.renderMobileFeedTabs("recommended");
         if (tabbarMount) tabbarMount.innerHTML = nav.renderMobileTabbar("view");
       }
@@ -72,11 +86,9 @@
       if (rootDesktop && window.TasuLiveVideos?.mountVideosFeed) {
         window.TasuLiveVideos.mountVideosFeed(rootDesktop, {
           roots: [rootDesktop, rootMobile],
-          searchInputs: [
-            document.querySelector("[data-tlv-desktop-search-input]"),
-          ],
-          searchForms: [document.querySelector("[data-tlv-desktop-search-form]")],
-          categoryChips: document.querySelector("[data-tlv-category-chips]"),
+          searchInputs: document.querySelectorAll("[data-tlv-desktop-search-input]"),
+          searchForms: document.querySelectorAll("[data-tlv-desktop-search-form]"),
+          categoryChips: document.querySelectorAll("[data-tlv-category-chips]"),
           feedTabs: document.querySelector("[data-tlv-feed-tabs]"),
         });
       }

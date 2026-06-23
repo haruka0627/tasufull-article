@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
   <style>
     /* 全体リセット */
     * {
@@ -114,19 +116,26 @@
       height: 34px;
       border-radius: 50%;
       background-color: rgba(255, 255, 255, 0.15);
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
+      flex-shrink: 0;
       transition: background-color 0.2s;
+      text-decoration: none;
     }
     .sns-link:hover {
       background-color: rgba(255, 255, 255, 0.3);
     }
 
     .sns-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       width: 16px;
       height: 16px;
-      fill: #ffffff;
+      font-size: 16px;
+      line-height: 1;
+      color: #ffffff;
     }
 
     /* ==========================================
@@ -136,36 +145,50 @@
       display: flex;
       flex-direction: column;
       height: 100%;
+      align-items: center;
     }
 
     .contact-btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       background-color: #ffffff;
       color: #002255;
       font-size: 14px;
       font-weight: 800;
       text-decoration: none;
-      width: 100%;
+      width: fit-content;
       max-width: 240px;
       height: 48px;
+      padding: 0;
       border-radius: 6px;
       margin-top: 16px;
+      margin-inline: auto;
+      align-self: center;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       transition: background-color 0.2s;
+      white-space: nowrap;
     }
     .contact-btn:hover {
       background-color: #f8fafc;
     }
 
+    .contact-btn > span {
+      flex: 0 1 auto;
+      white-space: nowrap;
+    }
+
     .btn-mail-icon {
       width: 18px;
       height: 18px;
+      flex: 0 0 18px;
+      flex-shrink: 0;
       fill: none;
       stroke: #002255;
-      stroke-width: 2.2;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     /* ==========================================
@@ -206,16 +229,16 @@
         </div>
         
         <div class="sns-group">
-          <a href="#" class="sns-link" aria-label="Facebook">
-            <svg class="sns-icon" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-          </a>
-          <a href="#" class="sns-link" aria-label="Instagram">
-            <svg class="sns-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><circle cx="17.5" cy="6.5" r="1"/></svg>
-          </a>
-          <a href="#" class="sns-link" aria-label="X">
-            <svg class="sns-icon" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 3.746 8.502 11.24H16.17l-5.214-6.817L4.99 17.25H1.68l7.73-4.035L1.25 2.25h6.84l4.697 6.21 5.457-6.21zm-1.161 13.02h1.833L7.084 4.126H5.117L17.083 15.27z"/></svg>
-          </a>
-        </div>
+        <a href="#" class="sns-link" aria-label="Facebook">
+          <i class="fa-brands fa-facebook-f sns-icon" aria-hidden="true"></i>
+        </a>
+        <a href="#" class="sns-link" aria-label="Instagram">
+          <i class="fa-brands fa-instagram sns-icon" aria-hidden="true"></i>
+        </a>
+        <a href="#" class="sns-link" aria-label="X">
+          <i class="fa-brands fa-x-twitter sns-icon" aria-hidden="true"></i>
+        </a>
+      </div>
       </div>
 
       <div class="footer-col">

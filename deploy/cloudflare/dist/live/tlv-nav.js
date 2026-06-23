@@ -36,6 +36,10 @@
     { id: "business", label: "ビジネス" },
     { id: "howto", label: "ノウハウ" },
     { id: "entertainment", label: "エンタメ" },
+    { id: "ai", label: "AI" },
+    { id: "music", label: "音楽" },
+    { id: "game", label: "ゲーム" },
+    { id: "live", label: "ライブ" },
   ]);
 
   function esc(s) {
@@ -87,12 +91,14 @@
       </header>`;
   }
 
-  function renderCategoryChips(activeCategory = "") {
+  function renderCategoryChips(activeCategory = "", options = {}) {
+    const scroll = options.scroll !== false;
     const chips = CATEGORY_CHIPS.map((chip) => {
       const active = chip.id === activeCategory ? " is-active" : "";
       return `<button type="button" class="tlv-category-chip${active}" data-tlv-category="${esc(chip.id)}">${esc(chip.label)}</button>`;
     }).join("");
-    return `<div class="tlv-category-chips" data-tlv-category-chips role="tablist" aria-label="カテゴリ">${chips}</div>`;
+    const scrollClass = scroll ? " tlv-category-chips--scroll" : "";
+    return `<div class="tlv-category-chips${scrollClass}" data-tlv-category-chips role="tablist" aria-label="カテゴリ">${chips}</div>`;
   }
 
   function renderMobileTabbar(activeTabId) {
@@ -193,7 +199,8 @@
   }
 
   function bindSearchForms(forms, onSearch) {
-    forms.forEach((form) => {
+    const list = !forms ? [] : forms instanceof Element ? [forms] : [...forms].filter(Boolean);
+    list.forEach((form) => {
       if (!form) return;
       form.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -204,13 +211,24 @@
   }
 
   function bindCategoryChips(container, onSelect) {
-    if (!container) return;
-    container.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-tlv-category]");
-      if (!btn) return;
-      container.querySelectorAll("[data-tlv-category]").forEach((el) => el.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      onSelect(String(btn.getAttribute("data-tlv-category") || ""));
+    const containers = !container
+      ? []
+      : container instanceof Element
+        ? [container]
+        : [...container].filter(Boolean);
+    if (!containers.length) return;
+    containers.forEach((root) => {
+      root.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-tlv-category]");
+        if (!btn) return;
+        const categoryId = String(btn.getAttribute("data-tlv-category") || "");
+        containers.forEach((c) => {
+          c.querySelectorAll("[data-tlv-category]").forEach((el) => {
+            el.classList.toggle("is-active", String(el.getAttribute("data-tlv-category") || "") === categoryId);
+          });
+        });
+        onSelect(categoryId);
+      });
     });
   }
 

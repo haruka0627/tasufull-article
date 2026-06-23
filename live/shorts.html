@@ -3,45 +3,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <meta name="theme-color" content="#0b0814" />
-  <title>ショートフィード | TASFUL LIVE</title>
+  <title>ショート | TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="live.css" />
 </head>
-<body class="live-body" data-page="live-shorts">
-  <div class="live-shell">
-    <header class="live-header live-header--shorts">
-      <a class="live-header__back" href="index.html">← LIVE トップ</a>
-      <div>
-        <h1 class="live-header__title">ショートフィード</h1>
-        <p class="live-header__sub">公開中の縦型ショート動画</p>
-      </div>
-      <a class="live-btn live-btn--primary live-header__action" href="short-upload.html">投稿</a>
-    </header>
-    <nav data-breadcrumb aria-label="パンくず"></nav>
-    <main class="live-main" data-live-shorts-root>
-      <p class="live-loading">読み込み中…</p>
-    </main>
+<body class="live-body tlv-page" data-page="live-shorts" data-tlv-page="shorts">
+  <div class="tlv-desktop-shell" data-tlv-desktop-shell>
+    <div data-tlv-desktop-sidebar-mount></div>
+    <div class="tlv-desktop-main">
+      <div data-tlv-desktop-topbar-mount></div>
+      <main class="tlv-desktop-content">
+        <p class="tlv-shorts-page-intro">ショートを発見 · タップで視聴 · <a href="videos.html">長尺動画一覧</a></p>
+        <div class="tlv-shorts-toolbar" data-tlv-shorts-toolbar data-tlv-shorts-toolbar-desktop hidden></div>
+        <div data-live-shorts-root data-live-shorts-root-desktop>
+          <p class="live-loading">読み込み中…</p>
+        </div>
+      </main>
+    </div>
   </div>
+
+  <div class="tlv-mobile-shell" data-tlv-mobile-shell>
+    <div data-tlv-mobile-header-mount></div>
+    <main class="tlv-mobile-content">
+      <p class="tlv-shorts-page-intro tlv-shorts-page-intro--mobile">ショートを発見 · タップで視聴</p>
+      <div class="tlv-shorts-toolbar" data-tlv-shorts-toolbar data-tlv-shorts-toolbar-mobile hidden></div>
+      <div data-live-shorts-root-mobile>
+        <p class="live-loading">読み込み中…</p>
+      </div>
+    </main>
+    <div data-tlv-mobile-tabbar-mount></div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../chat-supabase-config.js"></script>
+  <script src="tlv-feature-flags.js"></script>
+  <script src="tlv-private-test-gate.js" defer></script>
   <script src="../talk-runtime.js" defer></script>
   <script src="../auth-current-user.js" defer></script>
   <script src="../tasu-supabase-client.js" defer></script>
   <script src="../chat-user-identity.js" defer></script>
-  <script src="../breadcrumb-config.js" defer></script>
-  <script src="../common-breadcrumb.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="live-notify.js" defer></script>
+  <script src="tlv-nav.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
   <script src="live-shorts.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
-      const root = document.querySelector("[data-live-shorts-root]");
-      if (root && window.TasuLiveShorts?.mountShortsFeed) {
-        window.TasuLiveShorts.mountShortsFeed(root);
+      const nav = window.TasuTlvNav;
+      const sidebarApi = window.TasuTlvVideosSidebar;
+      const rootDesktop = document.querySelector("[data-live-shorts-root-desktop]");
+      const rootMobile = document.querySelector("[data-live-shorts-root-mobile]");
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: "shorts",
+          topbarTitle: "ショート",
+          showSearch: false,
+          uploadHref: "short-upload.html",
+          mobileHeaderTitle: "ショート",
+        });
+      } else if (nav) {
+        const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
+        const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
+        if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "ショート", showSearch: false });
+        if (headerMount) headerMount.innerHTML = nav.renderMobileHeader("ショート", { showUpload: true });
+      }
+
+      if (nav) {
+        const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
+        if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("shorts");
+      }
+
+      if (nav && tabbarMount) {
+        tabbarMount.innerHTML = nav.renderMobileTabbar("view");
+      }
+
+      if (rootDesktop && window.TasuLiveShorts?.mountShortsFeed) {
+        window.TasuLiveShorts.mountShortsFeed(rootDesktop, {
+          roots: [rootDesktop, rootMobile],
+          toolbarRoots: [
+            document.querySelector("[data-tlv-shorts-toolbar-desktop]"),
+            document.querySelector("[data-tlv-shorts-toolbar-mobile]"),
+          ],
+        });
       }
     });
   </script>

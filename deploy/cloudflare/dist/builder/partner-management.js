@@ -158,14 +158,30 @@
     });
   }
 
-  function showLoadError(message) {
+  function showLoadError(err) {
+    if (typeof err === "string") err = { message: err };
     var list = document.querySelector("[data-prt-mgmt-tbody]");
-    if (list) {
-      list.innerHTML =
-        '<li class="builder-admin-empty">' +
-        '<p class="builder-admin-empty__title">読み込みエラー</p>' +
-        '<p class="builder-admin-empty__sub">' + escapeHtml(message) + "</p></li>";
+    if (!list) return;
+    var message = formatApiError(err);
+    var hintHtml = "";
+    var code = err && err.code;
+    var status = err && err.status;
+    if (code === "not_logged_in" || status === 401) {
+      var returnPath = "builder/partner-management.html";
+      hintHtml =
+        '<p class="builder-admin-empty__hint">Supabase のセッションが必要です。' +
+        '<a href="../login.html?return=' + encodeURIComponent(returnPath) + '">ログインページへ</a>' +
+        "（partner_role 付与済みの運営アカウント）。localhost ではダッシュボード表示のみでは接続できません。</p>";
+    } else if (code === "forbidden" || status === 403) {
+      hintHtml =
+        '<p class="builder-admin-empty__hint">JWT の app_metadata.partner_role（admin / ops / reviewer）が必要です。付与後に再ログインしてください。</p>';
     }
+    list.innerHTML =
+      '<li class="builder-admin-empty">' +
+      '<p class="builder-admin-empty__title">読み込みエラー</p>' +
+      '<p class="builder-admin-empty__sub">' + escapeHtml(message) + "</p>" +
+      hintHtml +
+      "</li>";
   }
 
   function formatApiError(err) {
@@ -186,7 +202,7 @@
       getRows(q, source, status).then(function (rows) {
         renderTable(rows);
       }).catch(function (err) {
-        showLoadError(formatApiError(err));
+        showLoadError(err);
       });
     }
 
@@ -235,7 +251,7 @@
     }
 
     loadAll().catch(function (err) {
-      showLoadError(formatApiError(err));
+      showLoadError(err);
     });
 
     bindEvents(function (q, source, status) {

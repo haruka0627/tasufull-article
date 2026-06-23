@@ -265,7 +265,7 @@ fieldset.prt-reg-field .prt-reg-field__legend {
 
 .prt-reg-radio--simple {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
   margin: 0;
   padding: 0;
@@ -276,6 +276,12 @@ fieldset.prt-reg-field .prt-reg-field__legend {
   color: #334155;
   cursor: pointer;
   line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.prt-reg-radio-group--stack .prt-reg-radio--simple {
+  display: flex;
+  width: 100%;
 }
 
 .prt-reg-radio__input {
@@ -288,7 +294,8 @@ fieldset.prt-reg-field .prt-reg-field__legend {
 }
 
 .prt-reg-radio__text {
-  display: inline;
+  flex: 1;
+  min-width: 0;
 }
 
 .prt-reg-check {
@@ -377,14 +384,55 @@ fieldset.prt-reg-field .prt-reg-field__legend {
   border-color: #0b3a82;
 }
 
-.prt-reg-file {
+.prt-reg-field__file-label {
   display: block;
+  margin-bottom: 6px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+.prt-reg-file-zone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
+  min-height: 44px;
   padding: 10px;
   border: 1px dashed #cbd5e1;
   border-radius: 8px;
   font-size: 0.875rem;
   background: #f8fafc;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.prt-reg-file__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.prt-reg-file-zone__prompt {
+  position: relative;
+  z-index: 0;
+  color: #475569;
+  pointer-events: none;
+  user-select: none;
+}
+
+@media (max-width: 767px) {
+  .prt-reg-file-zone {
+    min-height: 48px;
+  }
 }
 
 .prt-reg-agree {
@@ -398,7 +446,18 @@ fieldset.prt-reg-field .prt-reg-field__legend {
 }
 
 .prt-reg-agree .prt-reg-check {
+  align-items: flex-start;
+  align-self: stretch;
   font-size: 0.875rem;
+}
+
+.prt-reg-agree .prt-reg-check > span {
+  flex: 1;
+  min-width: 0;
+}
+
+.prt-reg-agree .prt-reg-check input[type="checkbox"] {
+  margin-top: 0.15em;
 }
 
 .prt-reg-agree .prt-reg-check a {
@@ -508,43 +567,10 @@ fieldset.prt-reg-field .prt-reg-field__legend {
   }
 }
 
-/* PC: readable form width (1200px+) — mobile/tablet unchanged */
-@media (min-width: 1200px) {
-  .prt-reg-hero {
-    padding: 48px 40px 40px;
-  }
-
+/* PC (1024px+): widen form card only — mobile/tablet max-width stays 720px */
+@media (min-width: 1024px) {
+  .prt-reg-hero__inner,
   .prt-reg-main__inner {
-    max-width: min(760px, calc(100% - 48px));
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .prt-reg-main {
-    padding: 40px 40px 72px;
-  }
-
-  .prt-reg-section {
-    padding: 28px 32px;
-  }
-
-  .prt-reg-flow {
-    padding: 24px 28px;
-  }
-
-  .prt-reg-textarea {
-    min-height: 120px;
-  }
-
-  .prt-reg-textarea[name="achievements"] {
-    min-height: 148px;
-  }
-
-  .prt-reg-tags {
-    gap: 10px;
-  }
-
-  .prt-reg-radio-group--inline {
-    gap: 10px 24px;
+    max-width: min(1140px, calc(100% - 48px));
   }
 }

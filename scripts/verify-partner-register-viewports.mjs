@@ -61,6 +61,7 @@ async function main() {
       const hasTable = await page.locator("[data-prt-mgmt-table]").count();
 
       let formWidth = null;
+      let layoutMetrics = null;
       let hasFlowGuide = false;
       let hasDocsNote = false;
       let hasTradeTags = false;
@@ -68,6 +69,21 @@ async function main() {
         formWidth = await page.evaluate(() => {
           const inner = document.querySelector(".prt-reg-main__inner");
           return inner ? Math.round(inner.getBoundingClientRect().width) : null;
+        });
+        layoutMetrics = await page.evaluate(() => {
+          const docWidth = document.documentElement.scrollWidth;
+          const viewWidth = window.innerWidth;
+          const inlineRadios = document.querySelector('[data-prt-entity-type]');
+          const inlineCs = inlineRadios ? getComputedStyle(inlineRadios) : null;
+          const tagRow = document.querySelector(".prt-reg-tags");
+          const tagCount = tagRow ? tagRow.querySelectorAll(".prt-reg-tag").length : 0;
+          return {
+            horizontalScroll: docWidth > viewWidth + 1,
+            docWidth,
+            viewWidth,
+            entityTypeFlexDirection: inlineCs ? inlineCs.flexDirection : null,
+            tradeTagCount: tagCount,
+          };
         });
         hasFlowGuide = (await page.locator(".prt-reg-flow").count()) > 0;
         hasDocsNote = (await page.locator(".prt-reg-docs-note").count()) > 0;
@@ -84,6 +100,7 @@ async function main() {
         hasForm: hasForm > 0,
         hasTable: hasTable > 0,
         formInnerWidth: formWidth,
+        layoutMetrics,
         hasFlowGuide,
         hasDocsNote,
         hasTradeTags,
@@ -112,7 +129,9 @@ async function main() {
   console.log(JSON.stringify(report.summary, null, 2));
   for (const r of results) {
     const errFlag = r.consoleErrors.length ? " ERR:" + r.consoleErrors.length : "";
-    console.log(`${r.page}@${r.viewport}: load=${r.loadOk}${errFlag} title=${r.title}`);
+    const w = r.formInnerWidth != null ? ` width=${r.formInnerWidth}` : "";
+    const hs = r.layoutMetrics?.horizontalScroll ? " HSCROLL" : "";
+    console.log(`${r.page}@${r.viewport}: load=${r.loadOk}${errFlag}${w}${hs}`);
   }
   process.exit(report.summary.loadFailures > 0 ? 1 : 0);
 }

@@ -830,6 +830,16 @@
     return Boolean(getClient());
   }
 
+  function isPermissionDeniedError(err) {
+    const msg = String(err?.message || err || "").toLowerCase();
+    const code = String(err?.code || "").toUpperCase();
+    return code === "42501" || msg.includes("permission denied");
+  }
+
+  function isPublicReadAccessError(err) {
+    return isPermissionDeniedError(err);
+  }
+
   async function ensureSupabaseSession() {
     const client = getClient();
     if (!client) return null;
@@ -957,6 +967,8 @@
     probeVideoFileMeta,
     probeLongVideoFileMeta,
     isConfigured,
+    isPermissionDeniedError,
+    isPublicReadAccessError,
     ensureSupabaseSession,
   };
 })(typeof window !== "undefined" ? window : globalThis);

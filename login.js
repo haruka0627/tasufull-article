@@ -212,6 +212,17 @@
     });
   }
 
+  function returnNeedsSupabaseAuth() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const raw = String(params.get("return") || params.get("next") || "").trim();
+      const safe = raw.split("#")[0].split("?")[0].replace(/^\.\//, "");
+      return /partner-management\.html|partner-detail\.html/.test(safe);
+    } catch {
+      return false;
+    }
+  }
+
   renderLastUser();
 
   passwordToggle?.addEventListener("click", () => {
@@ -236,7 +247,7 @@
     });
   });
 
-  if (window.TasuMemberAuth?.DEV_SKIP_AUTH) {
+  if (window.TasuMemberAuth?.DEV_SKIP_AUTH && !returnNeedsSupabaseAuth()) {
     bindDevInstantLogin();
     return;
   }

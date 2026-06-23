@@ -12,6 +12,7 @@
 
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="partner-detail.css" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
 </head>
 <body class="builder-body" data-page="builder-partner-detail">
@@ -34,11 +35,7 @@
           </a>
         </div>
 
-        <div class="builder-header__center">
-          <h1 class="builder-header__title" data-prt-detail-title>協力パートナー詳細</h1>
-          <p class="builder-header__sub">基本情報・審査・書類（P1）</p>
-          <a class="builder-admin-back" href="partner-management.html">協力パートナー一覧へ</a>
-        </div>
+        <div class="builder-header__center builder-prt-detail-header-slot" aria-hidden="true"></div>
 
         <a class="builder-account" href="../dashboard.html" aria-label="TASFUL会員ダッシュボードへ">
           <img class="builder-account__avatar" data-dash-avatar src="https://placehold.co/64x64/fff7ed/c2410c?text=AD" width="40" height="40" alt="" />
@@ -52,7 +49,12 @@
     </header>
 
     <main class="builder-shell builder-main" data-builder-main>
-      <nav data-breadcrumb aria-label="パンくず"></nav>
+      <div class="builder-prt-detail-pagehead">
+        <nav data-breadcrumb aria-label="パンくず"></nav>
+        <h1 class="builder-header__title" data-prt-detail-title>協力パートナー詳細</h1>
+        <p class="builder-header__sub">基本情報・審査・書類（P1）</p>
+        <a class="builder-admin-back" href="partner-management.html">協力パートナー一覧へ</a>
+      </div>
       <p class="builder-prt-loading" data-prt-detail-loading>読み込み中…</p>
 
       <div data-prt-detail-content hidden>

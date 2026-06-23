@@ -1,5 +1,5 @@
 /**
- * TASFUL LIVE — クリエイタープロフィール（Phase 1）
+ * TASFUL LIVE — クリエイターチャンネル / プロフィール（Phase 9）
  */
 (function (global) {
   "use strict";
@@ -83,7 +83,7 @@
     return (data || []).reduce((sum, row) => sum + Number(row.amount_yen || 0), 0);
   }
 
-  function renderProfileCard(profile, userId, tipsTotalYen) {
+  function renderChannelHeader(profile, userId, stats, { isOwn = false } = {}) {
     const cfg = C();
     const name = cfg.resolveDisplayName(userId);
     const avatar = cfg.resolveAvatarUrl(userId);
@@ -91,39 +91,60 @@
       ? cfg.escapeHtml(profile.bio).replace(/\n/g, "<br>")
       : '<span class="live-muted">自己紹介はまだありません</span>';
     const followers = Number(profile?.follower_count ?? 0);
-    const tipsTotal = Number(tipsTotalYen ?? 0);
+    const videoCount = Number(stats?.videoCount ?? 0);
+    const totalViews = Number(stats?.totalViews ?? 0);
 
     return `
-      <article class="live-profile-card">
-        <div class="live-profile-card__banner" aria-hidden="true"></div>
-        <div class="live-profile-card__body">
-          <img class="live-profile-card__avatar" src="${cfg.escapeHtml(avatar)}" width="96" height="96" alt="" />
-          <div class="live-profile-card__head">
-            <h2 class="live-profile-card__name">${cfg.escapeHtml(name)}</h2>
-            <p class="live-profile-card__id">@${cfg.escapeHtml(userId)}</p>
+      <header class="tlv-channel-header" data-tlv-channel-header>
+        <div class="tlv-channel-header__banner" aria-hidden="true"></div>
+        <div class="tlv-channel-header__main">
+          <img class="tlv-channel-header__avatar" src="${cfg.escapeHtml(avatar)}" width="128" height="128" alt="" />
+          <div class="tlv-channel-header__info">
+            <div class="tlv-channel-header__headline">
+              <h2 class="tlv-channel-header__name">${cfg.escapeHtml(name)}</h2>
+              <p class="tlv-channel-header__handle">@${cfg.escapeHtml(userId)}</p>
+            </div>
+            ${profile ? renderStatusBadges(profile) : ""}
+            <p class="tlv-channel-header__bio">${bio}</p>
+            <dl class="tlv-channel-header__stats">
+              <div class="tlv-channel-header__stat">
+                <dt>投稿</dt>
+                <dd data-channel-stat-videos>${videoCount.toLocaleString("ja-JP")}</dd>
+              </div>
+              <div class="tlv-channel-header__stat">
+                <dt>フォロワー</dt>
+                <dd data-live-follower-count>${followers.toLocaleString("ja-JP")}</dd>
+              </div>
+              <div class="tlv-channel-header__stat">
+                <dt>総再生</dt>
+                <dd data-channel-stat-views>${totalViews.toLocaleString("ja-JP")}</dd>
+              </div>
+            </dl>
+            <div class="tlv-channel-header__actions" data-live-profile-actions></div>
           </div>
-          ${profile ? renderStatusBadges(profile) : ""}
-          <p class="live-profile-card__bio">${bio}</p>
-          <dl class="live-stats">
-            <div class="live-stats__item">
-              <dt>フォロワー</dt>
-              <dd data-live-follower-count>${followers.toLocaleString("ja-JP")}</dd>
-            </div>
-            <div class="live-stats__item">
-              <dt>受け取った応援</dt>
-              <dd data-live-tips-total>¥${tipsTotal.toLocaleString("ja-JP")}</dd>
-            </div>
-          </dl>
-          <div class="live-profile-card__actions" data-live-profile-actions></div>
         </div>
-      </article>
+      </header>
+    `;
+  }
+
+  function renderChannelPageShell(profile, userId, stats, { isOwn = false } = {}) {
+    const videosApi = global.TasuLiveVideos;
+    const tabsHtml = videosApi?.renderChannelTabs?.("videos") || "";
+    return `
+      <div class="tlv-channel" data-tlv-channel data-creator-id="${C().escapeHtml(userId)}">
+        ${renderChannelHeader(profile, userId, stats, { isOwn })}
+        ${tabsHtml}
+        <div class="tlv-channel-content" data-tlv-channel-content>
+          <p class="live-loading live-loading--inline">コンテンツを読み込み中…</p>
+        </div>
+      </div>
     `;
   }
 
   function renderEmptyProfile(userId) {
     const cfg = C();
     return `
-      <div class="live-empty">
+      <div class="live-empty live-empty--compact">
         <p class="live-empty__title">プロフィールがまだありません</p>
         <p class="live-empty__text">@${cfg.escapeHtml(userId)} の LIVE プロフィールは未作成です。</p>
       </div>
@@ -156,87 +177,157 @@
     }
   }
 
-  async function mountProfilePage(root) {
+  async function bindProfileActions(root, targetId, isOwn) {
+    const cfg = C();
+    const actions = root.querySelector("[data-live-profile-actions]");
+    if (!actions) return;
+
+    if (isOwn) {
+      actions.insertAdjacentHTML(
+        "afterbegin",
+        '<a class="live-btn live-btn--primary" href="settings.html">プロフィールを編集</a>',
+      );
+      actions.insertAdjacentHTML(
+        "beforeend",
+        `<a class="live-btn live-btn--ghost" href="video-upload.html">動画を投稿</a>`,
+      );
+      actions.insertAdjacentHTML(
+        "beforeend",
+        `<a class="live-btn live-btn--ghost" href="${cfg.creatorDashboardUrl()}">収益・分析</a>`,
+      );
+      actions.insertAdjacentHTML(
+        "beforeend",
+        `<a class="live-btn live-btn--ghost" href="${cfg.tipsUrl()}${cfg.isTalkDevStubMode() ? "?talkDev=1" : ""}">応援履歴</a>`,
+      );
+      return;
+    }
+
+    if (global.TasuLiveFollow?.mountFollowButton) {
+      await global.TasuLiveFollow.mountFollowButton(actions, targetId, root, { channelMode: true });
+    }
+
+    actions.insertAdjacentHTML("beforeend", renderTalkCtaButton());
+    const talkBtn = actions.querySelector("[data-live-talk-cta]");
+    global.TasuLiveTalkBridge?.bindTalkCtaButton?.(talkBtn, targetId);
+
+    actions.insertAdjacentHTML(
+      "beforeend",
+      `<a class="live-btn live-btn--ghost" href="${cfg.tipsUrl()}${cfg.isTalkDevStubMode() ? "?talkDev=1" : ""}">自分の応援履歴</a>`,
+    );
+  }
+
+  function setProfileSubtitleText(text) {
+    global.TasuTlvNav?.setProfileSubtitle?.(text);
+  }
+
+  async function mountChannelTabsOnRoot(root, creatorUserId, isOwn) {
+    const videosApi = global.TasuLiveVideos;
+    if (!videosApi?.bindChannelTabs) return;
+    await videosApi.bindChannelTabs(root, creatorUserId, isOwn);
+  }
+
+  async function mountProfilePage(root, options = {}) {
     const cfg = C();
     const params = new URLSearchParams(global.location?.search || "");
     const viewerId = cfg.getTalkUserId();
     const targetId = String(params.get("userId") || viewerId || "").trim();
 
+    const roots = (options.roots || [root]).filter(Boolean);
+    const writeRoots = (html) => {
+      roots.filter(Boolean).forEach((r) => {
+        r.innerHTML = html;
+      });
+    };
+
     if (!targetId) {
-      root.innerHTML = '<p class="live-error">userId を指定してください。</p>';
+      writeRoots('<p class="live-error">userId を指定してください。</p>');
       return;
     }
 
-    root.innerHTML = '<p class="live-loading">読み込み中…</p>';
+    writeRoots('<p class="live-loading">読み込み中…</p>');
 
     try {
       const profile = await fetchProfile(targetId);
-      let tipsTotalYen = 0;
+      const isOwn = Boolean(viewerId && viewerId === targetId);
+      const videosApi = global.TasuLiveVideos;
+
+      let stats = { videoCount: 0, totalViews: 0 };
       try {
-        tipsTotalYen = await fetchReceivedTipsTotal(targetId);
-      } catch (tipsErr) {
-        console.warn("[TasuLiveProfile] tips total skipped:", tipsErr);
+        if (videosApi?.fetchCreatorChannelStats) {
+          stats = await videosApi.fetchCreatorChannelStats(targetId, { isOwn });
+        }
+      } catch (statsErr) {
+        console.warn("[TasuLiveProfile] channel stats skipped:", statsErr);
       }
-      const isOwn = viewerId && viewerId === targetId;
 
       if (!profile && !isOwn) {
-        root.innerHTML = renderEmptyProfile(targetId);
+        writeRoots(renderChannelPageShell(null, targetId, stats, { isOwn: false }));
+        for (const r of roots) {
+          await bindProfileActions(r, targetId, false);
+          await mountChannelTabsOnRoot(r, targetId, false);
+        }
+        setProfileSubtitleText(`${cfg.resolveDisplayName(targetId)} のチャンネル`);
         return;
       }
 
       if (!profile && isOwn) {
-        root.innerHTML = `
-          ${renderEmptyProfile(targetId)}
-          <p style="margin-top:16px;text-align:center">
+        writeRoots(`
+          ${renderChannelPageShell(null, targetId, stats, { isOwn: true })}
+          <p class="tlv-channel-setup-cta">
             <a class="live-btn live-btn--primary" href="settings.html">プロフィールを作成する</a>
           </p>
-        `;
+        `);
+        for (const r of roots) {
+          await bindProfileActions(r, targetId, true);
+          await mountChannelTabsOnRoot(r, targetId, true);
+        }
+        setProfileSubtitleText("自分のチャンネル");
         return;
       }
 
-      root.innerHTML = renderProfileCard(profile, targetId, tipsTotalYen);
+      writeRoots(renderChannelPageShell(profile, targetId, stats, { isOwn }));
 
-      const actions = root.querySelector("[data-live-profile-actions]");
-      if (actions) {
-        if (!isOwn) {
-          actions.insertAdjacentHTML("beforeend", renderTalkCtaButton());
-          const talkBtn = actions.querySelector("[data-live-talk-cta]");
-          global.TasuLiveTalkBridge?.bindTalkCtaButton?.(talkBtn, targetId);
-        }
-
-        if (isOwn) {
-          actions.insertAdjacentHTML(
-            "afterbegin",
-            '<a class="live-btn live-btn--primary" href="settings.html">プロフィールを編集</a>'
-          );
-          actions.insertAdjacentHTML(
-            "beforeend",
-            `<a class="live-btn live-btn--ghost" href="${cfg.tipsUrl()}${cfg.isTalkDevStubMode() ? "?talkDev=1" : ""}">応援履歴</a>`
-          );
-        } else if (global.TasuLiveFollow?.mountFollowButton) {
-          await global.TasuLiveFollow.mountFollowButton(actions, targetId, root);
-        }
-
-        if (!isOwn) {
-          actions.insertAdjacentHTML(
-            "beforeend",
-            `<a class="live-btn live-btn--ghost" href="${cfg.tipsUrl()}${cfg.isTalkDevStubMode() ? "?talkDev=1" : ""}">自分の応援履歴</a>`
-          );
-        }
+      for (const r of roots) {
+        await bindProfileActions(r, targetId, isOwn);
+        await mountChannelTabsOnRoot(r, targetId, isOwn);
       }
 
-      const sub = global.document.querySelector("[data-live-profile-subtitle]");
-      if (sub) {
-        sub.textContent = isOwn ? "自分の LIVE プロフィール" : `${cfg.resolveDisplayName(targetId)} のプロフィール`;
-      }
+      setProfileSubtitleText(
+        isOwn ? "自分のチャンネル" : `${cfg.resolveDisplayName(targetId)} のチャンネル`,
+      );
     } catch (err) {
       const msg = String(err?.message || err);
       if (msg.includes("未設定")) {
-        root.innerHTML = `<p class="live-error">${cfg.escapeHtml(msg)}</p>`;
+        writeRoots(`<p class="live-error">${cfg.escapeHtml(msg)}</p>`);
       } else {
         console.error("[TasuLiveProfile]", err);
-        root.innerHTML = `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(msg)}</p>`;
+        writeRoots(`<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(msg)}</p>`);
       }
+    }
+  }
+
+  async function mountProfileVideosSection(root, creatorUserId, isOwn) {
+    const videosApi = global.TasuLiveVideos;
+    if (!videosApi?.fetchCreatorChannelVideos || !videosApi?.renderProfileVideosSection) return;
+
+    let host = root.querySelector("[data-tlv-channel-content]") || root.querySelector("[data-live-profile-videos-host]");
+    if (!host) {
+      root.insertAdjacentHTML("beforeend", '<div data-tlv-channel-content></div>');
+      host = root.querySelector("[data-tlv-channel-content]");
+    }
+    if (!host) return;
+
+    host.innerHTML = '<p class="live-loading live-loading--inline">動画を読み込み中…</p>';
+
+    try {
+      const videos = await videosApi.fetchCreatorChannelVideos(creatorUserId, { isOwn });
+      host.innerHTML = videosApi.renderProfileVideosSection(videos, {
+        isOwn,
+        creatorUserId,
+      });
+    } catch (err) {
+      console.warn("[TasuLiveProfile] channel videos skipped:", err);
+      host.innerHTML = `<p class="live-muted">動画一覧の読み込みに失敗しました。</p>`;
     }
   }
 
@@ -346,8 +437,10 @@
     fetchProfile,
     upsertOwnProfile,
     mountProfilePage,
+    mountProfileVideosSection,
     mountSettingsPage,
     renderStatusBadges,
+    renderChannelHeader,
     refreshFollowerCountDisplay,
   };
 })(typeof window !== "undefined" ? window : globalThis);

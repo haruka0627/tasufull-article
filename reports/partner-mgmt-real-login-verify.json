@@ -1,0 +1,134 @@
+{
+  "checkedAt": "2026-06-23T01:35:22.909Z",
+  "loginUrl": "http://127.0.0.1:8788/login.html?return=builder/partner-management.html",
+  "mgmtUrl": "http://127.0.0.1:8788/builder/partner-management.html",
+  "opsEmail": "t***@tasful-dev.test",
+  "hasServiceKey": true,
+  "steps": {
+    "step1_loginPage": {
+      "pass": true,
+      "devSkipAuth": true,
+      "returnNeedsSupabaseAuth": true,
+      "devSkipBypassed": true,
+      "hasForm": true
+    },
+    "step3_getSession_noRole": {
+      "hasAccessToken": true,
+      "partnerRole": null,
+      "authMetadataCleared": true
+    },
+    "step4_partnerList_noRole": {
+      "note": "client blocks before fetch if no partner_role",
+      "directApiStatus": 401
+    },
+    "step2_browserLogin_noRole": {
+      "loginPage": {
+        "returnParam": "builder/partner-management.html",
+        "devSkipAuth": true,
+        "returnNeedsSupabaseAuth": true,
+        "devSkipWouldBind": false,
+        "hasLoginForm": true,
+        "hasEmailInput": true,
+        "hasPasswordInput": true
+      },
+      "session": {
+        "hasSession": true,
+        "hasAccessToken": true,
+        "partnerRole": null,
+        "readPartnerRole": null,
+        "getSessionError": null
+      },
+      "ui": {
+        "mode": "API",
+        "errorSub": "この操作を行う権限がありません（partner_role: admin / ops / reviewer が必要です）",
+        "hint": "JWT の app_metadata.partner_role（admin / ops / reviewer）が必要です。付与後に再ログインしてください。",
+        "cardCount": 0,
+        "stats": {
+          "pending": "0",
+          "hold": "0",
+          "approved": "0",
+          "contracted": "0"
+        }
+      },
+      "partnerListRequests": []
+    },
+    "step5_forbiddenUi": {
+      "pass": true,
+      "errorSub": "この操作を行う権限がありません（partner_role: admin / ops / reviewer が必要です）",
+      "jwtPartnerRole": null,
+      "partnerListSent": false
+    },
+    "step6_roleGrant": {
+      "pass": true,
+      "app_metadata_partner_role": "admin"
+    },
+    "step7_reloginJwt": {
+      "pass": true,
+      "partnerRole": "admin",
+      "hasAccessToken": true
+    },
+    "step4_partnerList_withRole": {
+      "httpStatus": 200,
+      "itemCount": 3,
+      "hasBearer": true
+    },
+    "step8_uiWithRole": {
+      "session": {
+        "hasSession": true,
+        "hasAccessToken": true,
+        "partnerRole": "admin",
+        "readPartnerRole": "admin",
+        "getSessionError": null
+      },
+      "ui": {
+        "mode": "API",
+        "errorSub": "",
+        "hint": "",
+        "cardCount": 3,
+        "stats": {
+          "pending": "0",
+          "hold": "1",
+          "approved": "1",
+          "contracted": "0"
+        }
+      },
+      "partnerListRequests": [
+        {
+          "url": "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/partner-list?limit=100",
+          "hasBearer": true,
+          "bearerPrefix": "Bearer eyJhbGciO…"
+        },
+        {
+          "url": "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/partner-list?limit=100",
+          "hasBearer": true,
+          "bearerPrefix": "Bearer eyJhbGciO…"
+        },
+        {
+          "phase": "response",
+          "status": 200,
+          "hasBearer": true,
+          "bodyPreview": "{\"ok\":true,\"items\":[{\"id\":\"00cb4de9-f68c-4bb5-ab3f-1935107298cf\",\"partner_code\":\"PR-2026-0003\",\"source\":\"builder\",\"company_name\":\"P1 Test builder 1782170710152\",\"partner_type\":\"corporation\",\"business_types\":[\"電気工事\"],\"service_area\":\"東京都\",\"status\":\"rejected\",\"email\":\"p1-builder-1782170710152@example.t"
+        },
+        {
+          "phase": "response",
+          "status": 200,
+          "hasBearer": true,
+          "bodyPreview": "{\"ok\":true,\"items\":[{\"id\":\"00cb4de9-f68c-4bb5-ab3f-1935107298cf\",\"partner_code\":\"PR-2026-0003\",\"source\":\"builder\",\"company_name\":\"P1 Test builder 1782170710152\",\"partner_type\":\"corporation\",\"business_types\":[\"電気工事\"],\"service_area\":\"東京都\",\"status\":\"rejected\",\"email\":\"p1-builder-1782170710152@example.t"
+        }
+      ],
+      "pass": true
+    }
+  },
+  "blocked": false,
+  "blockReason": null,
+  "opsUserId": "9d9bd0bb-8849-4dd5-bd25-b51e230a900a",
+  "summary": {
+    "step1_devSkipBypassed": true,
+    "step3_accessToken": true,
+    "step5_forbidden": true,
+    "step6_roleGranted": true,
+    "step7_jwtRole": true,
+    "step8_listVisible": true,
+    "allPass": true
+  }
+}

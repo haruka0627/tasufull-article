@@ -306,10 +306,12 @@
   function fileField(name, label) {
     var id = "prt-" + name;
     return (
-      '<div class="prt-reg-field">' +
-      '<label for="' + id + '">' + escapeHtml(label) + "</label>" +
-      '<input class="prt-reg-file" type="file" id="' + id + '" name="' + name + '" accept=".pdf,.jpg,.jpeg,.png" />' +
-      "</div>"
+      '<div class="prt-reg-field prt-reg-field--file">' +
+      '<span class="prt-reg-field__file-label" id="' + id + '-label">' + escapeHtml(label) + "</span>" +
+      '<label class="prt-reg-file-zone" for="' + id + '" aria-labelledby="' + id + '-label">' +
+      '<input class="prt-reg-file__input" type="file" id="' + id + '" name="' + name + '" accept=".pdf,.jpg,.jpeg,.png" />' +
+      '<span class="prt-reg-file-zone__prompt">ファイルを選択</span>' +
+      "</label></div>"
     );
   }
 

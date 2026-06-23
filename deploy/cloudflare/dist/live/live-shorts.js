@@ -53,7 +53,8 @@
     const cfg = C();
     const userId = cfg.getTalkUserId();
     if (!userId || !shortIds?.length) return new Set();
-    await cfg.ensureSupabaseSession();
+    const session = await cfg.ensureSupabaseSession();
+    if (!session?.access_token) return new Set();
     const { data, error } = await cfg
       .getClient()
       .from(cfg.TABLES.likes)
@@ -108,6 +109,45 @@
     }
 
     return fetchShortById(shortId);
+  }
+
+  function shortWatchUrl(shortId) {
+    const id = encodeURIComponent(String(shortId || ""));
+    const base = String(global.location?.pathname || "");
+    if (base.includes("/live/")) return `/live/shorts/watch?id=${id}`;
+    return `shorts/watch?id=${id}`;
+  }
+
+  function formatViewCountLabel(count) {
+    const n = Number(count ?? 0);
+    if (n >= 10000) return `${(n / 10000).toFixed(1).replace(/\.0$/, "")}万回視聴`;
+    return `${n.toLocaleString("ja-JP")}回視聴`;
+  }
+
+  function formatShortDuration(sec) {
+    const total = Math.max(0, Math.floor(Number(sec) || 0));
+    const m = Math.floor(total / 60);
+    const s = total % 60;
+    return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  function renderShortGridCard(short) {
+    const cfg = C();
+    const href = shortWatchUrl(short.id);
+    const viewsLabel = formatViewCountLabel(short.view_count);
+    const duration = formatShortDuration(short.duration_sec);
+
+    return `
+      <a class="live-short-grid-card" href="${cfg.escapeHtml(href)}" data-live-short-id="${cfg.escapeHtml(short.id)}">
+        <div class="live-short-grid-card__thumb" aria-hidden="true">
+          <div class="live-short-grid-card__thumb-placeholder"></div>
+          <span class="live-short-grid-card__duration">${cfg.escapeHtml(duration)}</span>
+          <div class="live-short-grid-card__overlay">
+            <h2 class="live-short-grid-card__title">${cfg.escapeHtml(short.title)}</h2>
+            <p class="live-short-grid-card__meta">${cfg.escapeHtml(viewsLabel)}</p>
+          </div>
+        </div>
+      </a>`;
   }
 
   function renderShortCard(short, liked, videoUrl, videoBlocked, profile) {
@@ -212,45 +252,247 @@
     }
   }
 
-  async function mountShortsFeed(root) {
+  const SHORTS_SORT_OPTIONS = Object.freeze([
+    { id: "new", label: "新着" },
+    { id: "popular", label: "人気" },
+    { id: "views", label: "再生数" },
+    { id: "likes", label: "いいね" },
+    { id: "shortest", label: "短い順" },
+  ]);
+
+  function sortShortsList(shorts, sortId) {
+    const list = [...shorts];
+    const byDate = (a, b) => {
+      const ta = new Date(a.published_at || a.created_at || 0).getTime();
+      const tb = new Date(b.published_at || b.created_at || 0).getTime();
+      return tb - ta;
+    };
+    switch (sortId) {
+      case "popular":
+        return list.sort((a, b) => {
+          const scoreA = Number(a.view_count ?? 0) + Number(a.like_count ?? 0) * 8;
+          const scoreB = Number(b.view_count ?? 0) + Number(b.like_count ?? 0) * 8;
+          if (scoreB !== scoreA) return scoreB - scoreA;
+          return byDate(a, b);
+        });
+      case "views":
+        return list.sort((a, b) => {
+          const diff = Number(b.view_count ?? 0) - Number(a.view_count ?? 0);
+          return diff !== 0 ? diff : byDate(a, b);
+        });
+      case "likes":
+        return list.sort((a, b) => {
+          const diff = Number(b.like_count ?? 0) - Number(a.like_count ?? 0);
+          return diff !== 0 ? diff : byDate(a, b);
+        });
+      case "shortest":
+        return list.sort((a, b) => {
+          const diff = Number(a.duration_sec ?? 0) - Number(b.duration_sec ?? 0);
+          return diff !== 0 ? diff : byDate(a, b);
+        });
+      case "new":
+      default:
+        return list.sort(byDate);
+    }
+  }
+
+  function buildShortSearchHaystack(short, creatorName) {
     const cfg = C();
-    root.innerHTML = '<p class="live-loading">ショートを読み込み中…</p>';
+    const tags = Array.isArray(short.tags) ? short.tags : [];
+    return [
+      short.title,
+      short.description,
+      creatorName,
+      short.creator_id,
+      tags.join(" "),
+      cfg.resolveDisplayName?.(short.creator_id),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+  }
+
+  function filterShortsList(shorts, query, nameMap) {
+    const q = String(query || "").trim().toLowerCase();
+    if (!q) return shorts;
+    return shorts.filter((short) => {
+      const name = nameMap.get(String(short.creator_id)) || C().resolveDisplayName(short.creator_id);
+      return buildShortSearchHaystack(short, name).includes(q);
+    });
+  }
+
+  function renderShortsToolbarHtml(activeSortId = "new", query = "") {
+    const cfg = C();
+    const chips = SHORTS_SORT_OPTIONS.map((opt) => {
+      const active = opt.id === activeSortId ? " is-active" : "";
+      return `<button type="button" class="tlv-shorts-sort-chip${active}" data-tlv-shorts-sort="${cfg.escapeHtml(opt.id)}" aria-pressed="${opt.id === activeSortId ? "true" : "false"}">${cfg.escapeHtml(opt.label)}</button>`;
+    }).join("");
+    return `
+      <div class="tlv-shorts-toolbar__inner">
+        <label class="tlv-shorts-search">
+          <span class="tlv-shorts-search__icon" aria-hidden="true">⌕</span>
+          <input
+            class="tlv-shorts-search__input"
+            type="search"
+            name="q"
+            value="${cfg.escapeHtml(query)}"
+            placeholder="ショートを検索"
+            data-tlv-shorts-search
+            autocomplete="off"
+            enterkeyhint="search"
+            aria-label="ショートを検索"
+          />
+        </label>
+        <div class="tlv-shorts-sort" data-tlv-shorts-sort-bar role="toolbar" aria-label="並び替え">
+          ${chips}
+        </div>
+      </div>`;
+  }
+
+  function renderShortsFeedHtml(shorts) {
+    if (!shorts.length) return "";
+    const cards = shorts.map((short) => renderShortGridCard(short));
+    return `<div class="live-shorts-feed" data-live-shorts-feed>${cards.join("")}</div>`;
+  }
+
+  function renderShortsSearchEmptyHtml(query) {
+    const cfg = C();
+    const q = String(query || "").trim();
+    const detail = q
+      ? `「${cfg.escapeHtml(q)}」に一致するショートは見つかりませんでした。`
+      : "条件に一致するショートは見つかりませんでした。";
+    return `
+      <div class="live-empty tlv-shorts-empty" data-tlv-shorts-empty>
+        <p class="live-empty__title">検索結果がありません</p>
+        <p class="live-empty__text">${detail}</p>
+        <p class="live-empty__text">別のキーワードや並び替えをお試しください。</p>
+      </div>`;
+  }
+
+  function bindShortsToolbar(toolbarRoots, state, onChange) {
+    const roots = (toolbarRoots || []).filter(Boolean);
+    if (!roots.length) return;
+
+    roots.forEach((toolbar) => {
+      toolbar.innerHTML = renderShortsToolbarHtml(state.sortId, state.query);
+      toolbar.hidden = false;
+    });
+
+    const syncInputs = (value, source) => {
+      roots.forEach((toolbar) => {
+        const input = toolbar.querySelector("[data-tlv-shorts-search]");
+        if (input && input !== source) input.value = value;
+      });
+    };
+
+    const syncChips = (sortId) => {
+      roots.forEach((toolbar) => {
+        toolbar.querySelectorAll("[data-tlv-shorts-sort]").forEach((btn) => {
+          const active = btn.getAttribute("data-tlv-shorts-sort") === sortId;
+          btn.classList.toggle("is-active", active);
+          btn.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      });
+    };
+
+    roots.forEach((toolbar) => {
+      const input = toolbar.querySelector("[data-tlv-shorts-search]");
+      input?.addEventListener("input", () => {
+        state.query = input.value;
+        syncInputs(state.query, input);
+        onChange();
+      });
+
+      toolbar.querySelectorAll("[data-tlv-shorts-sort]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const sortId = btn.getAttribute("data-tlv-shorts-sort");
+          if (!sortId || sortId === state.sortId) return;
+          state.sortId = sortId;
+          syncChips(sortId);
+          onChange();
+        });
+      });
+    });
+  }
+
+  function applyShortsFeedView(state) {
+    const filtered = filterShortsList(state.allShorts, state.query, state.nameMap);
+    const sorted = sortShortsList(filtered, state.sortId);
+    const hasQuery = String(state.query || "").trim().length > 0;
+    const html = sorted.length
+      ? renderShortsFeedHtml(sorted)
+      : hasQuery
+        ? renderShortsSearchEmptyHtml(state.query)
+        : renderShortsSearchEmptyHtml("");
+    state.roots.forEach((root) => {
+      root.innerHTML = html;
+    });
+  }
+
+  async function mountShortsFeed(root, options = {}) {
+    const cfg = C();
+    const roots = (options.roots || [root]).filter(Boolean);
+    const toolbarRoots = (options.toolbarRoots || []).filter(Boolean);
+    const loading = '<p class="live-loading">ショートを読み込み中…</p>';
+    roots.forEach((r) => {
+      r.innerHTML = loading;
+    });
+    toolbarRoots.forEach((t) => {
+      t.hidden = true;
+      t.innerHTML = "";
+    });
 
     try {
       await cfg.ensureSupabaseSession();
       const shorts = await fetchPublishedShorts();
       if (!shorts.length) {
-        root.innerHTML = `
+        const empty = `
           <div class="live-empty">
             <p class="live-empty__title">公開ショートがありません</p>
             <p class="live-empty__text">最初のショートを投稿してみましょう。</p>
             <p style="margin-top:16px"><a class="live-btn live-btn--primary" href="short-upload.html">ショートを投稿</a></p>
           </div>
         `;
+        roots.forEach((r) => {
+          r.innerHTML = empty;
+        });
         return;
       }
 
-      const likedSet = await fetchUserLikes(shorts.map((s) => s.id));
-      const profiles = await fetchCreatorProfiles(shorts.map((s) => s.creator_id));
-      const cards = [];
+      const nameMap = new Map();
       for (const short of shorts) {
-        const { url, blocked } = await resolveVideoUrl(short);
-        cards.push(
-          renderShortCard(
-            short,
-            likedSet.has(String(short.id)),
-            url,
-            blocked,
-            profiles[String(short.creator_id)] || null
-          )
-        );
+        const id = String(short.creator_id || "");
+        if (!nameMap.has(id)) nameMap.set(id, cfg.resolveDisplayName(id));
       }
 
-      root.innerHTML = `<div class="live-shorts-feed" data-live-shorts-feed>${cards.join("")}</div>`;
-      await bindLikeButtons(root, likedSet);
+      const state = {
+        allShorts: shorts,
+        nameMap,
+        query: "",
+        sortId: "new",
+        roots,
+      };
+
+      bindShortsToolbar(toolbarRoots, state, () => applyShortsFeedView(state));
+      applyShortsFeedView(state);
     } catch (err) {
-      console.error("[TasuLiveShorts]", err);
-      root.innerHTML = `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`;
+      console.warn("[TasuLiveShorts]", err);
+      if (cfg.isPublicReadAccessError?.(err)) {
+        const empty = `
+          <div class="live-empty">
+            <p class="live-empty__title">公開ショートがありません</p>
+            <p class="live-empty__text">現在表示できるショートはありません。</p>
+          </div>
+        `;
+        roots.forEach((r) => {
+          r.innerHTML = empty;
+        });
+        return;
+      }
+      const errHtml = `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`;
+      roots.forEach((r) => {
+        r.innerHTML = errHtml;
+      });
     }
   }
 
@@ -262,6 +504,9 @@
     likeShort,
     unlikeShort,
     mountShortsFeed,
+    shortWatchUrl,
+    resolveVideoUrl,
+    renderShortGridCard,
     fetchShortSignedUrlViaEdge: (shortId) => C().fetchShortSignedUrlViaEdge(shortId),
     getSignedShortVideoUrl: (path) => C().getSignedShortVideoUrl(path),
   };

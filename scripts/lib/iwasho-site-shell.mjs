@@ -5,6 +5,8 @@
  *         iwasho/contact.html（agent transcript 完成版）
  */
 
+import { FOOTER_SNS_GROUP_HTML } from "./iwasho-footer-sns.mjs";
+
 export const IWASHO_NAV = [
   { id: "home", href: "/iwasho/", label: "ホーム" },
   { id: "about", href: "/iwasho/about.html", label: "事業内容" },
@@ -67,17 +69,7 @@ export function renderIwashoFooter() {
         <p class="footer-text">新築・中古・リフォームの現場管理</p>
         <p class="footer-text">パートナーネットワーク事業</p>
       </div>
-      <div class="sns-group">
-        <a href="#" class="sns-link" aria-label="Facebook">
-          <svg class="sns-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
-        </a>
-        <a href="#" class="sns-link" aria-label="Instagram">
-          <svg class="sns-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><circle cx="17.5" cy="6.5" r="1"/></svg>
-        </a>
-        <a href="#" class="sns-link" aria-label="X">
-          <svg class="sns-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 3.746 8.502 11.24H16.17l-5.214-6.817L4.99 17.25H1.68l7.73-4.035L1.25 2.25h6.84l4.697 6.21 5.457-6.21zm-1.161 13.02h1.833L7.084 4.126H5.117L17.083 15.27z"/></svg>
-        </a>
-      </div>
+      ${FOOTER_SNS_GROUP_HTML}
     </div>
     <div class="footer-col">
       <h4 class="footer-col-title">事業内容</h4>

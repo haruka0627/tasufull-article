@@ -73,19 +73,25 @@
     return true;
   }
 
-  function renderFollowButton(following) {
+  function renderFollowButton(following, options = {}) {
+    if (options.channelMode) {
+      if (following) {
+        return '<button type="button" class="live-btn live-btn--ghost" data-live-follow-btn data-following="1">登録済み</button>';
+      }
+      return '<button type="button" class="live-btn live-btn--primary" data-live-follow-btn data-following="0">チャンネル登録</button>';
+    }
     if (following) {
       return '<button type="button" class="live-btn live-btn--ghost" data-live-follow-btn data-following="1">フォロー中</button>';
     }
     return '<button type="button" class="live-btn live-btn--primary" data-live-follow-btn data-following="0">フォローする</button>';
   }
 
-  async function mountFollowButton(container, creatorId, profileRoot) {
+  async function mountFollowButton(container, creatorId, profileRoot, options = {}) {
     const cfg = C();
     const viewerId = cfg.getTalkUserId();
     const creator = String(creatorId || "").trim();
 
-    if (!viewerId || !creator || viewerId === creator) return;
+    if (!creator || viewerId === creator) return;
     if (!cfg.getClient()) return;
 
     let slot = container.querySelector(".live-follow-slot");
@@ -95,9 +101,15 @@
       container.insertBefore(slot, container.firstChild);
     }
 
+    if (!viewerId) {
+      const returnTo = encodeURIComponent(global.location?.pathname + global.location?.search || "profile.html");
+      slot.innerHTML = `<a class="live-btn live-btn--primary" href="../dashboard.html?returnTo=${returnTo}">ログインして登録</a>`;
+      return;
+    }
+
     async function refresh() {
       const following = await isFollowing(creator);
-      slot.innerHTML = renderFollowButton(following);
+      slot.innerHTML = renderFollowButton(following, options);
       const btn = slot.querySelector("[data-live-follow-btn]");
       btn?.addEventListener("click", async () => {
         btn.disabled = true;

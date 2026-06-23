@@ -1,0 +1,12 @@
+﻿node_modules/
+.wrangler/
+deploy/cloudflare/dist/.wrangler/
+reports/screenshots/
+screenshots/
+.tmp-*.sql
+deploy/cloudflare/dist/.tmp-*.sql
+deno.lock
+deploy/cloudflare/dist/deno.lock
+dist/
+coverage/
+.cache/

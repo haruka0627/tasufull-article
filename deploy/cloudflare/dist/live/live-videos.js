@@ -11,7 +11,11 @@
     "home-building": (v) => /住|建|リフォーム|施工|建築|住宅/.test(`${v.title || ""} ${v.description || ""}`),
     business: (v) => /ビジネス|仕事|営業|経営|現場/.test(`${v.title || ""} ${v.description || ""}`),
     howto: (v) => /ノウハウ|方法|やり方|解説|講座/.test(`${v.title || ""} ${v.description || ""}`),
-    entertainment: (v) => /エンタメ|音楽|ゲーム|Vlog|vlog/.test(`${v.title || ""} ${v.description || ""}`),
+    entertainment: (v) => /エンタメ|Vlog|vlog/.test(`${v.title || ""} ${v.description || ""}`),
+    ai: (v) => /AI|人工知能|生成|ChatGPT|Gemini/.test(`${v.title || ""} ${v.description || ""}`),
+    music: (v) => /音楽|楽曲|歌|ライブ配信|演奏/.test(`${v.title || ""} ${v.description || ""}`),
+    game: (v) => /ゲーム|プレイ|実況|eスポーツ/.test(`${v.title || ""} ${v.description || ""}`),
+    live: (v) => /ライブ|配信|LIVE|生放送/.test(`${v.title || ""} ${v.description || ""}`),
   });
 
   function filterByCategory(videos, categoryId) {
@@ -38,6 +42,21 @@
       .trim()
       .replace(/[%_,]/g, "")
       .slice(0, 80);
+  }
+
+  async function fetchPublishedShorts(limit = 24) {
+    const cfg = C();
+    await cfg.ensureSupabaseSession();
+    const { data, error } = await cfg
+      .getClient()
+      .from(cfg.TABLES.shorts)
+      .select("id, creator_id, title, description, duration_sec, view_count, published_at, created_at")
+      .eq("status", "published")
+      .order("published_at", { ascending: false, nullsFirst: false })
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return data || [];
   }
 
   async function fetchPublishedVideos({ limit = 48, query = "", feed = "recommended" } = {}) {
@@ -501,6 +520,241 @@
     return `${Math.max(1, year)}年前`;
   }
 
+  const HOME_TOPICS = Object.freeze([
+    { id: "game", label: "ゲーム", category: "entertainment" },
+    { id: "music", label: "音楽", category: "entertainment" },
+    { id: "live", label: "ライブ", category: "" },
+    { id: "cooking", label: "料理", category: "howto" },
+    { id: "sports", label: "スポーツ", category: "" },
+    { id: "news", label: "ニュース", category: "" },
+    { id: "learning", label: "学習", category: "howto" },
+    { id: "entertainment", label: "エンタメ", category: "entertainment" },
+  ]);
+
+  const SHELF_META = Object.freeze({
+    recommended: { title: "おすすめ", feed: "recommended" },
+    popular: { title: "人気の動画", feed: "trending" },
+    new: { title: "新着動画", feed: "new" },
+  });
+
+  function pickUniqueItems(pool, count, usedIds, idKey = "id") {
+    const out = [];
+    for (const item of pool || []) {
+      const id = String(item?.[idKey] || "");
+      if (!id || usedIds.has(id)) continue;
+      usedIds.add(id);
+      out.push(item);
+      if (out.length >= count) break;
+    }
+    return out;
+  }
+
+  async function buildHomeFeedPayload({ query = "", feed = "recommended", category = "", shelf = "" } = {}) {
+    const term = sanitizeSearchQuery(query);
+    const shelfKey = String(shelf || "").trim();
+
+    if (shelfKey && SHELF_META[shelfKey]) {
+      const meta = SHELF_META[shelfKey];
+      const videos = filterByCategory(
+        await fetchPublishedVideos({ limit: 48, feed: meta.feed, query: term }),
+        category,
+      );
+      return { mode: "shelf", shelf: shelfKey, title: meta.title, videos };
+    }
+
+    if (term) {
+      const videos = filterByCategory(
+        await fetchPublishedVideos({ limit: 48, query: term, feed }),
+        category,
+      );
+      return { mode: "search", videos, query: term };
+    }
+
+    if (feed === "following") {
+      const videos = filterByCategory(await fetchPublishedVideos({ limit: 48, feed: "following" }), category);
+      return { mode: "following", videos };
+    }
+
+    const feedKey = feed === "trending" ? "trending" : feed === "new" ? "new" : "recommended";
+    const [recommendedPool, popularPool, latestPool, shortsResult] = await Promise.all([
+      fetchPublishedVideos({ limit: 40, feed: feedKey }),
+      fetchPublishedVideos({ limit: 40, feed: "trending" }),
+      fetchPublishedVideos({ limit: 40, feed: "new" }),
+      fetchPublishedShorts(24).catch((err) => {
+        console.warn("[TasuLiveVideos] shorts fetch skipped:", err.message || err);
+        return [];
+      }),
+    ]);
+    const shortsPool = shortsResult;
+
+    const recFiltered = filterByCategory(recommendedPool, category);
+    const popFiltered = filterByCategory(popularPool, category);
+    const latestFiltered = filterByCategory(latestPool, category);
+
+    const usedVideoIds = new Set();
+    const usedShortIds = new Set();
+
+    const recommendedVideos = pickUniqueItems(recFiltered, 4, usedVideoIds);
+    const popularVideos = pickUniqueItems(popFiltered, 4, usedVideoIds);
+    const latestVideos = pickUniqueItems(latestFiltered, 9, usedVideoIds);
+
+    const shortVideosA = pickUniqueItems(shortsPool, 6, usedShortIds);
+    const shortVideosB = pickUniqueItems(shortsPool.slice(6), 6, usedShortIds);
+
+    return {
+      mode: "home",
+      recommendedVideos,
+      popularVideos,
+      latestVideos,
+      shortVideosA,
+      shortVideosB,
+    };
+  }
+
+  function renderHomeShortCard(short) {
+    const cfg = C();
+    const viewsLabel = formatViewCountLabel(short.view_count);
+    const href =
+      global.TasuLiveShorts?.shortWatchUrl?.(short.id) ||
+      `/live/shorts/watch?id=${encodeURIComponent(short.id)}`;
+
+    return `
+      <a class="live-video-card live-video-card--yt live-video-card--short live-video-card--short-shelf" href="${cfg.escapeHtml(href)}" data-live-short-id="${cfg.escapeHtml(short.id)}">
+        <div class="live-video-card__thumb live-video-card__thumb--portrait">
+          <div class="live-video-card__thumb-placeholder" aria-hidden="true"></div>
+        </div>
+        <div class="live-video-card__info live-video-card__info--compact">
+          <div class="live-video-card__details">
+            <h3 class="live-video-card__title">${cfg.escapeHtml(short.title)}</h3>
+            <p class="live-video-card__stats">${cfg.escapeHtml(viewsLabel)}</p>
+          </div>
+        </div>
+      </a>
+    `;
+  }
+
+  function renderVideoRow(videos, rowClass) {
+    if (!videos?.length) return "";
+    return `<div class="tlv-videos-section__row ${rowClass}">${videos.map((v) => renderVideoCard(v)).join("")}</div>`;
+  }
+
+  function renderShortRow(shorts) {
+    if (!shorts?.length) return "";
+    const renderCard = global.TasuLiveShorts?.renderShortGridCard;
+    const cards = shorts.map((s) => (renderCard ? renderCard(s) : renderHomeShortCard(s)));
+    return `<div class="tlv-videos-section__row tlv-shorts-tile-grid">${cards.join("")}</div>`;
+  }
+
+  function renderFeedSection(title, innerHtml, options = {}) {
+    if (!innerHtml?.trim()) return "";
+    const cfg = C();
+    const extraClass = String(options.extraClass || "");
+    const seeAllHref = String(options.seeAllHref || "");
+    const seeAllShelf = String(options.seeAllShelf || "");
+    let seeAllHtml = "";
+    if (seeAllHref) {
+      seeAllHtml = `<a class="tlv-videos-section__see-all" href="${cfg.escapeHtml(seeAllHref)}">すべて見る</a>`;
+    } else if (seeAllShelf) {
+      seeAllHtml = `<a class="tlv-videos-section__see-all" href="videos.html?shelf=${cfg.escapeHtml(seeAllShelf)}">すべて見る</a>`;
+    }
+    return `
+      <section class="tlv-videos-section ${extraClass}">
+        <div class="tlv-videos-section__head">
+          <h2 class="tlv-videos-section__title">${cfg.escapeHtml(title)}</h2>
+          ${seeAllHtml}
+        </div>
+        <div class="tlv-videos-section__body">
+          ${innerHtml}
+        </div>
+      </section>`;
+  }
+
+  function renderTopicCards() {
+    const cfg = C();
+    const cards = HOME_TOPICS.map(
+      (topic) => `
+        <button type="button" class="tlv-videos-topic-card" data-tlv-home-topic="${cfg.escapeHtml(topic.category)}" data-tlv-topic-id="${cfg.escapeHtml(topic.id)}">
+          <span class="tlv-videos-topic-card__label">${cfg.escapeHtml(topic.label)}</span>
+        </button>`,
+    ).join("");
+    return `<div class="tlv-videos-section__topics" role="list">${cards}<span class="tlv-videos-topic-card tlv-videos-topic-card--more" aria-hidden="true">…</span></div>`;
+  }
+
+  function renderHomeFeedHtml(payload, { feed = "recommended", category = "" } = {}) {
+    const cfg = C();
+
+    if (payload.mode === "shelf") {
+      if (!payload.videos.length) {
+        return renderFeedHtml([], { feed: SHELF_META[payload.shelf]?.feed || feed, category });
+      }
+      const rowClass =
+        payload.shelf === "new"
+          ? "tlv-videos-section__row--videos-9 tlv-videos-section__row--videos-list"
+          : "tlv-videos-section__row--videos-list";
+      return `
+        <div class="tlv-videos-home tlv-videos-home--shelf" data-live-videos-home>
+          <p class="tlv-videos-home__back"><a class="tlv-videos-section__see-all" href="videos.html">← ホームフィードへ</a></p>
+          ${renderFeedSection(payload.title, renderVideoRow(payload.videos, rowClass))}
+        </div>`;
+    }
+
+    if (payload.mode === "search") {
+      if (!payload.videos.length) {
+        return renderFeedHtml([], { currentQuery: payload.query, feed, category });
+      }
+      return `
+        <div class="tlv-videos-home tlv-videos-home--search" data-live-videos-home>
+          ${renderFeedSection("検索結果", renderVideoRow(payload.videos, "tlv-videos-section__row--videos-list"))}
+        </div>`;
+    }
+
+    if (payload.mode === "following") {
+      if (!payload.videos.length) {
+        return renderFeedHtml([], { feed: "following", category });
+      }
+      return `
+        <div class="tlv-videos-home tlv-videos-home--following" data-live-videos-home>
+          ${renderFeedSection("フォロー中", renderVideoRow(payload.videos, "tlv-videos-section__row--videos-list"))}
+        </div>`;
+    }
+
+    const sections = [
+      renderFeedSection("おすすめ", renderVideoRow(payload.recommendedVideos, "tlv-videos-section__row--videos-4"), {
+        seeAllShelf: "recommended",
+      }),
+      renderFeedSection("ショート", renderShortRow(payload.shortVideosA), {
+        extraClass: "tlv-videos-section--shorts",
+        seeAllHref: "shorts.html",
+      }),
+      renderFeedSection("人気の動画", renderVideoRow(payload.popularVideos, "tlv-videos-section__row--videos-4"), {
+        seeAllShelf: "popular",
+      }),
+      renderFeedSection("ショート", renderShortRow(payload.shortVideosB), {
+        extraClass: "tlv-videos-section--shorts tlv-videos-section--shorts-alt",
+        seeAllHref: "shorts.html",
+      }),
+      renderFeedSection("新着動画", renderVideoRow(payload.latestVideos, "tlv-videos-section__row--videos-9"), {
+        seeAllShelf: "new",
+      }),
+      renderFeedSection("その他のトピック", renderTopicCards(), {
+        extraClass: "tlv-videos-section--topics",
+      }),
+    ].join("");
+
+    const hasContent =
+      payload.recommendedVideos.length ||
+      payload.popularVideos.length ||
+      payload.latestVideos.length ||
+      payload.shortVideosA.length ||
+      payload.shortVideosB.length;
+
+    if (!hasContent) {
+      return renderFeedHtml([], { feed, category });
+    }
+
+    return `<div class="tlv-videos-home" data-live-videos-home>${sections}</div>`;
+  }
+
   function renderVideoCard(video) {
     const cfg = C();
     const channelName = cfg.resolveDisplayName(video.talk_user_id);
@@ -571,22 +825,36 @@
   async function mountVideosFeed(root, options = {}) {
     const cfg = C();
     const roots = (options.roots || [root]).filter(Boolean);
-    const searchInputs = (options.searchInputs || [options.searchInput].filter(Boolean));
-    const searchForms = options.searchForms || [];
+    const searchInputs = [...(options.searchInputs || []), options.searchInput].filter(Boolean);
+    const searchForms = [...(options.searchForms || [])];
     let currentQuery = String(options.initialQuery || "");
     let currentFeed = String(options.initialFeed || "recommended");
     let currentCategory = String(options.initialCategory || "");
+    let currentShelf = String(options.initialShelf || "");
+    try {
+      const urlParams = new URLSearchParams(global.location?.search || "");
+      if (!currentShelf && urlParams.get("shelf")) currentShelf = String(urlParams.get("shelf"));
+      if (!currentQuery && urlParams.get("q")) currentQuery = String(urlParams.get("q"));
+      if (urlParams.get("feed")) currentFeed = String(urlParams.get("feed"));
+    } catch {
+      /* non-browser */
+    }
 
-    async function render(query, feed, category) {
+    async function render(query, feed, category, shelf) {
       currentQuery = query;
       currentFeed = feed;
       currentCategory = category;
+      currentShelf = shelf;
       writeToRoots(roots, '<p class="live-loading">動画を読み込み中…</p>');
       try {
         await cfg.ensureSupabaseSession();
-        let videos = await fetchPublishedVideos({ query: currentQuery, feed: currentFeed });
-        videos = filterByCategory(videos, currentCategory);
-        writeToRoots(roots, renderFeedHtml(videos, { currentQuery, feed: currentFeed, category: currentCategory }));
+        const payload = await buildHomeFeedPayload({
+          query: currentQuery,
+          feed: currentFeed,
+          category: currentCategory,
+          shelf: currentShelf,
+        });
+        writeToRoots(roots, renderHomeFeedHtml(payload, { feed: currentFeed, category: currentCategory }));
         global.TasuTlvNav?.syncSearchInputs?.(searchInputs, currentQuery);
       } catch (err) {
         console.error("[TasuLiveVideos]", err);
@@ -595,8 +863,21 @@
     }
 
     function runSearch(raw) {
-      render(sanitizeSearchQuery(raw), currentFeed, currentCategory);
+      render(sanitizeSearchQuery(raw), currentFeed, currentCategory, "");
     }
+
+    roots.forEach((root) => {
+      root.addEventListener("click", (e) => {
+        const btn = e.target.closest("[data-tlv-home-topic]");
+        if (!btn) return;
+        const categoryId = String(btn.getAttribute("data-tlv-home-topic") || "");
+        render(currentQuery, currentFeed, categoryId, "");
+        document.querySelectorAll("[data-tlv-category]").forEach((chip) => {
+          const id = chip.getAttribute("data-tlv-category") || "";
+          chip.classList.toggle("is-active", id === categoryId);
+        });
+      });
+    });
 
     searchInputs.forEach((input) => {
       input?.addEventListener("keydown", (e) => {
@@ -617,13 +898,13 @@
 
     global.TasuTlvNav?.bindSearchForms?.(searchForms, runSearch);
     global.TasuTlvNav?.bindCategoryChips?.(options.categoryChips, (categoryId) => {
-      render(currentQuery, currentFeed, categoryId);
+      render(currentQuery, currentFeed, categoryId, "");
     });
     global.TasuTlvNav?.bindFeedTabs?.(options.feedTabs, (feedId) => {
-      render(currentQuery, feedId, currentCategory);
+      render(currentQuery, feedId, currentCategory, "");
     });
 
-    await render(currentQuery, currentFeed, currentCategory);
+    await render(currentQuery, currentFeed, currentCategory, currentShelf);
   }
 
   global.TasuLiveVideos = {

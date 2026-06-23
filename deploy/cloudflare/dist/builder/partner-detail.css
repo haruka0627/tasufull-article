@@ -1,0 +1,226 @@
+/**
+ * 協力パートナー詳細 — 審査向け視認性（レイアウトは builder.css を継承）
+ */
+
+/* ── ページ上部: パンくず → タイトル → サブタイトル → タブ ── */
+[data-page="builder-partner-detail"] .builder-prt-detail-header-slot {
+  display: none;
+}
+
+[data-page="builder-partner-detail"] .builder-header__inner {
+  padding-top: 22px;
+  padding-bottom: 6px;
+}
+
+[data-page="builder-partner-detail"] .builder-app {
+  padding-top: 48px;
+}
+
+[data-page="builder-partner-detail"] .builder-main {
+  padding-top: 0;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-pagehead {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-pagehead > nav[data-breadcrumb] {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+  row-gap: 0.25rem;
+  overflow-wrap: anywhere;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-pagehead .builder-header__title {
+  margin: 0;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-pagehead .builder-header__sub {
+  margin: 0;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-pagehead .builder-admin-back {
+  margin-top: 0;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-loading {
+  margin: 0 0 12px;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-tabs {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  [data-page="builder-partner-detail"] .builder-header__inner {
+    padding-top: 14px;
+    padding-bottom: 4px;
+  }
+
+  [data-page="builder-partner-detail"] .builder-prt-detail-pagehead {
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  [data-page="builder-partner-detail"] .builder-prt-detail-pagehead .builder-admin-back {
+    align-self: center;
+  }
+}
+
+[data-page="builder-partner-detail"] .builder-prt-kv--accent dt {
+  color: #22d3ee;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-kv--highlight {
+  border-color: rgba(34, 211, 238, 0.25);
+}
+
+[data-page="builder-partner-detail"] .builder-prt-kv--code {
+  background: rgba(34, 211, 238, 0.08);
+  border-color: rgba(34, 211, 238, 0.25);
+}
+
+[data-page="builder-partner-detail"] .builder-prt-kv--code dd {
+  font-family: ui-monospace, "Cascadia Code", "Segoe UI Mono", monospace;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-kv--company dd {
+  font-size: 17px;
+  line-height: 1.45;
+  color: #fff;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-kv--accent dd {
+  color: #fff;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-status--approved {
+  background: #10b98120;
+  color: #10b981;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-status--hold {
+  background: #f59e0b20;
+  color: #f59e0b;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-status--rejected {
+  background: #ef444420;
+  color: #ef4444;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-status--pending {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.82);
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+[data-page="builder-partner-detail"] .builder-prt-detail-status--contracted {
+  background: rgba(59, 130, 246, 0.12);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.22);
+}
+
+@media (min-width: 768px) {
+  [data-page="builder-partner-detail"] .builder-prt-kv--company dd {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 389px) {
+  [data-page="builder-partner-detail"] .builder-prt-detail-status {
+    font-size: 12px;
+    padding: 3px 10px;
+  }
+
+  [data-page="builder-partner-detail"] .builder-prt-kv--company dd {
+    font-size: 16px;
+  }
+
+  [data-page="builder-partner-detail"] .builder-prt-kv--code dd {
+    font-size: 14px;
+  }
+}
+
+/* ── 書類タブ（P1） ── */
+[data-page="builder-partner-detail"] .builder-prt-doc {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-doc__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-doc__type {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+[data-page="builder-partner-detail"] .builder-prt-doc__file {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.62);
+  word-break: break-word;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-doc-badge {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+[data-page="builder-partner-detail"] .builder-prt-doc-badge--verified {
+  background: #10b98120;
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.28);
+}
+
+[data-page="builder-partner-detail"] .builder-prt-doc-badge--unverified {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.72);
+  border-color: rgba(255, 255, 255, 0.14);
+}
