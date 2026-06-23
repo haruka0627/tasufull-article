@@ -175,6 +175,34 @@ function applySearchBlockingToDist() {
   console.log(`[stage-cloudflare-pages] search-blocking: ${htmlCount} HTML files (meta robots)`);
 }
 
+/**
+ * Site root `/` must serve TASFUL platform TOP (index-top.html).
+ * Repo root index.html is the legacy marketplace home → dist/market/index.html.
+ */
+function applyRootTopRouting() {
+  const distIndex = path.join(OUT_DIR, "index.html");
+  const distIndexTop = path.join(OUT_DIR, "index-top.html");
+  const marketDir = path.join(OUT_DIR, "market");
+  const marketIndex = path.join(marketDir, "index.html");
+
+  if (!fs.existsSync(distIndexTop)) {
+    console.error("[stage-cloudflare-pages] ERROR: index-top.html missing in dist");
+    process.exit(1);
+  }
+  if (!fs.existsSync(distIndex)) {
+    console.error("[stage-cloudflare-pages] ERROR: index.html missing in dist");
+    process.exit(1);
+  }
+
+  fs.mkdirSync(marketDir, { recursive: true });
+  fs.copyFileSync(distIndex, marketIndex);
+  fs.copyFileSync(distIndexTop, distIndex);
+
+  console.log(
+    "[stage-cloudflare-pages] root routing: index-top.html → dist/index.html, legacy market → market/index.html",
+  );
+}
+
 function copyCfMeta() {
   const required = ["robots.txt", "_headers"];
   const optional = ["_redirects"];
@@ -221,6 +249,7 @@ function main() {
 
   writeChatSupabaseConfig();
   writeTlvFeatureFlags();
+  applyRootTopRouting();
   applySearchBlockingToDist();
 
   const tlvErrors = verifyTlvDist(REPO_ROOT, path.relative(REPO_ROOT, OUT_DIR));

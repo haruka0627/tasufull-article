@@ -12,6 +12,8 @@ const DIST = path.join(__dirname, "..", "deploy", "cloudflare", "dist");
 
 const REQUIRED_PATHS = [
   "index.html",
+  "index-top.html",
+  "market/index.html",
   "talk-home.html",
   "dashboard.html",
   "shop-store.html",
@@ -124,6 +126,24 @@ function main() {
     setFail("_redirects contains SPA fallback (/* ... 200)");
   } else {
     pass("_redirects: no SPA fallback");
+  }
+  if (!/\/index\.html\s+\/market\//.test(redirects)) {
+    setFail("_redirects missing legacy market redirect (/index.html → /market/)");
+  } else {
+    pass("_redirects: legacy market /index.html → /market/");
+  }
+
+  const rootIndex = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
+  const marketIndex = fs.readFileSync(path.join(DIST, "market/index.html"), "utf8");
+  if (!rootIndex.includes('class="top-page"') || !rootIndex.includes("tas-hero")) {
+    setFail("dist/index.html is not TASFUL platform TOP (expected index-top.html content)");
+  } else {
+    pass("dist/index.html = TASFUL platform TOP (index-top)");
+  }
+  if (!marketIndex.includes('class="home-page"')) {
+    setFail("dist/market/index.html is not legacy marketplace home");
+  } else {
+    pass("dist/market/index.html = legacy marketplace home");
   }
 
   const headers = fs.readFileSync(path.join(DIST, "_headers"), "utf8");
