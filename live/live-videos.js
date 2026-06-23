@@ -523,16 +523,12 @@
         </div>
         <div class="live-video-card__info">
           <span class="live-video-card__avatar" aria-hidden="true">
-            <img src="${cfg.escapeHtml(avatarUrl)}" alt="" loading="lazy" width="36" height="36" />
+            <img src="${cfg.escapeHtml(avatarUrl)}" alt="" loading="lazy" width="32" height="32" />
           </span>
           <div class="live-video-card__details">
             <h3 class="live-video-card__title">${cfg.escapeHtml(video.title)}</h3>
             <p class="live-video-card__channel">${cfg.escapeHtml(channelName)}</p>
-            <p class="live-video-card__stats">
-              <span>${cfg.escapeHtml(viewsLabel)}</span>
-              <span class="live-video-card__stats-sep" aria-hidden="true">·</span>
-              <span>${cfg.escapeHtml(dateLabel)}</span>
-            </p>
+            <p class="live-video-card__stats">${cfg.escapeHtml(viewsLabel)}・${cfg.escapeHtml(dateLabel)}</p>
           </div>
         </div>
       </a>
