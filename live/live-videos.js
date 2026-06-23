@@ -445,37 +445,95 @@
 
   function resolveThumbUrl(video) {
     const cfg = C();
+    const direct = String(video?.thumbnail_url || "").trim();
+    if (/^https?:\/\//i.test(direct)) return direct;
     const path = String(video?.thumbnail_path || "").trim();
     if (!path) return null;
     return cfg.getPublicStorageUrl(cfg.STORAGE_BUCKET_VIDEO_THUMBS, path);
   }
 
+  function formatDurationBadge(sec) {
+    const total = Math.max(0, Math.floor(Number(sec) || 0));
+    if (!total) return "";
+    const h = Math.floor(total / 3600);
+    const m = Math.floor((total % 3600) / 60);
+    const s = total % 60;
+    if (h > 0) {
+      return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+    return `${m}:${String(s).padStart(2, "0")}`;
+  }
+
+  function formatViewCountLabel(count) {
+    const v = Math.max(0, Number(count) || 0);
+    if (v >= 100000000) {
+      const n = (v / 100000000).toFixed(1).replace(/\.0$/, "");
+      return `${n}億回視聴`;
+    }
+    if (v >= 10000) {
+      const n = (v / 10000).toFixed(1).replace(/\.0$/, "");
+      return `${n}万回視聴`;
+    }
+    if (v >= 1000) {
+      const n = (v / 1000).toFixed(1).replace(/\.0$/, "");
+      return `${n}千回視聴`;
+    }
+    return `${v.toLocaleString("ja-JP")}回視聴`;
+  }
+
+  function formatRelativePublishedDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "—";
+    const diffMs = Date.now() - d.getTime();
+    if (diffMs < 60_000) return "たった今";
+    const min = Math.floor(diffMs / 60_000);
+    if (min < 60) return `${min}分前`;
+    const hour = Math.floor(min / 60);
+    if (hour < 24) return `${hour}時間前`;
+    const day = Math.floor(hour / 24);
+    if (day < 7) return `${day}日前`;
+    const week = Math.floor(day / 7);
+    if (week < 5) return `${week}週間前`;
+    const month = Math.floor(day / 30);
+    if (month < 12) return `${month}ヶ月前`;
+    const year = Math.floor(day / 365);
+    return `${Math.max(1, year)}年前`;
+  }
+
   function renderVideoCard(video) {
     const cfg = C();
-    const name = cfg.resolveDisplayName(video.talk_user_id);
+    const channelName = cfg.resolveDisplayName(video.talk_user_id);
+    const avatarUrl = cfg.resolveAvatarUrl(video.talk_user_id);
     const thumbUrl = resolveThumbUrl(video);
     const watchUrl = cfg.watchVideoUrl(video.id);
-    const views = Number(video.views_count ?? 0).toLocaleString("ja-JP");
-    const likes = Number(video.likes_count ?? 0).toLocaleString("ja-JP");
-    const date = cfg.formatVideoDate(video.published_at);
-    const duration = video.duration_sec ? `${Number(video.duration_sec)}秒` : "";
+    const viewsLabel = formatViewCountLabel(video.views_count);
+    const dateLabel = formatRelativePublishedDate(video.published_at || video.created_at);
+    const duration = formatDurationBadge(video.duration_sec);
 
     const thumbInner = thumbUrl
       ? `<img class="live-video-card__thumb-img" src="${cfg.escapeHtml(thumbUrl)}" alt="" loading="lazy" />`
-      : `<div class="live-video-card__thumb-placeholder" aria-hidden="true"><span>動画</span></div>`;
+      : `<div class="live-video-card__thumb-placeholder" aria-hidden="true"></div>`;
 
     return `
-      <a class="live-video-card" href="${cfg.escapeHtml(watchUrl)}" data-live-video-id="${cfg.escapeHtml(video.id)}">
-        <div class="live-video-card__thumb">${thumbInner}</div>
-        <div class="live-video-card__body">
-          <h2 class="live-video-card__title">${cfg.escapeHtml(video.title)}</h2>
-          <p class="live-video-card__creator">${cfg.escapeHtml(name)} <span class="live-muted">@${cfg.escapeHtml(video.talk_user_id)}</span></p>
-          <p class="live-video-card__meta">
-            <span>再生 ${views}</span>
-            <span>♥ ${likes}</span>
-            ${duration ? `<span>${duration}</span>` : ""}
-            <span>${cfg.escapeHtml(date)}</span>
-          </p>
+      <a class="live-video-card live-video-card--yt" href="${cfg.escapeHtml(watchUrl)}" data-live-video-id="${cfg.escapeHtml(video.id)}">
+        <div class="live-video-card__thumb">
+          ${thumbInner}
+          ${duration ? `<span class="live-video-card__duration">${cfg.escapeHtml(duration)}</span>` : ""}
+        </div>
+        <div class="live-video-card__info">
+          <span class="live-video-card__avatar" aria-hidden="true">
+            <img src="${cfg.escapeHtml(avatarUrl)}" alt="" loading="lazy" width="36" height="36" />
+          </span>
+          <div class="live-video-card__details">
+            <h3 class="live-video-card__title">${cfg.escapeHtml(video.title)}</h3>
+            <p class="live-video-card__channel">${cfg.escapeHtml(channelName)}</p>
+            <p class="live-video-card__stats">
+              <span>${cfg.escapeHtml(viewsLabel)}</span>
+              <span class="live-video-card__stats-sep" aria-hidden="true">·</span>
+              <span>${cfg.escapeHtml(dateLabel)}</span>
+            </p>
+          </div>
         </div>
       </a>
     `;
