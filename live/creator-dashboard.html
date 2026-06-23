@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <meta name="theme-color" content="#0b0814" />
-  <title>チャンネル | TASFUL LIVE</title>
+  <title>収益・分析 | TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="live.css" />
 </head>
-<body class="live-body tlv-page" data-page="live-profile" data-tlv-page="profile">
+<body class="live-body tlv-page" data-page="live-creator-dashboard" data-tlv-page="creator">
   <div class="tlv-desktop-shell" data-tlv-desktop-shell>
     <div data-tlv-desktop-sidebar-mount></div>
     <div class="tlv-desktop-main">
       <div data-tlv-desktop-topbar-mount></div>
-      <main class="tlv-desktop-content tlv-desktop-content--profile">
-        <div data-live-profile-root data-live-profile-root-desktop>
+      <main class="tlv-desktop-content tlv-desktop-content--creator">
+        <div data-live-creator-dashboard-root data-live-creator-dashboard-root-desktop>
           <p class="live-loading">読み込み中…</p>
         </div>
       </main>
@@ -27,8 +27,8 @@
 
   <div class="tlv-mobile-shell" data-tlv-mobile-shell>
     <div data-tlv-mobile-header-mount></div>
-    <main class="tlv-mobile-content tlv-mobile-content--profile">
-      <div data-live-profile-root-mobile>
+    <main class="tlv-mobile-content tlv-mobile-content--creator">
+      <div data-live-creator-dashboard-root-mobile>
         <p class="live-loading">読み込み中…</p>
       </div>
     </main>
@@ -44,38 +44,31 @@
   <script src="../tasu-supabase-client.js" defer></script>
   <script src="../chat-user-identity.js" defer></script>
   <script src="../chat-supabase.js" defer></script>
-  <script src="../talk-room-ensure.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
   <script src="live-videos.js" defer></script>
-  <script src="live-notify.js" defer></script>
-  <script src="live-talk-bridge.js" defer></script>
-  <script src="live-follow.js" defer></script>
-  <script src="live-profile.js" defer></script>
+  <script src="live-my-videos.js" defer></script>
+  <script src="live-monetization-service.js" defer></script>
+  <script src="live-creator-dashboard.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
-      const cfg = window.TasuLiveConfig;
       const nav = window.TasuTlvNav;
-      const params = new URLSearchParams(globalThis.location?.search || "");
-      const viewerId = cfg?.getTalkUserId?.() || "";
-      const targetId = String(params.get("userId") || viewerId || "").trim();
-      const isOwn = Boolean(viewerId && targetId && viewerId === targetId);
-
       nav?.initPageShell?.({
-        desktopNavId: isOwn ? "my-videos" : "videos",
-        mobileTabId: isOwn ? "my" : "view",
-        topbarTitle: "チャンネル",
-        mobileHeaderTitle: "チャンネル",
+        desktopNavId: "creator",
+        mobileTabId: "my",
+        topbarTitle: "収益・分析",
+        mobileHeaderTitle: "収益・分析",
         mobileHeaderOptions: {
-          showUpload: isOwn,
-          backHref: isOwn ? "my-videos.html" : "videos.html",
+          showUpload: true,
+          backHref: "my-videos.html",
+          backLabel: "← マイ動画",
         },
       });
 
-      const rootDesktop = document.querySelector("[data-live-profile-root-desktop]");
-      const rootMobile = document.querySelector("[data-live-profile-root-mobile]");
-      if (rootDesktop && window.TasuLiveProfile?.mountProfilePage) {
-        window.TasuLiveProfile.mountProfilePage(rootDesktop, {
+      const rootDesktop = document.querySelector("[data-live-creator-dashboard-root-desktop]");
+      const rootMobile = document.querySelector("[data-live-creator-dashboard-root-mobile]");
+      if (rootDesktop && window.TasuLiveCreatorDashboard?.mountCreatorDashboard) {
+        window.TasuLiveCreatorDashboard.mountCreatorDashboard(rootDesktop, {
           roots: [rootDesktop, rootMobile],
         });
       }

@@ -13,6 +13,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { verifyTlvDist, TLV_REQUIRED_DIST } from "../../scripts/lib/tlv-dist-manifest.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "../..");
@@ -78,8 +79,23 @@ function copyRecursive(src, dest, rel = "") {
 }
 
 function writeChatSupabaseConfig() {
-  const url = process.env.TASFUL_SUPABASE_URL?.trim();
-  const anonKey = process.env.TASFUL_SUPABASE_ANON_KEY?.trim();
+  let url = process.env.TASFUL_SUPABASE_URL?.trim();
+  let anonKey = process.env.TASFUL_SUPABASE_ANON_KEY?.trim();
+
+  if (!url || !anonKey) {
+    const localCfg = path.join(REPO_ROOT, "chat-supabase-config.js");
+    if (fs.existsSync(localCfg)) {
+      const js = fs.readFileSync(localCfg, "utf8");
+      url = url || js.match(/url:\s*"([^"]+)"/)?.[1]?.replace(/\/$/, "") || "";
+      anonKey = anonKey || js.match(/anonKey:\s*"([^"]+)"/)?.[1] || "";
+      if (url && anonKey) {
+        console.warn(
+          "[stage-cloudflare-pages] TASFUL_SUPABASE_* unset — using chat-supabase-config.js (local build only)",
+        );
+      }
+    }
+  }
+
   if (!url || !anonKey) {
     console.error(
       "[stage-cloudflare-pages] ERROR: TASFUL_SUPABASE_URL and TASFUL_SUPABASE_ANON_KEY are required."
@@ -99,7 +115,36 @@ window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {};
   fs.writeFileSync(path.join(OUT_DIR, "chat-supabase-config.js"), body, "utf8");
 }
 
-const ROBOTS_META = '<meta name="robots" content="noindex,nofollow,noarchive">';
+function writeTlvFeatureFlags() {
+  const publicEnabled = String(process.env.TLV_PUBLIC_ENABLED || "false").toLowerCase() === "true";
+  const privateTestEnabled = String(process.env.TLV_PRIVATE_TEST_ENABLED ?? "true").toLowerCase() !== "false";
+  const emails = String(process.env.TLV_ALLOWED_TEST_EMAILS || "rubi.hiro0613@gmail.com")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const body = `/**
+ * Generated at deploy — TLV Phase 14 private production test
+ * Do not commit dist copy. Source: deploy/cloudflare/stage-cloudflare-pages.mjs
+ */
+(function (global) {
+  "use strict";
+  global.TLV_FEATURE_FLAGS = Object.freeze({
+    publicEnabled: ${publicEnabled},
+    privateTestEnabled: ${privateTestEnabled},
+    allowedTestEmails: Object.freeze(${JSON.stringify(emails)}),
+  });
+})(typeof window !== "undefined" ? window : globalThis);
+`;
+  const liveDir = path.join(OUT_DIR, "live");
+  fs.mkdirSync(liveDir, { recursive: true });
+  fs.writeFileSync(path.join(liveDir, "tlv-feature-flags.js"), body, "utf8");
+  console.log(
+    `[stage-cloudflare-pages] TLV flags public=${publicEnabled} privateTest=${privateTestEnabled} emails=${emails.length}`,
+  );
+}
+
+const ROBOTS_META = '<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">';
 const ROBOTS_META_RE = /<meta\s+name=["']robots["'][^>]*\/?>/gi;
 
 function applySearchBlockingToHtml(html) {
@@ -131,10 +176,28 @@ function applySearchBlockingToDist() {
 }
 
 function copyCfMeta() {
-  for (const name of ["_redirects", "_headers", "robots.txt"]) {
+  const required = ["robots.txt", "_headers"];
+  const optional = ["_redirects"];
+
+  for (const name of [...required, ...optional]) {
     const src = path.join(__dirname, name);
-    if (fs.existsSync(src)) {
-      fs.copyFileSync(src, path.join(OUT_DIR, name));
+    const dest = path.join(OUT_DIR, name);
+    if (!fs.existsSync(src)) {
+      if (required.includes(name)) {
+        console.error(`[stage-cloudflare-pages] ERROR: required file missing: ${src}`);
+        process.exit(1);
+      }
+      continue;
+    }
+    fs.copyFileSync(src, dest);
+    console.log(`[stage-cloudflare-pages] copied ${name} → dist/${name}`);
+  }
+
+  for (const name of required) {
+    const dest = path.join(OUT_DIR, name);
+    if (!fs.existsSync(dest)) {
+      console.error(`[stage-cloudflare-pages] ERROR: dist/${name} was not created`);
+      process.exit(1);
     }
   }
 }
@@ -154,9 +217,20 @@ function main() {
     copyRecursive(src, path.join(OUT_DIR, name), name);
   }
 
-  writeChatSupabaseConfig();
-  applySearchBlockingToDist();
   copyCfMeta();
+
+  writeChatSupabaseConfig();
+  writeTlvFeatureFlags();
+  applySearchBlockingToDist();
+
+  const tlvErrors = verifyTlvDist(REPO_ROOT, path.relative(REPO_ROOT, OUT_DIR));
+  if (tlvErrors.length) {
+    console.error("[stage-cloudflare-pages] ERROR: TLV pages missing or invalid in dist:");
+    for (const e of tlvErrors) console.error(`  - ${e}`);
+    console.error("  Ensure live/ TLV files exist in the build context (git-tracked for Cloudflare Pages).");
+    process.exit(1);
+  }
+  console.log(`[stage-cloudflare-pages] TLV pages OK (${TLV_REQUIRED_DIST.length} files)`);
 
   console.log(`[stage-cloudflare-pages] OK → ${OUT_DIR}`);
 }
