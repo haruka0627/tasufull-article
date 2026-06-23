@@ -5,20 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="theme-color" content="#0b0814" />
-  <title>チャンネル | TASFUL LIVE</title>
+  <title>動画を視聴 | TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="live.css" />
 </head>
-<body class="live-body tlv-page" data-page="live-profile" data-tlv-page="profile">
+<body class="live-body tlv-page" data-page="live-watch-video" data-tlv-page="watch">
   <div class="tlv-desktop-shell" data-tlv-desktop-shell>
     <div data-tlv-desktop-sidebar-mount></div>
     <div class="tlv-desktop-main">
       <div data-tlv-desktop-topbar-mount></div>
-      <main class="tlv-desktop-content tlv-desktop-content--profile">
-        <div data-live-profile-root data-live-profile-root-desktop>
+      <main class="tlv-desktop-content tlv-desktop-content--watch">
+        <div data-live-watch-root>
           <p class="live-loading">読み込み中…</p>
         </div>
       </main>
@@ -26,9 +26,12 @@
   </div>
 
   <div class="tlv-mobile-shell" data-tlv-mobile-shell>
-    <div data-tlv-mobile-header-mount></div>
-    <main class="tlv-mobile-content tlv-mobile-content--profile">
-      <div data-live-profile-root-mobile>
+    <header class="tlv-mobile-header tlv-mobile-header--watch">
+      <a class="tlv-mobile-header__back" href="videos.html">← VIEW</a>
+      <h1 class="tlv-mobile-header__title">視聴中</h1>
+    </header>
+    <main class="tlv-mobile-content tlv-mobile-content--watch">
+      <div data-live-watch-root-mobile>
         <p class="live-loading">読み込み中…</p>
       </div>
     </main>
@@ -43,41 +46,27 @@
   <script src="../auth-current-user.js" defer></script>
   <script src="../tasu-supabase-client.js" defer></script>
   <script src="../chat-user-identity.js" defer></script>
-  <script src="../chat-supabase.js" defer></script>
-  <script src="../talk-room-ensure.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
   <script src="live-videos.js" defer></script>
-  <script src="live-notify.js" defer></script>
-  <script src="live-talk-bridge.js" defer></script>
-  <script src="live-follow.js" defer></script>
-  <script src="live-profile.js" defer></script>
+  <script src="live-watch-video.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
-      const cfg = window.TasuLiveConfig;
       const nav = window.TasuTlvNav;
-      const params = new URLSearchParams(globalThis.location?.search || "");
-      const viewerId = cfg?.getTalkUserId?.() || "";
-      const targetId = String(params.get("userId") || viewerId || "").trim();
-      const isOwn = Boolean(viewerId && targetId && viewerId === targetId);
+      const rootDesktop = document.querySelector("[data-live-watch-root]");
+      const rootMobile = document.querySelector("[data-live-watch-root-mobile]");
+      const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
+      const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
 
-      nav?.initPageShell?.({
-        desktopNavId: isOwn ? "my-videos" : "videos",
-        mobileTabId: isOwn ? "my" : "view",
-        topbarTitle: "チャンネル",
-        mobileHeaderTitle: "チャンネル",
-        mobileHeaderOptions: {
-          showUpload: isOwn,
-          backHref: isOwn ? "my-videos.html" : "videos.html",
-        },
-      });
+      if (nav) {
+        if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("videos");
+        if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "動画を視聴", showSearch: false });
+        if (tabbarMount) tabbarMount.innerHTML = nav.renderMobileTabbar("view");
+      }
 
-      const rootDesktop = document.querySelector("[data-live-profile-root-desktop]");
-      const rootMobile = document.querySelector("[data-live-profile-root-mobile]");
-      if (rootDesktop && window.TasuLiveProfile?.mountProfilePage) {
-        window.TasuLiveProfile.mountProfilePage(rootDesktop, {
-          roots: [rootDesktop, rootMobile],
-        });
+      if (window.TasuLiveWatchVideo?.mountWatchPage && rootDesktop) {
+        window.TasuLiveWatchVideo.mountWatchPage(rootDesktop, { mirrorRoot: rootMobile });
       }
     });
   </script>

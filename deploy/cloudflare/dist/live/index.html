@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta name="theme-color" content="#0b0814" />
   <title>TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,99 +12,114 @@
   <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="live.css" />
 </head>
-<body class="live-body" data-page="live-index">
-  <div class="live-shell" data-live-hub>
-    <header class="live-header">
-      <a class="live-header__back" href="../dashboard.html">← ダッシュボード</a>
-    </header>
-    <nav data-breadcrumb aria-label="パンくず"></nav>
-    <main class="live-main">
-      <section class="live-hero" aria-label="TASFUL LIVE">
-        <p class="live-hero__kicker">TASFUL LIVE</p>
-        <h1 class="live-header__title live-hero__title">ショート &amp; ライブ</h1>
-        <p class="live-hero__desc">Phase 6: ショート・ライブ配信・ギフト stub。実決済は次 Phase です。</p>
-      </section>
-      <section class="live-hub-section" aria-label="ライブ配信">
-        <div class="live-hub-section__head">
-          <h2 class="live-hub-section__title">ライブ配信</h2>
-          <div class="live-hub-section__actions">
-            <a class="live-btn live-btn--ghost" href="create.html">配信作成</a>
-            <a class="live-btn live-btn--ghost" href="studio.html">スタジオ</a>
+<body class="live-body tlv-page" data-page="live-index" data-tlv-page="live">
+  <div class="tlv-desktop-shell" data-tlv-desktop-shell>
+    <div data-tlv-desktop-sidebar-mount></div>
+    <div class="tlv-desktop-main">
+      <div data-tlv-desktop-topbar-mount></div>
+      <main class="tlv-desktop-content" data-live-hub>
+        <section class="live-hero tlv-desktop-hero" aria-label="TASFUL LIVE">
+          <p class="live-hero__kicker">TASFUL LIVE</p>
+          <h1 class="live-header__title live-hero__title">ショート &amp; ライブ</h1>
+          <p class="live-hero__desc">長尺動画は VIEW から。ショート・ライブ配信もここから。</p>
+          <p class="tlv-desktop-hero__links">
+            <a class="live-btn live-btn--primary" href="videos.html">長尺動画を見る</a>
+            <a class="live-btn live-btn--ghost" href="shorts.html">ショート</a>
+          </p>
+        </section>
+        <section class="live-hub-section" id="live-broadcasts" aria-label="ライブ配信">
+          <div class="live-hub-section__head">
+            <h2 class="live-hub-section__title">ライブ配信</h2>
+            <div class="live-hub-section__actions">
+              <a class="live-btn live-btn--ghost" href="create.html">配信作成</a>
+              <a class="live-btn live-btn--ghost" href="studio.html">スタジオ</a>
+            </div>
           </div>
+          <div data-live-broadcasts-root>
+            <p class="live-loading">ライブ配信を読み込み中…</p>
+          </div>
+        </section>
+        <div class="live-grid tlv-desktop-hub-grid">
+          <a class="live-card" href="videos.html"><h2 class="live-card__title">動画一覧</h2><p class="live-card__text">長尺動画を視聴</p></a>
+          <a class="live-card" href="shorts.html"><h2 class="live-card__title">ショート</h2><p class="live-card__text">縦型動画フィード</p></a>
+          <a class="live-card" href="my-videos.html"><h2 class="live-card__title">マイ動画</h2><p class="live-card__text">投稿動画の管理</p></a>
+          <a class="live-card" href="video-upload.html"><h2 class="live-card__title">投稿</h2><p class="live-card__text">長尺 MP4 を投稿</p></a>
+          <a class="live-card" href="settings.html"><h2 class="live-card__title">クリエイター設定</h2><p class="live-card__text">プロフィール・通知</p></a>
+          <a class="live-card" href="profile.html" id="live-hub-profile-link"><h2 class="live-card__title">プロフィール</h2><p class="live-card__text">チャンネルを見る</p></a>
         </div>
-        <div data-live-broadcasts-root>
-          <p class="live-loading">ライブ配信を読み込み中…</p>
+      </main>
+    </div>
+  </div>
+
+  <div class="tlv-mobile-shell" data-tlv-mobile-shell>
+    <div data-tlv-mobile-header-mount></div>
+    <main class="tlv-mobile-content" data-live-hub-mobile>
+      <section class="tlv-mobile-hero">
+        <p class="tlv-mobile-hero__kicker">TLV LIVE</p>
+        <h1 class="tlv-mobile-hero__title">ショート &amp; 配信</h1>
+      </section>
+      <div class="tlv-mobile-quick-links">
+        <a class="tlv-mobile-quick-links__item" href="shorts.html">ショート</a>
+        <a class="tlv-mobile-quick-links__item" href="videos.html">長尺 VIEW</a>
+        <a class="tlv-mobile-quick-links__item" href="create.html">配信作成</a>
+      </div>
+      <section class="live-hub-section" aria-label="ライブ配信">
+        <h2 class="live-hub-section__title">ライブ配信</h2>
+        <div data-live-broadcasts-root-mobile>
+          <p class="live-loading">読み込み中…</p>
         </div>
       </section>
-      <div class="live-grid">
-        <a class="live-card" href="settings.html" data-live-link-settings>
-          <h2 class="live-card__title">クリエイター設定</h2>
-          <p class="live-card__text">LIVE プロフィールの作成・更新、通知設定</p>
-          <span class="live-card__tag">Phase 1</span>
-        </a>
-        <a class="live-card" href="profile.html" data-live-link-profile id="live-hub-profile-link">
-          <h2 class="live-card__title">自分のプロフィール</h2>
-          <p class="live-card__text">公開ステータス・フォロワー数を確認</p>
-          <span class="live-card__tag">Phase 1</span>
-        </a>
-        <a class="live-card" href="shorts.html">
-          <h2 class="live-card__title">ショートフィード</h2>
-          <p class="live-card__text">公開中の縦型動画を視聴・いいね</p>
-          <span class="live-card__tag">Phase 3</span>
-        </a>
-        <a class="live-card" href="short-upload.html">
-          <h2 class="live-card__title">ショート投稿</h2>
-          <p class="live-card__text">MP4 をアップロードして公開</p>
-          <span class="live-card__tag">Phase 3</span>
-        </a>
-        <a class="live-card" href="watch.html?broadcast_id=stub&talkDev=1">
-          <h2 class="live-card__title">ライブ視聴</h2>
-          <p class="live-card__text">配信中・終了したライブを視聴</p>
-          <span class="live-card__tag">Phase 5</span>
-        </a>
-        <a class="live-card" href="create.html">
-          <h2 class="live-card__title">配信作成</h2>
-          <p class="live-card__text">タイトル・予定日時を設定</p>
-          <span class="live-card__tag">Phase 5</span>
-        </a>
-        <a class="live-card" href="studio.html">
-          <h2 class="live-card__title">配信スタジオ</h2>
-          <p class="live-card__text">開始 / 終了（スタブ）</p>
-          <span class="live-card__tag">Phase 5</span>
-        </a>
-        <a class="live-card" href="gifts.html?broadcast_id=stub&creator_user_id=u_creator&talkDev=1">
-          <h2 class="live-card__title">ギフト</h2>
-          <p class="live-card__text">stub 投げ銭 · テスト用</p>
-          <span class="live-card__tag">Phase 6</span>
-        </a>
-        <a class="live-card" href="tips.html?talkDev=1">
-          <h2 class="live-card__title">応援履歴</h2>
-          <p class="live-card__text">送った · 受け取った応援</p>
-          <span class="live-card__tag">Phase 6</span>
-        </a>
+      <div class="tlv-mobile-link-list">
+        <a href="my-videos.html">マイ動画</a>
+        <a href="video-upload.html">動画を投稿</a>
+        <a href="profile.html" id="live-hub-profile-link-mobile">プロフィール</a>
+        <a href="settings.html">クリエイター設定</a>
       </div>
     </main>
+    <div data-tlv-mobile-tabbar-mount></div>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../chat-supabase-config.js"></script>
+  <script src="tlv-feature-flags.js"></script>
+  <script src="tlv-private-test-gate.js" defer></script>
   <script src="../talk-runtime.js" defer></script>
   <script src="../auth-current-user.js" defer></script>
   <script src="../tasu-supabase-client.js" defer></script>
   <script src="../chat-user-identity.js" defer></script>
-  <script src="../breadcrumb-config.js" defer></script>
-  <script src="../common-breadcrumb.js" defer></script>
   <script src="live-config.js" defer></script>
+  <script src="tlv-nav.js" defer></script>
   <script src="live-broadcasts.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
+      const nav = window.TasuTlvNav;
       const cfg = window.TasuLiveConfig;
       const id = cfg?.getTalkUserId?.() || "u_me";
-      const link = document.getElementById("live-hub-profile-link");
-      if (link && cfg?.profileUrl) link.href = cfg.profileUrl(id);
-      const liveRoot = document.querySelector("[data-live-broadcasts-root]");
-      if (liveRoot && window.TasuLiveBroadcasts?.mountHubLiveSection) {
-        window.TasuLiveBroadcasts.mountHubLiveSection(liveRoot);
+      const profileLink = document.getElementById("live-hub-profile-link");
+      const profileLinkMobile = document.getElementById("live-hub-profile-link-mobile");
+      if (cfg?.profileUrl) {
+        if (profileLink) profileLink.href = cfg.profileUrl(id);
+        if (profileLinkMobile) profileLinkMobile.href = cfg.profileUrl(id);
       }
+
+      if (nav) {
+        const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
+        const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
+        const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+        const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
+        if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("live");
+        if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "LIVE ハブ", showSearch: false });
+        if (headerMount) headerMount.innerHTML = nav.renderMobileHeader("LIVE");
+        if (tabbarMount) tabbarMount.innerHTML = nav.renderMobileTabbar("live");
+      }
+
+      const mountBroadcasts = (root) => {
+        if (root && window.TasuLiveBroadcasts?.mountHubLiveSection) {
+          window.TasuLiveBroadcasts.mountHubLiveSection(root);
+        }
+      };
+      mountBroadcasts(document.querySelector("[data-live-broadcasts-root]"));
+      mountBroadcasts(document.querySelector("[data-live-broadcasts-root-mobile]"));
     });
   </script>
 </body>

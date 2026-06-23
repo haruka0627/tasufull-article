@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="theme-color" content="#0b0814" />
+  <title>VIEW | TASFUL LIVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+  <link rel="stylesheet" href="live.css" />
+</head>
+<body class="live-body tlv-page" data-page="live-videos" data-tlv-page="view">
+  <div class="tlv-desktop-shell" data-tlv-desktop-shell>
+    <div data-tlv-desktop-sidebar-mount></div>
+    <div class="tlv-desktop-main">
+      <div data-tlv-desktop-topbar-mount></div>
+      <div data-tlv-desktop-chips-mount></div>
+      <main class="tlv-desktop-content">
+        <div data-live-videos-root data-live-videos-root-desktop>
+          <p class="live-loading">読み込み中…</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="tlv-mobile-shell" data-tlv-mobile-shell>
+    <div data-tlv-mobile-header-mount></div>
+    <div data-tlv-mobile-feed-tabs-mount></div>
+    <main class="tlv-mobile-content">
+      <div data-live-videos-root-mobile>
+        <p class="live-loading">読み込み中…</p>
+      </div>
+    </main>
+    <div data-tlv-mobile-tabbar-mount></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="tlv-feature-flags.js"></script>
+  <script src="tlv-private-test-gate.js" defer></script>
+  <script src="../talk-runtime.js" defer></script>
+  <script src="../auth-current-user.js" defer></script>
+  <script src="../tasu-supabase-client.js" defer></script>
+  <script src="../chat-user-identity.js" defer></script>
+  <script src="live-config.js" defer></script>
+  <script src="tlv-nav.js" defer></script>
+  <script src="live-videos.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const nav = window.TasuTlvNav;
+      const rootDesktop = document.querySelector("[data-live-videos-root-desktop]");
+      const rootMobile = document.querySelector("[data-live-videos-root-mobile]");
+      const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
+      const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
+      const chipsMount = document.querySelector("[data-tlv-desktop-chips-mount]");
+      const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
+      const feedTabsMount = document.querySelector("[data-tlv-mobile-feed-tabs-mount]");
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+
+      if (nav) {
+        if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("videos");
+        if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "動画を探す" });
+        if (chipsMount) chipsMount.innerHTML = nav.renderCategoryChips("");
+        if (headerMount) headerMount.innerHTML = nav.renderMobileHeader("VIEW", { showUpload: true });
+        if (feedTabsMount) feedTabsMount.innerHTML = nav.renderMobileFeedTabs("recommended");
+        if (tabbarMount) tabbarMount.innerHTML = nav.renderMobileTabbar("view");
+      }
+
+      if (rootDesktop && window.TasuLiveVideos?.mountVideosFeed) {
+        window.TasuLiveVideos.mountVideosFeed(rootDesktop, {
+          roots: [rootDesktop, rootMobile],
+          searchInputs: [
+            document.querySelector("[data-tlv-desktop-search-input]"),
+          ],
+          searchForms: [document.querySelector("[data-tlv-desktop-search-form]")],
+          categoryChips: document.querySelector("[data-tlv-category-chips]"),
+          feedTabs: document.querySelector("[data-tlv-feed-tabs]"),
+        });
+      }
+    });
+  </script>
+</body>
+</html>
