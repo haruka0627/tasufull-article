@@ -293,17 +293,22 @@
     `;
   }
 
-  function renderDashboardHtml({ summary, metrics, monetizationStatus, eligibility, talkUserId }) {
+  function renderDashboardHtml({ summary, metrics, monetizationStatus, eligibility, talkUserId, view = "full" }) {
     const cfg = C();
+    const isAnalytics = view === "analytics";
+    const pageTitle = isAnalytics ? "チャンネルのアナリティクス" : "収益・分析";
     return `
       <div class="tlv-creator-dashboard" data-tlv-creator-dashboard data-user-id="${cfg.escapeHtml(talkUserId)}">
+        <header class="tlv-studio-page__header">
+          <h1 class="tlv-studio-page__title">${cfg.escapeHtml(pageTitle)}</h1>
+        </header>
         ${renderDisclaimer()}
         ${renderSummaryCards(summary)}
-        ${renderMonetizationPanel(monetizationStatus, eligibility)}
+        ${isAnalytics ? "" : renderMonetizationPanel(monetizationStatus, eligibility)}
         ${renderVideoPerformanceTable(metrics)}
         ${renderDisclaimer()}
         <p class="tlv-creator-dashboard__links">
-          <a class="live-link" href="${cfg.escapeHtml(cfg.myVideosUrl())}">← マイ動画へ</a>
+          <a class="live-link" href="${cfg.escapeHtml(global.TasuLiveChannelContent?.STUDIO_ROUTES?.dashboard || "studio-dashboard.html")}">← Studio トップへ</a>
           ·
           <a class="live-link" href="${cfg.escapeHtml(cfg.profileUrl(talkUserId))}">チャンネルを見る</a>
         </p>
@@ -389,6 +394,7 @@
         monetizationStatus,
         eligibility,
         talkUserId,
+        view: options.view || "full",
       });
 
       writeToRoots(roots, html);
@@ -419,6 +425,7 @@
     mountCreatorDashboard,
     renderCreatorDashLinkBanner,
     fetchOwnVideosForAnalytics,
+    fetchActiveAdSlotCounts,
     enrichVideoMetrics,
     computeSummary,
     getMonetizationStatus,

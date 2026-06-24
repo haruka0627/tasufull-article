@@ -45,20 +45,38 @@
   <script src="../chat-user-identity.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
   <script src="live-video-upload.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
       const nav = window.TasuTlvNav;
-      nav?.initPageShell?.({
-        desktopNavId: "upload",
-        mobileTabId: "my",
-        topbarTitle: "長尺動画投稿",
-        mobileHeaderTitle: "投稿",
-        mobileHeaderOptions: {
-          backHref: "my-videos.html",
-          backLabel: "← 戻る",
-        },
-      });
+      const sidebarApi = window.TasuTlvVideosSidebar;
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: "upload",
+          headerLayout: "youtube",
+          mobileHeaderOptions: {
+            backHref: "my-videos.html",
+            backLabel: "← マイページ",
+          },
+        });
+      } else {
+        nav?.initPageShell?.({
+          desktopNavId: "upload",
+          mobileTabId: "my",
+          topbarTitle: "長尺動画投稿",
+          mobileHeaderTitle: "投稿",
+          mobileHeaderOptions: {
+            backHref: "my-videos.html",
+            backLabel: "← 戻る",
+          },
+        });
+      }
+      if (nav && tabbarMount) {
+        tabbarMount.innerHTML = nav.renderMobileTabbar("my");
+      }
 
       const root = nav?.pickContentRoot?.(
         "[data-live-video-upload-root-desktop]",

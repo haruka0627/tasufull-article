@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <meta name="theme-color" content="#0b0814" />
-  <title>マイ動画 | TASFUL LIVE</title>
+  <title>マイページ | TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="live.css" />
 </head>
 <body class="live-body tlv-page" data-page="live-my-videos" data-tlv-page="my-videos">
@@ -43,30 +42,91 @@
   <script src="../auth-current-user.js" defer></script>
   <script src="../tasu-supabase-client.js" defer></script>
   <script src="../chat-user-identity.js" defer></script>
-  <script src="../chat-supabase.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
   <script src="live-videos.js" defer></script>
   <script src="live-monetization-service.js" defer></script>
   <script src="live-my-videos.js" defer></script>
+  <script src="live-my-page.js" defer></script>
   <script src="live-creator-dashboard.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
       const nav = window.TasuTlvNav;
-      nav?.initPageShell?.({
-        desktopNavId: "my-videos",
-        mobileTabId: "my",
-        topbarTitle: "マイ動画",
-        mobileHeaderTitle: "マイ動画",
-        mobileHeaderOptions: { showUpload: true },
-      });
-
+      const sidebarApi = window.TasuTlvVideosSidebar;
       const rootDesktop = document.querySelector("[data-live-my-videos-root-desktop]");
       const rootMobile = document.querySelector("[data-live-my-videos-root-mobile]");
-      if (rootDesktop && window.TasuLiveMyVideos?.mountMyVideosPage) {
-        window.TasuLiveMyVideos.mountMyVideosPage(rootDesktop, {
-          roots: [rootDesktop, rootMobile],
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+      const params = new URLSearchParams(window.location.search || "");
+      const shelf = params.get("shelf");
+
+      if (shelf === "history") {
+        window.location.replace("history.html");
+        return;
+      }
+
+      if (shelf === "playlists") {
+        window.location.replace("playlists.html");
+        return;
+      }
+
+      if (shelf === "watch-later") {
+        window.location.replace("watch-later.html");
+        return;
+      }
+
+      if (shelf === "liked") {
+        window.location.replace("liked-videos.html");
+        return;
+      }
+
+      if (shelf === "uploaded" || shelf === "created") {
+        window.location.replace("channel-content.html");
+        return;
+      }
+
+      if (params.get("manage") === "1") {
+        window.location.replace("channel-content.html");
+        return;
+      }
+
+      if (shelf === "offline") {
+        window.location.replace("offline.html");
+        return;
+      }
+
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: "mypage",
+          headerLayout: "youtube",
         });
+      } else if (sidebarApi?.renderVideosDesktopSidebarRail) {
+        const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
+        const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
+        const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
+        if (sidebarMount) sidebarMount.innerHTML = sidebarApi.renderVideosDesktopSidebarRail("mypage");
+        if (topbarMount) {
+          topbarMount.innerHTML = sidebarApi.renderVideosDesktopTopbar({ headerLayout: "youtube" });
+          nav?.bindDesktopSearchRedirect?.(topbarMount.querySelector("[data-tlv-desktop-search-form]"));
+        }
+        if (headerMount) {
+          headerMount.innerHTML = sidebarApi.renderVideosMobileHeader("VIEW", { headerLayout: "youtube" });
+        }
+        sidebarApi.initVideosDrawer?.();
+        sidebarApi.initMiniFlyouts?.();
+        sidebarApi.initCreateMenu?.();
+        sidebarApi.initNotificationsMenu?.();
+        sidebarApi.initAccountMenu?.();
+        sidebarApi.initDrawerSubscriptions?.();
+      }
+
+      if (nav && tabbarMount) {
+        tabbarMount.innerHTML = nav.renderMobileTabbar("my");
+      }
+
+      const mountOptions = { roots: [rootDesktop, rootMobile] };
+      if (rootDesktop && window.TasuLiveMyPage?.mountMyPage) {
+        window.TasuLiveMyPage.mountMyPage(rootDesktop, mountOptions);
       }
     });
   </script>

@@ -42,7 +42,7 @@
         <div class="live-grid tlv-desktop-hub-grid">
           <a class="live-card" href="videos.html"><h2 class="live-card__title">動画一覧</h2><p class="live-card__text">長尺動画を視聴</p></a>
           <a class="live-card" href="shorts.html"><h2 class="live-card__title">ショート</h2><p class="live-card__text">縦型動画フィード</p></a>
-          <a class="live-card" href="my-videos.html"><h2 class="live-card__title">マイ動画</h2><p class="live-card__text">投稿動画の管理</p></a>
+          <a class="live-card" href="my-videos.html"><h2 class="live-card__title">マイページ</h2><p class="live-card__text">履歴・再生リスト・作成動画</p></a>
           <a class="live-card" href="video-upload.html"><h2 class="live-card__title">投稿</h2><p class="live-card__text">長尺 MP4 を投稿</p></a>
           <a class="live-card" href="settings.html"><h2 class="live-card__title">クリエイター設定</h2><p class="live-card__text">プロフィール・通知</p></a>
           <a class="live-card" href="profile.html" id="live-hub-profile-link"><h2 class="live-card__title">プロフィール</h2><p class="live-card__text">チャンネルを見る</p></a>
@@ -70,7 +70,7 @@
         </div>
       </section>
       <div class="tlv-mobile-link-list">
-        <a href="my-videos.html">マイ動画</a>
+        <a href="my-videos.html">マイページ</a>
         <a href="video-upload.html">動画を投稿</a>
         <a href="profile.html" id="live-hub-profile-link-mobile">プロフィール</a>
         <a href="settings.html">クリエイター設定</a>
@@ -89,10 +89,12 @@
   <script src="../chat-user-identity.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
   <script src="live-broadcasts.js" defer></script>
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
       const nav = window.TasuTlvNav;
+      const sidebarApi = window.TasuTlvVideosSidebar;
       const cfg = window.TasuLiveConfig;
       const id = cfg?.getTalkUserId?.() || "u_me";
       const profileLink = document.getElementById("live-hub-profile-link");
@@ -102,15 +104,22 @@
         if (profileLinkMobile) profileLinkMobile.href = cfg.profileUrl(id);
       }
 
-      if (nav) {
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: "home",
+          headerLayout: "youtube",
+        });
+      } else if (nav) {
         const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
         const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
-        const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
         const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
-        if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("live");
+        if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("home");
         if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "LIVE ハブ", showSearch: false });
         if (headerMount) headerMount.innerHTML = nav.renderMobileHeader("LIVE");
-        if (tabbarMount) tabbarMount.innerHTML = nav.renderMobileTabbar("live");
+      }
+      if (nav && tabbarMount) {
+        tabbarMount.innerHTML = nav.renderMobileTabbar("live");
       }
 
       const mountBroadcasts = (root) => {

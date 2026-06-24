@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <meta name="theme-color" content="#0b0814" />
   <title>VIEW | TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -63,9 +63,12 @@
       const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
 
       if (sidebarApi?.mountVideosPageChrome) {
+        const params = new URLSearchParams(window.location.search || "");
+        const isFollowing = params.get("feed") === "following";
         sidebarApi.mountVideosPageChrome({
-          activeId: "videos",
+          activeId: isFollowing ? "subscriptions" : "videos",
           headerLayout: "youtube",
+          mobileHeaderTitle: isFollowing ? "登録チャンネル" : "VIEW",
         });
       } else if (nav) {
         const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");

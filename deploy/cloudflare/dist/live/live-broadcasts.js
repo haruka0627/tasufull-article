@@ -166,10 +166,20 @@
       }
 
       const liveHtml = liveRows.length
-        ? `<section class="live-hub-section"><h2 class="live-hub-section__title">ライブ中</h2><div class="live-broadcast-grid">${liveRows.map(renderBroadcastCard).join("")}</div></section>`
+        ? `<section class="live-hub-section live-hub-section--broadcasts-list" aria-label="ライブ中">
+            <div class="live-hub-section__head live-hub-section__head--broadcasts-list">
+              <h2 class="live-hub-section__title">ライブ中</h2>
+            </div>
+            <div class="live-broadcast-grid">${liveRows.map(renderBroadcastCard).join("")}</div>
+          </section>`
         : "";
       const otherHtml = otherRows.length
-        ? `<section class="live-hub-section"><h2 class="live-hub-section__title">予定・終了</h2><div class="live-broadcast-grid">${otherRows.map(renderBroadcastCard).join("")}</div></section>`
+        ? `<section class="live-hub-section live-hub-section--broadcasts-list" aria-label="予定・終了">
+            <div class="live-hub-section__head live-hub-section__head--broadcasts-list">
+              <h2 class="live-hub-section__title">予定・終了</h2>
+            </div>
+            <div class="live-broadcast-grid">${otherRows.map(renderBroadcastCard).join("")}</div>
+          </section>`
         : "";
 
       root.innerHTML = `${liveHtml}${otherHtml}`;

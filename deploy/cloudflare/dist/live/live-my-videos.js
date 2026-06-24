@@ -259,7 +259,7 @@
         `
         <div class="live-empty">
           <p class="live-empty__title">ログインが必要です</p>
-          <p class="live-empty__text">マイ動画を管理するには TALK ログインしてください。</p>
+          <p class="live-empty__text">作成した動画を管理するには TALK ログインしてください。</p>
         </div>
       `,
       );
@@ -318,5 +318,9 @@
     fetchOwnVideos,
     updateOwnVideo,
     mountMyVideosPage,
+    bindRowActions,
+    bindRowActionsOnRoots,
+    renderVisibilitySelect,
+    renderActionButtons,
   };
 })(typeof window !== "undefined" ? window : globalThis);

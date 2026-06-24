@@ -17,7 +17,6 @@
     <div class="tlv-desktop-main">
       <div data-tlv-desktop-topbar-mount></div>
       <main class="tlv-desktop-content">
-        <p class="tlv-shorts-page-intro">ショートを発見 · タップで視聴 · <a href="videos.html">長尺動画一覧</a></p>
         <div class="tlv-shorts-toolbar" data-tlv-shorts-toolbar data-tlv-shorts-toolbar-desktop hidden></div>
         <div data-live-shorts-root data-live-shorts-root-desktop>
           <p class="live-loading">読み込み中…</p>
@@ -29,7 +28,6 @@
   <div class="tlv-mobile-shell" data-tlv-mobile-shell>
     <div data-tlv-mobile-header-mount></div>
     <main class="tlv-mobile-content">
-      <p class="tlv-shorts-page-intro tlv-shorts-page-intro--mobile">ショートを発見 · タップで視聴</p>
       <div class="tlv-shorts-toolbar" data-tlv-shorts-toolbar data-tlv-shorts-toolbar-mobile hidden></div>
       <div data-live-shorts-root-mobile>
         <p class="live-loading">読み込み中…</p>
@@ -62,21 +60,40 @@
       if (sidebarApi?.mountVideosPageChrome) {
         sidebarApi.mountVideosPageChrome({
           activeId: "shorts",
-          topbarTitle: "ショート",
-          showSearch: false,
+          headerLayout: "youtube",
           uploadHref: "short-upload.html",
-          mobileHeaderTitle: "ショート",
         });
-      } else if (nav) {
+      } else if (sidebarApi?.renderVideosDesktopSidebarRail) {
+        const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
         const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
         const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
-        if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "ショート", showSearch: false });
-        if (headerMount) headerMount.innerHTML = nav.renderMobileHeader("ショート", { showUpload: true });
-      }
-
-      if (nav) {
+        if (sidebarMount) sidebarMount.innerHTML = sidebarApi.renderVideosDesktopSidebarRail("shorts");
+        if (topbarMount) {
+          topbarMount.innerHTML = sidebarApi.renderVideosDesktopTopbar({
+            headerLayout: "youtube",
+            uploadHref: "short-upload.html",
+          });
+          nav?.bindDesktopSearchRedirect?.(topbarMount.querySelector("[data-tlv-desktop-search-form]"));
+        }
+        if (headerMount) {
+          headerMount.innerHTML = sidebarApi.renderVideosMobileHeader("VIEW", {
+            headerLayout: "youtube",
+            uploadHref: "short-upload.html",
+          });
+        }
+        sidebarApi.initVideosDrawer?.();
+        sidebarApi.initMiniFlyouts?.();
+        sidebarApi.initCreateMenu?.();
+        sidebarApi.initNotificationsMenu?.();
+        sidebarApi.initAccountMenu?.();
+        sidebarApi.initDrawerSubscriptions?.();
+      } else if (nav) {
         const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");
+        const topbarMount = document.querySelector("[data-tlv-desktop-topbar-mount]");
+        const headerMount = document.querySelector("[data-tlv-mobile-header-mount]");
         if (sidebarMount) sidebarMount.innerHTML = nav.renderDesktopSidebar("shorts");
+        if (topbarMount) topbarMount.innerHTML = nav.renderDesktopTopbar({ title: "動画を探す" });
+        if (headerMount) headerMount.innerHTML = nav.renderMobileHeader("VIEW", { showUpload: true });
       }
 
       if (nav && tabbarMount) {

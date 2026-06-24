@@ -10,6 +10,7 @@
     shorts: "live_shorts",
     likes: "live_short_likes",
     videos: "live_videos",
+    videoCaptions: "live_video_captions",
     videoLikes: "live_video_likes",
     videoReports: "live_video_reports",
     videoAds: "live_video_ads",
@@ -53,6 +54,16 @@
   const VIDEO_SIGNED_URL_FUNCTION = "live-video-signed-url";
   const VIDEO_VIEW_FUNCTION = "live-video-view";
   const VIDEO_ADMIN_FUNCTION = "live-video-admin";
+  /** 将来の Whisper / 字幕生成 Edge（未デプロイ · live-video-captions.js と同期） */
+  const LIVE_VIDEO_CAPTION_GENERATE_FUNCTION = "live-video-caption-generate";
+  const STORAGE_BUCKET_VIDEO_CAPTIONS = "live-video-captions";
+  const VIDEO_CAPTION_STATUS = Object.freeze({
+    none: "none",
+    pending: "pending",
+    processing: "processing",
+    ready: "ready",
+    failed: "failed",
+  });
   const MONETIZATION_ADMIN_FUNCTION = "live-monetization-admin";
   const SECURITY_EVENTS_FUNCTION = "live-security-events";
 
@@ -303,6 +314,10 @@
 
   function creatorDashboardUrl() {
     return "creator-dashboard.html";
+  }
+
+  function studioDashboardUrl() {
+    return "studio-dashboard.html";
   }
 
   function normalizeMonetizationStatus(value) {
@@ -885,6 +900,9 @@
     VIDEO_SIGNED_URL_FUNCTION,
     VIDEO_VIEW_FUNCTION,
     VIDEO_ADMIN_FUNCTION,
+    LIVE_VIDEO_CAPTION_GENERATE_FUNCTION,
+    STORAGE_BUCKET_VIDEO_CAPTIONS,
+    VIDEO_CAPTION_STATUS,
     MONETIZATION_ADMIN_FUNCTION,
     SECURITY_EVENTS_FUNCTION,
     SECURITY_VIEW_MIN_SECONDS,
@@ -932,6 +950,7 @@
     videosListUrl,
     myVideosUrl,
     creatorDashboardUrl,
+    studioDashboardUrl,
     normalizeMonetizationStatus,
     labelMonetizationStatus,
     labelRiskReason,

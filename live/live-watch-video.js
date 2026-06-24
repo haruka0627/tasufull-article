@@ -21,7 +21,7 @@
       .getClient()
       .from(cfg.TABLES.videos)
       .select(
-        "id, talk_user_id, title, description, thumbnail_path, duration_sec, views_count, likes_count, reports_count, published_at, status, visibility",
+        "id, talk_user_id, title, description, thumbnail_path, duration_sec, views_count, likes_count, reports_count, published_at, status, visibility, caption_status, has_caption, caption_language",
       )
       .eq("id", videoId)
       .maybeSingle();
@@ -354,8 +354,9 @@
       <article class="live-watch tlv-watch-layout" data-live-watch-article>
         <div class="tlv-watch-main">
           ${ads.pre_roll.length ? `<div class="live-watch__ads-pre">${ads.pre_roll.map(renderAdSlotHtml).join("")}</div>` : ""}
-          <div class="live-watch__player-wrap">
+          <div class="live-watch__player-wrap" data-live-watch-player>
             <video class="live-watch__player" controls playsinline preload="metadata" src="${cfg.escapeHtml(playback.videoUrl)}"${poster} data-live-watch-video></video>
+            <button type="button" class="live-watch__captions-btn" data-live-watch-captions-btn hidden aria-hidden="true" aria-label="字幕" title="字幕">CC</button>
             ${ads.overlay.length ? `<div class="live-watch__ads-overlay">${ads.overlay.map(renderAdSlotHtml).join("")}</div>` : ""}
           </div>
           ${ads.below.length ? `<div class="live-watch__ads-below">${ads.below.map(renderAdSlotHtml).join("")}</div>` : ""}
@@ -592,11 +593,16 @@
         existingReport,
         relatedVideos,
       };
-      renderWatchPage(root, video, playback);
-      bindWatchInteractions(root, video);
+      const normalizedVideo = global.TasuLiveVideoCaptions?.normalizeVideoCaptionFields?.(video) || video;
+      renderWatchPage(root, normalizedVideo, playback);
+      bindWatchInteractions(root, normalizedVideo);
+      const playerRoot = root.querySelector("[data-live-watch-player]") || root;
+      global.TasuLiveVideoCaptions?.bindWatchPlayerCaptions?.(playerRoot, normalizedVideo);
       if (mirrorRoot) {
         mirrorWatchContent(root, mirrorRoot);
-        bindWatchInteractions(mirrorRoot, video);
+        bindWatchInteractions(mirrorRoot, normalizedVideo);
+        const mirrorPlayer = mirrorRoot.querySelector("[data-live-watch-player]") || mirrorRoot;
+        global.TasuLiveVideoCaptions?.bindWatchPlayerCaptions?.(mirrorPlayer, normalizedVideo);
       }
     } catch (err) {
       console.error("[TasuLiveWatchVideo]", err);

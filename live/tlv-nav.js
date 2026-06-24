@@ -18,7 +18,8 @@
     { id: "videos", label: "動画", href: "videos.html", icon: "▦" },
     { id: "shorts", label: "ショート", href: "shorts.html", icon: "▮" },
     { id: "live", label: "ライブ配信", href: "index.html#live-broadcasts", icon: "●" },
-    { id: "my-videos", label: "マイ動画", href: "my-videos.html", icon: "◎" },
+    { id: "subscriptions", label: "登録チャンネル", href: "videos.html?feed=following", icon: "▦" },
+    { id: "mypage", label: "マイページ", href: "my-videos.html", icon: "◎" },
     { id: "creator", label: "収益・分析", href: "creator-dashboard.html", icon: "¥" },
     { id: "upload", label: "投稿", href: "video-upload.html", icon: "＋" },
   ]);
@@ -50,11 +51,18 @@
       .replace(/"/g, "&quot;");
   }
 
+  function isDesktopNavActive(itemId, activeId) {
+    if (itemId === activeId) return true;
+    if (itemId === "subscriptions" && activeId === "following") return true;
+    return false;
+  }
+
   function renderDesktopSidebar(activeId) {
     const items = DESKTOP_NAV.map((item) => {
-      const active = item.id === activeId ? ' aria-current="page"' : "";
+      const active = isDesktopNavActive(item.id, activeId);
+      const ariaCurrent = active ? ' aria-current="page"' : "";
       return `
-        <a class="tlv-desktop-nav__link${item.id === activeId ? " is-active" : ""}" href="${esc(item.href)}" data-tlv-desktop-nav="${esc(item.id)}"${active}>
+        <a class="tlv-desktop-nav__link${active ? " is-active" : ""}" href="${esc(item.href)}" data-tlv-desktop-nav="${esc(item.id)}"${ariaCurrent}>
           <span class="tlv-desktop-nav__icon" aria-hidden="true">${esc(item.icon)}</span>
           <span>${esc(item.label)}</span>
         </a>`;

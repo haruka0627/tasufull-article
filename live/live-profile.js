@@ -6,6 +6,34 @@
 
   const C = () => global.TasuLiveConfig;
 
+  /** UI確認用デモ（false で実データ） */
+  const PROFILE_DEMO_MODE = true;
+
+  const DEMO_PLAYLIST_META = Object.freeze({
+    "watch-later": { count: 28, collageTones: ["finance", "sports", "music", "tech"] },
+    liked: { count: 154, collageTones: ["movie", "food", "travel", "stream"] },
+    videos: { count: 12, collageTones: ["tech", "game", "pets", "music"] },
+    shorts: { count: 48, collageTones: ["sports", "food", "music", "travel"], unit: "shorts" },
+    live: { count: 9, collageTones: ["stream", "finance", "tech", "game"] },
+  });
+
+  const DEMO_POSTS_SECTIONS = Object.freeze({
+    videos: [
+      { id: "demo-v1", title: "【解説】TLV クリエイター入門", collageTone: "tech", views: 12400 },
+      { id: "demo-v2", title: "週末ライブ振り返り", collageTone: "stream", views: 8200 },
+      { id: "demo-v3", title: "おすすめ機材まとめ 2026", collageTone: "finance", views: 5100 },
+    ],
+    shorts: [
+      { id: "demo-s1", title: "30秒でわかる配信設定", collageTone: "music" },
+      { id: "demo-s2", title: "今日のハイライト", collageTone: "sports" },
+      { id: "demo-s3", title: "裏側メイキング", collageTone: "food" },
+    ],
+    live: [
+      { id: "demo-l1", title: "金曜ナイトライブ #42", collageTone: "stream" },
+      { id: "demo-l2", title: "新作お披露目配信", collageTone: "game" },
+    ],
+  });
+
   function requireConfig() {
     const cfg = C();
     if (!cfg?.getClient?.()) {
@@ -83,41 +111,263 @@
     return (data || []).reduce((sum, row) => sum + Number(row.amount_yen || 0), 0);
   }
 
+  const CHANNEL_TABS = Object.freeze([
+    { id: "playlists", label: "再生リスト" },
+    { id: "posts", label: "投稿" },
+  ]);
+
+  const USER_PLAYLISTS_STORAGE_KEY = "tlv_user_playlists_v1";
+
+  const SYSTEM_PLAYLIST_ORDER = Object.freeze([
+    "watch-later",
+    "liked",
+    "videos",
+    "shorts",
+    "live",
+  ]);
+
+  function readUserCreatedPlaylists(userId) {
+    try {
+      const raw = global.localStorage?.getItem(USER_PLAYLISTS_STORAGE_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      const byUser = parsed?.[userId] || parsed?.items || parsed;
+      if (!Array.isArray(byUser)) return [];
+      return byUser
+        .map((item) => ({
+          id: String(item?.id || "").trim(),
+          title: String(item?.title || "再生リスト").trim(),
+          privacy: String(item?.privacy || "非公開").trim(),
+          href: String(item?.href || "#").trim(),
+          kind: "user",
+          updatedAt: String(item?.updatedAt || item?.updated_at || ""),
+          count: Number(item?.count ?? 0),
+          thumbUrl: item?.thumbUrl || null,
+        }))
+        .filter((item) => item.id && item.title);
+    } catch {
+      return [];
+    }
+  }
+
+  function buildSystemChannelPlaylists(userId, isOwn) {
+    const cfg = C();
+    const encodedId = encodeURIComponent(userId);
+    const ownOnly = (item) => !item.ownOnly || isOwn;
+    return [
+      {
+        id: "watch-later",
+        title: "あとで見る",
+        privacy: "非公開",
+        href: "watch-later.html",
+        ownOnly: true,
+        kind: "system",
+      },
+      {
+        id: "liked",
+        title: "高く評価した動画",
+        privacy: "非公開",
+        href: "liked-videos.html",
+        ownOnly: true,
+        kind: "system",
+      },
+      {
+        id: "videos",
+        title: "作成した動画",
+        privacy: "公開",
+        href: isOwn ? "channel-content.html" : `${cfg.profileUrl(userId)}?tab=posts`,
+        countKey: "videos",
+        kind: "system",
+      },
+      {
+        id: "shorts",
+        title: "作成したショート",
+        privacy: "公開",
+        href: `shorts.html?creator=${encodedId}`,
+        countKey: "shorts",
+        kind: "system",
+      },
+      {
+        id: "live",
+        title: "ライブ配信",
+        privacy: "公開",
+        href: "broadcasts.html",
+        countKey: "live",
+        kind: "system",
+      },
+    ].filter(ownOnly);
+  }
+
+  function sortChannelPlaylists(playlists) {
+    const userItems = playlists
+      .filter((item) => item.kind === "user")
+      .sort((a, b) => new Date(b.updatedAt || 0).getTime() - new Date(a.updatedAt || 0).getTime());
+    const systemItems = playlists
+      .filter((item) => item.kind !== "user")
+      .sort(
+        (a, b) =>
+          SYSTEM_PLAYLIST_ORDER.indexOf(a.id) - SYSTEM_PLAYLIST_ORDER.indexOf(b.id),
+      );
+    return [...userItems, ...systemItems];
+  }
+
+  function buildChannelPlaylists(userId, isOwn) {
+    const userPlaylists = isOwn ? readUserCreatedPlaylists(userId) : [];
+    return sortChannelPlaylists([...userPlaylists, ...buildSystemChannelPlaylists(userId, isOwn)]);
+  }
+
+  function buildLibraryPlaylists(userId, isOwn) {
+    const cfg = C();
+    const playlists = buildChannelPlaylists(userId, isOwn);
+    if (!isOwn) return playlists;
+    return [
+      ...playlists,
+      {
+        id: "saved",
+        title: "保存済み",
+        privacy: "非公開",
+        href: "my-videos.html?shelf=saved",
+        kind: "system",
+      },
+    ];
+  }
+
+  async function fetchFollowingCount(userId) {
+    const cfg = C();
+    const id = String(userId || "").trim();
+    if (!id) return 0;
+    try {
+      await cfg.ensureSupabaseSession();
+      const client = cfg.getClient();
+      if (!client || !cfg.TABLES?.follows) return 0;
+      const { count, error } = await client
+        .from(cfg.TABLES.follows)
+        .select("creator_id", { count: "exact", head: true })
+        .eq("follower_id", id);
+      if (error) {
+        console.warn("[TasuLiveProfile] following count skipped:", error.message || error);
+        return 0;
+      }
+      return Number(count) || 0;
+    } catch (err) {
+      console.warn("[TasuLiveProfile] following count skipped:", err.message || err);
+      return 0;
+    }
+  }
+
+  async function fetchChannelPlaylistBundle(creatorUserId, isOwn) {
+    const videosApi = global.TasuLiveVideos;
+    const emptyBundle = {
+      videos: { count: 0, thumbUrl: null },
+      shorts: { count: 0, thumbUrl: null },
+      live: { count: 0, thumbUrl: null },
+      watchLater: { count: 0, thumbUrl: null },
+      liked: { count: 0, thumbUrl: null },
+      saved: { count: 0, thumbUrl: null },
+    };
+    if (!videosApi) return emptyBundle;
+
+    try {
+      const [videos, shorts, broadcasts] = await Promise.all([
+        videosApi.fetchCreatorChannelVideos(creatorUserId, { isOwn, limit: 500 }).catch(() => []),
+        videosApi.fetchCreatorChannelShorts(creatorUserId, { isOwn, limit: 500 }).catch(() => []),
+        videosApi.fetchCreatorChannelBroadcasts(creatorUserId, { isOwn, limit: 500 }).catch(() => []),
+      ]);
+      const firstVideo = videos[0] || null;
+      return {
+        videos: {
+          count: videos.length,
+          thumbUrl: firstVideo ? videosApi.resolveThumbUrl?.(firstVideo) : null,
+        },
+        shorts: { count: shorts.length, thumbUrl: null },
+        live: { count: broadcasts.length, thumbUrl: null },
+        watchLater: { count: 0, thumbUrl: null },
+        liked: { count: 0, thumbUrl: null },
+        saved: { count: 0, thumbUrl: null },
+      };
+    } catch (err) {
+      console.warn("[TasuLiveProfile] playlist bundle skipped:", err.message || err);
+      return emptyBundle;
+    }
+  }
+
+  function formatPlaylistCountLabel(count, playlistId) {
+    const n = Number(count ?? 0).toLocaleString("ja-JP");
+    if (playlistId === "shorts") return `${n}本のショート`;
+    return `${n}本の動画`;
+  }
+
+  function buildDemoPlaylistBundle() {
+    return {
+      videos: { count: DEMO_PLAYLIST_META.videos.count, thumbUrl: null, collageTones: DEMO_PLAYLIST_META.videos.collageTones },
+      shorts: { count: DEMO_PLAYLIST_META.shorts.count, thumbUrl: null, collageTones: DEMO_PLAYLIST_META.shorts.collageTones },
+      live: { count: DEMO_PLAYLIST_META.live.count, thumbUrl: null, collageTones: DEMO_PLAYLIST_META.live.collageTones },
+      watchLater: { count: DEMO_PLAYLIST_META["watch-later"].count, thumbUrl: null, collageTones: DEMO_PLAYLIST_META["watch-later"].collageTones },
+      liked: { count: DEMO_PLAYLIST_META.liked.count, thumbUrl: null, collageTones: DEMO_PLAYLIST_META.liked.collageTones },
+      saved: { count: 0, thumbUrl: null, collageTones: null },
+    };
+  }
+
+  function applyDemoPlaylistMeta(playlist, meta) {
+    if (!PROFILE_DEMO_MODE) return meta;
+    const demo = DEMO_PLAYLIST_META[playlist.id];
+    if (!demo) return meta;
+    return {
+      count: demo.count,
+      thumbUrl: meta?.thumbUrl || null,
+      collageTones: demo.collageTones,
+      unit: demo.unit || "videos",
+    };
+  }
+
+  function resolvePlaylistCountMeta(playlist, bundle) {
+    if (playlist.kind === "user") {
+      return {
+        count: Number(playlist.count ?? 0),
+        thumbUrl: playlist.thumbUrl || null,
+      };
+    }
+    const map = {
+      "watch-later": bundle.watchLater,
+      liked: bundle.liked,
+      videos: bundle.videos,
+      shorts: bundle.shorts,
+      live: bundle.live,
+      saved: bundle.saved,
+    };
+    const base = map[playlist.id] || { count: 0, thumbUrl: null };
+    return applyDemoPlaylistMeta(playlist, base);
+  }
+
   function renderChannelHeader(profile, userId, stats, { isOwn = false } = {}) {
     const cfg = C();
     const name = cfg.resolveDisplayName(userId);
     const avatar = cfg.resolveAvatarUrl(userId);
-    const bio = profile?.bio
-      ? cfg.escapeHtml(profile.bio).replace(/\n/g, "<br>")
-      : '<span class="live-muted">自己紹介はまだありません</span>';
+    const bioRaw = String(profile?.bio || "").trim();
+    const bioHtml = bioRaw
+      ? cfg.escapeHtml(bioRaw).replace(/\n/g, "<br>")
+      : '<span class="tlv-channel-header__bio-empty">自己紹介はまだありません</span>';
     const followers = Number(profile?.follower_count ?? 0);
     const videoCount = Number(stats?.videoCount ?? 0);
-    const totalViews = Number(stats?.totalViews ?? 0);
 
     return `
       <header class="tlv-channel-header" data-tlv-channel-header>
-        <div class="tlv-channel-header__banner" aria-hidden="true"></div>
         <div class="tlv-channel-header__main">
-          <img class="tlv-channel-header__avatar" src="${cfg.escapeHtml(avatar)}" width="128" height="128" alt="" />
+          <img class="tlv-channel-header__avatar" src="${cfg.escapeHtml(avatar)}" width="128" height="128" alt="" loading="lazy" />
           <div class="tlv-channel-header__info">
             <div class="tlv-channel-header__headline">
-              <h2 class="tlv-channel-header__name">${cfg.escapeHtml(name)}</h2>
+              <h1 class="tlv-channel-header__name">${cfg.escapeHtml(name)}</h1>
               <p class="tlv-channel-header__handle">@${cfg.escapeHtml(userId)}</p>
             </div>
-            ${profile ? renderStatusBadges(profile) : ""}
-            <p class="tlv-channel-header__bio">${bio}</p>
+            <p class="tlv-channel-header__bio">${bioHtml}</p>
             <dl class="tlv-channel-header__stats">
               <div class="tlv-channel-header__stat">
-                <dt>投稿</dt>
-                <dd data-channel-stat-videos>${videoCount.toLocaleString("ja-JP")}</dd>
-              </div>
-              <div class="tlv-channel-header__stat">
-                <dt>フォロワー</dt>
+                <dt>登録者数</dt>
                 <dd data-live-follower-count>${followers.toLocaleString("ja-JP")}</dd>
               </div>
               <div class="tlv-channel-header__stat">
-                <dt>総再生</dt>
-                <dd data-channel-stat-views>${totalViews.toLocaleString("ja-JP")}</dd>
+                <dt>動画数</dt>
+                <dd data-channel-stat-videos>${videoCount.toLocaleString("ja-JP")}</dd>
               </div>
             </dl>
             <div class="tlv-channel-header__actions" data-live-profile-actions></div>
@@ -127,26 +377,230 @@
     `;
   }
 
-  function renderChannelPageShell(profile, userId, stats, { isOwn = false } = {}) {
+  function renderChannelTabs(activeTab = "playlists") {
+    const cfg = C();
+    const tabs = CHANNEL_TABS.map((tab) => {
+      const active = tab.id === activeTab ? " is-active" : "";
+      return `<button type="button" class="tlv-channel-tab${active}" data-tlv-channel-tab="${cfg.escapeHtml(tab.id)}" role="tab" aria-selected="${tab.id === activeTab ? "true" : "false"}">${cfg.escapeHtml(tab.label)}</button>`;
+    }).join("");
+    return `
+      <div class="tlv-channel-tabs-wrap">
+        <div class="tlv-channel-tabs-row">
+          <nav class="tlv-channel-tabs" data-tlv-channel-tabs role="tablist" aria-label="チャンネルコンテンツ">
+            ${tabs}
+          </nav>
+          <button type="button" class="tlv-channel-tabs__search" data-tlv-channel-search-toggle aria-label="チャンネル内を検索">
+            <svg class="tlv-channel-tabs__search-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z"/>
+            </svg>
+          </button>
+        </div>
+        <div class="tlv-channel-search" data-tlv-channel-search-panel hidden>
+          <input type="search" class="tlv-channel-search__input" data-tlv-channel-search-input placeholder="チャンネル内を検索" autocomplete="off" />
+        </div>
+      </div>`;
+  }
+
+  function renderPlaylistCollageCover(collageTones) {
+    const cfg = C();
+    const tones = Array.isArray(collageTones) ? collageTones.slice(0, 4) : [];
+    while (tones.length < 4) tones.push(tones[tones.length - 1] || "default");
+    const cells = tones
+      .map(
+        (tone) =>
+          `<div class="tlv-channel-playlist-card__collage-cell tlv-channel-playlist-card__collage-cell--${cfg.escapeHtml(tone)}" aria-hidden="true"></div>`,
+      )
+      .join("");
+    return `<div class="tlv-channel-playlist-card__collage">${cells}</div>`;
+  }
+
+  function renderChannelPlaylistCard(playlist, meta) {
+    const cfg = C();
+    const count = Number(meta?.count ?? 0);
+    const countLabel = formatPlaylistCountLabel(count, playlist.id);
+    const thumbUrl = String(meta?.thumbUrl || "").trim();
+    const href = String(playlist.href || "#").trim();
+    const collageTones = meta?.collageTones;
+    let coverInner = "";
+    if (thumbUrl) {
+      coverInner = `<img class="tlv-channel-playlist-card__cover-img" src="${cfg.escapeHtml(thumbUrl)}" alt="" loading="lazy" />`;
+    } else if (Array.isArray(collageTones) && collageTones.length) {
+      coverInner = renderPlaylistCollageCover(collageTones);
+    } else {
+      coverInner = `<div class="tlv-channel-playlist-card__cover-placeholder" aria-hidden="true"></div>`;
+    }
+
+    return `
+      <article class="tlv-channel-playlist-card" data-tlv-channel-playlist="${cfg.escapeHtml(playlist.id)}">
+        <a class="tlv-channel-playlist-card__media" href="${cfg.escapeHtml(href)}">
+          <div class="tlv-channel-playlist-card__thumb">
+            <div class="tlv-channel-playlist-card__stack tlv-channel-playlist-card__stack--back" aria-hidden="true"></div>
+            <div class="tlv-channel-playlist-card__stack tlv-channel-playlist-card__stack--front" aria-hidden="true"></div>
+            <div class="tlv-channel-playlist-card__cover">${coverInner}</div>
+            <span class="tlv-channel-playlist-card__count">
+              <span class="tlv-channel-playlist-card__count-icon" aria-hidden="true">≡</span>
+              ${cfg.escapeHtml(countLabel)}
+            </span>
+          </div>
+        </a>
+        <div class="tlv-channel-playlist-card__body">
+          <div class="tlv-channel-playlist-card__title-row">
+            <a class="tlv-channel-playlist-card__title" href="${cfg.escapeHtml(href)}">${cfg.escapeHtml(playlist.title)}</a>
+            <button type="button" class="tlv-channel-playlist-card__menu" data-tlv-channel-playlist-menu="${cfg.escapeHtml(playlist.id)}" aria-label="再生リストの操作">
+              <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+              </svg>
+            </button>
+          </div>
+          <p class="tlv-channel-playlist-card__privacy">${cfg.escapeHtml(playlist.privacy || "非公開")}</p>
+          <a class="tlv-channel-playlist-card__link" href="${cfg.escapeHtml(href)}">再生リストの全体を見る</a>
+        </div>
+      </article>`;
+  }
+
+  function renderPlaylistsTabHtml(playlists, bundle) {
+    const cards = playlists
+      .map((playlist) => renderChannelPlaylistCard(playlist, resolvePlaylistCountMeta(playlist, bundle)))
+      .join("");
+    return `<div class="tlv-channel-playlist-grid" data-tlv-channel-playlist-grid>${cards}</div>`;
+  }
+
+  function renderPostsDemoCard(item, { kind = "video" } = {}) {
+    const cfg = C();
+    const tone = cfg.escapeHtml(String(item.collageTone || "default"));
+    const href = kind === "short" ? "shorts.html" : kind === "live" ? "broadcasts.html" : "videos.html";
+    const viewsHtml =
+      kind === "video" && item.views != null
+        ? `<p class="tlv-channel-post-card__meta">${Number(item.views).toLocaleString("ja-JP")} 回視聴</p>`
+        : "";
+    return `
+      <article class="tlv-channel-post-card">
+        <a class="tlv-channel-post-card__media" href="${href}">
+          <div class="tlv-channel-post-card__thumb tlv-channel-post-card__thumb--${tone}">
+            ${kind === "live" ? '<span class="tlv-channel-post-card__live-badge">LIVE</span>' : ""}
+            ${kind === "short" ? '<span class="tlv-channel-post-card__short-badge">SHORT</span>' : ""}
+          </div>
+        </a>
+        <a class="tlv-channel-post-card__title" href="${href}">${cfg.escapeHtml(item.title || "無題")}</a>
+        ${viewsHtml}
+      </article>`;
+  }
+
+  function renderPostsSection(title, items, kind) {
+    const cfg = C();
+    const cards = items.map((item) => renderPostsDemoCard(item, { kind })).join("");
+    return `
+      <section class="tlv-channel-posts-section">
+        <h2 class="tlv-channel-posts-section__title">${cfg.escapeHtml(title)}</h2>
+        <div class="tlv-channel-posts-section__grid">${cards}</div>
+      </section>`;
+  }
+
+  function renderPostsSectionsHtml(sections, { showEmpty = false } = {}) {
+    const hasItems = sections.videos.length || sections.shorts.length || sections.live.length;
+    const body = [
+      sections.videos.length ? renderPostsSection("動画", sections.videos, "video") : "",
+      sections.shorts.length ? renderPostsSection("ショート", sections.shorts, "short") : "",
+      sections.live.length ? renderPostsSection("ライブ", sections.live, "live") : "",
+    ].join("");
+
+    if (!hasItems && showEmpty) {
+      return `
+        <div class="tlv-channel-posts-sections tlv-channel-posts-sections--empty" data-tlv-channel-posts-grid>
+          <section class="tlv-channel-posts-section tlv-channel-posts-section--placeholder">
+            <h2 class="tlv-channel-posts-section__title">動画</h2>
+          </section>
+          <section class="tlv-channel-posts-section tlv-channel-posts-section--placeholder">
+            <h2 class="tlv-channel-posts-section__title">ショート</h2>
+          </section>
+          <section class="tlv-channel-posts-section tlv-channel-posts-section--placeholder">
+            <h2 class="tlv-channel-posts-section__title">ライブ</h2>
+          </section>
+          <p class="tlv-channel-posts-empty">投稿はまだありません</p>
+        </div>`;
+    }
+
+    return `<div class="tlv-channel-posts-sections" data-tlv-channel-posts-grid>${body}</div>`;
+  }
+
+  function filterDemoPostsSections(query) {
+    const term = String(query || "").trim().toLowerCase();
+    if (!term) return DEMO_POSTS_SECTIONS;
+    const match = (item) => String(item.title || "").toLowerCase().includes(term);
+    return {
+      videos: DEMO_POSTS_SECTIONS.videos.filter(match),
+      shorts: DEMO_POSTS_SECTIONS.shorts.filter(match),
+      live: DEMO_POSTS_SECTIONS.live.filter(match),
+    };
+  }
+
+  async function renderPostsTabHtml(creatorUserId, isOwn, query = "") {
+    if (PROFILE_DEMO_MODE) {
+      const sections = filterDemoPostsSections(query);
+      return renderPostsSectionsHtml(sections, { showEmpty: false });
+    }
+
     const videosApi = global.TasuLiveVideos;
-    const tabsHtml = videosApi?.renderChannelTabs?.("videos") || "";
+    if (!videosApi?.fetchCreatorChannelVideos) {
+      return renderPostsSectionsHtml({ videos: [], shorts: [], live: [] }, { showEmpty: true });
+    }
+
+    const [videos, shorts, broadcasts] = await Promise.all([
+      videosApi.fetchCreatorChannelVideos(creatorUserId, { isOwn, limit: 48 }).catch(() => []),
+      videosApi.fetchCreatorChannelShorts?.(creatorUserId, { isOwn, limit: 48 }).catch(() => []) || [],
+      videosApi.fetchCreatorChannelBroadcasts?.(creatorUserId, { isOwn, limit: 48 }).catch(() => []) || [],
+    ]);
+
+    const term = String(query || "").trim().toLowerCase();
+    const filterByTitle = (items) => {
+      if (!term) return items;
+      return items.filter((item) => String(item?.title || "").toLowerCase().includes(term));
+    };
+
+    const filteredVideos = filterByTitle(videos);
+    const filteredShorts = filterByTitle(shorts);
+    const filteredLive = filterByTitle(broadcasts);
+
+    if (!filteredVideos.length && !filteredShorts.length && !filteredLive.length) {
+      return renderPostsSectionsHtml({ videos: [], shorts: [], live: [] }, { showEmpty: true });
+    }
+
+    const cfg = C();
+    const renderVideoCards = (items, kind) => {
+      if (!items.length) return "";
+      const cards = items
+        .map((item) => {
+          if (kind === "video" && videosApi.renderVideoCard) return videosApi.renderVideoCard(item);
+          return renderPostsDemoCard(
+            {
+              id: item.id,
+              title: item.title,
+              collageTone: "default",
+              views: item.views_count ?? item.view_count,
+            },
+            { kind: kind === "short" ? "short" : kind === "live" ? "live" : "video" },
+          );
+        })
+        .join("");
+      const title = kind === "short" ? "ショート" : kind === "live" ? "ライブ" : "動画";
+      return `
+        <section class="tlv-channel-posts-section">
+          <h2 class="tlv-channel-posts-section__title">${cfg.escapeHtml(title)}</h2>
+          <div class="tlv-channel-posts-section__grid tlv-channel-posts-grid">${cards}</div>
+        </section>`;
+    };
+
+    return `<div class="tlv-channel-posts-sections" data-tlv-channel-posts-grid>${renderVideoCards(filteredVideos, "video")}${renderVideoCards(filteredShorts, "short")}${renderVideoCards(filteredLive, "live")}</div>`;
+  }
+
+  function renderChannelPageShell(profile, userId, stats, { isOwn = false } = {}) {
     return `
       <div class="tlv-channel" data-tlv-channel data-creator-id="${C().escapeHtml(userId)}">
         ${renderChannelHeader(profile, userId, stats, { isOwn })}
-        ${tabsHtml}
+        ${renderChannelTabs("playlists")}
         <div class="tlv-channel-content" data-tlv-channel-content>
           <p class="live-loading live-loading--inline">コンテンツを読み込み中…</p>
         </div>
-      </div>
-    `;
-  }
-
-  function renderEmptyProfile(userId) {
-    const cfg = C();
-    return `
-      <div class="live-empty live-empty--compact">
-        <p class="live-empty__title">プロフィールがまだありません</p>
-        <p class="live-empty__text">@${cfg.escapeHtml(userId)} の LIVE プロフィールは未作成です。</p>
       </div>
     `;
   }
@@ -183,25 +637,14 @@
     if (!actions) return;
 
     if (isOwn) {
-      actions.insertAdjacentHTML(
-        "afterbegin",
-        '<a class="live-btn live-btn--primary" href="settings.html">プロフィールを編集</a>',
-      );
-      actions.insertAdjacentHTML(
-        "beforeend",
-        `<a class="live-btn live-btn--ghost" href="video-upload.html">動画を投稿</a>`,
-      );
-      actions.insertAdjacentHTML(
-        "beforeend",
-        `<a class="live-btn live-btn--ghost" href="${cfg.creatorDashboardUrl()}">収益・分析</a>`,
-      );
-      actions.insertAdjacentHTML(
-        "beforeend",
-        `<a class="live-btn live-btn--ghost" href="${cfg.tipsUrl()}${cfg.isTalkDevStubMode() ? "?talkDev=1" : ""}">応援履歴</a>`,
-      );
+      actions.innerHTML = `
+        <a class="live-btn live-btn--ghost tlv-channel-header__btn" href="settings.html">チャンネルをカスタマイズ</a>
+        <a class="live-btn live-btn--ghost tlv-channel-header__btn" href="channel-content.html">動画を管理</a>
+      `;
       return;
     }
 
+    actions.innerHTML = "";
     if (global.TasuLiveFollow?.mountFollowButton) {
       await global.TasuLiveFollow.mountFollowButton(actions, targetId, root, { channelMode: true });
     }
@@ -209,21 +652,101 @@
     actions.insertAdjacentHTML("beforeend", renderTalkCtaButton());
     const talkBtn = actions.querySelector("[data-live-talk-cta]");
     global.TasuLiveTalkBridge?.bindTalkCtaButton?.(talkBtn, targetId);
-
-    actions.insertAdjacentHTML(
-      "beforeend",
-      `<a class="live-btn live-btn--ghost" href="${cfg.tipsUrl()}${cfg.isTalkDevStubMode() ? "?talkDev=1" : ""}">自分の応援履歴</a>`,
-    );
   }
 
   function setProfileSubtitleText(text) {
     global.TasuTlvNav?.setProfileSubtitle?.(text);
   }
 
+  async function renderChannelTabContent(tabId, creatorUserId, isOwn, { query = "", bundle = null, playlists = [] } = {}) {
+    if (tabId === "posts") {
+      return renderPostsTabHtml(creatorUserId, isOwn, query);
+    }
+    const playlistBundle = bundle || (await fetchChannelPlaylistBundle(creatorUserId, isOwn));
+    const playlistItems = playlists.length ? playlists : buildChannelPlaylists(creatorUserId, isOwn);
+    return renderPlaylistsTabHtml(playlistItems, playlistBundle);
+  }
+
+  function bindChannelTabs(root, creatorUserId, isOwn, bundle, playlists, initialTab = "playlists") {
+    const tabs = root.querySelector("[data-tlv-channel-tabs]");
+    const content = root.querySelector("[data-tlv-channel-content]");
+    const searchToggle = root.querySelector("[data-tlv-channel-search-toggle]");
+    const searchPanel = root.querySelector("[data-tlv-channel-search-panel]");
+    const searchInput = root.querySelector("[data-tlv-channel-search-input]");
+    if (!tabs || !content) return Promise.resolve();
+
+    let activeTab = initialTab === "posts" ? "posts" : "playlists";
+    let searchQuery = "";
+    let searchTimer = null;
+
+    async function loadTab(tabId, query = searchQuery) {
+      activeTab = tabId;
+      tabs.querySelectorAll("[data-tlv-channel-tab]").forEach((btn) => {
+        const id = btn.getAttribute("data-tlv-channel-tab");
+        const active = id === tabId;
+        btn.classList.toggle("is-active", active);
+        btn.setAttribute("aria-selected", active ? "true" : "false");
+      });
+      content.innerHTML = '<p class="live-loading live-loading--inline">読み込み中…</p>';
+      try {
+        content.innerHTML = await renderChannelTabContent(tabId, creatorUserId, isOwn, {
+          query,
+          bundle,
+          playlists,
+        });
+        content.querySelectorAll("[data-tlv-channel-playlist-menu]").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            global.alert("再生リストメニューは今後追加予定です。");
+          });
+        });
+      } catch (err) {
+        console.error("[TasuLiveProfile] channel tab", err);
+        content.innerHTML = `<p class="live-error">読み込みに失敗しました: ${C().escapeHtml(err.message || err)}</p>`;
+      }
+    }
+
+    tabs.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-tlv-channel-tab]");
+      if (!btn) return;
+      loadTab(String(btn.getAttribute("data-tlv-channel-tab") || "playlists"));
+    });
+
+    searchToggle?.addEventListener("click", () => {
+      const nextHidden = !searchPanel?.hidden;
+      if (searchPanel) searchPanel.hidden = nextHidden;
+      searchToggle.classList.toggle("is-active", !nextHidden);
+      if (!nextHidden) {
+        searchInput?.focus();
+        if (activeTab !== "posts") loadTab("posts");
+      }
+    });
+
+    searchInput?.addEventListener("input", () => {
+      searchQuery = String(searchInput.value || "");
+      global.clearTimeout(searchTimer);
+      searchTimer = global.setTimeout(() => {
+        if (activeTab !== "posts") {
+          loadTab("posts");
+          return;
+        }
+        loadTab("posts", searchQuery);
+      }, 220);
+    });
+
+    return loadTab(activeTab);
+  }
+
   async function mountChannelTabsOnRoot(root, creatorUserId, isOwn) {
-    const videosApi = global.TasuLiveVideos;
-    if (!videosApi?.bindChannelTabs) return;
-    await videosApi.bindChannelTabs(root, creatorUserId, isOwn);
+    const params = new URLSearchParams(global.location?.search || "");
+    const tabParam = String(params.get("tab") || "").trim();
+    const initialTab = tabParam === "posts" ? "posts" : "playlists";
+    const bundle = PROFILE_DEMO_MODE
+      ? buildDemoPlaylistBundle()
+      : await fetchChannelPlaylistBundle(creatorUserId, isOwn);
+    const playlists = buildChannelPlaylists(creatorUserId, isOwn);
+    return bindChannelTabs(root, creatorUserId, isOwn, bundle, playlists, initialTab);
   }
 
   async function mountProfilePage(root, options = {}) {
@@ -260,29 +783,8 @@
         console.warn("[TasuLiveProfile] channel stats skipped:", statsErr);
       }
 
-      if (!profile && !isOwn) {
-        writeRoots(renderChannelPageShell(null, targetId, stats, { isOwn: false }));
-        for (const r of roots) {
-          await bindProfileActions(r, targetId, false);
-          await mountChannelTabsOnRoot(r, targetId, false);
-        }
-        setProfileSubtitleText(`${cfg.resolveDisplayName(targetId)} のチャンネル`);
-        return;
-      }
-
-      if (!profile && isOwn) {
-        writeRoots(`
-          ${renderChannelPageShell(null, targetId, stats, { isOwn: true })}
-          <p class="tlv-channel-setup-cta">
-            <a class="live-btn live-btn--primary" href="settings.html">プロフィールを作成する</a>
-          </p>
-        `);
-        for (const r of roots) {
-          await bindProfileActions(r, targetId, true);
-          await mountChannelTabsOnRoot(r, targetId, true);
-        }
-        setProfileSubtitleText("自分のチャンネル");
-        return;
+      if (PROFILE_DEMO_MODE) {
+        stats = { ...stats, videoCount: DEMO_PLAYLIST_META.videos.count };
       }
 
       writeRoots(renderChannelPageShell(profile, targetId, stats, { isOwn }));
@@ -442,5 +944,12 @@
     renderStatusBadges,
     renderChannelHeader,
     refreshFollowerCountDisplay,
+    buildChannelPlaylists,
+    buildLibraryPlaylists,
+    sortChannelPlaylists,
+    readUserCreatedPlaylists,
+    fetchChannelPlaylistBundle,
+    resolvePlaylistCountMeta,
+    PROFILE_DEMO_MODE,
   };
 })(typeof window !== "undefined" ? window : globalThis);

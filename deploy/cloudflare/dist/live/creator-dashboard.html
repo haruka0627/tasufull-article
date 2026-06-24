@@ -46,6 +46,7 @@
   <script src="../chat-supabase.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
   <script src="live-videos.js" defer></script>
   <script src="live-my-videos.js" defer></script>
   <script src="live-monetization-service.js" defer></script>
@@ -53,17 +54,35 @@
   <script defer>
     document.addEventListener("DOMContentLoaded", () => {
       const nav = window.TasuTlvNav;
-      nav?.initPageShell?.({
-        desktopNavId: "creator",
-        mobileTabId: "my",
-        topbarTitle: "収益・分析",
-        mobileHeaderTitle: "収益・分析",
-        mobileHeaderOptions: {
-          showUpload: true,
-          backHref: "my-videos.html",
-          backLabel: "← マイ動画",
-        },
-      });
+      const sidebarApi = window.TasuTlvVideosSidebar;
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: "creator",
+          headerLayout: "youtube",
+          mobileHeaderOptions: {
+            showUpload: true,
+            backHref: "my-videos.html",
+            backLabel: "← マイページ",
+          },
+        });
+      } else {
+        nav?.initPageShell?.({
+          desktopNavId: "creator",
+          mobileTabId: "my",
+          topbarTitle: "収益・分析",
+          mobileHeaderTitle: "収益・分析",
+          mobileHeaderOptions: {
+            showUpload: true,
+            backHref: "my-videos.html",
+            backLabel: "← マイページ",
+          },
+        });
+      }
+      if (nav && tabbarMount) {
+        tabbarMount.innerHTML = nav.renderMobileTabbar("my");
+      }
 
       const rootDesktop = document.querySelector("[data-live-creator-dashboard-root-desktop]");
       const rootMobile = document.querySelector("[data-live-creator-dashboard-root-mobile]");

@@ -311,7 +311,7 @@
         successEl.hidden = false;
         successEl.innerHTML = `
           再生ページ: <a href="${cfg.escapeHtml(watchUrl)}">${cfg.escapeHtml(watchUrl)}</a>
-          · <a href="${cfg.escapeHtml(cfg.myVideosUrl())}">マイ動画へ</a>
+          · <a href="${cfg.escapeHtml(cfg.myVideosUrl())}">マイページへ</a>
         `;
       } catch (err) {
         if (uploaded.length) await removeUploadedObjects(uploaded);

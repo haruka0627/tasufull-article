@@ -47,6 +47,7 @@
   <script src="../talk-room-ensure.js" defer></script>
   <script src="live-config.js" defer></script>
   <script src="tlv-nav.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
   <script src="live-videos.js" defer></script>
   <script src="live-notify.js" defer></script>
   <script src="live-talk-bridge.js" defer></script>
@@ -56,21 +57,38 @@
     document.addEventListener("DOMContentLoaded", () => {
       const cfg = window.TasuLiveConfig;
       const nav = window.TasuTlvNav;
+      const sidebarApi = window.TasuTlvVideosSidebar;
       const params = new URLSearchParams(globalThis.location?.search || "");
       const viewerId = cfg?.getTalkUserId?.() || "";
       const targetId = String(params.get("userId") || viewerId || "").trim();
       const isOwn = Boolean(viewerId && targetId && viewerId === targetId);
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
 
-      nav?.initPageShell?.({
-        desktopNavId: isOwn ? "my-videos" : "videos",
-        mobileTabId: isOwn ? "my" : "view",
-        topbarTitle: "チャンネル",
-        mobileHeaderTitle: "チャンネル",
-        mobileHeaderOptions: {
-          showUpload: isOwn,
-          backHref: isOwn ? "my-videos.html" : "videos.html",
-        },
-      });
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: isOwn ? "channel" : "videos",
+          headerLayout: "youtube",
+          mobileHeaderOptions: {
+            showUpload: isOwn,
+            backHref: isOwn ? "my-videos.html" : "videos.html",
+            backLabel: isOwn ? "← マイページ" : "← 動画",
+          },
+        });
+      } else {
+        nav?.initPageShell?.({
+          desktopNavId: isOwn ? "mypage" : "videos",
+          mobileTabId: isOwn ? "my" : "view",
+          topbarTitle: "チャンネル",
+          mobileHeaderTitle: "チャンネル",
+          mobileHeaderOptions: {
+            showUpload: isOwn,
+            backHref: isOwn ? "my-videos.html" : "videos.html",
+          },
+        });
+      }
+      if (nav && tabbarMount) {
+        tabbarMount.innerHTML = nav.renderMobileTabbar(isOwn ? "my" : "view");
+      }
 
       const rootDesktop = document.querySelector("[data-live-profile-root-desktop]");
       const rootMobile = document.querySelector("[data-live-profile-root-mobile]");

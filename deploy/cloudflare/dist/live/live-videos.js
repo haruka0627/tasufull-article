@@ -23,18 +23,68 @@
     return (videos || []).filter(fn);
   }
 
+  function isAuthenticatedTalkUser() {
+    const auth = global.TasuAuthCurrentUser?.getCurrentUser?.();
+    return Boolean(auth?.authenticated && auth?.talkUserId);
+  }
+
+  function renderFollowingFeedShellHtml() {
+    return `
+      <div class="tlv-videos-home tlv-videos-home--following tlv-videos-home--subscriptions" data-live-videos-home>
+        ${renderFollowingEmptyHtml()}
+      </div>`;
+  }
+
+  async function ensureSupabaseSessionSafe() {
+    const cfg = C();
+    try {
+      return await Promise.race([
+        cfg.ensureSupabaseSession(),
+        new Promise((_, reject) => {
+          global.setTimeout(() => reject(new Error("session timeout")), 8000);
+        }),
+      ]);
+    } catch (err) {
+      console.warn("[TasuLiveVideos] session skipped:", err.message || err);
+      return null;
+    }
+  }
+
   async function fetchFollowingCreatorIds() {
     const cfg = C();
-    const userId = cfg.getTalkUserId();
+    if (!isAuthenticatedTalkUser()) return [];
+    const userId = global.TasuAuthCurrentUser?.getCurrentUser?.()?.talkUserId || cfg.getTalkUserId();
     if (!userId) return [];
-    await cfg.ensureSupabaseSession();
-    const { data, error } = await cfg
-      .getClient()
-      .from(cfg.TABLES.follows)
-      .select("creator_id")
-      .eq("follower_id", userId);
-    if (error) throw error;
-    return (data || []).map((r) => r.creator_id).filter(Boolean);
+    try {
+      const session = await ensureSupabaseSessionSafe();
+      if (!session?.access_token) return [];
+      const client = cfg.getClient();
+      if (!client) return [];
+      const { data, error } = await client
+        .from(cfg.TABLES.follows)
+        .select("creator_id")
+        .eq("follower_id", userId);
+      if (error) {
+        console.warn("[TasuLiveVideos] follows fetch skipped:", error.message || error);
+        return [];
+      }
+      return (data || []).map((r) => r.creator_id).filter(Boolean);
+    } catch (err) {
+      console.warn("[TasuLiveVideos] follows fetch skipped:", err.message || err);
+      return [];
+    }
+  }
+
+  function renderFollowingEmptyHtml() {
+    const cfg = C();
+    const loggedIn = isAuthenticatedTalkUser();
+    const message = loggedIn
+      ? "フォロー中チャンネルはありません"
+      : "ログインすると登録チャンネルを表示できます";
+    return `
+      <div class="tlv-videos-following-empty tlv-videos-following-empty--standalone" data-tlv-following-empty>
+        <p class="tlv-videos-following-empty__message">${cfg.escapeHtml(message)}</p>
+      </div>`;
   }
 
   function sanitizeSearchQuery(raw) {
@@ -59,15 +109,99 @@
     return data || [];
   }
 
+  async function fetchFollowingVideos(creatorIds, { limit = 48, offset = 0 } = {}) {
+    const cfg = C();
+    const ids = (creatorIds || []).filter(Boolean);
+    if (!ids.length) return [];
+    const safeLimit = Math.max(1, Math.min(Number(limit) || 48, 48));
+    const safeOffset = Math.max(0, Number(offset) || 0);
+    try {
+      await ensureSupabaseSessionSafe();
+      const client = cfg.getClient();
+      if (!client) return [];
+      const { data, error } = await client
+        .from(cfg.TABLES.videos)
+        .select(
+          "id, talk_user_id, title, description, thumbnail_path, duration_sec, views_count, likes_count, published_at",
+        )
+        .eq("status", "published")
+        .eq("visibility", "public")
+        .in("talk_user_id", ids)
+        .order("published_at", { ascending: false })
+        .range(safeOffset, safeOffset + safeLimit - 1);
+      if (error) {
+        console.warn("[TasuLiveVideos] following videos fetch skipped:", error.message || error);
+        return [];
+      }
+      return data || [];
+    } catch (err) {
+      console.warn("[TasuLiveVideos] following videos fetch skipped:", err.message || err);
+      return [];
+    }
+  }
+
+  async function fetchFollowingShorts(creatorIds, limit = 24) {
+    const cfg = C();
+    const ids = (creatorIds || []).filter(Boolean);
+    if (!ids.length) return [];
+    try {
+      await ensureSupabaseSessionSafe();
+      const client = cfg.getClient();
+      if (!client) return [];
+      const { data, error } = await client
+        .from(cfg.TABLES.shorts)
+        .select("id, creator_id, title, description, duration_sec, view_count, published_at, created_at")
+        .eq("status", "published")
+        .in("creator_id", ids)
+        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) {
+        console.warn("[TasuLiveVideos] following shorts fetch skipped:", error.message || error);
+        return [];
+      }
+      return data || [];
+    } catch (err) {
+      console.warn("[TasuLiveVideos] following shorts fetch skipped:", err.message || err);
+      return [];
+    }
+  }
+
+  async function fetchFollowingFeedData() {
+    const creatorIds = await fetchFollowingCreatorIds();
+    if (!creatorIds.length) {
+      return { creatorIds: [], videos: [], shorts: [], hasMore: false, videoOffset: 0 };
+    }
+    const [videos, shorts] = await Promise.all([
+      fetchFollowingVideos(creatorIds, { limit: FOLLOWING_PAGE_SIZE, offset: 0 }),
+      fetchFollowingShorts(creatorIds, 24),
+    ]);
+    return {
+      creatorIds,
+      videos,
+      shorts,
+      hasMore: videos.length >= FOLLOWING_PAGE_SIZE,
+      videoOffset: videos.length,
+    };
+  }
+
   async function fetchPublishedVideos({ limit = 48, query = "", feed = "recommended" } = {}) {
     const cfg = C();
-    await cfg.ensureSupabaseSession();
+
+    if (feed === "following") {
+      const { videos } = await fetchFollowingFeedData();
+      return videos;
+    }
+
+    await ensureSupabaseSessionSafe();
 
     let orderCol = "published_at";
     if (feed === "trending") orderCol = "views_count";
 
-    let q = cfg
-      .getClient()
+    const client = cfg.getClient();
+    if (!client) return [];
+
+    let q = client
       .from(cfg.TABLES.videos)
       .select(
         "id, talk_user_id, title, description, thumbnail_path, duration_sec, views_count, likes_count, published_at",
@@ -76,12 +210,6 @@
       .eq("visibility", "public")
       .order(orderCol, { ascending: false })
       .limit(limit);
-
-    if (feed === "following") {
-      const creatorIds = await fetchFollowingCreatorIds();
-      if (!creatorIds.length) return [];
-      q = q.in("talk_user_id", creatorIds);
-    }
 
     if (feed === "new") {
       const since = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString();
@@ -301,7 +429,7 @@
       actions.push(`<a class="live-btn live-btn--ghost" href="short-upload.html">ショートを投稿</a>`);
     }
     if (isOwn && tabId === "videos") {
-      actions.push(`<a class="live-btn live-btn--ghost" href="${cfg.escapeHtml(cfg.myVideosUrl())}">マイ動画で管理</a>`);
+      actions.push(`<a class="live-btn live-btn--ghost" href="${cfg.escapeHtml(cfg.myVideosUrl())}">マイページで管理</a>`);
     }
 
     return `
@@ -453,7 +581,7 @@
           <h2 class="live-profile-section__title" id="live-profile-videos-heading">動画</h2>
           ${
             isOwn
-              ? `<a class="live-link" href="${cfg.escapeHtml(cfg.myVideosUrl())}">マイ動画で管理</a>`
+              ? `<a class="live-link" href="${cfg.escapeHtml(cfg.myVideosUrl())}">マイページで管理</a>`
               : ""
           }
         </div>
@@ -537,6 +665,8 @@
     new: { title: "新着動画", feed: "new" },
   });
 
+  const FOLLOWING_PAGE_SIZE = 24;
+
   function pickUniqueItems(pool, count, usedIds, idKey = "id") {
     const out = [];
     for (const item of pool || []) {
@@ -571,8 +701,8 @@
     }
 
     if (feed === "following") {
-      const videos = filterByCategory(await fetchPublishedVideos({ limit: 48, feed: "following" }), category);
-      return { mode: "following", videos };
+      const data = await fetchFollowingFeedData();
+      return { mode: "following", ...data };
     }
 
     const feedKey = feed === "trending" ? "trending" : feed === "new" ? "new" : "recommended";
@@ -645,6 +775,12 @@
     return `<div class="tlv-videos-section__row tlv-shorts-tile-grid">${cards.join("")}</div>`;
   }
 
+  function renderFollowingShortRow(shorts) {
+    if (!shorts?.length) return "";
+    const cards = shorts.map((s) => renderHomeShortCard(s));
+    return `<div class="tlv-videos-section__row tlv-videos-section__row--shorts-scroll tlv-videos-following-shorts-scroll">${cards.join("")}</div>`;
+  }
+
   function renderFeedSection(title, innerHtml, options = {}) {
     if (!innerHtml?.trim()) return "";
     const cfg = C();
@@ -680,6 +816,42 @@
     return `<div class="tlv-videos-section__topics" role="list">${cards}<span class="tlv-videos-topic-card tlv-videos-topic-card--more" aria-hidden="true">…</span></div>`;
   }
 
+  function renderFollowingVideoGrid(videos) {
+    if (!videos?.length) return "";
+    return `<div class="tlv-videos-feed tlv-videos-following-grid" data-tlv-following-videos>${videos.map((v) => renderVideoCard(v)).join("")}</div>`;
+  }
+
+  function renderFollowingSubscriptionsHtml(payload) {
+    const shorts = payload.shorts || [];
+    const videos = payload.videos || [];
+    const cfg = C();
+    const hasMore = Boolean(payload.hasMore);
+
+    const shortsSection = shorts.length
+      ? renderFeedSection("ショート", renderFollowingShortRow(shorts), {
+          extraClass: "tlv-videos-section--shorts tlv-videos-section--shorts-following",
+          seeAllHref: "shorts.html",
+        })
+      : "";
+
+    const videosSection = videos.length ? renderFollowingVideoGrid(videos) : "";
+
+    const loadSentinel = hasMore
+      ? `<div class="tlv-videos-following-sentinel" data-tlv-following-sentinel aria-hidden="true"></div>`
+      : "";
+
+    return `
+      <div class="tlv-videos-home tlv-videos-home--following tlv-videos-home--subscriptions" data-live-videos-home>
+        <header class="tlv-videos-following-header">
+          <h1 class="tlv-videos-following-title">${cfg.escapeHtml("登録チャンネル")}</h1>
+          <p class="tlv-videos-following-sort">${cfg.escapeHtml("新しい順")}</p>
+        </header>
+        ${shortsSection}
+        ${videosSection}
+        ${loadSentinel}
+      </div>`;
+  }
+
   function renderHomeFeedHtml(payload, { feed = "recommended", category = "" } = {}) {
     const cfg = C();
 
@@ -709,13 +881,13 @@
     }
 
     if (payload.mode === "following") {
-      if (!payload.videos.length) {
-        return renderFeedHtml([], { feed: "following", category });
-      }
-      return `
-        <div class="tlv-videos-home tlv-videos-home--following" data-live-videos-home>
-          ${renderFeedSection("フォロー中", renderVideoRow(payload.videos, "tlv-videos-section__row--videos-list"))}
+      if (!payload.creatorIds?.length) {
+        return `
+        <div class="tlv-videos-home tlv-videos-home--following tlv-videos-home--subscriptions" data-live-videos-home>
+          ${renderFollowingEmptyHtml()}
         </div>`;
+      }
+      return renderFollowingSubscriptionsHtml(payload);
     }
 
     const sections = [
@@ -792,14 +964,14 @@
   function renderFeedHtml(videos, { currentQuery = "", feed = "recommended", category = "" } = {}) {
     const cfg = C();
     if (!videos.length) {
-      const emptyTitle =
-        feed === "following"
-          ? "フォロー中のクリエイター動画がありません"
-          : currentQuery
-            ? "該当する動画がありません"
-            : category
-              ? "このカテゴリの動画がありません"
-              : "公開動画がありません";
+      if (feed === "following") {
+        return renderFollowingEmptyHtml();
+      }
+      const emptyTitle = currentQuery
+        ? "該当する動画がありません"
+        : category
+          ? "このカテゴリの動画がありません"
+          : "公開動画がありません";
       return `
         <div class="live-empty">
           <p class="live-empty__title">${cfg.escapeHtml(emptyTitle)}</p>
@@ -822,6 +994,69 @@
     });
   }
 
+  function syncFollowingChrome(feed) {
+    const isFollowing = feed === "following";
+    const body = global.document?.body;
+    if (body) {
+      if (isFollowing) body.setAttribute("data-tlv-feed", "following");
+      else body.removeAttribute("data-tlv-feed");
+    }
+    global.document
+      ?.querySelectorAll?.("[data-tlv-desktop-chips-mount], [data-tlv-mobile-chips-mount]")
+      ?.forEach((el) => {
+        el.hidden = isFollowing;
+      });
+  }
+
+  function bindFollowingInfiniteScroll(roots, creatorIds, initialState) {
+    const ids = (creatorIds || []).filter(Boolean);
+    if (!ids.length) return null;
+
+    let loading = false;
+    let offset = Number(initialState?.videoOffset) || 0;
+    let hasMore = Boolean(initialState?.hasMore);
+
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting) || loading || !hasMore) return;
+        loading = true;
+        try {
+          const more = await fetchFollowingVideos(ids, {
+            limit: FOLLOWING_PAGE_SIZE,
+            offset,
+          });
+          if (!more.length) {
+            hasMore = false;
+            roots.forEach((root) => root.querySelector("[data-tlv-following-sentinel]")?.remove());
+            return;
+          }
+          offset += more.length;
+          if (more.length < FOLLOWING_PAGE_SIZE) {
+            hasMore = false;
+          }
+          const cardsHtml = more.map((video) => renderVideoCard(video)).join("");
+          roots.forEach((root) => {
+            const grid = root.querySelector("[data-tlv-following-videos]");
+            if (grid) grid.insertAdjacentHTML("beforeend", cardsHtml);
+            if (!hasMore) root.querySelector("[data-tlv-following-sentinel]")?.remove();
+          });
+        } catch (err) {
+          console.warn("[TasuLiveVideos] following load more skipped:", err.message || err);
+        } finally {
+          loading = false;
+        }
+      },
+      { rootMargin: "600px" },
+    );
+
+    roots.forEach((root) => {
+      const sentinel = root.querySelector("[data-tlv-following-sentinel]");
+      if (sentinel) observer.observe(sentinel);
+    });
+
+    return observer;
+  }
+
   async function mountVideosFeed(root, options = {}) {
     const cfg = C();
     const roots = (options.roots || [root]).filter(Boolean);
@@ -831,6 +1066,7 @@
     let currentFeed = String(options.initialFeed || "recommended");
     let currentCategory = String(options.initialCategory || "");
     let currentShelf = String(options.initialShelf || "");
+    let followingScrollObserver = null;
     try {
       const urlParams = new URLSearchParams(global.location?.search || "");
       if (!currentShelf && urlParams.get("shelf")) currentShelf = String(urlParams.get("shelf"));
@@ -845,9 +1081,22 @@
       currentFeed = feed;
       currentCategory = category;
       currentShelf = shelf;
+      if (followingScrollObserver) {
+        followingScrollObserver.disconnect();
+        followingScrollObserver = null;
+      }
       writeToRoots(roots, '<p class="live-loading">動画を読み込み中…</p>');
       try {
-        await cfg.ensureSupabaseSession();
+        if (currentFeed === "following" && !isAuthenticatedTalkUser()) {
+          writeToRoots(roots, renderFollowingFeedShellHtml());
+          syncFollowingChrome("following");
+          return;
+        }
+
+        if (currentFeed !== "following") {
+          await ensureSupabaseSessionSafe();
+        }
+
         const payload = await buildHomeFeedPayload({
           query: currentQuery,
           feed: currentFeed,
@@ -855,10 +1104,29 @@
           shelf: currentShelf,
         });
         writeToRoots(roots, renderHomeFeedHtml(payload, { feed: currentFeed, category: currentCategory }));
+        syncFollowingChrome(currentFeed);
+        if (currentFeed === "following" && payload.mode === "following" && payload.creatorIds?.length) {
+          followingScrollObserver = bindFollowingInfiniteScroll(roots, payload.creatorIds, payload);
+        }
         global.TasuTlvNav?.syncSearchInputs?.(searchInputs, currentQuery);
       } catch (err) {
+        if (currentFeed === "following") {
+          console.warn("[TasuLiveVideos] following feed skipped:", err.message || err);
+          writeToRoots(roots, renderFollowingFeedShellHtml());
+          syncFollowingChrome("following");
+          return;
+        }
         console.error("[TasuLiveVideos]", err);
         writeToRoots(roots, `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`);
+      } finally {
+        roots.forEach((root) => {
+          if (!root?.querySelector?.(".live-loading")) return;
+          if (currentFeed === "following") {
+            root.innerHTML = renderFollowingFeedShellHtml();
+            return;
+          }
+          root.innerHTML = `<p class="live-error">読み込みに失敗しました</p>`;
+        });
       }
     }
 
@@ -905,6 +1173,7 @@
     });
 
     await render(currentQuery, currentFeed, currentCategory, currentShelf);
+    syncFollowingChrome(currentFeed);
   }
 
   global.TasuLiveVideos = {

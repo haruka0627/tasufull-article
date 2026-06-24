@@ -63,9 +63,12 @@
       const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
 
       if (sidebarApi?.mountVideosPageChrome) {
+        const params = new URLSearchParams(window.location.search || "");
+        const isFollowing = params.get("feed") === "following";
         sidebarApi.mountVideosPageChrome({
-          activeId: "videos",
+          activeId: isFollowing ? "subscriptions" : "videos",
           headerLayout: "youtube",
+          mobileHeaderTitle: isFollowing ? "登録チャンネル" : "VIEW",
         });
       } else if (nav) {
         const sidebarMount = document.querySelector("[data-tlv-desktop-sidebar-mount]");

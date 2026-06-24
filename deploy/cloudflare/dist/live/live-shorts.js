@@ -352,7 +352,7 @@
   function renderShortsFeedHtml(shorts) {
     if (!shorts.length) return "";
     const cards = shorts.map((short) => renderShortGridCard(short));
-    return `<div class="live-shorts-feed" data-live-shorts-feed>${cards.join("")}</div>`;
+    return `<div class="live-shorts-feed tlv-shorts-tile-grid" data-live-shorts-feed>${cards.join("")}</div>`;
   }
 
   function renderShortsSearchEmptyHtml(query) {
