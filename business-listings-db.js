@@ -48,7 +48,15 @@
   const VALID_STATUS = new Set(["available", "busy", "closed"]);
   const VALID_PLANS = new Set(["none", "considering", "apply"]);
   const VALID_INVOICE = new Set(["yes", "no", "negotiable"]);
-  const VALID_PUBLISH = new Set(["draft", "public", "scheduled"]);
+  const VALID_PUBLISH = new Set([
+    "draft",
+    "public",
+    "scheduled",
+    "pending_review",
+    "rejected",
+    "hidden",
+    "removed",
+  ]);
   const UUID_RE =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -509,6 +517,34 @@
     return `必要項目が不足しています：\n${lines.join("\n")}`;
   }
 
+  function applyContentGate(input, row) {
+    const Gate = window.TasuPlatformContentGate;
+    if (Gate?.applyListingPublishGateAsync) {
+      return Gate.applyListingPublishGateAsync(
+        { ...input, ...row },
+        { requestedPublishStatus: input?.publish_status || row.publish_status }
+      ).then((gate) => {
+        if (gate.ok) {
+          window.TasuPlatformModerationQueue?.trackLocalListing?.(gate.row, "business_listings");
+        }
+        return gate;
+      });
+    }
+    if (!Gate?.applyListingPublishGate) return Promise.resolve({ ok: true, row });
+    const gate = Gate.applyListingPublishGate({ ...input, ...row }, {
+      requestedPublishStatus: input?.publish_status || row.publish_status,
+    });
+    if (!gate.ok) {
+      return Promise.resolve({
+        ok: false,
+        error: gate.error || "掲載内容の審査で拒否されました",
+        blocked: true,
+      });
+    }
+    window.TasuPlatformModerationQueue?.trackLocalListing?.(gate.row, "business_listings");
+    return Promise.resolve({ ok: true, row: gate.row, pending: gate.pending });
+  }
+
   function normalizePayload(input) {
     const category = normalizeBusinessCategory(input.business_category);
     const status = String(input.status || "").trim();
@@ -782,7 +818,12 @@
       return updateLocalBusinessListing(key, input);
     }
     if (key && isUuid(key) && updateSupabaseListing) {
-      return updateSupabaseListing(key, input);
+      const row = normalizePayload({ ...input, id: key });
+      const gated = await applyContentGate(input, row);
+      if (!gated.ok) {
+        return { ok: false, error: gated.error, blocked: gated.blocked };
+      }
+      return updateSupabaseListing(key, gated.row || row);
     }
     return insertBusinessListing(input);
   }
@@ -790,7 +831,7 @@
   async function insertBusinessListing(input) {
     logBusinessImagePayload("insertBusinessListing (raw input)", input);
     const shopProducts = input?.shop_store_products;
-    const row = normalizePayload(input);
+    let row = normalizePayload(input);
     logBusinessImagePayload("insertBusinessListing (normalized)", row);
     console.log("[business save payload]", {
       id: row?.id,
@@ -812,6 +853,10 @@
       }
     }
 
+    const gated = await applyContentGate(input, row);
+    if (!gated.ok) return { ok: false, error: gated.error, blocked: gated.blocked };
+    row = gated.row;
+
     const sb = getClient();
     if (sb) {
       const result = await insertSupabaseListing(row);
@@ -824,11 +869,12 @@
           console.warn("[TasuBusinessListings] shop_store_products insert:", prodResult.error);
         }
       }
-      if (result.ok) return result;
+      if (result.ok) return { ...result, pending: gated.pending, autoPublic: gated.autoPublic };
       console.warn("[TasuBusinessListings] fallback to local:", result.error);
     }
 
-    return insertLocal({ ...row, shop_store_products: shopProducts, products: input?.products });
+    const localResult = insertLocal({ ...row, shop_store_products: shopProducts, products: input?.products });
+    return { ...localResult, pending: gated.pending, autoPublic: gated.autoPublic };
   }
 
   async function mapFetchedBusinessRow(data) {
@@ -1162,11 +1208,22 @@
   async function updateBusinessPublishStatus(id, userId, publishStatus) {
     const key = String(id || "").trim();
     const uid = String(userId || "").trim();
-    const status = String(publishStatus || "").trim();
+    let status = String(publishStatus || "").trim();
     if (!key || !uid) return { ok: false, error: "id または user_id が未設定です" };
+
+    const Gate = window.TasuPlatformContentGate;
+    if (Gate?.gatePublishStatusUpdate) {
+      status = Gate.gatePublishStatusUpdate(status).publish_status;
+    } else if (status === "public") {
+      status = "pending_review";
+    }
+
     if (!VALID_PUBLISH.has(status)) {
       return { ok: false, error: "公開状態が不正です" };
     }
+
+    const patch = { publish_status: status, updated_at: new Date().toISOString() };
+    if (status === "pending_review") patch.moderation_status = "pending_review";
 
     if (key.startsWith("local_biz_")) {
       const list = loadLocal();
@@ -1177,11 +1234,10 @@
       }
       list[idx] = {
         ...list[idx],
-        publish_status: status,
-        updated_at: new Date().toISOString(),
+        ...patch,
       };
       saveLocal(list);
-      return { ok: true, id: key, via: "local" };
+      return { ok: true, id: key, via: "local", pending: status === "pending_review" };
     }
 
     const sb = getClient();
@@ -1191,10 +1247,7 @@
 
     const { data, error } = await sb
       .from("business_listings")
-      .update({
-        publish_status: status,
-        updated_at: new Date().toISOString(),
-      })
+      .update(patch)
       .eq("id", key)
       .eq("user_id", uid)
       .select("id")

@@ -131,6 +131,13 @@
             t.severity === "high" ||
             t.severity === "critical"
         );
+      case "report":
+        return list.filter(
+          (t) =>
+            t.status !== "resolved" &&
+            (t.category === "abuse_or_policy" ||
+              /通報/.test(String(t.title + t.body)))
+        );
       case "resolved":
         return list.filter((t) => t.status === "resolved");
       default:
@@ -151,6 +158,11 @@
           t.category === "abuse_or_policy" ||
           t.severity === "high" ||
           t.severity === "critical"
+      ).length,
+      report: all.filter(
+        (t) =>
+          t.status !== "resolved" &&
+          (t.category === "abuse_or_policy" || /通報/.test(String(t.title + t.body)))
       ).length,
       resolved: all.filter((t) => t.status === "resolved").length,
     };
@@ -300,7 +312,14 @@
 
   const params = new URLSearchParams(location.search);
   const preselect = params.get("ticket");
+  const urlFilter = params.get("filter");
   if (preselect) selectedId = preselect;
+  if (urlFilter && ["all", "open", "ai_replied", "needs_review", "connect", "risk", "report", "resolved"].includes(urlFilter)) {
+    currentFilter = urlFilter;
+    root.querySelectorAll("[data-support-filter]").forEach((b) => {
+      b.classList.toggle("is-active", b.getAttribute("data-support-filter") === urlFilter);
+    });
+  }
 
   renderList();
   renderDetail();

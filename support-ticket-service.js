@@ -18,6 +18,22 @@
       throw new Error("Support modules not loaded");
     }
 
+    const Gate = global.TasuPlatformContentGate;
+    if (Gate?.applyInquiryGate) {
+      const gate = Gate.applyInquiryGate(input);
+      if (!gate.ok) {
+        return {
+          ok: false,
+          blocked: true,
+          error: gate.error || "お問い合わせ内容を送信できません",
+          scan: gate.scan,
+        };
+      }
+      if (gate.needsReview) {
+        input = { ...input, _moderationNeedsReview: true, _moderationFlags: gate.scan?.flags };
+      }
+    }
+
     const classification = clf.classifySupportInquiry(input);
     const now = new Date().toISOString();
     const ticket = {
@@ -43,7 +59,10 @@
 
     store.appendEvent(ticket.id, "ticket_created", `受付: ${ticket.category}`, { classification });
 
-    if (classification.autoReplyAllowed) {
+    if (
+      classification.autoReplyAllowed &&
+      !input?._moderationNeedsReview
+    ) {
       const gen = ai.generateAutoReply({ body: ticket.body, classification });
       if (gen.allowed && gen.reply) {
         ticket.ai_suggested_reply = gen.reply;
@@ -144,6 +163,10 @@
       if (notify?.markNotificationsReadForTicket) {
         notify.markNotificationsReadForTicket(ticketId);
       }
+      global.TasuAdminAiDailyInbox?.completeInboxItem?.(`inbox_support_${ticketId}`);
+    }
+    if (plan.status === "in_progress" && action === "send_reply") {
+      global.TasuAdminAiDailyInbox?.completeInboxItem?.(`inbox_support_${ticketId}`);
     }
     ticket.updated_at = new Date().toISOString();
     store.saveTicket(ticket);
