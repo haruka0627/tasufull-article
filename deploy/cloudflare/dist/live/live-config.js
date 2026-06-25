@@ -4,6 +4,9 @@
 (function (global) {
   "use strict";
 
+  /** Feature-frozen product label (2026-06-25). Behavior changes require v1.1+. */
+  const TLV_PRODUCT_VERSION = "v1.0 Production Ready";
+
   const TABLES = Object.freeze({
     profiles: "live_creator_profiles",
     follows: "live_creator_follows",
@@ -947,6 +950,7 @@
   }
 
   global.TasuLiveConfig = {
+    TLV_PRODUCT_VERSION,
     TABLES,
     CREATOR_STATUS_LABELS,
     PERMISSION_STATUS_LABELS,
