@@ -8,7 +8,15 @@
   const STORAGE_KEY = "tasu_listings_v1";
   const VALID_TYPES = new Set(["skill", "product", "job", "worker"]);
   const VALID_INVOICE = new Set(["yes", "no", "negotiable"]);
-  const VALID_PUBLISH = new Set(["draft", "public", "scheduled"]);
+  const VALID_PUBLISH = new Set([
+    "draft",
+    "public",
+    "scheduled",
+    "pending_review",
+    "rejected",
+    "hidden",
+    "removed",
+  ]);
   const UUID_RE =
     /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -494,6 +502,30 @@
     return row;
   }
 
+  function applyContentGate(input, row) {
+    const Gate = window.TasuPlatformContentGate;
+    if (Gate?.applyListingPublishGateAsync) {
+      return Gate.applyListingPublishGateAsync(
+        { ...input, ...row },
+        { requestedPublishStatus: input?.publish_status || row.publish_status }
+      ).then((gate) => {
+        if (gate.ok) {
+          window.TasuPlatformModerationQueue?.trackLocalListing?.(gate.row, "listings");
+        }
+        return gate;
+      });
+    }
+    if (!Gate?.applyListingPublishGate) return Promise.resolve({ ok: true, row });
+    const gate = Gate.applyListingPublishGate({ ...input, ...row }, {
+      requestedPublishStatus: input?.publish_status || row.publish_status,
+    });
+    if (!gate.ok) {
+      return Promise.resolve({ ok: false, error: gate.error || "掲載内容の審査で拒否されました", blocked: true });
+    }
+    window.TasuPlatformModerationQueue?.trackLocalListing?.(gate.row, "listings");
+    return Promise.resolve({ ok: true, row: gate.row, pending: gate.pending });
+  }
+
   function applyWorkerListingColumns(row, input) {
     if (row.listing_type !== "worker") return;
 
@@ -634,7 +666,7 @@
   }
 
   async function insertListing(input) {
-    const row = normalizePayload(input);
+    let row = normalizePayload(input);
     if (!row.user_id) return { ok: false, error: "user_id が未設定です" };
     if (!row.listing_type) return { ok: false, error: "listing_type が未設定です" };
     const isDraft = String(row.publish_status || "").trim() === "draft";
@@ -643,14 +675,19 @@
       else return { ok: false, error: "title が未設定です" };
     }
 
+    const gated = await applyContentGate(input, row);
+    if (!gated.ok) return { ok: false, error: gated.error, blocked: gated.blocked };
+    row = gated.row;
+
     const sb = getClient();
     if (sb) {
       const result = await insertSupabase(row);
-      if (result.ok) return result;
+      if (result.ok) return { ...result, pending: gated.pending, autoPublic: gated.autoPublic };
       console.warn("[TasuListingStore] fallback to local:", result.error);
     }
 
-    return insertLocal(row);
+    const localResult = insertLocal(row);
+    return { ...localResult, pending: gated.pending, autoPublic: gated.autoPublic };
   }
 
   function collectLookupIds(id) {
@@ -848,10 +885,26 @@
   async function updateListingPublishStatus(id, userId, publishStatus) {
     const key = String(id || "").trim();
     const uid = String(userId || "").trim();
-    const status = String(publishStatus || "").trim();
+    let status = String(publishStatus || "").trim();
     if (!key || !uid) return { ok: false, error: "id または user_id が未設定です" };
+
+    const Gate = window.TasuPlatformContentGate;
+    if (Gate?.gatePublishStatusUpdate) {
+      const gated = Gate.gatePublishStatusUpdate(status);
+      status = gated.publish_status;
+    } else if (status === "public") {
+      status = "pending_review";
+    }
+
     if (!VALID_PUBLISH.has(status)) {
       return { ok: false, error: "公開状態が不正です" };
+    }
+
+    const patch = { publish_status: status, updated_at: new Date().toISOString() };
+    if (gated?.moderation_status) {
+      patch.moderation_status = gated.moderation_status;
+    } else if (Gate?.gatePublishStatusUpdate && status === "pending_review") {
+      patch.moderation_status = "pending_review";
     }
 
     if (key.startsWith("local_listing_") || !isUuid(key)) {
@@ -863,11 +916,10 @@
       }
       list[idx] = {
         ...list[idx],
-        publish_status: status,
-        updated_at: new Date().toISOString(),
+        ...patch,
       };
       saveLocal(list);
-      return { ok: true, id: key, via: "local" };
+      return { ok: true, id: key, via: "local", pending: status === "pending_review" };
     }
 
     const sb = getClient();
@@ -875,10 +927,7 @@
 
     const { data, error } = await sb
       .from("listings")
-      .update({
-        publish_status: status,
-        updated_at: new Date().toISOString(),
-      })
+      .update(patch)
       .eq("id", key)
       .eq("user_id", uid)
       .select("id")

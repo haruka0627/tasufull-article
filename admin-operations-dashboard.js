@@ -320,11 +320,19 @@
     const connectBase =
       connectTicketCount + connectIssues.length + connectCaseCount;
 
+    const pendingReviewLocal =
+      window.TasuPlatformModerationQueue?.readLocalQueue?.()?.filter(
+        (x) => x.moderation_status === "pending_review"
+      ).length ?? 0;
+    const pendingReviewSignals =
+      window.TasuPlatformContentGateEvents?.countPendingSignals?.() ?? 0;
+
     return {
       supportOk: support.ok,
       aiOk: ai.ok,
       builderOk: hidden.ok,
       openCount,
+      pendingReviewCount: pendingReviewLocal + pendingReviewSignals,
       needsReviewCount: needsReviewSupport + needsReviewAi,
       highCriticalCount: highCriticalTickets + highCriticalCases,
       connectCount: Math.max(connectBase, connectAiPending),
@@ -843,6 +851,16 @@
         effect: `通報 ${metrics.violationReportCount} 件`,
         cta: "通報を確認",
         href: "support-trouble-center.html?filter=report",
+      });
+    }
+
+    if (metrics.pendingReviewCount > 0) {
+      cards.push({
+        title: "掲載審査キュー",
+        body: `公開前審査待ち（pending_review）が ${metrics.pendingReviewCount} 件あります。`,
+        effect: `審査待ち ${metrics.pendingReviewCount} 件`,
+        cta: "審査キューを確認",
+        href: "admin-operations-dashboard.html#ops-content-gate",
       });
     }
 
@@ -1568,6 +1586,7 @@
     const hash = String(window.location.hash || "").replace(/^#/, "");
     if (
       hash === "ops-ai-top" ||
+      hash === "ops-ai-command-center" ||
       hash === "ops-ai-morning-summary" ||
       hash === "ops-ai-focus" ||
       hash === "ops-priority-heading" ||
@@ -1599,7 +1618,7 @@
           "ops-ai-hsg",
         ]);
         setActiveNav(
-          hash === "ops-ai-command"
+          hash === "ops-ai-command-center" || hash === "ops-ai-command"
             ? "dashboard"
             : hash === "ops-ai-watch"
               ? "watch"
@@ -1721,6 +1740,25 @@
     window.TasuAdminAiAutomationEngine?.renderAutomationPanel?.();
     window.TasuAdminAiDailyInbox?.renderDailyInbox?.();
     window.TasuAdminMorningSummary?.render?.(metrics);
+    window.TasuAdminAiSecretaryPhase2?.render?.({
+      metrics,
+      hub,
+      checkResult,
+      priorityRows,
+      kpi: window.TasuAdminAiKpiCenter?.collectKpiMetrics?.(),
+      opsWatch: window.TasuAdminAiOpsWatch?.buildOpsWatchSnapshot?.(),
+    });
+    window.TasuAdminAiSecretaryPhase3?.renderWorkHistory?.(
+      window.TasuAdminAiSecretaryPhase3?.getWorkPeriod?.() || "day"
+    );
+    window.TasuAdminAiSecretaryPhase4?.renderWorkHistoryEnhanced?.();
+    window.TasuAdminAiSecretaryPhase5?.renderWorkHistoryFull?.();
+    window.TasuAdminAiSecretaryPhase6?.renderIntelligencePanel?.();
+    window.TasuAdminAiSecretaryPhase7?.renderCommandCenterHome?.({
+      metrics,
+      hub,
+      kpi: window.TasuAdminAiKpiCenter?.collectKpiMetrics?.(),
+    });
 
     return { metrics, alerts, tasks, hub, checkResult, priorityRows };
   }
@@ -1750,6 +1788,7 @@
     window.addEventListener("tasu:admin-ai-response-activity-updated", scheduleRefresh);
     window.addEventListener("tasu:admin-ai-automation-updated", scheduleRefresh);
     window.addEventListener("tasu:admin-daily-inbox-updated", scheduleRefresh);
+    window.addEventListener("tasu:ops-content-review-completed", scheduleRefresh);
     window.addEventListener("tasu:admin-ai-decision-learning-updated", scheduleRefresh);
     window.addEventListener("tasu:admin-ai-outcome-learning-updated", scheduleRefresh);
     window.addEventListener("tasful-talk-notifications-changed", scheduleRefresh);

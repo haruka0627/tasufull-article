@@ -518,6 +518,11 @@
 
     const comment = String(input?.comment || "").trim();
 
+    const reviewGate = window.TasuPlatformContentGate?.applyReviewGate?.(comment);
+    if (reviewGate && !reviewGate.ok) {
+      return { ok: false, reason: reviewGate.error || "レビュー内容に禁止事項が含まれています" };
+    }
+
     await ensureInitialized();
 
     if (supabaseReady && window.TasuChatSupabase?.insertReview && !isLocalRoomId(roomId)) {
@@ -729,15 +734,47 @@
    * @returns {{ allowed: boolean, level: string, reasons: string[], message: string }}
    */
   function moderateMessage(input) {
+    const gateScan = window.TasuPlatformContentGate?.scanChatMessage?.({
+      text: input?.text ?? "",
+      ocrText: input?.ocrText ?? "",
+    });
+    if (gateScan && !gateScan.allowed) {
+      return {
+        allowed: false,
+        level: gateScan.level || "blocked",
+        reasons: gateScan.reasons || [],
+        message: gateScan.message || window.TasuChatModeration?.BLOCKED_USER_MESSAGE,
+      };
+    }
+
     if (window.TasuChatModeration?.moderateMessage) {
-      return window.TasuChatModeration.moderateMessage({
+      const legacy = window.TasuChatModeration.moderateMessage({
         text: input?.text ?? "",
         imageUrls: input?.imageUrls ?? [],
         ocrText: input?.ocrText ?? "",
         userId: input?.userId ?? input?.senderId ?? getConfigMeId(),
         roomId: normalizeRoomId(input?.roomId ?? input?.chatId ?? ""),
       });
+      if (!legacy.allowed) return legacy;
+      if (gateScan?.level === "warning") {
+        return {
+          ...legacy,
+          level: "warning",
+          reasons: [...(legacy.reasons || []), ...(gateScan.reasons || [])],
+        };
+      }
+      return legacy;
     }
+
+    if (gateScan) {
+      return {
+        allowed: gateScan.allowed !== false,
+        level: gateScan.level || "ok",
+        reasons: gateScan.reasons || [],
+        message: gateScan.message || "",
+      };
+    }
+
     return { allowed: true, level: "ok", reasons: [], message: "" };
   }
 
@@ -747,6 +784,57 @@
    * @param {object} messageInput
    */
   async function runModeration(roomId, messageInput) {
+    const root = typeof window !== "undefined" ? window : globalThis;
+    const Attach = root.TasuPlatformContentGateAttachments;
+    if (Attach?.scanAttachments && Attach.collectChatAttachmentRefs) {
+      const refs = Attach.collectChatAttachmentRefs(messageInput);
+      if (refs.length) {
+        const attachmentScan = await Attach.scanAttachments(refs);
+        if (attachmentScan.verdict === "block") {
+          return {
+            allowed: false,
+            level: "blocked",
+            reasons: attachmentScan.reasons || [],
+            message:
+              "添付ファイルに連絡先・外部誘導・危険な内容が含まれている可能性があるため、送信できません。",
+            _attachmentScan: attachmentScan,
+          };
+        }
+
+        const imageUrls = collectImageUrls(messageInput);
+        let ocrText = "";
+        attachmentScan.items?.forEach((item) => {
+          if (item.extractedLength > 0 && item.extractedText) {
+            ocrText = [ocrText, item.extractedText].filter(Boolean).join("\n");
+          }
+        });
+
+        const result = moderateMessage({
+          text: messageInput.text,
+          imageUrls,
+          ocrText,
+          userId: messageInput.senderId,
+          roomId,
+        });
+
+        if (attachmentScan.unscanned || attachmentScan.verdict === "needs_review") {
+          result.level = "warning";
+          result.reasons = [
+            ...new Set([...(result.reasons || []), ...(attachmentScan.reasons || []), "添付未審査"]),
+          ];
+          result._attachmentScan = attachmentScan;
+          root.TasuPlatformContentGate?.emitGateEvent?.("moderation.needs_review", {
+            surface: "chat_attachment",
+            roomId,
+            unscanned: attachmentScan.unscanned,
+            flags: attachmentScan.flags,
+          });
+        }
+
+        return result;
+      }
+    }
+
     const imageUrls = collectImageUrls(messageInput);
     let ocrText = "";
 
@@ -1303,22 +1391,20 @@
       };
     }
 
-    if (!isConsultThreadId(id)) {
-      const mod = await runModeration(id, messageInput);
-      if (mod._ocrText) {
-        messageInput._ocrText = mod._ocrText;
-      }
-      if (shouldPersistModerationLog(mod)) {
-        void persistModerationLog(id, messageInput, mod);
-      }
+    const mod = await runModeration(id, messageInput);
+    if (mod._ocrText) {
+      messageInput._ocrText = mod._ocrText;
+    }
+    if (shouldPersistModerationLog(mod)) {
+      void persistModerationLog(id, messageInput, mod);
+    }
 
-      if (!mod.allowed) {
-        return {
-          ok: false,
-          reason: mod.message || window.TasuChatModeration?.BLOCKED_USER_MESSAGE || "送信できませんでした",
-          moderation: mod,
-        };
-      }
+    if (!mod.allowed) {
+      return {
+        ok: false,
+        reason: mod.message || window.TasuChatModeration?.BLOCKED_USER_MESSAGE || "送信できませんでした",
+        moderation: mod,
+      };
     }
 
     if (isLocalRoomId(id)) {
@@ -1550,6 +1636,24 @@
         reason,
         detail: detail || undefined,
       });
+      const reportDetail = {
+        roomId,
+        messageId,
+        reason,
+        detail,
+        reporterId: input?.reporterId || getConfigMeId(),
+      };
+      try {
+        const KEY = "tasu_ops_chat_report_pending_v1";
+        const q = JSON.parse(global.localStorage?.getItem(KEY) || "[]");
+        q.unshift({ ...reportDetail, at: new Date().toISOString() });
+        global.localStorage?.setItem(KEY, JSON.stringify(q.slice(0, 30)));
+        global.dispatchEvent?.(
+          new CustomEvent("tasu:chat-report-submitted", { detail: reportDetail })
+        );
+      } catch {
+        /* ignore */
+      }
       return { ok: true, message: window.TasuChatReports?.REPORT_SUCCESS_MESSAGE || "通報を受け付けました" };
     } catch (err) {
       console.warn("[TasuChat] reports insert failed:", err);
