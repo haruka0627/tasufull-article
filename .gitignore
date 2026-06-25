@@ -25,3 +25,7 @@ supabase/.temp/
 
 # Ad-hoc git analysis dumps
 .git-*-utf8.txt
+
+# Wrangler dev / bundle temp (regenerated on wrangler pages dev)
+.wrangler/
+deploy/cloudflare/dist/.wrangler/
