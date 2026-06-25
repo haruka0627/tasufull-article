@@ -110,6 +110,14 @@
     return renderCard(video);
   }
 
+  function renderMypageNavPanel(userId) {
+    const sidebarApi = global.TasuTlvVideosSidebar;
+    if (sidebarApi?.renderMypageNavPanelHtml) {
+      return sidebarApi.renderMypageNavPanelHtml();
+    }
+    return "";
+  }
+
   function renderShelf(shelf, items) {
     const cfg = C();
     if (!items.length) {
@@ -132,6 +140,17 @@
           ${cards}
         </div>
       </section>`;
+  }
+
+  function renderYouPageLayout(talkUserId, shelfHtml) {
+    return `
+      <div class="tlv-you-page" data-tlv-you-page>
+        ${renderProfileCard(talkUserId)}
+        <div class="tlv-you-page__main">
+          ${renderMypageNavPanel(talkUserId)}
+          <div class="tlv-you-page__shelves">${shelfHtml}</div>
+        </div>
+      </div>`;
   }
 
   function bindShelfScroll(roots) {
@@ -178,24 +197,24 @@
         })),
       );
 
-      const html = `
-        <div class="tlv-you-page" data-tlv-you-page>
-          ${renderProfileCard(talkUserId)}
-          ${shelfResults.map(({ shelf, items }) => renderShelf(shelf, items)).join("")}
-        </div>`;
+      const shelfHtml = shelfResults.map(({ shelf, items }) => renderShelf(shelf, items)).join("");
+      const html = renderYouPageLayout(talkUserId, shelfHtml);
 
       writeToRoots(roots, html);
       bindShelfScroll(roots);
     } catch (err) {
       console.warn("[TasuLiveMyPage]", err.message || err);
-      writeToRoots(
-        roots,
-        `
-        <div class="tlv-you-page" data-tlv-you-page>
-          ${talkUserId ? renderProfileCard(talkUserId) : ""}
-          ${SHELVES.map((shelf) => renderShelf(shelf, [])).join("")}
-        </div>`,
-      );
+      if (talkUserId) {
+        writeToRoots(
+          roots,
+          renderYouPageLayout(
+            talkUserId,
+            SHELVES.map((shelf) => renderShelf(shelf, [])).join(""),
+          ),
+        );
+      } else {
+        writeToRoots(roots, `<div class="tlv-you-page" data-tlv-you-page></div>`);
+      }
       bindShelfScroll(roots);
     } finally {
       roots.forEach((root) => {

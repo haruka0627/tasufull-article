@@ -1,0 +1,270 @@
+{
+  "youtube": [
+    {
+      "viewport": null,
+      "label": "YouTube",
+      "contentWidth": 1264,
+      "playerWidth": 880,
+      "sidebarWidth": 368,
+      "playerStartX": 16,
+      "rightMargin": null,
+      "relatedCardWidth": null,
+      "relatedThumbWidth": null,
+      "gap": 0,
+      "playerPct": 69.6,
+      "sidebarPct": 29.1,
+      "gridCols": null,
+      "raw": {
+        "player": {
+          "w": 880,
+          "h": 660,
+          "x": 16
+        },
+        "primary": {
+          "w": 896,
+          "h": 2425,
+          "x": 16
+        },
+        "secondary": {
+          "w": 368,
+          "h": 2425,
+          "x": 912
+        },
+        "columns": {
+          "w": 1280,
+          "h": 2425,
+          "x": 0
+        },
+        "contentWidth": 1264,
+        "gridGap": 0
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\youtube-1280.png"
+    },
+    {
+      "viewport": null,
+      "label": "YouTube",
+      "contentWidth": 1424,
+      "playerWidth": 987,
+      "sidebarWidth": 421,
+      "playerStartX": 16,
+      "rightMargin": null,
+      "relatedCardWidth": null,
+      "relatedThumbWidth": null,
+      "gap": 0,
+      "playerPct": 69.3,
+      "sidebarPct": 29.6,
+      "gridCols": null,
+      "raw": {
+        "player": {
+          "w": 987,
+          "h": 740,
+          "x": 16
+        },
+        "primary": {
+          "w": 1003,
+          "h": 2740,
+          "x": 16
+        },
+        "secondary": {
+          "w": 421,
+          "h": 2740,
+          "x": 1019
+        },
+        "columns": {
+          "w": 1440,
+          "h": 2740,
+          "x": 0
+        },
+        "contentWidth": 1424,
+        "gridGap": 0
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\youtube-1440.png"
+    },
+    {
+      "viewport": null,
+      "label": "YouTube",
+      "contentWidth": 1579,
+      "playerWidth": 987,
+      "sidebarWidth": 576,
+      "playerStartX": 179,
+      "rightMargin": null,
+      "relatedCardWidth": null,
+      "relatedThumbWidth": null,
+      "gap": 0,
+      "playerPct": 62.5,
+      "sidebarPct": 36.5,
+      "gridCols": null,
+      "raw": {
+        "player": {
+          "w": 987,
+          "h": 740,
+          "x": 179
+        },
+        "primary": {
+          "w": 1003,
+          "h": 3697,
+          "x": 179
+        },
+        "secondary": {
+          "w": 576,
+          "h": 3697,
+          "x": 1181
+        },
+        "columns": {
+          "w": 1920,
+          "h": 3697,
+          "x": 0
+        },
+        "contentWidth": 1579,
+        "gridGap": 0
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\youtube-1920.png"
+    }
+  ],
+  "tlv": [
+    {
+      "viewport": 1280,
+      "label": "TLV-wide-after",
+      "contentWidth": 1264,
+      "playerWidth": 893,
+      "sidebarWidth": 371,
+      "playerStartX": 16,
+      "rightMargin": 0,
+      "relatedCardWidth": 371,
+      "relatedThumbWidth": 252,
+      "gap": 0,
+      "playerPct": 70.6,
+      "sidebarPct": 29.4,
+      "gridCols": "892.812px 371.188px",
+      "raw": {
+        "viewport": 1280,
+        "layout": 1264,
+        "main": {
+          "w": 893,
+          "h": 828,
+          "x": 16
+        },
+        "sidebar": {
+          "w": 371,
+          "h": 1822,
+          "x": 909
+        },
+        "player": {
+          "w": 893,
+          "h": 502,
+          "x": 16
+        },
+        "playerStartX": 16,
+        "rightMargin": 0,
+        "outer": {
+          "w": 1280,
+          "h": 1854,
+          "x": 0
+        },
+        "relatedCardWidth": 371,
+        "relatedThumbWidth": 252,
+        "gap": 0,
+        "gridCols": "892.812px 371.188px",
+        "sidebarClamp": "",
+        "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\tlv-wide-after-1280.png"
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\tlv-wide-after-1280.png"
+    },
+    {
+      "viewport": 1440,
+      "label": "TLV-wide-after",
+      "contentWidth": 1424,
+      "playerWidth": 1006,
+      "sidebarWidth": 418,
+      "playerStartX": 16,
+      "rightMargin": 0,
+      "relatedCardWidth": 418,
+      "relatedThumbWidth": 284,
+      "gap": 0,
+      "playerPct": 70.6,
+      "sidebarPct": 29.4,
+      "gridCols": "1006.41px 417.594px",
+      "raw": {
+        "viewport": 1440,
+        "layout": 1424,
+        "main": {
+          "w": 1006,
+          "h": 891,
+          "x": 16
+        },
+        "sidebar": {
+          "w": 418,
+          "h": 2041,
+          "x": 1022
+        },
+        "player": {
+          "w": 1006,
+          "h": 566,
+          "x": 16
+        },
+        "playerStartX": 16,
+        "rightMargin": 0,
+        "outer": {
+          "w": 1440,
+          "h": 2073,
+          "x": 0
+        },
+        "relatedCardWidth": 418,
+        "relatedThumbWidth": 284,
+        "gap": 0,
+        "gridCols": "1006.41px 417.594px",
+        "sidebarClamp": "",
+        "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\tlv-wide-after-1440.png"
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\tlv-wide-after-1440.png"
+    },
+    {
+      "viewport": 1920,
+      "label": "TLV-wide-after",
+      "contentWidth": 1904,
+      "playerWidth": 1347,
+      "sidebarWidth": 557,
+      "playerStartX": 16,
+      "rightMargin": 0,
+      "relatedCardWidth": 557,
+      "relatedThumbWidth": 382,
+      "gap": 0,
+      "playerPct": 70.7,
+      "sidebarPct": 29.3,
+      "gridCols": "1347.2px 556.797px",
+      "raw": {
+        "viewport": 1920,
+        "layout": 1904,
+        "main": {
+          "w": 1347,
+          "h": 1083,
+          "x": 16
+        },
+        "sidebar": {
+          "w": 557,
+          "h": 2699,
+          "x": 1363
+        },
+        "player": {
+          "w": 1347,
+          "h": 758,
+          "x": 16
+        },
+        "playerStartX": 16,
+        "rightMargin": 0,
+        "outer": {
+          "w": 1920,
+          "h": 2731,
+          "x": 0
+        },
+        "relatedCardWidth": 557,
+        "relatedThumbWidth": 382,
+        "gap": 0,
+        "gridCols": "1347.2px 556.797px",
+        "sidebarClamp": "",
+        "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\tlv-wide-after-1920.png"
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\tlv-wide-after-1920.png"
+    }
+  ]
+}

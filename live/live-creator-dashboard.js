@@ -308,7 +308,7 @@
         ${renderVideoPerformanceTable(metrics)}
         ${renderDisclaimer()}
         <p class="tlv-creator-dashboard__links">
-          <a class="live-link" href="${cfg.escapeHtml(global.TasuLiveChannelContent?.STUDIO_ROUTES?.dashboard || "studio-dashboard.html")}">← Studio トップへ</a>
+          <a class="live-link" href="${cfg.escapeHtml(global.TasuLiveChannelContent?.STUDIO_ROUTES?.home || "studio-dashboard.html")}">← Studio トップへ</a>
           ·
           <a class="live-link" href="${cfg.escapeHtml(cfg.profileUrl(talkUserId))}">チャンネルを見る</a>
         </p>

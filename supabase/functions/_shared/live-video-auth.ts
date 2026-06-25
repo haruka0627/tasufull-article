@@ -247,14 +247,11 @@ export async function isPublicCreator(
 
 const RESTRICTED_STATUSES = new Set(["draft", "processing", "hidden", "removed"]);
 
-export async function assertVideoViewAccess(
+/** Anonymous / anon-JWT playback — published public or unlisted from a public creator */
+export async function assertPublicVideoViewAccess(
   supabase: SupabaseClient,
   video: LiveVideoRow,
-  viewer: LiveVideoAuthUser,
 ): Promise<void> {
-  const isOwner = video.talk_user_id === viewer.talkUserId;
-  if (viewer.isAdmin || isOwner) return;
-
   if (RESTRICTED_STATUSES.has(String(video.status || ""))) {
     throw new LiveVideoFunctionError("forbidden", "Video is not available for playback", 403);
   }
@@ -270,6 +267,17 @@ export async function assertVideoViewAccess(
   if (!(await isPublicCreator(supabase, video.talk_user_id))) {
     throw new LiveVideoFunctionError("forbidden", "Video is not available for playback", 403);
   }
+}
+
+export async function assertVideoViewAccess(
+  supabase: SupabaseClient,
+  video: LiveVideoRow,
+  viewer: LiveVideoAuthUser,
+): Promise<void> {
+  const isOwner = video.talk_user_id === viewer.talkUserId;
+  if (viewer.isAdmin || isOwner) return;
+
+  await assertPublicVideoViewAccess(supabase, video);
 }
 
 export function handleLiveVideoError(err: unknown, req?: Request): Response {

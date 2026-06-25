@@ -311,14 +311,26 @@
         btn.disabled = true;
         try {
           const updated = await updateBroadcastStatus(id, "live");
-          if (global.TasuLiveNotify?.notifyBroadcastStarted) {
+          if (global.TasuTlvNotificationService?.createLiveStartedNotification) {
             try {
-              await global.TasuLiveNotify.notifyBroadcastStarted({
+              await global.TasuTlvNotificationService.createLiveStartedNotification({
                 broadcastId: id,
+                creatorId: userId,
                 creatorName: cfg.resolveDisplayName(userId),
               });
             } catch (notifyErr) {
-              console.warn("[TasuLiveBroadcasts] broadcast notify skipped:", notifyErr);
+              console.warn("[TasuLiveBroadcasts] live_started notify skipped:", notifyErr);
+            }
+          } else if (global.TasuLiveNotify?.notifyFollowersOnLiveStarted) {
+            try {
+              await global.TasuLiveNotify.notifyFollowersOnLiveStarted({
+                liveId: id,
+                broadcastId: id,
+                creatorId: userId,
+                creatorName: cfg.resolveDisplayName(userId),
+              });
+            } catch (notifyErr) {
+              console.warn("[TasuLiveBroadcasts] live_started notify skipped:", notifyErr);
             }
           }
           void updated;

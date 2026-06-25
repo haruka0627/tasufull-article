@@ -28,10 +28,59 @@
     return Boolean(auth?.authenticated && auth?.talkUserId);
   }
 
-  function renderFollowingFeedShellHtml() {
+  function renderFollowingEmptyHtml() {
+    const cfg = C();
+    const loggedIn = isAuthenticatedTalkUser();
+    const message = loggedIn
+      ? "登録チャンネルはまだありません"
+      : "ログインすると登録チャンネルを表示できます";
+    return `
+      <div class="tlv-videos-following-empty tlv-videos-following-empty--standalone" data-tlv-following-empty>
+        <p class="tlv-videos-following-empty__message">${cfg.escapeHtml(message)}</p>
+      </div>`;
+  }
+
+  function renderFollowingPageHeaderHtml(options = {}) {
+    const cfg = C();
+    const sortHtml = options.showSort
+      ? `<p class="tlv-videos-following-sort">${cfg.escapeHtml("新しい順")}</p>`
+      : "";
+    return `
+      <header class="tlv-videos-following-header">
+        <h1 class="tlv-videos-following-title">${cfg.escapeHtml("登録チャンネル")}</h1>
+        ${sortHtml}
+      </header>`;
+  }
+
+  function renderFollowingEmptyPageHtml() {
     return `
       <div class="tlv-videos-home tlv-videos-home--following tlv-videos-home--subscriptions" data-live-videos-home>
+        ${renderFollowingPageHeaderHtml()}
         ${renderFollowingEmptyHtml()}
+      </div>`;
+  }
+
+  function renderFollowingChannelsStrip(creatorIds) {
+    const cfg = C();
+    const ids = (creatorIds || []).filter(Boolean);
+    if (!ids.length) return "";
+    const items = ids.slice(0, 24).map((id) => {
+      const name = cfg.resolveDisplayName(id);
+      const avatarUrl = cfg.resolveAvatarUrl(id);
+      const profileHref = cfg.profileUrl(id);
+      const initial = encodeURIComponent(String(name).slice(0, 2) || "LV");
+      return `
+        <a class="tlv-videos-following-channel" href="${cfg.escapeHtml(profileHref)}" title="${cfg.escapeHtml(name)}">
+          <span class="tlv-videos-following-channel__avatar">
+            <img src="${cfg.escapeHtml(avatarUrl)}" alt="" width="56" height="56" loading="lazy"
+              onerror="this.src='https://placehold.co/56x56/1a1030/e879f9?text=${cfg.escapeHtml(initial)}'" />
+          </span>
+          <span class="tlv-videos-following-channel__name">${cfg.escapeHtml(name)}</span>
+        </a>`;
+    });
+    return `
+      <div class="tlv-videos-following-channels" role="list" aria-label="登録チャンネル">
+        ${items.join("")}
       </div>`;
   }
 
@@ -73,18 +122,6 @@
       console.warn("[TasuLiveVideos] follows fetch skipped:", err.message || err);
       return [];
     }
-  }
-
-  function renderFollowingEmptyHtml() {
-    const cfg = C();
-    const loggedIn = isAuthenticatedTalkUser();
-    const message = loggedIn
-      ? "フォロー中チャンネルはありません"
-      : "ログインすると登録チャンネルを表示できます";
-    return `
-      <div class="tlv-videos-following-empty tlv-videos-following-empty--standalone" data-tlv-following-empty>
-        <p class="tlv-videos-following-empty__message">${cfg.escapeHtml(message)}</p>
-      </div>`;
   }
 
   function sanitizeSearchQuery(raw) {
@@ -824,8 +861,11 @@
   function renderFollowingSubscriptionsHtml(payload) {
     const shorts = payload.shorts || [];
     const videos = payload.videos || [];
+    const creatorIds = payload.creatorIds || [];
     const cfg = C();
     const hasMore = Boolean(payload.hasMore);
+
+    const channelsStrip = renderFollowingChannelsStrip(creatorIds);
 
     const shortsSection = shorts.length
       ? renderFeedSection("ショート", renderFollowingShortRow(shorts), {
@@ -834,7 +874,11 @@
         })
       : "";
 
-    const videosSection = videos.length ? renderFollowingVideoGrid(videos) : "";
+    const videosSection = videos.length
+      ? renderFollowingVideoGrid(videos)
+      : creatorIds.length
+        ? `<div class="tlv-videos-following-empty tlv-videos-following-empty--inline"><p class="tlv-videos-following-empty__message">${cfg.escapeHtml("登録チャンネルの新しい動画はまだありません")}</p></div>`
+        : "";
 
     const loadSentinel = hasMore
       ? `<div class="tlv-videos-following-sentinel" data-tlv-following-sentinel aria-hidden="true"></div>`
@@ -842,10 +886,8 @@
 
     return `
       <div class="tlv-videos-home tlv-videos-home--following tlv-videos-home--subscriptions" data-live-videos-home>
-        <header class="tlv-videos-following-header">
-          <h1 class="tlv-videos-following-title">${cfg.escapeHtml("登録チャンネル")}</h1>
-          <p class="tlv-videos-following-sort">${cfg.escapeHtml("新しい順")}</p>
-        </header>
+        ${renderFollowingPageHeaderHtml({ showSort: true })}
+        ${channelsStrip}
         ${shortsSection}
         ${videosSection}
         ${loadSentinel}
@@ -882,10 +924,7 @@
 
     if (payload.mode === "following") {
       if (!payload.creatorIds?.length) {
-        return `
-        <div class="tlv-videos-home tlv-videos-home--following tlv-videos-home--subscriptions" data-live-videos-home>
-          ${renderFollowingEmptyHtml()}
-        </div>`;
+        return renderFollowingEmptyPageHtml();
       }
       return renderFollowingSubscriptionsHtml(payload);
     }
@@ -929,10 +968,14 @@
 
   function renderVideoCard(video) {
     const cfg = C();
-    const channelName = cfg.resolveDisplayName(video.talk_user_id);
-    const avatarUrl = cfg.resolveAvatarUrl(video.talk_user_id);
+    const videoId = String(video?.id || "").trim();
+    if (!videoId) return "";
+    const creatorId = String(video.talk_user_id || "").trim();
+    const channelName = cfg.resolveDisplayName(creatorId);
+    const avatarUrl = cfg.resolveAvatarUrl(creatorId);
+    const profileHref = creatorId ? cfg.profileUrl(creatorId) : "#";
     const thumbUrl = resolveThumbUrl(video);
-    const watchUrl = cfg.watchVideoUrl(video.id);
+    const watchUrl = cfg.watchVideoUrl(videoId);
     const viewsLabel = formatViewCountLabel(video.views_count);
     const dateLabel = formatRelativePublishedDate(video.published_at || video.created_at);
     const duration = formatDurationBadge(video.duration_sec);
@@ -942,22 +985,24 @@
       : `<div class="live-video-card__thumb-placeholder" aria-hidden="true"></div>`;
 
     return `
-      <a class="live-video-card live-video-card--yt" href="${cfg.escapeHtml(watchUrl)}" data-live-video-id="${cfg.escapeHtml(video.id)}">
+      <article class="live-video-card live-video-card--yt" data-live-video-id="${cfg.escapeHtml(videoId)}" data-tlv-home-video-card="long">
+        <a class="live-video-card__thumb-link" href="${cfg.escapeHtml(watchUrl)}">
         <div class="live-video-card__thumb">
           ${thumbInner}
           ${duration ? `<span class="live-video-card__duration">${cfg.escapeHtml(duration)}</span>` : ""}
         </div>
+        </a>
         <div class="live-video-card__info">
-          <span class="live-video-card__avatar" aria-hidden="true">
+          <a class="live-video-card__avatar" href="${cfg.escapeHtml(profileHref)}" aria-label="${cfg.escapeHtml(channelName)}のチャンネル">
             <img src="${cfg.escapeHtml(avatarUrl)}" alt="" loading="lazy" width="32" height="32" />
-          </span>
+          </a>
           <div class="live-video-card__details">
-            <h3 class="live-video-card__title">${cfg.escapeHtml(video.title)}</h3>
-            <p class="live-video-card__channel">${cfg.escapeHtml(channelName)}</p>
+            <a class="live-video-card__title" href="${cfg.escapeHtml(watchUrl)}">${cfg.escapeHtml(video.title)}</a>
+            <a class="live-video-card__channel" href="${cfg.escapeHtml(profileHref)}">${cfg.escapeHtml(channelName)}</a>
             <p class="live-video-card__stats">${cfg.escapeHtml(viewsLabel)}・${cfg.escapeHtml(dateLabel)}</p>
           </div>
         </div>
-      </a>
+      </article>
     `;
   }
 
@@ -998,14 +1043,33 @@
     const isFollowing = feed === "following";
     const body = global.document?.body;
     if (body) {
-      if (isFollowing) body.setAttribute("data-tlv-feed", "following");
-      else body.removeAttribute("data-tlv-feed");
+      if (isFollowing) {
+        body.setAttribute("data-tlv-feed", "following");
+        body.dataset.tlvSidebarActive = "subscriptions";
+      } else {
+        body.removeAttribute("data-tlv-feed");
+      }
     }
     global.document
-      ?.querySelectorAll?.("[data-tlv-desktop-chips-mount], [data-tlv-mobile-chips-mount]")
+      ?.querySelectorAll?.("[data-tlv-desktop-chips-mount], [data-tlv-mobile-chips-mount], [data-tlv-mobile-feed-tabs-mount]")
       ?.forEach((el) => {
         el.hidden = isFollowing;
       });
+    if (isFollowing) {
+      global.document.title = "登録チャンネル | TASFUL LIVE";
+      global.document
+        ?.querySelectorAll?.("[data-tlv-mini-nav='subscriptions']")
+        ?.forEach((el) => {
+          el.classList.add("is-active");
+          el.closest(".tlv-videos-mini-nav")
+            ?.querySelectorAll("[data-tlv-mini-nav]")
+            ?.forEach((link) => {
+              if (link !== el && link.getAttribute("data-tlv-mini-nav") !== "subscriptions") {
+                link.classList.remove("is-active");
+              }
+            });
+        });
+    }
   }
 
   function bindFollowingInfiniteScroll(roots, creatorIds, initialState) {
@@ -1088,7 +1152,7 @@
       writeToRoots(roots, '<p class="live-loading">動画を読み込み中…</p>');
       try {
         if (currentFeed === "following" && !isAuthenticatedTalkUser()) {
-          writeToRoots(roots, renderFollowingFeedShellHtml());
+          writeToRoots(roots, renderFollowingEmptyPageHtml());
           syncFollowingChrome("following");
           return;
         }
@@ -1112,21 +1176,12 @@
       } catch (err) {
         if (currentFeed === "following") {
           console.warn("[TasuLiveVideos] following feed skipped:", err.message || err);
-          writeToRoots(roots, renderFollowingFeedShellHtml());
+          writeToRoots(roots, renderFollowingEmptyPageHtml());
           syncFollowingChrome("following");
           return;
         }
         console.error("[TasuLiveVideos]", err);
         writeToRoots(roots, `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`);
-      } finally {
-        roots.forEach((root) => {
-          if (!root?.querySelector?.(".live-loading")) return;
-          if (currentFeed === "following") {
-            root.innerHTML = renderFollowingFeedShellHtml();
-            return;
-          }
-          root.innerHTML = `<p class="live-error">読み込みに失敗しました</p>`;
-        });
       }
     }
 

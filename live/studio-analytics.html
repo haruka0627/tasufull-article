@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+  <meta name="theme-color" content="#0b0814" />
+  <title>繧｢繝翫Μ繝・ぅ繧ｯ繧ｹ | TLV Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="live.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+</head>
+<body class="live-body tlv-page" data-page="live-studio-analytics" data-tlv-page="studio-analytics" data-studio-nav="analytics">
+  <div class="tlv-studio-app" data-tlv-studio-app>
+    <aside class="tlv-studio-sidebar" data-tlv-studio-sidebar aria-label="TLV Studio">
+      <div class="tlv-studio-sidebar__brand">
+        <a class="tlv-studio-sidebar__brand-link" href="videos.html" data-tlv-studio-brand-link aria-label="蜍慕判繝帙・繝縺ｸ">
+          <span class="tlv-studio-sidebar__brand-mark" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4L15.8 12 9.6 15.6z"/></svg></span>
+          <span class="tlv-studio-sidebar__brand-text">TLV Studio</span>
+        </a>
+      </div>
+      <div class="tlv-studio-sidebar__channel" data-tlv-studio-sidebar-channel></div>
+      <nav class="tlv-studio-sidebar__nav" data-tlv-studio-sidebar-nav></nav>
+    </aside>
+    <div class="tlv-studio-sidebar-backdrop" data-tlv-studio-sidebar-backdrop hidden></div>
+    <div class="tlv-studio-shell" data-tlv-studio-shell>
+      <header class="tlv-studio-topbar" data-tlv-studio-topbar>
+        <button type="button" class="tlv-studio-topbar__menu" data-tlv-studio-menu-toggle aria-label="繝｡繝九Η繝ｼ">
+          <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+        <form class="tlv-studio-topbar__search" data-tlv-studio-search role="search">
+          <span class="tlv-studio-topbar__search-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14z"/></svg>
+          </span>
+          <input type="search" class="tlv-studio-topbar__search-input" placeholder="繝√Ε繝ｳ繝阪Ν蜀・〒讀懃ｴ｢" data-tlv-studio-search-input autocomplete="off" />
+        </form>
+        <div class="tlv-studio-topbar__actions">
+          <button type="button" class="tlv-studio-topbar__icon-btn" data-tlv-studio-topbar-help aria-label="繝倥Ν繝・>
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+          </button>
+          <button type="button" class="tlv-studio-topbar__icon-btn" data-tlv-studio-topbar-notify aria-label="騾夂衍">
+            <svg width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          </button>
+          <a class="tlv-studio-topbar__create" href="video-upload.html">
+            <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+            <span>菴懈・</span>
+          </a>
+          <a class="tlv-studio-topbar__avatar" href="profile.html" data-tlv-studio-topbar-avatar aria-label="繧｢繧ｫ繧ｦ繝ｳ繝・></a>
+        </div>
+      </header>
+      <main class="tlv-studio-content">
+        <div data-live-studio-placeholder-root data-live-studio-placeholder-root-desktop>
+          <p class="live-loading">隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ窶ｦ</p>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div class="tlv-studio-mobile-shell" data-tlv-studio-mobile-shell>
+    <header class="tlv-studio-mobile-header">
+      <button type="button" class="tlv-studio-mobile-header__menu" data-tlv-studio-menu-toggle aria-label="繝｡繝九Η繝ｼ">笘ｰ</button>
+      <h1 class="tlv-studio-mobile-header__title">繧｢繝翫Μ繝・ぅ繧ｯ繧ｹ</h1>
+      <a class="tlv-studio-mobile-header__upload" href="video-upload.html" aria-label="菴懈・">・・/a>
+    </header>
+    <main class="tlv-studio-mobile-content">
+      <div data-live-studio-placeholder-root-mobile>
+        <p class="live-loading">隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ窶ｦ</p>
+      </div>
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="tlv-feature-flags.js" defer></script>
+  <script src="tlv-private-test-gate.js" defer></script>
+  <script src="../talk-runtime.js" defer></script>
+  <script src="../auth-current-user.js" defer></script>
+  <script src="../tasu-supabase-client.js" defer></script>
+  <script src="../chat-user-identity.js" defer></script>
+  <script src="live-config.js" defer></script>
+  <script src="tlv-dev-auth.js" defer></script>
+  <script src="tlv-account-context.js" defer></script>
+  <script src="tlv-studio-account-menu.js" defer></script>
+  <script src="live-channel-content.js" defer></script>
+  <script src="live-studio-placeholder.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const rootDesktop = document.querySelector("[data-live-studio-placeholder-root-desktop]");
+      const rootMobile = document.querySelector("[data-live-studio-placeholder-root-mobile]");
+      if (window.TasuLiveChannelContent?.initStudioChrome) {
+        window.TasuLiveChannelContent.initStudioChrome({ activeId: "analytics", previewChannel: true });
+      }
+      if (rootDesktop && window.TasuLiveStudioPlaceholder?.mountStudioPlaceholder) {
+        window.TasuLiveStudioPlaceholder.mountStudioPlaceholder(rootDesktop, {
+          pageId: "analytics",
+          roots: [rootDesktop, rootMobile],
+        });
+      }
+    });
+  </script>
+</body>
+</html>

@@ -74,11 +74,69 @@
       return { ok: false, reason: "missing_ids" };
     }
 
-    return invokeLiveNotify("follow_created", {
+    const followerName = opts?.followerName || followerId;
+    const followerAvatar = String(opts?.followerAvatar || "").trim();
+    const result = await invokeLiveNotify("follow_created", {
       creator_id: creatorId,
       follower_id: followerId,
-      follower_name: opts?.followerName || followerId,
+      follower_name: followerName,
+      follower_avatar: followerAvatar || undefined,
     });
+
+    if (
+      result.skipped &&
+      global.TasuTlvDevAuth?.shouldUseTlvNotifyLocalFallback?.()
+    ) {
+      const id = global.TasuTlvDevAuth.appendDevFollowNotification({
+        creatorId,
+        followerId,
+        followerName,
+        followerAvatar,
+      });
+      return { ok: true, dev_local: true, id };
+    }
+
+    return result;
+  }
+
+  /**
+   * @param {{ videoId: string, commentId: string, creatorId: string, actorId?: string, actorName?: string }} opts
+   */
+  async function notifyCreatorOnComment(opts) {
+    const videoId = String(opts?.videoId || "").trim();
+    const commentId = String(opts?.commentId || "").trim();
+    const creatorId = String(opts?.creatorId || "").trim();
+    const actorId = String(opts?.actorId || opts?.commenterId || "").trim();
+    if (!videoId || !commentId || !creatorId || !actorId) {
+      return { ok: false, reason: "missing_ids" };
+    }
+    if (actorId === creatorId) {
+      return { ok: true, skipped: true, reason: "self_comment" };
+    }
+
+    const actorName = opts?.actorName || actorId;
+    const result = await invokeLiveNotify("comment_created", {
+      video_id: videoId,
+      comment_id: commentId,
+      creator_id: creatorId,
+      actor_name: actorName,
+    });
+
+    if (
+      result.skipped &&
+      global.TasuTlvDevAuth?.shouldUseTlvNotifyLocalFallback?.()
+    ) {
+      const id = global.TasuTlvDevAuth.appendDevCommentNotification({
+        creatorId,
+        actorId,
+        actorName,
+        videoId,
+        commentId,
+      });
+      return { ok: true, dev_local: true, id };
+    }
+
+    return result;
   }
 
   /**
@@ -96,16 +154,145 @@
   }
 
   /**
+   * @param {{ broadcastId?: string, liveId?: string, creatorId?: string, creatorName?: string, title?: string }} opts
+   */
+  async function notifyFollowersOnLiveStarted(opts) {
+    const liveId = String(opts?.liveId || opts?.broadcastId || "").trim();
+    const creatorId = String(opts?.creatorId || "").trim();
+    if (!liveId) return { ok: false, reason: "missing_live_id" };
+
+    const creatorName = String(opts?.creatorName || creatorId || "").trim();
+    const title = String(opts?.title || "").trim();
+    const targetUrl =
+      String(opts?.targetUrl || "").trim() ||
+      global.TasuTlvNotificationTypes?.liveStartedTargetUrl?.(liveId) ||
+      `watch-live.html?id=${encodeURIComponent(liveId)}`;
+
+    const result = await invokeLiveNotify("live_started", {
+      live_id: liveId,
+      broadcast_id: liveId,
+      creator_id: creatorId || undefined,
+      creator_name: creatorName || undefined,
+      title: title || undefined,
+      target_url: targetUrl,
+    });
+
+    if (
+      result.skipped &&
+      global.TasuTlvDevAuth?.shouldUseTlvNotifyLocalFallback?.()
+    ) {
+      const fanout = global.TasuTlvDevAuth.appendDevLiveStartedNotifications({
+        broadcastId: liveId,
+        liveId,
+        creatorId,
+        creatorName,
+      });
+      return { ok: true, dev_local: true, ...fanout };
+    }
+
+    return result;
+  }
+
+  /** @deprecated use notifyFollowersOnLiveStarted */
+  async function notifyLiveStarted(opts) {
+    return notifyFollowersOnLiveStarted(opts);
+  }
+
+  /**
    * @param {{ broadcastId: string, creatorName?: string }} opts
    */
   async function notifyBroadcastStarted(opts) {
     const broadcastId = String(opts?.broadcastId || "").trim();
     if (!broadcastId) return { ok: false, reason: "missing_broadcast_id" };
 
-    return invokeLiveNotify("broadcast_started", {
-      broadcast_id: broadcastId,
-      creator_name: opts?.creatorName || undefined,
+    return notifyFollowersOnLiveStarted({
+      liveId: broadcastId,
+      broadcastId,
+      creatorName: opts?.creatorName,
     });
+  }
+
+  /**
+   * @param {{ videoId: string, creatorId?: string, creatorName?: string, title?: string, targetUrl?: string }} opts
+   */
+  async function notifyVideoPublished(opts) {
+    const videoId = String(opts?.videoId || "").trim();
+    const creatorId = String(opts?.creatorId || "").trim();
+    if (!videoId) return { ok: false, reason: "missing_video_id" };
+
+    const creatorName = String(opts?.creatorName || creatorId || "").trim();
+    const title = String(opts?.title || "").trim();
+    const targetUrl =
+      String(opts?.targetUrl || "").trim() ||
+      global.TasuTlvNotificationTypes?.videoPublishedTargetUrl?.(videoId) ||
+      `watch-video.html?id=${encodeURIComponent(videoId)}`;
+
+    const result = await invokeLiveNotify("video_published", {
+      video_id: videoId,
+      creator_id: creatorId || undefined,
+      creator_name: creatorName || undefined,
+      title: title || undefined,
+      target_url: targetUrl,
+    });
+
+    if (
+      result.skipped &&
+      global.TasuTlvDevAuth?.shouldUseTlvNotifyLocalFallback?.()
+    ) {
+      const fanout = global.TasuTlvDevAuth.appendDevVideoPublishedNotifications({
+        videoId,
+        creatorId,
+        creatorName,
+      });
+      return { ok: true, dev_local: true, ...fanout };
+    }
+
+    return result;
+  }
+
+  /**
+   * @param {{ targetUserId: string, title: string, body?: string, targetUrl?: string, priority?: string, creator?: string }} opts
+   */
+  async function notifySystem(opts) {
+    const targetUserId = String(opts?.targetUserId || opts?.target_id || "").trim();
+    const title = String(opts?.title || "").trim();
+    const body = String(opts?.body || "").trim();
+    if (!targetUserId || !title) {
+      return { ok: false, reason: "missing_fields" };
+    }
+
+    const priority =
+      global.TasuTlvNotificationTypes?.normalizeSystemPriority?.(opts?.priority) || "normal";
+    const targetUrl = String(opts?.targetUrl || opts?.target_url || "#").trim() || "#";
+    const creator = String(opts?.creator || "TLV運営").trim();
+    const timestamp = Date.now();
+
+    const result = await invokeLiveNotify("system", {
+      target_user_id: targetUserId,
+      title,
+      body,
+      priority,
+      target_url: targetUrl,
+      creator,
+      timestamp,
+    });
+
+    if (
+      result.skipped &&
+      global.TasuTlvDevAuth?.shouldUseTlvNotifyLocalFallback?.()
+    ) {
+      const saved = global.TasuTlvDevAuth.appendDevSystemNotification({
+        targetUserId,
+        title,
+        body,
+        targetUrl,
+        priority,
+        creator,
+      });
+      return { ok: true, dev_local: true, ...saved };
+    }
+
+    return result;
   }
 
   /**
@@ -135,8 +322,13 @@
   global.TasuLiveNotify = {
     invokeLiveNotify,
     notifyCreatorOnFollow,
+    notifyCreatorOnComment,
     notifyTipCreated,
+    notifyFollowersOnLiveStarted,
+    notifyLiveStarted,
     notifyBroadcastStarted,
+    notifyVideoPublished,
+    notifySystem,
     refreshLikeCount,
   };
 })(typeof window !== "undefined" ? window : globalThis);

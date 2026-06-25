@@ -1,0 +1,231 @@
+{
+  "script": "scripts/test-tlv-channel-content-regression.mjs",
+  "url": "http://127.0.0.1:8788/live/channel-content.html?talkDev=1&userId=u_me",
+  "widths": [
+    390,
+    768,
+    1280
+  ],
+  "screenshots": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-channel-content-regression",
+  "summary": {
+    "total": 40,
+    "pass": 39,
+    "fail": 1
+  },
+  "checks": [
+    {
+      "id": "source:live/channel-content.html:no-bad-patterns",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "id": "source:live/channel-content.html:utf8-title",
+      "pass": true,
+      "detail": "<title>コンテンツ | TLV Studio</title>"
+    },
+    {
+      "id": "source:deploy/cloudflare/dist/live/channel-content.html:no-bad-patterns",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "id": "source:deploy/cloudflare/dist/live/channel-content.html:utf8-title",
+      "pass": true,
+      "detail": "<title>コンテンツ | TLV Studio</title>"
+    },
+    {
+      "id": "390:no-bad-screen-text",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "id": "390:scroll-match",
+      "pass": true,
+      "detail": "390 vs 390"
+    },
+    {
+      "id": "390:acct-menu-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "390:acct-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "390:mobile-header-exists",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "390:mobile-title",
+      "pass": true,
+      "detail": "コンテンツ"
+    },
+    {
+      "id": "390:mobile-upload-plus",
+      "pass": true,
+      "detail": "+"
+    },
+    {
+      "id": "390:main-not-in-upload",
+      "pass": true,
+      "detail": "false"
+    },
+    {
+      "id": "390:me-mobile-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "390:mobile-header-order",
+      "pass": true,
+      "detail": "☰ / コンテンツ / ME / +"
+    },
+    {
+      "id": "390:mobile-header-labels",
+      "pass": true,
+      "detail": "☰|コンテンツ|ME|+"
+    },
+    {
+      "id": "768:no-bad-screen-text",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "id": "768:scroll-match",
+      "pass": true,
+      "detail": "768 vs 768"
+    },
+    {
+      "id": "768:acct-menu-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "768:acct-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "768:mobile-header-exists",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "768:mobile-title",
+      "pass": true,
+      "detail": "コンテンツ"
+    },
+    {
+      "id": "768:mobile-upload-plus",
+      "pass": true,
+      "detail": "+"
+    },
+    {
+      "id": "768:main-not-in-upload",
+      "pass": true,
+      "detail": "false"
+    },
+    {
+      "id": "768:me-mobile-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "768:mobile-header-order",
+      "pass": true,
+      "detail": "☰ / コンテンツ / ME / +"
+    },
+    {
+      "id": "768:mobile-header-labels",
+      "pass": true,
+      "detail": "☰|コンテンツ|ME|+"
+    },
+    {
+      "id": "1280:no-bad-screen-text",
+      "pass": true,
+      "detail": "clean"
+    },
+    {
+      "id": "1280:scroll-match",
+      "pass": true,
+      "detail": "1280 vs 1280"
+    },
+    {
+      "id": "1280:acct-menu-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "1280:acct-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "1280:mobile-header-exists",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "id": "1280:mobile-title",
+      "pass": true,
+      "detail": "コンテンツ"
+    },
+    {
+      "id": "1280:mobile-upload-plus",
+      "pass": true,
+      "detail": "+"
+    },
+    {
+      "id": "1280:main-not-in-upload",
+      "pass": true,
+      "detail": "false"
+    },
+    {
+      "id": "1280:me-topbar-one",
+      "pass": true,
+      "detail": "count=1"
+    },
+    {
+      "id": "1280:search-placeholder",
+      "pass": true,
+      "detail": "チャンネル内を検索"
+    },
+    {
+      "id": "1280:create-label",
+      "pass": true,
+      "detail": "作成"
+    },
+    {
+      "id": "1280:help-aria",
+      "pass": true,
+      "detail": "ヘルプ"
+    },
+    {
+      "id": "1280:account-aria",
+      "pass": true,
+      "detail": "アカウントメニュー"
+    },
+    {
+      "id": "console:no-errors",
+      "pass": false,
+      "detail": "24 error(s)"
+    }
+  ],
+  "consoleErrors": [
+    "[viewport:390] Refused to execute script from 'http://127.0.0.1:8788/chat-supabase-config.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:390] Refused to execute script from 'http://127.0.0.1:8788/talk-runtime.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:390] Refused to execute script from 'http://127.0.0.1:8788/tasu-supabase-client.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:390] [TasuLiveChannelContent] Error: Supabase が未設定です。chat-supabase-config.js を確認してください。\n    at requireConfig (http://127.0.0.1:8788/live/live-my-videos.js:12:13)\n    at Object.fetchOwnVideos (http://127.0.0.1:8788/live/live-my-videos.js:18:17)\n    at loadTabItems (http://127.0.0.1:8788/live/live-channel-content.js:1219:69)\n    at reload (http://127.0.0.1:8788/live/live-channel-content.js:1386:44)\n    at Object.mountChannelContentPage (http://127.0.0.1:8788/live/live-channel-content.js:1409:11)\n    at HTMLDocument.<anonymous> (http://127.0.0.1:8788/live/channel-content?talkDev=1&userId=u_me:102:39)",
+    "[viewport:768] Refused to execute script from 'http://127.0.0.1:8788/chat-supabase-config.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:768] Refused to execute script from 'http://127.0.0.1:8788/talk-runtime.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:768] Refused to execute script from 'http://127.0.0.1:8788/tasu-supabase-client.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:768] [TasuLiveChannelContent] Error: Supabase が未設定です。chat-supabase-config.js を確認してください。\n    at requireConfig (http://127.0.0.1:8788/live/live-my-videos.js:12:13)\n    at Object.fetchOwnVideos (http://127.0.0.1:8788/live/live-my-videos.js:18:17)\n    at loadTabItems (http://127.0.0.1:8788/live/live-channel-content.js:1219:69)\n    at reload (http://127.0.0.1:8788/live/live-channel-content.js:1386:44)\n    at Object.mountChannelContentPage (http://127.0.0.1:8788/live/live-channel-content.js:1409:11)\n    at HTMLDocument.<anonymous> (http://127.0.0.1:8788/live/channel-content?talkDev=1&userId=u_me:102:39)",
+    "[viewport:1280] Refused to execute script from 'http://127.0.0.1:8788/chat-supabase-config.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:1280] Refused to execute script from 'http://127.0.0.1:8788/talk-runtime.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:1280] Refused to execute script from 'http://127.0.0.1:8788/tasu-supabase-client.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
+    "[viewport:1280] [TasuLiveChannelContent] Error: Supabase が未設定です。chat-supabase-config.js を確認してください。\n    at requireConfig (http://127.0.0.1:8788/live/live-my-videos.js:12:13)\n    at Object.fetchOwnVideos (http://127.0.0.1:8788/live/live-my-videos.js:18:17)\n    at loadTabItems (http://127.0.0.1:8788/live/live-channel-content.js:1219:69)\n    at reload (http://127.0.0.1:8788/live/live-channel-content.js:1386:44)\n    at Object.mountChannelContentPage (http://127.0.0.1:8788/live/live-channel-content.js:1409:11)\n    at HTMLDocument.<anonymous> (http://127.0.0.1:8788/live/channel-content?talkDev=1&userId=u_me:102:39)"
+  ]
+}

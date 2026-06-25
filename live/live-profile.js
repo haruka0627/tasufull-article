@@ -43,10 +43,14 @@
   }
 
   async function fetchProfile(userId) {
-    const cfg = requireConfig();
-    await cfg.ensureSupabaseSession();
     const id = String(userId || "").trim();
     if (!id) return null;
+
+    const devStub = global.TasuTlvDevAuth?.getDevStubProfile?.(id);
+    if (devStub) return devStub;
+
+    const cfg = requireConfig();
+    await cfg.ensureSupabaseSession();
 
     const { data, error } = await cfg.getClient()
       .from(cfg.TABLES.profiles)
@@ -752,7 +756,9 @@
   async function mountProfilePage(root, options = {}) {
     const cfg = C();
     const params = new URLSearchParams(global.location?.search || "");
-    const viewerId = cfg.getTalkUserId();
+    const viewerId = global.TasuTlvDevAuth?.getTlvViewerTalkUserId
+      ? global.TasuTlvDevAuth.getTlvViewerTalkUserId()
+      : cfg.getTalkUserId();
     const targetId = String(params.get("userId") || viewerId || "").trim();
 
     const roots = (options.roots || [root]).filter(Boolean);

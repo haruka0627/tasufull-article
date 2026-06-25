@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+  <meta name="theme-color" content="#0b0814" />
+  <title>通知 | TASFUL LIVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="live.css" />
+</head>
+<body class="live-body tlv-page" data-page="live-notifications" data-tlv-page="notifications">
+  <div class="tlv-desktop-shell" data-tlv-desktop-shell>
+    <div data-tlv-desktop-sidebar-mount></div>
+    <div class="tlv-desktop-main">
+      <div data-tlv-desktop-topbar-mount></div>
+      <main class="tlv-desktop-content tlv-desktop-content--notifications">
+        <div data-live-notifications-root data-live-notifications-root-desktop>
+          <p class="live-loading">読み込み中…</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="tlv-mobile-shell" data-tlv-mobile-shell>
+    <div data-tlv-mobile-header-mount></div>
+    <main class="tlv-mobile-content tlv-mobile-content--notifications">
+      <div data-live-notifications-root-mobile>
+        <p class="live-loading">読み込み中…</p>
+      </div>
+    </main>
+    <div data-tlv-mobile-tabbar-mount></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="tlv-feature-flags.js"></script>
+  <script src="tlv-private-test-gate.js" defer></script>
+  <script src="../talk-runtime.js" defer></script>
+  <script src="../auth-current-user.js" defer></script>
+  <script src="../tasu-supabase-client.js" defer></script>
+  <script src="../chat-user-identity.js" defer></script>
+  <script src="live-config.js" defer></script>
+  <script src="tlv-nav.js" defer></script>
+  <script src="tlv-dev-auth.js" defer></script>
+  <script src="tlv-account-context.js" defer></script>
+  <script src="tlv-view-account-menu.js" defer></script>
+  <script src="tlv-notification-types.js" defer></script>
+  <script src="tlv-notification-service.js" defer></script>
+  <script src="live-notify.js" defer></script>
+  <script src="live-notifications-data.js" defer></script>
+  <script src="tlv-videos-sidebar.js" defer></script>
+  <script src="live-notifications.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const nav = window.TasuTlvNav;
+      const sidebarApi = window.TasuTlvVideosSidebar;
+      const rootDesktop = document.querySelector("[data-live-notifications-root-desktop]");
+      const rootMobile = document.querySelector("[data-live-notifications-root-mobile]");
+      const tabbarMount = document.querySelector("[data-tlv-mobile-tabbar-mount]");
+
+      if (sidebarApi?.mountVideosPageChrome) {
+        sidebarApi.mountVideosPageChrome({
+          activeId: "videos",
+          headerLayout: "youtube",
+          mobileHeaderTitle: "通知",
+        });
+      }
+
+      if (nav && tabbarMount) {
+        tabbarMount.innerHTML = nav.renderMobileTabbar("my");
+      }
+
+      if (rootDesktop && window.TasuLiveNotifications?.mountNotificationsPage) {
+        window.TasuLiveNotifications.mountNotificationsPage(rootDesktop, {
+          roots: [rootDesktop, rootMobile],
+        });
+      }
+    });
+  </script>
+</body>
+</html>

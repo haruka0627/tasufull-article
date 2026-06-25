@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
+  <title>System通知送信 (dev) | TASFUL LIVE</title>
+  <link rel="stylesheet" href="live.css" />
+</head>
+<body class="live-body tlv-page" data-page="live-system-notify-dev">
+  <main class="tlv-desktop-content" data-tlv-system-notify-dev-root>
+    <p class="live-loading">読み込み中…</p>
+  </main>
+  <script src="tlv-dev-auth.js" defer></script>
+  <script src="tlv-notification-types.js" defer></script>
+  <script src="live-notify.js" defer></script>
+  <script src="tlv-notification-service.js" defer></script>
+  <script src="system-notify-dev.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", () => {
+      const root = document.querySelector("[data-tlv-system-notify-dev-root]");
+      if (root && window.TasuTlvSystemNotifyDev?.mountSystemNotifyDevForm) {
+        window.TasuTlvSystemNotifyDev.mountSystemNotifyDevForm(root);
+      }
+    });
+  </script>
+</body>
+</html>

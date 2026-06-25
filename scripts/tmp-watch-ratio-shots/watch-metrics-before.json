@@ -1,0 +1,552 @@
+{
+  "label": "before",
+  "capturedAt": "2026-06-24T12:04:29.182Z",
+  "viewports": {
+    "1280": {
+      "viewport": {
+        "w": 1280,
+        "h": 900
+      },
+      "media1024": true,
+      "bodyDataPage": "live-watch-video",
+      "elements": {
+        "desktopMain": {
+          "rect": {
+            "w": 1280,
+            "h": 1314,
+            "x": 0,
+            "y": 129
+          },
+          "cs": {
+            "maxWidth": "1754px",
+            "padding": "0px 24px 40px",
+            "width": "1280px"
+          }
+        },
+        "layout": {
+          "rect": {
+            "w": 1232,
+            "h": 1274,
+            "x": 24,
+            "y": 129
+          },
+          "cs": {
+            "display": "grid",
+            "gridTemplateColumns": "806px 402px",
+            "gap": "24px",
+            "maxWidth": "none",
+            "outline": "rgb(245, 240, 255) none 3px",
+            "outlineColor": "rgb(245, 240, 255)"
+          }
+        },
+        "main": {
+          "rect": {
+            "w": 806,
+            "h": 791,
+            "x": 24,
+            "y": 129
+          },
+          "cs": {
+            "width": "806px",
+            "maxWidth": "none"
+          }
+        },
+        "sidebar": {
+          "rect": {
+            "w": 402,
+            "h": 1274,
+            "x": 854,
+            "y": 129
+          },
+          "cs": {
+            "width": "402px",
+            "minWidth": "402px",
+            "maxWidth": "402px"
+          }
+        },
+        "playerWrap": {
+          "rect": {
+            "w": 808,
+            "h": 455,
+            "x": 24,
+            "y": 129
+          },
+          "cs": {
+            "width": "806px",
+            "maxWidth": "none",
+            "aspectRatio": "16 / 9",
+            "maxHeight": "none"
+          }
+        },
+        "player": {
+          "rect": {
+            "w": 806,
+            "h": 453,
+            "x": 25,
+            "y": 130
+          },
+          "cs": {
+            "width": "806px",
+            "height": "453.375px",
+            "maxHeight": "720px",
+            "objectFit": "cover"
+          }
+        },
+        "relatedList": {
+          "rect": {
+            "w": 402,
+            "h": 1238,
+            "x": 854,
+            "y": 165
+          }
+        },
+        "thumb": {
+          "rect": {
+            "w": 168,
+            "h": 94,
+            "x": 854,
+            "y": 165
+          },
+          "cs": {
+            "width": "168px",
+            "height": "94px",
+            "minWidth": "168px"
+          }
+        },
+        "item": {
+          "rect": {
+            "w": 402,
+            "h": 94,
+            "x": 854,
+            "y": 165
+          },
+          "cs": {
+            "display": "flex",
+            "gap": "8px"
+          }
+        }
+      },
+      "redProbe": {
+        "body[data-page=\"live-watch-video\"] .tlv-watch-layout": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-watch-main": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-watch-sidebar": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .live-watch__player-wrap": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-related-list--yt": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-related-list--yt .tlv-related-list__thumb": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".tlv-watch-layout": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".tlv-watch-main": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".live-watch__player-wrap": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        }
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\watch-before-1280.png"
+    },
+    "1440": {
+      "viewport": {
+        "w": 1440,
+        "h": 900
+      },
+      "media1024": true,
+      "bodyDataPage": "live-watch-video",
+      "elements": {
+        "desktopMain": {
+          "rect": {
+            "w": 1440,
+            "h": 1314,
+            "x": 0,
+            "y": 129
+          },
+          "cs": {
+            "maxWidth": "1754px",
+            "padding": "0px 24px 40px",
+            "width": "1440px"
+          }
+        },
+        "layout": {
+          "rect": {
+            "w": 1392,
+            "h": 1274,
+            "x": 24,
+            "y": 129
+          },
+          "cs": {
+            "display": "grid",
+            "gridTemplateColumns": "966px 402px",
+            "gap": "24px",
+            "maxWidth": "none",
+            "outline": "rgb(245, 240, 255) none 3px",
+            "outlineColor": "rgb(245, 240, 255)"
+          }
+        },
+        "main": {
+          "rect": {
+            "w": 966,
+            "h": 881,
+            "x": 24,
+            "y": 129
+          },
+          "cs": {
+            "width": "966px",
+            "maxWidth": "none"
+          }
+        },
+        "sidebar": {
+          "rect": {
+            "w": 402,
+            "h": 1274,
+            "x": 1014,
+            "y": 129
+          },
+          "cs": {
+            "width": "402px",
+            "minWidth": "402px",
+            "maxWidth": "402px"
+          }
+        },
+        "playerWrap": {
+          "rect": {
+            "w": 968,
+            "h": 545,
+            "x": 24,
+            "y": 129
+          },
+          "cs": {
+            "width": "966px",
+            "maxWidth": "none",
+            "aspectRatio": "16 / 9",
+            "maxHeight": "none"
+          }
+        },
+        "player": {
+          "rect": {
+            "w": 966,
+            "h": 543,
+            "x": 25,
+            "y": 130
+          },
+          "cs": {
+            "width": "966px",
+            "height": "543.375px",
+            "maxHeight": "720px",
+            "objectFit": "cover"
+          }
+        },
+        "relatedList": {
+          "rect": {
+            "w": 402,
+            "h": 1238,
+            "x": 1014,
+            "y": 165
+          }
+        },
+        "thumb": {
+          "rect": {
+            "w": 168,
+            "h": 94,
+            "x": 1014,
+            "y": 165
+          },
+          "cs": {
+            "width": "168px",
+            "height": "94px",
+            "minWidth": "168px"
+          }
+        },
+        "item": {
+          "rect": {
+            "w": 402,
+            "h": 94,
+            "x": 1014,
+            "y": 165
+          },
+          "cs": {
+            "display": "flex",
+            "gap": "8px"
+          }
+        }
+      },
+      "redProbe": {
+        "body[data-page=\"live-watch-video\"] .tlv-watch-layout": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-watch-main": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-watch-sidebar": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .live-watch__player-wrap": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-related-list--yt": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-related-list--yt .tlv-related-list__thumb": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".tlv-watch-layout": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".tlv-watch-main": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".live-watch__player-wrap": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        }
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\watch-before-1440.png"
+    },
+    "1920": {
+      "viewport": {
+        "w": 1920,
+        "h": 1080
+      },
+      "media1024": true,
+      "bodyDataPage": "live-watch-video",
+      "elements": {
+        "desktopMain": {
+          "rect": {
+            "w": 1754,
+            "h": 1314,
+            "x": 83,
+            "y": 129
+          },
+          "cs": {
+            "maxWidth": "1754px",
+            "padding": "0px 24px 40px",
+            "width": "1754px"
+          }
+        },
+        "layout": {
+          "rect": {
+            "w": 1706,
+            "h": 1274,
+            "x": 107,
+            "y": 129
+          },
+          "cs": {
+            "display": "grid",
+            "gridTemplateColumns": "1280px 402px",
+            "gap": "24px",
+            "maxWidth": "none",
+            "outline": "rgb(245, 240, 255) none 3px",
+            "outlineColor": "rgb(245, 240, 255)"
+          }
+        },
+        "main": {
+          "rect": {
+            "w": 1280,
+            "h": 1058,
+            "x": 107,
+            "y": 129
+          },
+          "cs": {
+            "width": "1280px",
+            "maxWidth": "none"
+          }
+        },
+        "sidebar": {
+          "rect": {
+            "w": 402,
+            "h": 1274,
+            "x": 1411,
+            "y": 129
+          },
+          "cs": {
+            "width": "402px",
+            "minWidth": "402px",
+            "maxWidth": "402px"
+          }
+        },
+        "playerWrap": {
+          "rect": {
+            "w": 1282,
+            "h": 722,
+            "x": 107,
+            "y": 129
+          },
+          "cs": {
+            "width": "1280px",
+            "maxWidth": "none",
+            "aspectRatio": "16 / 9",
+            "maxHeight": "none"
+          }
+        },
+        "player": {
+          "rect": {
+            "w": 1280,
+            "h": 720,
+            "x": 108,
+            "y": 130
+          },
+          "cs": {
+            "width": "1280px",
+            "height": "720px",
+            "maxHeight": "900px",
+            "objectFit": "cover"
+          }
+        },
+        "relatedList": {
+          "rect": {
+            "w": 402,
+            "h": 1238,
+            "x": 1411,
+            "y": 165
+          }
+        },
+        "thumb": {
+          "rect": {
+            "w": 168,
+            "h": 94,
+            "x": 1411,
+            "y": 165
+          },
+          "cs": {
+            "width": "168px",
+            "height": "94px",
+            "minWidth": "168px"
+          }
+        },
+        "item": {
+          "rect": {
+            "w": 402,
+            "h": 94,
+            "x": 1411,
+            "y": 165
+          },
+          "cs": {
+            "display": "flex",
+            "gap": "8px"
+          }
+        }
+      },
+      "redProbe": {
+        "body[data-page=\"live-watch-video\"] .tlv-watch-layout": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-watch-main": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-watch-sidebar": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .live-watch__player-wrap": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-related-list--yt": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        "body[data-page=\"live-watch-video\"] .tlv-related-list--yt .tlv-related-list__thumb": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".tlv-watch-layout": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".tlv-watch-main": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        },
+        ".live-watch__player-wrap": {
+          "exists": true,
+          "outlineColor": "rgb(245, 240, 255)",
+          "outlineWidth": "3px",
+          "matchesBodyScope": true
+        }
+      },
+      "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\watch-before-1920.png"
+    }
+  }
+}

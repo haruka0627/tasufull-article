@@ -15,14 +15,14 @@
   }
 
   const MAIN_NAV = Object.freeze([
-    { id: "home", label: "ホーム", href: "index.html", icon: "⌂" },
+    { id: "home", label: "ホーム", href: "videos.html", icon: "⌂" },
     { id: "videos", label: "動画", href: "videos.html", icon: "▶" },
     { id: "shorts", label: "ショート", href: "shorts.html", icon: "▮" },
     { id: "live", label: "ライブ配信", href: "index.html#live-broadcasts", icon: "●" },
   ]);
 
   const VIDEOS_MINI_NAV = Object.freeze([
-    { id: "home", label: "ホーム", href: "index.html", icon: "⌂" },
+    { id: "home", label: "ホーム", href: "videos.html", icon: "⌂" },
     { id: "videos", label: "動画", href: "videos.html", icon: "▶" },
     { id: "shorts", label: "ショート", href: "shorts.html", icon: "▮" },
     { id: "live", label: "ライブ配信", href: "index.html#live-broadcasts", icon: "●" },
@@ -33,7 +33,7 @@
       href: "videos.html?feed=following",
       icon: "▦",
     },
-    { id: "mypage", label: "マイページ", href: "my-videos.html", icon: "◎" },
+    { id: "mypage", label: "マイページ", href: "profile.html", icon: "◎" },
     { id: "creator", label: "収益・分析", href: "creator-dashboard.html", icon: "¥" },
     { id: "upload", label: "投稿", href: "video-upload.html", icon: "＋" },
   ]);
@@ -82,6 +82,35 @@
     { type: "links", title: "マイページ", items: MYPAGE_ITEMS, dividerAfter: true },
     { type: "links", title: "TLV の他のサービス", items: TLV_MORE_SERVICES, dividerAfter: true },
     { type: "links", title: "探索", items: EXPLORE_NAV },
+  ]);
+
+  const WATCH_DRAWER_MYPAGE_ITEMS = Object.freeze([
+    { id: "channel", label: "チャンネル", href: "profile.html", iconKey: "channel", dynamic: "channel" },
+    { id: "history", label: "履歴", href: "history.html", iconKey: "history" },
+    { id: "playlists", label: "再生リスト", href: "playlists.html", iconKey: "playlists" },
+    { id: "watch-later", label: "後で見る", href: "watch-later.html", iconKey: "watch-later" },
+    { id: "liked", label: "高く評価した動画", href: "liked-videos.html", iconKey: "liked" },
+    { id: "uploaded", label: "作成した動画", href: "channel-content.html", iconKey: "uploaded" },
+    { id: "offline", label: "オフライン", href: "offline.html", iconKey: "offline" },
+  ]);
+
+  const WATCH_DRAWER_OTHER_ITEMS = Object.freeze([
+    { id: "creator", label: "収益・分析", href: "creator-dashboard.html", icon: "¥" },
+    { id: "upload", label: "投稿", href: "video-upload.html", icon: "＋" },
+    { id: "settings", label: "設定", href: "settings.html", icon: "⚙" },
+  ]);
+
+  const WATCH_DRAWER_SECTIONS = Object.freeze([
+    { type: "links", title: "", items: MAIN_NAV, dividerAfter: true },
+    { type: "subscriptions", title: "登録チャンネル", dividerAfter: true },
+    { type: "links", title: "マイページ", items: WATCH_DRAWER_MYPAGE_ITEMS, dividerAfter: true },
+    { type: "links", title: "", items: WATCH_DRAWER_OTHER_ITEMS },
+  ]);
+
+  const WATCH_PLACEHOLDER_CHANNELS = Object.freeze([
+    { name: "premium_home", profileHref: "videos.html?feed=following", initial: "P" },
+    { name: "TLV公式", profileHref: "videos.html", initial: "T" },
+    { name: "test_channel", profileHref: "videos.html", initial: "t" },
   ]);
 
   const MYPAGE_FLYOUT_ITEMS = MYPAGE_ITEMS;
@@ -149,16 +178,39 @@
 
   function closeAccountMenu() {
     closeAccountMenuFn?.();
+    global.TasuTlvViewAccountMenu?.close?.();
+    global.TasuTlvStudioAccountMenu?.close?.();
+  }
+
+  function resolveAccountMenuApi() {
+    const ctx = global.TasuTlvAccountContext?.resolveContext?.() || "view";
+    if (ctx === "studio") return global.TasuTlvStudioAccountMenu;
+    return global.TasuTlvViewAccountMenu;
+  }
+
+  function accountMenuBeforeOpen() {
+    closeCreateMenu();
+    closeNotificationsMenu();
+    closeMiniFlyout();
+    const ctx = global.TasuTlvAccountContext?.resolveContext?.() || "view";
+    if (ctx === "studio") {
+      global.TasuTlvViewAccountMenu?.close?.();
+    } else {
+      global.TasuTlvStudioAccountMenu?.close?.();
+    }
+  }
+
+  function tlvReturnToParam() {
+    const loc = global.location;
+    return encodeURIComponent(`${loc?.pathname || ""}${loc?.search || ""}${loc?.hash || ""}`);
   }
 
   function tlvLoginHref() {
-    const returnTo = encodeURIComponent(`${global.location?.pathname || ""}${global.location?.search || ""}`);
-    return `../dashboard.html?returnTo=${returnTo}`;
+    return `../login.html?returnTo=${tlvReturnToParam()}`;
   }
 
   function tlvSignupHref() {
-    const returnTo = encodeURIComponent(`${global.location?.pathname || ""}${global.location?.search || ""}`);
-    return `../signup.html?returnTo=${returnTo}`;
+    return `../signup.html?returnTo=${tlvReturnToParam()}`;
   }
 
   function formatNotificationRelativeTime(iso) {
@@ -176,6 +228,9 @@
   }
 
   function mapRawNotificationRow(row, cfg) {
+    if (global.TasuLiveNotificationsData?.mapRawNotificationRow) {
+      return global.TasuLiveNotificationsData.mapRawNotificationRow(row, cfg);
+    }
     const actorId = String(row.sender_user_id || row.senderUserId || row.actorId || "").trim();
     const actorName = actorId ? cfg?.resolveDisplayName?.(actorId) || actorId : "TASFUL";
     const title = String(row.title || row.videoTitle || "").trim();
@@ -281,60 +336,28 @@
     }
 
     const cfg = liveCfg();
-    let rows = [];
+    let items = [];
 
-    if (global.TasuTalkNotifications?.getAll) {
-      try {
-        const userId = cfg?.getTalkUserId?.() || "";
-        rows = (global.TasuTalkNotifications.getAll() || []).filter((row) => {
-          if (row?.hiddenAt || row?.hidden_at) return false;
-          const recipient = String(row.recipientUserId || row.recipient_user_id || "").trim();
-          return !recipient || recipient === userId;
-        });
-      } catch (err) {
-        console.warn("[TasuTlvVideosSidebar] notifications local skipped:", err.message || err);
-      }
-    }
-
-    if (!rows.length) {
+    if (global.TasuLiveNotificationsData?.fetchNotificationItems) {
+      items = await global.TasuLiveNotificationsData.fetchNotificationItems();
+    } else if (global.TasuTlvNotificationService?.listNotifications) {
+      items = await global.TasuTlvNotificationService.listNotifications();
+    } else {
+      const userId = cfg?.getTalkUserId?.() || "";
+      let rows = [];
       try {
         const raw = global.localStorage?.getItem("tasful_talk_notifications");
         if (raw) {
           const parsed = JSON.parse(raw);
           if (Array.isArray(parsed)) rows = parsed;
         }
-      } catch (err) {
-        console.warn("[TasuTlvVideosSidebar] notifications cache skipped:", err.message || err);
+      } catch {
+        /* ignore */
       }
+      items = rows.map((row) => mapRawNotificationRow(row, cfg)).filter((item) => item.id);
     }
 
-    if (!rows.length) {
-      try {
-        const userId = cfg?.getTalkUserId?.();
-        const session = await ensureSupabaseSessionSafe();
-        const client = cfg?.getClient?.();
-        if (userId && session?.access_token && client) {
-          const { data, error } = await client
-            .from("talk_notifications")
-            .select("id, title, body, href, created_at, read_at, type, source, sender_user_id, hidden_at")
-            .eq("recipient_user_id", userId)
-            .is("hidden_at", null)
-            .order("created_at", { ascending: false })
-            .limit(20);
-          if (error) {
-            console.warn("[TasuTlvVideosSidebar] notifications fetch skipped:", error.message || error);
-          } else {
-            rows = data || [];
-          }
-        }
-      } catch (err) {
-        console.warn("[TasuTlvVideosSidebar] notifications fetch skipped:", err.message || err);
-      }
-    }
-
-    let items = rows.map((row) => mapRawNotificationRow(row, cfg)).filter((item) => item.id);
-
-    if (!items.length && cfg?.isTalkDevStubMode?.()) {
+    if (!items.length && cfg?.isTalkDevStubMode?.() && !global.TasuTlvDevAuth?.shouldUseTlvNotifyLocalFallback?.()) {
       items = getDemoNotificationItems(cfg);
     }
 
@@ -349,13 +372,24 @@
     const name = esc(item.actorName);
     switch (item.kind) {
       case "live":
+      case "live_started":
+        if (item.kind === "live_started" || item.event === "live_started") {
+          return `<strong>${name}</strong> がライブ配信を開始しました`;
+        }
         return `<strong>${name}</strong> がライブ配信中: ${esc(item.title)}`;
       case "video":
         return `<strong>${name}</strong> が新しい動画を投稿しました: ${esc(item.title)}`;
+      case "video_published":
+        return `<strong>${name}</strong> が新しい動画を公開しました`;
       case "comment":
-        return `<strong>${name}</strong> があなたのコメントに返信しました`;
+        return `<strong>${name}</strong> があなたの動画にコメントしました`;
       case "follow":
         return `<strong>${name}</strong> があなたをフォローしました`;
+      case "system":
+        if (global.TasuTlvNotificationService?.renderItemText) {
+          return global.TasuTlvNotificationService.renderItemText(item);
+        }
+        return `<strong>${esc(item.systemTitle || item.title || "お知らせ")}</strong>${item.systemBody ? `<br>${esc(item.systemBody)}` : ""}`;
       case "like":
         return `<strong>${name}</strong> があなたの動画「${esc(item.title)}」に高く評価しました`;
       case "admin":
@@ -366,16 +400,17 @@
 
   function renderNotificationItemRow(item, cfg) {
     const avatarUrl =
-      item.actorId && cfg?.resolveAvatarUrl
+      item.actorAvatar ||
+      (item.actorId && cfg?.resolveAvatarUrl
         ? cfg.resolveAvatarUrl(item.actorId)
-        : `https://placehold.co/80x80/1a1030/e879f9?text=TLV`;
+        : `https://placehold.co/80x80/1a1030/e879f9?text=TLV`);
     const thumbStyle = item.thumb
       ? ` style="background-image:url('${esc(item.thumb)}')"`
       : ` style="background-image:url('https://placehold.co/168x94/1a1030/6d28d9?text=TLV')"`;
 
     return `
       <li class="tlv-notify-menu__item">
-        <a class="tlv-notify-menu__item-link" href="${esc(item.href)}">
+        <a class="tlv-notify-menu__item-link" href="${esc(item.href)}" data-tlv-notification-id="${esc(item.id)}">
           ${item.unread ? '<span class="tlv-notify-menu__dot" aria-hidden="true"></span>' : '<span class="tlv-notify-menu__dot tlv-notify-menu__dot--read" aria-hidden="true"></span>'}
           <img class="tlv-notify-menu__avatar" src="${esc(avatarUrl)}" width="40" height="40" alt="" loading="lazy" decoding="async" />
           <span class="tlv-notify-menu__content">
@@ -414,7 +449,7 @@
   function renderNotificationPanelShell(bodyHtml, showMore) {
     const moreHtml = showMore
       ? `<div class="tlv-notify-menu__foot">
-          <a class="tlv-notify-menu__more" href="../talk-home.html?tab=notify">通知をもっと見る</a>
+          <a class="tlv-notify-menu__more" href="notifications.html">通知をもっと見る</a>
         </div>`
       : "";
     return `
@@ -500,6 +535,29 @@
       const bodyHtml = renderNotificationPanelBody(data);
       const showMore = data.state === "ok";
       panel.innerHTML = renderNotificationPanelShell(bodyHtml, showMore);
+      refreshNotifyTriggerLabels(data);
+    }
+
+    function refreshNotifyTriggerLabels(data) {
+      const unread =
+        data?.state === "ok"
+          ? (data.items || []).filter((item) => item.unread).length
+          : 0;
+      const label = unread > 0 ? `通知（未読${unread}件）` : "通知";
+      global.document.querySelectorAll("[data-tlv-notify-menu-toggle]").forEach((btn) => {
+        btn.setAttribute("aria-label", label);
+        btn.setAttribute("title", label);
+      });
+    }
+
+    async function prefetchNotifyUnreadLabels() {
+      if (!isAuthenticatedTalkUser()) return;
+      try {
+        const data = await fetchNotificationPanelData();
+        refreshNotifyTriggerLabels(data);
+      } catch {
+        /* ignore */
+      }
     }
 
     async function openMenuFrom(trigger) {
@@ -524,7 +582,24 @@
 
     global.document.addEventListener(
       "click",
-      (e) => {
+      async (e) => {
+        const notifyLink = e.target.closest("[data-tlv-notification-id]");
+        if (notifyLink && e.target.closest("[data-tlv-notify-menu]")) {
+          const id = notifyLink.getAttribute("data-tlv-notification-id") || "";
+          const item = panelCache?.items?.find((row) => row.id === id);
+          if (item?.unread && global.TasuTlvNotificationService?.markAsRead) {
+            await global.TasuTlvNotificationService.markAsRead(id);
+            item.unread = false;
+            item.read = true;
+            if (openMenu?.panel) {
+              const bodyHtml = renderNotificationPanelBody(panelCache);
+              const showMore = panelCache.state === "ok";
+              openMenu.panel.innerHTML = renderNotificationPanelShell(bodyHtml, showMore);
+              refreshNotifyTriggerLabels(panelCache);
+            }
+          }
+        }
+
         const toggle = e.target.closest("[data-tlv-notify-menu-toggle]");
         if (toggle) {
           e.preventDefault();
@@ -557,6 +632,7 @@
     });
 
     closeNotificationsMenuFn = closeMenu;
+    prefetchNotifyUnreadLabels();
   }
 
   function renderCreateMenuItem(item, uploadHref) {
@@ -661,317 +737,23 @@
     closeCreateMenuFn = closeMenu;
   }
 
-  function renderAccountMenuRow(item) {
-    const iconHtml = `<span class="tlv-account-menu__row-icon" aria-hidden="true">${esc(item.icon)}</span>`;
-    const labelText = item.detail ? `${item.label}: ${item.detail}` : item.label;
-    const labelHtml = `<span class="tlv-account-menu__row-label">${esc(labelText)}</span>`;
-    const chevronHtml = item.chevron
-      ? `<span class="tlv-account-menu__row-chevron" aria-hidden="true">›</span>`
-      : "";
-    if (item.submenu) {
-      return `
-        <button type="button" class="tlv-account-menu__row" role="menuitem" data-tlv-account-submenu="${esc(item.submenu)}" aria-haspopup="true">
-          ${iconHtml}
-          ${labelHtml}
-          ${chevronHtml}
-        </button>`;
-    }
-    if (item.comingSoon) {
-      return `
-        <div class="tlv-account-menu__row tlv-account-menu__row--disabled" role="menuitem" aria-disabled="true">
-          ${iconHtml}
-          ${labelHtml}
-          ${chevronHtml}
-        </div>`;
-    }
-    if (item.action === "logout") {
-      return `
-        <button type="button" class="tlv-account-menu__row" role="menuitem" data-tlv-account-logout>
-          ${iconHtml}
-          ${labelHtml}
-        </button>`;
-    }
-    return `
-      <a class="tlv-account-menu__row" href="${esc(item.href)}" role="menuitem">
-        ${iconHtml}
-        ${labelHtml}
-        ${chevronHtml}
-      </a>`;
-  }
-
-  const ACCOUNT_SUBMENUS = Object.freeze({
-    language: {
-      title: "表示言語",
-      note: "他の言語は準備中です",
-      options: [
-        { label: "日本語", active: true },
-        { label: "English", comingSoon: true },
-      ],
-    },
-    region: {
-      title: "地域",
-      note: "他の地域は準備中です",
-      options: [
-        { label: "日本", active: true },
-        { label: "その他の地域", comingSoon: true },
-      ],
-    },
-  });
-
-  function renderAccountSubmenuHtml(submenuId) {
-    const sub = ACCOUNT_SUBMENUS[submenuId];
-    if (!sub) return "";
-    const options = sub.options
-      .map((opt) => {
-        if (opt.comingSoon) {
-          return `
-            <div class="tlv-account-menu__submenu-option tlv-account-menu__submenu-option--disabled" aria-disabled="true">
-              <span>${esc(opt.label)}</span>
-              <span class="tlv-account-menu__submenu-soon">準備中</span>
-            </div>`;
-        }
-        return `
-          <div class="tlv-account-menu__submenu-option is-active">
-            <span>${esc(opt.label)}</span>
-            <span class="tlv-account-menu__submenu-check" aria-hidden="true">✓</span>
-          </div>`;
-      })
-      .join("");
-    return `
-      <div class="tlv-account-menu__submenu" data-tlv-account-submenu-view="${esc(submenuId)}">
-        <button type="button" class="tlv-account-menu__submenu-back" data-tlv-account-submenu-back>
-          <span class="tlv-account-menu__submenu-back-icon" aria-hidden="true">‹</span>
-          <span>${esc(sub.title)}</span>
-        </button>
-        <div class="tlv-account-menu__submenu-list">${options}</div>
-        <p class="tlv-account-menu__submenu-note">${esc(sub.note)}</p>
-      </div>`;
-  }
-
-  function buildAccountMenuPanelHtml() {
-    const cfg = liveCfg();
-    if (!isAuthenticatedTalkUser()) {
-      return `
-        <div class="tlv-account-menu__guest">
-          <p class="tlv-account-menu__guest-text">ログインするとチャンネル管理・通知・収益確認ができます</p>
-          <div class="tlv-account-menu__guest-actions">
-            <a class="live-btn live-btn--primary" href="${esc(tlvLoginHref())}">ログイン</a>
-            <a class="live-btn live-btn--ghost" href="${esc(tlvSignupHref())}">アカウント作成</a>
-          </div>
-        </div>`;
-    }
-
-    const userId = cfg?.getTalkUserId?.() || "";
-    const displayName = cfg?.resolveDisplayName?.(userId) || userId || "ユーザー";
-    const handle = `@${userId}`;
-    const avatarUrl = cfg?.resolveAvatarUrl?.(userId) || "";
-    const channelHref = cfg?.profileUrl?.(userId) || "profile.html";
-
-    const accountRows = [
-      { icon: "✎", label: "プロフィール編集", href: "settings.html" },
-      { icon: "⇄", label: "アカウントを切り替える", href: "../dashboard.html", chevron: true },
-      { icon: "↪", label: "ログアウト", action: "logout" },
-    ];
-    const creatorRows = [
-      { icon: "▶", label: "TLV Studio", href: "studio.html" },
-      { icon: "¥", label: "収益・分析", href: "creator-dashboard.html" },
-      { icon: "◇", label: "購入とメンバーシップ", comingSoon: true, chevron: true },
-    ];
-    const settingsRows = [
-      { icon: "☾", label: "表示テーマ", comingSoon: true, chevron: true },
-      { icon: "文", label: "表示言語", detail: "日本語", submenu: "language", chevron: true },
-      { icon: "⌖", label: "地域", detail: "日本", submenu: "region", chevron: true },
-      { icon: "🔔", label: "通知設定", href: "settings.html" },
-      { icon: "🛡", label: "安全設定", href: "settings.html" },
-      { icon: "?", label: "ヘルプ", href: "../company/faq.html" },
-      { icon: "✉", label: "フィードバック", href: "../company/contact.html" },
-    ];
-
-    return `
-      <div class="tlv-account-menu__profile">
-        <img class="tlv-account-menu__avatar" src="${esc(avatarUrl)}" width="40" height="40" alt="" loading="lazy" decoding="async" />
-        <div class="tlv-account-menu__profile-text">
-          <div class="tlv-account-menu__name">${esc(displayName)}</div>
-          <div class="tlv-account-menu__handle">${esc(handle)}</div>
-          <a class="tlv-account-menu__channel-link" href="${esc(channelHref)}">チャンネルを表示</a>
-        </div>
-      </div>
-      <div class="tlv-account-menu__section">${accountRows.map(renderAccountMenuRow).join("")}</div>
-      <div class="tlv-account-menu__divider" aria-hidden="true"></div>
-      <div class="tlv-account-menu__section">${creatorRows.map(renderAccountMenuRow).join("")}</div>
-      <div class="tlv-account-menu__divider" aria-hidden="true"></div>
-      <div class="tlv-account-menu__section">${settingsRows.map(renderAccountMenuRow).join("")}</div>`;
-  }
-
-  function renderAccountMenuTriggerInner() {
-    const cfg = liveCfg();
-    const userId = cfg?.getTalkUserId?.() || "";
-    const loggedIn = isAuthenticatedTalkUser();
-    const avatarUrl = loggedIn && userId ? cfg?.resolveAvatarUrl?.(userId) : "";
-    if (avatarUrl) {
-      return `<img class="tlv-videos-action__avatar tlv-videos-action__avatar-img" src="${esc(avatarUrl)}" width="28" height="28" alt="" loading="lazy" decoding="async" />`;
-    }
-    return `<span class="tlv-videos-action__avatar" aria-hidden="true">◎</span>`;
-  }
-
   function renderAccountMenuHtml(options = {}) {
-    const compact = Boolean(options.compact);
-    const panelId = compact ? "tlv-account-menu-panel-mobile" : "tlv-account-menu-panel-desktop";
-    const triggerClass = compact
-      ? "tlv-videos-action tlv-videos-action--icon tlv-videos-action--profile tlv-account-menu__trigger"
-      : "tlv-videos-action tlv-videos-action--profile tlv-account-menu__trigger";
-
-    return `
-      <div class="tlv-account-menu${compact ? " tlv-account-menu--compact" : ""}" data-tlv-account-menu>
-        <button type="button" class="${triggerClass}" data-tlv-account-menu-toggle aria-haspopup="menu" aria-expanded="false" aria-controls="${panelId}" title="アカウント" aria-label="アカウントメニュー">
-          ${renderAccountMenuTriggerInner()}
-        </button>
-        <div class="tlv-account-menu__panel" id="${panelId}" data-tlv-account-menu-panel hidden role="menu" aria-label="アカウントメニュー">
-          <div class="tlv-account-menu__scroll" data-tlv-account-menu-body></div>
-        </div>
-      </div>`;
-  }
-
-  function positionAccountPanel(panel, trigger) {
-    if (!panel || !trigger) return;
-    const mqMobile = global.matchMedia("(max-width: 1023px)");
-    if (mqMobile.matches) {
-      const rect = trigger.getBoundingClientRect();
-      const margin = 8;
-      const width = Math.min(360, global.innerWidth - margin * 2);
-      const left = Math.max(margin, global.innerWidth - width - margin);
-      const maxHeight = Math.min(global.innerHeight * 0.9, global.innerHeight - rect.bottom - margin * 2);
-      panel.style.position = "fixed";
-      panel.style.width = `${width}px`;
-      panel.style.left = `${Math.round(left)}px`;
-      panel.style.top = `${Math.round(rect.bottom + 8)}px`;
-      panel.style.right = "auto";
-      panel.style.maxHeight = `${Math.max(240, maxHeight)}px`;
-    } else {
-      panel.style.position = "";
-      panel.style.width = "";
-      panel.style.left = "";
-      panel.style.top = "";
-      panel.style.right = "";
-      panel.style.maxHeight = "";
+    const api = resolveAccountMenuApi();
+    if (api === global.TasuTlvStudioAccountMenu) {
+      return api.renderHtml?.({ variant: options.compact ? "mobile" : "topbar", compact: options.compact }) || "";
     }
+    return api?.renderHtml?.(options) || "";
   }
 
   function initAccountMenu() {
-    if (global.document.body.dataset.tlvAccountMenuBound === "1") {
+    const ctx = global.TasuTlvAccountContext?.resolveContext?.() || "view";
+    if (ctx === "studio") {
+      global.TasuTlvStudioAccountMenu?.init?.({ beforeOpen: accountMenuBeforeOpen });
+      closeAccountMenuFn = () => global.TasuTlvStudioAccountMenu?.close?.();
       return;
     }
-    global.document.body.dataset.tlvAccountMenuBound = "1";
-
-    const mqMobile = global.matchMedia("(max-width: 1023px)");
-    let openMenu = null;
-
-    function setOpen(trigger, panel, open) {
-      if (!trigger || !panel) return;
-      panel.hidden = !open;
-      trigger.setAttribute("aria-expanded", open ? "true" : "false");
-      trigger.classList.toggle("is-open", open);
-      global.document.body.classList.toggle("tlv-account-menu-open", open);
-      openMenu = open ? { trigger, panel } : null;
-    }
-
-    function closeMenu() {
-      if (!openMenu) return;
-      setOpen(openMenu.trigger, openMenu.panel, false);
-    }
-
-    function renderPanel(panel) {
-      const body = panel.querySelector("[data-tlv-account-menu-body]");
-      if (body) body.innerHTML = buildAccountMenuPanelHtml();
-    }
-
-    function openMenuFrom(trigger) {
-      const menu = trigger.closest("[data-tlv-account-menu]");
-      const panel = menu?.querySelector("[data-tlv-account-menu-panel]");
-      if (!panel) return;
-      closeCreateMenu();
-      closeNotificationsMenu();
-      closeMiniFlyout();
-      if (openMenu?.trigger === trigger && !panel.hidden) {
-        closeMenu();
-        return;
-      }
-      if (openMenu) closeMenu();
-      setOpen(trigger, panel, true);
-      renderPanel(panel);
-      positionAccountPanel(panel, trigger);
-    }
-
-    async function handleLogout() {
-      closeMenu();
-      try {
-        if (global.TasuMemberAuth?.logout) {
-          await global.TasuMemberAuth.logout({ redirect: "../dashboard.html" });
-          return;
-        }
-      } catch (err) {
-        console.warn("[TasuTlvVideosSidebar] logout skipped:", err.message || err);
-      }
-      global.location.href = "../dashboard.html";
-    }
-
-    global.document.addEventListener(
-      "click",
-      (e) => {
-        const toggle = e.target.closest("[data-tlv-account-menu-toggle]");
-        if (toggle) {
-          e.preventDefault();
-          e.stopPropagation();
-          openMenuFrom(toggle);
-          return;
-        }
-        if (e.target.closest("[data-tlv-account-logout]")) {
-          e.preventDefault();
-          e.stopPropagation();
-          handleLogout();
-          return;
-        }
-        const submenuBtn = e.target.closest("[data-tlv-account-submenu]");
-        if (submenuBtn && openMenu) {
-          e.preventDefault();
-          e.stopPropagation();
-          const submenuId = submenuBtn.getAttribute("data-tlv-account-submenu");
-          const body = openMenu.panel.querySelector("[data-tlv-account-menu-body]");
-          if (body && submenuId) body.innerHTML = renderAccountSubmenuHtml(submenuId);
-          return;
-        }
-        if (e.target.closest("[data-tlv-account-submenu-back]") && openMenu) {
-          e.preventDefault();
-          e.stopPropagation();
-          renderPanel(openMenu.panel);
-          return;
-        }
-        if (openMenu && !e.target.closest("[data-tlv-account-menu]")) {
-          closeMenu();
-        }
-      },
-      true,
-    );
-
-    global.document.addEventListener("keydown", (e) => {
-      if (e.key !== "Escape" || !openMenu) return;
-      const body = openMenu.panel.querySelector("[data-tlv-account-menu-body]");
-      if (body?.querySelector("[data-tlv-account-submenu-view]")) {
-        renderPanel(openMenu.panel);
-        return;
-      }
-      closeMenu();
-    });
-
-    mqMobile.addEventListener("change", () => {
-      if (openMenu) positionAccountPanel(openMenu.panel, openMenu.trigger);
-    });
-
-    global.addEventListener("resize", () => {
-      if (openMenu) positionAccountPanel(openMenu.panel, openMenu.trigger);
-    });
-
-    closeAccountMenuFn = closeMenu;
+    global.TasuTlvViewAccountMenu?.init?.({ beforeOpen: accountMenuBeforeOpen });
+    closeAccountMenuFn = () => global.TasuTlvViewAccountMenu?.close?.();
   }
 
   function isNavItemActive(itemId, activeId) {
@@ -1033,7 +815,7 @@
   function renderVideosBrandHtml(compact = false) {
     const nameClass = compact ? " tlv-videos-brand__name--compact" : "";
     return `
-      <a class="tlv-videos-brand${compact ? " tlv-videos-brand--compact" : ""}" href="index.html" aria-label="TalkLiveView LIVE">
+      <a class="tlv-videos-brand${compact ? " tlv-videos-brand--compact" : ""}" href="videos.html" aria-label="TalkLiveView LIVE">
         <span class="tlv-videos-brand__mark">TLV</span>
         <span class="tlv-videos-brand__text">
           <span class="tlv-videos-brand__name${nameClass}">TalkLiveView</span>
@@ -1078,7 +860,7 @@
   function renderVideosCompactSidebar(activeId = "home") {
     const items = VIDEOS_MINI_NAV.map((item) => {
       const active = isNavItemActive(item.id, activeId);
-      const hasFlyout = Boolean(MINI_FLYOUT_PANELS[item.id]);
+      const hasFlyout = item.id === "mypage" && Boolean(MINI_FLYOUT_PANELS[item.id]);
       const label = miniNavDisplayLabel(item);
       const labelClass =
         item.id === "subscriptions" ? " tlv-videos-mini-nav__label--subscriptions" : "";
@@ -1100,6 +882,110 @@
       <aside class="tlv-desktop-sidebar tlv-videos-mini-sidebar" aria-label="TLV ナビゲーション">
         <nav class="tlv-videos-mini-nav" aria-label="クイックナビ">${items}</nav>
       </aside>`;
+  }
+
+  function formatSubscriberCount(count) {
+    const n = Number(count ?? 0);
+    if (!Number.isFinite(n) || n < 0) return "0人";
+    return `${n.toLocaleString("ja-JP")}人`;
+  }
+
+  function buildMypageSidebarProfileData(userId) {
+    const cfg = liveCfg();
+    const id = String(userId || "").trim();
+    if (!id) return null;
+    const displayName = cfg?.resolveDisplayName?.(id) || truncateIdFallback(id);
+    const handle = cfg?.resolveChannelHandle?.(id) || `@${id.slice(0, 8)}`;
+    const avatar = cfg?.resolveAvatarUrl?.(id) || "";
+    const profileHref = cfg?.profileUrl?.(id) || "profile.html";
+    const initial = encodeURIComponent(String(displayName).slice(0, 2) || "ME");
+    return {
+      userId: id,
+      displayName,
+      handle,
+      avatar,
+      profileHref,
+      initial,
+      subscribers: null,
+    };
+  }
+
+  function truncateIdFallback(userId) {
+    const cfg = liveCfg();
+    if (cfg?.truncateIdFallback) return cfg.truncateIdFallback(userId);
+    const id = String(userId || "").trim();
+    if (!id) return "ユーザー";
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) {
+      return `${id.slice(0, 8)}…`;
+    }
+    return id;
+  }
+
+  function renderMypageSidebarProfileHtml(data, options = {}) {
+    if (!data) return "";
+    const variant = options.variant === "flyout" ? "flyout" : "drawer";
+    const blockClass =
+      variant === "flyout" ? "tlv-videos-mini-flyout__profile" : "tlv-videos-drawer__profile";
+    const subscribers =
+      data.subscribers == null
+        ? '<span class="tlv-sidebar-channel-profile__subs" data-tlv-mypage-profile-subs>—</span>'
+        : `<span class="tlv-sidebar-channel-profile__subs" data-tlv-mypage-profile-subs>登録者 ${esc(formatSubscriberCount(data.subscribers))}</span>`;
+    return `
+      <a class="${blockClass} tlv-sidebar-channel-profile" href="${esc(data.profileHref)}" data-tlv-mypage-sidebar-profile>
+        <img
+          class="tlv-sidebar-channel-profile__avatar"
+          src="${esc(data.avatar)}"
+          alt=""
+          width="96"
+          height="96"
+          loading="lazy"
+          decoding="async"
+          onerror="this.src='https://placehold.co/96x96/1a1030/e879f9?text=${esc(data.initial)}'"
+        />
+        <div class="tlv-sidebar-channel-profile__text">
+          <span class="tlv-sidebar-channel-profile__label">チャンネル</span>
+          <span class="tlv-sidebar-channel-profile__name" data-tlv-mypage-profile-name>${esc(data.displayName)}</span>
+          <span class="tlv-sidebar-channel-profile__handle" data-tlv-mypage-profile-handle>${esc(data.handle)}</span>
+          ${subscribers}
+        </div>
+      </a>`;
+  }
+
+  function canShowMypageSidebarProfile() {
+    const userId = liveCfg()?.getTalkUserId?.();
+    return Boolean(String(userId || "").trim());
+  }
+
+  function renderDrawerMypageProfileShell() {
+    if (!canShowMypageSidebarProfile()) return "";
+    const cfg = liveCfg();
+    const userId = cfg?.getTalkUserId?.();
+    const data = buildMypageSidebarProfileData(userId);
+    if (!data) return "";
+    return renderMypageSidebarProfileHtml(data, { variant: "drawer" });
+  }
+
+  async function hydrateMypageSidebarProfiles() {
+    const cfg = liveCfg();
+    const userId = cfg?.getTalkUserId?.();
+    if (!userId) return;
+
+    let subscribers = 0;
+    try {
+      const profile = await cfg.fetchCreatorProfile?.(userId);
+      subscribers = Number(profile?.follower_count ?? 0);
+    } catch (err) {
+      console.warn("[TasuTlvVideosSidebar] mypage profile subs skipped:", err.message || err);
+    }
+
+    const subsText = `登録者 ${formatSubscriberCount(subscribers)}`;
+    global.document.querySelectorAll("[data-tlv-mypage-profile-subs]").forEach((el) => {
+      el.textContent = subsText;
+    });
+  }
+
+  function initDrawerMypageProfile() {
+    hydrateMypageSidebarProfiles();
   }
 
   function renderDrawerLink(item, activeId) {
@@ -1152,6 +1038,62 @@
     return renderDrawerLinksSection(section, activeId);
   }
 
+  function renderWatchDrawerSubscriptionsSection(section, activeId) {
+    const active = activeId === "subscriptions" || activeId === "following";
+    const divider = section.dividerAfter ? `<div class="tlv-videos-drawer__divider" aria-hidden="true"></div>` : "";
+    const rows = WATCH_PLACEHOLDER_CHANNELS.map(
+      (channel) => `
+        <a class="tlv-videos-drawer__creator-row" href="${esc(channel.profileHref)}">
+          <img class="tlv-videos-mini-flyout__avatar" src="https://placehold.co/36x36/1a1030/e879f9?text=${esc(channel.initial)}" alt="" width="36" height="36" loading="lazy" />
+          <span class="tlv-videos-mini-flyout__label">${esc(channel.name)}</span>
+        </a>`,
+    ).join("");
+    return `
+      <section class="tlv-videos-drawer__section tlv-videos-drawer__section--subscriptions">
+        <a class="tlv-videos-drawer__section-heading${active ? " is-active" : ""}" href="videos.html?feed=following">
+          <h3 class="tlv-videos-drawer__section-title">${esc(section.title)}</h3>
+          <span class="tlv-videos-drawer__section-chevron" aria-hidden="true">›</span>
+        </a>
+        <div class="tlv-videos-drawer__subscriptions">
+          <div class="tlv-videos-drawer__subscriptions-list">${rows}</div>
+        </div>
+      </section>
+      ${divider}`;
+  }
+
+  function renderWatchDrawerSection(section, activeId) {
+    if (section.type === "subscriptions") {
+      return renderWatchDrawerSubscriptionsSection(section, activeId);
+    }
+    return renderDrawerLinksSection(section, activeId);
+  }
+
+  function renderWatchDrawerPanel(activeId = "videos") {
+    const id = "tlv-watch-drawer";
+    const sections = WATCH_DRAWER_SECTIONS.map((s) => renderWatchDrawerSection(s, activeId)).join("");
+    return `
+      <aside class="tlv-videos-drawer tlv-videos-drawer--mobile-overlay tlv-side-drawer" id="${id}" data-tlv-watch-drawer role="dialog" aria-label="ナビゲーションメニュー" aria-hidden="true">
+        <div class="tlv-videos-drawer__head">
+          <button type="button" class="tlv-videos-drawer__menu-btn" data-tlv-drawer-toggle aria-label="メニューを閉じる" aria-expanded="false" aria-controls="${id}">
+            <span aria-hidden="true">☰</span>
+          </button>
+          <a class="tlv-videos-drawer__brand" href="videos.html">
+            <span class="tlv-videos-drawer__brand-mark">TLV</span>
+            <span class="tlv-videos-drawer__brand-text">TalkLiveView LIVE</span>
+          </a>
+        </div>
+        <div class="tlv-videos-drawer__scroll">
+          ${sections}
+        </div>
+      </aside>`;
+  }
+
+  function renderWatchOverlayDrawer(activeId = "videos") {
+    return `
+      <div class="tlv-videos-drawer-backdrop tlv-drawer-backdrop" data-tlv-watch-drawer-backdrop hidden></div>
+      ${renderWatchDrawerPanel(activeId)}`;
+  }
+
   function renderVideosDrawerPanel(activeId = "home", options = {}) {
     const variant = options.variant || "mobile-overlay";
     const id = variant === "desktop-rail" ? "tlv-videos-drawer-desktop" : "tlv-videos-drawer";
@@ -1160,6 +1102,7 @@
         ? "data-tlv-videos-drawer-desktop"
         : "data-tlv-videos-drawer-mobile";
     const sections = DRAWER_SECTIONS.map((s) => renderDrawerSection(s, activeId)).join("");
+    const profileHtml = renderDrawerMypageProfileShell();
 
     return `
       <aside class="tlv-videos-drawer tlv-videos-drawer--${variant}" id="${id}" ${dataAttr} aria-label="TLV メニュー" aria-hidden="true">
@@ -1167,11 +1110,12 @@
           <button type="button" class="tlv-videos-drawer__menu-btn" data-tlv-drawer-toggle aria-label="メニューを閉じる" aria-expanded="false" aria-controls="${id}">
             <span aria-hidden="true">☰</span>
           </button>
-          <a class="tlv-videos-drawer__brand" href="index.html">
+          <a class="tlv-videos-drawer__brand" href="videos.html">
             <span class="tlv-videos-drawer__brand-mark">TLV</span>
             <span class="tlv-videos-drawer__brand-text">TASFUL LIVE</span>
           </a>
         </div>
+        ${profileHtml}
         <div class="tlv-videos-drawer__scroll">
           ${sections}
         </div>
@@ -1231,10 +1175,11 @@
     }
 
     if (useYoutube) {
+      const drawerId = String(options.drawerControlsId || "tlv-videos-drawer-desktop");
       return `
         <header class="tlv-desktop-topbar tlv-desktop-topbar--videos tlv-desktop-topbar--youtube">
           <div class="tlv-videos-topbar__start">
-            <button type="button" class="tlv-videos-topbar__menu" data-tlv-drawer-toggle aria-label="メニューを開く" aria-expanded="false" aria-controls="tlv-videos-drawer-desktop">
+            <button type="button" class="tlv-videos-topbar__menu" data-tlv-drawer-toggle aria-label="メニューを開く" aria-expanded="false" aria-controls="${esc(drawerId)}">
               <span aria-hidden="true">☰</span>
             </button>
             ${renderVideosBrandHtml(false)}
@@ -1261,12 +1206,13 @@
   function renderVideosMobileHeader(title, options = {}) {
     const uploadHref = String(options.uploadHref || "video-upload.html");
     const useYoutube = options.headerLayout === "youtube";
+    const drawerId = String(options.drawerControlsId || "tlv-videos-drawer");
 
     if (useYoutube) {
       return `
         <header class="tlv-mobile-header tlv-mobile-header--videos tlv-mobile-header--videos-youtube">
           <div class="tlv-mobile-videos-toprow">
-            <button type="button" class="tlv-videos-mobile-menu" data-tlv-drawer-toggle aria-label="メニューを開く" aria-expanded="false" aria-controls="tlv-videos-drawer">
+            <button type="button" class="tlv-videos-mobile-menu" data-tlv-drawer-toggle aria-label="メニューを開く" aria-expanded="false" aria-controls="${esc(drawerId)}">
               <span aria-hidden="true">☰</span>
             </button>
             ${renderVideosBrandHtml(true)}
@@ -1293,7 +1239,7 @@
       : "";
     return `
       <header class="tlv-mobile-header tlv-mobile-header--videos${options.backHref ? " tlv-mobile-header--back" : ""}">
-        <button type="button" class="tlv-videos-mobile-menu" data-tlv-drawer-toggle aria-label="メニューを開く" aria-expanded="false" aria-controls="tlv-videos-drawer"><span aria-hidden="true">☰</span></button>
+        <button type="button" class="tlv-videos-mobile-menu" data-tlv-drawer-toggle aria-label="メニューを開く" aria-expanded="false" aria-controls="${esc(drawerId)}"><span aria-hidden="true">☰</span></button>
         ${back}
         <div class="tlv-mobile-header__text">
           <h1 class="tlv-mobile-header__title">${esc(title)}</h1>
@@ -1308,6 +1254,8 @@
   }
 
   function isAuthenticatedTalkUser() {
+    const dev = global.TasuTlvDevAuth;
+    if (dev?.isAuthenticatedForTlv) return dev.isAuthenticatedForTlv();
     const auth = global.TasuAuthCurrentUser?.getCurrentUser?.();
     return Boolean(auth?.authenticated && auth?.talkUserId);
   }
@@ -1416,7 +1364,7 @@
       return `<p class="${emptyClass}">ログインすると登録チャンネルを表示できます</p>`;
     }
     if (data.state === "empty") {
-      return `<p class="${emptyClass}">登録チャンネルはありません</p>`;
+      return `<p class="${emptyClass}">登録チャンネルはまだありません</p>`;
     }
     if (data.state === "loading") {
       return `<p class="${emptyClass}">読み込み中…</p>`;
@@ -1449,6 +1397,35 @@
     return resolveDrawerItemHref(item);
   }
 
+  function renderMypageNavListHtml(items, options = {}) {
+    const activeId = options.activeId ?? getSidebarActiveId();
+    const rowClass = options.rowClass || "tlv-mypage-nav__row";
+    const activeRowClass = options.activeRowClass || "tlv-mypage-nav__row--active";
+    const iconClass = options.iconClass || "tlv-mypage-nav__icon";
+    const labelClass = options.labelClass || "tlv-mypage-nav__label";
+    const list = Array.isArray(items) ? items : MYPAGE_ITEMS;
+
+    return list
+      .map((item) => {
+        const href = resolveMypageItemHref(item);
+        const active = isMypageItemActive(item.id, activeId) ? ` ${activeRowClass}` : "";
+        return `
+        <a class="${rowClass}${active}" href="${esc(href)}">
+          <span class="${iconClass} tlv-mypage-icon">${renderMypageIcon(item.iconKey)}</span>
+          <span class="${labelClass}">${esc(item.label)}</span>
+        </a>`;
+      })
+      .join("");
+  }
+
+  function renderMypageNavPanelHtml(activeId = "") {
+    const rows = renderMypageNavListHtml(MYPAGE_ITEMS, { activeId: activeId || getSidebarActiveId() });
+    return `
+      <nav class="tlv-mypage-nav" aria-label="マイページ">
+        <div class="tlv-mypage-nav__list">${rows}</div>
+      </nav>`;
+  }
+
   async function hydrateDrawerSubscriptions() {
     const mounts = global.document.querySelectorAll("[data-tlv-drawer-subscriptions]");
     if (!mounts.length) return;
@@ -1479,17 +1456,21 @@
   }
 
   function renderMypageFlyoutBody() {
-    const activeId = getSidebarActiveId();
-    const rows = MYPAGE_FLYOUT_ITEMS.map((item) => {
-      const href = resolveMypageItemHref(item);
-      const active = isMypageItemActive(item.id, activeId) ? " tlv-videos-mini-flyout__row--active" : "";
-      return `
-        <a class="tlv-videos-mini-flyout__row${active}" href="${esc(href)}">
-          <span class="tlv-videos-mini-flyout__icon tlv-mypage-icon">${renderMypageIcon(item.iconKey)}</span>
-          <span class="tlv-videos-mini-flyout__label">${esc(item.label)}</span>
-        </a>`;
-    }).join("");
-    return `<div class="tlv-videos-mini-flyout__list">${rows}</div>`;
+    const cfg = liveCfg();
+    const profileData = canShowMypageSidebarProfile()
+      ? buildMypageSidebarProfileData(cfg?.getTalkUserId?.())
+      : null;
+    const profileHtml = profileData
+      ? renderMypageSidebarProfileHtml(profileData, { variant: "flyout" })
+      : "";
+    const rows = renderMypageNavListHtml(MYPAGE_FLYOUT_ITEMS, {
+      rowClass: "tlv-videos-mini-flyout__row",
+      activeRowClass: "tlv-videos-mini-flyout__row--active",
+      iconClass: "tlv-videos-mini-flyout__icon",
+      labelClass: "tlv-videos-mini-flyout__label",
+      activeId: getSidebarActiveId(),
+    });
+    return `${profileHtml}<div class="tlv-videos-mini-flyout__list">${rows}</div>`;
   }
 
   function renderMiniFlyoutShell(panelId, bodyHtml) {
@@ -1502,10 +1483,13 @@
       </div>`;
   }
 
-  function positionMiniFlyout(flyout, trigger) {
+  function positionMiniFlyout(flyout, trigger, panelId = "") {
     if (!flyout || !trigger) return;
     const rect = trigger.getBoundingClientRect();
-    const maxHeight = Math.min(520, Math.max(220, global.innerHeight - 24));
+    const isMypage = panelId === "mypage";
+    const minHeight = isMypage ? 420 : 220;
+    const maxCap = isMypage ? 580 : 520;
+    const maxHeight = Math.min(maxCap, Math.max(minHeight, global.innerHeight - 24));
     let top = rect.top - 8;
     if (top + maxHeight > global.innerHeight - 12) {
       top = Math.max(12, global.innerHeight - maxHeight - 12);
@@ -1513,6 +1497,11 @@
     flyout.style.top = `${Math.round(top)}px`;
     flyout.style.left = `${Math.round(rect.right + 6)}px`;
     flyout.style.maxHeight = `${maxHeight}px`;
+    if (panelId) {
+      flyout.dataset.flyoutPanel = panelId;
+    } else {
+      delete flyout.dataset.flyoutPanel;
+    }
   }
 
   function initMiniFlyouts() {
@@ -1602,10 +1591,13 @@
       backdrop.hidden = false;
       global.document.body.classList.add("tlv-videos-mini-flyout-open");
       setTriggerExpanded(trigger, true);
-      positionMiniFlyout(flyout, trigger);
+      positionMiniFlyout(flyout, trigger, panelId);
       await renderFlyout(panelId);
       if (openPanelId === panelId && openTrigger === trigger) {
-        positionMiniFlyout(flyout, trigger);
+        positionMiniFlyout(flyout, trigger, panelId);
+      }
+      if (panelId === "mypage") {
+        hydrateMypageSidebarProfiles();
       }
     }
 
@@ -1710,6 +1702,54 @@
     closeMiniFlyoutFn = closeFlyout;
   }
 
+  function initWatchOverlayDrawer() {
+    const drawer = global.document.querySelector("[data-tlv-watch-drawer]");
+    const backdrop = global.document.querySelector("[data-tlv-watch-drawer-backdrop]");
+    if (!drawer || !backdrop || drawer.dataset.tlvWatchDrawerBound === "true") return;
+    drawer.dataset.tlvWatchDrawerBound = "true";
+
+    let menuOpen = false;
+    const toggles = global.document.querySelectorAll("[data-tlv-drawer-toggle]");
+
+    function isWatchDrawerToggle(btn) {
+      const controls = btn.getAttribute("aria-controls") || "tlv-watch-drawer";
+      return controls === "tlv-watch-drawer";
+    }
+
+    function setOpen(open) {
+      menuOpen = open;
+      closeMiniFlyout();
+      closeCreateMenu();
+      closeNotificationsMenu();
+      closeAccountMenu();
+      global.document.body.classList.toggle("tlv-drawer-open", open);
+      drawer.classList.toggle("is-open", open);
+      drawer.setAttribute("aria-hidden", open ? "false" : "true");
+      backdrop.hidden = !open;
+      toggles.forEach((btn) => {
+        if (!isWatchDrawerToggle(btn)) return;
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        btn.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+      });
+      if (open) {
+        drawer.querySelector(".tlv-videos-drawer__menu-btn")?.focus?.();
+      }
+    }
+
+    function toggle() {
+      setOpen(!menuOpen);
+    }
+
+    toggles.forEach((btn) => {
+      if (!isWatchDrawerToggle(btn)) return;
+      btn.addEventListener("click", toggle);
+    });
+    backdrop.addEventListener("click", () => setOpen(false));
+    global.document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && menuOpen) setOpen(false);
+    });
+  }
+
   function initVideosDrawer() {
     const desktopDrawer = global.document.querySelector("[data-tlv-videos-drawer-desktop]");
     const mobileDrawer = global.document.querySelector("[data-tlv-videos-drawer-mobile]");
@@ -1729,6 +1769,7 @@
       if (open) {
         closeMiniFlyout();
         hydrateDrawerSubscriptions();
+        hydrateMypageSidebarProfiles();
       }
       global.document.body.classList.toggle("tlv-videos-sidebar-expanded", open && !mobile);
       global.document.body.classList.toggle("tlv-videos-drawer-open", open && mobile);
@@ -1839,6 +1880,7 @@
     initVideosDrawer();
     initMiniFlyouts();
     initDrawerSubscriptions();
+    initDrawerMypageProfile();
     initCreateMenu();
     initNotificationsMenu();
     initAccountMenu();
@@ -1854,6 +1896,9 @@
     renderCreateMenuHtml,
     renderNotificationsMenuHtml,
     renderAccountMenuHtml,
+    renderWatchOverlayDrawer,
+    renderWatchDrawerPanel,
+    initWatchOverlayDrawer,
     initVideosDrawer,
     initMiniFlyouts,
     closeMiniFlyout,
@@ -1870,7 +1915,14 @@
     MYPAGE_ITEMS,
     DRAWER_SECTIONS,
     MYPAGE_FLYOUT_ITEMS,
+    renderMypageNavPanelHtml,
+    renderMypageNavListHtml,
+    renderMypageIcon,
+    resolveMypageItemHref,
+    getSidebarActiveId,
     initDrawerSubscriptions,
+    initDrawerMypageProfile,
+    hydrateMypageSidebarProfiles,
   };
 
   global.TasuTlvVideosSidebar = api;

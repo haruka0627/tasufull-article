@@ -5,17 +5,20 @@
  * → { video_signed_url, thumbnail_signed_url?, expires_in, video }
  */
 import {
+  assertPublicVideoViewAccess,
   assertVideoViewAccess,
   createServiceClient,
+  getBearerToken,
+  getSupabaseEnv,
   handleLiveVideoError,
   handleOptions,
   jsonResponse,
   LiveVideoFunctionError,
   loadVideo,
+  optionalVerifiedUser,
   parseJsonBody,
   parseVideoId,
   requirePost,
-  requireVerifiedUser,
 } from "../_shared/live-video-auth.ts";
 
 const SIGNED_URL_TTL_SEC = 300;
@@ -62,7 +65,18 @@ export async function handler(req: Request): Promise<Response> {
 
   try {
     requirePost(req);
-    const viewer = await requireVerifiedUser(req);
+
+    const token = getBearerToken(req);
+    if (!token) {
+      return jsonResponse({ error: "Authorization header required" }, 401, req);
+    }
+
+    const { anonKey } = getSupabaseEnv();
+    if (!anonKey) {
+      return jsonResponse({ error: "Missing SUPABASE_ANON_KEY" }, 500, req);
+    }
+
+    const viewer = await optionalVerifiedUser(req);
 
     let body: RequestBody;
     try {
@@ -80,7 +94,11 @@ export async function handler(req: Request): Promise<Response> {
     }
 
     try {
-      await assertVideoViewAccess(supabase, video, viewer);
+      if (viewer) {
+        await assertVideoViewAccess(supabase, video, viewer);
+      } else {
+        await assertPublicVideoViewAccess(supabase, video);
+      }
     } catch (err) {
       if (
         err instanceof LiveVideoFunctionError &&

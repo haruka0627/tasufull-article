@@ -1,0 +1,50 @@
+[
+  {
+    "viewport": 1280,
+    "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\css-single-source-1280.png",
+    "styleInjected": false,
+    "cssHref": "http://127.0.0.1:8788/live/live.css?v=watch-css-single-source",
+    "gridCols": "806px 402px",
+    "gap": "24px",
+    "mainMaxW": "1754px",
+    "sidebarW": 402,
+    "playerW": 806,
+    "thumbW": 168,
+    "thumbH": 94,
+    "gridFromLiveCss": true,
+    "hasVideo": true,
+    "hasLike": true
+  },
+  {
+    "viewport": 1440,
+    "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\css-single-source-1440.png",
+    "styleInjected": false,
+    "cssHref": "http://127.0.0.1:8788/live/live.css?v=watch-css-single-source",
+    "gridCols": "966px 402px",
+    "gap": "24px",
+    "mainMaxW": "1754px",
+    "sidebarW": 402,
+    "playerW": 966,
+    "thumbW": 168,
+    "thumbH": 94,
+    "gridFromLiveCss": true,
+    "hasVideo": true,
+    "hasLike": true
+  },
+  {
+    "viewport": 1920,
+    "screenshot": "C:\\Users\\rubih\\tasufull-article\\scripts\\tmp-watch-ratio-shots\\css-single-source-1920.png",
+    "styleInjected": false,
+    "cssHref": "http://127.0.0.1:8788/live/live.css?v=watch-css-single-source",
+    "gridCols": "1280px 402px",
+    "gap": "24px",
+    "mainMaxW": "1754px",
+    "sidebarW": 402,
+    "playerW": 1280,
+    "thumbW": 168,
+    "thumbH": 94,
+    "gridFromLiveCss": true,
+    "hasVideo": true,
+    "hasLike": true
+  }
+]

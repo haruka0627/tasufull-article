@@ -1,0 +1,252 @@
+{
+  "viewport": {
+    "w": 1280,
+    "h": 900
+  },
+  "layout": {
+    "gridTemplateColumns": "830px 402px",
+    "gap": "16px"
+  },
+  "playerWrap": {
+    "rect": {
+      "w": 830
+    }
+  },
+  "sidebar": {
+    "rect": {
+      "w": 402
+    }
+  },
+  "thumb": {
+    "rect": {
+      "w": 196,
+      "h": 110
+    }
+  },
+  "elements": {
+    ".live-watch__primary": {
+      "exists": true,
+      "rect": {
+        "w": 830,
+        "h": 321
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch__title": {
+      "exists": true,
+      "rect": {
+        "w": 830,
+        "h": 27
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "20px",
+        "fontWeight": "800"
+      }
+    },
+    ".live-watch__toolbar": {
+      "exists": true,
+      "rect": {
+        "w": 830,
+        "h": 77
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch__channel-block": {
+      "exists": true,
+      "rect": {
+        "w": 830,
+        "h": 49
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch__channel": {
+      "exists": true,
+      "rect": {
+        "w": 248,
+        "h": 24
+      },
+      "computed": {
+        "display": "inline",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch__subscribe": {
+      "exists": true,
+      "rect": {
+        "w": 109,
+        "h": 26
+      },
+      "computed": {
+        "display": "inline-block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgb(240, 240, 240)",
+        "borderRadius": "0px",
+        "appearance": "auto",
+        "padding": "1px 6px",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch__actions": {
+      "exists": true,
+      "rect": {
+        "w": 830,
+        "h": 28
+      },
+      "computed": {
+        "display": "flex",
+        "flexDirection": "row",
+        "alignItems": "center",
+        "justifyContent": "normal",
+        "gap": "8px",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch-chip": {
+      "exists": true,
+      "rect": {
+        "w": 45,
+        "h": 23
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgb(240, 240, 240)",
+        "borderRadius": "0px",
+        "appearance": "auto",
+        "padding": "1px 6px",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch-chip--like": {
+      "exists": true,
+      "rect": {
+        "w": 45,
+        "h": 23
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgb(240, 240, 240)",
+        "borderRadius": "0px",
+        "appearance": "auto",
+        "padding": "1px 6px",
+        "fontSize": "13.3333px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch__desc-card": {
+      "exists": true,
+      "rect": {
+        "w": 830,
+        "h": 63
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    },
+    ".live-watch-comments": {
+      "exists": true,
+      "rect": {
+        "w": 830,
+        "h": 122
+      },
+      "computed": {
+        "display": "block",
+        "flexDirection": "row",
+        "alignItems": "normal",
+        "justifyContent": "normal",
+        "gap": "normal",
+        "backgroundColor": "rgba(0, 0, 0, 0)",
+        "borderRadius": "0px",
+        "appearance": "none",
+        "padding": "0px",
+        "fontSize": "16px",
+        "fontWeight": "400"
+      }
+    }
+  },
+  "matchedRules": {
+    "subscribe": [],
+    "chip": []
+  }
+}

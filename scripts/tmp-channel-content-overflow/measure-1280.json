@@ -1,0 +1,103 @@
+{
+  "innerWidth": 1280,
+  "documentScrollWidth": 1280,
+  "bodyScrollWidth": 1280,
+  "match": true,
+  "hasHorizontalScroll": false,
+  "overflowDelta": 0,
+  "scrollDrivers": [],
+  "topOffenders": [],
+  "picks": [
+    {
+      "sel": ".tlv-studio-mobile-shell",
+      "rect": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "scrollWidth": 0,
+      "clientWidth": 0,
+      "overflowX": "visible",
+      "maxWidth": "none",
+      "minWidth": "0px"
+    },
+    {
+      "sel": ".tlv-studio-mobile-content",
+      "rect": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "scrollWidth": 0,
+      "clientWidth": 0,
+      "overflowX": "visible",
+      "maxWidth": "none",
+      "minWidth": "0px"
+    },
+    {
+      "sel": ".tlv-studio-page",
+      "rect": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "scrollWidth": 0,
+      "clientWidth": 0,
+      "overflowX": "visible",
+      "maxWidth": "none",
+      "minWidth": "0px"
+    },
+    {
+      "sel": ".tlv-studio-page__tabs",
+      "rect": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "scrollWidth": 0,
+      "clientWidth": 0,
+      "overflowX": "auto",
+      "maxWidth": "100%",
+      "minWidth": "0px"
+    },
+    {
+      "sel": ".tlv-studio-table-wrap",
+      "rect": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "scrollWidth": 0,
+      "clientWidth": 0,
+      "overflowX": "auto",
+      "maxWidth": "100%",
+      "minWidth": "0px"
+    },
+    {
+      "sel": ".tlv-studio-table",
+      "rect": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "scrollWidth": 0,
+      "clientWidth": 0,
+      "overflowX": "visible",
+      "maxWidth": "none",
+      "minWidth": "0px"
+    },
+    {
+      "sel": "table.tlv-studio-table",
+      "rect": {
+        "left": 0,
+        "right": 0,
+        "width": 0
+      },
+      "scrollWidth": 0,
+      "clientWidth": 0,
+      "overflowX": "visible",
+      "maxWidth": "none",
+      "minWidth": "0px"
+    }
+  ]
+}

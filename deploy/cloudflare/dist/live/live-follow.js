@@ -6,12 +6,29 @@
 
   const C = () => global.TasuLiveConfig;
 
+  function getFollowViewerId() {
+    const dev = global.TasuTlvDevAuth;
+    if (dev?.getTlvViewerTalkUserId) {
+      return String(dev.getTlvViewerTalkUserId() || "").trim();
+    }
+    return String(C().getTalkUserId() || "").trim();
+  }
+
+  function shouldUseDevFollowFallback() {
+    return Boolean(global.TasuTlvDevAuth?.shouldUseTlvFollowLocalFallback?.());
+  }
+
   async function isFollowing(creatorId) {
-    const cfg = C();
-    await cfg.ensureSupabaseSession();
-    const followerId = cfg.getTalkUserId();
+    const followerId = getFollowViewerId();
     const creator = String(creatorId || "").trim();
     if (!followerId || !creator || followerId === creator) return false;
+
+    if (shouldUseDevFollowFallback()) {
+      return global.TasuTlvDevAuth.isDevFollowStored(followerId, creator);
+    }
+
+    const cfg = C();
+    await cfg.ensureSupabaseSession();
 
     const { data, error } = await cfg.getClient()
       .from(cfg.TABLES.follows)
@@ -25,13 +42,31 @@
   }
 
   async function follow(creatorId) {
-    const cfg = C();
-    await cfg.ensureSupabaseSession();
-    const followerId = cfg.getTalkUserId();
+    const followerId = getFollowViewerId();
     const creator = String(creatorId || "").trim();
     if (!followerId) throw new Error("ログインが必要です");
     if (!creator) throw new Error("creator_id が不正です");
     if (followerId === creator) throw new Error("自分自身はフォローできません");
+
+    if (shouldUseDevFollowFallback()) {
+      global.TasuTlvDevAuth.setDevFollowStored(followerId, creator, true);
+      if (global.TasuLiveNotify?.notifyCreatorOnFollow) {
+        try {
+          await global.TasuLiveNotify.notifyCreatorOnFollow({
+            creatorId: creator,
+            followerId,
+            followerName: C().resolveDisplayName(followerId),
+            followerAvatar: C().resolveAvatarUrl?.(followerId) || "",
+          });
+        } catch (notifyErr) {
+          console.warn("[TasuLiveFollow] follow notify skipped:", notifyErr);
+        }
+      }
+      return true;
+    }
+
+    const cfg = C();
+    await cfg.ensureSupabaseSession();
 
     const { error } = await cfg.getClient().from(cfg.TABLES.follows).insert({
       follower_id: followerId,
@@ -47,6 +82,7 @@
           creatorId: creator,
           followerId,
           followerName: cfg.resolveDisplayName(followerId),
+          followerAvatar: cfg.resolveAvatarUrl?.(followerId) || "",
         });
       } catch (notifyErr) {
         console.warn("[TasuLiveFollow] follow notify skipped:", notifyErr);
@@ -57,11 +93,18 @@
   }
 
   async function unfollow(creatorId) {
-    const cfg = C();
-    await cfg.ensureSupabaseSession();
-    const followerId = cfg.getTalkUserId();
+    const followerId = getFollowViewerId();
     const creator = String(creatorId || "").trim();
     if (!followerId || !creator) return false;
+
+    if (shouldUseDevFollowFallback()) {
+      global.TasuTlvDevAuth.setDevFollowStored(followerId, creator, false);
+      global.TasuTlvDevAuth.removeDevFollowNotification?.(creator, followerId);
+      return true;
+    }
+
+    const cfg = C();
+    await cfg.ensureSupabaseSession();
 
     const { error } = await cfg.getClient()
       .from(cfg.TABLES.follows)
@@ -88,11 +131,10 @@
 
   async function mountFollowButton(container, creatorId, profileRoot, options = {}) {
     const cfg = C();
-    const viewerId = cfg.getTalkUserId();
+    const viewerId = getFollowViewerId();
     const creator = String(creatorId || "").trim();
 
     if (!creator || viewerId === creator) return;
-    if (!cfg.getClient()) return;
 
     let slot = container.querySelector(".live-follow-slot");
     if (!slot) {
@@ -102,10 +144,14 @@
     }
 
     if (!viewerId) {
-      const returnTo = encodeURIComponent(global.location?.pathname + global.location?.search || "profile.html");
-      slot.innerHTML = `<a class="live-btn live-btn--primary" href="../dashboard.html?returnTo=${returnTo}">ログインして登録</a>`;
+      const returnTo = encodeURIComponent(
+        `${global.location?.pathname || "profile.html"}${global.location?.search || ""}`,
+      );
+      slot.innerHTML = `<a class="live-btn live-btn--primary" href="../login.html?returnTo=${returnTo}">ログインして登録</a>`;
       return;
     }
+
+    if (!cfg.getClient() && !shouldUseDevFollowFallback()) return;
 
     async function refresh() {
       const following = await isFollowing(creator);
@@ -142,5 +188,7 @@
     follow,
     unfollow,
     mountFollowButton,
+    getFollowViewerId,
+    shouldUseDevFollowFallback,
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -180,23 +180,91 @@
   }
 
   function getTalkUserId() {
+    const dev = global.TasuTlvDevAuth;
+    if (dev?.shouldUseTlvDevDemo?.()) return dev.DEMO_USER_ID;
     const auth = global.TasuAuthCurrentUser?.getCurrentUser?.();
     if (auth?.talkUserId) return String(auth.talkUserId).trim();
-    const cfg = global.TASU_CHAT_SUPABASE_CONFIG || {};
-    return String(cfg.currentUserId || cfg.me?.id || "").trim();
+    if (global.TasuAuthCurrentUser?.canUseLocalStorageFallback?.()) {
+      const cfg = global.TASU_CHAT_SUPABASE_CONFIG || {};
+      return String(cfg.currentUserId || cfg.me?.id || "").trim();
+    }
+    return "";
+  }
+
+  function isUuidLike(value) {
+    const s = String(value || "").trim();
+    if (!s) return false;
+    if (
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(s)
+    ) {
+      return true;
+    }
+    // Truncated / partial UUID strings must not be used as display names
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(s);
+  }
+
+  function truncateIdFallback(userId) {
+    const id = String(userId || "").trim();
+    if (!id) return "ユーザー";
+    if (isUuidLike(id)) return `${id.slice(0, 8)}…`;
+    return id;
+  }
+
+  function pickChannelLabel(userId, ...candidates) {
+    const id = String(userId || "").trim();
+    for (const raw of candidates) {
+      const name = String(raw ?? "").trim();
+      if (!name) continue;
+      if (name === id) continue;
+      if (isUuidLike(name)) continue;
+      return name;
+    }
+    return truncateIdFallback(id);
   }
 
   function resolveDisplayName(userId) {
     const id = String(userId || "").trim();
     if (!id) return "クリエイター";
+    if (global.TasuTlvDevAuth?.shouldUseTlvDevDemo?.() && id === global.TasuTlvDevAuth.DEMO_USER_ID) {
+      return "TLV Demo User";
+    }
     const cfg = global.TASU_CHAT_SUPABASE_CONFIG || {};
-    if (cfg.me?.id === id && cfg.me?.displayName) return cfg.me.displayName;
+    if (cfg.me?.id === id) {
+      const fromMe = pickChannelLabel(id, cfg.me.displayName, cfg.me.display_name);
+      if (fromMe !== truncateIdFallback(id) || !isUuidLike(id)) return fromMe;
+    }
+    const talkProfile = global.TasuTalkChatProfile?.resolveProfile?.(id);
+    if (talkProfile) {
+      const fromTalk = pickChannelLabel(id, talkProfile.display_name, talkProfile.displayName);
+      if (fromTalk !== truncateIdFallback(id) || !isUuidLike(id)) return fromTalk;
+    }
     const identity = global.TasuChatUserIdentity?.getProfileForUserId?.(id);
-    if (identity?.displayName) return identity.displayName;
+    if (identity) {
+      const fromIdentity = pickChannelLabel(id, identity.displayName, identity.display_name);
+      if (fromIdentity !== truncateIdFallback(id) || !isUuidLike(id)) return fromIdentity;
+    }
     if (id === "u_me") return "あなた";
     if (id === "u_store") return "premium_home";
     if (id === "u_creator") return "LIVEクリエイター";
-    return id;
+    return truncateIdFallback(id);
+  }
+
+  function resolveChannelHandle(userId) {
+    const id = String(userId || "").trim();
+    if (!id) return "@—";
+    if (global.TasuTlvDevAuth?.shouldUseTlvDevDemo?.() && id === global.TasuTlvDevAuth.DEMO_USER_ID) {
+      return "@tlv_demo";
+    }
+    const cfg = global.TASU_CHAT_SUPABASE_CONFIG || {};
+    if (cfg.me?.id === id) {
+      const raw = String(cfg.me.handle || cfg.me.username || "").trim();
+      if (raw) return raw.startsWith("@") ? raw : `@${raw}`;
+    }
+    const identity = global.TasuChatUserIdentity?.getProfileForUserId?.(id);
+    const identityHandle = String(identity?.handle || identity?.username || "").trim();
+    if (identityHandle) return identityHandle.startsWith("@") ? identityHandle : `@${identityHandle}`;
+    if (isUuidLike(id)) return `@${id.slice(0, 8)}`;
+    return `@${id}`;
   }
 
   function resolveAvatarUrl(userId) {
@@ -314,6 +382,10 @@
 
   function creatorDashboardUrl() {
     return "creator-dashboard.html";
+  }
+
+  function studioTopUrl() {
+    return "/live/videos.html";
   }
 
   function studioDashboardUrl() {
@@ -558,14 +630,14 @@
     const cfg = global.TASU_CHAT_SUPABASE_CONFIG || {};
     const anonKey = String(cfg.anonKey || "").trim();
     const token = await getAccessTokenForEdge();
-    if (!token) throw new Error("認証トークンがありません");
+    if (!token && !anonKey) throw new Error("認証トークンがありません");
 
     const res = await fetch(`${base}/${VIDEO_SIGNED_URL_FUNCTION}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         apikey: anonKey,
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token || anonKey}`,
       },
       body: JSON.stringify({ video_id: String(videoId || "").trim() }),
     });
@@ -929,7 +1001,10 @@
     getClient,
     getTalkUserId,
     resolveDisplayName,
+    resolveChannelHandle,
     resolveAvatarUrl,
+    isUuidLike,
+    truncateIdFallback,
     labelCreatorStatus,
     labelPermissionStatus,
     labelBroadcastStatus,
@@ -951,6 +1026,7 @@
     myVideosUrl,
     creatorDashboardUrl,
     studioDashboardUrl,
+    studioTopUrl,
     normalizeMonetizationStatus,
     labelMonetizationStatus,
     labelRiskReason,

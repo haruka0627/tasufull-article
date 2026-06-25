@@ -13,6 +13,49 @@ const DIST = path.join(CF_DIR, "dist");
 const marker = path.join(DIST, "index.html");
 
 const CF_META = ["robots.txt", "_headers", "_redirects"];
+const LIVE_SRC = path.join(ROOT, "live");
+const LIVE_DEST = path.join(DIST, "live");
+
+function copyFileIfChanged(src, dest) {
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  if (!fs.existsSync(dest)) {
+    fs.copyFileSync(src, dest);
+    return true;
+  }
+  const srcStat = fs.statSync(src);
+  const destStat = fs.statSync(dest);
+  if (srcStat.mtimeMs > destStat.mtimeMs || srcStat.size !== destStat.size) {
+    fs.copyFileSync(src, dest);
+    return true;
+  }
+  const srcBuf = fs.readFileSync(src);
+  const destBuf = fs.readFileSync(dest);
+  if (!srcBuf.equals(destBuf)) {
+    fs.copyFileSync(src, dest);
+    return true;
+  }
+  return false;
+}
+
+function syncLiveDir() {
+  if (!fs.existsSync(LIVE_SRC)) return 0;
+  let synced = 0;
+  const walk = (rel = "") => {
+    const srcDir = rel ? path.join(LIVE_SRC, rel) : LIVE_SRC;
+    for (const name of fs.readdirSync(srcDir)) {
+      const relPath = rel ? `${rel}/${name}` : name;
+      const src = path.join(LIVE_SRC, relPath);
+      const dest = path.join(LIVE_DEST, relPath);
+      if (fs.statSync(src).isDirectory()) {
+        walk(relPath);
+      } else if (copyFileIfChanged(src, dest)) {
+        synced += 1;
+      }
+    }
+  };
+  walk();
+  return synced;
+}
 
 function syncCfMeta() {
   let synced = 0;
@@ -48,4 +91,9 @@ if (stillMissing.length) {
   console.error(`[ensure-pages-dist] required files still missing: ${stillMissing.join(", ")}`);
   console.error("  npm run build:pages");
   process.exit(1);
+}
+
+const liveSynced = syncLiveDir();
+if (liveSynced > 0) {
+  console.log(`[ensure-pages-dist] synced live/ → dist/live/ (${liveSynced} file(s))`);
 }

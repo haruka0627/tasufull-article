@@ -2,7 +2,7 @@
  * TASFUL LIVE — 通知 fanout（Phase 7）
  *
  * POST { event, payload }
- *   follow_created | tip_created | broadcast_started | like_changed
+ *   follow_created | tip_created | comment_created | live_started | video_published | system | broadcast_started | like_changed
  *
  * talk_notifications へ type=live を service_role で INSERT。
  * live_notify_dedupe で重複防止。
@@ -22,7 +22,15 @@ const BROADCAST_FANOUT_MAX = 50;
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
-type EventName = "follow_created" | "tip_created" | "broadcast_started" | "like_changed";
+type EventName =
+  | "follow_created"
+  | "comment_created"
+  | "live_started"
+  | "video_published"
+  | "system"
+  | "tip_created"
+  | "broadcast_started"
+  | "like_changed";
 
 type RequestBody = {
   event?: unknown;
@@ -44,6 +52,10 @@ function parseEvent(raw: unknown): EventName {
   const event = String(raw ?? "").trim() as EventName;
   if (
     event === "follow_created" ||
+    event === "comment_created" ||
+    event === "live_started" ||
+    event === "video_published" ||
+    event === "system" ||
     event === "tip_created" ||
     event === "broadcast_started" ||
     event === "like_changed"
@@ -92,8 +104,10 @@ async function tryDedupe(supabase: SupabaseClient, eventKey: string): Promise<bo
 
 async function insertNotification(
   supabase: SupabaseClient,
-  opts: { id: string; userId: string; title: string; body: string; targetUrl: string },
+  opts: { id: string; userId: string; title: string; body: string; targetUrl: string; priority?: string },
 ) {
+  const priority = String(opts.priority || "normal").trim().toLowerCase();
+  const normalizedPriority = priority === "high" || priority === "important" || priority === "urgent" ? "high" : "normal";
   const { error } = await supabase.from("talk_notifications").insert({
     id: opts.id,
     user_id: opts.userId,
@@ -102,7 +116,7 @@ async function insertNotification(
     body: opts.body,
     target_url: opts.targetUrl,
     source: NOTIFY_SOURCE,
-    priority: "normal",
+    priority: normalizedPriority,
   });
   if (error) {
     const code = String((error as { code?: string }).code || "");
@@ -136,21 +150,84 @@ async function handleFollowCreated(
   if (!isNew) return { ok: true, deduped: true, event: "follow_created" };
 
   const followerName = String(payload.follower_name || followerId).trim();
+  const followerAvatar = String(payload.follower_avatar || "").trim();
   const notifyPayload = buildPayload({
     service_ref_id: creatorId,
     event: "follow_created",
+    type: "follow",
     actor_id: followerId,
+    actor_name: followerName,
+    actor_avatar: followerAvatar,
+    target_user_id: creatorId,
   });
 
   await insertNotification(supabase, {
     id: notifyIdFromKey(eventKey),
     userId: creatorId,
     title: "新しいフォロワー",
-    body: formatBody(`${followerName} がフォローしました`, notifyPayload),
-    targetUrl: `live/profile.html?userId=${encodeURIComponent(creatorId)}`,
+    body: formatBody(`${followerName}さんがあなたをフォローしました`, notifyPayload),
+    targetUrl: `live/profile.html?userId=${encodeURIComponent(followerId)}`,
   });
 
   return { ok: true, notified: true, event: "follow_created" };
+}
+
+async function handleCommentCreated(
+  supabase: SupabaseClient,
+  actorId: string,
+  payload: Record<string, unknown>,
+) {
+  const videoId = String(payload.video_id || "").trim();
+  const commentId = String(payload.comment_id || "").trim();
+  if (!videoId || !UUID_RE.test(videoId)) {
+    throw new TalkRoomFunctionError("invalid_request", "video_id uuid required", 400);
+  }
+  if (!commentId) {
+    throw new TalkRoomFunctionError("invalid_request", "comment_id required", 400);
+  }
+
+  const { data: video, error: videoErr } = await supabase
+    .from("live_videos")
+    .select("id, talk_user_id")
+    .eq("id", videoId)
+    .maybeSingle();
+
+  if (videoErr) throw new Error(videoErr.message || "video lookup failed");
+  if (!video) throw new TalkRoomFunctionError("not_found", "video not found", 404);
+
+  const creatorId = String(payload.creator_id || video.talk_user_id || "").trim();
+  if (!creatorId) {
+    throw new TalkRoomFunctionError("invalid_request", "creator_id required", 400);
+  }
+  if (actorId === creatorId) {
+    return { ok: true, skipped: true, reason: "self_comment", event: "comment_created" };
+  }
+
+  const eventKey = `comment_created:${videoId}:${commentId}:${actorId}`;
+  const isNew = await tryDedupe(supabase, eventKey);
+  if (!isNew) return { ok: true, deduped: true, event: "comment_created" };
+
+  const actorName = String(payload.actor_name || actorId).trim();
+  const notifyPayload = buildPayload({
+    service_ref_id: videoId,
+    event: "comment_created",
+    type: "comment",
+    actor_id: actorId,
+    actor_name: actorName,
+    video_id: videoId,
+    comment_id: commentId,
+    target_user_id: creatorId,
+  });
+
+  await insertNotification(supabase, {
+    id: notifyIdFromKey(eventKey),
+    userId: creatorId,
+    title: "新しいコメント",
+    body: formatBody(`${actorName}さんがあなたの動画にコメントしました`, notifyPayload),
+    targetUrl: `live/watch-video.html?id=${encodeURIComponent(videoId)}`,
+  });
+
+  return { ok: true, notified: true, event: "comment_created" };
 }
 
 async function handleTipCreated(
@@ -289,13 +366,260 @@ async function handleBroadcastStarted(
     fanout += 1;
   }
 
+  return { ok: true, notified: true, event: "broadcast_started", fanout, fanout_cap: BROADCAST_FANOUT_MAX };
+}
+
+async function handleLiveStarted(
+  supabase: SupabaseClient,
+  actorId: string,
+  payload: Record<string, unknown>,
+) {
+  const broadcastId = String(payload.broadcast_id || payload.live_id || "").trim();
+  if (!broadcastId || !UUID_RE.test(broadcastId)) {
+    throw new TalkRoomFunctionError("invalid_request", "broadcast_id uuid required", 400);
+  }
+
+  const { data: broadcast, error: bcErr } = await supabase
+    .from("live_broadcasts")
+    .select("id, creator_id, title, status")
+    .eq("id", broadcastId)
+    .maybeSingle();
+
+  if (bcErr) {
+    throw Object.assign(new Error(bcErr.message), { status: 500 });
+  }
+  if (!broadcast) {
+    throw new TalkRoomFunctionError("not_found", "broadcast not found", 404);
+  }
+
+  const creatorId = String(payload.creator_id || broadcast.creator_id || actorId || "").trim();
+  if (!creatorId) {
+    throw new TalkRoomFunctionError("invalid_request", "creator_id required", 400);
+  }
+  if (String(broadcast.creator_id) !== actorId) {
+    throw new TalkRoomFunctionError("forbidden", "actor must be broadcast creator", 403);
+  }
+
+  const globalKey = `live_started:${broadcastId}`;
+  const globalNew = await tryDedupe(supabase, globalKey);
+  if (!globalNew) {
+    return { ok: true, deduped: true, event: "live_started", fanout: 0 };
+  }
+
+  const { data: followers, error: folErr } = await supabase
+    .from("live_creator_follows")
+    .select("follower_id")
+    .eq("creator_id", creatorId)
+    .eq("notify_enabled", true)
+    .limit(BROADCAST_FANOUT_MAX);
+
+  if (folErr) {
+    throw Object.assign(new Error(folErr.message), { status: 500 });
+  }
+
+  const creatorName = String(payload.creator_name || creatorId).trim();
+  const broadcastTitle = String(payload.title || broadcast.title || "").trim();
+  const displayText = `${creatorName}さんがライブ配信を開始しました`;
+  const defaultTargetUrl = `live/watch-live.html?id=${encodeURIComponent(broadcastId)}`;
+  const targetUrl = String(payload.target_url || defaultTargetUrl).trim() || defaultTargetUrl;
+  let fanout = 0;
+
+  for (const row of followers || []) {
+    const followerId = String(row.follower_id || "").trim();
+    if (!followerId || followerId === creatorId) continue;
+
+    const perKey = `live_started:${broadcastId}:${creatorId}:${followerId}`;
+    const isNew = await tryDedupe(supabase, perKey);
+    if (!isNew) continue;
+
+    const notifyPayload = buildPayload({
+      service_ref_id: broadcastId,
+      event: "live_started",
+      type: "live_started",
+      actor_id: creatorId,
+      actor_name: creatorName,
+      broadcast_id: broadcastId,
+      live_id: broadcastId,
+      title: broadcastTitle || undefined,
+      target_user_id: followerId,
+    });
+
+    await insertNotification(supabase, {
+      id: `live-n-live-started:${broadcastId}:${creatorId}:${followerId}`,
+      userId: followerId,
+      title: broadcastTitle || "ライブ配信が始まりました",
+      body: formatBody(displayText, notifyPayload),
+      targetUrl: targetUrl.startsWith("live/") ? targetUrl : `live/${targetUrl.replace(/^\//, "")}`,
+    });
+    fanout += 1;
+  }
+
+  if (!fanout) {
+    return { ok: true, skipped: true, reason: "no_followers", event: "live_started", fanout: 0 };
+  }
+
   return {
     ok: true,
     notified: true,
-    event: "broadcast_started",
+    event: "live_started",
     fanout,
     fanout_cap: BROADCAST_FANOUT_MAX,
   };
+}
+
+async function handleVideoPublished(
+  supabase: SupabaseClient,
+  actorId: string,
+  payload: Record<string, unknown>,
+) {
+  const videoId = String(payload.video_id || "").trim();
+  if (!videoId || !UUID_RE.test(videoId)) {
+    throw new TalkRoomFunctionError("invalid_request", "video_id uuid required", 400);
+  }
+
+  const { data: video, error: videoErr } = await supabase
+    .from("live_videos")
+    .select("id, talk_user_id, title, status, visibility")
+    .eq("id", videoId)
+    .maybeSingle();
+
+  if (videoErr) {
+    throw Object.assign(new Error(videoErr.message), { status: 500 });
+  }
+  if (!video) {
+    throw new TalkRoomFunctionError("not_found", "video not found", 404);
+  }
+
+  const creatorId = String(payload.creator_id || video.talk_user_id || actorId || "").trim();
+  if (!creatorId) {
+    throw new TalkRoomFunctionError("invalid_request", "creator_id required", 400);
+  }
+  if (String(video.talk_user_id) !== actorId) {
+    throw new TalkRoomFunctionError("forbidden", "actor must be video creator", 403);
+  }
+  if (String(video.status) !== "published") {
+    return { ok: true, skipped: true, reason: "not_published", event: "video_published", fanout: 0 };
+  }
+
+  const globalKey = `video_published:${videoId}`;
+  const globalNew = await tryDedupe(supabase, globalKey);
+  if (!globalNew) {
+    return { ok: true, deduped: true, event: "video_published", fanout: 0 };
+  }
+
+  const { data: followers, error: folErr } = await supabase
+    .from("live_creator_follows")
+    .select("follower_id")
+    .eq("creator_id", creatorId)
+    .eq("notify_enabled", true)
+    .limit(BROADCAST_FANOUT_MAX);
+
+  if (folErr) {
+    throw Object.assign(new Error(folErr.message), { status: 500 });
+  }
+
+  const creatorName = String(payload.creator_name || creatorId).trim();
+  const videoTitle = String(payload.title || video.title || "").trim();
+  const displayText = `${creatorName}さんが新しい動画を公開しました`;
+  const defaultTargetUrl = `live/watch-video.html?id=${encodeURIComponent(videoId)}`;
+  const targetUrl = String(payload.target_url || defaultTargetUrl).trim() || defaultTargetUrl;
+  let fanout = 0;
+
+  for (const row of followers || []) {
+    const followerId = String(row.follower_id || "").trim();
+    if (!followerId || followerId === creatorId) continue;
+
+    const perKey = `video_published:${videoId}:${creatorId}:${followerId}`;
+    const isNew = await tryDedupe(supabase, perKey);
+    if (!isNew) continue;
+
+    const notifyPayload = buildPayload({
+      service_ref_id: videoId,
+      event: "video_published",
+      type: "video_published",
+      actor_id: creatorId,
+      actor_name: creatorName,
+      video_id: videoId,
+      title: videoTitle || undefined,
+      target_user_id: followerId,
+    });
+
+    await insertNotification(supabase, {
+      id: `live-n-video-published:${videoId}:${creatorId}:${followerId}`,
+      userId: followerId,
+      title: videoTitle || "新しい動画が公開されました",
+      body: formatBody(displayText, notifyPayload),
+      targetUrl: targetUrl.startsWith("live/") ? targetUrl : `live/${targetUrl.replace(/^\//, "")}`,
+    });
+    fanout += 1;
+  }
+
+  if (!fanout) {
+    return { ok: true, skipped: true, reason: "no_followers", event: "video_published", fanout: 0 };
+  }
+
+  return {
+    ok: true,
+    notified: true,
+    event: "video_published",
+    fanout,
+    fanout_cap: BROADCAST_FANOUT_MAX,
+  };
+}
+
+async function handleSystem(
+  supabase: SupabaseClient,
+  _actorId: string,
+  payload: Record<string, unknown>,
+) {
+  const targetUserId = String(payload.target_user_id || payload.targetUserId || "").trim();
+  const title = String(payload.title || "").trim();
+  const bodyText = String(payload.body || "").trim();
+  if (!targetUserId) {
+    throw new TalkRoomFunctionError("invalid_request", "target_user_id required", 400);
+  }
+  if (!title) {
+    throw new TalkRoomFunctionError("invalid_request", "title required", 400);
+  }
+
+  const priorityRaw = String(payload.priority || "normal").trim().toLowerCase();
+  const priority = priorityRaw === "high" || priorityRaw === "important" || priorityRaw === "urgent" ? "high" : "normal";
+  const creator = String(payload.creator || payload.creator_name || "TLV運営").trim();
+  const timestamp = String(payload.timestamp || Date.now());
+  const defaultTargetUrl = "#";
+  const targetUrlRaw = String(payload.target_url || payload.targetUrl || defaultTargetUrl).trim() || defaultTargetUrl;
+  const targetUrl =
+    targetUrlRaw.startsWith("live/") || targetUrlRaw === "#"
+      ? targetUrlRaw
+      : `live/${targetUrlRaw.replace(/^\//, "")}`;
+
+  const eventKey = `system:${targetUserId}:${timestamp}`;
+  const isNew = await tryDedupe(supabase, eventKey);
+  if (!isNew) {
+    return { ok: true, deduped: true, event: "system" };
+  }
+
+  const notifyPayload = buildPayload({
+    service_ref_id: targetUserId,
+    event: "system",
+    type: "system",
+    title,
+    body: bodyText,
+    priority,
+    creator,
+    target_user_id: targetUserId,
+  });
+
+  await insertNotification(supabase, {
+    id: `live-n-system:${targetUserId}:${timestamp}`,
+    userId: targetUserId,
+    title,
+    body: formatBody(bodyText || title, notifyPayload),
+    targetUrl,
+    priority,
+  });
+
+  return { ok: true, notified: true, event: "system", id: `live-n-system:${targetUserId}:${timestamp}` };
 }
 
 async function handleLikeChanged(
@@ -353,11 +677,23 @@ export async function handler(req: Request): Promise<Response> {
       case "follow_created":
         result = await handleFollowCreated(supabase, auth.talkUserId, payload);
         break;
+      case "comment_created":
+        result = await handleCommentCreated(supabase, auth.talkUserId, payload);
+        break;
       case "tip_created":
         result = await handleTipCreated(supabase, auth.talkUserId, payload);
         break;
       case "broadcast_started":
         result = await handleBroadcastStarted(supabase, auth.talkUserId, payload);
+        break;
+      case "live_started":
+        result = await handleLiveStarted(supabase, auth.talkUserId, payload);
+        break;
+      case "video_published":
+        result = await handleVideoPublished(supabase, auth.talkUserId, payload);
+        break;
+      case "system":
+        result = await handleSystem(supabase, auth.talkUserId, payload);
         break;
       case "like_changed":
         result = await handleLikeChanged(supabase, auth.talkUserId, payload);

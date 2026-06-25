@@ -189,6 +189,22 @@
           else if (action === "remove") patch.status = "removed";
 
           await updateOwnVideo(videoId, patch);
+          if (
+            action === "publish" &&
+            global.TasuTlvNotificationService?.createVideoPublishedNotification
+          ) {
+            try {
+              const cfg = C();
+              const creatorId = cfg.getTalkUserId();
+              await global.TasuTlvNotificationService.createVideoPublishedNotification({
+                videoId,
+                creatorId,
+                creatorName: cfg.resolveDisplayName(creatorId),
+              });
+            } catch (notifyErr) {
+              console.warn("[TasuLiveMyVideos] video_published notify skipped:", notifyErr);
+            }
+          }
           if (statusEl) {
             statusEl.textContent = "更新しました";
             statusEl.className = "live-my-videos__row-status live-my-videos__row-status--ok";

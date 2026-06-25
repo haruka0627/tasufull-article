@@ -306,6 +306,19 @@
         const saved = await insertVideoRow(row);
         const watchUrl = cfg.watchVideoUrl(saved.id);
 
+        if (global.TasuTlvNotificationService?.createVideoPublishedNotification) {
+          try {
+            await global.TasuTlvNotificationService.createVideoPublishedNotification({
+              videoId: saved.id,
+              creatorId: talkUserId,
+              creatorName: cfg.resolveDisplayName(talkUserId),
+              title: saved.title,
+            });
+          } catch (notifyErr) {
+            console.warn("[TasuLiveVideoUpload] video_published notify skipped:", notifyErr);
+          }
+        }
+
         statusEl.textContent = "投稿が完了しました";
         statusEl.className = "live-form-status live-form-status--ok";
         successEl.hidden = false;
