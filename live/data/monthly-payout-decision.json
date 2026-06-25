@@ -1,0 +1,403 @@
+{
+  "engine_version": "2.0",
+  "baseline_file": "reports/tlv-business-simulator/payout-engine-v2-production-baseline.json",
+  "generated_at": "2026-06-25T04:18:31.617Z",
+  "month": "2026-05",
+  "source_input": "reports/tlv-business-simulator/input/monthly-revenue-sample.json",
+  "financial_integrity": {
+    "currency": "JPY",
+    "unit": "yen",
+    "integer_only": true,
+    "canonical_source_file": "reports/tlv-business-simulator/output/monthly-payout-decision.json",
+    "source_of_truth": "monthly-payout-decision.json",
+    "confirmed_payout_field": "creators[].payout_amount_yen",
+    "payout_amount_source": "monthly-payout-decision.json",
+    "payout_amount_yen_is_final": true,
+    "no_display_recalculation": true,
+    "gross_times_rate_reference_only": true,
+    "consumer_rule": "UI・Creator Dashboard・支払CSV・月次レポートは monthly-payout-decision.json の確定値のみを参照し、各画面で再計算しない",
+    "rounding_policy": "half_up_per_line_then_largest_remainder_for_variable_pool",
+    "payout_pool_formula": "total_revenue - payment_fee - platform_cost - reserve_amount - minimum_company_profit - operational_margin",
+    "company_first_rule": "会社側の必要経費・予備費・最低利益・運営マージンを先控除し、残りのみ payout_pool とする。総売上から直接 Creator 還元を計算しない",
+    "deduction_order": [
+      "payment_fee",
+      "platform_cost",
+      "reserve_amount",
+      "minimum_company_profit",
+      "operational_margin"
+    ]
+  },
+  "company_deductions": {
+    "payment_fee": 18600,
+    "platform_cost": 165000,
+    "cdn_storage_live_cost": 15000,
+    "platform_cost_total": 180000,
+    "reserve_amount": 50000,
+    "minimum_company_profit": 80000,
+    "operational_margin": 20000,
+    "company_deductions_total": 348600,
+    "company_margin_reserved": 100000,
+    "deduction_order": [
+      "payment_fee",
+      "platform_cost",
+      "reserve_amount",
+      "minimum_company_profit",
+      "operational_margin"
+    ]
+  },
+  "summary": {
+    "total_revenue": 620000,
+    "payment_fee": 18600,
+    "platform_cost": 165000,
+    "cdn_storage_live_cost": 15000,
+    "platform_cost_total": 180000,
+    "reserve_amount": 50000,
+    "minimum_company_profit": 80000,
+    "operational_margin": 20000,
+    "company_deductions_total": 348600,
+    "company_margin_reserved": 100000,
+    "payout_pool": 271400,
+    "guaranteed_payout_total": 160000,
+    "variable_payout_total": 111400,
+    "total_payout": 271400,
+    "final_company_profit": 100000,
+    "safety_status": "CAUTION",
+    "allocation_mode": "variable_scaled_down",
+    "pool_unallocated_yen": 0
+  },
+  "creators": [
+    {
+      "creator_id": "cr_001",
+      "display_name": "山田タロウ",
+      "rank": "Pro",
+      "gross_revenue": 85000,
+      "base_rate": 48,
+      "applied_rate": 36.1,
+      "payout_amount_yen": 30685,
+      "payout_amount": 30685,
+      "guarantee_applied": false,
+      "adjustment_reason": "Top/Elite 保証控除後の残余プール（¥111,400）により基準 48% → 36.1% に調整",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "confirmed_payout_amount_yen": 30685
+      },
+      "creator_explanation": "今月は Pro ランク基準で算定され、全体の還元プール内で 36.1% が適用されました。"
+    },
+    {
+      "creator_id": "cr_002",
+      "display_name": "佐藤ハナ",
+      "rank": "Creator",
+      "gross_revenue": 42000,
+      "base_rate": 38,
+      "applied_rate": 28.6,
+      "payout_amount_yen": 12004,
+      "payout_amount": 12004,
+      "guarantee_applied": false,
+      "adjustment_reason": "Top/Elite 保証控除後の残余プール（¥111,400）により基準 38% → 28.6% に調整",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "confirmed_payout_amount_yen": 12004
+      },
+      "creator_explanation": "今月は Creator ランク基準で算定され、全体の還元プール内で 28.6% が適用されました。"
+    },
+    {
+      "creator_id": "cr_003",
+      "display_name": "鈴木ケン",
+      "rank": "Starter",
+      "gross_revenue": 12000,
+      "base_rate": 28,
+      "applied_rate": 21.1,
+      "payout_amount_yen": 2527,
+      "payout_amount": 2527,
+      "guarantee_applied": false,
+      "adjustment_reason": "Top/Elite 保証控除後の残余プール（¥111,400）により基準 28% → 21.1% に調整",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "confirmed_payout_amount_yen": 2527
+      },
+      "creator_explanation": "今月は Starter ランク基準で算定され、全体の還元プール内で 21.1% が適用されました。"
+    },
+    {
+      "creator_id": "cr_004",
+      "display_name": "田中ミキ",
+      "rank": "Top Creator",
+      "gross_revenue": 120000,
+      "base_rate": 70,
+      "applied_rate": 70,
+      "payout_amount_yen": 84000,
+      "payout_amount": 84000,
+      "guarantee_applied": true,
+      "adjustment_reason": "条件達成・70% 保証（引き下げなし）",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "confirmed_payout_amount_yen": 84000
+      },
+      "creator_explanation": "今月は Top ランク条件を達成しているため、70% 保証が適用されました。"
+    },
+    {
+      "creator_id": "cr_005",
+      "display_name": "高橋リョウ",
+      "rank": "Pro",
+      "gross_revenue": 55000,
+      "base_rate": 48,
+      "applied_rate": 36.1,
+      "payout_amount_yen": 19855,
+      "payout_amount": 19855,
+      "guarantee_applied": false,
+      "adjustment_reason": "Top/Elite 保証控除後の残余プール（¥111,400）により基準 48% → 36.1% に調整",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "confirmed_payout_amount_yen": 19855
+      },
+      "creator_explanation": "今月は Pro ランク基準で算定され、全体の還元プール内で 36.1% が適用されました。"
+    },
+    {
+      "creator_id": "cr_006",
+      "display_name": "伊藤サキ",
+      "rank": "Elite Creator",
+      "gross_revenue": 95000,
+      "base_rate": 80,
+      "applied_rate": 80,
+      "payout_amount_yen": 76000,
+      "payout_amount": 76000,
+      "guarantee_applied": true,
+      "adjustment_reason": "条件達成・80% 保証（引き下げなし）",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "confirmed_payout_amount_yen": 76000
+      },
+      "creator_explanation": "今月は Elite ランク条件を達成しているため、80% 保証が適用されました。"
+    },
+    {
+      "creator_id": "cr_007",
+      "display_name": "渡辺ユウ",
+      "rank": "Top Creator",
+      "gross_revenue": 88000,
+      "base_rate": 70,
+      "applied_rate": 52.6,
+      "payout_amount_yen": 46329,
+      "payout_amount": 46329,
+      "guarantee_applied": false,
+      "adjustment_reason": "Top/Elite 保証控除後の残余プール（¥111,400）により基準 70% → 52.6% に調整",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "confirmed_payout_amount_yen": 46329
+      },
+      "creator_explanation": "今月は Top ランク基準で算定され、全体の還元プール内で 52.6% が適用されました。"
+    }
+  ],
+  "allocation_meta": {
+    "guaranteed_total": 160000,
+    "residual_pool": 111400,
+    "variable_total": 111400,
+    "guaranteed_shortfall": 0,
+    "variable_scale": 0.7520928976505536,
+    "allocation_mode": "variable_scaled_down"
+  },
+  "audit": {
+    "rounding_policy": "half_up_per_line_then_largest_remainder_for_variable_pool",
+    "source_of_truth": "monthly-payout-decision.json",
+    "confirmed_payout_field": "creators[].payout_amount_yen",
+    "pool_formula": "total_revenue - payment_fee - platform_cost - reserve_amount - minimum_company_profit - operational_margin",
+    "deduction_order": [
+      "payment_fee",
+      "platform_cost",
+      "reserve_amount",
+      "minimum_company_profit",
+      "operational_margin"
+    ],
+    "company_deductions_first": {
+      "payment_fee_yen": 18600,
+      "platform_cost_yen": 165000,
+      "cdn_storage_live_cost_yen": 15000,
+      "platform_cost_total_yen": 180000,
+      "reserve_amount_yen": 50000,
+      "minimum_company_profit_yen": 80000,
+      "operational_margin_yen": 20000,
+      "company_deductions_total_yen": 348600,
+      "company_margin_reserved_yen": 100000,
+      "payout_pool_after_company_margin_yen": 271400
+    },
+    "payout_pool_yen": 271400,
+    "allocated_total_yen": 271400,
+    "pool_unallocated_yen": 0,
+    "no_payout_from_gross_revenue": {
+      "rule": "Creator payout は payout_pool 内のみ。総売上×還元率を直接支払額としない",
+      "total_payout_yen": 271400,
+      "payout_pool_yen": 271400,
+      "within_pool": true
+    },
+    "guaranteed_layer": {
+      "total_yen": 160000,
+      "per_creator": [
+        {
+          "creator_id": "cr_004",
+          "gross_revenue_yen": 120000,
+          "rate_percent": 70,
+          "exact_yen": 84000,
+          "payout_amount_yen": 84000,
+          "rounding_delta_yen": 0,
+          "paid_from_payout_pool": true
+        },
+        {
+          "creator_id": "cr_006",
+          "gross_revenue_yen": 95000,
+          "rate_percent": 80,
+          "exact_yen": 76000,
+          "payout_amount_yen": 76000,
+          "rounding_delta_yen": 0,
+          "paid_from_payout_pool": true
+        }
+      ]
+    },
+    "variable_layer": {
+      "residual_pool_yen": 111400,
+      "pre_scale_total_yen": 148120,
+      "post_scale_total_yen": 111400,
+      "scale_factor_exact": 0.7520928976505536,
+      "scale_factor_display": 0.7521,
+      "rounding_adjustment_yen": 0,
+      "per_creator": [
+        {
+          "creator_id": "cr_001",
+          "gross_revenue_yen": 85000,
+          "base_rate_percent": 48,
+          "pre_scale_exact_yen": 40800,
+          "pre_scale_payout_yen": 40800,
+          "scale_factor_exact": 0.7520928976505536,
+          "post_scale_exact_yen": 30685.390224142586,
+          "payout_amount_yen": 30685,
+          "applied_rate_display_percent": 36.1,
+          "rounding_delta_yen": -0.39022414258579374,
+          "largest_remainder_adjustment_yen": 0,
+          "paid_from_payout_pool": true
+        },
+        {
+          "creator_id": "cr_002",
+          "gross_revenue_yen": 42000,
+          "base_rate_percent": 38,
+          "pre_scale_exact_yen": 15960,
+          "pre_scale_payout_yen": 15960,
+          "scale_factor_exact": 0.7520928976505536,
+          "post_scale_exact_yen": 12003.402646502836,
+          "payout_amount_yen": 12004,
+          "applied_rate_display_percent": 28.6,
+          "rounding_delta_yen": 0.5973534971635672,
+          "largest_remainder_adjustment_yen": 1,
+          "paid_from_payout_pool": true
+        },
+        {
+          "creator_id": "cr_003",
+          "gross_revenue_yen": 12000,
+          "base_rate_percent": 28,
+          "pre_scale_exact_yen": 3360,
+          "pre_scale_payout_yen": 3360,
+          "scale_factor_exact": 0.7520928976505536,
+          "post_scale_exact_yen": 2527.03213610586,
+          "payout_amount_yen": 2527,
+          "applied_rate_display_percent": 21.1,
+          "rounding_delta_yen": -0.032136105859990494,
+          "largest_remainder_adjustment_yen": 0,
+          "paid_from_payout_pool": true
+        },
+        {
+          "creator_id": "cr_005",
+          "gross_revenue_yen": 55000,
+          "base_rate_percent": 48,
+          "pre_scale_exact_yen": 26400,
+          "pre_scale_payout_yen": 26400,
+          "scale_factor_exact": 0.7520928976505536,
+          "post_scale_exact_yen": 19855.252497974616,
+          "payout_amount_yen": 19855,
+          "applied_rate_display_percent": 36.1,
+          "rounding_delta_yen": -0.2524979746158351,
+          "largest_remainder_adjustment_yen": 0,
+          "paid_from_payout_pool": true
+        },
+        {
+          "creator_id": "cr_007",
+          "gross_revenue_yen": 88000,
+          "base_rate_percent": 70,
+          "pre_scale_exact_yen": 61600,
+          "pre_scale_payout_yen": 61600,
+          "scale_factor_exact": 0.7520928976505536,
+          "post_scale_exact_yen": 46328.9224952741,
+          "payout_amount_yen": 46329,
+          "applied_rate_display_percent": 52.6,
+          "rounding_delta_yen": 0.07750472590123536,
+          "largest_remainder_adjustment_yen": 1,
+          "paid_from_payout_pool": true
+        }
+      ]
+    },
+    "company_profit_audit": {
+      "formula": "total_revenue - payment_fee - platform_cost_total - reserve_amount - total_payout",
+      "final_company_profit_yen": 100000,
+      "minimum_company_profit_yen": 80000,
+      "operational_margin_yen": 20000,
+      "required_company_margin_yen": 100000,
+      "operational_margin_preserved": true
+    },
+    "payment_finalization": {
+      "payout_amount_source": "monthly-payout-decision.json",
+      "payout_amount_yen_is_final": true,
+      "no_display_recalculation": true,
+      "gross_times_rate_reference_only": true,
+      "consumer_rules": {
+        "dashboard_must_use_payout_amount_yen": true,
+        "csv_must_use_payout_amount_yen": true,
+        "report_must_use_payout_amount_yen": true
+      }
+    },
+    "balance_check": {
+      "total_revenue_yen": 620000,
+      "payment_fee_yen": 18600,
+      "platform_cost_total_yen": 180000,
+      "reserve_amount_yen": 50000,
+      "minimum_company_profit_yen": 80000,
+      "operational_margin_yen": 20000,
+      "total_payout_yen": 271400,
+      "payout_pool_yen": 271400,
+      "final_company_profit_yen": 100000,
+      "identity_delta_yen": 0,
+      "identity_holds": true
+    }
+  },
+  "validations": {
+    "guarantee_preserved": true,
+    "payout_within_pool": true,
+    "company_profit_preserved": true,
+    "company_costs_deducted_first": true,
+    "operational_margin_preserved": true,
+    "payout_pool_after_company_margin": true,
+    "no_creator_payout_from_gross_revenue": true,
+    "creator_explanations_present": true,
+    "payout_amount_yen_present": true,
+    "payout_amount_yen_integer": true,
+    "payout_amount_yen_matches_total": true,
+    "dashboard_must_use_payout_amount_yen": true,
+    "csv_must_use_payout_amount_yen": true,
+    "report_must_use_payout_amount_yen": true,
+    "no_gross_times_rate_for_payment": true,
+    "yen_integer_only": true,
+    "sum_matches_allocated": true,
+    "audit_present": true,
+    "identity_holds": true,
+    "variable_pool_exact": true,
+    "all_pass": true
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "engine_version": "2.0",
+  "month": "2026-05",
+  "condition_lines": {
+    "month": "2026-05",
+    "ai_adjusts": "条件ライン（還元率は固定しない）",
+    "platform_gross_revenue": 620000,
+    "payout_pool": 126480,
+    "ranks": {
+      "Starter": {
+        "min_monthly_revenue": 0,
+        "min_views": 0,
+        "min_engagement_score": 0,
+        "min_live_hours": 0,
+        "payout_rate": 28,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Starter"
+      },
+      "Creator": {
+        "min_monthly_revenue": 3000,
+        "min_views": 2000,
+        "min_engagement_score": 0.35,
+        "min_live_hours": 0,
+        "payout_rate": 38,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Creator"
+      },
+      "Pro": {
+        "min_monthly_revenue": 15000,
+        "min_views": 10000,
+        "min_engagement_score": 0.5,
+        "min_live_hours": 2,
+        "payout_rate": 48,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Pro"
+      },
+      "Top Creator": {
+        "min_monthly_revenue": 203501,
+        "min_views": 40000,
+        "min_engagement_score": 0.7,
+        "min_live_hours": 8,
+        "min_platform_gross_revenue": 713000,
+        "guaranteed_rate": 70,
+        "max_slots": 0,
+        "payout_rate": 70,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Top Creator（最大70%・条件達成者のみ）"
+      },
+      "Elite Creator": {
+        "min_monthly_revenue": 212750,
+        "min_views": 60000,
+        "min_engagement_score": 0.78,
+        "min_live_hours": 12,
+        "min_platform_gross_revenue": 744000,
+        "guaranteed_rate": 80,
+        "max_slots": 0,
+        "payout_rate": 80,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Elite Creator（最大80%・条件達成者のみ）"
+      }
+    },
+    "reach_conditions": {
+      "top_creator_70": {
+        "guaranteed_rate": 70,
+        "conditions": {
+          "min_monthly_revenue": 203501,
+          "min_views": 40000,
+          "min_engagement_score": 0.7,
+          "min_live_hours": 8,
+          "min_platform_gross_revenue": 713000,
+          "guaranteed_rate": 70,
+          "max_slots": 0
+        },
+        "required_platform_gross_revenue": 678513,
+        "required_payout_pool_one_slot": 182886,
+        "max_affordable_this_month": 0
+      },
+      "elite_creator_80": {
+        "guaranteed_rate": 80,
+        "conditions": {
+          "min_monthly_revenue": 212750,
+          "min_views": 60000,
+          "min_engagement_score": 0.78,
+          "min_live_hours": 12,
+          "min_platform_gross_revenue": 744000,
+          "guaranteed_rate": 80,
+          "max_slots": 0
+        },
+        "required_platform_gross_revenue": 678513,
+        "required_payout_pool_one_slot": 182886,
+        "max_affordable_this_month": 0
+      }
+    },
+    "headcount_simulation": {
+      "elite_max_affordable": 0,
+      "top_creator_max_affordable": 0,
+      "payout_at_max": 182886
+    },
+    "max_platform_payout_rate": 47.7
+  },
+  "creators": [
+    {
+      "creator_id": "cr_001",
+      "creator_name": "ひろチャンネル",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 18501,
+        "views": 0,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥18,501"
+    },
+    {
+      "creator_id": "cr_002",
+      "creator_name": "ゲーム実況タロウ",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 105501,
+        "views": 0,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥105,501"
+    },
+    {
+      "creator_id": "cr_003",
+      "creator_name": "料理ショートみかん",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 151501,
+        "views": 0,
+        "engagement_score": 0.02,
+        "live_hours": 4
+      },
+      "gap_message": "発生収益 あと ¥151,501 / エンゲージメント あと 0.02 / ライブ あと 4h"
+    },
+    {
+      "creator_id": "cr_004",
+      "creator_name": "音楽ライブユキ",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 165501,
+        "views": 28000,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥165,501 / 再生数 あと 28,000"
+    },
+    {
+      "creator_id": "cr_005",
+      "creator_name": "初心者Vlogサクラ",
+      "rank": "Creator",
+      "payout_rate": 26.3,
+      "rate_guaranteed": false,
+      "next_rank": "Pro",
+      "gap_to_next_rank": {
+        "monthly_revenue": 6500,
+        "views": 800,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥6,500 / 再生数 あと 800"
+    },
+    {
+      "creator_id": "cr_006",
+      "creator_name": "テスト配信くん",
+      "rank": "Starter",
+      "payout_rate": 19.4,
+      "rate_guaranteed": false,
+      "next_rank": "Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 800,
+        "views": 200,
+        "engagement_score": 0.04,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥800 / 再生数 あと 200 / エンゲージメント あと 0.04"
+    }
+  ],
+  "headcount_simulation": {
+    "elite_max_affordable": 0,
+    "top_creator_max_affordable": 0,
+    "payout_at_max": 182886
+  },
+  "max_platform_payout_rate": 47.7,
+  "reach_conditions": {
+    "top_creator_70": {
+      "guaranteed_rate": 70,
+      "conditions": {
+        "min_monthly_revenue": 203501,
+        "min_views": 40000,
+        "min_engagement_score": 0.7,
+        "min_live_hours": 8,
+        "min_platform_gross_revenue": 713000,
+        "guaranteed_rate": 70,
+        "max_slots": 0
+      },
+      "required_platform_gross_revenue": 678513,
+      "required_payout_pool_one_slot": 182886,
+      "max_affordable_this_month": 0
+    },
+    "elite_creator_80": {
+      "guaranteed_rate": 80,
+      "conditions": {
+        "min_monthly_revenue": 212750,
+        "min_views": 60000,
+        "min_engagement_score": 0.78,
+        "min_live_hours": 12,
+        "min_platform_gross_revenue": 744000,
+        "guaranteed_rate": 80,
+        "max_slots": 0
+      },
+      "required_platform_gross_revenue": 678513,
+      "required_payout_pool_one_slot": 182886,
+      "max_affordable_this_month": 0
+    }
+  }
+}

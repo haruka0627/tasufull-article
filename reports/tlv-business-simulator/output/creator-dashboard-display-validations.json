@@ -1,0 +1,247 @@
+{
+  "generated_at": "2026-06-25T04:14:44.381Z",
+  "phase": "④-creator-dashboard-payout-display",
+  "source_files": {
+    "monthly_payout_decision": "reports/tlv-business-simulator/output/monthly-payout-decision.json",
+    "creator_rank_explanation": "live/data/creator-rank-explanation.json",
+    "payout_display_module": "live/tlv-creator-payout-display.js",
+    "creator_dashboard": "live/live-creator-dashboard.js"
+  },
+  "validations": {
+    "no_payout_recalculation_in_display_module": true,
+    "forbidden_pattern_hits": [],
+    "dashboard_uses_payout_display_module": true,
+    "dashboard_display_equals_payout_amount_yen": true,
+    "all_creators_render_match_json": true,
+    "payout_amount_yen_integer_for_all": true,
+    "payout_amount_yen_matches_monthly_decision": true,
+    "creator_resolve_sample_u_me": true,
+    "decision_integrity": {
+      "per_creator": [
+        {
+          "creator_id": "cr_001",
+          "found_in_decision": true,
+          "explanation_payout_amount_yen": 30685,
+          "decision_payout_amount_yen": 30685,
+          "payout_amount_yen_match": true,
+          "gross_revenue_match": true,
+          "applied_rate_match": true
+        },
+        {
+          "creator_id": "cr_002",
+          "found_in_decision": true,
+          "explanation_payout_amount_yen": 12004,
+          "decision_payout_amount_yen": 12004,
+          "payout_amount_yen_match": true,
+          "gross_revenue_match": true,
+          "applied_rate_match": true
+        },
+        {
+          "creator_id": "cr_003",
+          "found_in_decision": true,
+          "explanation_payout_amount_yen": 2527,
+          "decision_payout_amount_yen": 2527,
+          "payout_amount_yen_match": true,
+          "gross_revenue_match": true,
+          "applied_rate_match": true
+        },
+        {
+          "creator_id": "cr_004",
+          "found_in_decision": true,
+          "explanation_payout_amount_yen": 84000,
+          "decision_payout_amount_yen": 84000,
+          "payout_amount_yen_match": true,
+          "gross_revenue_match": true,
+          "applied_rate_match": true
+        },
+        {
+          "creator_id": "cr_005",
+          "found_in_decision": true,
+          "explanation_payout_amount_yen": 19855,
+          "decision_payout_amount_yen": 19855,
+          "payout_amount_yen_match": true,
+          "gross_revenue_match": true,
+          "applied_rate_match": true
+        },
+        {
+          "creator_id": "cr_006",
+          "found_in_decision": true,
+          "explanation_payout_amount_yen": 76000,
+          "decision_payout_amount_yen": 76000,
+          "payout_amount_yen_match": true,
+          "gross_revenue_match": true,
+          "applied_rate_match": true
+        },
+        {
+          "creator_id": "cr_007",
+          "found_in_decision": true,
+          "explanation_payout_amount_yen": 46329,
+          "decision_payout_amount_yen": 46329,
+          "payout_amount_yen_match": true,
+          "gross_revenue_match": true,
+          "applied_rate_match": true
+        }
+      ],
+      "payout_amount_yen_matches_monthly_decision": true
+    },
+    "per_creator": [
+      {
+        "creator_id": "cr_001",
+        "checks": {
+          "panel_has_confirmed_amount_attr": true,
+          "panel_has_gross_attr": true,
+          "panel_has_applied_rate_attr": true,
+          "displays_payout_amount_yen": true,
+          "displays_gross_revenue": true,
+          "displays_applied_rate": true,
+          "displays_rank": true,
+          "displays_rank_explanation": true,
+          "displays_payout_explanation": true,
+          "displays_adjustment_explanation": true,
+          "displays_next_month_guidance": true,
+          "displays_payment_notice": true,
+          "dashboard_display_equals_payout_amount_yen": true,
+          "amounts_match_json": true,
+          "yen_integrity": true
+        },
+        "all_pass": true
+      },
+      {
+        "creator_id": "cr_002",
+        "checks": {
+          "panel_has_confirmed_amount_attr": true,
+          "panel_has_gross_attr": true,
+          "panel_has_applied_rate_attr": true,
+          "displays_payout_amount_yen": true,
+          "displays_gross_revenue": true,
+          "displays_applied_rate": true,
+          "displays_rank": true,
+          "displays_rank_explanation": true,
+          "displays_payout_explanation": true,
+          "displays_adjustment_explanation": true,
+          "displays_next_month_guidance": true,
+          "displays_payment_notice": true,
+          "dashboard_display_equals_payout_amount_yen": true,
+          "amounts_match_json": true,
+          "yen_integrity": true
+        },
+        "all_pass": true
+      },
+      {
+        "creator_id": "cr_003",
+        "checks": {
+          "panel_has_confirmed_amount_attr": true,
+          "panel_has_gross_attr": true,
+          "panel_has_applied_rate_attr": true,
+          "displays_payout_amount_yen": true,
+          "displays_gross_revenue": true,
+          "displays_applied_rate": true,
+          "displays_rank": true,
+          "displays_rank_explanation": true,
+          "displays_payout_explanation": true,
+          "displays_adjustment_explanation": true,
+          "displays_next_month_guidance": true,
+          "displays_payment_notice": true,
+          "dashboard_display_equals_payout_amount_yen": true,
+          "amounts_match_json": true,
+          "yen_integrity": true
+        },
+        "all_pass": true
+      },
+      {
+        "creator_id": "cr_004",
+        "checks": {
+          "panel_has_confirmed_amount_attr": true,
+          "panel_has_gross_attr": true,
+          "panel_has_applied_rate_attr": true,
+          "displays_payout_amount_yen": true,
+          "displays_gross_revenue": true,
+          "displays_applied_rate": true,
+          "displays_rank": true,
+          "displays_rank_explanation": true,
+          "displays_payout_explanation": true,
+          "displays_adjustment_explanation": true,
+          "displays_next_month_guidance": true,
+          "displays_payment_notice": true,
+          "dashboard_display_equals_payout_amount_yen": true,
+          "amounts_match_json": true,
+          "yen_integrity": true
+        },
+        "all_pass": true
+      },
+      {
+        "creator_id": "cr_005",
+        "checks": {
+          "panel_has_confirmed_amount_attr": true,
+          "panel_has_gross_attr": true,
+          "panel_has_applied_rate_attr": true,
+          "displays_payout_amount_yen": true,
+          "displays_gross_revenue": true,
+          "displays_applied_rate": true,
+          "displays_rank": true,
+          "displays_rank_explanation": true,
+          "displays_payout_explanation": true,
+          "displays_adjustment_explanation": true,
+          "displays_next_month_guidance": true,
+          "displays_payment_notice": true,
+          "dashboard_display_equals_payout_amount_yen": true,
+          "amounts_match_json": true,
+          "yen_integrity": true
+        },
+        "all_pass": true
+      },
+      {
+        "creator_id": "cr_006",
+        "checks": {
+          "panel_has_confirmed_amount_attr": true,
+          "panel_has_gross_attr": true,
+          "panel_has_applied_rate_attr": true,
+          "displays_payout_amount_yen": true,
+          "displays_gross_revenue": true,
+          "displays_applied_rate": true,
+          "displays_rank": true,
+          "displays_rank_explanation": true,
+          "displays_payout_explanation": true,
+          "displays_adjustment_explanation": true,
+          "displays_next_month_guidance": true,
+          "displays_payment_notice": true,
+          "dashboard_display_equals_payout_amount_yen": true,
+          "amounts_match_json": true,
+          "yen_integrity": true
+        },
+        "all_pass": true
+      },
+      {
+        "creator_id": "cr_007",
+        "checks": {
+          "panel_has_confirmed_amount_attr": true,
+          "panel_has_gross_attr": true,
+          "panel_has_applied_rate_attr": true,
+          "displays_payout_amount_yen": true,
+          "displays_gross_revenue": true,
+          "displays_applied_rate": true,
+          "displays_rank": true,
+          "displays_rank_explanation": true,
+          "displays_payout_explanation": true,
+          "displays_adjustment_explanation": true,
+          "displays_next_month_guidance": true,
+          "displays_payment_notice": true,
+          "dashboard_display_equals_payout_amount_yen": true,
+          "amounts_match_json": true,
+          "yen_integrity": true
+        },
+        "all_pass": true
+      }
+    ],
+    "all_pass": true,
+    "consumer_validations": {
+      "payout_display_uses_decision_amount": true,
+      "dashboard_must_use_payout_amount_yen": true,
+      "csv_must_use_payout_amount_yen": true,
+      "report_must_use_payout_amount_yen": true,
+      "no_gross_times_rate_for_payment": true,
+      "yen_integrity_preserved": true,
+      "all_pass": true
+    }
+  }
+}

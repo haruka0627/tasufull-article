@@ -1,0 +1,96 @@
+{
+  "month": "2026-05",
+  "total_revenue": 620000,
+  "platform_cost": 165000,
+  "cdn_storage_live_cost": 15000,
+  "payment_fee": 18600,
+  "reserve_amount": 50000,
+  "minimum_company_profit": 80000,
+  "operational_margin": 20000,
+  "creators": [
+    {
+      "creator_id": "cr_001",
+      "display_name": "山田タロウ",
+      "rank": "Pro",
+      "gross_revenue": 85000,
+      "eligible_for_guarantee": false,
+      "views": 42000,
+      "live_minutes": 360,
+      "tips": 12000,
+      "ad_revenue": 73000,
+      "violations_count": 0
+    },
+    {
+      "creator_id": "cr_002",
+      "display_name": "佐藤ハナ",
+      "rank": "Creator",
+      "gross_revenue": 42000,
+      "eligible_for_guarantee": false,
+      "views": 18000,
+      "live_minutes": 120,
+      "tips": 5000,
+      "ad_revenue": 37000,
+      "violations_count": 0
+    },
+    {
+      "creator_id": "cr_003",
+      "display_name": "鈴木ケン",
+      "rank": "Starter",
+      "gross_revenue": 12000,
+      "eligible_for_guarantee": false,
+      "views": 3500,
+      "live_minutes": 0,
+      "tips": 800,
+      "ad_revenue": 11200,
+      "violations_count": 0
+    },
+    {
+      "creator_id": "cr_004",
+      "display_name": "田中ミキ",
+      "rank": "Top",
+      "gross_revenue": 120000,
+      "eligible_for_guarantee": true,
+      "views": 95000,
+      "live_minutes": 720,
+      "tips": 28000,
+      "ad_revenue": 92000,
+      "violations_count": 0
+    },
+    {
+      "creator_id": "cr_005",
+      "display_name": "高橋リョウ",
+      "rank": "Pro",
+      "gross_revenue": 55000,
+      "eligible_for_guarantee": false,
+      "views": 28000,
+      "live_minutes": 240,
+      "tips": 9000,
+      "ad_revenue": 46000,
+      "violations_count": 0
+    },
+    {
+      "creator_id": "cr_006",
+      "display_name": "伊藤サキ",
+      "rank": "Elite",
+      "gross_revenue": 95000,
+      "eligible_for_guarantee": true,
+      "views": 72000,
+      "live_minutes": 900,
+      "tips": 22000,
+      "ad_revenue": 73000,
+      "violations_count": 0
+    },
+    {
+      "creator_id": "cr_007",
+      "display_name": "渡辺ユウ",
+      "rank": "Top",
+      "gross_revenue": 88000,
+      "eligible_for_guarantee": false,
+      "views": 51000,
+      "live_minutes": 480,
+      "tips": 15000,
+      "ad_revenue": 73000,
+      "violations_count": 1
+    }
+  ]
+}

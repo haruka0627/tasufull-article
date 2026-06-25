@@ -1,0 +1,36 @@
+{
+  "generated_at": "2026-06-25T04:18:31.876Z",
+  "phase": "⑤-admin-payouts",
+  "source_files": {
+    "monthly_payout_decision": "live/data/monthly-payout-decision.json",
+    "creator_rank_explanation": "live/data/creator-rank-explanation.json",
+    "admin_page": "live/admin-payouts.html",
+    "admin_module": "live/live-admin-payouts.js"
+  },
+  "creators_checked": 7,
+  "validations": {
+    "no_payout_recalculation_in_admin_module": true,
+    "forbidden_pattern_hits": [],
+    "admin_page_integrated": true,
+    "payout_amount_yen_present_for_all": true,
+    "admin_display_matches_explanation_json": true,
+    "admin_display_matches_decision_json": true,
+    "payout_amount_yen_sum_matches_total_payout": true,
+    "csv_uses_payout_amount_yen": true,
+    "csv_sum_matches_total_payout": true,
+    "csv_no_gross_times_rate": true,
+    "explanation_payout_amount_yen_matches_decision": true,
+    "identity_holds": true,
+    "monthly_decision_validations_all_pass": true,
+    "all_pass": true,
+    "consumer_validations": {
+      "payout_display_uses_decision_amount": true,
+      "dashboard_must_use_payout_amount_yen": true,
+      "csv_must_use_payout_amount_yen": true,
+      "report_must_use_payout_amount_yen": true,
+      "no_gross_times_rate_for_payment": true,
+      "yen_integrity_preserved": true,
+      "all_pass": true
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-06-25T04:20:56.129Z",
+  "phase": "⑥-payout-policy-public-page",
+  "page": "live/payout-policy.html",
+  "url_path": "/live/payout-policy.html",
+  "validations": {
+    "content": {
+      "required_phrases_present": true,
+      "missing_required_phrases": [],
+      "no_forbidden_phrases": true,
+      "forbidden_phrase_hits": [],
+      "deduction_order_correct": true,
+      "payout_amount_yen_documented_as_final": true,
+      "gross_times_rate_not_payment_explanation": true,
+      "ai_does_not_change_rates_documented": true,
+      "no_payout_calculation_js": true,
+      "viewport_meta_present": true,
+      "responsive_page_structure": true,
+      "creator_dashboard_link_present": true,
+      "all_pass": true
+    },
+    "styles": {
+      "payout_policy_styles_present": true,
+      "responsive_768": true,
+      "responsive_390": true,
+      "all_pass": true
+    },
+    "all_pass": true
+  }
+}

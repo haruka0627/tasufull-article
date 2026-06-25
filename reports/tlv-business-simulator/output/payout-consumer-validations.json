@@ -1,0 +1,28 @@
+{
+  "generated_at": "2026-06-25T04:18:31.816Z",
+  "source_of_truth": "monthly-payout-decision.json",
+  "financial_integrity": {
+    "consumer_rule": "UI・Creator Dashboard・支払CSV・月次レポートは monthly-payout-decision.json の確定値のみを参照し、各画面で再計算しない",
+    "confirmed_payout_field": "creators[].payout_amount_yen",
+    "recalculation_prohibited": true
+  },
+  "source_files": {
+    "monthly_payout_decision": "reports/tlv-business-simulator/output/monthly-payout-decision.json",
+    "creator_rank_explanation": "reports/tlv-business-simulator/output/creator-rank-explanation.json"
+  },
+  "outputs": {
+    "admin_payout_display": "reports/tlv-business-simulator/output/admin-payout-display.json",
+    "creator_dashboard_payout": "reports/tlv-business-simulator/output/creator-dashboard-payout.json",
+    "stripe_connect_csv": "reports/tlv-business-simulator/output/stripe-connect-payouts.csv",
+    "monthly_operator_report": "reports/tlv-business-simulator/output/monthly-operator-report.md"
+  },
+  "validations": {
+    "payout_display_uses_decision_amount": true,
+    "dashboard_must_use_payout_amount_yen": true,
+    "csv_must_use_payout_amount_yen": true,
+    "report_must_use_payout_amount_yen": true,
+    "no_gross_times_rate_for_payment": true,
+    "yen_integrity_preserved": true,
+    "all_pass": true
+  }
+}

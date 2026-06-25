@@ -1,0 +1,157 @@
+{
+  "source_of_truth": "monthly-payout-decision.json",
+  "confirmed_payout_field": "creators[].payout_amount_yen",
+  "month": "2026-05",
+  "next_month": "2026-06",
+  "recalculation_prohibited": true,
+  "dashboard_does_not_recalculate": true,
+  "creators": [
+    {
+      "creator_id": "cr_001",
+      "display_name": "山田タロウ",
+      "rank": "Pro",
+      "gross_revenue_yen": 85000,
+      "applied_rate_percent": 36.1,
+      "payout_amount_yen": 30685,
+      "payout_display": "¥30,685",
+      "rank_explanation": "今月は Pro ランクとして判定されています。",
+      "payout_explanation": "今月の対象収益は ¥85,000、適用率は 36.1%、還元予定額は ¥30,685 です。",
+      "adjustment_explanation": "今月は還元プールが逼迫しているため、変動層として基準率 48% から 36.1% に調整されています。",
+      "next_month_guidance": "次月（2026-06）も Pro ランク条件の維持・向上を目指してください。 参考: 必要月間収益 ¥15,750 以上。 変動層の調整が発生したため、翌月は Pro 到達に必要な収益・視聴をやや引き上げます。 変動層の調整が発生したため、次月は収益・視聴維持を重視してください。",
+      "payment_notice": "この金額は月次確定後の支払予定額です。表示額は monthly-payout-decision.json の確定値であり、Dashboard 側で再計算しません。最終支払いは運営確認後に確定します。",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "source_payout_amount_yen": 30685,
+        "no_recalculation": true
+      }
+    },
+    {
+      "creator_id": "cr_002",
+      "display_name": "佐藤ハナ",
+      "rank": "Creator",
+      "gross_revenue_yen": 42000,
+      "applied_rate_percent": 28.6,
+      "payout_amount_yen": 12004,
+      "payout_display": "¥12,004",
+      "rank_explanation": "今月は Creator ランクとして判定されています。",
+      "payout_explanation": "今月の対象収益は ¥42,000、適用率は 28.6%、還元予定額は ¥12,004 です。",
+      "adjustment_explanation": "今月は還元プールが逼迫しているため、変動層として基準率 38% から 28.6% に調整されています。",
+      "next_month_guidance": "次月（2026-06）も Creator ランク条件の維持・向上を目指してください。 参考: 必要月間収益 ¥3,000 以上。 変動層の調整を踏まえ、翌月も基準条件を維持しつつ収益維持を推奨します。 Creator ランクは変動層です。次月も基準条件を満たし、収益・視聴の維持を心がけてください。",
+      "payment_notice": "この金額は月次確定後の支払予定額です。表示額は monthly-payout-decision.json の確定値であり、Dashboard 側で再計算しません。最終支払いは運営確認後に確定します。",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "source_payout_amount_yen": 12004,
+        "no_recalculation": true
+      }
+    },
+    {
+      "creator_id": "cr_003",
+      "display_name": "鈴木ケン",
+      "rank": "Starter",
+      "gross_revenue_yen": 12000,
+      "applied_rate_percent": 21.1,
+      "payout_amount_yen": 2527,
+      "payout_display": "¥2,527",
+      "rank_explanation": "今月は Starter ランクとして判定されています。",
+      "payout_explanation": "今月の対象収益は ¥12,000、適用率は 21.1%、還元予定額は ¥2,527 です。",
+      "adjustment_explanation": "今月は還元プールが逼迫しているため、変動層として基準率 28% から 21.1% に調整されています。",
+      "next_month_guidance": "次月（2026-06）も Starter ランク条件の維持・向上を目指してください。 変動層の調整を踏まえ、翌月も基準条件を維持しつつ収益維持を推奨します。 今月は運営余裕が薄いため、次月も Starter 条件は維持しつつ収益の継続を推奨します。",
+      "payment_notice": "この金額は月次確定後の支払予定額です。表示額は monthly-payout-decision.json の確定値であり、Dashboard 側で再計算しません。最終支払いは運営確認後に確定します。",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "source_payout_amount_yen": 2527,
+        "no_recalculation": true
+      }
+    },
+    {
+      "creator_id": "cr_004",
+      "display_name": "田中ミキ",
+      "rank": "Top Creator",
+      "gross_revenue_yen": 120000,
+      "applied_rate_percent": 70,
+      "payout_amount_yen": 84000,
+      "payout_display": "¥84,000",
+      "rank_explanation": "今月は Top ランクとして判定されています。",
+      "payout_explanation": "今月の対象収益は ¥120,000、適用率は 70%、還元予定額は ¥84,000 です。",
+      "adjustment_explanation": "Top 条件を達成しているため、70% 保証が適用されています。還元率は Production Baseline に基づき変更されません。",
+      "next_month_guidance": "次月も Top 保証（70%）を受けるには、2026-06 の条件ライン達成が必要です。 参考: 必要月間収益 ¥110,001 以上。 残余プール逼迫のため、翌月は特別ランクの達成条件をやや厳格化します（還元率は変更しません）。 保証対象者は条件達成時に 70% 保証が維持されます。還元率自体は AI では変更しません。",
+      "payment_notice": "この金額は月次確定後の支払予定額です。表示額は monthly-payout-decision.json の確定値であり、Dashboard 側で再計算しません。最終支払いは運営確認後に確定します。",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "source_payout_amount_yen": 84000,
+        "no_recalculation": true
+      }
+    },
+    {
+      "creator_id": "cr_005",
+      "display_name": "高橋リョウ",
+      "rank": "Pro",
+      "gross_revenue_yen": 55000,
+      "applied_rate_percent": 36.1,
+      "payout_amount_yen": 19855,
+      "payout_display": "¥19,855",
+      "rank_explanation": "今月は Pro ランクとして判定されています。",
+      "payout_explanation": "今月の対象収益は ¥55,000、適用率は 36.1%、還元予定額は ¥19,855 です。",
+      "adjustment_explanation": "今月は還元プールが逼迫しているため、変動層として基準率 48% から 36.1% に調整されています。",
+      "next_month_guidance": "次月（2026-06）も Pro ランク条件の維持・向上を目指してください。 参考: 必要月間収益 ¥15,750 以上。 変動層の調整が発生したため、翌月は Pro 到達に必要な収益・視聴をやや引き上げます。 変動層の調整が発生したため、次月は収益・視聴維持を重視してください。",
+      "payment_notice": "この金額は月次確定後の支払予定額です。表示額は monthly-payout-decision.json の確定値であり、Dashboard 側で再計算しません。最終支払いは運営確認後に確定します。",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "source_payout_amount_yen": 19855,
+        "no_recalculation": true
+      }
+    },
+    {
+      "creator_id": "cr_006",
+      "display_name": "伊藤サキ",
+      "rank": "Elite Creator",
+      "gross_revenue_yen": 95000,
+      "applied_rate_percent": 80,
+      "payout_amount_yen": 76000,
+      "payout_display": "¥76,000",
+      "rank_explanation": "今月は Elite ランクとして判定されています。",
+      "payout_explanation": "今月の対象収益は ¥95,000、適用率は 80%、還元予定額は ¥76,000 です。",
+      "adjustment_explanation": "Elite 条件を達成しているため、80% 保証が適用されています。還元率は Production Baseline に基づき変更されません。",
+      "next_month_guidance": "次月も Elite 保証（80%）を受けるには、2026-06 の条件ライン達成が必要です。 参考: 必要月間収益 ¥176,000 以上。 残余プール逼迫のため、翌月は特別ランクの達成条件をやや厳格化します（還元率は変更しません）。 保証対象者は条件達成時に 80% 保証が維持されます。還元率自体は AI では変更しません。",
+      "payment_notice": "この金額は月次確定後の支払予定額です。表示額は monthly-payout-decision.json の確定値であり、Dashboard 側で再計算しません。最終支払いは運営確認後に確定します。",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "source_payout_amount_yen": 76000,
+        "no_recalculation": true
+      }
+    },
+    {
+      "creator_id": "cr_007",
+      "display_name": "渡辺ユウ",
+      "rank": "Top Creator",
+      "gross_revenue_yen": 88000,
+      "applied_rate_percent": 52.6,
+      "payout_amount_yen": 46329,
+      "payout_display": "¥46,329",
+      "rank_explanation": "今月は Top ランクとして判定されています。",
+      "payout_explanation": "今月の対象収益は ¥88,000、適用率は 52.6%、還元予定額は ¥46,329 です。",
+      "adjustment_explanation": "今月は還元プールが逼迫しているため、変動層として基準率 70% から 52.6% に調整されています。",
+      "next_month_guidance": "次月 Top 保証を受けるには、2026-06 の条件ライン（収益・視聴等）の達成が必要です。 参考: 必要月間収益 ¥110,001 以上。 残余プール逼迫のため、翌月は特別ランクの達成条件をやや厳格化します（還元率は変更しません）。 保証対象者は条件達成時に 70% 保証が維持されます。還元率自体は AI では変更しません。",
+      "payment_notice": "この金額は月次確定後の支払予定額です。表示額は monthly-payout-decision.json の確定値であり、Dashboard 側で再計算しません。最終支払いは運営確認後に確定します。",
+      "audit": {
+        "payout_amount_source": "monthly-payout-decision.json",
+        "payout_amount_yen_is_final": true,
+        "no_display_recalculation": true,
+        "source_payout_amount_yen": 46329,
+        "no_recalculation": true
+      }
+    }
+  ]
+}

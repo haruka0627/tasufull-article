@@ -1,0 +1,91 @@
+{
+  "engine_version": "2.0",
+  "month": "2026-05",
+  "purpose": "高還元保証者を守ったあと、残りを一般クリエイターへ公平に配分する過程の可視化",
+  "payout_pool": 126480,
+  "gross_revenue": 620000,
+  "guaranteed_layer": {
+    "description": "Top Creator（70%）/ Elite Creator（80%）— 条件達成者は還元率を下げない",
+    "total": 0,
+    "count": 0,
+    "payouts": []
+  },
+  "residual_pool": 126480,
+  "variable_layer": {
+    "description": "Starter / Creator / Pro — 残余プールから配分（変動層）",
+    "total": 126480,
+    "count": 6,
+    "allocation_mode": "variable_scaled_down",
+    "variable_scale": 0.6915783602900167,
+    "residual_surplus": 0,
+    "payouts": [
+      {
+        "creator_id": "cr_001",
+        "creator_name": "ひろチャンネル",
+        "rank": "Pro",
+        "original_rate": 48,
+        "adjusted_rate": 33.2,
+        "gross_creator_revenue": 185000,
+        "payout_amount": 61412,
+        "adjustment_reason": "残余プール不足により基準 48% → 33.2% に調整"
+      },
+      {
+        "creator_id": "cr_002",
+        "creator_name": "ゲーム実況タロウ",
+        "rank": "Pro",
+        "original_rate": 48,
+        "adjusted_rate": 33.2,
+        "gross_creator_revenue": 98000,
+        "payout_amount": 32532,
+        "adjustment_reason": "残余プール不足により基準 48% → 33.2% に調整"
+      },
+      {
+        "creator_id": "cr_003",
+        "creator_name": "料理ショートみかん",
+        "rank": "Pro",
+        "original_rate": 48,
+        "adjusted_rate": 33.2,
+        "gross_creator_revenue": 52000,
+        "payout_amount": 17262,
+        "adjustment_reason": "残余プール不足により基準 48% → 33.2% に調整"
+      },
+      {
+        "creator_id": "cr_004",
+        "creator_name": "音楽ライブユキ",
+        "rank": "Pro",
+        "original_rate": 48,
+        "adjusted_rate": 33.2,
+        "gross_creator_revenue": 38000,
+        "payout_amount": 12614,
+        "adjustment_reason": "残余プール不足により基準 48% → 33.2% に調整"
+      },
+      {
+        "creator_id": "cr_005",
+        "creator_name": "初心者Vlogサクラ",
+        "rank": "Creator",
+        "original_rate": 38,
+        "adjusted_rate": 26.3,
+        "gross_creator_revenue": 8500,
+        "payout_amount": 2234,
+        "adjustment_reason": "残余プール不足により基準 38% → 26.3% に調整"
+      },
+      {
+        "creator_id": "cr_006",
+        "creator_name": "テスト配信くん",
+        "rank": "Starter",
+        "original_rate": 28,
+        "adjusted_rate": 19.4,
+        "gross_creator_revenue": 2200,
+        "payout_amount": 426,
+        "adjustment_reason": "残余プール不足により基準 28% → 19.4% に調整"
+      }
+    ]
+  },
+  "summary": {
+    "total_payout": 126480,
+    "guaranteed_count": 0,
+    "variable_count": 6,
+    "pool_utilization_pct": 100,
+    "narrative": "今月は Top/Elite 該当者なし。還元プール全体を Starter / Creator / Pro の変動層へ配分。"
+  }
+}

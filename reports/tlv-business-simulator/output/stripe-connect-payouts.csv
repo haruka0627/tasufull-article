@@ -1,0 +1,8 @@
+creator_id,creator_name,stripe_connect_account_id,payout_amount_jpy,currency,description,internal_note
+cr_001,山田タロウ,,30685,jpy,TLV 2026-05 creator revenue share,Pro / applied 36.1% / confirmed yen only
+cr_002,佐藤ハナ,,12004,jpy,TLV 2026-05 creator revenue share,Creator / applied 28.6% / confirmed yen only
+cr_003,鈴木ケン,,2527,jpy,TLV 2026-05 creator revenue share,Starter / applied 21.1% / confirmed yen only
+cr_004,田中ミキ,,84000,jpy,TLV 2026-05 creator revenue share,Top Creator / applied 70% / confirmed yen only
+cr_005,高橋リョウ,,19855,jpy,TLV 2026-05 creator revenue share,Pro / applied 36.1% / confirmed yen only
+cr_006,伊藤サキ,,76000,jpy,TLV 2026-05 creator revenue share,Elite Creator / applied 80% / confirmed yen only
+cr_007,渡辺ユウ,,46329,jpy,TLV 2026-05 creator revenue share,Top Creator / applied 52.6% / confirmed yen only

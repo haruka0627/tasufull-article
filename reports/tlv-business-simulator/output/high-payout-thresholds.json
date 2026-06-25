@@ -1,0 +1,501 @@
+{
+  "engine_version": "2.0",
+  "generated_at": "2026-06-25",
+  "philosophy": "会社を維持できる利益を確保したうえで、成果を出したクリエイターへ最大限還元すること",
+  "reference_month": {
+    "month": "2026-05",
+    "gross_revenue": 620000,
+    "payout_pool": 126480,
+    "safety_status": "CAUTION",
+    "max_platform_payout_rate": 47.7,
+    "highest_actual_rate": 33.2,
+    "top_creator_count": 0,
+    "elite_creator_count": 0,
+    "why_70_not_applied": [
+      "Top Creator 条件未達 — 条件ラインは output/condition-lines.json を参照",
+      "個人発生収益 ¥203,501 以上 / プラットフォーム総収益 ¥713,000 以上が必要",
+      "今月の還元プール ¥126,480 — Top 最大 0 名 / Elite 最大 0 名まで収容可能"
+    ],
+    "why_80_not_applied": [
+      "Elite Creator 条件未達 — 条件ラインは output/condition-lines.json を参照",
+      "個人発生収益 ¥212,750 以上 / プラットフォーム総収益 ¥744,000 以上が必要",
+      "今月の還元プール ¥126,480 — Top 最大 0 名 / Elite 最大 0 名まで収容可能"
+    ]
+  },
+  "condition_lines": {
+    "month": "2026-05",
+    "ai_adjusts": "条件ライン（還元率は固定しない）",
+    "platform_gross_revenue": 620000,
+    "payout_pool": 126480,
+    "ranks": {
+      "Starter": {
+        "min_monthly_revenue": 0,
+        "min_views": 0,
+        "min_engagement_score": 0,
+        "min_live_hours": 0,
+        "payout_rate": 28,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Starter"
+      },
+      "Creator": {
+        "min_monthly_revenue": 3000,
+        "min_views": 2000,
+        "min_engagement_score": 0.35,
+        "min_live_hours": 0,
+        "payout_rate": 38,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Creator"
+      },
+      "Pro": {
+        "min_monthly_revenue": 15000,
+        "min_views": 10000,
+        "min_engagement_score": 0.5,
+        "min_live_hours": 2,
+        "payout_rate": 48,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Pro"
+      },
+      "Top Creator": {
+        "min_monthly_revenue": 203501,
+        "min_views": 40000,
+        "min_engagement_score": 0.7,
+        "min_live_hours": 8,
+        "min_platform_gross_revenue": 713000,
+        "guaranteed_rate": 70,
+        "max_slots": 0,
+        "payout_rate": 70,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Top Creator（最大70%・条件達成者のみ）"
+      },
+      "Elite Creator": {
+        "min_monthly_revenue": 212750,
+        "min_views": 60000,
+        "min_engagement_score": 0.78,
+        "min_live_hours": 12,
+        "min_platform_gross_revenue": 744000,
+        "guaranteed_rate": 80,
+        "max_slots": 0,
+        "payout_rate": 80,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Elite Creator（最大80%・条件達成者のみ）"
+      }
+    },
+    "reach_conditions": {
+      "top_creator_70": {
+        "guaranteed_rate": 70,
+        "conditions": {
+          "min_monthly_revenue": 203501,
+          "min_views": 40000,
+          "min_engagement_score": 0.7,
+          "min_live_hours": 8,
+          "min_platform_gross_revenue": 713000,
+          "guaranteed_rate": 70,
+          "max_slots": 0
+        },
+        "required_platform_gross_revenue": 678513,
+        "required_payout_pool_one_slot": 182886,
+        "max_affordable_this_month": 0
+      },
+      "elite_creator_80": {
+        "guaranteed_rate": 80,
+        "conditions": {
+          "min_monthly_revenue": 212750,
+          "min_views": 60000,
+          "min_engagement_score": 0.78,
+          "min_live_hours": 12,
+          "min_platform_gross_revenue": 744000,
+          "guaranteed_rate": 80,
+          "max_slots": 0
+        },
+        "required_platform_gross_revenue": 678513,
+        "required_payout_pool_one_slot": 182886,
+        "max_affordable_this_month": 0
+      }
+    },
+    "headcount_simulation": {
+      "elite_max_affordable": 0,
+      "top_creator_max_affordable": 0,
+      "payout_at_max": 182886
+    },
+    "max_platform_payout_rate": 47.7
+  },
+  "rank_conditions": [
+    {
+      "rank": "Starter",
+      "payout_rate": 28,
+      "conditions": {
+        "min_monthly_revenue": 0,
+        "min_views": 0,
+        "min_engagement_score": 0,
+        "min_live_hours": 0,
+        "payout_rate": 28,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Starter"
+      },
+      "rate_guaranteed_on_achievement": false
+    },
+    {
+      "rank": "Creator",
+      "payout_rate": 38,
+      "conditions": {
+        "min_monthly_revenue": 3000,
+        "min_views": 2000,
+        "min_engagement_score": 0.35,
+        "min_live_hours": 0,
+        "payout_rate": 38,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Creator"
+      },
+      "rate_guaranteed_on_achievement": false
+    },
+    {
+      "rank": "Pro",
+      "payout_rate": 48,
+      "conditions": {
+        "min_monthly_revenue": 15000,
+        "min_views": 10000,
+        "min_engagement_score": 0.5,
+        "min_live_hours": 2,
+        "payout_rate": 48,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Pro"
+      },
+      "rate_guaranteed_on_achievement": false
+    },
+    {
+      "rank": "Top Creator",
+      "payout_rate": 70,
+      "conditions": {
+        "min_monthly_revenue": 203501,
+        "min_views": 40000,
+        "min_engagement_score": 0.7,
+        "min_live_hours": 8,
+        "min_platform_gross_revenue": 713000,
+        "guaranteed_rate": 70,
+        "max_slots": 0,
+        "payout_rate": 70,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Top Creator（最大70%・条件達成者のみ）"
+      },
+      "rate_guaranteed_on_achievement": true
+    },
+    {
+      "rank": "Elite Creator",
+      "payout_rate": 80,
+      "conditions": {
+        "min_monthly_revenue": 212750,
+        "min_views": 60000,
+        "min_engagement_score": 0.78,
+        "min_live_hours": 12,
+        "min_platform_gross_revenue": 744000,
+        "guaranteed_rate": 80,
+        "max_slots": 0,
+        "payout_rate": 80,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Elite Creator（最大80%・条件達成者のみ）"
+      },
+      "rate_guaranteed_on_achievement": true
+    }
+  ],
+  "rank_progress": [
+    {
+      "creator_id": "cr_001",
+      "creator_name": "ひろチャンネル",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 18501,
+        "views": 0,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥18,501"
+    },
+    {
+      "creator_id": "cr_002",
+      "creator_name": "ゲーム実況タロウ",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 105501,
+        "views": 0,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥105,501"
+    },
+    {
+      "creator_id": "cr_003",
+      "creator_name": "料理ショートみかん",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 151501,
+        "views": 0,
+        "engagement_score": 0.02,
+        "live_hours": 4
+      },
+      "gap_message": "発生収益 あと ¥151,501 / エンゲージメント あと 0.02 / ライブ あと 4h"
+    },
+    {
+      "creator_id": "cr_004",
+      "creator_name": "音楽ライブユキ",
+      "rank": "Pro",
+      "payout_rate": 33.2,
+      "rate_guaranteed": false,
+      "next_rank": "Top Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 165501,
+        "views": 28000,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥165,501 / 再生数 あと 28,000"
+    },
+    {
+      "creator_id": "cr_005",
+      "creator_name": "初心者Vlogサクラ",
+      "rank": "Creator",
+      "payout_rate": 26.3,
+      "rate_guaranteed": false,
+      "next_rank": "Pro",
+      "gap_to_next_rank": {
+        "monthly_revenue": 6500,
+        "views": 800,
+        "engagement_score": 0,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥6,500 / 再生数 あと 800"
+    },
+    {
+      "creator_id": "cr_006",
+      "creator_name": "テスト配信くん",
+      "rank": "Starter",
+      "payout_rate": 19.4,
+      "rate_guaranteed": false,
+      "next_rank": "Creator",
+      "gap_to_next_rank": {
+        "monthly_revenue": 800,
+        "views": 200,
+        "engagement_score": 0.04,
+        "live_hours": 0
+      },
+      "gap_message": "発生収益 あと ¥800 / 再生数 あと 200 / エンゲージメント あと 0.04"
+    }
+  ],
+  "headcount_simulation": {
+    "elite_max_affordable": 0,
+    "top_creator_max_affordable": 0,
+    "payout_at_max": 182886
+  },
+  "cost_assumptions": {
+    "stripe_rate": 0.036,
+    "fixed_costs_ex_stripe": 320200,
+    "required_company_keep": 151000
+  },
+  "safety_principle": "最低利益・税金積立・開発積立・緊急予備費を確保した後にのみ高還元条件ラインを開放",
+  "lp_copy": {
+    "public_wording": "成果に応じた段階制の収益還元",
+    "top_creator": "Top Creator は最大70%（条件達成者のみ・達成後は保証）",
+    "elite_creator": "Elite Creator は最大80%も可能（条件達成者のみ・達成後は保証）",
+    "always": "還元率は月次収支・運営コスト・貢献度に基づき算出。毎月固定○%はありません。",
+    "ai_role": "AI が毎月変更するのは還元率ではなく「条件ライン」"
+  },
+  "thresholds": [
+    {
+      "target_rate": 60,
+      "applies_to_tier": "Pro / Creator（一般ランク）",
+      "label": "一般ランク上限付近（60%）",
+      "required_monthly_gross_revenue": 678513,
+      "required_payout_pool": 182886,
+      "required_profit_before_payout": 333887,
+      "company_keep_amount": 151000,
+      "max_creators_at_target_rate": 6,
+      "current_month": {
+        "achievable": false,
+        "revenue_gap": 58513,
+        "why_not": [
+          "還元プール不足: 現状 ¥126,480 / 必要 ¥182,886",
+          "必要月間総収益: ¥678,513（差額 +¥58,513）",
+          "予備費・最低利益確保後の原資が不足"
+        ]
+      },
+      "lp_copy": {
+        "headline": "成果に応じた段階制の収益還元",
+        "body": "一般ランクは 60% 付近。全員同一還元率はありません。"
+      }
+    },
+    {
+      "target_rate": 65,
+      "applies_to_tier": "Pro / Creator（一般ランク）",
+      "label": "一般ランク上限付近（65%）",
+      "required_monthly_gross_revenue": 678513,
+      "required_payout_pool": 182886,
+      "required_profit_before_payout": 333887,
+      "company_keep_amount": 151000,
+      "max_creators_at_target_rate": 6,
+      "current_month": {
+        "achievable": false,
+        "revenue_gap": 58513,
+        "why_not": [
+          "還元プール不足: 現状 ¥126,480 / 必要 ¥182,886",
+          "必要月間総収益: ¥678,513（差額 +¥58,513）",
+          "予備費・最低利益確保後の原資が不足"
+        ]
+      },
+      "lp_copy": {
+        "headline": "成果に応じた段階制の収益還元",
+        "body": "一般ランクは 65% 付近。全員同一還元率はありません。"
+      }
+    },
+    {
+      "target_rate": 70,
+      "applies_to_tier": "Top Creator",
+      "label": "Top Creator（70% 保証）",
+      "required_monthly_gross_revenue": 720733,
+      "required_payout_pool": 223586,
+      "required_profit_before_payout": 374587,
+      "company_keep_amount": 151000,
+      "max_creators_at_target_rate": 0,
+      "current_month": {
+        "achievable": false,
+        "revenue_gap": 100733,
+        "why_not": [
+          "還元プール不足: 現状 ¥126,480 / 必要 ¥223,586",
+          "必要月間総収益: ¥720,733（差額 +¥100,733）",
+          "予備費・最低利益確保後の原資が不足"
+        ]
+      },
+      "lp_copy": {
+        "headline": "Top Creator は最大70%（条件達成者のみ）",
+        "body": "月間総収益 約72万円規模・個人高収益が目安。達成後は70%保証。",
+        "note": "参考月は未達 — 条件ラインは収支に応じて AI が調整"
+      },
+      "condition_line": {
+        "min_monthly_revenue": 203501,
+        "min_views": 40000,
+        "min_engagement_score": 0.7,
+        "min_live_hours": 8,
+        "min_platform_gross_revenue": 713000,
+        "guaranteed_rate": 70,
+        "max_slots": 0,
+        "payout_rate": 70,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Top Creator（最大70%・条件達成者のみ）"
+      },
+      "top_contributor_one": {
+        "description": "Top Creator 1人に 70% 保証適用",
+        "required_payout_pool": 223586,
+        "required_monthly_gross_revenue": 720733,
+        "min_creator_monthly_revenue": 203501
+      },
+      "top_contributor_multiple": {
+        "description": "Top Creator 複数人に 70% 保証",
+        "required_payout_pool": 223586,
+        "required_monthly_gross_revenue": 720733,
+        "max_affordable_at_reference_gross": 0
+      },
+      "guarantee_rule": "条件達成月は AI 都合で還元率を下げない（保証）"
+    },
+    {
+      "target_rate": 75,
+      "applies_to_tier": "Pro",
+      "label": "Pro（75% 保証）",
+      "required_monthly_gross_revenue": 678513,
+      "required_payout_pool": 182886,
+      "required_profit_before_payout": 333887,
+      "company_keep_amount": 151000,
+      "max_creators_at_target_rate": 0,
+      "current_month": {
+        "achievable": false,
+        "revenue_gap": 58513,
+        "why_not": [
+          "還元プール不足: 現状 ¥126,480 / 必要 ¥182,886",
+          "必要月間総収益: ¥678,513（差額 +¥58,513）",
+          "予備費・最低利益確保後の原資が不足"
+        ]
+      },
+      "lp_copy": {
+        "headline": "成果に応じた段階制の収益還元",
+        "body": "一般ランクは 75% 付近。全員同一還元率はありません。"
+      },
+      "condition_line": {
+        "min_monthly_revenue": 15000,
+        "min_views": 10000,
+        "min_engagement_score": 0.5,
+        "min_live_hours": 2,
+        "payout_rate": 48,
+        "rate_guaranteed_on_achievement": false,
+        "public_label": "Pro"
+      },
+      "top_contributor_one": {
+        "description": "Pro 1人に 75% 保証適用",
+        "required_payout_pool": 182886,
+        "required_monthly_gross_revenue": 678513,
+        "min_creator_monthly_revenue": 15000
+      },
+      "top_contributor_multiple": {
+        "description": "Pro 複数人に 75% 保証",
+        "required_payout_pool": 223586,
+        "required_monthly_gross_revenue": 720733,
+        "max_affordable_at_reference_gross": 0
+      },
+      "guarantee_rule": "条件達成月は AI 都合で還元率を下げない（保証）"
+    },
+    {
+      "target_rate": 80,
+      "applies_to_tier": "Elite Creator",
+      "label": "Elite Creator（80% 保証）",
+      "required_monthly_gross_revenue": 739924,
+      "required_payout_pool": 242086,
+      "required_profit_before_payout": 393087,
+      "company_keep_amount": 151000,
+      "max_creators_at_target_rate": 0,
+      "current_month": {
+        "achievable": false,
+        "revenue_gap": 119924,
+        "why_not": [
+          "還元プール不足: 現状 ¥126,480 / 必要 ¥242,086",
+          "必要月間総収益: ¥739,924（差額 +¥119,924）",
+          "予備費・最低利益確保後の原資が不足"
+        ]
+      },
+      "lp_copy": {
+        "headline": "Elite Creator は最大80%も可能（条件達成者のみ）",
+        "body": "月間総収益 約74万円以上・極少数向け。達成後は80%保証。",
+        "note": "参考月は未達"
+      },
+      "condition_line": {
+        "min_monthly_revenue": 212750,
+        "min_views": 60000,
+        "min_engagement_score": 0.78,
+        "min_live_hours": 12,
+        "min_platform_gross_revenue": 744000,
+        "guaranteed_rate": 80,
+        "max_slots": 0,
+        "payout_rate": 80,
+        "rate_guaranteed_on_achievement": true,
+        "public_label": "Elite Creator（最大80%・条件達成者のみ）"
+      },
+      "top_contributor_one": {
+        "description": "Elite Creator 1人に 80% 保証適用",
+        "required_payout_pool": 242086,
+        "required_monthly_gross_revenue": 739924,
+        "min_creator_monthly_revenue": 212750
+      },
+      "top_contributor_multiple": {
+        "description": "Elite Creator 複数人に 80% 保証",
+        "required_payout_pool": 242086,
+        "required_monthly_gross_revenue": 739924,
+        "max_affordable_at_reference_gross": 0
+      },
+      "guarantee_rule": "条件達成月は AI 都合で還元率を下げない（保証）"
+    }
+  ]
+}

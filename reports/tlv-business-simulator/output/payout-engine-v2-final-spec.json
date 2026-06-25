@@ -1,0 +1,303 @@
+{
+  "spec_version": "2.0-final",
+  "engine_version": "2.0",
+  "status": "production_baseline",
+  "frozen_at": "2026-06-25",
+  "purpose": "TLV AI 収益分配エンジン Ver2 の唯一の基準仕様（Production Baseline）。上書き禁止。変更は Ver3 として新規作成すること。",
+  "governance": {
+    "single_source_of_truth": [
+      "reports/tlv-business-simulator/payout-engine-v2-production-baseline.json",
+      "reports/tlv-business-simulator/payout-engine-v2-final-spec.md",
+      "reports/tlv-business-simulator/output/payout-engine-v2-final-spec.json",
+      "reports/tlv-business-simulator/tlv-business-simulator.xlsx — シート PayoutEngineV2Spec"
+    ],
+    "change_policy": "Ver2 は永久保存。仕様変更は Ver3 として新規作成。Ver2 の上書きは禁止。",
+    "implementation_phase_only": [
+      "実装",
+      "接続",
+      "UI",
+      "運用"
+    ],
+    "code_rule": "保証率・ランク・判定順・残余プールをコード側で別定義しない。本ファイルを参照すること。ハードコード禁止。"
+  },
+  "implementation": {
+    "engine": "scripts/tlv-payout-engine.mjs",
+    "generator": "scripts/generate-tlv-business-simulator.mjs",
+    "scope": "reports/ と scripts/ のみ（本番送金・Stripe API 非使用）"
+  },
+  "core_philosophy": {
+    "goal": "会社を維持できる利益を確保したうえで、成果を出したクリエイターへ最大限還元すること",
+    "principles": [
+      "固定還元率なし",
+      "全員同一還元率なし",
+      "成果・貢献度・月次収支に応じた段階制",
+      "会社維持に必要な利益を先に確保",
+      "残りを可能な限りクリエイターへ還元"
+    ],
+    "not_the_goal": "会社利益の最大化"
+  },
+  "rank_system": [
+    {
+      "rank": "Starter",
+      "base_rate_percent": 28,
+      "guaranteed": false,
+      "guarantee_rate_percent": null,
+      "layer": "variable"
+    },
+    {
+      "rank": "Creator",
+      "base_rate_percent": 38,
+      "guaranteed": false,
+      "guarantee_rate_percent": null,
+      "layer": "variable"
+    },
+    {
+      "rank": "Pro",
+      "base_rate_percent": 48,
+      "guaranteed": false,
+      "guarantee_rate_percent": null,
+      "layer": "variable"
+    },
+    {
+      "rank": "Top Creator",
+      "base_rate_percent": 70,
+      "guaranteed": true,
+      "guarantee_rate_percent": 70,
+      "layer": "guaranteed"
+    },
+    {
+      "rank": "Elite Creator",
+      "base_rate_percent": 80,
+      "guaranteed": true,
+      "guarantee_rate_percent": 80,
+      "layer": "guaranteed"
+    }
+  ],
+  "two_layer_allocation": {
+    "guaranteed_layer": {
+      "ranks": [
+        "Top Creator",
+        "Elite Creator"
+      ],
+      "rates": {
+        "Top Creator": 70,
+        "Elite Creator": 80
+      },
+      "description": "条件達成者のみ。先に控除。還元率は引き下げない。"
+    },
+    "variable_layer": {
+      "ranks": [
+        "Starter",
+        "Creator",
+        "Pro"
+      ],
+      "rates": {
+        "Starter": 28,
+        "Creator": 38,
+        "Pro": 48
+      },
+      "description": "残余プールから配分。月次収支により adjusted_rate が変動し得る。"
+    },
+    "flow": [
+      "payout_pool 算出（会社費用・積立・最低利益を先に確保）",
+      "保証層（Top/Elite）支払いを先に控除",
+      "残余プールを変動層（Starter/Creator/Pro）へ配分"
+    ],
+    "allocation_order": [
+      "guaranteed_layer",
+      "variable_layer"
+    ]
+  },
+  "guarantee_rules": [
+    "条件達成月は Top Creator 70% / Elite Creator 80% を下げない",
+    "AI 都合で 70% → 66% などへ引き下げしない",
+    "収支が厳しい月は条件ラインまたは max_slots を調整し、該当者を絞る",
+    "残余プール不足時は一般ランクのみ adjusted_rate を下げる"
+  ],
+  "ai_role": {
+    "adjusts": "条件ライン（月次）",
+    "does_not_adjust": "達成済み Top/Elite の還元率",
+    "responsibilities": [
+      "条件ライン算出",
+      "利益シミュレーション",
+      "安全判定"
+    ],
+    "prohibited": [
+      "還元率を気分で決めない",
+      "還元率を AI が恣意的に決定する"
+    ],
+    "inputs_considered": [
+      "会社経費",
+      "Cloudflare",
+      "Stripe",
+      "AI利用料",
+      "税金積立",
+      "開発積立",
+      "予備費",
+      "最低利益"
+    ]
+  },
+  "condition_line_defaults": {
+    "Starter": {
+      "min_monthly_revenue": 0,
+      "min_views": 0,
+      "min_engagement_score": 0,
+      "min_live_hours": 0
+    },
+    "Creator": {
+      "min_monthly_revenue": 3000,
+      "min_views": 2000,
+      "min_engagement_score": 0.35,
+      "min_live_hours": 0
+    },
+    "Pro": {
+      "min_monthly_revenue": 15000,
+      "min_views": 10000,
+      "min_engagement_score": 0.5,
+      "min_live_hours": 2
+    },
+    "Top Creator": {
+      "min_monthly_revenue": 100000,
+      "min_views": 40000,
+      "min_engagement_score": 0.7,
+      "min_live_hours": 8,
+      "min_platform_gross_revenue": 750000,
+      "guaranteed_rate": 70,
+      "max_slots": 5
+    },
+    "Elite Creator": {
+      "min_monthly_revenue": 160000,
+      "min_views": 60000,
+      "min_engagement_score": 0.78,
+      "min_live_hours": 12,
+      "min_platform_gross_revenue": 850000,
+      "guaranteed_rate": 80,
+      "max_slots": 2
+    }
+  },
+  "outputs": [
+    {
+      "path": "reports/tlv-business-simulator/output/monthly-payout-decision.json",
+      "description": "月次配分判断の正本",
+      "implementation_target": true
+    },
+    {
+      "path": "reports/tlv-business-simulator/output/condition-lines.json",
+      "description": "AI 条件ライン",
+      "implementation_target": true
+    },
+    {
+      "path": "reports/tlv-business-simulator/output/rank-progress.json",
+      "description": "次ランクギャップ",
+      "implementation_target": true
+    },
+    {
+      "path": "reports/tlv-business-simulator/output/residual-pool-allocation.json",
+      "description": "保証後残余プール配分",
+      "implementation_target": true
+    },
+    {
+      "path": "reports/tlv-business-simulator/output/creator-rank-explanation.json",
+      "description": "Creator 向けランク説明",
+      "implementation_target": true
+    },
+    {
+      "path": "reports/tlv-business-simulator/output/high-payout-thresholds.json",
+      "description": "高還元条件逆算",
+      "implementation_target": false
+    },
+    {
+      "path": "reports/tlv-business-simulator/output/stripe-connect-payouts.csv",
+      "description": "送金候補 CSV（実送金なし）",
+      "implementation_target": false
+    },
+    {
+      "path": "reports/tlv-business-simulator/payout-engine-v2-final-spec.md",
+      "description": "本仕様書（Markdown）"
+    }
+  ],
+  "implementation_phase": {
+    "status": "active",
+    "targets": [
+      {
+        "id": 1,
+        "name": "monthly-payout-decision.json の実データ生成",
+        "description": "本番収支・Creator 実績から月次 JSON を生成"
+      },
+      {
+        "id": 2,
+        "name": "AI 月次判定",
+        "description": "条件ライン算出・利益シミュレーション・安全判定"
+      },
+      {
+        "id": 3,
+        "name": "Creator 向け還元説明生成",
+        "description": "creator-rank-explanation.json / MD の実データ連携"
+      },
+      {
+        "id": 4,
+        "name": "管理画面への表示",
+        "description": "運営者向け月次レポート・安全判定・残余プール"
+      },
+      {
+        "id": 5,
+        "name": "Creator Dashboard への表示",
+        "description": "ランク・還元率・次ランクギャップの表示"
+      },
+      {
+        "id": 6,
+        "name": "公開説明ページ",
+        "description": "public_marketing_copy に基づく対外向け説明"
+      },
+      {
+        "id": 7,
+        "name": "月次レポート出力",
+        "description": "monthly-operator-report・Excel・CSV の運用連携"
+      }
+    ],
+    "completion_criteria": [
+      "Ver2 Final Spec と実装結果が一致",
+      "再生成・検証・UI・API・JSON がすべて一致",
+      "コードに保証率・ランクのハードコードがない"
+    ]
+  },
+  "verification_criteria": [
+    "Top/Elite 保証維持（高収益シナリオ）",
+    "一般ランクのみ変動（variable layer）",
+    "monthly-payout-decision.json と各レポートの金額整合",
+    "node scripts/generate-tlv-business-simulator.mjs で Excel / Markdown / JSON 再生成"
+  ],
+  "public_marketing_copy": {
+    "primary": "成果に応じた段階制の収益還元",
+    "top_creator": "Top Creator は最大70%",
+    "elite_creator": "Elite Creator は最大80%も可能",
+    "eligibility": "条件達成者のみ適用",
+    "disclaimer": "月次収支・運営コスト・適用条件に基づき算出。毎月固定の還元率はない。"
+  },
+  "related_docs": [
+    "reports/tlv-business-simulator/payout-engine-v2-final-spec.md",
+    "reports/tlv-business-simulator/payout-engine-v2-implementation-phase.md",
+    "reports/tlv-business-simulator/payout-decision-engine.md",
+    "reports/tlv-business-simulator/creator-rank-policy-v2.md"
+  ],
+  "generated_at": "2026-06-25",
+  "verification_last_run": {
+    "guarantee_rule": {
+      "ok": true,
+      "guaranteed_count": 1
+    },
+    "residual_pool": {
+      "ok": true,
+      "high_guaranteed": 1,
+      "normal_variable_only": 6
+    },
+    "creator_rank_explanation": {
+      "ok": true,
+      "creator_count": 6,
+      "high_special": 1
+    },
+    "baseline_safety_status": "RED",
+    "reference_month": "2026-05",
+    "all_pass": true
+  }
+}
