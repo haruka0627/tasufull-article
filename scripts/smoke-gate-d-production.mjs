@@ -11,6 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
+import { isCloudflareAccessLoginPage } from "./lib/smoke-access-detect.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -18,6 +19,7 @@ const ROOT = path.join(__dirname, "..");
 const DEFAULT_BASE = "https://tasufull-article.pages.dev";
 
 const URLS = [
+  { id: "top-root", path: "/", module: "TOP" },
   { id: "top", path: "/index.html", module: "TOP" },
   { id: "talk", path: "/talk-home.html", module: "TALK" },
   { id: "match-top", path: "/match/match-top.html", module: "MATCH" },
@@ -42,13 +44,6 @@ function parseArgs() {
   const storageIdx = process.argv.indexOf("--storage-state");
   const storageState = storageIdx >= 0 ? process.argv[storageIdx + 1] : null;
   return { base: base.replace(/\/$/, ""), storageState };
-}
-
-function isAccessLogin(url, body) {
-  if (/cloudflareaccess\.com/i.test(url)) return true;
-  if (/cdn-cgi\/access\/login/i.test(url)) return true;
-  if (body && /Cloudflare Access|Get a login code|One-time PIN/i.test(body)) return true;
-  return false;
 }
 
 function classifyConsoleError(text) {
@@ -97,7 +92,7 @@ async function smokeUrl(page, base, spec) {
     const title = await page.title();
 
     const docStatus = resp?.status() ?? 0;
-    const blocked = isAccessLogin(finalUrl, body) || docStatus === 302 || /302 Found/i.test(body.slice(0, 500));
+    const blocked = isCloudflareAccessLoginPage({ url: finalUrl, body, title });
 
     const cfg = responses.find((r) => r.url.includes("chat-supabase-config.js"));
     const supa = responses.filter((r) => r.url.includes("supabase.co"));

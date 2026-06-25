@@ -127,10 +127,15 @@ function main() {
   } else {
     pass("_redirects: no SPA fallback");
   }
-  if (!/\/index\.html\s+\/market\//.test(redirects)) {
-    setFail("_redirects missing legacy market redirect (/index.html → /market/)");
+  if (/\/index\.html\s+\/market\//.test(redirects)) {
+    setFail("_redirects must NOT redirect /index.html → /market/ (platform TOP is dist/index.html)");
   } else {
-    pass("_redirects: legacy market /index.html → /market/");
+    pass("_redirects: no /index.html → /market/ (primary: / and /index.html = platform TOP)");
+  }
+  if (!/\/market\s+\/market\//.test(redirects)) {
+    setFail("_redirects missing legacy /market trailing-slash rule");
+  } else {
+    pass("_redirects: legacy /market/ trailing slash only (P2)");
   }
 
   const rootIndex = fs.readFileSync(path.join(DIST, "index.html"), "utf8");

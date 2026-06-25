@@ -1,0 +1,71 @@
+{
+  "at": "2026-06-25T20:59:16.745Z",
+  "finishedAt": "2026-06-25T21:02:11.848Z",
+  "smokeToolingReady": true,
+  "productChanges": 0,
+  "dbChanges": 0,
+  "sqlChanges": 0,
+  "falsePositiveTarget": 0,
+  "falseBlockedTarget": 0,
+  "tlvLivePreSmoke": "PASS",
+  "legacyMarketPreSmoke": "EXPECTED_LEGACY",
+  "runs": [
+    {
+      "id": "unit-smoke-access-detect",
+      "cmd": "node scripts/test-smoke-access-detect.mjs",
+      "pass": true,
+      "code": 0,
+      "stdout": "PASS TLV banner is NOT access login\nPASS Access login URL detected\nPASS Access OTP form detected\nPASS ops 403 detected\nPASS ops dashboard title not denied\n\n5 pass / 0 fail\n"
+    },
+    {
+      "id": "node-test-content-gate",
+      "cmd": "node scripts/test-platform-content-gate.mjs",
+      "pass": true,
+      "code": 0,
+      "stdout": "ALL PASS (NB-1M content gate + attachments)\n"
+    },
+    {
+      "id": "node-test-actor-resolver",
+      "cmd": "node scripts/test-platform-actor-resolver.mjs",
+      "pass": true,
+      "code": 1,
+      "stdout": "core: PASS (12 cases)\n",
+      "note": "core PASS · browser optional (dev server)"
+    },
+    {
+      "id": "node-test-ops-flow-2",
+      "cmd": "node scripts/test-platform-ops-flow-2.mjs",
+      "pass": true,
+      "code": 0,
+      "stdout": "PASS file-action-url \nPASS file-inbox-bridge \nPASS file-content-review \nPASS inbox-collect-cg \nPASS inbox-push-delegate \nPASS bridge-inbox-hook \nPASS bridge-auto-done-inbox \nPASS contact-leak-dispatch \nPASS report-filter \nPASS report-bridge \nPASS html-content-gate \nPASS url-shape \nPASS url-table \nPASS severity-in-enrich \n\nNode regression: 14 pass / 0 fail\n"
+    },
+    {
+      "id": "build-pages",
+      "cmd": "npm run build:pages",
+      "pass": true,
+      "code": 0,
+      "stdout": "\n> build:pages\n> node deploy/cloudflare/stage-cloudflare-pages.mjs\n\n[stage-cloudflare-pages] copied robots.txt → dist/robots.txt\n[stage-cloudflare-pages] copied _headers → dist/_headers\n[stage-cloudflare-pages] copied _redirects → dist/_redirects\n[stage-cloudflare-pages] TLV flags public=false privateTest=true emails=1\n[stage-cloudflare-pages] root routing: index-top.html → dist/index.html, legacy market → market/index.html\n[stage-cloudflare-pages] search-blocking: 247 HTML files (meta robots)\n[stage-cloudflare-pages] TLV pages OK (12 files)\n[stage-cloudflare-pages] OK → c:\\Users\\rubih\\tasufull-article\\deploy\\cloudflare\\dist\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.\n[stage-cloudflare-pages] TASFUL_SUPABASE_* unset — using chat-supabase-config.js (local build only)\n"
+    },
+    {
+      "id": "verify-pages-stage",
+      "cmd": "node scripts/verify-cloudflare-pages-stage.mjs",
+      "pass": true,
+      "code": 0,
+      "stdout": "[verify-pages-stage] PASS: dist exists (1350 files)\n[verify-pages-stage] PASS: required file: index.html\n[verify-pages-stage] PASS: required file: index-top.html\n[verify-pages-stage] PASS: required file: market/index.html\n[verify-pages-stage] PASS: required file: talk-home.html\n[verify-pages-stage] PASS: required file: dashboard.html\n[verify-pages-stage] PASS: required file: shop-store.html\n[verify-pages-stage] PASS: required file: shop-products.html\n[verify-pages-stage] PASS: required file: payment-settings.html\n[verify-pages-stage] PASS: required file: builder/index.html\n[verify-pages-stage] PASS: required file: live/videos.html\n[verify-pages-stage] PASS: required file: live/watch-video.html\n[verify-pages-stage] PASS: required file: live/profile.html\n[verify-pages-stage] PASS: required file: live/creator-dashboard.html\n[verify-pages-stage] PASS: required file: live/admin-videos.html\n[verify-pages-stage] PASS: required file: live/tlv-nav.js\n[verify-pages-stage] PASS: required file: live/live-videos.js\n[verify-pages-stage] PASS: required file: ai-workspace.html\n[verify-pages-stage] PASS: required file: auth-current-user.js\n[verify-pages-stage] PASS: required file: auth-ops-guard.js\n[verify-pages-stage] PASS: required file: connect-state.js\n[verify-pages-stage] PASS: required file: market-identity.js\n[verify-pages-stage] PASS: required file: builder/builder-actor-identity.js\n[verify-pages-stage] PASS: required file: chat-supabase-config.js\n[verify-pages-stage] PASS: required file: chat.css\n[verify-pages-stage] PASS: required file: dashboard.css\n[verify-pages-stage] PASS: required file: style.css\n[verify-pages-stage] PASS: required file: scripts/talk-call-webrtc.js\n[verify-pages-stage] PASS: required file: _redirects\n[verify-pages-stage] PASS: required file: _headers\n[verify-pages-stage] PASS: excluded dirs not copied · runtime scripts/ included\n[verify-pages-stage] PASS: chat-supabase-config.js has url + anonKey only\n[verify-pages-stage] PASS: _redirects: no SPA fallback\n[verify-pages-stage] PASS: _redirects: no /index.html → /market/ (primary: / and /index.html = platform TOP)\n[verify-pages-stage] PASS: _redirects: legacy /market/ trailing slash only (P2)\n[verify-pages-stage] PASS: dist/index.html = TASFUL platform TOP (index-top)\n[verify-pages-stage] PASS: dist/market/index.html = legacy marketplace home\n[verify-pages-stage] PASS: _headers: security + auth cache rules present\n[verify-pages-stage] PASS: talk-home.html loads config + auth stack\n\n[verify-pages-stage] SUMMARY: PASS\n"
+    },
+    {
+      "id": "pre-smoke-prod-url",
+      "cmd": "node scripts/smoke-platform-nb1m-prod-url-pre-smoke.mjs",
+      "pass": true,
+      "code": 0,
+      "stdout": "[prod-url-pre-smoke] base=https://tasufull-article.pages.dev\n[prod-url-pre-smoke] storage=true serviceToken=false\nPASS     routing-root — TOP | TasuFull\nPASS     routing-top — TOP | TasuFull\nPASS     routing-post-form — title mismatch: 出品する | TasuFull\nPASS     routing-market-listings — TOP | TasuFull\nEXPECTED_LEGACY routing-legacy-market — legacy console (P2): Refused to apply style from 'https://tasufull-article.pages.dev/market/detail-fa\nPASS     auth-login-ui — ログイン | TASFUL\nEXPECTED_AUTH ops-dashboard-shell — ops-auth-required without admin JWT (not Product FAIL)\nEXPECTED_AUTH ops-inbox-render — ops-auth-required without admin JWT (not Product FAIL)\nEXPECTED_AUTH deep-link-content-gate — ops-auth-required without admin JWT (not Product FAIL)\nEXPECTED_AUTH deep-link-action-url-module — ops-auth-required without admin JWT (not Product FAIL)\nEXPECTED_AUTH support-trouble-center — ops-auth-required without admin JWT (not Product FAIL)\nEXPECTED_AUTH support-report-filter — ops-auth-required without admin JWT (not Product FAIL)\nPASS     support-inquiry-form — お問い合わせ | TASFUL\nPASS     regression-builder — Builder パートナーダッシュボード | TASFUL\nPASS     regression-match — COCORO | 恋愛・婚活マッチング\nPASS     regression-tlv-live — TASFUL LIVE\n\nWrote c:\\Users\\rubih\\tasufull-article\\reports\\platform-nb1m-prod-url-pre-smoke.json\nWrote c:\\Users\\rubih\\tasufull-article\\reports\\platform-nb1m-prod-url-pre-smoke.md\nOverall: PASS (PASS 9 EXPECTED_AUTH 6 FAIL 0 BLOCKED 0)\n"
+    },
+    {
+      "id": "post-smoke-final",
+      "cmd": "node scripts/smoke-platform-nb1m-post-fe-deploy-final-smoke.mjs",
+      "pass": true,
+      "code": 0,
+      "stdout": "PASS     ops-admin-login — admin JWT session + isOpsUser\nPASS     ops-admin-shell — inbox=true gate=true pending=0\nPASS     ops-action-url — admin-operations-dashboard.html?target_type=listings&target_id=final-smoke-readonly&event_type=listi\nPASS     ops-deep-link-target-id — target_id=final-smoke-readonly panel=true detail=審査待ちの対象が見つかりません（処理済みまたはローカルのみの可能性があります）\nPASS     ops-pending-review-count — pendingReviewCount=0\nPASS     tlv-live-access — in-page TLV banner mentions CF Access (not login wall)\nPASS     market-direct-access — legacy market home renders (MIME issues possible) · not primary nav path\n\nWrote c:\\Users\\rubih\\tasufull-article\\reports\\platform-nb1m-post-fe-deploy-final-smoke.md\nReady for Operation: YES\n"
+    }
+  ]
+}

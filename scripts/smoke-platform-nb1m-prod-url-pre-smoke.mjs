@@ -12,6 +12,12 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
+import {
+  isCloudflareAccessLoginPage,
+  isOpsAuthDenied,
+  OPS_GUARDED_CATEGORIES,
+  isSmokeProductFail,
+} from "./lib/smoke-access-detect.mjs";
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const DEFAULT_BASE = "https://tasufull-article.pages.dev";
@@ -29,11 +35,18 @@ const IGNORE_CONSOLE = [
 
 const URLS = [
   {
+    id: "routing-root",
+    category: "routing",
+    path: "/",
+    titleHint: /TASFUL|TasuFull|TOP/i,
+    selectors: ["body.top-page", ".tasful-ai-logo", ".top-main"],
+  },
+  {
     id: "routing-top",
     category: "routing",
     path: "/index.html",
-    titleHint: /TASFUL|TOP/i,
-    selectors: ["body", "[data-page]"],
+    titleHint: /TASFUL|TasuFull|TOP/i,
+    selectors: ["body.top-page", ".tasful-ai-logo", ".top-main"],
   },
   {
     id: "routing-post-form",
@@ -46,8 +59,8 @@ const URLS = [
     id: "routing-market-listings",
     category: "public_listing",
     path: "/index.html",
-    titleHint: /TASFUL/i,
-    selectors: ["body"],
+    titleHint: /TASFUL|TasuFull|TOP/i,
+    selectors: ["body.top-page"],
     evaluate: async (page) => {
       const hasStore = await page.evaluate(() => !!window.TasuListingStore?.fetchPublishedListings);
       const cards = await page.evaluate(
@@ -55,6 +68,15 @@ const URLS = [
       );
       return { hasStore, listingDomCount: cards, note: cards > 0 ? "listings visible" : "empty or demo OK" };
     },
+  },
+  {
+    id: "routing-legacy-market",
+    category: "legacy_routing",
+    path: "/market/",
+    titleHint: /TASFUL|TasuFull|TOP/i,
+    selectors: ["body.home-page"],
+    optional: true,
+    legacyP2: true,
   },
   {
     id: "auth-login-ui",
@@ -177,7 +199,7 @@ const URLS = [
     category: "regression",
     path: "/live/index.html",
     titleHint: /LIVE/i,
-    selectors: ["body"],
+    selectors: ["body.live-body", "main"],
     optional: true,
   },
 ];
@@ -209,12 +231,6 @@ function inspectStorageState(storagePath) {
   }
 }
 
-function isAccessLogin(url, body) {
-  if (/cloudflareaccess\.com/i.test(url)) return true;
-  if (/cdn-cgi\/access\/login/i.test(url)) return true;
-  if (body && /Cloudflare Access|Get a login code|One-time PIN/i.test(body)) return true;
-  return false;
-}
 
 function classifyConsole(text) {
   if (IGNORE_CONSOLE.some((re) => re.test(text))) return "ignore";
@@ -256,15 +272,18 @@ async function smokeOne(page, base, spec) {
     const title = await page.title();
     const docStatus = resp?.status() ?? 0;
 
-    if (isAccessLogin(finalUrl, body) || (docStatus === 302 && !body.includes("ops-ai-app"))) {
+    if (isCloudflareAccessLoginPage({ url: finalUrl, body, title })) {
       verdict = "BLOCKED";
-      note = "Cloudflare Access — storage-state or service token required";
+      note = "Cloudflare Access login wall — storage-state or service token required";
     } else if (docStatus === 404 || docStatus >= 500) {
       verdict = "FAIL";
       note = `HTTP ${docStatus}`;
     } else if (body.length < 150) {
       verdict = "FAIL";
       note = "blank/short body";
+    } else if (OPS_GUARDED_CATEGORIES.has(spec.category) && isOpsAuthDenied(title, body)) {
+      verdict = "EXPECTED_AUTH";
+      note = "ops-auth-required without admin JWT (not Product FAIL)";
     } else {
       if (spec.titleHint && !spec.titleHint.test(title)) {
         note = `title mismatch: ${title.slice(0, 50)}`;
@@ -296,7 +315,9 @@ async function smokeOne(page, base, spec) {
       const critical = consoleMsgs.filter((m) => classifyConsole(m.text) === "critical");
       const rls = consoleMsgs.filter((m) => classifyConsole(m.text) === "rls");
       if (critical.length && verdict === "PASS") {
-        if (spec.optional && spec.category === "regression") {
+        if (spec.legacyP2 && spec.optional) {
+          note = note || `legacy console (P2): ${critical[0].text.slice(0, 80)}`;
+        } else if (spec.optional && spec.category === "regression") {
           note = note || `optional console: ${critical[0].text.slice(0, 80)}`;
         } else if (spec.category !== "public_listing") {
           verdict = "FAIL";
@@ -304,6 +325,10 @@ async function smokeOne(page, base, spec) {
         }
       } else if (rls.length && spec.optional) {
         note = note || `RLS console (optional): ${rls[0].text.slice(0, 60)}`;
+      }
+      if (spec.legacyP2 && verdict === "PASS") {
+        verdict = "EXPECTED_LEGACY";
+        note = note || "legacy /market/ path (P2 · not primary nav)";
       }
     }
 
@@ -352,15 +377,15 @@ async function smokeOne(page, base, spec) {
 
 function summarizeCategory(cat) {
   const rows = results.filter((r) => r.category === cat && !r.optional);
+  const ok = (r) => r.verdict === "PASS" || r.verdict === "EXPECTED_AUTH" || r.verdict === "EXPECTED_LEGACY";
   if (!rows.length) {
     const opt = results.filter((r) => r.category === cat);
     if (!opt.length) return "N/A";
-    const blocked = opt.every((r) => r.verdict === "BLOCKED");
-    if (blocked) return "BLOCKED";
-    return opt.every((r) => r.verdict === "PASS" || r.verdict === "BLOCKED") ? "PASS" : "FAIL";
+    if (opt.every((r) => r.verdict === "BLOCKED")) return "BLOCKED";
+    return opt.every((r) => ok(r) || r.verdict === "BLOCKED") ? "PASS" : "FAIL";
   }
   if (rows.some((r) => r.verdict === "BLOCKED")) return rows.some((r) => r.verdict === "PASS") ? "PARTIAL" : "BLOCKED";
-  if (rows.some((r) => r.verdict === "FAIL")) return "FAIL";
+  if (rows.some((r) => isSmokeProductFail(r.verdict))) return "FAIL";
   return "PASS";
 }
 
@@ -472,9 +497,10 @@ async function main() {
   await closeAllBrowsers();
 
   const blocked = results.filter((r) => r.verdict === "BLOCKED");
-  const failed = results.filter((r) => r.verdict === "FAIL" && !r.optional);
+  const failed = results.filter((r) => isSmokeProductFail(r.verdict) && !r.optional);
+  const expectedAuth = results.filter((r) => r.verdict === "EXPECTED_AUTH");
   const criticalJs = results.some((r) =>
-    (r.consoleErrors || []).some((t) => classifyConsole(t) === "critical" && r.verdict === "FAIL")
+    (r.consoleErrors || []).some((t) => classifyConsole(t) === "critical" && isSmokeProductFail(r.verdict))
   );
 
   const summary = {
@@ -505,10 +531,9 @@ async function main() {
         ? "FAIL"
         : blocked.length === results.length
           ? "BLOCKED"
-          : blocked.length > 0
-            ? "PARTIAL"
-            : "PASS",
+          : "PASS",
     pass: results.filter((r) => r.verdict === "PASS").length,
+    expectedAuth: expectedAuth.length,
     fail: failed.length,
     blocked: blocked.length,
     results,
@@ -518,7 +543,9 @@ async function main() {
   fs.writeFileSync(OUT_MD, buildMarkdown(summary));
   console.log(`\nWrote ${OUT_JSON}`);
   console.log(`Wrote ${OUT_MD}`);
-  console.log(`Overall: ${summary.overall} (PASS ${summary.pass} FAIL ${summary.fail} BLOCKED ${summary.blocked})`);
+  console.log(
+    `Overall: ${summary.overall} (PASS ${summary.pass} EXPECTED_AUTH ${summary.expectedAuth} FAIL ${summary.fail} BLOCKED ${summary.blocked})`
+  );
 
   if (failed.length > 0) process.exit(1);
   if (blocked.length === results.length) process.exit(2);

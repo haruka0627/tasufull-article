@@ -9,6 +9,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
+import { isCloudflareAccessLoginPage } from "./lib/smoke-access-detect.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -19,11 +20,10 @@ const MAX_WAIT_MS = 15 * 60 * 1000;
 
 async function isAuthed(page) {
   const url = page.url();
-  if (/cloudflareaccess\.com/i.test(url)) return false;
-  if (/cdn-cgi\/access\/login/i.test(url)) return false;
   if (!/tasufull-article\.pages\.dev/i.test(url)) return false;
   const body = await page.content();
-  if (/Cloudflare Access|Get a login code|One-time PIN/i.test(body)) return false;
+  const title = await page.title();
+  if (isCloudflareAccessLoginPage({ url, body, title })) return false;
   return body.length > 500;
 }
 

@@ -1,0 +1,384 @@
+{
+  "at": "2026-06-25T21:01:57.034Z",
+  "base": "https://tasufull-article.pages.dev",
+  "hasStorage": true,
+  "hasServiceToken": false,
+  "storageExpired": false,
+  "storageExpiresAt": "2026-06-26T20:21:21.000Z",
+  "routing": "PASS",
+  "auth": "PASS",
+  "inbox": "PASS",
+  "deep_link": "PASS",
+  "public_listing": "PASS",
+  "support": "PASS",
+  "report": "PASS",
+  "jsErrors": "NONE",
+  "noGoDelta": "NO",
+  "overall": "PASS",
+  "pass": 9,
+  "expectedAuth": 6,
+  "fail": 0,
+  "blocked": 0,
+  "results": [
+    {
+      "id": "routing-root",
+      "category": "routing",
+      "url": "/",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/",
+      "title": "TOP | TasuFull",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/",
+        "status": 200
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/routing-root.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "routing-top",
+      "category": "routing",
+      "url": "/index.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/",
+      "title": "TOP | TasuFull",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/index.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/routing-top.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "routing-post-form",
+      "category": "routing",
+      "url": "/post.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/post",
+      "title": "出品する | TasuFull",
+      "note": "title mismatch: 出品する | TasuFull",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/post.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/routing-post-form.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "routing-market-listings",
+      "category": "public_listing",
+      "url": "/index.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/",
+      "title": "TOP | TasuFull",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/index.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/routing-market-listings.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "routing-legacy-market",
+      "category": "legacy_routing",
+      "url": "/market/",
+      "verdict": "EXPECTED_LEGACY",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/market/",
+      "title": "TOP | TASFUL",
+      "note": "legacy console (P2): Refused to apply style from 'https://tasufull-article.pages.dev/market/detail-fa",
+      "consoleErrors": [
+        "Refused to apply style from 'https://tasufull-article.pages.dev/market/detail-favorites.css' because its MIME type ('text/html') is not a supported st",
+        "Refused to apply style from 'https://tasufull-article.pages.dev/market/tasful-ai-logo.css?v=4' because its MIME type ('text/html') is not a supported ",
+        "Refused to apply style from 'https://tasufull-article.pages.dev/market/seller-rank-plate.css' because its MIME type ('text/html') is not a supported s",
+        "Refused to apply style from 'https://tasufull-article.pages.dev/market/index-home.css' because its MIME type ('text/html') is not a supported styleshe",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/chat-supabase-config.js' because its MIME type ('text/html') is not executab",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/supabase-public-key.js' because its MIME type ('text/html') is not executabl",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/tasu-supabase-client.js' because its MIME type ('text/html') is not executab",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/chat-user-identity.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/favorites-db.js' because its MIME type ('text/html') is not executable, and ",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/detail-favorites.js' because its MIME type ('text/html') is not executable, ",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/listing-tags.js' because its MIME type ('text/html') is not executable, and ",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/listing-images.js' because its MIME type ('text/html') is not executable, an",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/product-listing-fields.js' because its MIME type ('text/html') is not execut",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/listing-seller-profile.js' because its MIME type ('text/html') is not execut",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/stripe-featured-config.js' because its MIME type ('text/html') is not execut",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/listing-featured.js' because its MIME type ('text/html') is not executable, ",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/listing-renderer.js' because its MIME type ('text/html') is not executable, ",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/listings-db.js' because its MIME type ('text/html') is not executable, and s",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/market/index-home.js' because its MIME type ('text/html') is not executable, and st"
+      ],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/market/",
+        "status": 200
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/routing-legacy-market.png",
+      "optional": true,
+      "readOnly": true
+    },
+    {
+      "id": "auth-login-ui",
+      "category": "auth",
+      "url": "/login.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/login",
+      "title": "ログイン | TASFUL",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/login.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/auth-login-ui.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "ops-dashboard-shell",
+      "category": "inbox",
+      "url": "/admin-operations-dashboard.html",
+      "verdict": "EXPECTED_AUTH",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/admin-operations-dashboard",
+      "title": "403 | TASFUL",
+      "note": "ops-auth-required without admin JWT (not Product FAIL)",
+      "consoleErrors": [
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase2.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase3.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase4.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase5.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase6.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-modes.js' because its MIME type ('text/html') is not executable,",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase7.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase8.js' because its MIME type ('text/html') is not executable",
+        "Access to fetch at 'https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/serper-search' from origin 'https://tasufull-article.pages.dev' has been blo",
+        "Failed to load resource: net::ERR_FAILED",
+        "Failed to load resource: the server responded with a status of 400 ()",
+        "Failed to load resource: the server responded with a status of 400 ()"
+      ],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/admin-operations-dashboard.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/ops-dashboard-shell.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "ops-inbox-render",
+      "category": "inbox",
+      "url": "/admin-operations-dashboard.html",
+      "verdict": "EXPECTED_AUTH",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/admin-operations-dashboard",
+      "title": "403 | TASFUL",
+      "note": "ops-auth-required without admin JWT (not Product FAIL)",
+      "consoleErrors": [
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase2.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase3.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase4.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase5.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase6.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-modes.js' because its MIME type ('text/html') is not executable,",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase7.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase8.js' because its MIME type ('text/html') is not executable",
+        "Failed to load resource: the server responded with a status of 400 ()",
+        "Failed to load resource: the server responded with a status of 400 ()",
+        "Access to fetch at 'https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/serper-search' from origin 'https://tasufull-article.pages.dev' has been blo",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/admin-operations-dashboard.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/ops-inbox-render.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "deep-link-content-gate",
+      "category": "deep_link",
+      "url": "/admin-operations-dashboard.html?target_type=listings&target_id=pre-smoke-readonly&event_type=listing.flagged#ops-content-gate",
+      "verdict": "EXPECTED_AUTH",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/admin-operations-dashboard?target_type=listings&target_id=pre-smoke-readonly&event_ty",
+      "title": "403 | TASFUL",
+      "note": "ops-auth-required without admin JWT (not Product FAIL)",
+      "consoleErrors": [
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase2.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase3.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase4.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase5.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase6.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-modes.js' because its MIME type ('text/html') is not executable,",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase7.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase8.js' because its MIME type ('text/html') is not executable",
+        "Failed to load resource: the server responded with a status of 400 ()",
+        "Failed to load resource: the server responded with a status of 400 ()",
+        "Access to fetch at 'https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/serper-search' from origin 'https://tasufull-article.pages.dev' has been blo",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/admin-operations-dashboard.html?target_type=listings&target_id=pre-smoke-readonly&event_type=listing.flagged",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/deep-link-content-gate.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "deep-link-action-url-module",
+      "category": "deep_link",
+      "url": "/admin-operations-dashboard.html",
+      "verdict": "EXPECTED_AUTH",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/admin-operations-dashboard",
+      "title": "403 | TASFUL",
+      "note": "ops-auth-required without admin JWT (not Product FAIL)",
+      "consoleErrors": [
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase2.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase3.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase4.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase5.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase6.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-modes.js' because its MIME type ('text/html') is not executable,",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase7.js' because its MIME type ('text/html') is not executable",
+        "Refused to execute script from 'https://tasufull-article.pages.dev/admin-ai-secretary-phase8.js' because its MIME type ('text/html') is not executable",
+        "Failed to load resource: the server responded with a status of 400 ()",
+        "Failed to load resource: the server responded with a status of 400 ()",
+        "Access to fetch at 'https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/serper-search' from origin 'https://tasufull-article.pages.dev' has been blo",
+        "Failed to load resource: net::ERR_FAILED"
+      ],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/admin-operations-dashboard.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/deep-link-action-url-module.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "support-trouble-center",
+      "category": "support",
+      "url": "/support-trouble-center.html",
+      "verdict": "EXPECTED_AUTH",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/support-trouble-center",
+      "title": "403 | TASFUL",
+      "note": "ops-auth-required without admin JWT (not Product FAIL)",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/support-trouble-center.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/support-trouble-center.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "support-report-filter",
+      "category": "report",
+      "url": "/support-trouble-center.html?filter=report",
+      "verdict": "EXPECTED_AUTH",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/support-trouble-center?filter=report",
+      "title": "403 | TASFUL",
+      "note": "ops-auth-required without admin JWT (not Product FAIL)",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/support-trouble-center.html?filter=report",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/support-report-filter.png",
+      "optional": false,
+      "readOnly": true
+    },
+    {
+      "id": "support-inquiry-form",
+      "category": "support",
+      "url": "/support-intake.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/support-intake",
+      "title": "お問い合わせ | TASFUL",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/support-intake.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/support-inquiry-form.png",
+      "optional": true,
+      "readOnly": true
+    },
+    {
+      "id": "regression-builder",
+      "category": "regression",
+      "url": "/builder/index.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/builder/",
+      "title": "Builder パートナーダッシュボード | TASFUL",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/builder/index.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/regression-builder.png",
+      "optional": true,
+      "readOnly": true
+    },
+    {
+      "id": "regression-match",
+      "category": "regression",
+      "url": "/match/match-top.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/match/match-top",
+      "title": "COCORO | 恋愛・婚活マッチング",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/match/match-top.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/regression-match.png",
+      "optional": true,
+      "readOnly": true
+    },
+    {
+      "id": "regression-tlv-live",
+      "category": "regression",
+      "url": "/live/index.html",
+      "verdict": "PASS",
+      "docStatus": 200,
+      "finalUrl": "https://tasufull-article.pages.dev/live/",
+      "title": "TASFUL LIVE",
+      "note": "",
+      "consoleErrors": [],
+      "networkDocument": {
+        "url": "https://tasufull-article.pages.dev/live/index.html",
+        "status": 308
+      },
+      "screenshot": "reports/platform-nb1m-prod-url-pre-smoke-screenshots/regression-tlv-live.png",
+      "optional": true,
+      "readOnly": true
+    }
+  ]
+}
