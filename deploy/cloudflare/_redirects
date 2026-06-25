@@ -11,6 +11,6 @@
 # builder ディレクトリ（trailing slash なしアクセス）
 /builder            /builder/         301
 
-# Legacy marketplace home (repo index.html) — root / is TASFUL platform TOP (index-top.html)
-/index.html         /market/          301
+# Legacy marketplace home lives at /market/ (build copies repo index.html → market/index.html).
+# Do NOT redirect /index.html → /market/ — dist/index.html is platform TOP (index-top.html).
 /market             /market/          301
