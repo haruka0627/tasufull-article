@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <meta name="theme-color" content="#0b0814" />
-  <title>????? | TASFUL LIVE</title>
+  <title>チャンネル | TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -19,7 +19,7 @@
       <div data-tlv-desktop-topbar-mount></div>
       <main class="tlv-desktop-content tlv-desktop-content--profile">
         <div data-live-profile-root data-live-profile-root-desktop>
-          <p class="live-loading">??????</p>
+          <p class="live-loading">読み込み中…</p>
         </div>
       </main>
     </div>
@@ -29,7 +29,7 @@
     <div data-tlv-mobile-header-mount></div>
     <main class="tlv-mobile-content tlv-mobile-content--profile">
       <div data-live-profile-root-mobile>
-        <p class="live-loading">??????</p>
+        <p class="live-loading">読み込み中…</p>
       </div>
     </main>
     <div data-tlv-mobile-tabbar-mount></div>
@@ -79,15 +79,15 @@
           mobileHeaderOptions: {
             showUpload: isOwn,
             backHref: isOwn ? "my-videos.html" : "videos.html",
-            backLabel: isOwn ? "?E????E?" : "?E??",
+            backLabel: isOwn ? "\u2190 \u30de\u30a4\u30da\u30fc\u30b8" : "\u2190 \u52d5\u753b",
           },
         });
       } else {
         nav?.initPageShell?.({
           desktopNavId: isOwn ? "mypage" : "videos",
           mobileTabId: isOwn ? "my" : "view",
-          topbarTitle: "?????",
-          mobileHeaderTitle: "?????",
+          topbarTitle: "チャンネル",
+          mobileHeaderTitle: "チャンネル",
           mobileHeaderOptions: {
             showUpload: isOwn,
             backHref: isOwn ? "my-videos.html" : "videos.html",
