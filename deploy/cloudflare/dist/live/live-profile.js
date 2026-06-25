@@ -6,8 +6,10 @@
 
   const C = () => global.TasuLiveConfig;
 
-  /** UI確認用デモ（false で実データ） */
-  const PROFILE_DEMO_MODE = true;
+  /** UI確認用デモ（localhost のみ。本番は実データ） */
+  function isProfileDemoMode() {
+    return Boolean(global.TasuTlvDevAuth?.isLocalTlvDevHost?.());
+  }
 
   const DEMO_PLAYLIST_META = Object.freeze({
     "watch-later": { count: 28, collageTones: ["finance", "sports", "music", "tech"] },
@@ -313,7 +315,7 @@
   }
 
   function applyDemoPlaylistMeta(playlist, meta) {
-    if (!PROFILE_DEMO_MODE) return meta;
+    if (!isProfileDemoMode()) return meta;
     const demo = DEMO_PLAYLIST_META[playlist.id];
     if (!demo) return meta;
     return {
@@ -539,7 +541,7 @@
   }
 
   async function renderPostsTabHtml(creatorUserId, isOwn, query = "") {
-    if (PROFILE_DEMO_MODE) {
+    if (isProfileDemoMode()) {
       const sections = filterDemoPostsSections(query);
       return renderPostsSectionsHtml(sections, { showEmpty: false });
     }
@@ -746,7 +748,7 @@
     const params = new URLSearchParams(global.location?.search || "");
     const tabParam = String(params.get("tab") || "").trim();
     const initialTab = tabParam === "posts" ? "posts" : "playlists";
-    const bundle = PROFILE_DEMO_MODE
+    const bundle = isProfileDemoMode()
       ? buildDemoPlaylistBundle()
       : await fetchChannelPlaylistBundle(creatorUserId, isOwn);
     const playlists = buildChannelPlaylists(creatorUserId, isOwn);
@@ -789,7 +791,7 @@
         console.warn("[TasuLiveProfile] channel stats skipped:", statsErr);
       }
 
-      if (PROFILE_DEMO_MODE) {
+      if (isProfileDemoMode()) {
         stats = { ...stats, videoCount: DEMO_PLAYLIST_META.videos.count };
       }
 
@@ -956,6 +958,6 @@
     readUserCreatedPlaylists,
     fetchChannelPlaylistBundle,
     resolvePlaylistCountMeta,
-    PROFILE_DEMO_MODE,
+    isProfileDemoMode,
   };
 })(typeof window !== "undefined" ? window : globalThis);

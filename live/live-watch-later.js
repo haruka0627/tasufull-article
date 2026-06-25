@@ -6,7 +6,9 @@
 
   const C = () => global.TasuLiveConfig;
   const WATCH_LATER_STORAGE_KEY = "tlv_watch_later_v1";
-  const DEMO_MODE = true;
+  function isDemoMode() {
+    return Boolean(global.TasuTlvDevAuth?.isLocalTlvDevHost?.());
+  }
   let openMenuVideoId = "";
   let documentMenuBound = false;
 
@@ -213,7 +215,7 @@
   }
 
   function isDemoDisplayActive() {
-    return DEMO_MODE && readStoredItems().length === 0;
+    return isDemoMode() && readStoredItems().length === 0;
   }
 
   function buildDemoItems() {
@@ -270,7 +272,7 @@
   async function loadWatchLaterItems() {
     const stored = readStoredItems();
     if (stored.length) return resolveItems(stored);
-    if (DEMO_MODE) return buildDemoItems();
+    if (isDemoMode()) return buildDemoItems();
     const cfg = C();
     if (cfg?.isTalkDevStubMode?.() === true) {
       const stub = await buildStubItems();
@@ -665,6 +667,6 @@
     addVideoToWatchLater,
     readStoredItems,
     WATCH_LATER_STORAGE_KEY,
-    DEMO_MODE,
+    isDemoMode,
   };
 })(typeof window !== "undefined" ? window : globalThis);

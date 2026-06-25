@@ -42,9 +42,11 @@
     if (!id) return null;
     if (isStubBroadcastId(id) && cfg.isTalkDevStubMode()) return { ...STUB_BROADCAST };
 
+    const client = cfg.getClient?.();
+    if (!client) return null;
+
     await cfg.ensureSupabaseSession();
-    const { data, error } = await cfg
-      .getClient()
+    const { data, error } = await client
       .from(cfg.TABLES.broadcasts)
       .select("*")
       .eq("id", id)

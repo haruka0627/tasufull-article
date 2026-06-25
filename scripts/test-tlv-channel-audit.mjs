@@ -106,7 +106,7 @@ const browser = await chromium.launch();
   );
 
   // Follow button test (logged in as u_me following u_creator)
-  const followBtn = page.locator("[data-live-follow-btn]");
+  const followBtn = page.locator("[data-live-follow-btn]:visible").first();
   if (await followBtn.count()) {
     const before = await followBtn.getAttribute("data-following");
     await followBtn.click();

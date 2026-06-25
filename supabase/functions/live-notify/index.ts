@@ -13,6 +13,7 @@ import {
   getBearerToken,
   requireTalkUser,
   TalkRoomFunctionError,
+  isOpsOrAdminFromClaims,
 } from "../_shared/talk-room-auth.ts";
 
 const NOTIFY_TYPE = "live";
@@ -693,6 +694,9 @@ export async function handler(req: Request): Promise<Response> {
         result = await handleVideoPublished(supabase, auth.talkUserId, payload);
         break;
       case "system":
+        if (!isOpsOrAdminFromClaims(auth.claims)) {
+          throw new TalkRoomFunctionError("forbidden", "Ops access required", 403);
+        }
         result = await handleSystem(supabase, auth.talkUserId, payload);
         break;
       case "like_changed":

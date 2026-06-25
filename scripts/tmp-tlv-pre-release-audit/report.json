@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T00:58:11.381Z",
+  "generatedAt": "2026-06-25T01:35:26.596Z",
   "layoutResults": [
     {
       "page": "videos",
@@ -780,33 +780,8 @@
   ],
   "consoleSummary": {
     "totalPages": 36,
-    "badCount": 3,
-    "bad": [
-      {
-        "page": "watch-live",
-        "width": 390,
-        "type": "error",
-        "text": "[TasuLiveBroadcasts] watch TypeError: Cannot read properties of null (reading 'from')\n    at fetchBroadcastById (http://127.0.0.1:8788/live/live-broadcasts.js:48:7)\n    at async Object.mountWatchPage (http://127.0.0.1:8788/live/live-broadcasts.js:247:25)",
-        "benign": false,
-        "reason": null
-      },
-      {
-        "page": "watch-live",
-        "width": 768,
-        "type": "error",
-        "text": "[TasuLiveBroadcasts] watch TypeError: Cannot read properties of null (reading 'from')\n    at fetchBroadcastById (http://127.0.0.1:8788/live/live-broadcasts.js:48:7)\n    at async Object.mountWatchPage (http://127.0.0.1:8788/live/live-broadcasts.js:247:25)",
-        "benign": false,
-        "reason": null
-      },
-      {
-        "page": "watch-live",
-        "width": 1280,
-        "type": "error",
-        "text": "[TasuLiveBroadcasts] watch TypeError: Cannot read properties of null (reading 'from')\n    at fetchBroadcastById (http://127.0.0.1:8788/live/live-broadcasts.js:48:7)\n    at async Object.mountWatchPage (http://127.0.0.1:8788/live/live-broadcasts.js:247:25)",
-        "benign": false,
-        "reason": null
-      }
-    ],
+    "badCount": 0,
+    "bad": [],
     "benignSamples": [
       "Refused to execute script from 'http://127.0.0.1:8788/chat-supabase-config.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",
       "Refused to execute script from 'http://127.0.0.1:8788/talk-runtime.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled.",

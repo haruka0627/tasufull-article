@@ -67,6 +67,19 @@ function readTalkUserIdFromClaims(claims: Record<string, unknown>): string {
   );
 }
 
+/** JWT claims から運営権限（tasu_admin / match_admin / is_ops）を判定 */
+export function isOpsOrAdminFromClaims(claims: Record<string, unknown>): boolean {
+  const appMeta =
+    claims.app_metadata && typeof claims.app_metadata === "object" && !Array.isArray(claims.app_metadata)
+      ? (claims.app_metadata as Record<string, unknown>)
+      : {};
+  const role = pickString(appMeta.role, appMeta.platform_role, claims.role).toLowerCase();
+  const isOpsRaw = appMeta.is_ops ?? claims.is_ops;
+  const isOps =
+    isOpsRaw === true || String(isOpsRaw ?? "").trim().toLowerCase() === "true";
+  return role === "tasu_admin" || role === "match_admin" || isOps;
+}
+
 export function requireTalkUser(req: Request): TalkAuthUser {
   const token = getBearerToken(req);
   if (!token) {

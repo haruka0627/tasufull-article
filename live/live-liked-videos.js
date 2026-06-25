@@ -5,7 +5,9 @@
   "use strict";
 
   const C = () => global.TasuLiveConfig;
-  const DEMO_MODE = true;
+  function isDemoMode() {
+    return Boolean(global.TasuTlvDevAuth?.isLocalTlvDevHost?.());
+  }
   let openMenuKey = "";
   let documentMenuBound = false;
 
@@ -199,7 +201,7 @@
   }
 
   function isDemoDisplayActive(entries) {
-    return DEMO_MODE && Array.isArray(entries) && entries.length > 0 && entries.every((entry) => entry.isDemo);
+    return isDemoMode() && Array.isArray(entries) && entries.length > 0 && entries.every((entry) => entry.isDemo);
   }
 
   function buildDemoEntries() {
@@ -364,7 +366,7 @@
     }
 
     if (entries.length) return entries;
-    if (DEMO_MODE) return buildDemoEntries();
+    if (isDemoMode()) return buildDemoEntries();
     if (cfg?.isTalkDevStubMode?.() === true) return buildStubEntries();
     return [];
   }
@@ -826,6 +828,6 @@
   global.TasuLiveLikedVideos = {
     mountLikedVideosPage,
     loadLikedItems,
-    DEMO_MODE,
+    isDemoMode,
   };
 })(typeof window !== "undefined" ? window : globalThis);
