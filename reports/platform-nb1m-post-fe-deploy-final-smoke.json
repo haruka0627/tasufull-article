@@ -1,0 +1,118 @@
+{
+  "at": "2026-06-25T21:02:11.830Z",
+  "base": "https://tasufull-article.pages.dev",
+  "productionCommit": "83d3111",
+  "hasStorage": true,
+  "storageExpired": false,
+  "opsEmail": "t***@tasful-dev.test",
+  "opsLoginOk": true,
+  "opsLoginNote": "admin JWT session + isOpsUser",
+  "readyForOperation": "YES",
+  "noGo": "NO — NB-1M FE deploy verified",
+  "tlvClassification": "expected_private_test_gate_banner",
+  "tlvProductDefect": "NO (infra banner / smoke heuristic)",
+  "marketPriority": "P2 — legacy path · not primary nav",
+  "marketPrimaryPath": "Platform TOP `/` · `/index.html` → index-top · listings via index.html/shop-store",
+  "preSmokeDiffNote": "main(83d3111) vs local: routing-top selectors + ops 403 expected PASS. Recommend separate commit `chore(smoke): align prod pre-smoke with 83d3111 routing`.",
+  "blockersMd": "- （なし — operation ready）",
+  "priorityMd": "- **P1:** 運営 JWT 付き OPS Inbox 実表示（本 smoke で検証）\n- **P2:** `/market/` legacy 直アクセス MIME（主導線外 · routing-only fix 候補）\n- **P2:** pre-smoke TLV false BLOCKED 修正（smoke script only）",
+  "results": [
+    {
+      "id": "ops-admin-login",
+      "category": "ops_jwt",
+      "verdict": "PASS",
+      "note": "admin JWT session + isOpsUser",
+      "probe": {
+        "url": "https://tasufull-article.pages.dev/admin-operations-dashboard",
+        "title": "AI運営司令塔 | TASFUL 運営",
+        "hasSession": true,
+        "isOps": true,
+        "is403": false
+      }
+    },
+    {
+      "id": "ops-admin-shell",
+      "category": "ops_jwt",
+      "verdict": "PASS",
+      "note": "inbox=true gate=true pending=0",
+      "title": "AI運営司令塔 | TASFUL 運営",
+      "is403": false,
+      "hasInbox": true,
+      "hasContentGate": true,
+      "hasInboxSections": true,
+      "hasReviewModule": true,
+      "hasActionUrl": true,
+      "hasInboxModule": true,
+      "pendingReviewCount": 0,
+      "inboxItemCount": 26,
+      "summaryText": "要判断13件承認待ち13件自動処理済み0件"
+    },
+    {
+      "id": "ops-action-url",
+      "category": "ops_jwt",
+      "verdict": "PASS",
+      "note": "admin-operations-dashboard.html?target_type=listings&target_id=final-smoke-readonly&event_type=listi",
+      "ok": true,
+      "action_url": "admin-operations-dashboard.html?target_type=listings&target_id=final-smoke-readonly&event_type=listing.flagged&severity=warning#ops-content-gate"
+    },
+    {
+      "id": "ops-deep-link-target-id",
+      "category": "ops_jwt",
+      "verdict": "PASS",
+      "note": "target_id=final-smoke-readonly panel=true detail=審査待ちの対象が見つかりません（処理済みまたはローカルのみの可能性があります）",
+      "title": "AI運営司令塔 | TASFUL 運営",
+      "is403": false,
+      "hash": "#ops-content-gate",
+      "targetId": "final-smoke-readonly",
+      "hasPanel": true,
+      "hasReview": true,
+      "detailText": "審査待ちの対象が見つかりません（処理済みまたはローカルのみの可能性があります）",
+      "hasApproveBtn": false,
+      "hasRejectBtn": false
+    },
+    {
+      "id": "ops-pending-review-count",
+      "category": "ops_jwt",
+      "verdict": "PASS",
+      "note": "pendingReviewCount=0",
+      "pendingReviewCount": 0,
+      "inboxItemCount": 26
+    },
+    {
+      "id": "tlv-live-access",
+      "category": "tlv",
+      "verdict": "PASS",
+      "note": "in-page TLV banner mentions CF Access (not login wall)",
+      "finalUrl": "https://tasufull-article.pages.dev/live/",
+      "title": "TASFUL LIVE",
+      "classification": "expected_private_test_gate_banner",
+      "falsePositiveReason": "in-page TLV banner mentions CF Access (not login wall)",
+      "probe": {
+        "hasLiveHub": true,
+        "hasTlvBanner": true,
+        "bannerText": "\n      TLV 非公開本番テスト中\n      \n        検索エンジン・一般導線には公開していません。\n        tasufull-article.pages.dev · Cloudflare Access 認証が必要で",
+        "bodyClass": "live-body tlv-page"
+      },
+      "productDefect": false
+    },
+    {
+      "id": "market-direct-access",
+      "category": "routing",
+      "verdict": "PASS",
+      "note": "legacy market home renders (MIME issues possible) · not primary nav path",
+      "probe": {
+        "title": "TOP | TASFUL",
+        "path": "/market/",
+        "bodyClass": "home-page",
+        "isHomePage": true,
+        "cssCount": 5,
+        "scriptCount": 16,
+        "hasListingStore": false
+      },
+      "mimeErrorCount": 0,
+      "primaryNavUsesMarket": false,
+      "priority": "P2"
+    }
+  ],
+  "opsRows": "| ops-admin-login | PASS | admin JWT session + isOpsUser |\n| ops-admin-shell | PASS | inbox=true gate=true pending=0 |\n| ops-action-url | PASS | admin-operations-dashboard.html?target_type=listings&target_id=final-smoke-reado |\n| ops-deep-link-target-id | PASS | target_id=final-smoke-readonly panel=true detail=審査待ちの対象が見つかりません（処理済みまたはローカルのみの可 |\n| ops-pending-review-count | PASS | pendingReviewCount=0 |"
+}
