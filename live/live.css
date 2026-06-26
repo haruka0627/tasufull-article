@@ -11194,6 +11194,38 @@ body[data-page="live-studio-audio-library"] .tlv-studio-sidebar__footer .tlv-stu
   background: rgba(255, 255, 255, 0.12);
 }
 
+.tlv-tasful-ai-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.35), rgba(59, 130, 246, 0.22));
+  color: #f5f0ff;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tlv-tasful-ai-entry:hover {
+  border-color: rgba(196, 181, 253, 0.75);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(59, 130, 246, 0.32));
+  color: #fff;
+}
+
+.tlv-tasful-ai-entry--studio-mobile {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 0.75rem;
+}
+
+.tlv-tasful-ai-entry--videos-compact {
+  margin-right: 8px;
+}
+
 .tlv-studio-topbar__avatar {
   display: block;
   width: 32px;

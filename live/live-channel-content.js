@@ -1071,6 +1071,30 @@
     installStudioSettingsUi();
 
     syncStudioBrandLinks();
+
+    mountTasfulAiEntry("studio");
+  }
+
+  function mountTasfulAiEntry(kind) {
+    const run = () => {
+      if (kind === "videos") global.TasuTlvTasfulAiEntry?.mountVideosChrome?.();
+      else global.TasuTlvTasfulAiEntry?.init?.({ videos: false });
+    };
+    if (global.TasuTlvTasfulAiEntry) {
+      run();
+      return;
+    }
+    const loader = global.document.querySelector("script[data-tlv-tasful-ai-entry-loader]");
+    if (loader) {
+      loader.addEventListener("load", run, { once: true });
+      return;
+    }
+    const script = global.document.createElement("script");
+    script.src = "tlv-tasful-ai-entry.js";
+    script.defer = true;
+    script.setAttribute("data-tlv-tasful-ai-entry-loader", "");
+    script.addEventListener("load", run, { once: true });
+    global.document.head.appendChild(script);
   }
 
   if (typeof document !== "undefined") {
@@ -1412,6 +1436,7 @@
   global.TasuLiveChannelContent = {
     mountChannelContentPage,
     initStudioChrome,
+    mountTasfulAiEntry,
     resetStudioTop,
     syncStudioBrandLinks,
     STUDIO_BRAND_HREF,

@@ -1884,6 +1884,7 @@
     initCreateMenu();
     initNotificationsMenu();
     initAccountMenu();
+    global.TasuTlvTasfulAiEntry?.mountVideosChrome?.();
   }
 
   const api = {
