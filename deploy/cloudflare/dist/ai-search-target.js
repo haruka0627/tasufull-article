@@ -49,12 +49,17 @@
   }
 
   function preserveModelMeta(source, next) {
-    return {
+    const out = {
       ...next,
       model_id: source?.model_id || next?.model_id || "",
       model_label: source?.model_label || next?.model_label || "",
       model_provider: source?.model_provider || next?.model_provider || "",
     };
+    if (source?._usageCharge) {
+      out._usageCharge = source._usageCharge;
+      out._usageFeature = source._usageFeature;
+    }
+    return out;
   }
 
   const RESULT_SECTION_TITLES = {

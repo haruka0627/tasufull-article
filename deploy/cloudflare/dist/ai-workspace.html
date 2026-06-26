@@ -139,6 +139,16 @@
       </div>
 
       <div id="bottom-container">
+        <div
+          class="ai-workspace-usage"
+          data-ai-workspace-usage-status
+          role="status"
+          aria-live="polite"
+        ></div>
+        <div class="ai-workspace-usage-limit" data-ai-workspace-usage-limit hidden role="alert">
+          <p class="ai-workspace-usage-limit__msg" data-ai-workspace-usage-limit-msg></p>
+          <a class="ai-workspace-usage-limit__cta" href="gen-ai-workspace.html">プランを見る</a>
+        </div>
         <div class="ai-workspace-model-host" data-ai-model-selector-host aria-label="AIモデル選択"></div>
         <div id="neon-bar-area">
           <div class="neon-input-frame" data-ai-composer-frame>
@@ -251,6 +261,8 @@
   <script src="serper-search-service.js" defer></script>
   <script src="ai-interaction-log.js" defer></script>
   <script src="ai-plan-models.js" defer></script>
+  <script src="stripe-genai-config.js" defer></script>
+  <script src="ai-workspace-usage.js" defer></script>
   <script src="ai-workspace-response-ux.js" defer></script>
   <script src="ai-model-gateway.js" defer></script>
   <script src="ai-search-orchestrator.js" defer></script>
