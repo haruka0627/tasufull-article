@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-27（Notification Center Phase 6-G · 通知基盤）  
+**最終更新:** 2026-06-27（AD-012 UI/UX 設計原則）  
 **Git HEAD:** `549e562`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -95,6 +95,13 @@
 **正本:** [DECISIONS.md](./DECISIONS.md) **AD-011** · 要約: [ROADMAP.md](./ROADMAP.md) §サービス展開方針
 
 開発優先順位は **国内完成** を基本とし、海外前提の実装は AD-011 に従い **行わない**（Builder / Platform）または **将来設計のみ**（TLV / TASFUL AI）とする。
+
+### UI/UX 設計原則（2026-06 確定）
+
+**正本:** [DECISIONS.md](./DECISIONS.md) **AD-012** · 要約: [ROADMAP.md](./ROADMAP.md) §UI/UX 設計原則
+
+- **高機能は AI** · **シンプルは UI** — 全製品の画面設計・文言・新機能追加時に適用する。
+- 迷った場合は **シンプルな操作** と **分かりやすい言葉** を優先。既存 UI の複雑化を避ける。
 
 ### AI プロバイダ分担
 
