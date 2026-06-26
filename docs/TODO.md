@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Site Assistant Phase 1 commit `ac864b4`）  
-**Git HEAD:** `ac864b4`（`cf-pages-deploy` · Site Assistant Phase 1 **commit 済** · **git push 未実施**）  
+**最終更新:** 2026-06-26（Builder AI Vision Phase 2 実装 · commit 予定）  
+**Git HEAD:** `46677eb`（`cf-pages-deploy` · Vision Phase 2 **未コミット** · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -150,7 +150,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **AI Secretary Trend Scout** | 📋 未着手 | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) |
 | **TASFUL Site Assistant Phase 1** | ✅ commit 済 | `ac864b4` · [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) · `reports/tasful-site-assistant-phase1.md` |
 | **TASFUL Site Assistant Phase 2+** | 📋 未着手 | 同上（Feedback Launcher · OPS 集約） |
-| **Builder AI Gemini Live 現場診断モード** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+| **Builder AI Vision Phase 2**（Gemini Vision · Gateway 流用） | ✅ 実装（未コミット） | [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-vision-phase2.md` |
+| **Builder AI Gemini Live / Voice** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
 - 購入者の表示・カート適用・利用済み/不可理由
@@ -177,7 +178,13 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - 必須7入口: 検索 / お問い合わせ / 通報 / 不具合 / 要望 / FAQ / **TASFUL AI を開く**
 - OPS / AI 秘書へ将来集約 · P0/P1 外
 
-**Builder AI Gemini Live 現場診断モード**
+**Builder AI Vision Phase 2（Gemini Vision · ✅ 実装）**
+
+- 既存 Gateway → `gemini-chat` · 画像 + 相談文 · 4MB · 回答 8 項目 + 免責
+- UI Phase 1 `5d28acc` 上に接続 · **未コミット · 未デプロイ**
+- Live / Voice — UI stub のみ · **未着手**
+
+**Builder AI Gemini Live / Voice（未着手）**
 
 - カメラ映像 · 画面共有でのリアルタイム相談 · 現場診断補助 · 劣化指摘 · 見積 / 資材 / 施工提案 · チェックリスト · 写真付き現場レポート
 - **Builder AI のみ** — AI 秘書 · Platform · TLV · TASFUL AI には実装しない
@@ -208,3 +215,5 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | AI 秘書 DeepSeek Adapter Phase 1 | `6c70985` · Adapter + CF Pages Function · AD-010 · 503/502 fallback · API 到達 · `reports/secretary-deepseek-adapter-phase1.md` |
 | AI 秘書 OpsContextBuilder Phase 2 | `840a574` · 6 ドメイン context 注入 · PII マスク · `reports/secretary-ops-context-builder-phase2.md` |
 | TASFUL Site Assistant Phase 1 | `ac864b4` · 232 HTML 注入 · cross-search/FAQ 流用 · browser 18/18 · `reports/tasful-site-assistant-phase1.md` |
+| Builder AI UI Phase 1 | `5d28acc` · 現場診断 UI シェル · Live/Voice stub |
+| Builder AI p1-review test follow-up | `46677eb` · legacy details open in UI checks |
