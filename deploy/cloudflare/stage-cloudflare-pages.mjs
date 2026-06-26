@@ -230,6 +230,18 @@ function copyCfMeta() {
   }
 }
 
+function copyPagesFunctions() {
+  const srcDir = path.join(__dirname, "functions");
+  const destDir = path.join(OUT_DIR, "functions");
+  if (!fs.existsSync(srcDir)) {
+    console.warn("[stage-cloudflare-pages] functions/ not found — skipping Pages Functions copy");
+    return;
+  }
+  fs.mkdirSync(destDir, { recursive: true });
+  copyRecursive(srcDir, destDir, "functions");
+  console.log("[stage-cloudflare-pages] copied deploy/cloudflare/functions → dist/functions");
+}
+
 function main() {
   if (fs.existsSync(OUT_DIR)) {
     fs.rmSync(OUT_DIR, { recursive: true, force: true });
@@ -246,6 +258,7 @@ function main() {
   }
 
   copyCfMeta();
+  copyPagesFunctions();
 
   writeChatSupabaseConfig();
   writeTlvFeatureFlags();

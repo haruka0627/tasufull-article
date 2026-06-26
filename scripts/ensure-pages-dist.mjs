@@ -13,6 +13,8 @@ const DIST = path.join(CF_DIR, "dist");
 const marker = path.join(DIST, "index.html");
 
 const CF_META = ["robots.txt", "_headers", "_redirects"];
+const FUNCTIONS_SRC = path.join(CF_DIR, "functions");
+const FUNCTIONS_DEST = path.join(DIST, "functions");
 const LIVE_SRC = path.join(ROOT, "live");
 const LIVE_DEST = path.join(DIST, "live");
 
@@ -46,6 +48,26 @@ function syncLiveDir() {
       const relPath = rel ? `${rel}/${name}` : name;
       const src = path.join(LIVE_SRC, relPath);
       const dest = path.join(LIVE_DEST, relPath);
+      if (fs.statSync(src).isDirectory()) {
+        walk(relPath);
+      } else if (copyFileIfChanged(src, dest)) {
+        synced += 1;
+      }
+    }
+  };
+  walk();
+  return synced;
+}
+
+function syncPagesFunctions() {
+  if (!fs.existsSync(FUNCTIONS_SRC)) return 0;
+  let synced = 0;
+  const walk = (rel = "") => {
+    const srcDir = rel ? path.join(FUNCTIONS_SRC, rel) : FUNCTIONS_SRC;
+    for (const name of fs.readdirSync(srcDir)) {
+      const relPath = rel ? `${rel}/${name}` : name;
+      const src = path.join(FUNCTIONS_SRC, relPath);
+      const dest = path.join(FUNCTIONS_DEST, relPath);
       if (fs.statSync(src).isDirectory()) {
         walk(relPath);
       } else if (copyFileIfChanged(src, dest)) {
@@ -96,4 +118,9 @@ if (stillMissing.length) {
 const liveSynced = syncLiveDir();
 if (liveSynced > 0) {
   console.log(`[ensure-pages-dist] synced live/ → dist/live/ (${liveSynced} file(s))`);
+}
+
+const fnSynced = syncPagesFunctions();
+if (fnSynced > 0) {
+  console.log(`[ensure-pages-dist] synced functions/ → dist/functions/ (${fnSynced} file(s))`);
 }
