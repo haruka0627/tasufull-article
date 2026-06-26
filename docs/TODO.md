@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
 **最終更新:** 2026-06-26（Builder AI Tool Integration Phase 3 · 完了）  
-**Git HEAD:** `25ec824`（`cf-pages-deploy` · Tool Phase 3 **本コミット** · **git push 未実施**）  
+**Git HEAD:** `05c32ad`（`cf-pages-deploy` · Tool Phase 3 **`05c32ad`** · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -150,7 +150,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **AI Secretary Trend Scout** | 📋 未着手 | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) |
 | **TASFUL Site Assistant Phase 1** | ✅ commit 済 | `ac864b4` · [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) · `reports/tasful-site-assistant-phase1.md` |
 | **TASFUL Site Assistant Phase 2+** | 📋 未着手 | 同上（Feedback Launcher · OPS 集約） |
-| **Builder AI Tool Integration Phase 3** | ✅ commit 済 | [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-tools-phase3.md` |
+| **Builder AI Tool Integration Phase 3** | ✅ commit 済 | `05c32ad` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-tools-phase3.md` |
 | **Builder AI Vision Phase 2** | ✅ commit 済 | `4aff9ec` · `reports/builder-ai-vision-phase2.md` |
 | **Builder AI Gemini Live / Voice** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
@@ -183,7 +183,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 
 - 自然文 intent · Orchestrator · 既存 calculators / material tool 流用 · precalc
 - MVP: 坪→㎡ · 材料数量 · 外壁塗装概算 · 利益率逆算 · 消費税/インボイス
-- calc **15/15** · tools **85/85** · **未デプロイ**
+- calc **15/15** · tools **85/85** · commit `05c32ad` · **未デプロイ**
 - 今後: 足場 · 屋根 · 人工 · 原価 · 会計 · 顧客/現場管理
 
 **Builder AI Vision Phase 2（Gemini Vision · ✅ commit 済）**
