@@ -7,6 +7,12 @@
 
   const DEMO_ENABLED = true;
 
+  function shouldUseDemo(realCount) {
+    const search = window.location?.search || "";
+    if (/(?:^|[?&])demo=1(?:&|$)/.test(search)) return true;
+    return Number(realCount) === 0;
+  }
+
   function daysAgo(n) {
     const d = new Date();
     d.setDate(d.getDate() - n);
@@ -844,6 +850,7 @@
 
   window.TasuBusinessBoardDemo = {
     DEMO_ENABLED,
+    shouldUseDemo,
     getListings,
     resetCache() {
       cached = null;

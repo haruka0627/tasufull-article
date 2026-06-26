@@ -261,6 +261,12 @@
     nav.appendChild(next);
   }
 
+  function syncDemoNote() {
+    const demoNote = $("[data-biz-board-demo-note]");
+    if (!demoNote) return;
+    demoNote.hidden = !allItems.some((item) => item._source === "demo");
+  }
+
   function renderBoard() {
     const renderer = window.TasuBusinessBoardRenderer;
     const sortSelect = $("[data-category-sort]");
@@ -310,6 +316,7 @@
       if (mobileList) mobileList.innerHTML = "";
       renderPagination(0);
       populateEmptyStateTags();
+      syncDemoNote();
       return;
     }
 
@@ -346,6 +353,7 @@
 
     renderPagination(totalPages);
     syncFavorites(document);
+    syncDemoNote();
   }
 
   async function fetchItems(businessCategory) {
@@ -360,7 +368,10 @@
       });
     }
 
-    const demo = window.TasuBusinessBoardDemo?.getListings?.(businessCategory) || [];
+    const useDemo = window.TasuBusinessBoardDemo?.shouldUseDemo?.(items.length) ?? false;
+    const demo = useDemo
+      ? window.TasuBusinessBoardDemo?.getListings?.(businessCategory) || []
+      : [];
     const seen = new Set(items.map((item) => item.id));
     const merged = [...demo.filter((d) => d.id && !seen.has(d.id)), ...items];
     return applyBoardListingTypeFilter(merged, businessCategory);
@@ -490,11 +501,6 @@
     populateEmptyStateTags();
     initTabs();
     bindEvents();
-
-    const demoNote = $("[data-biz-board-demo-note]");
-    if (demoNote && window.TasuBusinessBoardDemo?.DEMO_ENABLED) {
-      demoNote.hidden = false;
-    }
 
     $("[data-biz-board-empty-clear]")?.addEventListener("click", () => {
       $("[data-biz-board-filter-clear]")?.click();
