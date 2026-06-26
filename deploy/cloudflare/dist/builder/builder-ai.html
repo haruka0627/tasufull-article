@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="builder.css" />
   <link rel="stylesheet" href="builder-ai-ui.css" />
   <link rel="stylesheet" href="../tasful-ai-voice.css" />
+  <link rel="stylesheet" href="builder-project-hub.css" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="../common-ai-disclaimer.css" />
 </head>
@@ -43,6 +44,12 @@
       </section>
 
       <div class="builder-ai-disclaimer common-ai-disclaimer common-ai-disclaimer--builder" data-common-ai-disclaimer-banner data-surface="builder" role="note"></div>
+
+      <section class="builder-panel builder-ph-ai-context" data-builder-ai-project-context hidden aria-label="案件連携">
+        <p class="builder-ph-ai-context__label">案件連携</p>
+        <p class="builder-ph-ai-context__text" data-builder-ai-project-context-text>—</p>
+        <a class="builder-btn builder-btn--ghost builder-btn--sm" href="#" data-builder-ai-project-detail-link>案件詳細へ</a>
+      </section>
 
       <section class="builder-panel" aria-label="クイック相談">
         <h2 class="builder-section-title">クイック相談</h2>
@@ -201,6 +208,7 @@
   <script src="../tasful-ai-voice-core.js"></script>
   <script src="builder-ai-vision.js"></script>
   <script src="builder-ai-vision-analyzer.js"></script>
+  <script src="builder-project-store.js"></script>
   <script src="builder-ai-live-gate.js"></script>
   <script src="builder-ai-voice.js"></script>
   <script src="builder-ai-live.js"></script>

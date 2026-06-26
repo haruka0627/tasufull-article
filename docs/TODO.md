@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Builder AI Vision Phase 5 · 未コミット）  
+**最終更新:** 2026-06-26（Builder Project Hub Phase 6-A · 未コミット）  
 **Git HEAD:** `66051f7`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -166,7 +166,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder AI Tool Integration Phase 3** | ✅ commit 済 | `05c32ad` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-tools-phase3.md` |
 | **Builder AI Vision Phase 2** | ✅ commit 済 | `4aff9ec` · `reports/builder-ai-vision-phase2.md` |
 | **Builder AI Live Phase 4-A** | ✅ commit 済 | `66051f7` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-live-phase4-plan.md` |
-| **Builder AI Vision Phase 5** | ✅ 実装 · 未コミット | 構造化 JSON · Analyzer · `reports/builder-ai-phase5-vision.md` |
+| **Builder AI Vision Phase 5** | ✅ commit 済 | `7ef4efd` · `reports/builder-ai-phase5-vision.md` |
+| **Builder Project Hub Phase 6-A** | ✅ 実装 · 未コミット | 案件ハブ MVP · `reports/builder-project-hub-phase6a.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -221,6 +222,13 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - UI: 解析中 / 診断完了 / エラー / 画像なし
 - `test-builder-ai-vision-phase5.mjs` **28/28** + phase2 回帰 **8/8** + build PASS
 - 参照: `reports/builder-ai-phase5-vision.md`
+
+**Builder Project Hub Phase 6-A（案件ハブ MVP · ✅ 実装 · 未コミット）**
+
+- `builder-project-store.js` · 一覧 / 詳細 / 検索 / タイムライン / Vision JSON 保存
+- `project-hub.html` · `project-detail.html` · Builder AI `?projectId=` 連携
+- `test-builder-project-hub-phase6a.mjs` + phase5 回帰 + build PASS
+- 参照: `reports/builder-project-hub-phase6a.md`
 
 **Builder AI Gemini Live Phase 4-B（未着手）**
 
