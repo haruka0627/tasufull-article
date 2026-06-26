@@ -8,17 +8,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="detail-favorites.css">
-  <link rel="stylesheet" href="seller-rank-plate.css">
-  <link rel="stylesheet" href="index-home.css">
-  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="/detail-favorites.css">
+  <link rel="stylesheet" href="/seller-rank-plate.css">
+  <link rel="stylesheet" href="/index-home.css">
+  <link rel="stylesheet" href="/tasful-ai-logo.css?v=4">
 </head>
-<body class="home-page">
+<body class="home-page" data-page="portal_listings">
   <header class="home-header top-portal-header" aria-label="TASFUL ヘッダー">
     <div class="home-header__inner">
-      <a class="tasful-ai-logo home-header__logo" href="index.html" aria-label="TASFUL プラットフォーム">
+      <a class="tasful-ai-logo home-header__logo" href="/market/" aria-label="TASFUL プラットフォーム">
         <img
-          src="images/tasful-ai-globe.png?v=4"
+          src="/images/tasful-ai-globe.png?v=4"
           alt=""
           class="tasful-ai-logo-icon"
         >
@@ -28,22 +28,22 @@
         </div>
       </a>
       <nav class="home-nav" aria-label="メインナビ">
-        <a href="index.html">一般</a>
-        <a href="job-top.html">求人</a>
-        <a href="shop-store.html">店舗・販売</a>
-        <a href="business.html">業務サービス</a>
-        <a href="ai-workspace.html">AI相談</a>
+        <a href="/market/">一般</a>
+        <a href="/job-top.html">求人</a>
+        <a href="/shop-store.html">店舗・販売</a>
+        <a href="/business.html">業務サービス</a>
+        <a href="/ai-workspace.html">AI相談</a>
       </nav>
       <div class="home-actions">
-        <a class="home-icon-btn" href="chat.html" aria-label="メッセージ">
+        <a class="home-icon-btn" href="/chat.html" aria-label="メッセージ">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           <span>メッセージ</span>
         </a>
-        <a class="home-icon-btn" href="favorites-list.html" aria-label="お気に入り">
+        <a class="home-icon-btn" href="/favorites-list.html" aria-label="お気に入り">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
           <span>お気に入り</span>
         </a>
-        <a class="home-cta" href="post.html">出品する</a>
+        <a class="home-cta" href="/post.html">出品する</a>
       </div>
     </div>
   </header>
@@ -63,7 +63,7 @@
         <aside class="home-hero__right" aria-label="AI相談カード">
           <h2 class="home-ai-title">AIに相談してぴったりの人を見つけよう</h2>
           <p class="home-ai-lead">条件整理・相場感の確認・おすすめ提案をサポートします。</p>
-          <a class="home-ai-btn" href="ai-workspace.html">AI相談をはじめる</a>
+          <a class="home-ai-btn" href="/ai-workspace.html">AI相談をはじめる</a>
         </aside>
       </div>
     </section>
@@ -71,7 +71,7 @@
     <section class="home-cats home-section" aria-label="カテゴリから探す">
       <div class="home-section__head">
         <h2 class="home-section__title">カテゴリから探す</h2>
-        <a class="home-link" href="listing-category-page.html">すべて見る</a>
+        <a class="home-link" href="/listing-category-page.html">すべて見る</a>
       </div>
       <div class="home-cats__row" data-home-cats></div>
     </section>
@@ -79,7 +79,7 @@
     <section class="home-section pr-featured-section" aria-label="PR掲載">
       <div class="home-section__head">
         <h2 class="home-section__title">PR掲載</h2>
-        <a class="home-link" href="listing-category-page.html">すべて見る</a>
+        <a class="home-link" href="/listing-category-page.html">すべて見る</a>
       </div>
       <div class="home-featured-grid" data-home-featured></div>
     </section>
@@ -92,21 +92,21 @@
         <article class="ranking-card is-purple">
           <div class="ranking-card__head">
             <h3 class="ranking-card__title">総合人気ランキング</h3>
-            <a class="home-link" href="listing-category-page.html">すべて見る</a>
+            <a class="home-link" href="/listing-category-page.html">すべて見る</a>
           </div>
           <div data-home-rank-popular></div>
         </article>
         <article class="ranking-card is-orange">
           <div class="ranking-card__head">
             <h3 class="ranking-card__title">急上昇ランキング</h3>
-            <a class="home-link" href="listing-category-page.html">すべて見る</a>
+            <a class="home-link" href="/listing-category-page.html">すべて見る</a>
           </div>
           <div data-home-rank-trending></div>
         </article>
         <article class="ranking-card is-green">
           <div class="ranking-card__head">
             <h3 class="ranking-card__title">レビュー高評価ランキング</h3>
-            <a class="home-link" href="listing-category-page.html">すべて見る</a>
+            <a class="home-link" href="/listing-category-page.html">すべて見る</a>
           </div>
           <div data-home-rank-rated></div>
         </article>
@@ -147,15 +147,15 @@
         <div class="side-card">
           <h3 class="side-card__title">はじめての方へ</h3>
           <ul class="side-links">
-            <li><a href="index-top.html">ご利用ガイド</a></li>
-            <li><a href="index-top.html">安心・安全の取り組み</a></li>
-            <li><a href="post.html">出品者になる</a></li>
+            <li><a href="/">ご利用ガイド</a></li>
+            <li><a href="/">安心・安全の取り組み</a></li>
+            <li><a href="/post.html">出品者になる</a></li>
           </ul>
         </div>
         <div class="side-card side-card--premium">
           <h3 class="side-card__title">TASFULプレミアム</h3>
           <p class="side-card__text">上位掲載・手数料最適化など、掲載価値を最大化。</p>
-          <a class="btn-primary side-card__btn" href="post.html">詳細を見る</a>
+          <a class="btn-primary side-card__btn" href="/post.html">詳細を見る</a>
         </div>
         <div class="side-card">
           <h3 class="side-card__title">最近見たサービス</h3>
@@ -165,21 +165,24 @@
     </div>
   </main>
 
+  <div data-tasful-portal-tabbar-mount></div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="chat-supabase-config.js"></script>
-  <script src="supabase-public-key.js"></script>
-  <script src="tasu-supabase-client.js"></script>
-  <script src="chat-user-identity.js"></script>
-  <script src="favorites-db.js"></script>
-  <script src="detail-favorites.js"></script>
-  <script src="listing-tags.js"></script>
-  <script src="listing-images.js"></script>
-  <script src="product-listing-fields.js"></script>
-  <script src="listing-seller-profile.js"></script>
-  <script src="stripe-featured-config.js"></script>
-  <script src="listing-featured.js"></script>
-  <script src="listing-renderer.js"></script>
-  <script src="listings-db.js"></script>
-  <script src="index-home.js"></script>
+  <script src="/chat-supabase-config.js"></script>
+  <script src="/supabase-public-key.js"></script>
+  <script src="/tasu-supabase-client.js"></script>
+  <script src="/chat-user-identity.js"></script>
+  <script src="/favorites-db.js"></script>
+  <script src="/detail-favorites.js"></script>
+  <script src="/listing-tags.js"></script>
+  <script src="/listing-images.js"></script>
+  <script src="/product-listing-fields.js"></script>
+  <script src="/listing-seller-profile.js"></script>
+  <script src="/stripe-featured-config.js"></script>
+  <script src="/listing-featured.js"></script>
+  <script src="/listing-renderer.js"></script>
+  <script src="/listings-db.js"></script>
+  <script src="/index-home.js"></script>
+  <script src="/platform-portal-tabbar.js"></script>
 </body>
 </html>

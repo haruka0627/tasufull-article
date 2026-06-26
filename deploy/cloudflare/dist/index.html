@@ -13,8 +13,11 @@
   <link rel="stylesheet" href="tas-hero.css">
   <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
   <link rel="stylesheet" href="top-ranking.css">
+  <link rel="stylesheet" href="platform-badges.css">
+  <link rel="stylesheet" href="platform-search-hub.css">
+  <link rel="stylesheet" href="common-ai-disclaimer.css">
 </head>
-<body class="top-page" data-breadcrumb-page-label="TASFUL">
+<body class="top-page" data-page="portal_top" data-breadcrumb-page-label="TASFUL">
   <header class="top-site-header site-header top-portal-header">
     <div class="top-site-header__inner">
       <a href="index-top.html" class="tasful-ai-logo top-site-header__logo top-portal-header__logo" aria-label="TASFUL プラットフォームTOP">
@@ -29,7 +32,7 @@
         </div>
       </a>
       <nav class="top-site-header__nav top-portal-header__nav" aria-label="メインナビ">
-        <a href="index.html">掲載を探す</a>
+        <a href="/market/">掲載を探す</a>
         <a href="post.html">掲載する</a>
         <a href="ai-workspace.html">AI相談</a>
         <a href="/contact">お知らせ</a>
@@ -106,7 +109,7 @@
             </div>
             <div class="tas-hero__actions">
               <a class="tas-hero__btn tas-hero__btn--pink" href="post.html">掲載する（無料）<span class="tas-hero__btn-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 7 6 5-6 5"/></svg></span></a>
-              <a class="tas-hero__btn tas-hero__btn--pink-ghost" href="index.html">詳しく見る<span class="tas-hero__btn-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 7 6 5-6 5"/></svg></span></a>
+              <a class="tas-hero__btn tas-hero__btn--pink-ghost" href="/market/">詳しく見る<span class="tas-hero__btn-arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 7 6 5-6 5"/></svg></span></a>
             </div>
           </article>
 
@@ -160,6 +163,30 @@
             </div>
           </article>
         </div>
+
+        <section class="platform-search-hub" data-platform-search-hub aria-label="探す・比較する・おすすめ">
+          <h2 class="platform-search-hub__title">探す · 比較する · AIおすすめ（TASFUL AI 入口）</h2>
+          <div class="common-ai-disclaimer common-ai-disclaimer--platform" data-common-ai-disclaimer-banner data-surface="platform" role="note"></div>
+          <div class="platform-search-hub__row">
+            <input type="search" class="platform-search-hub__input" data-platform-search-input placeholder="例: 埼玉 30万円以内 外壁塗装 即対応" autocomplete="off" />
+            <select class="platform-search-hub__select" data-platform-search-pref aria-label="都道府県">
+              <option value="">都道府県</option>
+              <option value="埼玉">埼玉</option>
+              <option value="東京">東京</option>
+              <option value="神奈川">神奈川</option>
+              <option value="千葉">千葉</option>
+              <option value="大阪">大阪</option>
+            </select>
+            <input type="number" class="platform-search-hub__radius" data-platform-search-radius value="50" min="5" max="200" aria-label="半径km" title="半径 km" />
+            <button type="button" class="platform-search-hub__btn" data-platform-search-geo>現在地</button>
+            <button type="button" class="platform-search-hub__btn platform-search-hub__btn--primary" data-platform-search-ai>TASFUL AI検索</button>
+            <button type="button" class="platform-search-hub__btn" data-platform-search-compare>AI比較</button>
+          </div>
+          <p class="platform-search-hub__label">人気検索</p>
+          <div class="platform-search-hub__popular" data-platform-search-popular></div>
+          <div class="platform-search-hub__suggest" data-platform-search-suggest hidden></div>
+          <pre class="platform-search-hub__result" data-platform-search-result hidden></pre>
+        </section>
 
         <div class="tas-hero__trust" aria-label="安心訴求">
           <div class="tas-hero__trust-item">
@@ -246,13 +273,13 @@
             </button>
           </form>
           <div class="top-search__tags">
-            <a href="index.html?q=動画編集">動画編集</a>
-            <a href="index.html?q=SNS運用">SNS運用</a>
+            <a href="/market/?q=動画編集">動画編集</a>
+            <a href="/market/?q=SNS運用">SNS運用</a>
             <a href="ai-workspace.html">AI相談</a>
             <a href="public-board.html">案件・求人</a>
-            <a href="index.html?q=デザイン">デザイン</a>
-            <a href="index.html?q=プログラミング">プログラミング</a>
-            <a href="index.html?q=占い">占い</a>
+            <a href="/market/?q=デザイン">デザイン</a>
+            <a href="/market/?q=プログラミング">プログラミング</a>
+            <a href="/market/?q=占い">占い</a>
           </div>
         </div>
       </section>
@@ -264,7 +291,7 @@
           <p class="top-section__desc">7つのカテゴリから、あなたの目的に合わせて探せます。</p>
         </header>
         <div class="top-categories category-grid">
-          <a href="index.html?category=skill" class="top-category-card category-card">
+          <a href="/market/?category=skill" class="top-category-card category-card">
             <span class="top-category-card__icon category-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2.8l2.55 7.75h8.2l-6.62 4.82 2.53 7.78L12 17.1l-6.66 4.05 2.53-7.78L1.25 10.55h8.2L12 2.8z"/></svg>
             </span>
@@ -274,7 +301,7 @@
               <span class="top-category-card__link category-link">すべて見る <span aria-hidden="true">→</span></span>
             </span>
           </a>
-          <a href="index.html?category=product" class="top-category-card category-card">
+          <a href="/market/?category=product" class="top-category-card category-card">
             <span class="top-category-card__icon category-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 7h12a1 1 0 0 1 .98 1.17L17.2 20a1 1 0 0 1-.98.83H7.78a1 1 0 0 1-.98-.83L5.02 8.17A1 1 0 0 1 6 7zm2 0V6a4 4 0 0 1 8 0v1h-1.5V6a2.5 2.5 0 0 0-5 0v1H8z"/></svg>
             </span>
@@ -294,7 +321,7 @@
               <span class="top-category-card__link category-link">すべて見る <span aria-hidden="true">→</span></span>
             </span>
           </a>
-          <a href="index.html?category=worker" class="top-category-card category-card">
+          <a href="/market/?category=worker" class="top-category-card category-card">
             <span class="top-category-card__icon category-icon" aria-hidden="true">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 11.5a4.25 4.25 0 1 0 0-8.5 4.25 4.25 0 0 0 0 8.5zm-7.5 9.25a7.75 7.75 0 0 1 15 0H4.5z"/></svg>
             </span>
@@ -348,7 +375,7 @@
       <div class="top-page__inner top-ranking__inner">
         <header class="top-ranking__head">
           <h2 id="rankingPopularTitle" class="top-section__title">人気ランキング</h2>
-          <a href="index.html" class="top-ranking__more">すべて見る →</a>
+          <a href="/market/" class="top-ranking__more">すべて見る →</a>
         </header>
         <div class="top-ranking__carousel">
           <button type="button" class="top-ranking__arrow top-ranking__arrow--prev" data-ranking-prev aria-label="前の掲載">‹</button>
@@ -438,7 +465,7 @@
       <div class="top-page__inner top-ranking__inner">
         <header class="top-ranking__head">
           <h2 id="rankingNewTitle" class="top-section__title">新着ランキング</h2>
-          <a href="index.html?sort=new" class="top-ranking__more">すべて見る →</a>
+          <a href="/market/?sort=new" class="top-ranking__more">すべて見る →</a>
         </header>
         <div class="top-ranking__carousel">
           <button type="button" class="top-ranking__arrow top-ranking__arrow--prev" data-ranking-prev aria-label="前の掲載">‹</button>
@@ -528,7 +555,7 @@
       <div class="top-page__inner top-ranking__inner">
         <header class="top-ranking__head">
           <h2 id="rankingProductTitle" class="top-section__title">商品ランキング</h2>
-          <a href="index.html?category=product" class="top-ranking__more">すべて見る →</a>
+          <a href="/market/?category=product" class="top-ranking__more">すべて見る →</a>
         </header>
         <div class="top-ranking__carousel">
           <button type="button" class="top-ranking__arrow top-ranking__arrow--prev" data-ranking-prev aria-label="前の掲載">‹</button>
@@ -618,7 +645,7 @@
       <div class="top-page__inner top-ranking__inner">
         <header class="top-ranking__head">
           <h2 id="rankingSkillTitle" class="top-section__title">スキルランキング</h2>
-          <a href="index.html?category=skill" class="top-ranking__more">すべて見る →</a>
+          <a href="/market/?category=skill" class="top-ranking__more">すべて見る →</a>
         </header>
         <div class="top-ranking__carousel">
           <button type="button" class="top-ranking__arrow top-ranking__arrow--prev" data-ranking-prev aria-label="前の掲載">‹</button>
@@ -813,9 +840,9 @@
           <h3 id="footerColServices" class="top-site-footer__col-title">サービス</h3>
           <ul class="top-site-footer__links">
             <li><a href="ai-workspace.html">AIに相談する</a></li>
-            <li><a href="index.html">スキルを探す</a></li>
+            <li><a href="/market/">スキルを探す</a></li>
             <li><a href="public-board.html">案件・求人を探す</a></li>
-            <li><a href="index.html">商品を探す</a></li>
+            <li><a href="/market/">商品を探す</a></li>
             <li><a href="/post">スキルを出品する</a></li>
             <li><a href="/post">案件を掲載する</a></li>
             <li><a href="/post">商品を出品する</a></li>
@@ -915,8 +942,28 @@
       </div>
     </div>
   </footer>
+  <div data-tasful-portal-tabbar-mount></div>
+
   <script src="breadcrumb-config.js"></script>
   <script src="common-breadcrumb.js"></script>
+  <script src="search.js"></script>
+  <script src="ai-workspace-links.js"></script>
+  <script src="platform-ai-recommend.js"></script>
+  <script src="platform-badges.js"></script>
+  <script src="platform-search-assist.js"></script>
+  <script src="platform-compare-assist.js"></script>
+  <script src="platform-location-search.js"></script>
+  <script src="platform-category-kyc.js"></script>
+  <script src="platform-favorites-folders.js"></script>
+  <script src="platform-search-hub.js"></script>
+  <script src="common-ai-disclaimer.js"></script>
   <script src="top.js" defer></script>
+  <script src="platform-portal-tabbar.js"></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", function () {
+      window.TasuPlatformSearchHub?.mount?.();
+      window.TasuPlatformBadges?.bindRecommendPopovers?.(document);
+    });
+  </script>
 </body>
 </html>

@@ -382,12 +382,12 @@
   function detailUrl(item) {
     const type = item.listing_type || item.type;
     const id = item.id;
-    if (type === "product") return `detail-product.html?id=${encodeURIComponent(id)}`;
-    if (type === "worker") return `detail-worker.html?id=${encodeURIComponent(id)}`;
-    if (type === "job") return `detail-job.html?id=${encodeURIComponent(id)}`;
+    if (type === "product") return `/detail-product.html?id=${encodeURIComponent(id)}`;
+    if (type === "worker") return `/detail-worker.html?id=${encodeURIComponent(id)}`;
+    if (type === "job") return `/detail-job.html?id=${encodeURIComponent(id)}`;
     if (type === "skill") {
       const userId = item.user_id || "u_me";
-      return `detail-skill.html?userId=${encodeURIComponent(userId)}&id=${encodeURIComponent(id)}`;
+      return `/detail-skill.html?userId=${encodeURIComponent(userId)}&id=${encodeURIComponent(id)}`;
     }
     return "#";
   }
@@ -851,7 +851,7 @@
     host.innerHTML = "";
     CATEGORY_ICONS.forEach((c) => {
       const el = document.createElement("a");
-      el.href = c.key === "job" ? "job-top.html" : "#new";
+      el.href = c.key === "job" ? "/job-top.html" : "#new";
       el.className = `home-cat${c.key === "all" ? " is-active" : ""}`;
       el.dataset.homeCat = c.key;
       el.innerHTML = `<span class="home-cat__icon" aria-hidden="true">${escapeHtml(c.icon)}</span><span class="home-cat__label">${escapeHtml(c.label)}</span>`;
@@ -1571,7 +1571,7 @@
       e.preventDefault();
       const q = String($("[data-home-search-input]")?.value || "").trim();
       if (!q) return;
-      window.location.href = `listing-category-page.html?q=${encodeURIComponent(q)}`;
+      window.location.href = `/listing-category-page.html?q=${encodeURIComponent(q)}`;
     });
 
     const applySearchFromInput = () => {
