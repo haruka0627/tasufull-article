@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "hooks": {
+    "beforeSubmitPrompt": [
+      {
+        "command": "node .cursor/hooks/run-pre-check.mjs pre-finish",
+        "matcher": "/finish|作業完了前整理|pre-finish"
+      },
+      {
+        "command": "node .cursor/hooks/run-pre-check.mjs pre-review",
+        "matcher": "/review|実装差分レビュー|pre-review"
+      },
+      {
+        "command": "node .cursor/hooks/run-pre-check.mjs pre-release",
+        "matcher": "/release|リリース前確認|pre-release"
+      }
+    ],
+    "afterShellExecution": [
+      {
+        "command": "node .cursor/hooks/run-post-build.mjs",
+        "matcher": "build:pages|npm run build"
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "node .cursor/hooks/block-dangerous-shell.mjs"
+      }
+    ]
+  }
+}
