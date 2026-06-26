@@ -1,0 +1,262 @@
+/* TOP ランキングセクション専用（index-top.html） */
+
+.top-page .top-ranking {
+  padding: 48px 0;
+  background: #fff;
+}
+
+.top-page .top-ranking + .top-ranking {
+  margin-top: 0;
+  padding-top: 48px;
+}
+
+.top-page .top-ranking .top-ranking__inner,
+.top-page .top-ranking .top-page__inner {
+  max-width: min(100%, 1760px);
+}
+
+.top-page .top-ranking__head {
+  margin-bottom: 1.35rem;
+}
+
+.top-page .top-ranking__carousel {
+  gap: 0.5rem 0.75rem;
+}
+
+.top-page .top-ranking__arrow {
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #475569;
+  background: #fff;
+  border: 1px solid rgba(216, 169, 58, 0.25);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+.top-page .top-ranking__arrow:hover {
+  color: #001f3f;
+  background: #fffaf0;
+  border-color: rgba(216, 169, 58, 0.4);
+}
+
+.top-page .top-ranking__track,
+.top-page .top-ranking .ranking-slider {
+  gap: 22px;
+  padding-bottom: 6px;
+}
+
+.top-page .top-rank-card,
+.top-page .top-ranking .ranking-card {
+  position: relative;
+  display: flex;
+  flex: 0 0 270px;
+  flex-direction: column;
+  width: 270px;
+  min-width: 270px;
+  max-width: 270px;
+  padding: 0;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  scroll-snap-align: start;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.top-page .top-rank-card:hover,
+.top-page .top-ranking .ranking-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.14);
+}
+
+/* ランクバッジ・ネームプレートは一般TOPでは非表示 */
+.top-page .top-rank-card__badge,
+.top-page .top-ranking .ranking-rank {
+  display: none !important;
+}
+
+.top-page .top-rank-card__media-wrap {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+}
+
+.top-page .top-rank-card__media,
+.top-page .top-ranking .ranking-card-image {
+  display: block;
+  width: 100%;
+  height: 160px;
+  background-color: #f1f5f9;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.top-page .top-rank-card__media-wrap .top-rank-card__tag,
+.top-page .top-ranking .ranking-tag {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  z-index: 1;
+  margin: 0;
+  padding: 5px 12px;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: #7c5a12;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+.top-page .top-rank-card__tag--product {
+  color: #1d4ed8;
+}
+
+.top-page .top-rank-card__tag--new {
+  color: #047857;
+}
+
+.top-page .top-rank-card__body,
+.top-page .top-ranking .ranking-body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 14px 16px 12px;
+  min-height: 0;
+}
+
+.top-page .top-rank-card__title,
+.top-page .top-ranking .ranking-title {
+  display: -webkit-box;
+  margin: 0 0 8px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.45;
+  color: #0f172a;
+}
+
+.top-page .top-rank-card__rating,
+.top-page .top-ranking .ranking-meta {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: #b45309;
+}
+
+.top-page .top-rank-card__rating-count {
+  font-weight: 600;
+  color: #64748b;
+}
+
+.top-page .top-rank-card__price,
+.top-page .top-ranking .ranking-price {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.2;
+  color: #b8860b;
+}
+
+.top-page .top-rank-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto;
+  padding: 12px 16px 16px;
+  border-top: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.top-page .top-rank-card__seller,
+.top-page .top-ranking .ranking-seller {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #64748b;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-page .top-rank-card__cta,
+.top-page .top-ranking .ranking-cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+  color: #001f3f;
+  background: linear-gradient(180deg, #fffdf8 0%, #fff3dc 100%);
+  border: 1px solid rgba(216, 169, 58, 0.32);
+  border-radius: 10px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.top-page .top-rank-card:hover .top-rank-card__cta,
+.top-page .top-ranking .ranking-card:hover .ranking-cta {
+  background: linear-gradient(180deg, #fff9eb 0%, #ffe9b8 100%);
+  border-color: rgba(216, 169, 58, 0.5);
+}
+
+@media (max-width: 900px) {
+  .top-page .top-ranking {
+    padding: 40px 0;
+  }
+
+  .top-page .top-ranking + .top-ranking {
+    padding-top: 40px;
+  }
+}
+
+@media (max-width: 640px) {
+  .top-page .top-ranking {
+    padding: 36px 0;
+  }
+
+  .top-page .top-ranking + .top-ranking {
+    padding-top: 36px;
+  }
+
+  .top-page .top-rank-card,
+  .top-page .top-ranking .ranking-card {
+    flex: 0 0 248px;
+    width: 248px;
+    min-width: 248px;
+    max-width: 248px;
+  }
+
+  .top-page .top-rank-card__media,
+  .top-page .top-ranking .ranking-card-image {
+    height: 150px;
+  }
+
+  .top-page .top-rank-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .top-page .top-rank-card__seller {
+    white-space: normal;
+  }
+
+  .top-page .top-rank-card__cta {
+    width: 100%;
+  }
+}
