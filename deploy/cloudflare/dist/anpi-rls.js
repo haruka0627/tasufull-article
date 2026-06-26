@@ -40,14 +40,38 @@
   }
 
   /**
-   * 管理者: tasu_admin ロール / LINE運用管理者フラグ / mock
+   * JWT / Platform resolver 経由の運営判定（NB-1.5 · localStorage 権限昇格より優先）
+   */
+  function isAnpiAdminFromAuth() {
+    if (global.TasuAuthCurrentUser?.isOpsUser?.()) return true;
+    const resolver = global.TasuPlatformActorResolver;
+    if (!resolver?.resolvePlatformActor) return false;
+    const actor = resolver.resolvePlatformActor();
+    if (actor.actor_type !== "admin") return false;
+    if (actor.source === "admin_preview") {
+      return global.TasuAuthCurrentUser?.canUseLocalStorageFallback?.() === true;
+    }
+    return actor.source === "jwt_ops" || actor.source === "jwt";
+  }
+
+  /**
+   * デモのみ: legacy localStorage tasu_member_role（本番 host では無効）
+   */
+  function isAnpiAdminFromLegacyMemberRole() {
+    if (global.TasuAuthCurrentUser?.canUseLocalStorageFallback?.() !== true) return false;
+    const role = readMemberRole();
+    return role === "tasu_admin" || role === "admin";
+  }
+
+  /**
+   * 管理者: JWT is_ops / Platform resolver / LINE運用 / mock / demo LS role
    */
   function isAnpiAdmin() {
     if (mockAdmin === true) return true;
     if (mockAdmin === false) return false;
     if (isAnpiLineAdminClient()) return true;
-    const role = readMemberRole();
-    if (role === "tasu_admin" || role === "admin") return true;
+    if (isAnpiAdminFromAuth()) return true;
+    if (isAnpiAdminFromLegacyMemberRole()) return true;
     if (global.__ANPI_RLS_MOCK_ADMIN__ === true) return true;
     return false;
   }
@@ -245,7 +269,8 @@
       admin_ui_flag: isAnpiLineAdminClient(),
       admin_db_role: "unknown_client",
       admin_db_role_note:
-        "DB の tasu_admin は JWT app_metadata.role です。UI の anpi_admin とは別です。",
+        "DB の tasu_admin は JWT app_metadata.role / is_ops です。tasu_member_role LS は demo のみ。",
+      platform_actor: global.TasuPlatformActorResolver?.resolvePlatformActor?.() || null,
       context_save_mode: getSaveMode("context"),
       logs_save_mode: getSaveMode("logs"),
       supabase_sync_paused: shouldSkipSupabaseWrite("readiness"),
@@ -351,6 +376,8 @@
     CHECKLIST_PATH,
     getRlsMemberId,
     isAnpiAdmin,
+    isAnpiAdminFromAuth,
+    isAnpiAdminFromLegacyMemberRole,
     isRlsMockEnforced,
     isSupabaseMockActive,
     isProductionRlsMode,
