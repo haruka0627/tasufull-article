@@ -245,7 +245,6 @@
     };
   }
 
-  const MVP_STORAGE_KEY = "tasful:builder:mvp:v1";
 
   function ensureBoardFeedListings(state) {
     if (!state || typeof state !== "object") return state;
@@ -294,11 +293,7 @@
     }
 
     if (changed) {
-      try {
-        global.localStorage.setItem(MVP_STORAGE_KEY, JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
+      return next;
     }
 
     return next;

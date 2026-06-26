@@ -7,6 +7,14 @@
 
   const global = typeof window !== "undefined" ? window : globalThis;
 
+  function b3Provider() {
+    return global.TasuBuilderDataProvider;
+  }
+
+  function b3MvpStore() {
+    return b3Provider()?.getMvpStore?.() || global.TasuBuilderMvpStoreLocal || null;
+  }
+
   function generalFlowApi() {
     return global.TasuBuilderGeneralFlow;
   }
@@ -298,6 +306,14 @@
   }
 
   function loadMvpState() {
+    const store = b3MvpStore();
+    if (store?.load) {
+      try {
+        return store.load();
+      } catch {
+        /* fallback below */
+      }
+    }
     try {
       const raw = localStorage.getItem(MVP_STORAGE_KEY);
       if (!raw) return null;
@@ -316,6 +332,15 @@
   }
 
   function saveMvpState(state) {
+    const store = b3MvpStore();
+    if (store?.save) {
+      try {
+        store.save(state);
+        return;
+      } catch {
+        /* fallback below */
+      }
+    }
     try {
       localStorage.setItem(MVP_STORAGE_KEY, JSON.stringify(state));
       const threads = state && typeof state === "object" && state.threads ? state.threads : {};
@@ -1585,6 +1610,14 @@
   }
 
   function getMvpNotifications() {
+    const repo = b3Provider()?.getNotificationRepository?.();
+    if (repo?.list) {
+      try {
+        return repo.list();
+      } catch {
+        /* fallback below */
+      }
+    }
     migrateLegacyMvpNotificationsIfNeeded();
     try {
       const raw = localStorage.getItem(MVP_NOTIFICATIONS_KEY);
@@ -1599,6 +1632,15 @@
   }
 
   function saveMvpNotifications(list) {
+    const repo = b3Provider()?.getNotificationRepository?.();
+    if (repo?.saveAll) {
+      try {
+        repo.saveAll(list);
+        return;
+      } catch {
+        /* fallback below */
+      }
+    }
     const state = loadMvpState() || {};
     const normalized = (Array.isArray(list) ? list : []).map((n) => normalizeMvpNotification(n, state));
     try {
@@ -1610,12 +1652,25 @@
   }
 
   function getMvpUnreadNotificationCount() {
+    const adapter = global.TasuBuilderNotificationAdapter;
+    if (adapter?.countUnread) {
+      try {
+        return adapter.countUnread({ skipActorFilter: true });
+      } catch {
+        /* fallback */
+      }
+    }
     return getMvpNotifications().filter((n) => !n.read).length;
   }
 
   function markMvpNotificationRead(notificationId) {
     const id = String(notificationId || "");
     if (!id) return;
+    const adapter = global.TasuBuilderNotificationAdapter;
+    if (adapter?.markAsRead) {
+      adapter.markAsRead(id);
+      return;
+    }
     const list = getMvpNotifications();
     let changed = false;
     const next = list.map((n) => {
@@ -1627,6 +1682,11 @@
   }
 
   function markAllMvpNotificationsRead() {
+    const adapter = global.TasuBuilderNotificationAdapter;
+    if (adapter?.markAllAsRead) {
+      adapter.markAllAsRead();
+      return;
+    }
     const list = getMvpNotifications();
     if (!list.some((n) => !n.read)) return;
     saveMvpNotifications(list.map((n) => ({ ...n, read: true })));
@@ -1667,7 +1727,12 @@
       },
       state
     );
-    saveMvpNotifications([row, ...getMvpNotifications()]);
+    const adapter = global.TasuBuilderNotificationAdapter;
+    if (adapter?.persistFromMvp) {
+      adapter.persistFromMvp(row);
+    } else {
+      saveMvpNotifications([row, ...getMvpNotifications()]);
+    }
     const recipientRole = payload.recipientRole || row.recipientRole || payload.audience || "";
     const thread = row.threadId ? (state.threads || {})[row.threadId] : null;
     const opsPartnerId =
@@ -1996,6 +2061,9 @@
       reload() {
         let loaded = loadMvpState() || state;
         loaded = ensureTalkBuilderDemoInState(loaded);
+        if (global.TasuBuilderBoardAdapter?.ensureFeedListings) {
+          return global.TasuBuilderBoardAdapter.ensureFeedListings(loaded);
+        }
         return window.TasuBuilderBoardFeed?.ensureBoardFeedListings?.(loaded) || loaded;
       },
       commit(next, meta) {
@@ -6920,9 +6988,12 @@
       appCallouts.innerHTML = call.join("");
 
       const buildRow = (a) => {
-        const partner = (state.partners || []).find((x) => x.partner_id === a.partner_id) || DEMO_PARTNERS.find((x) => x.partner_id === a.partner_id);
+        const partner =
+          global.TasuBuilderPartnerAdapter?.resolvePartnerForApplication?.(a, state) ||
+          (state.partners || []).find((x) => x.partner_id === a.partner_id) ||
+          DEMO_PARTNERS.find((x) => x.partner_id === a.partner_id);
         const name = partner?.display_name || a.partner_id;
-        const trades = (partner?.trades || []).map(formatTrade).slice(0, 2).join("・") || "—";
+        const trades = (partner?.skills || partner?.trades || []).map(formatTrade).slice(0, 2).join("・") || "—";
         const areas = (partner?.areas || []).map(formatArea).slice(0, 2).join("・") || "—";
         const st = selectedIds.includes(a.partner_id) ? "selected" : a.status || "applied";
         const stLabel = st === "selected" ? "選定済み" : st === "rejected" ? "却下" : "応募中";
@@ -6960,6 +7031,37 @@
         if (getRole() !== "owner") return;
         const partner_id = (sel || rej).getAttribute("data-partner-id");
         if (!partner_id) return;
+
+        const partnerAdapter = global.TasuBuilderPartnerAdapter;
+        if (partnerAdapter?.updateApplicationStatus) {
+          const result = partnerAdapter.updateApplicationStatus({
+            projectId: proj.project_id,
+            partnerId: partner_id,
+            status: sel ? "selected" : "rejected",
+          });
+          if (!result?.ok) return;
+          const next = api.reload();
+          const pr = next.projects.find((x) => x.project_id === proj.project_id) || proj;
+          const threadId = pr.main_thread_id;
+          const pname = partnerLabel(next, partner_id);
+          if (threadId && next.threads?.[threadId]) {
+            next.threads[threadId].events.push({
+              type: sel ? "selected" : "rejected",
+              actor: { id: next.owner_id || OWNER_ID, type: "owner", name: "TASFUL運営" },
+              ts: nowIso(),
+              text: `${sel ? "選定" : "却下"}: ${pname}`,
+            });
+            api.commit(next);
+          }
+          api.pushNotification({
+            type: sel ? "selected" : "rejected",
+            body: `${pr.title}: ${pname} を${sel ? "選定" : "却下"}しました。`,
+            project_id: pr.project_id,
+            thread_id: threadId || pr.main_thread_id || null,
+          });
+          renderProjectDetailPage();
+          return;
+        }
 
         const next = api.reload();
         const pidx = (next.projects || []).findIndex((x) => x.project_id === proj.project_id);
@@ -8150,10 +8252,18 @@
   }
 
   function getApplication(state, project_id, partner_id) {
+    const adapter = global.TasuBuilderPartnerAdapter;
+    if (adapter?.getApplication) {
+      return adapter.getApplication(project_id, partner_id, { state });
+    }
     return (state.applications || []).find((a) => a.project_id === project_id && a.partner_id === partner_id) || null;
   }
 
   function upsertApplication(state, app) {
+    const adapter = global.TasuBuilderPartnerAdapter;
+    if (adapter?.upsertApplication) {
+      return adapter.upsertApplication(app, { state });
+    }
     const next = { ...state };
     const list = [...(next.applications || [])];
     const idx = list.findIndex((a) => a.project_id === app.project_id && a.partner_id === app.partner_id);
@@ -8164,6 +8274,11 @@
   }
 
   function partnerLabel(state, partner_id) {
+    const adapter = global.TasuBuilderPartnerAdapter;
+    if (adapter?.getDisplayName) {
+      const name = adapter.getDisplayName(partner_id, { state });
+      if (name) return name;
+    }
     const p =
       (state.partners || []).find((x) => x.partner_id === partner_id) ||
       DEMO_PARTNERS.find((x) => x.partner_id === partner_id);
@@ -10179,6 +10294,18 @@
       { type: "completion_requested", actor, ts, text: "完了報告を提出しました。" },
     ];
 
+    global.TasuBuilderBoardAdapter?.recordBoardEvent?.(next, "completion_requested", {
+      thread_id: tid,
+      project_id: project.project_id,
+      status: "submitted",
+    });
+
+    global.TasuBuilderStorageAdapter?.registerCompletionPhotos?.(photos, {
+      project_id: project.project_id,
+      thread_id: tid,
+      partner_id: String(actor?.id || "").trim(),
+    });
+
     api.commit(next);
 
     const body = `${project.title || project.project_id} — 完了報告をご確認ください。`;
@@ -10563,14 +10690,13 @@
     });
   }
 
-  function commitBoardApplicationDecision(api, project, partnerId, selected) {
-    const next = api.reload();
+  function mutateBoardApplicationDecision(next, project, partnerId, selected) {
     const pidx = (next.projects || []).findIndex((x) => x.project_id === project.project_id);
-    if (pidx < 0) return false;
+    if (pidx < 0) return { ok: false, threadId: null, project: null };
     const pr = next.projects[pidx];
     const req = Number(pr.required_partners || 1);
     const selectedIdsNext = Array.isArray(pr.selected_partner_ids) ? [...pr.selected_partner_ids] : [];
-    if (selected && selectedIdsNext.length >= req) return false;
+    if (selected && selectedIdsNext.length >= req) return { ok: false, threadId: null, project: null };
 
     next.applications = (next.applications || []).map((a) => {
       if (a.project_id !== project.project_id || a.partner_id !== partnerId) return a;
@@ -10599,17 +10725,76 @@
       ...next.projects[pidx],
       selected_partner_ids: selectedIdsNext,
     };
+    return { ok: true, threadId, project: next.projects[pidx] };
+  }
+
+  function commitBoardApplicationDecision(api, project, partnerId, selected) {
+    const adapter = global.TasuBuilderBoardAdapter;
+    if (adapter?.commitBoardMutation) {
+      let threadId = null;
+      let updatedProject = null;
+      const committed = adapter.commitBoardMutation(
+        (next) => {
+          const result = mutateBoardApplicationDecision(next, project, partnerId, selected);
+          threadId = result.threadId;
+          updatedProject = result.project;
+          return result.ok ? next : null;
+        },
+        {
+          source: "board_application_decision",
+          boardEvent: {
+            type: "application_status_changed",
+            payload: {
+              project_id: project.project_id,
+              partner_id: partnerId,
+              status: selected ? "selected" : "rejected",
+            },
+          },
+        }
+      );
+      if (!committed || !updatedProject) return false;
+      global.TasuBuilderPartnerAdapter?.recordPartnerEvent?.(
+        committed,
+        selected ? "partner_application_selected" : "partner_application_rejected",
+        {
+          project_id: project.project_id,
+          partner_id: partnerId,
+          status: selected ? "selected" : "rejected",
+        }
+      );
+      notifyBoardApplicationDecision(api, {
+        project: updatedProject,
+        partnerId,
+        selected,
+        threadId,
+      });
+      return true;
+    }
+
+    const next = api.reload();
+    const result = mutateBoardApplicationDecision(next, project, partnerId, selected);
+    if (!result.ok) return false;
     api.commit(next);
     notifyBoardApplicationDecision(api, {
-      project: next.projects[pidx],
+      project: result.project,
       partnerId,
       selected,
-      threadId,
+      threadId: result.threadId,
     });
     return true;
   }
 
   function boardApplyToProject(api, projectId) {
+    const adapter = global.TasuBuilderBoardAdapter;
+    if (adapter?.applyToProject) {
+      const res = adapter.applyToProject(projectId, getPartnerId(), {
+        isBoardFeedItem,
+        computeProjectStatus,
+        getBoardTypeConfig,
+      });
+      return res?.ok === true;
+    }
+
     const next = api.reload();
     const myPartnerId = getPartnerId();
     const project = (next.projects || []).find((x) => x.project_id === projectId);
@@ -10682,16 +10867,25 @@
     const typeTabsHost = document.querySelector("[data-builder-board-type-tabs]");
     renderBoardTypeTabs(typeTabsHost, () => renderBoardProjectsPage());
     const api = mvp();
-    const state = api.reload();
+    const adapter = global.TasuBuilderBoardAdapter;
+    let state;
+    let rows;
+    if (adapter?.listBoardProjects) {
+      const bundle = adapter.listBoardProjects();
+      state = bundle.state;
+      rows = (bundle.projects || []).slice().sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+    } else {
+      state = api.reload();
+      rows = filterBoardProjects(state.projects || [])
+        .slice()
+        .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+    }
     const list = document.querySelector("[data-builder-board-project-list]");
     const kpi = document.querySelector("[data-builder-board-project-count]");
     const topKpi = document.querySelector("[data-builder-board-kpi]");
     if (!list || !kpi || !topKpi) return;
     topKpi.textContent = `role: ${getRole()}`;
 
-    let rows = filterBoardProjects(state.projects || [])
-      .slice()
-      .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
     if (boardFeedTypeFilter && boardFeedTypeFilter !== "all") {
       const matchesTab =
         window.TasuBuilderBoardFeed?.matchesBoardTabFilter ||
@@ -10920,9 +11114,21 @@
   function renderBoardProjectDetailPage() {
     applyBoardPageBackLinks();
     const api = mvp();
-    const state = api.reload();
     const id = getProjectIdParam() || "demo-project-001";
-    const project = (state.projects || []).find((x) => x.project_id === id) || DEMO_PROJECTS.find((x) => x.project_id === id);
+    const adapter = global.TasuBuilderBoardAdapter;
+    let state;
+    let project;
+    if (adapter?.getBoardProject) {
+      const bundle = adapter.getBoardProject(id);
+      state = bundle?.state || api.reload();
+      project =
+        bundle?.project ||
+        (state.projects || []).find((x) => x.project_id === id) ||
+        DEMO_PROJECTS.find((x) => x.project_id === id);
+    } else {
+      state = api.reload();
+      project = (state.projects || []).find((x) => x.project_id === id) || DEMO_PROJECTS.find((x) => x.project_id === id);
+    }
 
     if (!project || !isBoardFeedItem(project)) {
       syncBoardPdApplyDock({ canApply: false });
@@ -10948,7 +11154,9 @@
     const rewardText = spec.reward || budgetText;
     const required = Math.max(1, Number(project.required_partners || 1));
     const selectedCount = Array.isArray(project.selected_partner_ids) ? project.selected_partner_ids.length : 0;
-    const apps = (state.applications || []).filter((a) => a.project_id === project.project_id);
+    const apps =
+      global.TasuBuilderBoardAdapter?.listBoardApplications?.(project.project_id, { state }) ||
+      (state.applications || []).filter((a) => a.project_id === project.project_id);
     const appCount = apps.length;
     const threadId = resolveBoardMainThreadId(state, project);
     const role = getRole();
@@ -12447,6 +12655,17 @@
   }
 
   function addSitePhotoToThread(threadId, payload = {}) {
+    const storage = global.TasuBuilderStorageAdapter;
+    if (storage?.uploadProjectPhoto) {
+      return storage.uploadProjectPhoto(threadId, payload, {
+        getActor,
+        threadCanAddSitePhoto,
+        normalizeSitePhoto,
+        normalizeMvpThreadSiteData,
+        pushSitePhotoNotification,
+      });
+    }
+
     const tid = String(threadId || "").trim();
     const fileName = String(payload.fileName || payload.name || "").trim();
     const memo = String(payload.memo || "").trim();
@@ -12718,7 +12937,11 @@
   function sendMvpThreadMessage(text, attachments, threadId) {
     const tid = String(threadId || getMvpThreadIdParam() || "").trim();
     const body = String(text || "").trim();
-    const attach = Array.isArray(attachments) ? attachments : [];
+    let attach = Array.isArray(attachments) ? attachments : [];
+    const storage = global.TasuBuilderStorageAdapter;
+    if (storage?.normalizeChatAttachments && attach.length) {
+      attach = storage.normalizeChatAttachments(attach, { threadId: tid });
+    }
     if (!tid || (!body && !attach.length)) return false;
 
     const api = mvp();
@@ -13126,6 +13349,26 @@
   function getThreadPdfOutputs(threadId, state) {
     const tid = String(threadId || "").trim();
     if (!tid) return [];
+    const pdfAdapter = global.TasuBuilderPdfAdapter;
+    if (pdfAdapter?.listThreadPdfOutputs) {
+      return pdfAdapter.listThreadPdfOutputs(tid, state);
+    }
+    const storage = global.TasuBuilderStorageAdapter;
+    if (storage?.listFiles) {
+      const indexed = storage.listFiles({ thread_id: tid, category: "pdf" });
+      if (indexed.length) {
+        return indexed.map((f) => ({
+          id: f.file_id,
+          project_id: f.project_id,
+          thread_id: f.thread_id,
+          kind: f.meta?.kind || "pdf",
+          fileName: f.file_name,
+          url: f.data_url,
+          dataUrl: f.data_url,
+          storagePath: f.storage_key,
+        }));
+      }
+    }
     const st = state || mvp().reload();
     const thread = st.threads?.[tid];
     if (!thread) return [];
@@ -13148,6 +13391,22 @@
   }
 
   function saveThreadPdfOutput(threadId, pdfOutput, state) {
+    const pdfAdapter = global.TasuBuilderPdfAdapter;
+    if (pdfAdapter?.saveThreadPdfOutput) {
+      return pdfAdapter.saveThreadPdfOutput(threadId, pdfOutput, state, {
+        normalizeThreadPdfOutput,
+      })
+        ? "adapter"
+        : false;
+    }
+    const storage = global.TasuBuilderStorageAdapter;
+    if (storage?.saveThreadPdfOutput) {
+      storage.saveThreadPdfOutput(threadId, pdfOutput, state, {
+        normalizeThreadPdfOutput,
+      });
+      return "adapter";
+    }
+
     const tid = String(threadId || "").trim();
     if (!tid || !pdfOutput) return false;
     const st = state || mvp().reload();
@@ -13314,8 +13573,8 @@
     const next = api.reload();
     const output = buildWorkReportPdfOutput(tid, next);
     if (!output) return { ok: false, error: "thread_not_found" };
-    saveThreadPdfOutput(tid, output, next);
-    api.commit(next);
+    const saved = saveThreadPdfOutput(tid, output, next);
+    if (saved !== "adapter") api.commit(next);
     pushReportPdfNotification(tid, "work_report");
     document.dispatchEvent(new CustomEvent("builder:mvp-changed"));
     return { ok: true, pdfOutput: output };
@@ -13337,8 +13596,8 @@
     }
     const output = buildCompletionReportPdfOutput(tid, next);
     if (!output) return { ok: false, error: "build_failed" };
-    saveThreadPdfOutput(tid, output, next);
-    api.commit(next);
+    const saved = saveThreadPdfOutput(tid, output, next);
+    if (saved !== "adapter") api.commit(next);
     pushReportPdfNotification(tid, "completion_report");
     document.dispatchEvent(new CustomEvent("builder:mvp-changed"));
     return { ok: true, pdfOutput: output };
@@ -18198,6 +18457,16 @@
       return { ok: true };
     },
   };
+
+  if (global.TasuBuilderB3Init?.registerBuilderBridge) {
+    global.TasuBuilderB3Init.registerBuilderBridge({
+      normalizeMvpState,
+      normalizeMvpNotification,
+      migrateLegacyMvpNotificationsIfNeeded,
+      dispatchMvpNotificationsChanged,
+    });
+    global.TasuBuilderB3Init.finish();
+  }
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
