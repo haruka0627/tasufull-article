@@ -464,6 +464,237 @@
     });
   }
 
+  function ntfPriorityClass(priority) {
+    return `builder-ntf-priority builder-ntf-priority--${String(priority || "normal").replace(/-/g, "_")}`;
+  }
+
+  function ntfStatusClass(status) {
+    return `builder-ntf-status builder-ntf-status--${String(status || "unread").replace(/-/g, "_")}`;
+  }
+
+  function bindNotifications(project) {
+    const Store = global.TasuBuilderProjectStore;
+    if (!Store) return;
+
+    const sourceFilter = $("[data-builder-pd-ntf-source-filter]");
+    const priorityFilter = $("[data-builder-pd-ntf-priority-filter]");
+    const statusFilter = $("[data-builder-pd-ntf-status-filter]");
+    const form = $("[data-builder-pd-ntf-form]");
+    const sourceSel = $("[data-builder-pd-ntf-source]");
+    const prioritySel = $("[data-builder-pd-ntf-priority]");
+    const noteIdInput = $("[data-builder-pd-ntf-id]");
+
+    const fillOptions = (el, items, includeAll) => {
+      if (!el || !items) return;
+      el.innerHTML =
+        (includeAll ? `<option value="">すべて</option>` : "") +
+        items.map((t) => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.label)}</option>`).join("");
+    };
+
+    fillOptions(sourceFilter, Store.NOTIFICATION_SOURCES, true);
+    fillOptions(priorityFilter, Store.NOTIFICATION_PRIORITIES, true);
+    fillOptions(statusFilter, Store.NOTIFICATION_STATUSES, true);
+    fillOptions(sourceSel, Store.NOTIFICATION_SOURCES, false);
+    fillOptions(prioritySel, Store.NOTIFICATION_PRIORITIES, false);
+    if (sourceSel) sourceSel.value = "manual";
+    if (prioritySel) prioritySel.value = "normal";
+
+    function getFilters() {
+      return {
+        source: sourceFilter?.value || "",
+        priority: priorityFilter?.value || "",
+        status: statusFilter?.value || "",
+      };
+    }
+
+    function filterNotifications(list) {
+      const f = getFilters();
+      return list.filter((n) => {
+        if (f.source && n.source !== f.source) return false;
+        if (f.priority && n.priority !== f.priority) return false;
+        if (f.status && n.status !== f.status) return false;
+        return true;
+      });
+    }
+
+    function clearNtfForm() {
+      if (noteIdInput) noteIdInput.value = "";
+      if ($("[data-builder-pd-ntf-title]")) $("[data-builder-pd-ntf-title]").value = "";
+      if ($("[data-builder-pd-ntf-message]")) $("[data-builder-pd-ntf-message]").value = "";
+      if ($("[data-builder-pd-ntf-due]")) $("[data-builder-pd-ntf-due]").value = "";
+      if (sourceSel) sourceSel.value = "manual";
+      if (prioritySel) prioritySel.value = "normal";
+    }
+
+    function fillNtfForm(note) {
+      if (noteIdInput) noteIdInput.value = note.id || "";
+      if (sourceSel) sourceSel.value = note.source || "manual";
+      if (prioritySel) prioritySel.value = note.priority || "normal";
+      if ($("[data-builder-pd-ntf-title]")) $("[data-builder-pd-ntf-title]").value = note.title || "";
+      if ($("[data-builder-pd-ntf-message]")) $("[data-builder-pd-ntf-message]").value = note.message || "";
+      if ($("[data-builder-pd-ntf-due]")) $("[data-builder-pd-ntf-due]").value = note.dueDate || "";
+    }
+
+    function showNtfMsg(text) {
+      const msg = $("[data-builder-pd-ntf-status-msg]");
+      if (!msg) return;
+      msg.textContent = text;
+      setTimeout(() => {
+        msg.textContent = "";
+      }, 2000);
+    }
+
+    function renderNotificationList() {
+      const tbody = $("[data-builder-pd-ntf-tbody]");
+      const empty = $("[data-builder-pd-ntf-empty]");
+      const countEl = $("[data-builder-pd-ntf-count]");
+      const unreadEl = $("[data-builder-pd-ntf-unread]");
+      if (!tbody) return;
+
+      const all = Store.getNotifications?.(project.id, { includeArchived: true }) || [];
+      const notes = filterNotifications(all);
+      const unread = all.filter((n) => n.status === "unread").length;
+      if (countEl) countEl.textContent = `${notes.length} 件`;
+      if (unreadEl) unreadEl.textContent = `未読 ${unread}`;
+
+      if (!notes.length) {
+        tbody.innerHTML = "";
+        if (empty) empty.hidden = false;
+        return;
+      }
+      if (empty) empty.hidden = true;
+
+      tbody.innerHTML = notes
+        .map(
+          (n) =>
+            `<tr data-ntf-id="${escapeHtml(n.id)}" tabindex="0">` +
+            `<td><span class="${ntfPriorityClass(n.priority)}">${escapeHtml(n.priorityLabel)}</span></td>` +
+            `<td>${escapeHtml(n.sourceLabel)}</td>` +
+            `<td>${escapeHtml(n.title || "—")}</td>` +
+            `<td>${escapeHtml(n.message || "—")}</td>` +
+            `<td>${escapeHtml(n.dueDate || "—")}</td>` +
+            `<td><span class="${ntfStatusClass(n.status)}">${escapeHtml(n.statusLabel)}</span></td>` +
+            `<td class="builder-ph-ntf-actions">` +
+            `<button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-ntf-read="${escapeHtml(n.id)}">既読</button>` +
+            `<button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-ntf-archive="${escapeHtml(n.id)}">アーカイブ</button>` +
+            `</td>` +
+            `</tr>`
+        )
+        .join("");
+
+      tbody.querySelectorAll("tr[data-ntf-id]").forEach((row) => {
+        row.addEventListener("click", (ev) => {
+          if (ev.target.closest("button")) return;
+          const note = notes.find((n) => n.id === row.getAttribute("data-ntf-id"));
+          if (note) fillNtfForm(note);
+        });
+      });
+
+      tbody.querySelectorAll("[data-ntf-read]").forEach((btn) => {
+        btn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          const id = btn.getAttribute("data-ntf-read");
+          const out = Store.markNotificationRead?.(project.id, id, "一覧から既読");
+          if (out?.ok) {
+            currentProject = out.project;
+            renderTimeline(currentProject);
+            renderNotificationList();
+            showNtfMsg("既読にしました");
+          }
+        });
+      });
+
+      tbody.querySelectorAll("[data-ntf-archive]").forEach((btn) => {
+        btn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          const id = btn.getAttribute("data-ntf-archive");
+          const out = Store.archiveNotification?.(project.id, id, "一覧からアーカイブ");
+          if (out?.ok) {
+            currentProject = out.project;
+            renderTimeline(currentProject);
+            clearNtfForm();
+            renderNotificationList();
+            showNtfMsg("アーカイブしました");
+          }
+        });
+      });
+    }
+
+    renderNotificationList();
+    clearNtfForm();
+
+    sourceFilter?.addEventListener("change", () => renderNotificationList());
+    priorityFilter?.addEventListener("change", () => renderNotificationList());
+    statusFilter?.addEventListener("change", () => renderNotificationList());
+
+    $("[data-builder-pd-ntf-new]")?.addEventListener("click", () => clearNtfForm());
+
+    form?.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const payload = {
+        source: sourceSel?.value || "manual",
+        type: sourceSel?.value || "manual",
+        priority: prioritySel?.value || "normal",
+        title: $("[data-builder-pd-ntf-title]")?.value || "",
+        message: $("[data-builder-pd-ntf-message]")?.value || "",
+        dueDate: $("[data-builder-pd-ntf-due]")?.value || "",
+      };
+      const existingId = noteIdInput?.value?.trim();
+      const out = existingId
+        ? Store.updateNotification?.(project.id, existingId, {
+            ...payload,
+            notificationReason: "案件詳細から通知を更新",
+          })
+        : Store.addNotification?.(project.id, payload);
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        renderNotificationList();
+        if (!existingId && out.notification) fillNtfForm(out.notification);
+        showNtfMsg(existingId ? "通知を更新しました" : "通知を追加しました");
+      }
+    });
+
+    $("[data-builder-pd-ntf-read]")?.addEventListener("click", () => {
+      const id = noteIdInput?.value?.trim();
+      if (!id) return;
+      const out = Store.markNotificationRead?.(project.id, id, "案件詳細から既読");
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        renderNotificationList();
+        fillNtfForm(out.notification);
+        showNtfMsg("既読にしました");
+      }
+    });
+
+    $("[data-builder-pd-ntf-unread-btn]")?.addEventListener("click", () => {
+      const id = noteIdInput?.value?.trim();
+      if (!id) return;
+      const out = Store.markNotificationUnread?.(project.id, id, "案件詳細から未読に戻す");
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        renderNotificationList();
+        fillNtfForm(out.notification);
+        showNtfMsg("未読に戻しました");
+      }
+    });
+
+    $("[data-builder-pd-ntf-archive]")?.addEventListener("click", () => {
+      const id = noteIdInput?.value?.trim();
+      if (!id) return;
+      const out = Store.archiveNotification?.(project.id, id, "案件詳細からアーカイブ");
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        clearNtfForm();
+        renderNotificationList();
+        showNtfMsg("アーカイブしました");
+      }
+    });
+  }
+
   function bindFinance(project) {
     const form = $("[data-builder-pd-finance-form]");
     const estimate = $("[data-builder-pd-finance-estimate]");
@@ -717,6 +948,7 @@
     bindContract(project);
     bindCompletion(project);
     bindDocuments(project);
+    bindNotifications(project);
     bindFinance(project);
     bindSchedule(project);
     bindAiLink(project);

@@ -1,12 +1,12 @@
 /**
- * Builder Project Hub — 案件ストア（Phase 6-A〜6-F · localStorage）
+ * Builder Project Hub — 案件ストア（Phase 6-A〜6-G · localStorage）
  * Builder 専用 · Platform / AI秘書 / TASFUL AI 非連携
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_project_hub_v1";
-  const SCHEMA_VERSION = 6;
+  const SCHEMA_VERSION = 7;
 
   const STATUSES = Object.freeze([
     { id: "inquiry", label: "問い合わせ" },
@@ -45,6 +45,10 @@
     document_updated: "ドキュメント更新",
     document_archived: "ドキュメントアーカイブ",
     document_deleted: "ドキュメント削除",
+    notification_added: "通知追加",
+    notification_updated: "通知更新",
+    notification_read: "通知既読",
+    notification_archived: "通知アーカイブ",
   });
 
   const TAX_RATE = 0.1;
@@ -132,6 +136,39 @@
     ARCHIVE: "archive",
   });
 
+  /** 通知優先度（Phase 6-G） */
+  const NOTIFICATION_PRIORITIES = Object.freeze([
+    { id: "low", label: "低" },
+    { id: "normal", label: "通常" },
+    { id: "high", label: "高" },
+    { id: "urgent", label: "緊急" },
+  ]);
+
+  const NOTIFICATION_STATUSES = Object.freeze([
+    { id: "unread", label: "未読" },
+    { id: "read", label: "既読" },
+    { id: "archived", label: "アーカイブ" },
+  ]);
+
+  const NOTIFICATION_SOURCES = Object.freeze([
+    { id: "schedule", label: "工程" },
+    { id: "finance", label: "収支" },
+    { id: "estimate", label: "見積" },
+    { id: "invoice", label: "請求" },
+    { id: "contract", label: "契約" },
+    { id: "completion", label: "完了" },
+    { id: "document", label: "ドキュメント" },
+    { id: "vision", label: "Vision" },
+    { id: "manual", label: "手動" },
+  ]);
+
+  const NOTIFICATION_INTENT_TYPES = Object.freeze({
+    ADD: "add",
+    SET_PRIORITY: "set_priority",
+    MARK_READ: "mark_read",
+    ARCHIVE: "archive",
+  });
+
   /** 支払い状況（Phase 6-C） */
   const PAYMENT_STATUSES = Object.freeze([
     { id: "unpaid", label: "未入金" },
@@ -210,6 +247,18 @@
 
   function documentStatusLabel(id) {
     return DOCUMENT_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function notificationPriorityLabel(id) {
+    return NOTIFICATION_PRIORITIES.find((p) => p.id === id)?.label || id;
+  }
+
+  function notificationStatusLabel(id) {
+    return NOTIFICATION_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function notificationSourceLabel(id) {
+    return NOTIFICATION_SOURCES.find((s) => s.id === id)?.label || id;
   }
 
   function guessDocumentMime(type) {
@@ -360,6 +409,134 @@
 
   function normalizeDocuments(list) {
     return Array.isArray(list) ? list.map(normalizeDocument) : [];
+  }
+
+  function normalizeNotificationMetadata(raw) {
+    const m = raw && typeof raw === "object" ? raw : {};
+    const out = {};
+    Object.keys(m).forEach((k) => {
+      out[String(k)] = String(m[k] ?? "");
+    });
+    return out;
+  }
+
+  function normalizeNotification(raw) {
+    const n = raw && typeof raw === "object" ? raw : {};
+    const source = String(n.source || n.type || "manual");
+    const priority = String(n.priority || "normal");
+    const status = String(n.status || "unread");
+    const t = nowIso();
+    return {
+      id: String(n.id || uid("ntf")),
+      type: String(n.type || source),
+      typeLabel: String(n.typeLabel || notificationSourceLabel(source)),
+      title: String(n.title || ""),
+      message: String(n.message || ""),
+      priority,
+      priorityLabel: String(n.priorityLabel || notificationPriorityLabel(priority)),
+      status,
+      statusLabel: String(n.statusLabel || notificationStatusLabel(status)),
+      source,
+      sourceLabel: String(n.sourceLabel || notificationSourceLabel(source)),
+      dueDate: String(n.dueDate || ""),
+      createdAt: String(n.createdAt || t),
+      readAt: String(n.readAt || ""),
+      archivedAt: String(n.archivedAt || ""),
+      linkedTimelineId: String(n.linkedTimelineId || ""),
+      linkedDocumentId: String(n.linkedDocumentId || ""),
+      linkedVisionId: String(n.linkedVisionId || ""),
+      metadata: normalizeNotificationMetadata(n.metadata),
+    };
+  }
+
+  function normalizeNotifications(list) {
+    return Array.isArray(list) ? list.map(normalizeNotification) : [];
+  }
+
+  function seedDemoNotifications(projectId) {
+    const day = (n) => new Date(Date.now() - n * 86400000).toISOString();
+    if (projectId === "PRJ-2026-001") {
+      return normalizeNotifications([
+        {
+          id: "ntf-001-1",
+          type: "schedule",
+          source: "schedule",
+          title: "工程期限の確認",
+          message: "見積工程の終了予定日が近づいています。",
+          priority: "high",
+          dueDate: dateOnlyOffset(3),
+          createdAt: day(1),
+        },
+        {
+          id: "ntf-001-2",
+          type: "finance",
+          source: "finance",
+          title: "支払期限",
+          message: "概算見積に基づく支払予定日を確認してください。",
+          priority: "urgent",
+          dueDate: dateOnlyOffset(7),
+          createdAt: day(2),
+        },
+        {
+          id: "ntf-001-3",
+          type: "contract",
+          source: "contract",
+          title: "契約確認",
+          message: "契約書ドラフトの確認が必要です。",
+          priority: "normal",
+          dueDate: dateOnlyOffset(14),
+          createdAt: day(3),
+        },
+        {
+          id: "ntf-001-4",
+          type: "completion",
+          source: "completion",
+          title: "完了確認",
+          message: "着工前の完了ステータス確認（未着手）。",
+          priority: "low",
+          createdAt: day(4),
+        },
+        {
+          id: "ntf-001-5",
+          type: "vision",
+          source: "vision",
+          title: "Vision診断の参照",
+          message: "現場写真の Builder AI 診断結果を案件に反映できます。",
+          priority: "normal",
+          createdAt: day(5),
+        },
+      ]);
+    }
+    if (projectId === "PRJ-2026-002") {
+      return normalizeNotifications([
+        {
+          id: "ntf-002-1",
+          type: "schedule",
+          source: "schedule",
+          title: "着工予定の確認",
+          message: "キッチン解体の着工予定を確認してください。",
+          priority: "high",
+          dueDate: dateOnlyOffset(2),
+          createdAt: day(1),
+        },
+      ]);
+    }
+    if (projectId === "PRJ-2026-003") {
+      return normalizeNotifications([
+        {
+          id: "ntf-003-1",
+          type: "invoice",
+          source: "invoice",
+          title: "請求残金の確認",
+          message: "発行済請求の支払期限を確認してください。",
+          priority: "urgent",
+          dueDate: dateOnlyOffset(-3),
+          status: "unread",
+          createdAt: day(2),
+        },
+      ]);
+    }
+    return [];
   }
 
   function seedDemoDocuments(projectId) {
@@ -635,6 +812,7 @@
       contract: normalizeContract(p.contract),
       completion: normalizeCompletion(p.completion),
       documents: normalizeDocuments(p.documents),
+      notifications: normalizeNotifications(p.notifications),
       memo: String(p.memo || ""),
       createdAt: String(p.createdAt || nowIso()),
       updatedAt: String(p.updatedAt || p.createdAt || nowIso()),
@@ -719,6 +897,7 @@
           photos: [],
         },
         documents: seedDemoDocuments("PRJ-2026-001"),
+        notifications: seedDemoNotifications("PRJ-2026-001"),
         memo: "外壁ひび・塗装剥離。現調済み。",
         createdAt: day(14),
         updatedAt: day(2),
@@ -787,6 +966,7 @@
           ],
         },
         documents: seedDemoDocuments("PRJ-2026-002"),
+        notifications: seedDemoNotifications("PRJ-2026-002"),
         memo: "キッチン・浴室の同時リフォーム相談。",
         createdAt: day(5),
         updatedAt: day(1),
@@ -857,6 +1037,7 @@
           ],
         },
         documents: seedDemoDocuments("PRJ-2026-003"),
+        notifications: seedDemoNotifications("PRJ-2026-003"),
         memo: "施工週次報告あり。",
         createdAt: day(30),
         updatedAt: day(0),
@@ -2019,6 +2200,416 @@
     return { ok: false, error: "invalid_intent" };
   }
 
+  function formatNotificationDetail(n) {
+    const item = normalizeNotification(n);
+    return `${item.sourceLabel} · ${item.title || "—"} · ${item.priorityLabel} · ${item.statusLabel}`;
+  }
+
+  function getProjectNotificationsList(project, options) {
+    const opts = options && typeof options === "object" ? options : {};
+    const includeArchived = Boolean(opts.includeArchived);
+    const list = normalizeNotifications(project?.notifications);
+    return list.filter((n) => {
+      if (n.status === "archived" && !includeArchived) return false;
+      return true;
+    });
+  }
+
+  function isHighPriorityNotification(n) {
+    const p = String(n?.priority || "");
+    return p === "high" || p === "urgent";
+  }
+
+  function isNotificationOverdue(n, today) {
+    if (!n?.dueDate || n.status === "archived") return false;
+    const due = parseDateOnly(n.dueDate);
+    const ref = parseDateOnly(today || todayDateOnly());
+    if (!due || !ref) return false;
+    return due < ref;
+  }
+
+  function isNotificationDueToday(n, today) {
+    if (!n?.dueDate || n.status === "archived") return false;
+    return String(n.dueDate) === String(today || todayDateOnly());
+  }
+
+  function getProjectNotificationCounts(project) {
+    const list = getProjectNotificationsList(project, { includeArchived: false });
+    return {
+      total: list.length,
+      unread: list.filter((n) => n.status === "unread").length,
+      highPriority: list.filter((n) => isHighPriorityNotification(n)).length,
+      overdue: list.filter((n) => isNotificationOverdue(n)).length,
+      dueToday: list.filter((n) => isNotificationDueToday(n)).length,
+    };
+  }
+
+  function persistProjectNotifications(projectId, mutator) {
+    const existing = getProject(projectId);
+    if (!existing) return { ok: false, error: "not_found" };
+    const notes = normalizeNotifications(existing.notifications);
+    const result = mutator(notes, existing);
+    if (!result) return { ok: false, error: "mutation_failed" };
+    const next = normalizeProject({ ...existing, notifications: result.notifications });
+    if (result.timelineType) {
+      addTimelineEvent(next, result.timelineType, result.timelineDetail || "");
+    }
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === projectId);
+    data.projects[idx] = next;
+    writeAll(data);
+    return {
+      ok: true,
+      project: next,
+      notification: result.notification || null,
+      notifications: next.notifications,
+    };
+  }
+
+  function getNotifications(projectId, options) {
+    const project = getProject(projectId);
+    if (!project) return [];
+    return getProjectNotificationsList(project, options);
+  }
+
+  function getUnreadNotifications(projectId, options) {
+    return getNotifications(projectId, options).filter((n) => n.status === "unread");
+  }
+
+  function getNotificationsByType(projectId, type, options) {
+    const t = String(type || "").trim();
+    return getNotifications(projectId, options).filter((n) => !t || n.type === t || n.source === t);
+  }
+
+  function getNotificationsByPriority(projectId, priority, options) {
+    const p = String(priority || "").trim();
+    return getNotifications(projectId, options).filter((n) => !p || n.priority === p);
+  }
+
+  function getNotificationSummary() {
+    const projects = listProjects();
+    let totalNotifications = 0;
+    let unreadCount = 0;
+    let highPriorityCount = 0;
+    let overdueCount = 0;
+    let dueTodayCount = 0;
+    projects.forEach((p) => {
+      const c = getProjectNotificationCounts(p);
+      totalNotifications += c.total;
+      unreadCount += c.unread;
+      highPriorityCount += c.highPriority;
+      overdueCount += c.overdue;
+      dueTodayCount += c.dueToday;
+    });
+    return {
+      totalNotifications,
+      unreadCount,
+      highPriorityCount,
+      overdueCount,
+      dueTodayCount,
+      projectCount: projects.length,
+    };
+  }
+
+  function addNotification(projectId, noteInput) {
+    const input = noteInput && typeof noteInput === "object" ? noteInput : {};
+    const note = normalizeNotification({
+      ...input,
+      status: input.status || "unread",
+      createdAt: nowIso(),
+    });
+    return persistProjectNotifications(projectId, (notes) => ({
+      notifications: [...notes, note],
+      notification: note,
+      timelineType: "notification_added",
+      timelineDetail: formatNotificationDetail(note),
+    }));
+  }
+
+  function updateNotification(projectId, noteId, notePatch) {
+    const nid = String(noteId || "").trim();
+    if (!nid) return { ok: false, error: "invalid_id" };
+    const patch = notePatch && typeof notePatch === "object" ? notePatch : {};
+    return persistProjectNotifications(projectId, (notes) => {
+      const idx = notes.findIndex((n) => n.id === nid);
+      if (idx < 0) return null;
+      const merged = normalizeNotification({ ...notes[idx], ...patch });
+      if (patch.metadata) merged.metadata = normalizeNotificationMetadata(patch.metadata);
+      const next = [...notes];
+      next[idx] = merged;
+      return {
+        notifications: next,
+        notification: merged,
+        timelineType: "notification_updated",
+        timelineDetail:
+          patch.notificationReason != null
+            ? String(patch.notificationReason).slice(0, 500)
+            : formatNotificationDetail(merged),
+      };
+    });
+  }
+
+  function markNotificationRead(projectId, noteId, reason) {
+    const nid = String(noteId || "").trim();
+    if (!nid) return { ok: false, error: "invalid_id" };
+    return persistProjectNotifications(projectId, (notes) => {
+      const idx = notes.findIndex((n) => n.id === nid);
+      if (idx < 0) return null;
+      const merged = normalizeNotification({
+        ...notes[idx],
+        status: "read",
+        readAt: nowIso(),
+      });
+      const next = [...notes];
+      next[idx] = merged;
+      return {
+        notifications: next,
+        notification: merged,
+        timelineType: "notification_read",
+        timelineDetail: reason || formatNotificationDetail(merged),
+      };
+    });
+  }
+
+  function markNotificationUnread(projectId, noteId, reason) {
+    const nid = String(noteId || "").trim();
+    if (!nid) return { ok: false, error: "invalid_id" };
+    return persistProjectNotifications(projectId, (notes) => {
+      const idx = notes.findIndex((n) => n.id === nid);
+      if (idx < 0) return null;
+      const merged = normalizeNotification({
+        ...notes[idx],
+        status: "unread",
+        readAt: "",
+      });
+      const next = [...notes];
+      next[idx] = merged;
+      return {
+        notifications: next,
+        notification: merged,
+        timelineType: "notification_updated",
+        timelineDetail: reason || `未読に戻す · ${formatNotificationDetail(merged)}`,
+      };
+    });
+  }
+
+  function archiveNotification(projectId, noteId, reason) {
+    const nid = String(noteId || "").trim();
+    if (!nid) return { ok: false, error: "invalid_id" };
+    return persistProjectNotifications(projectId, (notes) => {
+      const idx = notes.findIndex((n) => n.id === nid);
+      if (idx < 0) return null;
+      const merged = normalizeNotification({
+        ...notes[idx],
+        status: "archived",
+        archivedAt: nowIso(),
+      });
+      const next = [...notes];
+      next[idx] = merged;
+      return {
+        notifications: next,
+        notification: merged,
+        timelineType: "notification_archived",
+        timelineDetail: reason || formatNotificationDetail(merged),
+      };
+    });
+  }
+
+  function daysUntilDate(dateStr) {
+    const target = parseDateOnly(dateStr);
+    const today = parseDateOnly(todayDateOnly());
+    if (!target || !today) return null;
+    return Math.ceil((target.getTime() - today.getTime()) / 86400000);
+  }
+
+  function generateProjectNotifications(projectId) {
+    const project = getProject(projectId);
+    if (!project) return { ok: false, error: "not_found", candidates: [] };
+    const candidates = [];
+    const existing = getProjectNotificationsList(project, { includeArchived: true });
+
+    function hasSimilar(source, title) {
+      return existing.some((n) => n.source === source && n.title === title && n.status !== "archived");
+    }
+
+    if (project.scheduleEndDate) {
+      const diff = daysUntilDate(project.scheduleEndDate);
+      if (diff != null && diff <= 7) {
+        const title = diff < 0 ? "工程期限超過" : "工程期限の確認";
+        if (!hasSimilar("schedule", title)) {
+          candidates.push(
+            normalizeNotification({
+              type: "schedule",
+              source: "schedule",
+              title,
+              message: `工程終了予定: ${project.scheduleEndDate}（${project.schedulePhaseLabel || "—"}）`,
+              priority: diff < 0 ? "urgent" : diff <= 3 ? "high" : "normal",
+              dueDate: project.scheduleEndDate,
+            })
+          );
+        }
+      }
+    }
+
+    const fin = project.finance || {};
+    if (fin.paymentDueDate && fin.paymentStatus === "unpaid") {
+      const diff = daysUntilDate(fin.paymentDueDate);
+      const title = diff != null && diff < 0 ? "支払期限超過" : "支払期限";
+      if (!hasSimilar("finance", title)) {
+        candidates.push(
+          normalizeNotification({
+            type: "finance",
+            source: "finance",
+            title,
+            message: `支払予定日: ${fin.paymentDueDate} · ${fin.paymentStatusLabel || "未入金"}`,
+            priority: diff != null && diff < 0 ? "urgent" : diff != null && diff <= 7 ? "high" : "normal",
+            dueDate: fin.paymentDueDate,
+          })
+        );
+      }
+    }
+
+    const ctr = project.contract || {};
+    if (ctr.contractStatus === "draft" || ctr.contractStatus === "sent") {
+      const title = "契約確認";
+      if (!hasSimilar("contract", title)) {
+        candidates.push(
+          normalizeNotification({
+            type: "contract",
+            source: "contract",
+            title,
+            message: `契約状態: ${ctr.contractStatusLabel || ctr.contractStatus}`,
+            priority: "normal",
+            dueDate: ctr.plannedStartDate || "",
+          })
+        );
+      }
+    }
+
+    const cmp = project.completion || {};
+    if (cmp.completionStatus === "inspection" || cmp.completionStatus === "working") {
+      const title = cmp.completionStatus === "inspection" ? "完了確認" : "施工進捗確認";
+      if (!hasSimilar("completion", title)) {
+        candidates.push(
+          normalizeNotification({
+            type: "completion",
+            source: "completion",
+            title,
+            message: `完了状態: ${cmp.completionStatusLabel || cmp.completionStatus}`,
+            priority: cmp.completionStatus === "inspection" ? "high" : "normal",
+          })
+        );
+      }
+    }
+
+    const est = project.estimate || {};
+    if (est.estimateStatus === "draft" || est.estimateStatus === "sent") {
+      const title = "見積確認";
+      if (!hasSimilar("estimate", title)) {
+        candidates.push(
+          normalizeNotification({
+            type: "estimate",
+            source: "estimate",
+            title,
+            message: `見積状態: ${est.estimateStatusLabel || est.estimateStatus}`,
+            priority: "normal",
+          })
+        );
+      }
+    }
+
+    const inv = project.invoice || {};
+    if (inv.invoiceStatus === "sent" && fin.paymentStatus === "unpaid") {
+      const title = "請求確認";
+      if (!hasSimilar("invoice", title)) {
+        candidates.push(
+          normalizeNotification({
+            type: "invoice",
+            source: "invoice",
+            title,
+            message: `請求状態: ${inv.invoiceStatusLabel || inv.invoiceStatus}`,
+            priority: "high",
+            dueDate: fin.paymentDueDate || "",
+          })
+        );
+      }
+    }
+
+    (project.visionDiagnoses || []).forEach((v, idx) => {
+      const vid = String(v?.id || `vision-${idx}`);
+      const title = "Vision診断の参照";
+      const exists = existing.some((n) => n.source === "vision" && n.linkedVisionId === vid);
+      if (!exists) {
+        candidates.push(
+          normalizeNotification({
+            type: "vision",
+            source: "vision",
+            title,
+            message: String(v?.summary || v?.label || "Builder AI 診断結果を案件に反映できます。"),
+            priority: "normal",
+            linkedVisionId: vid,
+          })
+        );
+      }
+    });
+
+    return { ok: true, projectId, candidates };
+  }
+
+  function previewNotificationIntent(intentText) {
+    const text = String(intentText || "").trim();
+    if (!text) return { ok: false, error: "empty_intent" };
+    const intent = { source: "ai_assistant", rawText: text };
+    const priorityMatch = text.match(/(?:優先度|priority)\s*[:：]?\s*(低|通常|高|緊急|low|normal|high|urgent)/i);
+    const titleMatch = text.match(/(?:タイトル|題名)\s*[:：]?\s*(.+)/);
+    const addMatch = /追加|登録|作成/i.test(text);
+    const readMatch = /既読/i.test(text);
+    const archiveMatch = /アーカイブ|保管/i.test(text);
+
+    if (archiveMatch) {
+      intent.type = NOTIFICATION_INTENT_TYPES.ARCHIVE;
+    } else if (readMatch) {
+      intent.type = NOTIFICATION_INTENT_TYPES.MARK_READ;
+    } else if (addMatch || titleMatch) {
+      intent.type = NOTIFICATION_INTENT_TYPES.ADD;
+      if (titleMatch) intent.title = titleMatch[1].trim().slice(0, 120);
+      if (priorityMatch) {
+        const map = {
+          低: "low",
+          通常: "normal",
+          高: "high",
+          緊急: "urgent",
+          low: "low",
+          normal: "normal",
+          high: "high",
+          urgent: "urgent",
+        };
+        intent.priority = map[priorityMatch[1]] || "normal";
+      } else {
+        intent.priority = "normal";
+      }
+      intent.source = "manual";
+    } else if (priorityMatch) {
+      intent.type = NOTIFICATION_INTENT_TYPES.SET_PRIORITY;
+      const map = { 低: "low", 通常: "normal", 高: "high", 緊急: "urgent" };
+      intent.priority = map[priorityMatch[1]] || "normal";
+    } else {
+      return { ok: false, error: "unrecognized_intent", rawText: text };
+    }
+    return { ok: true, intent };
+  }
+
+  function applyNotificationIntent(_projectId, notificationIntent) {
+    const i = notificationIntent && typeof notificationIntent === "object" ? notificationIntent : {};
+    return {
+      ok: true,
+      previewOnly: true,
+      intent: i,
+      message: "applyNotificationIntent は将来 AI 用プレビュー専用です（実更新は接続していません）",
+    };
+  }
+
   function clearForTests() {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -2047,6 +2638,10 @@
     DOCUMENT_TYPES,
     DOCUMENT_STATUSES,
     DOCUMENT_INTENT_TYPES,
+    NOTIFICATION_PRIORITIES,
+    NOTIFICATION_STATUSES,
+    NOTIFICATION_SOURCES,
+    NOTIFICATION_INTENT_TYPES,
     TAX_RATE,
     TIMELINE_LABELS,
     statusLabel,
@@ -2059,6 +2654,9 @@
     completionStatusLabel,
     documentTypeLabel,
     documentStatusLabel,
+    notificationPriorityLabel,
+    notificationStatusLabel,
+    notificationSourceLabel,
     toAmount,
     formatYen,
     normalizeFinance,
@@ -2068,6 +2666,8 @@
     normalizeCompletion,
     normalizeDocument,
     normalizeDocuments,
+    normalizeNotification,
+    normalizeNotifications,
     normalizeEstimateItem,
     calculateFinanceAmounts,
     calculateProjectFinance,
@@ -2142,6 +2742,20 @@
     countActiveDocuments,
     previewDocumentIntent,
     applyDocumentIntent,
+    addNotification,
+    updateNotification,
+    markNotificationRead,
+    markNotificationUnread,
+    archiveNotification,
+    getNotifications,
+    getUnreadNotifications,
+    getNotificationsByType,
+    getNotificationsByPriority,
+    getNotificationSummary,
+    getProjectNotificationCounts,
+    generateProjectNotifications,
+    previewNotificationIntent,
+    applyNotificationIntent,
     ensureSeed,
     seedDemoProjects,
     clearForTests,

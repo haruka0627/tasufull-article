@@ -62,7 +62,7 @@ const storeSrc = fs.readFileSync(path.join(builder, "builder-project-store.js"),
 const uiJs = fs.readFileSync(path.join(builder, "builder-ai-ui.js"), "utf8");
 const hubJs = fs.readFileSync(path.join(builder, "builder-project-hub.js"), "utf8");
 
-assert(storeSrc.includes("SCHEMA_VERSION = 6"), "SCHEMA v6");
+assert(storeSrc.includes("SCHEMA_VERSION = 7"), "SCHEMA v7");
 assert(detailHtml.includes("data-builder-pd-doc-form"), "detail documents panel");
 assert(hubHtml.includes("data-builder-ph-document-summary"), "hub document summary");
 assert(hubHtml.includes("Document数"), "hub document columns");
@@ -77,7 +77,7 @@ const Store = loadStore();
 Store.clearForTests();
 Store.ensureSeed();
 
-assert(Store.SCHEMA_VERSION === 6, "store schema 6");
+assert(Store.SCHEMA_VERSION === 7, "store schema 7");
 
 const p001 = Store.getProject("PRJ-2026-001");
 assert(p001?.documents?.length >= 5, "documents seed 5+", String(p001?.documents?.length));
