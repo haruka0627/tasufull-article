@@ -10,6 +10,7 @@
 
 | 項目 | 内容 |
 | --- | --- |
+| **展開方針** | 日本発 · 将来は海外ユーザー利用可能な設計 · 多言語・翻訳は将来 — [DECISIONS.md](../DECISIONS.md) **AD-011** |
 | **TLV 製品** | Production Ready v1.0 · **FEATURE FROZEN** |
 | **TLV 専用 AI エンジン** | **作らない** |
 | **AI 利用** | TASFUL AI Workspace への **導線のみ** |

@@ -10,6 +10,7 @@
 
 | 項目 | 内容 |
 | --- | --- |
+| **展開方針** | 日本国内向け基本 · 海外前提の設計・実装は行わない — [DECISIONS.md](../DECISIONS.md) **AD-011** |
 | **Platform 製品** | Production Ready |
 | **Platform 専用 AI** | **作らない** |
 | **AI 利用** | deterministic assist + **TASFUL AI Workspace** 遷移（`source=platform`） |
