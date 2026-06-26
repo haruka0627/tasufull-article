@@ -50,11 +50,14 @@ else bad("camera/voice hooks");
 if (html.includes("builder-ai-legacy")) ok("legacy gateway section preserved");
 else bad("legacy gateway section preserved");
 
-if (!js.includes("ai-model-gateway") && js.includes("TasuBuilderAIVision")) ok("ui delegates to vision module");
-else bad("ui delegates to vision module");
+if (html.includes("builder-ai-live.js") && html.includes("builder-ai-voice.js")) ok("html loads live phase4 modules");
+else bad("html loads live phase4 modules");
 
-if (js.includes("カメラ診断は次フェーズ") && js.includes("音声相談は次フェーズ")) ok("camera/voice stubs remain");
-else bad("camera/voice stubs remain");
+if (!js.includes("次フェーズで対応予定")) ok("camera/voice stubs removed");
+else bad("camera/voice stubs removed");
+
+if (js.includes("TasuBuilderAILive") && js.includes("TasuBuilderAIVoice")) ok("ui delegates to live/voice modules");
+else bad("ui delegates to live/voice modules");
 
 if (js.includes("外壁の補修判断") && js.includes("概算見積を作りたい")) ok("quick prompts");
 else bad("quick prompts");
@@ -97,10 +100,11 @@ async function browserSmoke() {
     else bad("browser: vision/mock reply", text.slice(0, 80));
 
     await page.locator("[data-builder-ai-ui-camera]").click();
-    await page.waitForTimeout(200);
+    await page.waitForTimeout(300);
     const afterCam = await page.locator("[data-builder-ai-ui-messages]").innerText();
-    if (afterCam.includes("カメラ診断は次フェーズ")) ok("browser: camera stub");
-    else bad("browser: camera stub");
+    const panelVisible = await page.locator("[data-builder-ai-live-panel]").isVisible().catch(() => false);
+    if (panelVisible || !afterCam.includes("次フェーズで対応予定")) ok("browser: camera live handler");
+    else bad("browser: camera live handler");
 
     const reqUrls = [];
     page.on("request", (req) => reqUrls.push(req.url()));
