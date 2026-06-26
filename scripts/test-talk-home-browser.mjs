@@ -14,9 +14,10 @@ const AI_DRAFTS_KEY = "tasful_talk_ai_drafts";
 const PHASE4_MARKER = "phase4-ai-e2e-notice";
 
 async function main() {
-  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
-  const page = await context.newPage();
   const errors = [];
+  await withPlaywrightBrowser(async (browser) => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
+  const page = await context.newPage();
 
   const pass = (msg) => console.log(`  ✓ ${msg}`);
   const fail = (msg) => {
