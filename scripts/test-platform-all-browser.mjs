@@ -9,6 +9,23 @@ import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browse
 
 const BASE = (process.env.BASE_URL || "http://127.0.0.1:8765").replace(/\/$/, "");
 
+/** @param {string | null | undefined} href */
+function normalizeHrefPath(href) {
+  if (!href) return "";
+  try {
+    const u = new URL(href, `${BASE}/`);
+    return `${u.pathname.replace(/^\/+/, "")}${u.search}`;
+  } catch {
+    return String(href).replace(/^\/+/, "");
+  }
+}
+
+/** @param {string | null | undefined} href @param {RegExp} pattern */
+function hrefMatches(href, pattern) {
+  const norm = normalizeHrefPath(href);
+  return pattern.test(norm) || pattern.test(href || "");
+}
+
 const VIEWPORTS = [
   { w: 390, h: 844, label: "390px" },
   { w: 768, h: 900, label: "768px" },
@@ -19,20 +36,41 @@ const VIEWPORTS = [
 const TOP_LINKS_INDEX_TOP = [
   { name: "スキル一覧", path: "index-top.html", selector: 'a[href*="category=skill"]', hrefMatch: /category=skill/ },
   { name: "ワーカー一覧", path: "index-top.html", selector: 'a[href*="category=worker"]', hrefMatch: /category=worker/ },
-  { name: "求人一覧", path: "index-top.html", selector: 'a[href="job-top.html"], a[href*="category=job"]', hrefMatch: /job/ },
+  {
+    name: "求人一覧",
+    path: "index-top.html",
+    selector: 'a.top-category-card[href*="public-board"], a[href="public-board.html"]',
+    hrefMatch: /public-board/,
+  },
   { name: "商品一覧", path: "index-top.html", selector: 'a[href*="category=product"]', hrefMatch: /category=product/ },
   { name: "店舗・販売", path: "index-top.html", selector: 'a[href="shop-store.html"]', hrefMatch: /shop-store/ },
   { name: "業務サービス", path: "index-top.html", selector: 'a[href="business.html"]', hrefMatch: /business/ },
-  { name: "AI相談", path: "index-top.html", selector: 'a[href="chat-list.html"]', hrefMatch: /chat-list/ },
-  { name: "TALK導線(chat-list)", path: "index-top.html", selector: 'a.top-category-card--ai[href*="chat-list"]', hrefMatch: /chat-list/ },
+  {
+    name: "AI相談",
+    path: "index-top.html",
+    selector: 'a[href*="ai-workspace.html"]',
+    hrefMatch: /ai-workspace/,
+  },
 ];
 
 const TOP_LINKS_INDEX = [
-  { name: "一般TOP", path: "index.html" },
-  { name: "求人", path: "index.html", selector: 'a[href="job-top.html"]', hrefMatch: /job-top/ },
-  { name: "店舗・販売", path: "index.html", selector: 'a[href="shop-store.html"]', hrefMatch: /shop-store/ },
-  { name: "業務サービス", path: "index.html", selector: 'a[href="business.html"]', hrefMatch: /business/ },
-  { name: "AI相談", path: "index.html", selector: 'a[href="index-top.html"]', hrefMatch: /index-top/ },
+  { name: "一般TOP", path: "market/", surface: "market", checkHomePage: true },
+  { name: "求人", path: "market/", surface: "market", selector: 'a[href*="job-top"]', hrefMatch: /job-top/ },
+  { name: "店舗・販売", path: "market/", surface: "market", selector: 'a[href*="shop-store"]', hrefMatch: /shop-store/ },
+  {
+    name: "業務サービス",
+    path: "market/",
+    surface: "market",
+    selector: 'a[href*="business"]',
+    hrefMatch: /business/,
+  },
+  {
+    name: "AI相談",
+    path: "market/",
+    surface: "market",
+    selector: 'a[href*="ai-workspace"]',
+    hrefMatch: /ai-workspace/,
+  },
 ];
 
 const POST_TYPES = [
@@ -50,9 +88,24 @@ const POST_TYPES = [
 ];
 
 const LIST_PAGES = [
-  { label: "index skill", url: "index.html?category=skill", cardSel: "[data-home-featured] a, [data-home-rank-popular] a, .listing-card a" },
-  { label: "index worker", url: "index.html?category=worker", cardSel: "[data-home-featured] a, .listing-card a" },
-  { label: "index product", url: "index.html?category=product", cardSel: "[data-home-featured] a, .listing-card a" },
+  {
+    label: "market skill",
+    url: "market/?category=skill",
+    cardSel: "[data-home-featured] a, [data-home-rank-popular] a, .listing-card a",
+    marketHome: true,
+  },
+  {
+    label: "market worker",
+    url: "market/?category=worker",
+    cardSel: "[data-home-featured] a, [data-home-rank-popular] a, .listing-card a",
+    marketHome: true,
+  },
+  {
+    label: "market product",
+    url: "market/?category=product",
+    cardSel: "[data-home-featured] a, [data-home-rank-popular] a, .listing-card a",
+    marketHome: true,
+  },
   { label: "job-top", url: "job-top.html", cardSel: ".job-top-card a, .job-card a, a[href*='detail-job']" },
   { label: "shop-store", url: "shop-store.html", cardSel: "a[href*='detail-shop']" },
   { label: "business", url: "business.html", cardSel: "a[href*='detail-business']" },
@@ -103,21 +156,26 @@ async function main() {
       await topPage.goto(`${BASE}/${item.path}`, { waitUntil: "load", timeout: 25000 });
       const loc = topPage.locator(item.selector || "a").first();
       const href = await loc.getAttribute("href").catch(() => null);
-      if (!href || (item.hrefMatch && !item.hrefMatch.test(href))) {
+      if (!href || (item.hrefMatch && !hrefMatches(href, item.hrefMatch))) {
         fail(`index-top: ${item.name} (${href || "missing"})`);
       } else pass(`index-top: ${item.name} → ${href}`);
     }
 
     for (const item of TOP_LINKS_INDEX) {
+      const surface = item.surface || item.path.replace(/\/$/, "") || "market";
       await topPage.goto(`${BASE}/${item.path}`, { waitUntil: "load", timeout: 25000 });
-      if (!item.selector) {
-        pass(`index.html: ${item.name} 表示`);
+      if (item.checkHomePage) {
+        const isHome = await topPage
+          .evaluate(() => document.body.classList.contains("home-page"))
+          .catch(() => false);
+        if (!isHome) fail(`${surface}: ${item.name} (home-page missing)`);
+        else pass(`${surface}: ${item.name} 表示`);
         continue;
       }
       const href = await topPage.locator(item.selector).first().getAttribute("href").catch(() => null);
-      if (!href || (item.hrefMatch && !item.hrefMatch.test(href))) {
-        fail(`index.html: ${item.name} (${href || "missing"})`);
-      } else pass(`index.html: ${item.name} → ${href}`);
+      if (!href || (item.hrefMatch && !hrefMatches(href, item.hrefMatch))) {
+        fail(`${surface}: ${item.name} (${href || "missing"})`);
+      } else pass(`${surface}: ${item.name} → ${href}`);
     }
     await topPage.close();
 
@@ -165,10 +223,31 @@ async function main() {
           await p.close();
           continue;
         }
-        await p.waitForTimeout(1500);
+        if (list.marketHome) {
+          await p.waitForSelector("body.home-page", { timeout: 10000 }).catch(() => {});
+          await p
+            .waitForSelector("[data-home-featured], [data-home-rank-popular]", { timeout: 10000 })
+            .catch(() => {});
+          await p
+            .waitForSelector("[data-home-featured] a, [data-home-rank-popular] a", { timeout: 15000 })
+            .catch(() => {});
+        } else {
+          await p.waitForTimeout(1500);
+        }
         const cardCount = await p.locator(list.cardSel).count();
-        if (cardCount < 1) fail(`${list.label}: カード0件`);
-        else pass(`${list.label}: カード ${cardCount}件`);
+        const featuredLinks = list.marketHome
+          ? await p.locator("[data-home-featured] a").count()
+          : 0;
+        const rankLinks = list.marketHome
+          ? await p.locator("[data-home-rank-popular] a").count()
+          : 0;
+        if (cardCount < 1) {
+          if (list.marketHome && (featuredLinks > 0 || rankLinks > 0)) {
+            pass(`${list.label}: featured/rank リンク ${featuredLinks + rankLinks}件`);
+          } else {
+            fail(`${list.label}: カード0件`);
+          }
+        } else pass(`${list.label}: カード ${cardCount}件`);
       } catch (err) {
         fail(`${list.label}: ${err.message}`);
       }
