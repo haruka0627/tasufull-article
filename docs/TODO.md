@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-27（Builder Contract/Completion Phase 6-E · 未コミット）  
-**Git HEAD:** `8be158f`（`cf-pages-deploy` · **git push 未実施**）  
+**最終更新:** 2026-06-27（Builder Document Center Phase 6-F · 未コミット）  
+**Git HEAD:** `ac385c6`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -171,7 +171,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder Project Calendar Phase 6-B** | ✅ commit 済 | `556f315` · `reports/builder-project-calendar-phase6b.md` |
 | **Builder Project Finance Phase 6-C** | ✅ commit 済 | `e70d679` · `reports/builder-project-finance-phase6c.md` |
 | **Builder Estimate/Invoice Phase 6-D** | ✅ commit 済 | `8be158f` · `reports/builder-estimate-invoice-phase6d.md` |
-| **Builder Contract/Completion Phase 6-E** | ✅ 実装 · 未コミット | 契約・完了基盤 · `reports/builder-contract-completion-phase6e.md` |
+| **Builder Contract/Completion Phase 6-E** | ✅ commit 済 | `ac385c6` · `reports/builder-contract-completion-phase6e.md` |
+| **Builder Document Center Phase 6-F** | ✅ 実装 · 未コミット | ドキュメント管理基盤 · `reports/builder-document-center-phase6f.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -255,13 +256,21 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - `test-builder-estimate-invoice-phase6d.mjs` + phase6c 回帰 + build PASS
 - 参照: `reports/builder-estimate-invoice-phase6d.md`
 
-**Builder Contract/Completion Phase 6-E（契約・完了基盤 · ✅ 実装 · 未コミット）**
+**Builder Contract/Completion Phase 6-E（契約・完了基盤 · ✅ commit 済 · `ac385c6`）**
 
 - `project.contract` / `project.completion`（SCHEMA v5）· ライフサイクル基盤
 - `updateContract` / `updateCompletion` · Hub 契約・完了サマリー
 - `previewContractIntent` / `prepareContractIntent` 等（AI 未接続）
 - `test-builder-contract-completion-phase6e.mjs` + phase6d/c/b/a/vision 回帰 + build PASS
 - 参照: `reports/builder-contract-completion-phase6e.md`
+
+**Builder Document Center Phase 6-F（ドキュメント管理基盤 · ✅ 実装 · 未コミット）**
+
+- `project.documents[]`（SCHEMA v6）· 種別/タグ/検索 · Hub サマリー
+- `addDocument` / `updateDocument` / `archiveDocument` / `removeDocument`
+- `prepareDocumentIntent`（AI 未接続）· 実アップロードなし
+- `test-builder-document-center-phase6f.mjs` + phase6e/d/c/vision 回帰 + build PASS
+- 参照: `reports/builder-document-center-phase6f.md`
 
 **Builder AI Gemini Live Phase 4-B（未着手）**
 

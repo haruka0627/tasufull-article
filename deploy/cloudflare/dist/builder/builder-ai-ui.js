@@ -134,6 +134,12 @@
     return Store?.previewCompletionIntent?.(intentText) || null;
   }
 
+  /** Phase 6-F: 将来の AI ドキュメント intent プレビュー（現時点では UI から未呼び出し） */
+  function prepareDocumentIntent(intentText) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewDocumentIntent?.(intentText) || null;
+  }
+
   let messages = loadHistory();
   let sending = false;
   let photoFile = null;
@@ -538,6 +544,7 @@
     prepareInvoiceIntent,
     prepareContractIntent,
     prepareCompletionIntent,
+    prepareDocumentIntent,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);

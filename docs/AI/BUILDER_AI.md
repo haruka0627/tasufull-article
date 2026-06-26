@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-27（Contract/Completion Phase 6-E · 契約・完了基盤）  
-**ステータス:** **実装済み**（… + **Estimate/Invoice 6-D** + **Contract/Completion 6-E**）· P2-C 残  
-**直近コミット:** `8be158f`（Estimate/Invoice 6-D · **git push 未実施**）
+**最終更新:** 2026-06-27（Document Center Phase 6-F · ドキュメント管理基盤）  
+**ステータス:** **実装済み**（… + **Contract/Completion 6-E** + **Document Center 6-F**）· P2-C 残  
+**直近コミット:** `ac385c6`（Contract/Completion 6-E · **git push 未実施**）
 
 ---
 
@@ -62,7 +62,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | `builder-ai-live.js` | カメラプレビュー · スナップショット → Vision |
 | `builder-ai-voice.js` | `TasuAiVoiceCore` adapter · `surface: builder_ai` |
 | `builder-ai-live-gate.js` | Free/Pro gate stub（本番課金未接続） |
-| `builder-project-store.js` | **Phase 6-A〜6-E** · 案件 · 日程 · 収支 · 見積/請求 · 契約/完了 · Vision |
+| `builder-project-store.js` | **Phase 6-A〜6-F** · 案件 · 日程 · 収支 · 見積/請求 · 契約/完了 · ドキュメント · Vision |
 | `builder-project-calendar.js` | **Phase 6-B** · 月/週カレンダー · 本日/今週/遅延 |
 | `builder-project-hub.js` | 案件一覧 · 検索 |
 | `builder-project-detail.js` | 案件詳細 · タイムライン閲覧 · メモ最小編集 |
@@ -205,7 +205,7 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 ---
 
-## Builder Contract/Completion Phase 6-E（✅ 実装 · 未コミット）
+## Builder Contract/Completion Phase 6-E（✅ commit 済 · `ac385c6`）
 
 **契約・完了基盤** — `project.contract` / `project.completion`（SCHEMA v5）
 
@@ -220,6 +220,25 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 **テスト:** `scripts/test-builder-contract-completion-phase6e.mjs`
 
 **報告:** `reports/builder-contract-completion-phase6e.md`
+
+---
+
+## Builder Document Center Phase 6-F（✅ 実装 · 未コミット）
+
+**ドキュメント管理基盤** — `project.documents[]`（SCHEMA v6）
+
+| 項目 | 内容 |
+| --- | --- |
+| **種別** | photo / drawing / pdf / contract / invoice / estimate / memo / other |
+| **状態** | active / archived / deleted |
+| **Detail** | 一覧 · 検索 · タグ · 追加/編集/アーカイブ/削除（ダミー管理） |
+| **Hub** | 総数/写真/PDF/図面/契約書サマリー · 一覧列 |
+| **AI 準備** | `previewDocumentIntent` · `prepareDocumentIntent`（未接続） |
+| **非実装** | OCR · PDF生成 · Cloud Storage · 実アップロード · 他 surface |
+
+**テスト:** `scripts/test-builder-document-center-phase6f.mjs`
+
+**報告:** `reports/builder-document-center-phase6f.md`
 
 ---
 

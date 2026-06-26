@@ -281,6 +281,189 @@
     });
   }
 
+  function bindDocuments(project) {
+    const Store = global.TasuBuilderProjectStore;
+    if (!Store) return;
+
+    const typeFilter = $("[data-builder-pd-doc-type-filter]");
+    const searchInput = $("[data-builder-pd-doc-search]");
+    const tagFilter = $("[data-builder-pd-doc-tag-filter]");
+    const form = $("[data-builder-pd-doc-form]");
+    const typeSel = $("[data-builder-pd-doc-type]");
+    const docIdInput = $("[data-builder-pd-doc-id]");
+
+    if (typeSel && Store.DOCUMENT_TYPES) {
+      typeSel.innerHTML = Store.DOCUMENT_TYPES.map(
+        (t) => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.label)}</option>`
+      ).join("");
+    }
+    if (typeFilter && Store.DOCUMENT_TYPES) {
+      typeFilter.innerHTML =
+        `<option value="">すべて</option>` +
+        Store.DOCUMENT_TYPES.map(
+          (t) => `<option value="${escapeHtml(t.id)}">${escapeHtml(t.label)}</option>`
+        ).join("");
+    }
+
+    function getFilters() {
+      return {
+        q: searchInput?.value || "",
+        type: typeFilter?.value || "",
+        tag: tagFilter?.value || "",
+      };
+    }
+
+    function renderCategorySummary(docs) {
+      const wrap = $("[data-builder-pd-doc-category-summary]");
+      if (!wrap) return;
+      const counts = {};
+      docs.forEach((d) => {
+        counts[d.type] = (counts[d.type] || 0) + 1;
+      });
+      wrap.innerHTML = Store.DOCUMENT_TYPES.filter((t) => counts[t.id])
+        .map(
+          (t) =>
+            `<div><span class="builder-kpi">${escapeHtml(t.label)}</span> <strong>${counts[t.id]}</strong></div>`
+        )
+        .join("");
+    }
+
+    function clearDocForm() {
+      if (docIdInput) docIdInput.value = "";
+      if ($("[data-builder-pd-doc-title]")) $("[data-builder-pd-doc-title]").value = "";
+      if ($("[data-builder-pd-doc-description]")) $("[data-builder-pd-doc-description]").value = "";
+      if ($("[data-builder-pd-doc-filename]")) $("[data-builder-pd-doc-filename]").value = "";
+      if ($("[data-builder-pd-doc-mime]")) $("[data-builder-pd-doc-mime]").value = "";
+      if ($("[data-builder-pd-doc-size]")) $("[data-builder-pd-doc-size]").value = "0";
+      if ($("[data-builder-pd-doc-tags]")) $("[data-builder-pd-doc-tags]").value = "";
+      if (typeSel) typeSel.value = "other";
+    }
+
+    function fillDocForm(doc) {
+      if (docIdInput) docIdInput.value = doc.id || "";
+      if (typeSel) typeSel.value = doc.type || "other";
+      if ($("[data-builder-pd-doc-title]")) $("[data-builder-pd-doc-title]").value = doc.title || "";
+      if ($("[data-builder-pd-doc-description]")) $("[data-builder-pd-doc-description]").value = doc.description || "";
+      if ($("[data-builder-pd-doc-filename]")) $("[data-builder-pd-doc-filename]").value = doc.filename || "";
+      if ($("[data-builder-pd-doc-mime]")) $("[data-builder-pd-doc-mime]").value = doc.mimeType || "";
+      if ($("[data-builder-pd-doc-size]")) $("[data-builder-pd-doc-size]").value = doc.size ?? 0;
+      if ($("[data-builder-pd-doc-tags]")) $("[data-builder-pd-doc-tags]").value = (doc.tags || []).join(", ");
+    }
+
+    function renderDocumentList() {
+      const tbody = $("[data-builder-pd-doc-tbody]");
+      const empty = $("[data-builder-pd-doc-empty]");
+      const countEl = $("[data-builder-pd-doc-count]");
+      if (!tbody) return;
+
+      const docs = Store.searchDocuments?.(project.id, getFilters()) || [];
+      if (countEl) countEl.textContent = `${docs.length} 件`;
+      renderCategorySummary(docs);
+
+      if (!docs.length) {
+        tbody.innerHTML = "";
+        if (empty) empty.hidden = false;
+        return;
+      }
+      if (empty) empty.hidden = true;
+
+      tbody.innerHTML = docs
+        .map(
+          (d) =>
+            `<tr data-doc-id="${escapeHtml(d.id)}" tabindex="0">` +
+            `<td>${escapeHtml(d.typeLabel)}</td>` +
+            `<td>${escapeHtml(d.title || "—")}</td>` +
+            `<td>${escapeHtml(d.filename || "—")}</td>` +
+            `<td>${escapeHtml((d.tags || []).join(", ") || "—")}</td>` +
+            `<td>${escapeHtml(d.statusLabel)}</td>` +
+            `</tr>`
+        )
+        .join("");
+
+      tbody.querySelectorAll("tr[data-doc-id]").forEach((row) => {
+        row.addEventListener("click", () => {
+          const doc = docs.find((d) => d.id === row.getAttribute("data-doc-id"));
+          if (doc) fillDocForm(doc);
+        });
+      });
+    }
+
+    function showDocMsg(text) {
+      const msg = $("[data-builder-pd-doc-status-msg]");
+      if (!msg) return;
+      msg.textContent = text;
+      setTimeout(() => {
+        msg.textContent = "";
+      }, 2000);
+    }
+
+    renderDocumentList();
+    clearDocForm();
+
+    typeFilter?.addEventListener("change", () => renderDocumentList());
+    searchInput?.addEventListener("input", () => renderDocumentList());
+    tagFilter?.addEventListener("input", () => renderDocumentList());
+
+    $("[data-builder-pd-doc-new]")?.addEventListener("click", () => clearDocForm());
+
+    form?.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const tags = ($("[data-builder-pd-doc-tags]")?.value || "")
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean);
+      const payload = {
+        type: typeSel?.value || "other",
+        title: $("[data-builder-pd-doc-title]")?.value || "",
+        description: $("[data-builder-pd-doc-description]")?.value || "",
+        filename: $("[data-builder-pd-doc-filename]")?.value || "",
+        mimeType: $("[data-builder-pd-doc-mime]")?.value || "",
+        size: $("[data-builder-pd-doc-size]")?.value,
+        tags,
+      };
+      const existingId = docIdInput?.value?.trim();
+      const out = existingId
+        ? Store.updateDocument?.(project.id, existingId, {
+            ...payload,
+            documentReason: "案件詳細からドキュメントを更新",
+          })
+        : Store.addDocument?.(project.id, payload);
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        renderDocumentList();
+        if (!existingId && out.document) fillDocForm(out.document);
+        showDocMsg(existingId ? "ドキュメントを更新しました" : "ドキュメントを追加しました");
+      }
+    });
+
+    $("[data-builder-pd-doc-archive]")?.addEventListener("click", () => {
+      const id = docIdInput?.value?.trim();
+      if (!id) return;
+      const out = Store.archiveDocument?.(project.id, id, "案件詳細からアーカイブ");
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        clearDocForm();
+        renderDocumentList();
+        showDocMsg("アーカイブしました");
+      }
+    });
+
+    $("[data-builder-pd-doc-delete]")?.addEventListener("click", () => {
+      const id = docIdInput?.value?.trim();
+      if (!id) return;
+      const out = Store.removeDocument?.(project.id, id, "案件詳細から削除");
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        clearDocForm();
+        renderDocumentList();
+        showDocMsg("削除しました");
+      }
+    });
+  }
+
   function bindFinance(project) {
     const form = $("[data-builder-pd-finance-form]");
     const estimate = $("[data-builder-pd-finance-estimate]");
@@ -533,6 +716,7 @@
     bindInvoice(project);
     bindContract(project);
     bindCompletion(project);
+    bindDocuments(project);
     bindFinance(project);
     bindSchedule(project);
     bindAiLink(project);

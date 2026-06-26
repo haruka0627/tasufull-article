@@ -1,12 +1,12 @@
 /**
- * Builder Project Hub — 案件ストア（Phase 6-A〜6-E · localStorage）
+ * Builder Project Hub — 案件ストア（Phase 6-A〜6-F · localStorage）
  * Builder 専用 · Platform / AI秘書 / TASFUL AI 非連携
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_project_hub_v1";
-  const SCHEMA_VERSION = 5;
+  const SCHEMA_VERSION = 6;
 
   const STATUSES = Object.freeze([
     { id: "inquiry", label: "問い合わせ" },
@@ -41,6 +41,10 @@
     invoice_updated: "請求更新",
     contract_updated: "契約更新",
     completion_updated: "完了更新",
+    document_added: "ドキュメント追加",
+    document_updated: "ドキュメント更新",
+    document_archived: "ドキュメントアーカイブ",
+    document_deleted: "ドキュメント削除",
   });
 
   const TAX_RATE = 0.1;
@@ -101,6 +105,31 @@
     SET_STATUS: "set_status",
     SET_DATES: "set_dates",
     SET_APPROVALS: "set_approvals",
+  });
+
+  /** ドキュメント種別（Phase 6-F） */
+  const DOCUMENT_TYPES = Object.freeze([
+    { id: "photo", label: "写真" },
+    { id: "drawing", label: "図面" },
+    { id: "pdf", label: "PDF" },
+    { id: "contract", label: "契約書" },
+    { id: "invoice", label: "請求書" },
+    { id: "estimate", label: "見積書" },
+    { id: "memo", label: "メモ" },
+    { id: "other", label: "その他" },
+  ]);
+
+  const DOCUMENT_STATUSES = Object.freeze([
+    { id: "active", label: "有効" },
+    { id: "archived", label: "アーカイブ" },
+    { id: "deleted", label: "削除済" },
+  ]);
+
+  const DOCUMENT_INTENT_TYPES = Object.freeze({
+    ADD: "add",
+    SET_TYPE: "set_type",
+    SET_TITLE: "set_title",
+    ARCHIVE: "archive",
   });
 
   /** 支払い状況（Phase 6-C） */
@@ -173,6 +202,27 @@
 
   function completionStatusLabel(id) {
     return COMPLETION_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function documentTypeLabel(id) {
+    return DOCUMENT_TYPES.find((t) => t.id === id)?.label || id;
+  }
+
+  function documentStatusLabel(id) {
+    return DOCUMENT_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function guessDocumentMime(type) {
+    const map = {
+      photo: "image/jpeg",
+      drawing: "image/png",
+      pdf: "application/pdf",
+      contract: "application/pdf",
+      invoice: "application/pdf",
+      estimate: "application/pdf",
+      memo: "text/plain",
+    };
+    return map[type] || "application/octet-stream";
   }
 
   function calcTax(subtotal) {
@@ -281,6 +331,158 @@
       photos,
       updatedAt: String(c.updatedAt || ""),
     };
+  }
+
+  function normalizeDocument(raw) {
+    const d = raw && typeof raw === "object" ? raw : {};
+    const type = String(d.type || "other");
+    const status = String(d.status || "active");
+    const tags = Array.isArray(d.tags) ? d.tags.map((t) => String(t).trim()).filter(Boolean) : [];
+    const t = nowIso();
+    return {
+      id: String(d.id || uid("doc")),
+      type,
+      typeLabel: String(d.typeLabel || documentTypeLabel(type)),
+      title: String(d.title || ""),
+      description: String(d.description || ""),
+      filename: String(d.filename || ""),
+      mimeType: String(d.mimeType || guessDocumentMime(type)),
+      size: Math.max(0, Number(d.size) || 0),
+      createdAt: String(d.createdAt || t),
+      updatedAt: String(d.updatedAt || d.createdAt || t),
+      tags,
+      linkedVisionId: String(d.linkedVisionId || ""),
+      linkedTimelineId: String(d.linkedTimelineId || ""),
+      status,
+      statusLabel: String(d.statusLabel || documentStatusLabel(status)),
+    };
+  }
+
+  function normalizeDocuments(list) {
+    return Array.isArray(list) ? list.map(normalizeDocument) : [];
+  }
+
+  function seedDemoDocuments(projectId) {
+    const day = (n) => new Date(Date.now() - n * 86400000).toISOString();
+    if (projectId === "PRJ-2026-001") {
+      return normalizeDocuments([
+        {
+          id: "doc-001-1",
+          type: "photo",
+          title: "施工前写真",
+          description: "外壁ひび・塗装剥離の現状",
+          filename: "before-exterior.jpg",
+          mimeType: "image/jpeg",
+          size: 2457600,
+          tags: ["現場", "外壁"],
+          createdAt: day(10),
+        },
+        {
+          id: "doc-001-2",
+          type: "photo",
+          title: "施工後写真",
+          description: "補修完了後（参考イメージ）",
+          filename: "after-exterior.jpg",
+          mimeType: "image/jpeg",
+          size: 1980000,
+          tags: ["現場", "完了"],
+          createdAt: day(3),
+        },
+        {
+          id: "doc-001-3",
+          type: "drawing",
+          title: "図面",
+          description: "外壁展開図",
+          filename: "elevation-plan.png",
+          mimeType: "image/png",
+          size: 890000,
+          tags: ["図面"],
+          createdAt: day(12),
+        },
+        {
+          id: "doc-001-4",
+          type: "contract",
+          title: "契約書",
+          description: "工事請負契約書（下書き）",
+          filename: "contract-draft.pdf",
+          mimeType: "application/pdf",
+          size: 420000,
+          tags: ["契約"],
+          createdAt: day(8),
+        },
+        {
+          id: "doc-001-5",
+          type: "estimate",
+          title: "見積書",
+          description: "EST-2026-001 正式見積",
+          filename: "estimate-2026-001.pdf",
+          mimeType: "application/pdf",
+          size: 310000,
+          tags: ["見積"],
+          createdAt: day(7),
+        },
+      ]);
+    }
+    if (projectId === "PRJ-2026-002") {
+      return normalizeDocuments([
+        {
+          id: "doc-002-1",
+          type: "drawing",
+          title: "水回り平面図",
+          filename: "wet-area-plan.pdf",
+          mimeType: "application/pdf",
+          size: 560000,
+          tags: ["図面", "水回り"],
+          createdAt: day(4),
+        },
+        {
+          id: "doc-002-2",
+          type: "memo",
+          title: "打合せメモ",
+          description: "キッチン・浴室同時施工の希望",
+          filename: "meeting-memo.txt",
+          mimeType: "text/plain",
+          size: 2048,
+          tags: ["メモ"],
+          createdAt: day(5),
+        },
+      ]);
+    }
+    if (projectId === "PRJ-2026-003") {
+      return normalizeDocuments([
+        {
+          id: "doc-003-1",
+          type: "photo",
+          title: "竣工写真",
+          filename: "storefront-complete.jpg",
+          mimeType: "image/jpeg",
+          size: 3200000,
+          tags: ["竣工"],
+          createdAt: day(1),
+        },
+        {
+          id: "doc-003-2",
+          type: "invoice",
+          title: "請求書",
+          filename: "invoice-2026-003.pdf",
+          mimeType: "application/pdf",
+          size: 280000,
+          tags: ["請求"],
+          createdAt: day(15),
+        },
+        {
+          id: "doc-003-3",
+          type: "pdf",
+          title: "検査報告書",
+          filename: "inspection-report.pdf",
+          mimeType: "application/pdf",
+          size: 150000,
+          tags: ["検査"],
+          createdAt: day(2),
+        },
+      ]);
+    }
+    return [];
   }
 
   function calculateEstimateAmounts(items) {
@@ -432,6 +634,7 @@
       invoice: normalizeInvoice(p.invoice),
       contract: normalizeContract(p.contract),
       completion: normalizeCompletion(p.completion),
+      documents: normalizeDocuments(p.documents),
       memo: String(p.memo || ""),
       createdAt: String(p.createdAt || nowIso()),
       updatedAt: String(p.updatedAt || p.createdAt || nowIso()),
@@ -515,6 +718,7 @@
           completionMemo: "",
           photos: [],
         },
+        documents: seedDemoDocuments("PRJ-2026-001"),
         memo: "外壁ひび・塗装剥離。現調済み。",
         createdAt: day(14),
         updatedAt: day(2),
@@ -582,6 +786,7 @@
             { id: "ph_w1", label: "キッチン解体前", url: "", at: dateOnlyOffset(-1) },
           ],
         },
+        documents: seedDemoDocuments("PRJ-2026-002"),
         memo: "キッチン・浴室の同時リフォーム相談。",
         createdAt: day(5),
         updatedAt: day(1),
@@ -651,6 +856,7 @@
             { id: "ph_c2", label: "竣工写真（内装）", url: "", at: dateOnlyOffset(-3) },
           ],
         },
+        documents: seedDemoDocuments("PRJ-2026-003"),
         memo: "施工週次報告あり。",
         createdAt: day(30),
         updatedAt: day(0),
@@ -1545,6 +1751,274 @@
     return updateCompletion(projectId, patch);
   }
 
+  function formatDocumentDetail(doc) {
+    const d = normalizeDocument(doc);
+    return `${d.typeLabel} · ${d.title || d.filename || "—"} · ${d.statusLabel}`;
+  }
+
+  function isActiveDocument(doc) {
+    return doc?.status === "active";
+  }
+
+  function getProjectDocumentsList(project, options) {
+    const opts = options && typeof options === "object" ? options : {};
+    const includeArchived = Boolean(opts.includeArchived);
+    const includeDeleted = Boolean(opts.includeDeleted);
+    const list = normalizeDocuments(project?.documents);
+    return list.filter((d) => {
+      if (d.status === "deleted" && !includeDeleted) return false;
+      if (d.status === "archived" && !includeArchived) return false;
+      return true;
+    });
+  }
+
+  function persistProjectDocuments(projectId, mutator) {
+    const existing = getProject(projectId);
+    if (!existing) return { ok: false, error: "not_found" };
+    const docs = normalizeDocuments(existing.documents);
+    const result = mutator(docs, existing);
+    if (!result) return { ok: false, error: "mutation_failed" };
+    const next = normalizeProject({ ...existing, documents: result.documents });
+    if (result.timelineType) {
+      addTimelineEvent(next, result.timelineType, result.timelineDetail || "");
+    }
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === projectId);
+    data.projects[idx] = next;
+    writeAll(data);
+    return {
+      ok: true,
+      project: next,
+      document: result.document || null,
+      documents: next.documents,
+    };
+  }
+
+  function getDocuments(projectId, options) {
+    const project = getProject(projectId);
+    if (!project) return [];
+    return getProjectDocumentsList(project, options);
+  }
+
+  function getDocumentsByType(projectId, type, options) {
+    const t = String(type || "").trim();
+    return getDocuments(projectId, options).filter((d) => !t || d.type === t);
+  }
+
+  function searchDocuments(projectId, filters) {
+    const project = getProject(projectId);
+    if (!project) return [];
+    const f = filters && typeof filters === "object" ? filters : {};
+    const q = String(f.q || "")
+      .trim()
+      .toLowerCase();
+    const type = String(f.type || "").trim();
+    const tag = String(f.tag || "")
+      .trim()
+      .toLowerCase();
+    const status = String(f.status || "").trim();
+    return getProjectDocumentsList(project, {
+      includeArchived: Boolean(f.includeArchived),
+      includeDeleted: Boolean(f.includeDeleted),
+    }).filter((d) => {
+      if (type && d.type !== type) return false;
+      if (status && d.status !== status) return false;
+      if (tag && !(d.tags || []).some((t) => String(t).toLowerCase().includes(tag))) return false;
+      if (!q) return true;
+      const hay = [d.title, d.description, d.filename, d.typeLabel, ...(d.tags || [])]
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  function countDocumentsByType(documents, type) {
+    return (documents || []).filter((d) => d.status === "active" && d.type === type).length;
+  }
+
+  function countActiveDocuments(documents) {
+    return (documents || []).filter((d) => d.status === "active").length;
+  }
+
+  function getProjectDocumentCounts(project) {
+    const docs = getProjectDocumentsList(project, { includeArchived: true });
+    const active = docs.filter((d) => d.status === "active");
+    return {
+      total: active.length,
+      photo: countDocumentsByType(active, "photo"),
+      pdf: active.filter((d) => d.type === "pdf" || d.mimeType === "application/pdf").length,
+      drawing: countDocumentsByType(active, "drawing"),
+      contract: countDocumentsByType(active, "contract"),
+    };
+  }
+
+  function getDocumentSummary() {
+    const projects = listProjects();
+    let totalDocuments = 0;
+    let photoCount = 0;
+    let pdfCount = 0;
+    let drawingCount = 0;
+    let contractCount = 0;
+    projects.forEach((p) => {
+      const c = getProjectDocumentCounts(p);
+      totalDocuments += c.total;
+      photoCount += c.photo;
+      pdfCount += c.pdf;
+      drawingCount += c.drawing;
+      contractCount += c.contract;
+    });
+    return { totalDocuments, photoCount, pdfCount, drawingCount, contractCount, projectCount: projects.length };
+  }
+
+  function addDocument(projectId, docInput) {
+    const input = docInput && typeof docInput === "object" ? docInput : {};
+    const doc = normalizeDocument({ ...input, status: "active", createdAt: nowIso(), updatedAt: nowIso() });
+    return persistProjectDocuments(projectId, (docs) => ({
+      documents: [...docs, doc],
+      document: doc,
+      timelineType: "document_added",
+      timelineDetail: formatDocumentDetail(doc),
+    }));
+  }
+
+  function updateDocument(projectId, docId, docPatch) {
+    const did = String(docId || "").trim();
+    if (!did) return { ok: false, error: "invalid_id" };
+    const patch = docPatch && typeof docPatch === "object" ? docPatch : {};
+    return persistProjectDocuments(projectId, (docs) => {
+      const idx = docs.findIndex((d) => d.id === did);
+      if (idx < 0) return null;
+      const merged = normalizeDocument({ ...docs[idx], ...patch, updatedAt: nowIso() });
+      if (patch.tags) merged.tags = normalizeDocument({ tags: patch.tags }).tags;
+      const next = [...docs];
+      next[idx] = merged;
+      return {
+        documents: next,
+        document: merged,
+        timelineType: "document_updated",
+        timelineDetail: patch.documentReason != null ? String(patch.documentReason).slice(0, 500) : formatDocumentDetail(merged),
+      };
+    });
+  }
+
+  function archiveDocument(projectId, docId, reason) {
+    const did = String(docId || "").trim();
+    if (!did) return { ok: false, error: "invalid_id" };
+    return persistProjectDocuments(projectId, (docs) => {
+      const idx = docs.findIndex((d) => d.id === did);
+      if (idx < 0) return null;
+      const merged = normalizeDocument({ ...docs[idx], status: "archived", updatedAt: nowIso() });
+      const next = [...docs];
+      next[idx] = merged;
+      return {
+        documents: next,
+        document: merged,
+        timelineType: "document_archived",
+        timelineDetail: reason || formatDocumentDetail(merged),
+      };
+    });
+  }
+
+  function removeDocument(projectId, docId, reason) {
+    const did = String(docId || "").trim();
+    if (!did) return { ok: false, error: "invalid_id" };
+    return persistProjectDocuments(projectId, (docs) => {
+      const idx = docs.findIndex((d) => d.id === did);
+      if (idx < 0) return null;
+      const merged = normalizeDocument({ ...docs[idx], status: "deleted", updatedAt: nowIso() });
+      const next = [...docs];
+      next[idx] = merged;
+      return {
+        documents: next,
+        document: merged,
+        timelineType: "document_deleted",
+        timelineDetail: reason || formatDocumentDetail(merged),
+      };
+    });
+  }
+
+  function previewDocumentIntent(intentText) {
+    const text = String(intentText || "").trim();
+    if (!text) return { ok: false, error: "empty_intent" };
+    const intent = { source: "ai_assistant", rawText: text };
+    const typeMatch = text.match(
+      /(?:ドキュメント|書類)?(?:種別|タイプ)\s*[:：]?\s*(写真|図面|PDF|契約書|請求書|見積書|メモ|photo|drawing|pdf|contract|invoice|estimate|memo)/i
+    );
+    const titleMatch = text.match(/(?:タイトル|題名)\s*[:：]?\s*(.+)/);
+    const addMatch = /追加|登録|アップロード/i.test(text);
+    const archiveMatch = /アーカイブ|保管/i.test(text);
+
+    if (archiveMatch) {
+      intent.type = DOCUMENT_INTENT_TYPES.ARCHIVE;
+    } else if (addMatch || titleMatch) {
+      intent.type = DOCUMENT_INTENT_TYPES.ADD;
+      if (titleMatch) intent.title = titleMatch[1].trim().slice(0, 120);
+      intent.type = intent.type || DOCUMENT_INTENT_TYPES.ADD;
+      if (typeMatch) {
+        const map = {
+          写真: "photo",
+          図面: "drawing",
+          PDF: "pdf",
+          契約書: "contract",
+          請求書: "invoice",
+          見積書: "estimate",
+          メモ: "memo",
+          photo: "photo",
+          drawing: "drawing",
+          pdf: "pdf",
+          contract: "contract",
+          invoice: "invoice",
+          estimate: "estimate",
+          memo: "memo",
+        };
+        intent.docType = map[typeMatch[1]] || "other";
+      } else {
+        intent.docType = "other";
+      }
+    } else if (typeMatch) {
+      intent.type = DOCUMENT_INTENT_TYPES.SET_TYPE;
+      const map = {
+        写真: "photo",
+        図面: "drawing",
+        PDF: "pdf",
+        契約書: "contract",
+        請求書: "invoice",
+        見積書: "estimate",
+        メモ: "memo",
+      };
+      intent.docType = map[typeMatch[1]] || "other";
+    } else {
+      return { ok: false, error: "unrecognized_intent", rawText: text };
+    }
+    return { ok: true, intent };
+  }
+
+  function applyDocumentIntent(projectId, documentIntent) {
+    const i = documentIntent && typeof documentIntent === "object" ? documentIntent : {};
+    const type = String(i.type || "");
+
+    if (type === DOCUMENT_INTENT_TYPES.ADD) {
+      return addDocument(projectId, {
+        type: i.docType || "other",
+        title: i.title || i.rawText || "AI 提案ドキュメント",
+        description: i.description || "",
+        filename: i.filename || "",
+        documentReason: i.reason || i.rawText,
+      });
+    }
+    if (type === DOCUMENT_INTENT_TYPES.SET_TYPE && i.docId) {
+      return updateDocument(projectId, i.docId, { type: i.docType || "other" });
+    }
+    if (type === DOCUMENT_INTENT_TYPES.SET_TITLE && i.docId) {
+      return updateDocument(projectId, i.docId, { title: i.title || "" });
+    }
+    if (type === DOCUMENT_INTENT_TYPES.ARCHIVE && i.docId) {
+      return archiveDocument(projectId, i.docId, i.reason || i.rawText);
+    }
+    return { ok: false, error: "invalid_intent" };
+  }
+
   function clearForTests() {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -1570,6 +2044,9 @@
     COMPLETION_STATUSES,
     CONTRACT_INTENT_TYPES,
     COMPLETION_INTENT_TYPES,
+    DOCUMENT_TYPES,
+    DOCUMENT_STATUSES,
+    DOCUMENT_INTENT_TYPES,
     TAX_RATE,
     TIMELINE_LABELS,
     statusLabel,
@@ -1580,6 +2057,8 @@
     invoiceStatusLabel,
     contractStatusLabel,
     completionStatusLabel,
+    documentTypeLabel,
+    documentStatusLabel,
     toAmount,
     formatYen,
     normalizeFinance,
@@ -1587,6 +2066,8 @@
     normalizeInvoice,
     normalizeContract,
     normalizeCompletion,
+    normalizeDocument,
+    normalizeDocuments,
     normalizeEstimateItem,
     calculateFinanceAmounts,
     calculateProjectFinance,
@@ -1649,6 +2130,18 @@
     previewCompletionIntent,
     applyContractIntent,
     applyCompletionIntent,
+    addDocument,
+    updateDocument,
+    removeDocument,
+    archiveDocument,
+    getDocuments,
+    getDocumentsByType,
+    searchDocuments,
+    getDocumentSummary,
+    getProjectDocumentCounts,
+    countActiveDocuments,
+    previewDocumentIntent,
+    applyDocumentIntent,
     ensureSeed,
     seedDemoProjects,
     clearForTests,

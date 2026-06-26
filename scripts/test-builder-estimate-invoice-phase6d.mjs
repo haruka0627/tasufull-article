@@ -62,7 +62,7 @@ const storeSrc = fs.readFileSync(path.join(builder, "builder-project-store.js"),
 const uiJs = fs.readFileSync(path.join(builder, "builder-ai-ui.js"), "utf8");
 const hubJs = fs.readFileSync(path.join(builder, "builder-project-hub.js"), "utf8");
 
-assert(storeSrc.includes("SCHEMA_VERSION = 5"), "SCHEMA v5");
+assert(storeSrc.includes("SCHEMA_VERSION = 6"), "SCHEMA v6");
 assert(detailHtml.includes("data-builder-pd-estimate-form"), "detail estimate panel");
 assert(detailHtml.includes("data-builder-pd-invoice-form"), "detail invoice panel");
 assert(hubHtml.includes("data-builder-ph-est-inv-summary"), "hub est/inv summary");
@@ -77,10 +77,10 @@ const Store = loadStore();
 Store.clearForTests();
 Store.ensureSeed();
 
-assert(Store.SCHEMA_VERSION === 5, "store schema 5");
+assert(Store.SCHEMA_VERSION === 6, "store schema 6");
 
 const all = Store.listProjects();
-assert(all.every((p) => p.estimate && p.invoice && p.contract && p.completion), "estimate/invoice/contract/completion defaults");
+assert(all.every((p) => p.estimate && p.invoice && p.contract && p.completion && Array.isArray(p.documents)), "estimate/invoice/contract/completion/documents defaults");
 
 const calc = Store.calculateEstimate({
   items: [{ description: "テスト", quantity: 2, unitPrice: 50000 }],
