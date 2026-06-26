@@ -347,6 +347,9 @@ async function uiReview() {
 
       await page.goto(url, { waitUntil: "domcontentloaded" });
       await page.waitForFunction(() => window.TasuBuilderAIPage && document.querySelector("[data-builder-ai-templates]"));
+      await page.locator(".builder-ai-legacy").evaluate((el) => {
+        el.open = true;
+      });
       if (c.role === "guest") {
         await page.waitForFunction(() => document.querySelector("[data-builder-ai-save-draft]")?.hidden === true);
       } else {
