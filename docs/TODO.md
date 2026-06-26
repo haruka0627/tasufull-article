@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Builder Project Hub Phase 6-A · 未コミット）  
-**Git HEAD:** `66051f7`（`cf-pages-deploy` · **git push 未実施**）  
+**最終更新:** 2026-06-26（Builder Project Calendar Phase 6-B · 未コミット）  
+**Git HEAD:** `46c5e02`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -167,7 +167,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder AI Vision Phase 2** | ✅ commit 済 | `4aff9ec` · `reports/builder-ai-vision-phase2.md` |
 | **Builder AI Live Phase 4-A** | ✅ commit 済 | `66051f7` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-live-phase4-plan.md` |
 | **Builder AI Vision Phase 5** | ✅ commit 済 | `7ef4efd` · `reports/builder-ai-phase5-vision.md` |
-| **Builder Project Hub Phase 6-A** | ✅ 実装 · 未コミット | 案件ハブ MVP · `reports/builder-project-hub-phase6a.md` |
+| **Builder Project Hub Phase 6-A** | ✅ commit 済 | `46c5e02` · `reports/builder-project-hub-phase6a.md` |
+| **Builder Project Calendar Phase 6-B** | ✅ 実装 · 未コミット | 工程・カレンダー · `reports/builder-project-calendar-phase6b.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -223,12 +224,20 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - `test-builder-ai-vision-phase5.mjs` **28/28** + phase2 回帰 **8/8** + build PASS
 - 参照: `reports/builder-ai-phase5-vision.md`
 
-**Builder Project Hub Phase 6-A（案件ハブ MVP · ✅ 実装 · 未コミット）**
+**Builder Project Hub Phase 6-A（案件ハブ MVP · ✅ commit 済 · `46c5e02`）**
 
 - `builder-project-store.js` · 一覧 / 詳細 / 検索 / タイムライン / Vision JSON 保存
 - `project-hub.html` · `project-detail.html` · Builder AI `?projectId=` 連携
 - `test-builder-project-hub-phase6a.mjs` + phase5 回帰 + build PASS
 - 参照: `reports/builder-project-hub-phase6a.md`
+
+**Builder Project Calendar Phase 6-B（工程・カレンダー · ✅ 実装 · 未コミット）**
+
+- 開始日 / 終了日 / 工程（8段階）· 月/週カレンダー · 本日/今週/遅延ウィジェット
+- `project-calendar.html` · 詳細から日程変更 → Store 正本 → カレンダー反映
+- `previewScheduleIntent` / `prepareScheduleIntent` — AI 日程変更の将来フック（未接続）
+- `test-builder-project-calendar-phase6b.mjs` + phase6a 回帰 + build PASS
+- 参照: `reports/builder-project-calendar-phase6b.md`
 
 **Builder AI Gemini Live Phase 4-B（未着手）**
 

@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-26（Project Hub Phase 6-A · 案件ハブ MVP）  
-**ステータス:** **実装済み**（P1 + tools + Vision 5 + Live 4-A + **Project Hub 6-A**）· P2-C 残  
-**直近コミット:** `66051f7`（Live Phase 4-A · **git push 未実施**）
+**最終更新:** 2026-06-26（Project Calendar Phase 6-B · 工程・カレンダー）  
+**ステータス:** **実装済み**（P1 + tools + Vision 5 + Live 4-A + **Project Hub 6-A** + **Calendar 6-B**）· P2-C 残  
+**直近コミット:** `46c5e02`（Project Hub 6-A · **git push 未実施**）
 
 ---
 
@@ -62,7 +62,8 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | `builder-ai-live.js` | カメラプレビュー · スナップショット → Vision |
 | `builder-ai-voice.js` | `TasuAiVoiceCore` adapter · `surface: builder_ai` |
 | `builder-ai-live-gate.js` | Free/Pro gate stub（本番課金未接続） |
-| `builder-project-store.js` | **Phase 6-A** · 案件 localStorage · タイムライン · Vision JSON 保存 |
+| `builder-project-store.js` | **Phase 6-A/6-B** · 案件 localStorage · タイムライン · Vision · 日程/工程 |
+| `builder-project-calendar.js` | **Phase 6-B** · 月/週カレンダー · 本日/今週/遅延 |
 | `builder-project-hub.js` | 案件一覧 · 検索 |
 | `builder-project-detail.js` | 案件詳細 · タイムライン閲覧 · メモ最小編集 |
 
@@ -143,7 +144,7 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 ---
 
-## Builder Project Hub Phase 6-A（✅ 実装 · 未コミット）
+## Builder Project Hub Phase 6-A（✅ commit 済 · `46c5e02`）
 
 **案件ハブ MVP** — Builder 経由案件の一覧 · 詳細 · タイムライン · Vision 診断 JSON 保存
 
@@ -155,11 +156,29 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 | **検索** | キーワード · カテゴリ · ステータス |
 | **タイムライン** | 作成 · 見積 · AI診断 · 契約 · 施工 · 完了（閲覧のみ） |
 | **AI 連携** | `builder-ai.html?projectId=` → Vision 診断 JSON → 案件保存 |
-| **非実装** | 収支 · カレンダー · 請求 · 契約書 · 写真比較 · OCR · 他 surface |
 
 **テスト:** `scripts/test-builder-project-hub-phase6a.mjs`
 
 **報告:** `reports/builder-project-hub-phase6a.md`
+
+---
+
+## Builder Project Calendar Phase 6-B（✅ 実装 · 未コミット）
+
+**工程・日程管理** — 月/週カレンダー · 本日/今週/遅延 · 詳細から日程変更
+
+| 項目 | 内容 |
+| --- | --- |
+| **画面** | `project-calendar.html` |
+| **日程** | 開始日 · 終了日 · 工程（8段階） |
+| **カレンダー** | 月表示 · 週表示 · 案件クリック → 詳細 |
+| **ウィジェット** | 本日の案件 · 今週の案件 · 遅延案件 |
+| **AI 準備** | `previewScheduleIntent` · `prepareScheduleIntent`（未接続） |
+| **非実装** | 収支 · 請求 · 契約書 · 通知 · OCR · CAD · 他 surface |
+
+**テスト:** `scripts/test-builder-project-calendar-phase6b.mjs`
+
+**報告:** `reports/builder-project-calendar-phase6b.md`
 
 ---
 

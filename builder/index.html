@@ -37,8 +37,8 @@
           </div>
         </div>
         <nav class="builder-partner-sidebar__nav" data-builder-partner-nav>
-          <button type="button" class="builder-partner-sidebar__link is-active" data-builder-partner-view="dashboard">ダッシュボード</button>
-          <button type="button" class="builder-partner-sidebar__link" data-builder-partner-view="calendar">案件カレンダー</button>
+          <button type="button" class="builder-partner-sidebar__link" data-builder-partner-view="dashboard">ダッシュボード</button>
+          <a class="builder-partner-sidebar__link" href="project-calendar.html">案件カレンダー</a>
           <a class="builder-partner-sidebar__link" href="mvp-projects.html">案件一覧</a>
           <a class="builder-partner-sidebar__link" href="project-hub.html">案件ハブ</a>
           <a class="builder-partner-sidebar__link" href="mvp-threads.html?role=partner">やりとり <span class="builder-partner-sidebar__badge is-cyan">3</span></a>
@@ -127,7 +127,7 @@
             <strong class="builder-stat-card__value" data-builder-stat-value="inProgress">—</strong>
             <span class="builder-stat-card__desc">手配・施工中の案件</span>
           </div>
-          <a class="builder-stat-card__action" href="#" data-builder-open-calendar data-builder-stat-action="inProgress">案件カレンダー ›</a>
+          <a class="builder-stat-card__action" href="project-calendar.html" data-builder-stat-action="inProgress">案件カレンダー ›</a>
         </article>
 
         <article class="builder-stat-card" data-builder-stat-card data-builder-stat="applications">
@@ -221,7 +221,7 @@
             </span>
           </a>
 
-          <button type="button" class="builder-quick-card builder-quick-card--btn" data-builder-open-calendar data-builder-quick="calendar">
+          <a class="builder-quick-card builder-quick-card--btn" href="project-calendar.html" data-builder-quick="calendar">
             <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="4" width="18" height="18" rx="2" />
@@ -232,7 +232,7 @@
               <strong>案件カレンダー</strong>
               <span>担当案件のスケジュール</span>
             </span>
-          </button>
+          </a>
 
           <a class="builder-quick-card" href="board-projects.html" data-builder-quick="projects">
             <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">

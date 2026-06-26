@@ -57,6 +57,9 @@
       ["連絡先", project.customerContact || "—"],
       ["担当業者", project.assignedVendor || "—"],
       ["ステータス", project.statusLabel],
+      ["開始日", project.scheduleStartDate || "—"],
+      ["終了日", project.scheduleEndDate || "—"],
+      ["工程", project.schedulePhaseLabel || "—"],
       ["作成日", formatDate(project.createdAt)],
       ["更新日", formatDate(project.updatedAt)],
     ];
@@ -113,6 +116,46 @@
       .join("");
   }
 
+  function bindSchedule(project) {
+    const form = $("[data-builder-pd-schedule-form]");
+    const start = $("[data-builder-pd-schedule-start]");
+    const end = $("[data-builder-pd-schedule-end]");
+    const phase = $("[data-builder-pd-schedule-phase]");
+    const status = $("[data-builder-pd-schedule-status]");
+    const Store = global.TasuBuilderProjectStore;
+    if (!form || !Store) return;
+
+    if (phase && Store.SCHEDULE_PHASES) {
+      phase.innerHTML = Store.SCHEDULE_PHASES.map(
+        (p) =>
+          `<option value="${escapeHtml(p.id)}"${p.id === project.schedulePhase ? " selected" : ""}>${escapeHtml(p.label)}</option>`
+      ).join("");
+    }
+    if (start) start.value = project.scheduleStartDate || "";
+    if (end) end.value = project.scheduleEndDate || "";
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const out = Store.updateSchedule?.(project.id, {
+        scheduleStartDate: start?.value || "",
+        scheduleEndDate: end?.value || "",
+        schedulePhase: phase?.value || project.schedulePhase,
+        reason: "案件詳細から日程を更新",
+      });
+      if (out?.ok) {
+        currentProject = out.project;
+        renderInfo(currentProject);
+        renderTimeline(currentProject);
+        if (status) {
+          status.textContent = "日程を保存しました";
+          setTimeout(() => {
+            status.textContent = "";
+          }, 2000);
+        }
+      }
+    });
+  }
+
   function bindMemo(project) {
     const ta = $("[data-builder-pd-memo]");
     const btn = $("[data-builder-pd-memo-save]");
@@ -155,6 +198,7 @@
     renderInfo(project);
     renderTimeline(project);
     renderVisionList(project);
+    bindSchedule(project);
     bindAiLink(project);
     bindMemo(project);
   }

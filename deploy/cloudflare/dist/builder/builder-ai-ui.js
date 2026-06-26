@@ -96,6 +96,14 @@
     return Store?.saveVisionDiagnosis?.(projectId, result.diagnosis, meta) || null;
   }
 
+  /** Phase 6-B: 将来の AI 日程変更 intent プレビュー（現時点では UI から未呼び出し） */
+  function prepareScheduleIntent(intent) {
+    const projectId = getProjectIdFromUrl();
+    if (!projectId || !intent) return null;
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewScheduleIntent?.(projectId, { ...intent, source: "ai_assistant" }) || null;
+  }
+
   let messages = loadHistory();
   let sending = false;
   let photoFile = null;
@@ -494,6 +502,7 @@
     init,
     sendMessage,
     pushSystem,
+    prepareScheduleIntent,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -59,6 +59,13 @@
     });
   }
 
+  function formatScheduleRange(p) {
+    if (!p.scheduleStartDate && !p.scheduleEndDate) return "—";
+    const s = p.scheduleStartDate || "—";
+    const e = p.scheduleEndDate || "—";
+    return `${s} → ${e}`;
+  }
+
   function renderTable(projects) {
     const tbody = $("[data-builder-ph-tbody]");
     const empty = $("[data-builder-ph-empty]");
@@ -84,6 +91,8 @@
           `<td>${escapeHtml(p.customerName || "—")}</td>` +
           `<td>${escapeHtml(p.assignedVendor || "—")}</td>` +
           `<td><span class="${statusClass(p.status)}">${escapeHtml(p.statusLabel)}</span></td>` +
+          `<td>${escapeHtml(p.schedulePhaseLabel || "—")}</td>` +
+          `<td>${escapeHtml(formatScheduleRange(p))}</td>` +
           `<td>${escapeHtml(formatDate(p.updatedAt))}</td>` +
           `</tr>`
       )
