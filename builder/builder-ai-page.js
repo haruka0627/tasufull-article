@@ -337,6 +337,9 @@
   }
 
   function init() {
+    const legacyRoot = $(".builder-ai-legacy");
+    if (!legacyRoot) return;
+
     const actor = getActor();
     populateProjects(actor);
     populateTemplates(actor);
@@ -359,14 +362,14 @@
       });
     }
 
-    $("[data-builder-ai-send]")?.addEventListener("click", sendMessage);
-    $("[data-builder-ai-input]")?.addEventListener("keydown", (ev) => {
+    legacyRoot.querySelector("[data-builder-ai-send]")?.addEventListener("click", sendMessage);
+    legacyRoot.querySelector("[data-builder-ai-input]")?.addEventListener("keydown", (ev) => {
       if (ev.key === "Enter" && !ev.shiftKey) {
         ev.preventDefault();
         sendMessage();
       }
     });
-    $("[data-builder-ai-clear]")?.addEventListener("click", () => {
+    legacyRoot.querySelector("[data-builder-ai-clear]")?.addEventListener("click", () => {
       messages = [];
       lastResult = null;
       saveHistory(messages);
