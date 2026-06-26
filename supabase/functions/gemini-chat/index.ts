@@ -1,4 +1,9 @@
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import {
+  buildGeminiUserParts,
+  mergeMessageWithAttachments,
+  normalizeAttachments,
+} from "../_shared/ai-attachments.ts";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE =
@@ -30,6 +35,7 @@ type RequestBody = {
   mode?: string;
   intent?: string;
   searchContext?: string;
+  attachments?: unknown;
 };
 
 type GeminiIntent = "chat" | "work" | "business" | "support";
@@ -46,7 +52,7 @@ const INTENT_GENERATION_CONFIG: Record<
   support: { maxOutputTokens: 3072, temperature: 0.6 },
 };
 
-type GeminiPart = { text: string };
+type GeminiPart = { text: string } | { inlineData: { mimeType: string; data: string } };
 type GeminiContent = { role?: string; parts: GeminiPart[] };
 
 function trimText(value: unknown, maxLen: number): string {
@@ -310,18 +316,18 @@ function normalizeHistory(history: HistoryItem[] | undefined): GeminiContent[] {
 
 function buildGeminiContents(
   message: string,
-  history: HistoryItem[] | undefined
+  history: HistoryItem[] | undefined,
+  attachments: ReturnType<typeof normalizeAttachments>
 ): GeminiContent[] {
   const contents = normalizeHistory(history);
-  const userMessage = trimText(message, 2000);
+  const userMessage = mergeMessageWithAttachments(message, attachments);
+  const userParts = buildGeminiUserParts(userMessage, attachments);
 
-  if (userMessage) {
+  if (userParts.length) {
     if (contents.length && contents[contents.length - 1].role === "user") {
-      const last = contents[contents.length - 1].parts[0]?.text || "";
-      contents[contents.length - 1].parts = [{ text: `${last}\n${userMessage}`.slice(0, 2000) }];
-    } else {
-      contents.push({ role: "user", parts: [{ text: userMessage }] });
+      contents.pop();
     }
+    contents.push({ role: "user", parts: userParts });
   }
 
   if (!contents.length) {
@@ -495,8 +501,9 @@ Deno.serve(async (req) => {
   const message = trimText(body.message, 2000);
   const character = body.character && typeof body.character === "object" ? body.character : null;
   const history = Array.isArray(body.history) ? body.history : [];
+  const attachments = normalizeAttachments(body.attachments);
 
-  if (!message && history.length === 0) {
+  if (!message && history.length === 0 && attachments.length === 0) {
     return jsonResponse({ error: "message is required", reply: "" }, 400, req);
   }
 
@@ -507,7 +514,7 @@ Deno.serve(async (req) => {
   if (searchContext) {
     systemPrompt = `${systemPrompt}\n\n【Web検索結果（参考）】\n${searchContext}\n\n上記を参考に、ユーザーの質問に答えてください。検索結果をそのまま貼り付けず、要約して伝えてください。`;
   }
-  const contents = buildGeminiContents(message, history);
+  const contents = buildGeminiContents(message, history, attachments);
   const genConfig = INTENT_GENERATION_CONFIG[intent];
 
   console.log(`[gemini-chat] intent=${intent} maxOutputTokens=${genConfig.maxOutputTokens}`);

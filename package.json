@@ -3,7 +3,7 @@
   "private": true,
   "description": "TasuFull 静的フロント（HTML/CSS/JS + Supabase）",
   "scripts": {
-    "dev": "node scripts/ensure-pages-dist.mjs && npx wrangler pages dev deploy/cloudflare/dist --port 8788 --ip 127.0.0.1",
+    "dev": "node scripts/ensure-pages-dist.mjs && npx wrangler pages dev deploy/cloudflare/dist --port 8788 --ip 127.0.0.1 --compatibility-date=2026-06-24",
     "dev:fresh": "npm run build:pages && npm run dev",
     "dev:vite": "vite",
     "start": "npm run dev",

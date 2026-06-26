@@ -1,5 +1,10 @@
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import { appendSearchContextToSystemPrompt, trimAiText } from "../_shared/ai-search-context.ts";
+import {
+  buildClaudeUserContent,
+  mergeMessageWithAttachments,
+  normalizeAttachments,
+} from "../_shared/ai-attachments.ts";
 
 type HistoryItem = { role?: string; content?: string };
 
@@ -9,22 +14,25 @@ type RequestBody = {
   mode?: string;
   searchContext?: string;
   systemPrompt?: string;
+  attachments?: unknown;
 };
 
 const CLAUDE_MODEL = Deno.env.get("ANTHROPIC_CHAT_MODEL")?.trim() || "claude-haiku-4-5";
 
 function buildMessages(body: RequestBody) {
+  const attachments = normalizeAttachments(body.attachments);
   const history = Array.isArray(body.history) ? body.history : [];
-  const messages: { role: string; content: string }[] = [];
+  const messages: { role: string; content: string | ReturnType<typeof buildClaudeUserContent> }[] = [];
   history.forEach((item) => {
     const content = trimAiText(item?.content, 4000);
     if (!content) return;
     const role = item?.role === "assistant" ? "assistant" : "user";
     messages.push({ role, content });
   });
-  const message = trimAiText(body.message, 2000);
-  if (message) messages.push({ role: "user", content: message });
-  return messages;
+  const message = mergeMessageWithAttachments(trimAiText(body.message, 2000), attachments);
+  const userContent = buildClaudeUserContent(message, attachments);
+  if (userContent) messages.push({ role: "user", content: userContent });
+  return { messages, attachments };
 }
 
 Deno.serve(async (req) => {
@@ -46,8 +54,8 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "Invalid JSON body", reply: "" }, 400);
   }
 
-  const messages = buildMessages(body);
-  if (!messages.length && !trimAiText(body.message, 2000)) {
+  const { messages, attachments } = buildMessages(body);
+  if (!messages.length && !trimAiText(body.message, 2000) && !attachments.length) {
     return jsonResponse({ error: "message is required", reply: "" }, 400);
   }
 

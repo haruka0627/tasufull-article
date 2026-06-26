@@ -1,5 +1,10 @@
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import { appendSearchContextToSystemPrompt, trimAiText } from "../_shared/ai-search-context.ts";
+import {
+  buildOpenAiUserContent,
+  mergeMessageWithAttachments,
+  normalizeAttachments,
+} from "../_shared/ai-attachments.ts";
 
 type HistoryItem = { role?: string; content?: string };
 
@@ -9,11 +14,13 @@ type RequestBody = {
   mode?: string;
   searchContext?: string;
   systemPrompt?: string;
+  attachments?: unknown;
 };
 
 const OPENAI_MODEL = Deno.env.get("OPENAI_CHAT_MODEL")?.trim() || "gpt-4o-mini";
 
 function buildMessages(body: RequestBody) {
+  const attachments = normalizeAttachments(body.attachments);
   const system = appendSearchContextToSystemPrompt(
     trimAiText(
       body.systemPrompt ||
@@ -22,7 +29,9 @@ function buildMessages(body: RequestBody) {
     ),
     trimAiText(body.searchContext, 6000)
   );
-  const messages: { role: string; content: string }[] = [{ role: "system", content: system }];
+  const messages: { role: string; content: string | ReturnType<typeof buildOpenAiUserContent> }[] = [
+    { role: "system", content: system },
+  ];
   const history = Array.isArray(body.history) ? body.history : [];
   history.forEach((item) => {
     const content = trimAiText(item?.content, 4000);
@@ -30,9 +39,10 @@ function buildMessages(body: RequestBody) {
     const role = item?.role === "assistant" ? "assistant" : "user";
     messages.push({ role, content });
   });
-  const message = trimAiText(body.message, 2000);
-  if (message) messages.push({ role: "user", content: message });
-  return messages;
+  const message = mergeMessageWithAttachments(trimAiText(body.message, 2000), attachments);
+  const userContent = buildOpenAiUserContent(message, attachments);
+  if (userContent) messages.push({ role: "user", content: userContent });
+  return { messages, attachments };
 }
 
 Deno.serve(async (req) => {
@@ -54,8 +64,8 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "Invalid JSON body", reply: "" }, 400);
   }
 
-  const messages = buildMessages(body);
-  if (messages.length <= 1 && !trimAiText(body.message, 2000)) {
+  const { messages, attachments } = buildMessages(body);
+  if (messages.length <= 1 && !trimAiText(body.message, 2000) && !attachments.length) {
     return jsonResponse({ error: "message is required", reply: "" }, 400);
   }
 
