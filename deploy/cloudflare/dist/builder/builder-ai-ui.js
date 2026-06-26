@@ -1,18 +1,13 @@
 /**
- * Builder AI — Field diagnosis UI shell (Phase 1)
- * Vision / Live / Voice API 非接続 · ローカル stub のみ
+ * Builder AI — Field diagnosis UI（Vision Phase 2 · Gateway 経由）
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_ai_field_ui_v1";
   const MAX_MESSAGES = 40;
-  const STUB_REPLY =
-    "Builder AIは現在UI準備中です。写真診断・見積補助は次フェーズで接続予定です。";
   const CAMERA_STUB = "カメラ診断は次フェーズで対応予定です。";
   const VOICE_STUB = "音声相談は次フェーズで対応予定です。";
-  const ACCEPT_TYPES = ["image/jpeg", "image/png", "image/webp"];
-  const ACCEPT_EXT = /\.(jpe?g|png|webp)$/i;
 
   const QUICK_PROMPTS = [
     { label: "外壁の補修判断", text: "外壁の補修が必要かどうか判断したいです。" },
@@ -44,12 +39,20 @@
     }
   }
 
-  function saveHistory(messages) {
+  function saveHistory(list) {
     try {
-      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-MAX_MESSAGES)));
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(list.slice(-MAX_MESSAGES)));
     } catch {
       /* ignore */
     }
+  }
+
+  function getVision() {
+    return global.TasuBuilderAIVision;
+  }
+
+  function getActor() {
+    return global.TasuBuilderAIContext?.resolveActor?.({}) || { actorType: "guest", label: "ゲスト" };
   }
 
   let messages = loadHistory();
@@ -116,6 +119,11 @@
   }
 
   function showPhotoPreview(file) {
+    const Vision = getVision();
+    if (Vision?.isImageTooLarge?.(file)) {
+      pushSystem(`画像は ${Vision.MAX_IMAGE_MB || 4}MB 以下にしてください。`);
+      return;
+    }
     const preview = $("[data-builder-ai-ui-photo-preview]");
     const thumb = $("[data-builder-ai-ui-photo-thumb]");
     const nameEl = $("[data-builder-ai-ui-photo-name]");
@@ -135,21 +143,16 @@
     preview.classList.add("builder-ai-ui-photo__preview--visible");
   }
 
-  function isAcceptedImage(file) {
-    if (!file) return false;
-    if (ACCEPT_TYPES.includes(file.type)) return true;
-    return ACCEPT_EXT.test(String(file.name || ""));
-  }
-
   function bindPhotoUpload() {
     const input = $("[data-builder-ai-ui-photo-input]");
     const removeBtn = $("[data-builder-ai-ui-photo-remove]");
+    const Vision = getVision();
     if (!input) return;
 
     input.addEventListener("change", () => {
       const file = input.files?.[0];
       if (!file) return;
-      if (!isAcceptedImage(file)) {
+      if (Vision?.isAcceptedImage && !Vision.isAcceptedImage(file)) {
         pushSystem("jpg / png / webp 形式の画像を選択してください。");
         input.value = "";
         return;
@@ -190,24 +193,62 @@
     const text = String(forcedText != null ? forcedText : input?.value || "").trim();
     if (!text) return;
 
-    sending = true;
-    setStatus("送信中…", true);
+    const Vision = getVision();
+    if (!Vision?.runFieldDiagnosis) {
+      pushSystem("Builder AI Vision モジュールが読み込まれていません。");
+      return;
+    }
 
-    const userMsg = {
+    const sentPhoto = photoFile;
+    const sentPhotoName = sentPhoto?.name || "";
+
+    sending = true;
+    setStatus(sentPhoto ? "画像を診断中…" : "送信中…", true);
+
+    messages.push({
       role: "user",
       content: text,
-      imageName: photoFile ? photoFile.name : "",
-    };
-    messages.push(userMsg);
+      imageName: sentPhotoName,
+    });
     renderMessages();
     if (input && !opts?.fromQuick) input.value = "";
 
-    await new Promise((r) => setTimeout(r, 450));
+    const result = await Vision.runFieldDiagnosis({
+      userText: text,
+      photoFile: sentPhoto,
+      messages,
+      actor: getActor(),
+    });
 
-    messages.push({ role: "assistant", content: STUB_REPLY });
-    saveHistory(messages);
-    renderMessages();
-    setStatus("", false);
+    if (!result.ok && result.reply) {
+      pushSystem(result.reply);
+      setStatus("", false);
+      sending = false;
+      return;
+    }
+
+    if (result.reply) {
+      messages.push({ role: "assistant", content: result.reply });
+      saveHistory(messages);
+      renderMessages();
+    }
+
+    if (result.usedVision && sentPhoto) {
+      clearPhotoPreview();
+    }
+
+    if (result.usedRemote) {
+      setStatus("Vision 応答", false);
+      setTimeout(() => setStatus("", false), 2000);
+    } else if (result.fallback_used) {
+      setStatus("モック / オフライン応答", false);
+      setTimeout(() => setStatus("", false), 2500);
+    } else if (result.photoRequired) {
+      setStatus("", false);
+    } else {
+      setStatus("", false);
+    }
+
     sending = false;
   }
 
@@ -256,9 +297,8 @@
   global.TasuBuilderAIUi = {
     init,
     sendMessage,
-    STUB_REPLY,
     CAMERA_STUB,
     VOICE_STUB,
-    useFieldStub: true,
+    useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);

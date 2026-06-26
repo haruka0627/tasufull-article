@@ -333,6 +333,86 @@
   }
 
   /**
+   * 現場写真 Vision 診断（Gateway attachments → gemini-chat）
+   * @param {{
+   *   userText?: string,
+   *   attachments?: object[],
+   *   actor?: object,
+   *   messages?: object[],
+   *   preferRemote?: boolean,
+   * }} params
+   */
+  async function runFieldVision(params) {
+    const userText = String(params?.userText || "").trim();
+    const attachments = Array.isArray(params?.attachments) ? params.attachments : [];
+    const actor = params?.actor || getContext()?.resolveActor?.({}) || { actorType: "guest", label: "ゲスト" };
+    const Vision = global.TasuBuilderAIVision;
+
+    const intent = detectProhibitedIntent(userText);
+    if (intent.blocked) {
+      return {
+        ok: true,
+        draft: wrapDraft(prohibitedReplyForKind(intent.kind)),
+        action: "field_vision",
+        blocked: true,
+        blockedKind: intent.kind,
+        surface: SURFACE,
+      };
+    }
+
+    if (!userText) {
+      return { ok: false, error: "empty_text", draft: "", action: "field_vision" };
+    }
+
+    const Gateway = global.TasuAiModelGateway;
+    if (!Gateway?.completeTurn) {
+      const mock = Vision?.mockVisionReply?.(userText, attachments.length > 0) || "";
+      return {
+        ok: Boolean(mock),
+        draft: wrapDraft(mock),
+        action: "field_vision",
+        surface: SURFACE,
+        usedRemote: false,
+        fallback_used: true,
+        apiError: "gateway_missing",
+      };
+    }
+
+    const systemPrompt = Vision?.buildSystemPrompt?.(actor) || BASE_SYSTEM_PROMPT;
+    const hasImage = attachments.length > 0;
+    const messageForAi = hasImage
+      ? `${userText}\n\n（添付の現場写真を参照し、建設・住宅現場向けの参考診断として回答してください。）`
+      : `${userText}\n\n（現場写真は添付されていません。テキスト情報のみに基づく一般的な参考回答としてください。）`;
+
+    const turn = await Gateway.completeTurn({
+      userText: messageForAi,
+      modeId: MODE_ID,
+      systemPrompt,
+      messages: params?.messages,
+      attachments: hasImage ? attachments : undefined,
+      skipSearch: true,
+      preferRemote: params?.preferRemote !== false,
+      surface: SURFACE,
+      modelId: DEFAULT_MODEL,
+      mockFallback: () => Vision?.mockVisionReply?.(userText, hasImage) || "",
+    });
+
+    const rawReply = String(turn?.reply || "").trim();
+    const draft = wrapDraft(Vision?.formatForDisplay?.(rawReply) || rawReply);
+    return {
+      ok: Boolean(draft),
+      draft,
+      action: "field_vision",
+      surface: SURFACE,
+      modelId: turn?.modelId,
+      modelLabel: turn?.modelLabel,
+      usedRemote: turn?.usedRemote,
+      fallback_used: turn?.fallback_used,
+      apiError: turn?.apiError || "",
+    };
+  }
+
+  /**
    * @param {string} text
    * @param {{ action?: string, projectId?: string, actor?: object, messages?: object[] }} [options]
    */
@@ -361,6 +441,7 @@
     PROHIBITED_PATTERNS,
     wrapDraft,
     runAction,
+    runFieldVision,
     query,
     runDeterministicAssist,
     detectProhibitedIntent,

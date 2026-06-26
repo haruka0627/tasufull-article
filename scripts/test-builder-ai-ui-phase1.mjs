@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
- * Builder AI UI Phase 1 — static + browser smoke
- * Vision / Live / Voice API 非接続 · stub UI のみ
+ * Builder AI UI — static + browser smoke
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -51,11 +50,11 @@ else bad("camera/voice hooks");
 if (html.includes("builder-ai-legacy")) ok("legacy gateway section preserved");
 else bad("legacy gateway section preserved");
 
-if (!js.includes("ai-model-gateway") && !js.includes("TasuBuilderAICore")) ok("ui js no gateway/core");
-else bad("ui js no gateway/core");
+if (!js.includes("ai-model-gateway") && js.includes("TasuBuilderAIVision")) ok("ui delegates to vision module");
+else bad("ui delegates to vision module");
 
-if (js.includes("UI準備中") && js.includes("カメラ診断は次フェーズ") && js.includes("音声相談は次フェーズ")) ok("stub messages");
-else bad("stub messages");
+if (js.includes("カメラ診断は次フェーズ") && js.includes("音声相談は次フェーズ")) ok("camera/voice stubs remain");
+else bad("camera/voice stubs remain");
 
 if (js.includes("外壁の補修判断") && js.includes("概算見積を作りたい")) ok("quick prompts");
 else bad("quick prompts");
@@ -92,10 +91,10 @@ async function browserSmoke() {
 
     await page.locator("[data-builder-ai-ui-input]").fill("外壁テスト");
     await page.locator("[data-builder-ai-ui-send]").click();
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(900);
     const text = await page.locator("[data-builder-ai-ui-messages]").innerText();
-    if (text.includes("UI準備中")) ok("browser: stub reply");
-    else bad("browser: stub reply", text.slice(0, 80));
+    if (text.includes("確定判断") || text.includes("写真") || text.includes("モック")) ok("browser: vision/mock reply");
+    else bad("browser: vision/mock reply", text.slice(0, 80));
 
     await page.locator("[data-builder-ai-ui-camera]").click();
     await page.waitForTimeout(200);
