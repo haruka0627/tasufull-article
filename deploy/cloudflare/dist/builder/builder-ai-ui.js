@@ -104,6 +104,12 @@
     return Store?.previewScheduleIntent?.(projectId, { ...intent, source: "ai_assistant" }) || null;
   }
 
+  /** Phase 6-C: 将来の AI 収支 intent プレビュー（現時点では UI から未呼び出し） */
+  function prepareFinanceIntent(intentText) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewFinanceIntent?.(intentText) || null;
+  }
+
   let messages = loadHistory();
   let sending = false;
   let photoFile = null;
@@ -503,6 +509,7 @@
     sendMessage,
     pushSystem,
     prepareScheduleIntent,
+    prepareFinanceIntent,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -1,12 +1,12 @@
 /**
- * Builder Project Hub — 案件ストア（Phase 6-A/6-B · localStorage）
+ * Builder Project Hub — 案件ストア（Phase 6-A/6-B/6-C · localStorage）
  * Builder 専用 · Platform / AI秘書 / TASFUL AI 非連携
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_project_hub_v1";
-  const SCHEMA_VERSION = 2;
+  const SCHEMA_VERSION = 3;
 
   const STATUSES = Object.freeze([
     { id: "inquiry", label: "問い合わせ" },
@@ -36,6 +36,21 @@
     memo_updated: "メモ更新",
     status_changed: "ステータス変更",
     schedule_updated: "日程変更",
+    finance_updated: "収支更新",
+  });
+
+  /** 支払い状況（Phase 6-C） */
+  const PAYMENT_STATUSES = Object.freeze([
+    { id: "unpaid", label: "未入金" },
+    { id: "partial", label: "一部入金" },
+    { id: "paid", label: "入金済" },
+  ]);
+
+  const FINANCE_INTENT_TYPES = Object.freeze({
+    SET_ESTIMATE: "set_estimate",
+    SET_COST: "set_cost",
+    SET_PAYMENT_STATUS: "set_payment_status",
+    SET_DUE_DATE: "set_due_date",
   });
 
   /** 工程（Phase 6-B）— 案件スケジュールの工程ステップ */
@@ -74,6 +89,19 @@
 
   function schedulePhaseLabel(id) {
     return SCHEDULE_PHASES.find((p) => p.id === id)?.label || id;
+  }
+
+  function paymentStatusLabel(id) {
+    return PAYMENT_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function toAmount(value) {
+    const n = Number(value);
+    return Number.isFinite(n) && n >= 0 ? Math.round(n) : 0;
+  }
+
+  function formatYen(amount) {
+    return `¥${toAmount(amount).toLocaleString("ja-JP")}`;
   }
 
   function dateOnlyOffset(daysFromToday) {
@@ -143,6 +171,40 @@
     );
   }
 
+  function normalizeFinance(raw) {
+    const f = raw && typeof raw === "object" ? raw : {};
+    const estimateAmount = toAmount(f.estimateAmount);
+    const costAmount = toAmount(f.costAmount);
+    const paymentStatus = String(f.paymentStatus || "unpaid");
+    const calc = calculateFinanceAmounts(estimateAmount, costAmount);
+    return {
+      estimateAmount,
+      costAmount,
+      grossProfit: calc.grossProfit,
+      grossProfitRate: calc.grossProfitRate,
+      paymentStatus,
+      paymentStatusLabel: String(f.paymentStatusLabel || paymentStatusLabel(paymentStatus)),
+      paymentDueDate: String(f.paymentDueDate || ""),
+      paidAt: String(f.paidAt || ""),
+      memo: String(f.memo || ""),
+      updatedAt: String(f.updatedAt || ""),
+    };
+  }
+
+  function calculateFinanceAmounts(estimateAmount, costAmount) {
+    const estimate = toAmount(estimateAmount);
+    const cost = toAmount(costAmount);
+    const grossProfit = estimate - cost;
+    const grossProfitRate =
+      estimate > 0 ? Math.round((grossProfit / estimate) * 1000) / 10 : 0;
+    return { grossProfit, grossProfitRate };
+  }
+
+  function calculateProjectFinance(project) {
+    const f = normalizeFinance(project?.finance || project);
+    return { ...f };
+  }
+
   function normalizeProject(raw) {
     const p = raw && typeof raw === "object" ? raw : {};
     const status = String(p.status || "inquiry");
@@ -162,6 +224,7 @@
       scheduleEndDate: String(p.scheduleEndDate || ""),
       schedulePhase,
       schedulePhaseLabel: String(p.schedulePhaseLabel || schedulePhaseLabel(schedulePhase)),
+      finance: normalizeFinance(p.finance || p),
       memo: String(p.memo || ""),
       createdAt: String(p.createdAt || nowIso()),
       updatedAt: String(p.updatedAt || p.createdAt || nowIso()),
@@ -199,6 +262,13 @@
         scheduleStartDate: dateOnlyOffset(14),
         scheduleEndDate: dateOnlyOffset(20),
         schedulePhase: "estimate",
+        finance: {
+          estimateAmount: 1200000,
+          costAmount: 800000,
+          paymentStatus: "unpaid",
+          paymentDueDate: dateOnlyOffset(30),
+          memo: "概算見積ベース",
+        },
         memo: "外壁ひび・塗装剥離。現調済み。",
         createdAt: day(14),
         updatedAt: day(2),
@@ -219,6 +289,13 @@
         scheduleStartDate: dateOnlyOffset(2),
         scheduleEndDate: dateOnlyOffset(9),
         schedulePhase: "inquiry",
+        finance: {
+          estimateAmount: 3500000,
+          costAmount: 0,
+          paymentStatus: "unpaid",
+          paymentDueDate: dateOnlyOffset(45),
+          memo: "見積作成中",
+        },
         memo: "キッチン・浴室の同時リフォーム相談。",
         createdAt: day(5),
         updatedAt: day(1),
@@ -237,6 +314,14 @@
         scheduleStartDate: dateOnlyOffset(-20),
         scheduleEndDate: dateOnlyOffset(-2),
         schedulePhase: "construction",
+        finance: {
+          estimateAmount: 2800000,
+          costAmount: 2100000,
+          paymentStatus: "partial",
+          paymentDueDate: dateOnlyOffset(-5),
+          paidAt: dateOnlyOffset(-20),
+          memo: "着手金入金済・残金未収",
+        },
         memo: "施工週次報告あり。",
         createdAt: day(30),
         updatedAt: day(0),
@@ -533,6 +618,164 @@
       .sort((a, b) => String(a.scheduleEndDate).localeCompare(String(b.scheduleEndDate)));
   }
 
+  function isUnpaidProject(project) {
+    const status = project?.finance?.paymentStatus || "unpaid";
+    return status === "unpaid" || status === "partial";
+  }
+
+  function isOverduePaymentProject(project) {
+    const f = project?.finance;
+    if (!f || f.paymentStatus === "paid") return false;
+    if (!f.paymentDueDate) return false;
+    const due = parseDateOnly(f.paymentDueDate);
+    const today = parseDateOnly(todayDateOnly());
+    if (!due || !today) return false;
+    return due.getTime() < today.getTime();
+  }
+
+  function getUnpaidProjects() {
+    return listProjects().filter(isUnpaidProject);
+  }
+
+  function getOverduePaymentProjects() {
+    return listProjects()
+      .filter(isOverduePaymentProject)
+      .sort((a, b) =>
+        String(a.finance?.paymentDueDate || "").localeCompare(String(b.finance?.paymentDueDate || ""))
+      );
+  }
+
+  function getFinanceSummary() {
+    const projects = listProjects();
+    let totalEstimate = 0;
+    let totalCost = 0;
+    let unpaidCount = 0;
+    let overdueCount = 0;
+    projects.forEach((p) => {
+      const f = calculateProjectFinance(p);
+      totalEstimate += f.estimateAmount;
+      totalCost += f.costAmount;
+      if (isUnpaidProject(p)) unpaidCount += 1;
+      if (isOverduePaymentProject(p)) overdueCount += 1;
+    });
+    const totalGrossProfit = totalEstimate - totalCost;
+    return {
+      totalEstimate,
+      totalCost,
+      totalGrossProfit,
+      unpaidCount,
+      overdueCount,
+      projectCount: projects.length,
+    };
+  }
+
+  function formatFinanceDetail(finance) {
+    const f = normalizeFinance(finance);
+    const parts = [
+      `見積 ${formatYen(f.estimateAmount)}`,
+      `原価 ${formatYen(f.costAmount)}`,
+      `粗利 ${formatYen(f.grossProfit)}（${f.grossProfitRate}%）`,
+      f.paymentStatusLabel,
+    ];
+    if (f.paymentDueDate) parts.push(`支払予定 ${f.paymentDueDate}`);
+    return parts.join(" · ");
+  }
+
+  /**
+   * @param {string} projectId
+   * @param {object} financePatch
+   */
+  function updateFinance(projectId, financePatch) {
+    const existing = getProject(projectId);
+    if (!existing) return { ok: false, error: "not_found" };
+    const patch = financePatch && typeof financePatch === "object" ? financePatch : {};
+    const prev = existing.finance || {};
+    const merged = normalizeFinance({
+      ...prev,
+      ...patch,
+      updatedAt: nowIso(),
+    });
+    const next = normalizeProject({ ...existing, finance: merged });
+    addTimelineEvent(
+      next,
+      "finance_updated",
+      patch.financeReason != null
+        ? String(patch.financeReason).slice(0, 500)
+        : formatFinanceDetail(merged)
+    );
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === projectId);
+    data.projects[idx] = next;
+    writeAll(data);
+    return { ok: true, project: next, finance: next.finance };
+  }
+
+  /**
+   * Builder AI 連携準備 — 自然文から finance intent を推定（プレビューのみ）
+   * @param {string} intentText
+   */
+  function previewFinanceIntent(intentText) {
+    const text = String(intentText || "").trim();
+    if (!text) return { ok: false, error: "empty_intent" };
+
+    const intent = { source: "ai_assistant", rawText: text };
+    const estimateMatch = text.match(/見積\s*[:：]?\s*([\d,.]+)\s*万?/);
+    const costMatch = text.match(/原価\s*[:：]?\s*([\d,.]+)\s*万?/);
+    const paidMatch = /入金済|支払い?済|paid/i.test(text);
+    const partialMatch = /一部入金|partial/i.test(text);
+    const dueMatch = text.match(/支払(?:予定|期限)\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+
+    if (estimateMatch) {
+      intent.type = FINANCE_INTENT_TYPES.SET_ESTIMATE;
+      const n = Number(estimateMatch[1].replace(/,/g, ""));
+      intent.estimateAmount = text.includes("万") ? Math.round(n * 10000) : Math.round(n);
+    } else if (costMatch) {
+      intent.type = FINANCE_INTENT_TYPES.SET_COST;
+      const n = Number(costMatch[1].replace(/,/g, ""));
+      intent.costAmount = text.includes("万") ? Math.round(n * 10000) : Math.round(n);
+    } else if (paidMatch) {
+      intent.type = FINANCE_INTENT_TYPES.SET_PAYMENT_STATUS;
+      intent.paymentStatus = "paid";
+    } else if (partialMatch) {
+      intent.type = FINANCE_INTENT_TYPES.SET_PAYMENT_STATUS;
+      intent.paymentStatus = "partial";
+    } else if (dueMatch) {
+      intent.type = FINANCE_INTENT_TYPES.SET_DUE_DATE;
+      intent.paymentDueDate = dueMatch[1];
+    } else {
+      return { ok: false, error: "unrecognized_intent", rawText: text };
+    }
+
+    return { ok: true, intent };
+  }
+
+  /**
+   * 将来 AI 連携用 — 現時点ではテスト/UI からのみ呼び出し可
+   */
+  function applyFinanceIntent(projectId, financeIntent) {
+    const i = financeIntent && typeof financeIntent === "object" ? financeIntent : {};
+    const type = String(i.type || "");
+    const patch = { financeReason: i.reason || i.rawText || "AI 収支提案" };
+
+    if (type === FINANCE_INTENT_TYPES.SET_ESTIMATE) {
+      patch.estimateAmount = toAmount(i.estimateAmount);
+    } else if (type === FINANCE_INTENT_TYPES.SET_COST) {
+      patch.costAmount = toAmount(i.costAmount);
+    } else if (type === FINANCE_INTENT_TYPES.SET_PAYMENT_STATUS) {
+      patch.paymentStatus = String(i.paymentStatus || "unpaid");
+      if (patch.paymentStatus === "paid" && !i.paidAt) {
+        patch.paidAt = todayDateOnly();
+      }
+    } else if (type === FINANCE_INTENT_TYPES.SET_DUE_DATE) {
+      patch.paymentDueDate = String(i.paymentDueDate || "");
+    } else {
+      return { ok: false, error: "invalid_intent" };
+    }
+
+    return updateFinance(projectId, patch);
+  }
+
   function clearForTests() {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -548,10 +791,18 @@
     CATEGORIES,
     SCHEDULE_PHASES,
     SCHEDULE_INTENT_TYPES,
+    PAYMENT_STATUSES,
+    FINANCE_INTENT_TYPES,
     TIMELINE_LABELS,
     statusLabel,
     categoryLabel,
     schedulePhaseLabel,
+    paymentStatusLabel,
+    toAmount,
+    formatYen,
+    normalizeFinance,
+    calculateFinanceAmounts,
+    calculateProjectFinance,
     parseDateOnly,
     toDateOnlyString,
     todayDateOnly,
@@ -574,6 +825,14 @@
     getTodayProjects,
     getThisWeekProjects,
     getDelayedProjects,
+    isUnpaidProject,
+    isOverduePaymentProject,
+    getUnpaidProjects,
+    getOverduePaymentProjects,
+    getFinanceSummary,
+    updateFinance,
+    previewFinanceIntent,
+    applyFinanceIntent,
     ensureSeed,
     seedDemoProjects,
     clearForTests,

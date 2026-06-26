@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-26（Project Calendar Phase 6-B · 工程・カレンダー）  
-**ステータス:** **実装済み**（P1 + tools + Vision 5 + Live 4-A + **Project Hub 6-A** + **Calendar 6-B**）· P2-C 残  
-**直近コミット:** `46c5e02`（Project Hub 6-A · **git push 未実施**）
+**最終更新:** 2026-06-26（Project Finance Phase 6-C · 収支 MVP）  
+**ステータス:** **実装済み**（P1 + tools + Vision 5 + Live 4-A + **Hub 6-A** + **Calendar 6-B** + **Finance 6-C**）· P2-C 残  
+**直近コミット:** `556f315`（Calendar 6-B · **git push 未実施**）
 
 ---
 
@@ -62,7 +62,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | `builder-ai-live.js` | カメラプレビュー · スナップショット → Vision |
 | `builder-ai-voice.js` | `TasuAiVoiceCore` adapter · `surface: builder_ai` |
 | `builder-ai-live-gate.js` | Free/Pro gate stub（本番課金未接続） |
-| `builder-project-store.js` | **Phase 6-A/6-B** · 案件 localStorage · タイムライン · Vision · 日程/工程 |
+| `builder-project-store.js` | **Phase 6-A/6-B/6-C** · 案件 · 日程 · 収支 · Vision |
 | `builder-project-calendar.js` | **Phase 6-B** · 月/週カレンダー · 本日/今週/遅延 |
 | `builder-project-hub.js` | 案件一覧 · 検索 |
 | `builder-project-detail.js` | 案件詳細 · タイムライン閲覧 · メモ最小編集 |
@@ -163,7 +163,7 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 ---
 
-## Builder Project Calendar Phase 6-B（✅ 実装 · 未コミット）
+## Builder Project Calendar Phase 6-B（✅ commit 済 · `556f315`）
 
 **工程・日程管理** — 月/週カレンダー · 本日/今週/遅延 · 詳細から日程変更
 
@@ -171,14 +171,29 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 | --- | --- |
 | **画面** | `project-calendar.html` |
 | **日程** | 開始日 · 終了日 · 工程（8段階） |
-| **カレンダー** | 月表示 · 週表示 · 案件クリック → 詳細 |
-| **ウィジェット** | 本日の案件 · 今週の案件 · 遅延案件 |
 | **AI 準備** | `previewScheduleIntent` · `prepareScheduleIntent`（未接続） |
-| **非実装** | 収支 · 請求 · 契約書 · 通知 · OCR · CAD · 他 surface |
 
 **テスト:** `scripts/test-builder-project-calendar-phase6b.mjs`
 
 **報告:** `reports/builder-project-calendar-phase6b.md`
+
+---
+
+## Builder Project Finance Phase 6-C（✅ 実装 · 未コミット）
+
+**収支 MVP** — 見積/原価/粗利 · 支払状況 · Hub サマリー
+
+| 項目 | 内容 |
+| --- | --- |
+| **データ** | `project.finance`（Store 正本） |
+| **詳細** | 収支パネル編集 · `updateFinance` · タイムライン `finance_updated` |
+| **ハブ** | 総見積/原価/粗利 · 未入金/遅延件数 · 一覧列 |
+| **AI 準備** | `previewFinanceIntent` · `prepareFinanceIntent`（未接続） |
+| **非実装** | Stripe · 請求書 PDF · 契約書 · OCR · 他 surface |
+
+**テスト:** `scripts/test-builder-project-finance-phase6c.mjs`
+
+**報告:** `reports/builder-project-finance-phase6c.md`
 
 ---
 

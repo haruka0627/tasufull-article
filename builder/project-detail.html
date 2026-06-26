@@ -38,6 +38,41 @@
     <main class="builder-shell builder-main" data-builder-pd-root hidden>
       <div class="builder-ph-detail-grid">
         <div>
+          <section class="builder-panel" aria-label="収支">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">収支</h2>
+            </div>
+            <dl class="builder-ph-finance-readonly" data-builder-pd-finance-readonly></dl>
+            <form class="builder-ph-finance-form" data-builder-pd-finance-form>
+              <label>
+                見積額（円）
+                <input class="builder-input" type="number" min="0" step="1000" name="estimateAmount" data-builder-pd-finance-estimate />
+              </label>
+              <label>
+                原価（円）
+                <input class="builder-input" type="number" min="0" step="1000" name="costAmount" data-builder-pd-finance-cost />
+              </label>
+              <label>
+                支払い状況
+                <select class="builder-select" name="paymentStatus" data-builder-pd-finance-payment-status></select>
+              </label>
+              <label>
+                支払予定日
+                <input class="builder-input" type="date" name="paymentDueDate" data-builder-pd-finance-due />
+              </label>
+              <label>
+                入金日
+                <input class="builder-input" type="date" name="paidAt" data-builder-pd-finance-paid />
+              </label>
+              <label class="builder-ph-finance-form__wide">
+                収支メモ
+                <textarea class="builder-ph-memo" name="financeMemo" data-builder-pd-finance-memo rows="2" placeholder="入金条件・備考…"></textarea>
+              </label>
+              <button type="submit" class="builder-btn builder-btn--secondary builder-btn--sm">収支を保存</button>
+              <p class="builder-kpi" data-builder-pd-finance-status aria-live="polite"></p>
+            </form>
+          </section>
+
           <section class="builder-panel" aria-label="工程・日程">
             <div class="builder-panel__head">
               <h2 class="builder-section-title">工程・日程</h2>

@@ -116,6 +116,74 @@
       .join("");
   }
 
+  function formatYen(amount) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.formatYen?.(amount) || `¥${Number(amount || 0).toLocaleString("ja-JP")}`;
+  }
+
+  function renderFinanceReadonly(project) {
+    const dl = $("[data-builder-pd-finance-readonly]");
+    if (!dl) return;
+    const f = project.finance || {};
+    const rows = [
+      ["粗利", formatYen(f.grossProfit)],
+      ["粗利率", `${f.grossProfitRate ?? 0}%`],
+    ];
+    dl.innerHTML = rows
+      .map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`)
+      .join("");
+  }
+
+  function bindFinance(project) {
+    const form = $("[data-builder-pd-finance-form]");
+    const estimate = $("[data-builder-pd-finance-estimate]");
+    const cost = $("[data-builder-pd-finance-cost]");
+    const payment = $("[data-builder-pd-finance-payment-status]");
+    const due = $("[data-builder-pd-finance-due]");
+    const paid = $("[data-builder-pd-finance-paid]");
+    const memo = $("[data-builder-pd-finance-memo]");
+    const status = $("[data-builder-pd-finance-status]");
+    const Store = global.TasuBuilderProjectStore;
+    if (!form || !Store) return;
+
+    const f = project.finance || {};
+    if (payment && Store.PAYMENT_STATUSES) {
+      payment.innerHTML = Store.PAYMENT_STATUSES.map(
+        (s) =>
+          `<option value="${escapeHtml(s.id)}"${s.id === f.paymentStatus ? " selected" : ""}>${escapeHtml(s.label)}</option>`
+      ).join("");
+    }
+    if (estimate) estimate.value = f.estimateAmount ?? 0;
+    if (cost) cost.value = f.costAmount ?? 0;
+    if (due) due.value = f.paymentDueDate || "";
+    if (paid) paid.value = f.paidAt || "";
+    if (memo) memo.value = f.memo || "";
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const out = Store.updateFinance?.(project.id, {
+        estimateAmount: estimate?.value,
+        costAmount: cost?.value,
+        paymentStatus: payment?.value,
+        paymentDueDate: due?.value || "",
+        paidAt: paid?.value || "",
+        memo: memo?.value || "",
+        financeReason: "案件詳細から収支を更新",
+      });
+      if (out?.ok) {
+        currentProject = out.project;
+        renderFinanceReadonly(currentProject);
+        renderTimeline(currentProject);
+        if (status) {
+          status.textContent = "収支を保存しました";
+          setTimeout(() => {
+            status.textContent = "";
+          }, 2000);
+        }
+      }
+    });
+  }
+
   function bindSchedule(project) {
     const form = $("[data-builder-pd-schedule-form]");
     const start = $("[data-builder-pd-schedule-start]");
@@ -196,8 +264,10 @@
     if (title) title.textContent = project.name;
     if (sub) sub.textContent = `${project.id} · ${project.customerName || "顧客未設定"}`;
     renderInfo(project);
+    renderFinanceReadonly(project);
     renderTimeline(project);
     renderVisionList(project);
+    bindFinance(project);
     bindSchedule(project);
     bindAiLink(project);
     bindMemo(project);
