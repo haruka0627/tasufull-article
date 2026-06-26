@@ -2304,3 +2304,42 @@
   font-weight: 700;
   text-decoration: underline;
 }
+
+/* Workspace quota (Phase 1) */
+.ai-workspace-usage {
+  padding: 8px 14px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(196, 181, 253, 0.95);
+  line-height: 1.4;
+}
+
+.ai-workspace-usage--depleted {
+  color: #fda4af;
+}
+
+.ai-workspace-usage-limit {
+  padding: 10px 14px;
+  background: rgba(127, 29, 29, 0.35);
+  border-bottom: 1px solid rgba(254, 205, 211, 0.35);
+}
+
+.ai-workspace-usage-limit[hidden] {
+  display: none !important;
+}
+
+.ai-workspace-usage-limit__msg {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fecdd3;
+  line-height: 1.45;
+}
+
+.ai-workspace-usage-limit__cta {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #c4b5fd;
+  text-decoration: underline;
+}

@@ -243,12 +243,20 @@
 
   function withModelFromTurn(payload, turn) {
     if (!payload || !turn) return payload;
-    return {
+    const next = {
       ...payload,
       model_id: turn.modelId || payload.model_id || "",
       model_label: turn.modelLabel || payload.model_label || "",
       model_provider: turn.modelProvider || payload.model_provider || "",
     };
+    const Usage = window.TasuAiWorkspaceUsage;
+    if (Usage?.shouldChargeTurn?.(turn)) {
+      next._usageCharge = true;
+      next._usageFeature = Usage.FEATURE_TEXT_TURN || "text_turn";
+    } else {
+      next._usageCharge = false;
+    }
+    return next;
   }
 
   function withModelFromSource(payload, source) {
@@ -516,12 +524,7 @@
         forceSearch: true,
       });
       if (web) {
-        const labeled = applySearchSourceLabel(wrapAssistantPayload(web, {
-          search_used: Boolean(web.search_used),
-          search_query: web.search_query,
-          search_provider: web.search_provider,
-          search_result_count: web.search_result_count,
-        }), target);
+        const labeled = applySearchSourceLabel(web, target);
         return window.TasuAiSearchResultUx?.appendWebSummary?.(labeled, userText) || labeled;
       }
       return applySearchSourceLabel(
@@ -1522,6 +1525,13 @@
     }
     if (!text) return;
     if (root.dataset.aiChatSending === "1") return;
+
+    const usageFeature = window.TasuAiWorkspaceUsage?.resolveFeatureKey?.() || "text_turn";
+    if (window.TasuAiWorkspaceUsage && !window.TasuAiWorkspaceUsage.canUse(usageFeature)) {
+      window.TasuAiWorkspaceUsage.showUsageBlocked(usageFeature);
+      return;
+    }
+
     root.dataset.aiChatSending = "1";
 
     window.TasuAiVoiceCore?.stopVoice?.();
@@ -1602,6 +1612,10 @@
       if (isSearchAssistantMessage(last)) {
         persistWorkspaceAiSearchState(root, modeId, messages);
       }
+      if (reply && typeof reply === "object" && reply._usageCharge && window.TasuAiWorkspaceUsage?.consume) {
+        window.TasuAiWorkspaceUsage.consume(reply._usageFeature || usageFeature);
+      }
+
       if (last?.role === "assistant") {
         window.TasuAiConcierge?.onAssistantReply(modeId, last.content);
         try {

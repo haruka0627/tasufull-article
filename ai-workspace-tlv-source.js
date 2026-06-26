@@ -86,6 +86,45 @@
     });
   }
 
+  function writeFreeRemaining(n) {
+    try {
+      global.localStorage.setItem(FREE_STORAGE_KEY, String(Math.max(0, Number(n) || 0)));
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function decrementFreeRemaining() {
+    const next = Math.max(0, readFreeRemaining() - 1);
+    writeFreeRemaining(next);
+    refreshFreeQuotaUi();
+    return next;
+  }
+
+  function refreshFreeQuotaUi() {
+    const bottom = global.document.getElementById("bottom-container");
+    if (!bottom) return;
+    let banner = bottom.querySelector("[data-tlv-free-quota]");
+    const remaining = readFreeRemaining();
+    const depleted = remaining <= 0;
+
+    if (!banner) {
+      mountFreeQuotaUi();
+      banner = bottom.querySelector("[data-tlv-free-quota]");
+    }
+    if (!banner) return;
+
+    banner.className = depleted ? "ai-tlv-free-quota ai-tlv-free-quota--depleted" : "ai-tlv-free-quota";
+    if (depleted) {
+      banner.innerHTML =
+        '<p class="ai-tlv-free-quota__text">無料枠を使い切りました。</p>' +
+        '<a class="ai-tlv-free-quota__cta" href="gen-ai-workspace.html">TASFUL AI プランを見る</a>';
+    } else {
+      banner.innerHTML =
+        `<p class="ai-tlv-free-quota__text">TASFUL AI の無料回数を消費します（残り <strong data-tlv-free-remaining>${remaining}</strong> 回）</p>`;
+    }
+  }
+
   function mountFreeQuotaUi() {
     const bottom = global.document.getElementById("bottom-container");
     if (!bottom || bottom.querySelector("[data-tlv-free-quota]")) return;
@@ -136,5 +175,10 @@
     SOURCE,
     templates: TLV_TEMPLATES,
     readFreeRemaining,
+    writeFreeRemaining,
+    decrementFreeRemaining,
+    refreshFreeQuotaUi,
+    FREE_STORAGE_KEY,
+    FREE_DEFAULT,
   };
 })(typeof window !== "undefined" ? window : globalThis);
