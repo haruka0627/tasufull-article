@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Site Assistant Phase 1 実装 · secretary Phase 1+2 commit 反映）  
-**Git HEAD:** `6c70985`（`cf-pages-deploy` · Site Assistant Phase 1 **未コミット** · secretary **commit 済** · **git push 未実施**）  
+**最終更新:** 2026-06-26（Site Assistant Phase 1 commit `ac864b4`）  
+**Git HEAD:** `ac864b4`（`cf-pages-deploy` · Site Assistant Phase 1 **commit 済** · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -148,7 +148,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | --- | --- | --- |
 | **Platform Coupon System** | 📋 未着手 | [platform-coupon-system-backlog.md](./platform-coupon-system-backlog.md) |
 | **AI Secretary Trend Scout** | 📋 未着手 | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) |
-| **TASFUL Site Assistant Phase 1** | ✅ 実装（未コミット） | [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) · `reports/tasful-site-assistant-phase1.md` |
+| **TASFUL Site Assistant Phase 1** | ✅ commit 済 | `ac864b4` · [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) · `reports/tasful-site-assistant-phase1.md` |
 | **TASFUL Site Assistant Phase 2+** | 📋 未着手 | 同上（Feedback Launcher · OPS 集約） |
 | **Builder AI Gemini Live 現場診断モード** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
@@ -168,7 +168,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 **TASFUL Site Assistant Phase 1（サイトAI ウィジェット · ✅ 実装）**
 
 - 全ページ右下 **「TASFUL サイトAI」** · cross-matching / FAQ 流用（Gateway / 秘書 非接続）
-- 232 HTML 注入 · browser **18/18 PASS** · **未コミット · 未デプロイ**
+- 232 HTML 注入 · browser **18/18 PASS** · commit `ac864b4` · **未デプロイ**
 - Phase 2+: 通報 · 問い合わせフォーム · OPS / AI 秘書集約 — **未着手**
 
 **TASFUL Site Assistant Phase 2+（Feedback Launcher · 未着手）**
@@ -207,3 +207,4 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | Workspace enforcement Phase 1 | `2a43fe5` · Production deploy · smoke 12/12 · browser 15/15 + 53/53 · `reports/tasful-ai-workspace-phase1-deploy.md` |
 | AI 秘書 DeepSeek Adapter Phase 1 | `6c70985` · Adapter + CF Pages Function · AD-010 · 503/502 fallback · API 到達 · `reports/secretary-deepseek-adapter-phase1.md` |
 | AI 秘書 OpsContextBuilder Phase 2 | `840a574` · 6 ドメイン context 注入 · PII マスク · `reports/secretary-ops-context-builder-phase2.md` |
+| TASFUL Site Assistant Phase 1 | `ac864b4` · 232 HTML 注入 · cross-search/FAQ 流用 · browser 18/18 · `reports/tasful-site-assistant-phase1.md` |

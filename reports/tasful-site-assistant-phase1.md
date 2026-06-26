@@ -1,7 +1,7 @@
 # TASFUL Site Assistant — Phase 1 実装報告
 
 **実施日:** 2026-06-26  
-**状態:** **Phase 1 実装完了** · **commit 予定** · **未デプロイ**  
+**状態:** **Phase 1 実装完了** · commit `ac864b4` · **未デプロイ**  
 **正本:** [docs/tasful-site-assistant-backlog.md](../docs/tasful-site-assistant-backlog.md) · [docs/AI/TASFUL_AI.md](../docs/AI/TASFUL_AI.md)  
 **制約:** 新規 AI / API / Gateway なし · AD-003 系 · AD-005 非変更
 
@@ -31,7 +31,7 @@
 
 | 項目 | 状態 |
 | --- | --- |
-| git commit | **予定** |
+| git commit | **完了** · `ac864b4` |
 | Production deploy | **未** |
 | Production smoke | **未** |
 

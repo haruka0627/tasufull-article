@@ -1,7 +1,7 @@
 # TASFUL Site Assistant — Backlog
 
 **最終更新:** 2026-06-26  
-**Phase 1:** ✅ **実装完了**（commit 予定）  
+**Phase 1:** ✅ **実装完了**（commit `ac864b4`）  
 **Phase 2+:** 📋 未着手（Feedback Launcher · OPS 集約）  
 **優先度:** P0/P1 外 · **Phase UI-3 Platform Critical の優先順位に影響しない**
 
