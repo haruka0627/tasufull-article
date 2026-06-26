@@ -101,6 +101,16 @@
       </section>
 
       <section class="builder-panel builder-ai-ui-field-chat" aria-label="Builder AI チャット">
+        <div
+          class="builder-ai-ui-vision-result"
+          data-builder-ai-ui-vision-result
+          data-vision-state="idle"
+          hidden
+          aria-live="polite"
+        >
+          <h2 class="builder-section-title builder-ai-ui-vision-result__title">AI参考診断</h2>
+          <div data-builder-ai-ui-vision-result-body></div>
+        </div>
         <div class="builder-ai-ui-messages" data-builder-ai-ui-messages role="log" aria-live="polite"></div>
         <div class="builder-ai-ui-composer">
           <textarea
@@ -189,6 +199,7 @@
   <script src="builder-ai-calc-orchestrator.js"></script>
   <script src="../tasful-ai-voice-core.js"></script>
   <script src="builder-ai-vision.js"></script>
+  <script src="builder-ai-vision-analyzer.js"></script>
   <script src="builder-ai-live-gate.js"></script>
   <script src="builder-ai-voice.js"></script>
   <script src="builder-ai-live.js"></script>

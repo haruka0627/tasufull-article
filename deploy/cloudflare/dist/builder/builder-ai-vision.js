@@ -164,6 +164,11 @@
    * }} params
    */
   async function runFieldDiagnosis(params) {
+    const Analyzer = global.TasuBuilderAIVisionAnalyzer;
+    if (Analyzer?.analyze) {
+      return Analyzer.analyze(params);
+    }
+
     const userText = String(params?.userText || "").trim();
     if (!userText) {
       return { ok: false, error: "empty_text", reply: "" };
@@ -230,6 +235,7 @@
     MAX_IMAGE_MB,
     VISION_DISCLAIMER,
     PHOTO_GUIDE,
+    TEXT_ONLY_STUB,
     FIELD_VISION_SYSTEM_PROMPT,
     buildSystemPrompt,
     fileToImageAttachment,

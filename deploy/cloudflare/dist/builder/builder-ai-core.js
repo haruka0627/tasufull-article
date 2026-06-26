@@ -384,7 +384,8 @@
       };
     }
 
-    const systemPrompt = Vision?.buildSystemPrompt?.(actor) || BASE_SYSTEM_PROMPT;
+    const systemPrompt =
+      params.systemPromptOverride || Vision?.buildSystemPrompt?.(actor) || BASE_SYSTEM_PROMPT;
     const hasImage = attachments.length > 0;
     const messageForAi = hasImage
       ? `${userText}\n\n（添付の現場写真を参照し、建設・住宅現場向けの参考診断として回答してください。）`
@@ -404,10 +405,13 @@
     });
 
     const rawReply = String(turn?.reply || "").trim();
-    const draft = wrapDraft(Vision?.formatForDisplay?.(rawReply) || rawReply);
+    const draft = params.rawOutput
+      ? rawReply
+      : wrapDraft(Vision?.formatForDisplay?.(rawReply) || rawReply);
     return {
       ok: Boolean(draft),
       draft,
+      rawReply,
       action: "field_vision",
       surface: SURFACE,
       modelId: turn?.modelId,
