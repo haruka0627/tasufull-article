@@ -45,9 +45,55 @@
 
   let activeConnectItemId = null;
 
+  const OPS_CC = "#ops-ai-command-center";
+
+  /** 非表示レガシー hash → P7 Command Center 内の表示先 */
+  const OPS_NAV_ALIASES = {
+    "ops-ai-secretary": { sectionId: "ops-ai-command-center" },
+    "ops-ai-command-center": { sectionId: "ops-ai-command-center" },
+    "ops-ai-top": { sectionId: "ops-ai-command-center" },
+    "ops-ai-morning-summary": { sectionId: "ops-ai-command-center", focusSelector: "#ops-p7-morning-summary" },
+    "ops-ai-daily-inbox": { sectionId: "ops-ai-command-center", focusSelector: "#ops-p7-daily-inbox" },
+    "ops-ai-daily-conclusion": { sectionId: "ops-ai-command-center", focusSelector: "#ops-p7-daily-conclusion" },
+    "ops-ai-command": { sectionId: "ops-ai-command-center", focusSelector: "#ops-p7-daily-conclusion" },
+    "ops-ai-focus": { sectionId: "ops-ai-command-center", focusSelector: "#ops-p7-recommendations" },
+    "ops-priority-heading": { sectionId: "ops-ai-command-center", focusSelector: "#ops-priority-heading" },
+    "ops-suggest-heading": { sectionId: "ops-ai-command-center", focusSelector: "#ops-suggest-heading" },
+    "ops-ai-response": { sectionId: "ops-ai-command-center", focusSelector: "#ops-ai-response" },
+    "ops-ai-automation": { sectionId: "ops-ai-command-center", focusSelector: "#ops-ai-automation" },
+    "ops-ai-connect": { sectionId: "ops-ai-command-center", focusSelector: "#ops-ai-connect" },
+    connect: { sectionId: "ops-ai-command-center", focusSelector: "#ops-ai-connect" },
+    "ops-ai-hub": { sectionId: "ops-ai-command-center", focusSelector: "#ops-p7-recommendations" },
+    "ops-ai-hub-fold": { sectionId: "ops-ai-command-center", focusSelector: "#ops-p7-recommendations" },
+    "ops-ai-watch": { sectionId: "ops-ai-command-center", parentDetailsId: "ops-ops-dashboard", detailsId: "ops-p7-intel-full" },
+    "ops-ai-kpi": { sectionId: "ops-ai-command-center", parentDetailsId: "ops-ops-dashboard", detailsId: "ops-p7-kpi-fold" },
+    "ops-ai-hsg": { sectionId: "ops-ai-command-center", focusSelector: "#ops-ai-connect" },
+    "ops-ai-autofix": { sectionId: "ops-ai-command-center", parentDetailsId: "ops-ops-dashboard", detailsId: "ops-p7-intel-full" },
+    "ops-ai-quick": { sectionId: "ops-ai-command-center", parentDetailsId: "ops-ops-dashboard" },
+    "ops-ai-kpi-fold": { sectionId: "ops-ai-command-center", parentDetailsId: "ops-ops-dashboard", detailsId: "ops-p7-kpi-fold" },
+    "ops-ai-category-fold": { sectionId: "ops-ai-category-fold" },
+    "ops-ai-activity-fold": { sectionId: "ops-ai-activity-fold" },
+  };
+
+  const OPS_LEGACY_HASHES = new Set(Object.keys(OPS_NAV_ALIASES));
+
+  function resolveOpsNavTarget(id) {
+    const key = String(id || "").replace(/^#/, "");
+    return OPS_NAV_ALIASES[key] || { sectionId: key };
+  }
+
+  function queryCcFirst(sel) {
+    return document.querySelector(`${OPS_CC} ${sel}`) || document.querySelector(sel);
+  }
+
+  function queryCcAll(sel) {
+    const scoped = document.querySelectorAll(`${OPS_CC} ${sel}`);
+    return scoped.length ? scoped : document.querySelectorAll(sel);
+  }
+
   const SHORTCUTS = [
     {
-      href: "#ops-ai-secretary",
+      href: "#ops-ai-command-center",
       label: "AI運営秘書",
       desc: "運営情報の集約（毎日の起点）",
       testId: "shortcut-talk-ops",
@@ -620,7 +666,7 @@
   }
 
   function renderAlerts(alerts) {
-    const el = document.querySelector("[data-ops-dash-alerts]");
+    const el = queryCcFirst("[data-ops-dash-alerts]");
     if (!el) return;
     if (!alerts.length) {
       el.innerHTML =
@@ -645,7 +691,7 @@
   }
 
   function renderPriorityTasks(rows, alerts) {
-    const tbody = document.querySelector("[data-ops-dash-priority-tasks]");
+    const tbody = queryCcFirst("[data-ops-dash-priority-tasks]");
     if (!tbody) return;
     const display = rows.slice(0, 4);
     tbody.innerHTML = display.length
@@ -746,8 +792,8 @@
   }
 
   function renderNextAction(result) {
-    const msgEl = document.querySelector("[data-ops-daily-next-message]");
-    const host = document.querySelector("[data-ops-daily-next-cta-host]");
+    const msgEl = queryCcFirst("[data-ops-daily-next-message]");
+    const host = queryCcFirst("[data-ops-daily-next-cta-host]");
     if (!msgEl || !host) return;
 
     const next = resolveNextAction(result);
@@ -767,14 +813,11 @@
   }
 
   function renderDailyConclusion(result, priorityRows) {
-    const panel = document.querySelector("[data-ops-daily-conclusion]");
-    const statsEl = document.querySelector("[data-ops-daily-conclusion-stats]");
-    const sentenceEl = document.querySelector("[data-ops-daily-conclusion-sentence]");
-    const timeEl = document.querySelector("[data-ops-daily-conclusion-time]");
-    if (!panel || !statsEl) return;
+    const statsEl = queryCcFirst("[data-ops-daily-conclusion-stats]");
+    const sentenceEl = queryCcFirst("[data-ops-daily-conclusion-sentence]");
+    const timeEl = queryCcFirst("[data-ops-daily-conclusion-time]");
+    if (!statsEl) return;
 
-    panel.hidden = false;
-    panel.classList.add("is-ready");
     if (timeEl) {
       timeEl.dateTime = result.generatedAt;
       timeEl.textContent = formatTime(result.generatedAt);
@@ -1047,7 +1090,7 @@
   }
 
   function renderSuggestions(metrics, hub, alerts, limit) {
-    const el = document.querySelector("[data-ops-dash-suggestions]");
+    const el = queryCcFirst("[data-ops-dash-suggestions]");
     if (!el) return;
     const max = typeof limit === "number" ? limit : 2;
     const cards = buildSuggestions(metrics, hub, alerts).slice(0, max);
@@ -1316,7 +1359,7 @@
         btn.classList.remove("is-running");
         btn.textContent = "本日の運営チェックを再実行";
       }
-      document.querySelector("[data-ops-daily-conclusion]")?.scrollIntoView({
+      document.getElementById("ops-p7-daily-conclusion")?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
       });
@@ -1424,8 +1467,8 @@
   }
 
   function renderConnectPanel(draft) {
-    const el = document.querySelector("[data-ops-connect-panel]");
-    const badge = document.querySelector("[data-ops-connect-pending-badge]");
+    const el = queryCcFirst("[data-ops-connect-panel]");
+    const badge = queryCcFirst("[data-ops-connect-pending-badge]");
     if (!el) return;
 
     const stripeStatus =
@@ -1552,16 +1595,74 @@
   }
 
   function scrollToSection(id, hubSection) {
-    const el = document.getElementById(id);
+    const raw = String(id || "").replace(/^#/, "");
+    const target = resolveOpsNavTarget(raw);
+    const sectionId = target.sectionId || raw;
+    const el = document.getElementById(sectionId);
     if (!el) return;
     openAncestorDetails(el);
+    if (target.parentDetailsId) {
+      const parent = document.getElementById(target.parentDetailsId);
+      if (parent) openAncestorDetails(parent);
+    }
+    if (target.detailsId) {
+      const details = document.getElementById(target.detailsId);
+      if (details) openAncestorDetails(details);
+    }
     el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (target.focusSelector) {
+      window.setTimeout(() => {
+        const focus =
+          document.querySelector(`${OPS_CC} ${target.focusSelector}`) ||
+          document.querySelector(target.focusSelector);
+        focus?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }, 350);
+    }
     if (hubSection) {
       window.setTimeout(() => {
         document
           .querySelector(`[data-talk-ops-hub-section="${hubSection}"]`)
           ?.scrollIntoView({ behavior: "smooth", block: "nearest" });
       }, 350);
+    }
+  }
+
+  function bindCommandCenterHashLinks() {
+    const cc = document.getElementById("ops-ai-command-center");
+    if (!cc || bindCommandCenterHashLinks._bound) return;
+    bindCommandCenterHashLinks._bound = true;
+    cc.addEventListener("click", (e) => {
+      const link = e.target.closest("a[href^='#']");
+      if (!link || !cc.contains(link)) return;
+      const hash = (link.getAttribute("href") || "").slice(1);
+      if (!hash || !OPS_LEGACY_HASHES.has(hash)) return;
+      e.preventDefault();
+      scrollToSection(hash);
+      if (window.history?.replaceState) {
+        window.history.replaceState(null, "", `#${hash}`);
+      }
+    });
+  }
+
+  function handleDailyNextCtaClick(e) {
+    const el = e.target.closest("[data-ops-daily-next-cta]");
+    if (!el) return;
+
+    if (el.getAttribute("data-ops-next-action") === "morning_report") {
+      e.preventDefault();
+      runMorningCheck();
+      return;
+    }
+
+    if (el.getAttribute("data-ops-next-scroll") === "1") {
+      const href = el.getAttribute("href") || "";
+      if (href.startsWith("#")) {
+        e.preventDefault();
+        scrollToSection(href.slice(1));
+        if (window.history?.replaceState) {
+          window.history.replaceState(null, "", href);
+        }
+      }
     }
   }
 
@@ -1588,9 +1689,13 @@
       hash === "ops-ai-top" ||
       hash === "ops-ai-command-center" ||
       hash === "ops-ai-morning-summary" ||
+      hash === "ops-ai-daily-inbox" ||
+      hash === "ops-ai-daily-conclusion" ||
       hash === "ops-ai-focus" ||
       hash === "ops-priority-heading" ||
       hash === "ops-ai-secretary" ||
+      hash === "ops-ai-response" ||
+      hash === "ops-ai-automation" ||
       hash === "ops-ai-hub" ||
       hash === "ops-ai-hub-fold" ||
       hash === "ops-ai-watch" ||
@@ -1630,9 +1735,7 @@
         const scrollId =
           hash === "connect"
             ? "ops-ai-connect"
-            : hash === "ops-ai-hub"
-              ? "ops-ai-secretary"
-              : hash;
+            : hash;
         scrollToSection(scrollId, hash === "ops-ai-hub" ? hubSection : "");
       }, 200);
     } else {
@@ -1640,34 +1743,15 @@
       if (hubSection) {
         window.setTimeout(() => {
           setActiveNav("secretary");
-          scrollToSection("ops-ai-secretary", hubSection);
+          scrollToSection("ops-ai-hub", hubSection);
         }, 200);
       }
     }
   }
 
   function bindNextActionCta() {
-    document.querySelector("[data-ops-daily-conclusion]")?.addEventListener("click", (e) => {
-      const el = e.target.closest("[data-ops-daily-next-cta]");
-      if (!el) return;
-
-      if (el.getAttribute("data-ops-next-action") === "morning_report") {
-        e.preventDefault();
-        runMorningCheck();
-        return;
-      }
-
-      if (el.getAttribute("data-ops-next-scroll") === "1") {
-        const href = el.getAttribute("href") || "";
-        if (href.startsWith("#")) {
-          e.preventDefault();
-          scrollToSection(href.slice(1));
-          if (window.history?.replaceState) {
-            window.history.replaceState(null, "", href);
-          }
-        }
-      }
-    });
+    document.getElementById("ops-ai-command-center")?.addEventListener("click", handleDailyNextCtaClick);
+    document.querySelector("[data-ops-daily-conclusion]")?.addEventListener("click", handleDailyNextCtaClick);
   }
 
   function bindUi() {
@@ -1776,6 +1860,7 @@
     bindUi();
     bindConnectUi();
     bindNextActionCta();
+    bindCommandCenterHashLinks();
     bindNavScroll();
     bindMorningSummaryNav();
     refresh();
@@ -1804,6 +1889,11 @@
     resolveNextAction,
     runMorningCheck,
     refresh,
+  };
+
+  window.TasuAdminOpsDashboardNav = {
+    resolveOpsNavTarget,
+    scrollToSection,
   };
 
   if (document.readyState === "loading") {

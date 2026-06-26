@@ -4506,6 +4506,20 @@ a.ops-p2-tile:hover {
   color: var(--od-text);
 }
 
+.ops-p2-chat__msg--error {
+  color: #b91c1c;
+}
+
+.ops-p2-chat__quick-btn {
+  font-size: 0.6875rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--od-border);
+  background: var(--od-panel-soft);
+  color: var(--od-text);
+  cursor: pointer;
+}
+
 .ops-p2-chat__form {
   display: flex;
   gap: 0.4rem;
@@ -5969,6 +5983,33 @@ a.ops-p2-tile:hover {
   color: var(--od-muted);
   text-transform: none;
   letter-spacing: 0.02em;
+}
+
+.ops-p7-desk-block {
+  margin-bottom: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 10px;
+}
+
+.ops-p7-desk-block__sub {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+  color: var(--od-muted);
+}
+
+.ops-p7-desk-subtitle {
+  margin: 0.65rem 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.ops-p7-desk-priority + .ops-p7-desk-suggest,
+.ops-p7-desk-suggest + .ops-p7-desk-response,
+.ops-p7-desk-response + .ops-p7-desk-auto,
+.ops-p7-desk-auto + .ops-p7-desk-connect {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--od-border);
 }
 
 .ops-p7-desk-priorities {

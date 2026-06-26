@@ -556,8 +556,10 @@
   }
 
   function renderSummary(summary) {
-    const host = global.document?.querySelector("[data-ops-daily-inbox-summary]");
-    const priorityHost = global.document?.querySelector("[data-ops-daily-inbox-priority]");
+    const host = global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-summary]")
+      || global.document?.querySelector("[data-ops-daily-inbox-summary]");
+    const priorityHost = global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-priority]")
+      || global.document?.querySelector("[data-ops-daily-inbox-priority]");
     if (!host) return;
 
     host.innerHTML =
@@ -632,9 +634,10 @@
   let renderDailyInboxTimer = null;
 
   function renderDailyInboxInternal() {
-    const root = global.document?.querySelector("[data-ops-daily-inbox]");
-    const sectionsHost = global.document?.querySelector("[data-ops-daily-inbox-sections]");
-    if (!root || !sectionsHost) return;
+    const sectionsHost =
+      global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-sections]") ||
+      global.document?.querySelector("[data-ops-daily-inbox-sections]");
+    if (!sectionsHost) return;
 
     const items = buildInboxItems();
     const summary = buildDailySummary(items);
@@ -656,7 +659,9 @@
   }
 
   function showToast(message) {
-    const el = global.document?.querySelector("[data-ops-daily-inbox-toast]");
+    const el =
+      global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-toast]") ||
+      global.document?.querySelector("[data-ops-daily-inbox-toast]");
     if (!el) return;
     el.textContent = message;
     el.hidden = false;
@@ -667,7 +672,10 @@
   }
 
   function bindUi() {
-    const root = global.document?.querySelector("[data-ops-daily-inbox]");
+    const cc = global.document?.getElementById("ops-ai-command-center");
+    const root =
+      cc?.querySelector("[data-ops-daily-inbox]") ||
+      global.document?.querySelector("[data-ops-daily-inbox]");
     if (!root || root.dataset.inboxBound === "1") return;
     root.dataset.inboxBound = "1";
 
