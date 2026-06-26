@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f97316" />
+  <title>案件詳細 | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="builder-project-hub.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-project-detail">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="案件詳細">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">案件詳細</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="project-hub.html" data-builder-ph-back>‹ 案件ハブ</a>
+        </div>
+        <div class="builder-header__center">
+          <h1 class="builder-header__title" data-builder-pd-title>案件詳細</h1>
+          <p class="builder-header__sub" data-builder-pd-sub>—</p>
+        </div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main" data-builder-pd-root hidden>
+      <div class="builder-ph-detail-grid">
+        <div>
+          <section class="builder-panel" aria-label="案件情報">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">案件情報</h2>
+              <span class="builder-ph-status" data-builder-pd-status-badge>—</span>
+            </div>
+            <dl class="builder-ph-dl" data-builder-pd-info></dl>
+            <div class="builder-ph-actions">
+              <a class="builder-btn builder-btn--primary" href="#" data-builder-pd-ai-link>Builder AI で診断</a>
+              <a class="builder-btn builder-btn--ghost" href="project-hub.html">一覧へ戻る</a>
+            </div>
+          </section>
+
+          <section class="builder-panel" aria-label="メモ">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">メモ</h2>
+            </div>
+            <textarea class="builder-ph-memo" data-builder-pd-memo rows="4" placeholder="現場メモ…"></textarea>
+            <div class="builder-ph-actions">
+              <button type="button" class="builder-btn builder-btn--secondary builder-btn--sm" data-builder-pd-memo-save>
+                メモを保存
+              </button>
+              <p class="builder-kpi" data-builder-pd-memo-status aria-live="polite"></p>
+            </div>
+          </section>
+
+          <section class="builder-panel" aria-label="Vision診断履歴">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">Builder AI 診断履歴</h2>
+            </div>
+            <div data-builder-pd-vision-list></div>
+            <p class="builder-ph-empty" data-builder-pd-vision-empty>診断履歴はまだありません。Builder AI から現場写真を診断してください。</p>
+          </section>
+        </div>
+
+        <aside>
+          <section class="builder-panel" aria-label="タイムライン">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">タイムライン</h2>
+            </div>
+            <ol class="builder-ph-timeline" data-builder-pd-timeline></ol>
+          </section>
+        </aside>
+      </div>
+
+      <footer class="builder-footer"><p>© 2026 TASFUL inc. Builder Project Hub MVP</p></footer>
+    </main>
+
+    <main class="builder-shell builder-main" data-builder-pd-not-found hidden>
+      <section class="builder-panel">
+        <p class="builder-ph-empty">案件が見つかりません。</p>
+        <a class="builder-btn builder-btn--ghost" href="project-hub.html">案件ハブへ</a>
+      </section>
+    </main>
+  </div>
+
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-project-store.js"></script>
+  <script src="builder-project-detail.js"></script>
+</body>
+</html>

@@ -59,6 +59,43 @@
     return global.TasuBuilderAIContext?.resolveActor?.({}) || { actorType: "guest", label: "ゲスト" };
   }
 
+  function getProjectIdFromUrl() {
+    try {
+      return new URLSearchParams(global.location?.search || "").get("projectId") || "";
+    } catch {
+      return "";
+    }
+  }
+
+  function bindProjectContext() {
+    const projectId = getProjectIdFromUrl();
+    const panel = $("[data-builder-ai-project-context]");
+    const text = $("[data-builder-ai-project-context-text]");
+    const detailLink = $("[data-builder-ai-project-detail-link]");
+    if (!projectId || !panel) return projectId;
+
+    const Store = global.TasuBuilderProjectStore;
+    Store?.ensureSeed?.();
+    const project = Store?.getProject?.(projectId);
+    panel.hidden = false;
+    if (text) {
+      text.textContent = project
+        ? `診断結果は案件「${project.name}」（${project.id}）に保存されます。`
+        : `案件 ID ${projectId} に診断を保存します。`;
+    }
+    if (detailLink) {
+      detailLink.href = `project-detail.html?id=${encodeURIComponent(projectId)}`;
+    }
+    return projectId;
+  }
+
+  function saveDiagnosisToProject(result, meta) {
+    const projectId = getProjectIdFromUrl();
+    if (!projectId || !result?.diagnosis) return null;
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.saveVisionDiagnosis?.(projectId, result.diagnosis, meta) || null;
+  }
+
   let messages = loadHistory();
   let sending = false;
   let photoFile = null;
@@ -369,6 +406,15 @@
     } else if (result.diagnosis) {
       setVisionState("complete");
       renderVisionDiagnosis(result);
+      if (result.usedVision && getProjectIdFromUrl()) {
+        const saved = saveDiagnosisToProject(result, {
+          userText: text,
+          imageName: sentPhotoName,
+        });
+        if (saved?.ok) {
+          pushSystem(`案件 ${getProjectIdFromUrl()} に AI 参考診断を保存しました。`);
+        }
+      }
     } else {
       setVisionState("idle");
       renderVisionDiagnosis(null);
@@ -427,6 +473,7 @@
   }
 
   function init() {
+    bindProjectContext();
     seedWelcome();
     renderMessages();
     bindPhotoUpload();

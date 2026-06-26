@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f97316" />
+  <title>案件ハブ | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="builder-project-hub.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-project-hub">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="案件ハブ">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">案件ハブ · Phase 6-A</span>
+            </span>
+          </a>
+        </div>
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">案件ハブ</h1>
+          <p class="builder-header__sub">Builder 経由案件の一元管理</p>
+        </div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-panel" aria-label="案件検索">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">検索</h2>
+          <span class="builder-kpi" data-builder-ph-count>—</span>
+        </div>
+        <form class="builder-ph-filters" data-builder-ph-search-form>
+          <label>
+            キーワード
+            <input class="builder-input" type="search" name="q" placeholder="案件名 · 顧客 · 業者" data-builder-ph-q />
+          </label>
+          <label>
+            カテゴリ
+            <select class="builder-select" name="category" data-builder-ph-category>
+              <option value="">すべて</option>
+            </select>
+          </label>
+          <label>
+            ステータス
+            <select class="builder-select" name="status" data-builder-ph-status>
+              <option value="">すべて</option>
+            </select>
+          </label>
+          <button type="submit" class="builder-btn builder-btn--primary">検索</button>
+        </form>
+      </section>
+
+      <section class="builder-panel" aria-label="案件一覧">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">案件一覧</h2>
+        </div>
+        <div class="builder-ph-table-wrap" data-builder-ph-table-wrap>
+          <table class="builder-ph-table" data-builder-ph-table>
+            <thead>
+              <tr>
+                <th scope="col">案件ID</th>
+                <th scope="col">案件名</th>
+                <th scope="col">カテゴリ</th>
+                <th scope="col">顧客名</th>
+                <th scope="col">担当業者</th>
+                <th scope="col">ステータス</th>
+                <th scope="col">更新日時</th>
+              </tr>
+            </thead>
+            <tbody data-builder-ph-tbody></tbody>
+          </table>
+        </div>
+        <p class="builder-ph-empty" data-builder-ph-empty hidden>該当する案件がありません。</p>
+      </section>
+
+      <footer class="builder-footer"><p>© 2026 TASFUL inc. Builder Project Hub MVP</p></footer>
+    </main>
+  </div>
+
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-project-store.js"></script>
+  <script src="builder-project-hub.js"></script>
+</body>
+</html>

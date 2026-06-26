@@ -1,7 +1,7 @@
 # Builder AI
 
-**最終更新:** 2026-06-26（Vision Phase 5 · 構造化 JSON 診断）  
-**ステータス:** **実装済み**（P1 + tools + Vision + Calc Orchestrator + Live 4-A + **Vision 5**）· P2-C 残  
+**最終更新:** 2026-06-26（Project Hub Phase 6-A · 案件ハブ MVP）  
+**ステータス:** **実装済み**（P1 + tools + Vision 5 + Live 4-A + **Project Hub 6-A**）· P2-C 残  
 **直近コミット:** `66051f7`（Live Phase 4-A · **git push 未実施**）
 
 ---
@@ -62,6 +62,9 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | `builder-ai-live.js` | カメラプレビュー · スナップショット → Vision |
 | `builder-ai-voice.js` | `TasuAiVoiceCore` adapter · `surface: builder_ai` |
 | `builder-ai-live-gate.js` | Free/Pro gate stub（本番課金未接続） |
+| `builder-project-store.js` | **Phase 6-A** · 案件 localStorage · タイムライン · Vision JSON 保存 |
+| `builder-project-hub.js` | 案件一覧 · 検索 |
+| `builder-project-detail.js` | 案件詳細 · タイムライン閲覧 · メモ最小編集 |
 
 **経路（Vision）:** Builder → Gateway → `gemini-chat` → Gemini Vision
 
@@ -130,16 +133,37 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 | `scripts/test-builder-ai-calc-phase3.mjs` | **15/15 PASS** |
 | `scripts/test-builder-ai-vision-phase2.mjs` | **8/8 PASS** |
 | `scripts/test-builder-ai-vision-phase5.mjs` | **28/28 PASS** |
+| `scripts/test-builder-project-hub-phase6a.mjs` | **PASS** |
 | `scripts/test-builder-ai-ui-phase1.mjs` | **15/15 PASS** |
 | `scripts/test-builder-ai-p1-review.mjs` | **135/135 PASS** |
 | `scripts/test-builder-ai-tools-adaptation.mjs` | **85/85 PASS** |
 | `npm run build:pages` | **PASS** |
 
-**報告:** `reports/builder-ai-live-phase4-plan.md` · `reports/builder-ai-vision-phase2.md` · `reports/builder-ai-phase5-vision.md` · `reports/builder-ai-tools-phase3.md`
+**報告:** `reports/builder-ai-live-phase4-plan.md` · `reports/builder-ai-vision-phase2.md` · `reports/builder-ai-phase5-vision.md` · `reports/builder-project-hub-phase6a.md` · `reports/builder-ai-tools-phase3.md`
 
 ---
 
-## Builder AI Vision Phase 5（✅ 実装 · 未コミット）
+## Builder Project Hub Phase 6-A（✅ 実装 · 未コミット）
+
+**案件ハブ MVP** — Builder 経由案件の一覧 · 詳細 · タイムライン · Vision 診断 JSON 保存
+
+| 項目 | 内容 |
+| --- | --- |
+| **画面** | `project-hub.html` · `project-detail.html` |
+| **ストア** | `TasuBuilderProjectStore`（localStorage） |
+| **一覧** | ID · 名前 · カテゴリ · 顧客 · 業者 · ステータス · 更新日 |
+| **検索** | キーワード · カテゴリ · ステータス |
+| **タイムライン** | 作成 · 見積 · AI診断 · 契約 · 施工 · 完了（閲覧のみ） |
+| **AI 連携** | `builder-ai.html?projectId=` → Vision 診断 JSON → 案件保存 |
+| **非実装** | 収支 · カレンダー · 請求 · 契約書 · 写真比較 · OCR · 他 surface |
+
+**テスト:** `scripts/test-builder-project-hub-phase6a.mjs`
+
+**報告:** `reports/builder-project-hub-phase6a.md`
+
+---
+
+## Builder AI Vision Phase 5（✅ commit 済 · `7ef4efd`）
 
 **構造化 Gemini Vision 診断** — JSON 正本 · 11 カテゴリ · AI参考診断免責統一
 

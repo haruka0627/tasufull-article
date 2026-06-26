@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-26（Builder AI Vision Phase 5）
+**最終更新:** 2026-06-26（Builder Project Hub Phase 6-A）
 
 ---
 
@@ -54,7 +54,8 @@
 | **Vision Phase 2**（Gemini Vision · Gateway attachments） | ✅ | `4aff9ec` |
 | **Tool Integration Phase 3**（自然文 → 計算ツール Orchestrator） | ✅ | `05c32ad` · `reports/builder-ai-tools-phase3.md` |
 | **Live Phase 4-A**（カメラ · Voice · スナップショット Vision · Live 風 MVP） | ✅ | `66051f7` · `reports/builder-ai-live-phase4-plan.md` |
-| **Vision Phase 5**（構造化 JSON 診断 · Analyzer · 11 カテゴリ） | ✅ 実装（未コミット） | `reports/builder-ai-phase5-vision.md` |
+| **Vision Phase 5**（構造化 JSON 診断 · Analyzer · 11 カテゴリ） | ✅ `7ef4efd` | `reports/builder-ai-phase5-vision.md` |
+| **Project Hub Phase 6-A**（案件ハブ MVP · Vision 保存） | ✅ 実装（未コミット） | `reports/builder-project-hub-phase6a.md` |
 | **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 ### Platform（製品機能）
