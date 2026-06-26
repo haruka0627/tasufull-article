@@ -93,6 +93,10 @@
 
   function createReview(payload) {
     const body = normalizePayload(payload);
+    const gate = window.TasuPlatformContentGate?.applyReviewGate?.(body.comment);
+    if (gate && !gate.ok) {
+      throw new Error(gate.error || "レビュー内容に禁止事項が含まれています");
+    }
     if (!body.deal_id) throw new Error("deal_id が必要です");
     if (!body.service_id) throw new Error("service_id が必要です");
     if (getReviewByDealId(body.deal_id)) {
@@ -121,6 +125,10 @@
 
     const existing = mapRow(list[idx]);
     const body = normalizePayload({ ...existing, ...(patch || {}) }, existing);
+    const gate = window.TasuPlatformContentGate?.applyReviewGate?.(body.comment);
+    if (gate && !gate.ok) {
+      throw new Error(gate.error || "レビュー内容に禁止事項が含まれています");
+    }
     const now = nowIso();
     list[idx] = {
       ...list[idx],

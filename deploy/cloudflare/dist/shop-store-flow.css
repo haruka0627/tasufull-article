@@ -1,0 +1,329 @@
+/* 店舗販売 — カート / 注文確認 / 完了（市場型ヘッダーなし） */
+
+body.shop-store-flow-page {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+body.shop-store-flow-page .shop-store-flow-main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 16px 16px 32px;
+}
+
+body.shop-store-flow-page .shop-store-flow-main__title {
+  margin: 0 0 8px;
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+body.shop-store-flow-page .shop-store-flow-main__lead {
+  margin: 0 0 16px;
+  font-size: 0.875rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+body.shop-store-flow-page .shop-store-flow-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+body.shop-store-flow-page .shop-store-flow-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
+body.shop-store-flow-page .shop-store-flow-btn--primary {
+  background: linear-gradient(135deg, #f5e6a8, #d4af37);
+  color: #1a1a1a;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+}
+
+body.shop-store-flow-page .shop-store-flow-btn--outline {
+  background: #fff;
+  color: #7a5e10;
+  border: 1px solid rgba(212, 175, 55, 0.55);
+}
+
+body.shop-store-flow-page .shop-store-flow-layout {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 961px) {
+  body.shop-store-flow-page .shop-store-flow-layout--cart {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    align-items: start;
+  }
+}
+
+body.shop-store-flow-page .tasful-market-cart-item,
+body.shop-store-flow-page .tasful-market-checkout-item {
+  background: #fff;
+}
+
+body.shop-store-flow-page .shop-store-checkout-item__shop a {
+  color: #7a5e10;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+body.shop-store-flow-page .shop-store-checkout-item__shop a:hover {
+  text-decoration: underline;
+}
+
+body.shop-store-flow-page .shop-store-flow-status {
+  padding: 20px;
+  text-align: center;
+  color: #64748b;
+}
+
+body.shop-store-flow-page .shop-store-complete-card {
+  margin: 24px auto;
+  max-width: 520px;
+  padding: 28px 20px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__icon {
+  margin: 0 0 8px;
+  font-size: 2rem;
+  color: #16a34a;
+  font-weight: 900;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__title {
+  margin: 0 0 8px;
+  font-size: 1.375rem;
+  font-weight: 900;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__lead {
+  margin: 0 0 16px;
+  color: #475569;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__summary {
+  margin: 0 0 12px;
+  padding: 16px 14px;
+  text-align: left;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__shop {
+  margin: 0 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: #7a5e10;
+  letter-spacing: 0.02em;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__product {
+  margin: 0 0 14px;
+  font-size: 1.0625rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.45;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__facts {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__fact {
+  display: grid;
+  grid-template-columns: 5.5em 1fr;
+  gap: 8px;
+  align-items: baseline;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__fact dt {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__fact dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #0f172a;
+  word-break: break-all;
+}
+
+body.shop-store-flow-page .shop-store-complete-card__note {
+  margin: 12px 0 0;
+  font-size: 0.8125rem;
+  color: #94a3b8;
+}
+
+body.shop-store-flow-page .shop-store-complete-actions {
+  justify-content: center;
+  gap: 12px;
+}
+
+body.shop-store-flow-page .shop-store-complete-actions .shop-store-flow-btn--primary {
+  order: 1;
+}
+
+body.shop-store-flow-page .shop-store-complete-actions .shop-store-flow-btn--outline {
+  order: 2;
+}
+
+@media (max-width: 960px) {
+  body.shop-store-flow-page .tasful-market-cart-summary .tasful-market-cart-main__btn {
+    display: none;
+  }
+}
+
+@media (min-width: 961px) {
+  body.shop-store-flow-page .tasful-market-cart-main__actions--mobile {
+    display: none;
+  }
+}
+
+body.shop-store-flow-page .shop-store-delivery--checkout {
+  display: grid;
+  gap: 14px;
+}
+
+body.shop-store-flow-page .shop-store-delivery__block {
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+body.shop-store-flow-page .shop-store-delivery__product-title {
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: #334155;
+}
+
+body.shop-store-flow-page .shop-store-delivery__list {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+body.shop-store-flow-page .shop-store-delivery__row {
+  display: grid;
+  grid-template-columns: minmax(6.5rem, 8.5rem) 1fr;
+  gap: 6px 10px;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+body.shop-store-flow-page .shop-store-delivery__row dt {
+  margin: 0;
+  font-weight: 800;
+  color: #64748b;
+}
+
+body.shop-store-flow-page .shop-store-delivery__row dd {
+  margin: 0;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+body.shop-store-flow-page .shop-store-delivery__empty {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+@media (max-width: 520px) {
+  body.shop-store-flow-page .shop-store-delivery__row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* checkout / complete — コンパクトヘッダー（ページタイトルを主役に） */
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__inner,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__inner {
+  min-height: 60px;
+  height: 60px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header .tasful-ai-logo-icon,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header .tasful-ai-logo-icon {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header .tasful-ai-logo,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header .tasful-ai-logo {
+  gap: 10px;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header .tasful-ai-logo-text .main,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header .tasful-ai-logo-text .main {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header .tasful-ai-logo-text .sub,
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header .tasful-ai-logo-text .sub {
+  font-size: 0.6875rem;
+}
+
+body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-store-flow-main__title,
+body.shop-store-flow-page[data-page="shop_store_checkout"] .tasful-market-checkout-main__title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  color: #0f172a;
+}
+
+body.shop-store-flow-page[data-page="shop_store_complete"] .shop-store-complete-card__title {
+  font-size: 1.5rem;
+  line-height: 1.3;
+}
+
+@media (max-width: 1024px) {
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-market-header__inner,
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-market-header__inner {
+    min-height: 56px;
+    height: auto;
+    padding: 0.5rem 16px;
+  }
+}
+
+@media (min-width: 961px) {
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .shop-store-flow-main__title,
+  body.shop-store-flow-page[data-page="shop_store_checkout"] .tasful-market-checkout-main__title {
+    font-size: 1.625rem;
+  }
+
+  body.shop-store-flow-page[data-page="shop_store_complete"] .shop-store-complete-card__title {
+    font-size: 1.625rem;
+  }
+}

@@ -4967,6 +4967,20 @@
         return;
       }
 
+      const successMessageEl = successModal?.querySelector("[data-success-message]");
+      if (successMessageEl) {
+        successMessageEl.textContent =
+          result.autoPublic ||
+          (result.record?.publish_status === "public" &&
+            result.record?.moderation_status === "approved")
+            ? "掲載が完了しました。詳細ページを見に行みますか？"
+            : result.pending ||
+                result.record?.publish_status === "pending_review" ||
+                result.record?.moderation_status === "pending_review"
+              ? "掲載を受け付けました。タスフルAIが確認中です。完了後に公開されます。"
+              : "掲載が完了しました。詳細ページを見に行みますか？";
+      }
+
       const savedScope = pendingPublish.scope;
       const savedListingType = resolveActiveListingType(form);
 

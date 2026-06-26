@@ -890,6 +890,7 @@
     const listings = await fetchShopListings();
     let base = flattenProducts(listings);
     const sellerFlat = getSellerProducts()
+      .filter((entry) => entry.moderation_status === "approved" && entry.publish_status === "public")
       .map(sellerListingToProduct)
       .filter(Boolean);
     const seen = new Set(base.map((p) => p.id));
@@ -2001,6 +2002,7 @@
     const sid = String(shopId || "").trim();
     const fromPool = (pool || []).filter((p) => p.shopId === sid && !String(p.id).includes("::dup-"));
     const sellerOnly = getSellerProductsByShop(sid)
+      .filter((entry) => entry.moderation_status === "approved" && entry.publish_status === "public")
       .map(sellerListingToProduct)
       .filter(Boolean)
       .map(enrichProductImage);
@@ -2125,6 +2127,13 @@
     const errors = validateListingInput(input);
     if (errors.length) return { ok: false, errors };
 
+    const Gate = window.TasuPlatformContentGate;
+    if (Gate?.applyShopPublishGate) {
+      const gate = Gate.applyShopPublishGate(input);
+      if (!gate.ok) return { ok: false, errors: gate.errors || [gate.error || "審査で拒否されました"] };
+      input = gate.entry;
+    }
+
     const profile = getSellerProfile();
     const shopId = String(input.shopId || profile.shopId || DEFAULT_SELLER_SHOP_ID).trim();
     const shopName = String(input.sellerName || profile.shopName || "マイショップ").trim();
@@ -2165,6 +2174,12 @@
       connectVerified: Boolean(input.connectVerified),
       createdAt: new Date().toISOString(),
       publishedAt: new Date().toISOString(),
+      moderation_status: input.moderation_status || "pending_review",
+      publish_status: input.publish_status || "pending_review",
+      moderation_flags: input.moderation_flags || [],
+      moderation_reason: input.moderation_reason || null,
+      isProductionListed: false,
+      _demoOnly: input._demoOnly === true,
     };
 
     const list = getSellerProducts();
@@ -2172,7 +2187,11 @@
     saveSellerProducts(list);
     saveSellerProfile({ shopId, shopName, connectVerified: entry.connectVerified });
     invalidateProductPoolCache();
-    return { ok: true, entry, product: sellerListingToProduct(entry) };
+    window.TasuPlatformModerationQueue?.trackLocalListing?.(
+      { ...entry, id: entry.id, title: entry.title, user_id: shopId, table: "shop_local" },
+      "shop_local"
+    );
+    return { ok: true, entry, product: sellerListingToProduct(entry), pending: true };
   }
 
   function listingNewHref(shopId) {

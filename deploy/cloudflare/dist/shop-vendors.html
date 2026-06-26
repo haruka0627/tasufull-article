@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>店舗・販売（専門店）一覧 | TASFUL</title>
+  <!-- 旧店舗一覧TOP — shop-vendors.html（市場TOP shop-store.html は別URL） -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="business-board.css">
+  <link rel="stylesheet" href="shop-store-cards.css">
+  <link rel="stylesheet" href="shop-vendors-brand.css">
+    <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+</head>
+<body class="shop-store-list-page tasful-shop-mall-brand" data-page="shop_store_list">
+  <div class="tasu-banner">
+    <div class="tasu-text">
+      🚀 <span class="logo">TASFUL</span>プラットフォームへようこそ　
+      <a href="business.html" class="link">法人・業者一覧</a>　｜　
+      <a href="index.html" class="link accent">一覧トップ</a>
+    </div>
+  </div>
+
+  <header class="shop-market-header shop-store-market-header" data-shop-store-market-header aria-label="サイトヘッダー">
+    <div class="shop-market-header__inner">
+      <a href="index-top.html" class="tasful-ai-logo shop-market-header__logo" aria-label="TASFUL 店舗・販売 TOP">
+        <img
+          src="images/tasful-globe-logo.png"
+          alt="TASFUL"
+          class="tasful-ai-logo-icon"
+          width="58"
+          height="58"
+          decoding="async"
+        >
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">店舗・販売</span>
+        </div>
+      </a>
+      <div class="shop-market-header__center">
+        <form class="shop-market-header__search" role="search" action="shop-vendors.html" method="get">
+          <span class="shop-market-header__search-icon" aria-hidden="true">🔍</span>
+          <input type="search" name="keyword" class="shop-market-header__search-input" placeholder="店舗・商品を検索" aria-label="店舗・商品を検索">
+        </form>
+        <nav class="shop-market-header__nav" aria-label="メインメニュー">
+          <a href="shop-vendors.html" class="shop-market-header__nav-link">カテゴリから探す</a>
+          <a href="shop-vendors.html#shop-store-area" class="shop-market-header__nav-link">エリアから探す</a>
+          <a href="index.html" class="shop-market-header__nav-link">特集一覧</a>
+          <a href="ai-top.html" class="shop-market-header__nav-link shop-market-header__nav-link--ai">AI相談</a>
+        </nav>
+      </div>
+      <div class="shop-market-header__actions">
+        <a href="index.html" class="shop-market-header__action" aria-label="お気に入り">
+          <span class="shop-market-header__action-icon" aria-hidden="true">♡</span>
+          <span class="shop-market-header__action-label">お気に入り</span>
+        </a>
+        <a href="index.html" class="shop-market-header__action" aria-label="通知">
+          <span class="shop-market-header__action-icon" aria-hidden="true">🔔</span>
+          <span class="shop-market-header__action-label">通知</span>
+        </a>
+        <a href="post.html?scope=business" class="shop-market-header__cta">店舗を掲載する</a>
+        <a href="index.html" class="shop-market-header__action shop-market-header__action--primary" aria-label="マイページ">
+          <span class="shop-market-header__action-icon" aria-hidden="true">👤</span>
+          <span class="shop-market-header__action-label">マイページ</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="page business-container shop-store-page">
+    <main class="main business-container__main shop-store-main">
+      <section class="shop-platform-hero" aria-label="トップ">
+        <div class="shop-platform-hero__copy">
+          <p class="shop-platform-hero__eyebrow">TASFUL 店舗・販売</p>
+          <h1 class="shop-platform-hero__title">セレクトショップを、<br>もっと身近に。</h1>
+          <p class="shop-platform-hero__lead">飲食・雑貨・古着・ホビーまで。商品を販売するお店を、ECのように探して買えるプラットフォームです。</p>
+          <div class="shop-platform-hero__cta">
+            <a href="#shop-store-results" class="shop-store-btn shop-store-btn--gold">お店を探す</a>
+            <a href="chat.html" class="shop-store-btn shop-store-btn--outline">AIに相談する</a>
+          </div>
+        </div>
+        <div class="shop-platform-hero__mosaic" aria-hidden="true">
+          <figure class="shop-platform-hero__shot shop-platform-hero__shot--main">
+            <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&amp;q=80" alt="" loading="eager" decoding="async" data-shop-img-fallback="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&amp;q=80" data-shop-img-safe="images/tasful-logo.webp">
+          </figure>
+          <figure class="shop-platform-hero__shot shop-platform-hero__shot--coffee">
+            <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&amp;q=80" alt="" loading="lazy" decoding="async" data-shop-img-fallback="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&amp;q=80" data-shop-img-safe="images/tasful-logo.webp">
+          </figure>
+          <figure class="shop-platform-hero__shot shop-platform-hero__shot--salon">
+            <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&amp;q=80" alt="" loading="lazy" decoding="async" data-shop-img-fallback="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&amp;q=80" data-shop-img-safe="images/tasful-logo.webp">
+          </figure>
+          <figure class="shop-platform-hero__shot shop-platform-hero__shot--tools">
+            <img src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&amp;q=80" alt="" loading="lazy" decoding="async" data-shop-img-fallback="https://images.unsplash.com/photo-1530124566582-a618bc2615dc?w=600&amp;q=80" data-shop-img-safe="images/tasful-logo.webp">
+          </figure>
+          <figure class="shop-platform-hero__shot shop-platform-hero__shot--flowers">
+            <img src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=900&amp;q=80" alt="" loading="lazy" decoding="async" data-shop-img-fallback="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&amp;q=80" data-shop-img-safe="images/tasful-logo.webp">
+          </figure>
+          <figure class="shop-platform-hero__shot shop-platform-hero__shot--lounge">
+            <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=900&amp;q=80" alt="" loading="lazy" decoding="async" data-shop-img-fallback="https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=900&amp;q=80" data-shop-img-safe="images/tasful-logo.webp">
+          </figure>
+        </div>
+      </section>
+
+      <section class="shop-platform-categories shop-platform-categories--after-hero" aria-label="カテゴリから探す">
+        <div class="shop-platform-categories__head">
+          <h2 class="shop-platform-categories__title">カテゴリから探す</h2>
+          <a href="#shop-store-results" class="shop-platform-categories__more">すべて見る &gt;</a>
+        </div>
+        <div class="shop-platform-categories__panel">
+          <div class="shop-platform-categories__track" data-shop-platform-categories></div>
+        </div>
+      </section>
+
+      <section class="shop-store-searchbar shop-store-searchbar--platform" aria-label="ショップ検索">
+        <form class="shop-store-searchbar__form" data-shop-store-filter-form>
+          <div class="shop-store-searchbar__field">
+            <label for="shopStoreKeyword">キーワード</label>
+            <input type="search" id="shopStoreKeyword" name="keyword" placeholder="店舗名・商品名・カテゴリ・タグ" />
+          </div>
+          <div class="shop-store-searchbar__field">
+            <label for="shopStoreCategory">店舗カテゴリ</label>
+            <select id="shopStoreCategory" name="subcategory" data-shop-store-subcategory>
+              <option value="">すべて</option>
+            </select>
+          </div>
+          <div class="shop-store-searchbar__field" id="shop-store-area">
+            <label for="shopStoreArea">対応エリア</label>
+            <input type="text" id="shopStoreArea" name="area" placeholder="例：大阪府 / 東京都" />
+          </div>
+          <div class="shop-store-searchbar__field">
+            <label for="shopStoreSalesType">販売/買取</label>
+            <select id="shopStoreSalesType" name="sales_type">
+              <option value="">すべて</option>
+              <option value="sales">販売対応</option>
+              <option value="buyback">買取対応</option>
+            </select>
+          </div>
+          <button type="submit" class="shop-store-searchbar__submit">検索する</button>
+        </form>
+        <div class="shop-store-quicktags" aria-label="クイックタグ">
+          <button type="button" class="shop-store-quicktag" data-shop-quicktag="中古販売">中古販売</button>
+          <button type="button" class="shop-store-quicktag" data-shop-quicktag="買取対応">買取対応</button>
+          <button type="button" class="shop-store-quicktag" data-shop-quicktag="法人対応">法人対応</button>
+          <button type="button" class="shop-store-quicktag" data-shop-quicktag="即日発送">即日発送</button>
+          <button type="button" class="shop-store-quicktag" data-shop-quicktag="店舗受取OK">店舗受取OK</button>
+          <button type="button" class="shop-store-quicktag" data-shop-quicktag="クレジット対応">クレジット対応</button>
+          <button type="button" class="shop-store-quicktag" data-shop-quicktag="オンライン相談">オンライン相談</button>
+        </div>
+      </section>
+
+      <div class="shop-store-layout shop-store-layout--catalog" id="shop-store-catalog">
+        <aside class="shop-store-sidebar shop-store-sidebar--filter" aria-label="絞り込み">
+          <div class="shop-store-sidebar__head">
+            <h2 class="shop-store-sidebar__title">条件で絞り込む</h2>
+            <button type="button" class="shop-store-sidebar__reset" data-shop-store-filter-clear>リセット</button>
+          </div>
+
+          <form class="shop-store-sidebar__form" data-shop-store-sidebar-form>
+            <div class="shop-store-filter-group">
+              <h3 class="shop-store-filter-group__title">店舗カテゴリ</h3>
+              <select name="subcategory" data-shop-store-subcategory>
+                <option value="">すべて</option>
+              </select>
+            </div>
+
+            <div class="shop-store-filter-group">
+              <h3 class="shop-store-filter-group__title">販売対応</h3>
+              <label class="shop-store-check"><input type="checkbox" name="used_sales" data-shop-store-check="used_sales"><span>中古販売</span></label>
+              <label class="shop-store-check"><input type="checkbox" name="new_sales" data-shop-store-check="new_sales"><span>新品販売</span></label>
+              <label class="shop-store-check"><input type="checkbox" name="in_stock" data-shop-store-check="in_stock"><span>在庫あり</span></label>
+            </div>
+
+            <div class="shop-store-filter-group">
+              <h3 class="shop-store-filter-group__title">買取対応</h3>
+              <label class="shop-store-check"><input type="checkbox" name="buyback_instore" data-shop-store-check="buyback_instore"><span>店頭買取</span></label>
+              <label class="shop-store-check"><input type="checkbox" name="buyback_visit" data-shop-store-check="buyback_visit"><span>出張買取</span></label>
+              <label class="shop-store-check"><input type="checkbox" name="buyback_delivery" data-shop-store-check="buyback_delivery"><span>宅配買取</span></label>
+            </div>
+
+            <div class="shop-store-filter-group">
+              <h3 class="shop-store-filter-group__title">対応エリア</h3>
+              <select name="area_pref" data-shop-store-area-pref>
+                <option value="">都道府県を選択</option>
+              </select>
+              <input type="text" name="area_city" placeholder="市区町村を入力" />
+            </div>
+
+            <div class="shop-store-filter-group">
+              <h3 class="shop-store-filter-group__title">法人対応</h3>
+              <label class="shop-store-check"><input type="checkbox" name="corporate" data-shop-store-check="corporate"><span>法人対応</span></label>
+            </div>
+
+            <div class="shop-store-filter-group">
+              <h3 class="shop-store-filter-group__title">その他条件</h3>
+              <label class="shop-store-check"><input type="checkbox" name="same_day" data-shop-store-check="same_day"><span>即日発送</span></label>
+              <label class="shop-store-check"><input type="checkbox" name="store_pickup" data-shop-store-check="store_pickup"><span>店舗受取OK</span></label>
+              <label class="shop-store-check"><input type="checkbox" name="credit" data-shop-store-check="credit"><span>クレジット対応</span></label>
+              <label class="shop-store-check"><input type="checkbox" name="online" data-shop-store-check="online"><span>オンライン相談対応</span></label>
+            </div>
+
+            <button type="submit" class="shop-store-sidebar__submit">この条件で検索</button>
+          </form>
+        </aside>
+
+        <section class="shop-store-results" id="shop-store-results" aria-label="店舗一覧">
+          <div class="shop-store-results__head">
+            <p class="shop-store-results__count">
+              <span>表示</span>
+              <strong data-shop-store-count>0</strong>
+              <span>件</span>
+            </p>
+          </div>
+          <div class="shop-store-grid shop-store-grid--catalog" data-shop-store-grid></div>
+          <div class="shop-store-empty" data-shop-store-empty hidden>
+            <p class="shop-store-empty__title">該当する店舗がありません</p>
+            <p class="shop-store-empty__text">条件を変更して、もう一度お試しください。</p>
+          </div>
+          <div class="shop-store-load-more-wrap">
+            <button type="button" class="shop-store-load-more" data-shop-load-more hidden>
+              <span>もっと見る</span>
+              <span class="shop-store-load-more__chev" aria-hidden="true">∨</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <footer class="tasful-market-footer tasful-shop-mall-footer" aria-label="TASFUL市場フッター">
+    <div class="tasful-market-footer__inner">
+      <div class="tasful-market-footer__brand-block">
+        <p class="tasful-market-footer__brand">TASFUL市場</p>
+        <p class="tasful-market-footer__lead">安心して売買できる</p>
+        <p class="tasful-market-footer__sub">TASFULのショッピングマーケット</p>
+      </div>
+
+      <nav class="tasful-market-footer__block" aria-labelledby="tasful-shop-mall-footer-guide">
+        <h2 class="tasful-market-footer__heading" id="tasful-shop-mall-footer-guide">ご利用ガイド</h2>
+        <ul class="tasful-market-footer__links">
+          <li><a href="index-top.html">配送について</a></li>
+          <li><a href="index-top.html">返品・キャンセル</a></li>
+          <li><a href="ai-workspace.html">よくある質問</a></li>
+          <li><a href="index-top.html">お問い合わせ</a></li>
+        </ul>
+      </nav>
+
+      <nav class="tasful-market-footer__block" aria-labelledby="tasful-shop-mall-footer-seller">
+        <h2 class="tasful-market-footer__heading" id="tasful-shop-mall-footer-seller">出品する</h2>
+        <ul class="tasful-market-footer__links">
+          <li><a href="post.html?scope=business">出店ガイド</a></li>
+          <li><a href="builder/mvp-partner-register.html">Connect認証について</a></li>
+        </ul>
+      </nav>
+
+      <p class="tasful-market-footer__copy">© TASFUL</p>
+    </div>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="business-categories.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="shop-store-products-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="shop-store-demo.js"></script>
+  <script src="listing-local-store.js"></script>
+  <script src="shop-detail-category.js"></script>
+  <script src="shop-store-page.js"></script>
+</body>
+</html>

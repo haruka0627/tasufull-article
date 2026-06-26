@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>支払い方法・口座管理 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="dash-body" data-page="payment-settings">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ"></nav>
+    </aside>
+
+    <div class="dash-main">
+      <header class="dash-header dash-header--account">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <a href="index-top.html" class="tasful-ai-logo dash-header__logo" aria-label="TASFUL">
+              <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+              <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+            </a>
+          </div>
+          <div class="dash-header__actions">
+            <a href="talk-home.html?tab=chat" class="dash-header-link" aria-label="メッセージ">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="dash-header-link__label">メッセージ</span>
+              <span class="dash-header-link__badge" data-dash-msg-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="dashboard.html#dash-notices" class="dash-header-link" aria-label="通知">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="dash-header-link__label">通知</span>
+              <span class="dash-header-link__badge" data-dash-notice-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="profile-settings.html" class="dash-profile" aria-label="プロフィール">
+              <img class="dash-profile__avatar" data-dash-avatar src="https://placehold.co/64x64/f3ead4/967622?text=ME" width="40" height="40" alt="">
+              <span class="dash-profile__text">
+                <span class="dash-profile__name" data-dash-user-name>会員</span>
+                <span class="dash-profile__sub">個人・事業者</span>
+              </span>
+              <svg class="dash-profile__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="dash-content dash-shell">
+        <section class="dash-member-page-head">
+          <h1 class="dash-member-page-head__title">支払い方法・口座管理</h1>
+          <p class="dash-member-page-head__sub">手数料の支払い方法と、売上振込先の口座情報を管理できます。</p>
+        </section>
+
+        <section class="dash-card dash-settings dash-connect-card" aria-labelledby="connectOnboardingTitle" data-connect-onboarding>
+          <div class="dash-card__head dash-connect-card__head">
+            <div>
+              <h2 class="dash-card__title" id="connectOnboardingTitle">TASFUL Connect</h2>
+              <p class="dash-connect-card__sub">Stripe Connect による安全な決済・振込</p>
+            </div>
+            <span class="dash-connect-badge" data-connect-status-badge>未申請</span>
+          </div>
+          <div class="dash-card__body dash-card__body--padded">
+            <p class="dash-connect-lead" data-connect-lead>Connect を利用すると、TASFUL 経由の取引で報酬を安全に受け取れます。</p>
+            <ol class="dash-connect-steps" data-connect-steps aria-label="Connect 手続きの進捗"></ol>
+            <div class="dash-connect-actions" data-connect-actions>
+              <button type="button" class="dash-btn dash-btn--primary dash-btn--block-sm" data-connect-apply>Connectを始める</button>
+            </div>
+            <div class="dash-connect-panel" data-connect-identity-panel hidden>
+              <p class="dash-connect-panel__title">本人確認</p>
+              <p class="dash-connect-panel__text">Stripe Connect の案内に従い、本人確認書類を提出してください。</p>
+              <button type="button" class="dash-btn dash-btn--primary dash-btn--block-sm" data-connect-identity-submit>本人確認を始める</button>
+            </div>
+            <div class="dash-connect-panel" data-connect-qualification-panel hidden>
+              <p class="dash-connect-panel__title">振込先・資格確認</p>
+              <p class="dash-connect-panel__text">振込先口座を登録し、事業者情報を確認してください。</p>
+              <button type="button" class="dash-btn dash-btn--secondary dash-btn--block-sm" data-connect-scroll-payout>振込先口座へ進む</button>
+            </div>
+            <ul class="dash-connect-ready" data-connect-ready-benefits hidden>
+              <li class="dash-connect-ready__item">✓ 本人確認済み</li>
+              <li class="dash-connect-ready__item">✓ Connect対応</li>
+              <li class="dash-connect-ready__item">✓ 安心して取引できます</li>
+            </ul>
+            <p class="dash-settings-notice dash-connect-disclaimer" data-connect-disclaimer hidden></p>
+          </div>
+        </section>
+
+        <details class="dash-settings-fold" data-payment-method-fold>
+          <summary class="dash-settings-fold__summary">支払い方法（Connect完了後に設定できます）</summary>
+        <section class="dash-card dash-settings dash-settings-fold__card" aria-labelledby="paymentMethodTitle">
+          <div class="dash-card__head">
+            <h2 class="dash-card__title" id="paymentMethodTitle">支払い方法</h2>
+          </div>
+          <div class="dash-card__body dash-card__body--padded">
+            <div class="dash-settings-status">
+              <span class="dash-settings-status__label">現在の支払い方法</span>
+              <span class="dash-settings-status__value" data-payment-current-method>未設定</span>
+            </div>
+
+            <fieldset class="dash-field dash-field--radios">
+              <legend class="dash-field__label">支払い方法を選択</legend>
+              <div class="dash-radio-group">
+                <label class="dash-radio">
+                  <input type="radio" name="paymentMethod" value="unset" data-payment-method checked>
+                  <span>未設定</span>
+                </label>
+                <label class="dash-radio">
+                  <input type="radio" name="paymentMethod" value="card" data-payment-method>
+                  <span>クレジットカード</span>
+                </label>
+                <label class="dash-radio">
+                  <input type="radio" name="paymentMethod" value="bank" data-payment-method>
+                  <span>銀行振込</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="dash-settings-subcard" data-payment-card-panel hidden>
+              <p class="dash-settings-subcard__title">クレジットカード登録（デモ）</p>
+              <div class="dash-settings__form">
+                <div class="dash-field">
+                  <label class="dash-field__label" for="paymentCardNumber">カード番号</label>
+                  <input class="dash-field__input" id="paymentCardNumber" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="1234 5678 9012 3456" data-payment-card-number maxlength="19">
+                </div>
+                <div class="dash-field">
+                  <label class="dash-field__label" for="paymentCardName">名義</label>
+                  <input class="dash-field__input" id="paymentCardName" type="text" autocomplete="cc-name" placeholder="TARO TASFUL" data-payment-card-name>
+                </div>
+                <div class="dash-settings__row">
+                  <div class="dash-field">
+                    <label class="dash-field__label" for="paymentCardExpiry">有効期限</label>
+                    <input class="dash-field__input" id="paymentCardExpiry" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" data-payment-card-expiry maxlength="5">
+                  </div>
+                  <div class="dash-field">
+                    <label class="dash-field__label" for="paymentCardCvc">セキュリティコード</label>
+                    <input class="dash-field__input" id="paymentCardCvc" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="123" data-payment-card-cvc maxlength="4">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p class="dash-settings-notice">本番ではStripeと連携して安全に決済情報を管理します。現在はデモ保存です。</p>
+
+            <div class="dash-settings__actions">
+              <button type="button" class="dash-btn dash-btn--primary dash-btn--block-sm" data-payment-save-method>保存する</button>
+            </div>
+          </div>
+        </section>
+        </details>
+
+        <details class="dash-settings-fold" data-payment-payout-fold>
+          <summary class="dash-settings-fold__summary">振込先口座（Connect手続きの途中で設定）</summary>
+        <section class="dash-card dash-settings dash-settings-fold__card" aria-labelledby="payoutAccountTitle">
+          <div class="dash-card__head">
+            <h2 class="dash-card__title" id="payoutAccountTitle">振込先口座</h2>
+          </div>
+          <div class="dash-card__body dash-card__body--padded">
+            <div class="dash-settings__form">
+              <div class="dash-field">
+                <label class="dash-field__label" for="paymentBankName">銀行名</label>
+                <input class="dash-field__input" id="paymentBankName" type="text" placeholder="例：TASFUL銀行" data-payment-bank-name>
+              </div>
+              <div class="dash-field">
+                <label class="dash-field__label" for="paymentBranchName">支店名</label>
+                <input class="dash-field__input" id="paymentBranchName" type="text" placeholder="例：東京支店" data-payment-branch-name>
+              </div>
+              <div class="dash-field">
+                <label class="dash-field__label" for="paymentAccountType">口座種別</label>
+                <select class="dash-field__input dash-field__select" id="paymentAccountType" data-payment-account-type>
+                  <option value="普通">普通</option>
+                  <option value="当座">当座</option>
+                </select>
+              </div>
+              <div class="dash-field">
+                <label class="dash-field__label" for="paymentAccountNumber">口座番号</label>
+                <input class="dash-field__input" id="paymentAccountNumber" type="text" inputmode="numeric" placeholder="1234567" data-payment-account-number>
+              </div>
+              <div class="dash-field">
+                <label class="dash-field__label" for="paymentAccountHolder">口座名義</label>
+                <input class="dash-field__input" id="paymentAccountHolder" type="text" placeholder="例：タスフル タロウ" data-payment-account-holder>
+              </div>
+            </div>
+
+            <div class="dash-settings__actions">
+              <button type="button" class="dash-btn dash-btn--primary dash-btn--block-sm" data-payment-save-bank>保存する</button>
+            </div>
+          </div>
+        </section>
+        </details>
+
+        <p class="dash-settings__toast" data-payment-toast hidden role="status"></p>
+      </main>
+    </div>
+  </div>
+
+  <script src="dashboard-guard.js"></script>
+  <script src="talk-runtime.js"></script>
+  <script src="auth-current-user.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="chat-user-identity.js"></script>
+  <script src="chat-supabase.js"></script>
+  <script src="chat-service.js"></script>
+  <script src="service-deals-db.js"></script>
+  <script src="favorites-db.js"></script>
+  <script src="business-service-data.js"></script>
+  <script src="business-board-demo.js"></script>
+  <script src="dashboard-data.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="demo-deals-data.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="connect-identity-templates.js"></script>
+  <script src="platform-chat-dual-window-flow.js"></script>
+  <script src="platform-chat-connect-chat-flow.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="connect-member-ui.js"></script>
+  <script src="connect-state.js"></script>
+  <script src="payment-settings.js"></script>
+</body>
+</html>
