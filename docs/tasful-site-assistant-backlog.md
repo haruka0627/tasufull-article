@@ -1,236 +1,130 @@
-# TASFUL Site Assistant / Feedback Launcher — Backlog
+# TASFUL Site Assistant — Backlog
 
 **最終更新:** 2026-06-26  
-**状態:** 📋 未着手（**今回は実装しない**）  
+**Phase 1:** ✅ **実装完了**（commit 予定）  
+**Phase 2+:** 📋 未着手（Feedback Launcher · OPS 集約）  
 **優先度:** P0/P1 外 · **Phase UI-3 Platform Critical の優先順位に影響しない**
 
 ---
 
-## 目的
+## Phase 1 — サイトAIウィジェット（✅ 実装済）
 
-ユーザーが **「問い合わせしたい」「通報したい」「不具合を報告したい」「サイト内で探したい」** と思ったときに、場所が分からず離脱しないようにする。
+全ページ右下に **「TASFUL サイトAI」** を表示。新規 AI / 新規 API / Gateway 接続は **作らない**。
 
-各ページ右下の丸いアイコンから、ユーザー・出品者・業者が **サイト検索 · FAQ · お問い合わせ · 通報 · 不具合報告 · 機能要望 · ページ案内** にすぐアクセスできる導線ハブとする。
+| 要素 | 方針 |
+| --- | --- |
+| **UI** | 右下 **丸アイコン**（`fixed` · タップ領域 44px 以上）→ チャットパネル |
+| **表示名** | `TASFUL サイトAI` |
+| **配置** | **全ページ共通**（`build:pages` で 232 HTML 注入 · 16 スキップ） |
+| **回答** | 既存 TASFUL AI **cross-matching / FAQ** を流用 |
+| **依存** | `TasuAiConsultBridge.tryCrossSearch` · `TasuAiCrossSearch` · `TasuAiFaqKnowledge` |
+| **非接続** | Gateway · DeepSeek · AI 秘書 · Ops Context · 新規外部 API |
+| **モード UI** | TASFUL AI の他モード UI は **出さない**（サイトAI のみ） |
+| **不明時** | `ai-workspace.html?mode=cross-matching&source=site_assistant` · `/contact` へ誘導 |
+
+### 実装ファイル
+
+| 種別 | パス |
+| --- | --- |
+| CSS | `tasful-site-assistant.css` |
+| UI | `tasful-site-assistant.js` |
+| Adapter | `tasful-site-assistant-adapter.js` |
+| 注入 | `deploy/cloudflare/stage-cloudflare-pages.mjs` → `applySiteAssistantToDist()` |
+| テスト | `scripts/test-tasful-site-assistant-browser.mjs` |
+
+### Context（送信メタのみ）
+
+- `page_url` · `page_title` · `page_heading` · `page_type`（`body[data-page]`）
+
+**禁止:** 個人情報 · localStorage ユーザーデータ · 管理者 / AI 秘書 / Ops / Stripe 内部 Context
+
+### Lazy load（初回パネル open / 送信時）
+
+1. `ai-intent-router.js`
+2. `ai-cross-search.js`
+3. `ai-faq-knowledge.js`
+4. `ai-consult-bridge.js`
+
+### スキップ対象（注入しない）
+
+管理系 · `ai-workspace` · Builder AI · Ops 系 HTML（16 件）
+
+### 検証
+
+```bash
+npm run build:pages
+node scripts/test-tasful-site-assistant-browser.mjs
+```
+
+**報告:** [reports/tasful-site-assistant-phase1.md](../reports/tasful-site-assistant-phase1.md)
 
 ---
 
-## 設計意図
+## Phase 2+ — Feedback Launcher（📋 未着手）
 
-### 解消したい離脱
+Phase 1 は **サイト案内チャット** のみ。以下は **将来** の拡張（導線ハブ · OPS 集約）。
 
-| ユーザーの声 | 方針 |
-| --- | --- |
-| どこから問い合わせるの？ | **お問い合わせ**を常設入口から即開ける |
-| 通報したいのに場所が分からない | **通報**を専用入口として常設 |
-| ボタンが押せない / 表示がおかしい | **不具合報告**をその場からすぐ送信 |
-| 探したいのに戻れない | **サイト内検索** · **FAQ** · **ページ案内** |
+### 目的
+
+ユーザーが **「問い合わせしたい」「通報したい」「不具合を報告したい」「サイト内で探したい」** と思ったときに、場所が分からず離脱しないようにする。
 
 ### 役割分担（混同禁止）
 
 | 製品 / 機能 | 役割 |
 | --- | --- |
-| **TASFUL AI** | 相談 · 提案 · 専門的な AI 対応 |
-| **Site Assistant** | サイト内検索 · お問い合わせ · **通報** · 不具合報告 · 機能要望 · FAQ · ページ案内 |
+| **TASFUL AI** | 相談 · 提案 · 専門的な AI 対応 · **操作アシスタント**（Workspace 側） |
+| **Site Assistant Phase 1** | 右下 **サイトAI** — cross-search / FAQ · ページ案内 |
+| **Site Assistant Phase 2+** | お問い合わせ · **通報** · 不具合 · 要望フォーム · OPS / AI 秘書集約 |
+| **操作案内 AI** | [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md) — Site Assistant では実装しない |
 
-Site Assistant は **本格 AI ではない**。初版は **軽量な導線ハブ**（検索 · 静的 FAQ · フォーム送信 · ページリンク）とし、**TASFUL AI を開く** はハブ内の **別入口** として提供する（AI エンジン本体は TASFUL AI Workspace に委譲）。
-
-### 必須入口（パネル内）
-
-初版パネルに **必ず** 含める:
+### 必須入口（Phase 2 パネル拡張案）
 
 1. **サイト内検索**
 2. **お問い合わせ**
 3. **通報**
 4. **不具合報告**
 5. **機能要望**
-6. **FAQ**
+6. **FAQ**（Phase 1 で cross-search / FAQ 流用済）
 7. **TASFUL AI を開く**
 
-### 重要方針
-
-- 「どこから問い合わせるの？」を無くす
-- 「通報したいのに場所が分からない」を無くす
-- 「ボタンが押せない / 表示がおかしい」をすぐ送れるようにする
-- **右下の丸いアイコン**から全ページ共通でアクセスできるようにする
-- ただし本格 AI ではなく、**最初は軽量な導線ハブ**として作る
-- 将来的に **AI 秘書 / OPS / 管理画面**へ集約する
-
----
-
-## 位置づけ
-
-| 観点 | 内容 |
-| --- | --- |
-| **本格 AI ではない** | 軽量な導線ハブ — **TASFUL AI 本体ではない**（「TASFUL AI を開く」入口は別導線として提供） |
-| **初版スコープ** | 必須7入口 + フォーム / 検索 / FAQ / ページ案内（ルールベース中心） |
-| **将来** | 送信内容を **AI 秘書 · OPS · 管理画面** に集約 |
-| **試験導入** | いきなり全ページではなく **Platform 1〜2 ページ** でパイロット |
-
-**スコープ境界（混同禁止）**
-
-| 製品 | 関係 |
-| --- | --- |
-| **TASFUL AI** | **別製品** — 相談・提案・専門 AI は Workspace 側。Site Assistant から **開く** 導線のみ |
-| **AI 秘書** | 受信・集計・トレンド提案の **管理側** 連携先（[ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) と要望集計で連携想定） |
-| **Builder AI / Platform AI 入口** | 専用 AI エンジンを作らない（[DECISIONS.md](./DECISIONS.md) AD-003 系） |
-
----
-
-## 主な機能
-
-### 1. サイト内検索
-
-- 商品
-- サービス
-- 案件
-- ヘルプ
-- FAQ
-
-### 2. よくある質問
-
-- 使い方
-- 支払い
-- キャンセル
-- 出品方法
-- 業者登録
-- 手数料
-- トラブル時の対応
-
-### 3. お問い合わせ
-
-- 一般問い合わせ
-- 注文について
-- 支払いについて
-- 出品について
-- アカウントについて
-
-### 4. 通報
-
-- 掲載内容の通報
-- ユーザー / 出品者の通報
-- 不適切なメッセージ・行為
-- 詐欺・なりすましの疑い
-- その他ルール違反
-
-### 5. 不具合報告
-
-- 表示がおかしい
-- ボタンが押せない
-- ページが開かない
-- 決済 / 注文の問題
-- 通知が届かない
-
-### 6. 機能要望
-
-- こういう機能がほしい
-- ここを改善してほしい
-- 業者向け機能の要望
-- 店舗 / 出品者向け改善案
-
-### 7. ページ案内
-
-目的から該当ページへ誘導（本格 AI 回答ではなくリンク / ルールベース）
-
-| 例（ユーザー意図） | 誘導先 |
-| --- | --- |
-| 出品したい | 出品ページ |
-| 注文履歴を見たい | 注文履歴 |
-| クーポンを使いたい | クーポン案内（将来 [platform-coupon-system-backlog.md](./platform-coupon-system-backlog.md) と連携） |
-
-### 8. TASFUL AI を開く
-
-- Site Assistant パネル内の **別入口** — `ai-workspace.html` 等へ遷移
-- 相談・提案・専門的な AI 対応は **TASFUL AI** に委譲（Site Assistant 内で AI チャットを実装しない）
-
----
-
-## 初期 UI 案
-
-| 要素 | 方針 |
-| --- | --- |
-| ランチャー | 右下 `fixed` の丸いアイコン（`?` · `💬` · ヘルプ等） |
-| タップ領域 | **44px 以上** |
-| パネル | クリックで小型パネルを開く |
-| パネル入口 | **必須7入口:** サイト検索 · お問い合わせ · **通報** · 不具合報告 · 機能要望 · FAQ · **TASFUL AI を開く** |
-| 配置 | **全ページ共通** — 右下 `fixed` ランチャー（パイロット後に段階展開） |
-| SP レイアウト | 下部 tabbar と重ならないよう **bottom offset** を調整（市場ページ等） |
-| PC | 既存フッター / サイド UI を壊さない |
-
----
-
-## 管理側連携（将来）
+### 管理側連携（将来）
 
 送信内容を AI 秘書 / OPS / 管理画面に集約。
 
-### 種別（`type`）
-
-| 値 | 用途 |
+| 種別 `type` | 用途 |
 | --- | --- |
 | `inquiry` | お問い合わせ |
-| `report` | 通報（ルール違反・不適切コンテンツ等） |
+| `report` | 通報 |
 | `bug_report` | 不具合報告 |
 | `feature_request` | 機能要望 |
-| `navigation_help` | ページ案内・迷子支援 |
+| `navigation_help` | ページ案内 |
 
-### 優先度（`priority`）
+### Phase 2 実装前の確認事項
 
-`critical` · `high` · `normal` · `low`
-
-### 自動添付メタデータ
-
-- ページ URL
-- `user_id`（ログイン時）
-- `actor_type`（購入者 / 出品者 / 業者 / 未ログイン等）
-- `device` / `viewport`
-- 送信日時
-
-### 集計・秘書連携
-
-- 同じ要望が多い場合は **件数集計**
-- AI 秘書が **「要望が増えている機能」** として提案可能に（Trend Scout / OPS Inbox 連携想定）
+- [ ] Phase 1 本番 deploy · smoke
+- [ ] 必須7入口のパネル IA 確定
+- [ ] フィードバック API / ストアの AD 起票
+- [ ] AI 秘書 Inbox との受信スキーマ統一
+- [ ] 市場 tabbar との `bottom offset` 仕様
+- [ ] 全ページ Playwright（390 / 768 / 1280）
 
 ---
 
-## 対象候補（展開順）
-
-| フェーズ | 対象 |
-| --- | --- |
-| **パイロット** | Platform 1〜2 ページ（例: 市場 TOP · 掲載一覧） |
-| **拡張** | Platform 全体 · 注文 / カート / 出品 |
-| **横断** | Builder · TLV · TASFUL AI · 管理画面 · ヘルプページ · 案件作成ページ |
-
-**凍結領域:** Builder v1.0 · TLV v1.0 · AI 秘書 v1.1 は Production Ready 凍結中 — パイロットは **Platform 非凍結 UI** から開始。
-
----
-
-## 設計メモ（実装前）
+## 設計メモ
 
 | ルール | 内容 |
 | --- | --- |
-| **TASFUL AI と分離** | Site Assistant ≠ TASFUL AI。**「TASFUL AI を開く」** はハブ内の遷移入口として可。AI 応答本体は Workspace に委譲 |
-| **Gateway 不要** | 初版は検索インデックス既存 API + 静的 FAQ + フォーム POST のみ |
-| **プライバシー** | 不具合報告にスクリーンショット任意添付時は同意 UI |
-| **重複送信** | 同一セッション連打防止 · レート制限 |
-| **アクセシビリティ** | キーボード操作 · `aria-expanded` · フォーカストラップ |
+| **TASFUL AI と分離** | 埋め込み UI はサイトAI のみ。本格 Workspace は別 URL |
+| **Gateway 不要（Phase 1）** | cross-search / FAQ はクライアント既存モジュールのみ |
+| **ai-modes.js** | 独自 `site` mode は **追加しない** |
+| **プライバシー** | Context はページメタのみ（上記禁止リスト） |
 
 ---
 
 ## 関連ドキュメント
 
-- [TODO.md](./TODO.md) — Backlog 節
-- [ROADMAP.md](./ROADMAP.md) — 横断バックログ
-- [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) — 受信・OPS 集約
-- [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) — 別製品（混同禁止）
-- [platform-coupon-system-backlog.md](./platform-coupon-system-backlog.md) — ページ案内連携例
-
----
-
-## 実装時の確認事項（未着手）
-
-- [ ] 必須7入口のパネル IA 確定（検索 · 問い合わせ · 通報 · 不具合 · 要望 · FAQ · TASFUL AI を開く）
-- [ ] パイロット対象ページの選定（Platform 1〜2）
-- [ ] フィードバック API / ストアの AD 起票（種別 `report` 含む · 優先度 · メタデータ）
-- [ ] AI 秘書 Inbox との受信スキーマ統一
-- [ ] 市場 tabbar との `bottom offset` 仕様（`shop-market-top.css` 等）
-- [ ] FAQ 正本の置き場（静的 JSON vs CMS）
-- [ ] 全ページ展開前の Playwright（390 / 768 / 1280 · タップ領域 · 重なり）
+- [TODO.md](./TODO.md)
+- [ROADMAP.md](./ROADMAP.md)
+- [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) — cross-matching 流用 · 混同禁止
+- [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) — Phase 2+ OPS 集約
+- [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md)

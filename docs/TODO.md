@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Workspace enforcement Phase 1 deploy 反映 · §P0-2）  
-**Git HEAD:** `2a43fe5`（`cf-pages-deploy` · Phase 1 commit/deploy 済 · **git push 未実施**）  
+**最終更新:** 2026-06-26（Site Assistant Phase 1 実装 · secretary Phase 1+2 commit 反映）  
+**Git HEAD:** `6c70985`（`cf-pages-deploy` · Site Assistant Phase 1 **未コミット** · secretary **commit 済** · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -101,11 +101,42 @@
 
 Groq / Cerebras / Claude は **現時点では不要**。
 
-### AI 秘書 — DeepSeek 本番接続（未着手）
+### AI 秘書 — DeepSeek Adapter Phase 1 / OpsContextBuilder Phase 2（P0-3）
 
-- [ ] DeepSeek API 接続（要約 · 優先順位 · 自然文生成）
-- [ ] 画面遷移 / 件数 / DB 検索 / フィルターは **プログラム処理のまま**（LLM 不使用）
-- 参照: [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) · [DECISIONS.md](./DECISIONS.md) AD-010
+| 区分 | 状態 | 根拠 |
+| --- | --- | --- |
+| **Phase 1 実装** | **完了 · commit 済** | `6c70985` · `reports/secretary-deepseek-adapter-phase1.md` |
+| **Phase 2 実装** | **完了 · commit 済** | `840a574` · `reports/secretary-ops-context-builder-phase2.md` |
+| **DeepSeek API 到達** | **済** | `configured:true` · 502 `Insufficient Balance` まで（ローカル） |
+| **本番 deploy** | **No-Go** | `reports/secretary-deepseek-deploy-triage.md` |
+
+**Phase 1 完了（実装 · `6c70985`）**
+
+- [x] DeepSeek 専用 Adapter + Cloudflare Pages Function（`/api/secretary-deepseek-chat`）
+- [x] `admin-ai-secretary-phase2.js` を Gateway から Adapter へ切替（AD-010 · Gateway 非混在）
+- [x] `DEEPSEEK_API_KEY` 読み込み（ローカル · リポジトリルート `.env` + Pages Functions 用 `deploy/cloudflare/dist/.dev.vars`）
+- [x] DeepSeek API 到達（`configured:true` · 残高不足時 502 `Insufficient Balance` まで確認）
+- [x] Secret 未設定時 503 · API エラー時 502 の graceful モックフォールバック
+- [x] `npm run build:pages` · browser **12/12** + **8/8** PASS
+
+**Phase 2 完了（実装 · `840a574`）**
+
+- [x] **OpsContextBuilder** — 6 ドメイン正規化 · PII マスク · phase2 `systemPrompt` 注入
+- [x] TLV stub · top-N / char budget · intent regex · inbox ID diff
+- [x] 単体 **7/7** · **17/17** · E2E **11/11** PASS（file + dev server）
+- [x] Gateway / DeepSeek Adapter 契約 **非変更**
+
+**本番 deploy 前残件（未完了 · deploy No-Go）**
+
+- [ ] Cloudflare Pages **Production** Secret `DEEPSEEK_API_KEY`（Encrypted）登録
+- [ ] **DeepSeek 残高チャージ**（アカウント側）
+- [ ] **HTTP 200** · `usedDeepSeek:true` · assistant text の実応答確認（ローカル / Staging）
+- [ ] Production **smoke**（本番 URL · 秘書 1 往復 · 運営コンテキスト付き）
+- [ ] **ahead 4** の push / deploy **スコープ整理**（secretary 2 + tasful-ai workspace 2 — secretary のみ載せる場合は要方針）
+- [ ] working tree **124 件**を deploy に混ぜない（HEAD + clean `build:pages` を正とする）
+
+- [x] 画面遷移 / 件数 / DB 検索 / フィルターは **プログラム処理のまま**（LLM 不使用）
+- 参照: [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) · [DECISIONS.md](./DECISIONS.md) AD-010 · `reports/secretary-deepseek-deploy-triage.md`
 
 ---
 
@@ -117,7 +148,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | --- | --- | --- |
 | **Platform Coupon System** | 📋 未着手 | [platform-coupon-system-backlog.md](./platform-coupon-system-backlog.md) |
 | **AI Secretary Trend Scout** | 📋 未着手 | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) |
-| **TASFUL Site Assistant / Feedback Launcher** | 📋 未着手 | [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) |
+| **TASFUL Site Assistant Phase 1** | ✅ 実装（未コミット） | [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) · `reports/tasful-site-assistant-phase1.md` |
+| **TASFUL Site Assistant Phase 2+** | 📋 未着手 | 同上（Feedback Launcher · OPS 集約） |
 | **Builder AI Gemini Live 現場診断モード** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -133,13 +165,17 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - 表現: 「流行っている」断定を避け **複数ソースからの増加傾向** で記載
 - **実装なし** · P0/P1 外 · Platform Critical 優先順位は変更しない
 
-**TASFUL Site Assistant / Feedback Launcher（軽量導線ハブ）**
+**TASFUL Site Assistant Phase 1（サイトAI ウィジェット · ✅ 実装）**
+
+- 全ページ右下 **「TASFUL サイトAI」** · cross-matching / FAQ 流用（Gateway / 秘書 非接続）
+- 232 HTML 注入 · browser **18/18 PASS** · **未コミット · 未デプロイ**
+- Phase 2+: 通報 · 問い合わせフォーム · OPS / AI 秘書集約 — **未着手**
+
+**TASFUL Site Assistant Phase 2+（Feedback Launcher · 未着手）**
 
 - 離脱防止: 問い合わせ · **通報** · 不具合報告 · サイト内検索の常設入口
 - 必須7入口: 検索 / お問い合わせ / 通報 / 不具合 / 要望 / FAQ / **TASFUL AI を開く**
-- 役割分担: **TASFUL AI** = 相談・提案・専門 AI / **Site Assistant** = 検索・問い合わせ・通報・FAQ・ページ案内
-- 右下ランチャー · 全ページ共通（段階展開）· OPS / AI 秘書へ将来集約
-- **実装なし** · P0/P1 外 · Platform Critical 優先順位は変更しない
+- OPS / AI 秘書へ将来集約 · P0/P1 外
 
 **Builder AI Gemini Live 現場診断モード**
 
@@ -169,3 +205,5 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | TLV → TASFUL AI 入口 | `5ed9672` · 16/16 PASS |
 | AI 選別コミット | `5ed9672` |
 | Workspace enforcement Phase 1 | `2a43fe5` · Production deploy · smoke 12/12 · browser 15/15 + 53/53 · `reports/tasful-ai-workspace-phase1-deploy.md` |
+| AI 秘書 DeepSeek Adapter Phase 1 | `6c70985` · Adapter + CF Pages Function · AD-010 · 503/502 fallback · API 到達 · `reports/secretary-deepseek-adapter-phase1.md` |
+| AI 秘書 OpsContextBuilder Phase 2 | `840a574` · 6 ドメイン context 注入 · PII マスク · `reports/secretary-ops-context-builder-phase2.md` |
