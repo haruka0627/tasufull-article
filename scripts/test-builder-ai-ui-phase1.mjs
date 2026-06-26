@@ -35,10 +35,11 @@ const css = fs.readFileSync(uiCss, "utf8");
 if (html.includes("builder-ai-ui.css") && html.includes("builder-ai-ui.js")) ok("html loads ui assets");
 else bad("html loads ui assets");
 
-if (html.includes("現場写真・補修判断・見積補助を支援します")) ok("hero description");
-else bad("hero description");
+if (html.includes("data-builder-ai-ui-capability") || html.includes("建設現場の相談をテキストで")) ok("hero/capability description");
+else if (html.includes("現場写真・補修判断・見積補助を支援します")) ok("hero description");
+else bad("hero/capability description");
 
-if (html.includes("AI回答は参考情報です。最終判断は現場確認・専門業者判断を優先してください。")) ok("hero notice");
+if (html.includes("AI回答は参考情報です")) ok("hero notice");
 else bad("hero notice");
 
 if (html.includes("data-builder-ai-ui-send") && html.includes("data-builder-ai-ui-photo-input")) ok("field ui hooks");
@@ -59,10 +60,13 @@ else bad("camera/voice stubs removed");
 if (js.includes("TasuBuilderAILive") && js.includes("TasuBuilderAIVoice")) ok("ui delegates to live/voice modules");
 else bad("ui delegates to live/voice modules");
 
-if (js.includes("外壁の補修判断") && js.includes("概算見積を作りたい")) ok("quick prompts");
+if (
+  (js.includes("現場写真の相談") && js.includes("未入金確認")) ||
+  (js.includes("外壁の補修判断") && js.includes("概算見積を作りたい"))
+) ok("quick prompts");
 else bad("quick prompts");
 
-if (css.includes("builder-ai-ui-field-chat")) ok("ui css present");
+if (css.includes("builder-ai-ui-field-chat") || css.includes("builder-ai-ui-chat-shell")) ok("ui css present");
 else bad("ui css present");
 
 async function browserSmoke() {
@@ -99,6 +103,11 @@ async function browserSmoke() {
     if (text.includes("確定判断") || text.includes("写真") || text.includes("モック")) ok("browser: vision/mock reply");
     else bad("browser: vision/mock reply", text.slice(0, 80));
 
+    const mediaFold = page.locator(".builder-ai-ui-media-fold");
+    if (!(await mediaFold.getAttribute("open"))) {
+      await mediaFold.locator("summary").click();
+      await page.waitForTimeout(200);
+    }
     await page.locator("[data-builder-ai-ui-camera]").click();
     await page.waitForTimeout(300);
     const afterCam = await page.locator("[data-builder-ai-ui-messages]").innerText();

@@ -35,80 +35,33 @@
     <main class="builder-shell builder-main builder-ai-main">
       <nav data-breadcrumb aria-label="パンくず"></nav>
 
-      <section class="builder-ai-ui-hero" aria-label="Builder AI 概要">
-        <h1 class="builder-ai-ui-hero__title">Builder AI</h1>
-        <p class="builder-ai-ui-hero__desc">現場写真・補修判断・見積補助を支援します</p>
-        <p class="builder-ai-ui-hero__notice" role="note">
-          AI回答は参考情報です。最終判断は現場確認・専門業者判断を優先してください。
-        </p>
-      </section>
-
       <div class="builder-ai-disclaimer common-ai-disclaimer common-ai-disclaimer--builder" data-common-ai-disclaimer-banner data-surface="builder" role="note"></div>
 
-      <section class="builder-panel builder-ph-ai-context" data-builder-ai-project-context hidden aria-label="案件連携">
-        <p class="builder-ph-ai-context__label">案件連携</p>
-        <p class="builder-ph-ai-context__text" data-builder-ai-project-context-text>—</p>
-        <a class="builder-btn builder-btn--ghost builder-btn--sm" href="#" data-builder-ai-project-detail-link>案件詳細へ</a>
-      </section>
-
-      <section class="builder-panel" aria-label="クイック相談">
-        <h2 class="builder-section-title">クイック相談</h2>
-        <div class="builder-ai-ui-quick" data-builder-ai-ui-quick></div>
-      </section>
-
-      <section class="builder-panel builder-ai-ui-photo" aria-label="現場写真">
-        <h2 class="builder-section-title">現場写真</h2>
-        <div class="builder-ai-ui-photo__row">
-          <label class="builder-ai-ui-photo__label">
-            画像を選択（jpg / png / webp）
-            <input
-              type="file"
-              class="builder-ai-ui-photo__input"
-              data-builder-ai-ui-photo-input
-              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-            />
-          </label>
-        </div>
-        <div class="builder-ai-ui-photo__preview" data-builder-ai-ui-photo-preview>
-          <img class="builder-ai-ui-photo__thumb" data-builder-ai-ui-photo-thumb alt="選択した現場写真のプレビュー" hidden />
-          <div class="builder-ai-ui-photo__meta">
-            <p class="builder-ai-ui-photo__name" data-builder-ai-ui-photo-name></p>
-            <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-ui-photo-remove>写真を削除</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="builder-panel" aria-label="カメラ・音声">
-        <div class="builder-ai-ui-toolbar">
-          <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-camera>カメラ診断</button>
-          <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-voice>音声で相談</button>
-        </div>
-        <div class="builder-ai-ui-live" data-builder-ai-live-panel hidden>
-          <div class="builder-ai-ui-live__preview-wrap">
-            <video
-              class="builder-ai-ui-live__video"
-              data-builder-ai-live-video
-              playsinline
-              muted
-              aria-label="現場カメラプレビュー"
-            ></video>
-          </div>
-          <div class="builder-ai-ui-live__actions">
-            <button type="button" class="builder-btn builder-btn--primary builder-btn--sm" data-builder-ai-live-snapshot>
-              スナップショット診断
-            </button>
-            <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-live-close>
-              カメラ停止
-            </button>
-          </div>
-          <p class="builder-ai-ui-live__status" data-builder-ai-live-status aria-live="polite"></p>
-          <p class="builder-ai-ui-live__note" role="note">
-            Live 風 MVP · 静止画スナップショットを既存 Vision に送信します（Gemini Live WebSocket ではありません）。
+      <section class="builder-panel builder-ai-ui-chat-shell" aria-label="Builder AI チャット">
+        <header class="builder-ai-ui-capability" data-builder-ai-ui-capability aria-label="Builder AI のできること">
+          <h1 class="builder-ai-ui-capability__title">Builder AI</h1>
+          <p class="builder-ai-ui-capability__lead">
+            建設現場の相談をテキストで。写真診断 · 見積 · 工程 · 未入金 · 書類 · 通知を、案件データとあわせて確認できます。
           </p>
-        </div>
-      </section>
+          <ul class="builder-ai-ui-capability__list">
+            <li>現場写真の参考診断（添付時）</li>
+            <li>見積 · 原価 · 粗利のたたき台</li>
+            <li>工程 · 遅延 · 今週予定の整理</li>
+            <li>未入金 · 書類 · 通知のサマリー</li>
+          </ul>
+          <p class="builder-ai-ui-capability__notice" role="note">
+            AI回答は参考情報です。最終判断は現地確認・専門業者判断を優先してください。
+          </p>
+        </header>
 
-      <section class="builder-panel builder-ai-ui-field-chat" aria-label="Builder AI チャット">
+        <section class="builder-ph-ai-context builder-ai-ui-project-context" data-builder-ai-project-context hidden aria-label="案件連携">
+          <p class="builder-ph-ai-context__label">案件連携</p>
+          <p class="builder-ph-ai-context__text" data-builder-ai-project-context-text>—</p>
+          <a class="builder-btn builder-btn--ghost builder-btn--sm" href="#" data-builder-ai-project-detail-link>案件詳細へ</a>
+        </section>
+
+        <nav class="builder-ai-ui-hub-links" data-builder-ai-ui-hub-links aria-label="案件機能への導線"></nav>
+
         <div
           class="builder-ai-ui-vision-result"
           data-builder-ai-ui-vision-result
@@ -119,13 +72,75 @@
           <h2 class="builder-section-title builder-ai-ui-vision-result__title">AI参考診断</h2>
           <div data-builder-ai-ui-vision-result-body></div>
         </div>
+
         <div class="builder-ai-ui-messages" data-builder-ai-ui-messages role="log" aria-live="polite"></div>
+
+        <div class="builder-ai-ui-quick-wrap" aria-label="クイック相談">
+          <p class="builder-ai-ui-quick-wrap__label">クイック相談</p>
+          <div class="builder-ai-ui-quick" data-builder-ai-ui-quick></div>
+        </div>
+
+        <details class="builder-ai-ui-media-fold">
+          <summary>写真 · カメラ · 音声（次フェーズで拡張）</summary>
+          <div class="builder-ai-ui-media-fold__body">
+            <section class="builder-ai-ui-photo" aria-label="現場写真">
+              <div class="builder-ai-ui-photo__row">
+                <label class="builder-ai-ui-photo__label">
+                  画像を選択（jpg / png / webp）
+                  <input
+                    type="file"
+                    class="builder-ai-ui-photo__input"
+                    data-builder-ai-ui-photo-input
+                    accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                  />
+                </label>
+              </div>
+              <div class="builder-ai-ui-photo__preview" data-builder-ai-ui-photo-preview>
+                <img class="builder-ai-ui-photo__thumb" data-builder-ai-ui-photo-thumb alt="選択した現場写真のプレビュー" hidden />
+                <div class="builder-ai-ui-photo__meta">
+                  <p class="builder-ai-ui-photo__name" data-builder-ai-ui-photo-name></p>
+                  <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-ui-photo-remove>写真を削除</button>
+                </div>
+              </div>
+            </section>
+            <div class="builder-ai-ui-toolbar">
+              <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-camera>カメラ診断</button>
+              <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-voice>音声で相談</button>
+            </div>
+            <div class="builder-ai-ui-live" data-builder-ai-live-panel hidden>
+              <div class="builder-ai-ui-live__preview-wrap">
+                <video
+                  class="builder-ai-ui-live__video"
+                  data-builder-ai-live-video
+                  playsinline
+                  muted
+                  aria-label="現場カメラプレビュー"
+                ></video>
+              </div>
+              <div class="builder-ai-ui-live__actions">
+                <button type="button" class="builder-btn builder-btn--primary builder-btn--sm" data-builder-ai-live-snapshot>
+                  スナップショット診断
+                </button>
+                <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-live-close>
+                  カメラ停止
+                </button>
+              </div>
+              <p class="builder-ai-ui-live__status" data-builder-ai-live-status aria-live="polite"></p>
+              <p class="builder-ai-ui-live__note" role="note">
+                Live 風 MVP · 静止画スナップショットを既存 Vision に送信します（Gemini Live WebSocket ではありません）。
+              </p>
+            </div>
+          </div>
+        </details>
+
         <div class="builder-ai-ui-composer">
+          <label class="builder-ai-ui-composer__label" for="builder-ai-ui-input">相談内容</label>
           <textarea
+            id="builder-ai-ui-input"
             rows="3"
             class="builder-ai-ui-composer__input"
             data-builder-ai-ui-input
-            placeholder="現場の状況や相談内容を入力"
+            placeholder="現場の状況や相談内容を入力してください"
           ></textarea>
           <div class="builder-ai-ui-composer__actions">
             <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-ui-clear>履歴クリア</button>

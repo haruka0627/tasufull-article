@@ -1,18 +1,32 @@
 /**
- * Builder AI — Field diagnosis UI（Vision · Calc · Live Phase 4-A）
+ * Builder AI — Field diagnosis UI（Vision · Calc · Live · UI Phase 7）
+ * AD-012: 高機能は AI · UI はシンプル · テキスト会話優先 · Store 読取のみ
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_ai_field_ui_v1";
   const MAX_MESSAGES = 40;
+  /** UI フェーズ: Gateway / Gemini へ接続せず mock · local のみ */
+  const UI_LOCAL_ONLY = true;
 
   const QUICK_PROMPTS = [
-    { label: "外壁の補修判断", text: "外壁の補修が必要かどうか判断したいです。" },
-    { label: "屋根の状態確認", text: "屋根の状態を確認し、劣化や補修の必要性を知りたいです。" },
-    { label: "水回りの交換判断", text: "水回り設備の交換が必要かどうか相談したいです。" },
-    { label: "材料を相談", text: "この工事に必要な材料の目安を相談したいです。" },
-    { label: "概算見積を作りたい", text: "概算見積のたたき台を作りたいです。" },
+    { label: "現場写真の相談", text: "現場写真について補修判断を相談したいです。", intent: "photo" },
+    { label: "見積もり相談", text: "案件の見積もりと粗利の目安を相談したいです。", intent: "estimate" },
+    { label: "工程相談", text: "工程の遅延や今週の予定を整理したいです。", intent: "schedule" },
+    { label: "未入金確認", text: "未入金・支払遅延の案件を確認したいです。", intent: "unpaid" },
+    { label: "書類確認", text: "登録されている書類の状況を確認したいです。", intent: "documents" },
+    { label: "通知確認", text: "未読通知と優先度の高い通知を確認したいです。", intent: "notifications" },
+  ];
+
+  const HUB_LINKS = [
+    { label: "司令塔", href: "project-dashboard.html", key: "dashboard" },
+    { label: "案件ハブ", href: "project-hub.html", key: "hub" },
+    { label: "カレンダー", href: "project-calendar.html", key: "calendar" },
+    { label: "Vision", href: "project-detail.html", key: "vision", needsProject: true },
+    { label: "Finance", href: "project-hub.html", key: "finance", hash: "#finance" },
+    { label: "Documents", href: "project-hub.html", key: "documents", hash: "#documents" },
+    { label: "Notifications", href: "project-hub.html", key: "notifications", hash: "#notifications" },
   ];
 
   const SOURCE_LABELS = {
@@ -65,6 +79,184 @@
     } catch {
       return "";
     }
+  }
+
+  function formatYenLocal(amount) {
+    const n = Number(amount) || 0;
+    return `¥${n.toLocaleString("ja-JP")}`;
+  }
+
+  function getStore() {
+    const Store = global.TasuBuilderProjectStore;
+    Store?.ensureSeed?.();
+    return Store;
+  }
+
+  function buildHubLinkHref(link) {
+    const projectId = getProjectIdFromUrl();
+    let href = link.href;
+    if (link.needsProject && projectId) {
+      href = `project-detail.html?id=${encodeURIComponent(projectId)}`;
+    } else if (link.needsProject && !projectId) {
+      href = "project-hub.html";
+    }
+    const hash = link.hash || "";
+    return `${href}${hash}`;
+  }
+
+  function bindHubLinks() {
+    const nav = $("[data-builder-ai-ui-hub-links]");
+    if (!nav) return;
+    nav.innerHTML = HUB_LINKS.map((link) => {
+      const href = buildHubLinkHref(link);
+      const title = link.needsProject && !getProjectIdFromUrl() ? `${link.label}（案件ハブ経由）` : link.label;
+      return `<a class="builder-ai-ui-hub-links__link" href="${escapeHtml(href)}">${escapeHtml(title)}</a>`;
+    }).join("");
+  }
+
+  function detectConsultIntent(text) {
+    const t = String(text || "");
+    if (/未入金|支払|入金|overdue|未払/i.test(t)) return "unpaid";
+    if (/書類|document|契約書|pdf|図面/i.test(t)) return "documents";
+    if (/通知|未読|notification/i.test(t)) return "notifications";
+    if (/工程|スケジュール|遅延|予定|カレンダー/i.test(t)) return "schedule";
+    if (/見積|粗利|原価|finance|収支/i.test(t)) return "estimate";
+    if (/写真|現場|外壁|屋根|診断|vision|補修/i.test(t)) return "photo";
+    return "";
+  }
+
+  function buildLocalStoreConsultReply(intent, userText) {
+    const Store = getStore();
+    if (!Store) {
+      return "案件ストアが読み込まれていません。";
+    }
+
+    const projectId = getProjectIdFromUrl();
+    const lines = ["【Builder AI · ローカル参考回答】", ""];
+
+    switch (intent) {
+      case "unpaid": {
+        const summary = Store.getFinanceSummary?.() || {};
+        const unpaid = Store.getUnpaidProjects?.() || [];
+        const overdue = Store.getOverduePaymentProjects?.() || [];
+        lines.push(
+          `未入金案件: ${summary.unpaidCount ?? unpaid.length} 件`,
+          `支払遅延: ${summary.overdueCount ?? overdue.length} 件`,
+          `登録案件: ${summary.projectCount ?? 0} 件`
+        );
+        if (unpaid.length) {
+          lines.push("", "— 未入金・一部入金 —");
+          unpaid.slice(0, 5).forEach((p) => {
+            const fin = p.finance || {};
+            lines.push(`· ${p.name}: ${fin.paymentStatusLabel || fin.paymentStatus || "未払"}`);
+          });
+        }
+        if (projectId) {
+          const p = Store.getProject?.(projectId);
+          if (p?.finance) {
+            lines.push("", `連携案件「${p.name}」: ${Store.formatFinanceDetail?.(p.finance) || ""}`);
+          }
+        }
+        lines.push("", "詳細は司令塔ダッシュボード · 案件ハブの Finance をご確認ください。");
+        break;
+      }
+      case "documents": {
+        const summary = Store.getDocumentSummary?.() || {};
+        lines.push(
+          `書類合計: ${summary.totalDocuments ?? 0} 件`,
+          `写真 ${summary.photoCount ?? 0} · PDF ${summary.pdfCount ?? 0} · 図面 ${summary.drawingCount ?? 0} · 契約 ${summary.contractCount ?? 0}`
+        );
+        if (projectId) {
+          const p = Store.getProject?.(projectId);
+          const counts = p ? Store.getProjectDocumentCounts?.(p) : null;
+          if (counts) {
+            lines.push("", `連携案件「${p.name}」: 書類 ${counts.total} 件`);
+          }
+        }
+        lines.push("", "書類の追加・更新は案件ハブ / 案件詳細から行えます。");
+        break;
+      }
+      case "notifications": {
+        const summary = Store.getNotificationSummary?.() || {};
+        lines.push(
+          `通知合計: ${summary.totalNotifications ?? 0} 件`,
+          `未読 ${summary.unreadCount ?? 0} · 高優先 ${summary.highPriorityCount ?? 0}`,
+          `期限超過 ${summary.overdueCount ?? 0} · 本日期限 ${summary.dueTodayCount ?? 0}`
+        );
+        if (projectId) {
+          const p = Store.getProject?.(projectId);
+          const counts = p ? Store.getProjectNotificationCounts?.(p) : null;
+          if (counts) {
+            lines.push("", `連携案件「${p.name}」: 未読 ${counts.unread} 件`);
+          }
+        }
+        lines.push("", "通知の詳細は案件ハブ · 司令塔ダッシュボードをご確認ください。");
+        break;
+      }
+      case "schedule": {
+        const delayed = Store.getDelayedProjects?.() || [];
+        const week = Store.getThisWeekProjects?.() || [];
+        const today = Store.getTodayProjects?.() || [];
+        lines.push(
+          `今日の予定: ${today.length} 件`,
+          `今週の予定: ${week.length} 件`,
+          `工程遅延: ${delayed.length} 件`
+        );
+        if (delayed.length) {
+          lines.push("", "— 遅延案件 —");
+          delayed.slice(0, 5).forEach((p) => {
+            lines.push(`· ${p.name}（終了予定 ${p.scheduleEndDate || "—"}）`);
+          });
+        }
+        lines.push("", "カレンダー · 司令塔ダッシュボードで工程を確認できます。");
+        break;
+      }
+      case "estimate": {
+        const summary = Store.getFinanceSummary?.() || {};
+        lines.push(
+          `見積合計: ${formatYenLocal(summary.totalEstimate)}`,
+          `原価合計: ${formatYenLocal(summary.totalCost)}`,
+          `粗利合計: ${formatYenLocal(summary.totalGrossProfit)}`,
+          `対象案件: ${summary.projectCount ?? 0} 件`
+        );
+        if (projectId) {
+          const p = Store.getProject?.(projectId);
+          if (p) {
+            const fin = Store.calculateProjectFinance?.(p) || p.finance || {};
+            lines.push(
+              "",
+              `連携案件「${p.name}」`,
+              `見積 ${formatYenLocal(fin.estimateAmount)} · 原価 ${formatYenLocal(fin.costAmount)} · 粗利 ${formatYenLocal(fin.grossProfit)}`
+            );
+          }
+        }
+        lines.push("", "概算のたたき台です。正式見積は案件詳細 · 見積機能で確認してください。");
+        break;
+      }
+      case "photo":
+      default: {
+        const Vision = getVision();
+        if (photoFile) {
+          lines.push("添付写真をもとに参考診断を実行します。");
+        } else {
+          lines.push(
+            Vision?.PHOTO_GUIDE ||
+              "現場写真を添付すると、劣化箇所の参考診断をより具体的にお伝えできます。",
+            "",
+            "「写真 · カメラ · 音声」から画像を選択するか、下の入力欄に状況を書いて送信してください。"
+          );
+        }
+        if (userText) lines.push("", `相談: ${String(userText).slice(0, 120)}`);
+        break;
+      }
+    }
+
+    lines.push("", "※ 参考情報です。契約 · 請求 · 完了の確定は行いません。");
+    return lines.join("\n");
+  }
+
+  function isStoreConsultIntent(intent) {
+    return ["unpaid", "documents", "notifications", "schedule", "estimate"].includes(intent);
   }
 
   function bindProjectContext() {
@@ -301,13 +493,14 @@
     if (!wrap) return;
     wrap.innerHTML = QUICK_PROMPTS.map(
       (p) =>
-        `<button type="button" class="builder-ai-ui-quick__btn" data-builder-ai-ui-quick="${escapeHtml(p.text)}">${escapeHtml(p.label)}</button>`
+        `<button type="button" class="builder-ai-ui-quick__btn" data-builder-ai-ui-quick="${escapeHtml(p.text)}" data-builder-ai-ui-intent="${escapeHtml(p.intent || "")}">${escapeHtml(p.label)}</button>`
     ).join("");
     wrap.addEventListener("click", (ev) => {
       const btn = ev.target.closest("[data-builder-ai-ui-quick]");
       if (!btn || sending) return;
       const text = btn.getAttribute("data-builder-ai-ui-quick") || "";
-      void sendMessage(text, { fromQuick: true, source: "text" });
+      const intent = btn.getAttribute("data-builder-ai-ui-intent") || "";
+      void sendMessage(text, { fromQuick: true, source: "text", consultIntent: intent });
     });
   }
 
@@ -369,8 +562,27 @@
     const Orch = global.TasuBuilderAICalcOrchestrator;
     const sentPhoto = options.photoFile || photoFile;
     const sentPhotoName = sentPhoto?.name || "";
+    const consultIntent =
+      options.consultIntent || detectConsultIntent(text);
 
     global.TasuBuilderAIVoice?.stopVoice?.();
+
+    if (UI_LOCAL_ONLY && isStoreConsultIntent(consultIntent) && !sentPhoto) {
+      sending = true;
+      setStatus("確認中…", true);
+      messages.push({ role: "user", content: text, source });
+      renderMessages();
+      if (input && !options.fromQuick && !options.fromVoice) input.value = "";
+
+      const reply = buildLocalStoreConsultReply(consultIntent, text);
+      messages.push({ role: "assistant", content: reply, source: "text" });
+      saveHistory(messages);
+      renderMessages();
+      setStatus("ローカル参考回答", false);
+      setTimeout(() => setStatus("", false), 2000);
+      sending = false;
+      return;
+    }
 
     if (!sentPhoto && Orch?.isCalcQuery?.(text)) {
       sending = true;
@@ -404,6 +616,21 @@
     }
 
     if (!Vision?.runFieldDiagnosis) {
+      if (UI_LOCAL_ONLY) {
+        sending = true;
+        setStatus("送信中…", true);
+        messages.push({ role: "user", content: text, source });
+        renderMessages();
+        if (input && !options.fromQuick && !options.fromVoice) input.value = "";
+        const reply = buildLocalStoreConsultReply(consultIntent || "photo", text);
+        messages.push({ role: "assistant", content: reply, source: "text" });
+        saveHistory(messages);
+        renderMessages();
+        setStatus("ローカル参考回答", false);
+        setTimeout(() => setStatus("", false), 2000);
+        sending = false;
+        return;
+      }
       pushSystem("Builder AI Vision モジュールが読み込まれていません。");
       return;
     }
@@ -426,6 +653,7 @@
       photoFile: sentPhoto,
       messages,
       actor: getActor(),
+      preferRemote: UI_LOCAL_ONLY ? false : undefined,
     });
 
     if (!result.ok && result.reply) {
@@ -516,7 +744,7 @@
     messages.push({
       role: "assistant",
       content:
-        "現場写真の診断・補修判断・見積補助の相談をどうぞ。写真を添付するか、カメラ診断 · 音声相談 · クイック相談から始められます。",
+        "Builder AI へようこそ。テキストで相談できます。\n\nクイック相談から「見積もり」「工程」「未入金」「書類」「通知」を選ぶか、下の入力欄に質問を入力してください。現場写真は「写真 · カメラ · 音声」から添付できます。",
       source: "text",
     });
     saveHistory(messages);
@@ -524,6 +752,7 @@
 
   function init() {
     bindProjectContext();
+    bindHubLinks();
     seedWelcome();
     renderMessages();
     bindPhotoUpload();
@@ -552,6 +781,8 @@
     prepareCompletionIntent,
     prepareDocumentIntent,
     prepareNotificationIntent,
+    UI_LOCAL_ONLY,
+    buildLocalStoreConsultReply,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);
