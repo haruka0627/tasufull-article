@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-27（AD-012 UI/UX 設計原則）  
-**Git HEAD:** `549e562`（`cf-pages-deploy` · **git push 未実施**）  
+**最終更新:** 2026-06-27（Command Dashboard Phase 6-H · 司令塔 KPI）  
+**Git HEAD:** `991e56b`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -186,7 +186,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder Estimate/Invoice Phase 6-D** | ✅ commit 済 | `8be158f` · `reports/builder-estimate-invoice-phase6d.md` |
 | **Builder Contract/Completion Phase 6-E** | ✅ commit 済 | `ac385c6` · `reports/builder-contract-completion-phase6e.md` |
 | **Builder Document Center Phase 6-F** | ✅ commit 済 | `549e562` · `reports/builder-document-center-phase6f.md` |
-| **Builder Notification Center Phase 6-G** | ✅ 実装 · 未コミット | `reports/builder-notification-center-phase6g.md` |
+| **Builder Notification Center Phase 6-G** | ✅ commit 済 | `74d54b8` · `reports/builder-notification-center-phase6g.md` |
+| **Builder Command Dashboard Phase 6-H** | ✅ 実装 · 未コミット | `reports/builder-dashboard-phase6h.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -286,7 +287,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - `test-builder-document-center-phase6f.mjs` + phase6e/d/c/vision 回帰 + build PASS
 - 参照: `reports/builder-document-center-phase6f.md`
 
-**Builder Notification Center Phase 6-G（通知基盤 Foundation · ✅ 実装 · 未コミット）**
+**Builder Notification Center Phase 6-G（通知基盤 Foundation · ✅ commit 済 · `74d54b8`）**
 
 - `project.notifications[]`（SCHEMA v7）· 優先度/状態/ソース · Hub サマリー
 - `addNotification` / `updateNotification` / `markNotificationRead` / `markNotificationUnread` / `archiveNotification`
@@ -294,6 +295,13 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - メール/Push/cron/他 surface 連携なし
 - `test-builder-notification-center-phase6g.mjs` + phase6f/e/d/c/vision 回帰 + build PASS
 - 参照: `reports/builder-notification-center-phase6g.md`
+
+**Builder Command Dashboard Phase 6-H（司令塔 KPI · ✅ 実装 · 未コミット）**
+
+- `project-dashboard.html` — KPI · Today's Work · Active · Notifications · Activity · Upcoming
+- 既存 Store API 読取のみ（新規業務ロジックなし）· AD-012 準拠
+- `test-builder-dashboard-phase6h.mjs` + phase6g 回帰 + build PASS + スクリーンショット
+- 参照: `reports/builder-dashboard-phase6h.md`
 
 **Builder AI Gemini Live Phase 4-B（未着手）**
 

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f97316" />
+  <title>司令塔ダッシュボード | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="builder-project-hub.css" />
+  <link rel="stylesheet" href="builder-project-dashboard.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-project-dashboard">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="司令塔ダッシュボード">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">司令塔 · Phase 6-H</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="project-hub.html">‹ 案件ハブ</a>
+        </div>
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">司令塔ダッシュボード</h1>
+          <p class="builder-header__sub">いまの状況をひと目で確認</p>
+        </div>
+        <div class="builder-ph-actions" style="margin-top:0">
+          <a class="builder-btn builder-btn--ghost builder-btn--sm" href="builder-ai.html">Builder AI</a>
+          <a class="builder-btn builder-btn--ghost builder-btn--sm" href="project-calendar.html">カレンダー</a>
+        </div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <section class="builder-pd-kpi" aria-label="KPI" data-builder-pd-kpi></section>
+
+      <div class="builder-pd-mid">
+        <section class="builder-panel" aria-label="Today's Work">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">Today's Work</h2>
+            <span class="builder-kpi" data-builder-pd-today-count>—</span>
+          </div>
+          <ul class="builder-pd-list" data-builder-pd-today-list></ul>
+          <p class="builder-ph-empty" data-builder-pd-today-empty hidden>今日の予定案件はありません。</p>
+        </section>
+
+        <section class="builder-panel" aria-label="Active Projects">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">Active Projects</h2>
+            <span class="builder-kpi" data-builder-pd-active-count>—</span>
+          </div>
+          <ul class="builder-pd-list" data-builder-pd-active-list></ul>
+          <p class="builder-ph-empty" data-builder-pd-active-empty hidden>工事中の案件はありません。</p>
+        </section>
+
+        <section class="builder-panel" aria-label="Notifications">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">Notifications</h2>
+            <span class="builder-kpi" data-builder-pd-ntf-count>—</span>
+          </div>
+          <ul class="builder-pd-list" data-builder-pd-ntf-list></ul>
+          <p class="builder-ph-empty" data-builder-pd-ntf-empty hidden>未読通知はありません。</p>
+        </section>
+
+        <section class="builder-panel" aria-label="Recent Activity">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">Recent Activity</h2>
+          </div>
+          <ul class="builder-pd-timeline" data-builder-pd-activity-list></ul>
+          <p class="builder-ph-empty" data-builder-pd-activity-empty hidden>タイムラインはまだありません。</p>
+        </section>
+      </div>
+
+      <div class="builder-pd-bottom">
+        <section class="builder-panel builder-pd-stat-panel" aria-label="Revenue">
+          <h2 class="builder-section-title">Revenue</h2>
+          <p class="builder-pd-stat-value" data-builder-pd-revenue>—</p>
+          <p class="builder-pd-stat-hint">請求合計（既存データ）</p>
+        </section>
+
+        <section class="builder-panel builder-pd-stat-panel" aria-label="Gross Profit">
+          <h2 class="builder-section-title">Gross Profit</h2>
+          <p class="builder-pd-stat-value" data-builder-pd-profit>—</p>
+          <p class="builder-pd-stat-hint">粗利合計（既存データ）</p>
+        </section>
+
+        <section class="builder-panel builder-pd-stat-panel" aria-label="Outstanding">
+          <h2 class="builder-section-title">Outstanding</h2>
+          <p class="builder-pd-stat-value" data-builder-pd-outstanding>—</p>
+          <p class="builder-pd-stat-hint">未入金案件数</p>
+        </section>
+
+        <section class="builder-panel builder-pd-stat-panel" aria-label="Vision">
+          <h2 class="builder-section-title">Vision</h2>
+          <p class="builder-pd-stat-value" data-builder-pd-vision>—</p>
+          <p class="builder-pd-stat-hint">診断履歴件数</p>
+        </section>
+
+        <section class="builder-panel builder-pd-stat-panel" aria-label="Documents">
+          <h2 class="builder-section-title">Documents</h2>
+          <p class="builder-pd-stat-value" data-builder-pd-documents>—</p>
+          <p class="builder-pd-stat-hint">ドキュメント総数</p>
+        </section>
+
+        <section class="builder-panel" aria-label="Upcoming">
+          <div class="builder-panel__head">
+            <h2 class="builder-section-title">Upcoming</h2>
+            <span class="builder-kpi" data-builder-pd-upcoming-count>—</span>
+          </div>
+          <ul class="builder-pd-list" data-builder-pd-upcoming-list></ul>
+          <p class="builder-ph-empty" data-builder-pd-upcoming-empty hidden>今週の予定案件はありません。</p>
+        </section>
+      </div>
+
+      <footer class="builder-footer"><p>© 2026 TASFUL inc. Builder Command Dashboard · Phase 6-H</p></footer>
+    </main>
+  </div>
+
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-project-store.js"></script>
+  <script src="builder-project-dashboard.js"></script>
+</body>
+</html>
