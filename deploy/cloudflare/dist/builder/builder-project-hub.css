@@ -78,6 +78,12 @@
   text-decoration: none;
 }
 
+.builder-ph-table__num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .builder-ph-empty {
   padding: 2rem 1rem;
   text-align: center;
@@ -179,6 +185,91 @@
   margin-top: 0.75rem;
 }
 
+/* Phase 6-C — Finance */
+
+.builder-ph-finance-summary {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.builder-ph-finance-stat {
+  border: 1px solid var(--builder-border, #e8edf3);
+  border-radius: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  background: #fafbfc;
+}
+
+.builder-ph-finance-stat--warn {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.builder-ph-finance-stat__label {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--builder-sub, #64748b);
+  font-weight: 600;
+}
+
+.builder-ph-finance-stat__value {
+  margin: 0.25rem 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--builder-ink, #0f172a);
+}
+
+.builder-ph-finance-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.builder-ph-finance-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.builder-ph-finance-form label.builder-ph-finance-form__wide {
+  grid-column: 1 / -1;
+}
+
+.builder-ph-finance-readonly {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.builder-ph-finance-readonly dt {
+  margin: 0;
+  color: var(--builder-sub, #64748b);
+  font-weight: 500;
+}
+
+.builder-ph-finance-readonly dd {
+  margin: 0 0 0.5rem;
+  font-weight: 600;
+}
+
+.builder-ph-payment--unpaid {
+  color: #b45309;
+}
+
+.builder-ph-payment--partial {
+  color: #1d4ed8;
+}
+
+.builder-ph-payment--paid {
+  color: #047857;
+}
+
 .builder-ph-ai-context {
   border-left: 4px solid var(--builder-orange, #f97316);
   background: var(--builder-orange-bg, #fff7ed);
@@ -204,6 +295,14 @@
   }
 
   .builder-ph-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-ph-finance-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .builder-ph-finance-form {
     grid-template-columns: 1fr;
   }
 }

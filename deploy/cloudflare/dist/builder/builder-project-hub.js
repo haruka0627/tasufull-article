@@ -59,6 +59,28 @@
     });
   }
 
+  function formatYen(amount) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.formatYen?.(amount) || `¥${Number(amount || 0).toLocaleString("ja-JP")}`;
+  }
+
+  function paymentClass(status) {
+    return `builder-ph-payment--${String(status || "unpaid").replace(/-/g, "_")}`;
+  }
+
+  function renderFinanceSummary() {
+    const Store = global.TasuBuilderProjectStore;
+    const wrap = $("[data-builder-ph-finance-summary]");
+    if (!Store || !wrap) return;
+    const s = Store.getFinanceSummary?.() || {};
+    wrap.innerHTML =
+      `<div class="builder-ph-finance-stat"><p class="builder-ph-finance-stat__label">総見積額</p><p class="builder-ph-finance-stat__value">${escapeHtml(formatYen(s.totalEstimate))}</p></div>` +
+      `<div class="builder-ph-finance-stat"><p class="builder-ph-finance-stat__label">総原価</p><p class="builder-ph-finance-stat__value">${escapeHtml(formatYen(s.totalCost))}</p></div>` +
+      `<div class="builder-ph-finance-stat"><p class="builder-ph-finance-stat__label">総粗利</p><p class="builder-ph-finance-stat__value">${escapeHtml(formatYen(s.totalGrossProfit))}</p></div>` +
+      `<div class="builder-ph-finance-stat${s.unpaidCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">未入金</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(s.unpaidCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${s.overdueCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">支払遅延</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(s.overdueCount || 0))} 件</p></div>`;
+  }
+
   function formatScheduleRange(p) {
     if (!p.scheduleStartDate && !p.scheduleEndDate) return "—";
     const s = p.scheduleStartDate || "—";
@@ -93,6 +115,10 @@
           `<td><span class="${statusClass(p.status)}">${escapeHtml(p.statusLabel)}</span></td>` +
           `<td>${escapeHtml(p.schedulePhaseLabel || "—")}</td>` +
           `<td>${escapeHtml(formatScheduleRange(p))}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.finance?.estimateAmount))}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.finance?.costAmount))}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.finance?.grossProfit))}</td>` +
+          `<td><span class="${paymentClass(p.finance?.paymentStatus)}">${escapeHtml(p.finance?.paymentStatusLabel || "—")}</span></td>` +
           `<td>${escapeHtml(formatDate(p.updatedAt))}</td>` +
           `</tr>`
       )
@@ -102,6 +128,7 @@
   function refresh() {
     const Store = global.TasuBuilderProjectStore;
     if (!Store?.searchProjects) return;
+    renderFinanceSummary();
     renderTable(Store.searchProjects(getFiltersFromForm()));
   }
 
