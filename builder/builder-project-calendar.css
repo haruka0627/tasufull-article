@@ -1,0 +1,247 @@
+/* Builder Project Calendar — Phase 6-B */
+
+.builder-pc-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.builder-pc-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.builder-pc-widget {
+  border: 1px solid var(--builder-border, #e8edf3);
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  background: #fafbfc;
+}
+
+.builder-pc-widget__title {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--builder-sub, #64748b);
+}
+
+.builder-pc-widget--delay {
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.builder-pc-widget--delay .builder-pc-widget__title {
+  color: #b91c1c;
+}
+
+.builder-pc-mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.builder-pc-mini-list li {
+  margin-bottom: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.builder-pc-mini-list a {
+  color: var(--builder-orange-strong, #c2410c);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.builder-pc-mini-list__meta {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--builder-muted, #94a3b8);
+  font-weight: 400;
+}
+
+.builder-pc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.builder-pc-toolbar__nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.builder-pc-toolbar__label {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  min-width: 10rem;
+  text-align: center;
+}
+
+.builder-pc-view-tabs {
+  display: inline-flex;
+  border: 1px solid var(--builder-border, #e8edf3);
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.builder-pc-view-tabs button {
+  border: 0;
+  background: #fff;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--builder-sub, #64748b);
+}
+
+.builder-pc-view-tabs button.is-active {
+  background: var(--builder-orange-bg, #fff7ed);
+  color: var(--builder-orange-strong, #c2410c);
+}
+
+.builder-pc-month {
+  border: 1px solid var(--builder-border, #e8edf3);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.builder-pc-month__head {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #fafbfc;
+  border-bottom: 1px solid var(--builder-border, #e8edf3);
+}
+
+.builder-pc-month__head span {
+  padding: 0.4rem;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--builder-sub, #64748b);
+}
+
+.builder-pc-month__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.builder-pc-day {
+  min-height: 5.5rem;
+  border-right: 1px solid var(--builder-border, #e8edf3);
+  border-bottom: 1px solid var(--builder-border, #e8edf3);
+  padding: 0.25rem;
+  font-size: 0.75rem;
+  background: #fff;
+}
+
+.builder-pc-day:nth-child(7n) {
+  border-right: 0;
+}
+
+.builder-pc-day--muted {
+  background: #f8fafc;
+  color: var(--builder-muted, #94a3b8);
+}
+
+.builder-pc-day--today .builder-pc-day__num {
+  background: var(--builder-orange, #f97316);
+  color: #fff;
+}
+
+.builder-pc-day__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  margin-bottom: 0.15rem;
+}
+
+.builder-pc-event {
+  display: block;
+  margin-bottom: 0.15rem;
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.2rem;
+  background: var(--builder-orange-bg, #fff7ed);
+  color: var(--builder-orange-strong, #c2410c);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.builder-pc-event--delay {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.builder-pc-week {
+  border: 1px solid var(--builder-border, #e8edf3);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.builder-pc-week__row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--builder-border, #e8edf3);
+}
+
+.builder-pc-week__row:last-child {
+  border-bottom: 0;
+}
+
+.builder-pc-week__cell {
+  min-height: 6rem;
+  padding: 0.35rem;
+  border-right: 1px solid var(--builder-border, #e8edf3);
+  font-size: 0.8125rem;
+}
+
+.builder-pc-week__cell:last-child {
+  border-right: 0;
+}
+
+.builder-pc-week__head {
+  background: #fafbfc;
+  font-weight: 600;
+  min-height: auto;
+}
+
+.builder-pc-schedule-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.builder-pc-schedule-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .builder-pc-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-pc-schedule-form {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-pc-day {
+    min-height: 4rem;
+  }
+}

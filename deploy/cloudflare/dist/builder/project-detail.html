@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="builder.css" />
   <link rel="stylesheet" href="builder-project-hub.css" />
+  <link rel="stylesheet" href="builder-project-calendar.css" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
 </head>
 <body class="builder-body" data-page="builder-project-detail">
@@ -38,6 +39,29 @@
     <main class="builder-shell builder-main" data-builder-pd-root hidden>
       <div class="builder-ph-detail-grid">
         <div>
+          <section class="builder-panel" aria-label="工程・日程">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">工程・日程</h2>
+              <a class="builder-btn builder-btn--ghost builder-btn--sm" href="project-calendar.html">カレンダー</a>
+            </div>
+            <form class="builder-pc-schedule-form" data-builder-pd-schedule-form>
+              <label>
+                開始日
+                <input class="builder-input" type="date" name="scheduleStartDate" data-builder-pd-schedule-start />
+              </label>
+              <label>
+                終了日
+                <input class="builder-input" type="date" name="scheduleEndDate" data-builder-pd-schedule-end />
+              </label>
+              <label>
+                工程
+                <select class="builder-select" name="schedulePhase" data-builder-pd-schedule-phase></select>
+              </label>
+              <button type="submit" class="builder-btn builder-btn--secondary builder-btn--sm">日程を保存</button>
+              <p class="builder-kpi" data-builder-pd-schedule-status aria-live="polite"></p>
+            </form>
+          </section>
+
           <section class="builder-panel" aria-label="案件情報">
             <div class="builder-panel__head">
               <h2 class="builder-section-title">案件情報</h2>

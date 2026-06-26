@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f97316" />
+  <title>案件カレンダー | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="builder-project-hub.css" />
+  <link rel="stylesheet" href="builder-project-calendar.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body" data-page="builder-project-calendar">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="案件カレンダー">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder</span>
+              <span class="builder-brand__sub">案件カレンダー · Phase 6-B</span>
+            </span>
+          </a>
+          <a class="builder-page-back" href="project-hub.html">‹ 案件ハブ</a>
+        </div>
+        <div class="builder-header__center">
+          <h1 class="builder-header__title">案件カレンダー</h1>
+          <p class="builder-header__sub">工程・日程の一元管理（ProjectStore 正本）</p>
+        </div>
+      </div>
+    </header>
+
+    <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <main class="builder-shell builder-main">
+      <div class="builder-pc-layout">
+        <aside class="builder-pc-sidebar" aria-label="案件サマリー">
+          <section class="builder-pc-widget" aria-label="本日の案件">
+            <h2 class="builder-pc-widget__title">本日の案件</h2>
+            <ul class="builder-pc-mini-list" data-builder-pc-today></ul>
+          </section>
+          <section class="builder-pc-widget" aria-label="今週の案件">
+            <h2 class="builder-pc-widget__title">今週の案件</h2>
+            <ul class="builder-pc-mini-list" data-builder-pc-week></ul>
+          </section>
+          <section class="builder-pc-widget builder-pc-widget--delay" aria-label="遅延案件">
+            <h2 class="builder-pc-widget__title">遅延案件</h2>
+            <ul class="builder-pc-mini-list" data-builder-pc-delayed></ul>
+          </section>
+        </aside>
+
+        <section class="builder-panel" aria-label="カレンダー">
+          <div class="builder-pc-toolbar">
+            <div class="builder-pc-toolbar__nav">
+              <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-pc-prev aria-label="前へ">‹</button>
+              <p class="builder-pc-toolbar__label" data-builder-pc-period-label>—</p>
+              <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-pc-next aria-label="次へ">›</button>
+              <button type="button" class="builder-btn builder-btn--secondary builder-btn--sm" data-builder-pc-today-btn>今日</button>
+            </div>
+            <div class="builder-pc-view-tabs" role="tablist" aria-label="表示切替">
+              <button type="button" class="is-active" data-builder-pc-view="month" role="tab" aria-selected="true">月</button>
+              <button type="button" data-builder-pc-view="week" role="tab" aria-selected="false">週</button>
+            </div>
+          </div>
+          <div data-builder-pc-calendar-body></div>
+        </section>
+      </div>
+
+      <footer class="builder-footer"><p>© 2026 TASFUL inc. Builder Project Calendar MVP</p></footer>
+    </main>
+  </div>
+
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-project-store.js"></script>
+  <script src="builder-project-calendar.js"></script>
+</body>
+</html>
