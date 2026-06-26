@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Builder AI Tool Integration Phase 3 · 完了）  
-**Git HEAD:** `05c32ad`（`cf-pages-deploy` · Tool Phase 3 **`05c32ad`** · **git push 未実施**）  
+**最終更新:** 2026-06-26（Builder AI Live Phase 4-A · 完了）  
+**Git HEAD:** `66051f7`（`cf-pages-deploy` · Live Phase 4-A **`66051f7`** · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -152,7 +152,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **TASFUL Site Assistant Phase 2+** | 📋 未着手 | 同上（Feedback Launcher · OPS 集約） |
 | **Builder AI Tool Integration Phase 3** | ✅ commit 済 | `05c32ad` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-tools-phase3.md` |
 | **Builder AI Vision Phase 2** | ✅ commit 済 | `4aff9ec` · `reports/builder-ai-vision-phase2.md` |
-| **Builder AI Gemini Live / Voice** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+| **Builder AI Live Phase 4-A** | ✅ commit 済 | `66051f7` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-live-phase4-plan.md` |
+| **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
 - 購入者の表示・カート適用・利用済み/不可理由
@@ -190,9 +191,16 @@ Groq / Cerebras / Claude は **現時点では不要**。
 
 - 既存 Gateway → `gemini-chat` · 画像 + 相談文 · 4MB · 回答 8 項目 + 免責
 - UI Phase 1 `5d28acc` 上に接続 · commit `4aff9ec` · **未デプロイ**
-- Live / Voice — UI stub のみ · **未着手**
 
-**Builder AI Gemini Live / Voice（未着手）**
+**Builder AI Live Phase 4-A（現場 Live 風 MVP · ✅ commit 済）**
+
+- カメラプレビュー · スナップショット Vision · Voice Core adapter · transcript → Calc/Vision
+- Live panel UI · Free/Pro gate stub · Gateway/Secret/CF 変更なし
+- live **18/18** · calc **15/15** · tools **85/85** · p1-review **135/135** · vision **8/8** · ui **15/15** · build PASS
+- commit `66051f7` · **未 push · 未デプロイ**
+- 真 Gemini Live / WebSocket / ephemeral token Edge — **未実装**（Phase 4-B）
+
+**Builder AI Gemini Live Phase 4-B（未着手）**
 
 - カメラ映像 · 画面共有でのリアルタイム相談 · 現場診断補助 · 劣化指摘 · 見積 / 資材 / 施工提案 · チェックリスト · 写真付き現場レポート
 - **Builder AI のみ** — AI 秘書 · Platform · TLV · TASFUL AI には実装しない
@@ -226,3 +234,5 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | Builder AI UI Phase 1 | `5d28acc` · 現場診断 UI シェル · Live/Voice stub |
 | Builder AI p1-review test follow-up | `46677eb` · legacy details open in UI checks |
 | Builder AI Vision Phase 2 | `4aff9ec` · Gateway attachments → gemini-chat · vision 8/8 + ui 14/14 + review 135/135 · `reports/builder-ai-vision-phase2.md` |
+| Builder AI Tool Integration Phase 3 | `05c32ad` · docs `95a45dd` |
+| Builder AI Live Phase 4-A | `66051f7` · live 18/18 · ui 15/15 · `reports/builder-ai-live-phase4-plan.md` |

@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-26（Tool Integration Phase 3 · 計算ツール連携）  
-**ステータス:** **実装済み**（P1 + tools + Vision + **Calc Orchestrator**）· P2-C 残  
-**直近コミット:** `05c32ad`（Tool Phase 3 · **git push 未実施**）
+**最終更新:** 2026-06-26（Live Phase 4-A · 現場 Live 風 MVP）  
+**ステータス:** **実装済み**（P1 + tools + Vision + Calc Orchestrator + **Live 4-A**）· P2-C 残  
+**直近コミット:** `66051f7`（Live Phase 4-A · **git push 未実施**）
 
 ---
 
@@ -21,7 +21,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 
 | 柱 | 内容 |
 | --- | --- |
-| **現場 AI** | Vision ✅ · Live 📋 · Voice 📋 |
+| **現場 AI** | Vision ✅ · **Live 4-A ✅**（Live 風 MVP）· **真 Gemini Live 📋** |
 | **計算 AI** | **Tool Orchestrator ✅** · 面積 · 外壁 · 塗料 · 材料 · 利益 · 税 · 見積（既存 calculators 流用）· 足場/屋根/人工/原価/会計 📋 |
 | **業務 AI** | 顧客 · 現場 · 写真 · メモ · 見積 · 請求 · 領収 · 売上 · 経費 · 会計補助（将来） |
 
@@ -48,15 +48,19 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | **UI Phase 1** | `5d28acc` | 現場診断 UI シェル · 写真 · クイック相談 · Live/Voice stub |
 | **Vision Phase 2** | `4aff9ec` | Gemini Vision 接続 · `builder-ai-vision.js` · `runFieldVision` |
 | **Tool Integration Phase 3** | `05c32ad` | 自然文 → intent · Orchestrator · precalc · `builder-ai-calc-*.js` |
+| **Live Phase 4-A** | `66051f7` | カメラプレビュー · スナップショット Vision · Voice adapter · gate stub |
 
 | モジュール | 役割 |
 | --- | --- |
-| `builder-ai-ui.js` | 現場チャット UI · Vision / **計算ルート** |
-| `builder-ai-ui.css` | 現場 UI スタイル |
+| `builder-ai-ui.js` | 現場チャット UI · Vision / 計算 / **Live ルート** |
+| `builder-ai-ui.css` | 現場 UI · **Live パネル** スタイル |
 | `builder-ai-vision.js` | 画像 base64 · 4MB · prompt · `runFieldDiagnosis` |
 | `builder-ai-calc-intent.js` | 自然文 intent / スロット抽出 |
 | `builder-ai-calc-orchestrator.js` | ツール選択 · チェーン実行 · 要約 |
 | `builder-ai-core.js` | `runFieldVision` · **`precalc`**（数値再計算禁止） |
+| `builder-ai-live.js` | カメラプレビュー · スナップショット → Vision |
+| `builder-ai-voice.js` | `TasuAiVoiceCore` adapter · `surface: builder_ai` |
+| `builder-ai-live-gate.js` | Free/Pro gate stub（本番課金未接続） |
 
 **経路（Vision）:** Builder → Gateway → `gemini-chat` → Gemini Vision
 
@@ -76,6 +80,27 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | **MVP** | 坪→㎡ · 材料数量 · 外壁塗装概算 · 利益率逆算 · 消費税/インボイス |
 
 **報告:** `reports/builder-ai-tools-phase3.md`
+
+---
+
+## Builder AI Live Phase 4-A（✅ 実装済 · `66051f7`）
+
+**現場 Live 風 MVP** — 真 Gemini Live（WebSocket）ではない。既存 REST Vision · ブラウザ Voice Core のみ。
+
+| 項目 | 内容 |
+| --- | --- |
+| **カメラプレビュー** | `getUserMedia` · Live パネル UI |
+| **スナップショット Vision** | canvas キャプチャ → 既存 `runFieldVision` |
+| **Voice Core adapter** | `tasful-ai-voice-core.js` · `surface: builder_ai` · STT/TTS |
+| **transcript ルーティング** | 音声 → Calc Orchestrator または Vision |
+| **会話ログ** | `sessionStorage` · source メタ（text / voice / camera_snapshot） |
+| **Free/Pro gate stub** | `builder-ai-live-gate.js` · `?tier=pro` デバッグ |
+
+**非実装（Phase 4-B）:** 真 Gemini Live · WebSocket · ephemeral token Edge
+
+**インフラ:** Gateway 契約変更 **なし** · Secret **なし** · 新規 CF Function **なし** · **未 push · 未デプロイ**
+
+**報告:** `reports/builder-ai-live-phase4-plan.md`
 
 ---
 
@@ -100,13 +125,15 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 | スクリプト | 結果 |
 | --- | --- |
+| `scripts/test-builder-ai-live-phase4.mjs` | **18/18 PASS** |
 | `scripts/test-builder-ai-calc-phase3.mjs` | **15/15 PASS** |
 | `scripts/test-builder-ai-vision-phase2.mjs` | **8/8 PASS** |
-| `scripts/test-builder-ai-ui-phase1.mjs` | **14/14 PASS** |
+| `scripts/test-builder-ai-ui-phase1.mjs` | **15/15 PASS** |
 | `scripts/test-builder-ai-p1-review.mjs` | **135/135 PASS** |
 | `scripts/test-builder-ai-tools-adaptation.mjs` | **85/85 PASS** |
+| `npm run build:pages` | **PASS** |
 
-**報告:** `reports/builder-ai-vision-phase2.md` · `reports/builder-ai-tools-phase3.md`
+**報告:** `reports/builder-ai-live-phase4-plan.md` · `reports/builder-ai-vision-phase2.md` · `reports/builder-ai-tools-phase3.md`
 
 ---
 
@@ -127,8 +154,7 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 | 項目 | 状態 | 参照 |
 | --- | --- | --- |
-| **Gemini Live**（リアルタイムカメラ · 音声） | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](../builder-ai-gemini-live-field-diagnosis-backlog.md) |
-| **Voice 相談** | 📋 UI stub のみ | 同上 |
+| **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](../builder-ai-gemini-live-field-diagnosis-backlog.md) · `reports/builder-ai-live-phase4-plan.md` §4-B |
 | **会計補助**（白/青 · インボイス · 確定申告） | 📋 将来 | 本 doc §育成方向 |
 
 ---
@@ -140,4 +166,4 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 - Vision / Live アダプタは **Builder AI 内に閉じる**（AD-002）
 - AI は補助。**画像だけでは確定判断できない** — 現地確認 · 専門業者優先
 
-**レポート:** `reports/builder-ai-vision-phase2.md`, `reports/builder-ai-architecture.md`, `reports/builder-ai-p1-review.md`
+**レポート:** `reports/builder-ai-live-phase4-plan.md`, `reports/builder-ai-vision-phase2.md`, `reports/builder-ai-architecture.md`, `reports/builder-ai-p1-review.md`
