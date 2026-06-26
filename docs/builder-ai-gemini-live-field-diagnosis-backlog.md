@@ -1,7 +1,7 @@
 # Builder AI — 現場診断 Backlog（Gemini Vision → Gemini Live）
 
 **最終更新:** 2026-06-26  
-**Vision（静止画）:** ✅ **接続済**（Vision Phase 2 · 未コミット）  
+**Vision（静止画）:** ✅ **接続済**（Vision Phase 2 · `4aff9ec`）  
 **Live / Voice:** 📋 未着手  
 **参照:** [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-vision-phase2.md`
 

@@ -2,7 +2,7 @@
 
 **最終更新:** 2026-06-26（Vision Phase 2 · 現場AI 接続）  
 **ステータス:** **実装済み**（P1 + P2-A/B + tools + **Vision UI/接続**）· P2-C 残  
-**直近コミット:** `46677eb`（Vision Phase 2 **未コミット**）
+**直近コミット:** `4aff9ec`（Vision Phase 2 **commit 済** · **git push 未実施**）
 
 ---
 
@@ -46,7 +46,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | Phase | commit | 内容 |
 | --- | --- | --- |
 | **UI Phase 1** | `5d28acc` | 現場診断 UI シェル · 写真 · クイック相談 · Live/Voice stub |
-| **Vision Phase 2** | **未コミット** | Gemini Vision 接続 · `builder-ai-vision.js` · `runFieldVision` |
+| **Vision Phase 2** | `4aff9ec` | Gemini Vision 接続 · `builder-ai-vision.js` · `runFieldVision` |
 
 | モジュール | 役割 |
 | --- | --- |

@@ -1,7 +1,7 @@
 # Builder AI — Vision Phase 2 実装報告
 
 **実施日:** 2026-06-26  
-**状態:** **実装完了** · **commit 予定** · **未デプロイ · 未 push**  
+**状態:** **実装完了** · commit `4aff9ec` · **未デプロイ · 未 push**  
 **正本:** [docs/AI/BUILDER_AI.md](../docs/AI/BUILDER_AI.md) · [docs/builder-ai-gemini-live-field-diagnosis-backlog.md](../docs/builder-ai-gemini-live-field-diagnosis-backlog.md)  
 **前提:** UI Phase 1 `5d28acc` · p1-review follow-up `46677eb`
 
