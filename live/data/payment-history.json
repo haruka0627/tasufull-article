@@ -1,0 +1,80 @@
+{
+  "engine_version": "demo-v1",
+  "demo_mode": true,
+  "stripe_api_used": false,
+  "generated_at": "2026-06-26T04:06:36.035Z",
+  "month": "2026-05",
+  "source_of_truth": "monthly-payout-decision.json",
+  "payments": [
+    {
+      "creator_id": "cr_001",
+      "display_name": "山田タロウ",
+      "stripe_connect_account_id": "acct_demo_001",
+      "payout_amount_yen": 30685,
+      "currency": "jpy",
+      "status": "unpaid",
+      "month": "2026-05",
+      "demo_mode": true
+    },
+    {
+      "creator_id": "cr_002",
+      "display_name": "佐藤ハナ",
+      "stripe_connect_account_id": "acct_demo_002",
+      "payout_amount_yen": 12004,
+      "currency": "jpy",
+      "status": "unpaid",
+      "month": "2026-05",
+      "demo_mode": true
+    },
+    {
+      "creator_id": "cr_003",
+      "display_name": "鈴木ケン",
+      "stripe_connect_account_id": "acct_demo_003",
+      "payout_amount_yen": 2527,
+      "currency": "jpy",
+      "status": "unpaid",
+      "month": "2026-05",
+      "demo_mode": true
+    },
+    {
+      "creator_id": "cr_004",
+      "display_name": "田中ミキ",
+      "stripe_connect_account_id": "acct_demo_004",
+      "payout_amount_yen": 84000,
+      "currency": "jpy",
+      "status": "unpaid",
+      "month": "2026-05",
+      "demo_mode": true
+    },
+    {
+      "creator_id": "cr_005",
+      "display_name": "高橋リョウ",
+      "stripe_connect_account_id": "acct_demo_005",
+      "payout_amount_yen": 19855,
+      "currency": "jpy",
+      "status": "unpaid",
+      "month": "2026-05",
+      "demo_mode": true
+    },
+    {
+      "creator_id": "cr_006",
+      "display_name": "伊藤サキ",
+      "stripe_connect_account_id": "acct_demo_006",
+      "payout_amount_yen": 76000,
+      "currency": "jpy",
+      "status": "unpaid",
+      "month": "2026-05",
+      "demo_mode": true
+    },
+    {
+      "creator_id": "cr_007",
+      "display_name": "渡辺ユウ",
+      "stripe_connect_account_id": "acct_demo_007",
+      "payout_amount_yen": 46329,
+      "currency": "jpy",
+      "status": "unpaid",
+      "month": "2026-05",
+      "demo_mode": true
+    }
+  ]
+}

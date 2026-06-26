@@ -22,6 +22,13 @@ const ROOT = path.resolve(__dirname, "..");
 const OUTPUT_DIR = path.join(ROOT, "reports", "tlv-business-simulator", "output");
 const DEFAULT_SOURCE = path.join(OUTPUT_DIR, "monthly-payout-decision.json");
 const OUTPUT_PATH = path.join(OUTPUT_DIR, "condition-lines.json");
+const LIVE_DATA_DIR = path.join(ROOT, "live", "data");
+const LIVE_CONDITION_PATH = path.join(LIVE_DATA_DIR, "condition-lines.json");
+
+function syncConditionLinesToLiveData(report) {
+  fs.mkdirSync(LIVE_DATA_DIR, { recursive: true });
+  fs.writeFileSync(LIVE_CONDITION_PATH, JSON.stringify(report, null, 2) + "\n", "utf8");
+}
 
 const POOL_UTIL_GREEN_MAX = 0.85;
 const POOL_UTIL_CAUTION_MIN = 0.92;
@@ -409,11 +416,13 @@ function main() {
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   fs.writeFileSync(OUTPUT_PATH, JSON.stringify(report, null, 2) + "\n", "utf8");
+  syncConditionLinesToLiveData(report);
 
   console.log("TLV condition-lines — generated (Ver2 phase 2):");
   console.log("  Source:", sourcePath);
   console.log("  Baseline:", PRODUCTION_BASELINE_RELATIVE_PATH);
   console.log("  Output:", OUTPUT_PATH);
+  console.log("  Live data:", LIVE_CONDITION_PATH);
   console.log("  Source month:", report.source_month);
   console.log("  Next month:", report.month);
   console.log("  Safety:", report.safety_status);

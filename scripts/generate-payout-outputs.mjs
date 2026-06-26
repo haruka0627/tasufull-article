@@ -18,6 +18,12 @@ import {
   buildMonthlyOperatorReport,
   validateConsumerIntegrity,
 } from "./tlv-payout-consumers.mjs";
+import {
+  loadStripeConnectAccounts,
+  buildStripeAccountMap,
+  buildPaymentHistory,
+  validateDemoPaymentFlow,
+} from "./tlv-demo-payment-flow.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -31,22 +37,50 @@ const DASHBOARD_PATH = path.join(OUTPUT_DIR, "creator-dashboard-payout.json");
 const CSV_PATH = path.join(OUTPUT_DIR, "stripe-connect-payouts.csv");
 const REPORT_PATH = path.join(OUTPUT_DIR, "monthly-operator-report.md");
 const VALIDATIONS_PATH = path.join(OUTPUT_DIR, "payout-consumer-validations.json");
+const PAYMENT_HISTORY_PATH = path.join(OUTPUT_DIR, "payment-history.json");
+const LIVE_DATA_DIR = path.join(ROOT, "live", "data");
+const LIVE_PAYMENT_HISTORY_PATH = path.join(LIVE_DATA_DIR, "payment-history.json");
+
+const GENERATOR_PATH = path.join(ROOT, "scripts", "generate-payout-outputs.mjs");
+const DEMO_MODULE_PATH = path.join(ROOT, "scripts", "tlv-demo-payment-flow.mjs");
+
+function syncPaymentHistoryToLiveData(paymentHistory) {
+  fs.mkdirSync(LIVE_DATA_DIR, { recursive: true });
+  fs.writeFileSync(
+    LIVE_PAYMENT_HISTORY_PATH,
+    JSON.stringify(paymentHistory, null, 2) + "\n",
+    "utf8"
+  );
+}
 
 /**
  * @param {object} decision
  * @param {object} explanation
+ * @param {Record<string, string>} stripeAccountByCreatorId
  */
-export function buildPayoutConsumerOutputs(decision, explanation) {
+export function buildPayoutConsumerOutputs(decision, explanation, stripeAccountByCreatorId = {}) {
   const admin = buildAdminPayoutDisplay(decision);
   const dashboard = buildCreatorDashboardPayout(decision, explanation);
-  const csvRows = buildStripeConnectCsvRows(decision);
+  const csvRows = buildStripeConnectCsvRows(decision, stripeAccountByCreatorId);
   const report = buildMonthlyOperatorReport(decision, explanation);
+  const paymentHistory = buildPaymentHistory(decision, stripeAccountByCreatorId);
 
   const validations = validateConsumerIntegrity(decision, {
     admin,
     dashboard,
     csvRows,
     report,
+  });
+
+  const generatorSource = fs.readFileSync(GENERATOR_PATH, "utf8");
+  const moduleSource = fs.readFileSync(DEMO_MODULE_PATH, "utf8");
+  const demoPaymentValidations = validateDemoPaymentFlow({
+    decision,
+    csvRows,
+    paymentHistory,
+    stripeAccountMap: stripeAccountByCreatorId,
+    generatorSource,
+    moduleSource,
   });
 
   return {
@@ -66,12 +100,15 @@ export function buildPayoutConsumerOutputs(decision, explanation) {
       creator_dashboard_payout: "reports/tlv-business-simulator/output/creator-dashboard-payout.json",
       stripe_connect_csv: "reports/tlv-business-simulator/output/stripe-connect-payouts.csv",
       monthly_operator_report: "reports/tlv-business-simulator/output/monthly-operator-report.md",
+      payment_history: "reports/tlv-business-simulator/output/payment-history.json",
     },
     admin,
     dashboard,
+    paymentHistory,
     csv_row_count: csvRows.length,
     report_amount_count: report.report_amounts.length,
     validations,
+    demo_payment_validations: demoPaymentValidations,
     _csvRows: csvRows,
     _reportMarkdown: report.markdown,
   };
@@ -91,14 +128,22 @@ function main() {
 
   const decision = JSON.parse(fs.readFileSync(DECISION_PATH, "utf8"));
   const explanation = JSON.parse(fs.readFileSync(EXPLANATION_PATH, "utf8"));
+  const stripeAccounts = loadStripeConnectAccounts(ROOT);
+  const stripeAccountByCreatorId = buildStripeAccountMap(stripeAccounts);
 
-  const bundle = buildPayoutConsumerOutputs(decision, explanation);
+  const bundle = buildPayoutConsumerOutputs(decision, explanation, stripeAccountByCreatorId);
 
   fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   fs.writeFileSync(ADMIN_PATH, JSON.stringify(bundle.admin, null, 2) + "\n", "utf8");
   fs.writeFileSync(DASHBOARD_PATH, JSON.stringify(bundle.dashboard, null, 2) + "\n", "utf8");
   fs.writeFileSync(CSV_PATH, stripeConnectCsvString(bundle._csvRows), "utf8");
   fs.writeFileSync(REPORT_PATH, bundle._reportMarkdown + "\n", "utf8");
+  fs.writeFileSync(
+    PAYMENT_HISTORY_PATH,
+    JSON.stringify(bundle.paymentHistory, null, 2) + "\n",
+    "utf8"
+  );
+  syncPaymentHistoryToLiveData(bundle.paymentHistory);
 
   const validationsDoc = {
     generated_at: bundle.generated_at,
@@ -107,8 +152,12 @@ function main() {
     source_files: bundle.source_files,
     outputs: bundle.outputs,
     validations: bundle.validations,
+    demo_payment_validations: bundle.demo_payment_validations,
   };
   fs.writeFileSync(VALIDATIONS_PATH, JSON.stringify(validationsDoc, null, 2) + "\n", "utf8");
+
+  const allPass =
+    bundle.validations.all_pass && bundle.demo_payment_validations.all_pass === true;
 
   console.log("TLV payout consumer outputs — generated:");
   console.log("  Source of truth:", SOURCE_OF_TRUTH);
@@ -116,11 +165,14 @@ function main() {
   console.log("  Dashboard:", DASHBOARD_PATH);
   console.log("  CSV:", CSV_PATH);
   console.log("  Report:", REPORT_PATH);
+  console.log("  Payment history:", PAYMENT_HISTORY_PATH);
+  console.log("  Live payment history:", LIVE_PAYMENT_HISTORY_PATH);
   console.log("  Validations:", VALIDATIONS_PATH);
   console.log("  CSV rows:", bundle.csv_row_count);
   console.log("  Consumer validations all_pass:", bundle.validations.all_pass);
-  if (!bundle.validations.all_pass) {
-    console.error("  FAILED:", JSON.stringify(bundle.validations, null, 2));
+  console.log("  Demo payment validations all_pass:", bundle.demo_payment_validations.all_pass);
+  if (!allPass) {
+    console.error("  FAILED:", JSON.stringify(validationsDoc, null, 2));
     process.exit(1);
   }
 }

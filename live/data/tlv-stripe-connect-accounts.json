@@ -1,0 +1,42 @@
+{
+  "demo_mode": true,
+  "stripe_api_used": false,
+  "description": "TLV demo Stripe Connect account map — display and CSV only; no Stripe API calls",
+  "accounts": [
+    {
+      "creator_id": "cr_001",
+      "display_name": "山田タロウ",
+      "stripe_connect_account_id": "acct_demo_001"
+    },
+    {
+      "creator_id": "cr_002",
+      "display_name": "佐藤ハナ",
+      "stripe_connect_account_id": "acct_demo_002"
+    },
+    {
+      "creator_id": "cr_003",
+      "display_name": "鈴木ケン",
+      "stripe_connect_account_id": "acct_demo_003"
+    },
+    {
+      "creator_id": "cr_004",
+      "display_name": "田中ミキ",
+      "stripe_connect_account_id": "acct_demo_004"
+    },
+    {
+      "creator_id": "cr_005",
+      "display_name": "高橋リョウ",
+      "stripe_connect_account_id": "acct_demo_005"
+    },
+    {
+      "creator_id": "cr_006",
+      "display_name": "伊藤サキ",
+      "stripe_connect_account_id": "acct_demo_006"
+    },
+    {
+      "creator_id": "cr_007",
+      "display_name": "渡辺ユウ",
+      "stripe_connect_account_id": "acct_demo_007"
+    }
+  ]
+}
