@@ -136,3 +136,29 @@
   background: #eff6ff;
   color: #1d4ed8;
 }
+
+.category-portal-crumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0.5rem clamp(1rem, 3vw, 1.5rem) 0;
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.category-portal-crumb a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.category-portal-crumb a:hover {
+  text-decoration: underline;
+}
+
+.category-portal-crumb__sep {
+  opacity: 0.5;
+}

@@ -4,72 +4,95 @@
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ワーカー一覧 | TasuFull</title>
+  <title>ワーカー一覧 | TASFUL</title>
+  <meta name="description" content="TASFUL — 登録されているワーカー一覧">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="seller-rank-plate.css">
   <link rel="stylesheet" href="listing-list-card.css">
-  <link rel="stylesheet" href="tasu-banner.css">
+  <link rel="stylesheet" href="index-home.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
   <link rel="stylesheet" href="category-list-page.css">
   <link rel="stylesheet" href="platform-badges.css">
 </head>
-<body id="top" class="category-list-page" data-category-page="worker">
-
-  <div class="tasu-banner">
-    <div class="tasu-text">
-      🚀 <span class="logo">TASFUL</span>プラットへようこそ　
-      <a href="post.html" class="link">掲載する</a>　｜　
-      <a href="index.html" class="link accent">一覧トップ</a>
+<body id="top" class="home-page category-list-page listing-category-hub-page" data-category-page="worker">
+  <header class="home-header top-portal-header" aria-label="TASFUL ヘッダー">
+    <div class="home-header__inner">
+      <a class="tasful-ai-logo home-header__logo" href="/" aria-label="TASFUL プラットフォームTOP">
+        <img src="/images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <div class="home-actions">
+        <a class="home-cta" href="/post.html">出品する</a>
+      </div>
     </div>
-  </div>
+  </header>
 
-  <div class="page">
-    <main class="main">
-      <section class="section section--premium" aria-labelledby="categoryListTitle">
-        <header class="section__head">
-          <p class="section__badge section__badge--featured" data-category-badge>ワーカー</p>
-          <h1 id="categoryListTitle" class="section__title" data-category-title>ワーカー一覧</h1>
-          <p class="section__desc">Supabase の実掲載データを表示しています</p>
-        </header>
+  <nav class="category-portal-crumb" aria-label="ページ導線">
+    <a href="/">TOP</a>
+    <span class="category-portal-crumb__sep" aria-hidden="true">/</span>
+    <a href="/market/">掲載トップ</a>
+  </nav>
 
-        <div class="category-list-toolbar">
-          <p class="category-list-count">表示件数 <strong data-category-count>0件</strong></p>
-          <p class="category-list-toolbar__sort">
-            <label for="categorySort">並び順</label>
-            <select id="categorySort" class="category-list-toolbar__select" data-category-sort>
-              <option value="newest" selected>新着順</option>
-              <option value="pr">PR優先</option>
-              <option value="featured">上位掲載優先</option>
-            </select>
-          </p>
-        </div>
+  <main class="main">
+    <section class="section section--premium" aria-labelledby="categoryListTitle">
+      <header class="section__head">
+        <p class="section__badge section__badge--featured" data-category-badge>ワーカー</p>
+        <h1 id="categoryListTitle" class="section__title" data-category-title>ワーカー一覧</h1>
+        <p class="section__desc">登録されているワーカーを一覧で確認できます</p>
+      </header>
 
-        <ul class="card-list card-list--premium" data-category-list></ul>
+      <form class="listing-category-hub-search" role="search" action="/listing-category-page.html" method="get">
+        <input type="hidden" name="type" value="worker">
+        <input type="search" name="q" class="listing-category-hub-search__input" placeholder="キーワードで探す" aria-label="キーワード検索">
+        <button type="submit" class="listing-category-hub-search__btn">検索</button>
+      </form>
 
-        <div class="empty-state" data-category-empty hidden>
-          <p class="empty-state__title">掲載がありません</p>
-          <p class="empty-state__text">まだワーカー掲載がないか、条件に一致するデータがありません。<a href="post.html">掲載フォーム</a>から追加できます。</p>
-        </div>
-      </section>
-    </main>
-  </div>
+      <nav class="listing-category-hub-filters" aria-label="掲載タイプ">
+        <a class="listing-category-hub-filters__chip" href="/skill.html">スキル</a>
+        <a class="listing-category-hub-filters__chip" href="/product.html">商品</a>
+        <a class="listing-category-hub-filters__chip is-active" href="/worker.html">ワーカー</a>
+        <a class="listing-category-hub-filters__chip" href="/listing-category-page.html">すべて</a>
+      </nav>
+
+      <div class="category-list-toolbar">
+        <p class="category-list-count">表示件数 <strong data-category-count>0件</strong></p>
+        <p class="category-list-toolbar__sort">
+          <label for="categorySort">並び順</label>
+          <select id="categorySort" class="category-list-toolbar__select" data-category-sort>
+            <option value="newest" selected>新着順</option>
+            <option value="pr">PR優先</option>
+            <option value="featured">上位掲載優先</option>
+          </select>
+        </p>
+      </div>
+
+      <ul class="card-list card-list--premium" data-category-list></ul>
+
+      <div class="empty-state" data-category-empty hidden>
+        <p class="empty-state__title">掲載がありません</p>
+        <p class="empty-state__text">まだワーカー掲載がないか、条件に一致するデータがありません。<a href="/post.html">掲載フォーム</a>から追加できます。</p>
+      </div>
+    </section>
+  </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="chat-supabase-config.js"></script>
-  <script src="tasu-supabase-client.js"></script>
-  <script src="search.js"></script>
-  <script src="listing-tags.js"></script>
-  <script src="listing-images.js"></script>
-  <script src="detail-trust-score.js"></script>
-  <script src="listing-seller-profile.js"></script>
-  <script src="platform-ai-recommend.js"></script>
-  <script src="platform-badges.js"></script>
-  <script src="platform-search-hub.js"></script>
-  <script src="listing-renderer.js"></script>
-  <script src="listings-db.js"></script>
-  <script src="business-listings-db.js"></script>
-  <script src="listing-category-page.js"></script>
+  <script src="/chat-supabase-config.js"></script>
+  <script src="/tasu-supabase-client.js"></script>
+  <script src="/search.js"></script>
+  <script src="/listing-tags.js"></script>
+  <script src="/listing-images.js"></script>
+  <script src="/detail-trust-score.js"></script>
+  <script src="/listing-seller-profile.js"></script>
+  <script src="/platform-ai-recommend.js"></script>
+  <script src="/platform-badges.js"></script>
+  <script src="/listing-renderer.js"></script>
+  <script src="/listings-db.js"></script>
+  <script src="/business-listings-db.js"></script>
+  <script src="/listing-category-page.js"></script>
 </body>
 </html>
