@@ -92,17 +92,69 @@
     }
   }
 
-  function mockReply(model, message, searchContext) {
+  function mockReply(model, message, searchContext, attachments) {
     const label = model?.label || "AI";
     const text = String(message || "").trim();
     const preview = text.slice(0, 120);
     const searchNote = searchContext
       ? "\n\n（Web検索結果を参考に回答する想定です。接続先API未設定時はモック応答です。）"
       : "";
-    if (/^(こんにちは|こんばんは|おはよう|はじめまして|hello|hi)(?:[!！.。\s]|$)/i.test(text)) {
-      return `こんにちは。TASFUL AI Workspaceです。${label}でお答えしています。ご用件を教えてください。${searchNote}`;
+    let attachNote = "";
+    if (Array.isArray(attachments) && attachments.length) {
+      const names = attachments.map((a) => a?.name || "file").join(", ");
+      attachNote = `\n\n【添付受信】${names} を受け取りました。`;
+      if (attachments.some((a) => a?.kind === "pdf")) {
+        attachNote += "\n※ PDF本文解析は後続フェーズです。";
+      }
+      if (attachments.some((a) => a?.kind === "image")) {
+        attachNote += "\n※ 画像は Vision 接続時に内容を参照します（モックではファイル名のみ確認）。";
+      }
     }
-    return `【${label}・モック応答】\n\n「${preview}」についてお答えします。${searchNote}\n\n※本番では Edge Function 経由で ${label} が応答します。`;
+    if (/^(こんにちは|こんばんは|おはよう|はじめまして|hello|hi)(?:[!！.。\s]|$)/i.test(text)) {
+      return `こんにちは。TASFUL AI Workspaceです。${label}でお答えしています。ご用件を教えてください。${searchNote}${attachNote}`;
+    }
+    return `【${label}・モック応答】\n\n「${preview}」についてお答えします。${searchNote}${attachNote}\n\n※本番では Edge Function 経由で ${label} が応答します。`;
+  }
+
+  function normalizeAttachments(raw) {
+    if (!Array.isArray(raw)) return [];
+    return raw
+      .filter((item) => item && typeof item === "object")
+      .slice(0, 5)
+      .map((item) => ({
+        name: String(item.name || "attachment").slice(0, 200),
+        mimeType: String(item.mimeType || "application/octet-stream").slice(0, 120),
+        kind: String(item.kind || "").slice(0, 20),
+        base64: item.base64 ? String(item.base64).slice(0, 7500000) : undefined,
+        textContent: item.textContent ? String(item.textContent).slice(0, 12000) : undefined,
+        sizeBytes: Number(item.sizeBytes) || 0,
+        note: item.note ? String(item.note).slice(0, 500) : undefined,
+      }));
+  }
+
+  function buildAttachmentTextBlock(attachments) {
+    const blocks = [];
+    for (const a of attachments) {
+      if (a.kind === "document" && a.textContent) {
+        blocks.push(`【添付: ${a.name}】\n${a.textContent}`);
+      } else if (a.kind === "pdf") {
+        const kb = a.sizeBytes ? `${Math.round(a.sizeBytes / 1024)}KB` : "";
+        blocks.push(
+          `【添付PDF: ${a.name}${kb ? ` (${kb})` : ""}】\n${a.note || "PDF本文解析は後続フェーズです。"}`
+        );
+      } else if (a.kind === "image") {
+        blocks.push(`【添付画像: ${a.name}】画像内容は Vision 入力として参照してください。`);
+      }
+    }
+    return blocks.join("\n\n");
+  }
+
+  function mergeMessageWithAttachments(message, attachments) {
+    const block = buildAttachmentTextBlock(attachments);
+    const msg = String(message || "").trim();
+    if (!block) return msg;
+    if (!msg) return block;
+    return `${block}\n\n${msg}`;
   }
 
   function formatApiErrorReply(model, errorInfo) {
@@ -117,7 +169,11 @@
   }
 
   async function callModel(model, params) {
-    const message = String(params.message || "").trim();
+    const attachments = normalizeAttachments(params.attachments);
+    const message = mergeMessageWithAttachments(
+      String(params.message || "").trim(),
+      attachments
+    );
     const searchContext = params.searchContext ? String(params.searchContext).slice(0, 6000) : "";
     const history = buildHistory(params.messages);
     const systemPrompt = String(params.systemPrompt || "").trim();
@@ -135,6 +191,7 @@
           intent: resolveGeminiIntent({ ...params, message }),
           searchContext: searchContext || undefined,
           character: params.character || null,
+          attachments: attachments.length ? attachments : undefined,
         },
         { timeoutMs }
       );
@@ -160,6 +217,7 @@
           mode,
           searchContext: searchContext || undefined,
           systemPrompt: systemPrompt || undefined,
+          attachments: attachments.length ? attachments : undefined,
         },
         { timeoutMs }
       );
@@ -185,6 +243,7 @@
           mode,
           searchContext: searchContext || undefined,
           systemPrompt: systemPrompt || undefined,
+          attachments: attachments.length ? attachments : undefined,
         },
         { timeoutMs }
       );
@@ -233,11 +292,14 @@
    *   preferRemote?: boolean,
    *   mockFallback?: (args: object) => string,
    *   surface?: string,
+   *   attachments?: object[],
    * }} params
    */
   async function completeTurn(params) {
     const Plans = global.TasuAiPlanModels;
     const Orchestrator = global.TasuAiSearchOrchestrator;
+    const attachments = normalizeAttachments(params?.attachments);
+    const hasAttachments = attachments.length > 0;
     const userPlan = Plans?.resolveUserPlan?.() || "free";
     let modelId = params?.modelId || Plans?.getSelectedModelId?.() || "gemini-flash";
     if (!Plans?.isModelAllowed?.(modelId, userPlan)) {
@@ -250,7 +312,7 @@
           userText: params.userText,
           modeId: params.modeId,
           siteContext: params.siteContext,
-          skipSearch: params.skipSearch,
+          skipSearch: params.skipSearch || hasAttachments,
           forceSearch: params.forceSearch,
           skipLog: true,
         })
@@ -279,6 +341,7 @@
       intent: params.intent,
       modeId: params.modeId,
       userText: params.userText,
+      attachments,
     });
 
     let fallback_used = false;
@@ -304,10 +367,11 @@
               searchContext: prep.contextForAi,
               modeId: params.modeId,
               messages: params.messages,
+              attachments,
             }) || ""
           ).trim();
         }
-        if (!reply) reply = mockReply(model, prep.messageForAi, prep.contextForAi);
+        if (!reply) reply = mockReply(model, prep.messageForAi, prep.contextForAi, attachments);
       }
     }
 
@@ -342,10 +406,13 @@
       search_query: prep.searchQuery || "",
       search_provider: prep.searchProvider || "",
       search_result_count: prep.searchResultCount || 0,
+      searchFailed: Boolean(prep.searchFailed),
+      searchMessage: String(prep.searchMessage || ""),
       uiBadgeHtml: prep.uiBadgeHtml || "",
       contextForAi: prep.contextForAi || "",
       messageForAi: prep.messageForAi,
       user_plan: userPlan,
+      attachments_count: attachments.length,
     };
   }
 
