@@ -62,7 +62,7 @@ const storeSrc = fs.readFileSync(path.join(builder, "builder-project-store.js"),
 const uiJs = fs.readFileSync(path.join(builder, "builder-ai-ui.js"), "utf8");
 const hubJs = fs.readFileSync(path.join(builder, "builder-project-hub.js"), "utf8");
 
-assert(storeSrc.includes("SCHEMA_VERSION = 5"), "SCHEMA v5");
+assert(storeSrc.includes("SCHEMA_VERSION = 6"), "SCHEMA v6");
 assert(detailHtml.includes("data-builder-pd-contract-form"), "detail contract panel");
 assert(detailHtml.includes("data-builder-pd-completion-form"), "detail completion panel");
 assert(hubHtml.includes("data-builder-ph-contract-completion-summary"), "hub contract/completion summary");
@@ -78,10 +78,10 @@ const Store = loadStore();
 Store.clearForTests();
 Store.ensureSeed();
 
-assert(Store.SCHEMA_VERSION === 5, "store schema 5");
+assert(Store.SCHEMA_VERSION === 6, "store schema 6");
 
 const all = Store.listProjects();
-assert(all.every((p) => p.contract && p.completion), "contract/completion defaults");
+assert(all.every((p) => p.contract && p.completion && Array.isArray(p.documents)), "contract/completion/documents defaults");
 assert(all.some((p) => p.contract?.contractStatus === "draft"), "seed contract draft");
 assert(all.some((p) => p.completion?.completionStatus === "working"), "seed completion working");
 assert(all.some((p) => p.completion?.completionStatus === "completed"), "seed completion completed");
