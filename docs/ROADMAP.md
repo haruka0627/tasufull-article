@@ -29,6 +29,16 @@
 
 ## AI ロードマップ
 
+### AI プロバイダ分担（確定 · 2026-06-26）
+
+| 製品 / 領域 | 本番 API | 参照 |
+| --- | --- | --- |
+| AI 秘書 | **DeepSeek** | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) · AD-010 |
+| TASFUL AI | **OpenAI** | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) |
+| Builder AI | **OpenAI** | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) |
+| Builder AI 将来 Backlog | Gemini Live（現場診断） | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+| Groq / Cerebras / Claude | 採用しない（現時点） | — |
+
 ### Builder AI
 
 | フェーズ | 状態 | 内容 |
@@ -37,6 +47,7 @@
 | P1（actions · UI · 隔離） | ✅ | `5ed9672` |
 | P2-A / P2-B（tools · JWT · draft staging SQL） | ✅ | `5ed9672` · `reports/builder-ai-p2-b.md` |
 | **P2-C**（DB 適用 · hook · Supabase 正本化 · Live E2E） | 📋 | `reports/builder-ai-p2-b.md` §9 |
+| **Gemini Live 現場診断モード**（カメラ · 画面共有 · 現場相談） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) · **利益安定後** · P0/P1 外 |
 
 ### Platform（製品機能）
 
@@ -72,7 +83,9 @@
 | フェーズ | 状態 | 内容 |
 | --- | --- | --- |
 | v1.1 リリース | ✅ 🔒 | `reports/ai-ops-secretary-release-status.md` |
+| **本番 AI API** | ✅ 方針確定 | **DeepSeek API**（AD-010）· 要約/優先付け/自然文のみ · 遷移/件数/検索/フィルターは非AI |
 | 未コミット phase ファイル | 📋 要整理 | working tree に `admin-ai-secretary-phase*.js` 等 |
+| **DeepSeek 本番接続** | 📋 未着手 | Edge/アダプタ実装は別フェーズ（今回 docs のみ） |
 | **Trend Scout**（トレンド収集 · 経営参謀提案） | 📋 Backlog | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) · v1.2 以降想定 · **UI Critical 優先度外** |
 
 ---
@@ -92,6 +105,7 @@
 ## 将来（v1.1 以降 · 凍結解除後）
 
 - Builder AI Supabase 本番 RLS（P2-C 完了後）
+- **Builder AI Gemini Live 現場診断モード**（カメラ · 画面共有 · 現場診断補助 · 見積補助）— [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) · **利益安定後**
 - TASFUL AI 履歴 Supabase 同期
 - Platform お気に入りサーバー正本
 - **Platform Coupon System**（店舗・出品者発行 · 横断クーポン基盤）— [platform-coupon-system-backlog.md](./platform-coupon-system-backlog.md)

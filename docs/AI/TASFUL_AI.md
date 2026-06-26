@@ -13,6 +13,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | 項目 | 内容 |
 | --- | --- |
 | **Production Ready** | **NO**（本番 preflight）— 機能実装は完了 |
+| **本番 AI API** | **OpenAI**（AI 秘書 DeepSeek · Builder OpenAI と分担 — [DECISIONS.md](../DECISIONS.md) AD-010） |
 | **Gateway** | `TasuAiModelGateway` · 契約変更はフェーズ外方針（未コミット diff あり → [KNOWN_ISSUES.md](../KNOWN_ISSUES.md) KI-001） |
 
 ---
@@ -42,7 +43,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | 相手 | 関係 |
 | --- | --- |
 | **Builder AI** | **統合しない** — 別 surface · 別 UI |
-| **AI 秘書** | 独立 — admin ops 専用 |
+| **AI 秘書** | 独立 — admin ops 専用 · **DeepSeek API**（AD-010） |
 | **Platform** | `source=platform` で入口接続のみ |
 | **TLV** | `source=tlv` · 8 テンプレ — [TLV_AI.md](./TLV_AI.md) |
 

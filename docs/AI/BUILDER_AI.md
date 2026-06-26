@@ -15,6 +15,7 @@ Builder AI は **建設・リフォーム案件コンテキスト専用 AI**。T
 | **Builder 製品** | Production Ready v1.0 · RELEASE FROZEN |
 | **Builder AI** | `builder/builder-ai.html` + `builder/builder-ai-*.js` |
 | **surface** | `builder_ai`（Gateway 経由） |
+| **本番 AI API** | **OpenAI**（TASFUL AI · AI 秘書とは別プロバイダ） |
 
 ---
 
@@ -69,5 +70,17 @@ Builder AI は **建設・リフォーム案件コンテキスト専用 AI**。T
 - すべての出力は **下書き** — 契約/請求/採用/完了承認に使わない
 - 本番 DB / RLS **P2-C まで触らない**
 - Gateway 本体契約は AI フェーズで変更しない方針（未コミット gateway diff は別件）
+
+---
+
+## 将来 Backlog（未着手 · 利益安定後）
+
+| 項目 | 参照 |
+| --- | --- |
+| **Gemini Live 現場診断モード** — カメラ · 画面共有 · 現場診断補助 · 見積 / 資材 / 施工提案 · チェックリスト · 写真付き現場レポート | [builder-ai-gemini-live-field-diagnosis-backlog.md](../builder-ai-gemini-live-field-diagnosis-backlog.md) |
+
+- **Builder AI のみ**（AD-002）。AI 秘書 · Platform · TLV · TASFUL AI Workspace には展開しない
+- AI は補助。最終判断は現地確認 · 有資格者 · 専門業者。診断結果のみで施工判断しない
+- P2-C · 基本機能完成 · **利益安定** 後に着手判断
 
 **レポート:** `reports/builder-ai-architecture.md`, `reports/builder-ai-p1-review.md`, `reports/builder-ai-p2-b.md`, `reports/builder-ai-tools-adaptation.md`

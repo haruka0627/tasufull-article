@@ -75,6 +75,27 @@
 
 ---
 
+## 方針（確定 · 2026-06-26）
+
+### AI プロバイダ分担
+
+| 領域 | 本番 API |
+| --- | --- |
+| AI 秘書 | **DeepSeek** |
+| TASFUL AI | **OpenAI** |
+| Builder AI | **OpenAI** |
+| Builder AI 将来（Gemini Live 現場診断） | Gemini Live — [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+
+Groq / Cerebras / Claude は **現時点では不要**。
+
+### AI 秘書 — DeepSeek 本番接続（未着手）
+
+- [ ] DeepSeek API 接続（要約 · 優先順位 · 自然文生成）
+- [ ] 画面遷移 / 件数 / DB 検索 / フィルターは **プログラム処理のまま**（LLM 不使用）
+- 参照: [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) · [DECISIONS.md](./DECISIONS.md) AD-010
+
+---
+
 ## Backlog（将来実装 · P0/P1 優先度外）
 
 **注:** 以下は実装予定の記録のみ。**Platform Critical / UI 修正の優先順位は変更しない。**
@@ -84,6 +105,7 @@
 | **Platform Coupon System** | 📋 未着手 | [platform-coupon-system-backlog.md](./platform-coupon-system-backlog.md) |
 | **AI Secretary Trend Scout** | 📋 未着手 | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) |
 | **TASFUL Site Assistant / Feedback Launcher** | 📋 未着手 | [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) |
+| **Builder AI Gemini Live 現場診断モード** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
 - 購入者の表示・カート適用・利用済み/不可理由
@@ -105,6 +127,13 @@
 - 役割分担: **TASFUL AI** = 相談・提案・専門 AI / **Site Assistant** = 検索・問い合わせ・通報・FAQ・ページ案内
 - 右下ランチャー · 全ページ共通（段階展開）· OPS / AI 秘書へ将来集約
 - **実装なし** · P0/P1 外 · Platform Critical 優先順位は変更しない
+
+**Builder AI Gemini Live 現場診断モード**
+
+- カメラ映像 · 画面共有でのリアルタイム相談 · 現場診断補助 · 劣化指摘 · 見積 / 資材 / 施工提案 · チェックリスト · 写真付き現場レポート
+- **Builder AI のみ** — AI 秘書 · Platform · TLV · TASFUL AI には実装しない
+- AI は補助ツール。最終判断は現地確認 · 有資格者 · 専門業者。**診断結果のみで施工判断しない**
+- **着手:** 利益安定 · Builder AI 基本機能完成後 · P0/P1 外
 
 ---
 
