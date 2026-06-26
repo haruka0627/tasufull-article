@@ -28,7 +28,7 @@
 }
 
 .category-list-toolbar__select {
-  min-height: 2.35rem;
+  min-height: 2.75rem;
   padding: 0.35rem 0.75rem;
   font-size: 0.875rem;
   border: 1px solid var(--color-border);
@@ -91,7 +91,7 @@
 .listing-category-hub-search__input {
   min-width: 0;
   width: 100%;
-  min-height: 2.5rem;
+  min-height: 2.75rem;
   padding: 0.45rem 0.75rem;
   border: 1px solid var(--color-border, #d1d5db);
   border-radius: 8px;
@@ -99,8 +99,8 @@
 }
 
 .listing-category-hub-search__btn {
-  min-height: 2.5rem;
-  padding: 0.45rem 1rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 8px;
   background: #1f2937;
@@ -120,8 +120,8 @@
 .listing-category-hub-filters__chip {
   display: inline-flex;
   align-items: center;
-  min-height: 2rem;
-  padding: 0.3rem 0.75rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.85rem;
   border-radius: 999px;
   border: 1px solid var(--color-border, #d1d5db);
   background: #fff;
