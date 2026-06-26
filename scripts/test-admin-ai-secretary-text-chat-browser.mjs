@@ -25,7 +25,14 @@ function pageUrl(rel) {
 
 function fail(msg) {
   console.error("FAIL:", msg);
-  closeAllBrowsers().finally(() => process.exit(1));
+  throw new Error(msg);
+}
+
+function isIgnorableConsoleError(text) {
+  const t = String(text || "").replace(/^\[[\w.]+\]\s*/, "");
+  return /favicon|ERR_BLOCKED_BY_CLIENT|CORS|ERR_FAILED|serper-search|\/api\/secretary-deepseek-chat|supabase\.co|Failed to load resource/i.test(
+    t
+  );
 }
 
 function pass(msg) {
@@ -33,11 +40,42 @@ function pass(msg) {
 }
 
 async function testDashboardChat(page) {
+  const consoleErrors = [];
+  page.on("console", (msg) => {
+    if (msg.type() === "error" && !isIgnorableConsoleError(msg.text())) {
+      consoleErrors.push(msg.text());
+    }
+  });
+  page.on("pageerror", (err) => {
+    const msg = String(err.message || err);
+    if (!isIgnorableConsoleError(msg)) consoleErrors.push(msg);
+  });
+
   await page.goto(pageUrl("admin-operations-dashboard.html#ops-ai-command-center"), {
     waitUntil: "domcontentloaded",
   });
-  await page.waitForFunction(() => window.TasuAdminAiSecretaryPhase2?.sendMessage, null, {
-    timeout: 15000,
+  await page.waitForFunction(
+    () =>
+      window.TasuSecretaryDeepSeekAdapter?.completeTurn &&
+      window.TasuAdminAiSecretaryPhase2?.sendMessage &&
+      window.TasuSecretaryOpsContextBuilder?.build,
+    null,
+    { timeout: 15000 }
+  );
+  pass("DeepSeek adapter script loaded");
+
+  await page.evaluate(() => {
+    const Adapter = window.TasuSecretaryDeepSeekAdapter;
+    if (!Adapter || Adapter.__regressionHooked) return;
+    Adapter.__regressionHooked = true;
+    Adapter.postSecretaryEdge = async () => ({
+      ok: true,
+      reply: "regression mock reply",
+      modelLabel: "DeepSeek",
+      httpStatus: 200,
+      configured: true,
+      data: { usedDeepSeek: true },
+    });
   });
 
   const input = page.locator("[data-ops-secretary-input]").first();
@@ -69,13 +107,36 @@ async function testDashboardChat(page) {
   const hubAttached = await page.locator("#ops-ai-secretary [data-talk-ops-hub]").count();
   if (hubAttached < 1) fail("dashboard ops hub missing after chat");
   pass("dashboard ops hub intact");
+
+  const badConsole = consoleErrors.filter((e) => !isIgnorableConsoleError(e));
+  if (badConsole.length) fail(`console errors: ${badConsole.slice(0, 2).join(" | ")}`);
+  pass("dashboard chat console clean");
 }
 
 async function testTalkOpsRoomChat(page) {
-  await page.goto(pageUrl("talk-ops-room.html"), { waitUntil: "domcontentloaded" });
-  await page.waitForFunction(() => window.TasuAdminAiSecretaryPhase2?.sendMessage, null, {
-    timeout: 15000,
+  await page.evaluate(() => {
+    const Adapter = window.TasuSecretaryDeepSeekAdapter;
+    if (Adapter && !Adapter.__regressionHooked) {
+      Adapter.__regressionHooked = true;
+      Adapter.postSecretaryEdge = async () => ({
+        ok: true,
+        reply: "talk ops mock reply",
+        modelLabel: "DeepSeek",
+        httpStatus: 200,
+        configured: true,
+        data: { usedDeepSeek: true },
+      });
+    }
   });
+  await page.goto(pageUrl("talk-ops-room.html"), { waitUntil: "domcontentloaded" });
+  await page.waitForFunction(
+    () =>
+      window.TasuSecretaryDeepSeekAdapter?.completeTurn &&
+      window.TasuAdminAiSecretaryPhase2?.sendMessage &&
+      window.TasuSecretaryOpsContextBuilder?.build,
+    null,
+    { timeout: 15000 }
+  );
 
   const input = page.locator("#talk-ops-text-chat-input");
   await input.fill("本日の優先対応は？");
@@ -105,17 +166,23 @@ async function testTalkOpsRoomChat(page) {
 
 await withPlaywrightBrowser(async (browser) => {
   const page = await browser.newPage();
-  await page.goto(pageUrl("admin-operations-dashboard.html"), { waitUntil: "domcontentloaded" });
-  await page.evaluate(() => {
-    try {
-      sessionStorage.removeItem("tasu_admin_ai_secretary_chat_v1");
-    } catch {
-      /* ignore */
-    }
-  });
-  await testDashboardChat(page);
-  await testTalkOpsRoomChat(page);
-  console.log("\nAll AI secretary text chat checks passed.");
+  try {
+    await page.goto(pageUrl("admin-operations-dashboard.html"), { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => {
+      try {
+        sessionStorage.removeItem("tasu_admin_ai_secretary_chat_v1");
+      } catch {
+        /* ignore */
+      }
+    });
+    await testDashboardChat(page);
+    await testTalkOpsRoomChat(page);
+    console.log("\nAll AI secretary text chat checks passed.");
+  } catch (err) {
+    console.error(String(err?.message || err));
+    process.exitCode = 1;
+  }
 });
 
 await closeAllBrowsers();
+if (process.exitCode) process.exit(process.exitCode);

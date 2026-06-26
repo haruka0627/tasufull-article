@@ -16,6 +16,42 @@
 
   let bound = false;
   let sending = false;
+  let opsSnapshot = null;
+  let opsSnapshotAt = 0;
+  const SNAPSHOT_TTL_MS = 60000;
+
+  function setOpsSnapshot(ctx) {
+    if (!ctx || typeof ctx !== "object") {
+      opsSnapshot = null;
+      opsSnapshotAt = 0;
+      return;
+    }
+    opsSnapshot = ctx;
+    opsSnapshotAt = Date.now();
+  }
+
+  function getEffectiveSnapshot() {
+    if (opsSnapshot && Date.now() - opsSnapshotAt < SNAPSHOT_TTL_MS) return opsSnapshot;
+    return null;
+  }
+
+  function buildSystemPrompt(userText) {
+    const Builder = global.TasuSecretaryOpsContextBuilder;
+    if (!Builder?.build || !Builder?.formatForSystemPrompt) return SYSTEM_PROMPT;
+    try {
+      const intent = Builder.resolveIntent(userText);
+      const opsCtx = Builder.build({
+        userText,
+        filters: intent.filters || {},
+        snapshot: getEffectiveSnapshot(),
+      });
+      const block = Builder.formatForSystemPrompt(opsCtx);
+      if (!block) return SYSTEM_PROMPT;
+      return `${SYSTEM_PROMPT}\n\n---\n${block}`;
+    } catch {
+      return SYSTEM_PROMPT;
+    }
+  }
 
   function $(sel, root) {
     return (root || document).querySelector(sel);
@@ -114,13 +150,13 @@
       `【AI運営秘書 · テキスト応答】\n\n` +
       `「${preview}」について承りました。\n\n` +
       "詳細な案件抽出は下部の「運営コマンド」検索（例: 未対応だけ見せて）もご利用ください。\n" +
-      "※ API 未接続時はモック応答です。Supabase Edge が設定されていれば本番モデルが応答します。"
+      "※ DeepSeek 未接続時はモック応答です。Cloudflare Pages Function（/api/secretary-deepseek-chat）と DEEPSEEK_API_KEY が設定されていれば本番応答します。"
     );
   }
 
   async function requestAssistantReply(userText, history) {
-    const Gateway = global.TasuAiModelGateway;
-    if (!Gateway?.completeTurn) {
+    const Adapter = global.TasuSecretaryDeepSeekAdapter;
+    if (!Adapter?.completeTurn) {
       return { content: mockSecretaryReply(userText), mock: true };
     }
     const messages = history.map((m) => ({
@@ -128,20 +164,23 @@
       content: m.content,
     }));
     try {
-      const out = await Gateway.completeTurn({
+      const out = await Adapter.completeTurn({
         userText,
         messages,
-        systemPrompt: SYSTEM_PROMPT,
+        systemPrompt: buildSystemPrompt(userText),
         modeId: MODE_ID,
-        surface: "ops_secretary",
-        skipSearch: true,
         mockFallback: ({ message }) => mockSecretaryReply(message),
       });
       const reply = String(out?.reply || "").trim();
       if (!reply) {
         return { content: mockSecretaryReply(userText), mock: true, error: out?.apiError };
       }
-      return { content: reply, mock: Boolean(out?.fallback_used), modelLabel: out?.modelLabel };
+      return {
+        content: reply,
+        mock: Boolean(out?.fallback_used),
+        modelLabel: out?.modelLabel,
+        error: out?.fallback_used ? out?.apiError : "",
+      };
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       return { content: mockSecretaryReply(userText), mock: true, error: msg };
@@ -193,7 +232,10 @@
       }
 
       if (out.error && out.mock) {
-        setStatus("error", "API未接続 — モック応答を表示", "⚠️");
+        const statusLabel = /DEEPSEEK_API_KEY|DeepSeek API が未設定/.test(out.error)
+          ? "DeepSeek 未設定 — モック応答"
+          : "API未接続 — モック応答を表示";
+        setStatus("error", statusLabel, "⚠️");
         setTimeout(() => setStatus("idle", "待機中", "🟢"), 4000);
       } else {
         setStatus("idle", "待機中", "🟢");
@@ -269,6 +311,7 @@
   }
 
   function render(ctx) {
+    setOpsSnapshot(ctx);
     bindChatForm();
     renderLog(loadHistory());
     renderBrief(ctx || {});
@@ -296,5 +339,7 @@
     loadHistory,
     clearHistoryForTests,
     bindChatForm,
+    setOpsSnapshot,
+    buildSystemPrompt,
   };
 })(typeof window !== "undefined" ? window : globalThis);
