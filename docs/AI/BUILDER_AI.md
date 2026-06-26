@@ -12,6 +12,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 
 | 項目 | 内容 |
 | --- | --- |
+| **展開方針** | 日本国内完成優先 · 建設業務専用 · 海外対象外 — [DECISIONS.md](../DECISIONS.md) **AD-011** |
 | **Builder 製品** | Production Ready v1.0 · RELEASE FROZEN |
 | **Builder AI 画面** | `builder/builder-ai.html` + `builder/builder-ai-*.js` |
 | **surface** | `builder_ai`（Gateway 経由） |

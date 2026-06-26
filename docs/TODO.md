@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-27（Builder Document Center Phase 6-F · 未コミット）  
+**最終更新:** 2026-06-27（サービス展開方針 2026-06 確定）  
 **Git HEAD:** `ac385c6`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -89,6 +89,12 @@
 ---
 
 ## 方針（確定 · 2026-06-26）
+
+### サービス展開方針（2026-06 確定）
+
+**正本:** [DECISIONS.md](./DECISIONS.md) **AD-011** · 要約: [ROADMAP.md](./ROADMAP.md) §サービス展開方針
+
+開発優先順位は **国内完成** を基本とし、海外前提の実装は AD-011 に従い **行わない**（Builder / Platform）または **将来設計のみ**（TLV / TASFUL AI）とする。
 
 ### AI プロバイダ分担
 

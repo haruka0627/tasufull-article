@@ -12,6 +12,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 
 | 項目 | 内容 |
 | --- | --- |
+| **展開方針** | 日本発 · 将来は海外ユーザー利用可能な設計 · 多言語・音声・専門 AI は段階追加 — [DECISIONS.md](../DECISIONS.md) **AD-011** |
 | **Production Ready** | **NO**（本番 preflight）— 機能実装は完了 |
 | **本番 AI API** | **OpenAI**（AI 秘書 DeepSeek · Builder OpenAI と分担 — [DECISIONS.md](../DECISIONS.md) AD-010） |
 | **Gateway** | `TasuAiModelGateway` · 契約変更はフェーズ外方針（未コミット diff あり → [KNOWN_ISSUES.md](../KNOWN_ISSUES.md) KI-001） |

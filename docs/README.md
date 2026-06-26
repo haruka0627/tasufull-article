@@ -1,6 +1,6 @@
 # TASFUL 開発ドキュメント（正本）
 
-**最終更新:** 2026-06-26  
+**最終更新:** 2026-06-27  
 **目的:** 「次に何をやるか」「どこまで終わったか」「何を決定したか」を、会話ログではなく **リポジトリ内** から確認する。
 
 ---
@@ -11,8 +11,8 @@
 | --- | --- |
 | [PROJECT_STATUS.md](./PROJECT_STATUS.md) | **現状スナップショット**（製品別ステータス・直近コミット） |
 | [TODO.md](./TODO.md) | **次にやること**（優先順・担当領域） |
-| [ROADMAP.md](./ROADMAP.md) | 中長期のフェーズと完了/未完了 |
-| [DECISIONS.md](./DECISIONS.md) | **決定事項**（アーキテクチャ・統合方針） |
+| [ROADMAP.md](./ROADMAP.md) | 中長期フェーズ · 展開方針要約（正本は AD-011） |
+| [DECISIONS.md](./DECISIONS.md) | **決定事項**（アーキテクチャ · 統合方針 · **AD-011 展開方針**） |
 | [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md) | リリース前ゲート |
 | [CHANGELOG.md](./CHANGELOG.md) |  notable 変更履歴 |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | 未解決・要確認・矛盾の記録 |
@@ -21,6 +21,7 @@
 
 | ファイル | 用途 |
 | --- | --- |
+| [AI/README.md](./AI/README.md) | AI 領域インデックス · 展開方針要約 |
 | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) | TASFUL AI Workspace（総合 AI） |
 | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) | Builder 専用 AI |
 | [AI/PLATFORM_AI.md](./AI/PLATFORM_AI.md) | Platform → TASFUL AI 入口 |
