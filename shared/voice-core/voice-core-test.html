@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Voice Core Phase 1 — Mock Test</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    button { margin: 0.25rem; padding: 0.5rem 1rem; }
+    #log { background: #f4f4f5; padding: 1rem; min-height: 200px; white-space: pre-wrap; font-size: 14px; }
+    .ok { color: #047857; }
+    .err { color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <h1>Voice Core Phase 1</h1>
+  <p>Mock adapter only — no external API.</p>
+  <div>
+    <button type="button" id="btn-start">Start session</button>
+    <button type="button" id="btn-text">Send text</button>
+    <button type="button" id="btn-audio">Send audio</button>
+    <button type="button" id="btn-stop">Stop session</button>
+    <button type="button" id="btn-auto">Run auto test</button>
+  </div>
+  <pre id="log"></pre>
+
+  <script src="voice-core-events.js"></script>
+  <script src="voice-adapter-interface.js"></script>
+  <script src="voice-mock-adapter.js"></script>
+  <script src="voice-provider-router.js"></script>
+  <script src="voice-session.js"></script>
+  <script src="voice-core.js"></script>
+  <script>
+    (function () {
+      const logEl = document.getElementById("log");
+      let session = null;
+      const lines = [];
+
+      function log(msg, cls) {
+        lines.push(msg);
+        logEl.textContent = lines.join("\n");
+        if (cls) logEl.className = cls;
+      }
+
+      function bindSession(s) {
+        s.receiveEvent((ev) => log(JSON.stringify(ev)));
+      }
+
+      document.getElementById("btn-start").onclick = () => {
+        session = window.TasuVoiceCore.startSession({ surface: "voice_core_test", provider: "mock" });
+        bindSession(session);
+        log("started: " + session.id);
+      };
+
+      document.getElementById("btn-text").onclick = () => {
+        if (!session) return log("no session", "err");
+        session.sendText("hello voice core");
+      };
+
+      document.getElementById("btn-audio").onclick = () => {
+        if (!session) return log("no session", "err");
+        session.sendAudio(new Uint8Array([1, 2, 3, 4]));
+      };
+
+      document.getElementById("btn-stop").onclick = () => {
+        if (!session) return log("no session", "err");
+        session.stopSession();
+        log("stopped", "ok");
+      };
+
+      document.getElementById("btn-auto").onclick = async () => {
+        const events = [];
+        const s = window.TasuVoiceCore.createSession({ surface: "auto", provider: "mock" });
+        s.receiveEvent((ev) => events.push(ev.type));
+        s.startSession({ provider: "mock", kind: "mock" });
+        s.sendText("phase1");
+        s.sendAudio(new Uint8Array([0]));
+        s.stopSession();
+        const need = ["session_started", "text_delta", "audio_delta_mock", "session_stopped"];
+        const ok = need.every((t) => events.includes(t));
+        log(ok ? "AUTO PASS: " + events.join(", ") : "AUTO FAIL: " + events.join(", "), ok ? "ok" : "err");
+      };
+    })();
+  </script>
+</body>
+</html>
