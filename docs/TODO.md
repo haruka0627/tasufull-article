@@ -75,6 +75,39 @@
 
 ---
 
+## Backlog（将来実装 · P0/P1 優先度外）
+
+**注:** 以下は実装予定の記録のみ。**Platform Critical / UI 修正の優先順位は変更しない。**
+
+| 項目 | 状態 | 参照 |
+| --- | --- | --- |
+| **Platform Coupon System** | 📋 未着手 | [platform-coupon-system-backlog.md](./platform-coupon-system-backlog.md) |
+| **AI Secretary Trend Scout** | 📋 未着手 | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) |
+| **TASFUL Site Assistant / Feedback Launcher** | 📋 未着手 | [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) |
+
+- 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
+- 購入者の表示・カート適用・利用済み/不可理由
+- 運営一覧・強制停止・不正監視 · AI 秘書連携設計
+- 将来: TASFUL 共通クーポン基盤として Builder / TLV / TASFUL AI へ拡張可能な設計前提
+
+**AI Secretary Trend Scout（経営参謀 · トレンド提案）**
+
+- 最新トレンド・市場・競合・補助金・法改正・SNS/検索傾向の収集と TASFUL 向け提案
+- 表示候補: Morning Summary · Daily Inbox · Command Center · OPS WATCH · 月次レポート
+- 提案カード: 活用案 · 優先度 · 難易度 · 期待効果 · **出典必須** · 採用/保留/却下
+- 表現: 「流行っている」断定を避け **複数ソースからの増加傾向** で記載
+- **実装なし** · P0/P1 外 · Platform Critical 優先順位は変更しない
+
+**TASFUL Site Assistant / Feedback Launcher（軽量導線ハブ）**
+
+- 離脱防止: 問い合わせ · **通報** · 不具合報告 · サイト内検索の常設入口
+- 必須7入口: 検索 / お問い合わせ / 通報 / 不具合 / 要望 / FAQ / **TASFUL AI を開く**
+- 役割分担: **TASFUL AI** = 相談・提案・専門 AI / **Site Assistant** = 検索・問い合わせ・通報・FAQ・ページ案内
+- 右下ランチャー · 全ページ共通（段階展開）· OPS / AI 秘書へ将来集約
+- **実装なし** · P0/P1 外 · Platform Critical 優先順位は変更しない
+
+---
+
 ## P2 — ドキュメント・運用
 
 - [ ] `docs/` 正本をコミット
