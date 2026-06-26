@@ -2,7 +2,7 @@
 
 **最終更新:** 2026-06-27
 
-各製品の AI 詳細は個別ファイルが正本。サービス全体の **国内/海外展開方針** の正本は [DECISIONS.md](../DECISIONS.md) **AD-011**（要約: [ROADMAP.md](../ROADMAP.md) §サービス展開方針）。
+各製品の AI 詳細は個別ファイルが正本。サービス全体の **国内/海外展開方針** は [DECISIONS.md](../DECISIONS.md) **AD-011**（要約: [ROADMAP.md](../ROADMAP.md) §サービス展開方針）。**UI/UX 設計原則** は **AD-012**（要約: [ROADMAP.md](../ROADMAP.md) §UI/UX 設計原則）。
 
 ---
 
@@ -22,5 +22,6 @@
 ## 関連
 
 - [DECISIONS.md](../DECISIONS.md) AD-011 — サービス展開方針（正本）
+- [DECISIONS.md](../DECISIONS.md) AD-012 — UI/UX 設計原則（正本）
 - [DECISIONS.md](../DECISIONS.md) AD-002〜004 — AI 統合・専用エンジン方針
 - [TODO.md](../TODO.md) §方針 — 開発優先順位 · AI プロバイダ分担
