@@ -1,0 +1,140 @@
+{
+  "engine_version": "v2",
+  "baseline_file": "reports/tlv-business-simulator/payout-engine-v2-production-baseline.json",
+  "generated_at": "2026-06-26T04:06:56.587Z",
+  "source_file": "reports/tlv-business-simulator/output/monthly-payout-decision.json",
+  "source_month": "2026-05",
+  "month": "2026-06",
+  "safety_status": "CAUTION",
+  "summary": {
+    "total_revenue": 620000,
+    "payout_pool": 271400,
+    "total_payout": 271400,
+    "final_company_profit": 100000,
+    "minimum_company_profit": 80000,
+    "pool_utilization_rate": 1,
+    "guaranteed_payout_total": 160000,
+    "variable_payout_total": 111400
+  },
+  "next_month_condition_lines": {
+    "Starter": {
+      "required_monthly_revenue": 0,
+      "required_views": 0,
+      "required_live_minutes": 0,
+      "required_active_days": 0,
+      "max_violations_count": 3,
+      "notes": "変動層の調整を踏まえ、翌月も基準条件を維持しつつ収益維持を推奨します。",
+      "canonical_rank": "Starter",
+      "layer": "variable",
+      "baseline_payout_rate_percent": 28,
+      "guarantee_rate_percent": null,
+      "rates_are_read_only": true,
+      "ai_adjusts": "condition_line_only"
+    },
+    "Creator": {
+      "required_monthly_revenue": 3000,
+      "required_views": 2000,
+      "required_live_minutes": 0,
+      "required_active_days": 0,
+      "max_violations_count": 3,
+      "notes": "変動層の調整を踏まえ、翌月も基準条件を維持しつつ収益維持を推奨します。",
+      "canonical_rank": "Creator",
+      "layer": "variable",
+      "baseline_payout_rate_percent": 38,
+      "guarantee_rate_percent": null,
+      "rates_are_read_only": true,
+      "ai_adjusts": "condition_line_only"
+    },
+    "Pro": {
+      "required_monthly_revenue": 15750,
+      "required_views": 10500,
+      "required_live_minutes": 120,
+      "required_active_days": 7,
+      "max_violations_count": 3,
+      "notes": "変動層の調整が発生したため、翌月は Pro 到達に必要な収益・視聴をやや引き上げます。",
+      "canonical_rank": "Pro",
+      "layer": "variable",
+      "baseline_payout_rate_percent": 48,
+      "guarantee_rate_percent": null,
+      "rates_are_read_only": true,
+      "ai_adjusts": "condition_line_only"
+    },
+    "Top": {
+      "required_monthly_revenue": 110001,
+      "required_views": 40000,
+      "required_live_minutes": 480,
+      "required_active_days": 7,
+      "max_violations_count": 0,
+      "notes": "残余プール逼迫のため、翌月は特別ランクの達成条件をやや厳格化します（還元率は変更しません）。",
+      "required_platform_gross_revenue": 750000,
+      "max_slots": 4,
+      "canonical_rank": "Top Creator",
+      "layer": "guaranteed",
+      "baseline_payout_rate_percent": 70,
+      "guarantee_rate_percent": 70,
+      "rates_are_read_only": true,
+      "ai_adjusts": "condition_line_only"
+    },
+    "Elite": {
+      "required_monthly_revenue": 176000,
+      "required_views": 60000,
+      "required_live_minutes": 720,
+      "required_active_days": 7,
+      "max_violations_count": 0,
+      "notes": "残余プール逼迫のため、翌月は特別ランクの達成条件をやや厳格化します（還元率は変更しません）。",
+      "required_platform_gross_revenue": 850000,
+      "max_slots": 1,
+      "canonical_rank": "Elite Creator",
+      "layer": "guaranteed",
+      "baseline_payout_rate_percent": 80,
+      "guarantee_rate_percent": 80,
+      "rates_are_read_only": true,
+      "ai_adjusts": "condition_line_only"
+    }
+  },
+  "ai_judgement": {
+    "overall": "注意",
+    "risk_level": "medium",
+    "reason": "還元プール利用率 100%・変動層の還元調整または利益余裕の薄さが見られます。",
+    "recommended_action": "還元率は変更せず、特別ランクの条件ラインと Pro 到達基準をやや厳格化してください。"
+  },
+  "creator_guidance": [
+    {
+      "rank": "Starter",
+      "canonical_rank": "Starter",
+      "layer": "variable",
+      "message": "今月は運営余裕が薄いため、次月も Starter 条件は維持しつつ収益の継続を推奨します。"
+    },
+    {
+      "rank": "Creator",
+      "canonical_rank": "Creator",
+      "layer": "variable",
+      "message": "Creator ランクは変動層です。次月も基準条件を満たし、収益・視聴の維持を心がけてください。"
+    },
+    {
+      "rank": "Pro",
+      "canonical_rank": "Pro",
+      "layer": "variable",
+      "message": "変動層の調整が発生したため、次月は収益・視聴維持を重視してください。"
+    },
+    {
+      "rank": "Top",
+      "canonical_rank": "Top Creator",
+      "layer": "guaranteed",
+      "message": "保証対象者は条件達成時に 70% 保証が維持されます。還元率自体は AI では変更しません。"
+    },
+    {
+      "rank": "Elite",
+      "canonical_rank": "Elite Creator",
+      "layer": "guaranteed",
+      "message": "保証対象者は条件達成時に 80% 保証が維持されます。還元率自体は AI では変更しません。"
+    }
+  ],
+  "validations": {
+    "source_loaded": true,
+    "baseline_loaded": true,
+    "condition_lines_present": true,
+    "ai_does_not_change_rates": true,
+    "all_pass": true
+  }
+}

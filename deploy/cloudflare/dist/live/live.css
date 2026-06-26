@@ -6375,6 +6375,256 @@ body[data-page="live-my-videos"] .tlv-desktop-content--my-videos {
   text-align: right;
 }
 
+.tlv-creator-payout {
+  margin-bottom: 24px;
+  padding: 18px;
+  border-radius: var(--live-radius);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  background: linear-gradient(180deg, rgba(74, 222, 128, 0.08), var(--live-surface));
+}
+
+.tlv-creator-payout--empty {
+  border-color: var(--live-border);
+  background: var(--live-surface);
+}
+
+.tlv-creator-payout__head {
+  margin-bottom: 12px;
+}
+
+.tlv-creator-payout__title {
+  margin: 0 0 6px;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.tlv-creator-payout__meta {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--live-muted);
+}
+
+.tlv-creator-payout__notice {
+  margin: 0 0 16px;
+  font-size: 0.8125rem;
+  color: var(--live-muted);
+}
+
+.tlv-creator-payout__notice code {
+  font-size: 0.75rem;
+}
+
+.tlv-creator-payout__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin: 0 0 18px;
+}
+
+.tlv-creator-payout__fact {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--live-bg);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-creator-payout__fact--highlight {
+  border-color: rgba(74, 222, 128, 0.45);
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.tlv-creator-payout__fact dt {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  color: var(--live-muted);
+}
+
+.tlv-creator-payout__fact dd {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.tlv-creator-payout__fact--highlight dd {
+  font-size: 1.125rem;
+  color: #4ade80;
+}
+
+.tlv-creator-payout__field-id {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--live-muted);
+}
+
+.tlv-creator-payout__texts {
+  display: grid;
+  gap: 12px;
+}
+
+.tlv-creator-payout__text-block {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--live-bg);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-creator-payout__text-block--notice {
+  border-color: rgba(250, 204, 21, 0.35);
+  background: rgba(250, 204, 21, 0.06);
+}
+
+.tlv-creator-payout__text-title {
+  margin: 0 0 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--live-muted);
+}
+
+.tlv-creator-payout__text-block p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.55;
+}
+
+.tlv-admin-payouts {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.tlv-admin-payouts__section-title {
+  margin: 0 0 12px;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.tlv-admin-payouts__notice {
+  margin: 0 0 12px;
+  font-size: 0.8125rem;
+  color: var(--live-muted);
+}
+
+.tlv-admin-payouts__summary {
+  padding: 16px;
+  border-radius: var(--live-radius);
+  border: 1px solid var(--live-border);
+  background: var(--live-surface);
+}
+
+.tlv-admin-payouts__summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.tlv-admin-payouts__summary-grid > div {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--live-bg);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-admin-payouts__summary-grid dt {
+  margin: 0 0 4px;
+  font-size: 0.75rem;
+  color: var(--live-muted);
+}
+
+.tlv-admin-payouts__summary-grid dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.tlv-admin-payouts__validation.is-pass {
+  color: #4ade80;
+}
+
+.tlv-admin-payouts__validation.is-fail {
+  color: #f87171;
+}
+
+.tlv-admin-payouts__table-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.tlv-admin-payouts__table-scroll {
+  overflow-x: auto;
+}
+
+.tlv-admin-payouts__table {
+  width: 100%;
+  min-width: 960px;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+}
+
+.tlv-admin-payouts__table th,
+.tlv-admin-payouts__table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--live-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tlv-admin-payouts__table th {
+  font-size: 0.75rem;
+  color: var(--live-muted);
+  background: var(--live-bg);
+  position: sticky;
+  top: 0;
+}
+
+.tlv-admin-payouts__table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tlv-admin-payouts__table td[data-display-field="payout_amount_yen"] {
+  font-weight: 700;
+  color: #4ade80;
+  white-space: nowrap;
+}
+
+.tlv-payment-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.tlv-payment-status--unpaid {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+}
+
+.tlv-payment-status--processing {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.12);
+}
+
+.tlv-payment-status--completed {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.tlv-payment-status--failed {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.12);
+}
+
+.tlv-payment-status--unknown {
+  color: var(--live-muted);
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .tlv-creator-perf__table-head {
   display: none;
 }
@@ -10942,6 +11192,38 @@ body[data-page="live-studio-audio-library"] .tlv-studio-sidebar__footer .tlv-stu
 
 .tlv-studio-topbar__create:hover {
   background: rgba(255, 255, 255, 0.12);
+}
+
+.tlv-tasful-ai-entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(167, 139, 250, 0.45);
+  background: linear-gradient(135deg, rgba(109, 40, 217, 0.35), rgba(59, 130, 246, 0.22));
+  color: #f5f0ff;
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.tlv-tasful-ai-entry:hover {
+  border-color: rgba(196, 181, 253, 0.75);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(59, 130, 246, 0.32));
+  color: #fff;
+}
+
+.tlv-tasful-ai-entry--studio-mobile {
+  min-height: 32px;
+  padding: 0 10px;
+  font-size: 0.75rem;
+}
+
+.tlv-tasful-ai-entry--videos-compact {
+  margin-right: 8px;
 }
 
 .tlv-studio-topbar__avatar {
@@ -16462,6 +16744,339 @@ body[data-page="live-watch-video"] [data-tlv-watch-drawer-backdrop] {
     display: flex !important;
     width: 240px;
     max-width: 240px;
+  }
+}
+
+/* ── TLV 月次還元 公開説明ページ（フェーズ⑥） ── */
+body[data-page="live-payout-policy"] {
+  background: var(--live-bg);
+  color: var(--live-text);
+}
+
+.tlv-payout-policy {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 20px 48px;
+}
+
+.tlv-payout-policy__header {
+  margin-bottom: 28px;
+}
+
+.tlv-payout-policy__back {
+  display: inline-block;
+  margin-bottom: 12px;
+  font-size: 0.875rem;
+  color: var(--live-muted);
+  text-decoration: none;
+}
+
+.tlv-payout-policy__back:hover {
+  color: var(--live-text);
+}
+
+.tlv-payout-policy__eyebrow {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #4ade80;
+}
+
+.tlv-payout-policy__hero {
+  margin-bottom: 40px;
+  padding: 28px 24px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(74, 222, 128, 0.12), rgba(15, 10, 28, 0.6));
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.tlv-payout-policy__hero-title {
+  margin: 0 0 12px;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.tlv-payout-policy__hero-lead {
+  margin: 0 0 12px;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+
+.tlv-payout-policy__hero-note {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__section {
+  margin-bottom: 36px;
+}
+
+.tlv-payout-policy__section--highlight {
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background: rgba(74, 222, 128, 0.06);
+}
+
+.tlv-payout-policy__section-title {
+  margin: 0 0 14px;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.tlv-payout-policy__section-intro {
+  margin: 0 0 16px;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tlv-payout-policy__card {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--live-surface);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-payout-policy__card h3 {
+  margin: 0 0 8px;
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.tlv-payout-policy__card p {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__callout {
+  margin-bottom: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--live-bg);
+  border: 1px solid var(--live-border);
+  text-align: center;
+}
+
+.tlv-payout-policy__callout-label {
+  margin: 0 0 6px;
+  font-size: 0.75rem;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__callout-value {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #4ade80;
+}
+
+.tlv-payout-policy__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.tlv-payout-policy__list li + li {
+  margin-top: 8px;
+}
+
+.tlv-payout-policy__flow {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tlv-payout-policy__flow li {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 4px 12px;
+  align-items: start;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--live-surface);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-payout-policy__flow-step {
+  grid-row: span 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: var(--live-bg);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__flow-label {
+  font-weight: 700;
+  font-size: 0.875rem;
+  font-family: ui-monospace, monospace;
+}
+
+.tlv-payout-policy__flow-desc {
+  font-size: 0.8125rem;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__flow--pool {
+  border-color: rgba(250, 204, 21, 0.35);
+  background: rgba(250, 204, 21, 0.06);
+}
+
+.tlv-payout-policy__flow--creator {
+  border-color: rgba(74, 222, 128, 0.35);
+  background: rgba(74, 222, 128, 0.08);
+}
+
+.tlv-payout-policy__fineprint {
+  margin: 12px 0 0;
+  font-size: 0.75rem;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__defs {
+  margin: 0;
+  display: grid;
+  gap: 14px;
+}
+
+.tlv-payout-policy__defs > div {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--live-surface);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-payout-policy__defs dt {
+  margin: 0 0 6px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.tlv-payout-policy__defs dd {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__faq {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tlv-payout-policy__faq-item {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--live-surface);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-payout-policy__faq-item summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.tlv-payout-policy__faq-item p {
+  margin: 12px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__cta {
+  text-align: center;
+  padding: 24px;
+  border-radius: 14px;
+  background: var(--live-surface);
+  border: 1px solid var(--live-border);
+}
+
+.tlv-payout-policy__cta p {
+  margin: 0 0 16px;
+  font-size: 0.9375rem;
+  color: var(--live-muted);
+}
+
+.tlv-payout-policy__cta-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.tlv-payout-policy__footer {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid var(--live-border);
+  font-size: 0.75rem;
+  color: var(--live-muted);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .tlv-payout-policy {
+    padding: 20px 16px 40px;
+  }
+
+  .tlv-payout-policy__cards {
+    grid-template-columns: 1fr;
+  }
+
+  .tlv-payout-policy__hero {
+    padding: 22px 18px;
+  }
+}
+
+@media (max-width: 390px) {
+  .tlv-payout-policy {
+    padding: 16px 12px 32px;
+  }
+
+  .tlv-payout-policy__hero-title {
+    font-size: 1.375rem;
+  }
+
+  .tlv-payout-policy__cta-links {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tlv-payout-policy__cta-links .live-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .tlv-payout-policy__flow li {
+    grid-template-columns: 1.75rem 1fr;
+    padding: 10px 12px;
   }
 }
 

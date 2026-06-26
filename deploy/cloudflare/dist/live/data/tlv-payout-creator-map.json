@@ -1,0 +1,8 @@
+{
+  "query_param": "payoutCreator",
+  "default_creator_id": "cr_001",
+  "by_talk_user_id": {
+    "u_me": "cr_001",
+    "u_creator": "cr_004"
+  }
+}

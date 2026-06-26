@@ -293,7 +293,7 @@
     `;
   }
 
-  function renderDashboardHtml({ summary, metrics, monetizationStatus, eligibility, talkUserId, view = "full" }) {
+  function renderDashboardHtml({ summary, metrics, monetizationStatus, eligibility, talkUserId, view = "full", payoutPanelHtml = "" }) {
     const cfg = C();
     const isAnalytics = view === "analytics";
     const pageTitle = isAnalytics ? "チャンネルのアナリティクス" : "収益・分析";
@@ -302,6 +302,7 @@
         <header class="tlv-studio-page__header">
           <h1 class="tlv-studio-page__title">${cfg.escapeHtml(pageTitle)}</h1>
         </header>
+        ${payoutPanelHtml}
         ${renderDisclaimer()}
         ${renderSummaryCards(summary)}
         ${isAnalytics ? "" : renderMonetizationPanel(monetizationStatus, eligibility)}
@@ -378,9 +379,21 @@
     writeToRoots(roots, '<p class="live-loading">分析データを読み込み中…</p>');
 
     try {
-      const [videos, profile] = await Promise.all([
+      const payoutSvc = global.TasuTlvCreatorPayoutDisplay;
+      const payoutPanelPromise = payoutSvc?.fetchAndRenderPayoutPanel
+        ? payoutSvc.fetchAndRenderPayoutPanel({ talkUserId }).catch((err) => {
+            console.warn("[TasuLiveCreatorDashboard] payout panel skipped:", err);
+            return (
+              '<section class="tlv-creator-payout tlv-creator-payout--empty" data-tlv-creator-payout-empty>' +
+              "<p>月次還元データを読み込めませんでした。scripts で creator-rank-explanation.json を生成してください。</p></section>"
+            );
+          })
+        : Promise.resolve("");
+
+      const [videos, profile, payoutPanelHtml] = await Promise.all([
         fetchOwnVideosForAnalytics(),
         cfg.fetchCreatorProfile(talkUserId).catch(() => null),
+        payoutPanelPromise,
       ]);
 
       const adSlotCounts = await fetchActiveAdSlotCounts(videos.map((v) => v.id));
@@ -395,6 +408,7 @@
         eligibility,
         talkUserId,
         view: options.view || "full",
+        payoutPanelHtml: payoutPanelHtml || "",
       });
 
       writeToRoots(roots, html);
