@@ -106,6 +106,23 @@ async function verifyLayout(page, role, partnerId) {
         text: el.querySelector(".mvp-slack-msg__text, .mvp-slack-msg__system")?.textContent || "",
       }));
 
+      function findDomForMessage(domItems, m) {
+        const text = String(m.text || "").trim();
+        if (!text) return null;
+        const fromName = String(m.from?.name || m.senderName || "").trim();
+        const candidates = domItems.filter((d) => d.text.trim() === text);
+        if (candidates.length === 0) return null;
+        if (candidates.length === 1) return candidates[0];
+        if (fromName) {
+          const byName = candidates.find((d) => {
+            const n = d.name.trim();
+            return n === fromName || n.includes(fromName) || fromName.includes(n);
+          });
+          if (byName) return byName;
+        }
+        return candidates[0];
+      }
+
       function expectedSide(m, me) {
         if (m.system) return "system";
         const ftype = String(m.from?.type || "partner");
@@ -119,8 +136,8 @@ async function verifyLayout(page, role, partnerId) {
       const nonSystem = msgs.filter((m) => !m.system);
       for (const m of nonSystem) {
         const exp = expectedSide(m, me);
-        const dom = domItems.find((d) => d.text.includes((m.text || "").slice(0, 12)));
-        if (dom && dom.side !== exp) mismatches += 1;
+        const dom = findDomForMessage(domItems, m);
+        if (!dom || dom.side !== exp) mismatches += 1;
       }
 
       return {
@@ -143,8 +160,29 @@ async function verifyLayout(page, role, partnerId) {
 }
 
 async function runCompletionFlow(page) {
+  await page.evaluate(
+    ({ mvpKey, threadId, roleKey, partnerKey }) => {
+      localStorage.setItem(roleKey, "partner");
+      localStorage.setItem(partnerKey, "demo-partner-001");
+      const state = JSON.parse(localStorage.getItem(mvpKey) || "{}");
+      const thread = state.threads?.[threadId];
+      if (!thread) return;
+      const project = (state.projects || []).find((p) => p.project_id === thread.project_id);
+      thread.siteData = { photos: [], completed: false, completionConsent: false, completedAt: null };
+      thread.status = "in_progress";
+      thread.pdf_outputs = [];
+      thread.completion_report = null;
+      thread.invoice_meta = null;
+      thread.completion_submission = null;
+      if (project) {
+        project.selected_partner_ids = ["demo-partner-001"];
+      }
+      localStorage.setItem(mvpKey, JSON.stringify(state));
+    },
+    { mvpKey: MVP_KEY, threadId: THREAD_ID, roleKey: ROLE_KEY, partnerKey: PARTNER_KEY }
+  );
   await page.goto(THREAD_URL);
-  await page.waitForSelector("[data-builder-mvp-thread-complete-open]");
+  await page.waitForSelector("[data-builder-mvp-thread-complete-open]:not([hidden])");
 
   await page.locator("[data-builder-mvp-thread-complete-open]").click();
   await page.waitForSelector("[data-builder-mvp-thread-complete-modal]:not([hidden])");
@@ -168,6 +206,23 @@ async function runCompletionFlow(page) {
   await page.waitForFunction(
     ({ mvpKey, threadId }) => {
       const state = JSON.parse(localStorage.getItem(mvpKey) || "{}");
+      return state.threads?.[threadId]?.completion_submission?.status === "submitted";
+    },
+    { mvpKey: MVP_KEY, threadId: THREAD_ID }
+  );
+
+  await page.evaluate(({ roleKey }) => {
+    localStorage.setItem(roleKey, "owner");
+  }, { roleKey: ROLE_KEY });
+  await page.reload();
+  await page.waitForSelector("[data-builder-mvp-thread-complete-open]:not([hidden])");
+  await page.locator("[data-builder-mvp-thread-complete-open]").click();
+  await page.waitForSelector("[data-thread-completion-approve]");
+  await page.locator("[data-thread-completion-approve]").click();
+
+  await page.waitForFunction(
+    ({ mvpKey, threadId }) => {
+      const state = JSON.parse(localStorage.getItem(mvpKey) || "{}");
       return state.threads?.[threadId]?.siteData?.completed === true;
     },
     { mvpKey: MVP_KEY, threadId: THREAD_ID }
@@ -179,15 +234,15 @@ async function runCompletionFlow(page) {
       const notifs = JSON.parse(localStorage.getItem(notifKey) || "[]");
       const thread = state.threads?.[threadId] || {};
       const site = thread.siteData || {};
-      const invoices = (thread.pdf_outputs || []).filter((p) => p.kind === "invoice");
+      const submission = thread.completion_submission || {};
       return {
         siteCompleted: site.completed === true,
         siteConsent: site.completionConsent === true,
-        sitePhotos: (site.photos || []).length,
+        submissionPhotos: (submission.photos || []).length,
+        submissionStatus: submission.status || null,
         hasCompletionReport: Boolean(thread.completion_report?.ts),
-        invoiceMetaStatus: thread.invoice_meta?.status || null,
-        invoiceCount: invoices.length,
-        completedNotification: notifs.some((n) => n.type === "completed"),
+        completionSubmittedNotification: notifs.some((n) => n.type === "completion_submitted"),
+        completionApprovedNotification: notifs.some((n) => n.type === "completion_approved"),
         systemCompleteMsg: (thread.messages || []).some((m) => m.system && String(m.text || "").includes("完了")),
       };
     },
@@ -221,11 +276,17 @@ async function main() {
   const completion = await runCompletionFlow(page);
   if (!completion.siteCompleted) throw new Error("siteData.completed not set");
   if (!completion.siteConsent) throw new Error("siteData.completionConsent not set");
-  if (completion.sitePhotos < 1) throw new Error("Completion photos not saved");
+  if (completion.submissionPhotos < 1) throw new Error("Completion photos not saved");
   if (!completion.hasCompletionReport) throw new Error("completion_report not updated");
-  if (completion.invoiceMetaStatus !== "finalized") throw new Error("invoice_meta not finalized");
-  if (completion.invoiceCount < 1) throw new Error("Invoice PDF not in pdf_outputs");
-  if (!completion.completedNotification) throw new Error("completed notification missing");
+  if (completion.submissionStatus !== "approved") {
+    throw new Error(`completion_submission not approved: ${completion.submissionStatus}`);
+  }
+  if (!completion.completionSubmittedNotification) {
+    throw new Error("completion_submitted notification missing");
+  }
+  if (!completion.completionApprovedNotification) {
+    throw new Error("completion_approved notification missing");
+  }
   if (!completion.systemCompleteMsg) throw new Error("System completion message missing");
 
   console.log("OK: builder mvp thread integration test passed");
