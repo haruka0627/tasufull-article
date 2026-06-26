@@ -68,6 +68,19 @@
     return `builder-ph-payment--${String(status || "unpaid").replace(/-/g, "_")}`;
   }
 
+  function renderEstInvSummary() {
+    const Store = global.TasuBuilderProjectStore;
+    const wrap = $("[data-builder-ph-est-inv-summary]");
+    if (!Store || !wrap) return;
+    const est = Store.getEstimateSummary?.() || {};
+    const inv = Store.getInvoiceSummary?.() || {};
+    wrap.innerHTML =
+      `<div class="builder-ph-finance-stat"><p class="builder-ph-finance-stat__label">総見積</p><p class="builder-ph-finance-stat__value">${escapeHtml(formatYen(est.totalEstimate))}</p></div>` +
+      `<div class="builder-ph-finance-stat"><p class="builder-ph-finance-stat__label">総請求</p><p class="builder-ph-finance-stat__value">${escapeHtml(formatYen(inv.totalInvoice))}</p></div>` +
+      `<div class="builder-ph-finance-stat${est.uninvoicedCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">未請求</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(est.uninvoicedCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${inv.outstandingCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">未入金</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(inv.outstandingCount || 0))} 件</p></div>`;
+  }
+
   function renderFinanceSummary() {
     const Store = global.TasuBuilderProjectStore;
     const wrap = $("[data-builder-ph-finance-summary]");
@@ -119,6 +132,10 @@
           `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.finance?.costAmount))}</td>` +
           `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.finance?.grossProfit))}</td>` +
           `<td><span class="${paymentClass(p.finance?.paymentStatus)}">${escapeHtml(p.finance?.paymentStatusLabel || "—")}</span></td>` +
+          `<td>${escapeHtml(p.estimate?.estimateStatusLabel || "—")}</td>` +
+          `<td>${escapeHtml(p.invoice?.invoiceStatusLabel || "—")}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.estimate?.total))}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.invoice?.total))}</td>` +
           `<td>${escapeHtml(formatDate(p.updatedAt))}</td>` +
           `</tr>`
       )
@@ -128,6 +145,7 @@
   function refresh() {
     const Store = global.TasuBuilderProjectStore;
     if (!Store?.searchProjects) return;
+    renderEstInvSummary();
     renderFinanceSummary();
     renderTable(Store.searchProjects(getFiltersFromForm()));
   }

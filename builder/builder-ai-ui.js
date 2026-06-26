@@ -110,6 +110,18 @@
     return Store?.previewFinanceIntent?.(intentText) || null;
   }
 
+  /** Phase 6-D: 将来の AI 見積 intent プレビュー（現時点では UI から未呼び出し） */
+  function prepareEstimateIntent(intentText) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewEstimateIntent?.(intentText) || null;
+  }
+
+  /** Phase 6-D: 将来の AI 請求 intent プレビュー（現時点では UI から未呼び出し） */
+  function prepareInvoiceIntent(intentText) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewInvoiceIntent?.(intentText) || null;
+  }
+
   let messages = loadHistory();
   let sending = false;
   let photoFile = null;
@@ -510,6 +522,8 @@
     pushSystem,
     prepareScheduleIntent,
     prepareFinanceIntent,
+    prepareEstimateIntent,
+    prepareInvoiceIntent,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);

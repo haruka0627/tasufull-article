@@ -1,12 +1,12 @@
 /**
- * Builder Project Hub — 案件ストア（Phase 6-A/6-B/6-C · localStorage）
+ * Builder Project Hub — 案件ストア（Phase 6-A〜6-D · localStorage）
  * Builder 専用 · Platform / AI秘書 / TASFUL AI 非連携
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_project_hub_v1";
-  const SCHEMA_VERSION = 3;
+  const SCHEMA_VERSION = 4;
 
   const STATUSES = Object.freeze([
     { id: "inquiry", label: "問い合わせ" },
@@ -37,6 +37,39 @@
     status_changed: "ステータス変更",
     schedule_updated: "日程変更",
     finance_updated: "収支更新",
+    estimate_updated: "見積更新",
+    invoice_updated: "請求更新",
+  });
+
+  const TAX_RATE = 0.1;
+
+  /** 見積状態（Phase 6-D） */
+  const ESTIMATE_STATUSES = Object.freeze([
+    { id: "draft", label: "下書き" },
+    { id: "submitted", label: "提出済" },
+    { id: "approved", label: "承認済" },
+    { id: "expired", label: "期限切れ" },
+    { id: "cancelled", label: "取消" },
+  ]);
+
+  /** 請求状態（Phase 6-D） */
+  const INVOICE_STATUSES = Object.freeze([
+    { id: "draft", label: "下書き" },
+    { id: "issued", label: "発行済" },
+    { id: "paid", label: "入金済" },
+    { id: "cancelled", label: "取消" },
+  ]);
+
+  const ESTIMATE_INTENT_TYPES = Object.freeze({
+    SET_STATUS: "set_status",
+    ADD_ITEM: "add_item",
+    SET_VALID_UNTIL: "set_valid_until",
+  });
+
+  const INVOICE_INTENT_TYPES = Object.freeze({
+    SET_STATUS: "set_status",
+    SET_DUE_DATE: "set_due_date",
+    MARK_PAID: "mark_paid",
   });
 
   /** 支払い状況（Phase 6-C） */
@@ -93,6 +126,93 @@
 
   function paymentStatusLabel(id) {
     return PAYMENT_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function estimateStatusLabel(id) {
+    return ESTIMATE_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function invoiceStatusLabel(id) {
+    return INVOICE_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function calcTax(subtotal) {
+    return Math.round(toAmount(subtotal) * TAX_RATE);
+  }
+
+  function calcTotal(subtotal, tax) {
+    return toAmount(subtotal) + toAmount(tax);
+  }
+
+  function normalizeEstimateItem(raw) {
+    const it = raw && typeof raw === "object" ? raw : {};
+    const quantity = Math.max(0, Number(it.quantity) || 0);
+    const unitPrice = toAmount(it.unitPrice);
+    const amount = toAmount(it.amount) || Math.round(quantity * unitPrice);
+    return {
+      id: String(it.id || uid("est_it")),
+      description: String(it.description || ""),
+      quantity,
+      unitPrice,
+      amount,
+    };
+  }
+
+  function normalizeEstimate(raw, project) {
+    const e = raw && typeof raw === "object" ? raw : {};
+    const items = Array.isArray(e.items) ? e.items.map(normalizeEstimateItem) : [];
+    const calc = calculateEstimateAmounts(items);
+    const status = String(e.estimateStatus || "draft");
+    return {
+      estimateNumber: String(e.estimateNumber || ""),
+      estimateStatus: status,
+      estimateStatusLabel: String(e.estimateStatusLabel || estimateStatusLabel(status)),
+      createdAt: String(e.createdAt || project?.createdAt || nowIso()),
+      validUntil: String(e.validUntil || ""),
+      customerName: String(e.customerName || project?.customerName || ""),
+      customerAddress: String(e.customerAddress || ""),
+      items,
+      subtotal: calc.subtotal,
+      tax: calc.tax,
+      total: calc.total,
+      memo: String(e.memo || ""),
+      updatedAt: String(e.updatedAt || ""),
+    };
+  }
+
+  function normalizeInvoice(raw) {
+    const inv = raw && typeof raw === "object" ? raw : {};
+    const subtotal = toAmount(inv.subtotal);
+    const tax = inv.tax != null ? toAmount(inv.tax) : calcTax(subtotal);
+    const status = String(inv.invoiceStatus || "draft");
+    return {
+      invoiceNumber: String(inv.invoiceNumber || ""),
+      invoiceStatus: status,
+      invoiceStatusLabel: String(inv.invoiceStatusLabel || invoiceStatusLabel(status)),
+      issuedAt: String(inv.issuedAt || ""),
+      dueDate: String(inv.dueDate || ""),
+      paidAt: String(inv.paidAt || ""),
+      subtotal,
+      tax,
+      total: inv.total != null ? toAmount(inv.total) : calcTotal(subtotal, tax),
+      memo: String(inv.memo || ""),
+      updatedAt: String(inv.updatedAt || ""),
+    };
+  }
+
+  function calculateEstimateAmounts(items) {
+    const list = Array.isArray(items) ? items.map(normalizeEstimateItem) : [];
+    const subtotal = list.reduce((sum, it) => sum + toAmount(it.amount), 0);
+    const tax = calcTax(subtotal);
+    return { subtotal, tax, total: calcTotal(subtotal, tax), items: list };
+  }
+
+  function calculateEstimate(estimate) {
+    return normalizeEstimate(estimate);
+  }
+
+  function calculateInvoice(invoice) {
+    return normalizeInvoice(invoice);
   }
 
   function toAmount(value) {
@@ -225,6 +345,8 @@
       schedulePhase,
       schedulePhaseLabel: String(p.schedulePhaseLabel || schedulePhaseLabel(schedulePhase)),
       finance: normalizeFinance(p.finance || p),
+      estimate: normalizeEstimate(p.estimate, p),
+      invoice: normalizeInvoice(p.invoice),
       memo: String(p.memo || ""),
       createdAt: String(p.createdAt || nowIso()),
       updatedAt: String(p.updatedAt || p.createdAt || nowIso()),
@@ -269,6 +391,26 @@
           paymentDueDate: dateOnlyOffset(30),
           memo: "概算見積ベース",
         },
+        estimate: {
+          estimateNumber: "EST-2026-001",
+          estimateStatus: "submitted",
+          validUntil: dateOnlyOffset(30),
+          customerName: "田中 様",
+          customerAddress: "東京都世田谷区 1-2-3",
+          items: [
+            { description: "外壁ひび補修", quantity: 1, unitPrice: 600000, amount: 600000 },
+            { description: "部分塗装", quantity: 1, unitPrice: 490909, amount: 490909 },
+          ],
+          memo: "現調後正式見積",
+        },
+        invoice: {
+          invoiceNumber: "",
+          invoiceStatus: "draft",
+          subtotal: 0,
+          tax: 0,
+          total: 0,
+          memo: "未請求",
+        },
         memo: "外壁ひび・塗装剥離。現調済み。",
         createdAt: day(14),
         updatedAt: day(2),
@@ -296,6 +438,25 @@
           paymentDueDate: dateOnlyOffset(45),
           memo: "見積作成中",
         },
+        estimate: {
+          estimateNumber: "EST-2026-002",
+          estimateStatus: "draft",
+          validUntil: dateOnlyOffset(45),
+          customerName: "佐藤 様",
+          customerAddress: "神奈川県横浜市…",
+          items: [
+            { description: "キッチンリフォーム", quantity: 1, unitPrice: 2000000, amount: 2000000 },
+            { description: "浴室リフォーム", quantity: 1, unitPrice: 1181818, amount: 1181818 },
+          ],
+          memo: "打合せ後確定予定",
+        },
+        invoice: {
+          invoiceNumber: "",
+          invoiceStatus: "draft",
+          subtotal: 0,
+          tax: 0,
+          total: 0,
+        },
         memo: "キッチン・浴室の同時リフォーム相談。",
         createdAt: day(5),
         updatedAt: day(1),
@@ -321,6 +482,27 @@
           paymentDueDate: dateOnlyOffset(-5),
           paidAt: dateOnlyOffset(-20),
           memo: "着手金入金済・残金未収",
+        },
+        estimate: {
+          estimateNumber: "EST-2026-003",
+          estimateStatus: "approved",
+          validUntil: dateOnlyOffset(-10),
+          customerName: "山本商事",
+          customerAddress: "大阪府大阪市…",
+          items: [
+            { description: "店舗内装工事", quantity: 1, unitPrice: 2545455, amount: 2545455 },
+          ],
+          memo: "承認済",
+        },
+        invoice: {
+          invoiceNumber: "INV-2026-003",
+          invoiceStatus: "issued",
+          issuedAt: dateOnlyOffset(-15),
+          dueDate: dateOnlyOffset(-3),
+          subtotal: 2545455,
+          tax: 254545,
+          total: 2800000,
+          memo: "残金請求中",
         },
         memo: "施工週次報告あり。",
         createdAt: day(30),
@@ -776,6 +958,206 @@
     return updateFinance(projectId, patch);
   }
 
+  function formatEstimateDetail(estimate) {
+    const e = normalizeEstimate(estimate);
+    return `見積 ${e.estimateNumber || "—"} · ${e.estimateStatusLabel} · ${formatYen(e.total)}`;
+  }
+
+  function formatInvoiceDetail(invoice) {
+    const inv = normalizeInvoice(invoice);
+    return `請求 ${inv.invoiceNumber || "—"} · ${inv.invoiceStatusLabel} · ${formatYen(inv.total)}`;
+  }
+
+  function isUninvoicedProject(project) {
+    const inv = project?.invoice;
+    if (!inv) return true;
+    if (!inv.invoiceNumber && inv.invoiceStatus === "draft") return true;
+    return inv.invoiceStatus === "draft" && toAmount(inv.total) === 0;
+  }
+
+  function isOutstandingInvoice(project) {
+    return project?.invoice?.invoiceStatus === "issued";
+  }
+
+  function getOutstandingInvoices() {
+    return listProjects()
+      .filter(isOutstandingInvoice)
+      .sort((a, b) =>
+        String(a.invoice?.dueDate || "").localeCompare(String(b.invoice?.dueDate || ""))
+      );
+  }
+
+  function getUninvoicedProjects() {
+    return listProjects().filter(isUninvoicedProject);
+  }
+
+  function getEstimateSummary() {
+    const projects = listProjects();
+    let totalEstimate = 0;
+    let uninvoicedCount = 0;
+    projects.forEach((p) => {
+      const e = calculateEstimate(p.estimate);
+      totalEstimate += e.total;
+      if (isUninvoicedProject(p)) uninvoicedCount += 1;
+    });
+    return { totalEstimate, uninvoicedCount, projectCount: projects.length };
+  }
+
+  function getInvoiceSummary() {
+    const projects = listProjects();
+    let totalInvoice = 0;
+    let outstandingCount = 0;
+    projects.forEach((p) => {
+      const inv = calculateInvoice(p.invoice);
+      if (inv.invoiceStatus !== "cancelled") totalInvoice += inv.total;
+      if (isOutstandingInvoice(p)) outstandingCount += 1;
+    });
+    return { totalInvoice, outstandingCount, projectCount: projects.length };
+  }
+
+  /**
+   * @param {string} projectId
+   * @param {object} estimatePatch
+   */
+  function updateEstimate(projectId, estimatePatch) {
+    const existing = getProject(projectId);
+    if (!existing) return { ok: false, error: "not_found" };
+    const patch = estimatePatch && typeof estimatePatch === "object" ? estimatePatch : {};
+    const prev = existing.estimate || {};
+    const mergedInput = { ...prev, ...patch, updatedAt: nowIso() };
+    if (patch.items) mergedInput.items = patch.items;
+    const merged = normalizeEstimate(mergedInput, existing);
+    const next = normalizeProject({ ...existing, estimate: merged });
+    addTimelineEvent(
+      next,
+      "estimate_updated",
+      patch.estimateReason != null
+        ? String(patch.estimateReason).slice(0, 500)
+        : formatEstimateDetail(merged)
+    );
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === projectId);
+    data.projects[idx] = next;
+    writeAll(data);
+    return { ok: true, project: next, estimate: next.estimate };
+  }
+
+  /**
+   * @param {string} projectId
+   * @param {object} invoicePatch
+   */
+  function updateInvoice(projectId, invoicePatch) {
+    const existing = getProject(projectId);
+    if (!existing) return { ok: false, error: "not_found" };
+    const patch = invoicePatch && typeof invoicePatch === "object" ? invoicePatch : {};
+    const prev = existing.invoice || {};
+    const merged = normalizeInvoice({ ...prev, ...patch, updatedAt: nowIso() });
+    if (merged.invoiceStatus === "paid" && !merged.paidAt) {
+      merged.paidAt = todayDateOnly();
+    }
+    const next = normalizeProject({ ...existing, invoice: merged });
+    addTimelineEvent(
+      next,
+      "invoice_updated",
+      patch.invoiceReason != null
+        ? String(patch.invoiceReason).slice(0, 500)
+        : formatInvoiceDetail(merged)
+    );
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === projectId);
+    data.projects[idx] = next;
+    writeAll(data);
+    return { ok: true, project: next, invoice: next.invoice };
+  }
+
+  function previewEstimateIntent(intentText) {
+    const text = String(intentText || "").trim();
+    if (!text) return { ok: false, error: "empty_intent" };
+    const intent = { source: "ai_assistant", rawText: text };
+    const statusMatch = text.match(/見積(?:状態|ステータス)\s*[:：]?\s*(下書き|提出済|承認済|draft|submitted|approved)/i);
+    const validMatch = text.match(/有効期限\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+    const itemMatch = text.match(/(.+?)\s+([\d,.]+)\s*円/);
+
+    if (statusMatch) {
+      intent.type = ESTIMATE_INTENT_TYPES.SET_STATUS;
+      const map = { 下書き: "draft", 提出済: "submitted", 承認済: "approved", draft: "draft", submitted: "submitted", approved: "approved" };
+      intent.estimateStatus = map[statusMatch[1]] || "draft";
+    } else if (validMatch) {
+      intent.type = ESTIMATE_INTENT_TYPES.SET_VALID_UNTIL;
+      intent.validUntil = validMatch[1];
+    } else if (itemMatch) {
+      intent.type = ESTIMATE_INTENT_TYPES.ADD_ITEM;
+      intent.item = { description: itemMatch[1].trim(), quantity: 1, unitPrice: toAmount(itemMatch[2].replace(/,/g, "")) };
+    } else {
+      return { ok: false, error: "unrecognized_intent", rawText: text };
+    }
+    return { ok: true, intent };
+  }
+
+  function previewInvoiceIntent(intentText) {
+    const text = String(intentText || "").trim();
+    if (!text) return { ok: false, error: "empty_intent" };
+    const intent = { source: "ai_assistant", rawText: text };
+    const statusMatch = text.match(/請求(?:状態|ステータス)\s*[:：]?\s*(下書き|発行済|入金済|draft|issued|paid)/i);
+    const dueMatch = text.match(/支払期限\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+    const paidMatch = /入金済|支払い?済|paid/i.test(text);
+
+    if (paidMatch) {
+      intent.type = INVOICE_INTENT_TYPES.MARK_PAID;
+      intent.invoiceStatus = "paid";
+    } else if (statusMatch) {
+      intent.type = INVOICE_INTENT_TYPES.SET_STATUS;
+      const map = { 下書き: "draft", 発行済: "issued", 入金済: "paid", draft: "draft", issued: "issued", paid: "paid" };
+      intent.invoiceStatus = map[statusMatch[1]] || "draft";
+    } else if (dueMatch) {
+      intent.type = INVOICE_INTENT_TYPES.SET_DUE_DATE;
+      intent.dueDate = dueMatch[1];
+    } else {
+      return { ok: false, error: "unrecognized_intent", rawText: text };
+    }
+    return { ok: true, intent };
+  }
+
+  function applyEstimateIntent(projectId, estimateIntent) {
+    const i = estimateIntent && typeof estimateIntent === "object" ? estimateIntent : {};
+    const type = String(i.type || "");
+    const patch = { estimateReason: i.reason || i.rawText || "AI 見積提案" };
+
+    if (type === ESTIMATE_INTENT_TYPES.SET_STATUS) {
+      patch.estimateStatus = String(i.estimateStatus || "draft");
+    } else if (type === ESTIMATE_INTENT_TYPES.SET_VALID_UNTIL) {
+      patch.validUntil = String(i.validUntil || "");
+    } else if (type === ESTIMATE_INTENT_TYPES.ADD_ITEM) {
+      const project = getProject(projectId);
+      const items = [...(project?.estimate?.items || []), normalizeEstimateItem(i.item || {})];
+      patch.items = items;
+    } else {
+      return { ok: false, error: "invalid_intent" };
+    }
+    return updateEstimate(projectId, patch);
+  }
+
+  function applyInvoiceIntent(projectId, invoiceIntent) {
+    const i = invoiceIntent && typeof invoiceIntent === "object" ? invoiceIntent : {};
+    const type = String(i.type || "");
+    const patch = { invoiceReason: i.reason || i.rawText || "AI 請求提案" };
+
+    if (type === INVOICE_INTENT_TYPES.MARK_PAID) {
+      patch.invoiceStatus = "paid";
+      patch.paidAt = i.paidAt || todayDateOnly();
+    } else if (type === INVOICE_INTENT_TYPES.SET_STATUS) {
+      patch.invoiceStatus = String(i.invoiceStatus || "draft");
+      if (patch.invoiceStatus === "issued" && !i.issuedAt) patch.issuedAt = todayDateOnly();
+    } else if (type === INVOICE_INTENT_TYPES.SET_DUE_DATE) {
+      patch.dueDate = String(i.dueDate || "");
+    } else {
+      return { ok: false, error: "invalid_intent" };
+    }
+    return updateInvoice(projectId, patch);
+  }
+
   function clearForTests() {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -793,16 +1175,29 @@
     SCHEDULE_INTENT_TYPES,
     PAYMENT_STATUSES,
     FINANCE_INTENT_TYPES,
+    ESTIMATE_STATUSES,
+    INVOICE_STATUSES,
+    ESTIMATE_INTENT_TYPES,
+    INVOICE_INTENT_TYPES,
+    TAX_RATE,
     TIMELINE_LABELS,
     statusLabel,
     categoryLabel,
     schedulePhaseLabel,
     paymentStatusLabel,
+    estimateStatusLabel,
+    invoiceStatusLabel,
     toAmount,
     formatYen,
     normalizeFinance,
+    normalizeEstimate,
+    normalizeInvoice,
+    normalizeEstimateItem,
     calculateFinanceAmounts,
     calculateProjectFinance,
+    calculateEstimateAmounts,
+    calculateEstimate,
+    calculateInvoice,
     parseDateOnly,
     toDateOnlyString,
     todayDateOnly,
@@ -833,6 +1228,18 @@
     updateFinance,
     previewFinanceIntent,
     applyFinanceIntent,
+    updateEstimate,
+    updateInvoice,
+    getEstimateSummary,
+    getInvoiceSummary,
+    getOutstandingInvoices,
+    getUninvoicedProjects,
+    isUninvoicedProject,
+    isOutstandingInvoice,
+    previewEstimateIntent,
+    previewInvoiceIntent,
+    applyEstimateIntent,
+    applyInvoiceIntent,
     ensureSeed,
     seedDemoProjects,
     clearForTests,

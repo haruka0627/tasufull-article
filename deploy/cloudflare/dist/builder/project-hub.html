@@ -21,7 +21,7 @@
           <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
             <span class="builder-brand__text">
               <span class="builder-brand__main">Builder</span>
-              <span class="builder-brand__sub">案件ハブ · Phase 6-C</span>
+              <span class="builder-brand__sub">案件ハブ · Phase 6-D</span>
             </span>
           </a>
         </div>
@@ -35,6 +35,13 @@
     <nav data-breadcrumb aria-label="パンくず"></nav>
 
     <main class="builder-shell builder-main">
+      <section class="builder-panel" aria-label="見積・請求サマリー">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title">見積・請求サマリー</h2>
+        </div>
+        <div class="builder-ph-est-inv-summary" data-builder-ph-est-inv-summary></div>
+      </section>
+
       <section class="builder-panel" aria-label="収支サマリー">
         <div class="builder-panel__head">
           <h2 class="builder-section-title">収支サマリー</h2>
@@ -91,6 +98,10 @@
                 <th scope="col">原価</th>
                 <th scope="col">粗利</th>
                 <th scope="col">支払い</th>
+                <th scope="col">見積状態</th>
+                <th scope="col">請求状態</th>
+                <th scope="col">見積合計</th>
+                <th scope="col">請求合計</th>
                 <th scope="col">更新日時</th>
               </tr>
             </thead>
