@@ -6324,8 +6324,8 @@ a.ops-p2-tile:hover {
 
 .ops-p7-desk-chat .ops-p2-chat__log,
 .ops-p7-desk-chat-log {
-  min-height: 0;
-  max-height: 3.75rem;
+  min-height: 4.5rem;
+  max-height: 11rem;
   overflow-y: auto;
   margin-top: 0.15rem;
 }
@@ -6678,10 +6678,6 @@ a.ops-p2-tile:hover {
   .ops-p7-desk-hero-title {
     font-size: 1.125rem;
   }
-
-  .ops-p7-desk-chat-log {
-    max-height: 3.25rem !important;
-  }
 }
 
 /* 運営OS机 — 第3弾（秘書案内体験） */
@@ -6903,8 +6899,8 @@ a.ops-p2-tile:hover {
 }
 
 .ops-p7-desk-chat-log {
-  min-height: 0 !important;
-  max-height: 3.75rem !important;
+  min-height: 4.5rem !important;
+  max-height: 11rem !important;
   overflow-y: auto;
 }
 
@@ -6962,4 +6958,66 @@ a.ops-p2-tile:hover {
 
 .ops-light-card.ops-p7-task.ops-p7-pri--important {
   color: #c2410c;
+}
+
+/* Phase UI-2 — Content Gate responsive */
+#ops-content-gate .ops-ai-content-review {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) 2fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  #ops-content-gate .ops-ai-content-review {
+    grid-template-columns: 1fr;
+  }
+
+  #ops-ai-command-center .ops-p7-desk-chat-log,
+  #ops-ai-command-center .ops-p7-desk-chat .ops-p2-chat__log {
+    min-height: 8rem !important;
+    max-height: 40vh !important;
+  }
+}
+
+/* Phase UI-2 — Command Center タップ領域（44px） */
+#ops-ai-command-center .ops-ai-morning-chip {
+  min-height: 44px;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+#ops-ai-command-center .ops-p2-chat__quick-btn {
+  min-height: 44px;
+  padding: 0.4rem 0.65rem;
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+#ops-ai-command-center .ops-p7-desk-start-btn--primary,
+#ops-ai-command-center .ops-p7-mode-picker__trigger,
+#ops-ai-command-center .ops-p7-mode-picker__item,
+#ops-ai-command-center .ops-ai-inbox-btn,
+#ops-ai-command-center .ops-ai-daily-conclusion__cta,
+#ops-ai-command-center .ops-p7-cta-sub,
+#ops-ai-command-center .ops-p7-opening__start.ops-p7-cta-sub,
+#ops-ai-command-center .ops-p7-next-guide__start,
+#ops-ai-command-center .ops-p7-task__start {
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+#ops-ai-command-center .ops-ai-daily-conclusion__cta,
+#ops-ai-command-center .ops-p7-mode-picker__trigger,
+#ops-ai-command-center .ops-p7-mode-picker__item,
+#ops-ai-command-center .ops-ai-inbox-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#ops-ai-command-center .ops-p7-desk-start-btn--primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
