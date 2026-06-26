@@ -18,12 +18,16 @@ await listPage.waitForSelector("[data-builder-board-project-list] article.mvp-ca
 
 const listData = await listPage.evaluate(() => {
   const cards = [...document.querySelectorAll("[data-builder-board-project-list] article.mvp-card")];
+  const ALLOWED_BOARD_TYPES = new Set(["project", "job", "worker", "calendar"]);
+  const boardTypes = cards.map((c) => c.getAttribute("data-board-type") || "");
+  const allBoardFeed = cards.length > 0 && boardTypes.every((t) => ALLOWED_BOARD_TYPES.has(t));
   const kinds = cards.map((c) => c.querySelector(".mvp-pill--kind")?.textContent?.trim() || "");
-  const hasBoardLabel = cards.length > 0 && kinds.every((k) => k.includes("一般案件"));
   const applyBtn = document.querySelector("[data-builder-board-apply]");
   return {
     cardCount: cards.length,
-    hasBoardLabel,
+    allBoardFeed,
+    boardTypes,
+    kinds,
     hasApplyCta: Boolean(applyBtn),
     firstProjectId: cards[0]?.getAttribute("data-project-id") || "",
   };
@@ -72,7 +76,11 @@ const afterInject = await listPage.evaluate(() => {
   };
 });
 
-push("board-projects: builder_board のみ表示", listData.hasBoardLabel && listData.cardCount > 0, `cards=${listData.cardCount}`);
+push(
+  "board-projects: builder_board のみ表示",
+  listData.allBoardFeed && listData.cardCount > 0,
+  `cards=${listData.cardCount} types=${listData.boardTypes.join(",")}`
+);
 push("board-projects: tasful_managed 非表示", !afterInject.showsManaged, afterInject.showsManaged ? "managed visible" : `cards=${afterInject.cardCount}`);
 push("board-projects: パートナー応募CTA", listData.hasApplyCta, "");
 
@@ -125,18 +133,26 @@ await listPage.waitForSelector("[data-builder-mvp-thread-msgs]", { timeout: 1500
 const threadData = await listPage.evaluate(() => ({
   hasEnter: Boolean(document.querySelector("[data-builder-mvp-thread-enter]")),
   hasLeave: Boolean(document.querySelector("[data-builder-mvp-thread-leave]")),
-  hasSitePhotos: Boolean(document.querySelector("[data-builder-mvp-site-photos]")),
-  hasReports: Boolean(document.querySelector("[data-builder-mvp-thread-reports]")),
-  hasCompletion: Boolean(document.querySelector("[data-builder-board-thread-completion]")),
-  hasInvoice: Boolean(document.querySelector("[data-builder-board-thread-invoice]")),
+  photosPanelHidden: document.getElementById("photos")?.hidden === true,
+  reportsPanelHidden: document.getElementById("files")?.hidden === true,
+  hasCompletionJump: Boolean(document.querySelector("[data-builder-board-thread-completion-jump]:not([hidden])")),
+  hasTalkLink: Boolean(document.querySelector('[data-builder-board-thread-talk][href*="talk-home"]')),
   hasCompose: Boolean(document.querySelector("[data-builder-mvp-thread-form]")),
   url: location.href,
 }));
 
 push("詳細 → チャット 導線", threadData.url.includes("board-thread.html"), threadData.url);
 push("board-thread: 入退場UIなし", !threadData.hasEnter && !threadData.hasLeave, "");
-push("board-thread: 現場管理UIなし", !threadData.hasSitePhotos && !threadData.hasReports, "");
-push("board-thread: 完了/支払い導線", threadData.hasCompletion && threadData.hasInvoice, "");
+push(
+  "board-thread: 現場管理UIなし",
+  threadData.photosPanelHidden && threadData.reportsPanelHidden,
+  ""
+);
+push(
+  "board-thread: 完了/支払い導線",
+  threadData.hasCompletionJump && threadData.hasTalkLink,
+  ""
+);
 push("board-thread: メッセージ入力あり", threadData.hasCompose, "");
 
 await listPage.close();
