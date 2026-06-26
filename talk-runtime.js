@@ -157,24 +157,39 @@
   }
 
   function isAdminFromAuth() {
+    if (global.TasuAuthCurrentUser?.isOpsUser?.()) return true;
     const session = readSupabaseAuthSession();
     const payload = session?.access_token ? decodeJwtPayload(session.access_token) : {};
+    const appMeta = payload.app_metadata || {};
+    if (
+      appMeta.is_ops === true ||
+      appMeta.is_ops === "true" ||
+      payload.is_ops === true ||
+      payload.is_ops === "true"
+    ) {
+      return true;
+    }
     const role = String(
-      payload.role ||
-        payload.app_metadata?.role ||
-        payload.user_metadata?.role ||
-        ""
+      payload.role || appMeta.role || payload.user_metadata?.role || ""
     ).toLowerCase();
     if (role === "tasu_admin" || role === "admin" || role === "service_role") return true;
-    if (String(payload.tasu_admin || payload.app_metadata?.tasu_admin || "") === "true") return true;
+    if (String(payload.tasu_admin || appMeta.tasu_admin || "") === "true") return true;
     return false;
   }
 
-  /** 運営 UI 表示（JWT + ?talkAdmin=1 / localStorage プレビュー） */
+  /**
+   * 運営 UI 表示（JWT + ?talkAdmin=1 / localStorage プレビュー）
+   * NB-1.5: role=admin 単体でも true — 広い判定。厳密判定は TasuPlatformActorResolver.resolvePlatformActor()
+   */
   function isTalkAdmin() {
     if (isAdminFromAuth()) return true;
     if (isTalkAdminPreviewActive()) return true;
     return false;
+  }
+
+  /** NB-1.5 互換 — Platform actor 正規化（auth-current-user + platform-actor-resolver 読込時） */
+  function resolvePlatformActorCompat() {
+    return global.TasuPlatformActorResolver?.resolvePlatformActor?.() || null;
   }
 
   function isBuilderFromAuth() {
@@ -295,6 +310,7 @@
     isAdminFromAuth,
     isTalkAdminPreviewActive,
     isTalkAdmin,
+    resolvePlatformActorCompat,
     isBuilderFromAuth,
     isBuilderUser,
     getTalkAuthRole,
