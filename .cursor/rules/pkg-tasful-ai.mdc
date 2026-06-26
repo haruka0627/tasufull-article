@@ -1,0 +1,34 @@
+---
+description: TASFUL AI Workspace — 総合AI・Gateway維持・本番接続残
+globs: "ai-workspace*,ai-history-store.js,ai-video-generate.js,ai-music-generate.js,ai-document-generate.js,ai-media-gen-config.js,ai-generate-ui.js,tasful-ai-*,tasful-general-ai*,common-ai-disclaimer.*,ai-terms.html,ai-disclaimer.html,ai-model-gateway.js,scripts/test-tasful-ai*.mjs,scripts/test-ai-terms-disclaimer.mjs,deploy/cloudflare/dist/ai-workspace*,deploy/cloudflare/dist/ai-history-store.js,deploy/cloudflare/dist/ai-video-generate.js,deploy/cloudflare/dist/ai-music-generate.js,deploy/cloudflare/dist/ai-document-generate.js,deploy/cloudflare/dist/ai-media-gen-config.js,deploy/cloudflare/dist/ai-generate-ui.js,deploy/cloudflare/dist/tasful-ai-*,deploy/cloudflare/dist/tasful-general-ai*,deploy/cloudflare/dist/common-ai-disclaimer.*,deploy/cloudflare/dist/ai-terms.html,deploy/cloudflare/dist/ai-disclaimer.html,deploy/cloudflare/dist/ai-model-gateway.js"
+alwaysApply: false
+---
+
+# TASFUL AI Workspace
+
+正本: `docs/AI/TASFUL_AI.md` · `docs/DECISIONS.md` AD-001, AD-005, AD-006
+
+## ステータス
+
+- **機能完成**（Final Phase · `5ed9672`）
+- **本番 Production Ready: 未** — Edge / billing / Access E2E 残（`docs/TODO.md`）
+
+## 必須
+
+- **Gateway 契約維持** — `TasuAiModelGateway.completeTurn()` 等を安易に破らない
+- Builder AI / AI 秘書と **統合・surface 混在しない**
+- 全出力に免責/下書き方針（`common-ai-disclaimer.js`, `ai-terms.html`）
+
+## モジュール境界
+
+- 履歴: `ai-history-store.js` · メディア: `ai-video-generate.js` 等 · mock デフォルト可
+- Platform/TLV は **入口リンク** のみ（専用エンジンを Workspace 内に増やさない）
+
+## 変更後テスト
+
+```bash
+node scripts/test-tasful-ai-final-phase.mjs
+node scripts/test-ai-terms-disclaimer.mjs
+```
+
+Gateway 変更時は isolation 全スイート再実行。未コミット gateway diff は `docs/KNOWN_ISSUES.md` KI-001 参照。

@@ -1,0 +1,35 @@
+---
+description: Platform — 専用AIなし・TASFUL AI入口・バッジ/お気に入り
+globs: "platform-*,listing-*,favorites-list.*,business-board-*.js,index-top.html,business.html,product.html,skill.html,worker.html,search.js,login.html,login.js,signup.html,signup.js,scripts/test-platform*.mjs,deploy/cloudflare/dist/platform-*,deploy/cloudflare/dist/listing-*,deploy/cloudflare/dist/favorites-list.*,deploy/cloudflare/dist/business-board-*.js,deploy/cloudflare/dist/index-top.html,deploy/cloudflare/dist/business.html,deploy/cloudflare/dist/product.html,deploy/cloudflare/dist/skill.html,deploy/cloudflare/dist/worker.html,deploy/cloudflare/dist/search.js,deploy/cloudflare/dist/login.html,deploy/cloudflare/dist/login.js,deploy/cloudflare/dist/signup.html,deploy/cloudflare/dist/signup.js,deploy/cloudflare/dist/signup.css"
+alwaysApply: false
+---
+
+# Platform / Platform AI
+
+正本: `docs/AI/PLATFORM_AI.md` · `docs/DECISIONS.md` AD-003, AD-008
+
+## ステータス
+
+- **Platform: Production Ready**
+- **Platform 専用 AI エンジン: 作らない**
+
+## 許可される AI
+
+- deterministic assist（`platform-search-assist.js`, `platform-compare-assist.js`, バッジ）
+- **TASFUL AI への遷移のみ** — `source=platform`（`platform-search-hub.js` 等）
+- Platform 専用 LLM ループ · Gateway surface 新設 — **禁止**
+
+## 残タスク（`docs/TODO.md`）
+
+- index featured カードへのバッジ
+- お気に入り Supabase 同期
+- Google OAuth 実機 E2E（Dashboard 設定後）
+
+## 変更後テスト
+
+```bash
+node scripts/test-platform-finish-phase.mjs
+node scripts/test-platform-next-phase.mjs
+```
+
+触らない: `builder-ai-core.js`, `admin-ai-secretary-*`, `ai-model-gateway.js`（意図なき変更）。

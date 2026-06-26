@@ -1,0 +1,36 @@
+---
+description: Builder v1.0 と Builder AI — 独立 surface・凍結遵守
+globs: "builder/**,sql/builder-ai-drafts-staging.sql,scripts/test-builder-ai*.mjs,deploy/cloudflare/dist/builder/**"
+alwaysApply: false
+---
+
+# Builder / Builder AI
+
+正本: `docs/AI/BUILDER_AI.md` · `docs/DECISIONS.md` AD-002, AD-008
+
+## ステータス
+
+- **Builder v1.0: Production Ready · RELEASE FROZEN**
+- **Builder AI: 実装済み**（`5ed9672`）· **P2-C 未**（DB/RLS/hook）
+
+## 必須
+
+- Builder AI は **TASFUL AI Workspace と統合しない**
+- Gateway `surface=builder_ai` のみ。`ai-workspace` surface に混在させない
+- 出力は **下書き** — 契約/請求/採用/完了承認の自動確定禁止
+- **`ai-model-gateway.js` 契約を安易に変更しない**
+
+## 禁止
+
+- MVP/admin/board 等の無関係 HTML を Builder AI 変更に混ぜない
+- **本番 DB** に `sql/builder-ai-drafts-staging.sql` を適用しない（P2-C まで）
+
+## 変更後テスト
+
+```bash
+node scripts/test-builder-ai-tools-adaptation.mjs
+node scripts/test-builder-ai-p1-review.mjs
+node scripts/check-builder-production-ready.mjs  # Builder 本体触った場合
+```
+
+Isolation: TASFUL AI / AI 秘書 / TLV 入口 / Gateway — untouched 確認。

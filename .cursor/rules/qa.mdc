@@ -1,0 +1,38 @@
+---
+description: QA — Production Ready保護・最小変更・UI比較・build・回帰
+globs: "**/*.{js,html,css,mjs},builder/**,live/**,scripts/test-**"
+alwaysApply: false
+---
+
+# QA
+
+正本: `docs/RELEASE_CHECKLIST.md` · `docs/DECISIONS.md` AD-008
+
+## Production Ready を壊さない
+
+- Builder v1.0 · Platform · TLV · AI 秘書 — **Critical / Security / 仕様追従以外で UI・機能追加しない**
+- 凍結領域変更時は該当 release-status / QA 監査を再確認
+
+## 最小変更
+
+- 依頼スコープ外のリファクタ・一括整形・無関係ファイルを触らない
+- Gateway / AI Core 契約 — 必要最小限
+
+## UI 変更
+
+- レイアウト・見た目を変えたら **スクリーンショット比較**（`docs/screenshots-qa-rules.md` 参照）
+- Platform/TLV 凍結 UI — 原則変更禁止
+
+## build
+
+```bash
+npm run build:pages
+```
+
+出力: `deploy/cloudflare/dist` — ソース変更時は dist ミラーの整合を確認。
+
+## 回帰テスト
+
+変更領域の `scripts/test-*.mjs` を実行。PASS 前にコミットしない。
+
+推測で「完了」扱いしない — テスト出力またはレポート根拠を残す。

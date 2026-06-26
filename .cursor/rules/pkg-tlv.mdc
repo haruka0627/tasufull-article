@@ -1,0 +1,33 @@
+---
+description: TLV Live — FEATURE FROZEN・TASFUL AI導線のみ
+globs: "live/**,scripts/test-tlv*.mjs,deploy/cloudflare/dist/live/**"
+alwaysApply: false
+---
+
+# TLV / TLV AI
+
+正本: `docs/AI/TLV_AI.md` · `docs/DECISIONS.md` AD-004, AD-008
+
+## ステータス
+
+- **TLV v1.0: Production Ready · FEATURE FROZEN**
+- **TLV 専用 AI: 作らない**
+
+## 許可される AI 変更
+
+- **`live/tlv-tasful-ai-entry.js`** — Workspace への導線（`?source=tlv`）
+- **`ai-workspace-tlv-source.js`** — TLV テンプレ/無料枠 UI（Workspace 側 · tasful-ai ルール参照）
+
+## 禁止
+
+- TLV Live UI/CSS/レイアウト変更（Critical / Security / Production 障害以外）
+- TLV 専用 AI Gateway / LLM ループの新設
+- `reports/tlv-business-simulator/**` を AI 作業に混ぜない
+
+## 変更後テスト
+
+```bash
+node scripts/test-tlv-tasful-ai-entry.mjs
+```
+
+TLV 本体変更時は Playwright/QA 監査必須（`reports/tlv-v1-production-ready/`）。

@@ -1,0 +1,35 @@
+---
+description: docs正本 — 作業終了時のドキュメント更新運用
+globs: "docs/**"
+alwaysApply: false
+---
+
+# ドキュメント正本運用
+
+正本: `docs/README.md`
+
+## 作業終了時
+
+フェーズ完了 · 方針決定 · コミット · ブロッカー発見のいずれかがあれば、**必要に応じて** 以下を更新し **コードと一致** させる:
+
+| ファイル | 更新タイミング |
+| --- | --- |
+| `docs/ROADMAP.md` | フェーズ完了/追加 |
+| `docs/TODO.md` | 次タスクの増減 |
+| `docs/PROJECT_STATUS.md` | HEAD · ステータス · working tree サマリー |
+| `docs/CHANGELOG.md` | コミット・リリース |
+| `docs/DECISIONS.md` | 新規 AD / 方針変更 |
+| `docs/KNOWN_ISSUES.md` | 未確認 · 矛盾 · 解消 |
+
+領域別詳細: `docs/AI/*.md`（Builder / Platform / TLV / Secretary / TASFUL AI）
+
+## ルール
+
+- **`docs/DECISIONS.md` を他ドキュより優先**
+- 推測で「完了」にしない — 根拠（コミット hash · テスト · レポート）を書く
+- `reports/` はフェーズ詳細の一次記録。ステータス判断は **docs 正本**、矛盾は `KNOWN_ISSUES.md`
+- レガシー `docs/*.md`（Talk/Anpi 等）と矛盾したら KNOWN_ISSUES に記録
+
+## コミット
+
+docs 更新も **選別 `git add`**（`git.mdc`）。`git add -A` 禁止。

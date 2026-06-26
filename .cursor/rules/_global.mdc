@@ -1,0 +1,32 @@
+---
+description: TASFUL 全体 — 正本 docs 参照と基本方針
+globs: "**/*"
+alwaysApply: true
+---
+
+# TASFUL Global
+
+## 正本
+
+- **`docs/` が唯一のステータス正本**（会話ログより優先）
+- 着手前: `docs/README.md` → `docs/DECISIONS.md` → 該当 `docs/AI/*.md`
+- 現状・次タスク: `docs/PROJECT_STATUS.md`, `docs/TODO.md`
+- 未確認は推測で「完了」にしない → `docs/KNOWN_ISSUES.md`
+
+## 優先する決定（`docs/DECISIONS.md`）
+
+- Builder AI は **TASFUL AI と統合しない**（AD-002）
+- Platform / TLV は **専用 AI エンジンを作らない**（AD-003, AD-004）
+- **`ai-model-gateway.js` 契約は安易に変更しない**（AD-005）
+- **`git add -A` 禁止** — 選別ステージング（AD-007）
+- 静的配信: `npm run build:pages` → `deploy/cloudflare/dist`（AD-009）
+
+## Production Ready（凍結）
+
+Builder v1.0 · Platform · TLV v1.0 · AI 秘書 — Critical / Security / 仕様追従以外の変更禁止。
+
+TASFUL AI Workspace は **機能完成 ≠ 本番 Production Ready**（本番接続タスク残）。
+
+## 詳細ルール
+
+領域別は `.cursor/rules/pkg-*.mdc` · コミットは `git.mdc` · QA は `qa.mdc` · ドキュ更新は `docs.mdc`。

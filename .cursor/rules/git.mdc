@@ -1,0 +1,45 @@
+---
+description: Git — git add -A禁止・選別ステージング・build・回帰・diff確認
+globs: "**/*.{js,html,css,mjs,md,sql},deploy/cloudflare/**,reports/**"
+alwaysApply: false
+---
+
+# Git / ステージング
+
+正本: `docs/DECISIONS.md` AD-007 · `reports/ai-selected-staging-plan.md`
+
+## 禁止
+
+- **`git add -A` / `git add .` 一括** — 混在 working tree（400+ 件）で No Go
+
+## 選別ステージング
+
+1. 対象ファイルを **明示的 `git add <path>`** のみ
+2. `git diff --cached --name-status` — 意図外ファイルが無いか
+3. 件数・カテゴリがスコープ内か（ANPI / Live / probe / 無関係 Builder HTML を混ぜない）
+
+## コミット前
+
+```bash
+npm run build:pages
+```
+
+領域に応じた回帰（例 · AI 変更時）:
+
+```bash
+node scripts/test-builder-ai-tools-adaptation.mjs
+node scripts/test-builder-ai-p1-review.mjs
+node scripts/test-platform-finish-phase.mjs
+node scripts/test-platform-next-phase.mjs
+node scripts/test-tasful-ai-final-phase.mjs
+node scripts/test-ai-terms-disclaimer.mjs
+node scripts/test-tlv-tasful-ai-entry.mjs
+```
+
+## diff 確認
+
+- `git diff --cached --stat`
+- 秘密情報 · probe JSON/画像 · `ai-model-gateway.js` の意図しない含有
+- dist はリストのミラーのみ（dist 全 tree を add しない）
+
+ユーザーの明示指示なしに commit しない（ユーザー rule 準拠）。
