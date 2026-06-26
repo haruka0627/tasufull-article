@@ -219,6 +219,11 @@
       window.TasuAdminAiKpiCenter?.collectKpiMetrics?.() || {}
     );
     window.TasuAdminAiSecretaryPhase2?.render?.();
+    window.TasuSecretaryOrchestrator?.renderPanel?.(
+      window.TasuSecretaryOrchestrator?.getLastResult?.() || null
+    );
+    window.TasuSecretaryOrchestrator?.renderQueuePanel?.();
+    window.TasuSecretaryMorningReport?.bindMorningReportButton?.();
 
     document.querySelector("[data-talk-ops-command-form]")?.addEventListener("submit", (e) => {
       e.preventDefault();
