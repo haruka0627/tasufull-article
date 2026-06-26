@@ -1,0 +1,57 @@
+/* Stripe Connect トラブル強化 — 運営画面パネル（実行ボタンなし） */
+.stripe-trouble-panel {
+  margin: 0.75rem 0 0;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 0.85rem;
+}
+.stripe-trouble-panel__head {
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+  color: #0f172a;
+}
+.stripe-trouble-panel__row {
+  margin: 0.25rem 0;
+  color: #334155;
+}
+.stripe-trouble-panel__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.stripe-trouble-btn {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+  color: #1e293b;
+}
+.stripe-trouble-btn:hover {
+  background: #f1f5f9;
+}
+.stripe-trouble-pre {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem;
+  max-height: 220px;
+  overflow: auto;
+  font-size: 0.72rem;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  white-space: pre-wrap;
+}
+.stripe-trouble-tag {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.stripe-trouble-tag--critical { background: #fee2e2; color: #991b1b; }
+.stripe-trouble-tag--high { background: #ffedd5; color: #9a3412; }
+.stripe-trouble-tag--medium { background: #fef9c3; color: #854d0e; }
