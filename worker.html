@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="category-list-page.css">
   <link rel="stylesheet" href="platform-badges.css">
 </head>
-<body id="top" class="home-page category-list-page listing-category-hub-page" data-category-page="worker">
+<body id="top" class="home-page category-list-page listing-category-hub-page" data-page="portal_listings" data-category-page="worker">
   <header class="home-header top-portal-header" aria-label="TASFUL ヘッダー">
     <div class="home-header__inner">
       <a class="tasful-ai-logo home-header__logo" href="/" aria-label="TASFUL プラットフォームTOP">
@@ -79,6 +79,8 @@
     </section>
   </main>
 
+  <div data-tasful-portal-tabbar-mount></div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/chat-supabase-config.js"></script>
   <script src="/tasu-supabase-client.js"></script>
@@ -93,5 +95,6 @@
   <script src="/listings-db.js"></script>
   <script src="/business-listings-db.js"></script>
   <script src="/listing-category-page.js"></script>
+  <script src="/platform-portal-tabbar.js"></script>
 </body>
 </html>
