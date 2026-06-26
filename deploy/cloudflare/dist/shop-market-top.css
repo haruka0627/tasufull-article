@@ -512,5 +512,13 @@ body.tasful-market-page .tasful-market-mall-header__nav-scroll::-webkit-scrollba
   line-height: 1.2;
 }
 
+@media (max-width: 1024px) {
+  body.tasful-market-page.tasful-market-search-page,
+  body.tasful-market-page.tasful-market-cart-page,
+  body.tasful-market-page.tasful-market-order-history-page {
+    padding-bottom: calc(20px + var(--tasful-market-tabbar-h) + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
 /* PC 1025px+ 市場TOPセクションリズム（あなたへのおすすめ / 特集 / ランキング / Connect / 閲覧履歴）
    → shop-market-pc.css @media (min-width: 1025px) を参照。SP(390px)は本ファイルのみ。 */

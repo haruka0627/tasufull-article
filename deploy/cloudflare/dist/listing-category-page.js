@@ -160,7 +160,160 @@
     await loadAndRender();
   }
 
-  if (document.body.dataset.categoryPage) {
+  const HUB_TYPES = new Set(["product", "skill", "worker", "job"]);
+  const HUB_TYPE_LABELS = {
+    product: "商品",
+    skill: "スキル",
+    worker: "ワーカー",
+    job: "求人",
+  };
+
+  async function fetchHubList(typeFilter) {
+    const store = window.TasuListingStore;
+    if (!store?.fetchPublishedListings) return [];
+    if (typeFilter && HUB_TYPES.has(typeFilter)) {
+      return store.fetchPublishedListings({
+        limit: 100,
+        listing_type: typeFilter,
+        public_only: false,
+        localFallback: false,
+      });
+    }
+    const types = ["product", "skill", "worker"];
+    const batches = await Promise.all(
+      types.map((t) =>
+        store.fetchPublishedListings({
+          limit: 100,
+          listing_type: t,
+          public_only: false,
+          localFallback: false,
+        })
+      )
+    );
+    const seen = new Set();
+    const merged = [];
+    batches.flat().forEach((item) => {
+      const id = String(item?.id || "");
+      if (!id || seen.has(id)) return;
+      seen.add(id);
+      merged.push(item);
+    });
+    return merged;
+  }
+
+  function filterHubItems(items, query, typeFilter) {
+    let rows = (Array.isArray(items) ? items : []).filter(Boolean);
+    if (typeFilter && HUB_TYPES.has(typeFilter)) {
+      rows = rows.filter((r) => (r.listing_type || r.type) === typeFilter);
+    } else {
+      rows = rows.filter((r) => (r.listing_type || r.type) !== "job");
+    }
+    const q = String(query || "").trim().toLowerCase();
+    if (!q) return rows;
+    return rows.filter((r) => {
+      const hay = `${r.title || ""} ${r.description || ""} ${r.user_id || ""} ${r.name || ""}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  function syncHubChrome(query, typeFilter) {
+    const titleEl = document.querySelector("[data-category-title]");
+    const badgeEl = document.querySelector("[data-category-badge]");
+    const descEl = document.querySelector("[data-listing-hub-desc]");
+    const qInput = document.querySelector("[data-listing-hub-q]");
+
+    const q = String(query || "").trim();
+    const type = typeFilter && HUB_TYPES.has(typeFilter) ? typeFilter : "";
+
+    if (qInput) qInput.value = q;
+
+    document.querySelectorAll("[data-listing-hub-type]").forEach((link) => {
+      const value = link.getAttribute("data-listing-hub-type") || "";
+      link.classList.toggle("is-active", value === type);
+      const url = new URL(window.location.href);
+      url.search = "";
+      if (value) url.searchParams.set("type", value);
+      if (q) url.searchParams.set("q", q);
+      link.href = `${url.pathname}${url.search}`;
+    });
+
+    if (titleEl) {
+      if (q) titleEl.textContent = `「${q}」の検索結果`;
+      else if (type) titleEl.textContent = `${HUB_TYPE_LABELS[type] || type}一覧`;
+      else titleEl.textContent = "掲載一覧";
+    }
+    if (badgeEl) {
+      badgeEl.textContent = type ? HUB_TYPE_LABELS[type] || type : "掲載";
+    }
+    if (descEl) {
+      descEl.textContent = q
+        ? "キーワードに一致する掲載を表示しています"
+        : "商品・スキル・ワーカーの掲載を一覧で確認できます";
+    }
+  }
+
+  async function initHub() {
+    const listEl = document.querySelector("[data-category-list]");
+    const emptyEl = document.querySelector("[data-category-empty]");
+    const countEl = document.querySelector("[data-category-count]");
+    const sortSelect = document.querySelector("[data-category-sort]");
+    if (!listEl) return;
+
+    const params = new URLSearchParams(window.location.search);
+    let query = params.get("q") || params.get("keyword") || "";
+    let typeFilter = params.get("type") || "";
+    if (typeFilter && !HUB_TYPES.has(typeFilter)) typeFilter = "";
+
+    syncHubChrome(query, typeFilter);
+
+    let allItems = [];
+
+    async function loadAndRender() {
+      allItems = await fetchHubList(typeFilter);
+      let rows = filterHubItems(allItems, query, typeFilter);
+      const sort = sortSelect?.value || "newest";
+      if (window.TasuListingRenderer?.sortListings) {
+        rows = window.TasuListingRenderer.sortListings(rows, sort);
+      }
+      renderList(rows, listEl, emptyEl, countEl);
+      if (window.TasuListings?.ensureListingCardTitles) {
+        window.TasuListings.ensureListingCardTitles();
+      }
+      if (window.TasuListings?.refreshListingIndex) {
+        window.TasuListings.refreshListingIndex();
+      }
+    }
+
+    sortSelect?.addEventListener("change", () => {
+      let rows = filterHubItems(allItems, query, typeFilter);
+      if (window.TasuListingRenderer?.sortListings) {
+        rows = window.TasuListingRenderer.sortListings(rows, sortSelect.value || "newest");
+      }
+      renderList(rows, listEl, emptyEl, countEl);
+    });
+
+    document.querySelector("[data-listing-hub-search]")?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      query = String(document.querySelector("[data-listing-hub-q]")?.value || "").trim();
+      const url = new URL(window.location.href);
+      url.search = "";
+      if (query) url.searchParams.set("q", query);
+      if (typeFilter) url.searchParams.set("type", typeFilter);
+      window.history.replaceState({}, "", `${url.pathname}${url.search}`);
+      syncHubChrome(query, typeFilter);
+      void loadAndRender();
+    });
+
+    await loadAndRender();
+  }
+
+  if (document.body.dataset.listingCategoryHub !== undefined) {
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => void initHub());
+    } else {
+      void initHub();
+    }
+  } else if (document.body.dataset.categoryPage) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", () => void init());
     } else {

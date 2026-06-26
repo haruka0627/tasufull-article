@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>掲載一覧 | TASFUL</title>
+  <meta name="description" content="TASFUL — 商品・スキル・ワーカーの掲載一覧">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="detail-favorites.css">
+  <link rel="stylesheet" href="seller-rank-plate.css">
+  <link rel="stylesheet" href="listing-list-card.css">
+  <link rel="stylesheet" href="index-home.css">
+  <link rel="stylesheet" href="category-list-page.css">
+  <link rel="stylesheet" href="platform-badges.css">
+</head>
+<body class="home-page category-list-page listing-category-hub-page" data-listing-category-hub>
+  <header class="home-header top-portal-header" aria-label="TASFUL ヘッダー">
+    <div class="home-header__inner">
+      <a class="tasful-ai-logo home-header__logo" href="index.html" aria-label="TASFUL プラットフォーム">
+        <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <div class="home-actions">
+        <a class="home-cta" href="post.html">出品する</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="section section--premium" aria-labelledby="listingHubTitle">
+      <header class="section__head">
+        <p class="section__badge section__badge--featured" data-category-badge>掲載</p>
+        <h1 id="listingHubTitle" class="section__title" data-category-title>掲載一覧</h1>
+        <p class="section__desc" data-listing-hub-desc>商品・スキル・ワーカーの掲載を一覧で確認できます</p>
+      </header>
+
+      <form class="listing-category-hub-search" role="search" data-listing-hub-search action="listing-category-page.html" method="get">
+        <input type="search" name="q" class="listing-category-hub-search__input" data-listing-hub-q placeholder="キーワードで探す" aria-label="キーワード検索">
+        <button type="submit" class="listing-category-hub-search__btn">検索</button>
+      </form>
+
+      <nav class="listing-category-hub-filters" aria-label="掲載タイプ" data-listing-hub-type-nav>
+        <a class="listing-category-hub-filters__chip" data-listing-hub-type="" href="listing-category-page.html">すべて</a>
+        <a class="listing-category-hub-filters__chip" data-listing-hub-type="product" href="listing-category-page.html?type=product">商品</a>
+        <a class="listing-category-hub-filters__chip" data-listing-hub-type="skill" href="listing-category-page.html?type=skill">スキル</a>
+        <a class="listing-category-hub-filters__chip" data-listing-hub-type="worker" href="listing-category-page.html?type=worker">ワーカー</a>
+      </nav>
+
+      <div class="category-list-toolbar">
+        <p class="category-list-count">表示件数 <strong data-category-count>0件</strong></p>
+        <p class="category-list-toolbar__sort">
+          <label for="categorySort">並び順</label>
+          <select id="categorySort" class="category-list-toolbar__select" data-category-sort>
+            <option value="newest" selected>新着順</option>
+            <option value="pr">PR優先</option>
+            <option value="featured">上位掲載優先</option>
+          </select>
+        </p>
+      </div>
+
+      <ul class="card-list card-list--premium" data-category-list></ul>
+
+      <div class="empty-state" data-category-empty hidden>
+        <p class="empty-state__title">該当する掲載がありません</p>
+        <p class="empty-state__text">キーワードやタイプを変えるか、<a href="post.html">掲載フォーム</a>から新しく追加できます。</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="search.js"></script>
+  <script src="listing-tags.js"></script>
+  <script src="listing-images.js"></script>
+  <script src="detail-trust-score.js"></script>
+  <script src="listing-seller-profile.js"></script>
+  <script src="platform-ai-recommend.js"></script>
+  <script src="platform-badges.js"></script>
+  <script src="listing-renderer.js"></script>
+  <script src="listings-db.js"></script>
+  <script src="business-listings-db.js"></script>
+  <script src="listing-category-page.js"></script>
+</body>
+</html>
