@@ -48,14 +48,24 @@ if (!html.includes('<meta charset="UTF-8"')) {
   pass("index.html has UTF-8 charset meta");
 }
 
+if (!html.includes('data-builder-quick="builder-ai"') || !html.includes('href="builder-ai.html"')) {
+  fail("index.html missing Builder AI quick card");
+} else {
+  pass("index.html includes Builder AI quick card");
+}
+
+const EXPECTED_QUICK_MENU_COUNT = 12;
+
 const EXPECTED_TEXT = [
-  "Builder ダッシュボード",
-  "案件投稿・応募確認・スレッドのサマリー",
-  "未読スレッド",
+  "パートナーダッシュボード",
+  "担当案件・応募確認・やりとりのサマリー",
+  "未読やりとり",
   "再依頼候補",
   "最近の案件",
   "案件テンプレ",
   "よく使う協力会社",
+  "Builder AI",
+  "メインメニュー",
 ];
 
 async function main() {
@@ -91,10 +101,10 @@ async function main() {
       return getComputedStyle(grid).gridTemplateColumns.split(" ").length;
     });
 
-    if (width === 1280 && statCols !== 5) {
-      fail(`(1280px) expected 5 stat columns, got ${statCols}`);
+    if (width === 1280 && statCols !== 4) {
+      fail(`(1280px) expected 4 stat columns, got ${statCols}`);
     } else if (width === 1280) {
-      pass("(1280px) stat grid uses 5 columns");
+      pass("(1280px) stat grid uses 4 columns");
     }
 
     const recentCount = await page.locator("[data-builder-recent-list] .builder-recent-card").count();
@@ -102,8 +112,21 @@ async function main() {
     else pass(`(${width}px) recent list renders 4 cards`);
 
     const quickCount = await page.locator("[data-builder-quick-grid] .builder-quick-card").count();
-    if (quickCount !== 8) fail(`(${width}px) expected 8 quick menu cards, got ${quickCount}`);
-    else pass(`(${width}px) quick menu has 8 cards`);
+    if (quickCount !== EXPECTED_QUICK_MENU_COUNT) {
+      fail(`(${width}px) expected ${EXPECTED_QUICK_MENU_COUNT} quick menu cards, got ${quickCount}`);
+    } else {
+      pass(`(${width}px) quick menu has ${EXPECTED_QUICK_MENU_COUNT} cards`);
+    }
+
+    const builderAiQuick = page.locator('[data-builder-quick-grid] [data-builder-quick="builder-ai"]');
+    const builderAiHref = await builderAiQuick.getAttribute("href");
+    if ((await builderAiQuick.count()) !== 1) {
+      fail(`(${width}px) Builder AI quick card missing`);
+    } else if (builderAiHref !== "builder-ai.html") {
+      fail(`(${width}px) Builder AI quick card href: ${builderAiHref}`);
+    } else {
+      pass(`(${width}px) Builder AI quick card links to builder-ai.html`);
+    }
 
     await page.close();
   }
