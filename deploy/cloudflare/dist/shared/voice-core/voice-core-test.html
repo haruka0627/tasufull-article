@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-  <title>Voice Core Phase 1 — Mock Test</title>
+  <title>Voice Core — Mock Test</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
     button { margin: 0.25rem; padding: 0.5rem 1rem; }
@@ -14,8 +14,8 @@
   </style>
 </head>
 <body>
-  <h1>Voice Core Phase 1</h1>
-  <p>Mock adapter only — no external API.</p>
+  <h1>Voice Core</h1>
+  <p>Mock + openai_realtime skeleton (mock-compatible) — no external API.</p>
   <div>
     <button type="button" id="btn-start">Start session</button>
     <button type="button" id="btn-text">Send text</button>
@@ -28,6 +28,9 @@
   <script src="voice-core-events.js"></script>
   <script src="voice-adapter-interface.js"></script>
   <script src="voice-mock-adapter.js"></script>
+  <script src="voice-realtime-options.js"></script>
+  <script src="voice-realtime-event-mapper.js"></script>
+  <script src="adapters/voice-openai-realtime-adapter.js"></script>
   <script src="voice-provider-router.js"></script>
   <script src="voice-session.js"></script>
   <script src="voice-core.js"></script>
