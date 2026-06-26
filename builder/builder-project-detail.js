@@ -331,6 +331,119 @@
     });
   }
 
+  function renderCompletionPhotos(photos) {
+    const list = $("[data-builder-pd-completion-photos]");
+    if (!list) return;
+    const items = Array.isArray(photos) ? photos : [];
+    if (!items.length) {
+      list.innerHTML = '<li class="builder-ph-empty">写真はまだありません</li>';
+      return;
+    }
+    list.innerHTML = items
+      .map(
+        (ph) =>
+          `<li>` +
+          `<span class="builder-ph-completion-photos__label">${escapeHtml(ph.label || "写真")}</span>` +
+          (ph.at ? `<span class="builder-kpi">${escapeHtml(ph.at)}</span>` : "") +
+          `</li>`
+      )
+      .join("");
+  }
+
+  function bindContract(project) {
+    const form = $("[data-builder-pd-contract-form]");
+    const Store = global.TasuBuilderProjectStore;
+    if (!form || !Store) return;
+    const c = project.contract || {};
+
+    const statusSel = $("[data-builder-pd-contract-status]");
+    if (statusSel && Store.CONTRACT_STATUSES) {
+      statusSel.innerHTML = Store.CONTRACT_STATUSES.map(
+        (s) =>
+          `<option value="${escapeHtml(s.id)}"${s.id === c.contractStatus ? " selected" : ""}>${escapeHtml(s.label)}</option>`
+      ).join("");
+    }
+    if ($("[data-builder-pd-contract-number]")) $("[data-builder-pd-contract-number]").value = c.contractNumber || "";
+    if ($("[data-builder-pd-contract-date]")) $("[data-builder-pd-contract-date]").value = c.contractDate || "";
+    if ($("[data-builder-pd-contract-start]")) $("[data-builder-pd-contract-start]").value = c.plannedStartDate || "";
+    if ($("[data-builder-pd-contract-end]")) $("[data-builder-pd-contract-end]").value = c.plannedEndDate || "";
+    if ($("[data-builder-pd-contract-warranty]")) $("[data-builder-pd-contract-warranty]").value = c.warrantyMonths ?? 0;
+    if ($("[data-builder-pd-contract-notes]")) $("[data-builder-pd-contract-notes]").value = c.specialNotes || "";
+
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const out = Store.updateContract?.(project.id, {
+        contractNumber: $("[data-builder-pd-contract-number]")?.value || "",
+        contractStatus: statusSel?.value || c.contractStatus,
+        contractDate: $("[data-builder-pd-contract-date]")?.value || "",
+        plannedStartDate: $("[data-builder-pd-contract-start]")?.value || "",
+        plannedEndDate: $("[data-builder-pd-contract-end]")?.value || "",
+        warrantyMonths: $("[data-builder-pd-contract-warranty]")?.value,
+        specialNotes: $("[data-builder-pd-contract-notes]")?.value || "",
+        contractReason: "案件詳細から契約を更新",
+      });
+      if (out?.ok) {
+        currentProject = out.project;
+        renderTimeline(currentProject);
+        const msg = $("[data-builder-pd-contract-status-msg]");
+        if (msg) {
+          msg.textContent = "契約を保存しました";
+          setTimeout(() => {
+            msg.textContent = "";
+          }, 2000);
+        }
+      }
+    });
+  }
+
+  function bindCompletion(project) {
+    const form = $("[data-builder-pd-completion-form]");
+    const Store = global.TasuBuilderProjectStore;
+    if (!form || !Store) return;
+    const cmp = project.completion || {};
+
+    const statusSel = $("[data-builder-pd-completion-status]");
+    if (statusSel && Store.COMPLETION_STATUSES) {
+      statusSel.innerHTML = Store.COMPLETION_STATUSES.map(
+        (s) =>
+          `<option value="${escapeHtml(s.id)}"${s.id === cmp.completionStatus ? " selected" : ""}>${escapeHtml(s.label)}</option>`
+      ).join("");
+    }
+    if ($("[data-builder-pd-completion-started]")) $("[data-builder-pd-completion-started]").value = cmp.startedAt || "";
+    if ($("[data-builder-pd-completion-completed]")) $("[data-builder-pd-completion-completed]").value = cmp.completedAt || "";
+    if ($("[data-builder-pd-completion-handover]")) $("[data-builder-pd-completion-handover]").value = cmp.handoverAt || "";
+    if ($("[data-builder-pd-completion-owner]")) $("[data-builder-pd-completion-owner]").checked = Boolean(cmp.ownerApproved);
+    if ($("[data-builder-pd-completion-partner]")) $("[data-builder-pd-completion-partner]").checked = Boolean(cmp.partnerApproved);
+    if ($("[data-builder-pd-completion-memo]")) $("[data-builder-pd-completion-memo]").value = cmp.completionMemo || "";
+    renderCompletionPhotos(cmp.photos);
+
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const out = Store.updateCompletion?.(project.id, {
+        completionStatus: statusSel?.value || cmp.completionStatus,
+        startedAt: $("[data-builder-pd-completion-started]")?.value || "",
+        completedAt: $("[data-builder-pd-completion-completed]")?.value || "",
+        handoverAt: $("[data-builder-pd-completion-handover]")?.value || "",
+        ownerApproved: $("[data-builder-pd-completion-owner]")?.checked || false,
+        partnerApproved: $("[data-builder-pd-completion-partner]")?.checked || false,
+        completionMemo: $("[data-builder-pd-completion-memo]")?.value || "",
+        completionReason: "案件詳細から完了を更新",
+      });
+      if (out?.ok) {
+        currentProject = out.project;
+        renderCompletionPhotos(currentProject.completion?.photos);
+        renderTimeline(currentProject);
+        const msg = $("[data-builder-pd-completion-status-msg]");
+        if (msg) {
+          msg.textContent = "完了を保存しました";
+          setTimeout(() => {
+            msg.textContent = "";
+          }, 2000);
+        }
+      }
+    });
+  }
+
   function bindSchedule(project) {
     const form = $("[data-builder-pd-schedule-form]");
     const start = $("[data-builder-pd-schedule-start]");
@@ -418,6 +531,8 @@
     renderVisionList(project);
     bindEstimate(project);
     bindInvoice(project);
+    bindContract(project);
+    bindCompletion(project);
     bindFinance(project);
     bindSchedule(project);
     bindAiLink(project);

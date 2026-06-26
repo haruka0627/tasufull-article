@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-26（Estimate/Invoice Phase 6-D · 見積・請求基盤）  
-**ステータス:** **実装済み**（… + **Finance 6-C** + **Estimate/Invoice 6-D**）· P2-C 残  
-**直近コミット:** `e70d679`（Finance 6-C · **git push 未実施**）
+**最終更新:** 2026-06-27（Contract/Completion Phase 6-E · 契約・完了基盤）  
+**ステータス:** **実装済み**（… + **Estimate/Invoice 6-D** + **Contract/Completion 6-E**）· P2-C 残  
+**直近コミット:** `8be158f`（Estimate/Invoice 6-D · **git push 未実施**）
 
 ---
 
@@ -62,7 +62,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | `builder-ai-live.js` | カメラプレビュー · スナップショット → Vision |
 | `builder-ai-voice.js` | `TasuAiVoiceCore` adapter · `surface: builder_ai` |
 | `builder-ai-live-gate.js` | Free/Pro gate stub（本番課金未接続） |
-| `builder-project-store.js` | **Phase 6-A〜6-D** · 案件 · 日程 · 収支 · 見積/請求 · Vision |
+| `builder-project-store.js` | **Phase 6-A〜6-E** · 案件 · 日程 · 収支 · 見積/請求 · 契約/完了 · Vision |
 | `builder-project-calendar.js` | **Phase 6-B** · 月/週カレンダー · 本日/今週/遅延 |
 | `builder-project-hub.js` | 案件一覧 · 検索 |
 | `builder-project-detail.js` | 案件詳細 · タイムライン閲覧 · メモ最小編集 |
@@ -187,7 +187,7 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 ---
 
-## Builder Estimate/Invoice Phase 6-D（✅ 実装 · 未コミット）
+## Builder Estimate/Invoice Phase 6-D（✅ commit 済 · `8be158f`）
 
 **見積・請求基盤** — `project.estimate` / `project.invoice`（SCHEMA v4）
 
@@ -202,6 +202,24 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 **テスト:** `scripts/test-builder-estimate-invoice-phase6d.mjs`
 
 **報告:** `reports/builder-estimate-invoice-phase6d.md`
+
+---
+
+## Builder Contract/Completion Phase 6-E（✅ 実装 · 未コミット）
+
+**契約・完了基盤** — `project.contract` / `project.completion`（SCHEMA v5）
+
+| 項目 | 内容 |
+| --- | --- |
+| **契約** | 番号 · draft/sent/signed/cancelled · 着工/完了予定 · 保証期間 |
+| **完了** | not_started/working/inspection/completed/handed_over · 確認 · 写真（表示のみ） |
+| **Hub** | 契約待ち/工事中/完了待ち/完了済み · 一覧列 |
+| **AI 準備** | `previewContractIntent` · `prepareContractIntent` 等（未接続） |
+| **非実装** | Stripe · PDF · 電子署名 · メール · 通知 · 他 surface |
+
+**テスト:** `scripts/test-builder-contract-completion-phase6e.mjs`
+
+**報告:** `reports/builder-contract-completion-phase6e.md`
 
 ---
 

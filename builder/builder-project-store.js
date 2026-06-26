@@ -1,12 +1,12 @@
 /**
- * Builder Project Hub — 案件ストア（Phase 6-A〜6-D · localStorage）
+ * Builder Project Hub — 案件ストア（Phase 6-A〜6-E · localStorage）
  * Builder 専用 · Platform / AI秘書 / TASFUL AI 非連携
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_project_hub_v1";
-  const SCHEMA_VERSION = 4;
+  const SCHEMA_VERSION = 5;
 
   const STATUSES = Object.freeze([
     { id: "inquiry", label: "問い合わせ" },
@@ -39,6 +39,8 @@
     finance_updated: "収支更新",
     estimate_updated: "見積更新",
     invoice_updated: "請求更新",
+    contract_updated: "契約更新",
+    completion_updated: "完了更新",
   });
 
   const TAX_RATE = 0.1;
@@ -70,6 +72,35 @@
     SET_STATUS: "set_status",
     SET_DUE_DATE: "set_due_date",
     MARK_PAID: "mark_paid",
+  });
+
+  /** 契約状態（Phase 6-E） */
+  const CONTRACT_STATUSES = Object.freeze([
+    { id: "draft", label: "下書き" },
+    { id: "sent", label: "送付済" },
+    { id: "signed", label: "締結済" },
+    { id: "cancelled", label: "取消" },
+  ]);
+
+  /** 完了状態（Phase 6-E） */
+  const COMPLETION_STATUSES = Object.freeze([
+    { id: "not_started", label: "未着手" },
+    { id: "working", label: "施工中" },
+    { id: "inspection", label: "検査中" },
+    { id: "completed", label: "完了" },
+    { id: "handed_over", label: "引渡し済" },
+  ]);
+
+  const CONTRACT_INTENT_TYPES = Object.freeze({
+    SET_STATUS: "set_status",
+    SET_DATES: "set_dates",
+    SET_WARRANTY: "set_warranty",
+  });
+
+  const COMPLETION_INTENT_TYPES = Object.freeze({
+    SET_STATUS: "set_status",
+    SET_DATES: "set_dates",
+    SET_APPROVALS: "set_approvals",
   });
 
   /** 支払い状況（Phase 6-C） */
@@ -136,6 +167,14 @@
     return INVOICE_STATUSES.find((s) => s.id === id)?.label || id;
   }
 
+  function contractStatusLabel(id) {
+    return CONTRACT_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
+  function completionStatusLabel(id) {
+    return COMPLETION_STATUSES.find((s) => s.id === id)?.label || id;
+  }
+
   function calcTax(subtotal) {
     return Math.round(toAmount(subtotal) * TAX_RATE);
   }
@@ -197,6 +236,50 @@
       total: inv.total != null ? toAmount(inv.total) : calcTotal(subtotal, tax),
       memo: String(inv.memo || ""),
       updatedAt: String(inv.updatedAt || ""),
+    };
+  }
+
+  function normalizeCompletionPhoto(raw) {
+    const p = raw && typeof raw === "object" ? raw : {};
+    return {
+      id: String(p.id || uid("cmp_ph")),
+      label: String(p.label || ""),
+      url: String(p.url || ""),
+      at: String(p.at || ""),
+    };
+  }
+
+  function normalizeContract(raw) {
+    const c = raw && typeof raw === "object" ? raw : {};
+    const status = String(c.contractStatus || "draft");
+    return {
+      contractNumber: String(c.contractNumber || ""),
+      contractStatus: status,
+      contractStatusLabel: String(c.contractStatusLabel || contractStatusLabel(status)),
+      contractDate: String(c.contractDate || ""),
+      plannedStartDate: String(c.plannedStartDate || ""),
+      plannedEndDate: String(c.plannedEndDate || ""),
+      warrantyMonths: Math.max(0, Number(c.warrantyMonths) || 0),
+      specialNotes: String(c.specialNotes || ""),
+      updatedAt: String(c.updatedAt || ""),
+    };
+  }
+
+  function normalizeCompletion(raw) {
+    const c = raw && typeof raw === "object" ? raw : {};
+    const status = String(c.completionStatus || "not_started");
+    const photos = Array.isArray(c.photos) ? c.photos.map(normalizeCompletionPhoto) : [];
+    return {
+      completionStatus: status,
+      completionStatusLabel: String(c.completionStatusLabel || completionStatusLabel(status)),
+      startedAt: String(c.startedAt || ""),
+      completedAt: String(c.completedAt || ""),
+      handoverAt: String(c.handoverAt || ""),
+      ownerApproved: Boolean(c.ownerApproved),
+      partnerApproved: Boolean(c.partnerApproved),
+      completionMemo: String(c.completionMemo || ""),
+      photos,
+      updatedAt: String(c.updatedAt || ""),
     };
   }
 
@@ -347,6 +430,8 @@
       finance: normalizeFinance(p.finance || p),
       estimate: normalizeEstimate(p.estimate, p),
       invoice: normalizeInvoice(p.invoice),
+      contract: normalizeContract(p.contract),
+      completion: normalizeCompletion(p.completion),
       memo: String(p.memo || ""),
       createdAt: String(p.createdAt || nowIso()),
       updatedAt: String(p.updatedAt || p.createdAt || nowIso()),
@@ -411,6 +496,25 @@
           total: 0,
           memo: "未請求",
         },
+        contract: {
+          contractNumber: "",
+          contractStatus: "draft",
+          contractDate: "",
+          plannedStartDate: dateOnlyOffset(21),
+          plannedEndDate: dateOnlyOffset(60),
+          warrantyMonths: 24,
+          specialNotes: "見積承認後に契約書作成予定",
+        },
+        completion: {
+          completionStatus: "not_started",
+          startedAt: "",
+          completedAt: "",
+          handoverAt: "",
+          ownerApproved: false,
+          partnerApproved: false,
+          completionMemo: "",
+          photos: [],
+        },
         memo: "外壁ひび・塗装剥離。現調済み。",
         createdAt: day(14),
         updatedAt: day(2),
@@ -456,6 +560,27 @@
           subtotal: 0,
           tax: 0,
           total: 0,
+        },
+        contract: {
+          contractNumber: "CTR-2026-002",
+          contractStatus: "sent",
+          contractDate: dateOnlyOffset(-2),
+          plannedStartDate: dateOnlyOffset(10),
+          plannedEndDate: dateOnlyOffset(45),
+          warrantyMonths: 12,
+          specialNotes: "水回り同時施工のため着工調整中",
+        },
+        completion: {
+          completionStatus: "working",
+          startedAt: dateOnlyOffset(-1),
+          completedAt: "",
+          handoverAt: "",
+          ownerApproved: false,
+          partnerApproved: true,
+          completionMemo: "キッチン解体着手。浴室は来週予定。",
+          photos: [
+            { id: "ph_w1", label: "キッチン解体前", url: "", at: dateOnlyOffset(-1) },
+          ],
         },
         memo: "キッチン・浴室の同時リフォーム相談。",
         createdAt: day(5),
@@ -503,6 +628,28 @@
           tax: 254545,
           total: 2800000,
           memo: "残金請求中",
+        },
+        contract: {
+          contractNumber: "CTR-2026-003",
+          contractStatus: "signed",
+          contractDate: dateOnlyOffset(-25),
+          plannedStartDate: dateOnlyOffset(-22),
+          plannedEndDate: dateOnlyOffset(-5),
+          warrantyMonths: 36,
+          specialNotes: "店舗営業時間外施工",
+        },
+        completion: {
+          completionStatus: "completed",
+          startedAt: dateOnlyOffset(-20),
+          completedAt: dateOnlyOffset(-3),
+          handoverAt: "",
+          ownerApproved: true,
+          partnerApproved: true,
+          completionMemo: "内装仕上げ完了。最終検査済み。",
+          photos: [
+            { id: "ph_c1", label: "竣工写真（正面）", url: "", at: dateOnlyOffset(-3) },
+            { id: "ph_c2", label: "竣工写真（内装）", url: "", at: dateOnlyOffset(-3) },
+          ],
         },
         memo: "施工週次報告あり。",
         createdAt: day(30),
@@ -1158,6 +1305,246 @@
     return updateInvoice(projectId, patch);
   }
 
+  function formatContractDetail(contract) {
+    const c = normalizeContract(contract);
+    return `契約 ${c.contractNumber || "—"} · ${c.contractStatusLabel} · 着工予定 ${c.plannedStartDate || "—"}`;
+  }
+
+  function formatCompletionDetail(completion) {
+    const c = normalizeCompletion(completion);
+    return `完了 ${c.completionStatusLabel} · 着工 ${c.startedAt || "—"} · 完了 ${c.completedAt || "—"}`;
+  }
+
+  function isContractPending(project) {
+    const s = project?.contract?.contractStatus;
+    return s === "draft" || s === "sent";
+  }
+
+  function isCompletionWorking(project) {
+    return project?.completion?.completionStatus === "working";
+  }
+
+  function isCompletionAwaiting(project) {
+    return project?.completion?.completionStatus === "inspection";
+  }
+
+  function isCompletionDone(project) {
+    const s = project?.completion?.completionStatus;
+    return s === "completed" || s === "handed_over";
+  }
+
+  function getWorkingProjects() {
+    return listProjects().filter(isCompletionWorking);
+  }
+
+  function getCompletedProjects() {
+    return listProjects().filter(isCompletionDone);
+  }
+
+  function getContractSummary() {
+    const projects = listProjects();
+    let pendingCount = 0;
+    let signedCount = 0;
+    let cancelledCount = 0;
+    projects.forEach((p) => {
+      const s = p.contract?.contractStatus || "draft";
+      if (s === "draft" || s === "sent") pendingCount += 1;
+      else if (s === "signed") signedCount += 1;
+      else if (s === "cancelled") cancelledCount += 1;
+    });
+    return { pendingCount, signedCount, cancelledCount, projectCount: projects.length };
+  }
+
+  function getCompletionSummary() {
+    const projects = listProjects();
+    let workingCount = 0;
+    let inspectionCount = 0;
+    let completedCount = 0;
+    let notStartedCount = 0;
+    projects.forEach((p) => {
+      const s = p.completion?.completionStatus || "not_started";
+      if (s === "working") workingCount += 1;
+      else if (s === "inspection") inspectionCount += 1;
+      else if (s === "completed" || s === "handed_over") completedCount += 1;
+      else if (s === "not_started") notStartedCount += 1;
+    });
+    return { workingCount, inspectionCount, completedCount, notStartedCount, projectCount: projects.length };
+  }
+
+  /**
+   * @param {string} projectId
+   * @param {object} contractPatch
+   */
+  function updateContract(projectId, contractPatch) {
+    const existing = getProject(projectId);
+    if (!existing) return { ok: false, error: "not_found" };
+    const patch = contractPatch && typeof contractPatch === "object" ? contractPatch : {};
+    const prev = existing.contract || {};
+    const merged = normalizeContract({ ...prev, ...patch, updatedAt: nowIso() });
+    const next = normalizeProject({ ...existing, contract: merged });
+    addTimelineEvent(
+      next,
+      "contract_updated",
+      patch.contractReason != null
+        ? String(patch.contractReason).slice(0, 500)
+        : formatContractDetail(merged)
+    );
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === projectId);
+    data.projects[idx] = next;
+    writeAll(data);
+    return { ok: true, project: next, contract: next.contract };
+  }
+
+  /**
+   * @param {string} projectId
+   * @param {object} completionPatch
+   */
+  function updateCompletion(projectId, completionPatch) {
+    const existing = getProject(projectId);
+    if (!existing) return { ok: false, error: "not_found" };
+    const patch = completionPatch && typeof completionPatch === "object" ? completionPatch : {};
+    const prev = existing.completion || {};
+    const mergedInput = { ...prev, ...patch, updatedAt: nowIso() };
+    if (patch.photos) mergedInput.photos = patch.photos;
+    const merged = normalizeCompletion(mergedInput);
+    if (merged.completionStatus === "completed" && !merged.completedAt) {
+      merged.completedAt = todayDateOnly();
+    }
+    if (merged.completionStatus === "handed_over" && !merged.handoverAt) {
+      merged.handoverAt = todayDateOnly();
+    }
+    const next = normalizeProject({ ...existing, completion: merged });
+    addTimelineEvent(
+      next,
+      "completion_updated",
+      patch.completionReason != null
+        ? String(patch.completionReason).slice(0, 500)
+        : formatCompletionDetail(merged)
+    );
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === projectId);
+    data.projects[idx] = next;
+    writeAll(data);
+    return { ok: true, project: next, completion: next.completion };
+  }
+
+  function previewContractIntent(intentText) {
+    const text = String(intentText || "").trim();
+    if (!text) return { ok: false, error: "empty_intent" };
+    const intent = { source: "ai_assistant", rawText: text };
+    const statusMatch = text.match(/契約(?:状態|ステータス)\s*[:：]?\s*(下書き|送付済|締結済|取消|draft|sent|signed|cancelled)/i);
+    const startMatch = text.match(/着工予定\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+    const endMatch = text.match(/完了予定\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+    const warrantyMatch = text.match(/保証(?:期間)?\s*[:：]?\s*(\d+)\s*ヶ?月/);
+
+    if (statusMatch) {
+      intent.type = CONTRACT_INTENT_TYPES.SET_STATUS;
+      const map = {
+        下書き: "draft",
+        送付済: "sent",
+        締結済: "signed",
+        取消: "cancelled",
+        draft: "draft",
+        sent: "sent",
+        signed: "signed",
+        cancelled: "cancelled",
+      };
+      intent.contractStatus = map[statusMatch[1]] || "draft";
+    } else if (startMatch || endMatch) {
+      intent.type = CONTRACT_INTENT_TYPES.SET_DATES;
+      if (startMatch) intent.plannedStartDate = startMatch[1];
+      if (endMatch) intent.plannedEndDate = endMatch[1];
+    } else if (warrantyMatch) {
+      intent.type = CONTRACT_INTENT_TYPES.SET_WARRANTY;
+      intent.warrantyMonths = Number(warrantyMatch[1]) || 0;
+    } else {
+      return { ok: false, error: "unrecognized_intent", rawText: text };
+    }
+    return { ok: true, intent };
+  }
+
+  function previewCompletionIntent(intentText) {
+    const text = String(intentText || "").trim();
+    if (!text) return { ok: false, error: "empty_intent" };
+    const intent = { source: "ai_assistant", rawText: text };
+    const statusMatch = text.match(
+      /完了(?:状態|ステータス)\s*[:：]?\s*(未着手|施工中|検査中|完了|引渡し済|not_started|working|inspection|completed|handed_over)/i
+    );
+    const startMatch = text.match(/着工日\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+    const doneMatch = text.match(/完了日\s*[:：]?\s*(\d{4}-\d{2}-\d{2})/);
+    const ownerMatch = /オーナー確認済|ownerApproved/i.test(text);
+    const partnerMatch = /パートナー確認済|partnerApproved/i.test(text);
+
+    if (statusMatch) {
+      intent.type = COMPLETION_INTENT_TYPES.SET_STATUS;
+      const map = {
+        未着手: "not_started",
+        施工中: "working",
+        検査中: "inspection",
+        完了: "completed",
+        引渡し済: "handed_over",
+        not_started: "not_started",
+        working: "working",
+        inspection: "inspection",
+        completed: "completed",
+        handed_over: "handed_over",
+      };
+      intent.completionStatus = map[statusMatch[1]] || "not_started";
+    } else if (startMatch || doneMatch) {
+      intent.type = COMPLETION_INTENT_TYPES.SET_DATES;
+      if (startMatch) intent.startedAt = startMatch[1];
+      if (doneMatch) intent.completedAt = doneMatch[1];
+    } else if (ownerMatch || partnerMatch) {
+      intent.type = COMPLETION_INTENT_TYPES.SET_APPROVALS;
+      if (ownerMatch) intent.ownerApproved = true;
+      if (partnerMatch) intent.partnerApproved = true;
+    } else {
+      return { ok: false, error: "unrecognized_intent", rawText: text };
+    }
+    return { ok: true, intent };
+  }
+
+  function applyContractIntent(projectId, contractIntent) {
+    const i = contractIntent && typeof contractIntent === "object" ? contractIntent : {};
+    const type = String(i.type || "");
+    const patch = { contractReason: i.reason || i.rawText || "AI 契約提案" };
+
+    if (type === CONTRACT_INTENT_TYPES.SET_STATUS) {
+      patch.contractStatus = String(i.contractStatus || "draft");
+    } else if (type === CONTRACT_INTENT_TYPES.SET_DATES) {
+      if (i.plannedStartDate != null) patch.plannedStartDate = String(i.plannedStartDate);
+      if (i.plannedEndDate != null) patch.plannedEndDate = String(i.plannedEndDate);
+    } else if (type === CONTRACT_INTENT_TYPES.SET_WARRANTY) {
+      patch.warrantyMonths = Math.max(0, Number(i.warrantyMonths) || 0);
+    } else {
+      return { ok: false, error: "invalid_intent" };
+    }
+    return updateContract(projectId, patch);
+  }
+
+  function applyCompletionIntent(projectId, completionIntent) {
+    const i = completionIntent && typeof completionIntent === "object" ? completionIntent : {};
+    const type = String(i.type || "");
+    const patch = { completionReason: i.reason || i.rawText || "AI 完了提案" };
+
+    if (type === COMPLETION_INTENT_TYPES.SET_STATUS) {
+      patch.completionStatus = String(i.completionStatus || "not_started");
+    } else if (type === COMPLETION_INTENT_TYPES.SET_DATES) {
+      if (i.startedAt != null) patch.startedAt = String(i.startedAt);
+      if (i.completedAt != null) patch.completedAt = String(i.completedAt);
+      if (i.handoverAt != null) patch.handoverAt = String(i.handoverAt);
+    } else if (type === COMPLETION_INTENT_TYPES.SET_APPROVALS) {
+      if (i.ownerApproved != null) patch.ownerApproved = Boolean(i.ownerApproved);
+      if (i.partnerApproved != null) patch.partnerApproved = Boolean(i.partnerApproved);
+    } else {
+      return { ok: false, error: "invalid_intent" };
+    }
+    return updateCompletion(projectId, patch);
+  }
+
   function clearForTests() {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -1179,6 +1566,10 @@
     INVOICE_STATUSES,
     ESTIMATE_INTENT_TYPES,
     INVOICE_INTENT_TYPES,
+    CONTRACT_STATUSES,
+    COMPLETION_STATUSES,
+    CONTRACT_INTENT_TYPES,
+    COMPLETION_INTENT_TYPES,
     TAX_RATE,
     TIMELINE_LABELS,
     statusLabel,
@@ -1187,11 +1578,15 @@
     paymentStatusLabel,
     estimateStatusLabel,
     invoiceStatusLabel,
+    contractStatusLabel,
+    completionStatusLabel,
     toAmount,
     formatYen,
     normalizeFinance,
     normalizeEstimate,
     normalizeInvoice,
+    normalizeContract,
+    normalizeCompletion,
     normalizeEstimateItem,
     calculateFinanceAmounts,
     calculateProjectFinance,
@@ -1240,6 +1635,20 @@
     previewInvoiceIntent,
     applyEstimateIntent,
     applyInvoiceIntent,
+    updateContract,
+    updateCompletion,
+    getContractSummary,
+    getCompletionSummary,
+    getWorkingProjects,
+    getCompletedProjects,
+    isContractPending,
+    isCompletionWorking,
+    isCompletionAwaiting,
+    isCompletionDone,
+    previewContractIntent,
+    previewCompletionIntent,
+    applyContractIntent,
+    applyCompletionIntent,
     ensureSeed,
     seedDemoProjects,
     clearForTests,

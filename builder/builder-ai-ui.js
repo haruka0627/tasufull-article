@@ -122,6 +122,18 @@
     return Store?.previewInvoiceIntent?.(intentText) || null;
   }
 
+  /** Phase 6-E: 将来の AI 契約 intent プレビュー（現時点では UI から未呼び出し） */
+  function prepareContractIntent(intentText) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewContractIntent?.(intentText) || null;
+  }
+
+  /** Phase 6-E: 将来の AI 完了 intent プレビュー（現時点では UI から未呼び出し） */
+  function prepareCompletionIntent(intentText) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewCompletionIntent?.(intentText) || null;
+  }
+
   let messages = loadHistory();
   let sending = false;
   let photoFile = null;
@@ -524,6 +536,8 @@
     prepareFinanceIntent,
     prepareEstimateIntent,
     prepareInvoiceIntent,
+    prepareContractIntent,
+    prepareCompletionIntent,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);

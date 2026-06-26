@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-26（Builder Estimate/Invoice Phase 6-D）
+**最終更新:** 2026-06-27（Builder Contract/Completion Phase 6-E）
 
 ---
 
@@ -58,7 +58,8 @@
 | **Project Hub Phase 6-A**（案件ハブ MVP · Vision 保存） | ✅ `46c5e02` | `reports/builder-project-hub-phase6a.md` |
 | **Project Calendar Phase 6-B**（工程 · 月/週カレンダー · 遅延） | ✅ `556f315` | `reports/builder-project-calendar-phase6b.md` |
 | **Project Finance Phase 6-C**（見積/原価/粗利 · 支払サマリー） | ✅ `e70d679` | `reports/builder-project-finance-phase6c.md` |
-| **Estimate/Invoice Phase 6-D**（見積・請求基盤 · SCHEMA v4） | ✅ 実装（未コミット） | `reports/builder-estimate-invoice-phase6d.md` |
+| **Estimate/Invoice Phase 6-D**（見積・請求基盤 · SCHEMA v4） | ✅ `8be158f` | `reports/builder-estimate-invoice-phase6d.md` |
+| **Contract/Completion Phase 6-E**（契約・完了基盤 · SCHEMA v5） | ✅ 実装（未コミット） | `reports/builder-contract-completion-phase6e.md` |
 | **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 ### Platform（製品機能）
