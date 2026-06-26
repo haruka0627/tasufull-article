@@ -8,6 +8,22 @@
 
   const JSON_URL = "data/creator-rank-explanation.json";
   const MAP_URL = "data/tlv-payout-creator-map.json";
+  const PAYMENT_HISTORY_URL = "data/payment-history.json";
+
+  const PAYMENT_STATUS_LABELS = {
+    unpaid: "未払い",
+    processing: "送金中",
+    completed: "完了",
+    failed: "失敗",
+  };
+
+  function formatPaymentStatus(status) {
+    return PAYMENT_STATUS_LABELS[status] || status || "—";
+  }
+
+  function paymentStatusClass(status) {
+    return "tlv-payment-status tlv-payment-status--" + String(status || "unknown");
+  }
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -61,10 +77,13 @@
     }
 
     const reportMonth = meta.reportMonth || "";
+    const payment = meta.payment || {};
     const guaranteeLabel = creator.guarantee_applied ? "適用" : "なし";
     const payoutYen = creator.payout_amount_yen;
     const grossYen = creator.gross_revenue;
     const appliedRate = creator.applied_rate;
+    const paymentStatus = payment.status || "";
+    const stripeAccountId = payment.stripe_connect_account_id || "";
 
     return (
       '<section class="tlv-creator-payout" data-tlv-creator-payout data-tlv-payout-display-only="true"' +
@@ -105,6 +124,14 @@
       '<div class="tlv-creator-payout__fact tlv-creator-payout__fact--highlight"><dt>支払確定額 <span class="tlv-creator-payout__field-id">payout_amount_yen</span></dt><dd data-display-field="payout_amount_yen">' +
       escapeHtml(formatConfirmedYenDisplay(payoutYen)) +
       "</dd></div>" +
+      '<div class="tlv-creator-payout__fact"><dt>支払状態</dt><dd data-display-field="payment_status"><span class="' +
+      paymentStatusClass(paymentStatus) +
+      '">' +
+      escapeHtml(formatPaymentStatus(paymentStatus)) +
+      "</span></dd></div>" +
+      '<div class="tlv-creator-payout__fact"><dt>Connect Account</dt><dd data-display-field="stripe_connect_account_id"><code>' +
+      escapeHtml(stripeAccountId || "—") +
+      "</code></dd></div>" +
       '<div class="tlv-creator-payout__fact"><dt>保証適用</dt><dd data-display-field="guarantee_applied">' +
       escapeHtml(guaranteeLabel) +
       "</dd></div>" +
@@ -145,13 +172,22 @@
     return res.json();
   }
 
+  function findPaymentForCreator(paymentHistory, creatorId) {
+    return (paymentHistory?.payments || []).find(function (p) {
+      return p.creator_id === creatorId;
+    });
+  }
+
   async function fetchAndRenderPayoutPanel(options) {
     options = options || {};
-    const [report, creatorMap] = await Promise.all([
+    const [report, creatorMap, paymentHistory] = await Promise.all([
       loadJson(options.jsonUrl || JSON_URL),
       loadJson(options.mapUrl || MAP_URL).catch(() => ({
         default_creator_id: "cr_001",
         by_talk_user_id: { u_me: "cr_001" },
+      })),
+      loadJson(options.paymentHistoryUrl || PAYMENT_HISTORY_URL).catch(() => ({
+        payments: [],
       })),
     ]);
 
@@ -168,12 +204,17 @@
       );
     }
 
-    return renderCreatorPayoutPanelHtml(creator, { reportMonth: report.month });
+    const payment = findPaymentForCreator(paymentHistory, creator.creator_id);
+    return renderCreatorPayoutPanelHtml(creator, {
+      reportMonth: report.month,
+      payment: payment || {},
+    });
   }
 
   global.TasuTlvCreatorPayoutDisplay = {
     JSON_URL,
     MAP_URL,
+    PAYMENT_HISTORY_URL,
     formatConfirmedYenDisplay,
     resolveCreatorRecord,
     renderCreatorPayoutPanelHtml,

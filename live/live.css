@@ -6591,6 +6591,40 @@ body[data-page="live-my-videos"] .tlv-desktop-content--my-videos {
   white-space: nowrap;
 }
 
+.tlv-payment-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.tlv-payment-status--unpaid {
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+}
+
+.tlv-payment-status--processing {
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.12);
+}
+
+.tlv-payment-status--completed {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.tlv-payment-status--failed {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.12);
+}
+
+.tlv-payment-status--unknown {
+  color: var(--live-muted);
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .tlv-creator-perf__table-head {
   display: none;
 }

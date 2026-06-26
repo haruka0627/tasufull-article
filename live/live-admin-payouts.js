@@ -7,6 +7,52 @@
 
   const DECISION_URL = "data/monthly-payout-decision.json";
   const EXPLANATION_URL = "data/creator-rank-explanation.json";
+  const PAYMENT_HISTORY_URL = "data/payment-history.json";
+
+  const PAYMENT_STATUS_LABELS = {
+    unpaid: "未払い",
+    processing: "送金中",
+    completed: "完了",
+    failed: "失敗",
+  };
+
+  function formatPaymentStatus(status) {
+    return PAYMENT_STATUS_LABELS[status] || status || "—";
+  }
+
+  function paymentStatusClass(status) {
+    return "tlv-payment-status tlv-payment-status--" + String(status || "unknown");
+  }
+
+  function buildPaymentHistoryMap(paymentHistory) {
+    const map = new Map();
+    (paymentHistory?.payments || []).forEach(function (p) {
+      map.set(p.creator_id, p);
+    });
+    return map;
+  }
+
+  function mergePaymentHistoryRows(rows, paymentHistory) {
+    const byId = buildPaymentHistoryMap(paymentHistory);
+    return rows.map(function (r) {
+      const payment = byId.get(r.creator_id) || {};
+      return {
+        creator_id: r.creator_id,
+        display_name: r.display_name,
+        rank: r.rank,
+        gross_revenue: r.gross_revenue,
+        applied_rate: r.applied_rate,
+        payout_amount_yen: r.payout_amount_yen,
+        guarantee_applied: r.guarantee_applied,
+        adjustment_explanation: r.adjustment_explanation,
+        payment_notice: r.payment_notice,
+        safety_status: r.safety_status,
+        audit_status: r.audit_status,
+        stripe_connect_account_id: payment.stripe_connect_account_id || "",
+        payment_status: payment.status || "",
+      };
+    });
+  }
 
   function escapeHtml(value) {
     return String(value ?? "")
@@ -203,6 +249,14 @@
           '<td data-display-field="payout_amount_yen">' +
           escapeHtml(formatConfirmedYenDisplay(r.payout_amount_yen)) +
           "</td>" +
+          '<td data-display-field="stripe_connect_account_id"><code>' +
+          escapeHtml(r.stripe_connect_account_id || "—") +
+          "</code></td>" +
+          '<td data-display-field="payment_status"><span class="' +
+          paymentStatusClass(r.payment_status) +
+          '">' +
+          escapeHtml(formatPaymentStatus(r.payment_status)) +
+          "</span></td>" +
           '<td data-display-field="guarantee_applied">' +
           escapeHtml(guaranteeLabel) +
           "</td>" +
@@ -228,12 +282,12 @@
       '<h2 class="tlv-admin-payouts__section-title">TLV月次還元一覧</h2>' +
       '<button type="button" class="live-btn live-btn--primary" data-tlv-admin-payout-csv>CSV出力</button>' +
       "</div>" +
-      '<p class="tlv-admin-payouts__notice">支払確定値は <code>payout_amount_yen</code> のみ。管理画面では <code>gross_revenue × applied_rate</code> をしません。</p>' +
+      '<p class="tlv-admin-payouts__notice">支払確定値は <code>payout_amount_yen</code> のみ。管理画面では <code>gross_revenue × applied_rate</code> をしません。デモ支払いフロー: Stripe API は呼び出していません（<code>unpaid</code> = テスト送金直前）。</p>' +
       '<div class="tlv-admin-payouts__table-scroll">' +
       '<table class="tlv-admin-payouts__table">' +
       "<thead><tr>" +
       "<th>Creator</th><th>Rank</th><th>Gross Revenue</th><th>Applied Rate</th>" +
-      "<th>支払確定額 (payout_amount_yen)</th><th>Guarantee</th><th>Adjustment</th><th>Payment Notice</th>" +
+      "<th>支払確定額 (payout_amount_yen)</th><th>Connect Account</th><th>支払状態</th><th>Guarantee</th><th>Adjustment</th><th>Payment Notice</th>" +
       "<th>Safety</th><th>Audit</th>" +
       "</tr></thead><tbody>" +
       body +
@@ -269,12 +323,18 @@
   async function mountAdminPayoutsPage(root) {
     root.innerHTML = '<p class="live-loading">月次還元データを読み込み中…</p>';
     try {
-      const [decision, explanation] = await Promise.all([
+      const [decision, explanation, paymentHistory] = await Promise.all([
         loadJson(DECISION_URL),
         loadJson(EXPLANATION_URL),
+        loadJson(PAYMENT_HISTORY_URL).catch(function () {
+          return { payments: [] };
+        }),
       ]);
 
-      const rows = mergeAdminPayoutRows(decision, explanation);
+      const rows = mergePaymentHistoryRows(
+        mergeAdminPayoutRows(decision, explanation),
+        paymentHistory
+      );
       const summary = buildAdminSummaryView(decision);
       const csvRows = buildAdminPayoutCsvRows(decision, rows);
 
@@ -291,15 +351,18 @@
         '<p class="live-error">読み込みに失敗しました: ' +
         escapeHtml(err.message || String(err)) +
         "</p>" +
-        "<p>先に <code>node scripts/generate-monthly-payout-decision.mjs</code> と " +
-        "<code>node scripts/generate-creator-rank-explanation.mjs</code> を実行してください。</p>";
+        "<p>先に <code>node scripts/generate-monthly-payout-decision.mjs</code>、 " +
+        "<code>node scripts/generate-creator-rank-explanation.mjs</code>、 " +
+        "<code>node scripts/generate-payout-outputs.mjs</code> を実行してください。</p>";
     }
   }
 
   global.TasuLiveAdminPayouts = {
     DECISION_URL,
     EXPLANATION_URL,
+    PAYMENT_HISTORY_URL,
     mergeAdminPayoutRows,
+    mergePaymentHistoryRows,
     buildAdminPayoutCsvRows,
     buildAdminPayoutCsvString,
     mountAdminPayoutsPage,
