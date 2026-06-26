@@ -23,6 +23,8 @@ async function findBaseUrl() {
 const base = await findBaseUrl();
 console.log("Base URL:", base);
 
+const failures = [];
+
 await withPlaywrightBrowser(async (browser) => {const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
 
 await page.addInitScript((mvpKey) => {
@@ -108,7 +110,6 @@ const workerAfter = await page.evaluate((mvpKey) => {
 console.log("Job:", jobBefore, jobAfter);
 console.log("Worker:", workerBefore, workerAfter);
 
-const failures = [];
 if (listAudit.count < 3) failures.push(`一覧件数不足: ${listAudit.count}`);
 if (!listAudit.labels.includes("案件") && !listAudit.labels.some((l) => /募集/.test(l))) {
   failures.push("案件カードなし");

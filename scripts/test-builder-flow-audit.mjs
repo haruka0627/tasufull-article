@@ -30,7 +30,7 @@ const ACTIVE_NOTIFY_IDS = [
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 console.log("Base URL:", base);
 
-await withPlaywrightBrowser(async (browser) => {let failed = false;
+let failed = false;
 
 function fail(msg) {
   console.log("NG", msg);
@@ -40,6 +40,8 @@ function fail(msg) {
 function ok(msg) {
   console.log("OK", msg);
 }
+
+await withPlaywrightBrowser(async (browser) => {
 
 function partnerAssignmentInitScript() {
   localStorage.setItem("tasful:builder:mvp:role", "partner");
