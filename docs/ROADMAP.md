@@ -38,7 +38,8 @@
 | TASFUL AI 操作アシスタント | **Gemini** | [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md) |
 | Builder AI | **OpenAI** + **Gemini Vision**（Gateway） | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) |
 | Builder AI 計算 Orchestrator | ✅ 実装（Phase 3） | `reports/builder-ai-tools-phase3.md` |
-| Builder AI Gemini Live | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+| Builder AI Live Phase 4-A | ✅ 実装（Live 風 MVP） | `66051f7` · `reports/builder-ai-live-phase4-plan.md` |
+| Builder AI Gemini Live Phase 4-B | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 | Groq / Cerebras / Claude | 採用しない（現時点） | — |
 
 ### Builder AI
@@ -52,7 +53,8 @@
 | **UI Phase 1**（現場診断 UI シェル） | ✅ | `5d28acc` |
 | **Vision Phase 2**（Gemini Vision · Gateway attachments） | ✅ | `4aff9ec` |
 | **Tool Integration Phase 3**（自然文 → 計算ツール Orchestrator） | ✅ | `05c32ad` · `reports/builder-ai-tools-phase3.md` |
-| **Gemini Live / Voice**（リアルタイム現場診断） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+| **Live Phase 4-A**（カメラ · Voice · スナップショット Vision · Live 風 MVP） | ✅ | `66051f7` · `reports/builder-ai-live-phase4-plan.md` |
+| **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 ### Platform（製品機能）
 
@@ -112,7 +114,7 @@
 ## 将来（v1.1 以降 · 凍結解除後）
 
 - Builder AI Supabase 本番 RLS（P2-C 完了後）
-- **Builder AI Gemini Live / Voice** — [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) · Vision ✅ · Calc Orchestrator ✅
+- **Builder AI Gemini Live Phase 4-B** — [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) · Vision ✅ · Calc Orchestrator ✅ · **Live 4-A ✅** `66051f7`
 - TASFUL AI 履歴 Supabase 同期
 - **TASFUL AI 操作アシスタント**（Gemini · 画面操作案内 · 製品横断ナビ）— [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md)
 - Platform お気に入りサーバー正本
