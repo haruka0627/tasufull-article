@@ -7021,3 +7021,41 @@ a.ops-p2-tile:hover {
   align-items: center;
   justify-content: center;
 }
+
+/* AI îÈèë Phase 5-C ? Command Center UI */
+.ops-secretary-command-center { margin-top: 0.75rem; }
+.ops-cc-filters { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; margin-bottom: 0.75rem; font-size: 0.8125rem; }
+.ops-cc-filters label { display: flex; flex-direction: column; gap: 0.15rem; }
+.ops-cc-section-title { font-size: 0.875rem; font-weight: 600; margin: 0.75rem 0 0.35rem; }
+.ops-cc-table { font-size: 0.8125rem; }
+.ops-cc-row { cursor: pointer; }
+.ops-cc-row--selected { background: rgba(59, 130, 246, 0.08); }
+.ops-cc-row--owner { border-left: 3px solid #dc2626; }
+.ops-cc-badge { display: inline-block; padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+.ops-cc-badge--l3 { background: #fef3c7; color: #92400e; }
+.ops-cc-badge--l4 { background: #fee2e2; color: #991b1b; }
+.ops-cc-badge--l1 { background: #d1fae5; color: #065f46; }
+.ops-cc-badge--l2 { background: #e0e7ff; color: #3730a3; }
+.ops-cc-urgency { font-size: 0.75rem; font-weight: 600; }
+.ops-cc-urgency--critical { color: #dc2626; }
+.ops-cc-urgency--high { color: #ea580c; }
+.ops-cc-urgency--medium { color: #ca8a04; }
+.ops-cc-urgency--low { color: #64748b; }
+.ops-cc-empty { padding: 0.75rem; border: 1px dashed #cbd5e1; border-radius: 6px; background: #f8fafc; font-size: 0.8125rem; }
+.ops-cc-empty__title { font-weight: 600; margin: 0 0 0.25rem; }
+.ops-cc-empty__detail { margin: 0; color: #64748b; }
+.ops-cc-l3-card { border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.5rem 0.65rem; margin-bottom: 0.5rem; font-size: 0.8125rem; }
+.ops-cc-l3-edit { width: 100%; margin: 0.35rem 0; font-size: 0.8125rem; }
+.ops-cc-l3-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.ops-cc-l4-list { list-style: none; padding: 0; margin: 0; font-size: 0.8125rem; }
+.ops-cc-l4-item { padding: 0.35rem 0; border-bottom: 1px solid #f1f5f9; }
+.ops-cc-l4-note { margin: 0.2rem 0 0; color: #64748b; font-size: 0.75rem; }
+.ops-cc-morning-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.35rem 0; }
+.ops-cc-chip { font-size: 0.75rem; padding: 0.15rem 0.45rem; background: #f1f5f9; border-radius: 4px; }
+.ops-cc-morning-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.5rem; font-size: 0.8125rem; }
+.ops-cc-dl { font-size: 0.8125rem; margin: 0; }
+.ops-cc-dl dt { font-weight: 600; margin-top: 0.35rem; }
+.ops-cc-dl dd { margin: 0.1rem 0 0; color: #334155; }
+.ops-cc-hint { font-size: 0.75rem; color: #64748b; margin: 0 0 0.5rem; }
+.ops-cc-count { font-weight: 400; color: #64748b; }
+.ops-cc-muted { color: #64748b; font-size: 0.75rem; }

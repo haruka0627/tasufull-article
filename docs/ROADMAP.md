@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-26（機能開発フェーズ — 実装順確定）
+**最終更新:** 2026-06-26（AI 秘書 Phase 5-A Orchestrator Core）
 
 ---
 
@@ -94,6 +94,10 @@
 | **本番 AI API** | ✅ 方針確定 | **DeepSeek API**（AD-010）· 要約/優先付け/自然文のみ · 遷移/件数/検索/フィルターは非AI |
 | 未コミット phase ファイル | 📋 要整理 | working tree に `admin-ai-secretary-phase*.js` 等 |
 | **DeepSeek 本番接続** | 📋 **P0 実装** | 秘書専用 Adapter / Edge · **Gateway 非混在**（[TODO.md](./TODO.md) §P0-3） |
+| **Operations Orchestrator Phase 5-A** | ✅ 実装（未コミット） | Registry · Classifier · Human Gate · Task Queue · `reports/secretary-orchestrator-phase5a.md` |
+| **Operations Orchestrator Phase 5-B** | ✅ 実装（未コミット） | OpsEvent · HSG · CI ingest · 朝レポート · `reports/secretary-orchestrator-phase5b.md` |
+| **Operations Orchestrator Phase 5-C** | ✅ 実装（未コミット） | Command Center UI · フィルタ · L3/L4 · `reports/secretary-orchestrator-phase5c.md` |
+| **Operations Orchestrator Phase 6** | 📋 未着手 | Cursor SDK · cron · L1 自動送信 · Agent 自動実行 |
 | **Trend Scout**（トレンド収集 · 経営参謀提案） | 📋 Backlog | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) · v1.2 以降想定 · **UI Critical 優先度外** |
 
 ---

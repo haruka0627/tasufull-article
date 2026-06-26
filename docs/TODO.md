@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Builder AI Live Phase 4-A · 完了）  
-**Git HEAD:** `66051f7`（`cf-pages-deploy` · Live Phase 4-A **`66051f7`** · **git push 未実施**）  
+**最終更新:** 2026-06-26（AI 秘書 Phase 5-A Orchestrator Core · 未コミット）  
+**Git HEAD:** `66051f7`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -137,6 +137,19 @@ Groq / Cerebras / Claude は **現時点では不要**。
 
 - [x] 画面遷移 / 件数 / DB 検索 / フィルターは **プログラム処理のまま**（LLM 不使用）
 - 参照: [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) · [DECISIONS.md](./DECISIONS.md) AD-010 · `reports/secretary-deepseek-deploy-triage.md`
+
+### AI 秘書 — Operations Orchestrator Phase 5-A / 5-B（実装 · 未コミット）
+
+| 区分 | 状態 | 根拠 |
+| --- | --- | --- |
+| **Phase 5-A** | **完了 · 未コミット** | `reports/secretary-orchestrator-phase5a.md` |
+| **Phase 5-B** | **完了 · 未コミット** | `reports/secretary-orchestrator-phase5b.md` |
+
+- [x] Phase 5-A — Registry · Classifier · Human Gate · Task Queue · phase2
+- [x] Phase 5-B — OpsEvent · HSG · CI ingest · 朝レポート · DeepSeek 分類
+- [x] Phase 5-C — Command Center UI · フィルタ · L3/L4 パネル · 朝レポート UI
+- [x] `test-secretary-orchestrator-phase5a.mjs` · `phase5b` · `phase5c` PASS
+- [ ] Phase 6 — Cursor SDK · cron · L1 自動送信 · Agent 自動実行
 
 ---
 

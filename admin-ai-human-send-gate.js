@@ -256,6 +256,57 @@
     return { ok: true, item: list[idx] };
   }
 
+  function approvePendingWithoutSend(id, options) {
+    options = options || {};
+    const list = readAllPending();
+    const idx = list.findIndex((p) => p.id === id && p.status === "pending");
+    if (idx < 0) return { ok: false, error: "承認待ちが見つかりません" };
+    const item = list[idx];
+    if (item.source !== "orchestrator" && !options.force) {
+      return { ok: false, error: "Orchestrator 項目のみ Phase 5-C 無送信承認可" };
+    }
+    const approvedAt = new Date().toISOString();
+    list[idx] = {
+      ...item,
+      status: "approved",
+      approvedBy: options.approvedBy || "operator",
+      approvedAt,
+      executedAt: null,
+      executionResult: {
+        ok: true,
+        result: "approved_no_send",
+        message: "承認記録のみ（送信未実行 · Phase 5-C）",
+      },
+    };
+    savePendingList(list);
+    appendExecutionLog({
+      actionId: id,
+      category: item.category,
+      source: item.source,
+      approvedBy: list[idx].approvedBy,
+      approvedAt,
+      result: "approved_no_send",
+      outcome: "pending_send",
+      status: "approved",
+      detail: item.recommendation,
+    });
+    emitUpdated();
+    return { ok: true, item: list[idx], noSend: true };
+  }
+
+  function updatePendingProposal(id, proposal) {
+    const list = readAllPending();
+    const idx = list.findIndex((p) => p.id === id && p.status === "pending");
+    if (idx < 0) return { ok: false, error: "not found" };
+    list[idx] = {
+      ...list[idx],
+      proposal: String(proposal || "").slice(0, 2000),
+      recommendation: String(proposal || list[idx].recommendation).slice(0, 500),
+    };
+    savePendingList(list);
+    return { ok: true, item: list[idx] };
+  }
+
   function executeInternalAction(item) {
     const payload = item.payload || {};
     const AE = global.TasuAdminAiAutomationEngine;
@@ -573,6 +624,8 @@
     enqueueFromResponsePlan,
     enqueueFromAutomation,
     rejectPendingItem,
+    approvePendingWithoutSend,
+    updatePendingProposal,
     approveAndExecute,
     appendExecutionLog,
     readExecutionLog,

@@ -1,6 +1,6 @@
 # TASFUL 決定事項（Architecture Decisions）
 
-**最終更新:** 2026-06-26  
+**最終更新:** 2026-06-26（機能開発フェーズ）  
 **形式:** 決定 ID · 日付 · 状態 · 内容 · 根拠
 
 ---
@@ -104,6 +104,8 @@
 | **データフロー** | DB/Supabase → プログラムで必要データ取得 → DeepSeek → 要約/優先付け/自然文 → 管理者画面 |
 | **AI 禁止領域** | 画面遷移 · 件数表示 · DB 検索 · フィルター — **プログラム処理のみ** |
 | **他製品** | TASFUL AI · Builder AI は **OpenAI**（秘書とプロバイダを共有しない） |
+| **Gateway** | **`TasuAiModelGateway` に DeepSeek ルートを追加しない** — 秘書専用 Adapter + Cloudflare Pages Function |
+| **Secret** | **`DEEPSEEK_API_KEY`** — 本番 **Cloudflare Pages / Workers Secret** · ローカル **`.env`**（Supabase Secret は使わない） |
 | **見送り** | Groq · Cerebras · Claude — 現時点では不要 |
 | **根拠** | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
 

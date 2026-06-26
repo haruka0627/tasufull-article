@@ -208,6 +208,20 @@
     appendToLog(userMsg);
     if (input) input.value = "";
 
+    let orchestratorResult = null;
+    try {
+      const Orch = global.TasuSecretaryOrchestrator;
+      if (Orch?.processMessageAsync) {
+        orchestratorResult = await Orch.processMessageAsync(text, { tryDeepSeek: true });
+      } else {
+        orchestratorResult = Orch?.processMessage?.(text) || null;
+      }
+      Orch?.renderPanel?.(orchestratorResult);
+      Orch?.renderQueuePanel?.();
+    } catch {
+      /* orchestrator optional */
+    }
+
     try {
       const out = await requestAssistantReply(text, history.slice(0, -1));
       const assistantMsg = {
@@ -216,6 +230,13 @@
         at: Date.now(),
         mock: out.mock,
         modelLabel: out.modelLabel,
+        orchestrator: orchestratorResult?.ok
+          ? {
+              agentId: orchestratorResult.agent?.id,
+              levelId: orchestratorResult.level?.id,
+              taskStatus: orchestratorResult.task?.status,
+            }
+          : undefined,
       };
       history.push(assistantMsg);
       saveHistory(history);
@@ -310,12 +331,21 @@
     wrap.dataset.bound = "1";
   }
 
+  function renderOrchestratorPanelFromLast() {
+    const last = global.TasuSecretaryOrchestrator?.getLastResult?.();
+    if (last?.ok) global.TasuSecretaryOrchestrator?.renderPanel?.(last);
+  }
+
   function render(ctx) {
     setOpsSnapshot(ctx);
     bindChatForm();
     renderLog(loadHistory());
     renderBrief(ctx || {});
     renderQuickChips();
+    renderOrchestratorPanelFromLast();
+    global.TasuSecretaryOrchestrator?.renderQueuePanel?.();
+    global.TasuSecretaryCommandCenterUI?.init?.();
+    global.TasuSecretaryMorningReport?.bindMorningReportButton?.();
   }
 
   function clearHistoryForTests() {
