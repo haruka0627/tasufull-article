@@ -2,7 +2,7 @@
 
 **最終更新:** 2026-06-26（Tool Integration Phase 3 · 計算ツール連携）  
 **ステータス:** **実装済み**（P1 + tools + Vision + **Calc Orchestrator**）· P2-C 残  
-**直近コミット:** `25ec824`（Tool Phase 3 **本コミット** · **git push 未実施**）
+**直近コミット:** `05c32ad`（Tool Phase 3 · **git push 未実施**）
 
 ---
 
@@ -47,7 +47,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | --- | --- | --- |
 | **UI Phase 1** | `5d28acc` | 現場診断 UI シェル · 写真 · クイック相談 · Live/Voice stub |
 | **Vision Phase 2** | `4aff9ec` | Gemini Vision 接続 · `builder-ai-vision.js` · `runFieldVision` |
-| **Tool Integration Phase 3** | **本コミット** | 自然文 → intent · Orchestrator · precalc · `builder-ai-calc-*.js` |
+| **Tool Integration Phase 3** | `05c32ad` | 自然文 → intent · Orchestrator · precalc · `builder-ai-calc-*.js` |
 
 | モジュール | 役割 |
 | --- | --- |

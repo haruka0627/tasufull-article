@@ -51,7 +51,7 @@
 | **P2-C**（DB 適用 · hook · Supabase 正本化 · Live E2E） | 📋 | `reports/builder-ai-p2-b.md` §9 |
 | **UI Phase 1**（現場診断 UI シェル） | ✅ | `5d28acc` |
 | **Vision Phase 2**（Gemini Vision · Gateway attachments） | ✅ | `4aff9ec` |
-| **Tool Integration Phase 3**（自然文 → 計算ツール Orchestrator） | ✅ | `reports/builder-ai-tools-phase3.md` |
+| **Tool Integration Phase 3**（自然文 → 計算ツール Orchestrator） | ✅ | `05c32ad` · `reports/builder-ai-tools-phase3.md` |
 | **Gemini Live / Voice**（リアルタイム現場診断） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 ### Platform（製品機能）

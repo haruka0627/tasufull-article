@@ -1,7 +1,7 @@
 # Builder AI — Tool Integration Phase 3 実装報告
 
 **実施日:** 2026-06-26  
-**状態:** **完了** · **commit 済** · **未デプロイ · 未 push**  
+**状態:** **完了** · **commit `05c32ad`** · **未デプロイ · 未 push**  
 **正本:** [docs/AI/BUILDER_AI.md](../docs/AI/BUILDER_AI.md)  
 **前提:** UI Phase 1 `5d28acc` · Vision Phase 2 `4aff9ec`
 
