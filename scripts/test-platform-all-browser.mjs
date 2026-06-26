@@ -78,7 +78,8 @@ const MEMBER_PAGES = [
 ];
 
 async function main() {
-  await withPlaywrightBrowser(async (browser) => {const errors = [];
+  const errors = [];
+  await withPlaywrightBrowser(async (browser) => {
   const pass = (m) => console.log(`  ✓ ${m}`);
   const fail = (m) => {
     errors.push(m);
