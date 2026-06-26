@@ -11,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="builder.css" />
   <link rel="stylesheet" href="builder-ai-ui.css" />
+  <link rel="stylesheet" href="../tasful-ai-voice.css" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="../common-ai-disclaimer.css" />
 </head>
@@ -74,6 +75,29 @@
         <div class="builder-ai-ui-toolbar">
           <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-camera>カメラ診断</button>
           <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-voice>音声で相談</button>
+        </div>
+        <div class="builder-ai-ui-live" data-builder-ai-live-panel hidden>
+          <div class="builder-ai-ui-live__preview-wrap">
+            <video
+              class="builder-ai-ui-live__video"
+              data-builder-ai-live-video
+              playsinline
+              muted
+              aria-label="現場カメラプレビュー"
+            ></video>
+          </div>
+          <div class="builder-ai-ui-live__actions">
+            <button type="button" class="builder-btn builder-btn--primary builder-btn--sm" data-builder-ai-live-snapshot>
+              スナップショット診断
+            </button>
+            <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-live-close>
+              カメラ停止
+            </button>
+          </div>
+          <p class="builder-ai-ui-live__status" data-builder-ai-live-status aria-live="polite"></p>
+          <p class="builder-ai-ui-live__note" role="note">
+            Live 風 MVP · 静止画スナップショットを既存 Vision に送信します（Gemini Live WebSocket ではありません）。
+          </p>
         </div>
       </section>
 
@@ -164,7 +188,11 @@
   <script src="builder-tool-material-calculator.js"></script>
   <script src="builder-ai-calc-intent.js"></script>
   <script src="builder-ai-calc-orchestrator.js"></script>
+  <script src="../tasful-ai-voice-core.js"></script>
   <script src="builder-ai-vision.js"></script>
+  <script src="builder-ai-live-gate.js"></script>
+  <script src="builder-ai-voice.js"></script>
+  <script src="builder-ai-live.js"></script>
   <script src="builder-ai-ui.js"></script>
   <script src="builder-ai-draft-supabase.js"></script>
   <script src="builder-ai-draft-store.js"></script>

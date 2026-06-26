@@ -1,13 +1,11 @@
 /**
- * Builder AI — Field diagnosis UI（Vision Phase 2 · Gateway 経由）
+ * Builder AI — Field diagnosis UI（Vision · Calc · Live Phase 4-A）
  */
 (function (global) {
   "use strict";
 
   const STORAGE_KEY = "tasu_builder_ai_field_ui_v1";
   const MAX_MESSAGES = 40;
-  const CAMERA_STUB = "カメラ診断は次フェーズで対応予定です。";
-  const VOICE_STUB = "音声相談は次フェーズで対応予定です。";
 
   const QUICK_PROMPTS = [
     { label: "外壁の補修判断", text: "外壁の補修が必要かどうか判断したいです。" },
@@ -16,6 +14,12 @@
     { label: "材料を相談", text: "この工事に必要な材料の目安を相談したいです。" },
     { label: "概算見積を作りたい", text: "概算見積のたたき台を作りたいです。" },
   ];
+
+  const SOURCE_LABELS = {
+    text: "",
+    voice: "🎤 ",
+    camera_snapshot: "📷 Live ",
+  };
 
   function $(sel, root) {
     return (root || document).querySelector(sel);
@@ -72,6 +76,14 @@
     if (input) input.disabled = Boolean(busy);
   }
 
+  function formatMessageMeta(m) {
+    const parts = [];
+    const prefix = SOURCE_LABELS[m.source] || "";
+    if (prefix) parts.push(prefix.trim());
+    if (m.imageName && m.role === "user") parts.push(`📷 ${m.imageName}`);
+    return parts.length ? parts.join(" · ") : "";
+  }
+
   function renderMessages() {
     const log = $("[data-builder-ai-ui-messages]");
     if (!log) return;
@@ -79,8 +91,11 @@
     messages.forEach((m) => {
       const div = document.createElement("div");
       div.className = `builder-ai-ui-msg builder-ai-ui-msg--${m.role}`;
-      if (m.imageName && m.role === "user") {
-        div.innerHTML = `${escapeHtml(m.content)}<br><span style="font-size:0.75rem;color:#64748b">📷 ${escapeHtml(m.imageName)}</span>`;
+      const meta = formatMessageMeta(m);
+      if (meta && m.role === "user") {
+        div.innerHTML = `${escapeHtml(m.content)}<br><span class="builder-ai-ui-msg__meta">${escapeHtml(meta)}</span>`;
+      } else if (m.imageName && m.role === "user") {
+        div.innerHTML = `${escapeHtml(m.content)}<br><span class="builder-ai-ui-msg__meta">📷 ${escapeHtml(m.imageName)}</span>`;
       } else {
         div.textContent = m.content;
       }
@@ -90,7 +105,7 @@
   }
 
   function pushSystem(text) {
-    messages.push({ role: "system", content: text });
+    messages.push({ role: "system", content: text, source: "text" });
     saveHistory(messages);
     renderMessages();
   }
@@ -174,36 +189,76 @@
       const btn = ev.target.closest("[data-builder-ai-ui-quick]");
       if (!btn || sending) return;
       const text = btn.getAttribute("data-builder-ai-ui-quick") || "";
-      void sendMessage(text, { fromQuick: true });
+      void sendMessage(text, { fromQuick: true, source: "text" });
     });
   }
 
-  function bindMediaStubs() {
-    $("[data-builder-ai-ui-camera]")?.addEventListener("click", () => {
-      pushSystem(CAMERA_STUB);
-    });
+  function bindVoiceButton() {
     $("[data-builder-ai-ui-voice]")?.addEventListener("click", () => {
-      pushSystem(VOICE_STUB);
+      if (sending) return;
+      global.TasuBuilderAIVoice?.stopVoice?.();
+      void global.TasuBuilderAIVoice?.quickVoiceCapture?.({
+        onTranscript: (text) => sendMessage(text, { source: "voice", fromVoice: true }),
+      }).then((out) => {
+        if (!out?.ok && out?.error) pushSystem(out.error);
+      });
     });
+  }
+
+  function bindLiveModule() {
+    global.TasuBuilderAILive?.init?.({
+      onSnapshot: async ({ file, question }) => {
+        setStatus("スナップショット診断中…", true);
+        await sendMessage(question, {
+          photoFile: file,
+          source: "camera_snapshot",
+          fromLive: true,
+        });
+      },
+      onStatus: (text) => {
+        if (text && !sending) setStatus(text, false);
+      },
+    });
+  }
+
+  function bindComposerVoice() {
+    const input = $("[data-builder-ai-ui-input]");
+    const composer = input?.closest(".builder-ai-ui-composer");
+    if (!input || !composer) return;
+
+    global.TasuBuilderAIVoice?.mountComposerVoice?.({
+      inputEl: input,
+      hostEl: composer,
+    });
+
+    $("[data-builder-ai-ui-send]")?.addEventListener(
+      "click",
+      () => global.TasuBuilderAIVoice?.stopVoice?.(),
+      true
+    );
   }
 
   async function sendMessage(forcedText, opts) {
     if (sending) return;
+    const options = opts && typeof opts === "object" ? opts : {};
     const input = $("[data-builder-ai-ui-input]");
     const text = String(forcedText != null ? forcedText : input?.value || "").trim();
     if (!text) return;
 
+    const source = options.source || "text";
     const Vision = getVision();
     const Orch = global.TasuBuilderAICalcOrchestrator;
-    const sentPhoto = photoFile;
+    const sentPhoto = options.photoFile || photoFile;
     const sentPhotoName = sentPhoto?.name || "";
+
+    global.TasuBuilderAIVoice?.stopVoice?.();
 
     if (!sentPhoto && Orch?.isCalcQuery?.(text)) {
       sending = true;
       setStatus("計算中…", true);
-      messages.push({ role: "user", content: text });
+      messages.push({ role: "user", content: text, source });
       renderMessages();
-      if (input && !opts?.fromQuick) input.value = "";
+      if (input && !options.fromQuick && !options.fromVoice) input.value = "";
 
       const calcResult = await Orch.runFromNaturalLanguage({
         userText: text,
@@ -212,9 +267,10 @@
       });
 
       if (calcResult.ok && calcResult.reply) {
-        messages.push({ role: "assistant", content: calcResult.reply });
+        messages.push({ role: "assistant", content: calcResult.reply, source: "text" });
         saveHistory(messages);
         renderMessages();
+        global.TasuBuilderAIVoice?.notifyAssistantReply?.(calcResult.reply);
         setStatus(calcResult.usedRemote ? "計算 + AI 要約" : "計算完了", false);
         setTimeout(() => setStatus("", false), 2000);
       } else if (calcResult.reply) {
@@ -240,9 +296,10 @@
       role: "user",
       content: text,
       imageName: sentPhotoName,
+      source,
     });
     renderMessages();
-    if (input && !opts?.fromQuick) input.value = "";
+    if (input && !options.fromQuick && !options.fromVoice) input.value = "";
 
     const result = await Vision.runFieldDiagnosis({
       userText: text,
@@ -259,12 +316,13 @@
     }
 
     if (result.reply) {
-      messages.push({ role: "assistant", content: result.reply });
+      messages.push({ role: "assistant", content: result.reply, source: "text" });
       saveHistory(messages);
       renderMessages();
+      global.TasuBuilderAIVoice?.notifyAssistantReply?.(result.reply);
     }
 
-    if (result.usedVision && sentPhoto) {
+    if (result.usedVision && sentPhoto && !options.fromLive) {
       clearPhotoPreview();
     }
 
@@ -296,6 +354,8 @@
       saveHistory(messages);
       renderMessages();
       clearPhotoPreview();
+      global.TasuBuilderAILive?.closePanel?.();
+      global.TasuBuilderAIVoice?.stopVoice?.();
       setStatus("", false);
     });
   }
@@ -305,7 +365,8 @@
     messages.push({
       role: "assistant",
       content:
-        "現場写真の診断・補修判断・見積補助の相談をどうぞ。写真を添付するか、下のクイック相談から始められます。",
+        "現場写真の診断・補修判断・見積補助の相談をどうぞ。写真を添付するか、カメラ診断 · 音声相談 · クイック相談から始められます。",
+      source: "text",
     });
     saveHistory(messages);
   }
@@ -315,7 +376,9 @@
     renderMessages();
     bindPhotoUpload();
     bindQuickPrompts();
-    bindMediaStubs();
+    bindLiveModule();
+    bindVoiceButton();
+    bindComposerVoice();
     bindComposer();
   }
 
@@ -328,8 +391,7 @@
   global.TasuBuilderAIUi = {
     init,
     sendMessage,
-    CAMERA_STUB,
-    VOICE_STUB,
+    pushSystem,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);
