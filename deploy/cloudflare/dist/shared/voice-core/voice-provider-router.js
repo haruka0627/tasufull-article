@@ -48,6 +48,8 @@
     if (mockAdapter) registerAdapter(mockAdapter, { provider: "mock" });
     const openAiRealtime = global.TasuVoiceCoreOpenAiRealtimeAdapter;
     if (openAiRealtime) registerAdapter(openAiRealtime, { provider: "openai_realtime" });
+    const geminiLive = global.TasuVoiceCoreGeminiLiveAdapter;
+    if (geminiLive) registerAdapter(geminiLive, { provider: "gemini_live" });
   }
 
   initDefaults();

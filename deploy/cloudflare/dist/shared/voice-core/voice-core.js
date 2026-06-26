@@ -1,6 +1,6 @@
 /**
  * Voice Core — shared provider-agnostic voice session API
- * Builder AI · AI秘書 · TASFUL AI · TLV — 将来差し替え可能な土台（Phase 2: mock-compatible）
+ * Builder AI · AI秘書 · TASFUL AI · TLV — 将来差し替え可能な土台（Phase 3: mock-compatible）
  */
 (function (global) {
   "use strict";
@@ -10,6 +10,9 @@
   const { EVENT, ADAPTER_KIND } = global.TasuVoiceCoreEvents;
   const { normalizeRealtimeOptions } = global.TasuVoiceCoreRealtimeOptions || {};
   const { mapWireEventToVoiceCore, WIRE_EVENT } = global.TasuVoiceCoreRealtimeEventMapper || {};
+  const { normalizeGeminiLiveOptions } = global.TasuVoiceCoreGeminiLiveOptions || {};
+  const { mapGeminiWireEventToVoiceCore, GEMINI_WIRE_EVENT } =
+    global.TasuVoiceCoreGeminiLiveEventMapper || {};
 
   /**
    * @param {object} [options]
@@ -25,12 +28,15 @@
   }
 
   global.TasuVoiceCore = {
-    VERSION: "phase2-mock-compatible",
+    VERSION: "phase3-mock-compatible",
     EVENT,
     ADAPTER_KIND,
     WIRE_EVENT: WIRE_EVENT || {},
+    GEMINI_WIRE_EVENT: GEMINI_WIRE_EVENT || {},
     normalizeRealtimeOptions,
     mapWireEventToVoiceCore,
+    normalizeGeminiLiveOptions,
+    mapGeminiWireEventToVoiceCore,
     startSession,
     createSession,
     resolveAdapter,
