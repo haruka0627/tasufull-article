@@ -68,6 +68,19 @@
     return `builder-ph-payment--${String(status || "unpaid").replace(/-/g, "_")}`;
   }
 
+  function renderNotificationSummary() {
+    const Store = global.TasuBuilderProjectStore;
+    const wrap = $("[data-builder-ph-notification-summary]");
+    if (!Store || !wrap) return;
+    const s = Store.getNotificationSummary?.() || {};
+    wrap.innerHTML =
+      `<div class="builder-ph-finance-stat"><p class="builder-ph-finance-stat__label">総通知数</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(s.totalNotifications || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${s.unreadCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">未読</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(s.unreadCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${s.highPriorityCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">高優先度</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(s.highPriorityCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${s.overdueCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">期限超過</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(s.overdueCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${s.dueTodayCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">今日期限</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(s.dueTodayCount || 0))} 件</p></div>`;
+  }
+
   function renderDocumentSummary() {
     const Store = global.TasuBuilderProjectStore;
     const wrap = $("[data-builder-ph-document-summary]");
@@ -170,6 +183,9 @@
           `<td class="builder-ph-table__num">${escapeHtml(String(Store.getProjectDocumentCounts?.(p)?.total ?? 0))}</td>` +
           `<td class="builder-ph-table__num">${escapeHtml(String(Store.getProjectDocumentCounts?.(p)?.photo ?? 0))}</td>` +
           `<td class="builder-ph-table__num">${escapeHtml(String(Store.getProjectDocumentCounts?.(p)?.pdf ?? 0))}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(String(Store.getProjectNotificationCounts?.(p)?.total ?? 0))}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(String(Store.getProjectNotificationCounts?.(p)?.unread ?? 0))}</td>` +
+          `<td class="builder-ph-table__num">${escapeHtml(String(Store.getProjectNotificationCounts?.(p)?.highPriority ?? 0))}</td>` +
           `<td>${escapeHtml(formatDate(p.updatedAt))}</td>` +
           `</tr>`
       )
@@ -179,6 +195,7 @@
   function refresh() {
     const Store = global.TasuBuilderProjectStore;
     if (!Store?.searchProjects) return;
+    renderNotificationSummary();
     renderDocumentSummary();
     renderContractCompletionSummary();
     renderEstInvSummary();

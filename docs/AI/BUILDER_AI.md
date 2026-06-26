@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-27（Document Center Phase 6-F · ドキュメント管理基盤）  
-**ステータス:** **実装済み**（… + **Contract/Completion 6-E** + **Document Center 6-F**）· P2-C 残  
-**直近コミット:** `ac385c6`（Contract/Completion 6-E · **git push 未実施**）
+**最終更新:** 2026-06-27（Notification Center Phase 6-G · 通知基盤）  
+**ステータス:** **実装済み**（… + **Document Center 6-F** + **Notification Center 6-G**）· P2-C 残  
+**直近コミット:** `549e562`（Document Center 6-F · **git push 未実施**）
 
 ---
 
@@ -224,7 +224,7 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 ---
 
-## Builder Document Center Phase 6-F（✅ 実装 · 未コミット）
+## Builder Document Center Phase 6-F（✅ commit 済 · `549e562`）
 
 **ドキュメント管理基盤** — `project.documents[]`（SCHEMA v6）
 
@@ -240,6 +240,27 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 **テスト:** `scripts/test-builder-document-center-phase6f.mjs`
 
 **報告:** `reports/builder-document-center-phase6f.md`
+
+---
+
+## Builder Notification Center Phase 6-G（✅ 実装 · 未コミット）
+
+**通知基盤 Foundation** — `project.notifications[]`（SCHEMA v7）
+
+| 項目 | 内容 |
+| --- | --- |
+| **優先度** | low / normal / high / urgent |
+| **状態** | unread / read / archived |
+| **ソース** | schedule / finance / estimate / invoice / contract / completion / document / vision / manual |
+| **Detail** | Notifications パネル（未読数 · 一覧 · 既読/未読/アーカイブ · 手動追加） |
+| **Hub** | 総通知/未読/高優先度/期限超過/今日期限サマリー · 一覧列（通知数/未読/高優先度） |
+| **生成** | `generateProjectNotifications` — 既存データから候補のみ（自動送信なし） |
+| **AI 準備** | `previewNotificationIntent` · `prepareNotificationIntent`（Gateway 未接続） · `applyNotificationIntent` は previewOnly |
+| **非実装** | メール · Push · Web Push · LINE/Slack · AI秘書 · cron · Platform/TLV/TASFUL AI 連携 |
+
+**テスト:** `scripts/test-builder-notification-center-phase6g.mjs`
+
+**報告:** `reports/builder-notification-center-phase6g.md`
 
 ---
 

@@ -140,6 +140,12 @@
     return Store?.previewDocumentIntent?.(intentText) || null;
   }
 
+  /** Phase 6-G: 将来の AI 通知 intent プレビュー（Gateway 未接続 · 実更新なし） */
+  function prepareNotificationIntent(intentText) {
+    const Store = global.TasuBuilderProjectStore;
+    return Store?.previewNotificationIntent?.(intentText) || null;
+  }
+
   let messages = loadHistory();
   let sending = false;
   let photoFile = null;
@@ -545,6 +551,7 @@
     prepareContractIntent,
     prepareCompletionIntent,
     prepareDocumentIntent,
+    prepareNotificationIntent,
     useFieldStub: false,
   };
 })(typeof window !== "undefined" ? window : globalThis);

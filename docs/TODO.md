@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-27（サービス展開方針 2026-06 確定）  
-**Git HEAD:** `ac385c6`（`cf-pages-deploy` · **git push 未実施**）  
+**最終更新:** 2026-06-27（Notification Center Phase 6-G · 通知基盤）  
+**Git HEAD:** `549e562`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -178,7 +178,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder Project Finance Phase 6-C** | ✅ commit 済 | `e70d679` · `reports/builder-project-finance-phase6c.md` |
 | **Builder Estimate/Invoice Phase 6-D** | ✅ commit 済 | `8be158f` · `reports/builder-estimate-invoice-phase6d.md` |
 | **Builder Contract/Completion Phase 6-E** | ✅ commit 済 | `ac385c6` · `reports/builder-contract-completion-phase6e.md` |
-| **Builder Document Center Phase 6-F** | ✅ 実装 · 未コミット | ドキュメント管理基盤 · `reports/builder-document-center-phase6f.md` |
+| **Builder Document Center Phase 6-F** | ✅ commit 済 | `549e562` · `reports/builder-document-center-phase6f.md` |
+| **Builder Notification Center Phase 6-G** | ✅ 実装 · 未コミット | `reports/builder-notification-center-phase6g.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -270,13 +271,22 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - `test-builder-contract-completion-phase6e.mjs` + phase6d/c/b/a/vision 回帰 + build PASS
 - 参照: `reports/builder-contract-completion-phase6e.md`
 
-**Builder Document Center Phase 6-F（ドキュメント管理基盤 · ✅ 実装 · 未コミット）**
+**Builder Document Center Phase 6-F（ドキュメント管理基盤 · ✅ commit 済 · `549e562`）**
 
 - `project.documents[]`（SCHEMA v6）· 種別/タグ/検索 · Hub サマリー
 - `addDocument` / `updateDocument` / `archiveDocument` / `removeDocument`
 - `prepareDocumentIntent`（AI 未接続）· 実アップロードなし
 - `test-builder-document-center-phase6f.mjs` + phase6e/d/c/vision 回帰 + build PASS
 - 参照: `reports/builder-document-center-phase6f.md`
+
+**Builder Notification Center Phase 6-G（通知基盤 Foundation · ✅ 実装 · 未コミット）**
+
+- `project.notifications[]`（SCHEMA v7）· 優先度/状態/ソース · Hub サマリー
+- `addNotification` / `updateNotification` / `markNotificationRead` / `markNotificationUnread` / `archiveNotification`
+- `generateProjectNotifications`（候補生成のみ）· `prepareNotificationIntent`（AI 未接続）
+- メール/Push/cron/他 surface 連携なし
+- `test-builder-notification-center-phase6g.mjs` + phase6f/e/d/c/vision 回帰 + build PASS
+- 参照: `reports/builder-notification-center-phase6g.md`
 
 **Builder AI Gemini Live Phase 4-B（未着手）**
 
