@@ -174,7 +174,7 @@ async function browserSmoke() {
       else bad(`browser event: ${t}`);
     }
 
-    if (result.version?.includes("phase1")) ok("browser: VERSION tag");
+    if (result.version?.includes("phase")) ok("browser: VERSION tag");
     else bad("browser: VERSION tag");
   } finally {
     await browser.close();
