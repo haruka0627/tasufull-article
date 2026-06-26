@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>TALK ナビ Phase4 UI案</title>
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="chat.css">
+  <link rel="stylesheet" href="talk-home.css?v=notify-cta-only-3">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <style>
+    .talk-nav-mock-banner {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+      background: #1e3a5f;
+      color: #fff;
+    }
+    .talk-nav-mock-banner--a { background: #1565c0; }
+    .talk-nav-mock-banner--b { background: #2e7d32; }
+    .talk-nav-mock-banner--current { background: #616161; }
+    body.talk-home-page { min-height: 100vh; }
+    .talk-line-list__item { cursor: default; }
+  </style>
+</head>
+<body class="dash-body talk-home-page talk-home--line talk-home--tab-chat talk-home--chat-app">
+  <div id="mockBanner" class="talk-nav-mock-banner">UI案</div>
+  <div class="dash-app">
+    <div class="dash-main" style="margin-left:0;width:100%">
+      <main class="dash-content talk-home-main" style="padding:0">
+        <div class="talk-line-app" data-talk-line-app>
+          <nav class="talk-line-rail" id="mockRail" aria-label="メインメニュー"></nav>
+          <div class="talk-line-stage">
+            <div class="talk-line-split is-active">
+              <aside class="talk-line-list-col">
+                <header class="talk-line-list-head">
+                  <div class="talk-line-search-row">
+                    <label class="talk-line-search">
+                      <span class="talk-line-search__icon" aria-hidden="true">🔍</span>
+                      <input type="search" class="talk-line-search__input" placeholder="検索" readonly>
+                    </label>
+                    <button type="button" class="talk-line-add-friend" title="友達追加">＋</button>
+                  </div>
+                  <div class="talk-line-category-bar">
+                    <div class="talk-line-category-tabs" id="mockCategoryTabs" role="tablist"></div>
+                    <button type="button" class="talk-line-filter-gear" title="フィルター">⚙</button>
+                  </div>
+                </header>
+                <ul id="mockList" class="talk-line-list"></ul>
+              </aside>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+    const VARIANTS = {
+      current: {
+        banner: "現状（Phase 3 実装後・左ナビは未整理）",
+        bannerClass: "talk-nav-mock-banner--current",
+        rail: [
+          { id: "talk", label: "トーク", icon: "💬", active: true },
+          { id: "builder", label: "Builder", icon: "📋" },
+          { id: "job", label: "求人", icon: "👔" },
+          { id: "business", label: "業務", icon: "🔧" },
+          { id: "shop", label: "店舗", icon: "🏪" },
+          { id: "ai", label: "AI", icon: "✨" },
+          { id: "notify", label: "通知", icon: "🔔" },
+          { id: "mypage", label: "マイ", icon: "👤" },
+        ],
+        tabs: ["すべて", "個人", "求人", "ワーカー", "スキル", "商品", "業務", "店舗"],
+        activeTab: 0,
+        list: [
+          "TASFULプラット通知",
+          "TASFUL安否通知",
+          "TASFUL運営通知",
+          "TASFUL AI",
+          "TASFULサポート",
+          "友達",
+        ],
+      },
+      proposalA: {
+        banner: "案A — 左ナビ6項目 + カテゴリ「すべて/プラット/安否/運営/友達」",
+        bannerClass: "talk-nav-mock-banner--a",
+        rail: [
+          { id: "talk", label: "トーク", icon: "💬", active: true },
+          { id: "platform", label: "プラット", icon: "🏷" },
+          { id: "builder", label: "Builder", icon: "📋" },
+          { id: "anpi", label: "安否", icon: "🛡" },
+          { id: "ai", label: "AI", icon: "✨" },
+          { id: "mypage", label: "マイ", icon: "👤" },
+        ],
+        tabs: ["すべて", "プラット", "安否", "運営", "友達"],
+        activeTab: 0,
+        list: [
+          "TASFULプラット通知",
+          "TASFUL安否通知",
+          "TASFUL運営通知",
+          "TASFUL AI",
+          "TASFULサポート",
+          "友達",
+        ],
+      },
+      proposalB: {
+        banner: "案B — 左ナビ6項目 + カテゴリ「すべて/通知/友達」",
+        bannerClass: "talk-nav-mock-banner--b",
+        rail: [
+          { id: "talk", label: "トーク", icon: "💬", active: true },
+          { id: "platform", label: "プラット", icon: "🏷" },
+          { id: "builder", label: "Builder", icon: "📋" },
+          { id: "anpi", label: "安否", icon: "🛡" },
+          { id: "ai", label: "AI", icon: "✨" },
+          { id: "mypage", label: "マイ", icon: "👤" },
+        ],
+        tabs: ["すべて", "通知", "友達"],
+        activeTab: 1,
+        list: [
+          "TASFULプラット通知",
+          "TASFUL安否通知",
+          "TASFUL運営通知",
+        ],
+        listNote: "「通知」選択時 — 3通知ルームのみ",
+      },
+      proposalBAll: {
+        banner: "案B — 「すべて」選択時（AI/サポート含む）",
+        bannerClass: "talk-nav-mock-banner--b",
+        rail: [
+          { id: "talk", label: "トーク", icon: "💬", active: true },
+          { id: "platform", label: "プラット", icon: "🏷" },
+          { id: "builder", label: "Builder", icon: "📋" },
+          { id: "anpi", label: "安否", icon: "🛡" },
+          { id: "ai", label: "AI", icon: "✨" },
+          { id: "mypage", label: "マイ", icon: "👤" },
+        ],
+        tabs: ["すべて", "通知", "友達"],
+        activeTab: 0,
+        list: [
+          "TASFULプラット通知",
+          "TASFUL安否通知",
+          "TASFUL運営通知",
+          "TASFUL AI",
+          "TASFULサポート",
+          "友達",
+        ],
+      },
+    };
+
+    function render() {
+      const key = new URLSearchParams(location.search).get("variant") || "current";
+      const v = VARIANTS[key] || VARIANTS.current;
+      const banner = document.getElementById("mockBanner");
+      banner.textContent = v.banner;
+      banner.className = "talk-nav-mock-banner " + (v.bannerClass || "");
+
+      document.getElementById("mockRail").innerHTML = v.rail
+        .map(
+          (r) => `<button type="button" class="talk-line-rail__btn${r.active ? " is-active" : ""}${r.id === "ai" ? " talk-line-rail__btn--ai" : ""}">
+        <span class="talk-line-rail__icon">${r.icon}</span>
+        <span class="talk-line-rail__label">${r.label}</span>
+      </button>`
+        )
+        .join("");
+
+      document.getElementById("mockCategoryTabs").innerHTML = v.tabs
+        .map(
+          (t, i) => `<button type="button" class="talk-line-category-tab${i === v.activeTab ? " is-active" : ""}" role="tab">${t}</button>`
+        )
+        .join("");
+
+      document.getElementById("mockList").innerHTML = v.list
+        .map(
+          (name, i) => `<li class="talk-line-list__item">
+        <button type="button" class="talk-line-list__btn">
+          <span class="talk-line-list__avatar talk-line-list__avatar--initials">${name.slice(0, 1)}</span>
+          <span class="talk-line-list__body">
+            <span class="talk-line-list__row">
+              <span class="talk-line-list__name">${name}</span>
+              <time class="talk-line-list__time">12:${String(10 + i).padStart(2, "0")}</time>
+            </span>
+            <span class="talk-line-list__preview">${name === "TASFULプラット通知" ? "【求人】応募がありました" : name === "TASFUL安否通知" ? "【安否】安否確認をお願いします" : name === "TASFUL運営通知" ? "【運営】重要なお知らせがあります" : "—"}</span>
+          </span>
+        </button>
+      </li>`
+        )
+        .join("");
+    }
+    render();
+  </script>
+</body>
+</html>

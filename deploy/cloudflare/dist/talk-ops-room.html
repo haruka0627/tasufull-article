@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI運営秘書 | TASFUL TALK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="talk-home.css">
+  <link rel="stylesheet" href="talk-ops-room.css">
+  <link rel="stylesheet" href="tasful-ai-voice.css">
+  <link rel="stylesheet" href="tasful-app-mobile.css">
+  <link rel="stylesheet" href="tasful-app-mobile-detail.css">
+
+  <link rel="stylesheet" href="tasful-mobile-detail-template.css">
+</head>
+<body class="dash-body talk-home-page talk-ops-room-page" data-page="talk-ops-room">
+  <div class="dash-app">
+    <div class="dash-main">
+      <main class="dash-content dash-shell talk-ops-main" data-talk-ops-root>
+        <header class="talk-ops-header">
+          <a class="talk-ops-back" href="admin-operations-dashboard.html#ops-ai-secretary">← AI運営司令塔</a>
+          <p class="talk-ops-migrate-note">メインの運営画面は <a href="admin-operations-dashboard.html#ops-ai-secretary"><strong>AI運営司令塔</strong></a> に統合されました。こちらは互換用の旧画面です。</p>
+          <h1>AI運営秘書</h1>
+          <p>運営情報の集約画面 — 本日の優先対応・問い合わせ・通報・安否・Connect・OPS WATCH をここで確認し、各専用画面へ誘導します（実行操作は行いません）。</p>
+          <div class="talk-ops-pills" aria-label="集約カテゴリ">
+            <span class="talk-ops-pill">優先対応</span>
+            <span class="talk-ops-pill">未対応</span>
+            <span class="talk-ops-pill">通報</span>
+            <span class="talk-ops-pill">安否</span>
+            <span class="talk-ops-pill">Connect</span>
+            <span class="talk-ops-pill">Builder</span>
+            <span class="talk-ops-pill">TALK通知</span>
+          </div>
+        </header>
+
+        <section class="ops-ai-morning-summary talk-ops-morning-summary" id="ops-ai-morning-summary" data-ops-morning-summary aria-labelledby="ops-morning-summary-heading">
+          <header class="ops-ai-morning-summary__head">
+            <h2 class="ops-ai-morning-summary__title" id="ops-morning-summary-heading">本日の運営サマリー</h2>
+            <p class="ops-ai-morning-summary__sub">朝3分 — タップで各パネルへジャンプ</p>
+          </header>
+          <div class="ops-ai-morning-summary__chips" data-ops-morning-summary-chips role="list"></div>
+        </section>
+
+        <section class="ops-ai-watch talk-ops-watch-panel" id="ops-ai-watch" data-ops-ai-watch aria-labelledby="ops-ai-watch-heading"></section>
+
+        <section class="ops-ai-kpi talk-ops-kpi-panel" id="ops-ai-kpi" data-ops-ai-kpi-center aria-labelledby="ops-ai-kpi-heading"></section>
+
+        <section class="ops-ai-autofix talk-ops-autofix-panel" id="ops-ai-autofix" data-ops-ai-auto-fix aria-labelledby="ops-ai-autofix-heading"></section>
+
+        <section class="ops-ai-hsg talk-ops-hsg-panel" id="ops-ai-hsg" data-ops-ai-human-send-gate aria-labelledby="ops-ai-hsg-heading"></section>
+
+        <section class="talk-ops-summary-bar" aria-label="本日のサマリー">
+          <pre class="talk-ops-summary" data-talk-ops-summary></pre>
+          <div class="talk-ops-metrics" data-talk-ops-metrics aria-label="件数サマリー"></div>
+        </section>
+
+        <div class="talk-ops-hub" data-talk-ops-hub aria-live="polite" aria-label="運営情報ハブ"></div>
+
+        <section class="talk-ops-text-chat" aria-labelledby="talk-ops-text-chat-heading">
+          <h2 class="talk-ops-text-chat__title" id="talk-ops-text-chat-heading">AIテキストチャット</h2>
+          <p class="talk-ops-text-chat__sub">通常会話（テキスト常時利用 · 音声は補助機能）</p>
+          <div class="ops-p2-chat__log talk-ops-text-chat__log" data-ops-phase2-chat-log role="log" aria-live="polite"></div>
+          <form class="ops-p2-chat__form talk-ops-text-chat__form" data-ops-phase2-chat-form>
+            <label class="visually-hidden" for="talk-ops-text-chat-input">AI秘書へ入力</label>
+            <input type="text" class="ops-p2-chat__input" id="talk-ops-text-chat-input" data-ops-secretary-input data-ops-phase2-chat-input placeholder="秘書に話しかける…" autocomplete="off" />
+            <button type="submit" class="ops-p2-chat__send" data-ops-secretary-send aria-label="送信">送信</button>
+          </form>
+          <div class="ops-p4-status talk-ops-text-chat__status" data-ops-phase4-status data-state="idle" aria-live="polite" hidden>
+            <span data-ops-phase4-status-icon">🟢</span>
+            <span data-ops-phase4-status-label">待機中</span>
+          </div>
+        </section>
+
+        <form class="talk-ops-compose" data-talk-ops-command-form>
+          <input
+            type="text"
+            data-talk-ops-command-input
+            placeholder="運営コマンド（例: 未対応だけ見せて / Connect問題）"
+            autocomplete="off"
+          />
+          <button type="submit">検索</button>
+        </form>
+        <pre class="talk-ops-command-result" data-talk-ops-command-result hidden></pre>
+
+        <nav class="talk-ops-shortcuts" aria-label="管理画面ショートカット">
+          <a href="admin-operations-dashboard.html#ops-ai-secretary">AI運営ダッシュボード</a>
+          <a href="support-trouble-center.html">トラブルセンター</a>
+          <a href="admin-ai-operations-center.html">AI運営センター</a>
+          <a href="builder/admin-partner-evaluations.html">パートナー評価</a>
+        </nav>
+
+        <p class="talk-ops-footnote">
+          返金・BAN・掲載停止・Connect・Stripeの実行はこの画面では行いません。詳細対応は各専用画面へ進んでください。
+        </p>
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="chat-supabase-config.js"></script>
+  <script src="talk-runtime.js"></script>
+  <script src="auth-current-user.js"></script>
+  <script src="auth-ops-guard.js"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <link rel="stylesheet" href="supabase-ops-data-source.css" />
+  <script src="supabase-ops-primary-config.js"></script>
+  <script src="supabase-ops-primary-cache.js"></script>
+  <script src="supabase-ops-read-config.js"></script>
+  <script src="supabase-ops-read-adapter.js"></script>
+  <script src="supabase-ops-read-bootstrap.js"></script>
+  <script src="supabase-ops-data-source-ui.js"></script>
+  <script src="supabase-ops-write-config.js"></script>
+  <script src="supabase-ops-write-adapter.js"></script>
+  <link rel="stylesheet" href="stripe-connect-trouble.css" />
+  <script src="stripe-connect-event-map.js"></script>
+  <script src="connect-identity-templates.js"></script>
+  <script src="offplatform-risk-detector.js"></script>
+  <script src="refund-cancel-decision-checklist.js"></script>
+  <script src="chargeback-evidence-pack.js"></script>
+  <script src="stripe-connect-ingest.js"></script>
+  <script src="support-ticket-classifier.js"></script>
+  <script src="support-ticket-ai-reply.js"></script>
+  <script src="support-admin-notify.js"></script>
+  <script src="support-ticket-store.js"></script>
+  <script src="support-ticket-service.js"></script>
+  <script src="ai-ops-types.js"></script>
+  <script src="ai-ops-ai-provider.js"></script>
+  <script src="ai-ops-case-store.js"></script>
+  <script src="ai-ops-command-parser.js"></script>
+  <script src="builder/builder-partner-evaluation-store.js"></script>
+  <script src="search-intent-detector.js"></script>
+  <script src="serper-search-service.js"></script>
+  <script src="ai-interaction-log.js"></script>
+  <script src="ai-plan-models.js"></script>
+  <script src="ai-model-gateway.js"></script>
+  <script src="ai-search-orchestrator.js"></script>
+  <script src="talk-notifications-store.js"></script>
+  <script src="talk-platform-notify.js"></script>
+  <script src="ops-watch-categories.js"></script>
+  <script src="ops-watch-store.js"></script>
+  <script src="ops-watch-analyzer.js"></script>
+  <script src="talk-ops-watch-notify.js"></script>
+  <script src="ops-watch-service.js"></script>
+  <script src="ops-watch-daily.js"></script>
+  <script src="ops-watch-browser.js"></script>
+  <script src="talk-ops-watch-ui.js"></script>
+  <script src="talk-ops-assistant.js"></script>
+  <script src="tasful-ai-voice-core.js"></script>
+  <script src="admin-ai-secretary-phase2.js"></script>
+  <script src="admin-ai-secretary-voice.js"></script>
+  <script src="admin-ai-decision-learning.js"></script>
+  <script src="admin-ai-outcome-learning.js"></script>
+  <script src="admin-ai-ops-watch.js"></script>
+  <script src="admin-ai-kpi-center.js"></script>
+  <script src="admin-ai-auto-fix-candidate.js"></script>
+  <script src="admin-ai-human-send-gate.js"></script>
+  <script src="admin-ai-morning-summary.js"></script>
+  <script src="talk-ops-room.js"></script>
+  <script src="tasful-app-mobile.js" defer></script>
+  <script src="tasful-mobile-detail-template.js" defer></script>
+</body>
+</html>

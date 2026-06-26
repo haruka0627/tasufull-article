@@ -1,0 +1,286 @@
+/* TASFUL TALK — WebRTC 通話オーバーレイ（Phase1） */
+
+.talk-call-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  pointer-events: none;
+}
+
+.talk-call-overlay:not([hidden]) {
+  pointer-events: auto;
+}
+
+.talk-call-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.talk-call-overlay__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 360px);
+  padding: 28px 24px 22px;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
+  text-align: center;
+}
+
+.talk-call-overlay__chip {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.talk-call-overlay__title {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.talk-call-overlay__subtitle {
+  margin: 0 0 16px;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.talk-call-overlay__timer {
+  margin: 0 0 18px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #0f172a;
+}
+
+.talk-call-overlay__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.talk-call-btn {
+  min-width: 112px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.talk-call-btn--primary {
+  border-color: #2563eb;
+  background: #2563eb;
+  color: #fff;
+}
+
+.talk-call-btn--warn {
+  border-color: #dc2626;
+  background: #dc2626;
+  color: #fff;
+}
+
+.talk-call-btn--ghost {
+  background: #f8fafc;
+}
+
+.talk-call-btn:hover {
+  filter: brightness(0.97);
+}
+
+.talk-call-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  z-index: 12001;
+  max-width: min(92vw, 420px);
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.92);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+}
+
+.talk-line-room-header__icon-btn.talk-call-btn--enabled:not(:disabled) {
+  opacity: 1;
+  cursor: pointer;
+}
+
+@media (max-width: 960px) {
+  .talk-line-room-header__actions [data-talk-line-action="call"].talk-call-btn--enabled {
+    display: inline-flex !important;
+  }
+}
+
+/* chat-detail ヘッダー通話ボタン（Phase2） */
+.chat-peer-header__call-btn,
+.chat-mobile-head__call-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.chat-peer-header__call-btn.talk-call-btn--enabled:not(:disabled),
+.chat-mobile-head__call-btn.talk-call-btn--enabled:not(:disabled) {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.chat-peer-header__call-btn:disabled,
+.chat-mobile-head__call-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.chat-peer-header__actions {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  max-width: min(100%, 160px);
+}
+
+@media (max-width: 960px) {
+  .chat-peer-header__call-btn {
+    display: none !important;
+  }
+
+  .chat-mobile-head__call-btn.talk-call-btn--enabled:not([hidden]) {
+    display: inline-flex !important;
+  }
+}
+
+@media (min-width: 961px) {
+  .chat-mobile-head__call-btn {
+    display: none !important;
+  }
+}
+
+/* TALK 通知センター — 通話着信カード（Phase3） */
+.talk-notify-card--call-incoming .talk-notify-card__title {
+  font-weight: 700;
+}
+
+.talk-notify-card__dual-actions--call {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+}
+
+.talk-notify-card__dual-actions--call .talk-notify-card__action {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 390px) {
+  .talk-notify-card__dual-actions--call {
+    flex-direction: column;
+  }
+
+  .talk-notify-card__dual-actions--call .talk-notify-card__action {
+    width: 100%;
+  }
+}
+
+/* chat-detail 通話履歴（Phase4） */
+.chat-call-history {
+  display: flex;
+  justify-content: center;
+  margin: 0.45rem 0;
+  max-width: 100%;
+}
+
+.chat-call-history__inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  max-width: min(100%, 320px);
+  padding: 0.45rem 0.65rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  box-sizing: border-box;
+}
+
+.chat-call-history__icon {
+  flex: 0 0 auto;
+  font-size: 0.95rem;
+  line-height: 1.2;
+  opacity: 0.75;
+}
+
+.chat-call-history__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.chat-call-history__label {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.55);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.1rem;
+}
+
+.chat-call-history__text {
+  margin: 0;
+  font-size: 0.82rem;
+  color: rgba(15, 23, 42, 0.78);
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.chat-call-history__duration {
+  margin: 0.15rem 0 0;
+  font-size: 0.72rem;
+  color: rgba(15, 23, 42, 0.55);
+}
+
+.chat-call-history__time {
+  flex: 0 0 auto;
+  font-size: 0.68rem;
+  color: rgba(15, 23, 42, 0.45);
+  white-space: nowrap;
+}
+
+@media (max-width: 390px) {
+  .chat-call-history__inner {
+    max-width: 100%;
+    width: 100%;
+  }
+}

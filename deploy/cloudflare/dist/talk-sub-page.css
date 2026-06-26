@@ -1,0 +1,100 @@
+/* TASFUL TALK — サブページ（プロフィール / カレンダー / メモ） */
+.talk-sub-page {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Noto Sans JP", system-ui, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.talk-sub-page__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: calc(0.65rem + env(safe-area-inset-top, 0px)) 1rem 0.65rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: linear-gradient(180deg, #fffbeb 0%, #fff 85%);
+}
+
+.talk-sub-page__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+  color: #475569;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.talk-sub-page__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+}
+
+.talk-sub-page__sub {
+  margin: 0.25rem 0 0;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.talk-sub-page__main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 1rem 1rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+}
+
+.talk-sub-page__panel {
+  padding: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(15, 23, 42, 0.05);
+}
+
+.talk-sub-page__tabs {
+  display: flex;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.talk-sub-page__tab {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #475569;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.talk-sub-page__tab.is-active {
+  border-color: rgba(37, 99, 235, 0.35);
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.talk-sub-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.talk-sub-page__link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+}
+
+.talk-sub-page__empty {
+  margin: 0;
+  padding: 1.25rem 0;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.86rem;
+}
