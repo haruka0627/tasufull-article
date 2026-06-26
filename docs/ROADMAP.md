@@ -36,9 +36,9 @@
 | AI 秘書 | **DeepSeek**（秘書専用 Adapter · Gateway 非混在） | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) · AD-010 |
 | TASFUL AI | **OpenAI** | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) |
 | TASFUL AI 操作アシスタント | **Gemini** | [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md) |
-| Builder AI | **OpenAI** | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) |
-| Builder AI 将来 Phase 1 | **Gemini Vision**（静止画現場診断） | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
-| Builder AI 将来 Phase 2 | **Gemini Live**（リアルタイム現場診断 · Phase 1 後） | 同上 |
+| Builder AI | **OpenAI** + **Gemini Vision**（Gateway） | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) |
+| Builder AI 計算 Orchestrator | ✅ 実装（Phase 3） | `reports/builder-ai-tools-phase3.md` |
+| Builder AI Gemini Live | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 | Groq / Cerebras / Claude | 採用しない（現時点） | — |
 
 ### Builder AI
@@ -49,8 +49,10 @@
 | P1（actions · UI · 隔離） | ✅ | `5ed9672` |
 | P2-A / P2-B（tools · JWT · draft staging SQL） | ✅ | `5ed9672` · `reports/builder-ai-p2-b.md` |
 | **P2-C**（DB 適用 · hook · Supabase 正本化 · Live E2E） | 📋 | `reports/builder-ai-p2-b.md` §9 |
-| **Phase 1 — Gemini Vision 現場診断**（静止画 · 補修/交換/施工/材料/見積） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) · P2-C 後 · **利益安定後** |
-| **Phase 2 — Gemini Live 現場診断**（カメラ · 音声 · ライブ診断） | 📋 Backlog | 同上 · **Phase 1 完了後** |
+| **UI Phase 1**（現場診断 UI シェル） | ✅ | `5d28acc` |
+| **Vision Phase 2**（Gemini Vision · Gateway attachments） | ✅ | `4aff9ec` |
+| **Tool Integration Phase 3**（自然文 → 計算ツール Orchestrator） | ✅ | `reports/builder-ai-tools-phase3.md` |
+| **Gemini Live / Voice**（リアルタイム現場診断） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 ### Platform（製品機能）
 
@@ -110,8 +112,7 @@
 ## 将来（v1.1 以降 · 凍結解除後）
 
 - Builder AI Supabase 本番 RLS（P2-C 完了後）
-- **Builder AI Phase 1** — Gemini Vision 静止画現場診断（補修 · 交換 · 施工 · 材料 · 見積）— [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) · **利益安定後**
-- **Builder AI Phase 2** — Gemini Live リアルタイム現場診断（カメラ · 音声 · ライブ診断）— 同上 · **Phase 1 完了後**
+- **Builder AI Gemini Live / Voice** — [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) · Vision ✅ · Calc Orchestrator ✅
 - TASFUL AI 履歴 Supabase 同期
 - **TASFUL AI 操作アシスタント**（Gemini · 画面操作案内 · 製品横断ナビ）— [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md)
 - Platform お気に入りサーバー正本
