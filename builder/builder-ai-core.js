@@ -230,7 +230,13 @@
 
     const messageForAi = Actions.buildActionUserMessage(actionId, userText, contextText);
     const systemPrompt = buildSystemPrompt(actionId, actor);
-    const assist = runDeterministicAssist(actionId, userText, contextText);
+
+    let assist = null;
+    if (params?.precalc?.draftBody) {
+      assist = { ok: true, draftBody: String(params.precalc.draftBody) };
+    } else {
+      assist = runDeterministicAssist(actionId, userText, contextText);
+    }
 
     if (assist?.ok && assist.draftBody) {
       const preferRemote = params?.preferRemote !== false;

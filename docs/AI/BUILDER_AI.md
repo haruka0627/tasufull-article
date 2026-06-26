@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-26（Vision Phase 2 · 現場AI 接続）  
-**ステータス:** **実装済み**（P1 + P2-A/B + tools + **Vision UI/接続**）· P2-C 残  
-**直近コミット:** `4aff9ec`（Vision Phase 2 **commit 済** · **git push 未実施**）
+**最終更新:** 2026-06-26（Tool Integration Phase 3 · 計算ツール連携）  
+**ステータス:** **実装済み**（P1 + tools + Vision + **Calc Orchestrator**）· P2-C 残  
+**直近コミット:** `25ec824`（Tool Phase 3 **本コミット** · **git push 未実施**）
 
 ---
 
@@ -22,7 +22,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | 柱 | 内容 |
 | --- | --- |
 | **現場 AI** | Vision ✅ · Live 📋 · Voice 📋 |
-| **計算 AI** | 面積 · 外壁 · 屋根 · 塗料 · 材料 · 人工 · 原価 · 利益 · 見積 等（既存 Builder 計算ツール連携） |
+| **計算 AI** | **Tool Orchestrator ✅** · 面積 · 外壁 · 塗料 · 材料 · 利益 · 税 · 見積（既存 calculators 流用）· 足場/屋根/人工/原価/会計 📋 |
 | **業務 AI** | 顧客 · 現場 · 写真 · メモ · 見積 · 請求 · 領収 · 売上 · 経費 · 会計補助（将来） |
 
 **設計原則:** AI が直接計算するのではなく、**必要な Builder 内部ツールを判断して実行**する（既存 `builder-ai-calculators` 等）。
@@ -47,17 +47,35 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | --- | --- | --- |
 | **UI Phase 1** | `5d28acc` | 現場診断 UI シェル · 写真 · クイック相談 · Live/Voice stub |
 | **Vision Phase 2** | `4aff9ec` | Gemini Vision 接続 · `builder-ai-vision.js` · `runFieldVision` |
+| **Tool Integration Phase 3** | **本コミット** | 自然文 → intent · Orchestrator · precalc · `builder-ai-calc-*.js` |
 
 | モジュール | 役割 |
 | --- | --- |
-| `builder-ai-ui.js` | 現場チャット UI · Vision 送信 |
+| `builder-ai-ui.js` | 現場チャット UI · Vision / **計算ルート** |
 | `builder-ai-ui.css` | 現場 UI スタイル |
 | `builder-ai-vision.js` | 画像 base64 · 4MB · prompt · `runFieldDiagnosis` |
-| `builder-ai-core.js` | `runFieldVision` → Gateway `attachments` |
+| `builder-ai-calc-intent.js` | 自然文 intent / スロット抽出 |
+| `builder-ai-calc-orchestrator.js` | ツール選択 · チェーン実行 · 要約 |
+| `builder-ai-core.js` | `runFieldVision` · **`precalc`**（数値再計算禁止） |
 
-**経路:** Builder → Gateway → `gemini-chat` → Gemini Vision（**新規 CF Function なし**）
+**経路（Vision）:** Builder → Gateway → `gemini-chat` → Gemini Vision
 
-**回答:** 見える範囲 · 想定状態 · 補修/交換可能性 · 確認ポイント · 材料候補 · 概算レンジ · 注意事項 + 必須免責
+**経路（計算）:** 自然文 → CalcIntent → CalcOrchestrator → `builder-ai-calculators` / `builder-tool-material-calculator` → 要約（AI は数値を再計算しない）
+
+**回答（Vision）:** 見える範囲 · 想定状態 · 補修/交換可能性 · 確認ポイント · 材料候補 · 概算レンジ · 注意事項 + 必須免責
+
+---
+
+## Builder AI Tool Integration Phase 3（✅ 実装済）
+
+| 項目 | 内容 |
+| --- | --- |
+| **intent** | 自然文から計算 intent / スロット抽出 |
+| **Orchestrator** | 既存 deterministic ツール選択 · チェーン実行 |
+| **precalc** | Gateway 要約時に数値再計算禁止 |
+| **MVP** | 坪→㎡ · 材料数量 · 外壁塗装概算 · 利益率逆算 · 消費税/インボイス |
+
+**報告:** `reports/builder-ai-tools-phase3.md`
 
 ---
 
@@ -82,12 +100,13 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 | スクリプト | 結果 |
 | --- | --- |
+| `scripts/test-builder-ai-calc-phase3.mjs` | **15/15 PASS** |
 | `scripts/test-builder-ai-vision-phase2.mjs` | **8/8 PASS** |
 | `scripts/test-builder-ai-ui-phase1.mjs` | **14/14 PASS** |
 | `scripts/test-builder-ai-p1-review.mjs` | **135/135 PASS** |
 | `scripts/test-builder-ai-tools-adaptation.mjs` | **85/85 PASS** |
 
-**報告:** `reports/builder-ai-vision-phase2.md`
+**報告:** `reports/builder-ai-vision-phase2.md` · `reports/builder-ai-tools-phase3.md`
 
 ---
 

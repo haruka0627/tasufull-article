@@ -194,13 +194,44 @@
     if (!text) return;
 
     const Vision = getVision();
+    const Orch = global.TasuBuilderAICalcOrchestrator;
+    const sentPhoto = photoFile;
+    const sentPhotoName = sentPhoto?.name || "";
+
+    if (!sentPhoto && Orch?.isCalcQuery?.(text)) {
+      sending = true;
+      setStatus("計算中…", true);
+      messages.push({ role: "user", content: text });
+      renderMessages();
+      if (input && !opts?.fromQuick) input.value = "";
+
+      const calcResult = await Orch.runFromNaturalLanguage({
+        userText: text,
+        actor: getActor(),
+        preferRemote: false,
+      });
+
+      if (calcResult.ok && calcResult.reply) {
+        messages.push({ role: "assistant", content: calcResult.reply });
+        saveHistory(messages);
+        renderMessages();
+        setStatus(calcResult.usedRemote ? "計算 + AI 要約" : "計算完了", false);
+        setTimeout(() => setStatus("", false), 2000);
+      } else if (calcResult.reply) {
+        pushSystem(calcResult.reply);
+        setStatus("", false);
+      } else {
+        pushSystem("計算条件が不足しています。面積 · 原価 · 金額 等を追記してください。");
+        setStatus("", false);
+      }
+      sending = false;
+      return;
+    }
+
     if (!Vision?.runFieldDiagnosis) {
       pushSystem("Builder AI Vision モジュールが読み込まれていません。");
       return;
     }
-
-    const sentPhoto = photoFile;
-    const sentPhotoName = sentPhoto?.name || "";
 
     sending = true;
     setStatus(sentPhoto ? "画像を診断中…" : "送信中…", true);
