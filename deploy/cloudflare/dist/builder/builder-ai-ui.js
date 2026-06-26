@@ -76,6 +76,37 @@
     if (input) input.disabled = Boolean(busy);
   }
 
+  function setVisionState(state) {
+    const wrap = $("[data-builder-ai-ui-vision-result]");
+    if (!wrap) return;
+    const normalized = state || "idle";
+    wrap.dataset.visionState = normalized;
+    const visible = normalized !== "idle";
+    wrap.hidden = !visible;
+    wrap.classList.toggle("builder-ai-ui-vision-result--visible", visible);
+    wrap.classList.toggle("builder-ai-ui-vision-result--analyzing", normalized === "analyzing");
+    wrap.classList.toggle("builder-ai-ui-vision-result--complete", normalized === "complete");
+    wrap.classList.toggle("builder-ai-ui-vision-result--error", normalized === "error");
+    wrap.classList.toggle("builder-ai-ui-vision-result--no-image", normalized === "no_image");
+  }
+
+  function renderVisionDiagnosis(result) {
+    const wrap = $("[data-builder-ai-ui-vision-result]");
+    const body = $("[data-builder-ai-ui-vision-result-body]");
+    if (!wrap || !body) return;
+
+    if (!result?.diagnosis || !result?.displayHtml) {
+      body.innerHTML = "";
+      if (result?.visionState === "no_image") {
+        body.innerHTML =
+          '<p class="builder-ai-ui-vision-result__hint">現場写真を添付すると、AIの参考診断をより具体的に表示できます。</p>';
+      }
+      return;
+    }
+
+    body.innerHTML = result.displayHtml;
+  }
+
   function formatMessageMeta(m) {
     const parts = [];
     const prefix = SOURCE_LABELS[m.source] || "";
@@ -208,7 +239,8 @@
   function bindLiveModule() {
     global.TasuBuilderAILive?.init?.({
       onSnapshot: async ({ file, question }) => {
-        setStatus("スナップショット診断中…", true);
+        setVisionState("analyzing");
+        setStatus("スナップショット解析中…", true);
         await sendMessage(question, {
           photoFile: file,
           source: "camera_snapshot",
@@ -290,7 +322,8 @@
     }
 
     sending = true;
-    setStatus(sentPhoto ? "画像を診断中…" : "送信中…", true);
+    setVisionState(sentPhoto ? "analyzing" : "idle");
+    setStatus(sentPhoto ? "解析中…" : "送信中…", true);
 
     messages.push({
       role: "user",
@@ -309,17 +342,36 @@
     });
 
     if (!result.ok && result.reply) {
+      setVisionState("error");
+      renderVisionDiagnosis(result);
       pushSystem(result.reply);
-      setStatus("", false);
+      setStatus("エラー", false);
+      setTimeout(() => setStatus("", false), 2500);
       sending = false;
       return;
     }
 
     if (result.reply) {
-      messages.push({ role: "assistant", content: result.reply, source: "text" });
+      messages.push({
+        role: "assistant",
+        content: result.reply,
+        source: "text",
+        diagnosis: result.diagnosis || null,
+      });
       saveHistory(messages);
       renderMessages();
       global.TasuBuilderAIVoice?.notifyAssistantReply?.(result.reply);
+    }
+
+    if (result.visionState === "no_image" || result.photoRequired) {
+      setVisionState("no_image");
+      renderVisionDiagnosis(result);
+    } else if (result.diagnosis) {
+      setVisionState("complete");
+      renderVisionDiagnosis(result);
+    } else {
+      setVisionState("idle");
+      renderVisionDiagnosis(null);
     }
 
     if (result.usedVision && sentPhoto && !options.fromLive) {
@@ -327,13 +379,14 @@
     }
 
     if (result.usedRemote) {
-      setStatus("Vision 応答", false);
+      setStatus("診断完了", false);
       setTimeout(() => setStatus("", false), 2000);
     } else if (result.fallback_used) {
-      setStatus("モック / オフライン応答", false);
+      setStatus("参考診断（オフライン）", false);
       setTimeout(() => setStatus("", false), 2500);
     } else if (result.photoRequired) {
-      setStatus("", false);
+      setStatus("画像なし", false);
+      setTimeout(() => setStatus("", false), 2000);
     } else {
       setStatus("", false);
     }
@@ -357,6 +410,8 @@
       global.TasuBuilderAILive?.closePanel?.();
       global.TasuBuilderAIVoice?.stopVoice?.();
       setStatus("", false);
+      setVisionState("idle");
+      renderVisionDiagnosis(null);
     });
   }
 

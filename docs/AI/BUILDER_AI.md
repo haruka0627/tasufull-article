@@ -1,7 +1,7 @@
 # Builder AI
 
-**最終更新:** 2026-06-26（Live Phase 4-A · 現場 Live 風 MVP）  
-**ステータス:** **実装済み**（P1 + tools + Vision + Calc Orchestrator + **Live 4-A**）· P2-C 残  
+**最終更新:** 2026-06-26（Vision Phase 5 · 構造化 JSON 診断）  
+**ステータス:** **実装済み**（P1 + tools + Vision + Calc Orchestrator + Live 4-A + **Vision 5**）· P2-C 残  
 **直近コミット:** `66051f7`（Live Phase 4-A · **git push 未実施**）
 
 ---
@@ -54,7 +54,8 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | --- | --- |
 | `builder-ai-ui.js` | 現場チャット UI · Vision / 計算 / **Live ルート** |
 | `builder-ai-ui.css` | 現場 UI · **Live パネル** スタイル |
-| `builder-ai-vision.js` | 画像 base64 · 4MB · prompt · `runFieldDiagnosis` |
+| `builder-ai-vision.js` | 画像 base64 · 4MB · `runFieldDiagnosis` → Analyzer 委譲 |
+| `builder-ai-vision-analyzer.js` | **Phase 5** · JSON 正本 · カテゴリ別プロンプト · Gateway 構造化診断 |
 | `builder-ai-calc-intent.js` | 自然文 intent / スロット抽出 |
 | `builder-ai-calc-orchestrator.js` | ツール選択 · チェーン実行 · 要約 |
 | `builder-ai-core.js` | `runFieldVision` · **`precalc`**（数値再計算禁止） |
@@ -128,12 +129,31 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 | `scripts/test-builder-ai-live-phase4.mjs` | **18/18 PASS** |
 | `scripts/test-builder-ai-calc-phase3.mjs` | **15/15 PASS** |
 | `scripts/test-builder-ai-vision-phase2.mjs` | **8/8 PASS** |
+| `scripts/test-builder-ai-vision-phase5.mjs` | **28/28 PASS** |
 | `scripts/test-builder-ai-ui-phase1.mjs` | **15/15 PASS** |
 | `scripts/test-builder-ai-p1-review.mjs` | **135/135 PASS** |
 | `scripts/test-builder-ai-tools-adaptation.mjs` | **85/85 PASS** |
 | `npm run build:pages` | **PASS** |
 
-**報告:** `reports/builder-ai-live-phase4-plan.md` · `reports/builder-ai-vision-phase2.md` · `reports/builder-ai-tools-phase3.md`
+**報告:** `reports/builder-ai-live-phase4-plan.md` · `reports/builder-ai-vision-phase2.md` · `reports/builder-ai-phase5-vision.md` · `reports/builder-ai-tools-phase3.md`
+
+---
+
+## Builder AI Vision Phase 5（✅ 実装 · 未コミット）
+
+**構造化 Gemini Vision 診断** — JSON 正本 · 11 カテゴリ · AI参考診断免責統一
+
+| 項目 | 内容 |
+| --- | --- |
+| **Analyzer** | `TasuBuilderAIVisionAnalyzer` · `analyze` → Gateway `runFieldVision` |
+| **JSON** | category · condition · checkItems · possibleCauses · additionalChecks · aiComment |
+| **UI** | 解析中 / 診断完了 / エラー / 画像なし · 診断パネル（レイアウト最小変更） |
+| **フォールバック** | Gateway 失敗 · JSON 解析失敗 → カテゴリ mock |
+| **非実装** | OCR · CAD · 寸法 · 3D · 他 surface 連携 |
+
+**テスト:** `scripts/test-builder-ai-vision-phase5.mjs` — **28/28 PASS** + phase2 回帰 8/8
+
+**報告:** `reports/builder-ai-phase5-vision.md`
 
 ---
 

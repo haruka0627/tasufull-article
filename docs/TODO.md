@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（AI 秘書 Phase 5-A Orchestrator Core · 未コミット）  
+**最終更新:** 2026-06-26（Builder AI Vision Phase 5 · 未コミット）  
 **Git HEAD:** `66051f7`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -166,6 +166,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder AI Tool Integration Phase 3** | ✅ commit 済 | `05c32ad` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-tools-phase3.md` |
 | **Builder AI Vision Phase 2** | ✅ commit 済 | `4aff9ec` · `reports/builder-ai-vision-phase2.md` |
 | **Builder AI Live Phase 4-A** | ✅ commit 済 | `66051f7` · [BUILDER_AI.md](./AI/BUILDER_AI.md) · `reports/builder-ai-live-phase4-plan.md` |
+| **Builder AI Vision Phase 5** | ✅ 実装 · 未コミット | 構造化 JSON · Analyzer · `reports/builder-ai-phase5-vision.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -212,6 +213,14 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - live **18/18** · calc **15/15** · tools **85/85** · p1-review **135/135** · vision **8/8** · ui **15/15** · build PASS
 - commit `66051f7` · **未 push · 未デプロイ**
 - 真 Gemini Live / WebSocket / ephemeral token Edge — **未実装**（Phase 4-B）
+
+**Builder AI Vision Phase 5（構造化 Gemini Vision · ✅ 実装 · 未コミット）**
+
+- `builder-ai-vision-analyzer.js` · JSON 正本 · 11 診断カテゴリ · AI参考診断免責
+- Gateway `runFieldVision` 拡張（prompt override · raw JSON）· テキスト Gateway 非変更
+- UI: 解析中 / 診断完了 / エラー / 画像なし
+- `test-builder-ai-vision-phase5.mjs` **28/28** + phase2 回帰 **8/8** + build PASS
+- 参照: `reports/builder-ai-phase5-vision.md`
 
 **Builder AI Gemini Live Phase 4-B（未着手）**
 
