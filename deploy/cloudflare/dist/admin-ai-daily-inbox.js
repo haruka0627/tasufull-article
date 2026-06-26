@@ -22,6 +22,8 @@
     anpi: "安否",
     talk: "TALK通知",
     market: "市場",
+    content_gate: "Content Gate",
+    ai_ops: "通報・AI-ops",
   });
 
   let toastTimer = null;
@@ -398,12 +400,49 @@
       }));
   }
 
+  function collectFromContentGate() {
+    const bridge = global.TasuPlatformOpsInboxBridge;
+    if (bridge?.collectExternalInboxItems) return bridge.collectExternalInboxItems();
+    return [];
+  }
+
+  function collectFromAiOps() {
+    const store = global.TasuAiOpsCaseStore;
+    if (!store?.listCases) return [];
+    return store
+      .listCases()
+      .filter((c) => {
+        if (c.status === "resolved") return false;
+        const cat = c.ops_category || c.ai_category || "";
+        return cat === "report" || cat === "violation_report" || /通報/.test(String(c.title + c.body));
+      })
+      .slice(0, 8)
+      .map((c) => ({
+        id: `inbox_aiops_${c.id}`,
+        source: "ai_ops",
+        sourceId: c.id,
+        category: c.ai_risk === "critical" || c.ai_risk === "high" ? "needs_judgment" : "pending_approval",
+        eventType: c.ops_category || "report",
+        title: c.title || "通報",
+        target: c.user_id || "—",
+        reason: String(c.ai_summary || c.body || "").slice(0, 120),
+        recommendedAction: "通報を確認",
+        targetUrl:
+          global.TasuPlatformOpsActionUrl?.buildAiOpsCaseUrl?.(c.id) ||
+          `admin-ai-operations-center.html?case=${encodeURIComponent(c.id)}`,
+        priority: c.ai_risk === "critical" ? 0 : 1,
+        createdAt: c.updated_at || c.created_at,
+      }));
+  }
+
   function collectAllRawItems() {
     return [
       ...collectFromResponsePlans(),
       ...collectFromAutomation(),
       ...collectFromConnect(),
+      ...collectFromContentGate(),
       ...collectFromSupport(),
+      ...collectFromAiOps(),
       ...collectFromSupportEvents(),
       ...collectFromBuilder(),
       ...collectFromMarket(),
@@ -469,11 +508,26 @@
     };
   }
 
+  function pushExternalSignal(signal) {
+    return global.TasuPlatformOpsInboxBridge?.pushExternalSignal?.(signal) || { pushed: false };
+  }
+
+  function completeInboxItem(id) {
+    const bridge = global.TasuPlatformOpsInboxBridge;
+    if (bridge?.completeInboxItem) return bridge.completeInboxItem(id);
+    return dismissInboxItem(id);
+  }
+
   function dismissInboxItem(id) {
     const item = findItemById(id);
     const set = readDismissedSet();
     set.add(id);
     writeDismissedSet(set);
+    if (item && item.source === "content_gate") {
+      completeInboxItem(id);
+      global.dispatchEvent(new CustomEvent("tasu:admin-daily-inbox-updated"));
+      return { ok: true };
+    }
     if (item && item.source !== "response_plan" && item.source !== "automation") {
       global.TasuAdminAiDecisionLearning?.recordFromInbox?.(item, "dismissed");
     }
@@ -502,8 +556,10 @@
   }
 
   function renderSummary(summary) {
-    const host = global.document?.querySelector("[data-ops-daily-inbox-summary]");
-    const priorityHost = global.document?.querySelector("[data-ops-daily-inbox-priority]");
+    const host = global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-summary]")
+      || global.document?.querySelector("[data-ops-daily-inbox-summary]");
+    const priorityHost = global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-priority]")
+      || global.document?.querySelector("[data-ops-daily-inbox-priority]");
     if (!host) return;
 
     host.innerHTML =
@@ -578,9 +634,10 @@
   let renderDailyInboxTimer = null;
 
   function renderDailyInboxInternal() {
-    const root = global.document?.querySelector("[data-ops-daily-inbox]");
-    const sectionsHost = global.document?.querySelector("[data-ops-daily-inbox-sections]");
-    if (!root || !sectionsHost) return;
+    const sectionsHost =
+      global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-sections]") ||
+      global.document?.querySelector("[data-ops-daily-inbox-sections]");
+    if (!sectionsHost) return;
 
     const items = buildInboxItems();
     const summary = buildDailySummary(items);
@@ -602,7 +659,9 @@
   }
 
   function showToast(message) {
-    const el = global.document?.querySelector("[data-ops-daily-inbox-toast]");
+    const el =
+      global.document?.querySelector("#ops-ai-command-center [data-ops-daily-inbox-toast]") ||
+      global.document?.querySelector("[data-ops-daily-inbox-toast]");
     if (!el) return;
     el.textContent = message;
     el.hidden = false;
@@ -613,7 +672,10 @@
   }
 
   function bindUi() {
-    const root = global.document?.querySelector("[data-ops-daily-inbox]");
+    const cc = global.document?.getElementById("ops-ai-command-center");
+    const root =
+      cc?.querySelector("[data-ops-daily-inbox]") ||
+      global.document?.querySelector("[data-ops-daily-inbox]");
     if (!root || root.dataset.inboxBound === "1") return;
     root.dataset.inboxBound = "1";
 
@@ -645,6 +707,9 @@
       "tasful-talk-notifications-changed",
       "tasu-market-events-changed",
       "tasu:support-lifecycle-event",
+      "tasu:moderation-signal",
+      "tasu:ops-content-review-completed",
+      "tasu:ai-ops-cases-changed",
     ];
     events.forEach((ev) => global.addEventListener(ev, renderDailyInbox));
   }
@@ -662,6 +727,8 @@
     buildInboxItems,
     buildDailySummary,
     dismissInboxItem,
+    completeInboxItem,
+    pushExternalSignal,
     approveInboxItem,
     clearDismissedForTests,
     renderDailyInbox,

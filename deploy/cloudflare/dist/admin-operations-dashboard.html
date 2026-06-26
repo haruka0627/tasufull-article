@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="admin-operations-dashboard.css" />
+  <link rel="stylesheet" href="tasful-ai-voice.css" />
   <link rel="stylesheet" href="supabase-ops-data-source.css" />
 </head>
 <body class="ops-dash-page" data-page="admin-operations-dashboard">
@@ -19,11 +20,15 @@
         <span class="ops-ai-brand__text">TASFUL</span>
       </a>
       <nav class="ops-ai-nav" data-ops-ai-nav>
-        <a class="ops-ai-nav__item is-active" href="#ops-ai-top" data-ops-nav="dashboard" data-ops-nav-scroll>
+        <a class="ops-ai-nav__item is-active" href="#ops-ai-command-center" data-ops-nav="dashboard" data-ops-nav-scroll data-ops-nav-target="ops-ai-command-center">
           <span class="ops-ai-nav__icon" aria-hidden="true">▦</span>
-          <span class="ops-ai-nav__label">ダッシュボード</span>
+          <span class="ops-ai-nav__label">ホーム</span>
         </a>
-        <a class="ops-ai-nav__item" href="#ops-ai-secretary" data-ops-nav="secretary" data-ops-nav-scroll data-ops-nav-target="ops-ai-secretary">
+        <a class="ops-ai-nav__item" href="#ops-ops-dashboard" data-ops-nav="ops-dashboard" data-ops-nav-scroll data-ops-nav-target="ops-ops-dashboard">
+          <span class="ops-ai-nav__icon" aria-hidden="true">📊</span>
+          <span class="ops-ai-nav__label">運営ダッシュボード</span>
+        </a>
+        <a class="ops-ai-nav__item" href="#ops-ai-command-center" data-ops-nav="secretary" data-ops-nav-scroll data-ops-nav-target="ops-ai-secretary">
           <span class="ops-ai-nav__icon" aria-hidden="true">✦</span>
           <span class="ops-ai-nav__label">AI運営秘書</span>
           <span class="ops-ai-nav__badge ops-ai-nav__badge--ai">AI</span>
@@ -85,13 +90,276 @@
       <header class="ops-ai-topbar ops-ai-topbar--compact" id="ops-ai-top">
         <div class="ops-ai-topbar__intro">
           <h1>AI運営司令塔</h1>
-          <p class="ops-ai-topbar__sub">AIが整理した結論だけ見て、必要な1件だけ対応する</p>
+          <p class="ops-ai-topbar__sub">TASFUL全体の司令塔 — AIが整理した結論だけ見て、必要な1件だけ対応する</p>
         </div>
         <div class="ops-ai-topbar__tools">
           <button type="button" class="ops-ai-icon-btn" aria-label="更新" data-ops-dash-refresh>↻</button>
           <time class="ops-ai-updated" data-ops-dash-updated datetime=""></time>
         </div>
       </header>
+
+      <section class="ops-ai-command-center ops-p7-desk" id="ops-ai-command-center" data-ops-secretary-phase2 aria-label="AI秘書の机">
+        <header class="ops-ai-command-center__head ops-p7-desk__head ops-p7-mode-bar">
+          <div class="ops-p7-mode-bar__intro">
+            <h2 class="ops-ai-command-center__title">AI秘書</h2>
+            <p class="ops-p7-mode-bar__title" data-ops-mode-title>AI秘書モード</p>
+            <p class="ops-p7-mode-bar__desc" data-ops-mode-description>運営全体を横断して支援します。</p>
+          </div>
+          <details class="ops-p7-mode-picker" id="ops-p7-mode-picker" data-ops-secretary-mode-picker>
+            <summary class="ops-p7-mode-picker__trigger">
+              <span data-ops-mode-current-label>AI秘書</span>
+              <span class="ops-p7-mode-picker__caret" aria-hidden="true">▼</span>
+            </summary>
+            <div class="ops-p7-mode-picker__menu" data-ops-secretary-mode-switcher" role="menu" aria-label="専門モード"></div>
+          </details>
+        </header>
+
+        <section class="ops-p7-opening ops-light-card" data-ops-phase7-opening aria-live="polite"></section>
+
+        <div class="ops-p7-desk-hero" data-ops-phase7-slot-today aria-label="今日やること"></div>
+
+        <section class="ops-p7-desk-block ops-p7-desk-summary ops-light-card" id="ops-p7-morning-summary" aria-labelledby="ops-p7-morning-summary-heading">
+          <h3 class="ops-p7-desk-section-title" id="ops-p7-morning-summary-heading">本日の運営サマリー</h3>
+          <p class="ops-p7-desk-block__sub">朝3分 — タップで各パネルへ</p>
+          <div class="ops-ai-morning-summary__chips" data-ops-morning-summary-chips role="list"></div>
+        </section>
+
+        <section class="ops-p7-desk-block ops-p7-desk-inbox ops-light-card" id="ops-p7-daily-inbox" data-ops-daily-inbox aria-labelledby="ops-p7-daily-inbox-heading">
+          <h3 class="ops-p7-desk-section-title" id="ops-p7-daily-inbox-heading">本日の運営結果</h3>
+          <div class="ops-ai-daily-inbox__summary" data-ops-daily-inbox-summary></div>
+          <div class="ops-ai-daily-inbox__priority" data-ops-daily-inbox-priority></div>
+          <div class="ops-ai-daily-inbox__sections" data-ops-daily-inbox-sections></div>
+          <p class="ops-ai-daily-inbox-toast" data-ops-daily-inbox-toast hidden aria-live="polite"></p>
+        </section>
+
+        <section class="ops-p7-desk-block ops-p7-desk-conclusion ops-light-card" id="ops-p7-daily-conclusion" data-ops-p7-daily-conclusion aria-label="本日の結論">
+          <h3 class="ops-p7-desk-section-title">本日の結論</h3>
+          <time class="ops-ai-daily-conclusion__time" data-ops-daily-conclusion-time datetime=""></time>
+          <div class="ops-ai-daily-conclusion__stats" data-ops-daily-conclusion-stats></div>
+          <p class="ops-ai-daily-conclusion__sentence" data-ops-daily-conclusion-sentence></p>
+          <div class="ops-p7-daily-next" data-ops-daily-next-action>
+            <p class="ops-ai-daily-conclusion__next-label">次の操作</p>
+            <p class="ops-ai-daily-conclusion__next-message" data-ops-daily-next-message></p>
+            <div class="ops-ai-daily-conclusion__next-cta" data-ops-daily-next-cta-host></div>
+          </div>
+        </section>
+
+        <div class="ops-p7-cta-bar">
+          <button type="button" class="ops-p7-desk-start-btn ops-p7-desk-start-btn--primary" data-ops-p7-start-sequence>順番に開始</button>
+        </div>
+
+        <p class="ops-p7-complete-toast" data-ops-phase7-complete-toast hidden aria-live="polite"></p>
+        <section class="ops-p7-next-guide ops-light-card" data-ops-phase7-next-guide hidden aria-live="polite"></section>
+
+        <div class="ops-p2-layout ops-p7-desk-chat">
+          <section class="ops-p2-panel ops-p2-panel--chat ops-p7-desk-chat-panel" aria-labelledby="ops-p2-chat-heading">
+            <h3 class="ops-p7-desk-section-title" id="ops-p2-chat-heading">AIチャット</h3>
+            <div class="ops-p7-chat-conversation">
+              <div class="ops-p7-chat-msg ops-p7-chat-msg--assistant ops-light-card" data-ops-phase7-chat-brief aria-live="polite"></div>
+              <div class="ops-p2-chat__log ops-p7-desk-chat-log" data-ops-phase2-chat-log role="log" aria-live="polite"></div>
+            </div>
+            <div class="ops-p2-chat">
+              <form class="ops-p2-chat__form" data-ops-phase2-chat-form>
+                <div class="ops-p3-composer" data-ops-secretary-composer>
+                  <label class="visually-hidden" for="ops-p2-chat-input-desk">AI秘書へ入力</label>
+                  <input type="text" class="ops-p2-chat__input" id="ops-p2-chat-input-desk" data-ops-secretary-input data-ops-phase2-chat-input placeholder="秘書に話しかける…" autocomplete="off" />
+                </div>
+                <button type="submit" class="ops-p2-chat__send" data-ops-secretary-send aria-label="送信">送信</button>
+              </form>
+              <details class="ops-p7-desk-fold ops-p7-desk-fold--chips">
+                <summary>クイック入力</summary>
+                <div class="ops-p2-chat__quick ops-p7-quick-chat" data-ops-phase7-quick-chat role="group" aria-label="クイックチャット"></div>
+              </details>
+            </div>
+            <div class="ops-p4-status ops-p7-desk-chat-status" data-ops-phase4-status data-state="idle" aria-live="polite" hidden>
+              <span data-ops-phase4-status-icon">🟢</span>
+              <span data-ops-phase4-status-label">待機中</span>
+            </div>
+            <div class="ops-p7-status ops-p7-status--command" data-ops-phase7-status data-state="idle" aria-live="polite" hidden>
+              <span data-ops-phase7-status-icon">🟢</span>
+              <span data-ops-phase7-status-label">待機</span>
+            </div>
+          </section>
+          <details class="ops-p7-desk-fold ops-p7-desk-fold--agent">
+            <summary>エージェント自動化レベル（L3は自動実行しません）</summary>
+            <section class="ops-p2-panel ops-p2-panel--agent" aria-labelledby="ops-p2-agent-heading">
+              <header class="ops-p2-panel__head">
+                <h3 class="ops-p2-panel__title" id="ops-p2-agent-heading">AIエージェント自動化レベル</h3>
+              </header>
+              <div data-ops-phase2-agent-levels></div>
+            </section>
+          </details>
+        </div>
+
+        <section class="ops-p7-recommendations-wrap ops-p7-desk-recs" data-ops-phase7-recommendations id="ops-p7-recommendations" aria-label="今日の対応">
+          <h3 class="ops-p7-desk-section-title">今日の対応</h3>
+
+          <div class="ops-p7-desk-priority" id="ops-p7-priority-panel">
+            <h4 class="ops-p7-desk-subtitle" id="ops-priority-heading">要確認タスク</h4>
+            <div class="ops-ai-table-wrap">
+              <table class="ops-ai-table ops-ai-table--tasks ops-ai-table--compact">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">内容</th>
+                    <th scope="col">重要度</th>
+                    <th scope="col">対応</th>
+                  </tr>
+                </thead>
+                <tbody data-ops-dash-priority-tasks></tbody>
+              </table>
+            </div>
+            <ul class="ops-ai-alert-list" data-ops-dash-alerts hidden aria-hidden="true"></ul>
+          </div>
+
+          <div class="ops-p7-desk-suggest" id="ops-p7-suggest-panel">
+            <h4 class="ops-p7-desk-subtitle" id="ops-suggest-heading">AI提案</h4>
+            <div class="ops-ai-suggest-list ops-ai-suggest-list--compact" data-ops-dash-suggestions></div>
+          </div>
+
+          <section class="ops-ai-response ops-p7-desk-response" id="ops-ai-response" aria-labelledby="ops-response-heading">
+            <h4 class="ops-p7-desk-subtitle" id="ops-response-heading">AI対応案</h4>
+            <span class="ops-ai-response-badge" data-ops-ai-response-count hidden>0件</span>
+            <p class="ops-ai-response-lead">AIは対応案を提案します。送信前に Safety &amp; License Gate を通過し、利用者へ影響する送信・通知は必ず承認待ちを経由します。</p>
+            <div class="ops-ai-response-body" data-ops-ai-response-plans></div>
+            <p class="ops-ai-response-toast" data-ops-ai-response-toast hidden aria-live="polite"></p>
+          </section>
+
+          <section class="ops-ai-auto ops-p7-desk-auto" id="ops-ai-automation" aria-labelledby="ops-automation-heading">
+            <h4 class="ops-p7-desk-subtitle" id="ops-automation-heading">AI自動処理候補</h4>
+            <span class="ops-ai-auto-badge" data-ops-ai-automation-count hidden>0件</span>
+            <div class="ops-ai-auto-body" data-ops-ai-automation></div>
+            <p class="ops-ai-auto-toast" data-ops-ai-automation-toast hidden aria-live="polite"></p>
+          </section>
+
+          <section class="ops-ai-connect ops-p7-desk-connect" id="ops-ai-connect" aria-labelledby="ops-connect-heading">
+            <h4 class="ops-p7-desk-subtitle" id="ops-connect-heading">Connect対応</h4>
+            <span class="ops-ai-connect-badge" data-ops-connect-pending-badge hidden>0件</span>
+            <div class="ops-ai-connect-body" data-ops-connect-panel></div>
+          </section>
+        </section>
+
+        <section class="ops-p7-desk-status" data-ops-phase7-slot-summary aria-label="本日の状況"></section>
+
+        <div class="ops-p7-flow-track" data-ops-phase7-flow-track hidden aria-label="Flow進行状況"></div>
+
+        <div class="ops-p7-service-strip" data-ops-phase7-slot-domains aria-label="サービス件数"></div>
+        <div data-ops-phase7-slot-gmail hidden aria-hidden="true"></div>
+
+        <section class="ops-p7-intel-home" data-ops-phase7-slot-intel-home aria-label="AI Intelligence 重要3件"></section>
+
+        <details class="ops-p3-work ops-p7-desk-history" id="ops-p7-work-history" aria-labelledby="ops-p3-work-heading" data-ops-phase3-work-history>
+          <summary class="ops-p7-desk-history__summary">仕事履歴</summary>
+          <header class="ops-p3-work__head">
+            <h3 class="ops-p3-work__title" id="ops-p3-work-heading">仕事履歴</h3>
+            <p class="ops-p3-work__sub">実行ログ</p>
+          </header>
+          <div class="ops-p3-work__filters" role="tablist" aria-label="表示期間">
+            <button type="button" class="ops-p3-work__filter is-active" data-ops-phase3-period="day" role="tab" aria-selected="true">日</button>
+            <button type="button" class="ops-p3-work__filter" data-ops-phase3-period="week" role="tab" aria-selected="false">週</button>
+            <button type="button" class="ops-p3-work__filter" data-ops-phase3-period="month" role="tab" aria-selected="false">月</button>
+          </div>
+          <div class="ops-p4-work__filters ops-p4-work__filters--service" role="group" aria-label="サービス別（将来フィルタ）">
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-service="platform">Platform</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-service="builder">Builder</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-service="tlv">TLV</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-service="ai">AI</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-service="google">Google</button>
+          </div>
+          <div class="ops-p4-work__filters ops-p4-work__filters--status" role="group" aria-label="ステータス別（将来フィルタ）">
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-work-status="completed">完了</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-work-status="held">保留</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-work-status="awaiting_confirm">確認待ち</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-work-status="confirm_required">送信直前</button>
+            <button type="button" class="ops-p4-work__chip" data-ops-phase4-work-status="error">エラー</button>
+          </div>
+          <div class="ops-p4-work__filters ops-p4-work__filters--safety" role="group" aria-label="安全レベル別">
+            <button type="button" class="ops-p4-work__chip ops-p5-safety-chip" data-ops-phase5-safety-level="L1">L1</button>
+            <button type="button" class="ops-p4-work__chip ops-p5-safety-chip" data-ops-phase5-safety-level="L2">L2</button>
+            <button type="button" class="ops-p4-work__chip ops-p5-safety-chip" data-ops-phase5-safety-level="L3">L3</button>
+          </div>
+          <ol class="ops-p3-work__list" data-ops-phase3-work-list></ol>
+        </details>
+
+        <div class="ops-p3-gmail-draft" data-ops-phase3-gmail-draft hidden>
+          <header class="ops-p3-gmail-draft__head">
+            <h4 class="ops-p3-gmail-draft__title">Gmail 返信（本番準備）</h4>
+            <button type="button" class="ops-p3-gmail-draft__close" data-ops-phase3-gmail-draft-close aria-label="閉じる">×</button>
+          </header>
+          <div class="ops-p5-gmail-conn" data-ops-phase5-gmail-connection aria-live="polite"></div>
+          <ol class="ops-p4-gmail-flow" data-ops-phase4-gmail-flow aria-label="Gmailフロー"></ol>
+          <p class="ops-p3-gmail-draft__note">受信 → AI分析 → 重要度 → 返信作成 → 確認 → 送信（send は confirm_required）</p>
+          <ul class="ops-p5-gmail-inbox" data-ops-phase5-gmail-inbox aria-label="受信一覧"></ul>
+          <div class="ops-p4-gmail-meta">
+            <label class="ops-p4-gmail-meta__label">重要度</label>
+            <select class="ops-p4-gmail-meta__select" data-ops-phase4-gmail-priority disabled>
+              <option value="">— 未分析 —</option>
+              <option value="high">高</option>
+              <option value="normal">通常</option>
+              <option value="low">低</option>
+            </select>
+            <button type="button" class="ops-p3-action ops-p5-gmail-mock-btn" data-ops-phase5-gmail-mock-connect>モック接続</button>
+          </div>
+          <textarea class="ops-p3-gmail-draft__body" data-ops-phase3-gmail-draft-body rows="4" placeholder="AI秘書から呼び出される返信下書き"></textarea>
+          <div class="ops-p5-gmail-confirm" data-ops-phase5-gmail-confirm hidden>
+            <p class="ops-p5-gmail-confirm__note">送信直前 — 実送信はしません（confirm_required）</p>
+            <button type="button" class="ops-p3-action ops-p3-action--primary" data-ops-phase5-gmail-confirm-ack">確認済み（送信直前で停止）</button>
+          </div>
+          <div class="ops-p3-gmail-draft__actions">
+            <button type="button" class="ops-p3-action ops-p3-action--primary" data-ops-p3-action="gmail_confirm_send">確認して送信予定</button>
+            <button type="button" class="ops-p3-action" data-ops-p3-action="flow_start_gmail_reply">Gmail返信フロー</button>
+          </div>
+        </div>
+        <details class="ops-p2-fold" id="ops-ai-phase2-google">
+          <summary class="ops-p2-fold__summary">Google連携（将来 — 構造のみ）</summary>
+          <div class="ops-p2-fold__body">
+            <section class="ops-p2-google" aria-label="Gmail連携パイプライン">
+              <h4 class="ops-p2-google__title">Gmail（準備）</h4>
+              <div data-ops-phase2-gmail-pipeline></div>
+            </section>
+            <section class="ops-p2-google" aria-label="Googleサービス一覧">
+              <h4 class="ops-p2-google__title">Google サービス</h4>
+              <ul class="ops-p2-google-list" data-ops-phase2-google-list></ul>
+            </section>
+            <section class="ops-p8-connectors-wrap" aria-label="接続設定 Phase8">
+              <div class="ops-p8-connectors-panel" data-ops-phase8-connectors-panel></div>
+            </section>
+          </div>
+        </details>
+
+        <details class="ops-p7-desk-fold ops-p7-desk-fold--ops-dashboard" id="ops-ops-dashboard" aria-labelledby="ops-ops-dashboard-heading">
+          <summary class="ops-ops-dashboard__summary">詳細サマリー — 運営ダッシュボード</summary>
+          <div class="ops-ops-dashboard__body">
+            <p class="ops-ops-dashboard__sub" id="ops-ops-dashboard-heading">今日やること · Platform · Builder · TLV · AI · Google — 詳細KPIとタイル</p>
+            <div class="ops-p2-home ops-ops-dashboard__tiles" data-ops-phase2-dashboard-root></div>
+            <details class="ops-p7-desk-fold ops-p7-desk-fold--kpi" id="ops-p7-kpi-fold">
+              <summary>KPI・売上サマリー</summary>
+              <div data-ops-phase7-slot-kpi-fold></div>
+            </details>
+            <details class="ops-p7-desk-fold ops-p7-desk-fold--intel" id="ops-p7-intel-full">
+              <summary>AI Intelligence 一覧</summary>
+              <section class="ops-p6-intelligence" id="ops-ai-intelligence" data-ops-phase6-intelligence aria-labelledby="ops-p6-intelligence-heading">
+                <header class="ops-p6-intelligence__head">
+                  <div>
+                    <h3 class="ops-p6-intelligence__title" id="ops-p6-intelligence-heading">AI Intelligence</h3>
+                    <p class="ops-p6-intelligence__sub">要約・影響判定・導入提案のみ（自動導入しない）</p>
+                  </div>
+                  <div class="ops-p6-intelligence__tools">
+                    <span class="ops-p6-intelligence__badge">新規 <strong data-ops-phase6-intelligence-count>0</strong></span>
+                    <button type="button" class="ops-p3-action" data-ops-phase6-intelligence-refresh>更新</button>
+                  </div>
+                </header>
+                <div class="ops-p6-intelligence__sections" data-ops-phase6-intelligence-root></div>
+                <div class="ops-p6-intelligence__detail" data-ops-phase6-intelligence-detail hidden></div>
+              </section>
+            </details>
+          </div>
+        </details>
+
+        <nav class="ops-p7-command-bar ops-p7-desk-nav" data-ops-phase7-top hidden aria-hidden="true">
+          <nav class="ops-p7-quick-actions" data-ops-phase7-quick-actions aria-label="クイックアクション"></nav>
+        </nav>
+      </section>
 
       <section class="ops-ai-morning-summary" id="ops-ai-morning-summary" data-ops-morning-summary aria-labelledby="ops-morning-summary-heading">
         <header class="ops-ai-morning-summary__head">
@@ -104,12 +372,24 @@
       <section class="ops-ai-daily-inbox" id="ops-ai-daily-inbox" data-ops-daily-inbox aria-labelledby="ops-daily-inbox-heading">
         <header class="ops-ai-daily-inbox__head">
           <h2 class="ops-ai-daily-inbox__title" id="ops-daily-inbox-heading">本日の運営結果</h2>
-          <p class="ops-ai-daily-inbox__sub">AI対応案・自動処理・Connect・Support・Builder・安否・TALKを一画面で確認（約5分）</p>
+          <p class="ops-ai-daily-inbox__sub">AI対応案・自動処理・Connect・Support・Content Gate・Builder・安否・TALKを一画面で確認（約5分）</p>
         </header>
         <div class="ops-ai-daily-inbox__summary" data-ops-daily-inbox-summary></div>
         <div class="ops-ai-daily-inbox__priority" data-ops-daily-inbox-priority></div>
         <div class="ops-ai-daily-inbox__sections" data-ops-daily-inbox-sections></div>
         <p class="ops-ai-daily-inbox-toast" data-ops-daily-inbox-toast hidden aria-live="polite"></p>
+      </section>
+
+      <section class="ops-ai-panel ops-ai-panel--focus" id="ops-content-gate" data-ops-content-review aria-labelledby="ops-content-gate-heading">
+        <div class="ops-ai-panel__head">
+          <h2 id="ops-content-gate-heading">掲載審査キュー</h2>
+          <p class="ops-ai-inbox__sub">通知から開いた対象のみ表示 — 承認 / 却下（listPendingReview · applyReviewAction）</p>
+        </div>
+        <div class="ops-ai-content-review">
+          <div data-ops-content-review-list aria-label="審査待ち一覧"></div>
+          <div data-ops-content-review-detail aria-label="選択中の対象"></div>
+        </div>
+        <p class="ops-ai-inbox-toast" data-ops-content-review-toast hidden aria-live="polite"></p>
       </section>
 
       <section class="ops-ai-command ops-ai-command--compact" id="ops-ai-command" aria-label="運営チェック">
@@ -124,7 +404,7 @@
         </div>
         <div class="ops-ai-daily-conclusion__stats" data-ops-daily-conclusion-stats></div>
         <div class="ops-ai-daily-conclusion__action">
-          <p class="ops-ai-daily-conclusion__action-label">今日やること</p>
+          <p class="ops-ai-daily-conclusion__action-label">本日の状況</p>
           <p class="ops-ai-daily-conclusion__sentence" data-ops-daily-conclusion-sentence></p>
         </div>
         <div class="ops-ai-daily-conclusion__next" data-ops-daily-next-action>
@@ -319,7 +599,7 @@
 
       <nav class="ops-ai-shortcuts-hidden" aria-hidden="true" data-ops-dash-shortcuts></nav>
       <ul class="ops-ai-tasks-hidden" hidden data-ops-dash-tasks></ul>
-      <a href="#ops-ai-focus" hidden data-ops-dash-hub-cta>AI運営秘書を開く</a>
+      <a href="#ops-ai-command-center" hidden data-ops-dash-hub-cta>AI運営秘書を開く</a>
     </div>
   </div>
 
@@ -340,6 +620,16 @@
   <link rel="stylesheet" href="stripe-connect-trouble.css" />
   <script src="stripe-connect-event-map.js"></script>
   <script src="connect-identity-templates.js"></script>
+  <script src="platform-content-gate-events.js"></script>
+  <script src="platform-moderation-log.js"></script>
+  <script src="platform-ops-action-url.js"></script>
+  <script src="platform-ops-inbox-bridge.js"></script>
+  <script src="platform-content-gate.js"></script>
+  <script src="platform-content-gate-attachments.js"></script>
+  <script src="platform-content-gate-ai-bridge.js"></script>
+  <script src="platform-moderation-queue.js"></script>
+  <script src="platform-ops-content-review.js"></script>
+  <script src="platform-ops-chat-report-bridge.js"></script>
   <script src="offplatform-risk-detector.js"></script>
   <script src="refund-cancel-decision-checklist.js"></script>
   <script src="chargeback-evidence-pack.js"></script>
@@ -387,7 +677,19 @@
   <script src="admin-ai-auto-fix-candidate.js"></script>
   <script src="admin-ai-human-send-gate.js"></script>
   <script src="admin-ai-morning-summary.js"></script>
+  <script src="tasful-ai-voice-core.js"></script>
+  <script src="admin-ai-secretary-phase2.js"></script>
+  <script src="admin-ai-secretary-voice.js"></script>
+  <script src="admin-ai-secretary-phase3.js"></script>
+  <script src="admin-ai-secretary-phase4.js"></script>
+  <script src="admin-ai-secretary-phase5.js"></script>
+  <script src="admin-ai-secretary-phase6.js"></script>
+  <script src="admin-ai-secretary-modes.js"></script>
+  <script src="admin-ai-secretary-phase7.js"></script>
+  <script src="admin-ai-secretary-phase8.js"></script>
+  <!-- 他管理ページで常駐AI秘書: phase2→8 を読み込み後 TasuAdminAiSecretary.PERSISTENT_SHELL.mount({ mode: "floating" }) -->
   <script src="admin-operations-dashboard.js"></script>
   <script src="talk-ops-room.js"></script>
+  <div id="tasu-ai-secretary-shell" data-tasu-secretary-shell data-shell-mode="embedded" hidden aria-hidden="true"></div>
 </body>
 </html>

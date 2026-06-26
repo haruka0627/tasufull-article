@@ -229,6 +229,9 @@
 
     const Notify = global.TasuAiOpsNotify;
     if (plan.resolved && Notify?.markRead) Notify.markRead(caseId);
+    if (plan.resolved) {
+      global.TasuAdminAiDailyInbox?.completeInboxItem?.(`inbox_aiops_${caseId}`);
+    }
 
     return saved;
   }

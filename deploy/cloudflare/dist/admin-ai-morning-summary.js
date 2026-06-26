@@ -98,6 +98,10 @@
   }
 
   function scrollToMorningTarget(targetId) {
+    if (global.TasuAdminOpsDashboardNav?.scrollToSection) {
+      global.TasuAdminOpsDashboardNav.scrollToSection(targetId);
+      return;
+    }
     const el = global.document?.getElementById(targetId);
     if (!el) return;
     let node = el.parentElement;
