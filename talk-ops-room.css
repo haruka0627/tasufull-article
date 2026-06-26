@@ -1072,3 +1072,96 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* AIテキストチャット（Phase2 · talk-ops-room 互換） */
+.talk-ops-text-chat {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--talk-border, #e5e7eb);
+  background: #fff;
+}
+
+.talk-ops-text-chat__title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.talk-ops-text-chat__sub {
+  margin: 0.25rem 0 0.65rem;
+  font-size: 0.75rem;
+  color: var(--talk-muted);
+}
+
+.talk-ops-text-chat__log {
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--talk-border, #e5e7eb);
+  background: #f9fafb;
+  margin-bottom: 0.5rem;
+}
+
+.talk-ops-text-chat .ops-p2-chat__msg {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  margin-bottom: 0.45rem;
+  white-space: pre-wrap;
+}
+
+.talk-ops-text-chat .ops-p2-chat__msg--user {
+  color: #2563eb;
+}
+
+.talk-ops-text-chat .ops-p2-chat__msg--assistant {
+  color: #111827;
+}
+
+.talk-ops-text-chat .ops-p2-chat__msg--error {
+  color: #b91c1c;
+}
+
+.talk-ops-text-chat__form {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.talk-ops-text-chat .ops-p2-chat__input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--talk-border, #e5e7eb);
+  font-size: 0.8125rem;
+}
+
+.talk-ops-text-chat .ops-p2-chat__send {
+  padding: 0.45rem 0.75rem;
+  border-radius: 8px;
+  border: none;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.talk-ops-text-chat__status {
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--talk-muted);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

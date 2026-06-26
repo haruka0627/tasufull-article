@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="dashboard.css">
   <link rel="stylesheet" href="talk-home.css">
   <link rel="stylesheet" href="talk-ops-room.css">
+  <link rel="stylesheet" href="tasful-ai-voice.css">
   <link rel="stylesheet" href="tasful-app-mobile.css">
   <link rel="stylesheet" href="tasful-app-mobile-detail.css">
 
@@ -57,6 +58,21 @@
         </section>
 
         <div class="talk-ops-hub" data-talk-ops-hub aria-live="polite" aria-label="運営情報ハブ"></div>
+
+        <section class="talk-ops-text-chat" aria-labelledby="talk-ops-text-chat-heading">
+          <h2 class="talk-ops-text-chat__title" id="talk-ops-text-chat-heading">AIテキストチャット</h2>
+          <p class="talk-ops-text-chat__sub">通常会話（テキスト常時利用 · 音声は補助機能）</p>
+          <div class="ops-p2-chat__log talk-ops-text-chat__log" data-ops-phase2-chat-log role="log" aria-live="polite"></div>
+          <form class="ops-p2-chat__form talk-ops-text-chat__form" data-ops-phase2-chat-form>
+            <label class="visually-hidden" for="talk-ops-text-chat-input">AI秘書へ入力</label>
+            <input type="text" class="ops-p2-chat__input" id="talk-ops-text-chat-input" data-ops-secretary-input data-ops-phase2-chat-input placeholder="秘書に話しかける…" autocomplete="off" />
+            <button type="submit" class="ops-p2-chat__send" data-ops-secretary-send aria-label="送信">送信</button>
+          </form>
+          <div class="ops-p4-status talk-ops-text-chat__status" data-ops-phase4-status data-state="idle" aria-live="polite" hidden>
+            <span data-ops-phase4-status-icon">🟢</span>
+            <span data-ops-phase4-status-label">待機中</span>
+          </div>
+        </section>
 
         <form class="talk-ops-compose" data-talk-ops-command-form>
           <input
@@ -132,6 +148,9 @@
   <script src="ops-watch-browser.js"></script>
   <script src="talk-ops-watch-ui.js"></script>
   <script src="talk-ops-assistant.js"></script>
+  <script src="tasful-ai-voice-core.js"></script>
+  <script src="admin-ai-secretary-phase2.js"></script>
+  <script src="admin-ai-secretary-voice.js"></script>
   <script src="admin-ai-decision-learning.js"></script>
   <script src="admin-ai-outcome-learning.js"></script>
   <script src="admin-ai-ops-watch.js"></script>

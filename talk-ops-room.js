@@ -218,6 +218,7 @@
     window.TasuAdminMorningSummary?.render?.(
       window.TasuAdminAiKpiCenter?.collectKpiMetrics?.() || {}
     );
+    window.TasuAdminAiSecretaryPhase2?.render?.();
 
     document.querySelector("[data-talk-ops-command-form]")?.addEventListener("submit", (e) => {
       e.preventDefault();

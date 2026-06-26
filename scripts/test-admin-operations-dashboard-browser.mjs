@@ -13,7 +13,109 @@ const root = path.resolve(__dirname, "..");
 function pageUrl(rel) {
   const base = process.env.BUILDER_BASE_URL;
   if (base) return `${base.replace(/\/$/, "")}/${rel.replace(/^\//, "")}`;
-  return pathToFileURL(path.join(root, rel)).href;
+  const hashIdx = rel.indexOf("#");
+  const filePart = hashIdx >= 0 ? rel.slice(0, hashIdx) : rel;
+  const hash = hashIdx >= 0 ? rel.slice(hashIdx + 1) : "";
+  const [pathOnly, query] = filePart.split("?");
+  const url = pathToFileURL(path.join(root, pathOnly));
+  if (query) url.search = `?${query}`;
+  if (hash) url.hash = hash;
+  return url.href;
+}
+
+async function clickHiddenTabControl(page, selector) {
+  const clicked = await page.evaluate((sel) => {
+    const el = document.querySelector(sel);
+    if (!el) return false;
+    el.click();
+    return true;
+  }, selector);
+  if (!clicked) fail(`hidden tab control missing: ${selector}`);
+}
+
+async function getSecretaryHubText(page) {
+  return page.evaluate(() => {
+    const hub = document.querySelector("#ops-ai-secretary [data-talk-ops-hub]");
+    return hub?.textContent || "";
+  });
+}
+
+async function assertCommandCenterTextChat(page) {
+  await page.evaluate(() => {
+    try {
+      sessionStorage.removeItem("tasu_admin_ai_secretary_chat_v1");
+    } catch {
+      /* ignore */
+    }
+  });
+
+  await page.waitForFunction(() => window.TasuAdminAiSecretaryPhase2?.sendMessage, null, {
+    timeout: 15000,
+  });
+
+  const commandCenter = page.locator("#ops-ai-command-center");
+  if (!(await commandCenter.count())) fail("command center section missing");
+
+  const input = commandCenter.locator("[data-ops-secretary-input]").first();
+  const send = commandCenter.locator("[data-ops-secretary-send]").first();
+  const log = commandCenter.locator("[data-ops-phase2-chat-log]").first();
+
+  if (!(await input.isVisible())) fail("command center chat input not visible");
+  pass("Command Center — テキスト入力欄が表示される");
+
+  if (!(await send.isVisible())) fail("command center send button not visible");
+  pass("Command Center — 送信ボタンが表示される");
+
+  await input.fill("こんにちは、テストです");
+  if ((await input.inputValue()) !== "こんにちは、テストです") {
+    fail("command center chat input not editable");
+  }
+  pass("Command Center — テキスト入力できる");
+
+  await send.click();
+  await page.waitForFunction(
+    () => {
+      const log = document.querySelector(
+        "#ops-ai-command-center [data-ops-phase2-chat-log]"
+      );
+      return log && log.querySelectorAll(".ops-p2-chat__msg--user").length >= 1;
+    },
+    null,
+    { timeout: 10000 }
+  );
+  pass("Command Center — ユーザーメッセージがログに表示される");
+
+  await page.waitForFunction(
+    () => {
+      const log = document.querySelector(
+        "#ops-ai-command-center [data-ops-phase2-chat-log]"
+      );
+      return log && log.querySelectorAll(".ops-p2-chat__msg--assistant").length >= 1;
+    },
+    null,
+    { timeout: 20000 }
+  );
+  pass("Command Center — AI応答がログに表示される");
+
+  const msgCount = await log.locator(".ops-p2-chat__msg").count();
+  if (msgCount < 2) fail(`command center chat messages ${msgCount}, expected >= 2`);
+  pass(`Command Center — テキストチャット往復 (${msgCount} messages)`);
+
+  await input.fill("Enter送信テスト");
+  await input.press("Enter");
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll(
+        "#ops-ai-command-center [data-ops-phase2-chat-log] .ops-p2-chat__msg--user"
+      ).length >= 2,
+    null,
+    { timeout: 10000 }
+  );
+  pass("Command Center — Enter送信できる");
+
+  const rootOk = await page.locator("[data-ops-dash-root]").isVisible();
+  if (!rootOk) fail("dashboard root broken after chat");
+  pass("Command Center — チャット後もダッシュボードが壊れない");
 }
 
 const KEYS = [
@@ -169,13 +271,28 @@ async function main() {
   if (!title?.includes("AI運営")) fail(`title: ${title}`);
   pass("ダッシュボードが表示できる");
 
-  const hubSections = await page.locator("[data-talk-ops-hub-section]").count();
+  const hubSections = await page.locator("#ops-ai-secretary [data-talk-ops-hub-section]").count();
   if (hubSections !== 7) fail(`dashboard hub sections ${hubSections}, expected 7`);
-  pass("AI運営秘書ハブが7セクションで表示される");
+  pass("AI運営秘書ハブが7セクションで DOM に存在する");
 
-  const hubVisible = await page.locator("#ops-ai-secretary [data-talk-ops-hub]").isVisible();
-  if (!hubVisible) fail("AI運営秘書ハブが折りたたみ外で表示されていない");
-  pass("AI運営秘書が毎日起点として前面表示される");
+  const secretaryAttached = await page.locator("#ops-ai-secretary").count();
+  if (secretaryAttached !== 1) fail("#ops-ai-secretary missing from DOM");
+  pass("AI運営秘書セクションが DOM に存在する");
+
+  const secretaryDisplay = await page.evaluate(() => {
+    const el = document.querySelector("#ops-ai-secretary");
+    return el ? getComputedStyle(el).display : "";
+  });
+  if (secretaryDisplay !== "none") {
+    fail(`expected #ops-ai-secretary display:none on initial load, got ${secretaryDisplay}`);
+  }
+  pass("初期表示では #ops-ai-secretary は tab UI により display:none（期待どおり）");
+
+  const commandCenterVisible = await page.locator("#ops-ai-command-center").isVisible();
+  if (!commandCenterVisible) fail("#ops-ai-command-center not visible on initial load");
+  pass("初期表示は Command Center タブが前面");
+
+  await assertCommandCenterTextChat(page);
 
   const apiCostText = await page.locator("[data-ops-dash-api-cost]").innerText();
   if (/¥18,?430|2,?430|Gemini 62%/.test(apiCostText)) {
@@ -184,7 +301,7 @@ async function main() {
   if (!apiCostText.includes("データ未接続")) fail(`API cost disconnected label missing`);
   pass("APIコストは架空数値なし・未接続表示");
 
-  const suggestText = await page.locator("[data-ops-dash-suggestions]").innerText();
+  const suggestText = await page.locator("[data-ops-dash-suggestions]").first().innerText();
   if (/FAQ最適化|APIコスト削減|15% 削減/.test(suggestText)) {
     fail(`demo AI suggestions still shown: ${suggestText.slice(0, 120)}`);
   }
@@ -199,7 +316,7 @@ async function main() {
   if (/14:32|APIコストレポートを生成|日次レポートを生成/.test(activityPanelText)) {
     fail(`demo activity still shown: ${activityPanelText.slice(0, 120)}`);
   }
-  if (!/問い合わせ|AI運営|Support|Connect|Builder|判断学習|結果学習/.test(activityPanelText)) {
+  if (!/問い合わせ|AI運営|Support|Connect|Builder|判断学習|結果学習|AI利用|ops_secretary/.test(activityPanelText)) {
     fail(`activity not from stores: ${activityPanelText.slice(0, 120)}`);
   }
   pass("アクティビティが既存データ由来で表示される");
@@ -264,7 +381,7 @@ async function main() {
   }
   pass("サイドバー主要導線のhrefが正しい");
 
-  const hubText = await page.locator("[data-talk-ops-hub]").innerText();
+  const hubText = await getSecretaryHubText(page);
   for (const label of [
     "本日の優先対応",
     "未対応問い合わせ",
@@ -279,7 +396,7 @@ async function main() {
   pass("ハブ7カテゴリ見出しが一画面で確認できる");
 
   const hubMoreHrefs = await page
-    .locator("[data-talk-ops-hub] .talk-ops-hub-section__more")
+    .locator("#ops-ai-secretary [data-talk-ops-hub] .talk-ops-hub-section__more")
     .evaluateAll((links) => links.map((a) => a.getAttribute("href")).filter(Boolean));
   const joinedHub = hubMoreHrefs.join(" ");
   if (
@@ -363,11 +480,11 @@ async function main() {
   if (!connectLead?.includes("Connect対応が必要")) fail(`connect lead: ${connectLead}`);
   pass("Connect対応カードが表示される");
 
-  const badgeText = await page.locator("[data-ops-connect-pending-badge]").textContent();
+  const badgeText = await page.locator("[data-ops-connect-pending-badge]").first().textContent();
   if (!badgeText?.includes("件")) fail(`connect badge: ${badgeText}`);
   pass("Connect未対応バッジが表示される");
 
-  await page.locator("[data-ops-connect-view-reply]").click();
+  await clickHiddenTabControl(page, "[data-ops-connect-view-reply]");
   await page.waitForSelector("[data-ops-connect-modal]:not([hidden])");
   const modalNote = await page.locator(".ops-ai-connect-modal__note").textContent();
   if (!modalNote?.includes("実送信は行われません")) fail("connect modal note missing");
@@ -399,13 +516,22 @@ async function main() {
     await window.TasuAdminOperationsDashboard.refresh();
     return item?.id;
   });
-  await page.locator("[data-ops-connect-copy-inline]").click();
+  await page.evaluate(() => {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText = () =>
+        Promise.reject(new Error("clipboard disabled in file:// test"));
+    }
+  });
+  const copyBtn = page.locator("#ops-ai-command-center [data-ops-connect-copy-inline]").first();
+  if (!(await copyBtn.count())) fail("connect copy inline button missing");
+  await copyBtn.click();
   await page.waitForFunction(
     () => {
-      const t = document.querySelector("[data-ops-connect-panel-toast]");
-      return t && !t.hidden && t.textContent.includes("コピー");
+      const panels = Array.from(document.querySelectorAll("[data-ops-connect-panel-toast]"));
+      const t = panels.find((el) => !el.hidden && /コピー/.test(el.textContent || ""));
+      return Boolean(t);
     },
-    { timeout: 5000 }
+    { timeout: 10000 }
   );
   pass("コピーボタンで回答文をコピーできる");
 
@@ -480,35 +606,39 @@ async function main() {
   await page.waitForFunction(() => window.TasuAdminOperationsDashboard, { timeout: 15000 });
   await page.evaluate(() => window.TasuAdminOperationsDashboard.refresh());
 
-  const emptyHubCount = await page.locator("[data-talk-ops-hub-section]").count();
+  const emptyHubCount = await page.locator("#ops-ai-secretary [data-talk-ops-hub-section]").count();
   if (emptyHubCount !== 7) fail(`empty hub sections ${emptyHubCount}`);
-  const emptyHubText = await page.locator("[data-talk-ops-hub]").innerText();
+  const emptyHubText = await getSecretaryHubText(page);
   if (!/問題なし|該当なし/.test(emptyHubText) && !/本日の優先対応/.test(emptyHubText)) {
     fail(`empty hub unexpected: ${emptyHubText.slice(0, 120)}`);
   }
   pass("空データ時もハブ7セクションが表示される");
 
-  const emptyApi = await page.locator("[data-ops-dash-api-cost]").innerText();
+  const emptyApi = await page.locator("[data-ops-dash-api-cost]").first().innerText();
   if (!emptyApi.includes("データ未接続")) fail(`empty api cost: ${emptyApi}`);
   pass("空データ時APIコストは未接続表示");
 
-  const emptyPriority = await page.locator("[data-ops-dash-priority-tasks]").innerText();
+  const emptyPriority = await page.locator("[data-ops-dash-priority-tasks]").first().innerText();
   if (!/要確認タスクはありません|問題なし/.test(emptyPriority)) {
     fail(`empty priority tasks: ${emptyPriority}`);
   }
   pass("空データ時の要確認タスクが空状態表示");
 
-  const emptySuggest = await page.locator("[data-ops-dash-suggestions]").innerText();
+  const emptySuggest = await page.locator("[data-ops-dash-suggestions]").first().innerText();
   if (/FAQ最適化|APIコスト削減/.test(emptySuggest)) fail(`empty demo suggestions: ${emptySuggest}`);
   pass("空データ時に旧デモAI提案が出ない");
 
   const emptyActivity = await page
     .locator("[data-ops-dash-activity]")
+    .first()
     .evaluate((el) => el.textContent || "");
   if (/14:32|APIコストレポート/.test(emptyActivity)) fail(`empty demo activity: ${emptyActivity}`);
   pass("空データ時に旧デモアクティビティが出ない");
 
-  const emptyConnect = await page.locator("[data-ops-connect-panel]").innerText();
+  const emptyConnect = await page
+    .locator("#ops-ai-command-center [data-ops-connect-panel]")
+    .first()
+    .innerText();
   if (!/Connect対応はありません|問題なし/.test(emptyConnect)) {
     fail(`empty connect panel: ${emptyConnect.slice(0, 120)}`);
   }
