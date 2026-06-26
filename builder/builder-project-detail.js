@@ -134,6 +134,153 @@
       .join("");
   }
 
+  function renderEstimateTotals(estimate) {
+    const wrap = $("[data-builder-pd-estimate-totals]");
+    if (!wrap) return;
+    const e = estimate || {};
+    wrap.innerHTML =
+      `<div><span class="builder-kpi">小計</span><strong>${escapeHtml(formatYen(e.subtotal))}</strong></div>` +
+      `<div><span class="builder-kpi">税</span><strong>${escapeHtml(formatYen(e.tax))}</strong></div>` +
+      `<div><span class="builder-kpi">合計</span><strong>${escapeHtml(formatYen(e.total))}</strong></div>`;
+  }
+
+  function renderInvoiceTotals(invoice) {
+    const wrap = $("[data-builder-pd-invoice-totals]");
+    if (!wrap) return;
+    const inv = invoice || {};
+    wrap.innerHTML =
+      `<div><span class="builder-kpi">小計</span><strong>${escapeHtml(formatYen(inv.subtotal))}</strong></div>` +
+      `<div><span class="builder-kpi">税</span><strong>${escapeHtml(formatYen(inv.tax))}</strong></div>` +
+      `<div><span class="builder-kpi">合計</span><strong>${escapeHtml(formatYen(inv.total))}</strong></div>`;
+  }
+
+  function renderEstimateItemRows(items) {
+    const tbody = $("[data-builder-pd-estimate-items]");
+    if (!tbody) return;
+    const list = Array.isArray(items) ? items : [];
+    const rows = [];
+    for (let i = 0; i < 3; i += 1) {
+      const it = list[i] || {};
+      rows.push(
+        `<tr>` +
+        `<td><input class="builder-input" type="text" data-est-desc value="${escapeHtml(it.description || "")}" placeholder="工事内容" /></td>` +
+        `<td><input class="builder-input" type="number" min="0" step="1" data-est-qty value="${escapeHtml(String(it.quantity ?? 1))}" style="width:4rem" /></td>` +
+        `<td><input class="builder-input" type="number" min="0" step="1000" data-est-price value="${escapeHtml(String(it.unitPrice ?? 0))}" style="width:7rem" /></td>` +
+        `</tr>`
+      );
+    }
+    tbody.innerHTML = rows.join("");
+  }
+
+  function collectEstimateItems(root) {
+    const rows = root?.querySelectorAll("[data-builder-pd-estimate-items] tr") || [];
+    const items = [];
+    rows.forEach((tr) => {
+      const description = tr.querySelector("[data-est-desc]")?.value?.trim() || "";
+      const quantity = Number(tr.querySelector("[data-est-qty]")?.value) || 0;
+      const unitPrice = Number(tr.querySelector("[data-est-price]")?.value) || 0;
+      if (!description && !unitPrice) return;
+      items.push({ description, quantity: quantity || 1, unitPrice });
+    });
+    return items;
+  }
+
+  function bindEstimate(project) {
+    const form = $("[data-builder-pd-estimate-form]");
+    const Store = global.TasuBuilderProjectStore;
+    if (!form || !Store) return;
+    const e = project.estimate || {};
+
+    const statusSel = $("[data-builder-pd-estimate-status]");
+    if (statusSel && Store.ESTIMATE_STATUSES) {
+      statusSel.innerHTML = Store.ESTIMATE_STATUSES.map(
+        (s) =>
+          `<option value="${escapeHtml(s.id)}"${s.id === e.estimateStatus ? " selected" : ""}>${escapeHtml(s.label)}</option>`
+      ).join("");
+    }
+    if ($("[data-builder-pd-estimate-number]")) $("[data-builder-pd-estimate-number]").value = e.estimateNumber || "";
+    if ($("[data-builder-pd-estimate-customer]")) $("[data-builder-pd-estimate-customer]").value = e.customerName || "";
+    if ($("[data-builder-pd-estimate-address]")) $("[data-builder-pd-estimate-address]").value = e.customerAddress || "";
+    if ($("[data-builder-pd-estimate-valid-until]")) $("[data-builder-pd-estimate-valid-until]").value = e.validUntil || "";
+    if ($("[data-builder-pd-estimate-memo]")) $("[data-builder-pd-estimate-memo]").value = e.memo || "";
+    renderEstimateItemRows(e.items);
+    renderEstimateTotals(e);
+
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const out = Store.updateEstimate?.(project.id, {
+        estimateNumber: $("[data-builder-pd-estimate-number]")?.value || "",
+        estimateStatus: statusSel?.value || e.estimateStatus,
+        customerName: $("[data-builder-pd-estimate-customer]")?.value || "",
+        customerAddress: $("[data-builder-pd-estimate-address]")?.value || "",
+        validUntil: $("[data-builder-pd-estimate-valid-until]")?.value || "",
+        memo: $("[data-builder-pd-estimate-memo]")?.value || "",
+        items: collectEstimateItems(form),
+        estimateReason: "案件詳細から見積を更新",
+      });
+      if (out?.ok) {
+        currentProject = out.project;
+        renderEstimateTotals(currentProject.estimate);
+        renderTimeline(currentProject);
+        const msg = $("[data-builder-pd-estimate-status-msg]");
+        if (msg) {
+          msg.textContent = "見積を保存しました";
+          setTimeout(() => {
+            msg.textContent = "";
+          }, 2000);
+        }
+      }
+    });
+  }
+
+  function bindInvoice(project) {
+    const form = $("[data-builder-pd-invoice-form]");
+    const Store = global.TasuBuilderProjectStore;
+    if (!form || !Store) return;
+    const inv = project.invoice || {};
+
+    const statusSel = $("[data-builder-pd-invoice-status]");
+    if (statusSel && Store.INVOICE_STATUSES) {
+      statusSel.innerHTML = Store.INVOICE_STATUSES.map(
+        (s) =>
+          `<option value="${escapeHtml(s.id)}"${s.id === inv.invoiceStatus ? " selected" : ""}>${escapeHtml(s.label)}</option>`
+      ).join("");
+    }
+    if ($("[data-builder-pd-invoice-number]")) $("[data-builder-pd-invoice-number]").value = inv.invoiceNumber || "";
+    if ($("[data-builder-pd-invoice-issued]")) $("[data-builder-pd-invoice-issued]").value = inv.issuedAt || "";
+    if ($("[data-builder-pd-invoice-due]")) $("[data-builder-pd-invoice-due]").value = inv.dueDate || "";
+    if ($("[data-builder-pd-invoice-paid]")) $("[data-builder-pd-invoice-paid]").value = inv.paidAt || "";
+    if ($("[data-builder-pd-invoice-subtotal]")) $("[data-builder-pd-invoice-subtotal]").value = inv.subtotal ?? 0;
+    if ($("[data-builder-pd-invoice-memo]")) $("[data-builder-pd-invoice-memo]").value = inv.memo || "";
+    renderInvoiceTotals(inv);
+
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const out = Store.updateInvoice?.(project.id, {
+        invoiceNumber: $("[data-builder-pd-invoice-number]")?.value || "",
+        invoiceStatus: statusSel?.value || inv.invoiceStatus,
+        issuedAt: $("[data-builder-pd-invoice-issued]")?.value || "",
+        dueDate: $("[data-builder-pd-invoice-due]")?.value || "",
+        paidAt: $("[data-builder-pd-invoice-paid]")?.value || "",
+        subtotal: $("[data-builder-pd-invoice-subtotal]")?.value,
+        memo: $("[data-builder-pd-invoice-memo]")?.value || "",
+        invoiceReason: "案件詳細から請求を更新",
+      });
+      if (out?.ok) {
+        currentProject = out.project;
+        renderInvoiceTotals(currentProject.invoice);
+        renderTimeline(currentProject);
+        const msg = $("[data-builder-pd-invoice-status-msg]");
+        if (msg) {
+          msg.textContent = "請求を保存しました";
+          setTimeout(() => {
+            msg.textContent = "";
+          }, 2000);
+        }
+      }
+    });
+  }
+
   function bindFinance(project) {
     const form = $("[data-builder-pd-finance-form]");
     const estimate = $("[data-builder-pd-finance-estimate]");
@@ -265,8 +412,12 @@
     if (sub) sub.textContent = `${project.id} · ${project.customerName || "顧客未設定"}`;
     renderInfo(project);
     renderFinanceReadonly(project);
+    renderEstimateTotals(project.estimate);
+    renderInvoiceTotals(project.invoice);
     renderTimeline(project);
     renderVisionList(project);
+    bindEstimate(project);
+    bindInvoice(project);
     bindFinance(project);
     bindSchedule(project);
     bindAiLink(project);

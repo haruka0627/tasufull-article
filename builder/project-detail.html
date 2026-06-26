@@ -38,6 +38,89 @@
     <main class="builder-shell builder-main" data-builder-pd-root hidden>
       <div class="builder-ph-detail-grid">
         <div>
+          <section class="builder-panel" aria-label="見積">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">見積</h2>
+            </div>
+            <div class="builder-ph-doc-summary" data-builder-pd-estimate-totals></div>
+            <form class="builder-ph-doc-form" data-builder-pd-estimate-form>
+              <label>
+                見積番号
+                <input class="builder-input" type="text" data-builder-pd-estimate-number />
+              </label>
+              <label>
+                見積状態
+                <select class="builder-select" data-builder-pd-estimate-status></select>
+              </label>
+              <label>
+                顧客名
+                <input class="builder-input" type="text" data-builder-pd-estimate-customer />
+              </label>
+              <label>
+                有効期限
+                <input class="builder-input" type="date" data-builder-pd-estimate-valid-until />
+              </label>
+              <label class="builder-ph-doc-form__wide">
+                顧客住所
+                <input class="builder-input" type="text" data-builder-pd-estimate-address />
+              </label>
+              <div class="builder-ph-doc-form__wide">
+                <span class="builder-kpi">項目一覧</span>
+                <table class="builder-ph-items-table" data-builder-pd-estimate-items-table>
+                  <thead>
+                    <tr><th>内容</th><th>数量</th><th>単価</th></tr>
+                  </thead>
+                  <tbody data-builder-pd-estimate-items></tbody>
+                </table>
+              </div>
+              <label class="builder-ph-doc-form__wide">
+                メモ
+                <textarea class="builder-ph-memo" data-builder-pd-estimate-memo rows="2"></textarea>
+              </label>
+              <button type="submit" class="builder-btn builder-btn--secondary builder-btn--sm">見積を保存</button>
+              <p class="builder-kpi" data-builder-pd-estimate-status-msg aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="builder-panel" aria-label="請求">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">請求</h2>
+            </div>
+            <div class="builder-ph-doc-summary" data-builder-pd-invoice-totals></div>
+            <form class="builder-ph-doc-form" data-builder-pd-invoice-form>
+              <label>
+                請求番号
+                <input class="builder-input" type="text" data-builder-pd-invoice-number />
+              </label>
+              <label>
+                状態
+                <select class="builder-select" data-builder-pd-invoice-status></select>
+              </label>
+              <label>
+                請求日
+                <input class="builder-input" type="date" data-builder-pd-invoice-issued />
+              </label>
+              <label>
+                支払期限
+                <input class="builder-input" type="date" data-builder-pd-invoice-due />
+              </label>
+              <label>
+                入金日
+                <input class="builder-input" type="date" data-builder-pd-invoice-paid />
+              </label>
+              <label>
+                小計（円）
+                <input class="builder-input" type="number" min="0" step="1000" data-builder-pd-invoice-subtotal />
+              </label>
+              <label class="builder-ph-doc-form__wide">
+                メモ
+                <textarea class="builder-ph-memo" data-builder-pd-invoice-memo rows="2"></textarea>
+              </label>
+              <button type="submit" class="builder-btn builder-btn--secondary builder-btn--sm">請求を保存</button>
+              <p class="builder-kpi" data-builder-pd-invoice-status-msg aria-live="polite"></p>
+            </form>
+          </section>
+
           <section class="builder-panel" aria-label="収支">
             <div class="builder-panel__head">
               <h2 class="builder-section-title">収支</h2>

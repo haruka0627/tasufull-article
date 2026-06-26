@@ -270,6 +270,56 @@
   color: #047857;
 }
 
+/* Phase 6-D — Estimate / Invoice */
+
+.builder-ph-doc-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+.builder-ph-doc-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.builder-ph-doc-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.builder-ph-doc-form label.builder-ph-doc-form__wide {
+  grid-column: 1 / -1;
+}
+
+.builder-ph-items-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  margin-bottom: 0.5rem;
+}
+
+.builder-ph-items-table th,
+.builder-ph-items-table td {
+  padding: 0.35rem;
+  border-bottom: 1px solid var(--builder-border, #e8edf3);
+  text-align: left;
+}
+
+.builder-ph-est-inv-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
 .builder-ph-ai-context {
   border-left: 4px solid var(--builder-orange, #f97316);
   background: var(--builder-orange-bg, #fff7ed);
@@ -303,6 +353,14 @@
   }
 
   .builder-ph-finance-form {
+    grid-template-columns: 1fr;
+  }
+
+  .builder-ph-est-inv-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .builder-ph-doc-form {
     grid-template-columns: 1fr;
   }
 }

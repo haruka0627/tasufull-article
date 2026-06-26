@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26（Builder Project Finance Phase 6-C · 未コミット）  
-**Git HEAD:** `556f315`（`cf-pages-deploy` · **git push 未実施**）  
+**最終更新:** 2026-06-26（Builder Estimate/Invoice Phase 6-D · 未コミット）  
+**Git HEAD:** `e70d679`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -169,7 +169,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder AI Vision Phase 5** | ✅ commit 済 | `7ef4efd` · `reports/builder-ai-phase5-vision.md` |
 | **Builder Project Hub Phase 6-A** | ✅ commit 済 | `46c5e02` · `reports/builder-project-hub-phase6a.md` |
 | **Builder Project Calendar Phase 6-B** | ✅ commit 済 | `556f315` · `reports/builder-project-calendar-phase6b.md` |
-| **Builder Project Finance Phase 6-C** | ✅ 実装 · 未コミット | 収支 MVP · `reports/builder-project-finance-phase6c.md` |
+| **Builder Project Finance Phase 6-C** | ✅ commit 済 | `e70d679` · `reports/builder-project-finance-phase6c.md` |
+| **Builder Estimate/Invoice Phase 6-D** | ✅ 実装 · 未コミット | 見積・請求基盤 · `reports/builder-estimate-invoice-phase6d.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
@@ -240,12 +241,18 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - `test-builder-project-calendar-phase6b.mjs` + phase6a 回帰 + build PASS
 - 参照: `reports/builder-project-calendar-phase6b.md`
 
-**Builder Project Finance Phase 6-C（収支 MVP · ✅ 実装 · 未コミット）**
+**Builder Project Finance Phase 6-C（収支 MVP · ✅ commit 済 · `e70d679`）**
 
 - `project.finance` · 見積/原価/粗利/支払 · Hub サマリー · 詳細収支パネル
-- `updateFinance` · `getFinanceSummary` · `previewFinanceIntent`（AI 未接続）
 - `test-builder-project-finance-phase6c.mjs` + phase6b 回帰 + build PASS
 - 参照: `reports/builder-project-finance-phase6c.md`
+
+**Builder Estimate/Invoice Phase 6-D（見積・請求基盤 · ✅ 実装 · 未コミット）**
+
+- `project.estimate` / `project.invoice`（SCHEMA v4）· 税10% · Hub サマリー
+- `updateEstimate` / `updateInvoice` · `previewEstimateIntent`（AI 未接続）
+- `test-builder-estimate-invoice-phase6d.mjs` + phase6c 回帰 + build PASS
+- 参照: `reports/builder-estimate-invoice-phase6d.md`
 
 **Builder AI Gemini Live Phase 4-B（未着手）**
 
