@@ -68,6 +68,19 @@
     return `builder-ph-payment--${String(status || "unpaid").replace(/-/g, "_")}`;
   }
 
+  function renderContractCompletionSummary() {
+    const Store = global.TasuBuilderProjectStore;
+    const wrap = $("[data-builder-ph-contract-completion-summary]");
+    if (!Store || !wrap) return;
+    const ctr = Store.getContractSummary?.() || {};
+    const cmp = Store.getCompletionSummary?.() || {};
+    wrap.innerHTML =
+      `<div class="builder-ph-finance-stat${ctr.pendingCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">契約待ち</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(ctr.pendingCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${cmp.workingCount ? "" : ""}"><p class="builder-ph-finance-stat__label">工事中</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(cmp.workingCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat${cmp.inspectionCount ? " builder-ph-finance-stat--warn" : ""}"><p class="builder-ph-finance-stat__label">完了待ち</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(cmp.inspectionCount || 0))} 件</p></div>` +
+      `<div class="builder-ph-finance-stat"><p class="builder-ph-finance-stat__label">完了済み</p><p class="builder-ph-finance-stat__value">${escapeHtml(String(cmp.completedCount || 0))} 件</p></div>`;
+  }
+
   function renderEstInvSummary() {
     const Store = global.TasuBuilderProjectStore;
     const wrap = $("[data-builder-ph-est-inv-summary]");
@@ -136,6 +149,10 @@
           `<td>${escapeHtml(p.invoice?.invoiceStatusLabel || "—")}</td>` +
           `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.estimate?.total))}</td>` +
           `<td class="builder-ph-table__num">${escapeHtml(formatYen(p.invoice?.total))}</td>` +
+          `<td>${escapeHtml(p.contract?.contractStatusLabel || "—")}</td>` +
+          `<td>${escapeHtml(p.completion?.completionStatusLabel || "—")}</td>` +
+          `<td>${escapeHtml(p.contract?.plannedStartDate || "—")}</td>` +
+          `<td>${escapeHtml(p.contract?.plannedEndDate || "—")}</td>` +
           `<td>${escapeHtml(formatDate(p.updatedAt))}</td>` +
           `</tr>`
       )
@@ -145,6 +162,7 @@
   function refresh() {
     const Store = global.TasuBuilderProjectStore;
     if (!Store?.searchProjects) return;
+    renderContractCompletionSummary();
     renderEstInvSummary();
     renderFinanceSummary();
     renderTable(Store.searchProjects(getFiltersFromForm()));

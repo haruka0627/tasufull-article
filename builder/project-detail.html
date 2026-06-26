@@ -121,6 +121,86 @@
             </form>
           </section>
 
+          <section class="builder-panel" aria-label="契約">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">契約</h2>
+            </div>
+            <form class="builder-ph-doc-form" data-builder-pd-contract-form>
+              <label>
+                契約番号
+                <input class="builder-input" type="text" data-builder-pd-contract-number />
+              </label>
+              <label>
+                契約状態
+                <select class="builder-select" data-builder-pd-contract-status></select>
+              </label>
+              <label>
+                契約日
+                <input class="builder-input" type="date" data-builder-pd-contract-date />
+              </label>
+              <label>
+                着工予定
+                <input class="builder-input" type="date" data-builder-pd-contract-start />
+              </label>
+              <label>
+                完了予定
+                <input class="builder-input" type="date" data-builder-pd-contract-end />
+              </label>
+              <label>
+                保証期間（月）
+                <input class="builder-input" type="number" min="0" step="1" data-builder-pd-contract-warranty />
+              </label>
+              <label class="builder-ph-doc-form__wide">
+                特記事項
+                <textarea class="builder-ph-memo" data-builder-pd-contract-notes rows="2"></textarea>
+              </label>
+              <button type="submit" class="builder-btn builder-btn--secondary builder-btn--sm">契約を保存</button>
+              <p class="builder-kpi" data-builder-pd-contract-status-msg aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="builder-panel" aria-label="完了">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">完了</h2>
+            </div>
+            <form class="builder-ph-doc-form" data-builder-pd-completion-form>
+              <label>
+                完了状態
+                <select class="builder-select" data-builder-pd-completion-status></select>
+              </label>
+              <label>
+                着工日
+                <input class="builder-input" type="date" data-builder-pd-completion-started />
+              </label>
+              <label>
+                完了日
+                <input class="builder-input" type="date" data-builder-pd-completion-completed />
+              </label>
+              <label>
+                引渡し日
+                <input class="builder-input" type="date" data-builder-pd-completion-handover />
+              </label>
+              <label class="builder-ph-doc-form__check">
+                <input type="checkbox" data-builder-pd-completion-owner />
+                オーナー確認
+              </label>
+              <label class="builder-ph-doc-form__check">
+                <input type="checkbox" data-builder-pd-completion-partner />
+                パートナー確認
+              </label>
+              <label class="builder-ph-doc-form__wide">
+                完了メモ
+                <textarea class="builder-ph-memo" data-builder-pd-completion-memo rows="2"></textarea>
+              </label>
+              <div class="builder-ph-doc-form__wide" data-builder-pd-completion-photos-wrap>
+                <span class="builder-kpi">写真一覧（表示のみ）</span>
+                <ul class="builder-ph-completion-photos" data-builder-pd-completion-photos></ul>
+              </div>
+              <button type="submit" class="builder-btn builder-btn--secondary builder-btn--sm">完了を保存</button>
+              <p class="builder-kpi" data-builder-pd-completion-status-msg aria-live="polite"></p>
+            </form>
+          </section>
+
           <section class="builder-panel" aria-label="収支">
             <div class="builder-panel__head">
               <h2 class="builder-section-title">収支</h2>
