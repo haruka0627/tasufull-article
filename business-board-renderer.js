@@ -456,6 +456,7 @@
     el.dataset.category = "business";
     el.dataset.targetType = "business";
     el.dataset.targetId = listing.id;
+    el.dataset.listingId = listing.id;
     el.dataset.businessCategory = listing.business_category || "";
     el.dataset.status = listing.status || "";
     el.dataset.filterable = "";
@@ -551,6 +552,7 @@
         <div class="biz-board-mobile-card__logo">${buildLogoHtml(listing)}</div>
         <div class="biz-board-mobile-card__head">
           <p class="biz-board-mobile-card__company company-name">${escapeHtml(listing.company_name || "—")}</p>
+          ${window.TasuListingRenderer?.renderPlatformBadgesHtml?.(listing) || ""}
           ${buildCompanyColumnSummaryHtml(listing)}
           <a class="biz-board-mobile-card__detail-link" href="${escapeAttr(detailUrl)}" data-breadcrumb-label="${escapeAttr(listing.company_name || listing.title || "詳細")}">詳細を見る</a>
         </div>
@@ -562,6 +564,7 @@
         ${buildRowActions(listing, detailUrl, { stack: true })}
       </div>`;
 
+    window.TasuPlatformBadges?.bindRecommendPopovers?.(card);
     return card;
   }
 

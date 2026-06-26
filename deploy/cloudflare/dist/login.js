@@ -225,6 +225,18 @@
 
   renderLastUser();
 
+  (async function handleGoogleOAuthReturn() {
+    const Google = window.TasuPlatformGoogleAuth;
+    if (!Google?.handleOAuthCallback) return;
+    const result = await Google.handleOAuthCallback();
+    if (result?.ok) {
+      showToast("Google でログインしました。", "success");
+      window.setTimeout(() => Google.redirectAfterOAuth(), 400);
+    } else if (result?.error && !result?.skipped) {
+      showToast("Google ログインに失敗しました。メールログインをお試しください。", "error");
+    }
+  })();
+
   passwordToggle?.addEventListener("click", () => {
     if (!passwordInput) return;
     const show = passwordInput.type === "password";
@@ -238,12 +250,26 @@
   });
 
   document.querySelectorAll("[data-login-social]").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", async () => {
       const provider = btn.dataset.loginSocial;
-      showToast(
-        `${provider === "line" ? "LINE" : "Google"} ログインは準備中です。メールログインをご利用ください。`,
-        "info"
-      );
+      if (provider === "line") {
+        showToast("LINE ログインは現在利用できません。Google またはメールログインをご利用ください。", "info");
+        return;
+      }
+      if (provider === "google") {
+        if (submitBtn) submitBtn.disabled = true;
+        try {
+          const returnTo = window.TasuMemberAuth?.getReturnUrl?.("dashboard.html");
+          const r = await window.TasuPlatformGoogleAuth?.signInWithGoogle?.({ returnTo });
+          if (!r?.ok) {
+            showToast(r?.message || "Google ログインを開始できませんでした。", "error");
+          }
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+        }
+        return;
+      }
+      showToast("ソーシャルログインは準備中です。", "info");
     });
   });
 

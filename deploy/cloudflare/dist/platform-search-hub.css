@@ -1,0 +1,94 @@
+/* Platform search hub — TOP / market */
+.platform-search-hub {
+  margin: 1.25rem auto 0;
+  max-width: 920px;
+  padding: 1rem 1.1rem 1.15rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.platform-search-hub__title {
+  margin: 0 0 0.65rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.platform-search-hub__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.platform-search-hub__input {
+  flex: 1 1 220px;
+  min-width: 0;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.65rem;
+  font-size: 0.92rem;
+}
+
+.platform-search-hub__select,
+.platform-search-hub__radius {
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.55rem;
+  font-size: 0.85rem;
+}
+
+.platform-search-hub__btn {
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.55rem;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.platform-search-hub__btn--primary {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  border-color: transparent;
+}
+
+.platform-search-hub__popular,
+.platform-search-hub__suggest {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.platform-search-hub__chip,
+.platform-search-hub__suggest-item {
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.platform-search-hub__result {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 0.65rem;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.platform-search-hub__label {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-top: 0.55rem;
+}

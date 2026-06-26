@@ -1,0 +1,227 @@
+/* TASFUL AI Workspace — カテゴリ · 履歴 · 生成フォーム */
+
+.ai-workspace-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem 0;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.ai-workspace-categories__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(142, 117, 255, 0.35);
+  background: rgba(15, 23, 42, 0.04);
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ai-workspace-categories__btn.is-active {
+  background: linear-gradient(135deg, #8e75ff 0%, #6366f1 100%);
+  color: #fff;
+  border-color: transparent;
+}
+
+[data-ai-category-panel] {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0.75rem 1rem 1rem;
+}
+
+.ai-cat-form {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(142, 117, 255, 0.2);
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06);
+}
+
+.ai-cat-form__title {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.ai-cat-form__lead {
+  margin: 0 0 0.85rem;
+  font-size: 0.82rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.ai-cat-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.ai-cat-form__field input,
+.ai-cat-form__field textarea,
+.ai-cat-form__field select {
+  font: inherit;
+  font-weight: 400;
+  padding: 0.45rem 0.55rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.ai-cat-form__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.ai-cat-form__checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0.35rem 0 0.75rem;
+  font-size: 0.82rem;
+}
+
+.ai-cat-form__submit {
+  padding: 0.55rem 1rem;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #8e75ff, #6366f1);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ai-cat-form__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.ai-history-panel__title {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.ai-history-panel__sub {
+  margin: 0.2rem 0 0.75rem;
+  font-size: 0.78rem;
+  color: #64748b;
+}
+
+.ai-history-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.75rem;
+  align-items: center;
+}
+
+.ai-history-toolbar__search {
+  flex: 1 1 160px;
+  min-width: 140px;
+  padding: 0.4rem 0.55rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.ai-history-toolbar select {
+  padding: 0.35rem 0.45rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  font-size: 0.78rem;
+}
+
+.ai-history-toolbar__fav {
+  font-size: 0.78rem;
+  color: #475569;
+}
+
+.ai-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.ai-history-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+}
+
+.ai-history-item--pinned {
+  border-color: #c4b5fd;
+  background: #faf5ff;
+}
+
+.ai-history-item__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: #64748b;
+}
+
+.ai-history-item__title {
+  margin: 0.25rem 0;
+  font-size: 0.92rem;
+}
+
+.ai-history-item__meta,
+.ai-history-item__preview {
+  margin: 0.15rem 0;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.ai-history-item__preview {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ai-history-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.45rem;
+  align-items: center;
+}
+
+.ai-history-item__actions button,
+.ai-history-item__actions select {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.45rem;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.ai-history-item__delete {
+  color: #b91c1c;
+}
+
+.ai-history-empty {
+  padding: 1rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.ai-gen-result,
+.ai-doc-md {
+  white-space: pre-wrap;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  margin: 0;
+}

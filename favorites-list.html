@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="favorites-list.css">
   <link rel="stylesheet" href="common-breadcrumb.css">
+  <link rel="stylesheet" href="platform-badges.css">
 </head>
 <body data-page="favorites-list" data-favorites-view="list" data-breadcrumb-page-label="お気に入り">
   <header class="fav-site-header">
@@ -32,6 +33,8 @@
       <h1 class="fav-page-head__title">お気に入り一覧</h1>
       <p class="fav-page-head__sub">気になるサービスをお気に入りとして保存できます。</p>
     </header>
+
+    <nav class="fav-folders" aria-label="お気に入りフォルダ" data-favorites-folders hidden></nav>
 
     <section class="fav-toolbar" aria-label="検索とフィルター">
       <div class="fav-toolbar__row">
@@ -119,6 +122,7 @@
   <script src="breadcrumb-config.js"></script>
   <script src="common-breadcrumb.js"></script>
   <script src="favorite-store.js"></script>
+  <script src="platform-favorites-folders.js"></script>
   <script src="detail-nav-context.js"></script>
   <script src="favorites-list.js"></script>
 </body>

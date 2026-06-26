@@ -339,6 +339,9 @@
         );
       });
       mobileList.appendChild(mobileFrag);
+      if (window.TasuListingRenderer?.syncPlatformListingBadges) {
+        window.TasuListingRenderer.syncPlatformListingBadges(mobileList, pageItems);
+      }
     }
 
     renderPagination(totalPages);

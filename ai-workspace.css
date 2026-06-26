@@ -2271,3 +2271,36 @@
   background: rgba(38, 38, 38, 0.55);
   border-color: rgba(163, 163, 163, 0.42);
 }
+
+.ai-workspace-page--tlv-source .welcome-tlv-templates {
+  margin-top: 12px;
+}
+
+.ai-workspace-page--tlv-source .welcome-tlv-template-chip {
+  border-color: rgba(167, 139, 250, 0.35);
+}
+
+.ai-tlv-free-quota {
+  margin: 0 12px 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  background: rgba(109, 40, 217, 0.18);
+  color: #e9ddff;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+.ai-tlv-free-quota--depleted {
+  border-color: rgba(251, 146, 60, 0.45);
+  background: rgba(124, 45, 18, 0.25);
+  color: #ffedd5;
+}
+
+.ai-tlv-free-quota__cta {
+  display: inline-block;
+  margin-top: 6px;
+  color: #c4b5fd;
+  font-weight: 700;
+  text-decoration: underline;
+}

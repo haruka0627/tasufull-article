@@ -1,0 +1,106 @@
+/* 共通 AI 免責表示 */
+.common-ai-disclaimer {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.5rem;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: #78350f;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.common-ai-disclaimer--workspace {
+  margin: 0.5rem 1rem 0;
+  max-width: 920px;
+}
+
+.common-ai-disclaimer--tlv {
+  margin: 0 0 0.5rem;
+}
+
+.common-ai-disclaimer--platform {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+}
+
+.common-ai-disclaimer__text {
+  margin: 0 0 0.35rem;
+}
+
+.common-ai-disclaimer__links {
+  margin: 0;
+  font-size: 0.72rem;
+}
+
+.common-ai-disclaimer__link {
+  color: #92400e;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.common-ai-disclaimer__answer-footer {
+  margin: 0.5rem 0 0;
+  padding-top: 0.45rem;
+  border-top: 1px dashed rgba(148, 163, 184, 0.45);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.builder-ai-msg__disclaimer {
+  margin-top: 0.5rem;
+  padding-top: 0.45rem;
+  border-top: 1px dashed rgba(148, 163, 184, 0.4);
+  font-size: 0.72rem;
+  color: #64748b;
+  line-height: 1.45;
+}
+
+.ai-legal-page {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: #1e293b;
+}
+
+.ai-legal-page h1 {
+  font-size: 1.5rem;
+  margin: 0 0 0.5rem;
+}
+
+.ai-legal-page h2 {
+  font-size: 1.05rem;
+  margin: 1.75rem 0 0.5rem;
+}
+
+.ai-legal-page ul {
+  padding-left: 1.25rem;
+}
+
+.ai-legal-page .ai-legal-meta {
+  color: #64748b;
+  font-size: 0.8125rem;
+  margin-bottom: 1.5rem;
+}
+
+.ai-legal-page .ai-legal-note {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  font-size: 0.875rem;
+}
+
+.ai-legal-nav {
+  margin: 1.5rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.ai-legal-nav a {
+  color: #2563eb;
+}

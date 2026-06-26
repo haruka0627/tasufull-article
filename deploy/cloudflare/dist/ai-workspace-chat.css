@@ -1173,3 +1173,13 @@ body.ai-call-consent-open {
 .ai-workspace-page .ai-message .ai-cross-draft-panel {
   margin-top: 12px;
 }
+
+.ai-workspace-page .ai-attach-error {
+  margin: 0.35rem 0 0;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+  color: #b91c1c;
+  background: rgba(254, 226, 226, 0.65);
+  border-radius: 6px;
+}

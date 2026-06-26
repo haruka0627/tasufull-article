@@ -1,0 +1,61 @@
+/* TASFUL AI Voice Core — 共通 UI（補助機能） */
+.tasful-ai-voice {
+  margin: 0.35rem 0 0.5rem;
+}
+
+.tasful-ai-voice__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.tasful-ai-voice__btn {
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  padding: 0.3rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: rgba(15, 23, 42, 0.04);
+  color: inherit;
+  cursor: pointer;
+}
+
+.tasful-ai-voice__btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.tasful-ai-voice__btn[aria-pressed="true"] {
+  border-color: #2563eb;
+  background: rgba(37, 99, 235, 0.12);
+}
+
+.tasful-ai-voice__note,
+.tasful-ai-voice__error {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.4;
+}
+
+.tasful-ai-voice__note {
+  color: #64748b;
+}
+
+.tasful-ai-voice__error {
+  color: #b91c1c;
+}
+
+.tasful-ai-voice__workspace-form {
+  display: contents;
+}
+
+.ai-workspace-page .tasful-ai-voice {
+  margin: 0.25rem 0 0.35rem;
+}
+
+.ai-workspace-page .tasful-ai-voice__btn {
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: #e2e8f0;
+}

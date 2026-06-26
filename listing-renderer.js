@@ -1964,6 +1964,21 @@
   }
 
   /** 一覧カード共通（商品・スキル・求人・ワーカー・無料記事） */
+  function renderPlatformBadgesHtml(listing, ctx) {
+    const badges = window.TasuPlatformBadges;
+    if (!badges?.renderBadgesHtml) return "";
+    const searchCtx = ctx || window.TasuPlatformSearchHub?.getSearchContext?.() || {};
+    return badges.renderBadgesHtml(listing, searchCtx);
+  }
+
+  function syncPlatformListingBadges(root, listings) {
+    if (Array.isArray(listings) && listings.length && window.TasuPlatformSearchHub?.setListingPool) {
+      window.TasuPlatformSearchHub.setListingPool(listings);
+    }
+    const host = root || document;
+    window.TasuPlatformBadges?.bindRecommendPopovers?.(host);
+  }
+
   function buildUnifiedListCardElement(listing) {
     const li = document.createElement("li");
     li.className = "card-list__item";
@@ -2033,6 +2048,8 @@
       ? displayTags.map((t) => `<li class="card__tag">${escapeHtml(safeText(t, ""))}</li>`).join("")
       : '<li class="card__tag card__tag--empty">タグ未設定</li>';
 
+    const platformBadgesHtml = renderPlatformBadgesHtml(listing);
+
     const decorParts = [];
     if (isFeaturedSlot) {
       decorParts.push('<span class="list-card-featured-badge">上位掲載</span>');
@@ -2058,6 +2075,7 @@
       : "card__media list-card__media-link";
 
     const articleAttrs = `
+        data-listing-id="${escapeAttr(id)}"
         data-list-card-href="${escapeAttr(detailUrl)}"
         data-product-list-href="${escapeAttr(detailUrl)}"
         data-premium="${isPaid ? "true" : "false"}"
@@ -2093,6 +2111,7 @@
         <div class="list-card-horizontal__content card__main list-card__main">
           ${sellerHtml}
           <h3 class="listing-card-title">${escapeHtml(cardTitleText)}</h3>
+          ${platformBadgesHtml}
           <p class="card__price list-card__price">${escapeHtml(cardPriceText)}</p>
           <ul class="card__tags list-card__tags" aria-label="タグ">${tagHtml}</ul>
         </div>
@@ -2104,6 +2123,7 @@
     const card = li.querySelector(".list-card");
     bindListCardNavigation(card);
     bindListCardActions(card);
+    window.TasuPlatformBadges?.bindRecommendPopovers?.(card);
     if (sellerUserId) {
       queueMicrotask(() => {
         const host = card.querySelector("[data-premium-seller-host]");
@@ -2202,6 +2222,8 @@
     getDetailUrl,
     formatDate,
     resolveListingCardTitle,
+    renderPlatformBadgesHtml,
+    syncPlatformListingBadges,
     TYPE_LABELS,
     BUSINESS_CATEGORY_LABELS,
     CTA_BY_TYPE,

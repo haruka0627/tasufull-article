@@ -654,10 +654,32 @@
     return { plain, html, generate_kind: kind };
   }
 
+  function categoryForKind(kind) {
+    if (kind === KINDS.image) return "image";
+    if (kind === KINDS.code) return "code";
+    if (kind === KINDS.document) return "document";
+    return "chat";
+  }
+
   function tryHandle(userText) {
     const kind = detectKind(userText);
     if (!kind) return null;
-    return buildResponse(kind, userText);
+    const result = buildResponse(kind, userText);
+    try {
+      global.dispatchEvent(
+        new CustomEvent("tasu:ai-generation-complete", {
+          detail: {
+            category: categoryForKind(kind),
+            prompt: String(userText || "").trim(),
+            resultPreview: String(result.plain || "").slice(0, 500),
+            resultMarkdown: String(result.plain || ""),
+          },
+        })
+      );
+    } catch {
+      /* ignore */
+    }
+    return result;
   }
 
   function panelFromEvent(e) {

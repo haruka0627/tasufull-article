@@ -49,6 +49,8 @@
     if (o.send === true) params.set("send", "1");
     const returnTo = pickStr(o.returnTo);
     if (returnTo) params.set("returnTo", returnTo);
+    const source = pickStr(o.source);
+    if (source) params.set("source", source);
     const qs = params.toString();
     return qs ? `${base}?${qs}` : base;
   }
@@ -97,11 +99,51 @@
     });
   }
 
+  /** Platform AI条件検索 → TASFUL AI（cross-matching） */
+  function buildSearchAssistUrl(query, opts) {
+    const q =
+      pickStr(query) ||
+      "条件で掲載を探したいです。整理と候補案内をお願いします（確定依頼はしません）。";
+    return buildUrl({
+      ...(opts || {}),
+      mode: DEFAULT_MODE,
+      q,
+      send: opts?.send !== false,
+      returnTo: pickStr(opts?.returnTo),
+      source: pickStr(opts?.source) || "platform",
+    });
+  }
+
+  /** Platform AI比較 → TASFUL AI */
+  function buildCompareAssistUrl(listingIds, query, opts) {
+    const ids = Array.isArray(listingIds) ? listingIds.filter(Boolean) : [];
+    const q =
+      pickStr(query) ||
+      (ids.length
+        ? `以下の掲載を比較したいです（ID: ${ids.join(", ")}）。比較表と注意点を整理してください。契約確定はしません。`
+        : "掲載を比較したいです。比較表と注意点を整理してください。");
+    const params = buildUrl({
+      ...(opts || {}),
+      mode: DEFAULT_MODE,
+      q,
+      send: opts?.send !== false,
+      returnTo: pickStr(opts?.returnTo),
+      source: pickStr(opts?.source) || "platform",
+    });
+    if (ids.length) {
+      const sep = params.includes("?") ? "&" : "?";
+      return `${params}${sep}compare=${encodeURIComponent(ids.join(","))}`;
+    }
+    return params;
+  }
+
   global.TasuAiWorkspaceLinks = {
     DEFAULT_PAGE,
     DEFAULT_MODE,
     buildUrl,
     buildMatchCtaUrl,
     buildListingConsultUrl,
+    buildSearchAssistUrl,
+    buildCompareAssistUrl,
   };
 })(typeof window !== "undefined" ? window : globalThis);

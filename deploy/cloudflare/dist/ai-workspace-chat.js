@@ -20,6 +20,64 @@
     input.placeholder = COMPOSER_PLACEHOLDER;
     input.style.height = "auto";
     input.dispatchEvent(new Event("input", { bubbles: true }));
+    window.TasuTgaShell?.clearAttachments?.();
+  }
+
+  async function collectComposerAttachments(root) {
+    const Attach = window.TasuAiWorkspaceAttachments;
+    const attachInput = $("[data-ai-attach-input]", root);
+    if (!Attach?.prepareFromFileList || !attachInput?.files?.length) {
+      return { attachments: [], errors: [] };
+    }
+    Attach.clearComposerError?.(root);
+    const prepared = await Attach.prepareFromFileList(attachInput.files);
+    if (prepared.errors?.length) {
+      Attach.showComposerError(root, prepared.errors.join(" · "));
+    }
+    return {
+      attachments: prepared.attachments || [],
+      errors: prepared.errors || [],
+    };
+  }
+
+  function formatUserMessageWithAttachments(text, attachments) {
+    const base = String(text || "").trim();
+    if (!attachments?.length) return base;
+    const names = attachments.map((a) => a.name).join(", ");
+    return base ? `${base}\n（添付: ${names}）` : `（添付: ${names}）`;
+  }
+
+  async function requestGatewayWithAttachments({
+    modeId,
+    userText,
+    messages,
+    systemPrompt,
+    searchTarget,
+    attachments,
+  }) {
+    const target = window.TasuAiSearchTarget?.normalizeTarget?.(searchTarget) || "tasful";
+    const turn = await window.TasuAiModelGateway.completeTurn({
+      userText,
+      modeId,
+      messages,
+      systemPrompt,
+      skipSearch: true,
+      surface: "ai-workspace",
+      attachments,
+      mockFallback: () =>
+        mockGenerateReply(modeId, userText, messages, window.TasuAiModes?.getMode(modeId)),
+    });
+    const wrapped = withModelFromTurn(
+      wrapAssistantPayload(turn.reply, {
+        search_used: turn.search_used,
+        search_query: turn.search_query,
+        search_provider: turn.search_provider,
+        search_result_count: turn.search_result_count,
+        uiBadgeHtml: turn.uiBadgeHtml,
+      }),
+      turn
+    );
+    return applySearchSourceLabel(wrapped, target);
   }
 
   function resolveChatScrollContainer(fromEl) {
@@ -247,6 +305,23 @@
     return mockGenerateReply(modeId, userText, messages, mode);
   }
 
+  function formatWebSearchUnavailableMessage(searchMessage) {
+    const msg = String(searchMessage || "").toLowerCase();
+    if (/not configured|not_configured|serper_api_key/.test(msg)) {
+      return "Web検索は現在ご利用いただけません。しばらくしてから再度お試しください。";
+    }
+    if (/not enough credits|credits|quota|402/.test(msg)) {
+      return "Web検索の利用枠が不足しています。管理者へお問い合わせいただくか、しばらくしてから再度お試しください。";
+    }
+    if (/429|rate limit|too many/.test(msg)) {
+      return "Web検索へのリクエストが集中しています。しばらくしてから再度お試しください。";
+    }
+    if (/403|401|forbidden|unauthorized/.test(msg)) {
+      return "Web検索にアクセスできません。しばらくしてから再度お試しください。";
+    }
+    return "Web検索を実行できませんでした。しばらくしてから再度お試しください。";
+  }
+
   /**
    * Web検索モード用モック（TASFUL内の条件不足判定は行わない）
    */
@@ -295,7 +370,7 @@
     );
   }
 
-  async function runWebSearchTurn({ modeId, userText, messages, systemPrompt, siteContext, forceSearch }) {
+  async function runWebSearchTurn({ modeId, userText, messages, systemPrompt, siteContext, forceSearch, attachments }) {
     if (!window.TasuAiModelGateway?.completeTurn) return null;
     const turn = await window.TasuAiModelGateway.completeTurn({
       userText,
@@ -306,9 +381,22 @@
       skipSearch: false,
       forceSearch: forceSearch !== false,
       surface: "ai-workspace",
+      attachments: attachments || undefined,
       mockFallback: ({ searchContext }) =>
         mockWebKnowledgeReply(userText, { searchContext, modeId }),
     });
+    if (turn?.searchFailed && forceSearch !== false) {
+      return withModelFromTurn(
+        wrapAssistantPayload(formatWebSearchUnavailableMessage(turn.searchMessage), {
+          search_used: false,
+          search_query: turn.search_query || "",
+          search_provider: turn.search_provider || "",
+          search_result_count: 0,
+          uiBadgeHtml: "",
+        }),
+        turn
+      );
+    }
     if (!turn?.reply) return null;
     return withModelFromTurn(
       wrapAssistantPayload(turn.reply, {
@@ -367,7 +455,7 @@
     return base ? `${base}\n\n${instruction}` : instruction;
   }
 
-  async function requestModelWritingReply({ modeId, userText, messages, systemPrompt, searchTarget }) {
+  async function requestModelWritingReply({ modeId, userText, messages, systemPrompt, searchTarget, attachments }) {
     if (!window.TasuAiGenerateUi?.isGenerationIntent?.(userText)) return null;
     if (!window.TasuAiModelGateway?.completeTurn) return null;
 
@@ -381,6 +469,7 @@
       intent: "work",
       preferRemote: true,
       surface: "ai-workspace",
+      attachments: attachments || undefined,
     });
     if (!turn?.reply) return null;
 
@@ -523,12 +612,24 @@
   /**
    * 将来: Edge Function / OpenAI / Claude 等へ差し替え（検索コンテキストは共通）
    */
-  async function requestAssistantReply({ modeId, userText, messages, systemPrompt, searchTarget }) {
+  async function requestAssistantReply({ modeId, userText, messages, systemPrompt, searchTarget, attachments }) {
     if (window.TasuAiModes?.isConciergeMode?.(modeId)) {
       return null;
     }
 
     const target = window.TasuAiSearchTarget?.normalizeTarget?.(searchTarget) || "tasful";
+    const attachList = Array.isArray(attachments) ? attachments : [];
+
+    if (attachList.length > 0 && window.TasuAiModelGateway?.completeTurn) {
+      return requestGatewayWithAttachments({
+        modeId,
+        userText,
+        messages,
+        systemPrompt,
+        searchTarget: target,
+        attachments: attachList,
+      });
+    }
 
     const apiWriting = await requestModelWritingReply({
       modeId,
@@ -536,6 +637,7 @@
       messages,
       systemPrompt,
       searchTarget: target,
+      attachments: attachList,
     });
     if (apiWriting) return apiWriting;
 
@@ -640,6 +742,7 @@
         siteContext: sitePlain,
         skipSearch: !needsWeb,
         surface: "ai-workspace",
+        attachments: attachList.length ? attachList : undefined,
         mockFallback: () => mockGenerateReply(modeId, userText, messages, window.TasuAiModes?.getMode(modeId)),
       });
 
@@ -1131,6 +1234,7 @@
     const toolbar = ResponseUx?.buildMessageToolbarHtml?.(m) || "";
     const contextCta =
       ResponseUx?.buildContextCtaHtml?.(ResponseUx.resolveContextCtas?.(m, userMsg)) || "";
+    const disclaimerFooter = window.TasuCommonAiDisclaimer?.renderAnswerFooterHtml?.() || "";
     return (
       '<div class="ai-msg-row">' +
       '<div class="ai-avatar-container">' +
@@ -1141,6 +1245,7 @@
       toolbar +
       inner +
       contextCta +
+      disclaimerFooter +
       "</div>" +
       "</div>" +
       "</div>"
@@ -1400,10 +1505,26 @@
     const input = $("[data-ai-chat-input]", root);
     const list = $("[data-ai-chat-messages]", root);
     const sendBtn = $("[data-ai-chat-send]", root);
-    const text = String(input?.value || "").trim();
+
+    let attachments = [];
+    let attachErrors = [];
+    try {
+      const collected = await collectComposerAttachments(root);
+      attachments = collected.attachments;
+      attachErrors = collected.errors;
+    } catch {
+      window.TasuAiWorkspaceAttachments?.showComposerError?.(root, "添付の読み込みに失敗しました");
+    }
+
+    let text = String(input?.value || "").trim();
+    if (!text && attachments.length) {
+      text = "添付ファイルについて確認・相談してください。";
+    }
     if (!text) return;
     if (root.dataset.aiChatSending === "1") return;
     root.dataset.aiChatSending = "1";
+
+    window.TasuAiVoiceCore?.stopVoice?.();
 
     window.TasuTgaShell?.setWelcomeVisible?.(false);
     if (list) list.hidden = false;
@@ -1415,9 +1536,12 @@
 
     const saveEpoch = getChatEpoch(modeId);
     let messages = getStoredMessages(modeId);
-    messages.push({ role: "user", content: text });
+    messages.push({ role: "user", content: formatUserMessageWithAttachments(text, attachments) });
     renderMessages(list, messages);
     clearComposerInput(root);
+    if (attachErrors.length) {
+      window.TasuAiWorkspaceAttachments?.showComposerError?.(root, attachErrors.join(" · "));
+    }
     if (sendBtn) sendBtn.disabled = true;
 
     try {
@@ -1434,6 +1558,7 @@
         messages,
         systemPrompt,
         searchTarget,
+        attachments,
       });
       if (reply && typeof reply === "object" && reply.plain != null) {
         let html = reply.html || "";
@@ -1479,6 +1604,21 @@
       }
       if (last?.role === "assistant") {
         window.TasuAiConcierge?.onAssistantReply(modeId, last.content);
+        try {
+          global.dispatchEvent(
+            new CustomEvent("tasu:ai-voice-assistant-reply", {
+              detail: { text: last.content, surface: "tasful_ai", modeId },
+            })
+          );
+        } catch {
+          /* ignore */
+        }
+      }
+      if (attachErrors.length && getChatEpoch(modeId) === saveEpoch) {
+        window.TasuAiWorkspaceAttachments?.showComposerError?.(
+          root,
+          attachErrors.join(" · ")
+        );
       }
       input?.focus();
     } catch (err) {
@@ -1593,7 +1733,17 @@
 
   async function applyLocationSeed(root) {
     const params = new URLSearchParams(location.search);
-    const seedQ = String(params.get("q") || "").trim();
+    const compareRaw = String(params.get("compare") || "").trim();
+    const compareIds = compareRaw
+      ? compareRaw
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+    let seedQ = String(params.get("q") || "").trim();
+    if (!seedQ && compareIds.length >= 2) {
+      seedQ = `以下の掲載を比較したいです（ID: ${compareIds.join(", ")}）。比較表と注意点を整理してください。契約確定はしません。`;
+    }
     if (!seedQ) return;
     const input = $("[data-ai-chat-input]", root);
     if (input) input.value = seedQ;

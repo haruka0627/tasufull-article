@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>Builder AI | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+  <link rel="stylesheet" href="../common-ai-disclaimer.css" />
+</head>
+<body class="builder-body builder-ai-page" data-page="builder-ai">
+  <div class="builder-app" data-builder-root>
+    <header class="builder-header" aria-label="Builder AI">
+      <div class="builder-shell builder-header__inner">
+        <div class="builder-brandWrap">
+          <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
+            <span class="builder-brand__text">
+              <span class="builder-brand__main">Builder AI</span>
+              <span class="builder-brand__sub">業務下書き・相談（TASFUL AI とは独立）</span>
+            </span>
+          </a>
+        </div>
+        <p class="builder-ai-page__role">ロール: <strong data-builder-ai-role-label>—</strong></p>
+      </div>
+    </header>
+
+    <main class="builder-shell builder-main builder-ai-main">
+      <nav data-breadcrumb aria-label="パンくず"></nav>
+
+      <div class="builder-ai-disclaimer common-ai-disclaimer common-ai-disclaimer--builder" data-common-ai-disclaimer-banner data-surface="builder" role="note"></div>
+
+      <section class="builder-panel builder-ai-controls" aria-label="案件とテンプレート">
+        <div class="builder-ai-controls__row">
+          <label class="builder-ai-label">
+            案件
+            <select data-builder-ai-project-select class="builder-ai-select"></select>
+          </label>
+          <label class="builder-ai-label">
+            project_id
+            <input type="text" class="builder-ai-input-text" data-builder-ai-project-id placeholder="demo-project-001" />
+          </label>
+        </div>
+        <input type="hidden" data-builder-ai-current-action value="faq_answer" />
+        <div class="builder-ai-templates" data-builder-ai-templates aria-label="業務テンプレート"></div>
+      </section>
+
+      <section class="builder-panel builder-ai-chat" aria-label="Builder AI チャット">
+        <div class="builder-ai-messages" data-builder-ai-messages role="log" aria-live="polite"></div>
+        <div class="builder-ai-composer">
+          <textarea rows="3" class="builder-ai-composer__input" data-builder-ai-input placeholder="相談内容または下書き依頼を入力"></textarea>
+          <div class="builder-ai-composer__actions">
+            <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-clear>履歴クリア</button>
+            <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-copy>回答をコピー</button>
+            <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-save-draft hidden>下書きに保存</button>
+            <button type="button" class="builder-btn builder-btn--primary" data-builder-ai-send>送信</button>
+          </div>
+          <p class="builder-ai-status" data-builder-ai-status aria-live="polite"></p>
+        </div>
+      </section>
+
+      <section class="builder-panel builder-ai-drafts" aria-label="保存した下書き履歴">
+        <header class="builder-ai-drafts__head">
+          <h2 class="builder-ai-drafts__title">下書き履歴</h2>
+          <p class="builder-ai-drafts__note">保存した AI 下書きは確認・再コピー用です。契約・請求・採用・完了承認には使えません。</p>
+        </header>
+        <p class="builder-ai-drafts__empty" data-builder-ai-draft-empty hidden>保存された下書きはありません。</p>
+        <div class="builder-ai-draft-list" data-builder-ai-draft-list></div>
+      </section>
+
+      <p class="builder-ai-footnote">
+        <a href="construction-tools.html">建設ツール</a>の計算結果を踏まえた詳細下書きも、テンプレートから依頼できます。
+        · <a href="builder-ai-guidelines.html">Builder AI ガイドライン</a>
+        · <a href="../ai-terms.html">AI利用規約</a>
+      </p>
+    </main>
+  </div>
+
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../supabase-public-key.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../ai-model-gateway.js"></script>
+  <script src="builder-ai-actions.js"></script>
+  <script src="builder-ai-context.js"></script>
+  <script src="builder-ai-jwt-resolver.js"></script>
+  <script src="builder-ai-tools.js"></script>
+  <script src="builder-ai-calculators.js"></script>
+  <script src="builder-ai-search-assist.js"></script>
+  <script src="builder-ai-tax-assist.js"></script>
+  <script src="builder-ai-practice-assist.js"></script>
+  <script src="builder-ai-candidate-recommend.js"></script>
+  <script src="builder-ai-core.js"></script>
+  <script src="builder-ai-draft-supabase.js"></script>
+  <script src="builder-ai-draft-store.js"></script>
+  <script src="../common-ai-disclaimer.js"></script>
+  <script src="builder-ai-disclaimer.js"></script>
+  <script src="builder-ai-page.js"></script>
+</body>
+</html>

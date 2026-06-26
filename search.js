@@ -311,15 +311,27 @@
   }
 
   const POPULAR_SEARCH_WORDS = [
+    "外壁塗装",
+    "AI",
+    "ハウスクリーニング",
+    "エアコン",
+    "水道修理",
     "動画編集",
     "SNS",
-    "AI",
     "ロゴ",
-    "外壁",
     "求人",
     "即日対応",
-    "送料無料",
   ];
+
+  /** サジェスト拡張（入力プレフィックス → 候補） */
+  const SUGGEST_PREFIX_EXPANSIONS = Object.freeze({
+    動画: ["動画編集", "動画制作", "動画撮影"],
+    ai: ["AI", "AI画像生成", "AI相談"],
+    外壁: ["外壁塗装", "外壁修理"],
+    ハウス: ["ハウスクリーニング"],
+    エアコン: ["エアコンクリーニング", "エアコン修理"],
+    水道: ["水道修理"],
+  });
 
   const SUGGESTION_FIELD_GETTERS = [
     (item) => item.title,
@@ -365,13 +377,21 @@
     const normalized = normalizeSearchText(query);
     const pool = collectSuggestionPool(listings || []);
 
-    if (!normalized) {
-      return pool.slice(0, limit);
+    const expanded = [];
+    if (normalized) {
+      Object.keys(SUGGEST_PREFIX_EXPANSIONS).forEach((prefix) => {
+        if (normalized.startsWith(prefix) || prefix.startsWith(normalized)) {
+          SUGGEST_PREFIX_EXPANSIONS[prefix].forEach((term) => expanded.push(term));
+        }
+      });
     }
 
-    return pool
-      .filter((candidate) => normalizeSearchText(candidate).includes(normalized))
-      .slice(0, limit);
+    if (!normalized) {
+      return [...expanded, ...pool].slice(0, limit);
+    }
+
+    const matched = pool.filter((candidate) => normalizeSearchText(candidate).includes(normalized));
+    return [...expanded, ...matched].filter((v, i, a) => a.indexOf(v) === i).slice(0, limit);
   }
 
   /** 将来: 汎用サジェスト API */
@@ -591,6 +611,7 @@
     SCORE_WEIGHTS,
     ALL_TOKENS_BONUS,
     POPULAR_SEARCH_WORDS,
+    SUGGEST_PREFIX_EXPANSIONS,
     normalizeSearchText,
     parseSearchQuery,
     buildSearchKeywords,

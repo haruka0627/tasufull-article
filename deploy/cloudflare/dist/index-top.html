@@ -13,6 +13,9 @@
   <link rel="stylesheet" href="tas-hero.css">
   <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
   <link rel="stylesheet" href="top-ranking.css">
+  <link rel="stylesheet" href="platform-badges.css">
+  <link rel="stylesheet" href="platform-search-hub.css">
+  <link rel="stylesheet" href="common-ai-disclaimer.css">
 </head>
 <body class="top-page" data-breadcrumb-page-label="TASFUL">
   <header class="top-site-header site-header top-portal-header">
@@ -160,6 +163,30 @@
             </div>
           </article>
         </div>
+
+        <section class="platform-search-hub" data-platform-search-hub aria-label="探す・比較する・おすすめ">
+          <h2 class="platform-search-hub__title">探す · 比較する · AIおすすめ（TASFUL AI 入口）</h2>
+          <div class="common-ai-disclaimer common-ai-disclaimer--platform" data-common-ai-disclaimer-banner data-surface="platform" role="note"></div>
+          <div class="platform-search-hub__row">
+            <input type="search" class="platform-search-hub__input" data-platform-search-input placeholder="例: 埼玉 30万円以内 外壁塗装 即対応" autocomplete="off" />
+            <select class="platform-search-hub__select" data-platform-search-pref aria-label="都道府県">
+              <option value="">都道府県</option>
+              <option value="埼玉">埼玉</option>
+              <option value="東京">東京</option>
+              <option value="神奈川">神奈川</option>
+              <option value="千葉">千葉</option>
+              <option value="大阪">大阪</option>
+            </select>
+            <input type="number" class="platform-search-hub__radius" data-platform-search-radius value="50" min="5" max="200" aria-label="半径km" title="半径 km" />
+            <button type="button" class="platform-search-hub__btn" data-platform-search-geo>現在地</button>
+            <button type="button" class="platform-search-hub__btn platform-search-hub__btn--primary" data-platform-search-ai>TASFUL AI検索</button>
+            <button type="button" class="platform-search-hub__btn" data-platform-search-compare>AI比較</button>
+          </div>
+          <p class="platform-search-hub__label">人気検索</p>
+          <div class="platform-search-hub__popular" data-platform-search-popular></div>
+          <div class="platform-search-hub__suggest" data-platform-search-suggest hidden></div>
+          <pre class="platform-search-hub__result" data-platform-search-result hidden></pre>
+        </section>
 
         <div class="tas-hero__trust" aria-label="安心訴求">
           <div class="tas-hero__trust-item">
@@ -917,6 +944,23 @@
   </footer>
   <script src="breadcrumb-config.js"></script>
   <script src="common-breadcrumb.js"></script>
+  <script src="search.js"></script>
+  <script src="ai-workspace-links.js"></script>
+  <script src="platform-ai-recommend.js"></script>
+  <script src="platform-badges.js"></script>
+  <script src="platform-search-assist.js"></script>
+  <script src="platform-compare-assist.js"></script>
+  <script src="platform-location-search.js"></script>
+  <script src="platform-category-kyc.js"></script>
+  <script src="platform-favorites-folders.js"></script>
+  <script src="platform-search-hub.js"></script>
+  <script src="common-ai-disclaimer.js"></script>
   <script src="top.js" defer></script>
+  <script defer>
+    document.addEventListener("DOMContentLoaded", function () {
+      window.TasuPlatformSearchHub?.mount?.();
+      window.TasuPlatformBadges?.bindRecommendPopovers?.(document);
+    });
+  </script>
 </body>
 </html>

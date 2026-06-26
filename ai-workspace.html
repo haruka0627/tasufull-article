@@ -12,9 +12,12 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="tasful-general-ai.css">
   <link rel="stylesheet" href="ai-workspace-chat.css">
+  <link rel="stylesheet" href="tasful-ai-voice.css">
   <link rel="stylesheet" href="ai-workspace.css">
+  <link rel="stylesheet" href="ai-workspace-categories.css">
   <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
   <link rel="stylesheet" href="common-breadcrumb.css">
+  <link rel="stylesheet" href="common-ai-disclaimer.css">
 </head>
 <body class="tasful-general-ai-page ai-workspace-page" data-page="ai_workspace">
   <nav data-breadcrumb aria-label="パンくず"></nav>
@@ -24,6 +27,7 @@
     data-mode="cross-matching"
     data-workspace-tool="consult"
     data-search-target="tasful"
+    data-ai-category="chat"
   >
     <aside id="sidebar-fixed" data-tga-sidebar aria-label="チャット履歴">
       <div class="side-inner-top">
@@ -89,10 +93,19 @@
         <a href="index-top.html" class="tga-mobile-bar__link">TOP</a>
       </div>
 
+      <nav class="ai-workspace-categories" data-ai-workspace-categories aria-label="AIカテゴリ">
+        <button type="button" class="ai-workspace-categories__btn is-active" data-ai-workspace-category="chat" aria-pressed="true">💬 チャット</button>
+        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="image" aria-pressed="false">🖼️ 画像</button>
+        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="video" aria-pressed="false">🎬 動画</button>
+        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="music" aria-pressed="false">🎵 音楽</button>
+        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="document" aria-pressed="false">📄 資料</button>
+        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="history" aria-pressed="false">📋 履歴</button>
+      </nav>
+
       <div id="chat-scroller" data-ai-chat-scroll>
         <section id="welcome-screen" data-tga-welcome aria-label="TASFUL AIホーム">
           <h1 class="neon-welcome-title">TASFUL AI</h1>
-          <p class="welcome-lead">Web検索、資料作成、画像解析から、<br>業者・求人・商品探し、<br>音声相談までひとつで使えるAIです。</p>
+          <p class="welcome-lead">Web検索、資料作成、画像 · 動画 · 音楽生成から、<br>業者・求人・商品探し、<br>音声相談までひとつで使える総合AIです。</p>
 
           <nav class="welcome-starter-chips" data-tga-starter-chips aria-label="ショートカット">
             <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="最新情報を調べたい">Web検索</button>
@@ -118,6 +131,8 @@
             <p class="welcome-notice">注意: AIは依頼確定・購入・応募・決済は行いません。</p>
           </section>
         </section>
+
+        <div data-ai-category-panel hidden></div>
 
         <div class="message-wrapper chat-messages ai-chat-thread" id="message-wrapper" data-ai-chat-messages role="log" aria-live="polite" aria-relevant="additions" hidden></div>
       </div>
@@ -177,7 +192,7 @@
                   type="file"
                   id="image-upload"
                   data-ai-attach-input
-                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                  accept="image/png,image/jpeg,image/jpg,image/webp,application/pdf,.txt,.md,.csv,.json,text/plain,text/markdown,text/csv,application/json"
                   multiple
                   hidden
                 >
@@ -192,7 +207,8 @@
             </div>
           </div>
         </div>
-        <div class="bottom-footer">TASFUL AI Workspace</div>
+        <div class="common-ai-disclaimer common-ai-disclaimer--workspace" data-common-ai-disclaimer-banner role="note"></div>
+        <div class="bottom-footer">TASFUL AI Workspace · <a href="ai-terms.html">AI利用規約</a> · <a href="ai-disclaimer.html">免責</a></div>
       </div>
     </main>
 
@@ -249,11 +265,23 @@
   <script src="ai-concierge.js" defer></script>
   <script src="ai-consult-bridge.js" defer></script>
   <script src="ai-generate-ui.js" defer></script>
+  <script src="ai-media-gen-config.js" defer></script>
+  <script src="ai-history-store.js" defer></script>
+  <script src="ai-video-generate.js" defer></script>
+  <script src="ai-music-generate.js" defer></script>
+  <script src="ai-document-generate.js" defer></script>
+  <script src="ai-workspace-history-bridge.js" defer></script>
+  <script src="ai-workspace-categories.js" defer></script>
   <script src="ai-workspace-conversation-demo.js" defer></script>
   <script src="ai-workspace-category-demos.js" defer></script>
   <script src="ai-call-consent.js" defer></script>
   <script src="ai-search-state.js" defer></script>
+  <script src="ai-workspace-attachments.js" defer></script>
+  <script src="tasful-ai-voice-core.js" defer></script>
+  <script src="common-ai-disclaimer.js" defer></script>
   <script src="ai-workspace-chat.js" defer></script>
+  <script src="ai-workspace-voice.js" defer></script>
   <script src="tasful-general-ai-shell.js" defer></script>
+  <script src="ai-workspace-tlv-source.js" defer></script>
 </body>
 </html>

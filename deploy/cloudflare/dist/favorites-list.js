@@ -67,6 +67,7 @@
     typeFilter: "",
     sort: "date-desc",
     view: "list",
+    folderFilter: "all",
   };
 
   function removeSelfReloadFrames() {
@@ -366,6 +367,23 @@
     return url;
   }
 
+  function buildFolderSelectHtml(item) {
+    const folders = window.TasuPlatformFavoriteFolders;
+    if (!folders?.FOLDERS) return "";
+    const current = folders.getFolder(item.id, item.typeKey);
+    const options = folders.FOLDERS.map(
+      (f) =>
+        `<option value="${escapeHtml(f.id)}"${f.id === current ? " selected" : ""}>${escapeHtml(f.label)}</option>`
+    ).join("");
+    return `
+      <label class="fav-item__folder">
+        <span class="fav-item__folder-label">フォルダ</span>
+        <select class="fav-item__folder-select" data-favorites-folder-change data-listing-id="${escapeHtml(item.id)}" data-listing-type="${escapeHtml(item.typeKey)}" aria-label="フォルダを変更">
+          ${options}
+        </select>
+      </label>`;
+  }
+
   function buildItemHtml(item) {
     const titleBlock = item.isDemo
       ? `<h2 class="fav-item__title">${escapeHtml(item.title)}</h2>`
@@ -383,6 +401,7 @@
         </div>
         <div class="fav-item__aside">
           <p class="fav-item__saved">${buildSavedBadgeHtml(item, "aside")}</p>
+          ${buildFolderSelectHtml(item)}
           <div class="fav-item__actions">
             <a class="fav-btn fav-btn--detail" href="${escapeHtml(wrapFavoriteDetailHref(item.detailHref))}" data-breadcrumb-label="${detailLabel}">
               詳細を見る <span class="fav-btn__chevron" aria-hidden="true">›</span>
@@ -412,6 +431,13 @@
 
     if (state.typeFilter) {
       items = items.filter((item) => item.typeKey === state.typeFilter);
+    }
+
+    if (state.folderFilter && state.folderFilter !== "all" && window.TasuPlatformFavoriteFolders) {
+      const folderIds = new Set(
+        window.TasuPlatformFavoriteFolders.listByFolder(state.folderFilter).map((row) => row.id)
+      );
+      items = items.filter((item) => folderIds.has(item.id));
     }
 
     items.sort((a, b) => {
@@ -455,6 +481,33 @@
     }
   }
 
+  function renderFolderTabs(allIds) {
+    const nav = document.querySelector("[data-favorites-folders]");
+    const folders = window.TasuPlatformFavoriteFolders;
+    if (!nav || !folders?.FOLDERS) return;
+
+    if (!allIds.length) {
+      nav.hidden = true;
+      return;
+    }
+    nav.hidden = false;
+
+    const counts = { all: allIds.length };
+    folders.FOLDERS.forEach((f) => {
+      counts[f.id] = folders.listByFolder(f.id).length;
+    });
+
+    const tabs = [
+      `<button type="button" class="fav-folders__tab${state.folderFilter === "all" ? " is-active" : ""}" data-favorites-folder="all" aria-pressed="${state.folderFilter === "all"}">すべて <span class="fav-folders__count">${counts.all}</span></button>`,
+      ...folders.FOLDERS.map(
+        (f) =>
+          `<button type="button" class="fav-folders__tab${state.folderFilter === f.id ? " is-active" : ""}" data-favorites-folder="${escapeHtml(f.id)}" aria-pressed="${state.folderFilter === f.id}">${escapeHtml(f.label)} <span class="fav-folders__count">${counts[f.id] || 0}</span></button>`
+      ),
+    ].join("");
+
+    nav.innerHTML = tabs;
+  }
+
   function renderFavorites() {
     removeSelfReloadFrames();
 
@@ -471,6 +524,7 @@
     const hasAny = allIds.length > 0;
 
     syncPromo(allIds.length);
+    renderFolderTabs(allIds);
 
     listEl.innerHTML = "";
 
@@ -484,7 +538,7 @@
 
     if (emptyEl) emptyEl.hidden = true;
     if (panelEl) panelEl.hidden = false;
-    if (countEl) countEl.textContent = String(allIds.length);
+    if (countEl) countEl.textContent = String(items.length);
 
     if (!items.length) {
       if (noResultsEl) noResultsEl.hidden = false;
@@ -554,6 +608,14 @@
     }
 
     document.addEventListener("click", (event) => {
+      const folderBtn = event.target.closest("[data-favorites-folder]");
+      if (folderBtn) {
+        event.preventDefault();
+        state.folderFilter = folderBtn.getAttribute("data-favorites-folder") || "all";
+        renderFavorites();
+        return;
+      }
+
       const btn = event.target.closest("[data-favorites-remove]");
       if (!btn) return;
       event.preventDefault();
@@ -562,12 +624,31 @@
       readControlsFromDom();
       renderFavorites();
     });
+
+    document.addEventListener("change", (event) => {
+      const sel = event.target.closest("[data-favorites-folder-change]");
+      if (!sel) return;
+      const listingId = sel.getAttribute("data-listing-id") || "";
+      const listingType = sel.getAttribute("data-listing-type") || "general";
+      const folderId = sel.value;
+      window.TasuPlatformFavoriteFolders?.setFolder?.(listingId, listingType, folderId);
+      renderFavorites();
+    });
   }
 
   function onStorageSync(event) {
-    if (event.key === STORAGE_KEY || event.key === META_STORAGE_KEY) {
+    if (
+      event.key === STORAGE_KEY ||
+      event.key === META_STORAGE_KEY ||
+      event.key === "tasful_favorite_folders_meta" ||
+      event.key === "tasful_favorites"
+    ) {
       renderFavorites();
     }
+  }
+
+  function onFavoritesChanged() {
+    renderFavorites();
   }
 
   function start() {
@@ -576,6 +657,7 @@
     bindControls();
     renderFavorites();
     window.addEventListener("storage", onStorageSync);
+    window.addEventListener("tasful-favorites-changed", onFavoritesChanged);
   }
 
   window.TasuFavoritesList = {

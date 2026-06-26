@@ -1,0 +1,111 @@
+/* Platform — 共通バッジ（最大5 · 商品・サービス共通） */
+.platform-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+  max-width: 100%;
+}
+
+.list-card__main .platform-badges,
+.biz-board-mobile-card__head .platform-badges {
+  margin: 0.25rem 0 0.4rem;
+}
+
+.platform-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.platform-badge--ai-recommend {
+  background: linear-gradient(135deg, #fff6df 0%, #ffe8a8 100%);
+  color: #7a5710;
+  border-color: #e8c96a;
+  cursor: pointer;
+}
+
+.platform-badge--bestseller {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.platform-badge--popular {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+.platform-badge--high-rating {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.platform-badge--new {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.platform-badge--verified {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.platform-badge--license {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.platform-badge--corp {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.platform-badge--instant {
+  background: #ffedd5;
+  color: #c2410c;
+}
+
+.platform-badge--nearby {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.platform-badge-popover {
+  position: absolute;
+  z-index: 20;
+  min-width: 10rem;
+  max-width: 14rem;
+  padding: 0.5rem 0.65rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+.platform-badge-popover ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.platform-badge-popover li {
+  padding: 0.1rem 0;
+}
+
+.platform-badge-popover__note {
+  margin: 0.35rem 0 0;
+  padding-top: 0.35rem;
+  border-top: 1px solid #f3f4f6;
+  font-size: 0.68rem;
+  color: #6b7280;
+  line-height: 1.4;
+}

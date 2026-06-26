@@ -248,6 +248,20 @@
     version: VERSION,
     ready: true,
     analyze,
+    query(text, options) {
+      const core = global.TasuBuilderAICore || global.TasuBuilderAI;
+      if (core?.query) return core.query(text, options);
+      return {
+        ok: false,
+        source: "builder_internal",
+        intent: "unknown",
+        summary: "Builder AI Core が読み込まれていません。",
+        items: [],
+        actions: [],
+        warnings: ["core_not_loaded"],
+        used_tools: [],
+      };
+    },
     resolveAnalyzeType,
     getTypeMessages,
     renderComment,
