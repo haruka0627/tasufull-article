@@ -15,13 +15,14 @@
 </head>
 <body>
   <h1>Voice Core</h1>
-  <p>Mock + openai_realtime skeleton (mock-compatible) — no external API.</p>
+  <p>Mock + openai_realtime + gemini_live skeleton (mock-compatible) — no external API.</p>
   <div>
     <button type="button" id="btn-start">Start session</button>
     <button type="button" id="btn-text">Send text</button>
     <button type="button" id="btn-audio">Send audio</button>
     <button type="button" id="btn-stop">Stop session</button>
     <button type="button" id="btn-auto">Run auto test</button>
+    <button type="button" id="btn-gemini-auto">Run Gemini auto test</button>
   </div>
   <pre id="log"></pre>
 
@@ -31,6 +32,9 @@
   <script src="voice-realtime-options.js"></script>
   <script src="voice-realtime-event-mapper.js"></script>
   <script src="adapters/voice-openai-realtime-adapter.js"></script>
+  <script src="voice-gemini-live-options.js"></script>
+  <script src="voice-gemini-live-event-mapper.js"></script>
+  <script src="adapters/voice-gemini-live-adapter.js"></script>
   <script src="voice-provider-router.js"></script>
   <script src="voice-session.js"></script>
   <script src="voice-core.js"></script>
@@ -83,6 +87,19 @@
         const need = ["session_started", "text_delta", "audio_delta_mock", "session_stopped"];
         const ok = need.every((t) => events.includes(t));
         log(ok ? "AUTO PASS: " + events.join(", ") : "AUTO FAIL: " + events.join(", "), ok ? "ok" : "err");
+      };
+
+      document.getElementById("btn-gemini-auto").onclick = () => {
+        const events = [];
+        const s = window.TasuVoiceCore.createSession({ surface: "gemini-auto", provider: "gemini_live", kind: "live" });
+        s.receiveEvent((ev) => events.push(ev.type));
+        s.startSession({ provider: "gemini_live", kind: "live", mockCompatible: true });
+        s.sendText("phase3");
+        s.sendAudio(new Uint8Array([2, 4, 6]));
+        s.stopSession();
+        const need = ["session_started", "text_delta", "audio_delta_mock", "session_stopped"];
+        const ok = need.every((t) => events.includes(t));
+        log(ok ? "GEMINI AUTO PASS: " + events.join(", ") : "GEMINI AUTO FAIL: " + events.join(", "), ok ? "ok" : "err");
       };
     })();
   </script>
