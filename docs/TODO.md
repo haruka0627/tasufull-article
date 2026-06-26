@@ -1,6 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-26  
+**最終更新:** 2026-06-26（Workspace enforcement Phase 1 deploy 反映 · §P0-2）  
+**Git HEAD:** `2a43fe5`（`cf-pages-deploy` · Phase 1 commit/deploy 済 · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -26,19 +27,31 @@
 
 ---
 
-### 2. TASFUL AI 本番接続
+### 2. TASFUL AI 本番接続（Production Ready · §P0-2）
 
 | 項目 | 内容 |
 | --- | --- |
 | 状態 | 機能は `5ed9672` で完成。Production Ready 判定は **NO**（preflight） |
-| 参照 | `reports/tasful-ai-production-preflight.md`, `reports/tasful-ai-final-phase.md` §9 |
+| 参照 | `reports/tasful-ai-production-preflight.md`, `reports/tasful-ai-workspace-phase1-deploy.md` |
+| **P0-2 残件（運用）** | Serper credits チャージ · CF Access Service Token · Phase 2（Edge + DB quota） |
 
 **サブタスク**
 
+| タスク | 状態 | 根拠 |
+| --- | --- | --- |
+| **Workspace 課金 enforcement Phase 1**（クライアント） | **完了** | commit `2a43fe5223457327edf525bf4b56604d0c5e43a1` · Production https://tasufull-article.pages.dev · Direct Upload deploy 2026-06-26 |
+| Phase 1 prod smoke | **完了** | **12/12 PASS** · console 0 · network 0 |
+| Phase 1 browser regression | **完了** | `test-ai-workspace-usage-enforcement-browser.mjs` **15/15** · `test-tasful-ai-final-smoke-browser.mjs` **53/53** |
+| **Serper credits** | **未実装（運用）** | recovery §⑥ · `Not enough credits` |
+| **CF Access Service Token** | **未実装（運用）** | `CF_ACCESS_CLIENT_ID/SECRET` — E2E 自動化 |
+| **Workspace 課金 enforcement Phase 2** | **未実装** | Edge + DB quota · `reports/tasful-ai-workspace-enforcement-design.md` |
+
+- [x] Workspace 課金 enforcement **Phase 1**（クライアント · `2a43fe5` · Production deploy）
 - [ ] Supabase Edge デプロイ（chat functions · `ai-attachments.ts` 含む）→ Vision 再プローブ
-- [ ] Gemini billing / Serper credits 解消
+- [ ] Gemini billing / Serper credits 解消（**Serper = 運用チャージ**）
+- [ ] Cloudflare Access **Service Token** 設定
 - [ ] Cloudflare Access 下での本番 URL E2E（MIME / 認証後到達）
-- [ ] Workspace 課金 enforcement（Gateway + Edge quota）— 最小要件は preflight §11 P1
+- [ ] Workspace 課金 enforcement **Phase 2**（Edge + DB quota）
 - [ ] 動画/音楽 API — `ai-media-gen-config.js` で `enabled: true` + Edge Function
 
 ---
@@ -155,3 +168,4 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | AI 規約 / 免責 | `5ed9672` · 32/32 PASS |
 | TLV → TASFUL AI 入口 | `5ed9672` · 16/16 PASS |
 | AI 選別コミット | `5ed9672` |
+| Workspace enforcement Phase 1 | `2a43fe5` · Production deploy · smoke 12/12 · browser 15/15 + 53/53 · `reports/tasful-ai-workspace-phase1-deploy.md` |
