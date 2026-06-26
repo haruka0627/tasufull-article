@@ -175,6 +175,66 @@ function applySearchBlockingToDist() {
   console.log(`[stage-cloudflare-pages] search-blocking: ${htmlCount} HTML files (meta robots)`);
 }
 
+const SITE_ASSISTANT_MARKER = "tasful-site-assistant.css";
+
+function siteAssistantAssetPrefix(filePath) {
+  const rel = path.relative(OUT_DIR, filePath).replace(/\\/g, "/");
+  const depth = Math.max(0, rel.split("/").length - 1);
+  return depth ? "../".repeat(depth) : "";
+}
+
+function buildSiteAssistantSnippet(filePath) {
+  const prefix = siteAssistantAssetPrefix(filePath);
+  return [
+    `<link rel="stylesheet" href="${prefix}tasful-site-assistant.css">`,
+    `<script src="${prefix}tasful-site-assistant-adapter.js" defer></script>`,
+    `<script src="${prefix}tasful-site-assistant.js" defer></script>`,
+  ].join("\n  ");
+}
+
+function shouldSkipSiteAssistant(filePath) {
+  const rel = path.relative(OUT_DIR, filePath).replace(/\\/g, "/").toLowerCase();
+  const base = path.basename(filePath).toLowerCase();
+  const skipExact = new Set([
+    "ai-workspace.html",
+    "gen-ai-workspace.html",
+    "admin-operations-dashboard.html",
+    "talk-ops-room.html",
+    "builder-ai.html",
+  ]);
+  if (skipExact.has(base)) return true;
+  if (rel.includes("/live/admin-")) return true;
+  if (base.startsWith("admin-")) return true;
+  return false;
+}
+
+function injectSiteAssistantToHtml(html, filePath) {
+  if (!/<\/body>/i.test(html)) return html;
+  if (html.includes(SITE_ASSISTANT_MARKER)) return html;
+  const snippet = buildSiteAssistantSnippet(filePath);
+  return html.replace(/<\/body>/i, `  ${snippet}\n</body>`);
+}
+
+function applySiteAssistantToDist() {
+  let injected = 0;
+  let skipped = 0;
+  walkHtmlFiles(OUT_DIR, (filePath) => {
+    if (shouldSkipSiteAssistant(filePath)) {
+      skipped += 1;
+      return;
+    }
+    const raw = fs.readFileSync(filePath, "utf8");
+    const next = injectSiteAssistantToHtml(raw, filePath);
+    if (next !== raw) {
+      fs.writeFileSync(filePath, next, "utf8");
+      injected += 1;
+    }
+  });
+  console.log(
+    `[stage-cloudflare-pages] site-assistant: ${injected} HTML injected, ${skipped} skipped`,
+  );
+}
+
 /**
  * Site root `/` must serve TASFUL platform TOP (index-top.html).
  * Repo root index.html is the legacy marketplace home → dist/market/index.html.
@@ -264,6 +324,7 @@ function main() {
   writeTlvFeatureFlags();
   applyRootTopRouting();
   applySearchBlockingToDist();
+  applySiteAssistantToDist();
 
   const tlvErrors = verifyTlvDist(REPO_ROOT, path.relative(REPO_ROOT, OUT_DIR));
   if (tlvErrors.length) {
