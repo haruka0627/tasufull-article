@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-27（AD-012 UI/UX 設計原則）
+**最終更新:** 2026-06-27（Command Dashboard Phase 6-H）
 
 ---
 
@@ -92,7 +92,8 @@
 | **Estimate/Invoice Phase 6-D**（見積・請求基盤 · SCHEMA v4） | ✅ `8be158f` | `reports/builder-estimate-invoice-phase6d.md` |
 | **Contract/Completion Phase 6-E**（契約・完了基盤 · SCHEMA v5） | ✅ `ac385c6` | `reports/builder-contract-completion-phase6e.md` |
 | **Document Center Phase 6-F**（ドキュメント管理基盤 · SCHEMA v6） | ✅ `549e562` | `reports/builder-document-center-phase6f.md` |
-| **Notification Center Phase 6-G**（通知基盤 Foundation · SCHEMA v7） | ✅ 実装 · 未コミット | `reports/builder-notification-center-phase6g.md` |
+| **Notification Center Phase 6-G**（通知基盤 Foundation · SCHEMA v7） | ✅ `74d54b8` | `reports/builder-notification-center-phase6g.md` |
+| **Command Dashboard Phase 6-H**（司令塔 KPI · Store 読取のみ） | ✅ 実装 · 未コミット | `reports/builder-dashboard-phase6h.md` |
 | **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 ### Platform（製品機能）

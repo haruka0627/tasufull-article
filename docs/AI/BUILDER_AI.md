@@ -1,8 +1,8 @@
 # Builder AI
 
-**最終更新:** 2026-06-27（Notification Center Phase 6-G · 通知基盤）  
-**ステータス:** **実装済み**（… + **Document Center 6-F** + **Notification Center 6-G**）· P2-C 残  
-**直近コミット:** `549e562`（Document Center 6-F · **git push 未実施**）
+**最終更新:** 2026-06-27（Command Dashboard Phase 6-H · 司令塔 KPI）  
+**ステータス:** **実装済み**（… + **Notification Center 6-G** + **Command Dashboard 6-H**）· P2-C 残  
+**直近コミット:** `74d54b8`（Notification Center 6-G · **git push 未実施**）
 
 ---
 
@@ -243,7 +243,7 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 
 ---
 
-## Builder Notification Center Phase 6-G（✅ 実装 · 未コミット）
+## Builder Notification Center Phase 6-G（✅ commit 済 · `74d54b8`）
 
 **通知基盤 Foundation** — `project.notifications[]`（SCHEMA v7）
 
@@ -261,6 +261,23 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 **テスト:** `scripts/test-builder-notification-center-phase6g.mjs`
 
 **報告:** `reports/builder-notification-center-phase6g.md`
+
+---
+
+## Builder Command Dashboard Phase 6-H（✅ 実装 · 未コミット）
+
+**司令塔 KPI ダッシュボード** — 既存 Store 読取のみ · 新規業務機能なし
+
+| 項目 | 内容 |
+| --- | --- |
+| **画面** | `project-dashboard.html` — KPI カード · Today's Work · Active · Notifications · Activity · Upcoming |
+| **データ** | `getFinanceSummary` · `getInvoiceSummary` · `getCompletionSummary` · `getNotificationSummary` · `getDocumentSummary` · `getTodayProjects` · `getWorkingProjects` · `getDelayedProjects` · `getThisWeekProjects` |
+| **思想** | AD-012 — 高機能は AI · シンプルは UI |
+| **非実装** | Store 変更 · Gateway · AI 自動更新 · 新規業務機能 |
+
+**テスト:** `scripts/test-builder-dashboard-phase6h.mjs`
+
+**報告:** `reports/builder-dashboard-phase6h.md`
 
 ---
 
