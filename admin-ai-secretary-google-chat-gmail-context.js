@@ -1,96 +1,59 @@
 /**
- * AI秘書 Phase 3b — Chat Gmail list context (sessionStorage · TTL · no DOM exposure)
+ * AI秘書 Phase 3b/3c — Chat Gmail list context (delegates to unified Context v2)
  */
 (function (global) {
   "use strict";
 
+  const Unified = () => global.TasuSecretaryGoogleChatContext;
+
   const STORAGE_KEY = "tasu_secretary_chat_gmail_ctx_v1";
   const TTL_MS = 15 * 60 * 1000;
 
-  function trim(value, max) {
-    return String(value ?? "").trim().slice(0, max || 4000);
-  }
-
-  function readRaw() {
-    try {
-      const raw = global.sessionStorage?.getItem(STORAGE_KEY);
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch {
-      return null;
-    }
-  }
-
-  function isExpired(ctx) {
-    if (!ctx?.savedAt) return true;
-    const t = Date.parse(ctx.savedAt);
-    return !Number.isFinite(t) || Date.now() - t > TTL_MS;
-  }
-
-  function clear() {
-    try {
-      global.sessionStorage?.removeItem(STORAGE_KEY);
-    } catch {
-      /* ignore */
-    }
-  }
-
   function saveList(messages, meta) {
-    messages = Array.isArray(messages) ? messages : [];
-    meta = meta || {};
-    const items = messages
-      .map((m, i) => ({
-        index: i + 1,
-        id: trim(m.id, 120),
-        threadId: trim(m.threadId, 120),
-        subject: trim(m.subject, 200),
-        from: trim(m.from, 200),
-        snippet: trim(m.snippet, 300),
-        date: trim(m.date, 80),
-      }))
-      .filter((x) => x.id);
-
-    const ctx = {
-      savedAt: new Date().toISOString(),
-      sourceIntent: trim(meta.sourceIntent, 40),
-      label: trim(meta.label, 120),
-      items,
-    };
-
-    try {
-      global.sessionStorage?.setItem(STORAGE_KEY, JSON.stringify(ctx));
-    } catch {
-      /* ignore */
+    const U = Unified();
+    if (U?.saveGmailList) {
+      return U.saveGmailList(messages, meta);
     }
-    return ctx;
+    return null;
   }
 
   function getContext() {
-    const ctx = readRaw();
-    if (!ctx || isExpired(ctx)) {
-      clear();
-      return null;
+    const U = Unified();
+    if (U?.getGmailListMeta) {
+      return U.getGmailListMeta();
     }
-    return ctx;
+    return null;
   }
 
   function getByIndex(n) {
-    const ctx = getContext();
-    if (!ctx?.items?.length) return null;
-    const idx = Number(n);
-    if (!Number.isFinite(idx) || idx < 1) return null;
-    return ctx.items.find((x) => x.index === idx) || null;
+    const U = Unified();
+    if (U?.getGmailListItem) {
+      return U.getGmailListItem(n);
+    }
+    return null;
   }
 
   function getLast() {
-    const ctx = getContext();
-    if (!ctx?.items?.length) return null;
-    return ctx.items[0];
+    const U = Unified();
+    if (U?.getGmailListFirst) {
+      return U.getGmailListFirst();
+    }
+    return null;
   }
 
   function hasContext() {
-    const ctx = getContext();
-    return Boolean(ctx?.items?.length);
+    const U = Unified();
+    if (U?.hasGmailList) {
+      return U.hasGmailList();
+    }
+    return false;
+  }
+
+  function clear() {
+    const U = Unified();
+    if (U?.clear) {
+      U.clear();
+    }
   }
 
   global.TasuSecretaryGoogleChatGmailContext = {
