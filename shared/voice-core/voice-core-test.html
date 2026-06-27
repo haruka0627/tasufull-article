@@ -15,7 +15,7 @@
 </head>
 <body>
   <h1>Voice Core</h1>
-  <p>Mock + Live boundary (Phase 5-A) + STT/TTS/Fallback — no external API by default.</p>
+  <p>Mock + Live boundary (Phase 5-B WebSocket transport opt-in) + STT/TTS/Fallback — no external API by default.</p>
   <div>
     <button type="button" id="btn-start">Start session</button>
     <button type="button" id="btn-text">Send text</button>
@@ -38,6 +38,7 @@
   <script src="voice-realtime-config.js"></script>
   <script src="voice-realtime-event-mapper.js"></script>
   <script src="voice-openai-realtime-wire-client.js"></script>
+  <script src="transports/voice-openai-realtime-websocket-transport.js"></script>
   <script src="adapters/voice-openai-realtime-adapter.js"></script>
   <script src="voice-gemini-live-options.js"></script>
   <script src="voice-gemini-live-event-mapper.js"></script>

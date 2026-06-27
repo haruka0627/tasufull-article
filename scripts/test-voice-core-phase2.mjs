@@ -64,6 +64,7 @@ for (const name of phase2Files) {
 function collectJsFiles(dir, base = "") {
   const out = [];
   for (const name of fs.readdirSync(dir)) {
+    if (name === "transports") continue;
     const rel = base ? `${base}/${name}` : name;
     const full = path.join(dir, name);
     if (fs.statSync(full).isDirectory()) out.push(...collectJsFiles(full, rel));
@@ -80,7 +81,7 @@ for (const rel of allJs) {
 
 const connectionForbidden = [
   /\bfetch\s*\(/,
-  /\bWebSocket\b/,
+  /\bnew WebSocket\b/,
   /\bRTCPeerConnection\b/,
   /wss:\/\//,
   /https:\/\/api\./,

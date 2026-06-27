@@ -1,6 +1,6 @@
 /**
  * Voice Core — OpenAI Realtime wire client boundary (injectable transport · no built-in socket)
- * Phase 5-A: policy + transport injection only. Native socket transport is Phase 5-B.
+ * Phase 5-A: policy + transport injection. Phase 5-B: WebSocket transport is a separate opt-in module.
  */
 (function (global) {
   "use strict";

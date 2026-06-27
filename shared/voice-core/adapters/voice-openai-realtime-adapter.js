@@ -35,9 +35,30 @@
     return getRuntimeInjectors ? getRuntimeInjectors() : null;
   }
 
+  function shouldUseWebSocketTransport(options, injectors) {
+    if (options?.useWebSocketTransport === true) return true;
+    if (injectors?.useWebSocketTransport === true) return true;
+    if (typeof injectors?.useWebSocketTransport === "function") {
+      return Boolean(injectors.useWebSocketTransport(options));
+    }
+    return false;
+  }
+
+  function createWebSocketTransport(options, injectors) {
+    const factory = global.TasuVoiceCoreOpenAiRealtimeWebSocketTransport;
+    if (!factory?.createOpenAiRealtimeWebSocketTransport) return null;
+    const wsOptions = options?._voiceCoreWebSocketOptions || injectors?.webSocketOptions || {};
+    return factory.createOpenAiRealtimeWebSocketTransport(wsOptions);
+  }
+
   function getTransport(options) {
     if (options?._voiceCoreTransport) return options._voiceCoreTransport;
-    return sessionTransport || null;
+    if (sessionTransport) return sessionTransport;
+    const injectors = getInjectors(options);
+    if (shouldUseWebSocketTransport(options, injectors)) {
+      return createWebSocketTransport(options, injectors);
+    }
+    return null;
   }
 
   function setConnectionState(sessionId, patch) {
