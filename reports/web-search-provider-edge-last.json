@@ -1,0 +1,55 @@
+{
+  "capturedAt": "2026-06-27T17:59:19.041Z",
+  "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "probes": [
+    {
+      "name": "Edge reachable — TASFUL",
+      "ok": true,
+      "detail": "HTTP 200 provider=brave count=3",
+      "provider": "brave",
+      "preview": "TASTEFUL | Definition and Meaning | TASTEFUL meaning is - <strong>Having a good sense of style o"
+    },
+    {
+      "name": "Japanese query — 水漏れ修理 相場",
+      "ok": true,
+      "detail": "HTTP 200 provider=brave count=5",
+      "provider": "brave",
+      "preview": "水漏れ修理の費用相場はいくら？内訳や高くなる原因 | 水漏れによって壁や床材が腐食している場合は、さらに大規模な補修が必要になります。下地材の交換や防水処理なども含めると、補"
+    },
+    {
+      "name": "Japanese query — 補助金 2026",
+      "ok": true,
+      "detail": "HTTP 200 provider=brave count=3",
+      "provider": "brave",
+      "preview": "2026年 補助金まとめ！中小企業向け主要補助金のポイント解説|使いたい補助金・ | 2026年度は、中小企業向けの補助金として<strong>「デジタル化・AI導入補助金（旧IT導入補助金）」「小規模事業"
+    },
+    {
+      "name": "JA spot — 2026年 補助金 中小企業",
+      "ok": true,
+      "detail": "HTTP 200 provider=brave count=5",
+      "provider": "brave",
+      "preview": "2026年 補助金まとめ！中小企業向け主要補助金のポイント解説|使いたい補助金・ | 2026年度は、中小企業向けの補助金として<strong>「デジタル化・AI導入補助金（旧IT導入補助金）」「小規模事業"
+    },
+    {
+      "name": "JA spot — 埼玉 外壁塗装 相場",
+      "ok": true,
+      "detail": "HTTP 200 provider=brave count=5",
+      "provider": "brave",
+      "preview": "埼玉県の外壁塗装相場はこちらでチェック！統計データから算出しました | さくら外 | この計算から、埼玉県の外壁塗装の相場は、<strong>約95万円～155万円</strong>であることが分かります。"
+    },
+    {
+      "name": "JA spot — AI ニュース 日本",
+      "ok": true,
+      "detail": "HTTP 200 provider=brave count=5",
+      "provider": "brave",
+      "preview": "Ledge.ai｜日本最大級のAI特化型ニュースメディア | 東京都、都庁舎にAI自動分別リサイクルボックス設置 リチウムイオン電池内蔵製品を回収"
+    },
+    {
+      "name": "JA spot — Cloudflare Pages Supabase Edge Functions",
+      "ok": true,
+      "detail": "HTTP 200 provider=brave count=5",
+      "provider": "brave",
+      "preview": "Supabase vs Cloudflare (2026): Backend v | Supabase <strong>handles authentication, user data, and appl"
+    }
+  ]
+}

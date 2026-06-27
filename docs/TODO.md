@@ -42,15 +42,15 @@
 | **Workspace 課金 enforcement Phase 1**（クライアント） | **完了** | commit `2a43fe5223457327edf525bf4b56604d0c5e43a1` · Production https://tasufull-article.pages.dev · Direct Upload deploy 2026-06-26 |
 | Phase 1 prod smoke | **完了** | **12/12 PASS** · console 0 · network 0 |
 | Phase 1 browser regression | **完了** | `test-ai-workspace-usage-enforcement-browser.mjs` **15/15** · `test-tasful-ai-final-smoke-browser.mjs` **53/53** |
-| **Serper credits** | **未実装（運用）** | Final Phase 2026-06-28 · `Not enough credits` live 502 |
-| **CF Access Service Token** | **未実装（運用）** | `CF_ACCESS_CLIENT_ID/SECRET` — prod alias E2E FAIL |
+| **Serper credits / Web Search** | **完了（Brave Phase 1）** | Edge deploy · `WEB_SEARCH_PROVIDER=brave` · live **7/7 PASS** · `SERPER_API_KEY` rollback 保持 · `reports/brave-search-phase1.md` |
+| **CF Access Service Token** | **未実装（運用）** | `.env` に `CF_ACCESS_CLIENT_ID/SECRET` 未設定 · verification 停止 |
 | **build:pages EPERM** | **解消** | `scripts/stop-pages-dev.mjs` + package.json · 2026-06-28 |
 | **Workspace 課金 enforcement Phase 2** | **Production deploy 完了** | Edge + DB · `5437d70e` main · quota Edge 11/11 PASS |
 
 - [x] Workspace 課金 enforcement **Phase 1**（クライアント · `2a43fe5` · Production deploy）
 - [x] `npm run build:pages` EPERM 修正（`scripts/stop-pages-dev.mjs` · 2026-06-28）
 - [x] Supabase Edge デプロイ（chat functions · `ai-attachments.ts` 含む）→ Vision 再プローブ（2026-06-25 deploy · 2026-06-28 live 6/6 PASS）
-- [ ] Gemini billing / Serper credits 解消（**Serper = 運用チャージ** · Final Phase 2026-06-28 仍 FAIL）
+- [x] Gemini billing / Serper credits 解消（**Brave Web Search Phase 1** · 2026-06-28 live PASS）
 - [ ] Cloudflare Access **Service Token** 設定
 - [ ] Cloudflare Access 下での本番 URL E2E（MIME / 認証後到達）
 - [x] Workspace 課金 enforcement **Phase 2**（Edge + DB quota · Production deploy 2026-06-28）
