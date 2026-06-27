@@ -1,7 +1,13 @@
 /**
- * AI秘書 Phase 6-F — Google Workspace tools (Gmail + Calendar read/write w/ Human Gate)
+ * AI秘書 Phase 6-G — Google Workspace tools (Gmail + Calendar + Contacts)
  */
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import {
+  executeContactsRead,
+  CONTACTS_READ_METHODS,
+  CONTACTS_WRITE_METHODS,
+  isContactsWriteMethod,
+} from "../_shared/secretary-google-contacts.ts";
 import {
   executeCalendarRead,
   executeCalendarWrite,
@@ -40,7 +46,12 @@ const TOOL_STATUS = Object.freeze({
     readMethods: [...CALENDAR_READ_METHODS],
     writeMethods: [...CALENDAR_WRITE_ALLOWED_PHASE6F],
   },
-  contacts: { phase: "6-G", status: "stub", methods: ["people.searchContacts"] },
+  contacts: {
+    phase: "6-G",
+    status: "read_only",
+    readMethods: [...CONTACTS_READ_METHODS],
+    writeMethods: [],
+  },
   drive: { phase: "6-H", status: "stub", methods: ["files.list"] },
 });
 
@@ -67,7 +78,7 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-F",
+        phase: "6-G",
         service: "secretary-google-tools",
         configured: config.configured,
         mock: config.mock,
@@ -88,7 +99,7 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-F",
+        phase: "6-G",
         googleConnected: Boolean(connection?.connected),
         googleAccountEmail: connection?.googleAccountEmail || null,
         tools: TOOL_STATUS,
@@ -147,6 +158,25 @@ Deno.serve(async (req) => {
       timeZone: typeof body.timeZone === "string" ? body.timeZone : undefined,
     });
     const status = result.ok ? 200 : result.error === "human_gate_required" ? 403 : 502;
+    return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
+  }
+
+  if (action === "contacts_read") {
+    if (!userId) {
+      return jsonResponse({ ok: false, error: "unauthorized" }, 401, req);
+    }
+    const method = String(body.method || "").trim();
+    if (isContactsWriteMethod(method)) {
+      return jsonResponse({ ok: false, error: "contacts_read_only", method, phase: "6-G" }, 403, req);
+    }
+    const result = await executeContactsRead(userId, {
+      method,
+      resourceName: typeof body.resourceName === "string" ? body.resourceName : undefined,
+      query: typeof body.query === "string" ? body.query : undefined,
+      maxResults: Number(body.maxResults) || undefined,
+      pageToken: typeof body.pageToken === "string" ? body.pageToken : undefined,
+    });
+    const status = result.ok ? 200 : result.error === "contacts_read_only" ? 403 : 502;
     return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
   }
 
@@ -214,6 +244,13 @@ Deno.serve(async (req) => {
     if (tool === "calendar") {
       return jsonResponse(
         { ok: false, error: "use_action_calendar", hint: "POST action=calendar_read or calendar_write" },
+        400,
+        req
+      );
+    }
+    if (tool === "contacts") {
+      return jsonResponse(
+        { ok: false, error: "use_action_contacts", hint: "POST action=contacts_read" },
         400,
         req
       );
