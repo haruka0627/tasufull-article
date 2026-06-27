@@ -15,7 +15,7 @@
 </head>
 <body>
   <h1>Voice Core</h1>
-  <p>Mock + Live skeletons + STT/TTS/Fallback (mock-only) — no external API.</p>
+  <p>Mock + Live boundary (Phase 5-A) + STT/TTS/Fallback — no external API by default.</p>
   <div>
     <button type="button" id="btn-start">Start session</button>
     <button type="button" id="btn-text">Send text</button>
@@ -26,6 +26,7 @@
     <button type="button" id="btn-stt-mock">STT Mock</button>
     <button type="button" id="btn-tts-mock">TTS Mock</button>
     <button type="button" id="btn-fallback-mock">Fallback Mock</button>
+    <button type="button" id="btn-policy-mock">Policy Mock</button>
   </div>
   <pre id="log"></pre>
 
@@ -33,7 +34,10 @@
   <script src="voice-adapter-interface.js"></script>
   <script src="voice-mock-adapter.js"></script>
   <script src="voice-realtime-options.js"></script>
+  <script src="voice-realtime-connect-policy.js"></script>
+  <script src="voice-realtime-config.js"></script>
   <script src="voice-realtime-event-mapper.js"></script>
+  <script src="voice-openai-realtime-wire-client.js"></script>
   <script src="adapters/voice-openai-realtime-adapter.js"></script>
   <script src="voice-gemini-live-options.js"></script>
   <script src="voice-gemini-live-event-mapper.js"></script>
@@ -136,6 +140,13 @@
           next.nextProvider === "gemini_live" &&
           walk.steps.length >= 2;
         log(ok ? "FALLBACK MOCK PASS: " + JSON.stringify({ primary, next: next.nextProvider }) : "FALLBACK MOCK FAIL", ok ? "ok" : "err");
+      };
+
+      document.getElementById("btn-policy-mock").onclick = () => {
+        const policy = window.TasuVoiceCore.resolveConnectPolicy({ mockCompatible: true });
+        const disabled = window.TasuVoiceCore.resolveConnectPolicy({ mockCompatible: false });
+        const ok = policy.mode === "mock" && disabled.reason === "live_disabled";
+        log(ok ? "POLICY MOCK PASS: default mock, live disabled without flag" : "POLICY MOCK FAIL", ok ? "ok" : "err");
       };
     })();
   </script>

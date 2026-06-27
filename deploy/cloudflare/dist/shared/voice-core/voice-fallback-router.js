@@ -1,9 +1,11 @@
 /**
- * Voice Core — fallback router skeleton (no actual provider switch / connect)
+ * Voice Core — fallback router (plan + policy-aware connect hints · no native wire I/O)
  * Chain: openai_realtime → gemini_live → mock
  */
 (function (global) {
   "use strict";
+
+  const { resolveConnectPolicy } = global.TasuVoiceCoreRealtimeConnectPolicy || {};
 
   const DEFAULT_LIVE_CHAIN = Object.freeze([
     { provider: "openai_realtime", kind: "live", label: "OpenAI Live" },
@@ -71,6 +73,57 @@
     }
 
     /**
+     * Classify connect failure codes for fallback routing.
+     * @param {string} code
+     */
+    function classifyConnectFailure(code) {
+      const c = String(code || "");
+      const retriable = ["live_disabled", "live_not_configured", "transport_not_configured", "connect_failed"];
+      const exhausted = ["fallback_exhausted_mock"];
+      return {
+        code: c,
+        retriable: retriable.includes(c),
+        suggestFallback: retriable.includes(c) || c === "connect_exception",
+        exhausted: exhausted.includes(c),
+      };
+    }
+
+    /**
+     * Policy-aware start plan (no actual connect).
+     * @param {object} [query]
+     * @param {object} [options]
+     * @param {object} [injectors]
+     */
+    function resolveStartPlan(query = {}, options = {}, injectors) {
+      const selection = selectProvider(query);
+      const provider = selection.selected?.provider || "mock";
+      const connectPolicy =
+        resolveConnectPolicy && provider === "openai_realtime"
+          ? resolveConnectPolicy({ ...options, ...query, provider }, injectors)
+          : { mode: "mock", allowLive: false, mockCompatible: true, reason: "non_openai" };
+
+      let liveAttempt = { attempt: false, reason: "not_openai" };
+      if (provider === "openai_realtime") {
+        liveAttempt = connectPolicy.allowLive
+          ? { attempt: true, reason: "live_allowed" }
+          : {
+              attempt: false,
+              reason: connectPolicy.reason,
+              suggestFallback: !connectPolicy.mockCompatible,
+            };
+      }
+
+      return {
+        ...selection,
+        connectPolicy,
+        liveAttempt,
+        skeleton: true,
+        mockOnly,
+        ts: Date.now(),
+      };
+    }
+
+    /**
      * Skeleton: simulate full chain walk without API calls.
      */
     function simulateFallbackWalk(startProvider) {
@@ -94,6 +147,8 @@
       getFallbackPlan,
       selectProvider,
       routeOnFailure,
+      classifyConnectFailure,
+      resolveStartPlan,
       simulateFallbackWalk,
       chain,
       mockOnly,

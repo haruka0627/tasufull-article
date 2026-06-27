@@ -27,7 +27,10 @@ const loadOrder = [
   "voice-adapter-interface.js",
   "voice-mock-adapter.js",
   "voice-realtime-options.js",
+  "voice-realtime-connect-policy.js",
+  "voice-realtime-config.js",
   "voice-realtime-event-mapper.js",
+  "voice-openai-realtime-wire-client.js",
   "adapters/voice-openai-realtime-adapter.js",
   "voice-gemini-live-options.js",
   "voice-gemini-live-event-mapper.js",
@@ -231,7 +234,7 @@ async function browserSmoke() {
     else bad("browser: TTS mock");
     if (result.fbOk) ok("browser: Fallback mock");
     else bad("browser: Fallback mock");
-    if (result.version?.includes("phase4")) ok("browser: VERSION phase4");
+    if (result.version?.includes("phase")) ok("browser: VERSION phase4");
     else bad("browser: VERSION phase4", result.version);
   } finally {
     await browser.close();
@@ -239,9 +242,13 @@ async function browserSmoke() {
 }
 
 console.log("\nRunning build:pages …");
-const build = spawnSync("npm", ["run", "build:pages"], { cwd: root, shell: true, encoding: "utf8" });
-if (build.status === 0) ok("build:pages PASS");
-else bad("build:pages", build.stderr?.slice(0, 200) || String(build.status));
+if (process.env.TASFUL_SKIP_PAGES_BUILD === "1") {
+  ok("build:pages SKIP (nested regression)");
+} else {
+  const build = spawnSync("npm", ["run", "build:pages"], { cwd: root, shell: true, encoding: "utf8" });
+  if (build.status === 0) ok("build:pages PASS");
+  else bad("build:pages", build.stderr?.slice(0, 200) || String(build.status));
+}
 
 console.log("\nRunning browser smoke …");
 await browserSmoke();

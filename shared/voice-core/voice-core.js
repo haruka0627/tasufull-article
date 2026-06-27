@@ -18,6 +18,11 @@
   const sttMockAdapter = global.TasuVoiceCoreSttMockAdapter;
   const ttsMockAdapter = global.TasuVoiceCoreTtsMockAdapter;
   const { createFallbackRouter, DEFAULT_LIVE_CHAIN } = global.TasuVoiceCoreFallbackRouter || {};
+  const { resolveConnectPolicy, isLiveConnectionEnabled, setRuntimeInjectors } =
+    global.TasuVoiceCoreRealtimeConnectPolicy || {};
+  const { createRealtimeConfig } = global.TasuVoiceCoreRealtimeConfig || {};
+  const { normalizeOpenAiServerEvent, OPENAI_SERVER_EVENT } = global.TasuVoiceCoreRealtimeEventMapper || {};
+  const { createWireClient } = global.TasuVoiceCoreOpenAiRealtimeWireClient || {};
 
   /**
    * @param {object} [options]
@@ -57,20 +62,30 @@
   }
 
   global.TasuVoiceCore = {
-    VERSION: "phase4-mock-compatible",
+    VERSION: "phase5a-openai-live-boundary",
     EVENT,
     ADAPTER_KIND,
     WIRE_EVENT: WIRE_EVENT || {},
+    OPENAI_SERVER_EVENT: OPENAI_SERVER_EVENT || {},
     GEMINI_WIRE_EVENT: GEMINI_WIRE_EVENT || {},
     DEFAULT_LIVE_CHAIN: DEFAULT_LIVE_CHAIN || [],
     normalizeRealtimeOptions,
     mapWireEventToVoiceCore,
+    normalizeOpenAiServerEvent,
     normalizeGeminiLiveOptions,
     mapGeminiWireEventToVoiceCore,
+    resolveConnectPolicy,
+    isLiveConnectionEnabled,
+    setRuntimeInjectors,
+    createRealtimeConfig,
+    createWireClient,
     createSTTAdapter,
     createTTSAdapter,
     createFallbackRouter,
     VoiceFallbackRouter: global.TasuVoiceCoreFallbackRouter,
+    VoiceRealtimeConnectPolicy: global.TasuVoiceCoreRealtimeConnectPolicy,
+    VoiceRealtimeConfig: global.TasuVoiceCoreRealtimeConfig,
+    OpenAiRealtimeWireClient: global.TasuVoiceCoreOpenAiRealtimeWireClient,
     startSession,
     createSession,
     resolveAdapter,

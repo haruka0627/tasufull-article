@@ -1,5 +1,5 @@
 /**
- * Voice Core — OpenAI Realtime adapter skeleton (mock-compatible · no wire connect)
+ * Voice Core — OpenAI Realtime adapter (mock-compatible default · live via injectable transport)
  * provider: openai_realtime · kind: live
  */
 (function (global) {
@@ -8,26 +8,50 @@
   const { EVENT, ADAPTER_KIND } = global.TasuVoiceCoreEvents;
   const { normalizeRealtimeOptions } = global.TasuVoiceCoreRealtimeOptions;
   const { WIRE_EVENT, emitMappedWireEvent } = global.TasuVoiceCoreRealtimeEventMapper;
+  const { resolveConnectPolicy, getRuntimeInjectors } = global.TasuVoiceCoreRealtimeConnectPolicy;
+  const { createRealtimeConfig } = global.TasuVoiceCoreRealtimeConfig;
+  const { createWireClient } = global.TasuVoiceCoreOpenAiRealtimeWireClient;
 
   const CONNECTION_STATE = Object.freeze({
     IDLE: "idle",
     MOCK_ACTIVE: "mock_active",
+    CONNECTING: "connecting",
+    LIVE_ACTIVE: "live_active",
     DISCONNECTED: "disconnected",
   });
 
   const sessions = new Map();
+  let sessionInjectors = null;
+  let sessionTransport = null;
 
-  function setConnectionState(sessionId, state) {
+  function setSessionRuntime(injectors, transport) {
+    sessionInjectors = injectors || null;
+    sessionTransport = transport || null;
+  }
+
+  function getInjectors(options) {
+    if (options?._voiceCoreInjectors) return options._voiceCoreInjectors;
+    if (sessionInjectors) return sessionInjectors;
+    return getRuntimeInjectors ? getRuntimeInjectors() : null;
+  }
+
+  function getTransport(options) {
+    if (options?._voiceCoreTransport) return options._voiceCoreTransport;
+    return sessionTransport || null;
+  }
+
+  function setConnectionState(sessionId, patch) {
     if (!sessionId) return;
-    sessions.set(sessionId, { state, updatedAt: Date.now() });
+    const prev = sessions.get(sessionId) || {};
+    sessions.set(sessionId, { ...prev, ...patch, updatedAt: Date.now() });
   }
 
   function getConnectionState(sessionId) {
     return sessions.get(sessionId)?.state || CONNECTION_STATE.IDLE;
   }
 
-  function createSessionId() {
-    return `oai-rt-mock-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  function createSessionId(prefix) {
+    return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   }
 
   function ctxFor(sessionId, options) {
@@ -40,6 +64,81 @@
     };
   }
 
+  function emitConnectError(emit, code, message) {
+    const err = {
+      type: EVENT.ERROR_MOCK,
+      code,
+      message,
+    };
+    emit(err);
+    return err;
+  }
+
+  function startMockSession(opts, emit) {
+    const sessionId = createSessionId("oai-rt-mock");
+    setConnectionState(sessionId, {
+      state: CONNECTION_STATE.MOCK_ACTIVE,
+      surface: opts.surface,
+      mode: "mock",
+    });
+
+    emitMappedWireEvent(
+      emit,
+      { type: WIRE_EVENT.SESSION_CREATED, session: { id: sessionId } },
+      ctxFor(sessionId, opts)
+    );
+
+    return { sessionId, connectionState: CONNECTION_STATE.MOCK_ACTIVE, mode: "mock" };
+  }
+
+  function startLiveSession(opts, emit, policy) {
+    const sessionId = createSessionId("oai-rt-live");
+    const injectors = getInjectors(opts);
+    const transport = getTransport(opts);
+    const config = createRealtimeConfig(injectors);
+    const ctx = ctxFor(sessionId, { ...opts, mockCompatible: false });
+
+    const wireClient = createWireClient({
+      policy,
+      config,
+      transport,
+      emit,
+      ctx,
+    });
+
+    setConnectionState(sessionId, {
+      state: CONNECTION_STATE.CONNECTING,
+      surface: opts.surface,
+      mode: "live",
+      wireClient,
+    });
+
+    wireClient
+      .connect({ ...opts, sessionId })
+      .then((result) => {
+        const rec = sessions.get(sessionId);
+        if (!rec) return;
+
+        if (!result.ok) {
+          emitConnectError(emit, result.code || "connect_failed", result.message || "live connect failed");
+          setConnectionState(sessionId, { state: CONNECTION_STATE.DISCONNECTED, lastError: result.code });
+          return;
+        }
+
+        setConnectionState(sessionId, {
+          state: CONNECTION_STATE.LIVE_ACTIVE,
+          wireClient,
+          transportId: result.transportId,
+        });
+      })
+      .catch((err) => {
+        emitConnectError(emit, "connect_exception", String(err?.message || err));
+        setConnectionState(sessionId, { state: CONNECTION_STATE.DISCONNECTED, lastError: "connect_exception" });
+      });
+
+    return { sessionId, connectionState: CONNECTION_STATE.CONNECTING, mode: "live", pendingLive: true };
+  }
+
   const openAiRealtimeAdapter = {
     id: "openai-realtime-skeleton",
     kind: ADAPTER_KIND.LIVE,
@@ -50,35 +149,42 @@
      */
     startSession(options, emit) {
       const opts = normalizeRealtimeOptions({ ...options, provider: "openai_realtime", kind: "live" });
-      if (!opts.mockCompatible) {
-        const err = {
-          type: EVENT.ERROR_MOCK,
-          code: "mock_compatible_required",
-          message: "Phase 2 supports mock-compatible mode only",
-        };
-        emit(err);
-        return { sessionId: null, error: err };
+      const injectors = getInjectors(options);
+      const policy = resolveConnectPolicy(opts, injectors);
+
+      if (policy.mode === "mock") {
+        if (!policy.mockCompatible && !policy.liveFlag) {
+          const err = emitConnectError(
+            emit,
+            "live_disabled",
+            "OpenAI Realtime live connect disabled (feature flag off)"
+          );
+          return { sessionId: null, error: err, policy };
+        }
+        return startMockSession(opts, emit);
       }
 
-      const sessionId = createSessionId();
-      setConnectionState(sessionId, CONNECTION_STATE.MOCK_ACTIVE);
-      sessions.set(sessionId, {
-        state: CONNECTION_STATE.MOCK_ACTIVE,
-        surface: opts.surface,
-        updatedAt: Date.now(),
-      });
-
-      emitMappedWireEvent(
-        emit,
-        { type: WIRE_EVENT.SESSION_CREATED, session: { id: sessionId } },
-        ctxFor(sessionId, opts)
-      );
-
-      return { sessionId, connectionState: CONNECTION_STATE.MOCK_ACTIVE };
+      return startLiveSession(opts, emit, policy);
     },
 
     sendAudio(sessionId, chunk) {
-      if (!sessionId || getConnectionState(sessionId) !== CONNECTION_STATE.MOCK_ACTIVE) {
+      const rec = sessions.get(sessionId);
+      const state = rec?.state || CONNECTION_STATE.IDLE;
+
+      if (state === CONNECTION_STATE.LIVE_ACTIVE && rec?.wireClient) {
+        const sent = rec.wireClient.sendAudio(chunk);
+        if (!sent?.ok) {
+          return {
+            type: EVENT.ERROR_MOCK,
+            code: sent?.code || "send_failed",
+            message: "live audio send failed",
+            sessionId,
+          };
+        }
+        return { type: "audio_sent", sessionId, mode: "live", ts: Date.now() };
+      }
+
+      if (state !== CONNECTION_STATE.MOCK_ACTIVE) {
         return {
           type: EVENT.ERROR_MOCK,
           code: "not_active",
@@ -87,13 +193,12 @@
       }
 
       const size = chunk?.byteLength ?? chunk?.length ?? 0;
-      const opts = sessions.get(sessionId) || {};
       const ctx = {
         sessionId,
         provider: "openai_realtime",
         adapterId: openAiRealtimeAdapter.id,
         mockCompatible: true,
-        surface: opts.surface || "default",
+        surface: rec?.surface || "default",
       };
 
       return {
@@ -114,7 +219,23 @@
     },
 
     sendText(sessionId, text) {
-      if (!sessionId || getConnectionState(sessionId) !== CONNECTION_STATE.MOCK_ACTIVE) {
+      const rec = sessions.get(sessionId);
+      const state = rec?.state || CONNECTION_STATE.IDLE;
+
+      if (state === CONNECTION_STATE.LIVE_ACTIVE && rec?.wireClient) {
+        const sent = rec.wireClient.sendText(text);
+        if (!sent?.ok) {
+          return {
+            type: EVENT.ERROR_MOCK,
+            code: sent?.code || "send_failed",
+            message: "live text send failed",
+            sessionId,
+          };
+        }
+        return { type: "text_sent", sessionId, mode: "live", ts: Date.now() };
+      }
+
+      if (state !== CONNECTION_STATE.MOCK_ACTIVE) {
         return {
           type: EVENT.ERROR_MOCK,
           code: "not_active",
@@ -138,7 +259,7 @@
         mockCompatible: true,
       };
 
-      const mapped = {
+      return {
         type: EVENT.TEXT_DELTA,
         sessionId,
         text: `rt-mock: ${payload}`,
@@ -148,7 +269,6 @@
         _mappedFrom: WIRE_EVENT.RESPONSE_TEXT_DELTA,
         _ctx: ctx,
       };
-      return mapped;
     },
 
     stopSession(sessionId) {
@@ -160,7 +280,12 @@
         };
       }
 
-      setConnectionState(sessionId, CONNECTION_STATE.DISCONNECTED);
+      const rec = sessions.get(sessionId);
+      if (rec?.wireClient) {
+        rec.wireClient.close("user_stop");
+      }
+
+      setConnectionState(sessionId, { state: CONNECTION_STATE.DISCONNECTED });
       sessions.delete(sessionId);
 
       return {
@@ -175,6 +300,7 @@
 
     getConnectionState,
     CONNECTION_STATE,
+    setSessionRuntime,
   };
 
   global.TasuVoiceCoreOpenAiRealtimeAdapter = openAiRealtimeAdapter;
