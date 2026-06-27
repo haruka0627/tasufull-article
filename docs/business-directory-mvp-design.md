@@ -4,7 +4,7 @@
 **前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **方針正本:** [business-directory-subscription-model.md](./business-directory-subscription-model.md)  
 **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)  
-**状態:** **設計のみ** — コード · DB migration · UI · 決済 · Stripe 実装は **未着手**
+**状態:** **Phase 3 Owner UI 実装済** — 運営審査 UI · 公開検索 · Stripe 決済は **未着手**
 
 ---
 

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>掲載編集 | Business Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="business-directory.css">
+</head>
+<body class="dash-body" data-page="business-directory-edit" data-bd-page="edit">
+  <div class="dash-app">
+    <div class="dash-main">
+      <main class="dash-content dash-shell bd-layout" data-bd-root>
+        <div class="bd-page-head">
+          <div>
+            <a class="dash-btn dash-btn--ghost" href="index.html">← ダッシュボード</a>
+          </div>
+        </div>
+        <p class="bd-toast" data-bd-toast hidden role="status"></p>
+        <div class="bd-edit-head">
+          <h1 class="bd-edit-head__title" data-bd-edit-title>掲載編集</h1>
+          <span data-bd-edit-status></span>
+          <span class="bd-card__plan" data-bd-edit-plan>FREE</span>
+        </div>
+        <p class="bd-banner bd-banner--lock" data-bd-lock-banner hidden role="status"></p>
+        <p class="bd-banner bd-banner--info" data-bd-review-pending hidden>公開申請を審査中です。結果まで編集できません。</p>
+        <p class="bd-banner bd-banner--warn" data-bd-reapply-hint hidden>名称・住所・カテゴリなど主要項目を変更した場合は、再度公開申請が必要です。</p>
+        <p class="bd-banner bd-banner--warn" data-bd-reject-reason hidden></p>
+
+        <nav class="bd-tabs" aria-label="編集タブ">
+          <button type="button" class="bd-tabs__btn is-active" data-bd-tab="basic">基本情報</button>
+          <button type="button" class="bd-tabs__btn" data-bd-tab="photos">写真</button>
+          <button type="button" class="bd-tabs__btn" data-bd-tab="hours">営業時間</button>
+          <button type="button" class="bd-tabs__btn" data-bd-tab="service">商品/サービス</button>
+          <button type="button" class="bd-tabs__btn" data-bd-tab="preview">プレビュー</button>
+          <button type="button" class="bd-tabs__btn" data-bd-tab="publish">公開設定</button>
+          <button type="button" class="bd-tabs__btn is-locked" data-bd-tab="tlv">TLV 🔒</button>
+          <button type="button" class="bd-tabs__btn is-locked" data-bd-tab="sns">SNS 🔒</button>
+          <button type="button" class="bd-tabs__btn is-locked" data-bd-tab="achievements">実績 🔒</button>
+        </nav>
+
+        <div class="bd-tab-panel" data-bd-tab-panel="basic">
+          <form class="bd-form" data-bd-edit-form novalidate>
+            <input type="hidden" name="listing_type" value="shop_retail">
+            <input type="hidden" name="plan_code" value="free">
+            <label class="bd-field">
+              <span class="bd-field__label">掲載名</span>
+              <input name="display_name" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">担当者名</span>
+              <input name="contact_name" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">メール</span>
+              <input name="contact_email" type="email" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">電話</span>
+              <input name="contact_phone" type="tel" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">都道府県</span>
+              <input name="prefecture" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">市区町村</span>
+              <input name="city" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">番地以降</span>
+              <input name="address_line1" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">対応地域</span>
+              <input name="service_areas" required>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">カテゴリ</span>
+              <select name="category_id" required></select>
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">公式サイト URL</span>
+              <input name="website_url" type="url">
+            </label>
+            <fieldset class="bd-field bd-hp-mode">
+              <span class="bd-field__label">hp_mode</span>
+              <label><input type="radio" name="hp_mode" value="external_redirect"> 公式サイトへ送客</label>
+              <label><input type="radio" name="hp_mode" value="full_page" checked> TASFUL簡易HP</label>
+            </fieldset>
+            <label class="bd-field">
+              <span class="bd-field__label">短文紹介</span>
+              <textarea name="short_description" rows="3" required></textarea>
+            </label>
+            <div data-bd-type-field="shop_retail">
+              <label class="bd-field">
+                <span class="bd-field__label">主な販売ジャンル</span>
+                <input name="shop_sales_genre">
+              </label>
+            </div>
+            <div data-bd-type-field="business_service" hidden>
+              <label class="bd-field">
+                <span class="bd-field__label">主なサービス内容</span>
+                <input name="service_summary">
+              </label>
+              <label class="bd-field">
+                <span class="bd-field__label">料金目安</span>
+                <input name="price_range_text">
+              </label>
+            </div>
+            <div data-bd-plan-panel></div>
+            <div class="bd-form__actions">
+              <button type="submit" class="dash-btn dash-btn--primary">変更を保存</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="bd-tab-panel" data-bd-tab-panel="photos" hidden></div>
+        <div class="bd-tab-panel" data-bd-tab-panel="hours" hidden></div>
+        <div class="bd-tab-panel" data-bd-tab-panel="service">
+          <p class="bd-field-hint">種別に応じた商品/サービス情報は基本情報タブで編集します（MVP）。</p>
+        </div>
+        <div class="bd-tab-panel" data-bd-tab-panel="preview" hidden></div>
+        <div class="bd-tab-panel" data-bd-tab-panel="publish" hidden>
+          <p>内容を確認のうえ、公開申請を送信してください。審査完了後に公開されます。</p>
+          <button type="button" class="dash-btn dash-btn--primary" data-bd-submit-review data-bd-action="submit_listing_for_review">公開を申請する</button>
+        </div>
+        <div class="bd-tab-panel" data-bd-locked-tab="TLV" data-bd-tab-panel="tlv" hidden></div>
+        <div class="bd-tab-panel" data-bd-locked-tab="SNS" data-bd-tab-panel="sns" hidden></div>
+        <div class="bd-tab-panel" data-bd-locked-tab="実績" data-bd-tab-panel="achievements" hidden></div>
+      </main>
+    </div>
+  </div>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../member-auth.js"></script>
+  <script src="../business-directory-repository.js"></script>
+  <script src="business-directory-categories.js"></script>
+  <script src="business-directory-plan.js"></script>
+  <script src="business-directory-local-store.js"></script>
+  <script src="business-directory-common.js"></script>
+  <script src="business-directory-owner.js"></script>
+</body>
+</html>

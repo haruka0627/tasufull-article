@@ -63,6 +63,7 @@
 | `reports/business-directory-self-service-design.md` | Business Directory Self-Service 設計 |
 | `reports/business-directory-data-model-design.md` | Business Directory DB / Data Model 設計 |
 | `reports/business-directory-ui-flow-design.md` | Business Directory Owner/Admin UI Flow 設計 |
+| `reports/business-directory-phase3-owner-ui.md` | Business Directory Phase 3 Owner UI |
 
 ---
 
