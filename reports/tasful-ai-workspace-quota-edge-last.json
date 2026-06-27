@@ -1,0 +1,13 @@
+{
+  "capturedAt": "2026-06-27T16:32:47.342Z",
+  "runId": "mqwkwa41",
+  "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "dateJst": "2026/06/28",
+  "results": [
+    {
+      "name": "ai-workspace-quota edge reachable",
+      "ok": false,
+      "detail": "HTTP 404"
+    }
+  ]
+}

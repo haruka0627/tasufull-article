@@ -164,6 +164,8 @@
 | --- | --- | --- |
 | チャット · 検索 · 画像 UI | ✅（既存 + 更新） | コミット前から存在 |
 | Final（履歴 · 動画 · 音楽 · 資料 · 音声 · 規約） | ✅ | `5ed9672` · `reports/tasful-ai-final-phase.md` |
+| **課金 enforcement Phase 1**（クライアント） | ✅ | `2a43fe5` · Production deploy |
+| **課金 enforcement Phase 2**（Edge + DB） | ✅ コード · ⏳ deploy | `reports/tasful-ai-workspace-phase2-enforcement.md` |
 | **本番接続**（Edge · billing · Access E2E） | 🔄 | `reports/tasful-ai-production-preflight.md` |
 | **操作アシスタント**（Gemini · 画面操作案内 · 製品横断ナビ） | 📋 Backlog | [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md) · 本番接続 P0 後 |
 

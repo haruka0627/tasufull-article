@@ -93,7 +93,16 @@
 
 ---
 
-## KI-012 — Builder AI 本番 DB / RLS
+## KI-013 — Phase 2 quota SQL / Edge 未デプロイ
+
+| 項目 | 内容 |
+| --- | --- |
+| **状態** | コード commit 済 · live `ai-workspace-quota` **404** |
+| **対応** | `sql/ai-workspace-usage-daily.sql` 適用 + Edge deploy（`reports/tasful-ai-workspace-phase2-enforcement.md` §運用） |
+| **影響** | bypass 防止は live 反映まで未達 |
+
+---
+
 
 | 項目 | 内容 |
 | --- | --- |

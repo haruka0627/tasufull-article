@@ -5,6 +5,10 @@ import {
   mergeMessageWithAttachments,
   normalizeAttachments,
 } from "../_shared/ai-attachments.ts";
+import {
+  enforceWorkspaceQuotaEntry,
+  finalizeWorkspaceQuotaConsume,
+} from "../_shared/ai-workspace-quota.ts";
 
 type HistoryItem = { role?: string; content?: string };
 
@@ -15,6 +19,9 @@ type RequestBody = {
   searchContext?: string;
   systemPrompt?: string;
   attachments?: unknown;
+  surface?: string;
+  user_id?: string;
+  userId?: string;
 };
 
 const OPENAI_MODEL = Deno.env.get("OPENAI_CHAT_MODEL")?.trim() || "gpt-4o-mini";
@@ -69,6 +76,9 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "message is required", reply: "" }, 400);
   }
 
+  const quotaEntry = await enforceWorkspaceQuotaEntry(req, body);
+  if (quotaEntry.blocked) return quotaEntry.blocked;
+
   try {
     const res = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -95,6 +105,7 @@ Deno.serve(async (req) => {
         res.ok ? 502 : res.status >= 400 && res.status < 500 ? res.status : 502
       );
     }
+    await finalizeWorkspaceQuotaConsume(body);
     return jsonResponse({ reply, usedOpenAi: true, model: OPENAI_MODEL });
   } catch (err) {
     return jsonResponse(

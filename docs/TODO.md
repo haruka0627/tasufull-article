@@ -44,14 +44,14 @@
 | Phase 1 browser regression | **完了** | `test-ai-workspace-usage-enforcement-browser.mjs` **15/15** · `test-tasful-ai-final-smoke-browser.mjs` **53/53** |
 | **Serper credits** | **未実装（運用）** | recovery §⑥ · `Not enough credits` |
 | **CF Access Service Token** | **未実装（運用）** | `CF_ACCESS_CLIENT_ID/SECRET` — E2E 自動化 |
-| **Workspace 課金 enforcement Phase 2** | **未実装** | Edge + DB quota · `reports/tasful-ai-workspace-enforcement-design.md` |
+| **Workspace 課金 enforcement Phase 2** | **実装完了 · deploy 待ち** | Edge + DB quota · `reports/tasful-ai-workspace-phase2-enforcement.md` |
 
 - [x] Workspace 課金 enforcement **Phase 1**（クライアント · `2a43fe5` · Production deploy）
 - [x] Supabase Edge デプロイ（chat functions · `ai-attachments.ts` 含む）→ Vision 再プローブ（2026-06-25 deploy · 2026-06-28 live 6/6 PASS）
 - [ ] Gemini billing / Serper credits 解消（**Serper = 運用チャージ**）
 - [ ] Cloudflare Access **Service Token** 設定
 - [ ] Cloudflare Access 下での本番 URL E2E（MIME / 認証後到達）
-- [ ] Workspace 課金 enforcement **Phase 2**（Edge + DB quota）
+- [x] Workspace 課金 enforcement **Phase 2**（Edge + DB quota · コード完了 · SQL/Edge deploy 待ち）
 - [ ] 動画/音楽 API — `ai-media-gen-config.js` で `enabled: true` + Edge Function
 
 ---
