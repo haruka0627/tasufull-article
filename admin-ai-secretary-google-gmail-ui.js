@@ -1,11 +1,15 @@
 /**
  * AI秘書 Phase 6-D — Gmail UI cards (read + draft workflow + Human Gate)
+ * Step 1 read-only integration: connection gating · write hide
  */
 (function (global) {
   "use strict";
 
   let mounted = false;
   const cardState = new Map();
+
+  const GATED_MESSAGE =
+    "Google 接続後にメールを表示します。上の「接続する」から Google アカウントを連携してください。";
 
   const STATE_LABELS = Object.freeze({
     view: "閲覧",
@@ -26,6 +30,21 @@
 
   function $(root, sel) {
     return (root || document).querySelector(sel);
+  }
+
+  function coordinator() {
+    return global.TasuSecretaryGoogleReadonlyCoordinator;
+  }
+
+  function isGated() {
+    const c = coordinator();
+    if (c?.isConnected) return !c.isConnected();
+    return true;
+  }
+
+  function isWriteBlocked() {
+    const c = coordinator();
+    return !c || c.isReadOnlyMode?.() !== false || isGated();
   }
 
   function formatDate(raw) {
@@ -65,22 +84,24 @@
   }
 
   function renderStateBadge(phase) {
+    if (isWriteBlocked()) return "";
     const label = STATE_LABELS[phase] || STATE_LABELS.view;
     return `<span class="ops-secretary-gmail__state ops-secretary-gmail__state--${esc(phase)}">${esc(label)}</span>`;
   }
 
   function renderActions(message, state) {
+    if (isWriteBlocked()) return "";
     const id = message.id;
     if (state.phase === "view") {
       return (
-        `<div class="ops-secretary-gmail__actions">` +
+        `<div class="ops-secretary-gmail__actions" data-readonly-hide hidden aria-hidden="true">` +
         `<button type="button" class="ops-p3-action" data-gmail-action="propose-reply" data-gmail-id="${esc(id)}">返信案を作る</button>` +
         `</div>`
       );
     }
     if (state.phase === "reply") {
       return (
-        `<div class="ops-secretary-gmail__actions">` +
+        `<div class="ops-secretary-gmail__actions" data-readonly-hide hidden aria-hidden="true">` +
         `<button type="button" class="ops-p3-action" data-gmail-action="save-draft" data-gmail-id="${esc(id)}">下書き保存</button>` +
         `<button type="button" class="ops-p3-action" data-gmail-action="cancel" data-gmail-id="${esc(id)}">キャンセル</button>` +
         `</div>`
@@ -88,7 +109,7 @@
     }
     if (state.phase === "pending_draft") {
       return (
-        `<div class="ops-secretary-gmail__actions">` +
+        `<div class="ops-secretary-gmail__actions" data-readonly-hide hidden aria-hidden="true">` +
         `<button type="button" class="ops-p3-action" data-gmail-action="approve-draft" data-gmail-id="${esc(id)}">下書きを承認作成</button>` +
         `<button type="button" class="ops-p3-action" data-gmail-action="cancel" data-gmail-id="${esc(id)}">キャンセル</button>` +
         `<p class="ops-secretary-gmail__readonly">Human Gate 承認後に drafts.create を実行</p>` +
@@ -97,7 +118,7 @@
     }
     if (state.phase === "draft") {
       return (
-        `<div class="ops-secretary-gmail__actions">` +
+        `<div class="ops-secretary-gmail__actions" data-readonly-hide hidden aria-hidden="true">` +
         `<button type="button" class="ops-p3-action" data-gmail-action="confirm-send" data-gmail-id="${esc(id)}">送信確認</button>` +
         `<button type="button" class="ops-p3-action" data-gmail-action="cancel" data-gmail-id="${esc(id)}">キャンセル</button>` +
         `</div>`
@@ -105,7 +126,7 @@
     }
     if (state.phase === "confirm") {
       return (
-        `<div class="ops-secretary-gmail__confirm">` +
+        `<div class="ops-secretary-gmail__confirm" data-readonly-hide hidden aria-hidden="true">` +
         `<label class="ops-secretary-gmail__confirm-check">` +
         `<input type="checkbox" data-gmail-confirm-check data-gmail-id="${esc(id)}" /> 内容を確認しました` +
         `</label>` +
@@ -118,17 +139,18 @@
       );
     }
     if (state.phase === "sent") {
-      return `<p class="ops-secretary-gmail__readonly">送信済み（Human Gate 承認後）</p>`;
+      return `<p class="ops-secretary-gmail__readonly" data-readonly-hide hidden aria-hidden="true">送信済み（Human Gate 承認後）</p>`;
     }
     return "";
   }
 
   function renderDraftEditor(message, state) {
+    if (isWriteBlocked()) return "";
     if (!["reply", "pending_draft", "confirm", "draft"].includes(state.phase)) return "";
     const body = esc(state.body || "");
     const readonly = state.phase === "confirm" || state.phase === "pending_draft" || state.phase === "draft" ? "readonly" : "";
     return (
-      `<div class="ops-secretary-gmail__draft">` +
+      `<div class="ops-secretary-gmail__draft" data-readonly-hide hidden aria-hidden="true">` +
       `<label class="ops-secretary-gmail__draft-label">返信案</label>` +
       `<textarea class="ops-secretary-gmail__draft-body" data-gmail-draft-body data-gmail-id="${esc(message.id)}" rows="4" ${readonly}>${body}</textarea>` +
       (state.plan
@@ -138,11 +160,23 @@
     );
   }
 
+  function showGated(root) {
+    root = root || document.querySelector("[data-ops-secretary-gmail-panel]");
+    const host = $(root, "[data-ops-secretary-gmail-cards]");
+    const status = $(root, "[data-ops-secretary-gmail-status]");
+    cardState.clear();
+    delete cardState.__lastMessages;
+    if (host) host.innerHTML = `<p class="ops-secretary-gmail__empty ops-secretary-gmail__gated">${esc(GATED_MESSAGE)}</p>`;
+    if (status) status.textContent = "未接続（Gmail read-only）";
+    coordinator()?.setPanelStatus?.("gmail", "gated");
+  }
+
   function renderCards(host, messages) {
     if (!host) return;
     messages = Array.isArray(messages) ? messages : [];
     if (!messages.length) {
       host.innerHTML = '<p class="ops-secretary-gmail__empty">該当メールはありません</p>';
+      coordinator()?.setPanelStatus?.("gmail", "empty");
       return;
     }
     host.innerHTML = messages
@@ -174,10 +208,12 @@
         );
       })
       .join("");
-    bindCardActions(host);
+    bindCardActions(host.closest("[data-ops-secretary-gmail-panel]") || document);
+    coordinator()?.setPanelStatus?.("gmail", "ready");
   }
 
   async function handleProposeReply(root, messageId, cardEl) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleGmailClient;
     if (!Client?.proposeReply) return;
     const card = cardEl || root.querySelector(`[data-gmail-message-id="${messageId}"]`);
@@ -199,6 +235,7 @@
   }
 
   async function handleSaveDraft(root, messageId) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleGmailClient;
     const HSG = global.TasuAdminAiHumanSendGate;
     const state = getState(messageId);
@@ -222,6 +259,7 @@
   }
 
   async function handleApproveDraft(root, messageId) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleGmailClient;
     const state = getState(messageId);
     if (!state.draftPendingId) return;
@@ -234,6 +272,7 @@
   }
 
   function handleConfirmSend(root, messageId) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleGmailClient;
     const HSG = global.TasuAdminAiHumanSendGate;
     const state = getState(messageId);
@@ -253,6 +292,7 @@
   }
 
   async function handleFinalSend(root, messageId) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleGmailClient;
     const state = getState(messageId);
     const check = root.querySelector(`input[data-gmail-confirm-check][data-gmail-id="${messageId}"]`);
@@ -266,6 +306,7 @@
   }
 
   function handleCancel(messageId) {
+    if (isWriteBlocked()) return;
     cardState.delete(messageId);
     const host = document.querySelector("[data-ops-secretary-gmail-cards]");
     if (host) renderCards(host, cardState.__lastMessages || []);
@@ -279,6 +320,7 @@
       if (btn.dataset.bound === "1") return;
       btn.dataset.bound = "1";
       btn.addEventListener("click", () => {
+        if (isWriteBlocked()) return;
         const action = btn.getAttribute("data-gmail-action");
         const messageId = btn.getAttribute("data-gmail-id");
         if (!messageId) return;
@@ -295,6 +337,7 @@
       if (check.dataset.bound === "1") return;
       check.dataset.bound = "1";
       check.addEventListener("change", () => {
+        if (isWriteBlocked()) return;
         const messageId = check.getAttribute("data-gmail-id");
         const sendBtn = root.querySelector(`button[data-gmail-action="final-send"][data-gmail-id="${messageId}"]`);
         if (sendBtn) sendBtn.disabled = !check.checked;
@@ -305,6 +348,7 @@
       if (ta.dataset.bound === "1") return;
       ta.dataset.bound = "1";
       ta.addEventListener("input", () => {
+        if (isWriteBlocked()) return;
         const messageId = ta.getAttribute("data-gmail-id");
         const state = getState(messageId);
         setState(messageId, { body: ta.value, plan: state.plan });
@@ -313,23 +357,32 @@
   }
 
   async function loadQuery(root, q, label) {
+    if (isGated()) {
+      showGated(root);
+      return;
+    }
     const Client = global.TasuSecretaryGoogleGmailClient;
     const host = $(root, "[data-ops-secretary-gmail-cards]");
     const status = $(root, "[data-ops-secretary-gmail-status]");
     if (!Client?.listMessages || !host) return;
+    coordinator()?.setPanelStatus?.("gmail", "loading");
     if (status) status.textContent = `${label || "読込中"}…`;
     host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
     const result = await Client.listMessages({ q, maxResults: 10 });
     if (!result.ok) {
-      if (status) status.textContent = `Gmail エラー: ${String(result.error || "failed").slice(0, 80)}`;
+      const err = String(result.error || "failed").slice(0, 80);
+      if (status) status.textContent = `Gmail エラー: ${err}`;
       host.innerHTML = '<p class="ops-secretary-gmail__empty">Gmail を読み込めませんでした</p>';
+      coordinator()?.setPanelStatus?.("gmail", "error");
+      coordinator()?.setLastError?.(err);
       return;
     }
     const messages = result.data?.messages || [];
     cardState.__lastMessages = messages;
     renderCards(host, messages);
-    const mock = result.data?.mock ? " · mock" : "";
-    if (status) status.textContent = `${label || "Gmail"} ${messages.length} 件${mock} · Human Gate`;
+    const mode = result.data?.mock ? " · mock" : " · live";
+    if (status) status.textContent = `${label || "Gmail"} ${messages.length} 件${mode} · read-only`;
+    coordinator()?.setLastError?.("");
   }
 
   function bindPresets(root) {
@@ -339,6 +392,10 @@
       if (btn.dataset.bound === "1") return;
       btn.dataset.bound = "1";
       btn.addEventListener("click", () => {
+        if (isGated()) {
+          showGated(root);
+          return;
+        }
         const preset = btn.getAttribute("data-ops-secretary-gmail-preset") || "inbox";
         const q = Client.PRESETS[preset] || Client.PRESETS.inbox;
         void loadQuery(root, q, btn.textContent?.trim() || preset);
@@ -349,6 +406,10 @@
       searchForm.dataset.bound = "1";
       searchForm.addEventListener("submit", (ev) => {
         ev.preventDefault();
+        if (isGated()) {
+          showGated(root);
+          return;
+        }
         const input = $(root, "[data-ops-secretary-gmail-search-input]");
         const q = String(input?.value || "").trim();
         if (!q) return;
@@ -357,17 +418,36 @@
     }
   }
 
+  async function refreshDefault(root) {
+    root = root || document.querySelector("[data-ops-secretary-gmail-panel]");
+    if (isGated()) {
+      showGated(root);
+      return;
+    }
+    const Client = global.TasuSecretaryGoogleGmailClient;
+    await loadQuery(root, Client?.PRESETS?.unread, "未読");
+  }
+
   function mount(root) {
     root = root || document.querySelector("[data-ops-secretary-gmail-panel]");
     if (!root || mounted) return;
     mounted = true;
     bindPresets(root);
     global.addEventListener("tasu:admin-ai-human-send-gate-updated", () => {
+      if (isWriteBlocked()) return;
       const host = $(root, "[data-ops-secretary-gmail-cards]");
       if (host && cardState.__lastMessages) renderCards(host, cardState.__lastMessages);
     });
-    void loadQuery(root, global.TasuSecretaryGoogleGmailClient?.PRESETS?.unread, "未読");
+    showGated(root);
   }
 
-  global.TasuSecretaryGoogleGmailUI = { mount, loadQuery, renderCards, getState, STATE_LABELS };
+  global.TasuSecretaryGoogleGmailUI = {
+    mount,
+    loadQuery,
+    refreshDefault,
+    showGated,
+    renderCards,
+    getState,
+    STATE_LABELS,
+  };
 })(typeof window !== "undefined" ? window : globalThis);

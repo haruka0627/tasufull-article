@@ -1,11 +1,15 @@
 /**
  * AI秘書 Phase 6-F — Google Calendar UI (read + write workflow + Human Gate)
+ * Step 1 read-only integration: connection gating · write hide
  */
 (function (global) {
   "use strict";
 
   let mounted = false;
   const uiState = { phase: "view", pendingId: "", draft: null, selectedEvent: null };
+
+  const GATED_MESSAGE =
+    "Google 接続後に予定を表示します。上の「接続する」から Google アカウントを連携してください。";
 
   const STATE_LABELS = Object.freeze({
     view: "閲覧",
@@ -25,6 +29,21 @@
 
   function $(root, sel) {
     return (root || document).querySelector(sel);
+  }
+
+  function coordinator() {
+    return global.TasuSecretaryGoogleReadonlyCoordinator;
+  }
+
+  function isGated() {
+    const c = coordinator();
+    if (c?.isConnected) return !c.isConnected();
+    return true;
+  }
+
+  function isWriteBlocked() {
+    const c = coordinator();
+    return !c || c.isReadOnlyMode?.() !== false || isGated();
   }
 
   function formatDateTime(raw, allDay) {
@@ -48,12 +67,25 @@
   function renderStatusBadge(root) {
     const status = $(root, "[data-ops-secretary-calendar-status]");
     if (!status) return;
+    if (isWriteBlocked()) {
+      const base = status.dataset.baseLabel || status.textContent.split(" · ")[0] || "Calendar";
+      status.textContent = `${base} · read-only`;
+      return;
+    }
     const label = STATE_LABELS[uiState.phase] || STATE_LABELS.view;
     const base = status.dataset.baseLabel || status.textContent.split(" · ")[0] || "Calendar";
     status.textContent = `${base} · ${label}`;
   }
 
   function renderConfirmPanel(root) {
+    if (isWriteBlocked()) {
+      const host = $(root, "[data-ops-secretary-calendar-confirm]");
+      if (host) {
+        host.hidden = true;
+        host.innerHTML = "";
+      }
+      return;
+    }
     const host = $(root, "[data-ops-secretary-calendar-confirm]");
     if (!host) return;
     const draft = uiState.draft;
@@ -70,7 +102,7 @@
           ? "予定変更確認"
           : "予定作成確認";
     host.innerHTML =
-      `<article class="ops-secretary-gmail__card ops-secretary-calendar__confirm">` +
+      `<article class="ops-secretary-gmail__card ops-secretary-calendar__confirm" data-readonly-hide hidden aria-hidden="true">` +
       `<h5 class="ops-secretary-calendar__confirm-title">${esc(actionLabel)}</h5>` +
       `<p class="ops-secretary-gmail__snippet"><strong>${esc(draft.title || "")}</strong></p>` +
       `<p class="ops-secretary-gmail__snippet">${formatDateTime(draft.start, draft.allDay)} → ${formatDateTime(draft.end, draft.allDay)}</p>` +
@@ -105,6 +137,7 @@
   }
 
   async function handleApprove(root) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleCalendarClient;
     if (!uiState.pendingId || !Client?.approvePending) return;
     const approved = await Client.approvePending(uiState.pendingId);
@@ -118,6 +151,7 @@
   }
 
   function startHumanGate(root, calendarAction, fields) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleCalendarClient;
     const HSG = global.TasuAdminAiHumanSendGate;
     const queued = Client.enqueueCalendarHumanGate(calendarAction, fields);
@@ -145,6 +179,10 @@
     }
     uiState.selectedEvent = event;
     host.hidden = false;
+    const writeActions = isWriteBlocked()
+      ? ""
+      : `<button type="button" class="ops-p3-action" data-calendar-action="update" data-readonly-hide hidden aria-hidden="true">予定を変更</button>` +
+        `<button type="button" class="ops-p3-action" data-calendar-action="delete" data-readonly-hide hidden aria-hidden="true">予定を削除</button>`;
     host.innerHTML =
       `<article class="ops-secretary-gmail__card ops-secretary-calendar__detail">` +
       `<header class="ops-secretary-gmail__card-head">` +
@@ -159,36 +197,52 @@
       `</dl>` +
       (event.description ? `<p class="ops-secretary-gmail__snippet">${esc(event.description)}</p>` : "") +
       `<div class="ops-secretary-gmail__actions">` +
-      `<button type="button" class="ops-p3-action" data-calendar-action="update">予定を変更</button>` +
-      `<button type="button" class="ops-p3-action" data-calendar-action="delete">予定を削除</button>` +
+      writeActions +
       `<button type="button" class="ops-p3-action" data-ops-calendar-detail-close>閉じる</button>` +
       `</div>` +
       `</article>`;
     host.querySelector("[data-ops-calendar-detail-close]")?.addEventListener("click", () => {
       renderDetail(host, null, root);
     });
-    host.querySelector('[data-calendar-action="update"]')?.addEventListener("click", () => {
-      const fields = {
-        calendarId: event.calendarId || "primary",
-        eventId: event.id,
-        title: event.title,
-        start: event.start,
-        end: event.end,
-        allDay: event.allDay,
-        location: event.location,
-        description: event.description,
-      };
-      startHumanGate(root, "update", fields);
-    });
-    host.querySelector('[data-calendar-action="delete"]')?.addEventListener("click", () => {
-      startHumanGate(root, "delete", {
-        calendarId: event.calendarId || "primary",
-        eventId: event.id,
-        title: event.title,
-        start: event.start,
-        end: event.end,
+    if (!isWriteBlocked()) {
+      host.querySelector('[data-calendar-action="update"]')?.addEventListener("click", () => {
+        const fields = {
+          calendarId: event.calendarId || "primary",
+          eventId: event.id,
+          title: event.title,
+          start: event.start,
+          end: event.end,
+          allDay: event.allDay,
+          location: event.location,
+          description: event.description,
+        };
+        startHumanGate(root, "update", fields);
       });
-    });
+      host.querySelector('[data-calendar-action="delete"]')?.addEventListener("click", () => {
+        startHumanGate(root, "delete", {
+          calendarId: event.calendarId || "primary",
+          eventId: event.id,
+          title: event.title,
+          start: event.start,
+          end: event.end,
+        });
+      });
+    }
+  }
+
+  function showGated(root) {
+    root = root || document.querySelector("[data-ops-secretary-calendar-panel]");
+    const host = $(root, "[data-ops-secretary-calendar-cards]");
+    const status = $(root, "[data-ops-secretary-calendar-status]");
+    const detail = $(root, "[data-ops-secretary-calendar-detail]");
+    resetWorkflow(root);
+    if (host) {
+      host.__events = [];
+      host.innerHTML = `<p class="ops-secretary-gmail__empty ops-secretary-gmail__gated">${esc(GATED_MESSAGE)}</p>`;
+    }
+    if (detail) renderDetail(detail, null, root);
+    if (status) status.textContent = "未接続（Calendar read-only）";
+    coordinator()?.setPanelStatus?.("calendar", "gated");
   }
 
   function renderCards(host, events) {
@@ -196,6 +250,7 @@
     events = Array.isArray(events) ? events : [];
     if (!events.length) {
       host.innerHTML = '<p class="ops-secretary-gmail__empty">予定はありません</p>';
+      coordinator()?.setPanelStatus?.("calendar", "empty");
       return;
     }
     host.innerHTML = events
@@ -219,6 +274,7 @@
       })
       .join("");
     bindCardClicks(host);
+    coordinator()?.setPanelStatus?.("calendar", "ready");
   }
 
   function bindCardClicks(host) {
@@ -229,6 +285,10 @@
       if (card.dataset.bound === "1") return;
       card.dataset.bound = "1";
       const open = () => {
+        if (isGated()) {
+          showGated(root);
+          return;
+        }
         const eventId = card.getAttribute("data-calendar-event-id");
         const calendarId = card.getAttribute("data-calendar-id") || "primary";
         const cached = (host.__events || []).find((e) => e.id === eventId);
@@ -251,10 +311,15 @@
   }
 
   async function loadPreset(root, preset, label) {
+    if (isGated()) {
+      showGated(root);
+      return;
+    }
     const Client = global.TasuSecretaryGoogleCalendarClient;
     const host = $(root, "[data-ops-secretary-calendar-cards]");
     const status = $(root, "[data-ops-secretary-calendar-status]");
     if (!Client?.listEvents || !host) return;
+    coordinator()?.setPanelStatus?.("calendar", "loading");
     if (status) {
       status.dataset.baseLabel = label || "Calendar";
       status.textContent = `${label || "読込中"}…`;
@@ -262,21 +327,29 @@
     host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
     const result = await Client.listEvents({ preset, maxResults: 25 });
     if (!result.ok) {
-      if (status) status.textContent = `Calendar エラー: ${String(result.error || "failed").slice(0, 80)}`;
+      const err = String(result.error || "failed").slice(0, 80);
+      if (status) status.textContent = `Calendar エラー: ${err}`;
       host.innerHTML = '<p class="ops-secretary-gmail__empty">Calendar を読み込めませんでした</p>';
+      coordinator()?.setPanelStatus?.("calendar", "error");
+      coordinator()?.setLastError?.(err);
       return;
     }
     const events = result.data?.events || [];
     host.__events = events;
     renderCards(host, events);
-    const mock = result.data?.mock ? " · mock" : "";
+    const mode = result.data?.mock ? " · mock" : " · live";
     if (status) {
-      status.dataset.baseLabel = `${label || "Calendar"} ${events.length} 件${mock}`;
+      status.dataset.baseLabel = `${label || "Calendar"} ${events.length} 件${mode}`;
       renderStatusBadge(root);
     }
+    coordinator()?.setLastError?.("");
   }
 
   async function loadSearch(root, q) {
+    if (isGated()) {
+      showGated(root);
+      return;
+    }
     const Client = global.TasuSecretaryGoogleCalendarClient;
     const host = $(root, "[data-ops-secretary-calendar-cards]");
     const status = $(root, "[data-ops-secretary-calendar-status]");
@@ -286,6 +359,7 @@
     const result = await Client.listEvents({ preset: "next_7_days", q, maxResults: 25 });
     if (!result.ok) {
       host.innerHTML = '<p class="ops-secretary-gmail__empty">検索できませんでした</p>';
+      coordinator()?.setPanelStatus?.("calendar", "error");
       return;
     }
     const events = result.data?.events || [];
@@ -295,6 +369,7 @@
   }
 
   async function handleCreate(root) {
+    if (isWriteBlocked()) return;
     const Client = global.TasuSecretaryGoogleCalendarClient;
     const input = $(root, "[data-ops-secretary-calendar-create-input]");
     const text = String(input?.value || "").trim();
@@ -321,6 +396,10 @@
       if (btn.dataset.bound === "1") return;
       btn.dataset.bound = "1";
       btn.addEventListener("click", () => {
+        if (isGated()) {
+          showGated(root);
+          return;
+        }
         const preset = btn.getAttribute("data-ops-secretary-calendar-preset") || "today";
         void loadPreset(root, preset, btn.textContent?.trim() || preset);
       });
@@ -330,6 +409,10 @@
       searchForm.dataset.bound = "1";
       searchForm.addEventListener("submit", (ev) => {
         ev.preventDefault();
+        if (isGated()) {
+          showGated(root);
+          return;
+        }
         const input = $(root, "[data-ops-secretary-calendar-search-input]");
         const q = String(input?.value || "").trim();
         if (!q) return;
@@ -339,13 +422,17 @@
     const createBtn = $(root, "[data-ops-secretary-calendar-create-btn]");
     if (createBtn && createBtn.dataset.bound !== "1") {
       createBtn.dataset.bound = "1";
-      createBtn.addEventListener("click", () => void handleCreate(root));
+      createBtn.addEventListener("click", () => {
+        if (isWriteBlocked()) return;
+        void handleCreate(root);
+      });
     }
     const createForm = $(root, "[data-ops-secretary-calendar-create-form]");
     if (createForm && createForm.dataset.bound !== "1") {
       createForm.dataset.bound = "1";
       createForm.addEventListener("submit", (ev) => {
         ev.preventDefault();
+        if (isWriteBlocked()) return;
         void handleCreate(root);
       });
     }
@@ -375,20 +462,35 @@
     });
   }
 
+  async function refreshDefault(root) {
+    root = root || document.querySelector("[data-ops-secretary-calendar-panel]");
+    if (isGated()) {
+      showGated(root);
+      return;
+    }
+    const Client = global.TasuSecretaryGoogleCalendarClient;
+    await loadPreset(root, Client?.PRESETS?.today, "今日の予定");
+  }
+
   function mount(root) {
     root = root || document.querySelector("[data-ops-secretary-calendar-panel]");
     if (!root || mounted) return;
     mounted = true;
     bindTabs(root);
     bindPresets(root);
-    global.addEventListener("tasu:admin-ai-human-send-gate-updated", () => renderConfirmPanel(root));
-    void loadPreset(root, global.TasuSecretaryGoogleCalendarClient?.PRESETS?.today, "今日の予定");
+    global.addEventListener("tasu:admin-ai-human-send-gate-updated", () => {
+      if (isWriteBlocked()) return;
+      renderConfirmPanel(root);
+    });
+    showGated(root);
   }
 
   global.TasuSecretaryGoogleCalendarUI = {
     mount,
     loadPreset,
     loadSearch,
+    refreshDefault,
+    showGated,
     renderCards,
     renderDetail,
     STATE_LABELS,

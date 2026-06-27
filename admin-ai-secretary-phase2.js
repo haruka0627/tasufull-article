@@ -478,9 +478,10 @@
     global.TasuSecretaryOrchestrator?.renderQueuePanel?.();
     global.TasuSecretaryCommandCenterUI?.init?.();
     global.TasuSecretaryMorningReport?.bindMorningReportButton?.();
-    global.TasuSecretaryGoogleConnectUI?.mount?.();
+    global.TasuSecretaryGoogleReadonlyCoordinator?.mount?.();
     global.TasuSecretaryGoogleGmailUI?.mount?.();
     global.TasuSecretaryGoogleCalendarUI?.mount?.();
+    global.TasuSecretaryGoogleConnectUI?.mount?.();
     global.TasuSecretaryGoogleContactsUI?.mount?.();
     global.TasuSecretaryGoogleDriveUI?.mount?.();
     global.TasuSecretaryGoogleOrchestratorUI?.mount?.();

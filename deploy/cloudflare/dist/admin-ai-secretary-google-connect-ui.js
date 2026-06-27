@@ -18,6 +18,33 @@
     }
   }
 
+  function notifyConnectionChanged(status) {
+    const Coordinator = global.TasuSecretaryGoogleReadonlyCoordinator;
+    if (Coordinator?.dispatchConnectionChanged) {
+      Coordinator.dispatchConnectionChanged({
+        connected: Boolean(status?.connected),
+        mock: Boolean(status?.mock),
+        configured: Boolean(status?.configured),
+        source: "connect-ui",
+      });
+      return;
+    }
+    try {
+      global.dispatchEvent(
+        new CustomEvent(Coordinator?.EVENT_NAME || "tasu:secretary-google-connection-changed", {
+          detail: {
+            connected: Boolean(status?.connected),
+            mock: Boolean(status?.mock),
+            configured: Boolean(status?.configured),
+            source: "connect-ui",
+          },
+        })
+      );
+    } catch {
+      /* ignore */
+    }
+  }
+
   async function refreshUi(root) {
     const Client = global.TasuSecretaryGoogleOAuthClient;
     const label = $(root, "[data-ops-secretary-google-status-label]");
@@ -32,6 +59,7 @@
     if (disconnectBtn) disconnectBtn.hidden = !connected;
     root.dataset.state = connected ? "connected" : "disconnected";
     root.dataset.mock = status.mock ? "1" : "0";
+    notifyConnectionChanged(status);
   }
 
   function resolveConnectAuthUrl(result) {
