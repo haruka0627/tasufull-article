@@ -16,7 +16,7 @@
 | **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
 | **TALK / Connect / 安否** | Production Ready | レガシー `docs/talk-*` 等 |
 | **TASFUL Materials（素材DL）** | 📋 設計のみ | [free-download-service-backlog.md](./free-download-service-backlog.md) · [reports/free-download-service-plan.md](../reports/free-download-service-plan.md) |
-| **Business Directory** | 📋 設計完了 | [subscription-model](./business-directory-subscription-model.md) · [mvp](./business-directory-mvp-design.md) · [self-service](./business-directory-self-service-design.md) · [data-model](./business-directory-data-model-design.md) · AD-013 · 実装未着手 |
+| **Business Directory** | 📋 設計完了 | [subscription](./business-directory-subscription-model.md) · [mvp](./business-directory-mvp-design.md) · [self-service](./business-directory-self-service-design.md) · [data-model](./business-directory-data-model-design.md) · [ui-flow](./business-directory-ui-flow-design.md) · AD-013 · 実装未着手 |
 
 ---
 
@@ -62,6 +62,7 @@
 | `reports/business-directory-mvp-design.md` | Business Directory MVP 設計 |
 | `reports/business-directory-self-service-design.md` | Business Directory Self-Service 設計 |
 | `reports/business-directory-data-model-design.md` | Business Directory DB / Data Model 設計 |
+| `reports/business-directory-ui-flow-design.md` | Business Directory Owner/Admin UI Flow 設計 |
 
 ---
 

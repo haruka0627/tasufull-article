@@ -112,6 +112,8 @@
 
 ### 事業者 UI（タブ型 · 設計のみ · MVP 未実装）
 
+詳細: [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md) §5
+
 ```text
 基本情報 | 写真 | 動画 | SNS | 営業時間 | 商品/サービス | 実績 | プレビュー | 公開設定
 ```
@@ -209,4 +211,5 @@ Self-Service フォーム・マイページに以下を **含めない**:
 
 - [business-directory-mvp-design.md](./business-directory-mvp-design.md)
 - [business-directory-data-model-design.md](./business-directory-data-model-design.md)
+- [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md)
 - [reports/business-directory-self-service-design.md](../reports/business-directory-self-service-design.md)
