@@ -4,6 +4,13 @@
  */
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import {
+  checkVoiceRealtimeRateLimit,
+  extractVoiceRealtimeClientIp,
+  isVoiceRealtimeEdgeEnabled,
+  voiceRealtimeDisabledFailure,
+  VOICE_REALTIME_KILL_SWITCH_ENV,
+} from "../_shared/voice-realtime-edge-guard.ts";
+import {
   createOpenAiRealtimeSession,
   normalizeRealtimeSessionRequest,
   type RealtimeSessionRequest,
@@ -15,6 +22,17 @@ Deno.serve(async (req) => {
 
   if (req.method !== "POST") {
     return jsonResponse({ ok: false, error: "Method not allowed" }, 405, req);
+  }
+
+  if (!isVoiceRealtimeEdgeEnabled(Deno.env.get(VOICE_REALTIME_KILL_SWITCH_ENV))) {
+    const disabled = voiceRealtimeDisabledFailure();
+    return jsonResponse(disabled.body, disabled.status, req);
+  }
+
+  const clientIp = extractVoiceRealtimeClientIp(req);
+  const rateLimit = checkVoiceRealtimeRateLimit(clientIp);
+  if (!rateLimit.ok) {
+    return jsonResponse(rateLimit.body, rateLimit.status, req);
   }
 
   const apiKey = Deno.env.get("OPENAI_API_KEY")?.trim();
