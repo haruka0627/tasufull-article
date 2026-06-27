@@ -138,7 +138,8 @@
 | **Operations Orchestrator Phase 5-B** | ✅ 実装（未コミット） | OpsEvent · HSG · CI ingest · 朝レポート · `reports/secretary-orchestrator-phase5b.md` |
 | **Operations Orchestrator Phase 5-C** | ✅ 実装（未コミット） | Command Center UI · フィルタ · L3/L4 · `reports/secretary-orchestrator-phase5c.md` |
 | **Google Workspace Phase 6-A** | ✅ 設計完了 | Gmail / Calendar / Contacts / Drive · `reports/secretary-google-workspace-plan.md` |
-| **Google Workspace Phase 6-B〜H** | 📋 未着手 | OAuth · Gmail · Calendar · Contacts · Drive 段階実装 |
+| **Google Workspace Phase 6-B** | ✅ 実装 | OAuth PKCE · Token Vault · Edge skeleton · `reports/secretary-google-phase6b-oauth-token-vault.md` |
+| **Google Workspace Phase 6-C〜H** | 📋 未着手 | Gmail · Calendar · Contacts · Drive 段階実装 |
 | **Operations Orchestrator Phase 7-A** | 📋 未着手 | Cursor SDK · cron · L1 自動送信 · Agent 自動実行 |
 | **Trend Scout**（トレンド収集 · 経営参謀提案） | 📋 Backlog | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) · v1.2 以降想定 · **UI Critical 優先度外** |
 

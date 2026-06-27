@@ -4573,6 +4573,29 @@ a.ops-p2-tile:hover {
   color: var(--od-muted);
 }
 
+.ops-secretary-google-connect {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.65rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--od-border, #e5e7eb);
+  border-radius: 8px;
+  background: var(--od-surface, #fafafa);
+  font-size: 0.8125rem;
+}
+
+.ops-secretary-google-connect__label {
+  flex: 1 1 auto;
+  min-width: 8rem;
+  color: var(--od-muted, #6b7280);
+}
+
+.ops-secretary-google-connect__btn {
+  flex: 0 0 auto;
+}
+
 .ops-secretary-voice-state--listening {
   color: #059669;
 }

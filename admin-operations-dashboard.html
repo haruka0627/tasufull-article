@@ -153,6 +153,11 @@
         <div class="ops-p2-layout ops-p7-desk-chat">
           <section class="ops-p2-panel ops-p2-panel--chat ops-p7-desk-chat-panel" aria-labelledby="ops-p2-chat-heading">
             <h3 class="ops-p7-desk-section-title" id="ops-p2-chat-heading">AIチャット</h3>
+            <div class="ops-secretary-google-connect" data-ops-secretary-google-connect aria-live="polite">
+              <span class="ops-secretary-google-connect__label" data-ops-secretary-google-status-label>Google未接続</span>
+              <button type="button" class="ops-p3-action ops-secretary-google-connect__btn" data-ops-secretary-google-connect-btn>接続する</button>
+              <button type="button" class="ops-p3-action" data-ops-secretary-google-disconnect-btn hidden>切断する</button>
+            </div>
             <div class="ops-p7-chat-conversation">
               <div class="ops-p7-chat-msg ops-p7-chat-msg--assistant ops-light-card" data-ops-phase7-chat-brief aria-live="polite"></div>
               <div class="ops-p2-chat__log ops-p7-desk-chat-log" data-ops-phase2-chat-log role="log" aria-live="polite"></div>
@@ -710,6 +715,8 @@
   <script src="admin-ai-secretary-orchestrator.js"></script>
   <script src="admin-ai-secretary-morning-report.js"></script>
   <script src="admin-ai-secretary-command-center-ui.js"></script>
+  <script src="admin-ai-secretary-google-oauth-client.js"></script>
+  <script src="admin-ai-secretary-google-connect-ui.js"></script>
   <script src="admin-ai-secretary-ops-data-provider.js"></script>
   <script src="admin-ai-secretary-insight-engine.js"></script>
   <script src="admin-ai-secretary-priority-engine.js"></script>

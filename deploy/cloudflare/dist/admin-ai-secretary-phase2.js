@@ -478,6 +478,7 @@
     global.TasuSecretaryOrchestrator?.renderQueuePanel?.();
     global.TasuSecretaryCommandCenterUI?.init?.();
     global.TasuSecretaryMorningReport?.bindMorningReportButton?.();
+    global.TasuSecretaryGoogleConnectUI?.mount?.();
   }
 
   function clearHistoryForTests() {
