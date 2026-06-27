@@ -21,6 +21,14 @@
     context_reply_draft: "context_reply_draft",
     context_refine_short: "context_refine_short",
     context_refine_keigo: "context_refine_keigo",
+    context_refine_polite: "context_refine_polite",
+    context_refine_casual: "context_refine_casual",
+    context_refine_bullets: "context_refine_bullets",
+    context_refine_lines3: "context_refine_lines3",
+    context_refine_one_line: "context_refine_one_line",
+    context_refine_subject: "context_refine_subject",
+    context_triage: "context_triage",
+    context_cross_calendar: "context_cross_calendar",
     write_blocked: "write_blocked",
     none: "none",
   });
@@ -96,6 +104,102 @@
     return /返信案|返信文|下書き案|文案/.test(text) && /作|考|提示|見せ|ください|して|お願い/.test(text);
   }
 
+  function isPronounMailRef(text) {
+    return /^(それ|これ|あれ|このメール|あのメール|そのメール|この件)|^(それ|これ|あの)(は|を|の|、)/.test(
+      String(text || "").trim()
+    );
+  }
+
+  function isPronounCalendarRef(text) {
+    return /その予定|この予定|あの予定/.test(text);
+  }
+
+  function hadRecentGmailInHistory(history) {
+    if (!Array.isArray(history)) return false;
+    const tail = history.slice(-8);
+    return tail.some((m) => {
+      const gi = String(m?.googleIntent || "");
+      return gi.startsWith("gmail") || gi.startsWith("context_");
+    });
+  }
+
+  function hasResolvableGmailContext(history) {
+    const U = getChatContext();
+    if (U?.hasGmailFocus?.()) return true;
+    if (U?.hasGmailList?.()) return true;
+    const turn = U?.getLastTurn?.();
+    if (turn && turn.kind !== "calendar") return true;
+    return hadRecentGmailInHistory(history);
+  }
+
+  function hasResolvableCalendarContext(history) {
+    const U = getChatContext();
+    if (U?.hasCalendarList?.()) return true;
+    const turn = U?.getLastTurn?.();
+    if (turn?.kind === "calendar") return true;
+    if (!Array.isArray(history)) return false;
+    return history.slice(-8).some((m) => String(m?.googleIntent || "").startsWith("calendar"));
+  }
+
+  function isTriageText(text) {
+    const t = String(text || "");
+    return (
+      /(このメール|あのメール|そのメール|メール|それ|この件).*(重要|急ぎ|後で|返信必要|優先|要対応)/i.test(t) ||
+      /^(重要|急ぎ|後でいい|後回し|返信必要|対応優先度|要対応)/.test(t.trim()) ||
+      /重要\s*[？?]|急ぎ\s*[？?]|後でいい\s*[？?]|返信必要\s*[？?]|対応優先度\s*[？?]|優先度\s*[？?]/.test(t)
+    );
+  }
+
+  function isCrossCalendarText(text) {
+    const t = String(text || "");
+    return (
+      /予定.*(照ら|比較|確認)|照らして|今日の予定と|返信.*(いつ|タイミング|時期)|いつ返信|いつがいい/i.test(t) ||
+      (/この予定|その予定/.test(t) && /前|対応|返信|間に/.test(t))
+    );
+  }
+
+  function isReplyDraftLastTurn() {
+    const turn = getChatContext()?.getLastTurn?.();
+    if (!turn) return false;
+    const si = String(turn.sourceIntent || "");
+    if (si === INTENTS.context_reply_draft) return true;
+    if (si.startsWith("context_refine_")) return true;
+    return /返信案|未送信/.test(turn.assistantPreview || "");
+  }
+
+  function isRefineText(text) {
+    return /もっと短く|短くして|短めに|簡潔に|敬語|丁寧|カジュアル|箇条書き|ブレット|3行|３行|1文|１文|一件名|件名案|件名も/.test(
+      String(text || "")
+    );
+  }
+
+  function matchRefineMode(text) {
+    const t = String(text || "");
+    if (/件名案|件名も|一件名/.test(t)) return "subject";
+    if (/箇条書き|ブレット/.test(t)) return "bullets";
+    if (/3行|３行/.test(t)) return "lines3";
+    if (/1文|１文/.test(t)) return "one_line";
+    if (/カジュアル|くだけた|フランク/.test(t)) return "casual";
+    if (/もっと丁寧/.test(t)) return "polite";
+    if (/敬語|丁寧に|丁寧語/.test(t)) return "keigo";
+    if (/もっと短く|短くして|短めに|簡潔に/.test(t)) return "short";
+    return "";
+  }
+
+  function refineIntentForMode(mode) {
+    const map = {
+      short: INTENTS.context_refine_short,
+      keigo: INTENTS.context_refine_keigo,
+      polite: INTENTS.context_refine_polite,
+      casual: INTENTS.context_refine_casual,
+      bullets: INTENTS.context_refine_bullets,
+      lines3: INTENTS.context_refine_lines3,
+      one_line: INTENTS.context_refine_one_line,
+      subject: INTENTS.context_refine_subject,
+    };
+    return map[mode] || INTENTS.none;
+  }
+
   function isWriteIntent(text) {
     const t = String(text || "");
     if (isReplyDraftIntent(t)) return false;
@@ -107,7 +211,9 @@
     return write && googleCtx;
   }
 
-  function matchIntent(userText) {
+  function matchIntent(userText, options) {
+    options = options || {};
+    const history = options.history;
     const text = trim(userText, 2000);
     if (!text) return { intent: INTENTS.none, params: {} };
 
@@ -117,32 +223,55 @@
 
     const chatCtx = getChatContext();
 
-    if (isReplyDraftIntent(text)) {
-      if (chatCtx?.hasGmailFocus?.()) {
-        return { intent: INTENTS.context_reply_draft, params: {} };
+    if (isTriageText(text) && hasResolvableGmailContext(history)) {
+      return { intent: INTENTS.context_triage, params: {} };
+    }
+
+    if (isCrossCalendarText(text) && hasResolvableGmailContext(history)) {
+      return {
+        intent: INTENTS.context_cross_calendar,
+        params: { needsCalendar: !chatCtx?.hasCalendarList?.() },
+      };
+    }
+
+    if (isRefineText(text) && isReplyDraftLastTurn() && chatCtx?.hasLastTurn?.()) {
+      const mode = matchRefineMode(text);
+      const refineIntent = refineIntentForMode(mode);
+      if (refineIntent !== INTENTS.none) {
+        return { intent: refineIntent, params: { refineMode: mode } };
       }
     }
 
-    if (/もっと短く|短くして|短めに|簡潔に/.test(text) && chatCtx?.hasLastTurn?.()) {
+    if (isReplyDraftIntent(text)) {
+      if (hasResolvableGmailContext(history)) {
+        return { intent: INTENTS.context_reply_draft, params: { useFocus: true } };
+      }
+    }
+
+    if (/もっと短く|短くして|短めに|簡潔に/.test(text) && chatCtx?.hasLastTurn?.() && isReplyDraftLastTurn()) {
       return { intent: INTENTS.context_refine_short, params: {} };
     }
 
-    if (/敬語|丁寧に|丁寧語/.test(text) && chatCtx?.hasLastTurn?.()) {
+    if (/敬語|丁寧に|丁寧語/.test(text) && chatCtx?.hasLastTurn?.() && isReplyDraftLastTurn()) {
       return { intent: INTENTS.context_refine_keigo, params: {} };
     }
 
-    if (/^(それ|このメール|この件)/.test(text) && /詳しく|もう少し|詳細/.test(text) && !/要約/.test(text)) {
-      if (chatCtx?.hasGmailFocus?.()) {
+    if (
+      (isPronounMailRef(text) || /^(それ|このメール|あのメール|この件)/.test(text)) &&
+      /詳しく|もう少し|詳細/.test(text) &&
+      !/要約/.test(text)
+    ) {
+      if (hasResolvableGmailContext(history)) {
         return {
           intent: INTENTS.context_more_detail,
-          params: { mode: /全文/.test(text) ? "full" : "detail" },
+          params: { mode: /全文/.test(text) ? "full" : "detail", useFocus: true },
         };
       }
     }
 
     const pickIndex = extractPickIndex(text);
     const wantsDetail = isGmailDetailText(text);
-    const gmailCtx = isGmailMailContext(text);
+    const gmailCtx = isGmailMailContext(text) || isPronounMailRef(text);
 
     if (pickIndex > 0 && gmailCtx) {
       if (/要約/.test(text)) {
@@ -155,7 +284,7 @@
     }
 
     if (/要約/.test(text) && /(詳しく|詳細|本文)/.test(text) && /メール|mail|Gmail/i.test(text)) {
-      const params = {};
+      const params = { useFocus: true };
       if (/昨日|前日/.test(text)) params.dateHint = "yesterday";
       const name = extractPersonName(text);
       if (name) params.contactName = name;
@@ -168,13 +297,22 @@
     }
 
     if (
-      (/このメール|全文/.test(text) || (wantsDetail && gmailCtx)) &&
-      !/予定|カレンダー|Calendar/i.test(text)
+      (/このメール|あのメール|全文|それ/.test(text) || (wantsDetail && gmailCtx)) &&
+      !/予定|カレンダー|Calendar/i.test(text) &&
+      !isPronounCalendarRef(text)
     ) {
-      if (/要約/.test(text)) {
-        return { intent: INTENTS.gmail_detail_summarize, params: { mode: /全文/.test(text) ? "full" : "detail" } };
+      if (hasResolvableGmailContext(history)) {
+        if (/要約/.test(text)) {
+          return {
+            intent: INTENTS.gmail_detail_summarize,
+            params: { mode: /全文/.test(text) ? "full" : "detail", useFocus: true },
+          };
+        }
+        return {
+          intent: INTENTS.gmail_detail,
+          params: { mode: /全文/.test(text) ? "full" : "detail", useFocus: true },
+        };
       }
-      return { intent: INTENTS.gmail_detail, params: { mode: /全文/.test(text) ? "full" : "detail" } };
     }
 
     if (/未読.*メール|メール.*未読|未読は/i.test(text)) {
@@ -436,18 +574,100 @@
     });
   }
 
-  function resolveContextRef(params) {
-    const Ctx = global.TasuSecretaryGoogleChatGmailContext;
+  function resolveContextRef(params, options) {
+    options = options || {};
+    params = params || {};
     const U = getChatContext();
-    if (params?.pickIndex && Ctx?.getByIndex) {
-      return Ctx.getByIndex(params.pickIndex);
+    const Ctx = global.TasuSecretaryGoogleChatGmailContext;
+
+    if (params.pickIndex && Ctx?.getByIndex) {
+      const byIdx = Ctx.getByIndex(params.pickIndex);
+      if (byIdx?.id) return { index: params.pickIndex, id: byIdx.id, threadId: byIdx.threadId };
     }
+
     const focus = U?.getGmailFocusRef?.();
-    if (focus?.id && (params?.useFocus || params?.fromFocus)) {
-      return { index: focus.index, id: focus.id, threadId: focus.threadId };
+    if (focus?.id && (params.useFocus !== false || params.fromFocus || params.preferFocus)) {
+      return {
+        index: focus.index,
+        id: focus.id,
+        threadId: focus.threadId,
+        fromFocus: true,
+        bodyPreview: focus.bodyPreview,
+      };
     }
-    if (Ctx?.getLast) return Ctx.getLast();
+
+    if (params.useFocus !== false && focus?.id) {
+      return {
+        index: focus.index,
+        id: focus.id,
+        threadId: focus.threadId,
+        fromFocus: true,
+        bodyPreview: focus.bodyPreview,
+      };
+    }
+
+    const first = U?.getGmailListFirst?.();
+    if (first?.id && params.allowListFallback !== false) {
+      return { index: first.index || 1, id: first.id, threadId: first.threadId };
+    }
+
+    const turn = U?.getLastTurn?.();
+    if (turn?.kind === "gmail" && focus?.id) {
+      return {
+        index: focus.index,
+        id: focus.id,
+        threadId: focus.threadId,
+        fromFocus: true,
+        bodyPreview: focus.bodyPreview,
+      };
+    }
+
+    const history = options.history;
+    if (Array.isArray(history) && history.length && hadRecentGmailInHistory(history)) {
+      if (first?.id) {
+        return { index: first.index || 1, id: first.id, threadId: first.threadId };
+      }
+    }
+
+    if (Ctx?.getLast) {
+      const last = Ctx.getLast();
+      if (last?.id) return { index: last.index, id: last.id, threadId: last.threadId };
+    }
+
     return null;
+  }
+
+  function resolveGmailFocusForContext() {
+    const U = getChatContext();
+    const focus = U?.getGmailFocusRef?.();
+    if (focus?.id) return focus;
+    const first = U?.getGmailListFirst?.();
+    if (first?.id) {
+      return {
+        index: first.index || 1,
+        id: first.id,
+        threadId: first.threadId,
+        subject: first.subject,
+        from: first.from,
+        snippet: first.snippet,
+        date: first.date,
+        bodyPreview: first.snippet,
+      };
+    }
+    return null;
+  }
+
+  function formatCalendarContextForLlm(calMeta) {
+    if (!calMeta?.items?.length) return "（予定なし）";
+    return calMeta.items
+      .slice(0, CALENDAR_MAX)
+      .map((ev) => {
+        const title = trim(ev.title, 120) || "(無題)";
+        const start = trim(ev.start, 40);
+        const loc = trim(ev.location, 60);
+        return `- ${start ? `${start} ` : ""}${title}${loc ? ` @ ${loc}` : ""}`;
+      })
+      .join("\n");
   }
 
   function focusToMessage(focus) {
@@ -489,6 +709,78 @@
       .slice(0, 800);
   }
 
+  function deterministicRefinePolite(text) {
+    const base = String(text || "").trim();
+    if (!base) return "（mock）恐れ入りますが、ご確認ください。";
+    return `恐れ入りますが、\n${base}`.slice(0, 800);
+  }
+
+  function deterministicRefineCasual(text) {
+    const base = String(text || "").trim();
+    if (!base) return "（mock）了解です！";
+    return base.replace(/いたします/g, "します").replace(/でございます/g, "です").slice(0, 800);
+  }
+
+  function deterministicRefineBullets(text) {
+    const lines = String(text || "")
+      .split(/\n/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+    return lines.map((l) => `・${l.replace(/^・/, "")}`).join("\n") || "・（mock）確認します";
+  }
+
+  function deterministicRefineLines3(text) {
+    return deterministicRefineShort(text);
+  }
+
+  function deterministicRefineOneLine(text) {
+    const flat = String(text || "")
+      .replace(/\n+/g, " ")
+      .trim();
+    return flat.slice(0, 120) || "（mock）確認します。";
+  }
+
+  function deterministicRefineSubject(text, focus) {
+    const subject = trim(focus?.subject, 80) || "Re: 件名";
+    const body = deterministicRefineOneLine(text);
+    return `件名案: ${subject.startsWith("Re:") ? subject : `Re: ${subject}`}\n\n${body}`;
+  }
+
+  function deterministicTriage(focus, userText) {
+    const subject = trim(focus?.subject, 80) || "件名";
+    const snippet = trim(focus?.bodyPreview || focus?.snippet, 120);
+    const urgent = /期限|至急|ASAP|本日|今日中|緊急/i.test(`${subject} ${snippet} ${userText}`);
+    const stars = urgent ? "★★★★☆" : "★★★☆☆";
+    return (
+      `重要度\n${stars}\n\n` +
+      `理由\n（mock）${subject} — ${snippet || "内容を確認してください"}\n\n` +
+      `推奨\n${urgent ? "本日中に確認・返信を検討" : "時間のあるときに確認"}`
+    );
+  }
+
+  function deterministicCrossCalendar(focus, calMeta, userText) {
+    const subject = trim(focus?.subject, 80) || "メール";
+    const calLines = formatCalendarContextForLlm(calMeta);
+    const timing =
+      /いつ|タイミング|時期/.test(userText) || /返信.*なら/.test(userText)
+        ? "空き時間: 予定の合間または予定前後を推奨"
+        : "予定との兼ね合い: 上記予定を確認のうえ対応";
+    return (
+      `【Gmail × Calendar 照合 · read-only】\n\n` +
+      `メール: ${subject}\n\n` +
+      `今日の予定:\n${calLines}\n\n` +
+      `所見\n（mock）${timing}\n\n` +
+      `※ 予定の追加・変更は未対応`
+    );
+  }
+
+  function extractReplyDraftBody(assistantPreview) {
+    let text = String(assistantPreview || "");
+    text = text.replace(/^【返信案[^】]*】\s*/i, "");
+    text = text.replace(/\n\n※ read-only[^\n]*$/i, "");
+    return text.trim();
+  }
+
   async function runContextMoreDetail(params, userText) {
     const U = getChatContext();
     const focus = U?.getGmailFocusRef?.();
@@ -507,18 +799,105 @@
       return { ok: true, reply, mock: false };
     }
     return runGmailDetailFromRef(
-      { index: focus.index, id: focus.id, threadId: focus.threadId },
+      { index: focus.index, id: focus.id, threadId: focus.threadId, fromFocus: Boolean(focus.bodyPreview) },
       userText,
-      { ...params, pickIndex: focus.index, sourceIntent: INTENTS.context_more_detail }
+      { ...params, pickIndex: focus.index, sourceIntent: INTENTS.context_more_detail },
+      {}
     );
   }
 
-  async function runContextReplyDraft(userText) {
-    const U = getChatContext();
-    const focus = U?.getGmailFocusRef?.();
+  async function runContextTriage(userText) {
+    const focus = resolveGmailFocusForContext();
     if (!focus) {
       return { ok: true, reply: NO_FOLLOWUP_REPLY, mock: false };
     }
+
+    let body = trim(focus.bodyPreview, 1500) || trim(focus.snippet, 300);
+    const San = global.TasuSecretaryOpsContextSanitize;
+    if (San?.sanitizeText) body = San.sanitizeText(body, 1500);
+
+    const det = () => deterministicTriage(focus, userText);
+    const payload =
+      `件名: ${trim(focus.subject, 200)}\n差出人: ${trim(focus.from, 200)}\n本文:\n${body}\n\n` +
+      "上記メールについて、重要度（★1〜5）、理由、推奨アクションを日本語で回答してください。" +
+      "形式: 重要度 / 理由 / 推奨 の3セクション。送信・予定変更は不要。";
+
+    const Adapter = global.TasuSecretaryDeepSeekAdapter;
+    if (!Adapter?.completeTurn) {
+      return { ok: true, reply: det(), mock: true };
+    }
+
+    const turn = await Adapter.completeTurn({
+      userText: trim(userText, 500),
+      systemPrompt: "あなたはTASFUL AI運営秘書です。" + payload,
+      modeId: "ops_secretary",
+      mockFallback: det,
+    });
+
+    return {
+      ok: true,
+      reply: trim(turn.reply, 4000) || det(),
+      mock: !!turn.fallback_used,
+    };
+  }
+
+  async function runContextCrossCalendar(userText, params) {
+    const focus = resolveGmailFocusForContext();
+    if (!focus) {
+      return { ok: true, reply: NO_FOLLOWUP_REPLY, mock: false };
+    }
+
+    const U = getChatContext();
+    let calMeta = U?.getCalendarListMeta?.();
+    let calMock = false;
+
+    if ((!calMeta?.items?.length || params?.needsCalendar) && U && !U.hasCalendarList?.()) {
+      const result = await runCalendar("today", {});
+      if (result.ok) {
+        const events = result.data?.events || [];
+        saveCalendarListContext(events, { sourceIntent: INTENTS.context_cross_calendar, label: "今日の予定", preset: "today" });
+        calMeta = U.getCalendarListMeta?.();
+        calMock = Boolean(result.data?.mock);
+      }
+    }
+
+    let body = trim(focus.bodyPreview, 1200) || trim(focus.snippet, 300);
+    const San = global.TasuSecretaryOpsContextSanitize;
+    if (San?.sanitizeText) body = San.sanitizeText(body, 1200);
+
+    const calText = formatCalendarContextForLlm(calMeta);
+    const det = () => deterministicCrossCalendar(focus, calMeta, userText);
+    const payload =
+      `【メール】\n件名: ${trim(focus.subject, 200)}\n差出人: ${trim(focus.from, 200)}\n本文:\n${body}\n\n` +
+      `【今日の予定】\n${calText}\n\n` +
+      "Gmail と Calendar を read-only で照合し、返信タイミングや対応優先の所見を日本語で述べてください。" +
+      "予定の追加・変更・送信は不要。";
+
+    const Adapter = global.TasuSecretaryDeepSeekAdapter;
+    if (!Adapter?.completeTurn) {
+      return { ok: true, reply: det(), mock: true || calMock };
+    }
+
+    const turn = await Adapter.completeTurn({
+      userText: trim(userText, 500),
+      systemPrompt: "あなたはTASFUL AI運営秘書です。" + payload,
+      modeId: "ops_secretary",
+      mockFallback: det,
+    });
+
+    return {
+      ok: true,
+      reply: trim(turn.reply, 4000) || det(),
+      mock: !!turn.fallback_used || calMock,
+    };
+  }
+
+  async function runContextReplyDraft(userText) {
+    const focus = resolveGmailFocusForContext();
+    if (!focus) {
+      return { ok: true, reply: NO_FOLLOWUP_REPLY, mock: false };
+    }
+    const U = getChatContext();
     const preview = U.getGmailFocusPreview?.() || focus;
     const det = () => `【返信案 · 未送信】\n${deterministicReplyDraft(preview)}${READONLY_DRAFT_FOOTER}`;
 
@@ -552,48 +931,97 @@
 
   async function runContextRefine(userText, mode) {
     const turn = getChatContext()?.getLastTurn?.();
-    if (!turn?.assistantPreview) {
+    if (!turn?.assistantPreview || !isReplyDraftLastTurn()) {
       return { ok: true, reply: NO_FOLLOWUP_REPLY, mock: false };
     }
 
-    const det =
-      mode === "keigo"
-        ? () => deterministicRefineKeigo(turn.assistantPreview)
-        : () => deterministicRefineShort(turn.assistantPreview);
+    const draftBody = extractReplyDraftBody(turn.assistantPreview);
+    const focus = getChatContext()?.getGmailFocusPreview?.();
+
+    const detMap = {
+      keigo: () => deterministicRefineKeigo(draftBody),
+      polite: () => deterministicRefinePolite(draftBody),
+      casual: () => deterministicRefineCasual(draftBody),
+      bullets: () => deterministicRefineBullets(draftBody),
+      lines3: () => deterministicRefineLines3(draftBody),
+      one_line: () => deterministicRefineOneLine(draftBody),
+      subject: () => deterministicRefineSubject(draftBody, focus),
+      short: () => deterministicRefineShort(draftBody),
+    };
+    const det = detMap[mode] || detMap.short;
+
+    const promptMap = {
+      keigo: "以下の返信案を敬語のビジネス調に書き直してください。送信・実行操作は不要。\n\n",
+      polite: "以下の返信案をより丁寧なビジネス調に書き直してください。送信・実行操作は不要。\n\n",
+      casual: "以下の返信案をカジュアルだが礼儀正しい調子に書き直してください。送信・実行操作は不要。\n\n",
+      bullets: "以下の返信案を箇条書き（・始まり）に整理してください。送信・実行操作は不要。\n\n",
+      lines3: "以下の返信案を3行以内に要約してください。送信・実行操作は不要。\n\n",
+      one_line: "以下の返信案を1文に要約してください。送信・実行操作は不要。\n\n",
+      subject: "以下の返信案に加え、適切な件名案（Re: で始める）も提示してください。送信・実行操作は不要。\n\n",
+      short: "以下の返信案を3行以内に短く要約してください。送信・実行操作は不要。\n\n",
+    };
 
     const Adapter = global.TasuSecretaryDeepSeekAdapter;
     if (!Adapter?.completeTurn) {
-      return { ok: true, reply: det(), mock: true };
+      const out = det();
+      return {
+        ok: true,
+        reply: mode === "subject" ? out : `【返信案 · 未送信】\n${out}${READONLY_DRAFT_FOOTER}`,
+        mock: true,
+      };
     }
-
-    const systemPrompt =
-      mode === "keigo"
-        ? "以下のテキストを敬語のビジネス調に書き直してください。送信・実行操作は不要。\n\n" + turn.assistantPreview
-        : "以下を3行以内に短く要約してください。送信・実行操作は不要。\n\n" + turn.assistantPreview;
 
     const result = await Adapter.completeTurn({
       userText: trim(userText, 500),
-      systemPrompt,
+      systemPrompt: (promptMap[mode] || promptMap.short) + draftBody,
       modeId: "ops_secretary",
       mockFallback: det,
     });
 
+    let reply = trim(result.reply, 4000) || det();
+    if (mode !== "subject" && !/^【返信案/.test(reply)) {
+      reply = `【返信案 · 未送信】\n${reply}${READONLY_DRAFT_FOOTER}`;
+    } else if (mode === "subject" && !/件名/.test(reply)) {
+      reply = det();
+    } else if (mode === "subject") {
+      reply = `${reply}${READONLY_DRAFT_FOOTER}`;
+    }
+
     return {
       ok: true,
-      reply: trim(result.reply, 4000) || det(),
+      reply,
       mock: !!result.fallback_used,
     };
   }
 
-  async function runGmailDetailFromRef(ref, userText, params) {
+  async function runGmailDetailFromRef(ref, userText, params, options) {
     if (!ref?.id) return { ok: false, error: "no_message_ref" };
+
+    const mode = params?.mode || "detail";
+    const pickIndex = params?.pickIndex || ref.index || 0;
+    const U = getChatContext();
+    const focus = U?.getGmailFocusRef?.();
+
+    if (ref.fromFocus && focus?.bodyPreview && ref.id === focus.id) {
+      const message = focusToMessage(focus);
+      const det = () => deterministicBodyReply(message, mode, pickIndex);
+      persistGmailFocus(message, {
+        index: pickIndex,
+        pickIndex,
+        sourceIntent: params?.sourceIntent || INTENTS.gmail_detail,
+      });
+      if (/要約/.test(userText) || params?.summarize) {
+        const sum = await summarizeBodyForChat(userText, message, det, pickIndex);
+        return { ok: true, reply: sum.reply, mock: sum.mock };
+      }
+      return { ok: true, reply: det(), mock: false };
+    }
+
     const result = await fetchMessageBody(ref.id);
     if (!result.ok) return result;
     const message = result.data?.message;
     if (!message) return { ok: false, error: "message_not_found" };
 
-    const mode = params?.mode || "detail";
-    const pickIndex = params?.pickIndex || ref.index || 0;
     const det = () => deterministicBodyReply(message, mode, pickIndex);
 
     persistGmailFocus(message, {
@@ -626,7 +1054,8 @@
     return { ok: true, reply: detail.reply, mock: Boolean(detail.mock || listResult.data?.mock) };
   }
 
-  async function runGmailDetailSummarize(params, userText) {
+  async function runGmailDetailSummarize(params, userText, options) {
+    options = options || {};
     if (params?.dateHint || params?.contactName) {
       const listResult = await runGmailSearch({ ...params, summarize: true });
       if (!listResult.ok) return listResult;
@@ -644,19 +1073,29 @@
       const pickIndex = params.pickIndex || 1;
       const target = messages[pickIndex - 1] || messages[0];
       const ref = { index: pickIndex, id: target.id, threadId: target.threadId };
-      const detail = await runGmailDetailFromRef(ref, userText, { ...params, pickIndex, summarize: true });
+      const detail = await runGmailDetailFromRef(ref, userText, { ...params, pickIndex, summarize: true }, options);
       if (!detail.ok) return detail;
       return { ok: true, reply: detail.reply, mock: Boolean(detail.mock || listResult.data?.mock) };
     }
 
-    const ref = resolveContextRef(params);
+    const ref = resolveContextRef(params, options);
     if (!ref) {
       return { ok: true, reply: NO_CONTEXT_REPLY, mock: false };
     }
-    return runGmailDetailFromRef(ref, userText, { ...params, summarize: true });
+    return runGmailDetailFromRef(ref, userText, { ...params, summarize: true }, options);
   }
 
-  async function executeReadTool(intent, params, userText) {
+  async function executeReadTool(intent, params, userText, options) {
+    options = options || {};
+
+    if (intent === INTENTS.context_triage) {
+      return runContextTriage(userText);
+    }
+
+    if (intent === INTENTS.context_cross_calendar) {
+      return runContextCrossCalendar(userText, params);
+    }
+
     if (intent === INTENTS.context_more_detail) {
       return runContextMoreDetail(params, userText);
     }
@@ -673,16 +1112,40 @@
       return runContextRefine(userText, "keigo");
     }
 
+    if (intent === INTENTS.context_refine_polite) {
+      return runContextRefine(userText, "polite");
+    }
+
+    if (intent === INTENTS.context_refine_casual) {
+      return runContextRefine(userText, "casual");
+    }
+
+    if (intent === INTENTS.context_refine_bullets) {
+      return runContextRefine(userText, "bullets");
+    }
+
+    if (intent === INTENTS.context_refine_lines3) {
+      return runContextRefine(userText, "lines3");
+    }
+
+    if (intent === INTENTS.context_refine_one_line) {
+      return runContextRefine(userText, "one_line");
+    }
+
+    if (intent === INTENTS.context_refine_subject) {
+      return runContextRefine(userText, "subject");
+    }
+
     if (intent === INTENTS.gmail_pick || intent === INTENTS.gmail_detail) {
-      const ref = resolveContextRef(params);
+      const ref = resolveContextRef(params, options);
       if (!ref) {
         return { ok: true, reply: NO_CONTEXT_REPLY, mock: false };
       }
-      return runGmailDetailFromRef(ref, userText, params);
+      return runGmailDetailFromRef(ref, userText, params, options);
     }
 
     if (intent === INTENTS.gmail_detail_summarize) {
-      return runGmailDetailSummarize(params, userText);
+      return runGmailDetailSummarize(params, userText, options);
     }
 
     if (intent === INTENTS.gmail_search_and_detail) {
@@ -761,7 +1224,7 @@
 
   async function tryHandle(userText, options) {
     options = options || {};
-    const { intent, params } = matchIntent(userText);
+    const { intent, params } = matchIntent(userText, options);
     if (intent === INTENTS.none) {
       return { handled: false, intent };
     }
@@ -775,7 +1238,7 @@
       return { handled: true, intent, reply: DISCONNECT_REPLY, mock: false, disconnected: true };
     }
 
-    const tool = await executeReadTool(intent, params, userText);
+    const tool = await executeReadTool(intent, params, userText, options);
     if (!tool.ok) {
       const err = trim(tool.error, 80) || "read_failed";
       return {
@@ -792,7 +1255,10 @@
       reply = `${reply}\n\n（mock データ · read-only）`;
     }
 
-    const kind = String(intent).startsWith("calendar") ? "calendar" : "gmail";
+    const kind =
+      String(intent).startsWith("calendar") || intent === INTENTS.context_cross_calendar
+        ? "calendar"
+        : "gmail";
     persistLastTurn(intent, userText, reply, kind);
 
     return {
