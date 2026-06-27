@@ -59,6 +59,8 @@ async function auditViewport(browser, width, height, runSubmitChecks) {
       voiceCore: Boolean(window.TasuVoiceCore),
       controller: Boolean(window.TasuWorkspaceVoiceController),
       integration: Boolean(window.TasuWorkspaceVoiceIntegration),
+      sessionClient: Boolean(window.TasuVoiceRealtimeSessionClient),
+      liveOptIn: window.TasuWorkspaceVoiceController?.isLiveOptInEnabled?.() === true,
       composerBtn: Boolean(document.querySelector("[data-tasu-workspace-voice-composer-btn]")),
       stateBadge: Boolean(document.querySelector("[data-tasu-workspace-voice-state]")),
       legacyWrap: Boolean(document.querySelector(".tasful-ai-voice--legacy-hidden")),
@@ -84,6 +86,10 @@ async function auditViewport(browser, width, height, runSubmitChecks) {
     else bad(`${tag} TasuWorkspaceVoiceController exists`);
     if (globals.integration) ok(`${tag} TasuWorkspaceVoiceIntegration exists`);
     else bad(`${tag} TasuWorkspaceVoiceIntegration exists`);
+    if (globals.sessionClient) ok(`${tag} TasuVoiceRealtimeSessionClient exists`);
+    else bad(`${tag} TasuVoiceRealtimeSessionClient exists`);
+    if (!globals.liveOptIn) ok(`${tag} live opt-in OFF by default`);
+    else bad(`${tag} live opt-in OFF by default`);
     if (globals.composerBtn) ok(`${tag} composer voice button exists`);
     else bad(`${tag} composer voice button exists`);
     if (globals.stateBadge) ok(`${tag} state badge exists`);
@@ -145,6 +151,39 @@ async function auditViewport(browser, width, height, runSubmitChecks) {
       else bad(`${tag} voice submit reaches user bubble`, JSON.stringify(submitChecks));
       if (submitChecks.afterText > submitChecks.afterVoice) ok(`${tag} text submit works`);
       else bad(`${tag} text submit works`, JSON.stringify(submitChecks));
+
+      const liveFallback = await page.evaluate(async () => {
+        window.__TASU_VOICE_CORE_OPENAI_LIVE__ = true;
+        window.__TASU_VOICE_LIVE_TASFUL_AI__ = true;
+        window.TasuAiVoiceCore.speechToText = async () => ({
+          ok: true,
+          text: "tasful workspace live fallback smoke",
+        });
+        window.TasuWorkspaceVoiceController?.init?.({ mockCompatible: true, useWebSocketTransport: false });
+        const before = document.querySelectorAll(".user-bubble-row").length;
+        document.querySelector("[data-tasu-workspace-voice-composer-btn]")?.click();
+        await new Promise((r) => setTimeout(r, 12000));
+        const after = document.querySelectorAll(".user-bubble-row").length;
+        const policy = window.TasuVoiceRealtimeSessionClient?.getPolicySnapshot?.({ mockCompatible: false });
+        const injectors = window.TasuVoiceRealtimeSessionClient?.getInjectorsStatus?.();
+        return {
+          after,
+          before,
+          liveOptIn: window.TasuWorkspaceVoiceController?.isLiveOptInEnabled?.() === true,
+          policyMode: policy?.mode,
+          injectorsRegistered: injectors?.registered === true,
+        };
+      });
+
+      if (liveFallback.liveOptIn) ok(`${tag} live flags enable opt-in`);
+      else bad(`${tag} live flags enable opt-in`);
+      if (liveFallback.after > liveFallback.before) ok(`${tag} live flag ON fallback voice submit`);
+      else bad(`${tag} live flag ON fallback voice submit`, JSON.stringify(liveFallback));
+      if (!liveFallback.injectorsRegistered || liveFallback.policyMode === "mock") {
+        ok(`${tag} edge unavailable stays mock fallback`);
+      } else {
+        bad(`${tag} edge unavailable stays mock fallback`, JSON.stringify(liveFallback));
+      }
     }
   } finally {
     await page.close();
