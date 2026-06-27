@@ -69,12 +69,44 @@
     return { ok: true, data: result.data || {} };
   }
 
-  async function getMessage(messageId) {
-    return postGmail({ method: "messages.get", messageId: trim(messageId, 120) });
+  async function getMessage(messageId, options) {
+    options = options || {};
+    const result = await postGmail({
+      method: "messages.get",
+      messageId: trim(messageId, 120),
+      includeBody: Boolean(options.includeBody),
+    });
+    if (!result.ok) return result;
+    const data = result.data || {};
+    const message = data.message || result.message;
+    return {
+      ok: true,
+      data: {
+        ...data,
+        message,
+        mock: Boolean(data.mock || result.mock),
+      },
+    };
   }
 
-  async function getThread(threadId) {
-    return postGmail({ method: "threads.get", threadId: trim(threadId, 120) });
+  async function getThread(threadId, options) {
+    options = options || {};
+    const result = await postGmail({
+      method: "threads.get",
+      threadId: trim(threadId, 120),
+      includeBody: Boolean(options.includeBody),
+    });
+    if (!result.ok) return result;
+    const data = result.data || {};
+    const thread = data.thread || result.thread;
+    return {
+      ok: true,
+      data: {
+        ...data,
+        thread,
+        mock: Boolean(data.mock || result.mock),
+      },
+    };
   }
 
   async function listLabels() {
