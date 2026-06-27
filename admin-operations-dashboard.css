@@ -4660,6 +4660,44 @@ a.ops-p2-tile:hover {
   line-height: 1.45;
 }
 
+.ops-secretary-gmail__labels {
+  margin-top: 0.15rem;
+}
+
+.ops-secretary-gmail__labels .ops-secretary-gmail__chip--active {
+  border-color: #047857;
+  background: #ecfdf5;
+  color: #047857;
+  font-weight: 600;
+}
+
+.ops-secretary-gmail__labels-empty {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--od-muted, #6b7280);
+}
+
+.ops-secretary-calendar__list-host {
+  margin: 0 0 0.5rem;
+}
+
+.ops-secretary-calendar__list-select {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid var(--od-border, #e5e7eb);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  background: var(--od-surface, #fff);
+  color: var(--od-text, #111827);
+}
+
+.ops-secretary-calendar__list-empty {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--od-muted, #6b7280);
+}
+
 .ops-secretary-google-workspace {
   margin: 0 0 0.75rem;
 }

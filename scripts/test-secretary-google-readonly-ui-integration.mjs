@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * AI秘書 — Google read-only UI integration Step 1
+ * AI秘書 — Google read-only UI integration Step 1 + Step 2
  *   node scripts/test-secretary-google-readonly-ui-integration.mjs
  */
 import fs from "node:fs";
@@ -51,9 +51,25 @@ function runUnitTests() {
     ok("gmail-ui gating API");
   } else bad("gmail-ui gating API");
 
+  if (/loadLabels/.test(gmailUi) && /renderLabelChips/.test(gmailUi) && /loadByLabel/.test(gmailUi)) {
+    ok("gmail-ui labels API");
+  } else bad("gmail-ui labels API");
+
   if (/showGated/.test(calUi) && /refreshDefault/.test(calUi) && /isWriteBlocked/.test(calUi)) {
     ok("calendar-ui gating API");
   } else bad("calendar-ui gating API");
+
+  if (/loadCalendars/.test(calUi) && /renderCalendarSelect/.test(calUi) && /selectedCalendarId/.test(calUi)) {
+    ok("calendar-ui list API");
+  } else bad("calendar-ui list API");
+
+  if (/data-ops-secretary-gmail-labels/.test(html) && /data-ops-secretary-calendar-list/.test(html)) {
+    ok("dashboard labels + calendar list hooks");
+  } else bad("dashboard labels + calendar list hooks");
+
+  if (/gmailLabelCount/.test(coordinator) && /calendarListCount/.test(coordinator)) {
+    ok("coordinator label/calendar counts");
+  } else bad("coordinator label/calendar counts");
 
   if (/data-readonly-hide/.test(html) && /data-ops-secretary-google-readonly-summary/.test(html)) {
     ok("dashboard summary + readonly-hide markers");
@@ -225,28 +241,73 @@ async function runBrowserIntegration(base) {
           }
 
           if (fn === "secretary-google-tools" && action === "gmail" && body.method === "messages.list") {
+            const labelIds = Array.isArray(body.labelIds) ? body.labelIds.map(String) : [];
+            const filtered = labelIds.includes("Label_Work");
             return route.fulfill({
               status: 200,
               contentType: "application/json",
               body: JSON.stringify({
                 ok: true,
                 mock: true,
-                messages: [
-                  {
-                    id: "mock_msg_ro",
-                    subject: "Read-only test",
-                    from: "sender@example.com",
-                    snippet: "hello",
-                    date: new Date().toISOString(),
-                    unread: true,
-                    threadId: "t1",
-                  },
+                messages: filtered
+                  ? [
+                      {
+                        id: "mock_msg_label",
+                        subject: "Label filtered",
+                        from: "work@example.com",
+                        snippet: "label only",
+                        date: new Date().toISOString(),
+                        unread: false,
+                        threadId: "t2",
+                      },
+                    ]
+                  : [
+                      {
+                        id: "mock_msg_ro",
+                        subject: "Read-only test",
+                        from: "sender@example.com",
+                        snippet: "hello",
+                        date: new Date().toISOString(),
+                        unread: true,
+                        threadId: "t1",
+                      },
+                    ],
+              }),
+            });
+          }
+
+          if (fn === "secretary-google-tools" && action === "gmail" && body.method === "labels.list") {
+            return route.fulfill({
+              status: 200,
+              contentType: "application/json",
+              body: JSON.stringify({
+                ok: true,
+                mock: true,
+                labels: [
+                  { id: "INBOX", name: "受信トレイ", type: "system" },
+                  { id: "Label_Work", name: "Work", type: "user" },
+                ],
+              }),
+            });
+          }
+
+          if (fn === "secretary-google-tools" && action === "calendar_read" && body.method === "calendarList.list") {
+            return route.fulfill({
+              status: 200,
+              contentType: "application/json",
+              body: JSON.stringify({
+                ok: true,
+                mock: true,
+                calendars: [
+                  { id: "primary", summary: "Main", primary: true },
+                  { id: "cal_team", summary: "Team", primary: false },
                 ],
               }),
             });
           }
 
           if (fn === "secretary-google-tools" && action === "calendar_read" && body.method === "events.list") {
+            const calId = String(body.calendarId || "primary");
             return route.fulfill({
               status: 200,
               contentType: "application/json",
@@ -255,10 +316,10 @@ async function runBrowserIntegration(base) {
                 mock: true,
                 events: [
                   {
-                    id: "evt_ro",
-                    calendarId: "primary",
-                    calendarName: "Main",
-                    title: "Standup",
+                    id: calId === "cal_team" ? "evt_team" : "evt_ro",
+                    calendarId: calId,
+                    calendarName: calId === "cal_team" ? "Team" : "Main",
+                    title: calId === "cal_team" ? "Team sync" : "Standup",
                     start: new Date().toISOString(),
                     end: new Date(Date.now() + 3600000).toISOString(),
                     allDay: false,
@@ -292,6 +353,9 @@ async function runBrowserIntegration(base) {
           const calCard = document.querySelector("[data-calendar-event-id]");
           const gmailStatus = document.querySelector("[data-ops-secretary-gmail-status]")?.textContent || "";
           const calStatus = document.querySelector("[data-ops-secretary-calendar-status]")?.textContent || "";
+          const labelChips = document.querySelectorAll("[data-ops-secretary-gmail-labels] [data-ops-secretary-gmail-label]");
+          const calSelect = document.querySelector("[data-ops-secretary-calendar-list] select");
+          const calOptions = calSelect ? calSelect.querySelectorAll("option").length : 0;
           const writeSel =
             '[data-gmail-action="propose-reply"], [data-calendar-action="update"], [data-calendar-action="delete"], [data-ops-secretary-calendar-create-btn]';
           const writeVisible = [...document.querySelectorAll(writeSel)].filter((el) => {
@@ -312,6 +376,9 @@ async function runBrowserIntegration(base) {
             calCard: Boolean(calCard),
             gmailStatusHasMock: /mock/.test(gmailStatus),
             calStatusHasMock: /mock/.test(calStatus),
+            labelChipCount: labelChips.length,
+            calOptionCount: calOptions,
+            calSelectValue: calSelect?.value || "",
             writeVisible,
           };
         });
@@ -319,19 +386,64 @@ async function runBrowserIntegration(base) {
         const toolCallsConnected = fetchCalls.filter(
           (c) => c.action === "gmail" || c.action === "calendar_read"
         );
-        if (toolCallsConnected.length >= 2) ok(`${tag} connected mock refresh API calls`);
+        const labelsCall = fetchCalls.some((c) => c.action === "gmail" && c.method === "labels.list");
+        const calListCall = fetchCalls.some((c) => c.action === "calendar_read" && c.method === "calendarList.list");
+        if (toolCallsConnected.length >= 4) ok(`${tag} connected mock refresh API calls`);
         else bad(`${tag} connected mock refresh API calls`, String(toolCallsConnected.length));
+        if (labelsCall) ok(`${tag} connected labels.list called`);
+        else bad(`${tag} connected labels.list called`);
+        if (calListCall) ok(`${tag} connected calendarList.list called`);
+        else bad(`${tag} connected calendarList.list called`);
 
         if (connected.summaryConnected === "1" && connected.summaryMock === "1") ok(`${tag} summary connected mock`);
         else bad(`${tag} summary connected mock`);
         if (connected.summaryMode === "MOCK") ok(`${tag} summary MOCK mode`);
         else bad(`${tag} summary MOCK mode`, connected.summaryMode);
+        if (/labels/.test(connected.gmailSummary || "")) ok(`${tag} summary gmail labels count`);
+        else bad(`${tag} summary gmail labels count`, connected.gmailSummary);
+        if (/calendars/.test(connected.calSummary || "")) ok(`${tag} summary calendar list count`);
+        else bad(`${tag} summary calendar list count`, connected.calSummary);
         if (connected.gmailCard && connected.calCard) ok(`${tag} connected mock cards rendered`);
         else bad(`${tag} connected mock cards rendered`);
+        if (connected.labelChipCount >= 2) ok(`${tag} gmail labels UI rendered`);
+        else bad(`${tag} gmail labels UI rendered`, String(connected.labelChipCount));
+        if (connected.calOptionCount >= 2) ok(`${tag} calendar select rendered`);
+        else bad(`${tag} calendar select rendered`, String(connected.calOptionCount));
         if (connected.gmailStatusHasMock && connected.calStatusHasMock) ok(`${tag} panel status shows mock`);
         else bad(`${tag} panel status shows mock`);
         if (connected.writeVisible === 0) ok(`${tag} connected write UI not visible`);
         else bad(`${tag} connected write UI not visible`, String(connected.writeVisible));
+
+        await page.click('[data-ops-google-tab="mail"]');
+        await page.waitForTimeout(200);
+        await page.click('[data-ops-secretary-gmail-label="Label_Work"]');
+        await page.waitForTimeout(600);
+        const labelFilter = await page.evaluate(() => {
+          const card = document.querySelector('[data-gmail-message-id="mock_msg_label"]');
+          const status = document.querySelector("[data-ops-secretary-gmail-status]")?.textContent || "";
+          return { hasLabelCard: Boolean(card), statusHasWork: /Work/.test(status) };
+        });
+        if (labelFilter.hasLabelCard) ok(`${tag} label filter reloads messages`);
+        else bad(`${tag} label filter reloads messages`);
+        if (labelFilter.statusHasWork) ok(`${tag} label filter status text`);
+        else bad(`${tag} label filter status text`, labelFilter.statusHasWork ? "" : "missing Work");
+
+        await page.click('[data-ops-google-tab="calendar"]');
+        await page.waitForTimeout(200);
+        await page.selectOption("[data-ops-secretary-calendar-select]", "cal_team");
+        await page.waitForTimeout(600);
+        const calFilter = await page.evaluate(() => {
+          const card = document.querySelector('[data-calendar-event-id="evt_team"]');
+          const status = document.querySelector("[data-ops-secretary-calendar-status]")?.textContent || "";
+          const selectVal = document.querySelector("[data-ops-secretary-calendar-select]")?.value || "";
+          return { hasTeamCard: Boolean(card), selectVal, statusOk: /Team sync|件/.test(status) };
+        });
+        if (calFilter.selectVal === "cal_team") ok(`${tag} calendar select value`);
+        else bad(`${tag} calendar select value`, calFilter.selectVal);
+        if (calFilter.hasTeamCard) ok(`${tag} calendarId filter reloads events`);
+        else bad(`${tag} calendarId filter reloads events`);
+        if (calFilter.statusOk) ok(`${tag} calendar filter status text`);
+        else bad(`${tag} calendar filter status text`);
       } finally {
         await page.close();
       }
@@ -340,19 +452,19 @@ async function runBrowserIntegration(base) {
 }
 
 async function main() {
-  console.log("=== AI秘書 Google read-only UI Step 1 — unit ===");
+  console.log("=== AI秘書 Google read-only UI Step 1+2 — unit ===");
   runUnitTests();
 
   try {
     const base = await findDevServerBaseUrl({ probePath: "admin-operations-dashboard.html" });
-    console.log(`\n=== AI秘書 Google read-only UI Step 1 — browser @ ${base} ===`);
+    console.log(`\n=== AI秘書 Google read-only UI Step 1+2 — browser @ ${base} ===`);
     await runBrowserIntegration(base);
   } catch (err) {
     console.warn(`SKIP browser 8788: ${err instanceof Error ? err.message : err}`);
     bad("browser 8788 available", err instanceof Error ? err.message : String(err));
   }
 
-  console.log(`\n=== AI秘書 Google read-only UI Step 1: ${pass}/${pass + fail} PASS ===`);
+  console.log(`\n=== AI秘書 Google read-only UI Step 1+2: ${pass}/${pass + fail} PASS ===`);
   if (fail > 0) process.exit(1);
 }
 

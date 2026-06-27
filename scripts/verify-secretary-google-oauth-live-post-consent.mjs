@@ -15,6 +15,15 @@ import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const REPORT_JSON = path.join(ROOT, "reports/ai-secretary-google-oauth-live-e2e.json");
 
+function bodyHasSecretLeak(text) {
+  const t = String(text || "");
+  return (
+    /refresh_token|access_token|client_secret|code_verifier/i.test(t) ||
+    /eyJ[a-zA-Z0-9_-]{10,}\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/.test(t) ||
+    /[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}/i.test(t)
+  );
+}
+
 function redact(obj) {
   if (!obj || typeof obj !== "object") return obj;
   const out = Array.isArray(obj) ? [] : {};
@@ -101,19 +110,89 @@ async function runDashboard(devUserId) {
           { timeout: 30000 }
         );
         await page.waitForTimeout(2500);
+
+        await page.click('[data-ops-google-tab="mail"]');
+        await page.waitForTimeout(1200);
+
+        const gmailAudit = await page.evaluate(() => {
+          const summaryMode = document.querySelector("[data-ops-secretary-readonly-summary-mode]")?.dataset?.mode || "";
+          const summaryMock = document.querySelector("[data-ops-secretary-google-readonly-summary]")?.dataset?.mock || "";
+          const gmailCards = document.querySelector("[data-ops-secretary-gmail-cards]");
+          const gmailCardsText = gmailCards?.textContent || "";
+          const gmailGated = /接続後にメール/.test(gmailCardsText);
+          const gmailCardCount = document.querySelectorAll(".ops-secretary-gmail__card").length;
+          const gmailEmpty = /該当メールはありません/.test(gmailCardsText);
+          const labelHost = document.querySelector("[data-ops-secretary-gmail-labels]");
+          const labelChildCount = labelHost ? labelHost.querySelectorAll("[data-ops-secretary-gmail-label], button, p, span").length : 0;
+          const writeVisible = (() => {
+            const writeSel =
+              '[data-gmail-action="propose-reply"], [data-calendar-action="update"], [data-calendar-action="delete"], [data-ops-secretary-calendar-create-btn]';
+            return [...document.querySelectorAll(writeSel)].filter((el) => {
+              if (el.hidden) return false;
+              if (el.getAttribute("aria-hidden") === "true") return false;
+              if (el.closest("[hidden]")) return false;
+              const style = globalThis.getComputedStyle?.(el);
+              if (style && (style.display === "none" || style.visibility === "hidden")) return false;
+              return true;
+            }).length;
+          })();
+          return {
+            summaryMode,
+            summaryMock,
+            gmailGated,
+            gmailContentOk: gmailCardCount >= 1 || gmailEmpty,
+            labelUiOk: labelChildCount >= 1,
+            writeVisible,
+            bodyTextSample: document.body.innerText.slice(0, 8000),
+          };
+        });
+
+        await page.click('[data-ops-google-tab="calendar"]');
+        await page.waitForTimeout(1200);
+
+        const calAudit = await page.evaluate(() => {
+          const calPanel = document.querySelector("[data-ops-secretary-calendar-panel]");
+          const calVisible = calPanel && !calPanel.hidden && calPanel.getAttribute("aria-hidden") !== "true";
+          const calCards = document.querySelector("[data-ops-secretary-calendar-cards]");
+          const calCardsText = calCards?.textContent || "";
+          const calCardCount = document.querySelectorAll(".ops-secretary-calendar__card").length;
+          const calEmpty = /予定はありません/.test(calCardsText);
+          const calSelect = document.querySelector("[data-ops-secretary-calendar-list] select");
+          const calOptionCount = calSelect ? calSelect.querySelectorAll("option").length : 0;
+          return {
+            calPanelVisible: Boolean(calVisible),
+            calContentOk: calCardCount >= 1 || calEmpty,
+            calListOk: calOptionCount >= 1,
+          };
+        });
+
         const audit = await page.evaluate(() => {
           const label = document.querySelector("[data-ops-secretary-google-status-label]")?.textContent || "";
           const state = document.querySelector("[data-ops-secretary-google-connect]")?.dataset?.state || "";
           const mock = document.querySelector("[data-ops-secretary-google-connect]")?.dataset?.mock || "";
           return { label, state, mock };
         });
+
+        const uiPass =
+          gmailAudit.summaryMode === "LIVE" &&
+          gmailAudit.summaryMock === "0" &&
+          !gmailAudit.gmailGated &&
+          gmailAudit.gmailContentOk &&
+          gmailAudit.labelUiOk &&
+          calAudit.calPanelVisible &&
+          calAudit.calContentOk &&
+          calAudit.calListOk &&
+          gmailAudit.writeVisible === 0 &&
+          !bodyHasSecretLeak(gmailAudit.bodyTextSample);
+
         const pass =
           (resp?.status() ?? 0) === 200 &&
           /Google接続済み/.test(audit.label) &&
           !/mock/.test(audit.label) &&
           audit.state === "connected" &&
           audit.mock === "0" &&
-          jsFatals.length === 0;
+          jsFatals.length === 0 &&
+          uiPass;
         out.push({
           viewport: tag,
           http: resp?.status() ?? 0,
@@ -121,6 +200,14 @@ async function runDashboard(devUserId) {
           connectedState: audit.state,
           mockDataset: audit.mock,
           jsFatalCount: jsFatals.length,
+          summaryMode: gmailAudit.summaryMode,
+          gmailContentOk: gmailAudit.gmailContentOk,
+          gmailLabelsUiOk: gmailAudit.labelUiOk,
+          calendarContentOk: calAudit.calContentOk,
+          calendarListUiOk: calAudit.calListOk,
+          writeVisible: gmailAudit.writeVisible,
+          secretInDom: bodyHasSecretLeak(gmailAudit.bodyTextSample),
+          uiPass,
           pass,
         });
       } finally {
@@ -180,6 +267,13 @@ async function main() {
     { action: "calendar_read", method: "calendarList.list" },
     devUserId
   );
+  const calendarEvents = await postFn(
+    base,
+    anon,
+    "secretary-google-tools",
+    { action: "calendar_read", method: "events.list", calendarId: "primary", preset: "today", maxResults: 5 },
+    devUserId
+  );
 
   const dashboard = await runDashboard(devUserId);
 
@@ -193,6 +287,7 @@ async function main() {
   const gmailLabelsPass = gmailLabels.http === 200 && gmailLabels.data?.ok === true;
   const gmailProfilePass = gmailProfile.http === 200 && gmailProfile.data?.ok === true;
   const calendarPass = calendarList.http === 200 && calendarList.data?.ok === true;
+  const calendarEventsPass = calendarEvents.http === 200 && calendarEvents.data?.ok === true;
   const dashboardPass = dashboard.every((d) => d.pass);
 
   const report = {
@@ -230,6 +325,11 @@ async function main() {
     },
     calendar: {
       calendarList: { http: calendarList.http, ok: calendarList.data?.ok === true, pass: calendarPass },
+      eventsListProbe: {
+        http: calendarEvents.http,
+        ok: calendarEvents.data?.ok === true,
+        pass: calendarEventsPass,
+      },
     },
     dashboard,
     overallPass:
@@ -239,6 +339,7 @@ async function main() {
       profilePass &&
       gmailProfilePass &&
       calendarPass &&
+      calendarEventsPass &&
       dashboardPass,
   };
 
@@ -251,8 +352,11 @@ async function main() {
   console.log(`gmail profile (status email): ${profilePass ? "PASS" : "FAIL"}`);
   console.log(`gmail messages.list: ${gmailProfilePass ? "PASS" : "FAIL"} (http ${gmailProfile.http})`);
   console.log(`calendar calendarList.list: ${calendarPass ? "PASS" : "FAIL"} (http ${calendarList.http})`);
+  console.log(`calendar events.list: ${calendarEventsPass ? "PASS" : "FAIL"} (http ${calendarEvents.http})`);
   for (const d of dashboard) {
-    console.log(`dashboard ${d.viewport}: ${d.pass ? "PASS" : "FAIL"} (http ${d.http}, jsFatal ${d.jsFatalCount})`);
+    console.log(
+      `dashboard ${d.viewport}: ${d.pass ? "PASS" : "FAIL"} (http ${d.http}, jsFatal ${d.jsFatalCount}, ui ${d.uiPass ? "ok" : "fail"})`
+    );
   }
   console.log(`overall: ${report.overallPass ? "PASS" : "FAIL"}`);
   console.log(`JSON: reports/ai-secretary-google-oauth-live-e2e.json`);

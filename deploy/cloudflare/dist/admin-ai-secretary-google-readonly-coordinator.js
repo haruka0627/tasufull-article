@@ -13,6 +13,8 @@
     configured: false,
     gmail: "gated",
     calendar: "gated",
+    gmailLabelCount: 0,
+    calendarListCount: 0,
     lastError: "",
   };
 
@@ -44,6 +46,16 @@
     renderSummary();
   }
 
+  function setGmailLabelCount(count) {
+    state.gmailLabelCount = Math.max(0, Number(count) || 0);
+    renderSummary();
+  }
+
+  function setCalendarListCount(count) {
+    state.calendarListCount = Math.max(0, Number(count) || 0);
+    renderSummary();
+  }
+
   function setLastError(code) {
     state.lastError = trim(code, 120);
     renderSummary();
@@ -58,9 +70,17 @@
 
   function panelStatusLabel(key) {
     const v = state[key];
-    if (v === "ready") return "ready";
+    if (v === "ready") {
+      if (key === "gmail" && state.gmailLabelCount > 0) return `ready · labels ${state.gmailLabelCount}`;
+      if (key === "calendar" && state.calendarListCount > 0) return `ready · calendars ${state.calendarListCount}`;
+      return "ready";
+    }
     if (v === "loading") return "loading…";
-    if (v === "empty") return "ready（0件）";
+    if (v === "empty") {
+      if (key === "gmail" && state.gmailLabelCount > 0) return `ready（0件） · labels ${state.gmailLabelCount}`;
+      if (key === "calendar" && state.calendarListCount > 0) return `ready（0件） · calendars ${state.calendarListCount}`;
+      return "ready（0件）";
+    }
     if (v === "error") return "error";
     return "gated";
   }
@@ -124,6 +144,8 @@
     if (!state.connected) {
       state.gmail = "gated";
       state.calendar = "gated";
+      state.gmailLabelCount = 0;
+      state.calendarListCount = 0;
       state.lastError = "";
     }
     applyWriteHide();
@@ -213,6 +235,8 @@
     getState,
     setPanelStatus,
     setLastError,
+    setGmailLabelCount,
+    setCalendarListCount,
     dispatchConnectionChanged,
   };
 })(typeof window !== "undefined" ? window : globalThis);
