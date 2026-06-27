@@ -1,48 +1,44 @@
 # AI 秘書 DeepSeek — Production Secret Smoke
 
 **実施日:** 2026-06-28  
-**Git HEAD:** `6ba3102` — `docs(secretary): add deepseek production secret smoke evidence`  
-**種別:** Secret 登録 + live smoke 証跡
+**Git HEAD:** `1138302` — `docs(secretary): update deepseek production secret smoke`  
+**種別:** Secret 登録 · redeploy · live smoke 証跡
 
 **JSON:** `reports/ai-secretary-deepseek-production-secret-smoke.json`
 
 ---
 
-## 総合判定: **No-Go（P0 DeepSeek 未完）** — Secret **present** · Function **未反映**
+## 総合判定: **Secret 反映 Go** · **DeepSeek P0 No-Go**（API 残高）
 
 | 領域 | 判定 |
 | --- | --- |
 | Pages Function マウント | ✅ Go |
-| **`DEEPSEEK_API_KEY` CF 登録** | ✅ **present**（`wrangler pages secret put` 成功） |
-| Secret → Function `env` 反映 | ❌ **未反映**（POST 依然 `configured:false`） |
+| **`DEEPSEEK_API_KEY` CF 登録** | ✅ **present** |
+| Secret → Function `env` 反映 | ✅ **Go**（redeploy 後 · `configured:true`） |
+| DeepSeek API 到達 | ✅ **Go**（502 · `Insufficient Balance`） |
 | POST 200 · `usedDeepSeek:true` | ❌ 未到達 |
-| **DeepSeek P0** | ❌ **No-Go** |
+| **DeepSeek P0 完了** | ❌ **No-Go** — 残高チャージ後に 200 smoke |
 
 ---
 
-## Phase A — 登録前（commit `6ba3102` 時点）
+## Phase C — Redeploy + 再 smoke（2026-06-28）
+
+### 1. Redeploy
+
+```bash
+node --env-file=.env scripts/deploy-cloudflare-pages.mjs
+```
 
 | 項目 | 結果 |
 | --- | --- |
-| **`DEEPSEEK_API_KEY`** | **absent** |
-| POST（Service Token） | **503** · `configured:false` |
-| 判定 | Function 到達 · Secret 未登録どおり |
+| EPERM 対応 | `stop-pages-dev.mjs` で dev 停止後に再実行 |
+| **cwd** | `deploy/cloudflare/dist` ✅ |
+| **target** | `.` ✅ |
+| **Functions bundle** | `Uploading Functions bundle` ✅ |
+| **Deploy URL** | `https://4f24758d.tasufull-article.pages.dev` |
+| **Production alias** | `https://tasufull-article.pages.dev` |
 
----
-
-## Phase B — Secret 登録 + 再 smoke（2026-06-28）
-
-### 1. Secret 登録
-
-| 項目 | 結果 |
-| --- | --- |
-| 方法 | `wrangler pages secret put DEEPSEEK_API_KEY --project-name tasufull-article` |
-| 結果 | ✅ **Success! Uploaded secret DEEPSEEK_API_KEY** |
-| 値の表示 | **なし** |
-
-### 2. presence 確認
-
-**`wrangler pages secret list --project-name tasufull-article`**
+### 2. Secret presence
 
 | Secret | Presence |
 | --- | --- |
@@ -50,46 +46,52 @@
 
 ### 3. Production alias smoke（Service Token · POST）
 
-**Endpoint:** `https://tasufull-article.pages.dev/api/secretary-deepseek-chat`
+**Endpoint:** `https://tasufull-article.pages.dev/api/secretary-deepseek-chat`  
+**Body:** Adapter 互換（`message` + `surface: ops_secretary`）
 
 | 項目 | 値 |
 | --- | --- |
-| HTTP | **503** |
+| HTTP | **502** |
 | Content-Type | `application/json` |
-| `configured` | **false** |
+| `configured` | **true** |
 | `usedDeepSeek` | **false** |
-| `error` | `DEEPSEEK_API_KEY not configured` |
-| 15s 後リトライ | 同上 **503** · `configured:false` |
+| `error` | `Insufficient Balance` |
+| `model` | `deepseek-chat` |
+| 判定 | ✅ **Secret 反映 Go** · DeepSeek API **到達** · **残高 blocker** |
 
-**判定（ユーザー基準）:** ❌ **No-Go** — Secret **未反映**（登録失敗ではなく deploy 未実施による binding 遅延）
+### 4. Preview `4f24758d`
 
-### 4. API 側エラー
+| 項目 | 値 |
+| --- | --- |
+| HTTP | **502** |
+| `configured` | **true** |
+| `error` | `Insufficient Balance` |
+
+### 5. dist drift
 
 | 項目 | 結果 |
 | --- | --- |
-| DeepSeek API 到達 | **未到達**（`configured:false` のため proxy 未呼び出し） |
-| 残高 / 401 / 502 | **未検証** |
+| build/deploy 後 drift | 63 modified + untracked |
+| 対応 | `git checkout -- deploy/cloudflare/dist/` + `git clean -fd` |
+| commit | **不要**（build 由来のみ） |
 
 ---
 
-## 解釈
+## Phase 履歴
 
-Cloudflare Pages は **Secret 追加後、新しい deployment まで Functions の `env` に反映されない**（[CF ドキュメント](https://developers.cloudflare.com/pages/functions/bindings/) どおり）。
-
-| 状態 | 期待 |
-| --- | --- |
-| Secret put 直後 · deploy なし | 503 `configured:false`（**今回観測**） |
-| Secret + **redeploy 後** | `configured:true` → **502**（残高不足）または **200** |
+| Phase | Secret | POST 結果 | 判定 |
+| --- | --- | --- | --- |
+| A 登録前 | absent | 503 · `configured:false` | Function 到達 |
+| B 登録後 · redeploy 前 | present | 503 · `configured:false` | Secret 未反映 |
+| **C redeploy 後** | **present** | **502 · `configured:true`** | **Secret 反映 Go** |
 
 ---
 
 ## 次アクション
 
-1. **`node --env-file=.env scripts/deploy-cloudflare-pages.mjs`** で production redeploy（Functions 同梱済 script）
-2. Service Token 経由 POST 再 smoke
-   - **502** · `Insufficient Balance` → Secret 到達 **Go** · 残高チャージ
-   - **200** · `usedDeepSeek:true` → DeepSeek P0 **Go**
-3. 証跡更新 + commit
+1. **DeepSeek 残高チャージ**
+2. Service Token 経由 POST 再 smoke → **200** · `usedDeepSeek:true`
+3. DeepSeek P0 **Go** 確定 → Google OAuth Edge deploy へ
 
 ---
 
