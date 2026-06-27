@@ -1,24 +1,24 @@
 {
-  "capturedAt": "2026-06-27T16:32:51.222Z",
+  "capturedAt": "2026-06-27T16:37:43.387Z",
   "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
   "probes": [
     {
       "name": "ai-workspace-quota status",
-      "httpStatus": 404,
-      "ok": false,
-      "preview": "{\"code\":\"NOT_FOUND\",\"message\":\"Requested function was not found\"}"
+      "httpStatus": 200,
+      "ok": true,
+      "preview": "{\"ok\":true,\"allowed\":true,\"feature\":\"text_turn\",\"userId\":\"quota_compat_mqwl2hfi\",\"planCode\":\"free\",\"planLabel\":\"無料枠\",\"dailyLimit\":5,\"used\":0,\"remaining\":5,\"date"
     },
     {
       "name": "gemini-chat text (non-workspace)",
       "httpStatus": 200,
       "ok": true,
-      "preview": "{\"reply\":\"Ping？どうしたの？何かあった？\",\"usedGemini\":true,\"retryCount\":0,\"intent\":\"chat\"}"
+      "preview": "{\"reply\":\"compat ping？それって、何かネットワークとかシステム関連の話かな？\",\"usedGemini\":true,\"retryCount\":0,\"intent\":\"chat\"}"
     },
     {
       "name": "openai-chat workspace payload shape",
       "httpStatus": 200,
       "ok": true,
-      "preview": "{\"reply\":\"「compat workspace ping」というコマンドは、特定のソフトウェアや環境によって異なる意味を持つ可能性があります。一般的には、ネットワーク接続やサービスの応答を確認するためのコマンドです。具体的な使用方法や文脈について教えていただければ、さらに詳しい情報を提供できます。\",\"used"
+      "preview": "{\"reply\":\"「compat workspace ping」は特定のコマンドや機能の名前かもしれませんが、詳細が不明です。一般的には、ネットワーク接続の確認を行う「ping」コマンドと関連している可能性がありますが、具体的な文脈やシステムについての情報が必要です。どのような環境や用途で使用されているのか教えていた"
     }
   ]
 }
