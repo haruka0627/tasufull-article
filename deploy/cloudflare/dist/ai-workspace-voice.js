@@ -6,6 +6,16 @@
 
   const SURFACE = "tasful_ai";
   let voiceIntegrationInitialized = false;
+  let voiceStateBound = false;
+  let composerVoiceBound = false;
+
+  const VOICE_STATE_LABELS = Object.freeze({
+    ready: "Ready",
+    listening: "聞取中",
+    thinking: "処理中",
+    speaking: "読み上げ",
+    error: "エラー",
+  });
 
   function bindAssistantReply() {
     if (global.__tasuWorkspaceVoiceReplyBound) return;
@@ -22,8 +32,92 @@
     return document.querySelector("[data-ai-workspace-chat]");
   }
 
+  function isVoiceIntegrationReady() {
+    return (
+      voiceIntegrationInitialized &&
+      typeof global.TasuWorkspaceVoiceIntegration?.submitVoiceCapture === "function"
+    );
+  }
+
+  function runVoiceCapture(showError) {
+    if (!isVoiceIntegrationReady()) {
+      return Promise.resolve({ ok: false, error: "integration_not_ready" });
+    }
+    global.TasuWorkspaceVoiceIntegration.stopVoiceOutput?.();
+    return global.TasuWorkspaceVoiceIntegration.submitVoiceCapture().then((out) => {
+      if (!out?.ok && out?.error && typeof showError === "function") {
+        showError(String(out.error).slice(0, 120));
+      }
+      return out;
+    });
+  }
+
+  function renderComposerVoiceState(payload) {
+    const stateEl = document.querySelector("[data-tasu-workspace-voice-state]");
+    const btn = document.querySelector("[data-tasu-workspace-voice-composer-btn]");
+    const state = payload?.state || "ready";
+    const label = VOICE_STATE_LABELS[state] || VOICE_STATE_LABELS.ready;
+    const text = payload?.detail ? `${label} — ${payload.detail}` : label;
+
+    if (stateEl) {
+      stateEl.textContent = text;
+      stateEl.className = "tasful-ai-voice-composer__state";
+      stateEl.dataset.state = state;
+      if (state !== "ready") stateEl.classList.add(`tasful-ai-voice-composer__state--${state}`);
+    }
+
+    if (btn) {
+      btn.setAttribute("aria-pressed", state === "listening" ? "true" : "false");
+      btn.classList.toggle("is-active", state === "listening");
+      const sending = getChatRoot()?.dataset?.aiChatSending === "1";
+      btn.disabled = Boolean(sending && state !== "listening");
+    }
+  }
+
+  function bindComposerVoiceState() {
+    if (voiceStateBound) return;
+    const Integration = global.TasuWorkspaceVoiceIntegration;
+    if (!Integration?.onVoiceStateChange) return;
+    Integration.onVoiceStateChange(renderComposerVoiceState);
+    renderComposerVoiceState(Integration.getVoiceState?.() || { state: "ready" });
+    voiceStateBound = true;
+  }
+
+  function mountComposerVoiceControls() {
+    if (composerVoiceBound) return;
+    const actionsRight = document.querySelector("[data-ai-composer-frame] .input-actions-right");
+    const sendBtn = document.querySelector("[data-ai-chat-send]");
+    if (!actionsRight || !sendBtn) return;
+
+    if (actionsRight.querySelector("[data-tasu-workspace-voice-composer]")) {
+      composerVoiceBound = true;
+      return;
+    }
+
+    const wrap = document.createElement("div");
+    wrap.className = "tasful-ai-voice-composer";
+    wrap.dataset.tasuWorkspaceVoiceComposer = "1";
+    wrap.innerHTML =
+      '<button type="button" class="tasful-ai-voice-composer__btn" data-tasu-workspace-voice-composer-btn aria-pressed="false" aria-label="音声入力">🎤 音声</button>' +
+      '<span class="tasful-ai-voice-composer__state" data-tasu-workspace-voice-state aria-live="polite">Ready</span>';
+
+    actionsRight.insertBefore(wrap, sendBtn);
+
+    wrap.querySelector("[data-tasu-workspace-voice-composer-btn]")?.addEventListener("click", () => {
+      void runVoiceCapture((msg) => {
+        renderComposerVoiceState({ state: "error", detail: msg });
+      });
+    });
+
+    composerVoiceBound = true;
+    bindComposerVoiceState();
+  }
+
   function initVoiceIntegration(root) {
-    if (voiceIntegrationInitialized) return;
+    if (voiceIntegrationInitialized) {
+      bindComposerVoiceState();
+      return;
+    }
     const Integration = global.TasuWorkspaceVoiceIntegration;
     const Chat = global.TasuAiChat;
     if (!Integration?.init || !Chat?.sendMessage) return;
@@ -54,13 +148,7 @@
     });
 
     voiceIntegrationInitialized = true;
-  }
-
-  function isVoiceIntegrationReady() {
-    return (
-      voiceIntegrationInitialized &&
-      typeof global.TasuWorkspaceVoiceIntegration?.submitVoiceCapture === "function"
-    );
+    bindComposerVoiceState();
   }
 
   function bindLegacyMicCapture(wrap) {
@@ -89,17 +177,16 @@
 
         event.preventDefault();
         event.stopImmediatePropagation();
-        showMicError(null);
-        global.TasuWorkspaceVoiceIntegration.stopVoiceOutput?.();
-
-        void global.TasuWorkspaceVoiceIntegration.submitVoiceCapture().then((out) => {
-          if (!out?.ok && out?.error) {
-            showMicError(String(out.error).slice(0, 120));
-          }
-        });
+        void runVoiceCapture(showMicError);
       },
       true
     );
+  }
+
+  function hideLegacyToolbar(wrap) {
+    if (!wrap) return;
+    wrap.classList.add("tasful-ai-voice--legacy-hidden");
+    wrap.setAttribute("aria-hidden", "true");
   }
 
   function mountWorkspaceVoice() {
@@ -107,6 +194,7 @@
     if (!Voice?.mountToolbar) return;
     bindAssistantReply();
     Voice.initSurface(SURFACE);
+    mountComposerVoiceControls();
 
     const frame = document.querySelector("[data-ai-composer-frame]");
     const input = document.querySelector("[data-ai-chat-input]");
@@ -129,6 +217,7 @@
       insertBefore: "form",
     });
 
+    hideLegacyToolbar(wrap);
     bindLegacyMicCapture(wrap);
 
     sendBtn?.addEventListener("click", () => Voice.stopVoice?.(), true);
@@ -154,8 +243,10 @@
 
   global.TasuAiWorkspaceVoice = {
     mountWorkspaceVoice,
+    mountComposerVoiceControls,
     initVoiceIntegration,
     isVoiceIntegrationReady,
+    renderComposerVoiceState,
     SURFACE,
   };
 })(typeof window !== "undefined" ? window : globalThis);
