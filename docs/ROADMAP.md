@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-27（Command Dashboard Phase 6-H）
+**最終更新:** 2026-06-27（Voice Phase 5-D 完了）
 
 ---
 
@@ -139,6 +139,27 @@
 | **Operations Orchestrator Phase 5-C** | ✅ 実装（未コミット） | Command Center UI · フィルタ · L3/L4 · `reports/secretary-orchestrator-phase5c.md` |
 | **Operations Orchestrator Phase 6** | 📋 未着手 | Cursor SDK · cron · L1 自動送信 · Agent 自動実行 |
 | **Trend Scout**（トレンド収集 · 経営参謀提案） | 📋 Backlog | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) · v1.2 以降想定 · **UI Critical 優先度外** |
+
+---
+
+## Voice Core（OpenAI Realtime · Phase 5 完了）
+
+| 項目 | 状態 | 根拠 |
+| --- | --- | --- |
+| **Realtime Edge**（GA `client_secrets` · ephemeral token） | ✅ | `0cedb27` · `supabase/functions/_shared/openai-realtime-session.ts` |
+| **GA Transport**（WebSocket · beta subprotocol 除去） | ✅ | `6924aa1` |
+| **Default model `gpt-realtime-2`** | ✅ | `74e8048` |
+| **TASFUL AI Live** opt-in | ✅ | `1c8fe87` · `surface: tasful_ai` · flags default OFF |
+| **Builder AI Live** opt-in | ✅ | `2a57283` · `surface: builder_ai` · flags default OFF |
+| **AI秘書 Live** opt-in | ✅ | `e43c9c0` · `surface: ops_secretary` · flags default OFF |
+| **Kill Switch**（`VOICE_REALTIME_EDGE_ENABLED=1`） | ✅ | `d1f6ced` |
+| **Rate Limit Phase 1**（in-memory · 10 req/min/IP） | ✅ | `d1f6ced` |
+| **Hardening Phase 2**（JWT · 分散 Rate Limit） | 📋 | `reports/voice-phase5d-complete.md` §次フェーズ |
+| **TLV / Platform Voice** | 📋 未対応 | AD-003 / AD-004 |
+
+**共通:** 両方の feature flag が ON のときのみ live。デフォルト mock · live 失敗時 mock fallback。
+
+**報告:** `reports/voice-phase5d-complete.md`
 
 ---
 

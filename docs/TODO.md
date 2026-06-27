@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-27（Command Dashboard Phase 6-H · 司令塔 KPI）  
-**Git HEAD:** `991e56b`（`cf-pages-deploy` · **git push 未実施**）  
+**最終更新:** 2026-06-27（Voice Phase 5-D 完了）  
+**Git HEAD:** `4f1f926`（`cf-pages-deploy` · **git push 未実施**）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -312,6 +312,28 @@ Groq / Cerebras / Claude は **現時点では不要**。
 
 ---
 
+### Voice Core Phase 5-D（✅ 完了 · 2026-06-27）
+
+| 区分 | 状態 | 根拠 |
+| --- | --- | --- |
+| **5-D-1** TASFUL AI Live opt-in | **完了** | `1c8fe87` · `surface: tasful_ai` |
+| **5-D-2** Builder AI Live opt-in | **完了** | `2a57283` · `surface: builder_ai` |
+| **5-D-3** AI秘書 Live opt-in | **完了** | `e43c9c0` · `surface: ops_secretary` |
+| **Hardening Phase 1** Kill Switch + Rate Limit | **完了** | `d1f6ced` · Edge `VOICE_REALTIME_EDGE_ENABLED=1` |
+
+- [x] Voice 5-D-1 — TASFUL AI Workspace Live opt-in（flags · mock fallback）
+- [x] Voice 5-D-2 — Builder AI Live opt-in（flags · mock fallback）
+- [x] Voice 5-D-3 — AI秘書 Live opt-in（flags · mock fallback）
+- [x] Voice Hardening Phase 1 — Kill Switch + in-memory Rate Limit Phase 1
+
+**前提（5-A〜5-C · 完了）:** Edge GA `client_secrets`（`0cedb27`）· GA Transport（`6924aa1`）· default `gpt-realtime-2`（`74e8048`）
+
+**参照:** `reports/voice-phase5d-complete.md` · [AI/README.md](./AI/README.md) §Voice
+
+**次フェーズ候補（未着手）:** Hardening Phase 2 · Redis 等分散 Rate Limit · JWT 認可 · Builder/秘書 Voice UX · TLV Voice 検討
+
+---
+
 ## P2 — ドキュメント・運用
 
 - [ ] `docs/` 正本をコミット
@@ -339,3 +361,4 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | Builder AI Vision Phase 2 | `4aff9ec` · Gateway attachments → gemini-chat · vision 8/8 + ui 14/14 + review 135/135 · `reports/builder-ai-vision-phase2.md` |
 | Builder AI Tool Integration Phase 3 | `05c32ad` · docs `95a45dd` |
 | Builder AI Live Phase 4-A | `66051f7` · live 18/18 · ui 15/15 · `reports/builder-ai-live-phase4-plan.md` |
+| Voice Core Phase 5-D | `4f1f926` · TASFUL AI / Builder AI / AI秘書 Live opt-in · Hardening Phase 1 · `reports/voice-phase5d-complete.md` |
