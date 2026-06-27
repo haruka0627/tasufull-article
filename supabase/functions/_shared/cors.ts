@@ -2,7 +2,7 @@
  * Edge Functions 共通 CORS（localhost / 127.0.0.1 / 開発サーバ対応）
  */
 const ALLOW_HEADERS =
-  "authorization, x-client-info, apikey, content-type, accept, x-requested-with, x-supabase-api-version, x-supabase-authorization, x-partner-role, x-partner-user-id";
+  "authorization, x-client-info, apikey, content-type, accept, x-requested-with, x-supabase-api-version, x-supabase-authorization, x-partner-role, x-partner-user-id, x-secretary-dev-user-id";
 
 const ALLOW_METHODS = "POST, GET, OPTIONS";
 
