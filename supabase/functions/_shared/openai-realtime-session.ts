@@ -41,7 +41,7 @@ export type RealtimeSessionResult =
   | { status: 400 | 429 | 502 | 503; body: RealtimeSessionFailure };
 
 const DEFAULT_REALTIME_MODEL =
-  Deno.env.get("OPENAI_REALTIME_MODEL")?.trim() || "gpt-4o-realtime-preview-2024-12-17";
+  Deno.env.get("OPENAI_REALTIME_MODEL")?.trim() || "gpt-realtime-2";
 
 const DEFAULT_REALTIME_ENDPOINT =
   Deno.env.get("OPENAI_REALTIME_ENDPOINT")?.trim() || "wss://api.openai.com/v1/realtime";
