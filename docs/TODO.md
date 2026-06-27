@@ -162,7 +162,16 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - [x] Phase 5-B — OpsEvent · HSG · CI ingest · 朝レポート · DeepSeek 分類
 - [x] Phase 5-C — Command Center UI · フィルタ · L3/L4 パネル · 朝レポート UI
 - [x] `test-secretary-orchestrator-phase5a.mjs` · `phase5b` · `phase5c` PASS
-- [ ] Phase 6 — Cursor SDK · cron · L1 自動送信 · Agent 自動実行
+- [x] **Phase 6-A** — Google Workspace Integration 調査・設計（Gmail / Calendar / Contacts / Drive）
+- [ ] Phase 6-B — OAuth + Token Vault（秘書専用 GCP · Edge skeleton）
+- [ ] Phase 6-C — Gmail read-only
+- [ ] Phase 6-D — Gmail write + Human Gate 送信
+- [ ] Phase 6-E / 6-F — Calendar read / write
+- [ ] Phase 6-G — Contacts + 「○○さんへメール」導線
+- [ ] Phase 6-H — Drive 検索
+- [ ] Phase 7-A — Cursor SDK · cron · L1 自動送信 · Agent 自動実行（旧 Phase 6）
+
+**Phase 6-A 参照:** `reports/secretary-google-workspace-plan.md`
 
 ---
 
