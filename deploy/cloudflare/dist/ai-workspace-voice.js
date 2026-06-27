@@ -5,6 +5,7 @@
   "use strict";
 
   const SURFACE = "tasful_ai";
+  let voiceIntegrationInitialized = false;
 
   function bindAssistantReply() {
     if (global.__tasuWorkspaceVoiceReplyBound) return;
@@ -15,6 +16,44 @@
       if (!text) return;
       void global.TasuAiVoiceCore?.playVoice?.(text, { surface: SURFACE, lang: "ja-JP" });
     });
+  }
+
+  function getChatRoot() {
+    return document.querySelector("[data-ai-workspace-chat]");
+  }
+
+  function initVoiceIntegration(root) {
+    if (voiceIntegrationInitialized) return;
+    const Integration = global.TasuWorkspaceVoiceIntegration;
+    const Chat = global.TasuAiChat;
+    if (!Integration?.init || !Chat?.sendMessage) return;
+
+    const chatRoot = root || getChatRoot();
+    if (!chatRoot) return;
+
+    Integration.init({
+      surface: SURFACE,
+      onSubmit: async (payload) => {
+        const text = String(payload?.text || "").trim();
+        if (!text) return;
+
+        Integration.fillComposerInput?.(text);
+
+        const searchTarget =
+          payload?.options?.searchTarget ||
+          global.TasuAiSearchTarget?.readTargetFromRoot?.(chatRoot) ||
+          "tasful";
+
+        await Chat.sendMessage(chatRoot, {
+          userText: text,
+          searchTarget,
+          fromVoice: payload?.channel === "voice",
+          ...(payload?.options || {}),
+        });
+      },
+    });
+
+    voiceIntegrationInitialized = true;
   }
 
   function mountWorkspaceVoice() {
@@ -47,14 +86,27 @@
     sendBtn?.addEventListener("click", () => Voice.stopVoice?.(), true);
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mountWorkspaceVoice);
-  } else {
+  function bootstrap() {
     mountWorkspaceVoice();
+    initVoiceIntegration(getChatRoot());
+  }
+
+  if (!global.__tasuWorkspaceVoiceIntegrationBound) {
+    global.__tasuWorkspaceVoiceIntegrationBound = true;
+    global.addEventListener("tasu:ai-chat-ready", (event) => {
+      initVoiceIntegration(event.detail?.root || getChatRoot());
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootstrap);
+  } else {
+    bootstrap();
   }
 
   global.TasuAiWorkspaceVoice = {
     mountWorkspaceVoice,
+    initVoiceIntegration,
     SURFACE,
   };
 })(typeof window !== "undefined" ? window : globalThis);

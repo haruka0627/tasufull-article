@@ -1519,7 +1519,7 @@
       window.TasuAiWorkspaceAttachments?.showComposerError?.(root, "添付の読み込みに失敗しました");
     }
 
-    let text = String(input?.value || "").trim();
+    let text = String(opts?.userText ?? input?.value ?? "").trim();
     if (!text && attachments.length) {
       text = "添付ファイルについて確認・相談してください。";
     }
