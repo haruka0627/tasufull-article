@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "errors": [],
+  "results": [
+    {
+      "width": 1280,
+      "horizontalScroll": false,
+      "userBg": "linear-gradient(135deg, rgb(91, 33, 182) 0%, rgb(67, 56, 202) 52%, rgb(49, 46, 129) 100%)",
+      "logoBg": "rgba(0, 0, 0, 0)",
+      "screenshot": "c:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-final-1280.png"
+    },
+    {
+      "width": 768,
+      "horizontalScroll": false,
+      "userBg": "linear-gradient(135deg, rgb(91, 33, 182) 0%, rgb(67, 56, 202) 52%, rgb(49, 46, 129) 100%)",
+      "logoBg": "rgba(0, 0, 0, 0)",
+      "screenshot": "c:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-final-768.png"
+    },
+    {
+      "width": 390,
+      "horizontalScroll": false,
+      "userBg": "linear-gradient(135deg, rgb(91, 33, 182) 0%, rgb(67, 56, 202) 52%, rgb(49, 46, 129) 100%)",
+      "logoBg": "rgba(0, 0, 0, 0)",
+      "screenshot": "c:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-final-390.png"
+    }
+  ]
+}
