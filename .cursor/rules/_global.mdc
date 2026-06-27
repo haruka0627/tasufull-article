@@ -30,3 +30,28 @@ TASFUL AI Workspace は **機能完成 ≠ 本番 Production Ready**（本番接
 ## 詳細ルール
 
 領域別は `.cursor/rules/pkg-*.mdc` · コミットは `git.mdc` · QA は `qa.mdc` · ドキュ更新は `docs.mdc`。
+
+## 検証環境（全領域共通 · 必須）
+
+**`file://` · ローカル HTML 直開き · VSCode Preview 禁止。**
+
+検証・E2E・Playwright・スクリーンショット・UI 確認・完了報告はすべて **`http://127.0.0.1:8788`** のみ（Builder / TLV / Platform / AI 秘書 / TASFUL AI / 今後追加ページ含む）。
+
+正本手順: `docs/local-dev.md` · 実装: `scripts/lib/dev-server-url.mjs`
+
+### 作業開始前チェック（4点）
+
+1. `npm run dev` 起動済み
+2. `netstat -ano | findstr 8788` → LISTEN
+3. wrangler `Ready on http://127.0.0.1:8788`
+4. 対象 URL が HTTP 200
+
+### build（AD-009）
+
+ソース変更後 `npm run build:pages` → `deploy/cloudflare/dist` 同期。
+
+EPERM 時: dev 停止 → `npm run build:pages` → `npm run dev` 再開。
+
+### 完了報告（必須）
+
+8788 で確認した結果のみ有効。記載: **HTTP Status** · **Console Error** · **Viewport（1280 / 768 / 390）**。

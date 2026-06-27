@@ -31,3 +31,7 @@ node scripts/test-tlv-tasful-ai-entry.mjs
 ```
 
 TLV 本体変更時は Playwright/QA 監査必須（`reports/tlv-v1-production-ready/`）。
+
+## 検証環境
+
+**`_global.mdc` 参照（file:// 禁止 · 8788 のみ）。** 例: `http://127.0.0.1:8788/live/index.html`

@@ -34,3 +34,12 @@ node scripts/check-builder-production-ready.mjs  # Builder 本体触った場合
 ```
 
 Isolation: TASFUL AI / AI 秘書 / TLV 入口 / Gateway — untouched 確認。
+
+## 検証環境
+
+**共通手順は `_global.mdc`「検証環境」参照（file:// 禁止 · 8788 のみ）。**
+
+領域 URL 例:
+
+- `http://127.0.0.1:8788/builder/builder-ai`
+- `http://127.0.0.1:8788/builder/user-dashboard`

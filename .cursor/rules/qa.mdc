@@ -36,3 +36,13 @@ npm run build:pages
 変更領域の `scripts/test-*.mjs` を実行。PASS 前にコミットしない。
 
 推測で「完了」扱いしない — テスト出力またはレポート根拠を残す。
+
+## ローカル検証（8788 · 必須）
+
+**`file://` 禁止。** 手動・Playwright・スクショ・完了報告は `http://127.0.0.1:8788` のみ。
+
+共通手順は `_global.mdc`「検証環境」参照。テスト URL は `scripts/lib/dev-server-url.mjs` の `STANDARD_LOCAL_BASE` / `buildLocalPageUrl()` を使用。
+
+作業前: dev 起動 → 8788 LISTEN → wrangler Ready → 対象 HTTP 200。
+
+完了報告必須: HTTP Status · Console Error · Viewport 1280/768/390。
