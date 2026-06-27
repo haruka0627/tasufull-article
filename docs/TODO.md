@@ -116,7 +116,8 @@
 - **Phase 1 DB:** migration + seed 追加 · `scripts/test-business-directory-phase1-schema.mjs` — **37/37 PASS**
 - **Phase 2 API:** service + Edge + client repository · `scripts/test-business-directory-phase2-api.mjs` — **68/68 PASS**
 - **Phase 3 Owner UI:** `business-directory/` · `scripts/test-business-directory-phase3-owner-ui.mjs` — **53/53 PASS**
-- **Phase 4 Admin UI:** `business-directory/admin/` · `scripts/test-business-directory-phase4-admin-ui.mjs` — 公開検索 / Stripe **未着手**
+- **Phase 4 Admin UI:** `business-directory/admin/` · `scripts/test-business-directory-phase4-admin-ui.mjs` — **35/35 PASS**
+- **Phase 5 Public UI:** `business-directory/public/` · `scripts/test-business-directory-phase5-public-ui.mjs` — Stripe **未着手**
 
 ### AI プロバイダ分担
 

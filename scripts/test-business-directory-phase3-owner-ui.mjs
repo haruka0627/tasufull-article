@@ -109,11 +109,18 @@ mustInclude(memberAuth, "business-directory-new", "member auth guard new");
 mustInclude(memberAuth, "business-directory-edit", "member auth guard edit");
 
 // Marketplace / Platform non-interference
+// Marketplace pages — owner/admin wiring forbidden; public list entry (Phase 5) allowed
 const marketplaceFiles = ["shop-store.html", "business.html", "post.html", "listing-management.html"];
 for (const f of marketplaceFiles) {
   const full = path.join(root, f);
   if (!fs.existsSync(full)) continue;
   const src = read(f);
+  if (f === "shop-store.html" || f === "business.html") {
+    const badOwner = ["business-directory/index", "business-directory/new", "business-directory/edit", "business-directory/admin"].some((p) => src.includes(p));
+    if (!badOwner) ok(`${f} no owner/admin bd wiring`);
+    else bad(`${f} owner/admin bd wiring`);
+    continue;
+  }
   if (!src.includes("business-directory")) ok(`no bd wiring in ${f}`);
   else bad(`${f} modified with business-directory reference`);
 }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Directory — 掲載一覧 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="business-directory-public.css">
+</head>
+<body class="bd-public-page" data-bd-public-page="list">
+  <div class="bd-public-shell">
+    <header class="bd-public-head">
+      <h1 class="bd-public-head__title">Business Directory</h1>
+      <p class="bd-public-head__sub">店舗・販売 / 業務サービスの公開掲載（published のみ）</p>
+    </header>
+
+    <nav class="bd-public-nav" aria-label="種別">
+      <a href="list.html" data-bd-public-type-link="">すべて</a>
+      <a href="list.html?type=shop_retail" data-bd-public-type-link="shop_retail">店舗・販売</a>
+      <a href="list.html?type=business_service" data-bd-public-type-link="business_service">業務サービス</a>
+      <a href="../../index-top.html">TASFUL TOP</a>
+    </nav>
+
+    <p class="bd-public-toast" data-bd-public-toast hidden role="status"></p>
+
+    <form class="bd-public-filters" data-bd-public-filters>
+      <div class="bd-public-filters__row">
+        <div class="bd-public-field">
+          <label for="bd-type">種別</label>
+          <select id="bd-type" name="type">
+            <option value="">すべて</option>
+            <option value="shop_retail">店舗・販売</option>
+            <option value="business_service">業務サービス</option>
+          </select>
+        </div>
+        <div class="bd-public-field">
+          <label for="bd-category">カテゴリ</label>
+          <select id="bd-category" name="category"></select>
+        </div>
+        <div class="bd-public-field">
+          <label for="bd-region">地域</label>
+          <input id="bd-region" name="region" placeholder="都道府県・対応地域">
+        </div>
+        <div class="bd-public-field">
+          <label for="bd-sort">並び替え</label>
+          <select id="bd-sort" name="sort">
+            <option value="newest">新着順</option>
+            <option value="plan">プラン優先</option>
+            <option value="name">名前順</option>
+          </select>
+        </div>
+      </div>
+      <div class="bd-public-filters__row">
+        <div class="bd-public-field" style="grid-column:1/-1">
+          <label for="bd-q">キーワード</label>
+          <input id="bd-q" name="q" type="search" placeholder="掲載名 · 紹介文 · カテゴリ">
+        </div>
+      </div>
+      <button type="submit" class="bd-public-btn bd-public-btn--primary">検索</button>
+    </form>
+
+    <div class="bd-public-grid" data-bd-public-grid aria-live="polite"></div>
+    <div class="bd-public-empty" data-bd-public-empty hidden>
+      <p>条件に合う掲載がありません</p>
+    </div>
+    <div class="bd-public-pagination" data-bd-public-pagination></div>
+  </div>
+
+  <script src="../../business-directory-repository.js"></script>
+  <script src="../business-directory-categories.js"></script>
+  <script src="../business-directory-common.js"></script>
+  <script src="business-directory-public.js"></script>
+</body>
+</html>

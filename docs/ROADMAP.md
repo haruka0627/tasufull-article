@@ -52,8 +52,8 @@
 
 | 領域 | 収益主軸 | 状態 |
 | --- | --- | --- |
-| **店舗・販売** | 月額サブスク掲載料 | 🔄 Phase 4 Admin UI · Owner + Ops 接続済 |
-| **業務サービス** | 月額サブスク掲載料 | 🔄 Phase 4 Admin UI · Owner + Ops 接続済 |
+| **店舗・販売** | 月額サブスク掲載料 | 🔄 Phase 5 Public UI · Owner/Ops/Public 接続済 |
+| **業務サービス** | 月額サブスク掲載料 | 🔄 Phase 5 Public UI · Owner/Ops/Public 接続済 |
 | **Marketplace（商品）** | **成約手数料** | ✅ 既存方針 **維持** |
 | **Platform / 案件** | **成約手数料** | ✅ 既存方針 **維持** |
 | **広告枠** | スポンサー · 上位表示 · PR | 📋 将来 |
@@ -74,7 +74,9 @@
 
 **Phase 3 Owner UI:** `business-directory/` · `scripts/test-business-directory-phase3-owner-ui.mjs` · `reports/business-directory-phase3-owner-ui.md`
 
-**Phase 4 Admin UI:** `business-directory/admin/` · `scripts/test-business-directory-phase4-admin-ui.mjs` · `reports/business-directory-phase4-admin-ui.md` — 公開検索 / Stripe **未着手**
+**Phase 4 Admin UI:** `business-directory/admin/` · `scripts/test-business-directory-phase4-admin-ui.mjs` · `reports/business-directory-phase4-admin-ui.md`
+
+**Phase 5 Public UI:** `business-directory/public/` · `scripts/test-business-directory-phase5-public-ui.mjs` · `reports/business-directory-phase5-public-ui.md` — Stripe **未着手**
 
 **報告:** `reports/business-directory-subscription-model.md`
 
