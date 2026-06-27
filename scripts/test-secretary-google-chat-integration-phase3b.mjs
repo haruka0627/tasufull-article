@@ -83,6 +83,7 @@ function loadStack() {
   win.window = win;
   const sandbox = { window: win, global: win };
   vm.createContext(sandbox);
+  vm.runInContext(read("admin-ai-secretary-google-chat-context.js"), sandbox);
   vm.runInContext(read("admin-ai-secretary-google-chat-gmail-context.js"), sandbox);
   vm.runInContext(read("admin-ai-secretary-google-chat-router.js"), sandbox);
   return {
@@ -152,7 +153,7 @@ function runUnitTests() {
   if (hit?.subject === "Two" && hit.id === INTERNAL_MSG_ID) ok("context getByIndex");
   else bad("context getByIndex");
 
-  const raw = storage.getItem("tasu_secretary_chat_gmail_ctx_v1");
+  const raw = storage.getItem("tasu_secretary_chat_google_ctx_v2");
   if (raw && !/refresh_token|access_token/.test(raw)) ok("context storage no secrets");
   else bad("context storage no secrets");
 
@@ -345,8 +346,9 @@ async function runBrowserIntegration(base) {
 
         await page.waitForFunction(
           () =>
-            window.TasuSecretaryGoogleChatRouter &&
+            window.TasuSecretaryGoogleChatContext &&
             window.TasuSecretaryGoogleChatGmailContext &&
+            window.TasuSecretaryGoogleChatRouter &&
             document.querySelector("[data-ops-secretary-input]"),
           { timeout: 30000 }
         );
