@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Directory 審査キュー | TASFUL 運営</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../business-directory.css">
+  <link rel="stylesheet" href="../business-directory-admin.css">
+</head>
+<body data-page="business-directory-admin-reviews" data-bd-admin-page="reviews">
+  <main class="bd-admin-layout" data-bd-admin-root>
+    <header class="bd-admin-head">
+      <div>
+        <span class="bd-admin-badge">Ops · Business Directory</span>
+        <h1 class="bd-admin-head__title">審査キュー</h1>
+        <p class="bd-admin-head__sub">review_requested の掲載 — 読取 + 審査のみ（入力代行なし）</p>
+      </div>
+      <a class="bd-admin-btn bd-admin-btn--ghost" href="../../builder-admin/admin-index.html">運営 TOP</a>
+    </header>
+    <p class="bd-toast" data-bd-admin-toast hidden role="status"></p>
+    <div class="bd-admin-table-wrap" data-bd-admin-queue aria-live="polite"></div>
+    <div class="bd-admin-empty" data-bd-admin-queue-empty hidden>
+      <p>審査待ちの掲載はありません</p>
+    </div>
+  </main>
+  <script src="../../chat-supabase-config.js"></script>
+  <script src="../../member-auth.js"></script>
+  <script src="../../business-directory-repository.js"></script>
+  <script src="../business-directory-categories.js"></script>
+  <script src="../business-directory-common.js"></script>
+  <script src="business-directory-admin.js"></script>
+</body>
+</html>

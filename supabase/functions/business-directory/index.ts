@@ -20,6 +20,8 @@ import {
   requireMethod,
   requireOps,
   restoreListing,
+  getOpsListingDetail,
+  getListingAuditLogs,
   submitListingForReview,
   suspendListing,
   unpublishListing,
@@ -37,6 +39,7 @@ type ActionBody = DraftListingInput & {
   offset?: number;
   reject_reason_code?: string;
   reject_reason_note?: string;
+  approve_note?: string;
   reason?: string;
 };
 
@@ -118,11 +121,32 @@ export async function handler(req: Request): Promise<Response> {
         return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
       }
       const actorRole = auth.isOps ? "ops" : "owner";
-      const listing = await unpublishListing(supabase, auth.userId, actorRole, listingId);
+      const listing = await unpublishListing(supabase, auth.userId, actorRole, listingId, body.reason);
       return okResponse({ listing }, req);
     }
 
-    // Ops-only
+    // Ops-only (also used by admin UI)
+    if (auth.isOps) {
+      if (action === "get_ops_listing_detail") {
+        const listingId = String(body.listing_id ?? "").trim();
+        if (!listingId) {
+          return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
+        }
+        const detail = await getOpsListingDetail(supabase, listingId);
+        return okResponse({ detail }, req);
+      }
+
+      if (action === "get_listing_audit_logs") {
+        const listingId = String(body.listing_id ?? "").trim();
+        if (!listingId) {
+          return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
+        }
+        const logs = await getListingAuditLogs(supabase, listingId, body.limit);
+        return okResponse({ logs }, req);
+      }
+    }
+
+    // Ops-only mutations
     await requireOps(req);
 
     if (action === "get_review_queue") {
@@ -135,7 +159,9 @@ export async function handler(req: Request): Promise<Response> {
       if (!listingId) {
         return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
       }
-      const result = await approveListing(supabase, auth.userId, listingId);
+      const result = await approveListing(supabase, auth.userId, listingId, {
+        note: body.approve_note,
+      });
       return okResponse(result as Record<string, unknown>, req);
     }
 
@@ -165,7 +191,7 @@ export async function handler(req: Request): Promise<Response> {
       if (!listingId) {
         return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
       }
-      const listing = await restoreListing(supabase, auth.userId, listingId);
+      const listing = await restoreListing(supabase, auth.userId, listingId, body.reason);
       return okResponse({ listing }, req);
     }
 

@@ -55,7 +55,11 @@
     getPublicListingDetail: (slug, listingType) =>
       invoke("get_public_listing_detail", { slug, listing_type: listingType }),
     getReviewQueue: (limit) => invoke("get_review_queue", { limit }),
-    approveListing: (listingId) => invoke("approve_listing", { listing_id: listingId }),
+    getOpsListingDetail: (listingId) => invoke("get_ops_listing_detail", { listing_id: listingId }),
+    getListingAuditLogs: (listingId, limit) =>
+      invoke("get_listing_audit_logs", { listing_id: listingId, limit }),
+    approveListing: (listingId, opts) =>
+      invoke("approve_listing", { listing_id: listingId, approve_note: opts?.note }),
     rejectListing: (listingId, reason) =>
       invoke("reject_listing", {
         listing_id: listingId,
@@ -64,8 +68,10 @@
       }),
     suspendListing: (listingId, reason) =>
       invoke("suspend_listing", { listing_id: listingId, reason }),
-    unpublishListing: (listingId) => invoke("unpublish_listing", { listing_id: listingId }),
-    restoreListing: (listingId) => invoke("restore_listing", { listing_id: listingId }),
+    unpublishListing: (listingId, reason) =>
+      invoke("unpublish_listing", { listing_id: listingId, reason }),
+    restoreListing: (listingId, reason) =>
+      invoke("restore_listing", { listing_id: listingId, reason }),
     health: () => invoke("health"),
   };
 

@@ -831,6 +831,7 @@ export async function approveListing(
   supabase: SupabaseClient,
   opsUserId: string,
   listingId: string,
+  options: { note?: string } = {},
 ): Promise<Record<string, unknown>> {
   const listing = await getListingOrThrow(supabase, listingId);
   if (String(listing.status) !== "review_requested") {
@@ -838,10 +839,12 @@ export async function approveListing(
   }
 
   const review = await closeOpenReviewRequest(supabase, listingId, opsUserId, "approved");
+  const note = pickString(options.note);
   const updated = await transitionListingStatus(supabase, listing, "published", {
     actorUserId: opsUserId,
     actorRole: "ops",
     action: "listing.approve",
+    metadata: note ? { approve_note: note } : {},
   });
 
   return { listing: updated, review_request: review };
@@ -853,6 +856,9 @@ export async function rejectListing(
   listingId: string,
   rejectReason: { code?: string; note?: string } = {},
 ): Promise<Record<string, unknown>> {
+  if (!pickString(rejectReason.note)) {
+    throw new BusinessDirectoryError("validation_error", "reject_reason_note required", 400);
+  }
   const listing = await getListingOrThrow(supabase, listingId);
   if (String(listing.status) !== "review_requested") {
     throw new BusinessDirectoryError("invalid_state", "Listing is not awaiting review", 400);
@@ -875,12 +881,15 @@ export async function suspendListing(
   listingId: string,
   reason?: string,
 ): Promise<Record<string, unknown>> {
+  if (!pickString(reason)) {
+    throw new BusinessDirectoryError("validation_error", "reason required", 400);
+  }
   const listing = await getListingOrThrow(supabase, listingId);
   const updated = await transitionListingStatus(supabase, listing, "suspended", {
     actorUserId: opsUserId,
     actorRole: "ops",
     action: "listing.suspend",
-    metadata: reason ? { reason } : {},
+    metadata: { reason: pickString(reason) },
   });
   return updated;
 }
@@ -890,15 +899,18 @@ export async function unpublishListing(
   actorUserId: string,
   actorRole: "owner" | "ops",
   listingId: string,
+  reason?: string,
 ): Promise<Record<string, unknown>> {
   const listing = await getListingOrThrow(supabase, listingId);
   if (actorRole === "owner") {
     await assertOwner(listing, actorUserId);
   }
+  const note = pickString(reason);
   const updated = await transitionListingStatus(supabase, listing, "unpublished", {
     actorUserId,
     actorRole,
     action: "listing.unpublish",
+    metadata: note ? { reason: note } : {},
   });
   return updated;
 }
@@ -907,6 +919,7 @@ export async function restoreListing(
   supabase: SupabaseClient,
   opsUserId: string,
   listingId: string,
+  reason?: string,
 ): Promise<Record<string, unknown>> {
   const listing = await getListingOrThrow(supabase, listingId);
   const from = String(listing.status) as ListingStatus;
@@ -917,10 +930,75 @@ export async function restoreListing(
       400,
     );
   }
+  const note = pickString(reason);
   const updated = await transitionListingStatus(supabase, listing, "published", {
     actorUserId: opsUserId,
     actorRole: "ops",
     action: "listing.restore",
+    metadata: note ? { restore_note: note } : {},
   });
   return updated;
+}
+
+export async function getOpsListingDetail(
+  supabase: SupabaseClient,
+  listingId: string,
+): Promise<Record<string, unknown>> {
+  const listing = await getListingOrThrow(supabase, listingId);
+  const id = String(listing.id);
+
+  const [
+    { data: profile },
+    { data: photos },
+    { data: hours },
+    { data: sns },
+    { data: tlv },
+    { data: reviewRequests },
+    { data: auditLogs },
+  ] = await Promise.all([
+    supabase.from("business_directory_profiles").select("*").eq("listing_id", id).maybeSingle(),
+    supabase.from("business_directory_photos").select("*").eq("listing_id", id).order("sort_order"),
+    supabase.from("business_directory_business_hours").select("*").eq("listing_id", id).order("sort_order"),
+    supabase.from("business_directory_social_links").select("*").eq("listing_id", id).order("sort_order"),
+    supabase.from("business_directory_tlv_videos").select("*").eq("listing_id", id).order("sort_order"),
+    supabase
+      .from("business_directory_review_requests")
+      .select("*")
+      .eq("listing_id", id)
+      .order("submitted_at", { ascending: false })
+      .limit(20),
+    supabase
+      .from("business_directory_audit_logs")
+      .select("*")
+      .eq("listing_id", id)
+      .order("created_at", { ascending: false })
+      .limit(50),
+  ]);
+
+  return {
+    listing,
+    profile: profile ?? null,
+    photos: photos ?? [],
+    business_hours: hours ?? [],
+    social_links: sns ?? [],
+    tlv_videos: tlv ?? [],
+    review_requests: reviewRequests ?? [],
+    audit_logs: auditLogs ?? [],
+  };
+}
+
+export async function getListingAuditLogs(
+  supabase: SupabaseClient,
+  listingId: string,
+  limit = 50,
+): Promise<Record<string, unknown>[]> {
+  const capped = Math.min(Math.max(Number(limit) || 50, 1), 200);
+  const { data, error } = await supabase
+    .from("business_directory_audit_logs")
+    .select("*")
+    .eq("listing_id", listingId)
+    .order("created_at", { ascending: false })
+    .limit(capped);
+  if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+  return (data ?? []) as Record<string, unknown>[];
 }
