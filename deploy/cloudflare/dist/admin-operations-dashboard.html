@@ -158,6 +158,24 @@
               <button type="button" class="ops-p3-action ops-secretary-google-connect__btn" data-ops-secretary-google-connect-btn>接続する</button>
               <button type="button" class="ops-p3-action" data-ops-secretary-google-disconnect-btn hidden>切断する</button>
             </div>
+            <section class="ops-secretary-gmail" data-ops-secretary-gmail-panel aria-labelledby="ops-secretary-gmail-heading">
+              <header class="ops-secretary-gmail__head">
+                <h4 class="ops-secretary-gmail__title" id="ops-secretary-gmail-heading">Gmail（閲覧のみ）</h4>
+                <span class="ops-secretary-gmail__status" data-ops-secretary-gmail-status aria-live="polite">未読を読込中…</span>
+              </header>
+              <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Gmail フィルタ">
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-gmail-preset="unread">未読</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-gmail-preset="important">重要</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-gmail-preset="attachment">添付</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-gmail-preset="inbox">受信トレイ</button>
+              </div>
+              <form class="ops-secretary-gmail__search" data-ops-secretary-gmail-search-form>
+                <label class="visually-hidden" for="ops-secretary-gmail-search">Gmail 検索 q</label>
+                <input type="search" class="ops-secretary-gmail__search-input" id="ops-secretary-gmail-search" data-ops-secretary-gmail-search-input placeholder="検索 q（例: from:partner subject:審査）" autocomplete="off" />
+                <button type="submit" class="ops-p3-action">検索</button>
+              </form>
+              <div class="ops-secretary-gmail__cards" data-ops-secretary-gmail-cards aria-live="polite"></div>
+            </section>
             <div class="ops-p7-chat-conversation">
               <div class="ops-p7-chat-msg ops-p7-chat-msg--assistant ops-light-card" data-ops-phase7-chat-brief aria-live="polite"></div>
               <div class="ops-p2-chat__log ops-p7-desk-chat-log" data-ops-phase2-chat-log role="log" aria-live="polite"></div>
@@ -716,6 +734,8 @@
   <script src="admin-ai-secretary-morning-report.js"></script>
   <script src="admin-ai-secretary-command-center-ui.js"></script>
   <script src="admin-ai-secretary-google-oauth-client.js"></script>
+  <script src="admin-ai-secretary-google-gmail-client.js"></script>
+  <script src="admin-ai-secretary-google-gmail-ui.js"></script>
   <script src="admin-ai-secretary-google-connect-ui.js"></script>
   <script src="admin-ai-secretary-ops-data-provider.js"></script>
   <script src="admin-ai-secretary-insight-engine.js"></script>
