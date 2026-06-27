@@ -17,6 +17,8 @@ const VOICE_DIR = path.join(ROOT, "shared/voice-core");
 const VOICE_SURFACES = Object.freeze(["tasful_ai", "builder_ai", "ops_secretary"]);
 const MOCK_ENDPOINT = "wss://mock.example/v1/realtime";
 const MOCK_MODEL = "gpt-4o-realtime-preview-mock";
+const RATE_LIMIT_MAX = 10;
+const RATE_LIMIT_WINDOW_MS = 60_000;
 
 const SECRET_PATTERNS = [
   { name: "sk-*", re: /\bsk-[a-zA-Z0-9_-]{8,}\b/ },
@@ -82,11 +84,40 @@ async function readJsonBody(req) {
   return JSON.parse(raw);
 }
 
+function extractClientIp(req) {
+  const cf = req.headers["cf-connecting-ip"]?.trim?.() || req.headers["cf-connecting-ip"];
+  if (cf) return String(cf).trim().slice(0, 128);
+  const xff = req.headers["x-forwarded-for"]?.trim?.() || req.headers["x-forwarded-for"];
+  if (xff) {
+    const first = String(xff).split(",")[0]?.trim();
+    if (first) return first.slice(0, 128);
+  }
+  return "unknown";
+}
+
 /**
  * Local mock of POST /functions/v1/openai-realtime-session (contract mirror · no OpenAI).
  */
 function startMockEdge(options = {}) {
   const openAiKeyConfigured = options.openAiKeyConfigured !== false;
+  const edgeEnabled = options.edgeEnabled !== false;
+  const rateLimitMax = Number(options.rateLimitMax) || RATE_LIMIT_MAX;
+  const rateBuckets = new Map();
+
+  function checkRateLimit(ip, nowMs = Date.now()) {
+    const key = String(ip || "unknown").slice(0, 128);
+    const bucket = rateBuckets.get(key);
+    if (!bucket || nowMs >= bucket.resetAt) {
+      rateBuckets.set(key, { count: 1, resetAt: nowMs + RATE_LIMIT_WINDOW_MS });
+      return { ok: true };
+    }
+    if (bucket.count >= rateLimitMax) {
+      return { ok: false, status: 429, body: { ok: false, error: "rate_limit_exceeded" } };
+    }
+    bucket.count += 1;
+    rateBuckets.set(key, bucket);
+    return { ok: true };
+  }
 
   return new Promise((resolve, reject) => {
     const server = http.createServer(async (req, res) => {
@@ -109,6 +140,18 @@ function startMockEdge(options = {}) {
 
       if (req.method !== "POST") {
         sendJson(res, 405, { ok: false, error: "Method not allowed" });
+        return;
+      }
+
+      if (!edgeEnabled) {
+        sendJson(res, 503, { ok: false, error: "voice_realtime_disabled" });
+        return;
+      }
+
+      const clientIp = extractClientIp(req);
+      const rateLimit = checkRateLimit(clientIp);
+      if (!rateLimit.ok) {
+        sendJson(res, rateLimit.status, rateLimit.body);
         return;
       }
 
@@ -163,13 +206,14 @@ function startMockEdge(options = {}) {
   });
 }
 
-async function postEdge(baseUrl, body, anonKey = "anon-smoke-key") {
+async function postEdge(baseUrl, body, anonKey = "anon-smoke-key", extraHeaders = {}) {
   const res = await fetch(`${baseUrl}/functions/v1/openai-realtime-session`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${anonKey}`,
       apikey: anonKey,
+      ...extraHeaders,
     },
     body: JSON.stringify(body),
   });
@@ -252,6 +296,32 @@ async function runEdgeContractTests(mock) {
   }
   assertNoSecretsInJson(noKeyRes.data, "edge 503");
   await noKey.close();
+
+  const disabled = await startMockEdge({ edgeEnabled: false });
+  const disabledRes = await postEdge(disabled.baseUrl, { surface: "tasful_ai" });
+  if (disabledRes.status === 503 && disabledRes.data?.error === "voice_realtime_disabled") {
+    ok("edge kill switch disabled → 503");
+  } else {
+    bad("edge kill switch disabled → 503", JSON.stringify(disabledRes));
+  }
+  assertNoSecretsInJson(disabledRes.data, "edge kill switch 503");
+  await disabled.close();
+
+  const limited = await startMockEdge({ rateLimitMax: 3 });
+  const ipHeaders = { "cf-connecting-ip": "203.0.113.50" };
+  for (let i = 0; i < 3; i += 1) {
+    const allowed = await postEdge(limited.baseUrl, { surface: "tasful_ai" }, "anon-smoke-key", ipHeaders);
+    if (allowed.status === 200) ok(`edge rate limit allows request ${i + 1}/3`);
+    else bad(`edge rate limit allows request ${i + 1}/3`, JSON.stringify(allowed));
+  }
+  const blocked = await postEdge(limited.baseUrl, { surface: "tasful_ai" }, "anon-smoke-key", ipHeaders);
+  if (blocked.status === 429 && blocked.data?.error === "rate_limit_exceeded") {
+    ok("edge rate limit exceeded → 429");
+  } else {
+    bad("edge rate limit exceeded → 429", JSON.stringify(blocked));
+  }
+  assertNoSecretsInJson(blocked.data, "edge rate limit 429");
+  await limited.close();
 
   return success.data;
 }
