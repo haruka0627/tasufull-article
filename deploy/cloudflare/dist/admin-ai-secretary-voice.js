@@ -1,5 +1,5 @@
 /**
- * AI運営秘書 — Voice Core 接続（テキストチャット非破壊）
+ * AI運営秘書 — Voice Integration 補助（TTS 返答 · Phase2 UI 連携）
  */
 (function (global) {
   "use strict";
@@ -13,27 +13,20 @@
       if (event.detail?.surface !== SURFACE) return;
       const text = String(event.detail?.text || "").trim();
       if (!text) return;
+      const Integration = global.TasuSecretaryVoiceIntegration;
+      if (Integration?.notifyAssistantReply) {
+        void Integration.notifyAssistantReply(text);
+        return;
+      }
       void global.TasuAiVoiceCore?.playVoice?.(text, { surface: SURFACE, lang: "ja-JP" });
     });
   }
 
   function mountSecretaryVoice() {
-    const Voice = global.TasuAiVoiceCore;
-    if (!Voice?.mountToolbar) return;
     bindAssistantReply();
-    Voice.initSurface(SURFACE);
-    document.querySelectorAll("[data-ops-phase2-chat-form]").forEach((form) => {
-      const input =
-        form.querySelector("[data-ops-secretary-input]") ||
-        form.querySelector("[data-ops-phase2-chat-input]");
-      if (!input) return;
-      Voice.mountToolbar({
-        formEl: form,
-        inputEl: input,
-        surface: SURFACE,
-        insertBefore: "form",
-      });
-    });
+    global.TasuAiVoiceCore?.initSurface?.(SURFACE);
+    global.TasuAdminAiSecretaryPhase2?.initVoiceIntegration?.();
+    global.TasuAdminAiSecretaryPhase2?.bindVoiceButton?.();
   }
 
   function hookPhase2Render() {
