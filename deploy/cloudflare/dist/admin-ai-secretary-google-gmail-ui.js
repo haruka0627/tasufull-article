@@ -7,6 +7,19 @@
 
   let mounted = false;
   const cardState = new Map();
+  const uiFilter = { selectedLabelId: "", selectedLabelName: "", defaultQuery: "", defaultLabel: "未読" };
+
+  const LABEL_PRIORITY = Object.freeze([
+    "INBOX",
+    "UNREAD",
+    "IMPORTANT",
+    "STARRED",
+    "SENT",
+    "DRAFT",
+    "SPAM",
+    "TRASH",
+  ]);
+  const MAX_LABEL_CHIPS = 12;
 
   const GATED_MESSAGE =
     "Google 接続後にメールを表示します。上の「接続する」から Google アカウントを連携してください。";
@@ -163,12 +176,121 @@
   function showGated(root) {
     root = root || document.querySelector("[data-ops-secretary-gmail-panel]");
     const host = $(root, "[data-ops-secretary-gmail-cards]");
+    const labelsHost = $(root, "[data-ops-secretary-gmail-labels]");
     const status = $(root, "[data-ops-secretary-gmail-status]");
+    uiFilter.selectedLabelId = "";
+    uiFilter.selectedLabelName = "";
     cardState.clear();
     delete cardState.__lastMessages;
+    if (labelsHost) labelsHost.innerHTML = "";
     if (host) host.innerHTML = `<p class="ops-secretary-gmail__empty ops-secretary-gmail__gated">${esc(GATED_MESSAGE)}</p>`;
     if (status) status.textContent = "未接続（Gmail read-only）";
+    coordinator()?.setGmailLabelCount?.(0);
     coordinator()?.setPanelStatus?.("gmail", "gated");
+  }
+
+  function sortLabels(labels) {
+    labels = Array.isArray(labels) ? labels : [];
+    return [...labels].sort((a, b) => {
+      const ia = LABEL_PRIORITY.indexOf(String(a.id || ""));
+      const ib = LABEL_PRIORITY.indexOf(String(b.id || ""));
+      if (ia !== -1 || ib !== -1) {
+        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+      }
+      return String(a.name || a.id || "").localeCompare(String(b.name || b.id || ""), "ja");
+    });
+  }
+
+  function renderLabelChips(root, labels) {
+    const host = $(root, "[data-ops-secretary-gmail-labels]");
+    if (!host) return;
+    labels = sortLabels(Array.isArray(labels) ? labels : []).slice(0, MAX_LABEL_CHIPS);
+    coordinator()?.setGmailLabelCount?.(labels.length);
+    if (!labels.length) {
+      host.innerHTML = '<p class="ops-secretary-gmail__labels-empty">ラベルがありません</p>';
+      return;
+    }
+    const allActive = !uiFilter.selectedLabelId ? " ops-secretary-gmail__chip--active" : "";
+    host.innerHTML =
+      `<button type="button" class="ops-p3-action ops-secretary-gmail__chip${allActive}" data-ops-secretary-gmail-label="" data-bound="1">すべて</button>` +
+      labels
+        .map((label) => {
+          const id = String(label.id || "");
+          const name = String(label.name || id);
+          const active = uiFilter.selectedLabelId === id ? " ops-secretary-gmail__chip--active" : "";
+          return (
+            `<button type="button" class="ops-p3-action ops-secretary-gmail__chip${active}" ` +
+            `data-ops-secretary-gmail-label="${esc(id)}" data-ops-secretary-gmail-label-name="${esc(name)}" data-bound="1">${esc(name)}</button>`
+          );
+        })
+        .join("");
+    host.querySelectorAll("[data-ops-secretary-gmail-label]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (isGated()) {
+          showGated(root);
+          return;
+        }
+        const labelId = btn.getAttribute("data-ops-secretary-gmail-label") || "";
+        const labelName = btn.getAttribute("data-ops-secretary-gmail-label-name") || labelId || "すべて";
+        if (!labelId) {
+          uiFilter.selectedLabelId = "";
+          uiFilter.selectedLabelName = "";
+          void loadQuery(root, uiFilter.defaultQuery, uiFilter.defaultLabel);
+          return;
+        }
+        void loadByLabel(root, labelId, labelName);
+      });
+    });
+  }
+
+  async function loadLabels(root) {
+    if (isGated()) return;
+    const Client = global.TasuSecretaryGoogleGmailClient;
+    const host = $(root, "[data-ops-secretary-gmail-labels]");
+    if (!Client?.listLabels || !host) return;
+    host.innerHTML = '<span class="ops-secretary-gmail__labels-empty">ラベル読込中…</span>';
+    const result = await Client.listLabels();
+    if (!result.ok) {
+      host.innerHTML = '<p class="ops-secretary-gmail__labels-empty">ラベル取得エラー</p>';
+      coordinator()?.setGmailLabelCount?.(0);
+      return;
+    }
+    const labels = result.data?.labels || [];
+    cardState.__lastLabels = labels;
+    renderLabelChips(root, labels);
+  }
+
+  async function loadByLabel(root, labelId, labelName) {
+    if (isGated()) {
+      showGated(root);
+      return;
+    }
+    uiFilter.selectedLabelId = String(labelId || "");
+    uiFilter.selectedLabelName = String(labelName || labelId || "ラベル");
+    const Client = global.TasuSecretaryGoogleGmailClient;
+    const host = $(root, "[data-ops-secretary-gmail-cards]");
+    const status = $(root, "[data-ops-secretary-gmail-status]");
+    if (!Client?.listMessages || !host) return;
+    coordinator()?.setPanelStatus?.("gmail", "loading");
+    if (status) status.textContent = `${uiFilter.selectedLabelName} 読込中…`;
+    host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
+    const result = await Client.listMessages({ labelIds: [uiFilter.selectedLabelId], maxResults: 10 });
+    if (!result.ok) {
+      const err = String(result.error || "failed").slice(0, 80);
+      if (status) status.textContent = `Gmail エラー: ${err}`;
+      host.innerHTML = '<p class="ops-secretary-gmail__empty">Gmail を読み込めませんでした</p>';
+      renderLabelChips(root, cardState.__lastLabels || []);
+      coordinator()?.setPanelStatus?.("gmail", "error");
+      coordinator()?.setLastError?.(err);
+      return;
+    }
+    const messages = result.data?.messages || [];
+    cardState.__lastMessages = messages;
+    renderCards(host, messages);
+    renderLabelChips(root, cardState.__lastLabels || []);
+    const mode = result.data?.mock ? " · mock" : " · live";
+    if (status) status.textContent = `${uiFilter.selectedLabelName} ${messages.length} 件${mode} · read-only`;
+    coordinator()?.setLastError?.("");
   }
 
   function renderCards(host, messages) {
@@ -361,6 +483,10 @@
       showGated(root);
       return;
     }
+    uiFilter.selectedLabelId = "";
+    uiFilter.selectedLabelName = "";
+    uiFilter.defaultQuery = q || uiFilter.defaultQuery;
+    uiFilter.defaultLabel = label || uiFilter.defaultLabel;
     const Client = global.TasuSecretaryGoogleGmailClient;
     const host = $(root, "[data-ops-secretary-gmail-cards]");
     const status = $(root, "[data-ops-secretary-gmail-status]");
@@ -369,6 +495,7 @@
     if (status) status.textContent = `${label || "読込中"}…`;
     host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
     const result = await Client.listMessages({ q, maxResults: 10 });
+    if (Array.isArray(cardState.__lastLabels)) renderLabelChips(root, cardState.__lastLabels);
     if (!result.ok) {
       const err = String(result.error || "failed").slice(0, 80);
       if (status) status.textContent = `Gmail エラー: ${err}`;
@@ -425,7 +552,10 @@
       return;
     }
     const Client = global.TasuSecretaryGoogleGmailClient;
-    await loadQuery(root, Client?.PRESETS?.unread, "未読");
+    uiFilter.defaultQuery = Client?.PRESETS?.unread || "";
+    uiFilter.defaultLabel = "未読";
+    await loadLabels(root);
+    await loadQuery(root, uiFilter.defaultQuery, uiFilter.defaultLabel);
   }
 
   function mount(root) {
@@ -444,6 +574,8 @@
   global.TasuSecretaryGoogleGmailUI = {
     mount,
     loadQuery,
+    loadLabels,
+    loadByLabel,
     refreshDefault,
     showGated,
     renderCards,

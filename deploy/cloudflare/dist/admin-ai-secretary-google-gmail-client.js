@@ -63,6 +63,7 @@
       q: q || undefined,
       maxResults: options.maxResults || 10,
       pageToken: options.pageToken,
+      labelIds: Array.isArray(options.labelIds) ? options.labelIds.map(String) : undefined,
     });
     if (!result.ok) return result;
     return { ok: true, data: result.data || {} };
@@ -77,7 +78,11 @@
   }
 
   async function listLabels() {
-    return postGmail({ method: "labels.list" });
+    const result = await postGmail({ method: "labels.list" });
+    if (!result.ok) return result;
+    const data = result.data || {};
+    const labels = Array.isArray(data.labels) ? data.labels : Array.isArray(result.labels) ? result.labels : [];
+    return { ok: true, data: { ...data, labels } };
   }
 
   async function tryWriteBlocked(method) {

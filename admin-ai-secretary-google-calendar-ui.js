@@ -6,7 +6,16 @@
   "use strict";
 
   let mounted = false;
-  const uiState = { phase: "view", pendingId: "", draft: null, selectedEvent: null };
+  const uiState = {
+    phase: "view",
+    pendingId: "",
+    draft: null,
+    selectedEvent: null,
+    selectedCalendarId: "primary",
+    currentPreset: "today",
+    currentPresetLabel: "今日の予定",
+    calendars: [],
+  };
 
   const GATED_MESSAGE =
     "Google 接続後に予定を表示します。上の「接続する」から Google アカウントを連携してください。";
@@ -233,16 +242,83 @@
   function showGated(root) {
     root = root || document.querySelector("[data-ops-secretary-calendar-panel]");
     const host = $(root, "[data-ops-secretary-calendar-cards]");
+    const listHost = $(root, "[data-ops-secretary-calendar-list]");
     const status = $(root, "[data-ops-secretary-calendar-status]");
     const detail = $(root, "[data-ops-secretary-calendar-detail]");
     resetWorkflow(root);
+    uiState.selectedCalendarId = "primary";
+    uiState.calendars = [];
+    if (listHost) listHost.innerHTML = "";
     if (host) {
       host.__events = [];
       host.innerHTML = `<p class="ops-secretary-gmail__empty ops-secretary-gmail__gated">${esc(GATED_MESSAGE)}</p>`;
     }
     if (detail) renderDetail(detail, null, root);
     if (status) status.textContent = "未接続（Calendar read-only）";
+    coordinator()?.setCalendarListCount?.(0);
     coordinator()?.setPanelStatus?.("calendar", "gated");
+  }
+
+  function getSelectedCalendarId() {
+    return String(uiState.selectedCalendarId || "primary");
+  }
+
+  function renderCalendarSelect(root, calendars) {
+    const host = $(root, "[data-ops-secretary-calendar-list]");
+    if (!host) return;
+    calendars = Array.isArray(calendars) ? calendars : [];
+    uiState.calendars = calendars;
+    coordinator()?.setCalendarListCount?.(calendars.length);
+    if (!calendars.length) {
+      host.innerHTML = '<p class="ops-secretary-calendar__list-empty">利用可能なカレンダーがありません</p>';
+      return;
+    }
+    const selected = getSelectedCalendarId();
+    const options = calendars
+      .map((cal) => {
+        const id = String(cal.id || "");
+        const name = String(cal.summary || cal.name || id);
+        const isPrimary = cal.primary === true || id === "primary";
+        const label = isPrimary ? `${name}（primary）` : name;
+        const sel = id === selected ? " selected" : "";
+        return `<option value="${esc(id)}"${sel}>${esc(label)}</option>`;
+      })
+      .join("");
+    host.innerHTML =
+      `<label class="visually-hidden" for="ops-secretary-calendar-select">カレンダー選択</label>` +
+      `<select id="ops-secretary-calendar-select" class="ops-secretary-calendar__list-select" data-ops-secretary-calendar-select>${options}</select>`;
+    const select = host.querySelector("[data-ops-secretary-calendar-select]");
+    if (select && select.dataset.bound !== "1") {
+      select.dataset.bound = "1";
+      select.addEventListener("change", () => {
+        if (isGated()) {
+          showGated(root);
+          return;
+        }
+        uiState.selectedCalendarId = String(select.value || "primary");
+        void loadPreset(root, uiState.currentPreset, uiState.currentPresetLabel);
+      });
+    }
+  }
+
+  async function loadCalendars(root) {
+    if (isGated()) return;
+    const Client = global.TasuSecretaryGoogleCalendarClient;
+    const host = $(root, "[data-ops-secretary-calendar-list]");
+    if (!Client?.listCalendars || !host) return;
+    host.innerHTML = '<p class="ops-secretary-calendar__list-empty">カレンダー読込中…</p>';
+    const result = await Client.listCalendars({ maxResults: 20 });
+    if (!result.ok) {
+      host.innerHTML = '<p class="ops-secretary-calendar__list-empty">カレンダー取得エラー</p>';
+      coordinator()?.setCalendarListCount?.(0);
+      return;
+    }
+    const calendars = result.data?.calendars || [];
+    if (!uiState.selectedCalendarId || !calendars.some((c) => String(c.id) === uiState.selectedCalendarId)) {
+      const primary = calendars.find((c) => c.primary) || calendars[0];
+      uiState.selectedCalendarId = String(primary?.id || "primary");
+    }
+    renderCalendarSelect(root, calendars);
   }
 
   function renderCards(host, events) {
@@ -319,13 +395,19 @@
     const host = $(root, "[data-ops-secretary-calendar-cards]");
     const status = $(root, "[data-ops-secretary-calendar-status]");
     if (!Client?.listEvents || !host) return;
+    uiState.currentPreset = preset || uiState.currentPreset || "today";
+    uiState.currentPresetLabel = label || uiState.currentPresetLabel || "今日の予定";
     coordinator()?.setPanelStatus?.("calendar", "loading");
     if (status) {
-      status.dataset.baseLabel = label || "Calendar";
-      status.textContent = `${label || "読込中"}…`;
+      status.dataset.baseLabel = uiState.currentPresetLabel;
+      status.textContent = `${uiState.currentPresetLabel}…`;
     }
     host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
-    const result = await Client.listEvents({ preset, maxResults: 25 });
+    const result = await Client.listEvents({
+      preset: uiState.currentPreset,
+      calendarId: getSelectedCalendarId(),
+      maxResults: 25,
+    });
     if (!result.ok) {
       const err = String(result.error || "failed").slice(0, 80);
       if (status) status.textContent = `Calendar エラー: ${err}`;
@@ -339,7 +421,7 @@
     renderCards(host, events);
     const mode = result.data?.mock ? " · mock" : " · live";
     if (status) {
-      status.dataset.baseLabel = `${label || "Calendar"} ${events.length} 件${mode}`;
+      status.dataset.baseLabel = `${uiState.currentPresetLabel} ${events.length} 件${mode}`;
       renderStatusBadge(root);
     }
     coordinator()?.setLastError?.("");
@@ -356,7 +438,12 @@
     if (!Client?.listEvents || !host) return;
     if (status) status.dataset.baseLabel = `検索 ${q.slice(0, 24)}`;
     host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
-    const result = await Client.listEvents({ preset: "next_7_days", q, maxResults: 25 });
+    const result = await Client.listEvents({
+      preset: "next_7_days",
+      calendarId: getSelectedCalendarId(),
+      q,
+      maxResults: 25,
+    });
     if (!result.ok) {
       host.innerHTML = '<p class="ops-secretary-gmail__empty">検索できませんでした</p>';
       coordinator()?.setPanelStatus?.("calendar", "error");
@@ -469,6 +556,7 @@
       return;
     }
     const Client = global.TasuSecretaryGoogleCalendarClient;
+    await loadCalendars(root);
     await loadPreset(root, Client?.PRESETS?.today, "今日の予定");
   }
 
@@ -489,6 +577,7 @@
     mount,
     loadPreset,
     loadSearch,
+    loadCalendars,
     refreshDefault,
     showGated,
     renderCards,
