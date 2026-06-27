@@ -110,6 +110,26 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 
 ---
 
+## Builder AI Voice — Realtime Live opt-in（✅ Phase 5-D · `2a57283`）
+
+| 項目 | 内容 |
+| --- | --- |
+| **方式** | OpenAI Realtime Live opt-in（Voice Core Phase 5-D） |
+| **surface** | `builder_ai` |
+| **コントローラ** | `builder/builder-voice-controller.js` · `builder/builder-ai-voice-integration.js` |
+| **フラグ（両方 ON で live）** | `window.__TASU_VOICE_CORE_OPENAI_LIVE__` · `window.__TASU_VOICE_LIVE_BUILDER_AI__` |
+| **デフォルト** | mock（flags OFF） |
+| **live 失敗時** | mock fallback |
+| **Edge** | Supabase `openai-realtime-session` · ephemeral token · Kill Switch + Rate Limit Phase 1 |
+
+**テスト:** `scripts/test-builder-ai-voice-integration-phase1.mjs` **35/35 PASS**
+
+**報告:** `reports/voice-phase5d-complete.md`
+
+**注:** Phase 4-A の mock Voice adapter は維持。Live は opt-in のみ。真 Gemini Live（Phase 4-B）は別 Backlog。
+
+---
+
 ## Free / Pro 方針（設計維持）
 
 |  tier | 想定 |
