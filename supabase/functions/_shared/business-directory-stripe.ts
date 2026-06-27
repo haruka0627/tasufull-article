@@ -479,3 +479,80 @@ export async function syncBusinessDirectorySubscriptionStatus(
     plan_code: result.plan_code,
   };
 }
+
+const BD_STRIPE_CATALOG: Record<
+  "standard" | "pro",
+  { displayName: string; unitAmountYen: number }
+> = {
+  standard: { displayName: "TASFUL Business Directory Standard", unitAmountYen: 980 },
+  pro: { displayName: "TASFUL Business Directory Pro", unitAmountYen: 2980 },
+};
+
+/** Staging/production setup — find or create Test/Live monthly prices (service role only). */
+export async function ensureBusinessDirectoryStripeCatalog(): Promise<{
+  standard_price_id: string;
+  pro_price_id: string;
+  mode: "existing_secrets" | "created_or_reused";
+}> {
+  const existingStandard = resolveStripePriceIdForPlan("standard");
+  const existingPro = resolveStripePriceIdForPlan("pro");
+  if (existingStandard && existingPro) {
+    return {
+      standard_price_id: existingStandard,
+      pro_price_id: existingPro,
+      mode: "existing_secrets",
+    };
+  }
+
+  const stripe = getStripeClient();
+  const priceIds: Partial<Record<"standard" | "pro", string>> = {};
+
+  for (const planCode of ["standard", "pro"] as const) {
+    const meta = BD_STRIPE_CATALOG[planCode];
+    const search = await stripe.products.search({
+      query: `metadata['order_type']:'${BD_STRIPE_ORDER_TYPE}' AND metadata['plan_code']:'${planCode}'`,
+      limit: 1,
+    });
+
+    let product = search.data[0];
+    if (!product) {
+      product = await stripe.products.create({
+        name: meta.displayName,
+        metadata: {
+          order_type: BD_STRIPE_ORDER_TYPE,
+          plan_code: planCode,
+          tasful_product: "business_directory",
+        },
+      });
+    }
+
+    const prices = await stripe.prices.list({ product: product.id, active: true, limit: 20 });
+    let price = prices.data.find(
+      (p) =>
+        p.currency === "jpy" &&
+        p.unit_amount === meta.unitAmountYen &&
+        p.recurring?.interval === "month",
+    );
+
+    if (!price) {
+      price = await stripe.prices.create({
+        product: product.id,
+        currency: "jpy",
+        unit_amount: meta.unitAmountYen,
+        recurring: { interval: "month" },
+        metadata: {
+          order_type: BD_STRIPE_ORDER_TYPE,
+          plan_code: planCode,
+        },
+      });
+    }
+
+    priceIds[planCode] = price.id;
+  }
+
+  return {
+    standard_price_id: String(priceIds.standard),
+    pro_price_id: String(priceIds.pro),
+    mode: "created_or_reused",
+  };
+}

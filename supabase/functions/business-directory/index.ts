@@ -6,6 +6,7 @@ import {
   approveListing,
   createBusinessDirectoryServiceClient,
   createDraftListing,
+  getBearerToken,
   getOwnerListingDetail,
   getOwnerListings,
   getPublicListingDetail,
@@ -31,8 +32,26 @@ import {
 import {
   createBusinessDirectoryBillingPortalSession,
   createBusinessDirectorySubscriptionCheckout,
+  ensureBusinessDirectoryStripeCatalog,
   syncBusinessDirectorySubscriptionStatus,
 } from "../_shared/business-directory-stripe.ts";
+
+function isServiceRoleRequest(req: Request): boolean {
+  const token = getBearerToken(req);
+  if (!token) return false;
+  const serviceKey = String(Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "").trim();
+  if (serviceKey && token === serviceKey) return true;
+  try {
+    const payloadB64 = token.split(".")[1];
+    if (!payloadB64) return false;
+    const payload = JSON.parse(
+      atob(payloadB64.replace(/-/g, "+").replace(/_/g, "/")),
+    ) as { role?: string };
+    return payload.role === "service_role";
+  } catch {
+    return false;
+  }
+}
 
 type ActionBody = DraftListingInput & {
   action?: string;
@@ -65,6 +84,14 @@ export async function handler(req: Request): Promise<Response> {
 
     if (action === "health") {
       return okResponse({ service: "business-directory", phase: "6" }, req);
+    }
+
+    if (action === "ops_ensure_stripe_prices") {
+      if (!isServiceRoleRequest(req)) {
+        return okResponse({ code: "forbidden", message: "Service role required" }, req, 403);
+      }
+      const catalog = await ensureBusinessDirectoryStripeCatalog();
+      return okResponse(catalog, req);
     }
 
     if (action === "get_public_listings") {
