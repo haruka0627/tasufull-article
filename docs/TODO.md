@@ -113,7 +113,8 @@
 - **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)
 - **Data Model:** [business-directory-data-model-design.md](./business-directory-data-model-design.md)
 - **UI Flow:** [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md)
-- **Phase 1 DB:** migration + seed 追加 · `scripts/test-business-directory-phase1-schema.mjs` — UI/API **未着手**
+- **Phase 1 DB:** migration + seed 追加 · `scripts/test-business-directory-phase1-schema.mjs` — **37/37 PASS**
+- **Phase 2 API:** service + Edge + client repository · `scripts/test-business-directory-phase2-api.mjs` — UI **未着手**
 
 ### AI プロバイダ分担
 
