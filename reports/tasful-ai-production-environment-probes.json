@@ -1,0 +1,69 @@
+{
+  "capturedAt": "2026-06-27T16:26:01.251Z",
+  "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "probes": [
+    {
+      "name": "OpenAI text",
+      "edge": "openai-chat",
+      "kind": "text",
+      "httpStatus": 200,
+      "ok": true,
+      "note": "HTTP 200",
+      "preview": "「preflight env fix ping」という用語は、一般的にネットワークやシステムの設定に関連している可能性があります。具体的な文脈によって意味が異なるため、もう少し情報を提供していただければ、より正確な回答ができるかと思います。例えば、特定のソフトウェアやシステムに関する質問ですか？"
+    },
+    {
+      "name": "Claude text",
+      "edge": "claude-chat",
+      "kind": "text",
+      "httpStatus": 200,
+      "ok": true,
+      "note": "HTTP 200",
+      "preview": "# Preflight環境修正 Ping確認  **コマンド例:**  ```bash # 基本的なpingテスト ping 8.8.8.8  # 特定ホストへのpingテスト ping example.com  # Linux/macOS: 回数制限 ping -c 4 8.8.8.8  # Windows: 回数制"
+    },
+    {
+      "name": "Gemini text",
+      "edge": "gemini-chat",
+      "kind": "text",
+      "httpStatus": 200,
+      "ok": true,
+      "note": "HTTP 200",
+      "preview": "`preflight env fix ping` というコマンドは一般的なものではないため、どのような環境で、どのような目的でこのコマンドを実行しようとしているのか、もう少し詳しく教えていただけますか？  もし Kubernetes の `kubeadm preflight` の文脈で、環境の問題を修正し、ノード間の接"
+    },
+    {
+      "name": "OpenAI Vision",
+      "edge": "openai-chat",
+      "kind": "vision",
+      "httpStatus": 200,
+      "ok": true,
+      "note": "HTTP 200",
+      "preview": "Red."
+    },
+    {
+      "name": "Claude Vision",
+      "edge": "claude-chat",
+      "kind": "vision",
+      "httpStatus": 200,
+      "ok": true,
+      "note": "HTTP 200",
+      "preview": "Circle"
+    },
+    {
+      "name": "Gemini Vision",
+      "edge": "gemini-chat",
+      "kind": "vision",
+      "httpStatus": 200,
+      "ok": true,
+      "note": "HTTP 200",
+      "preview": "Red"
+    },
+    {
+      "name": "Serper search",
+      "edge": "serper-search",
+      "kind": "serper",
+      "httpStatus": 502,
+      "ok": false,
+      "note": "HTTP 502 — Serper credits depleted",
+      "preview": "Serper API error (400): {\"message\":\"Not enough credits\",\"statusCode\":400}"
+    }
+  ]
+}

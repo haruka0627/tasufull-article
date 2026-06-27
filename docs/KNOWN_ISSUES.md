@@ -1,20 +1,10 @@
 # TASFUL 既知の問題・未確認事項
 
-**最終更新:** 2026-06-26  
+**最終更新:** 2026-06-28  
 **ルール:** 推測で「完了」にしない。解消したら項目を削除または「解決」に更新。
 
 ---
 
-## KI-001 — `ai-model-gateway.js` 未コミット差分
-
-| 項目 | 内容 |
-| --- | --- |
-| **状態** | working tree に +73 行程度の変更（mockReply · attachments 関連） |
-| **方針** | AI フェーズでは Gateway 契約変更なし（AD-005） |
-| **影響** | `5ed9672` には含まれず。本番接続・Vision とセットで判断 |
-| **参照** | `reports/pre-commit-final-check.md`, `reports/ai-selected-staging-plan.md` |
-
----
 
 ## KI-002 — working tree 440 件
 
@@ -56,15 +46,6 @@
 
 ---
 
-## KI-006 — `supabase/functions/_shared/ai-attachments.ts` untracked
-
-| 項目 | 内容 |
-| --- | --- |
-| **状態** | untracked · `5ed9672` 除外 |
-| **関連** | KI-001 Gateway · TASFUL AI 本番 Vision |
-| **未決** | UD-001 と同様にマージ判断待ち |
-
----
 
 ## KI-007 — `package.json` wrangler compatibility-date
 
@@ -126,3 +107,5 @@
 | ID | 解決 |
 | --- | --- |
 | — | AI 186 件選別コミット `5ed9672` 完了（2026-06-26） |
+| KI-001 | `ai-model-gateway.js` 未コミット差分 — `35d72b2`（source）+ `0f6328d`（dist）で解消（2026-06-28 確認 · `reports/tasful-ai-gateway-attachments-head-sync.md`） |
+| KI-006 | `ai-attachments.ts` untracked — `35d72b2` でコミット済み · live Edge Vision PASS（2026-06-28 確認） |

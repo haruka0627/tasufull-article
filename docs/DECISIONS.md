@@ -256,6 +256,6 @@ TASFUL市場
 
 | ID | 内容 | 記録先 |
 | --- | --- | --- |
-| UD-001 | `ai-model-gateway.js` +73 行をマージするか | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) KI-001 |
+| UD-001 | ~~`ai-model-gateway.js` +73 行をマージするか~~ | **解決** — `35d72b2` + `0f6328d` · `reports/tasful-ai-gateway-attachments-head-sync.md` |
 | UD-002 | Cloudflare Access 下の TASFUL AI 公開方針 | preflight §11 |
 | UD-003 | Platform FE 本番昇格タイミング（NB-1M） | `reports/platform-nb1m-frontend-prod-deploy-ready.md` G1/G2 |
