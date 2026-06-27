@@ -6,24 +6,27 @@
 ---
 
 
-## KI-002 — working tree 440 件
+## 解決済み
+
+| ID | 解決 |
+| --- | --- |
+| KI-003 | TASFUL AI Production Ready — 2026-06-28 Go · `reports/tasful-ai-production-ready-verification.md` |
+
+---
+
+## KI-002 — working tree 未整理
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | コミット `5ed9672` 後も 440 件残存 |
+| **状態** | コミット後も Builder / Platform / TLV 等が unstaged 残存 |
 | **リスク** | 次の `git add -A` で ANPI / Live / Gateway 等が混入 |
 | **対応** | [TODO.md](./TODO.md) P0-1 · 選別ステージングのみ |
 
 ---
 
-## KI-003 — TASFUL AI Production Ready = NO
+## KI-003 — （解決済み · 上記）
 
-| 項目 | 内容 |
-| --- | --- |
-| **状態** | Phase 2 quota deploy 完了（`b4441b2`）。Final Phase 2026-06-28 判定 **No-Go** |
-| **ブロッカー** | CF Access Service Token 未設定 · prod alias redeploy |
-| **解消済み** | build EPERM · Vision live · quota Edge · **Serper credits → Brave Web Search Phase 1 live PASS** |
-| **参照** | `reports/tasful-ai-production-ready-final-verification.md`（2026-06-28 事前確認 FAIL で停止） |
+TASFUL AI Production Ready = **Go**（2026-06-28）。CF Access E2E · build · deploy · Brave live 完了。
 
 ---
 
