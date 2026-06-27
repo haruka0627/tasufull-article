@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-27（AI秘書 Phase 6-A Google Workspace 設計）
+**最終更新:** 2026-06-27（Business Directory サブスク掲載モデル AD-013）
 
 ---
 
@@ -43,6 +43,24 @@
 **原則（要約）:** 高機能とシンプルの両立 · 小学生でも分かる · 一目で用途理解 · 迷えばシンプル優先 · 平易な言葉 · AI で複雑操作を簡素化 · 新機能でも既存 UI を複雑化しない
 
 **補足:** UI 単純化が目的ではない。必要な機能は実装し、複雑さは AI が吸収してユーザーにシンプルな UI を提供する。
+
+---
+
+## Business Directory — サブスク掲載モデル（2026-06-27 確定）
+
+**正本:** [DECISIONS.md](./DECISIONS.md) **AD-013** · 詳細: [business-directory-subscription-model.md](./business-directory-subscription-model.md)
+
+| 領域 | 収益主軸 | 状態 |
+| --- | --- | --- |
+| **店舗・販売** | 月額サブスク掲載料 | 📋 方針確定 · 実装未着手 |
+| **業務サービス** | 月額サブスク掲載料 | 📋 方針確定 · 実装未着手 |
+| **Marketplace（商品）** | **成約手数料** | ✅ 既存方針 **維持** |
+| **Platform / 案件** | **成約手数料** | ✅ 既存方針 **維持** |
+| **広告枠** | スポンサー · 上位表示 · PR | 📋 将来 |
+
+**プラン案:** Free · Standard · Pro · Premium/Future（サブスク課金 · 決済実装は別 Epic）
+
+**報告:** `reports/business-directory-subscription-model.md`
 
 ---
 
