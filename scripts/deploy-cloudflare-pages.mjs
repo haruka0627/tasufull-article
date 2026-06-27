@@ -13,11 +13,14 @@
  *   node scripts/smoke-cloudflare-pages.mjs --base https://tasufull-article.pages.dev
  */
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
+const DIST = path.join(ROOT, "deploy", "cloudflare", "dist");
+const FUNCTIONS_MARKER = path.join(DIST, "functions", "api", "secretary-deepseek-chat.js");
 const PROJECT = process.env.CF_PAGES_PROJECT_NAME || "tasufull-article";
 const BRANCH = process.env.CF_PAGES_BRANCH || "main";
 
@@ -44,17 +47,26 @@ console.log("[deploy-pages] build…");
 run("node", ["deploy/cloudflare/stage-cloudflare-pages.mjs"]);
 
 console.log(`[deploy-pages] upload → project=${PROJECT} branch=${BRANCH}`);
-run("npx", [
-  "wrangler",
-  "pages",
-  "deploy",
-  "deploy/cloudflare/dist",
-  "--project-name",
-  PROJECT,
-  "--branch",
-  BRANCH,
-  "--commit-dirty=true",
-]);
+console.log(`[deploy-pages] cwd=${DIST}`);
+console.log(`[deploy-pages] target=. (static + dist/functions for Pages Functions)`);
+if (!fs.existsSync(FUNCTIONS_MARKER)) {
+  fail(`Pages Functions marker missing: ${path.relative(ROOT, FUNCTIONS_MARKER)} — run build first`);
+}
+run(
+  "npx",
+  [
+    "wrangler",
+    "pages",
+    "deploy",
+    ".",
+    "--project-name",
+    PROJECT,
+    "--branch",
+    BRANCH,
+    "--commit-dirty=true",
+  ],
+  { cwd: DIST }
+);
 
 const base = `https://${PROJECT}.pages.dev`;
 console.log(`\n[deploy-pages] OK — Production URL (typical): ${base}`);
