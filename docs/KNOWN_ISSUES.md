@@ -21,9 +21,9 @@
 | 項目 | 内容 |
 | --- | --- |
 | **状態** | Phase 2 quota deploy 完了（`b4441b2`）。Final Phase 2026-06-28 判定 **No-Go** |
-| **ブロッカー** | Serper credits 枯渇 · CF Access Service Token 未設定 · prod alias 未 redeploy |
-| **解消済み** | build:pages EPERM · Vision live 6/6 · quota Edge 11/11 |
-| **参照** | `reports/tasful-ai-production-ready-final.md` |
+| **ブロッカー** | CF Access Service Token 未設定 · prod alias redeploy |
+| **解消済み** | build EPERM · Vision live · quota Edge · **Serper credits → Brave Web Search Phase 1 live PASS** |
+| **参照** | `reports/tasful-ai-production-ready-final-verification.md`（2026-06-28 事前確認 FAIL で停止） |
 
 ---
 
