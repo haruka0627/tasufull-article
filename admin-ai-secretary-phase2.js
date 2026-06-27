@@ -15,10 +15,20 @@
     "専用画面への確認・エスカレーションを促してください。";
 
   let bound = false;
+  let voiceBound = false;
+  let voiceIntegrationInitialized = false;
   let sending = false;
   let opsSnapshot = null;
   let opsSnapshotAt = 0;
   const SNAPSHOT_TTL_MS = 60000;
+
+  const VOICE_STATE_LABELS = Object.freeze({
+    ready: "Ready",
+    listening: "Listening",
+    thinking: "Thinking",
+    speaking: "Speaking",
+    error: "Error",
+  });
 
   function setOpsSnapshot(ctx) {
     if (!ctx || typeof ctx !== "object") {
@@ -130,6 +140,23 @@
     scrollLog(logEl);
   }
 
+  function getVoiceIntegration() {
+    return global.TasuSecretaryVoiceIntegration;
+  }
+
+  function enrichMockReplyWithOpsAnalysis(baseReply, opsAnalysis) {
+    if (!opsAnalysis?.ok) return baseReply;
+    const total = opsAnalysis.insightSummary?.total;
+    if (typeof total !== "number" || total < 1) return baseReply;
+    const critical =
+      opsAnalysis.groups?.critical?.length ?? opsAnalysis.insightSummary?.bySeverity?.critical ?? 0;
+    return (
+      `${baseReply}\n\n` +
+      `[Operations Intelligence] 検出インサイト: ${total} 件` +
+      (critical ? `（Critical ${critical}）` : "")
+    );
+  }
+
   function mockSecretaryReply(userText) {
     const text = String(userText || "").trim();
     const preview = text.slice(0, 80);
@@ -187,10 +214,12 @@
     }
   }
 
-  async function sendMessage(rawText) {
+  async function dispatchSecretaryMessage(rawText, options) {
+    options = options && typeof options === "object" ? options : {};
     const text = String(rawText || "").trim();
     if (!text || sending) return { ok: false, reason: "empty_or_busy" };
 
+    getVoiceIntegration()?.stopVoiceOutput?.();
     global.TasuAiVoiceCore?.stopVoice?.();
 
     sending = true;
@@ -198,21 +227,32 @@
 
     const input = $("[data-ops-secretary-input]");
     const sendBtn = $("[data-ops-secretary-send]");
+    const voiceBtn = $("[data-ops-secretary-voice]");
     if (input) input.disabled = true;
     if (sendBtn) sendBtn.disabled = true;
+    if (voiceBtn) voiceBtn.disabled = true;
+
+    const channel = options.channel || (options.fromVoice ? "voice" : "text");
+    const opsAnalysis = options.opsAnalysis || null;
 
     const history = loadHistory();
-    const userMsg = { role: "user", content: text, at: Date.now() };
+    const userMsg = {
+      role: "user",
+      content: text,
+      at: Date.now(),
+      channel,
+      opsIntelligence: opsAnalysis?.ok ? { total: opsAnalysis.insightSummary?.total } : undefined,
+    };
     history.push(userMsg);
     saveHistory(history);
     appendToLog(userMsg);
-    if (input) input.value = "";
+    if (input && channel === "text" && !options.fromQuick) input.value = "";
 
     let orchestratorResult = null;
     try {
       const Orch = global.TasuSecretaryOrchestrator;
       if (Orch?.processMessageAsync) {
-        orchestratorResult = await Orch.processMessageAsync(text, { tryDeepSeek: true });
+        orchestratorResult = await Orch.processMessageAsync(text, { tryDeepSeek: true, opsAnalysis });
       } else {
         orchestratorResult = Orch?.processMessage?.(text) || null;
       }
@@ -224,12 +264,17 @@
 
     try {
       const out = await requestAssistantReply(text, history.slice(0, -1));
+      let replyContent = out.content;
+      if (out.mock && opsAnalysis) {
+        replyContent = enrichMockReplyWithOpsAnalysis(replyContent, opsAnalysis);
+      }
       const assistantMsg = {
         role: "assistant",
-        content: out.content,
+        content: replyContent,
         at: Date.now(),
         mock: out.mock,
         modelLabel: out.modelLabel,
+        channel,
         orchestrator: orchestratorResult?.ok
           ? {
               agentId: orchestratorResult.agent?.id,
@@ -245,7 +290,7 @@
       try {
         global.dispatchEvent(
           new CustomEvent("tasu:ai-voice-assistant-reply", {
-            detail: { text: out.content, surface: MODE_ID },
+            detail: { text: replyContent, surface: MODE_ID, channel },
           })
         );
       } catch {
@@ -261,7 +306,7 @@
       } else {
         setStatus("idle", "待機中", "🟢");
       }
-      return { ok: true, reply: out.content };
+      return { ok: true, reply: replyContent, opsAnalysisOk: Boolean(opsAnalysis?.ok) };
     } catch (err) {
       const errText = err instanceof Error ? err.message : String(err);
       const errMsg = { role: "assistant", content: `エラー: ${errText}`, at: Date.now(), error: true };
@@ -274,8 +319,93 @@
       sending = false;
       if (input) input.disabled = false;
       if (sendBtn) sendBtn.disabled = false;
+      if (voiceBtn) voiceBtn.disabled = false;
       input?.focus?.();
     }
+  }
+
+  /**
+   * Text / Voice 共通入口 — Operations Intelligence Engine 経由（Integration 委譲）
+   */
+  async function submit(payload) {
+    const p = payload && typeof payload === "object" ? payload : {};
+    const text = String(p.text ?? p.message ?? "").trim();
+    if (!text) return { ok: false, error: "empty_text" };
+
+    const Integration = getVoiceIntegration();
+    if (Integration?.submit) {
+      return Integration.submit({ channel: p.channel || "text", text, options: p.options, meta: p.meta });
+    }
+
+    const channel = p.channel === "voice" ? "voice" : "text";
+    const opsAnalysis = await Integration?.runOperationsIntelligence?.(text, channel);
+    return dispatchSecretaryMessage(text, { channel, opsAnalysis, ...(p.options || {}) });
+  }
+
+  async function sendMessage(rawText, options) {
+    options = options && typeof options === "object" ? options : {};
+    if (options._internal) {
+      return dispatchSecretaryMessage(rawText, options);
+    }
+    const channel = options.channel || (options.fromVoice ? "voice" : "text");
+    return submit({ channel, text: rawText, options });
+  }
+
+  function renderVoiceState(payload) {
+    const el = $("[data-ops-secretary-voice-state]");
+    if (!el) return;
+    const state = payload?.state || "ready";
+    const label = VOICE_STATE_LABELS[state] || VOICE_STATE_LABELS.ready;
+    el.textContent = payload?.detail ? `${label} — ${payload.detail}` : label;
+    el.className = "ops-secretary-voice-state";
+    if (state !== "ready") el.classList.add(`ops-secretary-voice-state--${state}`);
+
+    document.querySelectorAll("[data-ops-secretary-voice]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", state === "listening" ? "true" : "false");
+      btn.disabled = sending && state !== "listening";
+    });
+  }
+
+  function initVoiceIntegration() {
+    if (voiceIntegrationInitialized) return;
+    const Integration = getVoiceIntegration();
+    if (!Integration?.init) return;
+    Integration.init({
+      surface: MODE_ID,
+      onSubmit: async (payload) => {
+        await dispatchSecretaryMessage(payload.text, {
+          channel: payload.channel,
+          opsAnalysis: payload.meta?.opsAnalysis,
+          fromVoice: payload.channel === "voice",
+          ...(payload.options || {}),
+        });
+      },
+    });
+    Integration.onVoiceStateChange(renderVoiceState);
+    renderVoiceState(Integration.getVoiceState());
+    voiceIntegrationInitialized = true;
+  }
+
+  function bindVoiceButton() {
+    if (voiceBound) return;
+    const btn = $("[data-ops-secretary-voice]");
+    if (!btn) return;
+    voiceBound = true;
+    btn.addEventListener("click", async () => {
+      if (sending) return;
+      getVoiceIntegration()?.stopVoiceOutput?.();
+      const out = await (getVoiceIntegration()?.submitVoiceCapture?.() ||
+        Promise.resolve({ ok: false, error: "voice_unavailable" }));
+      if (!out?.ok && out?.error) {
+        setStatus("error", String(out.error).slice(0, 60), "⚠️");
+        setTimeout(() => setStatus("idle", "待機中", "🟢"), 3000);
+      }
+    });
+    $("[data-ops-secretary-send]")?.addEventListener(
+      "click",
+      () => getVoiceIntegration()?.stopVoiceOutput?.(),
+      true
+    );
   }
 
   function bindChatForm() {
@@ -289,7 +419,7 @@
       const input = $("[data-ops-secretary-input]", form) || $("[data-ops-phase2-chat-input]", form);
       const text = input && "value" in input ? String(input.value).trim() : "";
       if (!text) return;
-      void sendMessage(text);
+      void submit({ channel: "text", text });
     });
 
     const input = $("[data-ops-secretary-input]", form) || $("[data-ops-phase2-chat-input]", form);
@@ -325,7 +455,7 @@
       btn.type = "button";
       btn.className = "ops-p2-chat__quick-btn";
       btn.textContent = label;
-      btn.addEventListener("click", () => void sendMessage(label));
+      btn.addEventListener("click", () => void submit({ channel: "text", text: label, options: { fromQuick: true } }));
       wrap.appendChild(btn);
     });
     wrap.dataset.bound = "1";
@@ -338,7 +468,9 @@
 
   function render(ctx) {
     setOpsSnapshot(ctx);
+    initVoiceIntegration();
     bindChatForm();
+    bindVoiceButton();
     renderLog(loadHistory());
     renderBrief(ctx || {});
     renderQuickChips();
@@ -366,9 +498,14 @@
   global.TasuAdminAiSecretaryPhase2 = {
     render,
     sendMessage,
+    submit,
+    dispatchSecretaryMessage,
     loadHistory,
     clearHistoryForTests,
     bindChatForm,
+    bindVoiceButton,
+    initVoiceIntegration,
+    renderVoiceState,
     setOpsSnapshot,
     buildSystemPrompt,
   };
