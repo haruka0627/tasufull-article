@@ -7,7 +7,7 @@
 
   const { EVENT } = global.TasuVoiceCoreEvents;
 
-  /** Future Realtime wire event type strings (no network I/O in Phase 2). */
+  /** Internal wire event type strings (no network I/O). */
   const WIRE_EVENT = Object.freeze({
     SESSION_CREATED: "session.created",
     RESPONSE_TEXT_DELTA: "response.text.delta",
@@ -16,6 +16,71 @@
     ERROR: "error",
     SESSION_CLOSED: "session.closed",
   });
+
+  /** OpenAI Realtime server event types (Phase 5 mapping boundary). */
+  const OPENAI_SERVER_EVENT = Object.freeze({
+    SESSION_CREATED: "session.created",
+    SESSION_UPDATED: "session.updated",
+    RESPONSE_TEXT_DELTA: "response.text.delta",
+    RESPONSE_AUDIO_DELTA: "response.audio.delta",
+    RESPONSE_AUDIO_TRANSCRIPT_DELTA: "response.audio_transcript.delta",
+    RESPONSE_DONE: "response.done",
+    ERROR: "error",
+  });
+
+  /**
+   * Normalize OpenAI Realtime server JSON → internal WIRE_EVENT shape.
+   * @param {object} raw
+   * @returns {object|null}
+   */
+  function normalizeOpenAiServerEvent(raw) {
+    if (!raw || !raw.type) return null;
+    const type = String(raw.type);
+
+    switch (type) {
+      case OPENAI_SERVER_EVENT.SESSION_CREATED:
+      case OPENAI_SERVER_EVENT.SESSION_UPDATED:
+        return {
+          type: WIRE_EVENT.SESSION_CREATED,
+          session: raw.session || { id: raw.session_id || raw.id },
+        };
+
+      case OPENAI_SERVER_EVENT.RESPONSE_TEXT_DELTA:
+        return {
+          type: WIRE_EVENT.RESPONSE_TEXT_DELTA,
+          delta: raw.delta ?? raw.text ?? "",
+          final: Boolean(raw.final),
+        };
+
+      case OPENAI_SERVER_EVENT.RESPONSE_AUDIO_TRANSCRIPT_DELTA:
+        return {
+          type: WIRE_EVENT.RESPONSE_TEXT_DELTA,
+          delta: raw.delta ?? "",
+          final: false,
+          source: "audio_transcript",
+        };
+
+      case OPENAI_SERVER_EVENT.RESPONSE_AUDIO_DELTA:
+        return {
+          type: WIRE_EVENT.RESPONSE_AUDIO_DELTA,
+          delta: raw.delta,
+          audio: raw.audio || (raw.delta ? { format: "pcm16", payload: raw.delta } : null),
+        };
+
+      case OPENAI_SERVER_EVENT.RESPONSE_DONE:
+        return { type: WIRE_EVENT.RESPONSE_DONE };
+
+      case OPENAI_SERVER_EVENT.ERROR:
+        return {
+          type: WIRE_EVENT.ERROR,
+          code: raw.error?.code || raw.code || "openai_error",
+          message: raw.error?.message || raw.message || "openai realtime error",
+        };
+
+      default:
+        return null;
+    }
+  }
 
   function createMockAudioPayload(label) {
     const text = String(label || "mock-audio");
@@ -123,6 +188,8 @@
 
   global.TasuVoiceCoreRealtimeEventMapper = {
     WIRE_EVENT,
+    OPENAI_SERVER_EVENT,
+    normalizeOpenAiServerEvent,
     mapWireEventToVoiceCore,
     emitMappedWireEvent,
   };

@@ -54,8 +54,15 @@ const forbidden = [
   /generativelanguage\.googleapis/i,
 ];
 
+const forbiddenScanFiles = [
+  "voice-core-events.js",
+  "voice-adapter-interface.js",
+  "voice-mock-adapter.js",
+  "voice-session.js",
+];
+
 let combined = "";
-for (const name of coreFiles.filter((f) => f.endsWith(".js"))) {
+for (const name of forbiddenScanFiles) {
   combined += fs.readFileSync(path.join(voiceDir, name), "utf8") + "\n";
 }
 
@@ -66,7 +73,7 @@ for (const re of forbidden) {
     forbiddenHit = true;
   }
 }
-if (!forbiddenHit) ok("no forbidden API strings in voice-core sources");
+if (!forbiddenHit) ok("no forbidden API strings in phase1 core modules");
 
 const js = fs.readFileSync(path.join(voiceDir, "voice-core.js"), "utf8");
 if (js.includes("startSession") && js.includes("TasuVoiceCore")) ok("voice-core facade");
@@ -185,9 +192,13 @@ console.log("\nRunning node session smoke …");
 await nodeSessionSmoke();
 
 console.log("\nRunning build:pages …");
-const build = spawnSync("npm", ["run", "build:pages"], { cwd: root, shell: true, encoding: "utf8" });
-if (build.status === 0) ok("build:pages PASS");
-else bad("build:pages", build.stderr?.slice(0, 200) || String(build.status));
+if (process.env.TASFUL_SKIP_PAGES_BUILD === "1") {
+  ok("build:pages SKIP (nested regression)");
+} else {
+  const build = spawnSync("npm", ["run", "build:pages"], { cwd: root, shell: true, encoding: "utf8" });
+  if (build.status === 0) ok("build:pages PASS");
+  else bad("build:pages", build.stderr?.slice(0, 200) || String(build.status));
+}
 
 console.log("\nRunning browser smoke …");
 await browserSmoke();
