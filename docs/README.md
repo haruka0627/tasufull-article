@@ -5,14 +5,29 @@
 
 ---
 
+## TASFUL サービス一覧
+
+| サービス | 状態 | ドキュメント |
+| --- | --- | --- |
+| **Builder** | Production Ready · 凍結 | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) |
+| **Platform** | Production Ready · 凍結 | [AI/PLATFORM_AI.md](./AI/PLATFORM_AI.md) |
+| **TLV** | Production Ready · 凍結 | [AI/TLV_AI.md](./AI/TLV_AI.md) |
+| **TASFUL AI Workspace** | 機能完成 · 本番接続残 | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) |
+| **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
+| **TALK / Connect / 安否** | Production Ready | レガシー `docs/talk-*` 等 |
+| **TASFUL Materials（素材DL）** | 📋 設計のみ | [free-download-service-backlog.md](./free-download-service-backlog.md) · [reports/free-download-service-plan.md](../reports/free-download-service-plan.md) |
+| **Business Directory** | 📋 方針確定 | [business-directory-subscription-model.md](./business-directory-subscription-model.md) · AD-013 · 実装未着手 |
+
+---
+
 ## この `docs/` について
 
 | ファイル | 用途 |
 | --- | --- |
 | [PROJECT_STATUS.md](./PROJECT_STATUS.md) | **現状スナップショット**（製品別ステータス・直近コミット） |
 | [TODO.md](./TODO.md) | **次にやること**（優先順・担当領域） |
-| [ROADMAP.md](./ROADMAP.md) | 中長期フェーズ · 展開方針要約（AD-011）· UI/UX 原則要約（AD-012） |
-| [DECISIONS.md](./DECISIONS.md) | **決定事項**（アーキテクチャ · 統合方針 · **AD-011 展開** · **AD-012 UI/UX**） |
+| [ROADMAP.md](./ROADMAP.md) | 中長期フェーズ · 展開方針要約（AD-011）· UI/UX 原則要約（AD-012）· Business Directory（AD-013） |
+| [DECISIONS.md](./DECISIONS.md) | **決定事項**（アーキテクチャ · 統合方針 · **AD-011 展開** · **AD-012 UI/UX** · **AD-013 Business Directory**） |
 | [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md) | リリース前ゲート |
 | [CHANGELOG.md](./CHANGELOG.md) |  notable 変更履歴 |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | 未解決・要確認・矛盾の記録 |
@@ -43,6 +58,7 @@
 | `reports/platform-finish-phase.md` | Platform バッジ・お気に入り・AI 入口 |
 | `reports/tasful-ai-final-phase.md` | TASFUL AI Final（履歴・メディア・資料） |
 | `reports/tasful-ai-production-preflight.md` | 本番接続 preflight（Production Ready: NO） |
+| `reports/free-download-service-plan.md` | TASFUL Materials（無料DL＋広告）設計書 |
 
 ---
 

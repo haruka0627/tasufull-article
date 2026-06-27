@@ -103,6 +103,14 @@
 - **高機能は AI** · **シンプルは UI** — 全製品の画面設計・文言・新機能追加時に適用する。
 - 迷った場合は **シンプルな操作** と **分かりやすい言葉** を優先。既存 UI の複雑化を避ける。
 
+### Business Directory — サブスク掲載モデル（2026-06-27 確定）
+
+**正本:** [DECISIONS.md](./DECISIONS.md) **AD-013** · [business-directory-subscription-model.md](./business-directory-subscription-model.md)
+
+- 店舗・販売 / 業務サービス → **月額サブスク掲載**（専用ページ · URL 登録送客 · 簡易 HP）
+- Marketplace / Platform 案件 → **成約手数料**（既存方針維持）
+- 実装 · 決済 · DB — **未着手**（docs 方針のみ）
+
 ### AI プロバイダ分担
 
 | 領域 | 本番 API |
