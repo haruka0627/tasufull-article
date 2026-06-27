@@ -165,6 +165,7 @@
       humanGatePendingId: "",
       executedApis: [],
       createdAt: new Date().toISOString(),
+      startedAt: "",
     };
   }
 
@@ -422,6 +423,24 @@
     }
   }
 
+  function activityDuration(plan) {
+    const started = Date.parse(plan?.startedAt || plan?.createdAt || "");
+    return Number.isFinite(started) ? Math.max(0, Date.now() - started) : 0;
+  }
+
+  function recordActivity(plan, meta) {
+    if (!plan?.id) return;
+    global.TasuSecretaryWorkspaceActivity?.recordFromPlan?.(plan, {
+      duration: activityDuration(plan),
+      ...(meta || {}),
+    });
+  }
+
+  function updateActivityGate(plan, patch) {
+    if (!plan?.id) return;
+    global.TasuSecretaryWorkspaceActivity?.updateHumanGate?.(plan.id, patch);
+  }
+
   async function runWorkspaceRequest(userText) {
     const conn = await ensureConnected();
     if (!conn.ok) {
@@ -433,6 +452,7 @@
 
     const plan = buildPlan(intentResult, userText);
     plan.status = "running";
+    plan.startedAt = new Date().toISOString();
     saveRun(plan);
 
     for (const st of plan.steps) {
@@ -451,6 +471,7 @@
         plan.humanGatePendingId = result.pendingId || plan.context.pendingId || "";
         pushLog(plan, { stepId: st.id, label: st.label, ok: true, humanGate: true, summary: result.summary });
         saveRun(plan);
+        recordActivity(plan, { status: "awaiting_gate", humanGateState: "pending", pendingId: plan.humanGatePendingId });
         return { ok: true, plan, awaitingHumanGate: true };
       }
       if (!result.ok) {
@@ -459,6 +480,7 @@
         plan.error = result.error || "step_failed";
         pushLog(plan, { stepId: st.id, label: st.label, ok: false, error: plan.error });
         saveRun(plan);
+        recordActivity(plan, { status: "failed", error: plan.error });
         return { ok: false, error: plan.error, plan };
       }
       st.status = result.skipped ? "pending" : "done";
@@ -469,6 +491,7 @@
     if (plan.status !== "awaiting_gate") {
       plan.status = "done";
       saveRun(plan);
+      recordActivity(plan, { status: "success", result: plan.logs?.[plan.logs.length - 1]?.summary });
     }
     return { ok: true, plan };
   }
@@ -502,7 +525,30 @@
     plan.error = exec?.ok ? "" : String(exec?.error || "gate_execute_failed");
     plan.humanGatePendingId = "";
     saveRun(plan);
+    updateActivityGate(plan, {
+      state: exec?.ok ? "executed" : "failed",
+      status: exec?.ok ? "success" : "failed",
+      error: plan.error || null,
+      result: exec?.message || exec?.error || "",
+    });
     return { ok: !!exec?.ok, plan, exec };
+  }
+
+  function cancelHumanGate(plan, reason) {
+    plan = plan || loadLastRun();
+    if (!plan) return { ok: false, error: "no_plan" };
+    plan.status = "cancelled";
+    plan.cancelReason = trim(reason, 200) || "operator_cancelled";
+    plan.humanGatePendingId = "";
+    const gateStep = plan.steps?.find((s) => s.kind === "human_gate");
+    if (gateStep) gateStep.status = "cancelled";
+    saveRun(plan);
+    updateActivityGate(plan, {
+      state: "cancelled",
+      status: "cancelled",
+      cancelReason: plan.cancelReason,
+    });
+    return { ok: true, plan };
   }
 
   async function recoverFromOAuthError(plan) {
@@ -525,5 +571,6 @@
     sanitizeRun,
     ensureConnected,
     recoverFromOAuthError,
+    cancelHumanGate,
   };
 })(typeof window !== "undefined" ? window : globalThis);

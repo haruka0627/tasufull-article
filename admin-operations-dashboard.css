@@ -4689,6 +4689,26 @@ a.ops-p2-tile:hover {
   margin: 0.35rem 0;
 }
 
+.ops-secretary-gws-activity__row {
+  display: block;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.35rem;
+  cursor: pointer;
+}
+
+.ops-secretary-gws-activity__json {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem;
+  max-height: 10rem;
+  overflow: auto;
+  font-size: 0.7rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 0.35rem;
+}
+
 .ops-secretary-gmail {
   margin: 0 0 0.75rem;
   padding: 0.55rem 0.65rem;

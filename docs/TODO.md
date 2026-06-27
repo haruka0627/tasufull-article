@@ -171,6 +171,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - [x] **Phase 6-G** — Contacts read-only（people.connections/search/get · UI · 補助導線）
 - [x] **Phase 6-H** — Drive read-only（files.list/get/export · フォルダ · 検索 · mimeType · recent）
 - [x] **Phase 7-A** — Google Workspace Orchestrator（Intent · Plan · 横断実行 · Workspace Assistant）
+- [x] **Phase 7-B** — Workspace Activity / Audit Log（実行履歴 · Filter · JSON Export）
 - [ ] Phase 7-A — Cursor SDK · cron · L1 自動送信 · Agent 自動実行（旧 Phase 6）
 
 **Phase 6-E 参照:** `reports/secretary-google-phase6e-calendar-readonly.md`
@@ -182,6 +183,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 **Phase 6-H 参照:** `reports/secretary-google-phase6h-drive-readonly.md`
 
 **Phase 7-A 参照:** `reports/secretary-google-phase7a-workspace-orchestrator.md`
+
+**Phase 7-B 参照:** `reports/secretary-google-phase7b-workspace-activity.md`
 
 **Phase 6-D 参照:** `reports/secretary-google-phase6d-gmail-write-human-gate.md`
 
