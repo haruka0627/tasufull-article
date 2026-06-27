@@ -446,6 +446,36 @@
   color: #7c3aed;
 }
 
+.builder-ai-ui-voice-state {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.builder-ai-ui-voice-state--listening {
+  color: #059669;
+}
+
+.builder-ai-ui-voice-state--thinking {
+  color: #d97706;
+}
+
+.builder-ai-ui-voice-state--speaking {
+  color: #2563eb;
+}
+
+.builder-ai-ui-voice-state--error {
+  color: #dc2626;
+}
+
+.builder-ai-ui-voice-btn[aria-pressed="true"] {
+  border-color: #059669;
+  color: #059669;
+}
+
 .builder-ai-ui-vision-result {
   display: none;
   margin-bottom: 1rem;
