@@ -33,7 +33,7 @@
   }
 
   /**
-   * Browser WebSocket cannot set Authorization headers — use OpenAI subprotocol when needed.
+   * Browser WebSocket cannot set Authorization headers — GA Realtime uses subprotocol auth only.
    * Credential is used only during connect; never stored on the transport instance.
    * @param {object} credential
    * @returns {string[]|undefined}
@@ -43,7 +43,7 @@
     if (!value) return undefined;
     const type = String(credential.type || "ephemeral_token");
     if (type === "bearer" || type === "ephemeral_token" || type === "custom") {
-      return ["realtime", `openai-insecure-api-key.${value}`, "openai-beta.realtime-v1"];
+      return ["realtime", `openai-insecure-api-key.${value}`];
     }
     return undefined;
   }
@@ -127,13 +127,13 @@
           return { ok: false, code: "live_not_configured", message: "endpoint or credential missing" };
         }
 
-        const url = buildConnectUrl(endpoint, model);
+        const tokenValue = String(credential.value);
+        const isEphemeralToken = String(credential.type || "ephemeral_token") === "ephemeral_token";
+        const subprotocols = preferHeaders ? undefined : buildSubprotocols(credential);
+        const url = buildConnectUrl(endpoint, isEphemeralToken ? "" : model);
         if (!url) {
           return { ok: false, code: "live_not_configured", message: "invalid endpoint" };
         }
-
-        const tokenValue = String(credential.value);
-        const subprotocols = preferHeaders ? undefined : buildSubprotocols(credential);
 
         return new Promise((resolve) => {
           let settled = false;
@@ -191,9 +191,19 @@
           };
 
           socket.onopen = () => {
-            const update = { type: "session.update", session: { ...sessionOptions } };
-            if (model && !update.session.model) update.session.model = model;
-            sendWireEvent(update);
+            const hasSessionOverrides = Object.keys(sessionOptions).length > 0;
+            const shouldUpdateSession = hasSessionOverrides || (!isEphemeralToken && model);
+            if (shouldUpdateSession) {
+              const update = {
+                type: "session.update",
+                session: {
+                  type: "realtime",
+                  ...sessionOptions,
+                },
+              };
+              if (!isEphemeralToken && model && !update.session.model) update.session.model = model;
+              sendWireEvent(update);
+            }
             finish({ ok: true, sessionId: sessionId || null, transportId: TRANSPORT_ID });
           };
         });
