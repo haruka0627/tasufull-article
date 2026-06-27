@@ -1,15 +1,34 @@
 # TLV AI 収益分配エンジン Ver2 — 実装フェーズ
 
-**ステータス:** Production Baseline 確定 → 実装フェーズ移行  
-**基準仕様:** [payout-engine-v2-final-spec.md](payout-engine-v2-final-spec.md) / [payout-engine-v2-production-baseline.json](payout-engine-v2-production-baseline.json)
+**ステータス:** **Ver2 Demo Payment Flow Complete（固定）**  
+**基準仕様:** [payout-engine-v2-final-spec.md](payout-engine-v2-final-spec.md) / [payout-engine-v2-production-baseline.json](payout-engine-v2-production-baseline.json)  
+**本番移行 TODO:** [TODO_FOR_PRODUCTION.md](TODO_FOR_PRODUCTION.md)（実装せず記録のみ）
+
+**完成ドキュメント:** [README.md](README.md) · [SYSTEM_ARCHITECTURE.md](SYSTEM_ARCHITECTURE.md) · [DATA_FLOW.md](DATA_FLOW.md) · [VALIDATIONS.md](VALIDATIONS.md) · [REGRESSION_SUITE.md](REGRESSION_SUITE.md) · [CHANGELOG.md](CHANGELOG.md)
 
 ---
 
 ## 方針
 
-Ver2 Final Spec は **変更しない**。以降は仕様変更ではなく、実装・接続・UI・運用のみを進める。
+Ver2 Final Spec は **変更しない**。Ver2 は **デモ支払いフローまで完成** として固定し、以降の本番送金・ETL・DB は **本番移行タスク** として分離する。
 
 仕様を変更する場合は **Ver3** として新規作成し、Ver2 は履歴として永久保存する（上書き禁止）。
+
+### 完成スコープ（Ver2 デモ完成版）
+
+| # | 領域 | 状態 |
+|---|------|------|
+| ① | monthly-payout-decision.json | **完了** |
+| ② | condition-lines.json | **完了** |
+| ③ | creator-rank-explanation.json | **完了** |
+| ④ | Creator Dashboard | **完了** |
+| ⑤ | Admin Payouts | **完了** |
+| ⑥ | 公開説明ページ | **完了** |
+| ⑦ | 月次レポート | **完了**（サンプル月） |
+| ⑧ | デモ支払いフロー | **完了**（Stripe API 非使用） |
+
+**SSOT:** `monthly-payout-decision.json` → `creators[].payout_amount_yen`  
+**非スコープ:** 本番 Stripe 送金・Webhook・返金・再送・append-only 監査・複数承認
 
 ---
 
@@ -303,17 +322,77 @@ node scripts/validate-payout-policy-phase6.mjs
 
 ---
 
+## 実装フェーズ ⑦ — 月次レポート（運営・監査）
+
+**ステータス:** 実装済み（確定 JSON 集約・再計算禁止）
+
+| 種別 | パス |
+|------|------|
+| 入力 | `live/data/monthly-payout-decision.json`, `creator-rank-explanation.json`, `condition-lines.json` |
+| 出力 | `output/monthly-report.json`, `.md`, `.csv` |
+| 検証 | `scripts/validate-monthly-report-phase7.mjs` |
+
+```bash
+node scripts/generate-monthly-report.mjs
+node scripts/validate-monthly-report-phase7.mjs
+```
+
+---
+
+## デモ支払いフロー — Stripe テスト送金直前まで
+
+**ステータス:** 実装済み（**Stripe API 非使用・本番送金なし**）
+
+| 種別 | パス |
+|------|------|
+| Connect 口座（デモ） | `live/data/tlv-stripe-connect-accounts.json` |
+| 支払履歴（デモ） | `output/payment-history.json` → `live/data/payment-history.json` |
+| Stripe CSV | `output/stripe-connect-payouts.csv`（`stripe_connect_account_id` 付き） |
+| ロジック | `scripts/tlv-demo-payment-flow.mjs` |
+| 検証 | `scripts/validate-demo-payment-flow.mjs` |
+
+```bash
+node scripts/generate-payout-outputs.mjs
+node scripts/validate-demo-payment-flow.mjs
+```
+
+### 支払状態（4種・表示のみ）
+
+`unpaid` / `processing` / `completed` / `failed`  
+初期生成時はすべて `unpaid`（テスト送金直前）。
+
+### 検証（`validations`）
+
+| 項目 | 内容 |
+|------|------|
+| `csv_has_stripe_connect_account_id` | CSV に Connect ID あり |
+| `payment_history_generated` | payment-history.json 生成 |
+| `csv_payout_amount_yen_matches_decision` | SSOT 一致 |
+| `no_payout_recalculation_in_demo_module` | 再計算コードなし |
+| `demo_mode_no_stripe_api` | `stripe_api_used: false` |
+| `all_pass` | すべて true |
+
+### UI 表示
+
+- Admin: `live/live-admin-payouts.js` — Connect Account・支払状態列
+- Creator Dashboard: `live/tlv-creator-payout-display.js` — 支払状態・Connect 表示
+
+---
+
 ## 実装対象（全体）
 
-| # | 対象 | 説明 | 主な成果物 |
-|---|------|------|-----------|
-| ① | 実データ生成 | 本番収支・Creator 実績から月次判断を生成 | `output/monthly-payout-decision.json` | **完了** |
-| ② | AI 月次判定 | 条件ライン算出・利益シミュレーション・安全判定 | `output/condition-lines.json` | **完了** |
-| ③ | Creator 向け還元説明 | ランク・還元率・保証状態の説明生成 | `output/creator-rank-explanation.json` | **完了** |
+| # | 対象 | 説明 | 主な成果物 | 状態 |
+|---|------|------|-----------|------|
+| ① | 実データ生成 | 本番想定入力から月次判断を生成 | `output/monthly-payout-decision.json` | **完了** |
+| ② | AI 月次判定 | 条件ライン・安全判定 | `output/condition-lines.json` | **完了** |
+| ③ | Creator 向け還元説明 | ランク・還元率・保証説明 | `output/creator-rank-explanation.json` | **完了** |
 | ④ | Creator Dashboard | `payout_amount_yen` 確定値表示 | `live/tlv-creator-payout-display.js` | **完了** |
 | ⑤ | 管理画面 | 全 Creator 月次還元一覧・CSV | `live/admin-payouts.html` | **完了** |
-| ⑥ | 公開説明ページ | Creator 向け還元ポリシー説明 | `live/payout-policy.html` | **完了** |
-| ⑦ | 月次レポート出力 | 運用レポート・Excel・CSV 連携 | `monthly-operator-report` 等 |
+| ⑥ | 公開説明ページ | Creator 向け還元ポリシー | `live/payout-policy.html` | **完了** |
+| ⑦ | 月次レポート | 運営・監査レポート JSON/MD/CSV | `output/monthly-report.*` | **完了** |
+| ⑧ | デモ支払いフロー | Connect ID・payment-history・CSV | `payment-history.json` 等 | **完了** |
+
+**本番移行（未着手）:** [TODO_FOR_PRODUCTION.md](TODO_FOR_PRODUCTION.md)
 
 ---
 
@@ -343,16 +422,22 @@ const baseline = loadProductionBaseline();
 
 ---
 
-## 完了条件
+## 完了条件（Ver2 Demo Payment Flow Complete）
 
-- [x] ① monthly-payout-decision.json の実データ生成（本番想定入力）
+- [x] ① monthly-payout-decision.json の実データ生成（サンプル入力）
 - [x] ② condition-lines.json の AI 月次判定
 - [x] ③ creator-rank-explanation.json の Creator 向け説明
 - [x] ④ Creator Dashboard（payout_amount_yen 表示）
 - [x] ⑤ 管理画面 TLV 月次還元一覧
 - [x] ⑥ 公開説明ページ payout-policy.html
-- [ ] ⑦ が本番データで動作
-- [ ] 再生成・検証・UI・API・JSON がすべて Ver2 Baseline と一致
-- [ ] コードにランク・保証率のハードコードがない
+- [x] ⑦ 月次レポート（JSON / MD / CSV）
+- [x] ⑧ デモ支払いフロー（Connect ID・payment-history・CSV・支払状態表示）
+- [x] 全フェーズ検証 `validations.all_pass: true`（サンプル月 2026-05）
+- [x] `identity_holds: true`・consumer validations PASS
+- [x] 還元ロジックは `payout-engine-v2-production-baseline.json` 参照（ランク・保証率ハードコードなし）
 
-*Ver2 は Production Baseline として固定済み。本ドキュメントは実装フェーズの進行管理用です。*
+### 正式 Regression Suite
+
+変更時・リリース前は **[REGRESSION_SUITE.md](REGRESSION_SUITE.md)** の全コマンドを実行し、PASS 条件を満たすこと。
+
+*Ver2 は Production Baseline + Demo Payment Flow Complete として固定済み。本番送金以降は [TODO_FOR_PRODUCTION.md](TODO_FOR_PRODUCTION.md) を参照。*
