@@ -119,7 +119,8 @@
 - **Phase 4 Admin UI:** `business-directory/admin/` · `scripts/test-business-directory-phase4-admin-ui.mjs` — **35/35 PASS**
 - **Phase 5 Public UI:** `business-directory/public/` · `scripts/test-business-directory-phase5-public-ui.mjs` — **27/27 PASS**
 - **Phase 6 Stripe:** subscription checkout · webhook · plan guard · `scripts/test-business-directory-phase6-stripe.mjs` — **52/52 PASS**
-- **Phase 7 Preflight:** build · dist · deploy checklist · `scripts/test-business-directory-phase7-deploy-preflight.mjs` — **74/74 PASS**（Pages preview Go · migration/Edge/Stripe は手動残）
+- **Phase 7 Preflight:** build · dist · deploy checklist · `scripts/test-business-directory-phase7-deploy-preflight.mjs` — **74/74 PASS**（Pages preview Go）
+- **Production Step 1 DB:** staging migration apply · `scripts/test-business-directory-production-step1-migration.mjs --remote` — **22/22 PASS**（migration repair 手動残）
 
 ### AI プロバイダ分担
 
