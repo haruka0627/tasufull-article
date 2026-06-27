@@ -6366,8 +6366,8 @@ a.ops-p2-tile:hover {
 
 .ops-p7-desk-chat .ops-p2-chat__log,
 .ops-p7-desk-chat-log {
-  min-height: 4.5rem;
-  max-height: 11rem;
+  min-height: 8rem;
+  max-height: 30vh;
   overflow-y: auto;
   margin-top: 0.15rem;
 }
@@ -6452,11 +6452,6 @@ a.ops-p2-tile:hover {
 @media (min-width: 900px) {
   .ops-p7-svc-grid {
     grid-template-columns: repeat(4, 1fr);
-  }
-
-  .ops-p7-desk-chat .ops-p2-chat__log,
-  .ops-p7-desk-chat-log {
-    max-height: 4.5rem;
   }
 }
 
@@ -6638,8 +6633,9 @@ a.ops-p2-tile:hover {
 }
 
 .ops-p7-desk-chat-log {
-  min-height: 4.5rem !important;
-  max-height: 8rem !important;
+  min-height: 8rem !important;
+  max-height: 30vh !important;
+  overflow-y: auto !important;
 }
 
 .ops-p7-desk-fold--chips summary {
@@ -6972,8 +6968,8 @@ a.ops-p2-tile:hover {
 }
 
 .ops-p7-desk-chat-log {
-  min-height: 4.5rem !important;
-  max-height: 11rem !important;
+  min-height: 8rem !important;
+  max-height: 30vh !important;
   overflow-y: auto;
 }
 
@@ -7048,7 +7044,8 @@ a.ops-p2-tile:hover {
   #ops-ai-command-center .ops-p7-desk-chat-log,
   #ops-ai-command-center .ops-p7-desk-chat .ops-p2-chat__log {
     min-height: 8rem !important;
-    max-height: 40vh !important;
+    max-height: 30vh !important;
+    overflow-y: auto !important;
   }
 }
 
