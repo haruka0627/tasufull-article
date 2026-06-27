@@ -48,6 +48,8 @@ export type GmailReadRequest = {
   maxResults?: number;
   labelIds?: string[];
   pageToken?: string;
+  /** Phase 3b — detail path only; list path must not set this */
+  includeBody?: boolean;
 };
 
 export type GmailWriteRequest = {
@@ -81,7 +83,12 @@ export type GmailMessageCard = {
   important: boolean;
   hasAttachment: boolean;
   attachments: GmailAttachmentMeta[];
+  /** Populated only when includeBody=true on messages.get / threads.get */
+  bodyText?: string;
+  bodyTruncated?: boolean;
 };
+
+const BODY_TEXT_MAX = 8000;
 
 function trim(value: unknown, max = 4000): string {
   return String(value ?? "").trim().slice(0, max);
@@ -123,6 +130,68 @@ function headerValue(headers: Array<{ name?: string; value?: string }> | undefin
   return trim(hit?.value, 500);
 }
 
+function decodeBase64Url(data: string): string {
+  const raw = trim(data, 2_000_000);
+  if (!raw) return "";
+  try {
+    const pad = raw.length % 4 === 0 ? raw : raw + "=".repeat(4 - (raw.length % 4));
+    const b64 = pad.replace(/-/g, "+").replace(/_/g, "/");
+    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    return new TextDecoder("utf-8", { fatal: false }).decode(bytes);
+  } catch {
+    return "";
+  }
+}
+
+/** Strip HTML to plain text (read-only · no attachment parsing). */
+export function htmlToPlainText(html: string): string {
+  let t = trim(html, 500_000);
+  if (!t) return "";
+  t = t.replace(/<script[\s\S]*?<\/script>/gi, " ");
+  t = t.replace(/<style[\s\S]*?<\/style>/gi, " ");
+  t = t.replace(/<br\s*\/?>/gi, "\n");
+  t = t.replace(/<\/p>/gi, "\n");
+  t = t.replace(/<[^>]+>/g, " ");
+  t = t
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&amp;/gi, "&")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/g, "'");
+  return t.replace(/[ \t]+/g, " ").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+/** Extract plain body from Gmail payload; text/plain preferred over text/html. */
+export function extractPlainTextBody(
+  payload: Record<string, unknown> | undefined,
+  maxLen = BODY_TEXT_MAX
+): { text: string; truncated: boolean } {
+  let plain = "";
+  let html = "";
+
+  function walk(part: Record<string, unknown> | undefined) {
+    if (!part || typeof part !== "object") return;
+    const mime = trim(part.mimeType, 120).toLowerCase();
+    const body = part.body as Record<string, unknown> | undefined;
+    const data = trim(body?.data, 2_000_000);
+    if (data && mime === "text/plain" && !plain) {
+      plain = decodeBase64Url(data);
+    } else if (data && mime === "text/html" && !html) {
+      html = decodeBase64Url(data);
+    }
+    const parts = part.parts as Record<string, unknown>[] | undefined;
+    if (Array.isArray(parts)) parts.forEach(walk);
+  }
+
+  walk(payload);
+  let text = plain ? plain : htmlToPlainText(html);
+  text = text.replace(/\r\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
+  const truncated = text.length > maxLen;
+  if (truncated) text = text.slice(0, maxLen - 1) + "…";
+  return { text, truncated };
+}
+
 function extractAttachmentMeta(payload: Record<string, unknown> | undefined): GmailAttachmentMeta[] {
   const out: GmailAttachmentMeta[] = [];
   function walk(part: Record<string, unknown> | undefined) {
@@ -145,12 +214,15 @@ function extractAttachmentMeta(payload: Record<string, unknown> | undefined): Gm
   return out.slice(0, 20);
 }
 
-function normalizeMessage(raw: Record<string, unknown>): GmailMessageCard {
+function normalizeMessage(
+  raw: Record<string, unknown>,
+  options?: { includeBody?: boolean }
+): GmailMessageCard {
   const payload = raw.payload as Record<string, unknown> | undefined;
   const headers = payload?.headers as Array<{ name?: string; value?: string }> | undefined;
   const labelIds = Array.isArray(raw.labelIds) ? raw.labelIds.map((x) => String(x)) : [];
   const attachments = extractAttachmentMeta(payload);
-  return {
+  const card: GmailMessageCard = {
     id: String(raw.id || ""),
     threadId: String(raw.threadId || ""),
     snippet: trim(raw.snippet, 300),
@@ -163,6 +235,28 @@ function normalizeMessage(raw: Record<string, unknown>): GmailMessageCard {
     hasAttachment: attachments.length > 0 || labelIds.includes("ATTACHMENT"),
     attachments,
   };
+  if (options?.includeBody && payload) {
+    const body = extractPlainTextBody(payload);
+    if (body.text) {
+      card.bodyText = body.text;
+      card.bodyTruncated = body.truncated;
+    }
+  }
+  return card;
+}
+
+const MOCK_BODY_BY_ID: Record<string, string> = {
+  mock_msg_001:
+    "本日の運営サマリーです。Connect 審査 2 件、Platform 問い合わせ 1 件、未対応チケット 3 件があります。",
+  mock_msg_002:
+    "Connect 本人確認書類の再提出をお願いします。期限は来週金曜日です。添付の PDF をご確認ください。",
+  mock_msg_003: "掲載審査について、追加情報をお送りします。商品説明欄の修正をお願いできますでしょうか。",
+};
+
+function withMockBody(message: GmailMessageCard, includeBody: boolean): GmailMessageCard {
+  if (!includeBody) return message;
+  const bodyText = MOCK_BODY_BY_ID[message.id] || message.snippet;
+  return { ...message, bodyText, bodyTruncated: false };
 }
 
 const MOCK_LABELS = [
@@ -290,15 +384,21 @@ async function executeMockGmail(req: GmailReadRequest) {
   if (method === "messages.get") {
     const id = trim(req.messageId, 120);
     const hit = MOCK_MESSAGES.find((m) => m.id === id) || MOCK_MESSAGES[0];
-    return { ok: true, mock: true, message: hit };
+    const includeBody = Boolean(req.includeBody);
+    return { ok: true, mock: true, message: withMockBody(hit, includeBody) };
   }
   if (method === "threads.get") {
     const threadId = trim(req.threadId, 120);
+    const includeBody = Boolean(req.includeBody);
     const messages = MOCK_MESSAGES.filter((m) => m.threadId === threadId);
+    const list = messages.length ? messages : [MOCK_MESSAGES[0]];
     return {
       ok: true,
       mock: true,
-      thread: { id: threadId || "mock_thread_001", messages: messages.length ? messages : [MOCK_MESSAGES[0]] },
+      thread: {
+        id: threadId || "mock_thread_001",
+        messages: list.map((m) => withMockBody(m, includeBody)),
+      },
     };
   }
   return { ok: false, error: "unknown_gmail_method" };
@@ -329,7 +429,11 @@ async function executeLiveGmail(accessToken: string, req: GmailReadRequest) {
     for (const ref of refs.slice(0, maxResults)) {
       const id = trim((ref as Record<string, unknown>)?.id, 120);
       if (!id) continue;
-      const detail = await executeLiveGmail(accessToken, { method: "messages.get", messageId: id });
+      const detail = await executeLiveGmail(accessToken, {
+        method: "messages.get",
+        messageId: id,
+        includeBody: false,
+      });
       if (detail.ok && (detail as { message?: GmailMessageCard }).message) {
         messages.push((detail as { message: GmailMessageCard }).message);
       }
@@ -346,22 +450,26 @@ async function executeLiveGmail(accessToken: string, req: GmailReadRequest) {
   if (method === "messages.get") {
     const id = trim(req.messageId, 120);
     if (!id) return { ok: false, error: "message_id_required" };
+    const includeBody = Boolean(req.includeBody);
     const res = await gmailFetch(accessToken, `/messages/${encodeURIComponent(id)}`, {
       format: "full",
     });
     if (!res.ok) return res;
-    return { ok: true, message: normalizeMessage(res.data || {}) };
+    return { ok: true, message: normalizeMessage(res.data || {}, { includeBody }) };
   }
 
   if (method === "threads.get") {
     const id = trim(req.threadId, 120);
     if (!id) return { ok: false, error: "thread_id_required" };
+    const includeBody = Boolean(req.includeBody);
     const res = await gmailFetch(accessToken, `/threads/${encodeURIComponent(id)}`, {
       format: "full",
     });
     if (!res.ok) return res;
     const rawMessages = Array.isArray(res.data?.messages) ? res.data?.messages : [];
-    const messages = rawMessages.map((m) => normalizeMessage(m as Record<string, unknown>));
+    const messages = rawMessages.map((m) =>
+      normalizeMessage(m as Record<string, unknown>, { includeBody })
+    );
     return { ok: true, thread: { id, messages } };
   }
 
