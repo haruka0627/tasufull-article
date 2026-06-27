@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新規掲載 | Business Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="business-directory.css">
+</head>
+<body class="dash-body" data-page="business-directory-new" data-bd-page="new">
+  <div class="dash-app">
+    <div class="dash-main">
+      <main class="dash-content dash-shell bd-layout" data-bd-root>
+        <div class="bd-page-head">
+          <div>
+            <h1 class="bd-page-head__title">新規掲載</h1>
+            <p class="bd-page-head__sub">初回は最小項目のみ（約1〜2分）</p>
+          </div>
+          <a class="dash-btn dash-btn--ghost" href="index.html">← ダッシュボード</a>
+        </div>
+        <p class="bd-toast" data-bd-toast hidden role="status"></p>
+        <form class="bd-form" data-bd-new-form novalidate>
+          <h2 class="bd-form__section-title">掲載種別</h2>
+          <div class="bd-type-picker">
+            <label><input type="radio" name="listing_type" value="shop_retail" checked><span>店舗・販売</span></label>
+            <label><input type="radio" name="listing_type" value="business_service"><span>業務サービス</span></label>
+          </div>
+
+          <h2 class="bd-form__section-title">基本情報</h2>
+          <label class="bd-field">
+            <span class="bd-field__label">掲載名 *</span>
+            <input name="display_name" required maxlength="120" placeholder="例: 田中商店 / 山田工務店">
+          </label>
+          <label class="bd-field">
+            <span class="bd-field__label">担当者名 *</span>
+            <input name="contact_name" required>
+          </label>
+          <label class="bd-field">
+            <span class="bd-field__label">メール *</span>
+            <input name="contact_email" type="email" required>
+          </label>
+          <label class="bd-field">
+            <span class="bd-field__label">電話 *</span>
+            <input name="contact_phone" type="tel" required>
+          </label>
+
+          <h2 class="bd-form__section-title">所在地 · 対応地域</h2>
+          <div class="bd-field">
+            <span class="bd-field__label">所在地 *</span>
+            <div style="display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr));">
+              <input name="prefecture" placeholder="都道府県" required>
+              <input name="city" placeholder="市区町村" required>
+            </div>
+            <input name="address_line1" placeholder="番地以降" required style="margin-top:8px;">
+            <input name="postal_code" placeholder="郵便番号（任意）" style="margin-top:8px;">
+          </div>
+          <label class="bd-field">
+            <span class="bd-field__label">対応地域 *（カンマ区切り）</span>
+            <input name="service_areas" placeholder="例: 東京都, 神奈川県" required>
+          </label>
+          <label class="bd-field">
+            <span class="bd-field__label">カテゴリ *</span>
+            <select name="category_id" required></select>
+          </label>
+
+          <h2 class="bd-form__section-title">Web · 紹介</h2>
+          <label class="bd-field">
+            <span class="bd-field__label">公式サイト URL（任意）</span>
+            <input name="website_url" type="url" placeholder="https://">
+          </label>
+          <fieldset class="bd-field bd-hp-mode">
+            <span class="bd-field__label">hp_mode *</span>
+            <label><input type="radio" name="hp_mode" value="external_redirect"> 公式サイトへ送客</label>
+            <label><input type="radio" name="hp_mode" value="full_page" checked> TASFULページを簡易HPとして使う</label>
+          </fieldset>
+          <label class="bd-field">
+            <span class="bd-field__label">短文紹介 *</span>
+            <textarea name="short_description" rows="3" maxlength="400" required placeholder="140字程度の紹介文"></textarea>
+          </label>
+          <label class="bd-field">
+            <span class="bd-field__label">写真 1 枚 *</span>
+            <input name="photo" type="file" accept="image/*" required>
+            <span class="bd-field-hint">Free プランは1枚のみ</span>
+          </label>
+
+          <div data-bd-type-field="shop_retail">
+            <h2 class="bd-form__section-title">店舗・販売</h2>
+            <label class="bd-field">
+              <span class="bd-field__label">営業時間</span>
+              <input name="business_hours_text" placeholder="例: 10:00-19:00 定休日:水曜">
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">主な販売ジャンル</span>
+              <input name="shop_sales_genre" placeholder="例: 地元野菜・加工食品">
+            </label>
+          </div>
+
+          <div data-bd-type-field="business_service" hidden>
+            <h2 class="bd-form__section-title">業務サービス</h2>
+            <label class="bd-field">
+              <span class="bd-field__label">主なサービス内容</span>
+              <input name="service_summary" placeholder="例: 外壁塗装・屋根工事">
+            </label>
+            <label class="bd-field">
+              <span class="bd-field__label">料金目安</span>
+              <input name="price_range_text" placeholder="例: 10万円〜">
+            </label>
+          </div>
+
+          <h2 class="bd-form__section-title">プラン</h2>
+          <p class="bd-field-hint">新規作成時は Free プランです。Standard / Pro へのアップグレードは掲載作成後、編集画面のプランタブから Stripe 決済で行えます。</p>
+          <input type="hidden" name="plan_code" value="free">
+          <div data-bd-plan-panel></div>
+
+          <label class="bd-field">
+            <label><input type="checkbox" name="terms_accepted" required> 利用規約に同意する *</label>
+          </label>
+
+          <div class="bd-form__actions">
+            <button type="submit" class="dash-btn dash-btn--primary" data-bd-action="create_draft_listing">下書き保存</button>
+            <a class="dash-btn dash-btn--ghost" href="index.html">キャンセル</a>
+          </div>
+        </form>
+      </main>
+    </div>
+  </div>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../member-auth.js"></script>
+  <script src="../business-directory-repository.js"></script>
+  <script src="business-directory-categories.js"></script>
+  <script src="business-directory-plan.js"></script>
+  <script src="business-directory-local-store.js"></script>
+  <script src="business-directory-common.js"></script>
+  <script src="business-directory-owner.js"></script>
+  <link rel="stylesheet" href="../tasful-site-assistant.css">
+  <script src="../tasful-site-assistant-adapter.js" defer></script>
+  <script src="../tasful-site-assistant.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+# Business Directory — Self-Service 投稿/編集設計
+
+**最終更新:** 2026-06-27  
+**前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
+**関連:** [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [business-directory-mvp-design.md](./business-directory-mvp-design.md)  
+**状態:** **設計のみ** — コード · DB migration · UI · 決済実装は **未着手**
+
+---
+
+## 目的
+
+事業者が **自分で掲載ページを作成・編集** する Self-Service 型運用。運営の入力代行を避け、運営コストを下げる。
+
+---
+
+## 基本方針
+
+掲載ページは **事業者自身** が作成・編集する。
+
+```text
+会員登録
+  ↓
+サブスク選択（MVP: 希望プラン申込のみ · 課金は別 Epic）
+  ↓
+最小フォーム入力（1〜2 分）
+  ↓
+公開申請
+  ↓
+運営審査
+  ↓
+公開
+  ↓
+公開後に詳細編集（事業者マイページ）
+```
+
+### 入力負担の原則
+
+| フェーズ | 方針 |
+| --- | --- |
+| **初回登録** | **1〜2 分** で完了 · 必須最小 · 写真 1 枚 |
+| **公開後** | 事業者が必要に応じて詳細を **段階的に充実** |
+| **運営** | **入力代行しない** — 審査 · 停止 · 通報対応に集中 |
+
+---
+
+## 初回公開申請フォーム（最小）
+
+**1 画面 · 1 ステップ。** 種別選択で追加フィールド 2 項目のみ表示。
+
+### 共通（必須 unless noted）
+
+| 項目 | 備考 |
+| --- | --- |
+| 掲載種別 | `shop_retail` / `business_service` |
+| 会社名 / 店舗名 | ラベル切替 |
+| 担当者名 | — |
+| メール | 審査通知 |
+| 電話 | — |
+| 所在地 | 都道府県 + 市区町村 + 番地 |
+| 対応地域 | 1 つ以上 |
+| カテゴリ | 1 つ |
+| 公式サイト URL | **任意** |
+| 紹介文 | **短文**（80〜150 字目安） |
+| 写真 | **1 枚**（ロゴ or 代表画像） |
+| 希望プラン | Free / Standard / Pro |
+| 利用規約同意 | 必須 |
+
+**初回に含めない:** SNS · 複数写真 · TLV · 商品詳細 · 実績 · スタッフ · 資格（→ 公開後編集）
+
+### 店舗・販売 追加（+2）
+
+| 項目 | 備考 |
+| --- | --- |
+| 営業時間 | テキスト · 簡易テンプレ可 |
+| 主な販売ジャンル | 短文 |
+
+### 業務サービス 追加（+2）
+
+| 項目 | 備考 |
+| --- | --- |
+| 主なサービス内容 | 短文 |
+| 料金目安 | レンジ表記 |
+
+### 送信後
+
+`draft` → 公開申請 → `review_requested` → 運営審査 → `published` | 差戻し → `draft`
+
+（data model 正本: [business-directory-data-model-design.md](./business-directory-data-model-design.md) §4）
+
+---
+
+## 公開後編集（事業者マイページ）
+
+公開後、事業者は **マイページ** から詳細を追加・更新する。変更のうち **公開情報に影響する項目** は再審査対象とする（設計案 · MVP は主要項目のみ）。
+
+### 編集カテゴリ
+
+| カテゴリ | 内容 | プラン |
+| --- | --- | --- |
+| **基本情報** | 名称 · 住所 · 電話 · 紹介文 · カテゴリ | 全プラン |
+| **写真** | 追加 · 並替 · 削除 | Standard+（Free は 1 枚維持） |
+| **動画 / TLV** | TLV 動画 embed | Pro+ |
+| **SNS** | URL 複数 | Standard+ |
+| **営業時間** | 曜日 · 定休日 | Standard+ |
+| **商品紹介** | 店舗: テキスト + 画像（Checkout なし） | Standard+ |
+| **サービス詳細** | 業務: サービス説明拡張 | Standard+ |
+| **施工実績** | 業務: 事例 · 写真 | Standard+ |
+| **スタッフ紹介** | 業務: 任意 | Standard+ |
+| **資格・許認可** | 業務: 任意 · 運営確認 | Standard+ |
+| **問い合わせ導線** | 外部 URL / フォーム / TALK | Pro+ |
+| **公開設定** | 一時非公開申請 · プラン確認 | 全プラン |
+
+### 事業者 UI（タブ型 · 設計のみ · MVP 未実装）
+
+詳細: [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md) §5
+
+```text
+基本情報 | 写真 | 動画 | SNS | 営業時間 | 商品/サービス | 実績 | プレビュー | 公開設定
+```
+
+- **プレビュー:** 公開前に掲載ページを確認
+- **保存:** 下書き保存可 · 公開中の変更は `pending_review` 再審査（設計案）
+
+---
+
+## 運営の役割
+
+**運営は入力代行しない。**
+
+| 運営が行うこと | 備考 |
+| --- | --- |
+| **審査** | 初回公開 · 差戻し · 再審査（主要変更） |
+| **公開 / 非公開** | `published` ↔ `suspended` |
+| **通報対応** | `business_directory_reports` |
+| **規約違反確認** | 写真 · 文言 · 虚偽表示 |
+| **プラン確認** | 手動（MVP）· 将来 Stripe 連動 |
+| **凍結 / 停止** | `suspended` · `archived` |
+
+| 運営が行わないこと | 備考 |
+| --- | --- |
+| 掲載文案の代筆 | ❌ |
+| 写真のアップロード代行 | ❌ |
+| 事業者の代わりのフォーム入力 | ❌ |
+
+**例外:** 規約違反時の **強制編集・削除** のみ（監査ログ必須 · 将来）。
+
+---
+
+## 公式サイトあり / なし
+
+### 公式サイトあり
+
+```text
+TASFUL 掲載ページ（最小情報）
+  ↓
+公式サイト URL へ送客（CTA 主導線）
+```
+
+- 初回フォームは **URL のみ** でも公開申請可
+- TASFUL 内ページは **カード + 送客** モードを選べる
+
+### 公式サイトなし
+
+```text
+TASFUL 掲載ページ
+  ↓
+簡易ホームページとして利用
+```
+
+- 公開後編集で **段階的にページ充実**
+- 問い合わせ · 写真 · 実績を Self-Service で追加
+
+---
+
+## プラン連動（編集可能項目）
+
+| プラン | 初回申請 | 公開後編集 |
+| --- | --- | --- |
+| **Free** | 共通最小 + 種別 +2 | 基本情報のみ · 写真 1 枚 |
+| **Standard** | 同上 | + 写真複数 · SNS · 営業時間 · 口コミ · 商品/サービス詳細 |
+| **Pro** | 同上 | + TLV · 問い合わせ導線 · アクセス解析 · AI 紹介対象 |
+| **Premium** | 同上 | + 複数店舗 · 予約 · 見積 · チャット · Connect · 成果報酬 |
+
+**MVP:** プランは申込・手動反映。Stripe サブスクは **別 Epic**。
+
+---
+
+## Marketplace / Platform との境界
+
+Self-Service フォーム・マイページに以下を **含めない**:
+
+| 禁止 | 理由 |
+| --- | --- |
+| 商品出品 · 在庫 · Checkout | **Marketplace** 領域 · 成約手数料 |
+| 求人 · 案件 · 応募 · Connect deal | **Platform** 領域 · 成約手数料 |
+
+商品購入・案件応募への導線は **別製品の入口リンク** のみ（混在フォーム禁止）。
+
+**Marketplace / Platform の成約手数料方針は AD-013 どおり維持。**
+
+---
+
+## MVP スコープ外
+
+- コード · DB migration · UI 実装 · Stripe · 決済
+- Builder AI · TASFUL AI · AI 秘書 — 変更なし
+
+---
+
+## 参照
+
+- [business-directory-mvp-design.md](./business-directory-mvp-design.md)
+- [business-directory-data-model-design.md](./business-directory-data-model-design.md)
+- [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md)
+- [reports/business-directory-self-service-design.md](../reports/business-directory-self-service-design.md)
