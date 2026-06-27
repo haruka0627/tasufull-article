@@ -144,6 +144,7 @@
 | **Google Workspace Phase 6-F** | ✅ 実装 | Calendar write + Human Gate · `reports/secretary-google-phase6f-calendar-write-human-gate.md` |
 | **Google Workspace Phase 6-G** | ✅ 実装 | Contacts read-only · `reports/secretary-google-phase6g-contacts-readonly.md` |
 | **Google Workspace Phase 6-H** | ✅ 実装 | Drive read-only · `reports/secretary-google-phase6h-drive-readonly.md` |
+| **Google Workspace Phase 7-A** | ✅ 実装 | Workspace Orchestrator · `reports/secretary-google-phase7a-workspace-orchestrator.md` |
 | **Operations Orchestrator Phase 7-A** | 📋 未着手 | Cursor SDK · cron · L1 自動送信 · Agent 自動実行 |
 | **Trend Scout**（トレンド収集 · 経営参謀提案） | 📋 Backlog | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) · v1.2 以降想定 · **UI Critical 優先度外** |
 

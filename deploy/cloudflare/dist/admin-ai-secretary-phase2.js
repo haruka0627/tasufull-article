@@ -483,6 +483,7 @@
     global.TasuSecretaryGoogleCalendarUI?.mount?.();
     global.TasuSecretaryGoogleContactsUI?.mount?.();
     global.TasuSecretaryGoogleDriveUI?.mount?.();
+    global.TasuSecretaryGoogleOrchestratorUI?.mount?.();
   }
 
   function clearHistoryForTests() {
