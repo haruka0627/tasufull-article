@@ -16,7 +16,7 @@
 | **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
 | **TALK / Connect / 安否** | Production Ready | レガシー `docs/talk-*` 等 |
 | **TASFUL Materials（素材DL）** | 📋 設計のみ | [free-download-service-backlog.md](./free-download-service-backlog.md) · [reports/free-download-service-plan.md](../reports/free-download-service-plan.md) |
-| **Business Directory** | 📋 方針確定 | [business-directory-subscription-model.md](./business-directory-subscription-model.md) · AD-013 · 実装未着手 |
+| **Business Directory** | 📋 MVP 設計完了 | [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [business-directory-mvp-design.md](./business-directory-mvp-design.md) · AD-013 · 実装未着手 |
 
 ---
 
@@ -58,7 +58,8 @@
 | `reports/platform-finish-phase.md` | Platform バッジ・お気に入り・AI 入口 |
 | `reports/tasful-ai-final-phase.md` | TASFUL AI Final（履歴・メディア・資料） |
 | `reports/tasful-ai-production-preflight.md` | 本番接続 preflight（Production Ready: NO） |
-| `reports/free-download-service-plan.md` | TASFUL Materials（無料DL＋広告）設計書 |
+| `reports/business-directory-subscription-model.md` | Business Directory サブスク方針 |
+| `reports/business-directory-mvp-design.md` | Business Directory MVP 設計 |
 
 ---
 

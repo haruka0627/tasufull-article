@@ -109,7 +109,7 @@
 
 - 店舗・販売 / 業務サービス → **月額サブスク掲載**（専用ページ · URL 登録送客 · 簡易 HP）
 - Marketplace / Platform 案件 → **成約手数料**（既存方針維持）
-- 実装 · 決済 · DB — **未着手**（docs 方針のみ）
+- **MVP 設計:** [business-directory-mvp-design.md](./business-directory-mvp-design.md) · 実装 · 決済 · DB — **未着手**
 
 ### AI プロバイダ分担
 
