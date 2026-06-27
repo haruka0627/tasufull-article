@@ -216,22 +216,14 @@ npm run build:pages
 
 ## 8. commit 準備
 
-```bash
-# NB-1M Frontend のみ staging（本レポート §4.1）
-git add platform-*.js admin-ai-daily-inbox.js admin-operations-dashboard.* \
-  post.html listings-db.js business-listings-db.js business-service-reviews-db.js \
-  chat-service.js support-ticket-service.js support-trouble-center.* support-intake.html \
-  chat-detail.html shop-market-listing-new.html dashboard.html \
-  scripts/lib/platform-*.mjs scripts/smoke-platform-nb1m-*.mjs \
-  scripts/smoke-platform-ops-flow-2-browser.mjs scripts/test-platform-*.mjs \
-  reports/platform-nb1m-frontend-prod-deploy-ready.md
+**状態:** **38 ファイル `git add` 済み**（commit / push は人間承認後）
 
+```bash
+git status
 git commit -m "feat(platform): NB-1M Content Gate and OPS-FLOW-2 for production FE"
 git push origin main
 # Cloudflare Pages Production 昇格 → prod URL pre-smoke
 ```
-
-**注意:** commit / push は人間承認後。本チェックでは **staging 準備まで**（`git add` 実行可 · commit は未実施）。
 
 ---
 
