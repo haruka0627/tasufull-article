@@ -20,9 +20,9 @@
 **サブタスク**
 
 - [ ] カテゴリごとに「コミット / 破棄 / 保持」の判定表を作る
-- [ ] `ai-model-gateway.js`（+73 行）— Gateway レビュー後に別コミットか revert
+- [x] `ai-model-gateway.js`（+73 行）— `35d72b2` + dist `0f6328d` コミット済（2026-06-28 確認）
 - [ ] `package.json`（wrangler compatibility-date）— 単独コミットか revert
-- [ ] `supabase/functions/_shared/ai-attachments.ts` — Gateway セットで判断
+- [x] `supabase/functions/_shared/ai-attachments.ts` — `35d72b2` コミット済 · live Vision PASS
 - [ ] 本 `docs/` 正本セットのコミット（別 PR）
 
 ---
@@ -47,7 +47,7 @@
 | **Workspace 課金 enforcement Phase 2** | **未実装** | Edge + DB quota · `reports/tasful-ai-workspace-enforcement-design.md` |
 
 - [x] Workspace 課金 enforcement **Phase 1**（クライアント · `2a43fe5` · Production deploy）
-- [ ] Supabase Edge デプロイ（chat functions · `ai-attachments.ts` 含む）→ Vision 再プローブ
+- [x] Supabase Edge デプロイ（chat functions · `ai-attachments.ts` 含む）→ Vision 再プローブ（2026-06-25 deploy · 2026-06-28 live 6/6 PASS）
 - [ ] Gemini billing / Serper credits 解消（**Serper = 運用チャージ**）
 - [ ] Cloudflare Access **Service Token** 設定
 - [ ] Cloudflare Access 下での本番 URL E2E（MIME / 認証後到達）
