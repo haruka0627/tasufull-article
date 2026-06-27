@@ -1,0 +1,120 @@
+{
+  "ok": true,
+  "errors": [],
+  "results": [
+    {
+      "width": 1280,
+      "outPath": "c:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-icons-1280.png",
+      "errors": [],
+      "checks": {
+        "sidebar": {
+          "src": "assets/builder-ai-brand-icon.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 46,
+          "ch": 46,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "header": {
+          "src": "assets/builder-ai-brand-icon.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 42,
+          "ch": 42,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "chat": {
+          "src": "assets/builder-ai-chat-avatar.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 42,
+          "ch": 42,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "scroll": false
+      }
+    },
+    {
+      "width": 768,
+      "outPath": "c:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-icons-768.png",
+      "errors": [],
+      "checks": {
+        "sidebar": {
+          "src": "assets/builder-ai-brand-icon.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 46,
+          "ch": 46,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "header": {
+          "src": "assets/builder-ai-brand-icon.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 42,
+          "ch": 42,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "chat": {
+          "src": "assets/builder-ai-chat-avatar.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 42,
+          "ch": 42,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "scroll": false
+      }
+    },
+    {
+      "width": 390,
+      "outPath": "c:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-icons-390.png",
+      "errors": [],
+      "checks": {
+        "sidebar": {
+          "src": "assets/builder-ai-brand-icon.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 46,
+          "ch": 46,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "header": {
+          "src": "assets/builder-ai-brand-icon.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 42,
+          "ch": 42,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "chat": {
+          "src": "assets/builder-ai-chat-avatar.png",
+          "w": 1024,
+          "h": 1024,
+          "cw": 42,
+          "ch": 42,
+          "fit": "contain",
+          "br": "0px",
+          "bg": "rgba(0, 0, 0, 0)"
+        },
+        "scroll": false
+      }
+    }
+  ]
+}
