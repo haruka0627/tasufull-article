@@ -158,6 +158,23 @@
               <button type="button" class="ops-p3-action ops-secretary-google-connect__btn" data-ops-secretary-google-connect-btn>接続する</button>
               <button type="button" class="ops-p3-action" data-ops-secretary-google-disconnect-btn hidden>切断する</button>
             </div>
+            <section class="ops-secretary-gws-assistant ops-light-card" data-ops-google-workspace-assistant aria-labelledby="ops-google-workspace-assistant-heading">
+              <header class="ops-secretary-gmail__head">
+                <h4 class="ops-secretary-gmail__title" id="ops-google-workspace-assistant-heading">Workspace Assistant</h4>
+                <span class="ops-secretary-gmail__status" data-ops-google-workspace-assistant-status aria-live="polite">待機中</span>
+              </header>
+              <form class="ops-secretary-gmail__search" data-ops-google-workspace-assistant-form>
+                <label class="visually-hidden" for="ops-google-workspace-assistant-input">Workspace 指示</label>
+                <input type="text" class="ops-secretary-gmail__search-input" id="ops-google-workspace-assistant-input" data-ops-google-workspace-assistant-input placeholder="例: 田中さんに返信して / 明日15時に打ち合わせ / 見積書を探して" autocomplete="off" />
+                <button type="submit" class="ops-p3-action">実行計画</button>
+              </form>
+              <div data-ops-google-workspace-assistant-plan aria-live="polite"></div>
+              <div class="ops-secretary-gws-assistant__actions">
+                <button type="button" class="ops-p3-action" data-ops-google-workspace-assistant-approve hidden>Human Gate 承認</button>
+                <button type="button" class="ops-p3-action" data-ops-google-workspace-assistant-cancel hidden>キャンセル</button>
+              </div>
+              <div data-ops-google-workspace-assistant-log aria-live="polite"></div>
+            </section>
             <div class="ops-secretary-google-workspace" data-ops-secretary-google-workspace>
               <div class="ops-secretary-google-workspace__tabs" role="tablist" aria-label="Google Workspace">
                 <button type="button" class="ops-secretary-google-workspace__tab ops-secretary-google-workspace__tab--active" role="tab" data-ops-google-tab="mail" aria-selected="true">Mail</button>
@@ -816,6 +833,8 @@
   <script src="admin-ai-secretary-google-contacts-ui.js"></script>
   <script src="admin-ai-secretary-google-drive-client.js"></script>
   <script src="admin-ai-secretary-google-drive-ui.js"></script>
+  <script src="admin-ai-secretary-google-orchestrator.js"></script>
+  <script src="admin-ai-secretary-google-orchestrator-ui.js"></script>
   <script src="admin-ai-secretary-google-connect-ui.js"></script>
   <script src="admin-ai-secretary-ops-data-provider.js"></script>
   <script src="admin-ai-secretary-insight-engine.js"></script>
