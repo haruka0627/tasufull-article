@@ -16,7 +16,7 @@
 | **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
 | **TALK / Connect / 安否** | Production Ready | レガシー `docs/talk-*` 等 |
 | **TASFUL Materials（素材DL）** | 📋 設計のみ | [free-download-service-backlog.md](./free-download-service-backlog.md) · [reports/free-download-service-plan.md](../reports/free-download-service-plan.md) |
-| **Business Directory** | 🔄 Phase 7 Preflight | Phase 1–6 · deploy No-Go（dist 未同期）· [phase7 report](../reports/business-directory-phase7-deploy-preflight.md) |
+| **Business Directory** | 🔄 Phase 7 Preflight Go | Pages build/dist OK · migration/Edge/Stripe 手動残 · [phase7 report](../reports/business-directory-phase7-deploy-preflight.md) |
 
 ---
 

@@ -3,7 +3,8 @@
 **日付:** 2026-06-27  
 **種別:** 検証 · build · dist 同期 · デプロイ前チェックリスト（**新機能なし**）  
 **ブランチ:** `cf-pages-deploy`  
-**BD コミット:** Phase 1 `3648e03` → Phase 6 `632e981`
+**BD コミット:** Phase 1 `3648e03` → Phase 7 preflight `e3d1fd2`  
+**再Preflight:** 2026-06-27（wrangler/dev 停止後）
 
 ---
 
@@ -15,11 +16,13 @@
 | **Migration 事前確認** | ✅ 3 migration 存在 · idempotent · Marketplace `listings` 非変更 |
 | **Edge 事前確認** | ✅ `business-directory` + `stripe-webhook` 分岐 · config.toml OK |
 | **Stripe 設定** | ⚠️ **手動** — Price ID · Webhook イベント · Supabase secrets |
-| **`npm run build:pages`** | ❌ **BLOCKED** — `deploy/cloudflare/dist` EPERM（フォルダロック） |
-| **dist 同期** | ❌ **未同期** — `dist/business-directory/` 不在 · `index-top.html` BD 導線なし（stale） |
-| **Preview / Production 載せ** | **No-Go** — build 成功 + dist 同期後に再検証 |
+| **`npm run build:pages`** | ✅ **PASS**（wrangler `pages dev` 28 プロセス停止後） |
+| **dist 同期** | ✅ `dist/business-directory/**` · `business-directory-repository.js` · `dist/index.html` BD 導線 |
+| **Phase 7 preflight** | ✅ **74 passed · 0 failed · 3 notes** |
+| **Cloudflare Pages preview** | **Go** — dist ビルド済 · deploy 可能 |
+| **Production フル Go** | **Conditional** — migration apply + Edge deploy + Stripe secrets 後 |
 
-**Go 条件:** `npm run build:pages` 成功 · `dist/business-directory/**` 存在 · 本レポート再実行 **0 failed**
+**Go 条件（Pages）:** ✅ 達成 — `npm run build:pages` 成功 · preflight **0 failed**
 
 ---
 
@@ -31,20 +34,23 @@
 npm run build:pages
 ```
 
-### 結果（2026-06-27）
+### 結果（2026-06-27 初回）
 
 ```
 Error: EPERM, Permission denied: deploy/cloudflare/dist
 ```
 
-**原因:** Windows 上で `deploy/cloudflare/dist` がプロセスにロックされている（IDE · wrangler · dev server 等）。
+**原因:** 複数の `wrangler pages dev` / `scripts/dev-pages.mjs` プロセス（28 件）が `deploy/cloudflare/dist` を CWD としてロック。
 
-**対処:**
+### 結果（2026-06-27 再Preflight）
 
-1. `wrangler pages dev` / ローカル preview / dist を開いているタブを停止
-2. Cursor / Explorer で `deploy/cloudflare/dist` を参照している場合は閉じる
-3. 再実行: `npm run build:pages`
-4. 成功後: `node scripts/test-business-directory-phase7-deploy-preflight.mjs`
+```
+[stage-cloudflare-pages] OK → deploy/cloudflare/dist
+```
+
+**対処（実施済）:** wrangler / dev-pages 関連 node プロセスを停止 → `npm run build:pages` 成功。
+
+**再Preflight:** `node scripts/test-business-directory-phase7-deploy-preflight.mjs` → **74 passed · 0 failed · 3 notes**
 
 ### build 成功時に dist へ同期される BD 資産
 

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Directory | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="business-directory.css">
+</head>
+<body class="dash-body" data-page="business-directory-dashboard" data-bd-page="dashboard">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="../index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="../images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ"></nav>
+    </aside>
+    <div class="dash-main">
+      <header class="dash-header dash-header--account">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <a href="../dashboard.html" class="tasful-ai-logo dash-header__logo" aria-label="TASFUL">
+              <img src="../images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+              <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+            </a>
+          </div>
+          <div class="dash-header__actions">
+            <a href="../profile-settings.html" class="dash-profile" aria-label="プロフィール">
+              <img class="dash-profile__avatar" data-dash-avatar src="https://placehold.co/64x64/f3ead4/967622?text=ME" width="40" height="40" alt="">
+              <span class="dash-profile__text">
+                <span class="dash-profile__name" data-dash-user-name>会員</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </header>
+      <main class="dash-content dash-shell bd-layout" data-bd-root>
+        <div class="bd-page-head">
+          <div>
+            <h1 class="bd-page-head__title">Business Directory</h1>
+            <p class="bd-page-head__sub">店舗・販売 / 業務サービスの掲載を Self-Service で管理</p>
+          </div>
+          <a class="dash-btn dash-btn--primary" href="new.html" data-bd-create-btn>新規掲載を作成</a>
+        </div>
+        <p class="bd-toast" data-bd-toast hidden role="status"></p>
+        <section class="bd-list" data-bd-listings aria-live="polite"></section>
+        <div class="bd-empty" data-bd-empty hidden>
+          <p class="bd-empty__title">掲載がありません</p>
+          <p class="bd-empty__text">初回掲載は最小フォーム約1〜2分で作成できます。</p>
+          <a class="dash-btn dash-btn--primary" href="new.html">掲載を作成</a>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="../dashboard-guard.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../member-profile.js"></script>
+  <script src="../member-auth.js"></script>
+  <script src="../dashboard.js"></script>
+  <script src="../business-directory-repository.js"></script>
+  <script src="business-directory-categories.js"></script>
+  <script src="business-directory-plan.js"></script>
+  <script src="business-directory-local-store.js"></script>
+  <script src="business-directory-common.js"></script>
+  <script src="business-directory-owner.js"></script>
+  <link rel="stylesheet" href="../tasful-site-assistant.css">
+  <script src="../tasful-site-assistant-adapter.js" defer></script>
+  <script src="../tasful-site-assistant.js" defer></script>
+</body>
+</html>

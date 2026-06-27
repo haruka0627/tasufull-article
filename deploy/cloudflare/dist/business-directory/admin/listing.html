@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>掲載詳細（運営） | Business Directory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../business-directory.css">
+  <link rel="stylesheet" href="../business-directory-admin.css">
+</head>
+<body data-page="business-directory-admin-listing" data-bd-admin-page="listing">
+  <main class="bd-admin-layout" data-bd-admin-root>
+    <header class="bd-admin-head">
+      <div>
+        <a class="bd-admin-btn bd-admin-btn--ghost" href="reviews.html">← 審査キュー</a>
+        <h1 class="bd-admin-head__title" data-bd-admin-listing-title>掲載詳細</h1>
+        <p class="bd-admin-head__sub"><span data-bd-admin-listing-status></span></p>
+      </div>
+    </header>
+    <p class="bd-toast" data-bd-admin-toast hidden role="status"></p>
+
+    <section class="bd-admin-section" data-bd-admin-detail-readonly aria-label="掲載情報（読取専用）"></section>
+
+    <section class="bd-admin-section">
+      <h2 class="bd-admin-section__title">公開プレビュー</h2>
+      <div data-bd-admin-preview></div>
+    </section>
+
+    <section class="bd-admin-section">
+      <h2 class="bd-admin-section__title">申請履歴</h2>
+      <div data-bd-admin-review-history></div>
+    </section>
+
+    <section class="bd-admin-section">
+      <h2 class="bd-admin-section__title">監査ログ</h2>
+      <div data-bd-admin-audit-logs></div>
+    </section>
+
+    <section class="bd-admin-actions" aria-label="審査操作">
+      <h2 class="bd-admin-section__title">審査アクション</h2>
+
+      <div class="bd-admin-actions__group" data-bd-admin-actions="review_requested">
+        <p class="bd-admin-notice">review_requested — 承認または差戻し</p>
+        <div class="bd-admin-reason">
+          <label for="bd-reason-approve">承認メモ（任意）</label>
+          <textarea id="bd-reason-approve" data-bd-admin-reason-approve data-bd-admin-reason-only placeholder="任意"></textarea>
+        </div>
+        <div class="bd-admin-btn-row">
+          <button type="button" class="bd-admin-btn bd-admin-btn--approve" data-bd-admin-approve data-bd-admin-action="approve_listing">承認</button>
+        </div>
+        <div class="bd-admin-reason">
+          <label for="bd-reason-reject">差戻し理由（必須）</label>
+          <textarea id="bd-reason-reject" data-bd-admin-reason-reject data-bd-admin-reason-only required placeholder="差戻し理由を入力"></textarea>
+        </div>
+        <div class="bd-admin-btn-row">
+          <button type="button" class="bd-admin-btn bd-admin-btn--reject" data-bd-admin-reject data-bd-admin-action="reject_listing">差戻し</button>
+        </div>
+      </div>
+
+      <div class="bd-admin-actions__group" data-bd-admin-actions="published" hidden>
+        <p class="bd-admin-notice">published — 停止または非公開</p>
+        <div class="bd-admin-reason">
+          <label for="bd-reason-suspend">停止理由（必須）</label>
+          <textarea id="bd-reason-suspend" data-bd-admin-reason-suspend data-bd-admin-reason-only required></textarea>
+        </div>
+        <div class="bd-admin-btn-row">
+          <button type="button" class="bd-admin-btn bd-admin-btn--warn" data-bd-admin-suspend data-bd-admin-action="suspend_listing">停止</button>
+        </div>
+        <div class="bd-admin-reason">
+          <label for="bd-reason-unpublish">非公開メモ（任意）</label>
+          <textarea id="bd-reason-unpublish" data-bd-admin-reason-unpublish data-bd-admin-reason-only></textarea>
+        </div>
+        <div class="bd-admin-btn-row">
+          <button type="button" class="bd-admin-btn bd-admin-btn--ghost" data-bd-admin-unpublish data-bd-admin-action="unpublish_listing">非公開</button>
+        </div>
+      </div>
+
+      <div class="bd-admin-actions__group" data-bd-admin-actions="restore" hidden>
+        <p class="bd-admin-notice">suspended / unpublished — 再公開</p>
+        <div class="bd-admin-reason">
+          <label for="bd-reason-restore">再公開メモ（任意 · audit 記録）</label>
+          <textarea id="bd-reason-restore" data-bd-admin-reason-restore data-bd-admin-reason-only></textarea>
+        </div>
+        <div class="bd-admin-btn-row">
+          <button type="button" class="bd-admin-btn bd-admin-btn--approve" data-bd-admin-restore data-bd-admin-action="restore_listing">再公開</button>
+        </div>
+      </div>
+
+      <div class="bd-admin-actions__group" data-bd-admin-actions="archived" hidden>
+        <p class="bd-admin-notice bd-admin-notice--readonly">archived — 操作不可</p>
+      </div>
+    </section>
+  </main>
+  <script src="../../chat-supabase-config.js"></script>
+  <script src="../../member-auth.js"></script>
+  <script src="../../business-directory-repository.js"></script>
+  <script src="../business-directory-categories.js"></script>
+  <script src="../business-directory-common.js"></script>
+  <script src="business-directory-admin.js"></script>
+  <link rel="stylesheet" href="../../tasful-site-assistant.css">
+  <script src="../../tasful-site-assistant-adapter.js" defer></script>
+  <script src="../../tasful-site-assistant.js" defer></script>
+</body>
+</html>

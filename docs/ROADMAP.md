@@ -80,7 +80,7 @@
 
 **Phase 6 Stripe:** migration · checkout · webhook · plan guard · `scripts/test-business-directory-phase6-stripe.mjs` · `reports/business-directory-phase6-stripe.md`
 
-**Phase 7 Preflight:** `scripts/test-business-directory-phase7-deploy-preflight.mjs` · `reports/business-directory-phase7-deploy-preflight.md` — **No-Go until build:pages + dist sync**
+**Phase 7 Preflight:** `scripts/test-business-directory-phase7-deploy-preflight.mjs` · `reports/business-directory-phase7-deploy-preflight.md` — **Pages build Go** · migration/Edge/Stripe 手動残
 
 **報告:** `reports/business-directory-subscription-model.md`
 

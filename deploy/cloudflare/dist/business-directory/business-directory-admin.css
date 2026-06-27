@@ -1,0 +1,266 @@
+/* Business Directory — Admin / Ops UI */
+
+.bd-admin-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  min-width: 0;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+.bd-admin-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bd-admin-head__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.bd-admin-head__sub {
+  margin: 6px 0 0;
+  font-size: 0.9375rem;
+  color: #64748b;
+}
+
+.bd-admin-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.bd-admin-table-wrap {
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.bd-admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.bd-admin-table th,
+.bd-admin-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: top;
+}
+
+.bd-admin-table th {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #64748b;
+  background: #f8fafc;
+}
+
+.bd-admin-readonly {
+  display: grid;
+  gap: 16px;
+}
+
+.bd-admin-dl {
+  display: grid;
+  grid-template-columns: minmax(120px, 160px) minmax(0, 1fr);
+  gap: 8px 16px;
+  margin: 0;
+}
+
+.bd-admin-dl dt {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.bd-admin-dl dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.bd-admin-section {
+  padding: 18px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+}
+
+.bd-admin-section__title {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.bd-admin-actions {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.bd-admin-actions__group {
+  display: grid;
+  gap: 8px;
+}
+
+.bd-admin-actions__group[hidden] {
+  display: none !important;
+}
+
+.bd-admin-reason {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.bd-admin-reason label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.bd-admin-reason textarea {
+  min-height: 72px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font: inherit;
+  resize: vertical;
+}
+
+.bd-admin-reason textarea:required:invalid {
+  border-color: #f97316;
+}
+
+.bd-admin-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.bd-admin-btn {
+  min-height: 40px;
+  padding: 0 16px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.bd-admin-btn--approve {
+  background: #059669;
+  color: #fff;
+}
+
+.bd-admin-btn--reject {
+  background: #ea580c;
+  color: #fff;
+}
+
+.bd-admin-btn--warn {
+  background: #dc2626;
+  color: #fff;
+}
+
+.bd-admin-btn--ghost {
+  background: #fff;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.bd-admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bd-admin-log-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.bd-admin-log-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 0.8125rem;
+}
+
+.bd-admin-log-item strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.bd-admin-preview {
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px dashed #cbd5e1;
+  background: #fff;
+}
+
+.bd-admin-empty {
+  padding: 24px;
+  text-align: center;
+  color: #64748b;
+}
+
+.bd-admin-photo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.bd-admin-photo-row img {
+  width: 120px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.bd-admin-notice {
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.bd-admin-notice--readonly {
+  background: #f8fafc;
+  color: #475569;
+  border-color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .bd-admin-dl {
+    grid-template-columns: 1fr;
+  }
+}
