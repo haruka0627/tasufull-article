@@ -32,3 +32,7 @@ node scripts/test-ai-terms-disclaimer.mjs
 ```
 
 Gateway 変更時は isolation 全スイート再実行。未コミット gateway diff は `docs/KNOWN_ISSUES.md` KI-001 参照。
+
+## 検証環境
+
+**`_global.mdc` 参照（file:// 禁止 · 8788 のみ）。** 例: `http://127.0.0.1:8788/ai-workspace.html`

@@ -33,3 +33,7 @@ node scripts/test-platform-next-phase.mjs
 ```
 
 触らない: `builder-ai-core.js`, `admin-ai-secretary-*`, `ai-model-gateway.js`（意図なき変更）。
+
+## 検証環境
+
+**`_global.mdc` 参照（file:// 禁止 · 8788 のみ）。** 例: `http://127.0.0.1:8788/index-top.html`
