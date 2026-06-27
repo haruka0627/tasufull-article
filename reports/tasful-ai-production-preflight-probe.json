@@ -1,0 +1,242 @@
+{
+  "capturedAt": "2026-06-27T18:33:23.793Z",
+  "pagesBase": "https://bbe9eb2a.tasufull-article.pages.dev",
+  "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "results": [
+    {
+      "section": "url",
+      "name": "/ai-workspace.html HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/ai-workspace.html Content-Type",
+      "ok": true,
+      "detail": "text/html; charset=utf-8"
+    },
+    {
+      "section": "url",
+      "name": "/ai-workspace-chat.js HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/ai-workspace-chat.js Content-Type",
+      "ok": true,
+      "detail": "application/javascript"
+    },
+    {
+      "section": "url",
+      "name": "/ai-workspace-attachments.js HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/ai-workspace-attachments.js Content-Type",
+      "ok": true,
+      "detail": "application/javascript"
+    },
+    {
+      "section": "url",
+      "name": "/ai-model-gateway.js HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/ai-model-gateway.js Content-Type",
+      "ok": true,
+      "detail": "application/javascript"
+    },
+    {
+      "section": "url",
+      "name": "/ai-search-orchestrator.js HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/ai-search-orchestrator.js Content-Type",
+      "ok": true,
+      "detail": "application/javascript"
+    },
+    {
+      "section": "url",
+      "name": "/ai-workspace-voice.js HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/ai-workspace-voice.js Content-Type",
+      "ok": true,
+      "detail": "application/javascript"
+    },
+    {
+      "section": "url",
+      "name": "/ai-generate-ui.js HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/ai-generate-ui.js Content-Type",
+      "ok": true,
+      "detail": "application/javascript"
+    },
+    {
+      "section": "url",
+      "name": "/tasful-ai-voice.css HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/tasful-ai-voice.css Content-Type",
+      "ok": true,
+      "detail": "text/css; charset=utf-8"
+    },
+    {
+      "section": "url",
+      "name": "/gen-ai-workspace.html HTTP",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "mime",
+      "name": "/gen-ai-workspace.html Content-Type",
+      "ok": true,
+      "detail": "text/html; charset=utf-8"
+    },
+    {
+      "section": "staging",
+      "name": "dist/ai-workspace.html",
+      "ok": true,
+      "detail": "exists"
+    },
+    {
+      "section": "staging",
+      "name": "dist/ai-workspace-chat.js",
+      "ok": true,
+      "detail": "exists"
+    },
+    {
+      "section": "staging",
+      "name": "dist/ai-model-gateway.js",
+      "ok": true,
+      "detail": "exists"
+    },
+    {
+      "section": "staging",
+      "name": "dist/gen-ai-workspace.html",
+      "ok": true,
+      "detail": "exists"
+    },
+    {
+      "section": "config",
+      "name": "Supabase config loaded",
+      "ok": true,
+      "detail": "ddojquacsyqesrjhcvmn.supabase.co"
+    },
+    {
+      "section": "edge",
+      "name": "Gemini text",
+      "ok": true,
+      "detail": "HTTP 200, secret=\"200 OK\", preview=pong"
+    },
+    {
+      "section": "edge",
+      "name": "OpenAI text",
+      "ok": true,
+      "detail": "HTTP 200, secret=\"200 OK\", preview=確認"
+    },
+    {
+      "section": "edge",
+      "name": "Claude text",
+      "ok": true,
+      "detail": "HTTP 200, secret=\"200 OK\", preview=pong"
+    },
+    {
+      "section": "edge",
+      "name": "Serper search",
+      "ok": true,
+      "detail": "HTTP 200, secret=\"200 OK\""
+    },
+    {
+      "section": "edge",
+      "name": "Gemini Vision",
+      "ok": true,
+      "detail": "HTTP 200, secret=\"200 OK\", preview=赤"
+    },
+    {
+      "section": "edge",
+      "name": "OpenAI Vision",
+      "ok": true,
+      "detail": "HTTP 200, secret=\"200 OK\", preview=赤色"
+    },
+    {
+      "section": "edge",
+      "name": "Claude Vision",
+      "ok": true,
+      "detail": "HTTP 200, secret=\"200 OK\", preview=ドット"
+    },
+    {
+      "section": "secret",
+      "name": "GEMINI_API_KEY",
+      "ok": true,
+      "detail": "present (value not logged) — 200 OK"
+    },
+    {
+      "section": "secret",
+      "name": "OPENAI_API_KEY",
+      "ok": true,
+      "detail": "present (value not logged) — 200 OK"
+    },
+    {
+      "section": "secret",
+      "name": "ANTHROPIC_API_KEY",
+      "ok": true,
+      "detail": "present (value not logged) — 200 OK"
+    },
+    {
+      "section": "secret",
+      "name": "SERPER_API_KEY",
+      "ok": true,
+      "detail": "present (value not logged) — 200 OK"
+    },
+    {
+      "section": "browser",
+      "name": "ai-workspace.html loads",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "section": "browser",
+      "name": "390px no horizontal overflow",
+      "ok": true,
+      "detail": "scroll=390 client=390"
+    },
+    {
+      "section": "browser",
+      "name": "composer visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "section": "browser",
+      "name": "model bar visible",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "section": "browser",
+      "name": "console errors",
+      "ok": true,
+      "detail": "none"
+    }
+  ],
+  "failed": []
+}

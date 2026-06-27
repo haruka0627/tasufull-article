@@ -1,0 +1,53 @@
+{
+  "capturedAt": "2026-06-27T18:32:23.370Z",
+  "base": "https://tasufull-article.pages.dev",
+  "results": [
+    {
+      "name": "Unauthenticated — Access gate active",
+      "ok": true,
+      "detail": "Cloudflare Access login HTML"
+    },
+    {
+      "name": "MIME /ai-workspace.html",
+      "ok": true,
+      "detail": "status=200 ct=text/html; charset=utf-8"
+    },
+    {
+      "name": "MIME /ai-workspace-chat.js",
+      "ok": true,
+      "detail": "status=200 ct=application/javascript"
+    },
+    {
+      "name": "MIME /ai-model-gateway.js",
+      "ok": true,
+      "detail": "status=200 ct=application/javascript"
+    },
+    {
+      "name": "MIME /tasful-ai-voice.css",
+      "ok": true,
+      "detail": "status=200 ct=text/css; charset=utf-8"
+    },
+    {
+      "name": "Workspace HTML load",
+      "ok": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "Composer + Gateway loaded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "390px layout",
+      "ok": true,
+      "detail": "scroll=390 modelBar=true"
+    },
+    {
+      "name": "Console errors",
+      "ok": true,
+      "detail": "none"
+    }
+  ],
+  "accessHeaders": true,
+  "serviceTokenFailed": false
+}
