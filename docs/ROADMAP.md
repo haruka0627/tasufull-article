@@ -182,21 +182,16 @@
 | --- | --- | --- |
 | v1.1 リリース | ✅ 🔒 | `reports/ai-ops-secretary-release-status.md` |
 | **本番 AI API** | ✅ 方針確定 | **DeepSeek API**（AD-010）· 要約/優先付け/自然文のみ · 遷移/件数/検索/フィルターは非AI |
-| 未コミット phase ファイル | 📋 要整理 | working tree に `admin-ai-secretary-phase*.js` 等 |
-| **DeepSeek 本番接続** | 📋 **P0 実装** | 秘書専用 Adapter / Edge · **Gateway 非混在**（[TODO.md](./TODO.md) §P0-3） |
-| **Operations Orchestrator Phase 5-A** | ✅ 実装（未コミット） | Registry · Classifier · Human Gate · Task Queue · `reports/secretary-orchestrator-phase5a.md` |
-| **Operations Orchestrator Phase 5-B** | ✅ 実装（未コミット） | OpsEvent · HSG · CI ingest · 朝レポート · `reports/secretary-orchestrator-phase5b.md` |
-| **Operations Orchestrator Phase 5-C** | ✅ 実装（未コミット） | Command Center UI · フィルタ · L3/L4 · `reports/secretary-orchestrator-phase5c.md` |
-| **Google Workspace Phase 6-A** | ✅ 設計完了 | Gmail / Calendar / Contacts / Drive · `reports/secretary-google-workspace-plan.md` |
-| **Google Workspace Phase 6-B** | ✅ 実装 | OAuth PKCE · Token Vault · Edge skeleton · `reports/secretary-google-phase6b-oauth-token-vault.md` |
-| **Google Workspace Phase 6-D** | ✅ 実装 | Gmail write + Human Gate · `reports/secretary-google-phase6d-gmail-write-human-gate.md` |
-| **Google Workspace Phase 6-E** | ✅ 実装 | Calendar read-only · UI タブ · `reports/secretary-google-phase6e-calendar-readonly.md` |
-| **Google Workspace Phase 6-F** | ✅ 実装 | Calendar write + Human Gate · `reports/secretary-google-phase6f-calendar-write-human-gate.md` |
-| **Google Workspace Phase 6-G** | ✅ 実装 | Contacts read-only · `reports/secretary-google-phase6g-contacts-readonly.md` |
-| **Google Workspace Phase 6-H** | ✅ 実装 | Drive read-only · `reports/secretary-google-phase6h-drive-readonly.md` |
-| **Google Workspace Phase 7-A** | ✅ 実装 | Workspace Orchestrator · `reports/secretary-google-phase7a-workspace-orchestrator.md` |
-| **Google Workspace Phase 7-B** | ✅ 実装 | Activity / Audit Log · `reports/secretary-google-phase7b-workspace-activity.md` |
-| **Operations Orchestrator Phase 7-A** | 📋 未着手 | Cursor SDK · cron · L1 自動送信 · Agent 自動実行 |
+| **KI-008 phase ファイル** | ✅ **解消** | P0-1 選別コミット後 · `admin-ai-secretary-*` git 追跡済 |
+| **DeepSeek 本番接続** | 📋 **P0** | Adapter commit 済（`6c70985`）· **prod smoke 未** · [TODO.md](./TODO.md) §P0-3 |
+| **Operations Orchestrator 5-A/B/C** | ✅ commit 済 | `025e685` · Registry · OpsEvent · Command Center UI |
+| **Google Workspace 6-B〜6-H** | ✅ commit 済 | OAuth · Gmail / Calendar / Contacts / Drive |
+| **Google Workspace 7-A/B** | ✅ commit 済 | Orchestrator · Activity / Audit Log · `aa209d2` |
+| **P0 本番接続 smoke** | 📋 **次着手** | DeepSeek + Google OAuth · prod 1 往復 |
+| **Phase 5 残** | 📋 未着手 | Agent Task 票 UI · Workflow 定義 |
+| **Phase 6 Agent Routing** | 📋 未着手 | Cursor SDK · Agent stub 置換 |
+| **Phase 7 Command Center 完成** | 📋 未着手 | Automation 統合 · CI dist 同梱検討 |
+| **Phase 8 Memory / History** | 📋 未着手 | phase3/4/5/8 · Queue 永続化 |
 | **Trend Scout**（トレンド収集 · 経営参謀提案） | 📋 Backlog | [ai-secretary-trend-scout-backlog.md](./ai-secretary-trend-scout-backlog.md) · v1.2 以降想定 · **UI Critical 優先度外** |
 
 ---

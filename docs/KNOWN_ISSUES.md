@@ -11,6 +11,7 @@
 | ID | 解決 |
 | --- | --- |
 | KI-003 | TASFUL AI Production Ready — 2026-06-28 Go · `reports/tasful-ai-production-ready-verification.md` |
+| KI-008 | AI 秘書 phase ファイル — P0-1 選別コミット後 git 追跡済 · working tree clean · `docs(secretary): refresh status after p0-1 cleanup` |
 
 ---
 
@@ -56,16 +57,6 @@ TASFUL AI Production Ready = **Go**（2026-06-28）。CF Access E2E · build · 
 | --- | --- |
 | **状態** | unstaged · AI 無関係 |
 | **内容** | `dev` スクリプトに `--compatibility-date=2026-06-24` |
-
----
-
-## KI-008 — admin-ai-secretary 未コミット phase ファイル
-
-| 項目 | 内容 |
-| --- | --- |
-| **状態** | working tree に `admin-ai-secretary-phase2.js` 等（untracked/modified） |
-| **注** | AI 秘書本体は Production Ready（凍結）。phase ファイルは **別スコープ · 未コミット** |
-| **未確認** | phase ファイルが v1.1 凍結を破る変更かどうか diff 未監査 |
 
 ---
 

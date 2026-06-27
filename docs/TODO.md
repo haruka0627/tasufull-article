@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-28（Production Ready Go）  
-**Git HEAD:** `342b10c` + verification commit pending  
+**最終更新:** 2026-06-28（P0-1 cleanup · AI 秘書 docs refresh）  
+**Git HEAD:** `bce78cc`（Bundle E 完了 · working tree clean）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
 ---
@@ -170,52 +170,40 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - [ ] **DeepSeek 残高チャージ**（アカウント側）
 - [ ] **HTTP 200** · `usedDeepSeek:true` · assistant text の実応答確認（ローカル / Staging）
 - [ ] Production **smoke**（本番 URL · 秘書 1 往復 · 運営コンテキスト付き）
-- [ ] **ahead 4** の push / deploy **スコープ整理**（secretary 2 + tasful-ai workspace 2 — secretary のみ載せる場合は要方針）
-- [ ] working tree **124 件**を deploy に混ぜない（HEAD + clean `build:pages` を正とする）
+- [x] P0-1 選別コミット完了 — working tree **clean**（2026-06-28 · dist drift 含む）
+- [ ] Production **deploy** + **smoke**（HEAD + clean `build:pages` を正とする · 混在 dist 禁止）
 
 - [x] 画面遷移 / 件数 / DB 検索 / フィルターは **プログラム処理のまま**（LLM 不使用）
 - 参照: [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) · [DECISIONS.md](./DECISIONS.md) AD-010 · `reports/secretary-deepseek-deploy-triage.md`
 
-### AI 秘書 — Operations Orchestrator Phase 5-A / 5-B（実装 · 未コミット）
+### AI 秘書 — Operations Orchestrator + Google Workspace（commit 済 · KI-008 解消）
 
 | 区分 | 状態 | 根拠 |
 | --- | --- | --- |
-| **Phase 5-A** | **完了 · 未コミット** | `reports/secretary-orchestrator-phase5a.md` |
-| **Phase 5-B** | **完了 · 未コミット** | `reports/secretary-orchestrator-phase5b.md` |
+| **Phase 5-A/B/C** | **完了 · commit 済** | `025e685` · `reports/secretary-orchestrator-phase5a/b/c.md` |
+| **Google 6-B〜6-H** | **完了 · commit 済** | `67ec43a`〜`8ca7b7f` 系 |
+| **Google 7-A/B** | **完了 · commit 済** | `2af444a` · `aa209d2` |
+| **KI-008** | **解消** | `admin-ai-secretary-*` git 追跡済 · P0-1 後 clean |
+
+**完了（commit 済）**
 
 - [x] Phase 5-A — Registry · Classifier · Human Gate · Task Queue · phase2
 - [x] Phase 5-B — OpsEvent · HSG · CI ingest · 朝レポート · DeepSeek 分類
 - [x] Phase 5-C — Command Center UI · フィルタ · L3/L4 パネル · 朝レポート UI
-- [x] `test-secretary-orchestrator-phase5a.mjs` · `phase5b` · `phase5c` PASS
-- [x] **Phase 6-A** — Google Workspace Integration 調査・設計（Gmail / Calendar / Contacts / Drive）
-- [x] **Phase 6-B** — OAuth + Token Vault + Edge skeleton（PKCE · mock · UI 接続状態）
-- [x] **Phase 6-C** — Gmail read-only（messages.list/get · threads.get · labels.list · q · 添付 metadata · UI カード）
-- [x] **Phase 6-D** — Gmail write + Human Gate（返信案 · drafts.create · drafts.send · 送信確認）
-- [x] **Phase 6-E** — Calendar read-only（calendarList · events.list/get · preset · キーワード · UI カード）
-- [x] **Phase 6-F** — Calendar write + Human Gate（events.insert/update/delete · 自然言語作成）
-- [x] **Phase 6-G** — Contacts read-only（people.connections/search/get · UI · 補助導線）
-- [x] **Phase 6-H** — Drive read-only（files.list/get/export · フォルダ · 検索 · mimeType · recent）
-- [x] **Phase 7-A** — Google Workspace Orchestrator（Intent · Plan · 横断実行 · Workspace Assistant）
-- [x] **Phase 7-B** — Workspace Activity / Audit Log（実行履歴 · Filter · JSON Export）
-- [ ] Phase 7-A — Cursor SDK · cron · L1 自動送信 · Agent 自動実行（旧 Phase 6）
+- [x] Google 6-A〜6-H — OAuth · Gmail / Calendar / Contacts / Drive
+- [x] Google 7-A/B — Workspace Orchestrator · Activity / Audit Log
+- [x] `test-secretary-orchestrator-phase5a/b/c.mjs` PASS
 
-**Phase 6-E 参照:** `reports/secretary-google-phase6e-calendar-readonly.md`
+**次の優先順位（開発再開）**
 
-**Phase 6-F 参照:** `reports/secretary-google-phase6f-calendar-write-human-gate.md`
+- [ ] **P0 本番接続 smoke** — DeepSeek + Google OAuth（Secret · 残高 · HTTP 200 · prod 1 往復）
+- [ ] **Phase 5 残** — Agent Task 票 UI（Cursor 用 Markdown）
+- [ ] **Workflow 定義** — `wf_*` チェーン最小セット
+- [ ] **Phase 6** — Agent Routing（Cursor SDK · stub 置換）
+- [ ] **Phase 7** — Command Center 完成（Automation 統合 · CI dist 同梱検討）
+- [ ] **Phase 8** — Memory / History（phase3/4/5/8 · Queue 永続化）
 
-**Phase 6-G 参照:** `reports/secretary-google-phase6g-contacts-readonly.md`
-
-**Phase 6-H 参照:** `reports/secretary-google-phase6h-drive-readonly.md`
-
-**Phase 7-A 参照:** `reports/secretary-google-phase7a-workspace-orchestrator.md`
-
-**Phase 7-B 参照:** `reports/secretary-google-phase7b-workspace-activity.md`
-
-**Phase 6-D 参照:** `reports/secretary-google-phase6d-gmail-write-human-gate.md`
-
-**Phase 6-C 参照:** `reports/secretary-google-phase6c-gmail-readonly.md`
-
-**Phase 6-B 参照:** `reports/secretary-google-phase6b-oauth-token-vault.md`
+**参照:** `reports/ai-secretary-current-status-after-p0-1.md` · `reports/secretary-google-phase6b-oauth-token-vault.md` · `reports/secretary-google-phase7b-workspace-activity.md`
 
 ---
 
