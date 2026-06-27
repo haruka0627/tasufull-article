@@ -74,6 +74,8 @@
     "business-directory-dashboard",
     "business-directory-new",
     "business-directory-edit",
+    "business-directory-admin-reviews",
+    "business-directory-admin-listing",
     "sales-fees",
     "chat-list",
     "demo-progress",
