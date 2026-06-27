@@ -1,12 +1,15 @@
 /**
- * AI秘書 Phase 6-C — Google Workspace tools (Gmail read-only)
- * POST { action: "health" | "capabilities" | "gmail" | "execute" }
+ * AI秘書 Phase 6-D — Google Workspace tools (Gmail read + write w/ Human Gate)
+ * POST { action: "health" | "capabilities" | "gmail" | "gmail_write" | "execute" }
  */
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import {
   executeGmailRead,
+  executeGmailWrite,
   GMAIL_READ_METHODS,
+  GMAIL_WRITE_ALLOWED_PHASE6D,
   GMAIL_WRITE_METHODS,
+  isGmailWriteBlockedPhase6D,
   isGmailWriteMethod,
 } from "../_shared/secretary-google-gmail.ts";
 import {
@@ -17,7 +20,12 @@ import {
 } from "../_shared/secretary-google-oauth.ts";
 
 const TOOL_STATUS = Object.freeze({
-  gmail: { phase: "6-C", status: "read_only", methods: [...GMAIL_READ_METHODS] },
+  gmail: {
+    phase: "6-D",
+    status: "read_write_human_gate",
+    readMethods: [...GMAIL_READ_METHODS],
+    writeMethods: [...GMAIL_WRITE_ALLOWED_PHASE6D],
+  },
   calendar: { phase: "6-E", status: "stub", methods: ["events.list", "freebusy.query"] },
   contacts: { phase: "6-G", status: "stub", methods: ["people.searchContacts"] },
   drive: { phase: "6-H", status: "stub", methods: ["files.list"] },
@@ -46,12 +54,14 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-C",
+        phase: "6-D",
         service: "secretary-google-tools",
         configured: config.configured,
         mock: config.mock,
         tools: TOOL_STATUS,
-        gmailWriteForbidden: [...GMAIL_WRITE_METHODS],
+        gmailWriteAllowed: [...GMAIL_WRITE_ALLOWED_PHASE6D],
+        gmailWriteForbidden: GMAIL_WRITE_METHODS.filter((m) => isGmailWriteBlockedPhase6D(m)),
+        humanGateRequired: true,
       }),
       200,
       req
@@ -63,11 +73,11 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-C",
+        phase: "6-D",
         googleConnected: Boolean(connection?.connected),
         googleAccountEmail: connection?.googleAccountEmail || null,
         tools: TOOL_STATUS,
-        note: "Gmail read-only live · send/draft/delete blocked until Phase 6-D",
+        note: "Gmail write requires Human Gate approval (drafts.create · drafts.send)",
       }),
       200,
       req
@@ -81,7 +91,7 @@ Deno.serve(async (req) => {
     const method = String(body.method || "").trim();
     if (isGmailWriteMethod(method)) {
       return jsonResponse(
-        { ok: false, error: "gmail_write_forbidden", method, phase: "6-D" },
+        { ok: false, error: "gmail_write_use_gmail_write", method, phase: "6-D" },
         403,
         req
       );
@@ -99,11 +109,38 @@ Deno.serve(async (req) => {
     return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
   }
 
+  if (action === "gmail_write") {
+    if (!userId) {
+      return jsonResponse({ ok: false, error: "unauthorized" }, 401, req);
+    }
+    const method = String(body.method || "").trim();
+    if (isGmailWriteBlockedPhase6D(method)) {
+      return jsonResponse(
+        { ok: false, error: "gmail_write_forbidden", method, phase: "6-D+" },
+        403,
+        req
+      );
+    }
+    const result = await executeGmailWrite(userId, {
+      method,
+      humanGateApproved: body.humanGateApproved === true,
+      pendingId: typeof body.pendingId === "string" ? body.pendingId : undefined,
+      to: typeof body.to === "string" ? body.to : undefined,
+      subject: typeof body.subject === "string" ? body.subject : undefined,
+      body: typeof body.body === "string" ? body.body : undefined,
+      threadId: typeof body.threadId === "string" ? body.threadId : undefined,
+      replyToMessageId: typeof body.replyToMessageId === "string" ? body.replyToMessageId : undefined,
+      draftId: typeof body.draftId === "string" ? body.draftId : undefined,
+    });
+    const status = result.ok ? 200 : result.error === "human_gate_required" ? 403 : 502;
+    return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
+  }
+
   if (action === "execute") {
     const tool = String(body.tool || "").trim();
     if (tool === "gmail") {
       return jsonResponse(
-        { ok: false, error: "use_action_gmail", hint: "POST action=gmail with method" },
+        { ok: false, error: "use_action_gmail", hint: "POST action=gmail or gmail_write" },
         400,
         req
       );

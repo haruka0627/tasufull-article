@@ -33,6 +33,13 @@ export const GMAIL_WRITE_METHODS = Object.freeze([
   "drafts.delete",
 ]);
 
+/** Phase 6-D allowed write methods (trash/delete excluded). */
+export const GMAIL_WRITE_ALLOWED_PHASE6D = Object.freeze([
+  "drafts.create",
+  "drafts.send",
+  "messages.send",
+]);
+
 export type GmailReadRequest = {
   method: string;
   q?: string;
@@ -41,6 +48,18 @@ export type GmailReadRequest = {
   maxResults?: number;
   labelIds?: string[];
   pageToken?: string;
+};
+
+export type GmailWriteRequest = {
+  method: string;
+  humanGateApproved?: boolean;
+  pendingId?: string;
+  to?: string;
+  subject?: string;
+  body?: string;
+  threadId?: string;
+  replyToMessageId?: string;
+  draftId?: string;
 };
 
 export type GmailAttachmentMeta = {
@@ -78,6 +97,15 @@ export function isGmailReadMethod(method: string): boolean {
 
 export function isGmailWriteMethod(method: string): boolean {
   return GMAIL_WRITE_METHODS.includes(String(method || "").trim());
+}
+
+export function isGmailWriteAllowedPhase6D(method: string): boolean {
+  return GMAIL_WRITE_ALLOWED_PHASE6D.includes(String(method || "").trim());
+}
+
+export function isGmailWriteBlockedPhase6D(method: string): boolean {
+  const m = String(method || "").trim();
+  return isGmailWriteMethod(m) && !isGmailWriteAllowedPhase6D(m);
 }
 
 export function buildPresetQuery(preset: string): string {
@@ -361,4 +389,185 @@ export async function executeGmailRead(userId: string, req: GmailReadRequest) {
   }
 
   return executeLiveGmail(token.accessToken, req);
+}
+
+function extractEmailAddress(from: string): string {
+  const raw = trim(from, 500);
+  const angle = raw.match(/<([^>]+@[^>]+)>/);
+  if (angle?.[1]) return angle[1].trim();
+  const plain = raw.match(/[\w.+-]+@[\w.-]+\.\w+/);
+  return plain ? plain[0] : raw;
+}
+
+function normalizeReplySubject(subject: string): string {
+  const s = trim(subject, 500);
+  if (/^re:/i.test(s)) return s;
+  return `Re: ${s}`;
+}
+
+function buildMimeMessage(input: {
+  to: string;
+  subject: string;
+  body: string;
+  inReplyTo?: string;
+  references?: string;
+}): string {
+  const lines = [
+    `To: ${trim(input.to, 500)}`,
+    `Subject: ${trim(input.subject, 500)}`,
+    "MIME-Version: 1.0",
+    'Content-Type: text/plain; charset="UTF-8"',
+    'Content-Transfer-Encoding: 7bit',
+  ];
+  if (input.inReplyTo) lines.push(`In-Reply-To: ${trim(input.inReplyTo, 300)}`);
+  if (input.references) lines.push(`References: ${trim(input.references, 500)}`);
+  lines.push("", trim(input.body, 12000));
+  return lines.join("\r\n");
+}
+
+function encodeRawMime(mime: string): string {
+  const bytes = new TextEncoder().encode(mime);
+  let binary = "";
+  for (const b of bytes) binary += String.fromCharCode(b);
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+function assertHumanGate(req: GmailWriteRequest) {
+  if (!req.humanGateApproved || !trim(req.pendingId, 120)) {
+    return { ok: false as const, error: "human_gate_required", phase: "6-D" };
+  }
+  return { ok: true as const };
+}
+
+async function gmailPost(
+  accessToken: string,
+  path: string,
+  body: Record<string, unknown>
+): Promise<{ ok: boolean; status: number; data?: Record<string, unknown>; error?: string }> {
+  const res = await fetch(`${GMAIL_BASE}${path}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  if (!res.ok) {
+    return {
+      ok: false,
+      status: res.status,
+      error: trim((data.error as Record<string, unknown>)?.message || data.error || `http_${res.status}`, 300),
+    };
+  }
+  return { ok: true, status: res.status, data };
+}
+
+async function executeMockGmailWrite(req: GmailWriteRequest) {
+  const method = trim(req.method);
+  const gate = assertHumanGate(req);
+  if (!gate.ok) return gate;
+  if (method === "drafts.create") {
+    const draftId = `mock_draft_${trim(req.pendingId, 40).slice(0, 12) || Date.now()}`;
+    return {
+      ok: true,
+      mock: true,
+      method,
+      draftId,
+      pendingId: trim(req.pendingId, 120),
+      threadId: trim(req.threadId, 120) || null,
+    };
+  }
+  if (method === "drafts.send" || method === "messages.send") {
+    return {
+      ok: true,
+      mock: true,
+      method,
+      sent: true,
+      messageId: `mock_sent_${Date.now()}`,
+      draftId: trim(req.draftId, 120) || null,
+      pendingId: trim(req.pendingId, 120),
+    };
+  }
+  return { ok: false, error: "unknown_gmail_write_method" };
+}
+
+async function executeLiveGmailWrite(accessToken: string, req: GmailWriteRequest) {
+  const method = trim(req.method);
+  const to = trim(req.to, 500);
+  const subject = trim(req.subject, 500);
+  const body = trim(req.body, 12000);
+  const threadId = trim(req.threadId, 120) || undefined;
+
+  if (method === "drafts.create") {
+    if (!to || !subject || !body) return { ok: false, error: "draft_fields_required" };
+    const mime = buildMimeMessage({ to, subject, body });
+    const raw = encodeRawMime(mime);
+    const payload: Record<string, unknown> = { message: { raw } };
+    if (threadId) payload.message = { raw, threadId };
+    const res = await gmailPost(accessToken, "/drafts", payload);
+    if (!res.ok) return res;
+    const draftId = trim((res.data?.id as string) || "", 120);
+    return { ok: true, method, draftId, threadId: threadId || null, pendingId: trim(req.pendingId, 120) };
+  }
+
+  if (method === "drafts.send") {
+    const draftId = trim(req.draftId, 120);
+    if (!draftId) return { ok: false, error: "draft_id_required" };
+    const res = await gmailPost(accessToken, "/drafts/send", { id: draftId });
+    if (!res.ok) return res;
+    const messageId = trim((res.data?.id as string) || "", 120);
+    return { ok: true, method, sent: true, messageId, draftId, pendingId: trim(req.pendingId, 120) };
+  }
+
+  if (method === "messages.send") {
+    if (!to || !subject || !body) return { ok: false, error: "send_fields_required" };
+    const mime = buildMimeMessage({ to, subject, body });
+    const raw = encodeRawMime(mime);
+    const payload: Record<string, unknown> = { raw };
+    if (threadId) payload.threadId = threadId;
+    const res = await gmailPost(accessToken, "/messages/send", payload);
+    if (!res.ok) return res;
+    const messageId = trim((res.data?.id as string) || "", 120);
+    return { ok: true, method, sent: true, messageId, pendingId: trim(req.pendingId, 120) };
+  }
+
+  return { ok: false, error: "unknown_gmail_write_method" };
+}
+
+export async function executeGmailWrite(userId: string, req: GmailWriteRequest) {
+  const method = trim(req.method);
+  if (!method) return { ok: false, error: "method_required" };
+  if (isGmailWriteBlockedPhase6D(method)) {
+    return { ok: false, error: "gmail_write_forbidden", method, phase: "6-D+" };
+  }
+  if (!isGmailWriteAllowedPhase6D(method)) {
+    return { ok: false, error: "gmail_write_method_not_allowed", method };
+  }
+
+  const gate = assertHumanGate(req);
+  if (!gate.ok) return gate;
+
+  const config = getSecretaryGoogleConfig();
+  if (isSecretaryGoogleMockMode()) {
+    return executeMockGmailWrite(req);
+  }
+
+  const token = await ensureGoogleAccessToken(userId);
+  if (!token.ok || !token.accessToken) {
+    return { ok: false, error: token.error || "not_connected" };
+  }
+
+  return executeLiveGmailWrite(token.accessToken, req);
+}
+
+/** Build deterministic reply plan from read message (no LLM). */
+export function buildGmailReplyPlan(message: GmailMessageCard) {
+  return {
+    to: extractEmailAddress(message.from),
+    subject: normalizeReplySubject(message.subject || "(件名なし)"),
+    threadId: message.threadId || "",
+    replyToMessageId: message.id || "",
+    contextSnippet: trim(message.snippet, 300),
+  };
 }
