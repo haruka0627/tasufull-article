@@ -248,21 +248,55 @@
     appendToLog(userMsg);
     if (input && channel === "text" && !options.fromQuick) input.value = "";
 
-    let orchestratorResult = null;
     try {
-      const Orch = global.TasuSecretaryOrchestrator;
-      if (Orch?.processMessageAsync) {
-        orchestratorResult = await Orch.processMessageAsync(text, { tryDeepSeek: true, opsAnalysis });
-      } else {
-        orchestratorResult = Orch?.processMessage?.(text) || null;
+      try {
+        const GoogleChatRouter = global.TasuSecretaryGoogleChatRouter;
+        if (GoogleChatRouter?.tryHandle) {
+          const googleRoute = await GoogleChatRouter.tryHandle(text, { history: history.slice(0, -1) });
+          if (googleRoute?.handled) {
+            const replyContent = String(googleRoute.reply || "").trim();
+            const assistantMsg = {
+              role: "assistant",
+              content: replyContent,
+              at: Date.now(),
+              mock: Boolean(googleRoute.mock),
+              channel,
+              googleIntent: googleRoute.intent,
+            };
+            history.push(assistantMsg);
+            saveHistory(history);
+            appendToLog(assistantMsg);
+            try {
+              global.dispatchEvent(
+                new CustomEvent("tasu:ai-voice-assistant-reply", {
+                  detail: { text: replyContent, surface: MODE_ID, channel },
+                })
+              );
+            } catch {
+              /* ignore */
+            }
+            setStatus("idle", "待機中", "🟢");
+            return { ok: true, reply: replyContent, googleHandled: true, googleIntent: googleRoute.intent };
+          }
+        }
+      } catch {
+        /* google chat router optional */
       }
-      Orch?.renderPanel?.(orchestratorResult);
-      Orch?.renderQueuePanel?.();
-    } catch {
-      /* orchestrator optional */
-    }
 
-    try {
+      let orchestratorResult = null;
+      try {
+        const Orch = global.TasuSecretaryOrchestrator;
+        if (Orch?.processMessageAsync) {
+          orchestratorResult = await Orch.processMessageAsync(text, { tryDeepSeek: true, opsAnalysis });
+        } else {
+          orchestratorResult = Orch?.processMessage?.(text) || null;
+        }
+        Orch?.renderPanel?.(orchestratorResult);
+        Orch?.renderQueuePanel?.();
+      } catch {
+        /* orchestrator optional */
+      }
+
       const out = await requestAssistantReply(text, history.slice(0, -1));
       let replyContent = out.content;
       if (out.mock && opsAnalysis) {
