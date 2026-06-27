@@ -7005,9 +7005,11 @@ body:is([data-page="builder-partner-dashboard"], [data-page="builder-user-dashbo
 
 /* Builder AI quick card — photo icon (user dashboard) */
 body[data-page="builder-user-dashboard"] [data-builder-quick="builder-ai"] .builder-quick-card__icon--photo {
-  padding: 4px;
-  overflow: hidden;
-  background: rgba(255, 255, 255, 0.06);
+  padding: 0;
+  overflow: visible;
+  background: transparent;
+  border: none;
+  box-shadow: none;
 }
 
 body[data-page="builder-user-dashboard"] [data-builder-quick="builder-ai"] .builder-quick-card__icon-img {
@@ -7015,7 +7017,8 @@ body[data-page="builder-user-dashboard"] [data-builder-quick="builder-ai"] .buil
   height: 100%;
   object-fit: contain;
   display: block;
-  border-radius: 50%;
+  border-radius: 0;
+  background: transparent;
 }
 
 @media (max-width: 1199px) {
