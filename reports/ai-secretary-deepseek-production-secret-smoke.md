@@ -1,49 +1,54 @@
 # AI 秘書 DeepSeek — Production Secret Smoke
 
 **実施日:** 2026-06-28  
-**Git HEAD:** `3910f67` — `fix(deploy): run pages deploy from dist for functions`  
-**種別:** Secret presence + live smoke 証跡
+**Git HEAD:** `6ba3102` — `docs(secretary): add deepseek production secret smoke evidence`  
+**種別:** Secret 登録 + live smoke 証跡
 
 **JSON:** `reports/ai-secretary-deepseek-production-secret-smoke.json`
 
 ---
 
-## 総合判定: **No-Go（P0 DeepSeek 未完）** — Function 到達 **Go**
+## 総合判定: **No-Go（P0 DeepSeek 未完）** — Secret **present** · Function **未反映**
 
 | 領域 | 判定 |
 | --- | --- |
 | Pages Function マウント | ✅ Go |
-| **`DEEPSEEK_API_KEY` Production Secret** | ❌ **absent** |
+| **`DEEPSEEK_API_KEY` CF 登録** | ✅ **present**（`wrangler pages secret put` 成功） |
+| Secret → Function `env` 反映 | ❌ **未反映**（POST 依然 `configured:false`） |
 | POST 200 · `usedDeepSeek:true` | ❌ 未到達 |
-| 本 smoke（Secret 未登録時） | ✅ **503 · `configured:false`** は正常 |
+| **DeepSeek P0** | ❌ **No-Go** |
 
 ---
 
-## 1. git / dist 状態
+## Phase A — 登録前（commit `6ba3102` 時点）
 
 | 項目 | 結果 |
 | --- | --- |
-| `git status`（開始） | report 2 件 untracked のみ · **dist drift なし** |
-| dist checkout | **不要** |
+| **`DEEPSEEK_API_KEY`** | **absent** |
+| POST（Service Token） | **503** · `configured:false` |
+| 判定 | Function 到達 · Secret 未登録どおり |
 
 ---
 
-## 2. Production Secret — presence のみ
+## Phase B — Secret 登録 + 再 smoke（2026-06-28）
 
-**確認:** `wrangler pages secret list --project-name tasufull-article`
+### 1. Secret 登録
+
+| 項目 | 結果 |
+| --- | --- |
+| 方法 | `wrangler pages secret put DEEPSEEK_API_KEY --project-name tasufull-article` |
+| 結果 | ✅ **Success! Uploaded secret DEEPSEEK_API_KEY** |
+| 値の表示 | **なし** |
+
+### 2. presence 確認
+
+**`wrangler pages secret list --project-name tasufull-article`**
 
 | Secret | Presence |
 | --- | --- |
-| **`DEEPSEEK_API_KEY`** | **absent** |
-| production secrets 一覧 | **空** |
+| **`DEEPSEEK_API_KEY`** | **present** |
 
-Secret / Token **値は記載しない**。
-
----
-
-## 3. Smoke 結果
-
-### Production alias（Service Token · POST）
+### 3. Production alias smoke（Service Token · POST）
 
 **Endpoint:** `https://tasufull-article.pages.dev/api/secretary-deepseek-chat`
 
@@ -54,36 +59,37 @@ Secret / Token **値は記載しない**。
 | `configured` | **false** |
 | `usedDeepSeek` | **false** |
 | `error` | `DEEPSEEK_API_KEY not configured` |
-| 判定 | ✅ **Function 到達** · Secret absent どおり |
+| 15s 後リトライ | 同上 **503** · `configured:false` |
 
-### 参考
+**判定（ユーザー基準）:** ❌ **No-Go** — Secret **未反映**（登録失敗ではなく deploy 未実施による binding 遅延）
 
-| Probe | 結果 | 判定 |
-| --- | --- | --- |
-| alias 未認証 · manual | **302** Access | ✅ |
-| preview `b9931fcd` POST | **503** JSON · `configured:false` | ✅ |
-| local 8788 POST | **503** JSON · `configured:false` | ✅ |
+### 4. API 側エラー
 
-**405 / HTML fallback / empty body:** なし
-
----
-
-## 4. Secret 登録後の期待
-
-| 状態 | 期待 POST |
+| 項目 | 結果 |
 | --- | --- |
-| Secret **absent**（現状） | **503** · `configured:false` |
-| Secret **present** · 残高不足 | **502** 等 · `configured:true` 可 |
-| Secret **present** · 残高 OK | **200** · `usedDeepSeek:true` |
+| DeepSeek API 到達 | **未到達**（`configured:false` のため proxy 未呼び出し） |
+| 残高 / 401 / 502 | **未検証** |
 
 ---
 
-## 5. 次アクション
+## 解釈
 
-1. Cloudflare Pages Production に **`DEEPSEEK_API_KEY`** 登録（Dashboard / `wrangler pages secret put`）
-2. 本 smoke を **再実行** → 200 または 502 確認
-3. DeepSeek 残高チャージ（200 到達用）
-4. その後 Google OAuth Edge deploy へ
+Cloudflare Pages は **Secret 追加後、新しい deployment まで Functions の `env` に反映されない**（[CF ドキュメント](https://developers.cloudflare.com/pages/functions/bindings/) どおり）。
+
+| 状態 | 期待 |
+| --- | --- |
+| Secret put 直後 · deploy なし | 503 `configured:false`（**今回観測**） |
+| Secret + **redeploy 後** | `configured:true` → **502**（残高不足）または **200** |
+
+---
+
+## 次アクション
+
+1. **`node --env-file=.env scripts/deploy-cloudflare-pages.mjs`** で production redeploy（Functions 同梱済 script）
+2. Service Token 経由 POST 再 smoke
+   - **502** · `Insufficient Balance` → Secret 到達 **Go** · 残高チャージ
+   - **200** · `usedDeepSeek:true` → DeepSeek P0 **Go**
+3. 証跡更新 + commit
 
 ---
 
@@ -91,4 +97,3 @@ Secret / Token **値は記載しない**。
 
 - `reports/ai-secretary-deepseek-pages-function-redeploy.md`
 - `reports/ai-secretary-deepseek-production-route-triage.md`
-- `reports/ai-secretary-p0-production-smoke.md`
