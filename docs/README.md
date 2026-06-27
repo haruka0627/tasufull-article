@@ -16,7 +16,7 @@
 | **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
 | **TALK / Connect / 安否** | Production Ready | レガシー `docs/talk-*` 等 |
 | **TASFUL Materials（素材DL）** | 📋 設計のみ | [free-download-service-backlog.md](./free-download-service-backlog.md) · [reports/free-download-service-plan.md](../reports/free-download-service-plan.md) |
-| **Business Directory** | 🔄 Phase 6 Stripe | Phase 1–6 · AD-013 · [phase6 report](../reports/business-directory-phase6-stripe.md) |
+| **Business Directory** | 🔄 Phase 7 Preflight | Phase 1–6 · deploy No-Go（dist 未同期）· [phase7 report](../reports/business-directory-phase7-deploy-preflight.md) |
 
 ---
 
@@ -67,6 +67,7 @@
 | `reports/business-directory-phase4-admin-ui.md` | Business Directory Phase 4 Admin UI |
 | `reports/business-directory-phase5-public-ui.md` | Business Directory Phase 5 Public UI |
 | `reports/business-directory-phase6-stripe.md` | Business Directory Phase 6 Stripe Subscription |
+| `reports/business-directory-phase7-deploy-preflight.md` | Business Directory Phase 7 Deploy Preflight |
 
 ---
 
