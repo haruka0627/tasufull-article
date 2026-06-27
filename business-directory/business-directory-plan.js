@@ -60,11 +60,63 @@
     return false;
   }
 
+  function isPeriodEndActive(iso) {
+    if (!iso) return false;
+    const t = new Date(iso).getTime();
+    return Number.isFinite(t) && t > Date.now();
+  }
+
+  function hasPaidAccess(listing) {
+    if (!listing) return false;
+    const status = String(listing.subscription_status || "").trim();
+    if (status === "unpaid" || status === "incomplete_expired") return false;
+    const code = String(listing.plan_code || "free").toLowerCase();
+    if (code !== "standard" && code !== "pro") return false;
+    if (status === "active" || status === "trialing") {
+      return !listing.current_period_end || isPeriodEndActive(listing.current_period_end);
+    }
+    if (isPeriodEndActive(listing.current_period_end)) {
+      if (listing.cancel_at_period_end || status === "canceled") return true;
+      if (status === "past_due" || status === "unpaid") return true;
+    }
+    return false;
+  }
+
+  function effectivePlanCode(listing) {
+    if (!listing) return "free";
+    if (hasPaidAccess(listing)) {
+      const c = String(listing.plan_code || "free").toLowerCase();
+      if (c === "standard" || c === "pro") return c;
+    }
+    return "free";
+  }
+
+  function subscriptionWarning(listing) {
+    if (!listing) return null;
+    const status = String(listing.subscription_status || "").trim();
+    if (status === "past_due" || status === "unpaid") {
+      return "お支払いに問題があります。Billing Portal から支払い方法を更新してください。";
+    }
+    if (listing.cancel_at_period_end && isPeriodEndActive(listing.current_period_end)) {
+      try {
+        const label = new Date(listing.current_period_end).toLocaleDateString("ja-JP");
+        return `解約予約中です。${label} まで現行プランが利用できます。`;
+      } catch {
+        return "解約予約中です。期間終了まで現行プランが利用できます。";
+      }
+    }
+    return null;
+  }
+
   global.TasuBusinessDirectoryPlan = {
     PLANS,
     PLAN_NOTES,
     getPlan,
     renderPlanLimits,
     isPhotoSlotLocked,
+    hasPaidAccess,
+    effectivePlanCode,
+    subscriptionWarning,
+    isPeriodEndActive,
   };
 })(typeof window !== "undefined" ? window : globalThis);

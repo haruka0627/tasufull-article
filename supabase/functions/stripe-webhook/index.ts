@@ -6,6 +6,15 @@ import {
   syncGenAiFromStripeSubscription,
 } from "../_shared/apply-genai-plan.ts";
 import {
+  applyBusinessDirectoryFromCheckoutSession,
+  handleBusinessDirectoryInvoiceEvent,
+  isBusinessDirectoryCheckoutSession,
+  isBusinessDirectorySubscription,
+  syncBusinessDirectoryFromStripeSubscription,
+} from "../_shared/business-directory-stripe.ts";
+import { BD_STRIPE_ORDER_TYPE } from "../_shared/business-directory-plans.ts";
+import { createBusinessDirectoryServiceClient } from "../_shared/business-directory.ts";
+import {
   apply3dTicketFromCheckout,
   sync2dLiveFromStripeSubscription,
 } from "../_shared/apply-genai-entitlements.ts";
@@ -140,6 +149,19 @@ Deno.serve(async (req) => {
     if (event.type === "checkout.session.completed") {
       const session = event.data.object as Stripe.Checkout.Session;
 
+      if (isBusinessDirectoryCheckoutSession(session)) {
+        if (session.payment_status !== "paid" && session.status !== "complete") {
+          return jsonOk({ received: true, skipped: true, kind: "business_directory" });
+        }
+        const supabase = createBusinessDirectoryServiceClient();
+        const result = await applyBusinessDirectoryFromCheckoutSession(supabase, stripe, session);
+        if (!result.ok) {
+          console.error("[stripe-webhook] business directory checkout failed:", result.error);
+          return new Response(result.error, { status: result.status ?? 500 });
+        }
+        return jsonOk({ received: true, kind: "business_directory" });
+      }
+
       if (isGenAiCheckoutSession(session)) {
         if (session.payment_status !== "paid" && session.status !== "complete") {
           return jsonOk({ received: true, skipped: true, kind: "genai" });
@@ -173,12 +195,23 @@ Deno.serve(async (req) => {
     }
 
     if (
+      event.type === "customer.subscription.created" ||
       event.type === "customer.subscription.updated" ||
       event.type === "customer.subscription.deleted"
     ) {
       const sub = event.data.object as Stripe.Subscription;
       const meta = sub.metadata || {};
       const orderType = String(meta.order_type || "");
+
+      if (orderType === BD_STRIPE_ORDER_TYPE || isBusinessDirectorySubscription(sub)) {
+        const supabase = createBusinessDirectoryServiceClient();
+        const result = await syncBusinessDirectoryFromStripeSubscription(supabase, sub);
+        if (!result.ok) {
+          console.error("[stripe-webhook] business directory subscription sync failed:", result.error);
+          return new Response(result.error, { status: result.status ?? 500 });
+        }
+        return jsonOk({ received: true, kind: "business_directory" });
+      }
 
       if (orderType === "genai_2d_live_subscription" || meta.genai_plan === "genai_2d_live_300") {
         const result = await sync2dLiveFromStripeSubscription(sub);
@@ -198,6 +231,19 @@ Deno.serve(async (req) => {
           console.error("[stripe-webhook] genai subscription sync failed:", result.error);
           return new Response(result.error, { status: result.status ?? 500 });
         }
+      }
+    }
+
+    if (event.type === "invoice.payment_succeeded" || event.type === "invoice.payment_failed") {
+      const invoice = event.data.object as Stripe.Invoice;
+      const supabase = createBusinessDirectoryServiceClient();
+      const result = await handleBusinessDirectoryInvoiceEvent(supabase, stripe, invoice, event.type);
+      if (result && !result.ok) {
+        console.error("[stripe-webhook] business directory invoice failed:", result.error);
+        return new Response(result.error, { status: result.status ?? 500 });
+      }
+      if (result?.ok) {
+        return jsonOk({ received: true, kind: "business_directory_invoice" });
       }
     }
 

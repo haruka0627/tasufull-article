@@ -3,7 +3,7 @@
 **最終更新:** 2026-06-27  
 **正本 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)  
-**状態:** 方針確定 · **実装・決済・DB 変更は未着手**
+**状態:** 方針確定 · **Phase 6 Stripe 連携実装済**（Premium / 予約 / 決済代行は未着手）
 
 ---
 
@@ -132,10 +132,9 @@ TASFUL市場
 
 ---
 
-## 実装スコープ外（本フェーズ）
+## 実装スコープ外（本フェーズ以降）
 
-- DB migration · Stripe サブスク課金 · Connect 実装
-- UI / コード変更
+- Premium プラン · Connect · 予約 / 見積 / チャット / TASFUL 内決済
 - Builder AI · TASFUL AI · AI 秘書
 
 ---

@@ -296,7 +296,7 @@ function validateListingType(v: string): ListingType {
 function validateDraftInput(body: DraftListingInput, partial = false): Record<string, unknown> {
   const out: Record<string, unknown> = {};
   if (body.listing_type !== undefined) out.listing_type = validateListingType(String(body.listing_type));
-  if (body.plan_code !== undefined) out.plan_code = pickString(body.plan_code) || "free";
+  if (body.plan_code !== undefined) out.plan_code = "free";
   if (body.category_id !== undefined) out.category_id = pickString(body.category_id);
   if (body.display_name !== undefined) out.display_name = pickString(body.display_name);
   if (body.slug !== undefined) out.slug = slugify(pickString(body.slug));
@@ -551,7 +551,7 @@ export async function updateDraftListing(
   const validated = validateDraftInput(body, true);
   const listingPatch: Record<string, unknown> = {};
   for (const key of [
-    "listing_type", "plan_code", "category_id", "display_name", "slug",
+    "listing_type", "category_id", "display_name", "slug",
     "service_areas", "hp_mode", "website_url",
   ]) {
     if (validated[key] !== undefined) listingPatch[key] = validated[key];
@@ -618,7 +618,9 @@ export async function getOwnerListings(
 ): Promise<Record<string, unknown>[]> {
   const { data, error } = await supabase
     .from("business_directory_listings")
-    .select("id, listing_type, status, plan_code, display_name, slug, updated_at, published_at")
+    .select(
+      "id, listing_type, status, plan_code, display_name, slug, updated_at, published_at, subscription_status, current_period_end, cancel_at_period_end, stripe_customer_id",
+    )
     .eq("owner_user_id", ownerUserId)
     .neq("status", "archived")
     .order("updated_at", { ascending: false });

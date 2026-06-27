@@ -72,6 +72,16 @@
       invoke("unpublish_listing", { listing_id: listingId, reason }),
     restoreListing: (listingId, reason) =>
       invoke("restore_listing", { listing_id: listingId, reason }),
+    createSubscriptionCheckout: (listingId, targetPlan, opts) =>
+      invoke("create_subscription_checkout", {
+        listing_id: listingId,
+        target_plan: targetPlan,
+        ...(opts || {}),
+      }),
+    createBillingPortalSession: (listingId, opts) =>
+      invoke("create_billing_portal_session", { listing_id: listingId, ...(opts || {}) }),
+    syncSubscriptionStatus: (listingId) =>
+      invoke("sync_subscription_status", { listing_id: listingId }),
     health: () => invoke("health"),
   };
 

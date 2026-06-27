@@ -263,6 +263,13 @@
   color: #967622;
 }
 
+.bd-plan-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
 .bd-plan-card__list {
   margin: 0 0 12px;
   padding-left: 1.2rem;

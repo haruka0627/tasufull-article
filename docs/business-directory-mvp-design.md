@@ -4,7 +4,7 @@
 **前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **方針正本:** [business-directory-subscription-model.md](./business-directory-subscription-model.md)  
 **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)  
-**状態:** **Phase 5 Public UI 実装済** — Stripe 決済 **未着手**
+**状態:** **Phase 6 Stripe 連携実装済** — Premium / 予約 / 決済代行 **未着手**
 
 ---
 
