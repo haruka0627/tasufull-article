@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI運営司令塔 | TASFUL 運営</title>
@@ -164,8 +163,10 @@
                   <label class="visually-hidden" for="ops-p2-chat-input-desk">AI秘書へ入力</label>
                   <input type="text" class="ops-p2-chat__input" id="ops-p2-chat-input-desk" data-ops-secretary-input data-ops-phase2-chat-input placeholder="秘書に話しかける…" autocomplete="off" />
                 </div>
+                <button type="button" class="ops-p2-chat__voice" data-ops-secretary-voice aria-pressed="false" aria-label="音声入力">🎤 音声</button>
                 <button type="submit" class="ops-p2-chat__send" data-ops-secretary-send aria-label="送信">送信</button>
               </form>
+              <p class="ops-secretary-voice-state" data-ops-secretary-voice-state aria-live="polite">Ready</p>
               <details class="ops-p7-desk-fold ops-p7-desk-fold--chips">
                 <summary>クイック入力</summary>
                 <div class="ops-p2-chat__quick ops-p7-quick-chat" data-ops-phase7-quick-chat role="group" aria-label="クイックチャット"></div>
@@ -679,7 +680,22 @@
   <script src="admin-ai-auto-fix-candidate.js"></script>
   <script src="admin-ai-human-send-gate.js"></script>
   <script src="admin-ai-morning-summary.js"></script>
+  <script src="shared/voice-core/voice-core-events.js"></script>
+  <script src="shared/voice-core/voice-adapter-interface.js"></script>
+  <script src="shared/voice-core/voice-mock-adapter.js"></script>
+  <script src="shared/voice-core/voice-realtime-options.js"></script>
+  <script src="shared/voice-core/voice-realtime-connect-policy.js"></script>
+  <script src="shared/voice-core/voice-realtime-config.js"></script>
+  <script src="shared/voice-core/voice-realtime-event-mapper.js"></script>
+  <script src="shared/voice-core/voice-openai-realtime-wire-client.js"></script>
+  <script src="shared/voice-core/transports/voice-openai-realtime-websocket-transport.js"></script>
+  <script src="shared/voice-core/adapters/voice-openai-realtime-adapter.js"></script>
+  <script src="shared/voice-core/voice-provider-router.js"></script>
+  <script src="shared/voice-core/voice-session.js"></script>
+  <script src="shared/voice-core/voice-core.js"></script>
   <script src="tasful-ai-voice-core.js"></script>
+  <script src="admin-ai-secretary-voice-controller.js"></script>
+  <script src="admin-ai-secretary-voice-integration.js"></script>
   <script src="admin-ai-secretary-ops-context-sanitize.js"></script>
   <script src="admin-ai-secretary-ops-context.js"></script>
   <script src="admin-ai-secretary-deepseek-adapter.js"></script>
@@ -693,6 +709,11 @@
   <script src="admin-ai-secretary-orchestrator.js"></script>
   <script src="admin-ai-secretary-morning-report.js"></script>
   <script src="admin-ai-secretary-command-center-ui.js"></script>
+  <script src="admin-ai-secretary-ops-data-provider.js"></script>
+  <script src="admin-ai-secretary-insight-engine.js"></script>
+  <script src="admin-ai-secretary-priority-engine.js"></script>
+  <script src="admin-ai-secretary-suggestion-engine.js"></script>
+  <script src="admin-ai-secretary-operations-engine.js"></script>
   <script src="admin-ai-secretary-phase2.js"></script>
   <script src="admin-ai-secretary-voice.js"></script>
   <script src="admin-ai-secretary-phase3.js"></script>

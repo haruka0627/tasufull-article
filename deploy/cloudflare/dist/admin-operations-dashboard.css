@@ -4547,6 +4547,48 @@ a.ops-p2-tile:hover {
   cursor: pointer;
 }
 
+.ops-p2-chat__voice {
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--od-border);
+  background: var(--od-panel-soft);
+  color: var(--od-text);
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.ops-p2-chat__voice[aria-pressed="true"] {
+  border-color: #059669;
+  color: #059669;
+}
+
+.ops-secretary-voice-state {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--od-muted);
+}
+
+.ops-secretary-voice-state--listening {
+  color: #059669;
+}
+
+.ops-secretary-voice-state--thinking {
+  color: #d97706;
+}
+
+.ops-secretary-voice-state--speaking {
+  color: #2563eb;
+}
+
+.ops-secretary-voice-state--error {
+  color: #dc2626;
+}
+
 .ops-p2-agent-grid {
   display: flex;
   flex-direction: column;
