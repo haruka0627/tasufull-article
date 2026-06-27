@@ -225,6 +225,38 @@
     });
   }
 
+  function enqueueFromGmailDraft(partial) {
+    partial = partial || {};
+    const gmailAction = partial.gmailAction === "send" ? "send" : "draft_create";
+    const subject = String(partial.subject || "(件名なし)").slice(0, 200);
+    const to = String(partial.to || "").slice(0, 200);
+    return enqueuePendingItem({
+      source: "gmail",
+      sourceId: partial.messageId || partial.threadId || "",
+      category: "user_reply",
+      actionType: "human_send",
+      proposal: String(partial.body || partial.proposal || "").slice(0, 2000),
+      recommendation:
+        gmailAction === "send"
+          ? `Gmail 送信確認: ${subject}`
+          : `Gmail 下書き作成: ${subject} → ${to}`,
+      reason: "Gmail — Human Gate 必須（自動送信禁止）",
+      impactArea: "Gmail",
+      severity: "warning",
+      confidence: 0.9,
+      payload: {
+        gmailAction,
+        messageId: partial.messageId || "",
+        threadId: partial.threadId || "",
+        replyToMessageId: partial.replyToMessageId || partial.messageId || "",
+        to,
+        subject,
+        body: String(partial.body || "").slice(0, 12000),
+        draftId: partial.draftId || "",
+      },
+    });
+  }
+
   function rejectPendingItem(id) {
     const list = readAllPending();
     const idx = list.findIndex((p) => p.id === id);
@@ -333,7 +365,7 @@
     return { ok: true, result: "success", outcome: "resolved", message: "内部アクションを記録しました" };
   }
 
-  function executeHumanSendAction(item) {
+  async function executeHumanSendAction(item) {
     const payload = item.payload || {};
     const gateOpts = { fromHumanSendGate: true, approved: true };
 
@@ -377,6 +409,50 @@
       };
     }
 
+    if (item.source === "gmail") {
+      const Gmail = global.TasuSecretaryGoogleGmailClient;
+      if (!Gmail?.executeWriteApproved) {
+        return { ok: false, result: "failed", outcome: "unknown", message: "Gmail client missing" };
+      }
+      const action = payload.gmailAction || "draft_create";
+      if (action === "send") {
+        const sendMethod = payload.draftId ? "drafts.send" : "messages.send";
+        const r = await Gmail.executeWriteApproved({
+          method: sendMethod,
+          pendingId: item.id,
+          draftId: payload.draftId,
+          to: payload.to,
+          subject: payload.subject,
+          body: payload.body || item.proposal,
+          threadId: payload.threadId,
+          replyToMessageId: payload.replyToMessageId,
+        });
+        return {
+          ok: !!r?.ok,
+          result: r?.ok ? "success" : "failed",
+          outcome: r?.ok ? "resolved" : "unknown",
+          message: r?.ok ? "Gmail 送信完了（Human Gate 承認後）" : String(r?.error || "send_failed"),
+          raw: r,
+        };
+      }
+      const r = await Gmail.executeWriteApproved({
+        method: "drafts.create",
+        pendingId: item.id,
+        to: payload.to,
+        subject: payload.subject,
+        body: payload.body || item.proposal,
+        threadId: payload.threadId,
+        replyToMessageId: payload.replyToMessageId,
+      });
+      return {
+        ok: !!r?.ok,
+        result: r?.ok ? "success" : "failed",
+        outcome: r?.ok ? "draft_created" : "unknown",
+        message: r?.ok ? "Gmail 下書きを作成しました" : String(r?.error || "draft_failed"),
+        raw: r,
+      };
+    }
+
     return {
       ok: true,
       result: "success",
@@ -385,7 +461,7 @@
     };
   }
 
-  function approveAndExecute(id, options) {
+  async function approveAndExecute(id, options) {
     const list = readAllPending();
     const idx = list.findIndex((p) => p.id === id && p.status === "pending");
     if (idx < 0) return { ok: false, error: "承認待ちが見つかりません" };
@@ -396,7 +472,7 @@
 
     let exec;
     if (item.actionType === "human_send" || isHumanSendCategory(item.category)) {
-      exec = executeHumanSendAction(item);
+      exec = await executeHumanSendAction(item);
     } else {
       exec = executeInternalAction(item);
     }
@@ -563,16 +639,17 @@
     host.querySelectorAll("[data-hsg-approve]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-hsg-approve");
-        const res = approveAndExecute(id);
-        const toast = host.querySelector("[data-hsg-toast]");
-        if (toast) {
-          toast.hidden = false;
-          toast.textContent = res.ok
-            ? `承認して実行しました: ${res.executed?.message || "完了"}`
-            : `実行できませんでした: ${res.error || res.executed?.message || ""}`;
-        }
-        renderHumanSendGatePanel(host);
-        global.TasuAdminAiAutoFixCandidate?.renderAutoFixPanel?.("[data-ops-ai-auto-fix]");
+        void approveAndExecute(id).then((res) => {
+          const toast = host.querySelector("[data-hsg-toast]");
+          if (toast) {
+            toast.hidden = false;
+            toast.textContent = res.ok
+              ? `承認して実行しました: ${res.executed?.message || "完了"}`
+              : `実行できませんでした: ${res.error || res.executed?.message || ""}`;
+          }
+          renderHumanSendGatePanel(host);
+          global.TasuAdminAiAutoFixCandidate?.renderAutoFixPanel?.("[data-ops-ai-auto-fix]");
+        });
       });
     });
 
@@ -623,6 +700,7 @@
     enqueueFromAutoFixCandidate,
     enqueueFromResponsePlan,
     enqueueFromAutomation,
+    enqueueFromGmailDraft,
     rejectPendingItem,
     approvePendingWithoutSend,
     updatePendingProposal,

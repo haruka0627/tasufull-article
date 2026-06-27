@@ -95,8 +95,8 @@ function runUnitTests() {
   if (/executeGmailRead/.test(tools) && /action === "gmail"/.test(tools)) ok("tools action=gmail route");
   else bad("tools action=gmail route");
 
-  if (/read_only/.test(tools)) ok("tools health read_only phase 6-C");
-  else bad("tools health read_only phase 6-C");
+  if (/read_write_human_gate|executeGmailWrite|phase: "6-D"/.test(tools)) ok("tools health gmail write phase 6-D");
+  else bad("tools health gmail write phase 6-D");
 
   const client = read("admin-ai-secretary-google-gmail-client.js");
   if (/PRESETS/.test(client) && /listMessages/.test(client) && /tryWriteBlocked/.test(client)) {
@@ -104,8 +104,8 @@ function runUnitTests() {
   } else bad("gmail client API surface");
 
   const ui = read("admin-ai-secretary-google-gmail-ui.js");
-  if (/ops-secretary-gmail__card/.test(ui) && /Phase 6-D/.test(ui)) ok("gmail UI cards readonly note");
-  else bad("gmail UI cards readonly note");
+  if (/ops-secretary-gmail__card/.test(ui) && /返信案を作る|Human Gate/.test(ui)) ok("gmail UI cards workflow");
+  else bad("gmail UI cards workflow");
 
   const html = read("admin-operations-dashboard.html");
   if (/data-ops-secretary-gmail-panel/.test(html) && /admin-ai-secretary-google-gmail-client\.js/.test(html)) {
@@ -204,8 +204,9 @@ async function mockFetchTests() {
   else bad("client getThread mock");
 
   const blocked = await Gmail.tryWriteBlocked("messages.send");
-  if (!blocked.ok && blocked.data?.error === "gmail_write_forbidden") ok("client write blocked 403");
-  else bad("client write blocked 403", blocked.data?.error);
+  if (!blocked.ok && /gmail_write_(forbidden|use_gmail_write)/.test(blocked.data?.error || "")) {
+    ok("client write blocked 403");
+  } else bad("client write blocked 403", blocked.data?.error);
 
   if (calls.every((c) => c.action === "gmail" && !c.access_token)) ok("calls edge only no tokens");
   else bad("calls edge only no tokens");

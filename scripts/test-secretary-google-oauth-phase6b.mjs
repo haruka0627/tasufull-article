@@ -93,7 +93,7 @@ async function runUnitTests() {
   const toolsEdge = read("supabase/functions/secretary-google-tools/index.ts");
   if (/not_implemented/i.test(toolsEdge)) ok("tools edge execute stub 501");
   else bad("tools edge execute stub 501");
-  if (/read_only|executeGmailRead/i.test(toolsEdge)) ok("tools gmail read-only wired");
+  if (/read_only|read_write_human_gate|executeGmailWrite/i.test(toolsEdge)) ok("tools gmail read-only wired");
   else bad("tools gmail read-only wired");
 
   const pkce = pkceNode();
