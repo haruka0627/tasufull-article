@@ -65,6 +65,7 @@
 | `reports/business-directory-ui-flow-design.md` | Business Directory Owner/Admin UI Flow 設計 |
 | `reports/business-directory-phase3-owner-ui.md` | Business Directory Phase 3 Owner UI |
 | `reports/business-directory-phase4-admin-ui.md` | Business Directory Phase 4 Admin UI |
+| `reports/business-directory-phase5-public-ui.md` | Business Directory Phase 5 Public UI |
 
 ---
 

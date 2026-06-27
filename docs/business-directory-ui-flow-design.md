@@ -3,7 +3,7 @@
 **最終更新:** 2026-06-27  
 **前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **関連:** [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [business-directory-mvp-design.md](./business-directory-mvp-design.md) · [business-directory-self-service-design.md](./business-directory-self-service-design.md) · [business-directory-data-model-design.md](./business-directory-data-model-design.md)  
-**状態:** **Phase 4 Admin UI 実装済** — 公開検索 · Stripe は **未着手**
+**状態:** **Phase 5 Public UI 実装済** — Stripe 決済 **未着手**
 
 ---
 
