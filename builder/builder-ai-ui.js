@@ -465,6 +465,13 @@
     }
   }
 
+  function renderDemoActions() {
+    return `<div class="builder-ai-v2-msg__actions">
+      <button type="button" class="builder-ai-v2-msg-action builder-ai-v2-msg-action--primary">詳細レポートを作成</button>
+      <button type="button" class="builder-ai-v2-msg-action">工程表を確認</button>
+    </div>`;
+  }
+
   function renderMessages() {
     const log = $("[data-builder-ai-ui-messages]");
     if (!log) return;
@@ -483,6 +490,14 @@
       avatar.className = "builder-ai-v2-msg__avatar";
       avatar.setAttribute("aria-hidden", "true");
       avatar.textContent = m.role === "user" ? "👤" : "🤖";
+      const stack = document.createElement("div");
+      stack.className = `builder-ai-v2-msg__stack builder-ai-v2-msg__stack--${m.role}`;
+      if (m.role === "assistant") {
+        const sender = document.createElement("span");
+        sender.className = "builder-ai-v2-msg__sender";
+        sender.textContent = "Builder AI";
+        stack.appendChild(sender);
+      }
       const bubble = document.createElement("div");
       bubble.className = `builder-ai-ui-msg builder-ai-v2-msg builder-ai-v2-msg--${m.role}`;
       const meta = formatMessageMeta(m);
@@ -493,13 +508,22 @@
       } else if (m.imageName && m.role === "user") {
         body += `<br><span class="builder-ai-ui-msg__meta">📷 ${escapeHtml(m.imageName)}</span>`;
       }
-      bubble.innerHTML = `${body}<time class="builder-ai-v2-msg__time">${escapeHtml(time)}</time>`;
+      bubble.innerHTML = body;
+      if (m.demoActions) {
+        bubble.insertAdjacentHTML("beforeend", renderDemoActions());
+      }
+      stack.appendChild(bubble);
+      const timeEl = document.createElement("time");
+      timeEl.className = "builder-ai-v2-msg__time";
+      timeEl.dateTime = new Date(m.at || Date.now()).toISOString();
+      timeEl.textContent = time;
+      stack.appendChild(timeEl);
       if (m.role === "user") {
-        row.appendChild(bubble);
+        row.appendChild(stack);
         row.appendChild(avatar);
       } else {
         row.appendChild(avatar);
-        row.appendChild(bubble);
+        row.appendChild(stack);
       }
       log.appendChild(row);
     });
@@ -893,16 +917,36 @@
     });
   }
 
+  function seedDemoConversation() {
+    const base = Date.now() - 8 * 60 * 1000;
+    messages.push(
+      {
+        role: "user",
+        content: "本日の現場状況を教えてください。資材搬入は予定通りですか？",
+        source: "text",
+        at: base,
+      },
+      {
+        role: "assistant",
+        content:
+          "おはようございます。本日の資材搬入予定を確認しました。\n\n· コンクリート打設資材 — 09:00 搬入済み\n· 外壁パネル — 13:00 到着予定（15分の遅延見込み）\n\n搬入前に現場写真をいただければ、配置場所の確認もお手伝いできます。",
+        source: "text",
+        at: base + 2800,
+        demoActions: true,
+      },
+      {
+        role: "user",
+        content: "外壁パネル搬入前に写真を送ります。配置場所の判断もお願いします。",
+        source: "text",
+        at: base + 180000,
+      }
+    );
+    saveHistory(messages);
+  }
+
   function seedWelcome() {
     if (messages.length) return;
-    messages.push({
-      role: "assistant",
-      content:
-        "Builder AI へようこそ。テキストで相談できます。\n\nクイック相談から「見積もり」「工程」「未入金」「書類」「通知」を選ぶか、下の入力欄に質問を入力してください。現場写真は「写真 · カメラ · 音声」から添付できます。",
-      source: "text",
-      at: Date.now(),
-    });
-    saveHistory(messages);
+    seedDemoConversation();
   }
 
   function init() {

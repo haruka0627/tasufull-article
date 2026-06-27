@@ -101,35 +101,37 @@
           </div>
 
           <div class="builder-ai-v2-composer-wrap">
-            <div class="builder-ai-ui-composer builder-ai-v2-composer">
-              <label class="visually-hidden" for="builder-ai-ui-input">相談内容</label>
-              <textarea
-                id="builder-ai-ui-input"
-                rows="3"
-                class="builder-ai-ui-composer__input builder-ai-v2-composer__input"
-                data-builder-ai-ui-input
-                placeholder="現場の状況や相談内容を入力してください…"
-              ></textarea>
-              <div class="builder-ai-v2-composer__toolbar">
-                <div class="builder-ai-v2-composer__tools">
-                  <label class="builder-ai-v2-tool-btn">
-                    <span aria-hidden="true">📎</span> 添付
-                    <input type="file" class="builder-ai-ui-photo__input" data-builder-ai-ui-photo-input accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
-                  </label>
-                  <button type="button" class="builder-ai-v2-tool-btn" data-builder-ai-ui-camera>📷 写真</button>
-                  <button type="button" class="builder-ai-v2-tool-btn builder-ai-ui-voice-btn" data-builder-ai-ui-voice-composer aria-pressed="false">🎤 音声</button>
+            <div class="builder-ai-v2-composer-card">
+              <div class="builder-ai-ui-composer builder-ai-v2-composer">
+                <label class="visually-hidden" for="builder-ai-ui-input">相談内容</label>
+                <textarea
+                  id="builder-ai-ui-input"
+                  rows="3"
+                  class="builder-ai-ui-composer__input builder-ai-v2-composer__input"
+                  data-builder-ai-ui-input
+                  placeholder="現場の状況や相談内容を入力してください…"
+                ></textarea>
+                <div class="builder-ai-v2-composer__footer">
+                  <div class="builder-ai-v2-composer__tools">
+                    <label class="builder-ai-v2-tool-btn">
+                      <span aria-hidden="true">📎</span> 添付
+                      <input type="file" class="builder-ai-ui-photo__input" data-builder-ai-ui-photo-input accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
+                    </label>
+                    <button type="button" class="builder-ai-v2-tool-btn" data-builder-ai-ui-camera>📷 写真</button>
+                    <button type="button" class="builder-ai-v2-tool-btn builder-ai-ui-voice-btn" data-builder-ai-ui-voice-composer aria-pressed="false">🎤 音声</button>
+                  </div>
+                  <button type="button" class="builder-ai-v2-send" data-builder-ai-ui-send><span aria-hidden="true">➤</span> 送信</button>
                 </div>
-                <button type="button" class="builder-ai-v2-send" data-builder-ai-ui-send>送信</button>
-              </div>
-              <div class="builder-ai-ui-photo__preview builder-ai-v2-photo-preview" data-builder-ai-ui-photo-preview>
-                <img class="builder-ai-ui-photo__thumb" data-builder-ai-ui-photo-thumb alt="選択した現場写真" hidden />
-                <div class="builder-ai-ui-photo__meta">
-                  <p class="builder-ai-ui-photo__name" data-builder-ai-ui-photo-name></p>
-                  <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-ui-photo-remove>写真を削除</button>
+                <div class="builder-ai-ui-photo__preview builder-ai-v2-photo-preview" data-builder-ai-ui-photo-preview>
+                  <img class="builder-ai-ui-photo__thumb" data-builder-ai-ui-photo-thumb alt="選択した現場写真" hidden />
+                  <div class="builder-ai-ui-photo__meta">
+                    <p class="builder-ai-ui-photo__name" data-builder-ai-ui-photo-name></p>
+                    <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-ui-photo-remove>写真を削除</button>
+                  </div>
                 </div>
+                <p class="builder-ai-ui-voice-state builder-ai-v2-voice-state" data-builder-ai-voice-state aria-live="polite">Ready</p>
+                <p class="builder-ai-ui-status builder-ai-v2-status" data-builder-ai-ui-status aria-live="polite"></p>
               </div>
-              <p class="builder-ai-ui-voice-state builder-ai-v2-voice-state" data-builder-ai-voice-state aria-live="polite">Ready</p>
-              <p class="builder-ai-ui-status builder-ai-v2-status" data-builder-ai-ui-status aria-live="polite"></p>
             </div>
           </div>
 
@@ -216,11 +218,11 @@
           <ul class="builder-ai-v2-history" data-builder-ai-ui-history></ul>
         </section>
         <section class="builder-ai-v2-stats" aria-label="統計">
-          <div class="builder-ai-v2-stat"><strong>6</strong><span>対応分野</span></div>
-          <div class="builder-ai-v2-stat"><strong>98.7%</strong><span>精度</span></div>
-          <div class="builder-ai-v2-stat"><strong>128</strong><span>相談件数</span></div>
-          <div class="builder-ai-v2-stat"><strong>2.8秒</strong><span>平均応答</span></div>
-          <div class="builder-ai-v2-stat"><strong>最新</strong><span>DB状態</span></div>
+          <div class="builder-ai-v2-stat"><span class="builder-ai-v2-stat__icon" aria-hidden="true">🏗️</span><strong>6</strong><span>対応分野</span></div>
+          <div class="builder-ai-v2-stat"><span class="builder-ai-v2-stat__icon" aria-hidden="true">🎯</span><strong>98.7%</strong><span>精度</span></div>
+          <div class="builder-ai-v2-stat"><span class="builder-ai-v2-stat__icon" aria-hidden="true">💬</span><strong>128</strong><span>相談件数</span></div>
+          <div class="builder-ai-v2-stat"><span class="builder-ai-v2-stat__icon" aria-hidden="true">⚡</span><strong>2.8秒</strong><span>平均応答</span></div>
+          <div class="builder-ai-v2-stat builder-ai-v2-stat--wide"><span class="builder-ai-v2-stat__icon" aria-hidden="true">🔄</span><strong>最新</strong><span>DB状態</span></div>
         </section>
       </aside>
     </div>
