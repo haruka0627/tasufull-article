@@ -1,10 +1,19 @@
 /**
- * AI秘書 Phase 6-E — Google Calendar read-only UI cards
+ * AI秘書 Phase 6-F — Google Calendar UI (read + write workflow + Human Gate)
  */
 (function (global) {
   "use strict";
 
   let mounted = false;
+  const uiState = { phase: "view", pendingId: "", draft: null, selectedEvent: null };
+
+  const STATE_LABELS = Object.freeze({
+    view: "閲覧",
+    create_confirm: "作成確認待ち",
+    update_confirm: "更新確認待ち",
+    delete_confirm: "削除確認待ち",
+    done: "完了",
+  });
 
   function esc(s) {
     return String(s ?? "")
@@ -36,13 +45,105 @@
     }
   }
 
-  function renderDetail(host, event) {
+  function renderStatusBadge(root) {
+    const status = $(root, "[data-ops-secretary-calendar-status]");
+    if (!status) return;
+    const label = STATE_LABELS[uiState.phase] || STATE_LABELS.view;
+    const base = status.dataset.baseLabel || status.textContent.split(" · ")[0] || "Calendar";
+    status.textContent = `${base} · ${label}`;
+  }
+
+  function renderConfirmPanel(root) {
+    const host = $(root, "[data-ops-secretary-calendar-confirm]");
     if (!host) return;
-    if (!event) {
+    const draft = uiState.draft;
+    if (!draft || uiState.phase === "view" || uiState.phase === "done") {
       host.hidden = true;
       host.innerHTML = "";
       return;
     }
+    host.hidden = false;
+    const actionLabel =
+      uiState.phase === "delete_confirm"
+        ? "予定削除確認"
+        : uiState.phase === "update_confirm"
+          ? "予定変更確認"
+          : "予定作成確認";
+    host.innerHTML =
+      `<article class="ops-secretary-gmail__card ops-secretary-calendar__confirm">` +
+      `<h5 class="ops-secretary-calendar__confirm-title">${esc(actionLabel)}</h5>` +
+      `<p class="ops-secretary-gmail__snippet"><strong>${esc(draft.title || "")}</strong></p>` +
+      `<p class="ops-secretary-gmail__snippet">${formatDateTime(draft.start, draft.allDay)} → ${formatDateTime(draft.end, draft.allDay)}</p>` +
+      `<p class="ops-secretary-gmail__snippet">${esc(draft.location || "場所未設定")}</p>` +
+      `<label class="ops-secretary-gmail__confirm-check">` +
+      `<input type="checkbox" data-calendar-confirm-check /> 内容を確認しました` +
+      `</label>` +
+      `<div class="ops-secretary-gmail__actions">` +
+      `<button type="button" class="ops-p3-action" data-calendar-action="approve" disabled>承認</button>` +
+      `<button type="button" class="ops-p3-action" data-calendar-action="cancel">キャンセル</button>` +
+      `</div>` +
+      `<p class="ops-secretary-gmail__readonly">Human Gate 承認後のみ実行されます</p>` +
+      `</article>`;
+    host.querySelector("[data-calendar-confirm-check]")?.addEventListener("change", (ev) => {
+      const btn = host.querySelector('[data-calendar-action="approve"]');
+      if (btn) btn.disabled = !ev.target.checked;
+    });
+    host.querySelector('[data-calendar-action="approve"]')?.addEventListener("click", () => {
+      void handleApprove(root);
+    });
+    host.querySelector('[data-calendar-action="cancel"]')?.addEventListener("click", () => {
+      resetWorkflow(root);
+    });
+  }
+
+  function resetWorkflow(root) {
+    uiState.phase = "view";
+    uiState.pendingId = "";
+    uiState.draft = null;
+    renderConfirmPanel(root);
+    renderStatusBadge(root);
+  }
+
+  async function handleApprove(root) {
+    const Client = global.TasuSecretaryGoogleCalendarClient;
+    if (!uiState.pendingId || !Client?.approvePending) return;
+    const approved = await Client.approvePending(uiState.pendingId);
+    if (approved?.ok) {
+      uiState.phase = "done";
+      renderConfirmPanel(root);
+      renderStatusBadge(root);
+      void loadPreset(root, Client.PRESETS.today, "今日の予定");
+      setTimeout(() => resetWorkflow(root), 1500);
+    }
+  }
+
+  function startHumanGate(root, calendarAction, fields) {
+    const Client = global.TasuSecretaryGoogleCalendarClient;
+    const HSG = global.TasuAdminAiHumanSendGate;
+    const queued = Client.enqueueCalendarHumanGate(calendarAction, fields);
+    if (!queued.ok || !queued.item?.id) return;
+    uiState.pendingId = queued.item.id;
+    uiState.draft = fields;
+    uiState.phase =
+      calendarAction === "delete"
+        ? "delete_confirm"
+        : calendarAction === "update"
+          ? "update_confirm"
+          : "create_confirm";
+    HSG?.renderHumanSendGatePanel?.("[data-ops-ai-human-send-gate]");
+    renderConfirmPanel(root);
+    renderStatusBadge(root);
+  }
+
+  function renderDetail(host, event, root) {
+    if (!host) return;
+    if (!event) {
+      host.hidden = true;
+      host.innerHTML = "";
+      uiState.selectedEvent = null;
+      return;
+    }
+    uiState.selectedEvent = event;
     host.hidden = false;
     host.innerHTML =
       `<article class="ops-secretary-gmail__card ops-secretary-calendar__detail">` +
@@ -57,12 +158,36 @@
       `<dt>参加者</dt><dd>${Number(event.attendeeCount || 0)} 名</dd>` +
       `</dl>` +
       (event.description ? `<p class="ops-secretary-gmail__snippet">${esc(event.description)}</p>` : "") +
-      `<p class="ops-secretary-gmail__readonly">閲覧のみ — 予定変更は Phase 6-F 以降</p>` +
+      `<div class="ops-secretary-gmail__actions">` +
+      `<button type="button" class="ops-p3-action" data-calendar-action="update">予定を変更</button>` +
+      `<button type="button" class="ops-p3-action" data-calendar-action="delete">予定を削除</button>` +
       `<button type="button" class="ops-p3-action" data-ops-calendar-detail-close>閉じる</button>` +
+      `</div>` +
       `</article>`;
     host.querySelector("[data-ops-calendar-detail-close]")?.addEventListener("click", () => {
-      host.hidden = true;
-      host.innerHTML = "";
+      renderDetail(host, null, root);
+    });
+    host.querySelector('[data-calendar-action="update"]')?.addEventListener("click", () => {
+      const fields = {
+        calendarId: event.calendarId || "primary",
+        eventId: event.id,
+        title: event.title,
+        start: event.start,
+        end: event.end,
+        allDay: event.allDay,
+        location: event.location,
+        description: event.description,
+      };
+      startHumanGate(root, "update", fields);
+    });
+    host.querySelector('[data-calendar-action="delete"]')?.addEventListener("click", () => {
+      startHumanGate(root, "delete", {
+        calendarId: event.calendarId || "primary",
+        eventId: event.id,
+        title: event.title,
+        start: event.start,
+        end: event.end,
+      });
     });
   }
 
@@ -70,7 +195,7 @@
     if (!host) return;
     events = Array.isArray(events) ? events : [];
     if (!events.length) {
-      host.innerHTML = '<p class="ops-secretary-gmail__empty">予定はありません（read-only）</p>';
+      host.innerHTML = '<p class="ops-secretary-gmail__empty">予定はありません</p>';
       return;
     }
     host.innerHTML = events
@@ -98,7 +223,8 @@
 
   function bindCardClicks(host) {
     const Client = global.TasuSecretaryGoogleCalendarClient;
-    const detailHost = host.closest("[data-ops-secretary-calendar-panel]")?.querySelector("[data-ops-secretary-calendar-detail]");
+    const root = host.closest("[data-ops-secretary-calendar-panel]");
+    const detailHost = root?.querySelector("[data-ops-secretary-calendar-detail]");
     host.querySelectorAll("[data-calendar-event-id]").forEach((card) => {
       if (card.dataset.bound === "1") return;
       card.dataset.bound = "1";
@@ -107,11 +233,11 @@
         const calendarId = card.getAttribute("data-calendar-id") || "primary";
         const cached = (host.__events || []).find((e) => e.id === eventId);
         if (cached) {
-          renderDetail(detailHost, cached);
+          renderDetail(detailHost, cached, root);
           return;
         }
         void Client?.getEvent?.(calendarId, eventId).then((res) => {
-          if (res?.ok && res.data?.event) renderDetail(detailHost, res.data.event);
+          if (res?.ok && res.data?.event) renderDetail(detailHost, res.data.event, root);
         });
       };
       card.addEventListener("click", open);
@@ -129,7 +255,10 @@
     const host = $(root, "[data-ops-secretary-calendar-cards]");
     const status = $(root, "[data-ops-secretary-calendar-status]");
     if (!Client?.listEvents || !host) return;
-    if (status) status.textContent = `${label || "読込中"}…`;
+    if (status) {
+      status.dataset.baseLabel = label || "Calendar";
+      status.textContent = `${label || "読込中"}…`;
+    }
     host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
     const result = await Client.listEvents({ preset, maxResults: 25 });
     if (!result.ok) {
@@ -141,7 +270,10 @@
     host.__events = events;
     renderCards(host, events);
     const mock = result.data?.mock ? " · mock" : "";
-    if (status) status.textContent = `${label || "Calendar"} ${events.length} 件${mock}`;
+    if (status) {
+      status.dataset.baseLabel = `${label || "Calendar"} ${events.length} 件${mock}`;
+      renderStatusBadge(root);
+    }
   }
 
   async function loadSearch(root, q) {
@@ -149,7 +281,7 @@
     const host = $(root, "[data-ops-secretary-calendar-cards]");
     const status = $(root, "[data-ops-secretary-calendar-status]");
     if (!Client?.listEvents || !host) return;
-    if (status) status.textContent = `検索: ${q.slice(0, 24)}…`;
+    if (status) status.dataset.baseLabel = `検索 ${q.slice(0, 24)}`;
     host.innerHTML = '<p class="ops-secretary-gmail__empty">読込中…</p>';
     const result = await Client.listEvents({ preset: "next_7_days", q, maxResults: 25 });
     if (!result.ok) {
@@ -159,7 +291,27 @@
     const events = result.data?.events || [];
     host.__events = events;
     renderCards(host, events);
-    if (status) status.textContent = `検索 ${events.length} 件`;
+    renderStatusBadge(root);
+  }
+
+  async function handleCreate(root) {
+    const Client = global.TasuSecretaryGoogleCalendarClient;
+    const input = $(root, "[data-ops-secretary-calendar-create-input]");
+    const text = String(input?.value || "").trim();
+    if (!text) return;
+    const parsed = await Client.parseEventIntent(text, {});
+    if (!parsed.ok || !parsed.fields) return;
+    const fields = {
+      calendarId: "primary",
+      title: parsed.fields.title,
+      start: parsed.fields.start,
+      end: parsed.fields.end,
+      allDay: parsed.fields.allDay,
+      location: parsed.fields.location,
+      description: parsed.fields.description,
+      attendees: parsed.fields.attendees,
+    };
+    startHumanGate(root, "create", fields);
   }
 
   function bindPresets(root) {
@@ -182,6 +334,19 @@
         const q = String(input?.value || "").trim();
         if (!q) return;
         void loadSearch(root, q);
+      });
+    }
+    const createBtn = $(root, "[data-ops-secretary-calendar-create-btn]");
+    if (createBtn && createBtn.dataset.bound !== "1") {
+      createBtn.dataset.bound = "1";
+      createBtn.addEventListener("click", () => void handleCreate(root));
+    }
+    const createForm = $(root, "[data-ops-secretary-calendar-create-form]");
+    if (createForm && createForm.dataset.bound !== "1") {
+      createForm.dataset.bound = "1";
+      createForm.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        void handleCreate(root);
       });
     }
   }
@@ -212,8 +377,16 @@
     mounted = true;
     bindTabs(root);
     bindPresets(root);
+    global.addEventListener("tasu:admin-ai-human-send-gate-updated", () => renderConfirmPanel(root));
     void loadPreset(root, global.TasuSecretaryGoogleCalendarClient?.PRESETS?.today, "今日の予定");
   }
 
-  global.TasuSecretaryGoogleCalendarUI = { mount, loadPreset, loadSearch, renderCards, renderDetail };
+  global.TasuSecretaryGoogleCalendarUI = {
+    mount,
+    loadPreset,
+    loadSearch,
+    renderCards,
+    renderDetail,
+    STATE_LABELS,
+  };
 })(typeof window !== "undefined" ? window : globalThis);

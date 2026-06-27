@@ -35,6 +35,13 @@ export const CALENDAR_WRITE_METHODS = Object.freeze([
   "calendarList.delete",
 ]);
 
+/** Phase 6-F allowed write methods (non-recurring single events). */
+export const CALENDAR_WRITE_ALLOWED_PHASE6F = Object.freeze([
+  "events.insert",
+  "events.update",
+  "events.delete",
+]);
+
 export type CalendarReadRequest = {
   method: string;
   calendarId?: string;
@@ -47,6 +54,22 @@ export type CalendarReadRequest = {
   pageToken?: string;
   singleEvents?: boolean;
   orderBy?: string;
+};
+
+export type CalendarWriteRequest = {
+  method: string;
+  humanGateApproved?: boolean;
+  pendingId?: string;
+  calendarId?: string;
+  eventId?: string;
+  title?: string;
+  start?: string;
+  end?: string;
+  allDay?: boolean;
+  location?: string;
+  description?: string;
+  attendees?: string[];
+  timeZone?: string;
 };
 
 export type CalendarEventCard = {
@@ -74,6 +97,15 @@ export function isCalendarReadMethod(method: string): boolean {
 
 export function isCalendarWriteMethod(method: string): boolean {
   return CALENDAR_WRITE_METHODS.includes(String(method || "").trim());
+}
+
+export function isCalendarWriteAllowedPhase6F(method: string): boolean {
+  return CALENDAR_WRITE_ALLOWED_PHASE6F.includes(String(method || "").trim());
+}
+
+export function isCalendarWriteBlockedPhase6F(method: string): boolean {
+  const m = String(method || "").trim();
+  return isCalendarWriteMethod(m) && !isCalendarWriteAllowedPhase6F(m);
 }
 
 function sanitizeKeyword(q: string): string {
@@ -403,4 +435,180 @@ export async function executeCalendarRead(userId: string, req: CalendarReadReque
   }
 
   return executeLiveCalendar(token.accessToken, req);
+}
+
+const DEFAULT_TZ = "Asia/Tokyo";
+
+function buildEventResource(req: CalendarWriteRequest): Record<string, unknown> {
+  const title = trim(req.title, 500);
+  const location = trim(req.location, 500);
+  const description = trim(req.description, 5000);
+  const tz = trim(req.timeZone, 80) || DEFAULT_TZ;
+  const allDay = Boolean(req.allDay);
+  const startRaw = trim(req.start, 80);
+  const endRaw = trim(req.end, 80);
+  const body: Record<string, unknown> = {};
+  if (title) body.summary = title;
+  if (location) body.location = location;
+  if (description) body.description = description;
+  if (startRaw) {
+    body.start = allDay ? { date: startRaw.slice(0, 10) } : { dateTime: startRaw, timeZone: tz };
+  }
+  if (endRaw) {
+    body.end = allDay ? { date: endRaw.slice(0, 10) } : { dateTime: endRaw, timeZone: tz };
+  }
+  const attendees = Array.isArray(req.attendees)
+    ? req.attendees.map((email) => ({ email: trim(email, 200) })).filter((a) => a.email)
+    : [];
+  if (attendees.length) body.attendees = attendees.slice(0, 20);
+  return body;
+}
+
+function assertCalendarHumanGate(req: CalendarWriteRequest) {
+  if (!req.humanGateApproved || !trim(req.pendingId, 120)) {
+    return { ok: false as const, error: "human_gate_required", phase: "6-F" };
+  }
+  return { ok: true as const };
+}
+
+async function calendarMutate(
+  accessToken: string,
+  method: "POST" | "PUT" | "PATCH" | "DELETE",
+  path: string,
+  body?: Record<string, unknown>
+): Promise<{ ok: boolean; status: number; data?: Record<string, unknown>; error?: string }> {
+  const res = await fetch(`${CALENDAR_BASE}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (method === "DELETE" && res.status === 204) {
+    return { ok: true, status: 204, data: { deleted: true } };
+  }
+  const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
+  if (!res.ok) {
+    return {
+      ok: false,
+      status: res.status,
+      error: trim((data.error as Record<string, unknown>)?.message || data.error || `http_${res.status}`, 300),
+    };
+  }
+  return { ok: true, status: res.status, data };
+}
+
+async function executeMockCalendarWrite(req: CalendarWriteRequest) {
+  const gate = assertCalendarHumanGate(req);
+  if (!gate.ok) return gate;
+  const method = trim(req.method);
+  const calendarId = trim(req.calendarId, 300) || "primary";
+  if (method === "events.insert") {
+    const id = `mock_evt_${trim(req.pendingId, 20).slice(0, 8) || Date.now()}`;
+    const event = normalizeEvent(
+      {
+        id,
+        summary: trim(req.title, 500) || "新規予定",
+        start: req.allDay ? { date: trim(req.start, 10) } : { dateTime: trim(req.start, 80) },
+        end: req.allDay ? { date: trim(req.end, 10) } : { dateTime: trim(req.end, 80) },
+        location: trim(req.location, 500),
+        description: trim(req.description, 2000),
+        status: "confirmed",
+      },
+      calendarId,
+      "メインカレンダー"
+    );
+    return { ok: true, mock: true, method, eventId: id, event, pendingId: trim(req.pendingId, 120) };
+  }
+  if (method === "events.update") {
+    const eventId = trim(req.eventId, 200);
+    if (!eventId) return { ok: false, error: "event_id_required" };
+    return {
+      ok: true,
+      mock: true,
+      method,
+      eventId,
+      updated: true,
+      pendingId: trim(req.pendingId, 120),
+    };
+  }
+  if (method === "events.delete") {
+    const eventId = trim(req.eventId, 200);
+    if (!eventId) return { ok: false, error: "event_id_required" };
+    return { ok: true, mock: true, method, eventId, deleted: true, pendingId: trim(req.pendingId, 120) };
+  }
+  return { ok: false, error: "unknown_calendar_write_method" };
+}
+
+async function executeLiveCalendarWrite(accessToken: string, req: CalendarWriteRequest) {
+  const method = trim(req.method);
+  const calendarId = trim(req.calendarId, 300) || "primary";
+  const eventBody = buildEventResource(req);
+
+  if (method === "events.insert") {
+    if (!eventBody.summary || !eventBody.start) return { ok: false, error: "event_fields_required" };
+    const res = await calendarMutate(
+      accessToken,
+      "POST",
+      `/calendars/${encodeURIComponent(calendarId)}/events`,
+      eventBody
+    );
+    if (!res.ok) return res;
+    const event = normalizeEvent(res.data || {}, calendarId, calendarId);
+    return { ok: true, method, eventId: event.id, event, pendingId: trim(req.pendingId, 120) };
+  }
+
+  if (method === "events.update") {
+    const eventId = trim(req.eventId, 200);
+    if (!eventId) return { ok: false, error: "event_id_required" };
+    const res = await calendarMutate(
+      accessToken,
+      "PATCH",
+      `/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(eventId)}`,
+      eventBody
+    );
+    if (!res.ok) return res;
+    const event = normalizeEvent(res.data || {}, calendarId, calendarId);
+    return { ok: true, method, eventId, event, updated: true, pendingId: trim(req.pendingId, 120) };
+  }
+
+  if (method === "events.delete") {
+    const eventId = trim(req.eventId, 200);
+    if (!eventId) return { ok: false, error: "event_id_required" };
+    const res = await calendarMutate(
+      accessToken,
+      "DELETE",
+      `/calendars/${encodeURIComponent(calendarId)}/events/${encodeURIComponent(eventId)}`
+    );
+    if (!res.ok) return res;
+    return { ok: true, method, eventId, deleted: true, pendingId: trim(req.pendingId, 120) };
+  }
+
+  return { ok: false, error: "unknown_calendar_write_method" };
+}
+
+export async function executeCalendarWrite(userId: string, req: CalendarWriteRequest) {
+  const method = trim(req.method);
+  if (!method) return { ok: false, error: "method_required" };
+  if (isCalendarWriteBlockedPhase6F(method)) {
+    return { ok: false, error: "calendar_write_forbidden", method, phase: "6-F+" };
+  }
+  if (!isCalendarWriteAllowedPhase6F(method)) {
+    return { ok: false, error: "calendar_write_method_not_allowed", method };
+  }
+
+  const gate = assertCalendarHumanGate(req);
+  if (!gate.ok) return gate;
+
+  if (isSecretaryGoogleMockMode()) {
+    return executeMockCalendarWrite(req);
+  }
+
+  const token = await ensureGoogleAccessToken(userId);
+  if (!token.ok || !token.accessToken) {
+    return { ok: false, error: token.error || "not_connected" };
+  }
+
+  return executeLiveCalendarWrite(token.accessToken, req);
 }
