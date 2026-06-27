@@ -480,6 +480,7 @@
     global.TasuSecretaryMorningReport?.bindMorningReportButton?.();
     global.TasuSecretaryGoogleConnectUI?.mount?.();
     global.TasuSecretaryGoogleGmailUI?.mount?.();
+    global.TasuSecretaryGoogleCalendarUI?.mount?.();
   }
 
   function clearHistoryForTests() {

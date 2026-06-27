@@ -4596,6 +4596,46 @@ a.ops-p2-tile:hover {
   flex: 0 0 auto;
 }
 
+.ops-secretary-google-workspace {
+  margin: 0 0 0.75rem;
+}
+
+.ops-secretary-google-workspace__tabs {
+  display: flex;
+  gap: 0.35rem;
+  margin-bottom: 0.45rem;
+}
+
+.ops-secretary-google-workspace__tab {
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--od-border, #e5e7eb);
+  border-radius: 6px;
+  background: var(--od-surface, #fff);
+  cursor: pointer;
+}
+
+.ops-secretary-google-workspace__tab--active {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: #4338ca;
+  font-weight: 600;
+}
+
+.ops-secretary-calendar__detail-list {
+  margin: 0 0 0.35rem;
+  font-size: 0.75rem;
+}
+
+.ops-secretary-calendar__detail-list dt {
+  font-weight: 600;
+  color: var(--od-muted, #6b7280);
+}
+
+.ops-secretary-calendar__detail-list dd {
+  margin: 0 0 0.25rem;
+}
+
 .ops-secretary-gmail {
   margin: 0 0 0.75rem;
   padding: 0.55rem 0.65rem;

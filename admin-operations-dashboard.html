@@ -158,9 +158,14 @@
               <button type="button" class="ops-p3-action ops-secretary-google-connect__btn" data-ops-secretary-google-connect-btn>接続する</button>
               <button type="button" class="ops-p3-action" data-ops-secretary-google-disconnect-btn hidden>切断する</button>
             </div>
+            <div class="ops-secretary-google-workspace" data-ops-secretary-google-workspace>
+              <div class="ops-secretary-google-workspace__tabs" role="tablist" aria-label="Google Workspace">
+                <button type="button" class="ops-secretary-google-workspace__tab ops-secretary-google-workspace__tab--active" role="tab" data-ops-google-tab="mail" aria-selected="true">Mail</button>
+                <button type="button" class="ops-secretary-google-workspace__tab" role="tab" data-ops-google-tab="calendar" aria-selected="false">Calendar</button>
+              </div>
             <section class="ops-secretary-gmail" data-ops-secretary-gmail-panel aria-labelledby="ops-secretary-gmail-heading">
               <header class="ops-secretary-gmail__head">
-                <h4 class="ops-secretary-gmail__title" id="ops-secretary-gmail-heading">Gmail（閲覧のみ）</h4>
+                <h4 class="ops-secretary-gmail__title" id="ops-secretary-gmail-heading">Gmail</h4>
                 <span class="ops-secretary-gmail__status" data-ops-secretary-gmail-status aria-live="polite">未読を読込中…</span>
               </header>
               <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Gmail フィルタ">
@@ -176,6 +181,26 @@
               </form>
               <div class="ops-secretary-gmail__cards" data-ops-secretary-gmail-cards aria-live="polite"></div>
             </section>
+            <section class="ops-secretary-gmail ops-secretary-calendar" data-ops-secretary-calendar-panel aria-labelledby="ops-secretary-calendar-heading" hidden>
+              <header class="ops-secretary-gmail__head">
+                <h4 class="ops-secretary-gmail__title" id="ops-secretary-calendar-heading">Calendar（閲覧のみ）</h4>
+                <span class="ops-secretary-gmail__status" data-ops-secretary-calendar-status aria-live="polite">今日の予定を読込中…</span>
+              </header>
+              <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Calendar フィルタ">
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-calendar-preset="today">今日の予定</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-calendar-preset="tomorrow">明日の予定</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-calendar-preset="this_week">今週の予定</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-calendar-preset="next_7_days">今後7日</button>
+              </div>
+              <form class="ops-secretary-gmail__search" data-ops-secretary-calendar-search-form>
+                <label class="visually-hidden" for="ops-secretary-calendar-search">Calendar キーワード検索</label>
+                <input type="search" class="ops-secretary-gmail__search-input" id="ops-secretary-calendar-search" data-ops-secretary-calendar-search-input placeholder="キーワード検索（例: ミーティング）" autocomplete="off" />
+                <button type="submit" class="ops-p3-action">検索</button>
+              </form>
+              <div class="ops-secretary-gmail__cards" data-ops-secretary-calendar-cards aria-live="polite"></div>
+              <div class="ops-secretary-calendar__detail-host" data-ops-secretary-calendar-detail hidden aria-live="polite"></div>
+            </section>
+            </div>
             <div class="ops-p7-chat-conversation">
               <div class="ops-p7-chat-msg ops-p7-chat-msg--assistant ops-light-card" data-ops-phase7-chat-brief aria-live="polite"></div>
               <div class="ops-p2-chat__log ops-p7-desk-chat-log" data-ops-phase2-chat-log role="log" aria-live="polite"></div>
@@ -736,6 +761,8 @@
   <script src="admin-ai-secretary-google-oauth-client.js"></script>
   <script src="admin-ai-secretary-google-gmail-client.js"></script>
   <script src="admin-ai-secretary-google-gmail-ui.js"></script>
+  <script src="admin-ai-secretary-google-calendar-client.js"></script>
+  <script src="admin-ai-secretary-google-calendar-ui.js"></script>
   <script src="admin-ai-secretary-google-connect-ui.js"></script>
   <script src="admin-ai-secretary-ops-data-provider.js"></script>
   <script src="admin-ai-secretary-insight-engine.js"></script>

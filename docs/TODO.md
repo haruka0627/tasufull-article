@@ -166,10 +166,13 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - [x] **Phase 6-B** — OAuth + Token Vault + Edge skeleton（PKCE · mock · UI 接続状態）
 - [x] **Phase 6-C** — Gmail read-only（messages.list/get · threads.get · labels.list · q · 添付 metadata · UI カード）
 - [x] **Phase 6-D** — Gmail write + Human Gate（返信案 · drafts.create · drafts.send · 送信確認）
-- [ ] Phase 6-E / 6-F — Calendar read / write
+- [x] **Phase 6-E** — Calendar read-only（calendarList · events.list/get · preset · キーワード · UI カード）
+- [ ] Phase 6-F — Calendar write + Human Gate
 - [ ] Phase 6-G — Contacts + 「○○さんへメール」導線
 - [ ] Phase 6-H — Drive 検索
 - [ ] Phase 7-A — Cursor SDK · cron · L1 自動送信 · Agent 自動実行（旧 Phase 6）
+
+**Phase 6-E 参照:** `reports/secretary-google-phase6e-calendar-readonly.md`
 
 **Phase 6-D 参照:** `reports/secretary-google-phase6d-gmail-write-human-gate.md`
 
