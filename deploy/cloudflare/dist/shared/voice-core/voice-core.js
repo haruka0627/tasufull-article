@@ -1,6 +1,6 @@
 /**
  * Voice Core — shared provider-agnostic voice session API
- * Builder AI · AI秘書 · TASFUL AI · TLV — 将来差し替え可能な土台（Phase 3: mock-compatible）
+ * Builder AI · AI秘書 · TASFUL AI · TLV — 将来差し替え可能な土台（Phase 4: STT/TTS/Fallback skeleton）
  */
 (function (global) {
   "use strict";
@@ -13,6 +13,11 @@
   const { normalizeGeminiLiveOptions } = global.TasuVoiceCoreGeminiLiveOptions || {};
   const { mapGeminiWireEventToVoiceCore, GEMINI_WIRE_EVENT } =
     global.TasuVoiceCoreGeminiLiveEventMapper || {};
+  const { assertSttAdapter } = global.TasuVoiceCoreSttAdapterInterface || {};
+  const { assertTtsAdapter } = global.TasuVoiceCoreTtsAdapterInterface || {};
+  const sttMockAdapter = global.TasuVoiceCoreSttMockAdapter;
+  const ttsMockAdapter = global.TasuVoiceCoreTtsMockAdapter;
+  const { createFallbackRouter, DEFAULT_LIVE_CHAIN } = global.TasuVoiceCoreFallbackRouter || {};
 
   /**
    * @param {object} [options]
@@ -27,16 +32,45 @@
     return session;
   }
 
+  /**
+   * @param {{ provider?: string }} [options]
+   */
+  function createSTTAdapter(options = {}) {
+    const provider = String(options.provider || "mock");
+    if (provider === "mock" && sttMockAdapter) {
+      if (assertSttAdapter) assertSttAdapter(sttMockAdapter);
+      return sttMockAdapter;
+    }
+    throw new Error(`voice_core_stt_not_implemented:${provider}`);
+  }
+
+  /**
+   * @param {{ provider?: string }} [options]
+   */
+  function createTTSAdapter(options = {}) {
+    const provider = String(options.provider || "mock");
+    if (provider === "mock" && ttsMockAdapter) {
+      if (assertTtsAdapter) assertTtsAdapter(ttsMockAdapter);
+      return ttsMockAdapter;
+    }
+    throw new Error(`voice_core_tts_not_implemented:${provider}`);
+  }
+
   global.TasuVoiceCore = {
-    VERSION: "phase3-mock-compatible",
+    VERSION: "phase4-mock-compatible",
     EVENT,
     ADAPTER_KIND,
     WIRE_EVENT: WIRE_EVENT || {},
     GEMINI_WIRE_EVENT: GEMINI_WIRE_EVENT || {},
+    DEFAULT_LIVE_CHAIN: DEFAULT_LIVE_CHAIN || [],
     normalizeRealtimeOptions,
     mapWireEventToVoiceCore,
     normalizeGeminiLiveOptions,
     mapGeminiWireEventToVoiceCore,
+    createSTTAdapter,
+    createTTSAdapter,
+    createFallbackRouter,
+    VoiceFallbackRouter: global.TasuVoiceCoreFallbackRouter,
     startSession,
     createSession,
     resolveAdapter,

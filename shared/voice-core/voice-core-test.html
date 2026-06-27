@@ -15,7 +15,7 @@
 </head>
 <body>
   <h1>Voice Core</h1>
-  <p>Mock + openai_realtime + gemini_live skeleton (mock-compatible) — no external API.</p>
+  <p>Mock + Live skeletons + STT/TTS/Fallback (mock-only) — no external API.</p>
   <div>
     <button type="button" id="btn-start">Start session</button>
     <button type="button" id="btn-text">Send text</button>
@@ -23,6 +23,9 @@
     <button type="button" id="btn-stop">Stop session</button>
     <button type="button" id="btn-auto">Run auto test</button>
     <button type="button" id="btn-gemini-auto">Run Gemini auto test</button>
+    <button type="button" id="btn-stt-mock">STT Mock</button>
+    <button type="button" id="btn-tts-mock">TTS Mock</button>
+    <button type="button" id="btn-fallback-mock">Fallback Mock</button>
   </div>
   <pre id="log"></pre>
 
@@ -35,6 +38,11 @@
   <script src="voice-gemini-live-options.js"></script>
   <script src="voice-gemini-live-event-mapper.js"></script>
   <script src="adapters/voice-gemini-live-adapter.js"></script>
+  <script src="stt/voice-stt-adapter-interface.js"></script>
+  <script src="stt/voice-stt-mock-adapter.js"></script>
+  <script src="tts/voice-tts-adapter-interface.js"></script>
+  <script src="tts/voice-tts-mock-adapter.js"></script>
+  <script src="voice-fallback-router.js"></script>
   <script src="voice-provider-router.js"></script>
   <script src="voice-session.js"></script>
   <script src="voice-core.js"></script>
@@ -100,6 +108,34 @@
         const need = ["session_started", "text_delta", "audio_delta_mock", "session_stopped"];
         const ok = need.every((t) => events.includes(t));
         log(ok ? "GEMINI AUTO PASS: " + events.join(", ") : "GEMINI AUTO FAIL: " + events.join(", "), ok ? "ok" : "err");
+      };
+
+      document.getElementById("btn-stt-mock").onclick = () => {
+        const stt = window.TasuVoiceCore.createSTTAdapter({ provider: "mock" });
+        const result = stt.recognize(new Uint8Array([1, 2, 3]), { language: "ja-JP" });
+        const types = result.events.map((e) => e.type);
+        const ok = types.includes("stt_final_mock") && result.text.includes("mock transcript");
+        log(ok ? "STT MOCK PASS: " + result.text : "STT MOCK FAIL", ok ? "ok" : "err");
+      };
+
+      document.getElementById("btn-tts-mock").onclick = () => {
+        const tts = window.TasuVoiceCore.createTTSAdapter({ provider: "mock" });
+        const result = tts.synthesize("phase4 tts test", { language: "ja-JP" });
+        const types = result.events.map((e) => e.type);
+        const ok = types.includes("tts_audio_chunk_mock") && result.audio?.bytes?.length > 0;
+        log(ok ? "TTS MOCK PASS: bytes=" + result.audio.bytes.length : "TTS MOCK FAIL", ok ? "ok" : "err");
+      };
+
+      document.getElementById("btn-fallback-mock").onclick = () => {
+        const router = window.TasuVoiceCore.createFallbackRouter();
+        const primary = router.getPrimary();
+        const next = router.routeOnFailure("openai_realtime");
+        const walk = router.simulateFallbackWalk("openai_realtime");
+        const ok =
+          primary?.provider === "openai_realtime" &&
+          next.nextProvider === "gemini_live" &&
+          walk.steps.length >= 2;
+        log(ok ? "FALLBACK MOCK PASS: " + JSON.stringify({ primary, next: next.nextProvider }) : "FALLBACK MOCK FAIL", ok ? "ok" : "err");
       };
     })();
   </script>

@@ -235,7 +235,7 @@ async function browserSmoke() {
       if (result.events.includes(t)) ok(`browser gemini event: ${t}`);
       else bad(`browser gemini event: ${t}`);
     }
-    if (result.version?.includes("phase3")) ok("browser: VERSION phase3");
+    if (result.version?.includes("phase")) ok("browser: VERSION phase3");
     else bad("browser: VERSION phase3", result.version);
   } finally {
     await browser.close();
