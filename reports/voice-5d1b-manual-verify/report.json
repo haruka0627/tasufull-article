@@ -1,0 +1,57 @@
+{
+  "url": "http://127.0.0.1:8788/ai-workspace.html",
+  "defaultFlags": {
+    "liveOptIn": false,
+    "policy": "mock"
+  },
+  "live": {
+    "refreshOk": true,
+    "refreshError": null,
+    "injectorsRegistered": true,
+    "liveEnabled": true,
+    "useWebSocketTransport": true,
+    "policyMode": "live",
+    "startOk": true,
+    "hasSessionCreated": false,
+    "credentialType": "ephemeral_token",
+    "endpoint": "wss://api.openai.com/v1/realtime"
+  },
+  "fallback": {
+    "policyMode": "mock",
+    "injectorsRegistered": false,
+    "mockCompatible": true,
+    "voiceBubbleAdded": false,
+    "composerVisible": true
+  },
+  "flagsOff": {
+    "liveOptIn": false,
+    "policy": "mock",
+    "injectorsRegistered": false
+  },
+  "ui": [
+    {
+      "viewport": "1280x900",
+      "httpOk": true,
+      "horizontalScroll": false,
+      "jsErrors": 0
+    },
+    {
+      "viewport": "768x1024",
+      "httpOk": true,
+      "horizontalScroll": false,
+      "jsErrors": 0
+    },
+    {
+      "viewport": "390x844",
+      "httpOk": true,
+      "horizontalScroll": false,
+      "jsErrors": 0
+    }
+  ],
+  "console": {
+    "jsErrors": [],
+    "novelErrors": [],
+    "consoleErrors": []
+  },
+  "httpStatus": 200
+}
