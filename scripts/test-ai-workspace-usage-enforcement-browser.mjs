@@ -67,6 +67,8 @@ async function resetStorage(page, { usage = null, plan = null, tlv = null } = {}
       }
       window.__usageTestTurns = [];
       window.__usageTestConsumeCount = 0;
+      window.__TASU_WORKSPACE_USAGE_TEST__ = true;
+      window.__TASU_WORKSPACE_USAGE_PHASE2__ = false;
       const Usage = window.TasuAiWorkspaceUsage;
       if (Usage) Usage.updateUsageUi();
     },

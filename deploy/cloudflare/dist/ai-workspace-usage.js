@@ -1,6 +1,6 @@
 /**
- * TASFUL AI Workspace — 日次 quota（Phase 1 · クライアント enforcement）
- * プラン: tasu_genai_plan · usage: tasu_ai_workspace_usage
+ * TASFUL AI Workspace — 日次 quota（Phase 2 · Edge + DB 正本）
+ * プラン: tasu_genai_plan / gen_ai_subscriptions · usage: ai_workspace_usage_daily
  */
 (function (global) {
   "use strict";
@@ -8,12 +8,23 @@
   const STORAGE_USAGE = "tasu_ai_workspace_usage";
   const STORAGE_GENAI_PLAN = "tasu_genai_plan";
   const FEATURE_TEXT_TURN = "text_turn";
+  const WORKSPACE_SURFACE = "ai-workspace";
+  const CHAT_EDGE_PATTERN = /\/functions\/v1\/(gemini-chat|openai-chat|claude-chat)(?:\?|$)/;
 
   const DEFAULT_FREE_PLAN = {
     plan: "free",
     label: "無料枠",
     dailyTextLimit: 5,
   };
+
+  /** @type {{ remaining: number | null, dailyLimit: number | null, syncedAt: number }} */
+  const serverCache = { remaining: null, dailyLimit: null, syncedAt: 0 };
+
+  function isPhase2ServerEnabled() {
+    if (global.__TASU_WORKSPACE_USAGE_PHASE2__ === false) return false;
+    if (global.__TASU_WORKSPACE_USAGE_TEST__) return false;
+    return true;
+  }
 
   function getTokyoDateKey() {
     try {
@@ -45,6 +56,11 @@
   function getUserId() {
     const cfg = global.TASU_CHAT_SUPABASE_CONFIG || global.TASU_SUPABASE_CONFIG || {};
     return String(cfg.currentUserId || cfg.userId || cfg.user_id || "anonymous").trim() || "anonymous";
+  }
+
+  function getSupabaseBase() {
+    const cfg = global.TASU_CHAT_SUPABASE_CONFIG || global.TASU_SUPABASE_CONFIG || {};
+    return String(cfg.url || "").replace(/\/$/, "");
   }
 
   function getDefaultLimits() {
@@ -129,12 +145,37 @@
     };
   }
 
+  function applyServerStatusToCache(status) {
+    if (!status || typeof status !== "object") return;
+    const limit = Math.max(0, Number(status.dailyLimit) || getDailyLimit());
+    const remaining = Math.max(0, Number(status.remaining) || 0);
+    const used = Math.max(0, Number(status.used) ?? limit - remaining);
+    serverCache.remaining = remaining;
+    serverCache.dailyLimit = limit;
+    serverCache.syncedAt = Date.now();
+    const today = getTokyoDateKey();
+    saveUsage({ date: today, textTurnUsed: used });
+    if (status.planCode || status.planLabel) {
+      saveGenAiPlan({
+        plan: status.planCode,
+        label: status.planLabel,
+        dailyTextLimit: limit,
+      });
+    }
+  }
+
   function getDailyLimit() {
+    if (serverCache.dailyLimit != null) {
+      return Math.max(0, Number(serverCache.dailyLimit) || DEFAULT_FREE_PLAN.dailyTextLimit);
+    }
     const plan = readGenAiPlan();
     return Math.max(0, Number(plan.dailyTextLimit) || DEFAULT_FREE_PLAN.dailyTextLimit);
   }
 
   function getDailyRemaining() {
+    if (serverCache.remaining != null) {
+      return Math.max(0, Number(serverCache.remaining) || 0);
+    }
     const limit = getDailyLimit();
     const used = getUsage().textTurnUsed;
     return Math.max(0, limit - used);
@@ -174,17 +215,31 @@
     return true;
   }
 
-  function consume(featureKey) {
+  function consumeLocal(featureKey) {
     const key = featureKey || FEATURE_TEXT_TURN;
     if (key !== FEATURE_TEXT_TURN) return getUsage();
     const usage = getUsage();
     usage.textTurnUsed += 1;
     saveUsage(usage);
+    if (serverCache.remaining != null) {
+      serverCache.remaining = Math.max(0, serverCache.remaining - 1);
+    }
     if (isTlvSource() && global.TasuAiWorkspaceTlvSource?.decrementFreeRemaining) {
       global.TasuAiWorkspaceTlvSource.decrementFreeRemaining();
     }
     updateUsageUi();
     return usage;
+  }
+
+  function consume(featureKey) {
+    if (isPhase2ServerEnabled()) {
+      void syncUsageFromServer().then(() => updateUsageUi());
+      if (isTlvSource() && global.TasuAiWorkspaceTlvSource?.decrementFreeRemaining) {
+        global.TasuAiWorkspaceTlvSource.decrementFreeRemaining();
+      }
+      return getUsage();
+    }
+    return consumeLocal(featureKey);
   }
 
   function stripeHeaders() {
@@ -204,6 +259,62 @@
       Authorization: `Bearer ${anonKey}`,
       apikey: anonKey,
     };
+  }
+
+  function getQuotaEdgeUrl() {
+    const base = getSupabaseBase();
+    if (!base) return "";
+    return `${base}/functions/v1/ai-workspace-quota`;
+  }
+
+  async function postQuotaAction(action, featureKey) {
+    const url = getQuotaEdgeUrl();
+    const headers = stripeHeaders();
+    const userId = getUserId();
+    if (!url || !headers || !userId || userId === "anonymous") return null;
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({
+          action,
+          user_id: userId,
+          feature: featureKey || FEATURE_TEXT_TURN,
+          surface: WORKSPACE_SURFACE,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      return { httpStatus: res.status, data };
+    } catch (err) {
+      console.warn("[TasuAiWorkspaceUsage] quota action failed:", err);
+      return null;
+    }
+  }
+
+  async function syncUsageFromServer() {
+    if (!isPhase2ServerEnabled()) return false;
+    const out = await postQuotaAction("status", FEATURE_TEXT_TURN);
+    if (!out?.data?.ok) return false;
+    applyServerStatusToCache(out.data);
+    return true;
+  }
+
+  async function canUseAsync(featureKey) {
+    const key = featureKey || FEATURE_TEXT_TURN;
+    if (key !== FEATURE_TEXT_TURN) return false;
+
+    if (isPhase2ServerEnabled()) {
+      const check = await postQuotaAction("check", key);
+      if (check?.data?.ok) {
+        applyServerStatusToCache(check.data);
+        let remaining = Math.max(0, Number(check.data.remaining) || 0);
+        const tlvRem = getTlvRemaining();
+        if (tlvRem !== null) remaining = Math.min(remaining, tlvRem);
+        return check.data.allowed !== false && remaining > 0;
+      }
+    }
+
+    return canUse(key);
   }
 
   async function syncPlanFromServer() {
@@ -230,6 +341,30 @@
     return false;
   }
 
+  function installEdgePayloadHook() {
+    if (!isPhase2ServerEnabled() || global.__tasuWorkspaceEdgeHookInstalled) return;
+    global.__tasuWorkspaceEdgeHookInstalled = true;
+    const origFetch = global.fetch.bind(global);
+    global.fetch = async function tasuWorkspaceEdgeFetch(input, init) {
+      const url = typeof input === "string" ? input : input?.url || "";
+      if (init?.method === "POST" && CHAT_EDGE_PATTERN.test(url)) {
+        try {
+          const body = JSON.parse(String(init.body || "{}"));
+          body.surface = WORKSPACE_SURFACE;
+          body.user_id = getUserId();
+          init = { ...init, body: JSON.stringify(body) };
+        } catch {
+          /* keep original body */
+        }
+      }
+      const res = await origFetch(input, init);
+      if (isPhase2ServerEnabled() && CHAT_EDGE_PATTERN.test(url) && res.status === 402) {
+        void syncUsageFromServer();
+      }
+      return res;
+    };
+  }
+
   function resolveFeatureKey() {
     return FEATURE_TEXT_TURN;
   }
@@ -245,6 +380,7 @@
       dailyLimit: getDailyLimit(),
       dailyRemaining: getDailyRemaining(),
       tlvRemaining: getTlvRemaining(),
+      phase2: isPhase2ServerEnabled(),
     };
   }
 
@@ -295,9 +431,6 @@
     }
 
     if (remaining > 0) hideUsageLimitBanner();
-    else if (!isTlvSource() || (getTlvRemaining() ?? 1) > 0) {
-      /* depleted daily but tlv may still show its own banner */
-    }
 
     if (isTlvSource()) {
       global.TasuAiWorkspaceTlvSource?.refreshFreeQuotaUi?.();
@@ -310,30 +443,38 @@
     updateUsageUi();
   }
 
-  function init() {
+  async function init() {
+    installEdgePayloadHook();
     mountUsageBanner();
     updateUsageUi();
-    void syncPlanFromServer();
+    await syncPlanFromServer();
+    await syncUsageFromServer();
     global.addEventListener("focus", () => {
-      updateUsageUi();
+      void syncUsageFromServer().then(() => updateUsageUi());
     });
   }
 
   if (global.document?.readyState === "loading") {
-    global.document.addEventListener("DOMContentLoaded", init);
+    global.document.addEventListener("DOMContentLoaded", () => {
+      void init();
+    });
   } else {
-    init();
+    void init();
   }
 
   global.TasuAiWorkspaceUsage = {
     FEATURE_TEXT_TURN,
     STORAGE_USAGE,
+    WORKSPACE_SURFACE,
     getContext,
     getLimits,
     getRemaining,
     canUse,
+    canUseAsync,
     shouldChargeTurn,
     consume,
+    consumeLocal,
+    syncUsageFromServer,
     syncPlanFromServer,
     resolveFeatureKey,
     mountUsageBanner,
@@ -344,5 +485,7 @@
     getDailyRemaining,
     resetDailyIfNeeded,
     getUsage,
+    isPhase2ServerEnabled,
+    applyServerStatusToCache,
   };
 })(typeof window !== "undefined" ? window : globalThis);

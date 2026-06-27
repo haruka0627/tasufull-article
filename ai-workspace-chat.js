@@ -1527,9 +1527,16 @@
     if (root.dataset.aiChatSending === "1") return;
 
     const usageFeature = window.TasuAiWorkspaceUsage?.resolveFeatureKey?.() || "text_turn";
-    if (window.TasuAiWorkspaceUsage && !window.TasuAiWorkspaceUsage.canUse(usageFeature)) {
-      window.TasuAiWorkspaceUsage.showUsageBlocked(usageFeature);
-      return;
+    const usage = window.TasuAiWorkspaceUsage;
+    if (usage) {
+      const allowed =
+        typeof usage.canUseAsync === "function"
+          ? await usage.canUseAsync(usageFeature)
+          : usage.canUse(usageFeature);
+      if (!allowed) {
+        usage.showUsageBlocked(usageFeature);
+        return;
+      }
     }
 
     root.dataset.aiChatSending = "1";

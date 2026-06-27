@@ -4,6 +4,10 @@ import {
   mergeMessageWithAttachments,
   normalizeAttachments,
 } from "../_shared/ai-attachments.ts";
+import {
+  enforceWorkspaceQuotaEntry,
+  finalizeWorkspaceQuotaConsume,
+} from "../_shared/ai-workspace-quota.ts";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE =
@@ -36,6 +40,9 @@ type RequestBody = {
   intent?: string;
   searchContext?: string;
   attachments?: unknown;
+  surface?: string;
+  user_id?: string;
+  userId?: string;
 };
 
 type GeminiIntent = "chat" | "work" | "business" | "support";
@@ -507,6 +514,9 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "message is required", reply: "" }, 400, req);
   }
 
+  const quotaEntry = await enforceWorkspaceQuotaEntry(req, body);
+  if (quotaEntry.blocked) return quotaEntry.blocked;
+
   const intent = resolveIntent(body.intent, message, body.mode);
 
   const searchContext = trimText(body.searchContext, 6000);
@@ -538,6 +548,7 @@ Deno.serve(async (req) => {
     const outcome = await callGeminiWithRetry(geminiUrl, geminiPayload);
 
     if (outcome.ok) {
+      await finalizeWorkspaceQuotaConsume(body);
       return jsonResponse(
         {
           reply: outcome.reply,

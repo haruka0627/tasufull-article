@@ -1,0 +1,24 @@
+{
+  "capturedAt": "2026-06-27T16:32:51.222Z",
+  "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
+  "probes": [
+    {
+      "name": "ai-workspace-quota status",
+      "httpStatus": 404,
+      "ok": false,
+      "preview": "{\"code\":\"NOT_FOUND\",\"message\":\"Requested function was not found\"}"
+    },
+    {
+      "name": "gemini-chat text (non-workspace)",
+      "httpStatus": 200,
+      "ok": true,
+      "preview": "{\"reply\":\"Ping？どうしたの？何かあった？\",\"usedGemini\":true,\"retryCount\":0,\"intent\":\"chat\"}"
+    },
+    {
+      "name": "openai-chat workspace payload shape",
+      "httpStatus": 200,
+      "ok": true,
+      "preview": "{\"reply\":\"「compat workspace ping」というコマンドは、特定のソフトウェアや環境によって異なる意味を持つ可能性があります。一般的には、ネットワーク接続やサービスの応答を確認するためのコマンドです。具体的な使用方法や文脈について教えていただければ、さらに詳しい情報を提供できます。\",\"used"
+    }
+  ]
+}
