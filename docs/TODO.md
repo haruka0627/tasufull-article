@@ -111,7 +111,8 @@
 - Marketplace / Platform 案件 → **成約手数料**（既存方針維持）
 - **MVP 設計:** [business-directory-mvp-design.md](./business-directory-mvp-design.md)
 - **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)
-- **Data Model:** [business-directory-data-model-design.md](./business-directory-data-model-design.md) · 10 テーブル · status 遷移 · プラン制御
+- **Data Model:** [business-directory-data-model-design.md](./business-directory-data-model-design.md)
+- **UI Flow:** [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md) · 事業者/運営画面 · タブ · 公開フロー
 - 実装 · migration · 決済 — **未着手**
 
 ### AI プロバイダ分担
