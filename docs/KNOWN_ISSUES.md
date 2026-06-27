@@ -20,10 +20,10 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | 機能は Final Phase 完了（`5ed9672`）。preflight 判定は **NO** |
-| **ブロッカー例** | Edge Vision 未デプロイ · Gemini 429 · Serper 枯渇 · CF Access · 課金 enforcement 未実装 |
-| **参照** | `reports/tasful-ai-production-preflight.md` §10–11 |
-| **注** | 「完成済み」= 製品機能実装完了。「Production Ready」≠ 本番接続完了 |
+| **状態** | Phase 2 quota deploy 完了（`b4441b2`）。Final Phase 2026-06-28 判定 **No-Go** |
+| **ブロッカー** | Serper credits 枯渇 · CF Access Service Token 未設定 · prod alias 未 redeploy |
+| **解消済み** | build:pages EPERM · Vision live 6/6 · quota Edge 11/11 |
+| **参照** | `reports/tasful-ai-production-ready-final.md` |
 
 ---
 
