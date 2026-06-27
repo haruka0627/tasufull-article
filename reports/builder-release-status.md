@@ -1,23 +1,35 @@
 # Builder — リリース確定
 
-**確定日:** 2026-06-17  
-**状態:** ✅ リリース可能（**RELEASE FROZEN**）
+**確定日（デモ MVP）:** 2026-06-17  
+**Production Ready（v1.0）:** 2026-06-26  
+**状態:** ✅ **Builder v1.0 — PRODUCTION READY · RELEASE FROZEN**
 
-以降、Builder の新規製品修正は停止。残課題はリリース後改善（P2）として扱う。  
-市場EC・TALK・AI運営秘書・Connect・安否 は別途 RELEASE FROZEN 済み（本判定では未変更）。
+2026-06-17 のデモ MVP 監査 PASS に加え、B3–B10 の Repository / Adapter / AI / PDF 基盤完成をもって **Builder v1.0** として正式凍結。  
+以後の開発ルールは **AI秘書 v1.1 凍結** と同一（Critical Bug / Security / Supabase 仕様追従 / 軽微 UX のみ許可）。
+
+**Release package:** [`builder-production-ready/README.md`](builder-production-ready/README.md)
 
 ---
 
-## 総合判定
+## 総合判定（v1.0）
 
 | 項目 | 判定 |
 |------|------|
-| **リリース可否** | **RELEASE OK** |
-| **凍結** | **RELEASE FROZEN**（本ドキュメント時点で確定） |
+| **Production Ready** | **YES** — B10 audit complete |
+| **Version** | **1.0.0** |
+| **凍結** | **RELEASE FROZEN**（v1.0 正式凍結） |
+| **Data mode** | `local` · `useSupabase=false` |
+| **Architecture regression** | B3–B10 check scripts PASS |
+| **Legacy user-flow audit** | PASS 44/0/0（2026-06-17 基準・維持） |
 | P0（リリースブロッカー） | **なし** |
-| P1（要製品修正） | **なし**（監査スクリプト更新で解消済み。P1-4 は P2 送り） |
-| 自動監査総合 | **PASS**（44 / WARN 0 / FAIL 0） |
-| 製品コード変更 | **なし**（本フェーズ） |
+| P1（要製品修正） | **なし** |
+| **B10 製品コード変更** | **なし**（ドキュメント + 検証スクリプトのみ） |
+
+### v1.0 検証コマンド
+
+```bash
+node scripts/check-builder-production-ready.mjs
+```
 
 ---
 
@@ -27,7 +39,7 @@
 |------|-----------------|--------|------|
 | **市場EC** | [`market-ec-release-status.md`](market-ec-release-status.md) | 2026-06-16 | **RELEASE FROZEN** |
 | **TALK** | [`talk-release-status.md`](talk-release-status.md) | 2026-06-16 | **RELEASE FROZEN** |
-| **Builder** | 本ドキュメント | 2026-06-17 | **RELEASE FROZEN** |
+| **Builder** | 本ドキュメント + [`builder-production-ready/`](builder-production-ready/README.md) | 2026-06-26 | **v1.0 PRODUCTION READY · FROZEN** |
 | **AI運営秘書** | [`ai-ops-secretary-release-status.md`](ai-ops-secretary-release-status.md) | 2026-06-17 | **RELEASE FROZEN** |
 | **Connect** | [`connect-release-status.md`](connect-release-status.md) | 2026-06-17 | **RELEASE FROZEN** |
 | **安否** | [`anpi-release-status.md`](anpi-release-status.md) | 2026-06-17 | **RELEASE FROZEN** |
@@ -165,8 +177,10 @@ node scripts/verify-builder-dual-window-bench.mjs
 
 ## 次フェーズ
 
-Builder は本ドキュメント時点で **RELEASE FROZEN**。  
-**P0 / P1 は残っていない。** 新規の Builder 製品修正チケットは受け付けない（リリース後改善 P2 のみバックログ）。  
-今後の開発・修正対象から **Builder 製品コードを外す。**
+Builder は **v1.0 として正式凍結**（2026-06-26）。  
+許可される変更のみ: Critical Bug · Security Fix · Supabase 仕様追従 · 軽微 UX改善。  
+詳細: [`builder-production-ready/FREEZE.md`](builder-production-ready/FREEZE.md)
 
-市場EC・TALK・Builder・AI運営秘書・Connect・安否 の **6 領域**はいずれも RELEASE FROZEN。次フェーズの作業へ移行する。
+**P0 / P1 は残っていない。** アーキテクチャ新規開発（B11+）は unfreeze 承認まで禁止。
+
+市場EC・TALK・Builder・AI運営秘書・Connect・安否 の **6 領域**はいずれも RELEASE FROZEN。
