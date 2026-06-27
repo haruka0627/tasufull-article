@@ -30,23 +30,33 @@ function read(rel) {
   return fs.readFileSync(path.join(root, rel), "utf8");
 }
 
-function loadClient(fetchImpl) {
+function loadClient(fetchImpl, options = {}) {
   const code = read("admin-ai-secretary-google-oauth-client.js");
+  const sessionMap = new Map();
+  if (options.sessionDevUser) {
+    sessionMap.set("tasu_secretary_google_dev_user_v1", options.sessionDevUser);
+  }
   const sandbox = {
     window: {
       TASU_CHAT_SUPABASE_CONFIG: {
         url: "https://example.supabase.co",
         anonKey: "anon-test-key",
-        currentUserId: "00000000-0000-4000-8000-000000000099",
+        currentUserId: options.currentUserId || "00000000-0000-4000-8000-000000000099",
+        ...(options.secretaryGoogleAuthUserId
+          ? { secretaryGoogleAuthUserId: options.secretaryGoogleAuthUserId }
+          : {}),
       },
       __MATCH_FUNCTIONS_BASE__: "https://example.supabase.co/functions/v1",
       sessionStorage: {
-        _m: new Map(),
+        _m: sessionMap,
         getItem(k) {
           return this._m.get(k) ?? null;
         },
         setItem(k, v) {
           this._m.set(k, v);
+        },
+        removeItem(k) {
+          this._m.delete(k);
         },
       },
       location: { origin: "http://127.0.0.1:8788", protocol: "http:" },
@@ -116,7 +126,39 @@ async function runUnitTests() {
   if (!Client.scanForSecrets({ ok: true, connected: false })) ok("client scanForSecrets clean status");
   else bad("client scanForSecrets clean status");
 
+  const ClientUme = loadClient(async () => ({
+    ok: true,
+    status: 200,
+    json: async () => ({ ok: true }),
+  }), {
+    currentUserId: "u_me",
+    sessionDevUser: "u_me",
+  });
+  if (!ClientUme.getDevUserId()) ok("getDevUserId rejects u_me config and stale sessionStorage");
+  else bad("getDevUserId rejects u_me", ClientUme.getDevUserId());
+
+  const validUuid = "00000000-0000-4000-8000-000000000099";
+  const ClientUuid = loadClient(async () => ({
+    ok: true,
+    status: 200,
+    json: async () => ({ ok: true }),
+  }), { sessionDevUser: validUuid });
+  if (ClientUuid.getDevUserId() === validUuid) ok("getDevUserId accepts valid session UUID");
+  else bad("getDevUserId accepts valid session UUID", ClientUuid.getDevUserId());
+
+  if (ClientUuid.isValidAuthUserUuid(validUuid) && !ClientUuid.isValidAuthUserUuid("u_me")) {
+    ok("isValidAuthUserUuid gate");
+  } else bad("isValidAuthUserUuid gate");
+
+  const bootstrapCode = read("admin-ai-secretary-google-oauth-client.js");
   const uiCode = read("admin-ai-secretary-google-connect-ui.js");
+  if (/secretary_auth_uid/.test(bootstrapCode) && /consumeBootstrapAuthUserFromQuery/.test(bootstrapCode)) {
+    ok("dev bootstrap query param hook");
+  } else bad("dev bootstrap query param hook");
+
+  if (/isAutomationControlledBrowser/.test(uiCode) && /webdriver/.test(uiCode)) {
+    ok("connect UI blocks automation browser redirect");
+  } else bad("connect UI blocks automation browser redirect");
   if (
     /data-ops-secretary-google-connect-btn/.test(uiCode) &&
     /data-ops-secretary-google-disconnect-btn/.test(uiCode) &&
