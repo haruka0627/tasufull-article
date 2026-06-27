@@ -50,3 +50,6 @@ verify_jwt = false
 
 [functions.partner-document-verify]
 verify_jwt = false
+
+[functions.business-directory]
+verify_jwt = false
