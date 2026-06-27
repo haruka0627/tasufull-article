@@ -52,8 +52,8 @@
 
 | 領域 | 収益主軸 | 状態 |
 | --- | --- | --- |
-| **店舗・販売** | 月額サブスク掲載料 | 📋 UI Flow 設計完了 · 実装未着手 |
-| **業務サービス** | 月額サブスク掲載料 | 📋 UI Flow 設計完了 · 実装未着手 |
+| **店舗・販売** | 月額サブスク掲載料 | 🔄 Phase 1 DB migration 追加 · UI/API 未着手 |
+| **業務サービス** | 月額サブスク掲載料 | 🔄 Phase 1 DB migration 追加 · UI/API 未着手 |
 | **Marketplace（商品）** | **成約手数料** | ✅ 既存方針 **維持** |
 | **Platform / 案件** | **成約手数料** | ✅ 既存方針 **維持** |
 | **広告枠** | スポンサー · 上位表示 · PR | 📋 将来 |
@@ -67,6 +67,8 @@
 **Data Model:** [business-directory-data-model-design.md](./business-directory-data-model-design.md) · `reports/business-directory-data-model-design.md`
 
 **UI Flow:** [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md) · `reports/business-directory-ui-flow-design.md`
+
+**Phase 1 DB:** `supabase/migrations/20260711100000_business_directory_phase1_schema.sql` · seed · `scripts/test-business-directory-phase1-schema.mjs` · `reports/business-directory-phase1-db.md`
 
 **報告:** `reports/business-directory-subscription-model.md`
 

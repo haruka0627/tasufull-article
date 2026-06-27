@@ -112,8 +112,8 @@
 - **MVP 設計:** [business-directory-mvp-design.md](./business-directory-mvp-design.md)
 - **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)
 - **Data Model:** [business-directory-data-model-design.md](./business-directory-data-model-design.md)
-- **UI Flow:** [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md) · 事業者/運営画面 · タブ · 公開フロー
-- 実装 · migration · 決済 — **未着手**
+- **UI Flow:** [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md)
+- **Phase 1 DB:** migration + seed 追加 · `scripts/test-business-directory-phase1-schema.mjs` — UI/API **未着手**
 
 ### AI プロバイダ分担
 
