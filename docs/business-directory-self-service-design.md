@@ -83,7 +83,9 @@
 
 ### 送信後
 
-`draft` → 公開申請 → `pending_review` → 運営審査 → `published` | 差戻し → `draft`
+`draft` → 公開申請 → `review_requested` → 運営審査 → `published` | 差戻し → `draft`
+
+（data model 正本: [business-directory-data-model-design.md](./business-directory-data-model-design.md) §4）
 
 ---
 
@@ -206,4 +208,5 @@ Self-Service フォーム・マイページに以下を **含めない**:
 ## 参照
 
 - [business-directory-mvp-design.md](./business-directory-mvp-design.md)
+- [business-directory-data-model-design.md](./business-directory-data-model-design.md)
 - [reports/business-directory-self-service-design.md](../reports/business-directory-self-service-design.md)

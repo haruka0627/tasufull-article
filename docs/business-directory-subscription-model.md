@@ -146,4 +146,5 @@ TASFUL市場
 - [ROADMAP.md](./ROADMAP.md) §Business Directory
 - [business-directory-mvp-design.md](./business-directory-mvp-design.md) — MVP 設計正本
 - [business-directory-self-service-design.md](./business-directory-self-service-design.md) — Self-Service 正本
+- [business-directory-data-model-design.md](./business-directory-data-model-design.md) — DB / Data Model 正本
 - [reports/business-directory-subscription-model.md](../reports/business-directory-subscription-model.md)

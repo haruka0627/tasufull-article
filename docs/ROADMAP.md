@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-27（Business Directory Self-Service 設計）
+**最終更新:** 2026-06-27（Business Directory Data Model 設計）
 
 ---
 
@@ -52,8 +52,8 @@
 
 | 領域 | 収益主軸 | 状態 |
 | --- | --- | --- |
-| **店舗・販売** | 月額サブスク掲載料 | 📋 MVP 設計完了 · 実装未着手 |
-| **業務サービス** | 月額サブスク掲載料 | 📋 MVP 設計完了 · 実装未着手 |
+| **店舗・販売** | 月額サブスク掲載料 | 📋 Data Model 設計完了 · 実装未着手 |
+| **業務サービス** | 月額サブスク掲載料 | 📋 Data Model 設計完了 · 実装未着手 |
 | **Marketplace（商品）** | **成約手数料** | ✅ 既存方針 **維持** |
 | **Platform / 案件** | **成約手数料** | ✅ 既存方針 **維持** |
 | **広告枠** | スポンサー · 上位表示 · PR | 📋 将来 |
@@ -63,6 +63,8 @@
 **MVP 設計:** [business-directory-mvp-design.md](./business-directory-mvp-design.md) · `reports/business-directory-mvp-design.md`
 
 **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md) · `reports/business-directory-self-service-design.md`
+
+**Data Model:** [business-directory-data-model-design.md](./business-directory-data-model-design.md) · `reports/business-directory-data-model-design.md`
 
 **報告:** `reports/business-directory-subscription-model.md`
 
