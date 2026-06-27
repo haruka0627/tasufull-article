@@ -20,6 +20,9 @@ verify_jwt = false
 [functions.openai-chat]
 verify_jwt = false
 
+[functions.openai-realtime-session]
+verify_jwt = false
+
 [functions.claude-chat]
 verify_jwt = false
 
