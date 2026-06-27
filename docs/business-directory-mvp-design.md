@@ -1,8 +1,9 @@
 # Business Directory MVP 設計
 
-**最終更新:** 2026-06-27  
+**最終更新:** 2026-06-27（Self-Service 投稿/編集設計）  
 **前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **方針正本:** [business-directory-subscription-model.md](./business-directory-subscription-model.md)  
+**Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)  
 **状態:** **設計のみ** — コード · DB migration · UI · 決済 · Stripe 実装は **未着手**
 
 ---
@@ -84,53 +85,31 @@ TASFUL市場
 
 ---
 
-## 3. 登録フォーム（シンプル化）
+## 3. 登録フォーム · Self-Service
 
-**原則:** 1 画面完結を目指す · 必須は最小 · 種別選択後に **追加 3〜4 項目** のみ表示。
+**正本:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)
 
-### 3.1 共通（必須）
+事業者が **自分で** 掲載を作成。運営は **入力代行しない**。
 
-| 項目 | 備考 |
+### 3.1 初回公開申請（最小 · 1〜2 分）
+
+| 区分 | 項目数 |
 | --- | --- |
-| 掲載種別 | `shop_retail` / `business_service` |
-| 会社名 / 店舗名 | 種別に応じラベル切替 |
-| 担当者名 | — |
-| メール | 連絡 · 審査通知 |
-| 電話 | — |
-| 所在地 | 都道府県 + 市区町村 + 番地（地図は後から） |
-| 対応地域 | 複数選択可 |
-| 公式サイト URL | **任意** — あれば送客優先 |
-| SNS URL | 任意 · 複数は Standard 以降 |
-| 紹介文 | 200〜500 字目安 |
-| 写真 | Free: 最大 3 · Standard+: 10 |
-| カテゴリ | 1 つ必須 |
-| 希望プラン | Free / Standard / Pro（MVP は申込のみ · 課金なし） |
-| 利用規約同意 | 必須チェック |
+| **共通** | 13（写真 **1 枚** · 紹介文 **短文** · SNS/TLV は含めない） |
+| **店舗・販売 +2** | 営業時間 · 主な販売ジャンル |
+| **業務サービス +2** | 主なサービス内容 · 料金目安 |
 
-### 3.2 店舗・販売 専用（+4）
+```text
+会員登録 → サブスク選択 → 最小フォーム → 公開申請 → 運営審査 → 公開
+```
 
-| 項目 | 備考 |
-| --- | --- |
-| 営業時間 | テキスト or 曜日テンプレ |
-| 定休日 | 任意 |
-| 商品ジャンル | カテゴリ補助 |
-| 主な販売商品 | 短文 · 商品マーケット出品とは別 |
+### 3.2 公開後編集（事業者マイページ）
 
-### 3.3 業務サービス 専用（+5）
+詳細項目は **公開後** に段階追加: 写真 · TLV · SNS · 商品/サービス · 実績 · スタッフ · 資格 · 問い合わせ等（プラン連動 · §4）。
 
-| 項目 | 備考 |
-| --- | --- |
-| サービス内容 | 必須 |
-| 料金目安 | 必須 · レンジ表記 |
-| 対応可能エリア | 対応地域と連動 |
-| 実績 | 任意 |
-| 資格・許認可 | 任意 · 運営審査で確認 |
+### 3.3 旧・詳細フォーム項目（参考）
 
-### フォーム UX
-
-- **ステップ数:** MVP は **1 ステップ**（種別切替で追加フィールド表示）
-- **下書き:** `draft` 保存（ローカル or 将来 DB）
-- **送信後:** `pending_review` → 運営審査 → `published`
+初回に含めない項目の一覧は Self-Service 正本 §公開後編集 を参照。DB `type_specific` jsonb に格納想定。
 
 ---
 
@@ -159,20 +138,24 @@ TASFUL市場
 
 ---
 
-## 5. 管理画面設計
+## 5. 管理画面設計（運営）
 
-**対象:** 運営（AI 秘書 OPS とは独立 · 将来連携可）
+**対象:** 運営（AI 秘書 OPS とは独立 · 将来連携可）  
+**Self-Service 原則:** 運営は **掲載内容の入力代行をしない**（[business-directory-self-service-design.md](./business-directory-self-service-design.md) §運営の役割）
 
 | 機能 | MVP | 備考 |
 | --- | --- | --- |
 | 掲載申請一覧 | ✅ | `pending_review` フィルタ |
-| 審査（承認 / 差戻し） | ✅ | 差戻し理由テンプレ |
+| 審査（承認 / 差戻し） | ✅ | 差戻し理由テンプレ · 事業者が修正 |
 | 公開 / 非公開 | ✅ | `published` ↔ `suspended` |
-| プラン変更 | ✅ 手動 | 将来 Stripe 連動 |
-| 掲載情報編集 | ✅ | 事業者申請内容の修正 |
-| 写真管理 | ✅ | 不適切画像の削除 |
+| プラン確認 | ✅ 手動 | 将来 Stripe 連動 |
 | 通報 / 不正確認 | ✅ | `business_directory_reports` |
-| 契約ステータス確認 | 📋 表示のみ | MVP は決済なし · **将来 Stripe Subscription ID 列を予約** |
+| 規約違反 · 凍結 / 停止 | ✅ | 強制非公開 · 監査ログ（将来） |
+| 契約ステータス確認 | 📋 表示のみ | MVP は決済なし |
+
+**運営が行わないこと:** 文案代筆 · 写真代アップロード · フォーム入力代行（規約違反時の強制対応を除く）。
+
+**運営による掲載情報の代行編集:** 原則禁止 · 例外は規約違反対応のみ。
 
 ### 将来 Stripe 接続（設計のみ）
 
@@ -353,8 +336,8 @@ MVP では **NULL 許容 · UI 非表示** でスキーマ余地のみ。
 
 | Phase | 内容 |
 | --- | --- |
-| **MVP-1** | 登録フォーム · 審査 · 公開ページ · 検索（Free/Standard） |
-| **MVP-2** | Pro 機能 · TLV embed · 問い合わせ導線 |
+| **MVP-1** | Self-Service 初回申請 · 審査 · 公開ページ · 検索（Free/Standard） |
+| **MVP-2** | 公開後編集マイページ · Pro（TLV · 問い合わせ） |
 | **MVP-3** | Stripe サブスク · プラン自動反映 |
 | **Future** | Premium · Connect · 成果報酬 |
 
@@ -363,5 +346,6 @@ MVP では **NULL 許容 · UI 非表示** でスキーマ余地のみ。
 ## 参照
 
 - [DECISIONS.md](./DECISIONS.md) AD-013
-- [business-directory-subscription-model.md](./business-directory-subscription-model.md)
+- [business-directory-self-service-design.md](./business-directory-self-service-design.md)
 - [reports/business-directory-mvp-design.md](../reports/business-directory-mvp-design.md)
+- [reports/business-directory-self-service-design.md](../reports/business-directory-self-service-design.md)

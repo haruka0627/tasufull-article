@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-27（Business Directory MVP 設計）
+**最終更新:** 2026-06-27（Business Directory Self-Service 設計）
 
 ---
 
@@ -61,6 +61,8 @@
 **プラン案:** Free · Standard · Pro · Premium/Future（サブスク課金 · 決済実装は別 Epic）
 
 **MVP 設計:** [business-directory-mvp-design.md](./business-directory-mvp-design.md) · `reports/business-directory-mvp-design.md`
+
+**Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md) · `reports/business-directory-self-service-design.md`
 
 **報告:** `reports/business-directory-subscription-model.md`
 
