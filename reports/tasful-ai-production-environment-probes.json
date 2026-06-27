@@ -1,5 +1,5 @@
 {
-  "capturedAt": "2026-06-27T16:26:01.251Z",
+  "capturedAt": "2026-06-27T16:36:57.105Z",
   "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
   "probes": [
     {
@@ -9,7 +9,7 @@
       "httpStatus": 200,
       "ok": true,
       "note": "HTTP 200",
-      "preview": "「preflight env fix ping」という用語は、一般的にネットワークやシステムの設定に関連している可能性があります。具体的な文脈によって意味が異なるため、もう少し情報を提供していただければ、より正確な回答ができるかと思います。例えば、特定のソフトウェアやシステムに関する質問ですか？"
+      "preview": "「preflight env fix ping」というフレーズは、特定の文脈に依存する可能性がありますが、一般的には「事前確認環境の修正」や「環境設定の確認」を指すことが多いです。この場合、pingはネットワークの接続確認を意味します。  具体的な手順や詳細が必要な場合は、もう少し文脈を教えていただけると、より正確な情"
     },
     {
       "name": "Claude text",
@@ -18,7 +18,7 @@
       "httpStatus": 200,
       "ok": true,
       "note": "HTTP 200",
-      "preview": "# Preflight環境修正 Ping確認  **コマンド例:**  ```bash # 基本的なpingテスト ping 8.8.8.8  # 特定ホストへのpingテスト ping example.com  # Linux/macOS: 回数制限 ping -c 4 8.8.8.8  # Windows: 回数制"
+      "preview": "# Preflight env fix ping について  これは一般的に以下のいずれかを指します：  ## 1. **CORSプリフライトリクエスト** - ブラウザが実際のリクエスト前に `OPTIONS` メソッドで送信する確認リクエスト - 跨域リクエスト時に発生  ## 2. **環境設定の確認** ```"
     },
     {
       "name": "Gemini text",
@@ -27,7 +27,7 @@
       "httpStatus": 200,
       "ok": true,
       "note": "HTTP 200",
-      "preview": "`preflight env fix ping` というコマンドは一般的なものではないため、どのような環境で、どのような目的でこのコマンドを実行しようとしているのか、もう少し詳しく教えていただけますか？  もし Kubernetes の `kubeadm preflight` の文脈で、環境の問題を修正し、ノード間の接"
+      "preview": "承知いたしました。`preflight env fix ping` は、Kubernetesの`kubeadm preflight`コマンドで環境チェックを行う際に、ネットワーク接続（特に`ping`コマンドの利用可能性）に関する問題が発生している状況を指していると推測します。  この問題に対処するための手順を以下に示"
     },
     {
       "name": "OpenAI Vision",
@@ -36,16 +36,16 @@
       "httpStatus": 200,
       "ok": true,
       "note": "HTTP 200",
-      "preview": "Red."
+      "preview": "Red"
     },
     {
       "name": "Claude Vision",
       "edge": "claude-chat",
       "kind": "vision",
       "httpStatus": 200,
-      "ok": true,
-      "note": "HTTP 200",
-      "preview": "Circle"
+      "ok": false,
+      "note": "HTTP 200 — Vision payload not recognized by model",
+      "preview": "I'd be happy to help, but I'm unable to see the image you've attached. The image file doesn't appear to have loaded properly on my end.  Could you please try up"
     },
     {
       "name": "Gemini Vision",

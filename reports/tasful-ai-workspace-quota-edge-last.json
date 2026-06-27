@@ -1,13 +1,63 @@
 {
-  "capturedAt": "2026-06-27T16:32:47.342Z",
-  "runId": "mqwkwa41",
+  "capturedAt": "2026-06-27T16:36:36.763Z",
+  "runId": "mqwl0puc",
   "edgeBase": "https://ddojquacsyqesrjhcvmn.supabase.co",
   "dateJst": "2026/06/28",
   "results": [
     {
       "name": "ai-workspace-quota edge reachable",
-      "ok": false,
-      "detail": "HTTP 404"
+      "ok": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "free plan dailyLimit = 5",
+      "ok": true,
+      "detail": "limit=5"
+    },
+    {
+      "name": "free plan remaining = 5",
+      "ok": true,
+      "detail": "remaining=5"
+    },
+    {
+      "name": "free consume 5/5",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "free check blocked at 5/5",
+      "ok": true,
+      "detail": "allowed=false"
+    },
+    {
+      "name": "free consume returns 402 when depleted",
+      "ok": true,
+      "detail": "HTTP 402"
+    },
+    {
+      "name": "openai-chat 402 when workspace quota depleted",
+      "ok": true,
+      "detail": "HTTP 402"
+    },
+    {
+      "name": "non-workspace surface skips quota block",
+      "ok": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "basic_300 dailyLimit = 30",
+      "ok": true,
+      "detail": "limit=30"
+    },
+    {
+      "name": "pro_980 dailyLimit = 100",
+      "ok": true,
+      "detail": "limit=100"
+    },
+    {
+      "name": "error code quota_exceeded unified",
+      "ok": true,
+      "detail": "{\"error\":\"quota_exceeded\",\"feature\":\"text_turn\",\"reply\":\"\",\"plan\":\"free\",\"planLabel\":\"無料枠\",\"dailyLimit\":5,\"used\":5,\"rema"
     }
   ]
 }
