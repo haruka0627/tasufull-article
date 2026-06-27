@@ -3,7 +3,7 @@
 **最終更新:** 2026-06-27  
 **前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **関連:** [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [business-directory-mvp-design.md](./business-directory-mvp-design.md) · [business-directory-self-service-design.md](./business-directory-self-service-design.md) · [business-directory-data-model-design.md](./business-directory-data-model-design.md)  
-**状態:** **設計のみ** — コード · UI 実装 · migration · Stripe は **未着手**
+**状態:** **Phase 3 Owner UI 実装済** — 運営 UI · 公開検索 · Stripe は **未着手**
 
 ---
 

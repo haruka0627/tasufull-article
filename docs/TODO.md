@@ -114,7 +114,8 @@
 - **Data Model:** [business-directory-data-model-design.md](./business-directory-data-model-design.md)
 - **UI Flow:** [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md)
 - **Phase 1 DB:** migration + seed 追加 · `scripts/test-business-directory-phase1-schema.mjs` — **37/37 PASS**
-- **Phase 2 API:** service + Edge + client repository · `scripts/test-business-directory-phase2-api.mjs` — UI **未着手**
+- **Phase 2 API:** service + Edge + client repository · `scripts/test-business-directory-phase2-api.mjs` — **68/68 PASS**
+- **Phase 3 Owner UI:** `business-directory/` · `scripts/test-business-directory-phase3-owner-ui.mjs` — 運営 UI / 公開検索 / Stripe **未着手**
 
 ### AI プロバイダ分担
 
