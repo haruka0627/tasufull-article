@@ -86,7 +86,9 @@
 
 **Production Step 2 Edge:** `reports/business-directory-production-step2-edge.md` · Edge deploy · secrets · **15/15 smoke PASS**
 
-**Production Step 3 Preview E2E:** `reports/business-directory-production-step3-preview-e2e.md` · Pages preview · mock なし E2E **15/15 PASS**（Production deploy 未実施）
+**Production Step 3 Preview E2E:** `reports/business-directory-production-step3-preview-e2e.md` · Pages preview · mock なし E2E **15/15 PASS**
+
+**Production Step 4 Deploy:** `reports/business-directory-production-step4-production.md` · Production Pages · 最終 smoke **48/48 PASS · Go**
 
 **報告:** `reports/business-directory-subscription-model.md`
 

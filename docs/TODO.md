@@ -123,6 +123,7 @@
 - **Production Step 1 DB:** staging migration apply + repair · `scripts/test-business-directory-production-step1-migration.mjs --remote` — **23/23 PASS**
 - **Production Step 2 Edge:** staging deploy · secrets · smoke · `scripts/test-business-directory-production-step2-edge.mjs --remote` — **15/15 PASS**
 - **Production Step 3 Preview E2E:** Pages preview deploy · mock なし E2E · `scripts/test-business-directory-production-step3-preview-e2e.mjs --e2e` — **15/15 PASS**（Production 本番公開は未実施）
+- **Production Step 4 Deploy:** Production Pages deploy · 最終 smoke · `scripts/test-business-directory-production-step4-production.mjs --all` — **48/48 PASS · Go**
 
 ### AI プロバイダ分担
 
