@@ -248,7 +248,7 @@ TASFUL市場
 - Builder AI · TASFUL AI · AI 秘書
 - Stripe Connect / 決済実装
 
-| **根拠** | [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [ROADMAP.md](./ROADMAP.md) §Business Directory |
+| **根拠** | [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [business-directory-mvp-design.md](./business-directory-mvp-design.md) · [ROADMAP.md](./ROADMAP.md) §Business Directory |
 
 ---
 

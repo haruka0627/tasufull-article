@@ -137,4 +137,5 @@ TASFUL市場
 
 - [DECISIONS.md](./DECISIONS.md) AD-013
 - [ROADMAP.md](./ROADMAP.md) §Business Directory
+- [business-directory-mvp-design.md](./business-directory-mvp-design.md) — MVP 設計正本
 - [reports/business-directory-subscription-model.md](../reports/business-directory-subscription-model.md)
