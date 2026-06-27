@@ -76,11 +76,13 @@ metadata: `order_type=business_directory_subscription`
 
 ---
 
-## 次ステップ（Step 3 · 未着手）
+## 次ステップ（Step 3 完了 → Step 4）
 
-1. Pages production deploy（別指示）
-2. Mock なし E2E: Owner Checkout → Webhook → plan 反映
-3. Production 同一手順
+1. Pages **production** deploy（別指示）
+2. Production 同一手順の最終 smoke
+3. Stripe Live / webhook 本番確認
+
+Step 3 結果: [business-directory-production-step3-preview-e2e.md](./business-directory-production-step3-preview-e2e.md) — **15/15 PASS**
 
 ---
 
