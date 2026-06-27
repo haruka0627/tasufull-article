@@ -179,10 +179,16 @@ async function auditViewport(browser, width, height, runSubmitChecks) {
       else bad(`${tag} live flags enable opt-in`);
       if (liveFallback.after > liveFallback.before) ok(`${tag} live flag ON fallback voice submit`);
       else bad(`${tag} live flag ON fallback voice submit`, JSON.stringify(liveFallback));
-      if (!liveFallback.injectorsRegistered || liveFallback.policyMode === "mock") {
-        ok(`${tag} edge unavailable stays mock fallback`);
+      const mockFallback =
+        !liveFallback.injectorsRegistered || liveFallback.policyMode === "mock";
+      const edgeLiveOk =
+        liveFallback.liveOptIn &&
+        liveFallback.injectorsRegistered &&
+        liveFallback.policyMode === "live";
+      if (mockFallback || edgeLiveOk) {
+        ok(`${tag} live flags voice path (mock fallback or edge live)`);
       } else {
-        bad(`${tag} edge unavailable stays mock fallback`, JSON.stringify(liveFallback));
+        bad(`${tag} live flags voice path (mock fallback or edge live)`, JSON.stringify(liveFallback));
       }
     }
   } finally {

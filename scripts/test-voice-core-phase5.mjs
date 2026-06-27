@@ -299,6 +299,8 @@ else bad("buildConnectUrl adds model", urlBuilt);
 const protos = WsTransport.buildSubprotocols({ type: "ephemeral_token", value: "ephemeral-test" });
 if (protos?.some((p) => p.includes("openai-insecure-api-key."))) ok("buildSubprotocols ephemeral");
 else bad("buildSubprotocols ephemeral");
+if (!protos?.some((p) => p.includes("openai-beta"))) ok("buildSubprotocols no beta subprotocol");
+else bad("buildSubprotocols no beta subprotocol", protos.join(","));
 
 const wsTransport = WsTransport.createOpenAiRealtimeWebSocketTransport({ WebSocket: MockWebSocket });
 const wsEvents = [];
