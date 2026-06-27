@@ -171,93 +171,25 @@ MVP では **NULL 許容 · UI 非表示** でスキーマ余地のみ。
 
 ## 6. DB 設計案（migration 禁止 · 設計のみ）
 
-### 6.1 テーブル候補
+**正本:** [business-directory-data-model-design.md](./business-directory-data-model-design.md)
 
-#### `business_directory_profiles`
+MVP 段階の概要テーブルは data model 正本に統合。以下は **参照用サマリー**。
 
-掲載の正本（店舗 · 業務を 1 テーブルで `listing_type` 分岐）。
+### 6.1 テーブル（10）
 
-| 列（案） | 型 | 備考 |
-| --- | --- | --- |
-| `id` | uuid PK | — |
-| `owner_user_id` | uuid FK | auth.users |
-| `listing_type` | enum | `shop_retail` · `business_service` |
-| `status` | enum | §6.2 |
-| `plan_id` | uuid FK | → plans |
-| `display_name` | text | 店舗名 or サービス名 |
-| `company_name` | text | — |
-| `category_id` | uuid FK | — |
-| `address_*` | text | 分割保存 |
-| `service_area` | text[] | 対応地域 |
-| `phone` | text | — |
-| `email` | text | 担当連絡 |
-| `website_url` | text | 公式 HP |
-| `sns_urls` | jsonb | — |
-| `description` | text | 紹介文 |
-| `type_specific` | jsonb | 営業時間 / 料金目安 / 資格等 |
-| `tlv_video_ids` | uuid[] | TLV 動画参照（Pro+） |
-| `contact_mode` | enum | `external_url` · `form` · `talk` |
-| `stripe_customer_id` | text nullable | 将来 |
-| `stripe_subscription_id` | text nullable | 将来 |
-| `published_at` | timestamptz | — |
-| `created_at` / `updated_at` | timestamptz | — |
-
-#### `business_directory_media`
-
-| 列（案） | 備考 |
-| --- | --- |
-| `profile_id` FK | — |
-| `kind` | `photo` · `logo` · `staff` · `work_sample` |
-| `storage_path` | Supabase Storage |
-| `sort_order` | — |
-
-#### `business_directory_categories`
-
-| 列（案） | 備考 |
-| --- | --- |
-| `id` | — |
-| `listing_type` | 店舗用 / 業務用ツリー |
-| `name` | — |
-| `parent_id` | 階層 |
-
-#### `business_directory_plans`
-
-| 列（案） | 備考 |
-| --- | --- |
-| `code` | `free` · `standard` · `pro` · `premium` |
-| `features` | jsonb · §4 機能フラグ |
-| `stripe_price_id` | nullable |
-
-#### `business_directory_reviews`
-
-| 列（案） | 備考 |
-| --- | --- |
-| `profile_id` | Standard+ |
-| `author_user_id` | 認証ユーザー |
-| `rating` | 1–5 |
-| `body` | テキスト |
-| `status` | `pending` · `published` · `hidden` |
-
-#### `business_directory_reports`
-
-| 列（案） | 備考 |
-| --- | --- |
-| `profile_id` | — |
-| `reporter_user_id` | — |
-| `reason` | enum |
-| `status` | `open` · `resolved` |
+`listings` · `profiles` · `categories` · `photos` · `business_hours` · `social_links` · `tlv_videos` · `plan_features` · `review_requests` · `audit_logs`
 
 ### 6.2 掲載ステータス
 
 | status | 意味 |
 | --- | --- |
-| `draft` | 下書き · 未申請 |
-| `pending_review` | 申請済 · 運営審査待ち |
-| `published` | 公開中 · 検索対象 |
-| `suspended` | 非公開 · 規約違反等 |
-| `archived` | 退会 · 履歴保持 |
+| `draft` | 下書き |
+| `review_requested` | 審査待ち（旧称 `pending_review`） |
+| `published` | 公開中 |
+| `suspended` | 停止 |
+| `archived` | 退会 |
 
-**遷移:** `draft` → `pending_review` → `published` | `suspended` → `archived`
+詳細遷移図 · RLS · プラン制御 → data model 正本 §4–§8。
 
 ### 6.3 既存テーブルとの関係
 
@@ -347,5 +279,6 @@ MVP では **NULL 許容 · UI 非表示** でスキーマ余地のみ。
 
 - [DECISIONS.md](./DECISIONS.md) AD-013
 - [business-directory-self-service-design.md](./business-directory-self-service-design.md)
+- [business-directory-data-model-design.md](./business-directory-data-model-design.md)
 - [reports/business-directory-mvp-design.md](../reports/business-directory-mvp-design.md)
 - [reports/business-directory-self-service-design.md](../reports/business-directory-self-service-design.md)
