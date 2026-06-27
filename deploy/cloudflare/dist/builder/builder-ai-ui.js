@@ -11,12 +11,12 @@
   const UI_LOCAL_ONLY = true;
 
   const QUICK_PROMPTS = [
-    { label: "現場写真の相談", text: "現場写真について補修判断を相談したいです。", intent: "photo" },
-    { label: "見積もり相談", text: "案件の見積もりと粗利の目安を相談したいです。", intent: "estimate" },
-    { label: "工程相談", text: "工程の遅延や今週の予定を整理したいです。", intent: "schedule" },
-    { label: "未入金確認", text: "未入金・支払遅延の案件を確認したいです。", intent: "unpaid" },
-    { label: "書類確認", text: "登録されている書類の状況を確認したいです。", intent: "documents" },
-    { label: "通知確認", text: "未読通知と優先度の高い通知を確認したいです。", intent: "notifications" },
+    { label: "現場写真診断", desc: "写真から補修判断を相談", text: "現場写真について補修判断を相談したいです。", intent: "photo", icon: "📷" },
+    { label: "見積相談", desc: "見積もりと粗利の目安", text: "案件の見積もりと粗利の目安を相談したいです。", intent: "estimate", icon: "💴" },
+    { label: "工程相談", desc: "遅延と今週の予定", text: "工程の遅延や今週の予定を整理したいです。", intent: "schedule", icon: "📅" },
+    { label: "未入金確認", desc: "未入金・支払遅延", text: "未入金・支払遅延の案件を確認したいです。", intent: "unpaid", icon: "💰" },
+    { label: "書類作成", desc: "登録書類の状況", text: "登録されている書類の状況を確認したいです。", intent: "documents", icon: "📄" },
+    { label: "通知確認", desc: "未読と優先通知", text: "未読通知と優先度の高い通知を確認したいです。", intent: "notifications", icon: "🔔" },
   ];
 
   const HUB_LINKS = [
@@ -34,6 +34,68 @@
     voice: "🎤 ",
     camera_snapshot: "📷 Live ",
   };
+
+  const VOICE_STATE_LABELS = {
+    ready: "Ready",
+    listening: "Listening",
+    thinking: "Thinking",
+    speaking: "Speaking",
+    error: "Error",
+  };
+
+  function getIntegration() {
+    return global.TasuBuilderVoiceIntegration;
+  }
+
+  function renderVoiceState(payload) {
+    const el = $("[data-builder-ai-voice-state]");
+    const coreEl = $("[data-builder-ai-voice-core-status]");
+    const state = payload?.state || "ready";
+    const label = VOICE_STATE_LABELS[state] || VOICE_STATE_LABELS.ready;
+    const text = payload?.detail ? `${label} — ${payload.detail}` : label;
+    if (el) {
+      el.textContent = text;
+      el.className = "builder-ai-ui-voice-state builder-ai-v2-voice-state";
+      if (state !== "ready") el.classList.add(`builder-ai-ui-voice-state--${state}`);
+    }
+    if (coreEl) {
+      coreEl.textContent = label;
+      coreEl.dataset.state = state;
+    }
+
+    const voiceBtns = document.querySelectorAll("[data-builder-ai-ui-voice], [data-builder-ai-ui-voice-composer]");
+    voiceBtns.forEach((btn) => {
+      btn.setAttribute("aria-pressed", state === "listening" ? "true" : "false");
+      btn.disabled = sending && state !== "listening";
+    });
+  }
+
+  function initVoiceIntegration() {
+    const Integration = getIntegration();
+    if (!Integration?.init) return;
+    Integration.init({
+      surface: "builder_ai",
+      onSubmit: async (payload) => {
+        await sendMessage(payload.text, { ...(payload.options || {}), channel: payload.channel });
+      },
+    });
+    Integration.onVoiceStateChange(renderVoiceState);
+    renderVoiceState(Integration.getVoiceState());
+  }
+
+  /**
+   * Text / Voice 共通入口（Voice は Integration 経由のみ）
+   */
+  async function submit(payload) {
+    const Integration = getIntegration();
+    if (!Integration?.submit) {
+      const text = String(payload?.text ?? payload ?? "").trim();
+      if (!text) return { ok: false, error: "empty_text" };
+      await sendMessage(text, payload?.options || {});
+      return { ok: true, channel: "text" };
+    }
+    return Integration.submit(payload);
+  }
 
   function $(sel, root) {
     return (root || document).querySelector(sel);
@@ -394,24 +456,76 @@
     return parts.length ? parts.join(" · ") : "";
   }
 
+  function formatMessageTime(m) {
+    const ts = m.at || Date.now();
+    try {
+      return new Date(ts).toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" });
+    } catch {
+      return "";
+    }
+  }
+
   function renderMessages() {
     const log = $("[data-builder-ai-ui-messages]");
     if (!log) return;
     log.innerHTML = "";
     messages.forEach((m) => {
-      const div = document.createElement("div");
-      div.className = `builder-ai-ui-msg builder-ai-ui-msg--${m.role}`;
-      const meta = formatMessageMeta(m);
-      if (meta && m.role === "user") {
-        div.innerHTML = `${escapeHtml(m.content)}<br><span class="builder-ai-ui-msg__meta">${escapeHtml(meta)}</span>`;
-      } else if (m.imageName && m.role === "user") {
-        div.innerHTML = `${escapeHtml(m.content)}<br><span class="builder-ai-ui-msg__meta">📷 ${escapeHtml(m.imageName)}</span>`;
-      } else {
+      if (m.role === "system") {
+        const div = document.createElement("div");
+        div.className = "builder-ai-ui-msg builder-ai-ui-msg--system builder-ai-v2-msg--system";
         div.textContent = m.content;
+        log.appendChild(div);
+        return;
       }
-      log.appendChild(div);
+      const row = document.createElement("div");
+      row.className = `builder-ai-v2-msg-row builder-ai-v2-msg-row--${m.role}`;
+      const avatar = document.createElement("span");
+      avatar.className = "builder-ai-v2-msg__avatar";
+      avatar.setAttribute("aria-hidden", "true");
+      avatar.textContent = m.role === "user" ? "👤" : "🤖";
+      const bubble = document.createElement("div");
+      bubble.className = `builder-ai-ui-msg builder-ai-v2-msg builder-ai-v2-msg--${m.role}`;
+      const meta = formatMessageMeta(m);
+      const time = formatMessageTime(m);
+      let body = escapeHtml(m.content);
+      if (meta && m.role === "user") {
+        body += `<br><span class="builder-ai-ui-msg__meta">${escapeHtml(meta)}</span>`;
+      } else if (m.imageName && m.role === "user") {
+        body += `<br><span class="builder-ai-ui-msg__meta">📷 ${escapeHtml(m.imageName)}</span>`;
+      }
+      bubble.innerHTML = `${body}<time class="builder-ai-v2-msg__time">${escapeHtml(time)}</time>`;
+      if (m.role === "user") {
+        row.appendChild(bubble);
+        row.appendChild(avatar);
+      } else {
+        row.appendChild(avatar);
+        row.appendChild(bubble);
+      }
+      log.appendChild(row);
     });
     log.scrollTop = log.scrollHeight;
+    renderHistoryRail();
+  }
+
+  function renderHistoryRail() {
+    const list = $("[data-builder-ai-ui-history]");
+    if (!list) return;
+    const items = messages
+      .filter((m) => m.role === "user")
+      .slice(-4)
+      .reverse();
+    if (!items.length) {
+      list.innerHTML = '<li class="builder-ai-v2-history__empty">まだ相談履歴がありません</li>';
+      return;
+    }
+    list.innerHTML = items
+      .map((m) => {
+        const title = String(m.content || "").trim().slice(0, 42) || "相談";
+        const thumb = m.imageName ? "📷" : "💬";
+        const when = formatMessageTime(m);
+        return `<li class="builder-ai-v2-history__item"><span class="builder-ai-v2-history__thumb" aria-hidden="true">${thumb}</span><div><p class="builder-ai-v2-history__title">${escapeHtml(title)}</p><p class="builder-ai-v2-history__meta">${escapeHtml(when)}</p></div></li>`;
+      })
+      .join("");
   }
 
   function pushSystem(text) {
@@ -488,32 +602,68 @@
     removeBtn?.addEventListener("click", () => clearPhotoPreview());
   }
 
+  function quickCardHtml(p) {
+    return `<button type="button" class="builder-ai-v2-quick-card" data-builder-ai-ui-quick="${escapeHtml(p.text)}" data-builder-ai-ui-intent="${escapeHtml(p.intent || "")}">
+      <span class="builder-ai-v2-quick-card__icon" aria-hidden="true">${escapeHtml(p.icon || "💬")}</span>
+      <span class="builder-ai-v2-quick-card__body">
+        <strong class="builder-ai-v2-quick-card__title">${escapeHtml(p.label)}</strong>
+        <span class="builder-ai-v2-quick-card__desc">${escapeHtml(p.desc || "")}</span>
+      </span>
+      <span class="builder-ai-v2-quick-card__chev" aria-hidden="true">›</span>
+    </button>`;
+  }
+
   function bindQuickPrompts() {
-    const wrap = $("[data-builder-ai-ui-quick]");
-    if (!wrap) return;
-    wrap.innerHTML = QUICK_PROMPTS.map(
-      (p) =>
-        `<button type="button" class="builder-ai-ui-quick__btn" data-builder-ai-ui-quick="${escapeHtml(p.text)}" data-builder-ai-ui-intent="${escapeHtml(p.intent || "")}">${escapeHtml(p.label)}</button>`
-    ).join("");
-    wrap.addEventListener("click", (ev) => {
+    const html = QUICK_PROMPTS.map(quickCardHtml).join("");
+    const containers = document.querySelectorAll("[data-builder-ai-ui-quick], [data-builder-ai-ui-quick-mobile]");
+    if (!containers.length) return;
+    containers.forEach((wrap) => {
+      wrap.innerHTML = html;
+    });
+    document.addEventListener("click", (ev) => {
       const btn = ev.target.closest("[data-builder-ai-ui-quick]");
       if (!btn || sending) return;
       const text = btn.getAttribute("data-builder-ai-ui-quick") || "";
       const intent = btn.getAttribute("data-builder-ai-ui-intent") || "";
-      void sendMessage(text, { fromQuick: true, source: "text", consultIntent: intent });
+      void submit({ channel: "text", text, options: { fromQuick: true, consultIntent: intent } });
+    });
+  }
+
+  function bindShellUI() {
+    const sidebar = document.querySelector(".builder-ai-v2-sidebar");
+    const toggle = $("[data-builder-ai-v2-menu-toggle]");
+    const backdrop = $("[data-builder-ai-v2-backdrop]");
+    const closeSidebar = () => {
+      document.body.classList.remove("builder-ai-v2-sidebar-open");
+      toggle?.setAttribute("aria-expanded", "false");
+      backdrop?.setAttribute("hidden", "");
+    };
+    toggle?.addEventListener("click", () => {
+      const open = document.body.classList.toggle("builder-ai-v2-sidebar-open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      if (open) backdrop?.removeAttribute("hidden");
+      else backdrop?.setAttribute("hidden", "");
+    });
+    backdrop?.addEventListener("click", closeSidebar);
+    sidebar?.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        if (window.matchMedia("(max-width: 767px)").matches) closeSidebar();
+      });
+    });
+    $("[data-builder-ai-v2-history-scroll]")?.addEventListener("click", () => {
+      $("[data-builder-ai-ui-messages]")?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   }
 
   function bindVoiceButton() {
-    $("[data-builder-ai-ui-voice]")?.addEventListener("click", () => {
+    const handler = async () => {
       if (sending) return;
-      global.TasuBuilderAIVoice?.stopVoice?.();
-      void global.TasuBuilderAIVoice?.quickVoiceCapture?.({
-        onTranscript: (text) => sendMessage(text, { source: "voice", fromVoice: true }),
-      }).then((out) => {
-        if (!out?.ok && out?.error) pushSystem(out.error);
-      });
-    });
+      getIntegration()?.stopVoiceOutput?.();
+      const out = await (getIntegration()?.submitVoiceCapture?.() || Promise.resolve({ ok: false, error: "voice_unavailable" }));
+      if (!out?.ok && out?.error) pushSystem(out.error);
+    };
+    $("[data-builder-ai-ui-voice]")?.addEventListener("click", handler);
+    $("[data-builder-ai-ui-voice-composer]")?.addEventListener("click", handler);
   }
 
   function bindLiveModule() {
@@ -521,11 +671,7 @@
       onSnapshot: async ({ file, question }) => {
         setVisionState("analyzing");
         setStatus("スナップショット解析中…", true);
-        await sendMessage(question, {
-          photoFile: file,
-          source: "camera_snapshot",
-          fromLive: true,
-        });
+        await submit({ channel: "text", text: question, options: { photoFile: file, source: "camera_snapshot", fromLive: true } });
       },
       onStatus: (text) => {
         if (text && !sending) setStatus(text, false);
@@ -541,11 +687,12 @@
     global.TasuBuilderAIVoice?.mountComposerVoice?.({
       inputEl: input,
       hostEl: composer,
+      onTranscript: (text) => submit({ channel: "voice", text, options: { fromVoice: true } }),
     });
 
     $("[data-builder-ai-ui-send]")?.addEventListener(
       "click",
-      () => global.TasuBuilderAIVoice?.stopVoice?.(),
+      () => getIntegration()?.stopVoiceOutput?.(),
       true
     );
   }
@@ -565,7 +712,7 @@
     const consultIntent =
       options.consultIntent || detectConsultIntent(text);
 
-    global.TasuBuilderAIVoice?.stopVoice?.();
+    getIntegration()?.stopVoiceOutput?.();
 
     if (UI_LOCAL_ONLY && isStoreConsultIntent(consultIntent) && !sentPhoto) {
       sending = true;
@@ -601,7 +748,7 @@
         messages.push({ role: "assistant", content: calcResult.reply, source: "text" });
         saveHistory(messages);
         renderMessages();
-        global.TasuBuilderAIVoice?.notifyAssistantReply?.(calcResult.reply);
+        getIntegration()?.notifyAssistantReply?.(calcResult.reply);
         setStatus(calcResult.usedRemote ? "計算 + AI 要約" : "計算完了", false);
         setTimeout(() => setStatus("", false), 2000);
       } else if (calcResult.reply) {
@@ -675,7 +822,7 @@
       });
       saveHistory(messages);
       renderMessages();
-      global.TasuBuilderAIVoice?.notifyAssistantReply?.(result.reply);
+      getIntegration()?.notifyAssistantReply?.(result.reply);
     }
 
     if (result.visionState === "no_image" || result.photoRequired) {
@@ -719,11 +866,17 @@
   }
 
   function bindComposer() {
-    $("[data-builder-ai-ui-send]")?.addEventListener("click", () => sendMessage());
+    $("[data-builder-ai-ui-send]")?.addEventListener("click", () => {
+      const input = $("[data-builder-ai-ui-input]");
+      const text = String(input?.value || "").trim();
+      void submit({ channel: "text", text });
+    });
     $("[data-builder-ai-ui-input]")?.addEventListener("keydown", (ev) => {
       if (ev.key === "Enter" && !ev.shiftKey) {
         ev.preventDefault();
-        sendMessage();
+        const input = $("[data-builder-ai-ui-input]");
+        const text = String(input?.value || "").trim();
+        void submit({ channel: "text", text });
       }
     });
     $("[data-builder-ai-ui-clear]")?.addEventListener("click", () => {
@@ -732,7 +885,8 @@
       renderMessages();
       clearPhotoPreview();
       global.TasuBuilderAILive?.closePanel?.();
-      global.TasuBuilderAIVoice?.stopVoice?.();
+      getIntegration()?.stopVoiceOutput?.();
+      getIntegration()?.stopSession?.("cleared");
       setStatus("", false);
       setVisionState("idle");
       renderVisionDiagnosis(null);
@@ -746,6 +900,7 @@
       content:
         "Builder AI へようこそ。テキストで相談できます。\n\nクイック相談から「見積もり」「工程」「未入金」「書類」「通知」を選ぶか、下の入力欄に質問を入力してください。現場写真は「写真 · カメラ · 音声」から添付できます。",
       source: "text",
+      at: Date.now(),
     });
     saveHistory(messages);
   }
@@ -757,7 +912,9 @@
     renderMessages();
     bindPhotoUpload();
     bindQuickPrompts();
+    bindShellUI();
     bindLiveModule();
+    initVoiceIntegration();
     bindVoiceButton();
     bindComposerVoice();
     bindComposer();
@@ -771,6 +928,7 @@
 
   global.TasuBuilderAIUi = {
     init,
+    submit,
     sendMessage,
     pushSystem,
     prepareScheduleIntent,

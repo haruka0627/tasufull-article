@@ -4,7 +4,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0c0f1d" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Builder AI | TASFUL Builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,188 +16,216 @@
   <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="../common-ai-disclaimer.css" />
 </head>
-<body class="builder-body builder-ai-page" data-page="builder-ai">
-  <div class="builder-app" data-builder-root>
-    <header class="builder-header" aria-label="Builder AI">
-      <div class="builder-shell builder-header__inner">
-        <div class="builder-brandWrap">
-          <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
-            <span class="builder-brand__text">
-              <span class="builder-brand__main">Builder AI</span>
-              <span class="builder-brand__sub">TASFUL AI とは独立 · 建設現場支援</span>
-            </span>
-          </a>
+<body class="builder-body builder-ai-page builder-ai-v2" data-page="builder-ai">
+  <div class="builder-app builder-ai-v2-app" data-builder-root>
+    <div class="builder-ai-v2-layout">
+      <aside class="builder-ai-v2-sidebar" aria-label="Builder AI ナビゲーション">
+        <div class="builder-ai-v2-sidebar__brand">
+          <img class="builder-ai-v2-sidebar__logo" src="assets/builder-ai-icon.png" width="40" height="40" alt="" />
+          <div>
+            <p class="builder-ai-v2-sidebar__title">Builder AI</p>
+            <p class="builder-ai-v2-sidebar__sub">建設現場専用AIアシスタント</p>
+          </div>
         </div>
-        <p class="builder-ai-page__role">ロール: <strong data-builder-ai-role-label>—</strong></p>
-      </div>
-    </header>
+        <button type="button" class="builder-ai-v2-sidebar__new" data-builder-ai-ui-clear aria-label="新しい相談">
+          <span aria-hidden="true">+</span> 新しい相談
+        </button>
+        <nav class="builder-ai-v2-sidebar__nav" aria-label="メニュー">
+          <a class="builder-ai-v2-sidebar__link is-active" href="builder-ai.html">チャット</a>
+          <a class="builder-ai-v2-sidebar__link" href="project-hub.html">案件ハブ</a>
+          <a class="builder-ai-v2-sidebar__link" href="project-calendar.html">カレンダー</a>
+          <a class="builder-ai-v2-sidebar__link" href="project-detail.html">Vision</a>
+          <a class="builder-ai-v2-sidebar__link" href="project-hub.html#finance">Finance</a>
+          <a class="builder-ai-v2-sidebar__link" href="project-hub.html#documents">Documents</a>
+          <a class="builder-ai-v2-sidebar__link" href="project-hub.html#notifications">Notifications</a>
+        </nav>
+        <div class="builder-ai-v2-voice-core" data-builder-ai-voice-core-card aria-live="polite">
+          <div class="builder-ai-v2-voice-core__head">
+            <span class="builder-ai-v2-voice-core__dot" aria-hidden="true"></span>
+            <strong>Voice Core</strong>
+            <span class="builder-ai-v2-voice-core__badge" data-builder-ai-voice-core-status>Ready</span>
+          </div>
+          <p class="builder-ai-v2-voice-core__hint">音声入力は下部コンポーザーから利用できます。</p>
+        </div>
+      </aside>
 
-    <main class="builder-shell builder-main builder-ai-main">
-      <nav data-breadcrumb aria-label="パンくず"></nav>
-
-      <div class="builder-ai-disclaimer common-ai-disclaimer common-ai-disclaimer--builder" data-common-ai-disclaimer-banner data-surface="builder" role="note"></div>
-
-      <section class="builder-panel builder-ai-ui-chat-shell" aria-label="Builder AI チャット">
-        <header class="builder-ai-ui-capability" data-builder-ai-ui-capability aria-label="Builder AI のできること">
-          <h1 class="builder-ai-ui-capability__title">Builder AI</h1>
-          <p class="builder-ai-ui-capability__lead">
-            建設現場の相談をテキストで。写真診断 · 見積 · 工程 · 未入金 · 書類 · 通知を、案件データとあわせて確認できます。
-          </p>
-          <ul class="builder-ai-ui-capability__list">
-            <li>現場写真の参考診断（添付時）</li>
-            <li>見積 · 原価 · 粗利のたたき台</li>
-            <li>工程 · 遅延 · 今週予定の整理</li>
-            <li>未入金 · 書類 · 通知のサマリー</li>
-          </ul>
-          <p class="builder-ai-ui-capability__notice" role="note">
-            AI回答は参考情報です。最終判断は現地確認・専門業者判断を優先してください。
-          </p>
+      <div class="builder-ai-v2-main">
+        <header class="builder-ai-v2-topbar" aria-label="Builder AI ヘッダー">
+          <button type="button" class="builder-ai-v2-menu-toggle" data-builder-ai-v2-menu-toggle aria-label="メニューを開く" aria-expanded="false">
+            <span></span><span></span><span></span>
+          </button>
+          <div class="builder-ai-v2-topbar__brand">
+            <img class="builder-ai-v2-topbar__icon" src="assets/builder-ai-icon.png" width="36" height="36" alt="" />
+            <div>
+              <h1 class="builder-ai-v2-topbar__title">Builder AI</h1>
+              <p class="builder-ai-v2-topbar__sub">TASFUL AI と連携 · 建設現場支援</p>
+            </div>
+          </div>
+          <div class="builder-ai-v2-topbar__meta">
+            <span class="builder-ai-v2-pill builder-ai-v2-pill--online"><span class="builder-ai-v2-pill__dot"></span>オンライン</span>
+            <span class="builder-ai-v2-pill">使用モデル: Gemini 1.5 Pro</span>
+            <span class="builder-ai-v2-pill">ロール: <strong data-builder-ai-role-label>—</strong></span>
+          </div>
         </header>
 
-        <section class="builder-ph-ai-context builder-ai-ui-project-context" data-builder-ai-project-context hidden aria-label="案件連携">
-          <p class="builder-ph-ai-context__label">案件連携</p>
-          <p class="builder-ph-ai-context__text" data-builder-ai-project-context-text>—</p>
-          <a class="builder-btn builder-btn--ghost builder-btn--sm" href="#" data-builder-ai-project-detail-link>案件詳細へ</a>
-        </section>
+        <nav data-breadcrumb aria-label="パンくず" class="builder-ai-v2-breadcrumb"></nav>
 
-        <nav class="builder-ai-ui-hub-links" data-builder-ai-ui-hub-links aria-label="案件機能への導線"></nav>
+        <div class="builder-ai-disclaimer common-ai-disclaimer common-ai-disclaimer--builder builder-ai-v2-disclaimer" data-common-ai-disclaimer-banner data-surface="builder" role="note"></div>
 
-        <div
-          class="builder-ai-ui-vision-result"
-          data-builder-ai-ui-vision-result
-          data-vision-state="idle"
-          hidden
-          aria-live="polite"
-        >
-          <h2 class="builder-section-title builder-ai-ui-vision-result__title">AI参考診断</h2>
-          <div data-builder-ai-ui-vision-result-body></div>
-        </div>
+        <section class="builder-ai-ui-chat-shell builder-ai-v2-chat" aria-label="Builder AI チャット">
+          <header class="builder-ai-ui-capability builder-ai-v2-sr-panel" data-builder-ai-ui-capability hidden aria-hidden="true">
+            <h2 class="builder-ai-ui-capability__title">Builder AI</h2>
+            <p class="builder-ai-ui-capability__lead">建設現場の相談をテキストで。</p>
+          </header>
 
-        <div class="builder-ai-ui-messages" data-builder-ai-ui-messages role="log" aria-live="polite"></div>
+          <section class="builder-ph-ai-context builder-ai-ui-project-context builder-ai-v2-project" data-builder-ai-project-context hidden aria-label="案件連携">
+            <p class="builder-ph-ai-context__label">案件連携</p>
+            <p class="builder-ph-ai-context__text" data-builder-ai-project-context-text>—</p>
+            <a class="builder-btn builder-btn--ghost builder-btn--sm" href="#" data-builder-ai-project-detail-link>案件詳細へ</a>
+          </section>
 
-        <div class="builder-ai-ui-quick-wrap" aria-label="クイック相談">
-          <p class="builder-ai-ui-quick-wrap__label">クイック相談</p>
-          <div class="builder-ai-ui-quick" data-builder-ai-ui-quick></div>
-        </div>
+          <nav class="builder-ai-ui-hub-links builder-ai-v2-hub-hidden" data-builder-ai-ui-hub-links aria-label="案件機能への導線" hidden></nav>
 
-        <details class="builder-ai-ui-media-fold">
-          <summary>写真 · カメラ · 音声（次フェーズで拡張）</summary>
-          <div class="builder-ai-ui-media-fold__body">
-            <section class="builder-ai-ui-photo" aria-label="現場写真">
-              <div class="builder-ai-ui-photo__row">
-                <label class="builder-ai-ui-photo__label">
-                  画像を選択（jpg / png / webp）
-                  <input
-                    type="file"
-                    class="builder-ai-ui-photo__input"
-                    data-builder-ai-ui-photo-input
-                    accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-                  />
-                </label>
+          <div
+            class="builder-ai-ui-vision-result builder-ai-v2-vision"
+            data-builder-ai-ui-vision-result
+            data-vision-state="idle"
+            hidden
+            aria-live="polite"
+          >
+            <h2 class="builder-section-title builder-ai-ui-vision-result__title">AI参考診断</h2>
+            <div data-builder-ai-ui-vision-result-body></div>
+          </div>
+
+          <div class="builder-ai-v2-chat__body">
+            <div class="builder-ai-ui-messages builder-ai-v2-messages" data-builder-ai-ui-messages role="log" aria-live="polite"></div>
+          </div>
+
+          <div class="builder-ai-v2-composer-wrap">
+            <div class="builder-ai-ui-composer builder-ai-v2-composer">
+              <label class="visually-hidden" for="builder-ai-ui-input">相談内容</label>
+              <textarea
+                id="builder-ai-ui-input"
+                rows="3"
+                class="builder-ai-ui-composer__input builder-ai-v2-composer__input"
+                data-builder-ai-ui-input
+                placeholder="現場の状況や相談内容を入力してください…"
+              ></textarea>
+              <div class="builder-ai-v2-composer__toolbar">
+                <div class="builder-ai-v2-composer__tools">
+                  <label class="builder-ai-v2-tool-btn">
+                    <span aria-hidden="true">📎</span> 添付
+                    <input type="file" class="builder-ai-ui-photo__input" data-builder-ai-ui-photo-input accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
+                  </label>
+                  <button type="button" class="builder-ai-v2-tool-btn" data-builder-ai-ui-camera>📷 写真</button>
+                  <button type="button" class="builder-ai-v2-tool-btn builder-ai-ui-voice-btn" data-builder-ai-ui-voice-composer aria-pressed="false">🎤 音声</button>
+                </div>
+                <button type="button" class="builder-ai-v2-send" data-builder-ai-ui-send>送信</button>
               </div>
-              <div class="builder-ai-ui-photo__preview" data-builder-ai-ui-photo-preview>
-                <img class="builder-ai-ui-photo__thumb" data-builder-ai-ui-photo-thumb alt="選択した現場写真のプレビュー" hidden />
+              <div class="builder-ai-ui-photo__preview builder-ai-v2-photo-preview" data-builder-ai-ui-photo-preview>
+                <img class="builder-ai-ui-photo__thumb" data-builder-ai-ui-photo-thumb alt="選択した現場写真" hidden />
                 <div class="builder-ai-ui-photo__meta">
                   <p class="builder-ai-ui-photo__name" data-builder-ai-ui-photo-name></p>
                   <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-ui-photo-remove>写真を削除</button>
                 </div>
               </div>
-            </section>
-            <div class="builder-ai-ui-toolbar">
-              <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-camera>カメラ診断</button>
-              <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-voice>音声で相談</button>
-            </div>
-            <div class="builder-ai-ui-live" data-builder-ai-live-panel hidden>
-              <div class="builder-ai-ui-live__preview-wrap">
-                <video
-                  class="builder-ai-ui-live__video"
-                  data-builder-ai-live-video
-                  playsinline
-                  muted
-                  aria-label="現場カメラプレビュー"
-                ></video>
-              </div>
-              <div class="builder-ai-ui-live__actions">
-                <button type="button" class="builder-btn builder-btn--primary builder-btn--sm" data-builder-ai-live-snapshot>
-                  スナップショット診断
-                </button>
-                <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-live-close>
-                  カメラ停止
-                </button>
-              </div>
-              <p class="builder-ai-ui-live__status" data-builder-ai-live-status aria-live="polite"></p>
-              <p class="builder-ai-ui-live__note" role="note">
-                Live 風 MVP · 静止画スナップショットを既存 Vision に送信します（Gemini Live WebSocket ではありません）。
-              </p>
+              <p class="builder-ai-ui-voice-state builder-ai-v2-voice-state" data-builder-ai-voice-state aria-live="polite">Ready</p>
+              <p class="builder-ai-ui-status builder-ai-v2-status" data-builder-ai-ui-status aria-live="polite"></p>
             </div>
           </div>
+
+          <details class="builder-ai-ui-media-fold builder-ai-v2-media-fold">
+            <summary>カメラ Live · 音声（詳細）</summary>
+            <div class="builder-ai-ui-media-fold__body">
+              <div class="builder-ai-ui-toolbar">
+                <button type="button" class="builder-ai-ui-media-btn" data-builder-ai-ui-voice>音声で相談</button>
+              </div>
+              <div class="builder-ai-ui-live" data-builder-ai-live-panel hidden>
+                <div class="builder-ai-ui-live__preview-wrap">
+                  <video class="builder-ai-ui-live__video" data-builder-ai-live-video playsinline muted aria-label="現場カメラプレビュー"></video>
+                </div>
+                <div class="builder-ai-ui-live__actions">
+                  <button type="button" class="builder-btn builder-btn--primary builder-btn--sm" data-builder-ai-live-snapshot>スナップショット診断</button>
+                  <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-ai-live-close>カメラ停止</button>
+                </div>
+                <p class="builder-ai-ui-live__status" data-builder-ai-live-status aria-live="polite"></p>
+              </div>
+            </div>
+          </details>
+
+          <div class="builder-ai-ui-quick-wrap builder-ai-v2-quick-mobile" aria-label="クイック相談">
+            <p class="builder-ai-ui-quick-wrap__label">クイック相談</p>
+            <div class="builder-ai-ui-quick builder-ai-v2-quick-grid" data-builder-ai-ui-quick-mobile></div>
+          </div>
+        </section>
+
+        <details class="builder-ai-legacy builder-panel builder-ai-v2-legacy">
+          <summary>業務下書き（従来機能 · Gateway 接続）</summary>
+          <section class="builder-ai-controls" aria-label="案件とテンプレート">
+            <div class="builder-ai-controls__row">
+              <label class="builder-ai-label">
+                案件
+                <select data-builder-ai-project-select class="builder-ai-select"></select>
+              </label>
+              <label class="builder-ai-label">
+                project_id
+                <input type="text" class="builder-ai-input-text" data-builder-ai-project-id placeholder="demo-project-001" />
+              </label>
+            </div>
+            <input type="hidden" data-builder-ai-current-action value="faq_answer" />
+            <div class="builder-ai-templates" data-builder-ai-templates aria-label="業務テンプレート"></div>
+          </section>
+          <section class="builder-ai-chat" aria-label="業務下書きチャット">
+            <div class="builder-ai-messages" data-builder-ai-messages role="log" aria-live="polite"></div>
+            <div class="builder-ai-composer">
+              <textarea rows="3" class="builder-ai-composer__input" data-builder-ai-input placeholder="相談内容または下書き依頼を入力"></textarea>
+              <div class="builder-ai-composer__actions">
+                <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-clear>履歴クリア</button>
+                <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-copy>回答をコピー</button>
+                <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-save-draft hidden>下書きに保存</button>
+                <button type="button" class="builder-btn builder-btn--primary" data-builder-ai-send>送信</button>
+              </div>
+              <p class="builder-ai-status" data-builder-ai-status aria-live="polite"></p>
+            </div>
+          </section>
+          <section class="builder-ai-drafts" aria-label="保存した下書き履歴">
+            <header class="builder-ai-drafts__head">
+              <h2 class="builder-ai-drafts__title">下書き履歴</h2>
+            </header>
+            <p class="builder-ai-drafts__empty" data-builder-ai-draft-empty hidden>保存された下書きはありません。</p>
+            <div class="builder-ai-draft-list" data-builder-ai-draft-list></div>
+          </section>
         </details>
 
-        <div class="builder-ai-ui-composer">
-          <label class="builder-ai-ui-composer__label" for="builder-ai-ui-input">相談内容</label>
-          <textarea
-            id="builder-ai-ui-input"
-            rows="3"
-            class="builder-ai-ui-composer__input"
-            data-builder-ai-ui-input
-            placeholder="現場の状況や相談内容を入力してください"
-          ></textarea>
-          <div class="builder-ai-ui-composer__actions">
-            <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-ui-clear>履歴クリア</button>
-            <button type="button" class="builder-btn builder-btn--primary" data-builder-ai-ui-send>送信</button>
-          </div>
-          <p class="builder-ai-ui-status" data-builder-ai-ui-status aria-live="polite"></p>
-        </div>
-      </section>
+        <p class="builder-ai-footnote builder-ai-v2-footnote">
+          <a href="construction-tools.html">建設ツール</a>
+          · <a href="builder-ai-guidelines.html">Builder AI ガイドライン</a>
+          · <a href="../ai-terms.html">AI利用規約</a>
+        </p>
+      </div>
 
-      <details class="builder-ai-legacy builder-panel">
-        <summary>業務下書き（従来機能 · Gateway 接続）</summary>
-
-        <section class="builder-ai-controls" aria-label="案件とテンプレート">
-          <div class="builder-ai-controls__row">
-            <label class="builder-ai-label">
-              案件
-              <select data-builder-ai-project-select class="builder-ai-select"></select>
-            </label>
-            <label class="builder-ai-label">
-              project_id
-              <input type="text" class="builder-ai-input-text" data-builder-ai-project-id placeholder="demo-project-001" />
-            </label>
-          </div>
-          <input type="hidden" data-builder-ai-current-action value="faq_answer" />
-          <div class="builder-ai-templates" data-builder-ai-templates aria-label="業務テンプレート"></div>
+      <aside class="builder-ai-v2-rail" aria-label="クイック相談と履歴">
+        <section class="builder-ai-v2-rail__section">
+          <h2 class="builder-ai-v2-rail__title">クイック相談</h2>
+          <div class="builder-ai-ui-quick builder-ai-v2-quick-cards" data-builder-ai-ui-quick></div>
         </section>
-
-        <section class="builder-ai-chat" aria-label="業務下書きチャット">
-          <div class="builder-ai-messages" data-builder-ai-messages role="log" aria-live="polite"></div>
-          <div class="builder-ai-composer">
-            <textarea rows="3" class="builder-ai-composer__input" data-builder-ai-input placeholder="相談内容または下書き依頼を入力"></textarea>
-            <div class="builder-ai-composer__actions">
-              <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-clear>履歴クリア</button>
-              <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-copy>回答をコピー</button>
-              <button type="button" class="builder-btn builder-btn--ghost" data-builder-ai-save-draft hidden>下書きに保存</button>
-              <button type="button" class="builder-btn builder-btn--primary" data-builder-ai-send>送信</button>
-            </div>
-            <p class="builder-ai-status" data-builder-ai-status aria-live="polite"></p>
+        <section class="builder-ai-v2-rail__section">
+          <div class="builder-ai-v2-rail__head">
+            <h2 class="builder-ai-v2-rail__title">最近の相談履歴</h2>
+            <button type="button" class="builder-ai-v2-rail__link" data-builder-ai-v2-history-scroll>すべて見る</button>
           </div>
+          <ul class="builder-ai-v2-history" data-builder-ai-ui-history></ul>
         </section>
-
-        <section class="builder-ai-drafts" aria-label="保存した下書き履歴">
-          <header class="builder-ai-drafts__head">
-            <h2 class="builder-ai-drafts__title">下書き履歴</h2>
-            <p class="builder-ai-drafts__note">保存した AI 下書きは確認・再コピー用です。契約・請求・採用・完了承認には使えません。</p>
-          </header>
-          <p class="builder-ai-drafts__empty" data-builder-ai-draft-empty hidden>保存された下書きはありません。</p>
-          <div class="builder-ai-draft-list" data-builder-ai-draft-list></div>
+        <section class="builder-ai-v2-stats" aria-label="統計">
+          <div class="builder-ai-v2-stat"><strong>6</strong><span>対応分野</span></div>
+          <div class="builder-ai-v2-stat"><strong>98.7%</strong><span>精度</span></div>
+          <div class="builder-ai-v2-stat"><strong>128</strong><span>相談件数</span></div>
+          <div class="builder-ai-v2-stat"><strong>2.8秒</strong><span>平均応答</span></div>
+          <div class="builder-ai-v2-stat"><strong>最新</strong><span>DB状態</span></div>
         </section>
-      </details>
-
-      <p class="builder-ai-footnote">
-        <a href="construction-tools.html">建設ツール</a>の計算結果を踏まえた詳細下書きも、従来機能から依頼できます。
-        · <a href="builder-ai-guidelines.html">Builder AI ガイドライン</a>
-        · <a href="../ai-terms.html">AI利用規約</a>
-      </p>
-    </main>
+      </aside>
+    </div>
+    <div class="builder-ai-v2-backdrop" data-builder-ai-v2-backdrop hidden></div>
   </div>
 
   <script src="../breadcrumb-config.js"></script>
@@ -220,7 +248,22 @@
   <script src="builder-tool-material-calculator.js"></script>
   <script src="builder-ai-calc-intent.js"></script>
   <script src="builder-ai-calc-orchestrator.js"></script>
+  <script src="../shared/voice-core/voice-core-events.js"></script>
+  <script src="../shared/voice-core/voice-adapter-interface.js"></script>
+  <script src="../shared/voice-core/voice-mock-adapter.js"></script>
+  <script src="../shared/voice-core/voice-realtime-options.js"></script>
+  <script src="../shared/voice-core/voice-realtime-connect-policy.js"></script>
+  <script src="../shared/voice-core/voice-realtime-config.js"></script>
+  <script src="../shared/voice-core/voice-realtime-event-mapper.js"></script>
+  <script src="../shared/voice-core/voice-openai-realtime-wire-client.js"></script>
+  <script src="../shared/voice-core/transports/voice-openai-realtime-websocket-transport.js"></script>
+  <script src="../shared/voice-core/adapters/voice-openai-realtime-adapter.js"></script>
+  <script src="../shared/voice-core/voice-provider-router.js"></script>
+  <script src="../shared/voice-core/voice-session.js"></script>
+  <script src="../shared/voice-core/voice-core.js"></script>
   <script src="../tasful-ai-voice-core.js"></script>
+  <script src="builder-voice-controller.js"></script>
+  <script src="builder-ai-voice-integration.js"></script>
   <script src="builder-ai-vision.js"></script>
   <script src="builder-ai-vision-analyzer.js"></script>
   <script src="builder-project-store.js"></script>
