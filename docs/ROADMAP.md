@@ -80,7 +80,11 @@
 
 **Phase 6 Stripe:** migration · checkout · webhook · plan guard · `scripts/test-business-directory-phase6-stripe.mjs` · `reports/business-directory-phase6-stripe.md`
 
-**Phase 7 Preflight:** `scripts/test-business-directory-phase7-deploy-preflight.mjs` · `reports/business-directory-phase7-deploy-preflight.md` — **Pages build Go** · migration/Edge/Stripe 手動残
+**Phase 7 Preflight:** `scripts/test-business-directory-phase7-deploy-preflight.mjs` · `reports/business-directory-phase7-deploy-preflight.md` — **Pages build Go**
+
+**Production Step 1 Migration:** `reports/business-directory-production-step1-migration.md` · staging apply + repair 済
+
+**Production Step 2 Edge:** `reports/business-directory-production-step2-edge.md` · Edge deploy · secrets · **15/15 smoke PASS**
 
 **報告:** `reports/business-directory-subscription-model.md`
 
