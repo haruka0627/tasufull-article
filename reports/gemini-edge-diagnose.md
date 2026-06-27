@@ -1,6 +1,6 @@
 # Gemini Edge 診断レポート（別キー / 別プロジェクト調査）
 
-実施: 2026-06-12T10:51:11.243Z
+実施: 2026-06-26T03:44:24.499Z
 
 ## 1. Supabase Secret と Edge キーの一致
 
@@ -22,16 +22,16 @@
 
 ### generateContent_ping
 
-- HTTP: 429
+- HTTP: 200
 - URL: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=***REDACTED***`
 - Headers:
 ```json
 {
   "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
   "content-type": "application/json; charset=UTF-8",
-  "date": "Fri, 12 Jun 2026 10:51:06 GMT",
+  "date": "Fri, 26 Jun 2026 03:44:17 GMT",
   "server": "scaffolding on HTTPServer2",
-  "server-timing": "gfet4t7; dur=469",
+  "server-timing": "gfet4t7; dur=911",
   "vary": "Origin, X-Origin, Referer",
   "x-content-type-options": "nosniff",
   "x-frame-options": "SAMEORIGIN",
@@ -42,11 +42,34 @@
 - Body:
 ```json
 {
-  "error": {
-    "code": 429,
-    "message": "Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ",
-    "status": "RESOURCE_EXHAUSTED"
-  }
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Pong!\n\n(How can I help you today? Are you just saying hello, or is there something specific you'd like to discuss or ask?)"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 2,
+    "candidatesTokenCount": 31,
+    "totalTokenCount": 33,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "kfU9arzYAZzD0-kPoLml-QI"
 }
 ```
 
@@ -59,9 +82,9 @@
 {
   "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
   "content-type": "application/json; charset=UTF-8",
-  "date": "Fri, 12 Jun 2026 10:51:06 GMT",
+  "date": "Fri, 26 Jun 2026 03:44:17 GMT",
   "server": "scaffolding on HTTPServer2",
-  "server-timing": "gfet4t7; dur=79",
+  "server-timing": "gfet4t7; dur=114",
   "vary": "Origin, X-Origin, Referer",
   "x-content-type-options": "nosniff",
   "x-frame-options": "SAMEORIGIN",
@@ -900,9 +923,9 @@
 {
   "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
   "content-type": "application/json; charset=UTF-8",
-  "date": "Fri, 12 Jun 2026 10:51:07 GMT",
+  "date": "Fri, 26 Jun 2026 03:44:18 GMT",
   "server": "scaffolding on HTTPServer2",
-  "server-timing": "gfet4t7; dur=169",
+  "server-timing": "gfet4t7; dur=74",
   "vary": "Origin, X-Origin, Referer",
   "x-content-type-options": "nosniff",
   "x-frame-options": "SAMEORIGIN",
@@ -934,16 +957,16 @@
 
 ### generateContent_header_auth
 
-- HTTP: 429
+- HTTP: 200
 - URL: `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent`
 - Headers:
 ```json
 {
   "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000",
   "content-type": "application/json; charset=UTF-8",
-  "date": "Fri, 12 Jun 2026 10:51:07 GMT",
+  "date": "Fri, 26 Jun 2026 03:44:18 GMT",
   "server": "scaffolding on HTTPServer2",
-  "server-timing": "gfet4t7; dur=463",
+  "server-timing": "gfet4t7; dur=743",
   "vary": "Origin, X-Origin, Referer",
   "x-content-type-options": "nosniff",
   "x-frame-options": "SAMEORIGIN",
@@ -954,25 +977,47 @@
 - Body:
 ```json
 {
-  "error": {
-    "code": 429,
-    "message": "Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ",
-    "status": "RESOURCE_EXHAUSTED"
-  }
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Pong!\n\nHow can I help you today?"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 2,
+    "candidatesTokenCount": 10,
+    "totalTokenCount": 12,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 2
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-2.5-flash",
+  "responseId": "kvU9auqbCdCf0-kPvcfluQE"
 }
 ```
 
 
 ## 4. gemini-chat 応答（問い合わせ文）
 
-- HTTP: 429
+- HTTP: 200
 
 ```json
 {
-  "reply": "",
-  "usedGemini": false,
-  "error": "Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. ",
-  "retryCount": 2,
+  "reply": "草刈り業者への問い合わせ文案を作成します。以下の情報を【】内に追記・修正してご活用ください。\n\n---\n\n**件名：草刈り作業のお見積もり依頼（【氏名または会社名】）**\n\n【草刈り業者名】御担当者様\n\nいつもお世話になっております。\nまたは\n初めてご連絡させていただきます。【氏名または会社名】と申します。\n\n所有する土地の草刈り作業について、お見積もりをお願いしたくご連絡いたしました。\n\n下記に詳細を記載いたしますので、ご確認いただけますでしょうか。\n\n**1. 作業場所**\n*   住所：〒【郵便番号】 【都道府県】【市区町村】【番地】【建物名・部屋番号など】\n*   Google マップのURL（もしあれば）：【URL】\n\n**2. 敷地の状況**\n*   広さ：約【〇〇】平方メートル（または【〇〇】坪）\n*   現在の草の高さ：【例：膝丈程度、胸丈程度、まばらに生えている、全体的に密生している】\n*   敷地の傾斜：【例：平坦、緩やかな傾斜、急な傾斜、段差あり】\n*   主な障害物：【例：庭木、石、フェンス、物置、ゴミ、その他（具体的に）】\n*   作業箇所の写真（もしあれば、添付ファイルをご確認ください）\n\n**3. 作業内容**\n*   草刈り（刈り払い機による作業）：【はい／いいえ】\n*   集草・処分：【はい／いいえ】\n*   除草剤散布：【はい／いいえ】\n*   その他ご要望：【例：木の剪定、低木の伐採、特定の範囲のみ作業希望など】\n\n**4. 希望作業時期**\n*   【〇月上旬／中旬／下旬】頃\n*   または【〇月〇日～〇月〇日】の間\n*   または【特に希望なし、貴社のご都合に合わせます】\n\n**5. 立ち会い希望の有無**\n*   お見積もり時の現地立ち会い：【希望する／希望しない】\n*   作業当日の立ち会い：【希望する／希望しない】\n\n**6. ご連絡先**\n*   お名前：【氏名】\n*   電話番号：【電話番号】\n*   メールアドレス：【メールアドレス】\n\nお忙しいところ恐縮ですが、お見積もりと作業可能な時期についてご連絡いただけますと幸いです。\nご不明な点がございましたら、お気軽にお申し付けください。\n\nどうぞよろしくお願いいたします。\n\n---",
+  "usedGemini": true,
+  "retryCount": 0,
   "intent": "work"
 }
 ```
