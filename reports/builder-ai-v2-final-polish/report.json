@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "pageUrl": "http://127.0.0.1:8788/builder/builder-ai",
+  "errors": [],
+  "horizontalScroll": [
+    {
+      "width": 1280,
+      "hasHorizontalScroll": false
+    },
+    {
+      "width": 768,
+      "hasHorizontalScroll": false
+    },
+    {
+      "width": 390,
+      "hasHorizontalScroll": false
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-final-1280.png",
+    "C:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-final-768.png",
+    "C:\\Users\\rubih\\tasufull-article\\reports\\builder-ai-v2-final-polish\\builder-ai-v2-final-390.png"
+  ]
+}
