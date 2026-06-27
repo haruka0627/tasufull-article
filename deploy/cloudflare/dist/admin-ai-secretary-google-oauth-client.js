@@ -155,6 +155,7 @@
     TOOLS_FN,
     getFunctionsBase,
     getOAuthCallbackUrl,
+    postAction,
     fetchStatus,
     startConnect,
     disconnect,

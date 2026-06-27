@@ -414,3 +414,85 @@ export function sanitizeForClient<T extends Record<string, unknown>>(obj: T): T 
   }
   return out as T;
 }
+
+/** Read vault row with tokens — Edge-only (never return to client). */
+export async function readTokenVaultRow(userId: string): Promise<{
+  ok: boolean;
+  accessToken?: string;
+  refreshToken?: string;
+  email?: string;
+  scope?: string;
+  expiresAt?: string;
+  error?: string;
+}> {
+  const sb = getServiceSupabase();
+  if (!sb) return { ok: false, error: "supabase_service_unconfigured" };
+  const { data, error } = await sb
+    .from("secretary_google_token_vault")
+    .select("access_token, refresh_token, google_account_email, scope, expires_at")
+    .eq("user_id", userId)
+    .eq("provider", "google")
+    .maybeSingle();
+  if (error) return { ok: false, error: error.message };
+  if (!data?.refresh_token && !data?.access_token) return { ok: false, error: "not_connected" };
+  return {
+    ok: true,
+    accessToken: trim(data.access_token, 8000) || undefined,
+    refreshToken: trim(data.refresh_token, 8000) || undefined,
+    email: data.google_account_email ? String(data.google_account_email) : undefined,
+    scope: data.scope ? String(data.scope) : undefined,
+    expiresAt: data.expires_at ? String(data.expires_at) : undefined,
+  };
+}
+
+/** Ensure valid access token — refresh when expired/near expiry. */
+export async function ensureGoogleAccessToken(userId: string): Promise<{
+  ok: boolean;
+  accessToken?: string;
+  mock?: boolean;
+  refreshed?: boolean;
+  error?: string;
+}> {
+  const config = getSecretaryGoogleConfig();
+  if (config.mock || isSecretaryGoogleMockMode()) {
+    return { ok: true, accessToken: "mock_gmail_access", mock: true };
+  }
+
+  const row = await readTokenVaultRow(userId);
+  if (!row.ok) return { ok: false, error: row.error || "not_connected" };
+
+  const expiresMs = row.expiresAt ? new Date(row.expiresAt).getTime() : 0;
+  const needsRefresh = !row.accessToken || !expiresMs || expiresMs < Date.now() + 60_000;
+
+  if (!needsRefresh && row.accessToken) {
+    return { ok: true, accessToken: row.accessToken, refreshed: false };
+  }
+
+  if (!row.refreshToken) {
+    return { ok: false, error: "refresh_token_missing" };
+  }
+  if (!config.configured) {
+    return { ok: false, error: "google_oauth_not_configured" };
+  }
+
+  const refreshed = await refreshGoogleToken({
+    refreshToken: row.refreshToken,
+    clientId: config.clientId,
+    clientSecret: config.clientSecret,
+  });
+  if (!refreshed.ok || !refreshed.accessToken) {
+    return { ok: false, error: refreshed.error || "refresh_failed" };
+  }
+
+  const saved = await upsertTokenVault({
+    userId,
+    email: row.email,
+    accessToken: refreshed.accessToken,
+    refreshToken: refreshed.refreshToken || row.refreshToken,
+    scope: refreshed.scope || row.scope,
+    expiresAt: refreshed.expiresAt,
+  });
+  if (!saved.ok) return { ok: false, error: saved.error || "vault_update_failed" };
+
+  return { ok: true, accessToken: refreshed.accessToken, refreshed: true };
+}
