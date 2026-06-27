@@ -46,7 +46,7 @@ const DEFAULT_REALTIME_MODEL =
 const DEFAULT_REALTIME_ENDPOINT =
   Deno.env.get("OPENAI_REALTIME_ENDPOINT")?.trim() || "wss://api.openai.com/v1/realtime";
 
-const OPENAI_SESSIONS_URL = "https://api.openai.com/v1/realtime/sessions";
+const OPENAI_CLIENT_SECRETS_URL = "https://api.openai.com/v1/realtime/client_secrets";
 
 const SK_PATTERN = /\bsk-[a-zA-Z0-9_-]{8,}\b/g;
 
@@ -117,11 +117,11 @@ export function assertEphemeralCredentialValue(value: string): string {
   return token;
 }
 
-type OpenAiSessionResponse = {
-  model?: string;
-  client_secret?: {
-    value?: string;
-    expires_at?: number;
+type OpenAiClientSecretResponse = {
+  value?: string;
+  expires_at?: number;
+  session?: {
+    model?: string;
   };
   error?: {
     message?: string;
@@ -156,16 +156,18 @@ export async function createOpenAiRealtimeSession(input: {
 
   const endpoint = trimText(input.endpoint, 512) || DEFAULT_REALTIME_ENDPOINT;
   const sessionBody: Record<string, unknown> = {
-    model: input.model,
-    modalities: ["audio", "text"],
+    session: {
+      type: "realtime",
+      model: input.model,
+    },
   };
   if (input.voice) {
-    sessionBody.voice = input.voice;
+    (sessionBody.session as Record<string, unknown>).voice = input.voice;
   }
 
   let upstream: Response;
   try {
-    upstream = await fetch(OPENAI_SESSIONS_URL, {
+    upstream = await fetch(OPENAI_CLIENT_SECRETS_URL, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -184,7 +186,7 @@ export async function createOpenAiRealtimeSession(input: {
     };
   }
 
-  const data = (await upstream.json().catch(() => ({}))) as OpenAiSessionResponse;
+  const data = (await upstream.json().catch(() => ({}))) as OpenAiClientSecretResponse;
 
   if (!upstream.ok) {
     const message = sanitizeErrorMessage(data?.error?.message || `openai_${upstream.status}`);
@@ -196,7 +198,7 @@ export async function createOpenAiRealtimeSession(input: {
 
   let tokenValue: string;
   try {
-    tokenValue = assertEphemeralCredentialValue(String(data?.client_secret?.value || ""));
+    tokenValue = assertEphemeralCredentialValue(String(data?.value || ""));
   } catch (err) {
     return {
       status: 502,
@@ -208,8 +210,8 @@ export async function createOpenAiRealtimeSession(input: {
     };
   }
 
-  const resolvedModel = trimText(data?.model, 128) || input.model;
-  const expiresAt = epochSecondsToIso(data?.client_secret?.expires_at);
+  const resolvedModel = trimText(data?.session?.model, 128) || input.model;
+  const expiresAt = epochSecondsToIso(data?.expires_at);
 
   return {
     status: 200,
