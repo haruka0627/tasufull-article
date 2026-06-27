@@ -3,19 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <meta name="robots" content="noindex,nofollow" />
   <title>Voice Core — Mock Test</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
     button { margin: 0.25rem; padding: 0.5rem 1rem; }
     #log { background: #f4f4f5; padding: 1rem; min-height: 200px; white-space: pre-wrap; font-size: 14px; }
+    #session-panel { background: #eff6ff; border: 1px solid #bfdbfe; padding: 1rem; margin: 1rem 0; font-size: 14px; }
+    #session-panel dl { margin: 0; display: grid; grid-template-columns: 8rem 1fr; gap: 0.35rem 0.75rem; }
+    #session-panel dt { font-weight: 600; color: #1e3a8a; }
+    #session-panel dd { margin: 0; word-break: break-all; }
     .ok { color: #047857; }
     .err { color: #b91c1c; }
   </style>
 </head>
 <body>
   <h1>Voice Core</h1>
-  <p>Mock + Live boundary (Phase 5-B WebSocket transport opt-in) + STT/TTS/Fallback — no external API by default.</p>
+  <p>Mock + Live boundary (Phase 5-C-2 session client) + STT/TTS/Fallback — no external API by default.</p>
+
+  <section id="session-panel" aria-label="Realtime session status">
+    <h2 style="margin-top:0;font-size:1rem;">Realtime Session (Phase 5-C-2)</h2>
+    <div>
+      <button type="button" id="btn-refresh-session">Refresh Session</button>
+      <button type="button" id="btn-clear-session">Clear Session</button>
+    </div>
+    <dl>
+      <dt>mode (mock)</dt><dd id="status-mode-mock">—</dd>
+      <dt>mode (live req)</dt><dd id="status-mode-live">—</dd>
+      <dt>endpoint</dt><dd id="status-endpoint">—</dd>
+      <dt>model</dt><dd id="status-model">—</dd>
+      <dt>expiresAt</dt><dd id="status-expires">—</dd>
+      <dt>injectors</dt><dd id="status-injectors">—</dd>
+      <dt>auto refresh</dt><dd id="status-auto-refresh">—</dd>
+    </dl>
+  </section>
+
   <div>
     <button type="button" id="btn-start">Start session</button>
     <button type="button" id="btn-text">Send text</button>
@@ -30,6 +52,7 @@
   </div>
   <pre id="log"></pre>
 
+  <script src="../../chat-supabase-config.js"></script>
   <script src="voice-core-events.js"></script>
   <script src="voice-adapter-interface.js"></script>
   <script src="voice-mock-adapter.js"></script>
@@ -51,11 +74,13 @@
   <script src="voice-provider-router.js"></script>
   <script src="voice-session.js"></script>
   <script src="voice-core.js"></script>
+  <script src="voice-realtime-session-client.js"></script>
   <script>
     (function () {
       const logEl = document.getElementById("log");
       let session = null;
       const lines = [];
+      const SessionClient = () => window.TasuVoiceRealtimeSessionClient;
 
       function log(msg, cls) {
         lines.push(msg);
@@ -63,9 +88,68 @@
         if (cls) logEl.className = cls;
       }
 
+      function renderSessionStatus() {
+        const client = SessionClient();
+        if (!client) return;
+
+        const mockPolicy = client.getPolicySnapshot({ mockCompatible: true });
+        const livePolicy = client.getPolicySnapshot({ mockCompatible: false });
+        const current = client.getCurrentSession();
+        const injectors = client.getInjectorsStatus();
+
+        document.getElementById("status-mode-mock").textContent =
+          mockPolicy.mode + " (" + (mockPolicy.reason || "") + ")";
+        document.getElementById("status-mode-live").textContent =
+          livePolicy.mode + " (" + (livePolicy.reason || "") + ") · liveFlag=" + livePolicy.liveFlag;
+        document.getElementById("status-endpoint").textContent =
+          current?.endpoint || injectors.endpoint || "—";
+        document.getElementById("status-model").textContent =
+          current?.model || injectors.model || "—";
+        document.getElementById("status-expires").textContent = current?.credential?.expiresAt
+          ? current.credential.expiresAt + " · in " + Math.round((current.msUntilExpiry || 0) / 1000) + "s"
+          : "—";
+        document.getElementById("status-injectors").textContent = injectors.registered
+          ? "registered · live=" + injectors.liveEnabled + " · ws=" + injectors.useWebSocketTransport
+          : "not registered";
+        document.getElementById("status-auto-refresh").textContent = current?.refreshTimerActive
+          ? "scheduled · refresh in " + Math.round((current.msUntilAutoRefresh || 0) / 1000) + "s (lead " + current.autoRefreshLeadMs / 1000 + "s)"
+          : "—";
+      }
+
       function bindSession(s) {
         s.receiveEvent((ev) => log(JSON.stringify(ev)));
       }
+
+      document.getElementById("btn-refresh-session").onclick = async () => {
+        const client = SessionClient();
+        if (!client) return log("session client missing", "err");
+        log("refresh: fetching openai-realtime-session …");
+        try {
+          const result = await client.refresh({ surface: "tasful_ai" });
+          renderSessionStatus();
+          if (!result.ok) {
+            log("REFRESH FAIL: " + (result.error || "unknown") + " (http " + (result.httpStatus || 0) + ")", "err");
+            return;
+          }
+          const inj = client.getInjectorsStatus();
+          const cfg = window.TasuVoiceCore.createRealtimeConfig();
+          const endpoint = cfg.getEndpoint();
+          const model = cfg.getModel();
+          log(
+            "REFRESH OK: endpoint=" + endpoint + " model=" + model +
+              " injectors=" + inj.registered + " credential=" + (result.session?.credential?.valueMasked || "—"),
+            "ok"
+          );
+        } catch (err) {
+          log("REFRESH ERROR: " + (err?.message || err), "err");
+        }
+      };
+
+      document.getElementById("btn-clear-session").onclick = () => {
+        SessionClient()?.clear();
+        renderSessionStatus();
+        log("session injectors cleared", "ok");
+      };
 
       document.getElementById("btn-start").onclick = () => {
         session = window.TasuVoiceCore.startSession({ surface: "voice_core_test", provider: "mock" });
@@ -149,10 +233,9 @@
         const ok = policy.mode === "mock" && disabled.reason === "live_disabled";
         log(ok ? "POLICY MOCK PASS: default mock, live disabled without flag" : "POLICY MOCK FAIL", ok ? "ok" : "err");
       };
+
+      renderSessionStatus();
     })();
   </script>
-  <link rel="stylesheet" href="../../tasful-site-assistant.css">
-  <script src="../../tasful-site-assistant-adapter.js" defer></script>
-  <script src="../../tasful-site-assistant.js" defer></script>
 </body>
 </html>
