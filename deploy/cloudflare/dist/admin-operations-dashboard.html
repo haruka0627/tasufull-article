@@ -163,17 +163,43 @@
                 <h4 class="ops-secretary-gmail__title" id="ops-google-workspace-assistant-heading">Workspace Assistant</h4>
                 <span class="ops-secretary-gmail__status" data-ops-google-workspace-assistant-status aria-live="polite">待機中</span>
               </header>
-              <form class="ops-secretary-gmail__search" data-ops-google-workspace-assistant-form>
-                <label class="visually-hidden" for="ops-google-workspace-assistant-input">Workspace 指示</label>
-                <input type="text" class="ops-secretary-gmail__search-input" id="ops-google-workspace-assistant-input" data-ops-google-workspace-assistant-input placeholder="例: 田中さんに返信して / 明日15時に打ち合わせ / 見積書を探して" autocomplete="off" />
-                <button type="submit" class="ops-p3-action">実行計画</button>
-              </form>
-              <div data-ops-google-workspace-assistant-plan aria-live="polite"></div>
-              <div class="ops-secretary-gws-assistant__actions">
-                <button type="button" class="ops-p3-action" data-ops-google-workspace-assistant-approve hidden>Human Gate 承認</button>
-                <button type="button" class="ops-p3-action" data-ops-google-workspace-assistant-cancel hidden>キャンセル</button>
+              <div class="ops-secretary-google-workspace__tabs" role="tablist" aria-label="Workspace Assistant">
+                <button type="button" class="ops-secretary-google-workspace__tab ops-secretary-google-workspace__tab--active" role="tab" data-ops-gws-assistant-tab="assistant" aria-selected="true">Assistant</button>
+                <button type="button" class="ops-secretary-google-workspace__tab" role="tab" data-ops-gws-assistant-tab="activity" aria-selected="false">Activity</button>
               </div>
-              <div data-ops-google-workspace-assistant-log aria-live="polite"></div>
+              <div data-ops-gws-assistant-panel>
+                <form class="ops-secretary-gmail__search" data-ops-google-workspace-assistant-form>
+                  <label class="visually-hidden" for="ops-google-workspace-assistant-input">Workspace 指示</label>
+                  <input type="text" class="ops-secretary-gmail__search-input" id="ops-google-workspace-assistant-input" data-ops-google-workspace-assistant-input placeholder="例: 田中さんに返信して / 明日15時に打ち合わせ / 見積書を探して" autocomplete="off" />
+                  <button type="submit" class="ops-p3-action">実行計画</button>
+                </form>
+                <div data-ops-google-workspace-assistant-plan aria-live="polite"></div>
+                <div class="ops-secretary-gws-assistant__actions">
+                  <button type="button" class="ops-p3-action" data-ops-google-workspace-assistant-approve hidden>Human Gate 承認</button>
+                  <button type="button" class="ops-p3-action" data-ops-google-workspace-assistant-cancel hidden>キャンセル</button>
+                </div>
+                <div data-ops-google-workspace-assistant-log aria-live="polite"></div>
+              </div>
+              <div data-ops-gws-activity-panel hidden>
+                <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Activity filter">
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="success">Success</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="failed">Failed</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="cancelled">Canceled</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="human_gate">Human Gate</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="gmail">Gmail</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="calendar">Calendar</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="contacts">Contacts</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-filter="drive">Drive</button>
+                  <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-gws-activity-export>JSON Export</button>
+                </div>
+                <form class="ops-secretary-gmail__search" data-ops-gws-activity-search-form>
+                  <label class="visually-hidden" for="ops-gws-activity-search">Activity 検索</label>
+                  <input type="search" class="ops-secretary-gmail__search-input" id="ops-gws-activity-search" data-ops-gws-activity-search-input placeholder="Intent / RequestId 検索" autocomplete="off" />
+                  <button type="submit" class="ops-p3-action">検索</button>
+                </form>
+                <div data-ops-gws-activity-list aria-live="polite"></div>
+                <div data-ops-gws-activity-detail hidden aria-live="polite"></div>
+              </div>
             </section>
             <div class="ops-secretary-google-workspace" data-ops-secretary-google-workspace>
               <div class="ops-secretary-google-workspace__tabs" role="tablist" aria-label="Google Workspace">
@@ -834,6 +860,7 @@
   <script src="admin-ai-secretary-google-drive-client.js"></script>
   <script src="admin-ai-secretary-google-drive-ui.js"></script>
   <script src="admin-ai-secretary-google-orchestrator.js"></script>
+  <script src="admin-ai-secretary-workspace-activity.js"></script>
   <script src="admin-ai-secretary-google-orchestrator-ui.js"></script>
   <script src="admin-ai-secretary-google-connect-ui.js"></script>
   <script src="admin-ai-secretary-ops-data-provider.js"></script>
