@@ -134,11 +134,16 @@ if (phase2Js.includes("dispatchSecretaryMessage") && phase2Js.includes("opsAnaly
   ok("phase2 ops intelligence path");
 } else bad("phase2 ops intelligence path");
 
-if (!combined.includes("useWebSocketTransport: true")) ok("no useWebSocketTransport true");
-else bad("no useWebSocketTransport true");
+if (html.includes("voice-realtime-session-client.js")) ok("html loads session client");
+else bad("html loads session client");
 
-if (combined.includes("mockCompatible: true")) ok("mockCompatible enforced");
-else bad("mockCompatible enforced");
+if (combined.includes("__TASU_VOICE_LIVE_OPS_SECRETARY__") && combined.includes("isLiveOptInEnabled")) {
+  ok("live opt-in flags defined");
+} else bad("live opt-in flags defined");
+
+if (combined.includes('surface: "ops_secretary"') || combined.includes("surface: 'ops_secretary'")) {
+  ok("ops_secretary surface");
+} else bad("ops_secretary surface");
 
 console.log("\nRunning controller …");
 const ctx = loadSandbox();
@@ -147,7 +152,10 @@ const init = Ctrl.init({ surface: "ops_secretary", mockCompatible: true, useWebS
 if (init.ok) ok("controller init");
 else bad("controller init", init.error);
 
-const started = Ctrl.startSession();
+if (Ctrl.isLiveOptInEnabled?.() === false) ok("live opt-in OFF by default");
+else bad("live opt-in OFF by default");
+
+const started = await Ctrl.startSession();
 if (started.ok && started.sessionId) ok("voice session start");
 else bad("voice session start", JSON.stringify(started));
 
@@ -160,6 +168,7 @@ if (re.ok) ok("voice session reconnect");
 else bad("voice session reconnect");
 
 Ctrl.startSession();
+await new Promise((r) => setTimeout(r, 10));
 Ctrl.handleSessionTimeout();
 if (Ctrl.getState().detail === "session_timeout" || Ctrl.getState().state === "ready") ok("session timeout");
 else bad("session timeout", JSON.stringify(Ctrl.getState()));
