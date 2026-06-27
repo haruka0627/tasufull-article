@@ -164,6 +164,25 @@
           photos: [],
         },
       }),
+      createSubscriptionCheckout: async (listingId, targetPlan) => {
+        const list = readMockListings();
+        const idx = list.findIndex((l) => l.id === listingId);
+        if (idx < 0) throw Object.assign(new Error("not_found"), { code: "not_found" });
+        list[idx] = {
+          ...list[idx],
+          plan_code: targetPlan,
+          subscription_status: "active",
+          current_period_end: new Date(Date.now() + 30 * 86400000).toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+        writeMockListings(list);
+        return { mode: "subscription_update", plan_code: targetPlan };
+      },
+      createBillingPortalSession: async () => ({ url: "https://billing.stripe.com/mock" }),
+      syncSubscriptionStatus: async (listingId) => ({
+        listing: readMockListings().find((l) => l.id === listingId),
+        synced: true,
+      }),
     };
   }
 

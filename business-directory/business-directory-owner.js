@@ -76,18 +76,146 @@
     });
   }
 
-  function renderPlanPanel(host, planCode) {
+  function renderPlanPanel(host, listing, listingId) {
     if (!host || !Plan) return;
-    const { plan, notes } = Plan.renderPlanLimits(planCode);
+    const effective = Plan.effectivePlanCode(listing);
+    const { plan, notes } = Plan.renderPlanLimits(effective);
+    const storedPlan = String(listing.plan_code || "free").toLowerCase();
+    const subStatus = String(listing.subscription_status || "");
+    const hasCustomer = Boolean(listing.stripe_customer_id);
+    const upgradeStandard = effective !== "standard";
+    const upgradePro = effective !== "pro";
+
     host.innerHTML = `
-      <div class="bd-plan-card">
+      <div class="bd-plan-card" data-bd-plan-card>
         <div class="bd-plan-card__head">
           <strong class="bd-plan-card__name">${C.escapeHtml(plan.label)}</strong>
           <span class="bd-plan-card__badge">現在のプラン</span>
         </div>
         <ul class="bd-plan-card__list">${notes.map((n) => `<li>${C.escapeHtml(n)}</li>`).join("")}</ul>
-        <button type="button" class="dash-btn dash-btn--ghost" disabled title="Stripe 連携前">プラン変更（Coming soon）</button>
+        ${
+          subStatus
+            ? `<p class="bd-field-hint">Stripe: ${C.escapeHtml(subStatus)}${
+                listing.current_period_end
+                  ? ` · 次回更新 ${C.escapeHtml(C.formatDate(listing.current_period_end))}`
+                  : ""
+              }</p>`
+            : ""
+        }
+        ${
+          storedPlan !== effective && storedPlan !== "free"
+            ? `<p class="bd-field-hint">DB plan: ${C.escapeHtml(storedPlan)} → 有効: ${C.escapeHtml(effective)}</p>`
+            : ""
+        }
+        <div class="bd-plan-card__actions">
+          ${
+            upgradeStandard
+              ? `<button type="button" class="dash-btn dash-btn--primary" data-bd-upgrade="standard">Standard にアップグレード</button>`
+              : ""
+          }
+          ${
+            upgradePro
+              ? `<button type="button" class="dash-btn dash-btn--primary" data-bd-upgrade="pro">Pro にアップグレード</button>`
+              : ""
+          }
+          ${
+            hasCustomer
+              ? `<button type="button" class="dash-btn dash-btn--ghost" data-bd-billing-portal>支払い・解約 (Billing Portal)</button>`
+              : ""
+          }
+          <button type="button" class="dash-btn dash-btn--ghost" data-bd-sync-subscription hidden>サブスク状態を同期</button>
+        </div>
       </div>`;
+
+    const repo = C.getRepository();
+    const toastEl = C.qs("[data-bd-toast]");
+
+    host.querySelectorAll("[data-bd-upgrade]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (!repo?.createSubscriptionCheckout) {
+          C.toast(toastEl, "Stripe 連携 API 未設定です", "warn");
+          return;
+        }
+        const target = btn.getAttribute("data-bd-upgrade");
+        btn.disabled = true;
+        try {
+          const res = await repo.createSubscriptionCheckout(listingId, target, {
+            origin: global.location.origin,
+            success_path: `/business-directory/edit.html?id=${listingId}&tab=basic&bd_checkout=success`,
+            cancel_path: `/business-directory/edit.html?id=${listingId}&tab=basic&bd_checkout=cancel`,
+          });
+          if (res.url) {
+            global.location.href = res.url;
+            return;
+          }
+          if (res.mode === "subscription_update") {
+            C.toast(toastEl, `${target.toUpperCase()} プランに変更しました`, "ok");
+            global.location.reload();
+            return;
+          }
+          C.toast(toastEl, "Checkout を開始できませんでした", "error");
+        } catch (err) {
+          C.toast(toastEl, err.message || "Checkout に失敗しました", "error");
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+
+    host.querySelector("[data-bd-billing-portal]")?.addEventListener("click", async (btn) => {
+      if (!repo?.createBillingPortalSession) {
+        C.toast(toastEl, "Billing Portal API 未設定です", "warn");
+        return;
+      }
+      btn.disabled = true;
+      try {
+        const res = await repo.createBillingPortalSession(listingId, {
+          origin: global.location.origin,
+          return_path: `/business-directory/edit.html?id=${listingId}&tab=basic`,
+        });
+        if (res.url) global.location.href = res.url;
+        else C.toast(toastEl, "Portal URL を取得できませんでした", "error");
+      } catch (err) {
+        C.toast(toastEl, err.message || "Billing Portal に失敗しました", "error");
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
+
+  function showBillingBanner(root, listing) {
+    const banner = C.qs("[data-bd-billing-banner]", root);
+    if (!banner || !Plan) return;
+    const msg = Plan.subscriptionWarning(listing);
+    if (msg) {
+      banner.hidden = false;
+      banner.textContent = msg;
+    } else {
+      banner.hidden = true;
+    }
+  }
+
+  async function handleCheckoutReturn(listingId, repo, toastEl) {
+    const params = new URLSearchParams(global.location.search);
+    const checkout = params.get("bd_checkout");
+    if (!checkout || !repo?.syncSubscriptionStatus) return;
+    if (checkout === "success") {
+      try {
+        await repo.syncSubscriptionStatus(listingId);
+        C.toast(toastEl, "サブスクリプションを同期しました", "ok");
+      } catch (err) {
+        C.toast(toastEl, err.message || "同期に失敗しました — Billing Portal からご確認ください", "warn");
+      }
+      params.delete("bd_checkout");
+      params.delete("bd_session_id");
+      const next = `${global.location.pathname}?${params.toString()}`;
+      global.history.replaceState({}, "", next);
+    }
+    if (checkout === "cancel") {
+      C.toast(toastEl, "Checkout をキャンセルしました", "info");
+      params.delete("bd_checkout");
+      global.history.replaceState({}, "", `${global.location.pathname}?${params.toString()}`);
+    }
   }
 
   function statusBadge(status) {
@@ -178,12 +306,18 @@
       toggleTypeFields(form, type);
     }
     typeInputs.forEach((i) => i.addEventListener("change", syncType));
-    C.qs('[name="plan_code"]', form)?.addEventListener("change", (e) => {
-      renderPlanPanel(planPanel, e.target.value);
-    });
-
     syncType();
-    renderPlanPanel(planPanel, C.qs('[name="plan_code"]', form)?.value || "free");
+    if (planPanel && Plan) {
+      const { plan, notes } = Plan.renderPlanLimits("free");
+      planPanel.innerHTML = `
+        <div class="bd-plan-card">
+          <div class="bd-plan-card__head">
+            <strong class="bd-plan-card__name">${C.escapeHtml(plan.label)}</strong>
+            <span class="bd-plan-card__badge">初期プラン</span>
+          </div>
+          <ul class="bd-plan-card__list">${notes.map((n) => `<li>${C.escapeHtml(n)}</li>`).join("")}</ul>
+        </div>`;
+    }
 
     form.addEventListener("submit", async (ev) => {
       ev.preventDefault();
@@ -245,13 +379,15 @@
     const local = Local.read(listingId);
     const status = String(listing.status);
     const locked = C.isEditLocked(status);
-    const planCode = listing.plan_code || "free";
+    const planCode = Plan.effectivePlanCode(listing);
 
     C.qs("[data-bd-edit-title]", root).textContent = listing.display_name || "掲載編集";
     C.qs("[data-bd-edit-status]", root).innerHTML = statusBadge(status);
     C.qs("[data-bd-edit-plan]", root).textContent = String(planCode).toUpperCase();
 
-    renderPlanPanel(C.qs("[data-bd-plan-panel]", root), planCode);
+    renderPlanPanel(C.qs("[data-bd-plan-panel]", root), listing, listingId);
+    showBillingBanner(root, listing);
+    await handleCheckoutReturn(listingId, repo, toastEl);
 
     const lockReason =
       status === "review_requested"

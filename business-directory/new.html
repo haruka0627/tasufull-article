@@ -111,14 +111,8 @@
           </div>
 
           <h2 class="bd-form__section-title">プラン</h2>
-          <label class="bd-field">
-            <span class="bd-field__label">プラン *</span>
-            <select name="plan_code">
-              <option value="free">Free</option>
-              <option value="standard">Standard</option>
-              <option value="pro">Pro</option>
-            </select>
-          </label>
+          <p class="bd-field-hint">新規作成時は Free プランです。Standard / Pro へのアップグレードは掲載作成後、編集画面のプランタブから Stripe 決済で行えます。</p>
+          <input type="hidden" name="plan_code" value="free">
           <div data-bd-plan-panel></div>
 
           <label class="bd-field">

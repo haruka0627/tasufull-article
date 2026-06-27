@@ -117,7 +117,8 @@
 - **Phase 2 API:** service + Edge + client repository · `scripts/test-business-directory-phase2-api.mjs` — **68/68 PASS**
 - **Phase 3 Owner UI:** `business-directory/` · `scripts/test-business-directory-phase3-owner-ui.mjs` — **53/53 PASS**
 - **Phase 4 Admin UI:** `business-directory/admin/` · `scripts/test-business-directory-phase4-admin-ui.mjs` — **35/35 PASS**
-- **Phase 5 Public UI:** `business-directory/public/` · `scripts/test-business-directory-phase5-public-ui.mjs` — Stripe **未着手**
+- **Phase 5 Public UI:** `business-directory/public/` · `scripts/test-business-directory-phase5-public-ui.mjs` — **27/27 PASS**
+- **Phase 6 Stripe:** subscription checkout · webhook · plan guard · `scripts/test-business-directory-phase6-stripe.mjs` — **52/52 PASS**
 
 ### AI プロバイダ分担
 

@@ -3,7 +3,7 @@
 **最終更新:** 2026-06-27  
 **前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **関連:** [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [business-directory-mvp-design.md](./business-directory-mvp-design.md) · [business-directory-self-service-design.md](./business-directory-self-service-design.md) · [business-directory-data-model-design.md](./business-directory-data-model-design.md)  
-**状態:** **Phase 5 Public UI 実装済** — Stripe 決済 **未着手**
+**状態:** **Phase 6 Stripe 連携実装済** — Premium / 予約 / 決済代行 **未着手**
 
 ---
 
@@ -171,11 +171,12 @@ MVP: 1 owner = **1 掲載** 想定（Premium 複数は将来）。
 | 項目 | MVP | 将来 |
 | --- | --- | --- |
 | 現在プラン表示 | ✅ | Stripe 連動 |
-| アップグレード案内 | ✅ 申込フォーム | Checkout |
-| ダウングレード | 📋 運営/manual | 自動 |
-| 機能ロック表示 | ✅ タブ内ゲート | — |
+| アップグレード | ✅ Checkout（Standard / Pro） | Premium |
+| Billing Portal | ✅ 解約 · 支払い方法 | — |
+| ダウングレード | ✅ 解約後 free 降格 | 自動 proration |
+| 機能ロック表示 | ✅ effectivePlanCode | — |
 
-**MVP:** プラン変更は **運営手動反映** · UI は申込のみ。
+**Phase 6:** Owner 編集画面から Stripe Checkout · Billing Portal。新規作成は Free 固定。
 
 ---
 

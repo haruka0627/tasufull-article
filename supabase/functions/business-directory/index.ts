@@ -28,6 +28,11 @@ import {
   updateDraftListing,
   type DraftListingInput,
 } from "../_shared/business-directory.ts";
+import {
+  createBusinessDirectoryBillingPortalSession,
+  createBusinessDirectorySubscriptionCheckout,
+  syncBusinessDirectorySubscriptionStatus,
+} from "../_shared/business-directory-stripe.ts";
 
 type ActionBody = DraftListingInput & {
   action?: string;
@@ -41,6 +46,11 @@ type ActionBody = DraftListingInput & {
   reject_reason_note?: string;
   approve_note?: string;
   reason?: string;
+  target_plan?: string;
+  origin?: string;
+  success_path?: string;
+  cancel_path?: string;
+  return_path?: string;
 };
 
 export async function handler(req: Request): Promise<Response> {
@@ -54,7 +64,7 @@ export async function handler(req: Request): Promise<Response> {
     const supabase = createBusinessDirectoryServiceClient();
 
     if (action === "health") {
-      return okResponse({ service: "business-directory", phase: "2" }, req);
+      return okResponse({ service: "business-directory", phase: "6" }, req);
     }
 
     if (action === "get_public_listings") {
@@ -123,6 +133,55 @@ export async function handler(req: Request): Promise<Response> {
       const actorRole = auth.isOps ? "ops" : "owner";
       const listing = await unpublishListing(supabase, auth.userId, actorRole, listingId, body.reason);
       return okResponse({ listing }, req);
+    }
+
+    if (action === "create_subscription_checkout") {
+      const listingId = String(body.listing_id ?? "").trim();
+      const targetPlan = String(body.target_plan ?? body.plan_code ?? "").trim();
+      if (!listingId || !targetPlan) {
+        return okResponse(
+          { code: "validation_error", message: "listing_id and target_plan required" },
+          req,
+          400,
+        );
+      }
+      const result = await createBusinessDirectorySubscriptionCheckout(
+        supabase,
+        auth.userId,
+        listingId,
+        targetPlan,
+        req,
+        body,
+      );
+      return okResponse(result, req);
+    }
+
+    if (action === "create_billing_portal_session") {
+      const listingId = String(body.listing_id ?? "").trim();
+      if (!listingId) {
+        return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
+      }
+      const result = await createBusinessDirectoryBillingPortalSession(
+        supabase,
+        auth.userId,
+        listingId,
+        req,
+        body,
+      );
+      return okResponse(result, req);
+    }
+
+    if (action === "sync_subscription_status") {
+      const listingId = String(body.listing_id ?? "").trim();
+      if (!listingId) {
+        return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
+      }
+      const result = await syncBusinessDirectorySubscriptionStatus(
+        supabase,
+        auth.userId,
+        listingId,
+      );
+      return okResponse(result, req);
     }
 
     // Ops-only (also used by admin UI)

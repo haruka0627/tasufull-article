@@ -102,7 +102,9 @@ mustInclude(ownerJs, "review_requested", "edit lock for review_requested");
 mustInclude(ownerJs, "isEditLocked", "edit lock helper");
 
 mustInclude(planJs, "maxPhotos: 1", "free photo limit");
-mustInclude(ownerJs, "Coming soon", "plan change coming soon");
+mustInclude(ownerJs, "createSubscriptionCheckout", "stripe upgrade checkout");
+mustInclude(ownerJs, "createBillingPortalSession", "billing portal hook");
+mustInclude(ownerJs, "data-bd-upgrade", "upgrade buttons");
 
 mustInclude(memberAuth, "business-directory-dashboard", "member auth guard dashboard");
 mustInclude(memberAuth, "business-directory-new", "member auth guard new");
