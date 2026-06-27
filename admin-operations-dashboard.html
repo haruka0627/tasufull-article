@@ -158,6 +158,27 @@
               <button type="button" class="ops-p3-action ops-secretary-google-connect__btn" data-ops-secretary-google-connect-btn>接続する</button>
               <button type="button" class="ops-p3-action" data-ops-secretary-google-disconnect-btn hidden>切断する</button>
             </div>
+            <section class="ops-secretary-google-readonly-summary" data-ops-secretary-google-readonly-summary aria-live="polite" aria-label="Google read-only 統合状態">
+              <dl class="ops-secretary-google-readonly-summary__list">
+                <div class="ops-secretary-google-readonly-summary__row">
+                  <dt>接続</dt>
+                  <dd data-ops-secretary-readonly-summary-connection>未接続</dd>
+                </div>
+                <div class="ops-secretary-google-readonly-summary__row">
+                  <dt>モード</dt>
+                  <dd data-ops-secretary-readonly-summary-mode data-mode="OFFLINE">OFFLINE</dd>
+                </div>
+                <div class="ops-secretary-google-readonly-summary__row">
+                  <dt>Gmail</dt>
+                  <dd data-ops-secretary-readonly-summary-gmail>gated</dd>
+                </div>
+                <div class="ops-secretary-google-readonly-summary__row">
+                  <dt>Calendar</dt>
+                  <dd data-ops-secretary-readonly-summary-calendar>gated</dd>
+                </div>
+              </dl>
+              <p class="ops-secretary-google-readonly-summary__error" data-ops-secretary-readonly-summary-error hidden></p>
+            </section>
             <section class="ops-secretary-gws-assistant ops-light-card" data-ops-google-workspace-assistant aria-labelledby="ops-google-workspace-assistant-heading">
               <header class="ops-secretary-gmail__head">
                 <h4 class="ops-secretary-gmail__title" id="ops-google-workspace-assistant-heading">Workspace Assistant</h4>
@@ -210,8 +231,8 @@
               </div>
             <section class="ops-secretary-gmail" data-ops-secretary-gmail-panel aria-labelledby="ops-secretary-gmail-heading">
               <header class="ops-secretary-gmail__head">
-                <h4 class="ops-secretary-gmail__title" id="ops-secretary-gmail-heading">Gmail</h4>
-                <span class="ops-secretary-gmail__status" data-ops-secretary-gmail-status aria-live="polite">未読を読込中…</span>
+                <h4 class="ops-secretary-gmail__title" id="ops-secretary-gmail-heading">Gmail（閲覧）</h4>
+                <span class="ops-secretary-gmail__status" data-ops-secretary-gmail-status aria-live="polite">未接続（Gmail read-only）</span>
               </header>
               <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Gmail フィルタ">
                 <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-gmail-preset="unread">未読</button>
@@ -228,8 +249,8 @@
             </section>
             <section class="ops-secretary-gmail ops-secretary-calendar" data-ops-secretary-calendar-panel aria-labelledby="ops-secretary-calendar-heading" hidden>
               <header class="ops-secretary-gmail__head">
-                <h4 class="ops-secretary-gmail__title" id="ops-secretary-calendar-heading">Calendar（閲覧のみ）</h4>
-                <span class="ops-secretary-gmail__status" data-ops-secretary-calendar-status aria-live="polite">今日の予定を読込中…</span>
+                <h4 class="ops-secretary-gmail__title" id="ops-secretary-calendar-heading">Calendar（閲覧）</h4>
+                <span class="ops-secretary-gmail__status" data-ops-secretary-calendar-status aria-live="polite">未接続（Calendar read-only）</span>
               </header>
               <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Calendar フィルタ">
                 <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-calendar-preset="today">今日の予定</button>
@@ -242,7 +263,7 @@
                 <input type="search" class="ops-secretary-gmail__search-input" id="ops-secretary-calendar-search" data-ops-secretary-calendar-search-input placeholder="キーワード検索（例: ミーティング）" autocomplete="off" />
                 <button type="submit" class="ops-p3-action">検索</button>
               </form>
-              <form class="ops-secretary-gmail__search" data-ops-secretary-calendar-create-form>
+              <form class="ops-secretary-gmail__search" data-ops-secretary-calendar-create-form data-readonly-hide hidden aria-hidden="true">
                 <label class="visually-hidden" for="ops-secretary-calendar-create">予定作成（自然言語）</label>
                 <input type="text" class="ops-secretary-gmail__search-input" id="ops-secretary-calendar-create" data-ops-secretary-calendar-create-input placeholder="予定を作成（例: 明日15時 運営MTG @オンライン）" autocomplete="off" />
                 <button type="button" class="ops-p3-action" data-ops-secretary-calendar-create-btn>予定を作成</button>
@@ -851,6 +872,7 @@
   <script src="admin-ai-secretary-morning-report.js"></script>
   <script src="admin-ai-secretary-command-center-ui.js"></script>
   <script src="admin-ai-secretary-google-oauth-client.js"></script>
+  <script src="admin-ai-secretary-google-readonly-coordinator.js"></script>
   <script src="admin-ai-secretary-google-gmail-client.js"></script>
   <script src="admin-ai-secretary-google-gmail-ui.js"></script>
   <script src="admin-ai-secretary-google-calendar-client.js"></script>
