@@ -56,6 +56,52 @@
     voiceIntegrationInitialized = true;
   }
 
+  function isVoiceIntegrationReady() {
+    return (
+      voiceIntegrationInitialized &&
+      typeof global.TasuWorkspaceVoiceIntegration?.submitVoiceCapture === "function"
+    );
+  }
+
+  function bindLegacyMicCapture(wrap) {
+    if (!wrap || wrap.dataset.tasuWorkspaceMicBound === "1") return;
+    wrap.dataset.tasuWorkspaceMicBound = "1";
+
+    const micBtn = wrap.querySelector("[data-tasu-voice-mic]");
+    const errorEl = wrap.querySelector("[data-tasu-voice-error]");
+    if (!micBtn) return;
+
+    function showMicError(msg) {
+      if (!errorEl) return;
+      if (msg) {
+        errorEl.textContent = msg;
+        errorEl.hidden = false;
+      } else {
+        errorEl.textContent = "";
+        errorEl.hidden = true;
+      }
+    }
+
+    micBtn.addEventListener(
+      "click",
+      (event) => {
+        if (!isVoiceIntegrationReady()) return;
+
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        showMicError(null);
+        global.TasuWorkspaceVoiceIntegration.stopVoiceOutput?.();
+
+        void global.TasuWorkspaceVoiceIntegration.submitVoiceCapture().then((out) => {
+          if (!out?.ok && out?.error) {
+            showMicError(String(out.error).slice(0, 120));
+          }
+        });
+      },
+      true
+    );
+  }
+
   function mountWorkspaceVoice() {
     const Voice = global.TasuAiVoiceCore;
     if (!Voice?.mountToolbar) return;
@@ -75,13 +121,15 @@
     fakeForm.addEventListener("submit", (e) => e.preventDefault());
     toolbarHost.parentElement?.insertBefore(fakeForm, toolbarHost);
 
-    Voice.mountToolbar({
+    const wrap = Voice.mountToolbar({
       formEl: fakeForm,
       inputEl: input,
       surface: SURFACE,
       hostEl: toolbarHost.parentElement,
       insertBefore: "form",
     });
+
+    bindLegacyMicCapture(wrap);
 
     sendBtn?.addEventListener("click", () => Voice.stopVoice?.(), true);
   }
@@ -107,6 +155,7 @@
   global.TasuAiWorkspaceVoice = {
     mountWorkspaceVoice,
     initVoiceIntegration,
+    isVoiceIntegrationReady,
     SURFACE,
   };
 })(typeof window !== "undefined" ? window : globalThis);
