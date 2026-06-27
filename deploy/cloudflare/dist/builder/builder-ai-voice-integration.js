@@ -60,7 +60,7 @@
     }
 
     const ctrl = getController();
-    ctrl?.startSession?.();
+    await ctrl?.startSession?.();
 
     if (p.channel === CHANNEL.VOICE) {
       p.options.source = "voice";

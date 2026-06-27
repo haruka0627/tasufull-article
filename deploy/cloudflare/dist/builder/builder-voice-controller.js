@@ -1,9 +1,11 @@
 /**
- * Builder — Voice Controller（Voice Core ラッパー · surface 設定可能 · Mock のみ Phase 1）
- * Builder UI / 他 surface から Voice Core を直接触らない。
+ * Builder — Voice Controller（Voice Core ラッパー · mock デフォルト · live opt-in · surface: builder_ai）
  */
 (function (global) {
   "use strict";
+
+  const LIVE_FLAG_CORE = "__TASU_VOICE_CORE_OPENAI_LIVE__";
+  const LIVE_FLAG_SURFACE = "__TASU_VOICE_LIVE_BUILDER_AI__";
 
   const VOICE_STATE = Object.freeze({
     READY: "ready",
@@ -41,6 +43,82 @@
 
   function getBrowserStt() {
     return global.TasuAiVoiceCore || null;
+  }
+
+  function getSessionClient() {
+    return global.TasuVoiceRealtimeSessionClient || null;
+  }
+
+  function isLiveOptInEnabled() {
+    try {
+      return global[LIVE_FLAG_CORE] === true && global[LIVE_FLAG_SURFACE] === true;
+    } catch {
+      return false;
+    }
+  }
+
+  function applyMockFallbackConfig() {
+    config = { ...config, mockCompatible: true, useWebSocketTransport: false };
+    getSessionClient()?.clear?.();
+  }
+
+  async function ensureLiveInjectors() {
+    if (!isLiveOptInEnabled()) {
+      return { ok: true, mode: "mock", skipped: true };
+    }
+    const client = getSessionClient();
+    if (!client?.refresh) {
+      return { ok: false, error: "session_client_missing", mode: "mock" };
+    }
+    try {
+      const result = await client.refresh({ surface: config.surface || DEFAULTS.surface });
+      if (!result?.ok) {
+        client.clear?.();
+        return {
+          ok: false,
+          error: String(result?.error || "live_refresh_failed"),
+          mode: "mock",
+        };
+      }
+      return { ok: true, mode: "live" };
+    } catch (err) {
+      client.clear?.();
+      return {
+        ok: false,
+        error: err instanceof Error ? err.message : "live_refresh_failed",
+        mode: "mock",
+      };
+    }
+  }
+
+  async function resolveVoiceSessionMode() {
+    if (!isLiveOptInEnabled()) {
+      applyMockFallbackConfig();
+      return {
+        mode: "mock",
+        mockCompatible: true,
+        useWebSocketTransport: false,
+      };
+    }
+
+    const liveResult = await ensureLiveInjectors();
+    if (!liveResult.ok) {
+      applyMockFallbackConfig();
+      return {
+        mode: "mock",
+        mockCompatible: true,
+        useWebSocketTransport: false,
+        fallback: true,
+        fallbackReason: liveResult.error,
+      };
+    }
+
+    config = { ...config, mockCompatible: false, useWebSocketTransport: true };
+    return {
+      mode: "live",
+      mockCompatible: false,
+      useWebSocketTransport: true,
+    };
   }
 
   function emitState(next, detail) {
@@ -99,13 +177,15 @@
   }
 
   function sessionStartOptions(overrides) {
+    const extra = overrides && typeof overrides === "object" ? overrides : {};
+    const { _liveFallbackRetry, ...rest } = extra;
     return {
       surface: config.surface,
       provider: config.provider,
       kind: config.kind,
       mockCompatible: config.mockCompatible !== false,
-      useWebSocketTransport: false,
-      ...overrides,
+      useWebSocketTransport: config.useWebSocketTransport === true,
+      ...rest,
     };
   }
 
@@ -121,7 +201,15 @@
     return { ok: true, version: Core.VERSION || "unknown" };
   }
 
-  function startSession(overrides) {
+  async function startSession(overrides) {
+    overrides = overrides || {};
+    const isRetry = overrides._liveFallbackRetry === true;
+    if (!isRetry) {
+      await resolveVoiceSessionMode();
+    } else {
+      applyMockFallbackConfig();
+    }
+
     const Core = getVoiceCore();
     if (!Core?.createSession) {
       emitState(VOICE_STATE.ERROR, "Voice Core not loaded");
@@ -129,14 +217,25 @@
     }
 
     if (voiceSession?.id) {
-      return { ok: true, sessionId: voiceSession.id, reused: true };
+      return {
+        ok: true,
+        sessionId: voiceSession.id,
+        reused: true,
+        mode: config.mockCompatible === false ? "live" : "mock",
+      };
     }
 
     pendingTranscript = "";
-    voiceSession = Core.createSession(sessionStartOptions(overrides));
+    const opts = sessionStartOptions(overrides);
+    voiceSession = Core.createSession(opts);
     bindSessionEvents(voiceSession);
-    const started = voiceSession.startSession(sessionStartOptions(overrides));
+    const started = voiceSession.startSession(opts);
     if (!started?.ok && started?.error) {
+      if (!isRetry && config.mockCompatible === false) {
+        voiceSession.stopSession?.();
+        voiceSession = null;
+        return startSession({ ...overrides, _liveFallbackRetry: true });
+      }
       emitState(VOICE_STATE.ERROR, started.error.message || "session_start_failed");
       voiceSession = null;
       return { ok: false, error: "session_start_failed" };
@@ -145,8 +244,14 @@
     sessionStartedAt = Date.now();
     touchActivity();
     reconnectAttempts = 0;
-    emitState(VOICE_STATE.READY, "session_active");
-    return { ok: true, sessionId: voiceSession.id, provider: config.provider };
+    const modeLabel = config.mockCompatible === false ? "session_active_live" : "session_active";
+    emitState(VOICE_STATE.READY, modeLabel);
+    return {
+      ok: true,
+      sessionId: voiceSession.id,
+      provider: config.provider,
+      mode: config.mockCompatible === false ? "live" : "mock",
+    };
   }
 
   function stopSession(reason) {
@@ -180,11 +285,8 @@
     return { ok: true, reason: "timeout" };
   }
 
-  /**
-   * Mock voice capture: browser STT when available, always mirrored to Voice Core mock session.
-   */
   async function captureVoiceInput() {
-    const started = startSession();
+    const started = await startSession();
     if (!started.ok && started.error !== "session_start_failed") {
       return { ok: false, error: started.error || "session_unavailable" };
     }
@@ -227,7 +329,13 @@
 
     touchActivity();
     emitState(VOICE_STATE.THINKING, "captured");
-    return { ok: true, text, sessionId: voiceSession?.id || null, mock: !Stt?.speechToText };
+    return {
+      ok: true,
+      text,
+      sessionId: voiceSession?.id || null,
+      mock: config.mockCompatible !== false,
+      mode: config.mockCompatible === false ? "live" : "mock",
+    };
   }
 
   function notifySpeaking(text) {
@@ -251,6 +359,9 @@
   global.TasuBuilderVoiceController = {
     VOICE_STATE,
     DEFAULTS,
+    LIVE_FLAG_CORE,
+    LIVE_FLAG_SURFACE,
+    isLiveOptInEnabled,
     init,
     getState,
     onStateChange,
