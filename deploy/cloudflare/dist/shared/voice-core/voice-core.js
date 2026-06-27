@@ -23,6 +23,7 @@
   const { createRealtimeConfig } = global.TasuVoiceCoreRealtimeConfig || {};
   const { normalizeOpenAiServerEvent, OPENAI_SERVER_EVENT } = global.TasuVoiceCoreRealtimeEventMapper || {};
   const { createWireClient } = global.TasuVoiceCoreOpenAiRealtimeWireClient || {};
+  const { createOpenAiRealtimeWebSocketTransport } = global.TasuVoiceCoreOpenAiRealtimeWebSocketTransport || {};
 
   /**
    * @param {object} [options]
@@ -62,7 +63,7 @@
   }
 
   global.TasuVoiceCore = {
-    VERSION: "phase5a-openai-live-boundary",
+    VERSION: "phase5b-websocket-transport",
     EVENT,
     ADAPTER_KIND,
     WIRE_EVENT: WIRE_EVENT || {},
@@ -79,6 +80,7 @@
     setRuntimeInjectors,
     createRealtimeConfig,
     createWireClient,
+    createOpenAiRealtimeWebSocketTransport,
     createSTTAdapter,
     createTTSAdapter,
     createFallbackRouter,
@@ -86,6 +88,7 @@
     VoiceRealtimeConnectPolicy: global.TasuVoiceCoreRealtimeConnectPolicy,
     VoiceRealtimeConfig: global.TasuVoiceCoreRealtimeConfig,
     OpenAiRealtimeWireClient: global.TasuVoiceCoreOpenAiRealtimeWireClient,
+    OpenAiRealtimeWebSocketTransport: global.TasuVoiceCoreOpenAiRealtimeWebSocketTransport,
     startSession,
     createSession,
     resolveAdapter,
