@@ -166,7 +166,7 @@
 | Final（履歴 · 動画 · 音楽 · 資料 · 音声 · 規約） | ✅ | `5ed9672` · `reports/tasful-ai-final-phase.md` |
 | **課金 enforcement Phase 1**（クライアント） | ✅ | `2a43fe5` · Production deploy |
 | **課金 enforcement Phase 2**（Edge + DB） | ✅ Production | `e9c3dd0` · deploy `5437d70e` · `reports/tasful-ai-workspace-phase2-production.md` |
-| **本番接続**（Edge · billing · Access E2E） | 🔄 | `reports/tasful-ai-production-preflight.md` |
+| **本番接続**（Edge · billing · Access E2E） | 🔄 **No-Go** | `reports/tasful-ai-production-ready-final.md` · Serper credits · CF Access Token 残 |
 | **操作アシスタント**（Gemini · 画面操作案内 · 製品横断ナビ） | 📋 Backlog | [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md) · 本番接続 P0 後 |
 
 ### TLV AI

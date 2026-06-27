@@ -48,7 +48,7 @@
     "verify": "node scripts/capture-shop-store-ux-final.mjs",
     "verify:shop-store": "node scripts/capture-shop-store-ux-final.mjs",
     "screenshots:index": "node scripts/build-screenshots-index.mjs",
-    "build:pages": "node deploy/cloudflare/stage-cloudflare-pages.mjs",
+    "build:pages": "node scripts/stop-pages-dev.mjs && node deploy/cloudflare/stage-cloudflare-pages.mjs",
     "verify:pages-stage": "node scripts/verify-cloudflare-pages-stage.mjs",
     "verify:gate-c": "node scripts/verify-gate-c-search-blocking.mjs",
     "smoke:gate-d": "node scripts/smoke-gate-d-production.mjs",
