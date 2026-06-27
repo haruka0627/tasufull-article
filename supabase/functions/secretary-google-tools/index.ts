@@ -1,11 +1,14 @@
 /**
- * AI秘書 Phase 6-E — Google Workspace tools (Gmail + Calendar read-only)
+ * AI秘書 Phase 6-F — Google Workspace tools (Gmail + Calendar read/write w/ Human Gate)
  */
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import {
   executeCalendarRead,
+  executeCalendarWrite,
   CALENDAR_READ_METHODS,
+  CALENDAR_WRITE_ALLOWED_PHASE6F,
   CALENDAR_WRITE_METHODS,
+  isCalendarWriteBlockedPhase6F,
   isCalendarWriteMethod,
 } from "../_shared/secretary-google-calendar.ts";
 import {
@@ -32,9 +35,10 @@ const TOOL_STATUS = Object.freeze({
     writeMethods: [...GMAIL_WRITE_ALLOWED_PHASE6D],
   },
   calendar: {
-    phase: "6-E",
-    status: "read_only",
-    methods: [...CALENDAR_READ_METHODS],
+    phase: "6-F",
+    status: "read_write_human_gate",
+    readMethods: [...CALENDAR_READ_METHODS],
+    writeMethods: [...CALENDAR_WRITE_ALLOWED_PHASE6F],
   },
   contacts: { phase: "6-G", status: "stub", methods: ["people.searchContacts"] },
   drive: { phase: "6-H", status: "stub", methods: ["files.list"] },
@@ -63,14 +67,15 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-E",
+        phase: "6-F",
         service: "secretary-google-tools",
         configured: config.configured,
         mock: config.mock,
         tools: TOOL_STATUS,
         gmailWriteAllowed: [...GMAIL_WRITE_ALLOWED_PHASE6D],
         gmailWriteForbidden: GMAIL_WRITE_METHODS.filter((m) => isGmailWriteBlockedPhase6D(m)),
-        calendarWriteForbidden: [...CALENDAR_WRITE_METHODS],
+        calendarWriteAllowed: [...CALENDAR_WRITE_ALLOWED_PHASE6F],
+        calendarWriteForbidden: CALENDAR_WRITE_METHODS.filter((m) => isCalendarWriteBlockedPhase6F(m)),
         humanGateRequired: true,
       }),
       200,
@@ -83,11 +88,11 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-E",
+        phase: "6-F",
         googleConnected: Boolean(connection?.connected),
         googleAccountEmail: connection?.googleAccountEmail || null,
         tools: TOOL_STATUS,
-        note: "Calendar read-only · Gmail write requires Human Gate",
+        note: "Calendar write requires Human Gate · Gmail write requires Human Gate",
       }),
       200,
       req
@@ -114,6 +119,34 @@ Deno.serve(async (req) => {
       pageToken: typeof body.pageToken === "string" ? body.pageToken : undefined,
     });
     const status = result.ok ? 200 : result.error === "calendar_read_only" ? 403 : 502;
+    return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
+  }
+
+  if (action === "calendar_write") {
+    if (!userId) {
+      return jsonResponse({ ok: false, error: "unauthorized" }, 401, req);
+    }
+    const method = String(body.method || "").trim();
+    if (isCalendarWriteBlockedPhase6F(method)) {
+      return jsonResponse({ ok: false, error: "calendar_write_forbidden", method, phase: "6-F+" }, 403, req);
+    }
+    const attendees = Array.isArray(body.attendees) ? body.attendees.map(String) : undefined;
+    const result = await executeCalendarWrite(userId, {
+      method,
+      humanGateApproved: body.humanGateApproved === true,
+      pendingId: typeof body.pendingId === "string" ? body.pendingId : undefined,
+      calendarId: typeof body.calendarId === "string" ? body.calendarId : undefined,
+      eventId: typeof body.eventId === "string" ? body.eventId : undefined,
+      title: typeof body.title === "string" ? body.title : undefined,
+      start: typeof body.start === "string" ? body.start : undefined,
+      end: typeof body.end === "string" ? body.end : undefined,
+      allDay: body.allDay === true,
+      location: typeof body.location === "string" ? body.location : undefined,
+      description: typeof body.description === "string" ? body.description : undefined,
+      attendees,
+      timeZone: typeof body.timeZone === "string" ? body.timeZone : undefined,
+    });
+    const status = result.ok ? 200 : result.error === "human_gate_required" ? 403 : 502;
     return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
   }
 
@@ -180,7 +213,7 @@ Deno.serve(async (req) => {
     }
     if (tool === "calendar") {
       return jsonResponse(
-        { ok: false, error: "use_action_calendar_read", hint: "POST action=calendar_read with method" },
+        { ok: false, error: "use_action_calendar", hint: "POST action=calendar_read or calendar_write" },
         400,
         req
       );

@@ -4636,6 +4636,12 @@ a.ops-p2-tile:hover {
   margin: 0 0 0.25rem;
 }
 
+.ops-secretary-calendar__confirm-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
 .ops-secretary-gmail {
   margin: 0 0 0.75rem;
   padding: 0.55rem 0.65rem;

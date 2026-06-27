@@ -197,7 +197,13 @@
                 <input type="search" class="ops-secretary-gmail__search-input" id="ops-secretary-calendar-search" data-ops-secretary-calendar-search-input placeholder="キーワード検索（例: ミーティング）" autocomplete="off" />
                 <button type="submit" class="ops-p3-action">検索</button>
               </form>
+              <form class="ops-secretary-gmail__search" data-ops-secretary-calendar-create-form>
+                <label class="visually-hidden" for="ops-secretary-calendar-create">予定作成（自然言語）</label>
+                <input type="text" class="ops-secretary-gmail__search-input" id="ops-secretary-calendar-create" data-ops-secretary-calendar-create-input placeholder="予定を作成（例: 明日15時 運営MTG @オンライン）" autocomplete="off" />
+                <button type="button" class="ops-p3-action" data-ops-secretary-calendar-create-btn>予定を作成</button>
+              </form>
               <div class="ops-secretary-gmail__cards" data-ops-secretary-calendar-cards aria-live="polite"></div>
+              <div class="ops-secretary-calendar__confirm-host" data-ops-secretary-calendar-confirm hidden aria-live="polite"></div>
               <div class="ops-secretary-calendar__detail-host" data-ops-secretary-calendar-detail hidden aria-live="polite"></div>
             </section>
             </div>

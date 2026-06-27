@@ -117,8 +117,17 @@ function runUnitTests() {
   if (!/access_token|refresh_token|client_secret/.test(client)) ok("client no secret literals");
   else bad("client no secret literals");
 
-  if (!/DeepSeek|completeTurn/.test(client) && !/DeepSeek|completeTurn/.test(ui)) ok("no DeepSeek in calendar");
-  else bad("no DeepSeek in calendar");
+  function fnBlock(name) {
+    const m = client.match(new RegExp(`async function ${name}[\\s\\S]*?(?=\\n  async function|\\n  function|$)`));
+    return m ? m[0] : "";
+  }
+  const readFnsNoLlm =
+    !/completeTurn|DeepSeek/.test(fnBlock("listCalendars")) &&
+    !/completeTurn|DeepSeek/.test(fnBlock("listEvents")) &&
+    !/completeTurn|DeepSeek/.test(fnBlock("getEvent"));
+  const readUiNoLlm = !/DeepSeek|completeTurn/.test(ui);
+  if (readUiNoLlm && readFnsNoLlm) ok("read path no DeepSeek");
+  else bad("read path no DeepSeek");
 }
 
 async function mockFetchTests() {

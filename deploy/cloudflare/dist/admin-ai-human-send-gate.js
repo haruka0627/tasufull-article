@@ -257,6 +257,41 @@
     });
   }
 
+  function enqueueFromCalendarEvent(partial) {
+    partial = partial || {};
+    const calendarAction = partial.calendarAction || "create";
+    const title = String(partial.title || "(タイトルなし)").slice(0, 200);
+    const labels = {
+      create: "予定作成確認",
+      update: "予定変更確認",
+      delete: "予定削除確認",
+    };
+    return enqueuePendingItem({
+      source: "calendar",
+      sourceId: partial.eventId || partial.calendarId || "",
+      category: "notification_send",
+      actionType: "human_send",
+      proposal: String(partial.description || partial.proposal || title).slice(0, 2000),
+      recommendation: `${labels[calendarAction] || "Calendar"}: ${title}`,
+      reason: "Calendar — Human Gate 必須（自動実行禁止）",
+      impactArea: "Calendar",
+      severity: "warning",
+      confidence: 0.9,
+      payload: {
+        calendarAction,
+        calendarId: partial.calendarId || "primary",
+        eventId: partial.eventId || "",
+        title,
+        start: partial.start || "",
+        end: partial.end || "",
+        allDay: Boolean(partial.allDay),
+        location: String(partial.location || "").slice(0, 500),
+        description: String(partial.description || "").slice(0, 5000),
+        attendees: Array.isArray(partial.attendees) ? partial.attendees.map(String).slice(0, 20) : [],
+      },
+    });
+  }
+
   function rejectPendingItem(id) {
     const list = readAllPending();
     const idx = list.findIndex((p) => p.id === id);
@@ -449,6 +484,42 @@
         result: r?.ok ? "success" : "failed",
         outcome: r?.ok ? "draft_created" : "unknown",
         message: r?.ok ? "Gmail 下書きを作成しました" : String(r?.error || "draft_failed"),
+        raw: r,
+      };
+    }
+
+    if (item.source === "calendar") {
+      const Cal = global.TasuSecretaryGoogleCalendarClient;
+      if (!Cal?.executeWriteApproved) {
+        return { ok: false, result: "failed", outcome: "unknown", message: "Calendar client missing" };
+      }
+      const action = payload.calendarAction || "create";
+      const methodMap = { create: "events.insert", update: "events.update", delete: "events.delete" };
+      const method = methodMap[action] || "events.insert";
+      const r = await Cal.executeWriteApproved({
+        method,
+        pendingId: item.id,
+        calendarId: payload.calendarId,
+        eventId: payload.eventId,
+        title: payload.title,
+        start: payload.start,
+        end: payload.end,
+        allDay: payload.allDay,
+        location: payload.location,
+        description: payload.description || item.proposal,
+        attendees: payload.attendees,
+      });
+      const msg =
+        action === "delete"
+          ? "Calendar 予定を削除しました（Human Gate 承認後）"
+          : action === "update"
+            ? "Calendar 予定を更新しました（Human Gate 承認後）"
+            : "Calendar 予定を作成しました（Human Gate 承認後）";
+      return {
+        ok: !!r?.ok,
+        result: r?.ok ? "success" : "failed",
+        outcome: r?.ok ? "resolved" : "unknown",
+        message: r?.ok ? msg : String(r?.error || "calendar_write_failed"),
         raw: r,
       };
     }
@@ -701,6 +772,7 @@
     enqueueFromResponsePlan,
     enqueueFromAutomation,
     enqueueFromGmailDraft,
+    enqueueFromCalendarEvent,
     rejectPendingItem,
     approvePendingWithoutSend,
     updatePendingProposal,
