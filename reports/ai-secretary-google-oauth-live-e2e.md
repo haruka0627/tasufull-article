@@ -1,12 +1,10 @@
 # AI 秘書 P0 — Google OAuth Live E2E
 
 **実施日:** 2026-06-28  
-**Git HEAD:** `938cc98` — `docs(secretary): add google oauth live prep`  
-**種別:** live 移行 · Secrets · redeploy · OAuth E2E 証跡
-
+**Git HEAD:** `c39e399`（検証時）  
 **JSON:** `reports/ai-secretary-google-oauth-live-e2e.json`
 
-**Secret / Token 値は記載しない**
+**Secret / Token / UUID 値は記載しない**
 
 ---
 
@@ -14,104 +12,81 @@
 
 | 領域 | 判定 |
 | --- | --- |
-| **Live 移行（Secrets · MOCK 解除 · redeploy · connect）** | ✅ **Go** |
-| **OAuth callback · Vault · Gmail/Calendar live** | ❌ **No-Go**（GCP test user 未登録） |
-| **Dashboard UI（未接続）** | ✅ **PASS**（1280 / 390 · JS fatal 0） |
+| **OAuth consent · callback · Vault** | ✅ **PASS** |
+| **Gmail / Calendar live API** | ✅ **PASS** |
+| **Dashboard UI（接続済み）** | ✅ **PASS**（1280 / 390 · JS fatal 0） |
+| **Full Live E2E** | ✅ **Go** |
 
 ---
 
-## 1. Supabase Secrets
+## Post-consent 最終検証（2026-06-28）
 
-| Secret | Presence |
-| --- | --- |
-| `SECRETARY_GOOGLE_CLIENT_ID` | **present** |
-| `SECRETARY_GOOGLE_CLIENT_SECRET` | **present** |
-| `SECRETARY_GOOGLE_REDIRECT_URI` | **present** |
-| `SECRETARY_GOOGLE_OAUTH_MOCK` | **absent**（unset 済） |
+**コマンド:** `node --env-file=.env scripts/verify-secretary-google-oauth-live-post-consent.mjs`
 
-`.env` から CLI 経由で登録（値はログ非出力）。
-
----
-
-## 2. Edge redeploy
-
-| Function | 結果 |
-| --- | --- |
-| `secretary-google-oauth` | ✅ deployed |
-| `secretary-google-tools` | ✅ deployed |
-
-Secret 変更後に redeploy 実施。
-
----
-
-## 3. Live OAuth connect smoke
-
-**Base:** `https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1/secretary-google-oauth`
-
-| Probe | HTTP | 署名 | 判定 |
-| --- | ---: | --- | --- |
-| **connect** | **200** | `mock:false` · `configured:true` · `authUrl` → `accounts.google.com` | ✅ **live モード** |
-| **status**（callback 前） | **200** | `connected:false` · `mock:false` · `configured:true` | ✅ 未接続（期待） |
-
-503 `redirect_uri_not_configured` / mock fallback は **解消**。
-
----
-
-## 4. OAuth callback / Token Vault
-
-| 項目 | 結果 |
-| --- | --- |
-| ブラウザ consent | ❌ **`access_denied`** |
-| 原因 | OAuth app **Testing** · ログイン Google アカウントが **Test users 未登録** |
-| **Token Vault** | **0 rows**（callback 未完了のため保存なし） |
-| **status connected** | `false` |
-
-**次アクション（人間 · GCP Console）:**
-
-1. OAuth consent screen → **Test users** に live smoke 用 Gmail を追加
-2. Dashboard（8788）→ 「接続する」→ consent 完了
-3. Cursor に「live OAuth 続行」と依頼 → Gmail/Calendar/Dashboard 接続済み smoke 再実施
-
----
-
-## 5. Gmail / Calendar read-only smoke
-
-| Probe | 結果 |
-| --- | --- |
-| **gmail · labels.list** | ⏸ skipped（未接続） |
-| **status · profile（email）** | ⏸ skipped（未接続） |
-| **calendar_read · calendarList.list** | ⏸ skipped（未接続） |
-
-callback 成功後に再実施予定。
-
----
-
-## 6. Dashboard smoke（8788 · 未接続）
-
-**URL:** `http://127.0.0.1:8788/admin-operations-dashboard.html`
-
-| Viewport | HTTP | Label | JS fatal |
-| --- | ---: | --- | ---: |
-| **1280×900** | 200 | Google未接続 | **0** |
-| **390×844** | 200 | Google未接続 | **0** |
-
-UI / Edge fetch は正常 · **接続済み（live）表示は callback 後**。
-
----
-
-## 7. Mock → Live 切替確認
+### status
 
 | チェック | 結果 |
 | --- | --- |
-| `SECRETARY_GOOGLE_OAUTH_MOCK` | **absent** |
-| connect `mock` | **false** |
-| status `mock` | **false** |
-| authUrl | **Google 本番 consent URL** |
+| HTTP | **200** |
+| `connected` | **true** |
+| `mock` | **false** |
+| `configured` | **true** |
+| **判定** | ✅ **PASS** |
+
+### Token Vault
+
+| チェック | 結果 |
+| --- | --- |
+| rows | **1** |
+| **判定** | ✅ **PASS** |
+
+### Gmail
+
+| Probe | HTTP | 判定 |
+| --- | ---: | --- |
+| **labels.list** | 200 | ✅ **PASS** |
+| **profile（status email）** | — | ✅ **PASS** |
+
+### Calendar
+
+| Probe | HTTP | 判定 |
+| --- | ---: | --- |
+| **calendarList.list** | 200 | ✅ **PASS** |
+
+### Dashboard（8788）
+
+| Viewport | HTTP | Label | JS fatal | 判定 |
+| --- | ---: | --- | ---: | --- |
+| **1280×900** | 200 | Google接続済み | **0** | ✅ **PASS** |
+| **390×844** | 200 | Google接続済み | **0** | ✅ **PASS** |
+
+**overall:** ✅ **PASS**
+
+---
+
+## フロー概要
+
+1. Live connect API（mock:false · configured:true）
+2. external Chrome（PowerShell `Start-Process` — authUrl 切り詰め修正）
+3. Google consent 完了 · Dashboard リダイレクト
+4. GCP: Gmail API · Google Calendar API 有効化
+5. post-consent 検証 **全項目 PASS**
+
+---
+
+## 変更ファイル（AI秘書 Google OAuth）
+
+| ファイル | 内容 |
+| --- | --- |
+| `admin-ai-secretary-google-oauth-client.js` | UUID 検証 · dev bootstrap param |
+| `admin-ai-secretary-google-connect-ui.js` | WebDriver 検知 · connect redirect |
+| `scripts/secretary-google-oauth-live-open-external.mjs` | connect + 通常 Chrome 起動 |
+| `scripts/verify-secretary-google-oauth-live-post-consent.mjs` | post-consent 自動検証 |
+| `scripts/test-secretary-google-oauth-phase6b.mjs` | 単体 / browser smoke |
 
 ---
 
 ## 参照
 
+- `reports/ai-secretary-google-oauth-authurl-investigation.md`
 - `reports/ai-secretary-google-oauth-gcp-console-runbook.md`
-- `reports/ai-secretary-google-oauth-live-prep.md`
-- `reports/ai-secretary-google-oauth-p0-mock-connect.md`

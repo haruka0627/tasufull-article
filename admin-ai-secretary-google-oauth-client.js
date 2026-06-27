@@ -7,9 +7,113 @@
   const OAUTH_FN = "secretary-google-oauth";
   const TOOLS_FN = "secretary-google-tools";
   const DEV_USER_KEY = "tasu_secretary_google_dev_user_v1";
+  const AUTH_USER_UUID_RE =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
   function trim(value, max) {
     return String(value ?? "").trim().slice(0, max || 4000);
+  }
+
+  function isValidAuthUserUuid(value) {
+    return AUTH_USER_UUID_RE.test(trim(value, 80));
+  }
+
+  function decodeJwtSub(token) {
+    const raw = trim(token, 12000);
+    if (!raw || raw.split(".").length < 2) return "";
+    try {
+      const part = raw.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      const pad = part.length % 4 === 0 ? part : part + "=".repeat(4 - (part.length % 4));
+      const payload = JSON.parse(global.atob(pad));
+      return trim(payload.sub, 80);
+    } catch {
+      return "";
+    }
+  }
+
+  function readStoredDevUserId() {
+    try {
+      const stored = trim(global.sessionStorage?.getItem(DEV_USER_KEY));
+      if (!stored) return "";
+      if (!isValidAuthUserUuid(stored)) {
+        global.sessionStorage?.removeItem(DEV_USER_KEY);
+        return "";
+      }
+      return stored;
+    } catch {
+      return "";
+    }
+  }
+
+  function persistDevUserId(uid) {
+    if (!isValidAuthUserUuid(uid)) return;
+    try {
+      global.sessionStorage?.setItem(DEV_USER_KEY, uid);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  /** Dev E2E: ?secretary_auth_uid=<auth.users.id> を一度だけ取り込み URL から除去 */
+  function consumeBootstrapAuthUserFromQuery() {
+    try {
+      const params = new URLSearchParams(global.location?.search || "");
+      const raw = trim(params.get("secretary_auth_uid"));
+      if (!isValidAuthUserUuid(raw)) return;
+      global.__SECRETARY_GOOGLE_AUTH_USER_ID__ = raw;
+      persistDevUserId(raw);
+      params.delete("secretary_auth_uid");
+      const next = `${global.location.pathname}${params.toString() ? `?${params}` : ""}${global.location.hash || ""}`;
+      global.history?.replaceState?.({}, "", next);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  /** auth.users.id (UUID) — TALK u_me / demo id は使わない */
+  function resolveSecretaryAuthUserId() {
+    consumeBootstrapAuthUserFromQuery();
+
+    const explicit = trim(global.__SECRETARY_GOOGLE_AUTH_USER_ID__);
+    if (isValidAuthUserUuid(explicit)) return explicit;
+
+    const cfgId = trim(global.TASU_CHAT_SUPABASE_CONFIG?.secretaryGoogleAuthUserId);
+    if (isValidAuthUserUuid(cfgId)) return cfgId;
+
+    try {
+      const opsToken = trim(global.sessionStorage?.getItem("tasu_ops_admin_access_token"));
+      const opsSub = decodeJwtSub(opsToken);
+      if (isValidAuthUserUuid(opsSub)) return opsSub;
+    } catch {
+      /* ignore */
+    }
+
+    try {
+      const auth = global.TasuAuthCurrentUser;
+      const session = auth?.readSupabaseAuthSession?.();
+      const sessionUserId = trim(session?.user?.id);
+      if (isValidAuthUserUuid(sessionUserId)) return sessionUserId;
+      const claimsSub = trim(auth?.getCurrentUserClaims?.()?.sub);
+      if (isValidAuthUserUuid(claimsSub)) return claimsSub;
+    } catch {
+      /* ignore */
+    }
+
+    return readStoredDevUserId();
+  }
+
+  function getDevUserId() {
+    const uid = resolveSecretaryAuthUserId();
+    if (uid) persistDevUserId(uid);
+    return uid;
+  }
+
+  function clearDevUserIdCache() {
+    try {
+      global.sessionStorage?.removeItem(DEV_USER_KEY);
+    } catch {
+      /* ignore */
+    }
   }
 
   function getFunctionsBase() {
@@ -34,21 +138,6 @@
       /* ignore */
     }
     return getAnonKey();
-  }
-
-  function getDevUserId() {
-    try {
-      const stored = trim(global.sessionStorage?.getItem(DEV_USER_KEY));
-      if (stored) return stored;
-      const uid =
-        trim(global.TASU_CHAT_SUPABASE_CONFIG?.currentUserId) ||
-        trim(global.TasuAuthCurrentUser?.getCurrentUser?.()?.id) ||
-        "00000000-0000-4000-8000-000000000001";
-      global.sessionStorage?.setItem(DEV_USER_KEY, uid);
-      return uid;
-    } catch {
-      return "00000000-0000-4000-8000-000000000001";
-    }
   }
 
   function edgeHeaders(extra) {
@@ -127,9 +216,9 @@
       });
       return mockCb;
     }
-    if (d.authUrl) {
-      return { ok: true, redirect: true, authUrl: String(d.authUrl) };
-    }
+  if (d.authUrl) {
+    return { ok: true, redirect: true, authUrl: String(d.authUrl) };
+  }
     return { ok: false, error: "connect_response_invalid" };
   }
 
@@ -155,6 +244,10 @@
     TOOLS_FN,
     getFunctionsBase,
     getOAuthCallbackUrl,
+    isValidAuthUserUuid,
+    resolveSecretaryAuthUserId,
+    getDevUserId,
+    clearDevUserIdCache,
     postAction,
     fetchStatus,
     startConnect,
