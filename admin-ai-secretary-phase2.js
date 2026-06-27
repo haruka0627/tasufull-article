@@ -481,6 +481,7 @@
     global.TasuSecretaryGoogleConnectUI?.mount?.();
     global.TasuSecretaryGoogleGmailUI?.mount?.();
     global.TasuSecretaryGoogleCalendarUI?.mount?.();
+    global.TasuSecretaryGoogleContactsUI?.mount?.();
   }
 
   function clearHistoryForTests() {

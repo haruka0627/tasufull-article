@@ -357,6 +357,7 @@
     workspace.dataset.tabsBound = "1";
     const mailPanel = workspace.querySelector("[data-ops-secretary-gmail-panel]");
     const calPanel = workspace.querySelector("[data-ops-secretary-calendar-panel]");
+    const contactsPanel = workspace.querySelector("[data-ops-secretary-contacts-panel]");
     workspace.querySelectorAll("[data-ops-google-tab]").forEach((tab) => {
       tab.addEventListener("click", () => {
         const target = tab.getAttribute("data-ops-google-tab");
@@ -367,6 +368,7 @@
         });
         if (mailPanel) mailPanel.hidden = target !== "mail";
         if (calPanel) calPanel.hidden = target !== "calendar";
+        if (contactsPanel) contactsPanel.hidden = target !== "contacts";
       });
     });
   }

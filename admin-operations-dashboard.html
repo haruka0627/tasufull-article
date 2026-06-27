@@ -162,6 +162,7 @@
               <div class="ops-secretary-google-workspace__tabs" role="tablist" aria-label="Google Workspace">
                 <button type="button" class="ops-secretary-google-workspace__tab ops-secretary-google-workspace__tab--active" role="tab" data-ops-google-tab="mail" aria-selected="true">Mail</button>
                 <button type="button" class="ops-secretary-google-workspace__tab" role="tab" data-ops-google-tab="calendar" aria-selected="false">Calendar</button>
+                <button type="button" class="ops-secretary-google-workspace__tab" role="tab" data-ops-google-tab="contacts" aria-selected="false">Contacts</button>
               </div>
             <section class="ops-secretary-gmail" data-ops-secretary-gmail-panel aria-labelledby="ops-secretary-gmail-heading">
               <header class="ops-secretary-gmail__head">
@@ -205,6 +206,23 @@
               <div class="ops-secretary-gmail__cards" data-ops-secretary-calendar-cards aria-live="polite"></div>
               <div class="ops-secretary-calendar__confirm-host" data-ops-secretary-calendar-confirm hidden aria-live="polite"></div>
               <div class="ops-secretary-calendar__detail-host" data-ops-secretary-calendar-detail hidden aria-live="polite"></div>
+            </section>
+            <section class="ops-secretary-gmail ops-secretary-contacts" data-ops-secretary-contacts-panel aria-labelledby="ops-secretary-contacts-heading" hidden>
+              <header class="ops-secretary-gmail__head">
+                <h4 class="ops-secretary-gmail__title" id="ops-secretary-contacts-heading">Contacts（閲覧のみ）</h4>
+                <span class="ops-secretary-gmail__status" data-ops-secretary-contacts-status aria-live="polite">連絡先を読込中…</span>
+              </header>
+              <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Contacts">
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-contacts-list-btn>連絡先一覧</button>
+              </div>
+              <form class="ops-secretary-gmail__search" data-ops-secretary-contacts-search-form>
+                <label class="visually-hidden" for="ops-secretary-contacts-search">Contacts 検索</label>
+                <input type="search" class="ops-secretary-gmail__search-input" id="ops-secretary-contacts-search" data-ops-secretary-contacts-search-input placeholder="名前・メール・会社で検索" autocomplete="off" />
+                <button type="submit" class="ops-p3-action">検索</button>
+              </form>
+              <p class="ops-secretary-gmail__readonly">Gmail返信・Calendar参加者入力への補助導線あり（read-only · Human Gate 不要）</p>
+              <div class="ops-secretary-gmail__cards" data-ops-secretary-contacts-cards aria-live="polite"></div>
+              <div class="ops-secretary-contacts__detail-host" data-ops-secretary-contacts-detail hidden aria-live="polite"></div>
             </section>
             </div>
             <div class="ops-p7-chat-conversation">
@@ -769,6 +787,8 @@
   <script src="admin-ai-secretary-google-gmail-ui.js"></script>
   <script src="admin-ai-secretary-google-calendar-client.js"></script>
   <script src="admin-ai-secretary-google-calendar-ui.js"></script>
+  <script src="admin-ai-secretary-google-contacts-client.js"></script>
+  <script src="admin-ai-secretary-google-contacts-ui.js"></script>
   <script src="admin-ai-secretary-google-connect-ui.js"></script>
   <script src="admin-ai-secretary-ops-data-provider.js"></script>
   <script src="admin-ai-secretary-insight-engine.js"></script>
