@@ -1,7 +1,13 @@
 /**
- * AI秘書 Phase 6-G — Google Workspace tools (Gmail + Calendar + Contacts)
+ * AI秘書 Phase 6-H — Google Workspace tools (Gmail + Calendar + Contacts + Drive)
  */
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import {
+  executeDriveRead,
+  DRIVE_READ_METHODS,
+  DRIVE_WRITE_METHODS,
+  isDriveWriteMethod,
+} from "../_shared/secretary-google-drive.ts";
 import {
   executeContactsRead,
   CONTACTS_READ_METHODS,
@@ -52,7 +58,12 @@ const TOOL_STATUS = Object.freeze({
     readMethods: [...CONTACTS_READ_METHODS],
     writeMethods: [],
   },
-  drive: { phase: "6-H", status: "stub", methods: ["files.list"] },
+  drive: {
+    phase: "6-H",
+    status: "read_only",
+    readMethods: [...DRIVE_READ_METHODS],
+    writeMethods: [],
+  },
 });
 
 Deno.serve(async (req) => {
@@ -78,7 +89,7 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-G",
+        phase: "6-H",
         service: "secretary-google-tools",
         configured: config.configured,
         mock: config.mock,
@@ -99,7 +110,7 @@ Deno.serve(async (req) => {
     return jsonResponse(
       sanitizeForClient({
         ok: true,
-        phase: "6-G",
+        phase: "6-H",
         googleConnected: Boolean(connection?.connected),
         googleAccountEmail: connection?.googleAccountEmail || null,
         tools: TOOL_STATUS,
@@ -180,6 +191,29 @@ Deno.serve(async (req) => {
     return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
   }
 
+  if (action === "drive_read") {
+    if (!userId) {
+      return jsonResponse({ ok: false, error: "unauthorized" }, 401, req);
+    }
+    const method = String(body.method || "").trim();
+    if (isDriveWriteMethod(method)) {
+      return jsonResponse({ ok: false, error: "drive_read_only", method, phase: "6-H" }, 403, req);
+    }
+    const result = await executeDriveRead(userId, {
+      method,
+      fileId: typeof body.fileId === "string" ? body.fileId : undefined,
+      folderId: typeof body.folderId === "string" ? body.folderId : undefined,
+      preset: typeof body.preset === "string" ? body.preset : undefined,
+      q: typeof body.q === "string" ? body.q : undefined,
+      mimeType: typeof body.mimeType === "string" ? body.mimeType : undefined,
+      exportMimeType: typeof body.exportMimeType === "string" ? body.exportMimeType : undefined,
+      maxResults: Number(body.maxResults) || undefined,
+      pageToken: typeof body.pageToken === "string" ? body.pageToken : undefined,
+    });
+    const status = result.ok ? 200 : result.error === "drive_read_only" ? 403 : 502;
+    return jsonResponse(sanitizeForClient(result as Record<string, unknown>), status, req);
+  }
+
   if (action === "gmail") {
     if (!userId) {
       return jsonResponse({ ok: false, error: "unauthorized" }, 401, req);
@@ -251,6 +285,13 @@ Deno.serve(async (req) => {
     if (tool === "contacts") {
       return jsonResponse(
         { ok: false, error: "use_action_contacts", hint: "POST action=contacts_read" },
+        400,
+        req
+      );
+    }
+    if (tool === "drive") {
+      return jsonResponse(
+        { ok: false, error: "use_action_drive", hint: "POST action=drive_read" },
         400,
         req
       );

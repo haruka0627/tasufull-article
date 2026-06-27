@@ -163,6 +163,7 @@
                 <button type="button" class="ops-secretary-google-workspace__tab ops-secretary-google-workspace__tab--active" role="tab" data-ops-google-tab="mail" aria-selected="true">Mail</button>
                 <button type="button" class="ops-secretary-google-workspace__tab" role="tab" data-ops-google-tab="calendar" aria-selected="false">Calendar</button>
                 <button type="button" class="ops-secretary-google-workspace__tab" role="tab" data-ops-google-tab="contacts" aria-selected="false">Contacts</button>
+                <button type="button" class="ops-secretary-google-workspace__tab" role="tab" data-ops-google-tab="drive" aria-selected="false">Drive</button>
               </div>
             <section class="ops-secretary-gmail" data-ops-secretary-gmail-panel aria-labelledby="ops-secretary-gmail-heading">
               <header class="ops-secretary-gmail__head">
@@ -223,6 +224,30 @@
               <p class="ops-secretary-gmail__readonly">Gmail返信・Calendar参加者入力への補助導線あり（read-only · Human Gate 不要）</p>
               <div class="ops-secretary-gmail__cards" data-ops-secretary-contacts-cards aria-live="polite"></div>
               <div class="ops-secretary-contacts__detail-host" data-ops-secretary-contacts-detail hidden aria-live="polite"></div>
+            </section>
+            <section class="ops-secretary-gmail ops-secretary-drive" data-ops-secretary-drive-panel aria-labelledby="ops-secretary-drive-heading" hidden>
+              <header class="ops-secretary-gmail__head">
+                <h4 class="ops-secretary-gmail__title" id="ops-secretary-drive-heading">Drive（閲覧のみ）</h4>
+                <span class="ops-secretary-gmail__status" data-ops-secretary-drive-status aria-live="polite">最近のファイルを読込中…</span>
+              </header>
+              <div class="ops-secretary-gmail__toolbar ops-secretary-drive__breadcrumb" data-ops-secretary-drive-breadcrumb role="navigation" aria-label="Drive フォルダ"></div>
+              <div class="ops-secretary-gmail__toolbar" role="toolbar" aria-label="Drive フィルタ">
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-drive-preset="recent">最近のファイル</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-drive-preset="root">マイドライブ</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-drive-mime="application/vnd.google-apps.folder">フォルダ</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-drive-mime="application/vnd.google-apps.document">Docs</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-drive-mime="application/vnd.google-apps.spreadsheet">Sheets</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-drive-mime="application/vnd.google-apps.presentation">Slides</button>
+                <button type="button" class="ops-p3-action ops-secretary-gmail__chip" data-ops-secretary-drive-mime="application/pdf">PDF</button>
+              </div>
+              <form class="ops-secretary-gmail__search" data-ops-secretary-drive-search-form>
+                <label class="visually-hidden" for="ops-secretary-drive-search">Drive キーワード検索</label>
+                <input type="search" class="ops-secretary-gmail__search-input" id="ops-secretary-drive-search" data-ops-secretary-drive-search-input placeholder="キーワード検索（例: ロードマップ）" autocomplete="off" />
+                <button type="submit" class="ops-p3-action">検索</button>
+              </form>
+              <p class="ops-secretary-gmail__readonly">Google Docs/Sheets/Slides はテキスト抽出可（read-only · Human Gate 不要）</p>
+              <div class="ops-secretary-gmail__cards" data-ops-secretary-drive-cards aria-live="polite"></div>
+              <div class="ops-secretary-drive__detail-host" data-ops-secretary-drive-detail hidden aria-live="polite"></div>
             </section>
             </div>
             <div class="ops-p7-chat-conversation">
@@ -789,6 +814,8 @@
   <script src="admin-ai-secretary-google-calendar-ui.js"></script>
   <script src="admin-ai-secretary-google-contacts-client.js"></script>
   <script src="admin-ai-secretary-google-contacts-ui.js"></script>
+  <script src="admin-ai-secretary-google-drive-client.js"></script>
+  <script src="admin-ai-secretary-google-drive-ui.js"></script>
   <script src="admin-ai-secretary-google-connect-ui.js"></script>
   <script src="admin-ai-secretary-ops-data-provider.js"></script>
   <script src="admin-ai-secretary-insight-engine.js"></script>

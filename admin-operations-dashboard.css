@@ -4642,6 +4642,19 @@ a.ops-p2-tile:hover {
   font-weight: 600;
 }
 
+.ops-secretary-drive__export-preview {
+  margin: 0.5rem 0 0;
+  padding: 0.5rem 0.65rem;
+  max-height: 12rem;
+  overflow: auto;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 0.35rem;
+}
+
 .ops-secretary-gmail {
   margin: 0 0 0.75rem;
   padding: 0.55rem 0.65rem;
