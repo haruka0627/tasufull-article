@@ -6416,6 +6416,94 @@ a.ops-p2-tile:hover {
   font-weight: 700;
 }
 
+/* Command Center ? chat bubbles + voice affordance (desk only) */
+.ops-p7-desk-chat .ops-p2-chat__msg {
+  display: block;
+  max-width: 88%;
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+  box-sizing: border-box;
+  word-break: break-word;
+}
+
+.ops-p7-desk-chat .ops-p2-chat__msg--user {
+  margin-left: auto;
+  margin-right: 0;
+  color: #0f172a;
+  background: color-mix(in srgb, var(--od-accent) 24%, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--od-accent) 38%, var(--od-border));
+  border-radius: 10px 10px 4px 10px;
+}
+
+.ops-p7-desk-chat .ops-p2-chat__msg--assistant {
+  margin-right: auto;
+  margin-left: 0;
+  color: var(--od-text);
+  background: #ffffff;
+  border: 1px solid var(--od-border);
+  border-radius: 10px 10px 10px 4px;
+}
+
+.ops-p7-desk-chat .ops-p2-chat__msg--error {
+  margin-right: auto;
+  color: #991b1b;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.ops-p7-desk-chat .ops-p2-chat__voice {
+  min-height: 44px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ops-p7-desk-chat .ops-secretary-voice-state {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  margin: 0.35rem 0 0;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  background: var(--od-panel-soft);
+  border: 1px solid var(--od-border);
+  color: var(--od-muted);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ops-p7-desk-chat .ops-secretary-voice-state--listening {
+  color: #047857;
+  border-color: rgba(5, 150, 105, 0.35);
+  background: rgba(5, 150, 105, 0.1);
+}
+
+.ops-p7-desk-chat .ops-secretary-voice-state--thinking {
+  color: #b45309;
+  border-color: rgba(217, 119, 6, 0.35);
+  background: rgba(217, 119, 6, 0.1);
+}
+
+.ops-p7-desk-chat .ops-secretary-voice-state--speaking {
+  color: #1d4ed8;
+  border-color: rgba(37, 99, 235, 0.35);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.ops-p7-desk-chat .ops-secretary-voice-state--error {
+  color: #b91c1c;
+  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 0.08);
+}
+
 .ops-p7-desk-fold {
   border: 1px solid var(--od-border);
   border-radius: 8px;
