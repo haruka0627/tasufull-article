@@ -9,6 +9,7 @@
   const MAX_MESSAGES = 40;
   /** UI フェーズ: Gateway / Gemini へ接続せず mock · local のみ */
   const UI_LOCAL_ONLY = true;
+  const BUILDER_AI_CHAT_AVATAR = "assets/builder-ai-chat-avatar.png";
 
   const QUICK_PROMPTS = [
     { label: "現場写真診断", desc: "写真から補修判断を相談", text: "現場写真について補修判断を相談したいです。", intent: "photo", icon: "📷" },
@@ -489,7 +490,18 @@
       const avatar = document.createElement("span");
       avatar.className = "builder-ai-v2-msg__avatar";
       avatar.setAttribute("aria-hidden", "true");
-      avatar.textContent = m.role === "user" ? "👤" : "🤖";
+      if (m.role === "user") {
+        avatar.textContent = "👤";
+      } else {
+        const avatarImg = document.createElement("img");
+        avatarImg.className = "builder-ai-v2-msg__avatar-img";
+        avatarImg.src = BUILDER_AI_CHAT_AVATAR;
+        avatarImg.width = 42;
+        avatarImg.height = 42;
+        avatarImg.alt = "";
+        avatarImg.decoding = "async";
+        avatar.appendChild(avatarImg);
+      }
       const stack = document.createElement("div");
       stack.className = `builder-ai-v2-msg__stack builder-ai-v2-msg__stack--${m.role}`;
       if (m.role === "assistant") {
