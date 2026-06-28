@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-28（TLV Payment Engine · Production Readiness Review）  
+**最終更新:** 2026-06-28（TLV Payment Engine · RV1 Release Verification）  
 **Git HEAD:** `bce78cc`（Bundle E 完了 · working tree clean）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -383,8 +383,9 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | P0 実装（purchase · tip · chargeback · RLS） | **完了** |
 | Staging 検証 | **全スイート PASS** |
 | Production Readiness Review | **確定** — [runbook](../reports/tlv-payment-production-readiness.md) |
-| Migration Recovery | **計画確定** — [recovery plan](../reports/tlv-payment-migration-recovery-plan.md) · manifest · Inventory → Skip → Verify |
-| Production Go | **No-Go** — RC1 release **Phase 0 STOP**（[release report](../reports/tlv-payment-production-release.md)） |
+| Migration Recovery | **P1+P2 完了** — [recovery plan](../reports/tlv-payment-migration-recovery-plan.md) · git `dded4b4` |
+| Release Verification RV1 | **2026-06-28 · No-Go** — [RV1 report](../reports/tlv-payment-release-verification.md) · TODO-PROD **0/7 READY** |
+| Production Go | **No-Go** — Release **停止維持** · P0 blocker: PITR · PostgREST `tlv` · Stripe webhook · PS-02〜05 / PS-M01〜05 |
 
 | ID | 内容 | 判断 | 状態 |
 | --- | --- | --- | --- |
@@ -407,7 +408,9 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | TODO-RLS-03 | Admin JWT E2E（`talk_is_admin` / `is_ops`） | **候補** | `tlv_admin` 新設 **不要/保留** · 既存 hook + `talk_is_admin()` 再利用 · admin SELECT Policy 未 E2E |
 
 **Phase 2 staging Go/No-Go:** **Go** — 全スイート PASS（logic 26 · RPC 19 · RLS 30 · CB 10 · edge）。  
-**Phase 2 本番 Go/No-Go:** **No-Go** — Release **停止維持** · Recovery 計画確定 · Git Step 0〜4 untracked 解消待ち · [recovery plan](../reports/tlv-payment-migration-recovery-plan.md)
+**Phase 2 本番 Go/No-Go:** **No-Go** — [RV1](../reports/tlv-payment-release-verification.md) 2026-06-28 · fingerprint/Skip PASS · Platform/Smoke/Go 未完了
+
+**RV1 Blocker（P0）:** PITR 未確認 · PostgREST remote `tlv` 404 · Stripe 7 events 未確認 · PS-02〜05 / PS-M01〜05 未 PASS
 
 **Production Release 手順:** [reports/tlv-payment-production-readiness.md §6](../reports/tlv-payment-production-readiness.md#6-production-release-手順確定版)
 
