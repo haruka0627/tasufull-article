@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-27（Business Directory UI Flow 設計）
+**最終更新:** 2026-06-28（Live Platform Vision 制度設計）
 
 ---
 
@@ -91,6 +91,71 @@
 **Production Step 4 Deploy:** `reports/business-directory-production-step4-production.md` · Production Pages · 最終 smoke **48/48 PASS · Go**
 
 **報告:** `reports/business-directory-subscription-model.md`
+
+---
+
+## Platform Vision（2026-06-28 確定 · 設計のみ）
+
+**正本 AD:** [DECISIONS.md](./DECISIONS.md) **AD-014** · 詳細: [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) · 採否: [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md)
+
+| 項目 | 状態 | 内容 |
+| --- | --- | --- |
+| **ミッション** | ✅ 設計確定 | 「頑張ったクリエイターが一番報われるサービス」 |
+| **還元思想** | ✅ 設計確定 | 条件達成型 · 利益が先 · 還元率先行禁止 |
+| **三本柱** | ✅ 設計確定 | 通常動画 → ショート → ライブ |
+| **コアバリュー 6 項** | ✅ 設計確定 | 利益最優先 · 再投資 · 長期 · 配信者ファースト · 視聴者 · infra |
+| **TLV v1.0 コード** | 🔒 FROZEN | 本 Vision は **次世代** · v1 変更なし |
+| **実装** | 📋 未着手 | [TODO.md](./TODO.md) § Live Platform Vision |
+
+**非目標:** 全員常時最高還元 · 赤字ライブ無制限延長 · TLV 専用 AI · AI 自動送信
+
+---
+
+## Creator Economy（配信者制度 · 設計のみ）
+
+**正本:** [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) · 収益: [MONETIZATION.md](./MONETIZATION.md)
+
+| 制度 | 状態 | 備考 |
+| --- | --- | --- |
+| ランク 3 ティア（Standard / Proven / Top Contributor） | ✅ 採用 | 条件達成型 |
+| 条件達成型高還元 | ✅ 採用 | 数値は Ops データ後 |
+| Creator Score · 利益貢献度 · Creator Credit | ✅ 採用 | 内部指標 · 非公開 |
+| 継続配信 · GitHub 風ヒートマップ | ✅ 採用 | プロフィール opt-in |
+| Creator Challenge | ⏸ 保留 | 不正対策待ち |
+| エコ / 時間帯ボーナス | ⏸ 保留 | infra 実測後 |
+| Creator Lab | ⏸ 保留 | TASFUL AI 入口 · AD-004 |
+| Creator Marketplace · Incubator | ⏸ 保留 / 📋 将来 | 法務 · 再投資余力 |
+| メンター · MCN · NFT | 📋 将来 | v2+ |
+
+---
+
+## Viewer Economy（視聴者制度 · 設計のみ）
+
+**正本:** [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md)
+
+| 制度 | 状態 | 備考 |
+| --- | --- | --- |
+| 視聴者レベル · 古参バッジ | ✅ 採用 | AD-012 シンプル UI |
+| サポーター · ストリーク | ✅ 採用 | 課金連動は将来 |
+| ルーム内ライブランキング · 応援 | ✅ 採用 | グローバル晒しなし |
+| コレクション · マイル · ミッション | ⏸ 保留 | ボット · 経済設計 |
+| 視聴者ギルド · Family 視聴 | 📋 将来 | コミュニティ · 法務 |
+
+---
+
+## Live Economy（ライブシステム · 設計のみ）
+
+**正本:** [LIVE_SYSTEM.md](./LIVE_SYSTEM.md)
+
+| 機能 | 状態 | 備考 |
+| --- | --- | --- |
+| 30 分無料 → 条件延長 30 分 | ✅ 採用 | 赤字禁止の核心 |
+| ライブゲージ · 応援 · オーバーゲージ | ✅ 採用 | cap 必須 |
+| Raid · ラジオ配信 | ✅ 採用 | 低コスト · 導線 |
+| 同時多画面 · DVR · チケット制 · 4K | ⏸ 保留 | コスト · 課金基盤 |
+| ライブコマース · AI ハイライト · AR | 📋 将来 | Platform / TASFUL AI 連携 |
+
+**原則:** ライブは **利益を作る** · 未達時は **終了がデフォルト**
 
 ---
 

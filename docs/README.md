@@ -26,8 +26,8 @@
 | --- | --- |
 | [PROJECT_STATUS.md](./PROJECT_STATUS.md) | **現状スナップショット**（製品別ステータス・直近コミット） |
 | [TODO.md](./TODO.md) | **次にやること**（優先順・担当領域） |
-| [ROADMAP.md](./ROADMAP.md) | 中長期フェーズ · 展開方針要約（AD-011）· UI/UX 原則要約（AD-012）· Business Directory（AD-013） |
-| [DECISIONS.md](./DECISIONS.md) | **決定事項**（アーキテクチャ · 統合方針 · **AD-011 展開** · **AD-012 UI/UX** · **AD-013 Business Directory**） |
+| [ROADMAP.md](./ROADMAP.md) | 中長期フェーズ · 展開方針（AD-011）· UI/UX（AD-012）· Business Directory（AD-013）· **Platform Vision（AD-014）** |
+| [DECISIONS.md](./DECISIONS.md) | **決定事項**（AD-011 展開 · AD-012 UI/UX · AD-013 Business Directory · **AD-014 Platform Vision**） |
 | [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md) | リリース前ゲート |
 | [CHANGELOG.md](./CHANGELOG.md) |  notable 変更履歴 |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | 未解決・要確認・矛盾の記録 |

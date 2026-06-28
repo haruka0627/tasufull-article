@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-28（P0-1 cleanup · AI 秘書 docs refresh）  
+**最終更新:** 2026-06-28（Live Platform Vision 設計書 · TODO 整理）  
 **Git HEAD:** `bce78cc`（Bundle E 完了 · working tree clean）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -88,6 +88,72 @@
 - [ ] **お気に入り DB 同期** — Supabase favorites + folder meta サーバー保存
 - [ ] **Google OAuth 実機確認** — Supabase Dashboard 設定後 E2E（staging → production）
 - [ ] （任意）検索ハブ listing pool 初回ロード · 非 AI バッジ説明
+
+---
+
+## Live Platform Vision（制度設計 · 2026-06-28 確定）
+
+**正本 AD:** [DECISIONS.md](./DECISIONS.md) **AD-014** · 詳細: [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) · [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) · [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) · [MONETIZATION.md](./MONETIZATION.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) · [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md)
+
+**注:** TLV v1.0 は **FEATURE FROZEN**。以下は **次世代 Platform Vision**（設計のみ · **実装未着手**）。
+
+### P0 — 設計正本（完了）
+
+| タスク | 状態 |
+| --- | --- |
+| サービスコンセプト · 条件達成型還元 | ✅ [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) |
+| 収益モデル · 三本柱 · 再投資 | ✅ [MONETIZATION.md](./MONETIZATION.md) |
+| 配信者制度 · ランク · Creator Score | ✅ [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) |
+| 視聴者制度 · レベル · ストリーク | ✅ [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) |
+| ライブシステム · 30+30 · ゲージ · Raid | ✅ [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) |
+| ブレスト採否整理 | ✅ [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md) |
+| ROADMAP 反映 | ✅ [ROADMAP.md](./ROADMAP.md) § Platform Vision 以降 |
+| AD-014 Platform Vision · 条件達成型 Creator Economy | ✅ [DECISIONS.md](./DECISIONS.md) AD-014 |
+| AD-004 / AD-011 / AD-012 との整合確認 | ✅ 各設計書 § 既存決定 |
+
+- [x] 6 設計書作成 · 採用/保留/将来/不採用分類
+- [x] AD-014 確定 · DECISIONS 正本登録
+- [x] TODO · ROADMAP 更新
+- [ ] 設計書コミット（選別ステージング · `git add -A` 禁止）
+
+### P1 — 実装準備（未着手）
+
+| タスク | 内容 |
+| --- | --- |
+| Creator Score 次元定義 | Activity / Revenue / Quality / Trust / Cost Efficiency |
+| ライブコストモデル試算 | 帯域 · 同接 · 延長 cap の数値化 |
+| 還元 tier 条件の Ops 草案 | Standard / Proven / Top Contributor 閾値案 |
+| ライブゲージ weight シミュレーション | 延長条件 · オーバーゲージ cap |
+| 法務 · 税務レビュー依頼 | 条件達成型還元 · ギフト手数料 |
+
+- [ ] Creator Score 仕様書（数値閾値 · Ops ダッシュボード要件）
+- [ ] ライブ infra コスト試算レポート
+- [ ] 還元 tier 運用フロー（Ops 承認 · 降格ルール）
+- [ ] TLV v1 凍結解除と Vision 実装のマイルストーン整合
+
+### P2 — 制度実装（Future 着手前 · 未着手）
+
+| 領域 | 内容 |
+| --- | --- |
+| **Creator Economy** | ランク · Creator Credit · ヒートマップ · 条件還元エンジン |
+| **Viewer Economy** | レベル · ストリーク · 古参バッジ · ルーム内ランキング |
+| **Live Economy** | 30+30 フロー · ゲージ · 応援 · Raid · ラジオモード |
+| **Monetization** | 収益計測 · ギフト基盤 · 再投資配分 |
+
+- [ ] 収益計測基盤（三本柱共通）
+- [ ] ライブコア（ゲージ · 延長 · 終了）
+- [ ] Creator tier · Score バックエンド
+- [ ] 視聴者参加型 UI（AD-012 シンプル）
+
+### Future — 保留制度の実装
+
+| 項目 | 参照 |
+| --- | --- |
+| Creator Challenge · Lab · Marketplace · Incubator | [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) §3–4 |
+| エコボーナス · 時間帯ボーナス | [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) §3 |
+| コレクション · マイル · ミッション | [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) §3 |
+| DVR · チケット制 · 4K · コラボ多画面 | [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) §4–5 |
+| ライブコマース · 通訳 · NFT · MCN | [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md) §3 |
 
 ---
 
