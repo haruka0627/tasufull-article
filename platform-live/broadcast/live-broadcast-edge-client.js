@@ -30,6 +30,16 @@
         return this._invokeLocal(body);
       }
       if (!this._baseUrl) {
+        if (String(body.action || "").toLowerCase() === "set_live") {
+          return {
+            ok: true,
+            noop: true,
+            stub: true,
+            broadcastLive: body.live !== false,
+            surface: body.surface,
+            broadcastId: body.broadcastId,
+          };
+        }
         return { ok: false, error: "baseUrl または localService が必要です" };
       }
 
@@ -114,6 +124,19 @@
     /** @param {object} params */
     state(params) {
       return this._post({ action: "state", ...params });
+    }
+
+    /**
+     * P4-1 · broadcast edge は create/start で LIVE 同期 · setLive は state 確認用 alias
+     * @param {object} params
+     */
+    setLive(params) {
+      return this.start(params);
+    }
+
+    /** @param {object} params */
+    clearLive(params) {
+      return this.stop(params);
     }
   }
 
