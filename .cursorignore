@@ -1,12 +1,49 @@
-﻿node_modules/
+﻿# Cursor indexing — generated / temp / secrets
+# Source (docs/, scripts/, deploy/cloudflare/functions/, platform-live/, etc.) は除外しない
+# 運用: reports/cursor-update-tier-a-ops.md
+
+# Dependencies
+node_modules/
+
+# Wrangler / Pages dev temp
 .wrangler/
+deploy/cloudflare/dist/
 deploy/cloudflare/dist/.wrangler/
-reports/screenshots/
-screenshots/
-.tmp-*.sql
-deploy/cloudflare/dist/.tmp-*.sql
-deno.lock
-deploy/cloudflare/dist/deno.lock
-dist/
+deploy/cloudflare/dist/.dev.vars
+
+# Build / cache / coverage
 coverage/
 .cache/
+deno.lock
+deploy/cloudflare/dist/deno.lock
+
+# Ad-hoc SQL dumps (local only)
+.tmp-*.sql
+deploy/cloudflare/dist/.tmp-*.sql
+
+# Screenshots & visual QA artifacts (keep reports/*.md / *.json indexable)
+screenshots/
+reports/screenshots/
+reports/**/screenshots/
+reports/**/*.png
+reports/**/*.jpg
+reports/**/*.webp
+
+# Local secrets / generated config (never index)
+.env
+.env.local
+chat-supabase-config.local.js
+live/live-zego-config.js
+deploy/cloudflare/dist/live/live-zego-config.js
+deploy/cloudflare/dist/platform-live/platform-live-zego-config.js
+
+# Playwright / gate session (contains cookies)
+reports/gate-d-auth-storage.json
+
+# Local backups & sync temp
+backups/
+.tmp.driveupload/
+supabase/.temp/
+
+# Ad-hoc git analysis dumps
+.git-*-utf8.txt
