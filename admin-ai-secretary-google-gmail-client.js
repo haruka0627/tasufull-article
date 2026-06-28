@@ -199,6 +199,8 @@
       to: fields.to,
       subject: fields.subject,
       body: fields.body,
+      chatOrigin: Boolean(fields.chatOrigin),
+      chatIntent: fields.chatIntent,
     });
     return { ok: true, item };
   }

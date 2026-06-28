@@ -1,6 +1,6 @@
 /**
- * AI秘書 Phase 4-1 — Google Chat Write Bridge (Human Gate enqueue only)
- * No Gmail write execute · enqueue only
+ * AI秘書 Phase 4-1/4-2 — Google Chat Write Bridge
+ * 4-1: Human Gate enqueue only · 4-2: approve → drafts.create result sync
  */
 (function (global) {
   "use strict";
@@ -136,6 +136,8 @@
       to: plan.recipient,
       subject: plan.subject,
       body: plan.body,
+      chatOrigin: true,
+      chatIntent: "write_enqueue_gmail_draft",
     });
 
     if (!queued?.ok || !queued.item?.id) {
@@ -167,11 +169,49 @@
     };
   }
 
+  function handleGateExecutionResult(item, exec) {
+    const Ctx = getContext();
+    if (!Ctx || item?.source !== "gmail" || !item?.payload?.chatOrigin) return;
+    const payload = item.payload || {};
+    const subjectPreview = trim(payload.subject, 80) || "(件名なし)";
+    const sourceIntent = trim(payload.chatIntent, 40) || "write_enqueue_gmail_draft";
+
+    if (exec?.ok) {
+      const raw = exec.raw?.data || exec.raw || {};
+      Ctx.saveDraftExecuteResult?.({
+        pendingId: item.id,
+        success: true,
+        subjectPreview,
+        draftId: trim(raw.draftId, 120),
+        sourceIntent,
+      });
+      Ctx.clearPendingGate?.();
+      return;
+    }
+
+    Ctx.saveDraftExecuteResult?.({
+      pendingId: item.id,
+      success: false,
+      subjectPreview,
+      errorPreview: trim(exec?.message, 80) || "draft_failed",
+      sourceIntent,
+      keepPending: true,
+    });
+  }
+
+  function handleGateRejected(item) {
+    const Ctx = getContext();
+    if (!Ctx || item?.source !== "gmail" || !item?.payload?.chatOrigin) return;
+    Ctx.clearPendingGate?.();
+  }
+
   global.TasuSecretaryGoogleChatWriteBridge = {
     buildReplyPlanFromFocus,
     buildReplyPlanFromContext,
     persistReplyPlanFromDraft,
     enqueueGmailDraftFromChat,
     extractReplyDraftBody,
+    handleGateExecutionResult,
+    handleGateRejected,
   };
 })(typeof window !== "undefined" ? window : globalThis);

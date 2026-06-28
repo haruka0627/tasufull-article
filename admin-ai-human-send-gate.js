@@ -253,6 +253,8 @@
         subject,
         body: String(partial.body || "").slice(0, 12000),
         draftId: partial.draftId || "",
+        chatOrigin: Boolean(partial.chatOrigin),
+        chatIntent: String(partial.chatIntent || "").slice(0, 40),
       },
     });
   }
@@ -292,6 +294,16 @@
     });
   }
 
+  function notifyChatGateHook(item, event, exec) {
+    const Bridge = global.TasuSecretaryGoogleChatWriteBridge;
+    if (!Bridge || item?.source !== "gmail" || !item?.payload?.chatOrigin) return;
+    if (event === "reject" && Bridge.handleGateRejected) {
+      Bridge.handleGateRejected(item);
+    } else if (event === "execute" && Bridge.handleGateExecutionResult) {
+      Bridge.handleGateExecutionResult(item, exec);
+    }
+  }
+
   function rejectPendingItem(id) {
     const list = readAllPending();
     const idx = list.findIndex((p) => p.id === id);
@@ -320,6 +332,7 @@
       outcome: "unknown",
       outcomeReason: "運営者が却下",
     });
+    notifyChatGateHook(list[idx], "reject");
     return { ok: true, item: list[idx] };
   }
 
@@ -451,6 +464,14 @@
       }
       const action = payload.gmailAction || "draft_create";
       if (action === "send") {
+        if (payload.chatOrigin) {
+          return {
+            ok: false,
+            result: "failed",
+            outcome: "unknown",
+            message: "Chat 由来の送信は Phase 4-2 では未対応",
+          };
+        }
         const sendMethod = payload.draftId ? "drafts.send" : "messages.send";
         const r = await Gmail.executeWriteApproved({
           method: sendMethod,
@@ -548,28 +569,47 @@
       exec = executeInternalAction(item);
     }
 
-    list[idx] = {
-      ...item,
-      status: "approved",
-      approvedBy,
-      approvedAt,
-      executedAt: new Date().toISOString(),
-      executionResult: exec,
-    };
+    const payload = item.payload || {};
+    const chatDraftRetry =
+      exec.ok === false &&
+      item.source === "gmail" &&
+      payload.chatOrigin &&
+      (payload.gmailAction || "draft_create") === "draft_create";
+
+    const executedAt = new Date().toISOString();
+    if (chatDraftRetry) {
+      list[idx] = {
+        ...item,
+        status: "pending",
+        lastExecutionAttemptAt: executedAt,
+        lastExecutionResult: exec,
+      };
+    } else {
+      list[idx] = {
+        ...item,
+        status: "approved",
+        approvedBy,
+        approvedAt,
+        executedAt,
+        executionResult: exec,
+      };
+    }
     savePendingList(list);
 
     appendExecutionLog({
       actionId: id,
       category: item.category,
       source: item.source,
-      approvedBy,
-      approvedAt,
-      executedAt: list[idx].executedAt,
+      approvedBy: chatDraftRetry ? "operator" : approvedBy,
+      approvedAt: chatDraftRetry ? executedAt : approvedAt,
+      executedAt,
       result: exec.result || (exec.ok ? "success" : "failed"),
       outcome: exec.outcome || "unknown",
-      status: "approved",
+      status: chatDraftRetry ? "failed" : "approved",
       detail: item.recommendation,
     });
+
+    notifyChatGateHook(list[idx], "execute", exec);
 
     global.TasuAdminAiOutcomeLearning?.recordOutcome?.({
       sourceType: "human_send_gate",
