@@ -21,6 +21,8 @@
       this._edgeSyncEvents = [];
       /** @private @type {{ phase: string, payload: unknown, at: string }[]} */
       this._chatEdgeEvents = [];
+      /** @private @type {{ phase: string, payload: unknown, at: string }[]} */
+      this._recordingEvents = [];
     }
 
     /** @private */
@@ -67,6 +69,14 @@
       return this._push(this._chatEdgeEvents, "chatEdge", phase, payload);
     }
 
+    /**
+     * @param {"candidate"|"attempted"|"skipped"|"succeeded"|"failed"} phase
+     * @param {Record<string, unknown>} [payload]
+     */
+    recordRecording(phase, payload = {}) {
+      return this._push(this._recordingEvents, "recording", phase, payload);
+    }
+
     snapshot(extra = {}) {
       return {
         timeline: this._timeline.slice(),
@@ -76,6 +86,7 @@
         sessionEvents: this._sessionEvents.slice(),
         edgeSyncEvents: this._edgeSyncEvents.slice(),
         chatEdgeEvents: this._chatEdgeEvents.slice(),
+        recordingEvents: this._recordingEvents.slice(),
         ...extra,
       };
     }
@@ -88,6 +99,7 @@
       this._sessionEvents = [];
       this._edgeSyncEvents = [];
       this._chatEdgeEvents = [];
+      this._recordingEvents = [];
     }
   }
 

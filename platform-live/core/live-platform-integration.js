@@ -3,6 +3,7 @@
  * Phase 3 · ZEGO Adapter · stub fallback 維持 · Interface 非変更
  * Phase 4 P4-2 · useEdgeSync opt-in（デフォルト false）
  * Phase 4 P4-3 · Chat Gateway + joinLive set_watching（opt-in）
+ * Phase 4 P4-4 · Recording service wire · candidate event · explicit start/stop
  *
  * UI / Edge → LivePlatformIntegration → Broadcast / Viewer / Session → Provider → Adapter → SDK
  */
@@ -31,6 +32,7 @@
      *   recordingEdgeClient?: object,
      *   monitoringEdgeClient?: object,
      *   chatGateway?: object,
+     *   recordingService?: object,
      * }} [options]
      */
     constructor(options = {}) {
@@ -64,6 +66,14 @@
       this._chatEdgeClient = null;
       /** @private @type {object|null} */
       this._watchingSyncLastResult = null;
+      /** @private @type {object|null} */
+      this._recordingService = options.recordingService || null;
+      /** @private @type {object|null} */
+      this._injectedRecordingService = options.recordingService || null;
+      /** @private @type {object|null} */
+      this._recordingEdgeClient = null;
+      /** @private @type {object|null} */
+      this._recordingLastResult = null;
       /** @private */
       this._provider = null;
       /** @private */
@@ -127,6 +137,11 @@
       return this._chatGateway;
     }
 
+    /** @returns {object|null} */
+    get recordingService() {
+      return this._recordingService;
+    }
+
     /** @returns {string} raw provider state */
     get providerState() {
       return this._provider?.state || "idle";
@@ -162,6 +177,9 @@
         edgeSyncLastResult: this._edgeSync?.getLastResult?.() || null,
         chatGatewayReady: Boolean(this._chatGateway),
         watchingSyncLastResult: this._watchingSyncLastResult ? { ...this._watchingSyncLastResult } : null,
+        recordingServiceReady: Boolean(this._recordingService),
+        recordingState: this._recordingService?.state || null,
+        recordingLastResult: this._recordingLastResult ? { ...this._recordingLastResult } : null,
       };
       if (this._provider?.getPublishDiagnostics) {
         extra.publishDiagnostics = this._provider.getPublishDiagnostics();
@@ -439,6 +457,132 @@
       }
     }
 
+    /** @private */
+    _setupRecordingService(options = {}) {
+      if (options.recordingService) {
+        this._injectedRecordingService = options.recordingService;
+        this._recordingService = options.recordingService;
+        return;
+      }
+      if (this._injectedRecordingService) {
+        this._recordingService = this._injectedRecordingService;
+        return;
+      }
+
+      const RecordingService = global.TasuLivePlatformRecordingService;
+      if (!RecordingService) return;
+
+      this._recordingService = new RecordingService({
+        broadcastService: this._broadcast,
+        sessionManager: this._session,
+        provider: this._provider,
+      });
+    }
+
+    /** @private */
+    _getRecordingEdgeClient() {
+      if (!this._useEdgeSync) return null;
+      if (this._recordingEdgeClient) return this._recordingEdgeClient;
+      const injected = this._edgeClientOverrides?.recording;
+      if (injected) {
+        this._recordingEdgeClient = injected;
+        return injected;
+      }
+      const RecordingEdgeClient = global.TasuLivePlatformRecordingEdgeClient;
+      if (!RecordingEdgeClient) return null;
+      this._recordingEdgeClient = new RecordingEdgeClient({ baseUrl: this._edgeBaseUrl || undefined });
+      return this._recordingEdgeClient;
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    _recordingContext(ctx) {
+      return {
+        surface: String(ctx.surface || this._surface).trim().toLowerCase(),
+        broadcastId: String(ctx.broadcastId || this._broadcast?.broadcast?.id || "").trim(),
+        roomId: ctx.roomId ? String(ctx.roomId).trim() : this._broadcast?.broadcast?.roomId || null,
+        sessionId: ctx.sessionId || this._session?.session?.id || this._session?.session?.sessionId || null,
+        streamId: ctx.streamId || null,
+        recordingId: ctx.recordingId ? String(ctx.recordingId).trim() : null,
+      };
+    }
+
+    /** @private @param {Record<string, unknown>} ctx — publish 成功時 candidate のみ（自動 start 禁止） */
+    _recordRecordingCandidate(ctx) {
+      const safeCtx = this._recordingContext(ctx);
+      const payload = {
+        ...safeCtx,
+        autoStart: false,
+        candidate: true,
+      };
+      this._diagnostics?.recordLifecycle("recording:candidate", payload);
+      this._diagnostics?.recordRecording?.("candidate", payload);
+      const result = { ok: true, candidate: true, autoStart: false, ...safeCtx };
+      this._recordingLastResult = result;
+      return result;
+    }
+
+    /** @private @param {Record<string, unknown>} options */
+    async _runRecordingEdgeStart(options) {
+      if (!this._useEdgeSync) return null;
+      const client = this._getRecordingEdgeClient();
+      const safeCtx = this._recordingContext(options);
+      if (!client || typeof client.start !== "function") {
+        this._diagnostics?.recordRecording?.("skipped", { op: "edgeStart", reason: "client_missing", ...safeCtx });
+        return { ok: true, partial: true, noop: true, reason: "client_missing" };
+      }
+
+      this._diagnostics?.recordRecording?.("attempted", { op: "edgeStart", ...safeCtx });
+      try {
+        const edgeRes = await client.start({
+          surface: safeCtx.surface,
+          broadcastId: safeCtx.broadcastId,
+          sessionId: safeCtx.sessionId,
+          recordingId: safeCtx.recordingId,
+        });
+        const failed = edgeRes?.ok === false;
+        this._diagnostics?.recordRecording?.(failed ? "failed" : "succeeded", {
+          op: "edgeStart",
+          partial: failed,
+          ...safeCtx,
+        });
+        return failed ? { ok: true, partial: true, ...edgeRes } : { ok: true, ...edgeRes };
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordRecording?.("failed", { op: "edgeStart", error: message, ...safeCtx });
+        return { ok: true, partial: true, edgeSyncThrew: true, error: message };
+      }
+    }
+
+    /** @private @param {Record<string, unknown>} options */
+    async _runRecordingEdgeStop(options) {
+      if (!this._useEdgeSync) return null;
+      const client = this._getRecordingEdgeClient();
+      const safeCtx = this._recordingContext(options);
+      if (!client || typeof client.stop !== "function") {
+        this._diagnostics?.recordRecording?.("skipped", { op: "edgeStop", reason: "client_missing", ...safeCtx });
+        return { ok: true, partial: true, noop: true, reason: "client_missing" };
+      }
+
+      this._diagnostics?.recordRecording?.("attempted", { op: "edgeStop", ...safeCtx });
+      try {
+        const edgeRes = await client.stop({
+          surface: safeCtx.surface,
+          recordingId: safeCtx.recordingId,
+        });
+        const failed = edgeRes?.ok === false;
+        this._diagnostics?.recordRecording?.(failed ? "failed" : "succeeded", {
+          op: "edgeStop",
+          partial: failed,
+          ...safeCtx,
+        });
+        return failed ? { ok: true, partial: true, ...edgeRes } : { ok: true, ...edgeRes };
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordRecording?.("failed", { op: "edgeStop", error: message, ...safeCtx });
+        return { ok: true, partial: true, edgeSyncThrew: true, error: message };
+      }
+    }
+
     /** @private @param {Record<string, unknown>} ctx */
     _edgeSyncContext(ctx) {
       return {
@@ -519,6 +663,7 @@
      *   recordingEdgeClient?: object,
      *   monitoringEdgeClient?: object,
      *   chatGateway?: object,
+     *   recordingService?: object,
      * }} [options]
      */
     async initialize(options = {}) {
@@ -533,6 +678,7 @@
       if (options.recordingEdgeClient) this._edgeClientOverrides.recording = options.recordingEdgeClient;
       if (options.monitoringEdgeClient) this._edgeClientOverrides.monitoring = options.monitoringEdgeClient;
       if (options.chatGateway) this._injectedChatGateway = options.chatGateway;
+      if (options.recordingService) this._injectedRecordingService = options.recordingService;
 
       this._createStack();
       this._setupEdgeSync(options);
@@ -553,6 +699,7 @@
 
       this._attachProviderToStack();
       this._setupChatGateway(options);
+      this._setupRecordingService(options);
       this._wireTelemetry();
       this._initialized = true;
       this._diagnostics?.recordLifecycle("initialize", {
@@ -643,6 +790,14 @@
         canonicalProviderState: this.canonicalProviderState,
       });
 
+      const recordingCandidate = this._recordRecordingCandidate({
+        surface,
+        broadcastId,
+        roomId,
+        userId,
+        streamId: options.streamId,
+      });
+
       const edgeSyncResult = await this._runEdgeSetLive({
         surface,
         broadcastId,
@@ -657,6 +812,7 @@
         canonicalProviderState: this.canonicalProviderState,
         providerState: this.providerState,
         edgeSync: edgeSyncResult,
+        recordingCandidate,
         diagnostics: this.getDiagnostics(),
       };
     }
@@ -950,6 +1106,125 @@
       return this._chatGateway.getMessages({ ...options, surface });
     }
 
+    /**
+     * @param {{ surface?: string, broadcastId?: string, sessionId?: string, recordingId?: string }} options
+     */
+    async startRecording(options = {}) {
+      this._ensureReady();
+      if (!this._recordingService) {
+        return { ok: false, error: "Recording service が未ロードです", diagnostics: this.getDiagnostics() };
+      }
+
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      const broadcastId = String(options.broadcastId || this._broadcast?.broadcast?.id || "").trim();
+      const safeCtx = this._recordingContext({ ...options, surface, broadcastId });
+
+      this._diagnostics?.recordRecording?.("attempted", { op: "start", ...safeCtx });
+
+      const svcRes = await this._recordingService.startRecording({
+        ...options,
+        surface,
+        broadcastId: broadcastId || options.broadcastId,
+        sessionId: options.sessionId || safeCtx.sessionId,
+      });
+
+      if (svcRes?.ok === false) {
+        this._diagnostics?.recordRecording?.("failed", {
+          op: "start",
+          error: svcRes.error,
+          code: svcRes.code,
+          ...safeCtx,
+        });
+        this._recordingLastResult = { ok: false, op: "start", ...svcRes };
+        return { ...svcRes, diagnostics: this.getDiagnostics() };
+      }
+
+      const recordingEdgeResult = await this._runRecordingEdgeStart({
+        surface,
+        broadcastId,
+        sessionId: svcRes.metadata?.sessionId,
+        recordingId: svcRes.metadata?.recordingId,
+      });
+
+      this._diagnostics?.recordRecording?.("succeeded", {
+        op: "start",
+        recordingId: svcRes.metadata?.recordingId,
+        ...safeCtx,
+      });
+      this._diagnostics?.recordLifecycle("recording:start", {
+        recordingId: svcRes.metadata?.recordingId,
+        broadcastId,
+      });
+
+      const result = {
+        ...svcRes,
+        recordingEdge: recordingEdgeResult,
+        diagnostics: this.getDiagnostics(),
+      };
+      this._recordingLastResult = { ok: true, op: "start", recordingId: svcRes.metadata?.recordingId };
+      return result;
+    }
+
+    /**
+     * @param {{ surface?: string, recordingId?: string }} options
+     */
+    async stopRecording(options = {}) {
+      this._ensureReady();
+      if (!this._recordingService) {
+        return { ok: false, error: "Recording service が未ロードです", diagnostics: this.getDiagnostics() };
+      }
+
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      const recordingId =
+        options.recordingId ||
+        this._recordingService.metadata?.recordingId ||
+        null;
+      const safeCtx = this._recordingContext({ ...options, surface, recordingId });
+
+      this._diagnostics?.recordRecording?.("attempted", { op: "stop", ...safeCtx });
+
+      const svcRes = await this._recordingService.stopRecording({
+        ...options,
+        surface,
+        recordingId: recordingId || options.recordingId,
+      });
+
+      if (svcRes?.ok === false) {
+        this._diagnostics?.recordRecording?.("failed", {
+          op: "stop",
+          error: svcRes.error,
+          code: svcRes.code,
+          ...safeCtx,
+        });
+        this._recordingLastResult = { ok: false, op: "stop", ...svcRes };
+        return { ...svcRes, diagnostics: this.getDiagnostics() };
+      }
+
+      const recordingEdgeResult = await this._runRecordingEdgeStop({
+        surface,
+        recordingId: svcRes.metadata?.recordingId || recordingId,
+        broadcastId: svcRes.metadata?.broadcastId || safeCtx.broadcastId,
+      });
+
+      this._diagnostics?.recordRecording?.("succeeded", {
+        op: "stop",
+        recordingId: svcRes.metadata?.recordingId,
+        ...safeCtx,
+      });
+      this._diagnostics?.recordLifecycle("recording:stop", {
+        recordingId: svcRes.metadata?.recordingId,
+        broadcastId: svcRes.metadata?.broadcastId,
+      });
+
+      const result = {
+        ...svcRes,
+        recordingEdge: recordingEdgeResult,
+        diagnostics: this.getDiagnostics(),
+      };
+      this._recordingLastResult = { ok: true, op: "stop", recordingId: svcRes.metadata?.recordingId };
+      return result;
+    }
+
     getSessionSnapshot() {
       return {
         state: this.sessionState,
@@ -962,6 +1237,8 @@
         lastEvent: this._lastSessionEvent ? { ...this._lastSessionEvent } : null,
         useEdgeSync: this.useEdgeSync,
         chatGatewayReady: Boolean(this._chatGateway),
+        recordingServiceReady: Boolean(this._recordingService),
+        recordingState: this._recordingService?.state || null,
         status: this._session?.getStatus?.() || null,
         diagnostics: this.getDiagnostics(),
       };
@@ -999,6 +1276,7 @@
       if (this._viewer) await this._viewer.dispose?.();
       if (this._broadcast) await this._broadcast.dispose?.();
       if (this._session) await this._session.dispose?.();
+      if (this._recordingService?.dispose) await this._recordingService.dispose();
       if (this._provider) await this._provider.dispose?.();
       this._viewer = null;
       this._broadcast = null;
@@ -1008,6 +1286,9 @@
       this._chatGateway = null;
       this._chatEdgeClient = null;
       this._watchingSyncLastResult = null;
+      this._recordingService = null;
+      this._recordingEdgeClient = null;
+      this._recordingLastResult = null;
       this._initialized = false;
       this._reconnecting = false;
       return {
