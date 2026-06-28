@@ -6,6 +6,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadDotEnvFile } from "./lib/zego-env.mjs";
+import { writeLiveZegoConfigToDist } from "./lib/write-live-zego-config.mjs";
+import { writePlatformZegoConfigToDist } from "./lib/write-platform-zego-config.mjs";
+import { syncPagesDevVars } from "./lib/sync-pages-dev-vars.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CF_DIR = path.join(ROOT, "deploy/cloudflare");
@@ -123,4 +127,21 @@ if (liveSynced > 0) {
 const fnSynced = syncPagesFunctions();
 if (fnSynced > 0) {
   console.log(`[ensure-pages-dist] synced functions/ → dist/functions/ (${fnSynced} file(s))`);
+}
+
+loadDotEnvFile();
+const devVars = syncPagesDevVars(DIST);
+console.log(
+  `[ensure-pages-dist] synced dist/.dev.vars (ZEGO_APP_ID=${devVars.presence.ZEGO_APP_ID}, ZEGO_SERVER=${devVars.presence.ZEGO_SERVER}, ZEGO_SERVER_SECRET=${devVars.presence.ZEGO_SERVER_SECRET ? `present(${devVars.zegoSecretLen} chars)` : "missing"})`,
+);
+
+const zegoCfg = writeLiveZegoConfigToDist(LIVE_DEST);
+if (zegoCfg.ok) {
+  console.log(`[ensure-pages-dist] generated dist/live/live-zego-config.js (appId=${zegoCfg.appId})`);
+}
+
+const platformLiveDest = path.join(DIST, "platform-live");
+const platformCfg = writePlatformZegoConfigToDist(platformLiveDest);
+if (platformCfg.ok) {
+  console.log(`[ensure-pages-dist] generated dist/platform-live/platform-live-zego-config.js (appId=${platformCfg.appId})`);
 }

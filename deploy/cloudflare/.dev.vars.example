@@ -1,0 +1,12 @@
+# wrangler pages dev — Pages Functions local binding
+# 1. repo root .env に値を設定
+# 2. npm run dev 実行時に deploy/cloudflare/dist/.dev.vars へ自動同期
+# 3. 本ファイルを dist/.dev.vars に手動コピーしても可（Git 禁止）
+
+# TLV Live / Platform ZEGO Token API (/api/tlv-zego-token)
+ZEGO_APP_ID=
+ZEGO_SERVER=
+ZEGO_SERVER_SECRET=
+
+# AI 運営秘書 DeepSeek（任意）
+# DEEPSEEK_API_KEY=
