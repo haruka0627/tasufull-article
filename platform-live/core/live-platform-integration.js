@@ -1,6 +1,7 @@
 /**
  * Live Platform Integration — Session · Broadcast · Viewer · Provider 正式配線
  * Phase 3 · ZEGO Adapter · stub fallback 維持 · Interface 非変更
+ * Phase 4 P4-2 · useEdgeSync opt-in（デフォルト false）
  *
  * UI / Edge → LivePlatformIntegration → Broadcast / Viewer / Session → Provider → Adapter → SDK
  */
@@ -16,7 +17,19 @@
 
   class TasuLivePlatformIntegration {
     /**
-     * @param {{ surface?: string, providerId?: string, allowStubFallback?: boolean }} [options]
+     * @param {{
+     *   surface?: string,
+     *   providerId?: string,
+     *   allowStubFallback?: boolean,
+     *   useEdgeSync?: boolean,
+     *   edgeBaseUrl?: string,
+     *   edgeSync?: object,
+     *   broadcastEdgeClient?: object,
+     *   viewerEdgeClient?: object,
+     *   chatEdgeClient?: object,
+     *   recordingEdgeClient?: object,
+     *   monitoringEdgeClient?: object,
+     * }} [options]
      */
     constructor(options = {}) {
       /** @private */
@@ -25,6 +38,22 @@
       this._providerId = String(options.providerId || "stub").trim().toLowerCase();
       /** @private */
       this._allowStubFallback = options.allowStubFallback !== false;
+      /** @private */
+      this._useEdgeSync = options.useEdgeSync === true;
+      /** @private @type {object|null} */
+      this._edgeSync = null;
+      /** @private */
+      this._edgeBaseUrl = String(options.edgeBaseUrl || "").trim();
+      /** @private @type {object|null} */
+      this._edgeClientOverrides = {
+        broadcast: options.broadcastEdgeClient || null,
+        viewer: options.viewerEdgeClient || null,
+        chat: options.chatEdgeClient || null,
+        recording: options.recordingEdgeClient || null,
+        monitoring: options.monitoringEdgeClient || null,
+      };
+      /** @private @type {object|null} */
+      this._injectedEdgeSync = options.edgeSync || null;
       /** @private */
       this._provider = null;
       /** @private */
@@ -73,6 +102,16 @@
       return this._surface;
     }
 
+    /** Phase 4 P4-2 · Edge sync opt-in（デフォルト false） */
+    get useEdgeSync() {
+      return this._useEdgeSync === true;
+    }
+
+    /** @returns {object|null} */
+    get edgeSync() {
+      return this._edgeSync;
+    }
+
     /** @returns {string} raw provider state */
     get providerState() {
       return this._provider?.state || "idle";
@@ -103,6 +142,9 @@
         broadcastState: this.broadcastState,
         stubFallback: this._stubFallback,
         providerId: this.providerId,
+        useEdgeSync: this.useEdgeSync,
+        edgeSyncStatus: this._edgeSync?.getStatus?.() || null,
+        edgeSyncLastResult: this._edgeSync?.getLastResult?.() || null,
       };
       if (this._provider?.getPublishDiagnostics) {
         extra.publishDiagnostics = this._provider.getPublishDiagnostics();
@@ -192,15 +234,145 @@
       this._viewer?.setProvider?.(this._provider);
     }
 
+    /** @private @param {Record<string, unknown>} options */
+    _edgeClient(name, ClientCtor) {
+      const injected = this._edgeClientOverrides?.[name];
+      if (injected) return injected;
+      if (!ClientCtor) return null;
+      return new ClientCtor({ baseUrl: this._edgeBaseUrl || undefined });
+    }
+
+    /** @private */
+    _setupEdgeSync(options = {}) {
+      if (options.useEdgeSync === true) this._useEdgeSync = true;
+      if (options.useEdgeSync === false) this._useEdgeSync = false;
+
+      const EdgeSync = global.TasuLivePlatformEdgeSync;
+      if (this._injectedEdgeSync) {
+        this._edgeSync = this._injectedEdgeSync;
+        this._useEdgeSync = this._edgeSync.enabled === true;
+        return;
+      }
+
+      if (!this._useEdgeSync) {
+        this._edgeSync = null;
+        return;
+      }
+
+      if (!EdgeSync) {
+        this._diagnostics?.recordEdgeSync?.("failed", {
+          reason: "TasuLivePlatformEdgeSync が未ロードです",
+        });
+        this._edgeSync = null;
+        return;
+      }
+
+      this._edgeSync = new EdgeSync({
+        useEdgeSync: true,
+        diagnostics: this._diagnostics,
+        broadcastEdgeClient: this._edgeClient("broadcast", global.TasuLivePlatformBroadcastEdgeClient),
+        viewerEdgeClient: this._edgeClient("viewer", global.TasuLivePlatformViewerEdgeClient),
+        chatEdgeClient: this._edgeClient("chat", global.TasuLivePlatformChatEdgeClient),
+        recordingEdgeClient: this._edgeClient("recording", global.TasuLivePlatformRecordingEdgeClient),
+        monitoringEdgeClient: this._edgeClient("monitoring", global.TasuLivePlatformMonitoringEdgeClient),
+      });
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    _edgeSyncContext(ctx) {
+      return {
+        surface: String(ctx.surface || this._surface).trim().toLowerCase(),
+        broadcastId: String(ctx.broadcastId || "").trim(),
+        roomId: ctx.roomId ? String(ctx.roomId).trim() : this._broadcast?.broadcast?.roomId || null,
+        hostUserId: ctx.hostUserId || ctx.userId || this._broadcast?.broadcast?.hostUserId || null,
+        userId: ctx.userId || null,
+        sessionId: ctx.sessionId || this._session?.session?.id || this._session?.session?.sessionId || null,
+        streamId: ctx.streamId || null,
+        providerState: ctx.providerState || this.canonicalProviderState,
+        sessionActive: ctx.sessionActive != null ? ctx.sessionActive : this.sessionState !== (global.PLATFORM_LIVE_SESSION_STATES?.IDLE || "IDLE"),
+        reason: ctx.reason || null,
+      };
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    async _runEdgeSetLive(ctx) {
+      if (!this._useEdgeSync || !this._edgeSync) return null;
+      try {
+        const syncRes = await this._edgeSync.setLive(this._edgeSyncContext(ctx));
+        this._diagnostics?.recordLifecycle("edgeSync:setLive", {
+          partial: Boolean(syncRes?.partial),
+          skipped: Boolean(syncRes?.skipped),
+          idempotent: Boolean(syncRes?.idempotent),
+          broadcastId: ctx.broadcastId,
+        });
+        return syncRes;
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordEdgeSync?.("failed", { op: "setLive", error: message, broadcastId: ctx.broadcastId });
+        return { ok: true, partial: true, edgeSyncThrew: true, error: message };
+      }
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    async _runEdgeClearLive(ctx) {
+      if (!this._useEdgeSync || !this._edgeSync) return null;
+      try {
+        const syncRes = await this._edgeSync.clearLive(this._edgeSyncContext(ctx));
+        this._diagnostics?.recordLifecycle("edgeSync:clearLive", {
+          partial: Boolean(syncRes?.partial),
+          skipped: Boolean(syncRes?.skipped),
+          idempotent: Boolean(syncRes?.alreadyClear),
+          broadcastId: ctx.broadcastId,
+        });
+        return syncRes;
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordEdgeSync?.("failed", { op: "clearLive", error: message, broadcastId: ctx.broadcastId });
+        return { ok: true, partial: true, edgeSyncThrew: true, error: message };
+      }
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    async _runEdgePatchLive(ctx) {
+      if (!this._useEdgeSync || !this._edgeSync) return null;
+      try {
+        return await this._edgeSync.patchLive(this._edgeSyncContext(ctx));
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordEdgeSync?.("failed", { op: "patchLive", error: message });
+        return { ok: true, partial: true, edgeSyncThrew: true, error: message };
+      }
+    }
+
     /**
-     * @param {{ surface?: string, providerId?: string, allowStubFallback?: boolean }} [options]
+     * @param {{
+     *   surface?: string,
+     *   providerId?: string,
+     *   allowStubFallback?: boolean,
+     *   useEdgeSync?: boolean,
+     *   edgeBaseUrl?: string,
+     *   edgeSync?: object,
+     *   broadcastEdgeClient?: object,
+     *   viewerEdgeClient?: object,
+     *   chatEdgeClient?: object,
+     *   recordingEdgeClient?: object,
+     *   monitoringEdgeClient?: object,
+     * }} [options]
      */
     async initialize(options = {}) {
       if (options.surface) this._surface = String(options.surface).trim().toLowerCase();
       if (options.providerId) this._providerId = String(options.providerId).trim().toLowerCase();
       if (options.allowStubFallback === false) this._allowStubFallback = false;
+      if (options.edgeBaseUrl) this._edgeBaseUrl = String(options.edgeBaseUrl).trim();
+      if (options.edgeSync) this._injectedEdgeSync = options.edgeSync;
+      if (options.broadcastEdgeClient) this._edgeClientOverrides.broadcast = options.broadcastEdgeClient;
+      if (options.viewerEdgeClient) this._edgeClientOverrides.viewer = options.viewerEdgeClient;
+      if (options.chatEdgeClient) this._edgeClientOverrides.chat = options.chatEdgeClient;
+      if (options.recordingEdgeClient) this._edgeClientOverrides.recording = options.recordingEdgeClient;
+      if (options.monitoringEdgeClient) this._edgeClientOverrides.monitoring = options.monitoringEdgeClient;
 
       this._createStack();
+      this._setupEdgeSync(options);
 
       if (!global.createPlatformLiveProvider) {
         return { ok: false, error: "createPlatformLiveProvider が未ロードです" };
@@ -223,12 +395,14 @@
         providerId: this.providerId,
         stubFallback: this._stubFallback,
         canonicalState: this.canonicalProviderState,
+        useEdgeSync: this.useEdgeSync,
       });
 
       return {
         ...(initRes && typeof initRes === "object" ? initRes : { ok: true }),
         stubFallback: this._stubFallback,
         canonicalProviderState: this.canonicalProviderState,
+        useEdgeSync: this.useEdgeSync,
       };
     }
 
@@ -305,11 +479,20 @@
         canonicalProviderState: this.canonicalProviderState,
       });
 
+      const edgeSyncResult = await this._runEdgeSetLive({
+        surface,
+        broadcastId,
+        roomId,
+        userId,
+        streamId: options.streamId,
+      });
+
       return {
         ...sr,
         sessionState: this.sessionState,
         canonicalProviderState: this.canonicalProviderState,
         providerState: this.providerState,
+        edgeSync: edgeSyncResult,
         diagnostics: this.getDiagnostics(),
       };
     }
@@ -370,9 +553,27 @@
     async stopPublish(options = {}) {
       this._ensureReady();
       const surface = String(options.surface || this._surface).trim().toLowerCase();
+      const broadcastId = String(options.broadcastId || this._broadcast?.broadcast?.id || "").trim();
+      const roomId = this._broadcast?.broadcast?.roomId || null;
       this._diagnostics?.recordLifecycle("publish:stop", { reason: options.reason });
       const res = await this._broadcast.stopBroadcast({ surface, reason: options.reason });
-      return { ...res, canonicalProviderState: this.canonicalProviderState, diagnostics: this.getDiagnostics() };
+
+      let edgeSyncResult = null;
+      if (res?.ok !== false && broadcastId) {
+        edgeSyncResult = await this._runEdgeClearLive({
+          surface,
+          broadcastId,
+          roomId,
+          reason: options.reason,
+        });
+      }
+
+      return {
+        ...res,
+        canonicalProviderState: this.canonicalProviderState,
+        edgeSync: edgeSyncResult,
+        diagnostics: this.getDiagnostics(),
+      };
     }
 
     /** @param {{ surface?: string, userId: string }} options */
@@ -402,6 +603,17 @@
       const sr = await this._session.reconnect({ surface });
       this._reconnecting = false;
       this._diagnostics?.recordLifecycle("reconnect:done", { sessionState: this.sessionState });
+
+      if (this.useEdgeSync && this._broadcast?.broadcast?.id) {
+        await this._runEdgePatchLive({
+          surface,
+          broadcastId: this._broadcast.broadcast.id,
+          roomId: this._broadcast.broadcast.roomId,
+          providerState: this.canonicalProviderState,
+          sessionActive: true,
+          broadcastLive: this.broadcastState === (global.PLATFORM_LIVE_BROADCAST_STATES?.LIVE || "live"),
+        });
+      }
 
       return {
         ...(sr && typeof sr === "object" ? sr : { ok: true }),
@@ -532,6 +744,7 @@
         surface: this._surface,
         stubFallback: this._stubFallback,
         lastEvent: this._lastSessionEvent ? { ...this._lastSessionEvent } : null,
+        useEdgeSync: this.useEdgeSync,
         status: this._session?.getStatus?.() || null,
         diagnostics: this.getDiagnostics(),
       };
@@ -574,6 +787,7 @@
       this._broadcast = null;
       this._session = null;
       this._provider = null;
+      this._edgeSync = null;
       this._initialized = false;
       this._reconnecting = false;
       return {
