@@ -1,0 +1,79 @@
+{
+  "engine": "TLV Payment Engine RC1",
+  "project_ref": "ddojquacsyqesrjhcvmn",
+  "registry_note": "schema_migrations does NOT track TLV steps; use fingerprints",
+  "updated_at": "2026-06-28",
+  "steps": [
+    {
+      "step": 0,
+      "version": null,
+      "file": "db/tlv_schema.sql",
+      "git_tracked": false,
+      "schema_migrations": false,
+      "db_fingerprint": "step0_tlv_schema",
+      "db_applied": true,
+      "classification": "db_only_uncommitted"
+    },
+    {
+      "step": 1,
+      "version": "20260628120000",
+      "file": "supabase/migrations/20260628120000_tlv_payment_phase2_rpc.sql",
+      "git_tracked": false,
+      "schema_migrations": false,
+      "db_fingerprint": "step1_handle_payment_webhook_success",
+      "db_applied": true,
+      "classification": "db_only_uncommitted"
+    },
+    {
+      "step": 2,
+      "version": "20260628130000",
+      "file": "supabase/migrations/20260628130000_tlv_payer_user_uuid.sql",
+      "git_tracked": false,
+      "schema_migrations": false,
+      "db_fingerprint": "step2_payer_user_uuid_column",
+      "db_applied": true,
+      "classification": "db_only_uncommitted"
+    },
+    {
+      "step": 3,
+      "version": "20260628140000",
+      "file": "supabase/migrations/20260628140000_tlv_create_tip_transaction_rpc.sql",
+      "git_tracked": false,
+      "schema_migrations": false,
+      "db_fingerprint": "step3_create_tip_transaction",
+      "db_applied": true,
+      "classification": "db_only_uncommitted"
+    },
+    {
+      "step": 4,
+      "version": "20260628150000",
+      "file": "supabase/migrations/20260628150000_tlv_payment_rls.sql",
+      "git_tracked": false,
+      "schema_migrations": false,
+      "db_fingerprint": "step4_rls_vw_owner_select",
+      "db_applied": true,
+      "classification": "db_only_uncommitted"
+    },
+    {
+      "step": 5,
+      "version": "20260628160000",
+      "file": "supabase/migrations/20260628160000_tlv_payment_chargeback_clawback.sql",
+      "git_tracked": true,
+      "git_commit": "d1547de",
+      "schema_migrations": false,
+      "db_fingerprint": "step5_payment_reversals_table",
+      "db_applied": true,
+      "classification": "git_and_db_registry_missing"
+    }
+  ],
+  "verify_scripts": {
+    "inventory": "scripts/sql/tlv-recovery-fingerprints-all.sql",
+    "rls_meta": "scripts/sql/tlv-staging-rls-meta.sql",
+    "suites": [
+      "scripts/test-tlv-payment-logic.mjs",
+      "scripts/test-tlv-create-tip-rpc-staging.mjs",
+      "scripts/test-tlv-payment-rls-staging.mjs",
+      "scripts/test-tlv-payment-chargeback-staging.mjs"
+    ]
+  }
+}
