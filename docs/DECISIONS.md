@@ -1,6 +1,6 @@
 # TASFUL 決定事項（Architecture Decisions）
 
-**最終更新:** 2026-06-27（AD-013 Business Directory サブスク掲載モデル）  
+**最終更新:** 2026-06-28（AD-014 Platform Vision · 条件達成型 Creator Economy）  
 **形式:** 決定 ID · 日付 · 状態 · 内容 · 根拠
 
 ---
@@ -249,6 +249,66 @@ TASFUL市場
 - Stripe Connect / 決済実装
 
 | **根拠** | [business-directory-subscription-model.md](./business-directory-subscription-model.md) · [business-directory-mvp-design.md](./business-directory-mvp-design.md) · [business-directory-data-model-design.md](./business-directory-data-model-design.md) · [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md) · [ROADMAP.md](./ROADMAP.md) §Business Directory |
+
+---
+
+## AD-014 — Platform Vision · 条件達成型 Creator Economy
+
+| 項目 | 内容 |
+| --- | --- |
+| **決定** | **Platform Vision** の根幹思想として **条件達成型 Creator Economy** を採用する |
+| **日付** | 2026-06-28 |
+| **状態** | **確定（方針）** — 制度設計正本済 · **実装未着手** |
+
+### 根幹思想
+
+**利益を生み出したクリエイターへ、業界最高水準の還元を行う。**
+
+ただし **還元率を先に決めるのではない**。
+
+**利益が成立する条件を先に設計**し、条件を満たしたクリエイターのみが高還元 · 限定特典 · 限定機能を受け取る。
+
+### 採用する制度
+
+| 制度 | 内容 |
+| --- | --- |
+| **Creator Program** | 配信者制度 — ランク · 還元 · Creator Score · 継続評価等 |
+| **Viewer Program** | 視聴者制度 — レベル · 応援 · ストリーク等 |
+| **条件達成型高還元** | Standard / Proven / Top Contributor — 数値は Ops データ後 |
+| **限定特典** | 条件達成者のみ — イベント · Incubator 等（段階解禁） |
+| **限定機能** | 条件達成者のみ — 延長ライブ · Lab 等（段階解禁） |
+
+### 設計の順序
+
+```text
+1. 利益が成立する条件を設計
+2. 条件達成を計測（Creator Score · 利益貢献度）
+3. 達成者に高還元 · 限定特典 · 限定機能を付与
+```
+
+**禁止:** 還元率をマーケティング用に先に固定宣言すること · 全クリエイター一律最高還元
+
+### 関連ドキュメント（正本）
+
+| ドキュメント | 役割 |
+| --- | --- |
+| [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) | ミッション · コアバリュー · 三本柱 |
+| [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) | Creator Program 詳細 |
+| [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) | Viewer Program 詳細 |
+| [MONETIZATION.md](./MONETIZATION.md) | 収益 · 再投資 · 条件還元 |
+| [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) | ライブ · 赤字禁止設計 |
+| [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md) | ブレスト採否整理 |
+
+### 既存 AD との関係
+
+| AD | 関係 |
+| --- | --- |
+| **AD-004** | TLV 専用 AI なし — Creator Lab 等は **TASFUL AI 入口** |
+| **AD-011** | 国内完成優先 — 制度設計は国内先行 |
+| **AD-012** | 視聴者 UI はシンプル · 複雑な分析は AI / Ops |
+| **AD-008** | TLV v1.0 **FROZEN** — 本 AD は **次世代 Platform Vision** |
+
+| **根拠** | [ROADMAP.md](./ROADMAP.md) § Platform Vision · [TODO.md](./TODO.md) § Live Platform Vision |
 
 ---
 
