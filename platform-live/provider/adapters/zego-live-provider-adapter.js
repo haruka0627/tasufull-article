@@ -16,6 +16,61 @@
   }
 
   const DEFAULT_TOKEN_PATH = "/api/tlv-zego-token";
+  const DEFAULT_PUBLISH_TIMEOUT_MS = 90000;
+
+  /** @param {unknown} err */
+  function formatSdkError(err) {
+    if (!err) return "unknown error";
+    if (typeof err === "string") return err;
+    if (err instanceof Error) return err.message || err.name;
+    if (typeof err === "object") {
+      const o = /** @type {{ message?: string, errorCode?: number, code?: number }} */ (err);
+      if (o.message && typeof o.message === "string") return o.message;
+      if (o.errorCode != null) return `ZEGO errorCode=${o.errorCode}`;
+      if (o.code != null) return `ZEGO code=${o.code}`;
+      try {
+        return JSON.stringify(err);
+      } catch {
+        return String(err);
+      }
+    }
+    return String(err);
+  }
+
+  /** @param {string} step @param {Record<string, unknown>} [meta] */
+  function diagStep(diag, step, meta = {}) {
+    if (!diag) return;
+    const entry = { step, at: new Date().toISOString(), t: Date.now(), ...meta };
+    diag.steps.push(entry);
+    if (typeof console !== "undefined" && console.info) {
+      console.info("[ZegoAdapterPublishDiag]", step, meta?.detail || meta?.error || "");
+    }
+  }
+
+  /** @param {string} event @param {unknown[]} payload */
+  function summarizeSdkPayload(event, payload) {
+    try {
+      if (event === "roomStateUpdate") {
+        return { roomId: payload[0], state: payload[1] };
+      }
+      if (event === "roomStreamUpdate") {
+        return {
+          roomId: payload[0],
+          updateType: payload[1],
+          streamCount: Array.isArray(payload[2]) ? payload[2].length : 0,
+        };
+      }
+      if (event === "publisherStateUpdate") {
+        return { streamId: payload[0], state: payload[1] };
+      }
+      if (event === "playerStateUpdate") {
+        return { streamId: payload[0], state: payload[1] };
+      }
+      return { argCount: payload.length };
+    } catch {
+      return { argCount: payload?.length || 0 };
+    }
+  }
 
   class ZegoLiveProviderAdapter extends Base {
     /**
@@ -42,6 +97,208 @@
       this._sessionCache = null;
       /** @private */
       this._disposed = false;
+      /** @private @type {{ steps: object[], sdkEvents: object[], errors: object[], engineWrapped: boolean, timeoutMs: number, lastStep: string|null, blockedAt: string|null }} */
+      this._publishDiag = {
+        steps: [],
+        sdkEvents: [],
+        errors: [],
+        engineWrapped: false,
+        timeoutMs: DEFAULT_PUBLISH_TIMEOUT_MS,
+        lastStep: null,
+        blockedAt: null,
+      };
+      /** @private @type {Map<string, Function>} */
+      this._engineRestore = new Map();
+    }
+
+    /** PoC / verify 用 · publish 診断スナップショット */
+    getPublishDiagnostics() {
+      const poc = this._poc;
+      const engine = poc?._engine || null;
+      return {
+        steps: this._publishDiag.steps.slice(),
+        sdkEvents: this._publishDiag.sdkEvents.slice(),
+        errors: this._publishDiag.errors.slice(),
+        lastStep: this._publishDiag.lastStep,
+        blockedAt: this._publishDiag.blockedAt,
+        timeoutMs: this._publishDiag.timeoutMs,
+        engineWrapped: this._publishDiag.engineWrapped,
+        pocState: poc?.state || null,
+        roomId: poc?._roomId || null,
+        userId: poc?._userId || null,
+        streamId: poc?._publishStreamId || null,
+        hasLocalStream: Boolean(poc?._localStream),
+        hasVideoContainer: Boolean(poc?._videoContainer),
+        enginePresent: Boolean(engine),
+        engineApis: engine
+          ? {
+              loginRoom: typeof engine.loginRoom === "function",
+              createZegoStream: typeof engine.createZegoStream === "function",
+              createStream: typeof engine.createStream === "function",
+              startPublishingStream: typeof engine.startPublishingStream === "function",
+            }
+          : null,
+      };
+    }
+
+    /** @private */
+    _resetPublishDiag(timeoutMs = DEFAULT_PUBLISH_TIMEOUT_MS) {
+      this._publishDiag = {
+        steps: [],
+        sdkEvents: [],
+        errors: [],
+        engineWrapped: false,
+        timeoutMs,
+        lastStep: null,
+        blockedAt: null,
+      };
+      this._restoreEnginePatches();
+    }
+
+    /** @private */
+    _restoreEnginePatches() {
+      const engine = this._poc?._engine;
+      if (!engine) {
+        this._engineRestore.clear();
+        return;
+      }
+      for (const [name, fn] of this._engineRestore.entries()) {
+        engine[name] = fn;
+      }
+      this._engineRestore.clear();
+      this._publishDiag.engineWrapped = false;
+    }
+
+    /** @private */
+    _wrapEngineMethod(engine, methodName, diag) {
+      if (!engine || typeof engine[methodName] !== "function") return false;
+      if (this._engineRestore.has(methodName)) return true;
+      const original = engine[methodName].bind(engine);
+      this._engineRestore.set(methodName, engine[methodName]);
+      engine[methodName] = async (...args) => {
+        const meta = { method: methodName };
+        if (methodName === "loginRoom") {
+          meta.roomId = String(args[0] || "");
+          meta.userId = args[2]?.userID || args[2]?.userId || null;
+        }
+        if (methodName === "startPublishingStream") {
+          meta.streamId = String(args[0] || "");
+        }
+        diagStep(diag, `${methodName}:start`, meta);
+        this._publishDiag.lastStep = `${methodName}:start`;
+        try {
+          const result = await original(...args);
+          diagStep(diag, `${methodName}:done`, {
+            ...meta,
+            resultType: typeof result,
+            resultIsFalse: result === false,
+          });
+          this._publishDiag.lastStep = `${methodName}:done`;
+          return result;
+        } catch (err) {
+          const message = formatSdkError(err);
+          diagStep(diag, `${methodName}:error`, { ...meta, error: message });
+          this._publishDiag.errors.push({ method: methodName, message, at: new Date().toISOString() });
+          this._publishDiag.blockedAt = `${methodName}:error`;
+          throw err;
+        }
+      };
+      return true;
+    }
+
+    /** @private */
+    _attachSdkEventListeners(engine, diag) {
+      if (!engine || typeof engine.on !== "function") return;
+      const events = [
+        "roomStateUpdate",
+        "roomStreamUpdate",
+        "publisherStateUpdate",
+        "playerStateUpdate",
+        "roomUserUpdate",
+        "roomOnlineUserCountUpdate",
+        "IMRecvBroadcastMessage",
+        "tokenWillExpire",
+      ];
+      for (const ev of events) {
+        try {
+          engine.on(ev, (...payload) => {
+            const entry = { event: ev, at: new Date().toISOString(), payloadSummary: summarizeSdkPayload(ev, payload) };
+            diag.sdkEvents.push(entry);
+            if (typeof console !== "undefined" && console.info) {
+              console.info("[ZegoAdapterSdkEvent]", ev, entry.payloadSummary);
+            }
+          });
+        } catch (_) {
+          /* noop */
+        }
+      }
+    }
+
+    /** @private */
+    _wrapEngineForPublishTrace() {
+      const engine = this._poc?._engine;
+      const diag = this._publishDiag;
+      if (!engine) {
+        diagStep(diag, "engine:missing");
+        return;
+      }
+      diagStep(diag, "engine:present", {
+        apis: {
+          loginRoom: typeof engine.loginRoom === "function",
+          createZegoStream: typeof engine.createZegoStream === "function",
+          createStream: typeof engine.createStream === "function",
+          startPublishingStream: typeof engine.startPublishingStream === "function",
+        },
+      });
+      this._attachSdkEventListeners(engine, diag);
+      const wrapped = ["loginRoom", "createZegoStream", "createStream", "startPublishingStream"].filter((m) =>
+        this._wrapEngineMethod(engine, m, diag),
+      );
+      diag.engineWrapped = wrapped.length > 0;
+      diagStep(diag, "engine:wrapped", { methods: wrapped });
+    }
+
+    /** @private */
+    async _startLiveWithDiagnostics(options, timeoutMs) {
+      this._wrapEngineForPublishTrace();
+      diagStep(this._publishDiag, "poc:startLive:begin", {
+        roomId: options.roomId,
+        userId: options.userId,
+        streamId: options.streamId || null,
+        hasVideoContainer: Boolean(options.videoContainer),
+      });
+      this._publishDiag.lastStep = "poc:startLive:begin";
+
+      let timer;
+      const timeoutPromise = new Promise((_, reject) => {
+        timer = setTimeout(() => {
+          const blocked = this._publishDiag.lastStep || "poc:startLive:unknown";
+          this._publishDiag.blockedAt = blocked;
+          reject(new Error(`startLive timeout after ${timeoutMs}ms at ${blocked}`));
+        }, timeoutMs);
+      });
+
+      try {
+        const result = await Promise.race([this._poc.startLive(options), timeoutPromise]);
+        clearTimeout(timer);
+        diagStep(this._publishDiag, "poc:startLive:done", {
+          ok: result?.ok !== false,
+          state: result?.state || this._poc?.state,
+          error: result?.error || null,
+        });
+        this._publishDiag.lastStep = "poc:startLive:done";
+        return result;
+      } catch (err) {
+        clearTimeout(timer);
+        const message = formatSdkError(err);
+        diagStep(this._publishDiag, "poc:startLive:fail", { error: message });
+        if (!this._publishDiag.blockedAt) {
+          this._publishDiag.blockedAt = this._publishDiag.lastStep || "poc:startLive:fail";
+        }
+        return { ok: false, error: message, diagnostics: this.getPublishDiagnostics() };
+      } finally {
+        this._restoreEnginePatches();
+      }
     }
 
     /** @returns {boolean} */
@@ -256,6 +513,13 @@
         return { ...tokenRes, providerId: this.providerId, adapter: true };
       }
 
+      this._resetPublishDiag(options.publishTimeoutMs || DEFAULT_PUBLISH_TIMEOUT_MS);
+      diagStep(this._publishDiag, "token:ok", {
+        source: tokenRes.source,
+        role: tokenRes.role || role,
+        tokenLen: tokenRes.token ? String(tokenRes.token).length : 0,
+      });
+
       if (BSIG && options.broadcastId) {
         this._emitBroadcastSignal(BSIG.BROADCAST_PROVIDER_STARTING, {
           surface,
@@ -264,25 +528,45 @@
         });
       }
 
-      const pocRes = await this._poc.startLive({
-        roomId,
-        userId,
-        userName: options.userName || userId,
-        token: tokenRes.token,
-        videoContainer: options.videoContainer,
-        streamId: options.streamId,
-      });
+      const publishStreamId =
+        options.streamId ? String(options.streamId).trim() : `${roomId}_${userId}_main`;
+
+      const pocRes = await this._startLiveWithDiagnostics(
+        {
+          roomId,
+          userId,
+          userName: options.userName || userId,
+          token: tokenRes.token,
+          videoContainer: options.videoContainer,
+          streamId: publishStreamId,
+        },
+        this._publishDiag.timeoutMs,
+      );
 
       if (!pocRes?.ok) {
-        this._emitError({ surface, roomId, message: pocRes?.error || "startLive failed" });
+        const diag = this.getPublishDiagnostics();
+        this._emitError({
+          surface,
+          roomId,
+          message: pocRes?.error || "startLive failed",
+          blockedAt: diag.blockedAt,
+          lastStep: diag.lastStep,
+        });
         if (BSIG && options.broadcastId) {
           this._emitBroadcastSignal(BSIG.BROADCAST_PROVIDER_ERROR, {
             surface,
             broadcastId: options.broadcastId,
             message: pocRes?.error,
+            blockedAt: diag.blockedAt,
           });
         }
-        return { ...(pocRes || { ok: false }), providerId: this.providerId, adapter: true };
+        return {
+          ...(pocRes || { ok: false }),
+          providerId: this.providerId,
+          adapter: true,
+          diagnostics: diag,
+          blockedAt: diag.blockedAt,
+        };
       }
 
       this._state = this._poc.state || "live";

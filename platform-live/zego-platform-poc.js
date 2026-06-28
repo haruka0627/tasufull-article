@@ -154,7 +154,11 @@
       broadcastId: form.broadcastId || `bc-${form.roomId}`,
     });
     if (!result.ok) {
-      setStatus(statusEl, result.error || result.hint || "host publish 失敗", "error");
+      const errText =
+        typeof result.error === "string"
+          ? result.error
+          : result.error?.message || result.blockedAt || JSON.stringify(result.error || {});
+      setStatus(statusEl, errText || result.hint || "host publish 失敗", "error");
       return;
     }
     setStatus(
@@ -327,6 +331,7 @@
   }
 
   function getDebugState() {
+    const provider = service?._provider;
     return {
       providerSignals: providerSignalLog.slice(),
       broadcastSignals: broadcastSignalLog.slice(),
@@ -334,6 +339,7 @@
       providerId: service?.providerId || null,
       stubFallback: service?.isStubFallback ?? null,
       usesAdapterPath: Boolean(service && service.providerId === "zego" && !service.isStubFallback),
+      publishDiagnostics: provider?.getPublishDiagnostics?.() || null,
     };
   }
 
