@@ -888,6 +888,22 @@ PostgREST  → authenticated → SELECT only（RLS 適用後）
 
 **現行 webhook:** PI succeeded/failed/canceled + **refund/dispute P0 追加済**（Edge deploy で有効化）。
 
+### 9.6 Production Readiness（開発フェーズ完了 · 2026-06-28）
+
+**状態:** 開発フェーズ **完了** → **Production Readiness Review 確定** · Production 変更 **未実施**
+
+**正本 Runbook:** [reports/tlv-payment-production-readiness.md](../reports/tlv-payment-production-readiness.md)
+
+| 成果物 | 内容 |
+| --- | --- |
+| Migration Runbook | Step 0〜5 適用順 · rollback · verification |
+| Deploy Runbook | Edge · webhook · RLS · PostgREST 順序 |
+| Production Smoke | PS-01〜05 自動 · PS-M01〜09 手動 |
+| Go/No-Go Checklist | Pre-release · Release day · Post-release 24h |
+| FinOps Runbook | payout 後 clawback · frozen · manual_finops |
+
+**Production Go/No-Go（現時点）:** **No-Go** — migration · RLS production · Edge deploy · Stripe webhook 未実施
+
 ---
 
 ## 10. Test Cases
@@ -1095,7 +1111,8 @@ invoice.paid
 
 | 日付 | 版 | 内容 |
 | --- | --- | --- |
-| 2026-06-28 | 1.6.5 | §9.5 TODO-06 設計完成（①〜⑩ · reports/tlv-payment-chargeback-clawback-design.md） |
+| 2026-06-28 | 1.7.0 | §9.6 Production Readiness Review 確定（reports/tlv-payment-production-readiness.md） |
+| 2026-06-28 | 1.6.6 | §9.5 TODO-06 実装完了 · staging検証済 |
 | 2026-06-28 | 1.6.3 | RLS migration staging 適用 · 30/30 RLS test PASS |
 | 2026-06-28 | 1.6.2 | §9.4 拡張 — admin= talk_is_admin · RPC privilege · PostgREST expose リスク |
 | 2026-06-28 | 1.6.1 | §9.4 Security / RLS 設計（TODO-07 · 未適用） |
