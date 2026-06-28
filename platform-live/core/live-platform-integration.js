@@ -4,6 +4,7 @@
  * Phase 4 P4-2 · useEdgeSync opt-in（デフォルト false）
  * Phase 4 P4-3 · Chat Gateway + joinLive set_watching（opt-in）
  * Phase 4 P4-4 · Recording service wire · candidate event · explicit start/stop
+ * Phase 4 P4-5 · MonitoringService wire · diagnostics feed · monitoring edge patch
  *
  * UI / Edge → LivePlatformIntegration → Broadcast / Viewer / Session → Provider → Adapter → SDK
  */
@@ -33,6 +34,7 @@
      *   monitoringEdgeClient?: object,
      *   chatGateway?: object,
      *   recordingService?: object,
+     *   monitoringService?: object,
      * }} [options]
      */
     constructor(options = {}) {
@@ -74,6 +76,18 @@
       this._recordingEdgeClient = null;
       /** @private @type {object|null} */
       this._recordingLastResult = null;
+      /** @private @type {object|null} */
+      this._monitoringService = options.monitoringService || null;
+      /** @private @type {object|null} */
+      this._injectedMonitoringService = options.monitoringService || null;
+      /** @private @type {object|null} */
+      this._monitoringEdgeClient = null;
+      /** @private @type {object|null} */
+      this._monitoringFeedSnapshot = null;
+      /** @private @type {string|null} */
+      this._monitoringState = null;
+      /** @private @type {object|null} */
+      this._monitoringLastResult = null;
       /** @private */
       this._provider = null;
       /** @private */
@@ -142,6 +156,11 @@
       return this._recordingService;
     }
 
+    /** @returns {object|null} */
+    get monitoringService() {
+      return this._monitoringService;
+    }
+
     /** @returns {string} raw provider state */
     get providerState() {
       return this._provider?.state || "idle";
@@ -180,6 +199,10 @@
         recordingServiceReady: Boolean(this._recordingService),
         recordingState: this._recordingService?.state || null,
         recordingLastResult: this._recordingLastResult ? { ...this._recordingLastResult } : null,
+        monitoringServiceReady: Boolean(this._monitoringService),
+        monitoringState: this._monitoringState,
+        monitoringLastResult: this._monitoringLastResult ? { ...this._monitoringLastResult } : null,
+        monitoringFeed: this._monitoringFeedSnapshot ? { ...this._monitoringFeedSnapshot } : null,
       };
       if (this._provider?.getPublishDiagnostics) {
         extra.publishDiagnostics = this._provider.getPublishDiagnostics();
@@ -583,6 +606,166 @@
       }
     }
 
+    /** @private */
+    _setupMonitoringService(options = {}) {
+      if (options.monitoringService) {
+        this._injectedMonitoringService = options.monitoringService;
+        this._monitoringService = options.monitoringService;
+        return;
+      }
+      if (this._injectedMonitoringService) {
+        this._monitoringService = this._injectedMonitoringService;
+        return;
+      }
+
+      const MonitoringService = global.TasuLivePlatformMonitoringService;
+      if (!MonitoringService) return;
+
+      this._monitoringService = new MonitoringService();
+      this._monitoringService.wire({
+        sessionManager: this._session,
+        broadcastService: this._broadcast,
+        viewerService: this._viewer,
+        chatGateway: this._chatGateway,
+        recordingService: this._recordingService,
+        provider: this._provider,
+      });
+    }
+
+    /** @private */
+    _getMonitoringEdgeClient() {
+      if (!this._useEdgeSync) return null;
+      if (this._monitoringEdgeClient) return this._monitoringEdgeClient;
+      const injected = this._edgeClientOverrides?.monitoring;
+      if (injected) {
+        this._monitoringEdgeClient = injected;
+        return injected;
+      }
+      const MonitoringEdgeClient = global.TasuLivePlatformMonitoringEdgeClient;
+      if (!MonitoringEdgeClient) return null;
+      this._monitoringEdgeClient = new MonitoringEdgeClient({ baseUrl: this._edgeBaseUrl || undefined });
+      return this._monitoringEdgeClient;
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    _monitoringPatchContext(ctx) {
+      const RS = global.PLATFORM_LIVE_RECORDING_STATES || global.TasuLivePlatformRecordingStates;
+      const BS = global.PLATFORM_LIVE_BROADCAST_STATES || global.TasuLivePlatformBroadcastStates;
+      const SESSION_STATES = global.PLATFORM_LIVE_SESSION_STATES;
+      const sessionActive = ctx.sessionActive != null
+        ? ctx.sessionActive
+        : [
+            SESSION_STATES?.LIVE,
+            SESSION_STATES?.CONNECTED,
+            SESSION_STATES?.RECONNECTED,
+            SESSION_STATES?.RECONNECTING,
+          ].filter(Boolean).includes(this.sessionState);
+      const broadcastLive = ctx.broadcastLive != null
+        ? ctx.broadcastLive
+        : this.broadcastState === BS?.LIVE;
+      return {
+        surface: String(ctx.surface || this._surface).trim().toLowerCase(),
+        broadcastId: String(ctx.broadcastId || this._broadcast?.broadcast?.id || "").trim() || null,
+        roomId: ctx.roomId ? String(ctx.roomId).trim() : this._broadcast?.broadcast?.roomId || null,
+        sessionId: ctx.sessionId || this._session?.session?.id || this._session?.session?.sessionId || null,
+        streamId: ctx.streamId || null,
+        broadcastLive,
+        sessionActive,
+        recordingActive: ctx.recordingActive != null
+          ? ctx.recordingActive
+          : this._recordingService?.state === RS?.RECORDING,
+        providerState: ctx.providerState || this.canonicalProviderState,
+      };
+    }
+
+    /** @private @param {string} [reason] */
+    async _feedMonitoringDiagnostics(reason = "sync") {
+      if (!this._monitoringService) return null;
+      const surface = this._surface;
+      try {
+        const health = await this._monitoringService.getHealth({ surface });
+        const metrics = await this._monitoringService.getMetrics({ surface });
+        const feed = {
+          reason,
+          health: health?.health || null,
+          healthy: health?.healthy,
+          metrics: metrics?.metrics || null,
+          services: health?.services || null,
+          providerStatus: health?.providerStatus || null,
+        };
+        this._monitoringFeedSnapshot = feed;
+        this._monitoringState = feed.health;
+        this._diagnostics?.recordMonitoring?.("feed", feed);
+        return feed;
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordMonitoring?.("failed", { op: "feed", error: message, reason });
+        return { ok: true, partial: true, error: message };
+      }
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    async _runMonitoringEdgePatch(ctx) {
+      if (!this._useEdgeSync) {
+        this._diagnostics?.recordMonitoring?.("skipped", {
+          op: "patch",
+          reason: "useEdgeSync_disabled",
+          surface: ctx.surface || this._surface,
+        });
+        return null;
+      }
+
+      const client = this._getMonitoringEdgeClient();
+      const patchCtx = this._monitoringPatchContext(ctx);
+      if (!client || typeof client.patchLive !== "function") {
+        this._diagnostics?.recordMonitoring?.("failed", {
+          op: "patch",
+          error: "monitoring edge client missing",
+          ...patchCtx,
+        });
+        const res = { ok: true, partial: true, noop: true, reason: "client_missing" };
+        this._monitoringLastResult = res;
+        return res;
+      }
+
+      this._diagnostics?.recordMonitoring?.("attempted", { op: "patch", ...patchCtx });
+      try {
+        const patchRes = await client.patchLive(patchCtx);
+        const failed = patchRes?.ok === false;
+        this._diagnostics?.recordMonitoring?.(failed ? "failed" : "succeeded", {
+          op: "patch",
+          partial: failed,
+          ...patchCtx,
+        });
+        this._diagnostics?.recordLifecycle("monitoring:patch", {
+          partial: failed,
+          broadcastLive: patchCtx.broadcastLive,
+          sessionActive: patchCtx.sessionActive,
+        });
+        const result = failed
+          ? { ok: true, partial: true, ...patchRes }
+          : { ok: true, ...patchRes };
+        this._monitoringLastResult = result;
+        return result;
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordMonitoring?.("failed", { op: "patch", error: message, ...patchCtx });
+        const result = { ok: true, partial: true, edgeSyncThrew: true, error: message };
+        this._monitoringLastResult = result;
+        return result;
+      }
+    }
+
+    /** @private @param {Record<string, unknown>} ctx @param {{ patch?: boolean }} [options] */
+    async _syncMonitoring(ctx, options = {}) {
+      const feed = await this._feedMonitoringDiagnostics(String(ctx.reason || "sync"));
+      let monitoringPatch = null;
+      if (options.patch !== false && this._useEdgeSync) {
+        monitoringPatch = await this._runMonitoringEdgePatch(ctx);
+      }
+      return { feed, monitoringPatch };
+    }
+
     /** @private @param {Record<string, unknown>} ctx */
     _edgeSyncContext(ctx) {
       return {
@@ -664,6 +847,7 @@
      *   monitoringEdgeClient?: object,
      *   chatGateway?: object,
      *   recordingService?: object,
+     *   monitoringService?: object,
      * }} [options]
      */
     async initialize(options = {}) {
@@ -679,6 +863,7 @@
       if (options.monitoringEdgeClient) this._edgeClientOverrides.monitoring = options.monitoringEdgeClient;
       if (options.chatGateway) this._injectedChatGateway = options.chatGateway;
       if (options.recordingService) this._injectedRecordingService = options.recordingService;
+      if (options.monitoringService) this._injectedMonitoringService = options.monitoringService;
 
       this._createStack();
       this._setupEdgeSync(options);
@@ -700,6 +885,7 @@
       this._attachProviderToStack();
       this._setupChatGateway(options);
       this._setupRecordingService(options);
+      this._setupMonitoringService(options);
       this._wireTelemetry();
       this._initialized = true;
       this._diagnostics?.recordLifecycle("initialize", {
@@ -708,6 +894,8 @@
         canonicalState: this.canonicalProviderState,
         useEdgeSync: this.useEdgeSync,
       });
+
+      await this._feedMonitoringDiagnostics("initialize");
 
       return {
         ...(initRes && typeof initRes === "object" ? initRes : { ok: true }),
@@ -806,6 +994,14 @@
         streamId: options.streamId,
       });
 
+      const monitoringSync = await this._syncMonitoring({
+        surface,
+        broadcastId,
+        roomId,
+        streamId: options.streamId,
+        reason: "publish:success",
+      });
+
       return {
         ...sr,
         sessionState: this.sessionState,
@@ -813,6 +1009,7 @@
         providerState: this.providerState,
         edgeSync: edgeSyncResult,
         recordingCandidate,
+        monitoringPatch: monitoringSync?.monitoringPatch || null,
         diagnostics: this.getDiagnostics(),
       };
     }
@@ -888,10 +1085,20 @@
         });
       }
 
+      const monitoringSync = await this._syncMonitoring({
+        surface,
+        broadcastId,
+        roomId,
+        reason: "publish:stop",
+        broadcastLive: false,
+        sessionActive: this.sessionState !== (global.PLATFORM_LIVE_SESSION_STATES?.IDLE || "IDLE"),
+      });
+
       return {
         ...res,
         canonicalProviderState: this.canonicalProviderState,
         edgeSync: edgeSyncResult,
+        monitoringPatch: monitoringSync?.monitoringPatch || null,
         diagnostics: this.getDiagnostics(),
       };
     }
@@ -934,6 +1141,8 @@
           broadcastLive: this.broadcastState === (global.PLATFORM_LIVE_BROADCAST_STATES?.LIVE || "live"),
         });
       }
+
+      await this._feedMonitoringDiagnostics("reconnect:done");
 
       return {
         ...(sr && typeof sr === "object" ? sr : { ok: true }),
@@ -1225,6 +1434,55 @@
       return result;
     }
 
+    /**
+     * @param {{ surface?: string }} [options]
+     */
+    async getMonitoringHealth(options = {}) {
+      this._ensureReady();
+      if (!this._monitoringService) {
+        return { ok: false, error: "Monitoring service が未ロードです", diagnostics: this.getDiagnostics() };
+      }
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      const res = await this._monitoringService.getHealth({ surface });
+      await this._feedMonitoringDiagnostics("getMonitoringHealth");
+      return { ...res, diagnostics: this.getDiagnostics() };
+    }
+
+    /**
+     * @param {{ surface?: string }} [options]
+     */
+    async getMonitoringMetrics(options = {}) {
+      this._ensureReady();
+      if (!this._monitoringService) {
+        return { ok: false, error: "Monitoring service が未ロードです", diagnostics: this.getDiagnostics() };
+      }
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      const res = await this._monitoringService.getMetrics({ surface });
+      await this._feedMonitoringDiagnostics("getMonitoringMetrics");
+      return { ...res, diagnostics: this.getDiagnostics() };
+    }
+
+    /**
+     * Integration smoke variant — MonitoringService.runSmoke delegate
+     * @param {{ surface?: string, failAtStep?: string }} [options]
+     */
+    async runMonitoringSmoke(options = {}) {
+      this._ensureReady();
+      if (!this._monitoringService) {
+        return { ok: false, error: "Monitoring service が未ロードです", diagnostics: this.getDiagnostics() };
+      }
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      this._diagnostics?.recordMonitoring?.("attempted", { op: "smoke", surface });
+      const res = await this._monitoringService.runSmoke({ surface, failAtStep: options.failAtStep });
+      this._diagnostics?.recordMonitoring?.(res?.ok ? "succeeded" : "failed", {
+        op: "smoke",
+        surface,
+        failedStep: res?.smoke?.failedStep || null,
+      });
+      await this._feedMonitoringDiagnostics("runMonitoringSmoke");
+      return { ...res, diagnostics: this.getDiagnostics() };
+    }
+
     getSessionSnapshot() {
       return {
         state: this.sessionState,
@@ -1239,6 +1497,8 @@
         chatGatewayReady: Boolean(this._chatGateway),
         recordingServiceReady: Boolean(this._recordingService),
         recordingState: this._recordingService?.state || null,
+        monitoringServiceReady: Boolean(this._monitoringService),
+        monitoringState: this._monitoringState,
         status: this._session?.getStatus?.() || null,
         diagnostics: this.getDiagnostics(),
       };
@@ -1277,6 +1537,7 @@
       if (this._broadcast) await this._broadcast.dispose?.();
       if (this._session) await this._session.dispose?.();
       if (this._recordingService?.dispose) await this._recordingService.dispose();
+      if (this._monitoringService?.dispose) await this._monitoringService.dispose();
       if (this._provider) await this._provider.dispose?.();
       this._viewer = null;
       this._broadcast = null;
@@ -1289,6 +1550,11 @@
       this._recordingService = null;
       this._recordingEdgeClient = null;
       this._recordingLastResult = null;
+      this._monitoringService = null;
+      this._monitoringEdgeClient = null;
+      this._monitoringFeedSnapshot = null;
+      this._monitoringState = null;
+      this._monitoringLastResult = null;
       this._initialized = false;
       this._reconnecting = false;
       return {
