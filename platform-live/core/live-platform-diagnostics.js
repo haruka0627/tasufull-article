@@ -17,6 +17,8 @@
       this._viewerEvents = [];
       /** @private @type {{ event: string, payload: unknown, at: string }[]} */
       this._sessionEvents = [];
+      /** @private @type {{ phase: string, payload: unknown, at: string }[]} */
+      this._edgeSyncEvents = [];
     }
 
     /** @private */
@@ -47,6 +49,14 @@
       return this._push(this._timeline, "lifecycle", name, payload);
     }
 
+    /**
+     * @param {"attempted"|"skipped"|"succeeded"|"failed"} phase
+     * @param {Record<string, unknown>} [payload]
+     */
+    recordEdgeSync(phase, payload = {}) {
+      return this._push(this._edgeSyncEvents, "edgeSync", phase, payload);
+    }
+
     snapshot(extra = {}) {
       return {
         timeline: this._timeline.slice(),
@@ -54,6 +64,7 @@
         broadcastSignals: this._broadcastSignals.slice(),
         viewerEvents: this._viewerEvents.slice(),
         sessionEvents: this._sessionEvents.slice(),
+        edgeSyncEvents: this._edgeSyncEvents.slice(),
         ...extra,
       };
     }
@@ -64,6 +75,7 @@
       this._broadcastSignals = [];
       this._viewerEvents = [];
       this._sessionEvents = [];
+      this._edgeSyncEvents = [];
     }
   }
 

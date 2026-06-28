@@ -25,7 +25,20 @@
     /** @private */
     async _post(body) {
       if (this._localService) return this._invokeLocal(body);
-      if (!this._baseUrl) return { ok: false, error: "baseUrl または localService が必要です" };
+      if (!this._baseUrl) {
+        const action = String(body.action || "").toLowerCase();
+        if (action === "set_live") {
+          return {
+            ok: true,
+            noop: true,
+            stub: true,
+            broadcastLive: body.live !== false,
+            surface: body.surface,
+            broadcastId: body.broadcastId,
+          };
+        }
+        return { ok: false, error: "baseUrl または localService が必要です" };
+      }
 
       const url = `${this._baseUrl}${DEFAULT_PATH}`;
       const headers = { "Content-Type": "application/json" };
@@ -72,6 +85,14 @@
           return { ok: true, ccu: svc.getCcu({ surface, broadcastId: body.broadcastId }) };
         case "kick":
           return svc.kickViewer({ surface, userId, reason: body.reason });
+        case "set_live":
+          return {
+            ok: true,
+            noop: true,
+            broadcastLive: body.live !== false,
+            surface,
+            broadcastId: body.broadcastId,
+          };
         default:
           return { ok: false, error: `未知の action: ${action}` };
       }
@@ -107,6 +128,16 @@
 
     kick(params) {
       return this._post({ action: "kick", ...params });
+    }
+
+    /** @param {object} params */
+    setLive(params) {
+      return this._post({ action: "set_live", live: true, ...params });
+    }
+
+    /** @param {object} params */
+    clearLive(params) {
+      return this._post({ action: "set_live", live: false, ...params });
     }
   }
 

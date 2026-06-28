@@ -25,7 +25,21 @@
     /** @private */
     async _post(body) {
       if (this._localService) return this._invokeLocal(body);
-      if (!this._baseUrl) return { ok: false, error: "baseUrl または localService が必要です" };
+      if (!this._baseUrl) {
+        const action = String(body.action || "").toLowerCase();
+        if (action === "patch") {
+          return {
+            ok: true,
+            noop: true,
+            stub: true,
+            surface: body.surface,
+            broadcastLive: body.broadcastLive,
+            sessionActive: body.sessionActive,
+            providerState: body.providerState,
+          };
+        }
+        return { ok: false, error: "baseUrl または localService が必要です" };
+      }
 
       const url = `${this._baseUrl}${DEFAULT_PATH}`;
       const headers = { "Content-Type": "application/json" };
@@ -65,6 +79,17 @@
           return svc.getProviderStatus({ surface });
         case "smoke":
           return svc.runSmoke({ surface, failAtStep: body.failAtStep });
+        case "patch":
+          return {
+            ok: true,
+            noop: true,
+            stub: true,
+            surface,
+            broadcastLive: body.broadcastLive,
+            sessionActive: body.sessionActive,
+            recordingActive: body.recordingActive,
+            providerState: body.providerState,
+          };
         default:
           return { ok: false, error: `未知の action: ${action}` };
       }
@@ -88,6 +113,24 @@
 
     smoke(params) {
       return this._post({ action: "smoke", ...params });
+    }
+
+    /**
+     * P4-1 · monitoring edge patch adapter
+     * @param {object} params
+     */
+    patchLive(params) {
+      return this._post({
+        action: "patch",
+        surface: params.surface,
+        broadcastLive: params.broadcastLive,
+        sessionActive: params.sessionActive,
+        recordingActive: params.recordingActive,
+        providerStatus: params.providerState || params.providerStatus,
+        broadcastId: params.broadcastId,
+        sessionId: params.sessionId,
+        streamId: params.streamId,
+      });
     }
   }
 
