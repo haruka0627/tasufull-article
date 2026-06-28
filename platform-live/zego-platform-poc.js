@@ -1,8 +1,8 @@
 /**
- * Platform Live ZEGO PoC — UI（TasuLivePlatformService 経由のみ · Adapter 経由）
+ * Platform Live ZEGO PoC — UI（TasuLivePlatformIntegration 経由 · Phase 3）
  *
- * Platform PoC → LivePlatformService → createPlatformLiveProvider("zego")
- *   → ZegoLiveProviderAdapter → TlvZegoLiveProvider → ZEGO SDK
+ * Platform PoC → LivePlatformIntegration → Broadcast / Viewer / Session
+ *   → createPlatformLiveProvider("zego") → ZegoLiveProviderAdapter → TlvZegoLiveProvider → ZEGO SDK
  */
 (function (global) {
   "use strict";
@@ -20,7 +20,7 @@
   const SURFACE = "platform";
   const SESSION_EVENTS = global.PLATFORM_LIVE_SESSION_EVENTS || global.TasuLivePlatformSessionEvents;
 
-  /** @type {import('./core/live-platform-service.js').TasuLivePlatformService|null} */
+  /** @type {import('./core/live-platform-integration.js').TasuLivePlatformIntegration|null} */
   let service = null;
 
   /** @type {{ signal: string, payload: unknown, at: string }[]} */
@@ -55,7 +55,12 @@
     const providerEl = $("[data-platform-provider-state]", root);
     const snap = service.getSessionSnapshot?.() || {};
     if (stateEl) stateEl.textContent = snap.state || service.getSessionState?.() || "—";
-    if (providerEl) providerEl.textContent = snap.providerState || service.state || "—";
+    if (providerEl) {
+      providerEl.textContent =
+        snap.canonicalProviderState || snap.providerState || service.canonicalProviderState || service.state || "—";
+    }
+    const broadcastEl = $("[data-platform-broadcast-state]", root);
+    if (broadcastEl) broadcastEl.textContent = snap.broadcastState || service.broadcastState || "—";
     if (eventEl) {
       const le = snap.lastEvent;
       eventEl.textContent = le ? `${le.event} @ ${le.at}` : "—";
@@ -84,7 +89,7 @@
   async function handleInitialize(root, statusEl) {
     setStatus(statusEl, "initialize 中…", "pending");
     try {
-      service = new global.TasuLivePlatformService();
+      service = new global.TasuLivePlatformIntegration();
       const result = await service.initialize({
         surface: SURFACE,
         providerId: "zego",
@@ -99,7 +104,7 @@
       bindProviderTelemetry();
       setStatus(
         statusEl,
-        `initialize 成功 · provider=${service.providerId} · adapter=${!service.isStubFallback} · session=${service.getSessionState()}`,
+        `initialize 成功 · provider=${service.providerId} · adapter=${!service.isStubFallback} · session=${service.getSessionState()} · canonical=${service.canonicalProviderState}`,
         "ok",
       );
       refreshSessionPanel(root);
@@ -247,7 +252,7 @@
         <header class="live-zego-poc__head">
           <p class="live-zego-poc__badge">Platform PoC · 非本番 · TLV UI 未接続</p>
           <h1 class="live-zego-poc__title">Platform ZEGO Integration PoC</h1>
-          <p class="live-zego-poc__sub">UI → LivePlatformService → createPlatformLiveProvider("zego") → Adapter → TLV Provider → SDK</p>
+          <p class="live-zego-poc__sub">UI → LivePlatformIntegration → Broadcast / Viewer / Session → Adapter → TLV Provider → SDK</p>
         </header>
 
         <section class="live-zego-poc__panel">
@@ -294,6 +299,7 @@
           <div class="live-zego-poc__session" aria-live="polite">
             <p><strong>Session State:</strong> <span data-platform-session-state>—</span></p>
             <p><strong>Provider State:</strong> <span data-platform-provider-state>—</span></p>
+            <p><strong>Broadcast State:</strong> <span data-platform-broadcast-state>—</span></p>
             <p><strong>Last Event:</strong> <span data-platform-session-event>—</span></p>
           </div>
         </section>
@@ -331,15 +337,18 @@
   }
 
   function getDebugState() {
-    const provider = service?._provider;
+    const provider = service?.provider;
     return {
       providerSignals: providerSignalLog.slice(),
       broadcastSignals: broadcastSignalLog.slice(),
       sessionSnapshot: service?.getSessionSnapshot?.() || null,
+      integrationDiagnostics: service?.getDiagnostics?.() || null,
       providerId: service?.providerId || null,
       stubFallback: service?.isStubFallback ?? null,
       usesAdapterPath: Boolean(service && service.providerId === "zego" && !service.isStubFallback),
+      usesIntegrationPath: Boolean(service && global.TasuLivePlatformIntegration && service instanceof global.TasuLivePlatformIntegration),
       publishDiagnostics: provider?.getPublishDiagnostics?.() || null,
+      providerIntegrationDiagnostics: provider?.getIntegrationDiagnostics?.() || null,
     };
   }
 

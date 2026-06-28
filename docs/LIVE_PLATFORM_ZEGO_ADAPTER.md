@@ -314,7 +314,21 @@ Browser B (390)  — Viewer — play
 | --- | --- |
 | **Phase 0 Adapter Design** | **Go** |
 | **Phase 1 Adapter 実装** | **Go**（2026-06-28 · 77 tests PASS） |
-| **Phase 2 E2E Go** | **No-Go**（`.env` ZEGO + Platform PoC ページ前） |
+| **Phase 2 E2E** | **Go**（Token · host publish · audience play） |
+| **Phase 2.5 Browser Play** | **Go**（Permissions-Policy fix · d15b70b） |
+| **Phase 3 Platform Live Core 統合** | **Go**（2026-06-29 · Integration + 42 unit · E2E · Browser Play PASS） |
+
+**Phase 3 レポート:** [live-platform-zego-phase3-integration.md](../reports/live-platform-zego-phase3-integration.md)
+
+**Phase 3 追加ファイル:**
+
+| ファイル | 内容 |
+| --- | --- |
+| `platform-live/core/live-platform-integration.js` | Session · Broadcast · Viewer · Provider 正式配線 |
+| `platform-live/core/live-provider-state-map.js` | canonical provider state |
+| `platform-live/core/live-platform-diagnostics.js` | event timeline |
+| `platform-live/provider/zego-platform-error-map.js` | ZEGO → Platform error · retry |
+| `scripts/test-platform-live-zego-integration-phase3.mjs` | Phase 3 unit + regression |
 
 ---
 

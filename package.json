@@ -73,6 +73,7 @@
     "test:platform-live-zego-adapter-phase1": "node scripts/test-platform-live-zego-adapter-phase1.mjs",
     "verify:platform-live-zego-integration-e2e": "node scripts/verify-platform-live-zego-integration-e2e.mjs",
     "verify:platform-live-zego-browser-play-check": "node scripts/verify-platform-live-zego-browser-play-check.mjs",
+    "test:platform-live-zego-integration-phase3": "node scripts/test-platform-live-zego-integration-phase3.mjs",
     "verify:live-p7": "node scripts/verify-live-p7-notify-counts.mjs",
     "verify:live-youtube-p2": "node scripts/verify-live-youtube-p2-edge.mjs",
     "verify:live-youtube-p3": "node scripts/verify-live-youtube-p3-upload.mjs",

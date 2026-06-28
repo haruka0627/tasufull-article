@@ -17,6 +17,10 @@
 
   const DEFAULT_TOKEN_PATH = "/api/tlv-zego-token";
   const DEFAULT_PUBLISH_TIMEOUT_MS = 90000;
+  const mapZegoError =
+    global.TasuLivePlatformZegoErrorMap?.mapZegoError ||
+    ((err, ctx) => ({ ok: false, message: formatSdkError(err), code: "PROVIDER_ERROR", ...ctx }));
+  const mapProviderState = global.TasuLivePlatformProviderStateMap?.mapProviderState;
 
   /** @param {unknown} err */
   function formatSdkError(err) {
@@ -109,6 +113,30 @@
       };
       /** @private @type {Map<string, Function>} */
       this._engineRestore = new Map();
+      /** @private */
+      this._reconnecting = false;
+      /** @private @type {{ events: object[] }} */
+      this._viewerDiag = { events: [] };
+    }
+
+    /** Platform canonical provider state */
+    getCanonicalProviderState() {
+      return mapProviderState
+        ? mapProviderState(this.state, { reconnecting: this._reconnecting, role: this._role })
+        : this.state;
+    }
+
+    /** Phase 3 · provider / publish / viewer 統合診断 */
+    getIntegrationDiagnostics() {
+      return {
+        canonicalState: this.getCanonicalProviderState(),
+        rawState: this.state,
+        reconnecting: this._reconnecting,
+        role: this._role,
+        surface: this._surface,
+        viewerEvents: this._viewerDiag.events.slice(),
+        publish: this.getPublishDiagnostics(),
+      };
     }
 
     /** PoC / verify 用 · publish 診断スナップショット */
@@ -224,6 +252,20 @@
           engine.on(ev, (...payload) => {
             const entry = { event: ev, at: new Date().toISOString(), payloadSummary: summarizeSdkPayload(ev, payload) };
             diag.sdkEvents.push(entry);
+            if (ev === "roomStateUpdate") {
+              const roomState = payload[1];
+              const surface = this._surface;
+              const roomId = String(payload[0] || this._sessionCache?.roomId || "");
+              if (roomState === "DISCONNECTED") {
+                this._reconnecting = true;
+                this._emitReconnecting({ surface, roomId, reason: "room_disconnected" });
+              } else if (roomState === "CONNECTED") {
+                if (this._reconnecting) {
+                  this._reconnecting = false;
+                  this._emitReconnected({ surface, roomId });
+                }
+              }
+            }
             if (typeof console !== "undefined" && console.info) {
               console.info("[ZegoAdapterSdkEvent]", ev, entry.payloadSummary);
             }
@@ -295,7 +337,15 @@
         if (!this._publishDiag.blockedAt) {
           this._publishDiag.blockedAt = this._publishDiag.lastStep || "poc:startLive:fail";
         }
-        return { ok: false, error: message, diagnostics: this.getPublishDiagnostics() };
+        const mapped = mapZegoError(err, { blockedAt: this._publishDiag.blockedAt, method: "startLive" });
+        return {
+          ok: false,
+          error: mapped.message || message,
+          code: mapped.code,
+          recoverable: mapped.recoverable,
+          retryAfterMs: mapped.retryAfterMs,
+          diagnostics: this.getPublishDiagnostics(),
+        };
       } finally {
         this._restoreEnginePatches();
       }
@@ -509,8 +559,9 @@
         manualToken: options.manualToken,
       });
       if (!tokenRes.ok) {
-        this._emitError({ surface, roomId, message: tokenRes.error });
-        return { ...tokenRes, providerId: this.providerId, adapter: true };
+        const mapped = mapZegoError(tokenRes.error, { method: "fetchToken" });
+        this._emitError({ surface, roomId, message: mapped.message || tokenRes.error, code: mapped.code });
+        return { ...tokenRes, ...mapped, providerId: this.providerId, adapter: true };
       }
 
       this._resetPublishDiag(options.publishTimeoutMs || DEFAULT_PUBLISH_TIMEOUT_MS);
@@ -545,10 +596,12 @@
 
       if (!pocRes?.ok) {
         const diag = this.getPublishDiagnostics();
+        const mapped = mapZegoError(pocRes?.error, { blockedAt: diag.blockedAt, method: "startLive" });
         this._emitError({
           surface,
           roomId,
-          message: pocRes?.error || "startLive failed",
+          message: mapped.message || pocRes?.error || "startLive failed",
+          code: mapped.code,
           blockedAt: diag.blockedAt,
           lastStep: diag.lastStep,
         });
@@ -562,6 +615,7 @@
         }
         return {
           ...(pocRes || { ok: false }),
+          ...mapped,
           providerId: this.providerId,
           adapter: true,
           diagnostics: diag,
@@ -607,8 +661,9 @@
         manualToken: options.manualToken,
       });
       if (!tokenRes.ok) {
-        this._emitError({ surface, roomId, message: tokenRes.error });
-        return { ...tokenRes, providerId: this.providerId, adapter: true };
+        const mapped = mapZegoError(tokenRes.error, { method: "fetchToken" });
+        this._emitError({ surface, roomId, message: mapped.message || tokenRes.error, code: mapped.code });
+        return { ...tokenRes, ...mapped, providerId: this.providerId, adapter: true };
       }
 
       const pocRes = await this._poc.joinLive({
@@ -619,9 +674,16 @@
         videoContainer: options.videoContainer,
       });
 
+      this._viewerDiag.events.push({
+        step: "joinLive",
+        at: new Date().toISOString(),
+        ok: pocRes?.ok !== false,
+      });
+
       if (!pocRes?.ok) {
-        this._emitError({ surface, roomId, message: pocRes?.error || "joinLive failed" });
-        return { ...(pocRes || { ok: false }), providerId: this.providerId, adapter: true };
+        const mapped = mapZegoError(pocRes?.error, { method: "joinLive" });
+        this._emitError({ surface, roomId, message: mapped.message || pocRes?.error || "joinLive failed", code: mapped.code });
+        return { ...(pocRes || { ok: false }), ...mapped, providerId: this.providerId, adapter: true };
       }
 
       this._state = this._poc.state || "watching";
@@ -694,17 +756,24 @@
       const surface = cache.surface || this._surface;
 
       this._emitReconnecting({ surface, roomId: cache.roomId });
+      this._reconnecting = true;
 
       if (role === "host") {
         await this._poc.endLive();
         const res = await this._rtcPublish({ ...cache, surface }, "host");
-        if (res.ok) this._emitReconnected({ surface, roomId: cache.roomId });
+        if (res.ok) {
+          this._reconnecting = false;
+          this._emitReconnected({ surface, roomId: cache.roomId });
+        }
         return res;
       }
 
       await this._poc.leaveLive();
       const res = await this._rtcSubscribe({ ...cache, surface });
-      if (res.ok) this._emitReconnected({ surface, roomId: cache.roomId });
+      if (res.ok) {
+        this._reconnecting = false;
+        this._emitReconnected({ surface, roomId: cache.roomId });
+      }
       return res;
     }
 

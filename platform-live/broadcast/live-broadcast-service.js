@@ -237,6 +237,11 @@
           roomId: this._broadcast.roomId,
           surface: this._broadcast.surface,
           userId: options.userId || this._broadcast.hostUserId,
+          userName: options.userName,
+          videoContainer: options.videoContainer,
+          manualToken: options.manualToken,
+          streamId: options.streamId,
+          publishTimeoutMs: options.publishTimeoutMs,
         });
         if (pr?.ok === false) {
           this._transition(STATES.FAILED);
