@@ -13,6 +13,7 @@ git status --short
 ## 必ず読む
 
 - `docs/DECISIONS.md`
+- `.cursor/BUGBOT.md`（PR/Bugbot 向けミラー — 本コマンドと整合）
 - `.cursor/rules/`（変更領域の `pkg-*.mdc`, `git.mdc`, `qa.mdc`）
 - `.cursor/agents/`（該当 Subagent の担当境界）
 

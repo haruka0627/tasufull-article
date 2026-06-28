@@ -20,6 +20,7 @@
 ## 参照
 
 - `.cursor/commands/review.md`
+- `.cursor/BUGBOT.md`（PR/Bugbot 向けレビュー方針）
 - `docs/KNOWN_ISSUES.md`
 
 ## 出力
