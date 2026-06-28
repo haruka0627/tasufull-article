@@ -69,7 +69,13 @@
 
       switch (action) {
         case "send_message":
-          return gw.sendMessage({ surface, broadcastId: body.broadcastId, userId: body.userId, text: body.text });
+          return gw.sendMessage({
+            surface,
+            broadcastId: body.broadcastId,
+            userId: body.userId,
+            text: body.text,
+            messageId: body.messageId,
+          });
         case "add_reaction":
           return gw.addReaction({
             surface,
@@ -104,13 +110,25 @@
             surface,
             broadcastId: body.broadcastId,
           };
+        case "set_watching":
+          return {
+            ok: true,
+            noop: true,
+            stub: true,
+            surface,
+            broadcastId: body.broadcastId,
+            userId: body.userId,
+            watching: body.watching !== false,
+          };
         default:
           return { ok: false, error: `未知の action: ${action}` };
       }
     }
 
     sendMessage(params) {
-      return this._post({ action: "send_message", ...params });
+      const body = { action: "send_message", ...params };
+      if (params?.messageId) body.messageId = String(params.messageId).trim();
+      return this._post(body);
     }
 
     addReaction(params) {
@@ -137,6 +155,16 @@
     /** @param {object} params */
     clearLive(params) {
       return this._post({ action: "set_live", live: false, ...params });
+    }
+
+    /** @param {{ surface: string, broadcastId: string, userId: string, watching?: boolean }} params */
+    setWatching(params) {
+      return this._post({ action: "set_watching", watching: params?.watching !== false, ...params });
+    }
+
+    /** @param {{ surface: string, broadcastId: string, userId: string }} params */
+    clearWatching(params) {
+      return this._post({ action: "set_watching", watching: false, ...params });
     }
   }
 

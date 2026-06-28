@@ -2,6 +2,7 @@
  * Live Platform Integration — Session · Broadcast · Viewer · Provider 正式配線
  * Phase 3 · ZEGO Adapter · stub fallback 維持 · Interface 非変更
  * Phase 4 P4-2 · useEdgeSync opt-in（デフォルト false）
+ * Phase 4 P4-3 · Chat Gateway + joinLive set_watching（opt-in）
  *
  * UI / Edge → LivePlatformIntegration → Broadcast / Viewer / Session → Provider → Adapter → SDK
  */
@@ -29,6 +30,7 @@
      *   chatEdgeClient?: object,
      *   recordingEdgeClient?: object,
      *   monitoringEdgeClient?: object,
+     *   chatGateway?: object,
      * }} [options]
      */
     constructor(options = {}) {
@@ -54,6 +56,14 @@
       };
       /** @private @type {object|null} */
       this._injectedEdgeSync = options.edgeSync || null;
+      /** @private @type {object|null} */
+      this._chatGateway = options.chatGateway || null;
+      /** @private @type {object|null} */
+      this._injectedChatGateway = options.chatGateway || null;
+      /** @private @type {object|null} */
+      this._chatEdgeClient = null;
+      /** @private @type {object|null} */
+      this._watchingSyncLastResult = null;
       /** @private */
       this._provider = null;
       /** @private */
@@ -112,6 +122,11 @@
       return this._edgeSync;
     }
 
+    /** @returns {object|null} */
+    get chatGateway() {
+      return this._chatGateway;
+    }
+
     /** @returns {string} raw provider state */
     get providerState() {
       return this._provider?.state || "idle";
@@ -145,6 +160,8 @@
         useEdgeSync: this.useEdgeSync,
         edgeSyncStatus: this._edgeSync?.getStatus?.() || null,
         edgeSyncLastResult: this._edgeSync?.getLastResult?.() || null,
+        chatGatewayReady: Boolean(this._chatGateway),
+        watchingSyncLastResult: this._watchingSyncLastResult ? { ...this._watchingSyncLastResult } : null,
       };
       if (this._provider?.getPublishDiagnostics) {
         extra.publishDiagnostics = this._provider.getPublishDiagnostics();
@@ -278,6 +295,150 @@
       });
     }
 
+    /** @private */
+    _setupChatGateway(options = {}) {
+      if (options.chatGateway) {
+        this._injectedChatGateway = options.chatGateway;
+        this._chatGateway = options.chatGateway;
+        return;
+      }
+      if (this._injectedChatGateway) {
+        this._chatGateway = this._injectedChatGateway;
+        return;
+      }
+
+      const ChatGateway = global.TasuLivePlatformChatGateway;
+      if (!ChatGateway) return;
+
+      this._chatGateway = new ChatGateway({
+        broadcastService: this._broadcast,
+        viewerService: this._viewer,
+        sessionManager: this._session,
+        provider: this._provider,
+      });
+    }
+
+    /** @private */
+    _getChatEdgeClient() {
+      if (!this._useEdgeSync) return null;
+      if (this._chatEdgeClient) return this._chatEdgeClient;
+      const injected = this._edgeClientOverrides?.chat;
+      if (injected) {
+        this._chatEdgeClient = injected;
+        return injected;
+      }
+      const ChatEdgeClient = global.TasuLivePlatformChatEdgeClient;
+      if (!ChatEdgeClient) return null;
+      this._chatEdgeClient = new ChatEdgeClient({ baseUrl: this._edgeBaseUrl || undefined });
+      return this._chatEdgeClient;
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    _watchingSyncContext(ctx) {
+      return {
+        surface: String(ctx.surface || this._surface).trim().toLowerCase(),
+        broadcastId: String(ctx.broadcastId || "").trim(),
+        userId: ctx.userId ? String(ctx.userId).trim() : null,
+        roomId: ctx.roomId ? String(ctx.roomId).trim() : null,
+      };
+    }
+
+    /** @private @param {Record<string, unknown>} ctx */
+    async _runEdgeSetWatching(ctx) {
+      if (!this._useEdgeSync) {
+        this._diagnostics?.recordChatEdge?.("skipped", {
+          op: "setWatching",
+          reason: "useEdgeSync_disabled",
+          ...this._watchingSyncContext(ctx),
+        });
+        return null;
+      }
+
+      const client = this._getChatEdgeClient();
+      const safeCtx = this._watchingSyncContext(ctx);
+      if (!client || typeof client.setWatching !== "function") {
+        this._diagnostics?.recordChatEdge?.("failed", {
+          op: "setWatching",
+          error: "chat edge client missing",
+          ...safeCtx,
+        });
+        const res = { ok: true, partial: true, noop: true, reason: "client_missing" };
+        this._watchingSyncLastResult = res;
+        return res;
+      }
+
+      this._diagnostics?.recordChatEdge?.("attempted", { op: "setWatching", ...safeCtx });
+      try {
+        const syncRes = await client.setWatching({
+          surface: safeCtx.surface,
+          broadcastId: safeCtx.broadcastId,
+          userId: safeCtx.userId,
+          watching: true,
+        });
+        const failed = syncRes?.ok === false;
+        this._diagnostics?.recordChatEdge?.(failed ? "failed" : "succeeded", {
+          op: "setWatching",
+          partial: failed,
+          ...safeCtx,
+        });
+        this._diagnostics?.recordLifecycle("chatEdge:setWatching", {
+          partial: failed,
+          broadcastId: safeCtx.broadcastId,
+          userId: safeCtx.userId,
+        });
+        const result = failed
+          ? { ok: true, partial: true, edgeSyncThrew: false, ...syncRes }
+          : { ok: true, ...syncRes };
+        this._watchingSyncLastResult = result;
+        return result;
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordChatEdge?.("failed", { op: "setWatching", error: message, ...safeCtx });
+        const result = { ok: true, partial: true, edgeSyncThrew: true, error: message };
+        this._watchingSyncLastResult = result;
+        return result;
+      }
+    }
+
+    /** @private @param {Record<string, unknown>} options */
+    async _runChatEdgeSend(options) {
+      if (!this._useEdgeSync) return null;
+      const client = this._getChatEdgeClient();
+      if (!client || typeof client.sendMessage !== "function") return null;
+
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      const broadcastId = String(options.broadcastId || "").trim();
+      const userId = String(options.userId || "").trim();
+      const text = String(options.text || "").trim();
+      const messageId = options.messageId ? String(options.messageId).trim() : null;
+      if (!broadcastId || !userId || !text || !messageId) return null;
+
+      this._diagnostics?.recordChatEdge?.("attempted", {
+        op: "sendMessage",
+        surface,
+        broadcastId,
+        userId,
+        messageId,
+      });
+      try {
+        const edgeRes = await client.sendMessage({ surface, broadcastId, userId, text, messageId });
+        const failed = edgeRes?.ok === false;
+        this._diagnostics?.recordChatEdge?.(failed ? "failed" : "succeeded", {
+          op: "sendMessage",
+          partial: failed,
+          surface,
+          broadcastId,
+          userId,
+          messageId,
+        });
+        return failed ? { ok: true, partial: true, ...edgeRes } : { ok: true, ...edgeRes };
+      } catch (err) {
+        const message = err?.message || String(err);
+        this._diagnostics?.recordChatEdge?.("failed", { op: "sendMessage", error: message, messageId });
+        return { ok: true, partial: true, edgeSyncThrew: true, error: message };
+      }
+    }
+
     /** @private @param {Record<string, unknown>} ctx */
     _edgeSyncContext(ctx) {
       return {
@@ -357,6 +518,7 @@
      *   chatEdgeClient?: object,
      *   recordingEdgeClient?: object,
      *   monitoringEdgeClient?: object,
+     *   chatGateway?: object,
      * }} [options]
      */
     async initialize(options = {}) {
@@ -370,6 +532,7 @@
       if (options.chatEdgeClient) this._edgeClientOverrides.chat = options.chatEdgeClient;
       if (options.recordingEdgeClient) this._edgeClientOverrides.recording = options.recordingEdgeClient;
       if (options.monitoringEdgeClient) this._edgeClientOverrides.monitoring = options.monitoringEdgeClient;
+      if (options.chatGateway) this._injectedChatGateway = options.chatGateway;
 
       this._createStack();
       this._setupEdgeSync(options);
@@ -389,6 +552,7 @@
       }
 
       this._attachProviderToStack();
+      this._setupChatGateway(options);
       this._wireTelemetry();
       this._initialized = true;
       this._diagnostics?.recordLifecycle("initialize", {
@@ -726,12 +890,64 @@
         mode: "direct",
       });
 
+      let watchingSyncResult = null;
+      if (this._useEdgeSync && providerRes?.ok !== false && sessionRes.ok) {
+        watchingSyncResult = await this._runEdgeSetWatching({
+          surface,
+          broadcastId,
+          userId,
+          roomId,
+        });
+      }
+
       return {
         ...(providerRes && typeof providerRes === "object" ? providerRes : { ok: true }),
         sessionState: this.sessionState,
         canonicalProviderState: this.canonicalProviderState,
+        watchingSync: watchingSyncResult,
         diagnostics: this.getDiagnostics(),
       };
+    }
+
+    /**
+     * @param {{ surface?: string, broadcastId: string, userId: string, text: string }} options
+     */
+    async sendChatMessage(options = {}) {
+      this._ensureReady();
+      if (!this._chatGateway) {
+        return { ok: false, error: "Chat Gateway が未ロードです", diagnostics: this.getDiagnostics() };
+      }
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      const gwRes = await this._chatGateway.sendMessage({ ...options, surface });
+      if (gwRes?.ok === false) {
+        return { ...gwRes, diagnostics: this.getDiagnostics() };
+      }
+
+      const chatEdgeResult = await this._runChatEdgeSend({
+        surface,
+        broadcastId: options.broadcastId,
+        userId: options.userId,
+        text: options.text,
+        messageId: gwRes.message?.id,
+      });
+
+      return {
+        ...gwRes,
+        chatEdge: chatEdgeResult,
+        diagnostics: this.getDiagnostics(),
+      };
+    }
+
+    /**
+     * @param {{ surface?: string, broadcastId: string, limit?: number }} options
+     */
+    getChatMessages(options = {}) {
+      this._ensureReady();
+      if (!this._chatGateway) {
+        return { ok: false, error: "Chat Gateway が未ロードです" };
+      }
+      const surface = String(options.surface || this._surface).trim().toLowerCase();
+      return this._chatGateway.getMessages({ ...options, surface });
     }
 
     getSessionSnapshot() {
@@ -745,6 +961,7 @@
         stubFallback: this._stubFallback,
         lastEvent: this._lastSessionEvent ? { ...this._lastSessionEvent } : null,
         useEdgeSync: this.useEdgeSync,
+        chatGatewayReady: Boolean(this._chatGateway),
         status: this._session?.getStatus?.() || null,
         diagnostics: this.getDiagnostics(),
       };
@@ -788,6 +1005,9 @@
       this._session = null;
       this._provider = null;
       this._edgeSync = null;
+      this._chatGateway = null;
+      this._chatEdgeClient = null;
+      this._watchingSyncLastResult = null;
       this._initialized = false;
       this._reconnecting = false;
       return {

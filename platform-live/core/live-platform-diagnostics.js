@@ -19,6 +19,8 @@
       this._sessionEvents = [];
       /** @private @type {{ phase: string, payload: unknown, at: string }[]} */
       this._edgeSyncEvents = [];
+      /** @private @type {{ phase: string, payload: unknown, at: string }[]} */
+      this._chatEdgeEvents = [];
     }
 
     /** @private */
@@ -57,6 +59,14 @@
       return this._push(this._edgeSyncEvents, "edgeSync", phase, payload);
     }
 
+    /**
+     * @param {"attempted"|"skipped"|"succeeded"|"failed"} phase
+     * @param {Record<string, unknown>} [payload]
+     */
+    recordChatEdge(phase, payload = {}) {
+      return this._push(this._chatEdgeEvents, "chatEdge", phase, payload);
+    }
+
     snapshot(extra = {}) {
       return {
         timeline: this._timeline.slice(),
@@ -65,6 +75,7 @@
         viewerEvents: this._viewerEvents.slice(),
         sessionEvents: this._sessionEvents.slice(),
         edgeSyncEvents: this._edgeSyncEvents.slice(),
+        chatEdgeEvents: this._chatEdgeEvents.slice(),
         ...extra,
       };
     }
@@ -76,6 +87,7 @@
       this._viewerEvents = [];
       this._sessionEvents = [];
       this._edgeSyncEvents = [];
+      this._chatEdgeEvents = [];
     }
   }
 
