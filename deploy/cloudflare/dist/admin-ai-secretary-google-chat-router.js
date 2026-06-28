@@ -29,6 +29,7 @@
     context_refine_subject: "context_refine_subject",
     context_triage: "context_triage",
     context_cross_calendar: "context_cross_calendar",
+    write_enqueue_gmail_draft: "write_enqueue_gmail_draft",
     write_blocked: "write_blocked",
     none: "none",
   });
@@ -200,9 +201,13 @@
     return map[mode] || INTENTS.none;
   }
 
+  function isDraftEnqueueIntent(text) {
+    return /下書き保存|下書きを保存|この返信案.*下書き|Gmail.*下書き.*保存/.test(String(text || ""));
+  }
+
   function isWriteIntent(text) {
     const t = String(text || "");
-    if (isReplyDraftIntent(t)) return false;
+    if (isReplyDraftIntent(t) || isDraftEnqueueIntent(t)) return false;
     const write =
       /返信して|返信を送|送信して|送信を|下書きを?(作|保存|作成)|下書き保存|下書き作成|予定を追加|予定追加|予定を入|予定変更|予定削除|削除して|スケジュール.*入|ミーティング.*(入|設定|作成)|打ち合わせ.*(入|設定|作成)/i.test(
         t
@@ -217,11 +222,19 @@
     const text = trim(userText, 2000);
     if (!text) return { intent: INTENTS.none, params: {} };
 
+    const chatCtx = getChatContext();
+
+    if (
+      isDraftEnqueueIntent(text) &&
+      (isReplyDraftLastTurn() || chatCtx?.hasReplyPlan?.()) &&
+      hasResolvableGmailContext(history)
+    ) {
+      return { intent: INTENTS.write_enqueue_gmail_draft, params: {} };
+    }
+
     if (isWriteIntent(text)) {
       return { intent: INTENTS.write_blocked, params: {} };
     }
-
-    const chatCtx = getChatContext();
 
     if (isTriageText(text) && hasResolvableGmailContext(history)) {
       return { intent: INTENTS.context_triage, params: {} };
@@ -911,6 +924,11 @@
       "上記メールへの返信案を日本語で作成してください。送信はしません。本文のみ返してください。";
 
     if (!Adapter?.completeTurn) {
+      const draftBody = deterministicReplyDraft(preview);
+      const BridgeEarly = global.TasuSecretaryGoogleChatWriteBridge;
+      if (BridgeEarly?.persistReplyPlanFromDraft) {
+        BridgeEarly.persistReplyPlanFromDraft(focus, draftBody, userText);
+      }
       return { ok: true, reply: det(), mock: true };
     }
 
@@ -922,11 +940,23 @@
     });
 
     const draft = trim(turn.reply, 4000) || deterministicReplyDraft(preview);
+    const Bridge = global.TasuSecretaryGoogleChatWriteBridge;
+    if (Bridge?.persistReplyPlanFromDraft) {
+      Bridge.persistReplyPlanFromDraft(focus, draft, userText);
+    }
     return {
       ok: true,
       reply: `【返信案 · 未送信】\n${draft}${READONLY_DRAFT_FOOTER}`,
       mock: !!turn.fallback_used,
     };
+  }
+
+  async function runWriteEnqueueGmailDraft(userText) {
+    const Bridge = global.TasuSecretaryGoogleChatWriteBridge;
+    if (!Bridge?.enqueueGmailDraftFromChat) {
+      return { ok: true, reply: "Human Gate 連携が利用できません。", mock: false, error: "write_bridge_missing" };
+    }
+    return Bridge.enqueueGmailDraftFromChat(userText);
   }
 
   async function runContextRefine(userText, mode) {
@@ -985,6 +1015,13 @@
       reply = det();
     } else if (mode === "subject") {
       reply = `${reply}${READONLY_DRAFT_FOOTER}`;
+    }
+
+    const refinedBody = extractReplyDraftBody(reply);
+    const focusRef = getChatContext()?.getGmailFocusRef?.();
+    const Bridge = global.TasuSecretaryGoogleChatWriteBridge;
+    if (Bridge?.persistReplyPlanFromDraft && focusRef && refinedBody) {
+      Bridge.persistReplyPlanFromDraft(focusRef, refinedBody, userText);
     }
 
     return {
@@ -1102,6 +1139,10 @@
 
     if (intent === INTENTS.context_reply_draft) {
       return runContextReplyDraft(userText);
+    }
+
+    if (intent === INTENTS.write_enqueue_gmail_draft) {
+      return runWriteEnqueueGmailDraft(userText);
     }
 
     if (intent === INTENTS.context_refine_short) {

@@ -37,7 +37,7 @@
     return {
       savedAt: new Date().toISOString(),
       schemaVersion: SCHEMA_VERSION,
-      gmail: { list: null, focus: null },
+      gmail: { list: null, focus: null, replyPlan: null, pendingGate: null },
       calendar: { list: null },
       lastTurn: null,
     };
@@ -295,6 +295,79 @@
     return hasGmailFocus() || hasLastTurn() || hasCalendarList();
   }
 
+  function safeReplyPlanPreview(plan) {
+    if (!plan) return null;
+    return {
+      subject: plan.subject || "",
+      bodyPreview: plan.bodyPreview || "",
+      recipient: plan.recipient || "",
+      reason: plan.reason || "",
+    };
+  }
+
+  function saveReplyPlan(plan) {
+    plan = plan || {};
+    const ctx = ensureStore();
+    ctx.gmail = ctx.gmail || { list: null, focus: null, replyPlan: null, pendingGate: null };
+    const body = trim(plan.body ?? plan.bodyPreview, 12000);
+    let bodyPreview = body.slice(0, BODY_PREVIEW_MAX);
+    if (body.length > BODY_PREVIEW_MAX) {
+      bodyPreview = bodyPreview.slice(0, BODY_PREVIEW_MAX - 1) + "…";
+    }
+    ctx.gmail.replyPlan = {
+      subject: trim(plan.subject, 200),
+      body,
+      bodyPreview,
+      recipient: trim(plan.recipient ?? plan.to, 200),
+      reason: trim(plan.reason, 300),
+      id: trim(plan.messageId ?? plan.id, 120),
+      threadId: trim(plan.threadId, 120),
+      replyToMessageId: trim(plan.replyToMessageId ?? plan.messageId ?? plan.id, 120),
+      sourceIntent: trim(plan.sourceIntent, 40),
+    };
+    writeStore(ctx);
+    return safeReplyPlanPreview(ctx.gmail.replyPlan);
+  }
+
+  function getReplyPlanRef() {
+    const ctx = getStore();
+    return ctx?.gmail?.replyPlan || null;
+  }
+
+  function getReplyPlanPreview() {
+    return safeReplyPlanPreview(getReplyPlanRef());
+  }
+
+  function hasReplyPlan() {
+    const plan = getReplyPlanRef();
+    return Boolean(plan && (plan.body || plan.bodyPreview));
+  }
+
+  function savePendingGate(meta) {
+    meta = meta || {};
+    const ctx = ensureStore();
+    ctx.gmail = ctx.gmail || { list: null, focus: null, replyPlan: null, pendingGate: null };
+    ctx.gmail.pendingGate = {
+      pendingId: trim(meta.pendingId, 120),
+      kind: trim(meta.kind, 40) || "gmail_draft",
+      state: trim(meta.state, 20) || "pending",
+      sourceIntent: trim(meta.sourceIntent, 40),
+    };
+    writeStore(ctx);
+    return { kind: ctx.gmail.pendingGate.kind, state: ctx.gmail.pendingGate.state };
+  }
+
+  function getPendingGateMeta() {
+    const gate = getStore()?.gmail?.pendingGate;
+    if (!gate) return null;
+    return { kind: gate.kind || "", state: gate.state || "" };
+  }
+
+  function hasPendingGate() {
+    const gate = getStore()?.gmail?.pendingGate;
+    return Boolean(gate && gate.state === "pending" && gate.pendingId);
+  }
+
   function clear() {
     try {
       global.sessionStorage?.removeItem(STORAGE_KEY);
@@ -325,6 +398,13 @@
     hasCalendarList,
     hasLastTurn,
     hasFollowUpContext,
+    saveReplyPlan,
+    getReplyPlanRef,
+    getReplyPlanPreview,
+    hasReplyPlan,
+    savePendingGate,
+    getPendingGateMeta,
+    hasPendingGate,
     clear,
   };
 })(typeof window !== "undefined" ? window : globalThis);
