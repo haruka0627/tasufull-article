@@ -279,7 +279,10 @@
           surface: surfaceCheck.surface,
           broadcastId,
           userId,
-          roomId: this._broadcastService?.broadcast?.roomId,
+          roomId: options.roomId || this._broadcastService?.broadcast?.roomId,
+          userName: options.userName,
+          videoContainer: options.videoContainer,
+          manualToken: options.manualToken,
         });
         if (pr?.ok === false) {
           this._setViewerState(viewer, VS.FAILED);
