@@ -1,6 +1,12 @@
 # Supabase CLI 用（Edge Functions デプロイ）
 # https://supabase.com/docs/guides/functions
 
+# Staging PostgREST — expose tlv schema for Edge Functions (service_role + RPC)
+# Push: npx supabase config push --project-ref ddojquacsyqesrjhcvmn --yes
+[api]
+schemas = ["public", "graphql_public", "tlv"]
+extra_search_path = ["public", "extensions", "tlv"]
+
 [functions.stripe-create-checkout]
 verify_jwt = false
 
@@ -52,4 +58,16 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.business-directory]
+verify_jwt = false
+
+[functions.tlv-create-coin-purchase]
+verify_jwt = false
+
+[functions.tlv-payment-webhook]
+verify_jwt = false
+
+[functions.tlv-create-tip]
+verify_jwt = false
+
+[functions.tlv-e2e-simulate-payment]
 verify_jwt = false
