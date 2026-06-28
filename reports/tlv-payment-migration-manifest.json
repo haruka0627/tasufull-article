@@ -3,8 +3,9 @@
   "project_ref": "ddojquacsyqesrjhcvmn",
   "registry_note": "schema_migrations does NOT track TLV steps; use fingerprints",
   "updated_at": "2026-06-28",
-  "recovery_phase": "P1_complete",
+  "recovery_phase": "P2_complete",
   "git_db_aligned": true,
+  "platform_git_tracked": true,
   "steps": [
     {
       "step": 0,
@@ -68,6 +69,40 @@
       "classification": "git_and_db_registry_missing"
     }
   ],
+  "platform_assets": {
+    "edge_functions": [
+      "supabase/functions/tlv-create-coin-purchase",
+      "supabase/functions/tlv-create-tip",
+      "supabase/functions/tlv-payment-webhook"
+    ],
+    "edge_shared": [
+      "supabase/functions/_shared/tlv-coin-packs.ts",
+      "supabase/functions/_shared/tlv-create-tip.ts",
+      "supabase/functions/_shared/tlv-payment-db.ts",
+      "supabase/functions/_shared/tlv-payment-errors.ts",
+      "supabase/functions/_shared/tlv-payment-math.ts",
+      "supabase/functions/_shared/tlv-payment-webhook.ts"
+    ],
+    "config": "supabase/config.toml",
+    "config_push": false,
+    "smoke_scripts": {
+      "PS-01": "scripts/test-tlv-payment-logic.mjs",
+      "PS-02": "scripts/test-tlv-create-tip-rpc-staging.mjs",
+      "PS-03": "scripts/test-tlv-payment-rls-staging.mjs",
+      "PS-04": "scripts/test-tlv-payment-chargeback-staging.mjs",
+      "PS-05": "scripts/test-tlv-payment-edge.mjs"
+    },
+    "sql_fixtures": [
+      "scripts/sql/tlv-staging-rls-meta.sql",
+      "scripts/sql/tlv-staging-rls-fixture.sql",
+      "scripts/sql/tlv-staging-rls-cleanup.sql",
+      "scripts/sql/tlv-staging-create-tip-integration.sql",
+      "scripts/sql/tlv-staging-chargeback-integration.sql"
+    ],
+    "excluded": [
+      "supabase/functions/tlv-e2e-simulate-payment"
+    ]
+  },
   "verify_scripts": {
     "inventory": "scripts/sql/tlv-recovery-fingerprints-all.sql",
     "rls_meta": "scripts/sql/tlv-staging-rls-meta.sql",
@@ -75,7 +110,8 @@
       "scripts/test-tlv-payment-logic.mjs",
       "scripts/test-tlv-create-tip-rpc-staging.mjs",
       "scripts/test-tlv-payment-rls-staging.mjs",
-      "scripts/test-tlv-payment-chargeback-staging.mjs"
+      "scripts/test-tlv-payment-chargeback-staging.mjs",
+      "scripts/test-tlv-payment-edge.mjs"
     ]
   }
 }

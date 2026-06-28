@@ -4,8 +4,22 @@
 **Scope:** Migration / Git / Runbook 整合性回復  
 **Project:** `ddojquacsyqesrjhcvmn`（linked · read-only 照会）  
 **Release 状態:** **停止維持** · Production DB 変更 **禁止**  
-**Recovery Phase:** **P1 完了**（2026-06-28）— Git Step 0〜4 tracked · Git ↔ DB 一致  
+**Recovery Phase:** **P2 完了**（2026-06-28）— Platform assets tracked · config.toml（push 未実施）  
 **Related:** [tlv-payment-production-drift-analysis.md](./tlv-payment-production-drift-analysis.md) · [tlv-payment-production-readiness.md](./tlv-payment-production-readiness.md)
+
+---
+
+## Recovery Phase P2 — Platform assets（2026-06-28）
+
+| 区分 | 内容 | Git |
+| --- | --- | --- |
+| Edge | `tlv-create-coin-purchase` · `tlv-create-tip` · `tlv-payment-webhook` + `_shared/tlv-*` | **tracked** |
+| Config | `supabase/config.toml` — PostgREST `tlv` schema · Edge `verify_jwt` | **tracked** · **push 禁止** |
+| Smoke PS-01〜05 | 4 test scripts + chargeback（`d1547de` 済） | **tracked** |
+| SQL fixtures | rls meta/fixture/cleanup · tip integration · chargeback integration | **tracked** |
+| 除外 | `tlv-e2e-simulate-payment` · drift/prod-rc0 SQL · dist · secretary | 意図的除外 |
+
+**Smoke 性質:** PS-01 = DB 不要 · PS-02〜04 = linked DB + sandbox fixture/cleanup · PS-05 = Edge HTTP smoke（実行時のみ · commit はソース正本化）
 
 ---
 
@@ -17,6 +31,7 @@
 | **schema_migrations** | TLV 行 **0 件**（registry drift · 意図的に参照しない） | ⚠️ 既知 |
 | **実 DB（fingerprint）** | Step 0〜5 **すべて適用済み** | ✅ |
 | **Git ↔ DB** | manifest `git_db_aligned: true` · fingerprint 全 PASS | ✅ |
+| **Platform Git** | Edge 3 + shared + config + PS-01〜05 + fixtures **tracked**（P2） | ✅ |
 | **docs / Runbook** | Inventory → Skip → Verify（`db67363` で更新済） | ✅ |
 
 **正本の推奨:** Release 再開まで **`reports/tlv-payment-migration-manifest.json`（本計画 §5）+ fingerprint SQL** を運用上の migration 正本とし、`schema_migrations` は **TLV について参照しない**。
@@ -271,9 +286,14 @@ Migration Step 0〜5 を順次 db query -f で適用
 | 1 | **Git R1** — Step 0〜4 SQL + `db/tlv_schema.sql` 選別 commit | なし | **✅ P1 完了** |
 | 2 | **Manifest** — §5 JSON · `git_db_aligned: true` | なし | **✅ 完了** |
 | 3 | **docs** — TODO / TLV_DB_SCHEMA inventory ベース | なし | **✅ 完了**（`db67363`） |
-| 4 | **Release Phase 0** — fingerprint Inventory PASS · migration Skip | なし | 未着手 |
-| 5 | PostgREST / Stripe / Edge — read-only 確認 | なし | 未着手 |
+| 4 | **Release Phase 0** — fingerprint Inventory PASS · PITR 記録 · migration Skip | なし | 未着手 |
+| 5 | PostgREST remote / Stripe webhook / Edge deploy **確認**（push/deploy 禁止 until Go） | なし | 未着手 |
 | 6 | （将来）registry 整合 Option B/C | **要承認** | 任意 · 非必須 |
+
+#### Phase R2 — Platform Git 正本化 — **✅ P2 完了**
+
+- Edge · config.toml · smoke scripts · SQL fixtures を選別 commit
+- `tlv-e2e-simulate-payment` は production 非推奨のため **除外**
 
 ---
 
