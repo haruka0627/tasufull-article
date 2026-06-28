@@ -36,6 +36,45 @@
     return data || [];
   }
 
+  /** Phase2-03 · Session bridge（flag OFF 時 no-op · 既存挙動維持） */
+  async function runSessionBridge(method, payload) {
+    const bridge = global.TlvLiveBroadcastsSessionBridge;
+    if (!bridge?.isEnabled?.()) return;
+    const fn = bridge[method];
+    if (typeof fn !== "function") return;
+    try {
+      await fn(payload);
+      global.TlvLiveSessionDebugPanel?.refresh?.();
+    } catch (err) {
+      console.warn("[TasuLiveBroadcasts] session bridge:", err);
+    }
+  }
+
+  /** Phase5 P5-3 · Platform Live bridge（usePlatformLive OFF 時 no-op · 失敗 non-fatal） */
+  async function runPlatformLiveBridge(method, payload) {
+    const bridge = global.TlvPlatformLiveBridge;
+    if (!bridge?.isEnabled?.()) return;
+    const fn = bridge[method];
+    if (typeof fn !== "function") return;
+    try {
+      const res = await fn(payload);
+      if (res?.ok === false && !res?.skipped && res?.partial !== true) {
+        console.warn("[TasuLiveBroadcasts] platform live bridge:", res.error || res.code || method);
+      }
+    } catch (err) {
+      console.warn("[TasuLiveBroadcasts] platform live bridge:", err);
+    }
+  }
+
+  /** Phase2-04 · Session Debug Panel（flag OFF 時 DOM 追加なし） */
+  function mountSessionDebugPanel(page) {
+    try {
+      global.TlvLiveSessionDebugPanel?.mount?.({ page, anchor: document.body });
+    } catch (err) {
+      console.warn("[TasuLiveBroadcasts] session debug panel:", err);
+    }
+  }
+
   async function fetchBroadcastById(broadcastId) {
     const cfg = C();
     const id = String(broadcastId || "").trim();
@@ -273,6 +312,23 @@
       if (global.TasuLiveComments?.mountComments) {
         await global.TasuLiveComments.mountComments(commentsMount, broadcast);
       }
+
+      void runSessionBridge("onWatchJoin", {
+        broadcastId: broadcast.id,
+        viewerId: cfg.getTalkUserId(),
+        status: broadcast.status,
+      });
+
+      const watchArticle = root.querySelector("[data-live-watch]");
+      void runPlatformLiveBridge("onWatchJoin", {
+        broadcastId: broadcast.id,
+        viewerId: cfg.getTalkUserId(),
+        viewerName: cfg.resolveDisplayName(cfg.getTalkUserId()),
+        status: broadcast.status,
+        videoContainer: watchArticle?.querySelector(".live-watch__player") || null,
+      });
+
+      mountSessionDebugPanel("watch");
     } catch (err) {
       console.error("[TasuLiveBroadcasts] watch", err);
       root.innerHTML = `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`;
@@ -336,6 +392,12 @@
             }
           }
           void updated;
+          await runSessionBridge("onStudioStart", { broadcastId: id, creatorId: userId });
+          await runPlatformLiveBridge("onStudioStart", {
+            broadcastId: id,
+            creatorId: userId,
+            creatorName: cfg.resolveDisplayName(userId),
+          });
           await mountStudioPage(root);
         } catch (err) {
           global.alert(`配信開始に失敗しました: ${err.message || err}`);
@@ -352,6 +414,8 @@
         btn.disabled = true;
         try {
           await updateBroadcastStatus(id, "ended");
+          await runSessionBridge("onStudioEnd", { broadcastId: id, creatorId: userId });
+          await runPlatformLiveBridge("onStudioEnd", { broadcastId: id, creatorId: userId });
           await mountStudioPage(root);
         } catch (err) {
           global.alert(`配信終了に失敗しました: ${err.message || err}`);
@@ -382,6 +446,7 @@
             <p style="margin-top:16px"><a class="live-btn live-btn--primary" href="create.html">配信を作成</a></p>
           </div>
         `;
+        mountSessionDebugPanel("studio");
         return;
       }
 
@@ -392,6 +457,7 @@
         </div>
       `;
       await bindStudioActions(root);
+      mountSessionDebugPanel("studio");
     } catch (err) {
       console.error("[TasuLiveBroadcasts] studio", err);
       root.innerHTML = `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`;
@@ -405,6 +471,8 @@
     fetchBroadcastById,
     fetchOwnBroadcasts,
     updateBroadcastStatus,
+    runSessionBridge,
+    runPlatformLiveBridge,
     mountHubLiveSection,
     mountWatchPage,
     mountStudioPage,
