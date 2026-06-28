@@ -1,12 +1,641 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-28（TLV Payment Engine · RV1 Release Verification）  
-**Git HEAD:** `bce78cc`（Bundle E 完了 · working tree clean）  
-**優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
+**最終更新:** 2026-06-28（開発優先順位 P1–P5 · TLV Pause）  
+**Git HEAD:** `aebf23c`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
+**優先:** 下記 **Release Readiness** が正本。旧セクション（Legacy）は参照用 · 詳細は各リンク。
+
+**Cursor 開発優先:** **P1 TASFUL AI ✅** → **P2 Live Platform Core ✅** → **P3 Live API（ZEGO）** → **P4 BD 待機** → **P5 Materials Phase 0** → P6 TLV Pause · AI秘書待機
 
 ---
 
-## P0 — 直近
+### Live API — ZEGO Provider（P3 · 2026-06-28）
+
+**正本:** [LIVE_PLATFORM_ZEGO_ADAPTER.md](./LIVE_PLATFORM_ZEGO_ADAPTER.md) · [adapter design](../reports/live-platform-zego-adapter-design.md)
+
+| 項目 | 状態 |
+| --- | --- |
+| Phase 0 Adapter Design | **Go** |
+| Phase 1 Adapter 実装 | **Go** — `npm run test:platform-live-zego-adapter-phase1` **77 PASS** |
+| Phase 2 E2E | **Conditional Go** — `.env` ZEGO + Platform PoC ページ |
+| platform-live Provider | Stub のみ本接続 |
+| Token API | `/api/tlv-zego-token` 流用可 |
+| 禁止 | TLV PoC 変更 · Interface 変更 · TLV 接続 |
+
+---
+
+### Platform Live ZEGO Integration — Phase 5 TLV 統合（2026-06-29）
+
+**正本:** [P5-1 audit](../reports/live-platform-zego-phase5-p5-1-connection-audit.md) · Phase 4 完了 `a8a3a20`
+
+| Phase | 内容 | 状態 |
+| --- | --- | --- |
+| **P5-1** | TLV ↔ Platform Live 接続ポイント調査 · レポート | **Go** |
+| **P5-2** | TLV Platform Live Adapter（Interface 経由 · ZEGO 非直依存） | **Go**（未コミット） |
+| **P5-3** | `usePlatformLive` feature flag + 条件付き bridge 接続 | **Go**（未コミット） |
+| **P5-4** | 8788 統合スモーク（Flag OFF/ON · bridge/adapter/integration） | **Done / GO** |
+| **P5-5** | Flag ON ZEGO provider lazy load | 未着手（Phase 5 後続） |
+| **P5-6** | watch leave · studio preview container | 未着手（Phase 5 後続） |
+| **P5-7** | Supabase comments vs Platform Chat 統合方針 | 未着手（Phase 5 後続） |
+| **P5-8** | `renderStreamPlayer` 実映像化 | 未着手（Phase 5 後続） |
+| **P5-9** | watch URL 正規化 | 未着手（Phase 5 後続） |
+
+**制約:** UI 全面変更 · DB/API/Token 仕様変更 · dist/deploy · 大規模リファクタ **禁止**
+
+**検証:** `npm run verify:platform-live-zego-integration-phase5-p5-4-smoke` · P5-3/P5-2/P5-1/P4-6 regression · 8788
+
+---
+
+### Business Directory（P4 · 待機 · 2026-06-28）
+
+**状態:** MVP-1/3 Complete · Step 5 + Launch Gate Prep **Complete** · **Commercial Launch No-Go 維持** · **新規実装停止**
+
+**Cursor 継続可:** Docs（FAQ/Runbook/Legal）· 8788 regression · smoke · bugfix のみ
+
+**正本:** [launch gate prep](../reports/business-directory-launch-gate-prep.md) · [operational readiness](../reports/business-directory-operational-readiness.md)
+
+| 項目 | 状態 |
+| --- | --- |
+| MVP-1（Self-Service · 審査 · 公開 · 検索 · Stripe Test） | **Complete** |
+| MVP-2（公開後編集タブ · Pro TLV · 問い合わせ） | **未着手** |
+| Production Step 4 | **48/48 Go**（2026-06-27） |
+| Step 5 Operational Readiness | **Complete** |
+| Launch Gate Preparation | **Complete** |
+| **運用モード** | **待機** — 新規実装停止 · Docs/regression/bugfix のみ |
+| Commercial Launch | **No-Go**（OB1–OB8 · 明示承認待ち） |
+
+**Launch Gate blockers:** OB1–OB8 — [launch gate prep](../reports/business-directory-launch-gate-prep.md)
+
+---
+
+### TASFUL Materials（P5 · Phase 0 · 2026-06-28）
+
+**正本:** [free-download-service-backlog.md](./free-download-service-backlog.md) · [implementation readiness](../reports/free-download-service-implementation-readiness.md)
+
+| 項目 | 状態 |
+| --- | --- |
+| Phase | **0 のみ** — 実装 **開始しない** |
+| 実装 | **未着手**（設計のみ） |
+| Phase 0 対象 | 命名 · 法務 checklist · 広告 SDK 候補 · ライセンス整理 |
+| Phase 1 | **禁止**（schema/UI/DB 着手不可） |
+
+---
+
+### Live Platform 共通基盤（P2 · 2026-06-28）
+
+**正本:** [live-platform-common-foundation-plan.md](../reports/live-platform-common-foundation-plan.md)
+
+| 項目 | 状態 |
+| --- | --- |
+| TASFUL AI P1 | **Complete**（Membership = REL-F-04 保留） |
+| P2 設計・実装計画 | **完了** |
+| P2 Phase A（Session Core） | **Complete** — [phase-a report](../reports/platform-live-core-phase-a.md) |
+| P2 Phase B（Broadcast Core） | **Complete** — [phase-b report](../reports/platform-live-broadcast-phase-b.md) |
+| P2 Phase C（Viewer Core） | **Complete** — [phase-c report](../reports/platform-live-viewer-phase-c.md) |
+| P2 Phase D（Chat Gateway） | **Complete** — [phase-d report](../reports/platform-live-chat-phase-d.md) |
+| P2 Phase E（Recording） | **Complete** — [phase-e report](../reports/platform-live-recording-phase-e.md) |
+| P2 Phase F（Monitoring） | **Complete** — [phase-f report](../reports/platform-live-monitoring-phase-f.md) · [core summary](../reports/platform-live-platform-summary.md) |
+| **Live Platform Core** | **Complete（A〜F）** |
+| TLV | **Pause** — 共通基盤と **並行可** · TLV 固有接続は Complete 後 |
+
+**Phase A–F:** Session ✅ → Broadcast ✅ → Viewer ✅ → Chat Gateway ✅ → Recording ✅ → Monitoring ✅
+
+**Phase A テスト:** `npm run test:platform-live-core-phase-a`（53 PASS）  
+**Phase B テスト:** `npm run test:platform-live-broadcast-phase-b`（50 PASS）  
+**Phase C テスト:** `npm run test:platform-live-viewer-phase-c`（41 PASS）  
+**Phase D テスト:** `npm run test:platform-live-chat-phase-d`（39 PASS · 2026-06-28）  
+**Phase E テスト:** `npm run test:platform-live-recording-phase-e`（55 PASS · 2026-06-28）  
+**Phase F テスト:** `npm run test:platform-live-monitoring-phase-f`（40 PASS · 2026-06-28）
+
+**禁止（P2）:** TLV/Builder 固有 · Wallet · 30分制度 · Chat UI · Membership
+
+---
+
+## Release Readiness（2026-06-28 棚卸し）
+
+**監査レポート:** [reports/todo-release-readiness-audit.md](../reports/todo-release-readiness-audit.md)
+
+### 分類凡例
+
+| 分類 | 意味 |
+| --- | --- |
+| **Release P0** | 本番公開（または Go 宣言）の **直接 blocker** のみ |
+| **Release P1** | 公開後 **90 日以内** に着手 · 収益 · 運用安定 · 公開範囲拡大 |
+| **Later** | 後回し可 · 凍結製品の拡張 · staging 限定 |
+| **Future** | 設計のみ / 数値未確定 / 次世代 Vision |
+| **Done** | 完了 · コミット/テスト済（deploy 残は P1 へ） |
+| **Deprecated** | 重複 · 旧ラベル · 方針ズレ — 参照しない |
+
+**各項目:** サービス · 優先度 · 状態 · ブロッカー · 次アクション
+
+---
+
+### Release P0 — 本番公開前必須
+
+| ID | 対象 | 優先度 | 状態 | ブロッカー | 次アクション |
+| --- | --- | --- | --- | --- | --- |
+| **REL-P0-01** | **Repo / Docs** | P0 | 部分 | docs 正本未コミット群 | 選別ステージング · `docs/` + 設計 Backlog コミット（`git add -A` 禁止） |
+| **REL-P0-02** | **TLV Payment** | P0 | **Paused（運用待ち）** | 運用ゲートのみ（Backup · Stripe · Live smoke） | [Completion Gate §11](../reports/tlv-phase1-completion-gate.md#11-phase-1-停止--再開条件正本) · Runbook Step 1→10 |
+| **REL-P0-03** | **AI 秘書** | P0 | deploy No-Go | `DEEPSEEK_API_KEY` prod · 残高 · HTTP 200 smoke | Production Secret · deploy · 1 往復 smoke |
+| **REL-P0-04** | **Pages 配信** | P0 | 部分 | 未 deploy 資産多数（Builder 6-H 等 · Site Assistant） | `build:pages` → prod alias · 対象範囲の smoke 8788/本番 |
+
+**TLV Payment Release Operations（REL-P0-02 詳細 · 開発凍結 · Runbook のみ · Phase 1 実装停止 2026-06-28）**
+
+**技術 Blocker:** **0**（Migration · RPC · RLS · Edge v4 deploy 済）  
+**残:** 運用ゲートのみ — [tlv-phase1-completion-gate.md](../reports/tlv-phase1-completion-gate.md) §11  
+**着手禁止（TLV Complete まで）:** TLV Phase 2 固有 · Wallet↔Live · TLV Chat UI · TLV Moderation · 収益接続
+
+**並行可（P2）:** Live Platform **共通基盤**（`platform-live/` · Edge · stub）— [foundation plan](../reports/live-platform-common-foundation-plan.md)
+
+- [ ] Backup Dashboard 目視 · snapshot 日時記録 · rollback 確認
+- [ ] Stripe Dashboard — endpoint · **Runbook §2.4 の 7 events**（`refund.updated` 必須 · `checkout.session.*` 不要）· test delivery
+- [ ] `STRIPE_WEBHOOK_SECRET_TLV` 分離（推奨）
+- [ ] Live Payment · Partial Refund · Dispute（PS-M01 / M06 / M07）
+- [ ] Go Approval · PS-M03/M04 手動 · Production Go · 24h 監視
+
+**Stripe 7 events 正本:** `payment_intent.succeeded` · `payment_intent.payment_failed` · `payment_intent.canceled` · `charge.refunded` · **`refund.updated`** · `charge.dispute.created` · `charge.dispute.closed`
+
+#### TLV — 運用ゲート待ち（Cursor 待機指示 · 2026-06-28）
+
+| レイヤ | 状態 |
+| --- | --- |
+| **Design** | Complete · **Frozen** |
+| **Phase 1** | 技術実装完了 · **実装停止** · Complete 判定待ち |
+| **Phase 2（TLV 固有）** | **着手禁止** |
+
+**Cursor:** TLV 運用ゲート待ち。**P2 Live 共通基盤**は [foundation plan](../reports/live-platform-common-foundation-plan.md) に従い TLV 非依存で進める。
+
+| 待機中に可 | 禁止 |
+| --- | --- |
+| バグ修正 · ドキュメント · レポート · テスト · Runbook · **P2 Live 共通基盤（TLV 非依存）** | TLV Phase 2 固有 · Wallet↔Live · TLV Chat/Moderation UI · TLV migration |
+
+**再開:** 運用ゲート ALL PASS → `Phase 1 = Complete` · `Phase 2 = Go` — 正本 [tlv-phase1-completion-gate.md §11](../reports/tlv-phase1-completion-gate.md#11-phase-1-停止--再開条件正本)
+
+**非 P0（明示）:** AI Membership 料金確定 · Live Platform Vision 制度実装（30分サバイバル全体） · Builder Credits · Enterprise Sponsored · Creator Economy 数値 — **Future**
+
+---
+
+### TLV Release P0 — ライブ配信サービス本番最低条件（2026-06-28 再棚卸し）
+
+**監査レポート:** [reports/tlv-release-p0-audit.md](../reports/tlv-release-p0-audit.md)  
+**前提:** [TLV_PRD.md](./TLV_PRD.md) v2 正本 · [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) · TLV v1.0 **FEATURE FROZEN**（`live/` UI は v1 · **収益ライブ未接続**）
+
+**スコープ定義（本棚卸し）**
+
+| スコープ | 意味 | Release 判定 |
+| --- | --- | --- |
+| **A: TLV v1.0 静的ハブ** | Shorts · VOD · stub 配信 UI | ✅ Production Ready **FROZEN** — 本監査の P0 **対象外** |
+| **B: 収益ライブ MVP** | 実映像配信 + coin 投げ銭 + 最低限チャット/安全 | **本監査の P0 正本** — **未 Go** |
+| **C: PRD v2 制度全体** | 30分サバイバル · Gauge · Score · Legend | **Future（REL-F-01/02）** — MVP 後 |
+
+**現状ギャップ（要約）:** Payment Engine **開発完了** · `live/` は `public.live_*` + **tip stub** · `tlv.streams`/Wallet **UI 未接続** · 映像 ingest **stub** · Live Chat 設計は TODO Future · `docs/TLV_LIVE_CHAT.md` **未作成**
+
+#### サービス別分類
+
+| サービス | Release P0 | P1 | Future / 対象外 |
+| --- | --- | --- | --- |
+| **Payment / Wallet** | REL-P0-02 · TLV-P0-05（Live 接続） | chargeback prod 適用 · Admin JWT E2E | IAP · Membership |
+| **Live API** | TLV-P0-01 · TLV-P0-02 · TLV-P0-03 | フォロワー限定 · 予約配信 polish | LL-HLS 高度化 · 非アクティブ軽量化 |
+| **Viewer API** | TLV-P0-04 | 実効 CCU · bot 除外 | PRD §10 T&S フル |
+| **Live Chat** | TLV-P0-06 · TLV-P0-07 | ピン留め · 投げ銭強調 · Realtime polish | TODO-CHAT-05+ · AI 翻訳/要約/モデレーター |
+| **配信終了** | TLV-P0-08 | 異常終了 runbook 拡張 | 月次 payout · 30日 hold |
+| **管理・安全** | TLV-P0-09 | 通報 UI 拡張 · admin ダッシュ | T&S フル · Legend PPR |
+| **Runbook** | REL-P0-02 · TLV-P0-10 | 24h→7d 監視 | — |
+| **映像拡張** | — | 美顔/背景ぼかし（**Decision 候補**） | AI 字幕 · AI クリップ |
+| **分析・イベント** | — | Creator 分析（基本） | イベント · 高度分析 |
+
+#### TLV Release P0 チェックリスト（blocker のみ）
+
+| ID | 領域 | 状態 | ブロッカー | 次アクション |
+| --- | --- | --- | --- | --- |
+| **REL-P0-02** | Payment Runbook | No-Go（運用） | Backup/PITR · Stripe · webhook deploy · Go Approval | Runbook Step 1→10（**Wallet 本番の前提**） |
+| **TLV-P0-01** | Live DB + RLS 本番 | 未 Go | `live_p0_schema` **DRAFT · staging 適用待ち** · `tlv.*` payment migration prod 適用待ち | staging 適用 → prod migration · RLS smoke |
+| **TLV-P0-02** | 映像 ingest（RTMP→HLS） | 未 Go | `stream_provider=stub` · Cloudflare Stream **未接続** | ingest API · playback URL · creator 権限 gate |
+| **TLV-P0-03** | 配信 lifecycle API | 部分 | `live-broadcasts.js` 直 UPDATE のみ · **Edge/RPC なし** · `tlv.streams` **未使用** | start/end/status · creator 権限 · idempotent close |
+| **TLV-P0-04** | 視聴 session / CCU | 未 Go | join/leave **なし** · `peak_viewers` 更新なし | viewer join/leave · 同接カウント · 状態表示 |
+| **TLV-P0-05** | Wallet ↔ Live UI | 未 Go | `live-tips.js` = **`live_tips` stub** · `tlv-create-tip`/coin purchase **未接続** | checkout UI · tip RPC · 残高表示 · stream_id 紐付け |
+| **TLV-P0-06** | Live Chat MVP | 部分 | `live-comments.js` 最小 CRUD のみ · Realtime/NG **なし** | 投稿/表示 · `stream_events` 連携 · rate limit |
+| **TLV-P0-07** | Moderation MVP | 未 Go | NG/BAN/mute/mod 削除 **なし**（TODO-CHAT = Future） | NG ワード · timeout/BAN · mod 削除 · 最低限ログ |
+| **TLV-P0-08** | 配信終了処理 | 未 Go | `ended_at` のみ · viewer cleanup/ledger 確定 **なし** | room close · viewer 掃除 · tip/ledger 確定 · 異常終了方針 |
+| **TLV-P0-09** | 管理・安全 | 部分 | VOD 通報（P13）のみ · **配信強制停止/BAN 未整備** | ops 配信停止 · user BAN · 監査ログ · RLS 再確認 |
+| **TLV-P0-10** | Live + Payment Runbook | 未 Go | Payment runbook のみ · **ライブ障害手順なし** | 配信停止 · webhook 失敗 · CCU 異常 · ロールバック |
+
+**Done（TLV Live P0 から除外）:** Payment Engine 実装（purchase/tip/webhook/idempotency/RPC） · staging 全スイート PASS · v1.0 静的 Live UI FROZEN · `live-comments.js` Phase 5 最小
+
+**P1（公開後 90 日 · 差別化/体験）:** 美顔/背景ぼかし（軽量映像補正 = **Decision 候補**） · 延長 Gauge UX · 投げ銭チャット強調 · Creator 基本分析 · フォロワー限定配信 · chargeback prod registry
+
+**Future / リリース対象外:** AI 字幕 · AI 翻訳 · AI クリップ · AI モデレーター · Membership · 30分サバイバル制度フル · Score/Legend/Pool · イベント機能 · Creator 高度分析 · IAP
+
+#### 推奨実装順（依存関係）
+
+```text
+1. Payment/Wallet（REL-P0-02 Runbook + TLV-P0-01 DB prod）
+      ↓
+2. Live API（TLV-P0-02 ingest + TLV-P0-03 lifecycle + TLV-P0-04 viewer）
+      ↓
+3. Wallet ↔ Live（TLV-P0-05）
+      ↓
+4. Live Chat（TLV-P0-06）
+      ↓
+5. Moderation（TLV-P0-07 + TLV-P0-09 管理）
+      ↓
+6. 配信終了 + Runbook（TLV-P0-08 + TLV-P0-10）
+```
+
+**既存 REL-P0-02 との差分:** REL-P0-02 は **Payment 運用ゲートのみ**。本節 **TLV-P0-01〜10** は **ライブ配信サービスとしての追加 blocker**（開発 + 運用 + 接続）。
+
+---
+
+### TLV Live Provider — Future Backlog（2026-06-28）
+
+**種別:** **Future · 設計バックログのみ** — 実装 · DB · UI · Gateway · Payment · SDK **変更なし**
+
+**方針:** 初期リリースは **ライブ配信 SDK**（例: ZEGO 等）を採用し、サービスを最速で公開する。SDK は **時間を買うため** に利用する — **SDK へ永続依存は前提としない**。サービス成長後、必要に応じて **段階的に独自実装へ移行** する。
+
+**関連:** [TLV Release P0](#tlv-release-p0--ライブ配信サービス本番最低条件2026-06-28-再棚卸し)（TLV-P0-02 ingest = 初期 SDK 採用） · [TLV_PRD.md](./TLV_PRD.md) §インフラ · [ROADMAP.md](./ROADMAP.md)
+
+| ID | 項目 | 状態 |
+| --- | --- | --- |
+| **TLV-LIVE-FUTURE-01** | Live Provider Interface | **PoC Done** · 本番統合 Phase 2 |
+| **TLV-LIVE-FUTURE-02** | Beauty Provider | Future · 未着手 |
+| **TLV-LIVE-FUTURE-03** | 独自 RTC 研究 | Future · 未着手 |
+| **TLV-LIVE-FUTURE-04** | SDK 置換計画 | Future · 未着手 |
+
+#### TLV-LIVE-FUTURE-01 — Live Provider Interface
+
+- [ ] **SDK 依存を抽象化** — ingest / playback / room / token 発行を Provider 非依存インターフェースに分離
+- [ ] **Provider 差し替え可能な構造** — `stream_provider` 列挙 + Adapter パターン · 設定で切替
+- [ ] **初期:** 第三者 Live SDK（例: ZEGO 等）
+- [ ] **将来:** 独自 Live Provider（自社 SFU / Media Server ベース）
+
+#### TLV-LIVE-FUTURE-02 — Beauty Provider
+
+- [ ] **初期:** SDK 標準 Beauty（美顔 · 背景ぼかし等）を利用
+- [ ] **高度 Beauty:** SDK ライセンス追加 **または** 将来自前実装 — コスト/品質で選択
+- [ ] **将来:** 独自 Beauty Engine へ置換可能な抽象化（Live Provider Interface と同様）
+
+#### TLV-LIVE-FUTURE-03 — 独自 RTC 研究
+
+- [ ] **WebRTC** — ブラウザ/モバイル P2P/SFU クライアント調査
+- [ ] **SFU** — スケールアウト · 同接コスト試算
+- [ ] **Media Server** — ingest/transcode/LL-HLS パイプライン（[TLV_PRD.md](./TLV_PRD.md) 配信基盤前提）
+- [ ] **配信最適化** — 動的 bitrate · 非アクティブ軽量化 · CCU 連動原価
+- [ ] **独自 Live 基盤** — SDK 非依存の end-to-end 設計 · PoC
+
+#### TLV-LIVE-FUTURE-04 — SDK 置換計画
+
+**置換を検討する条件（例 · すべて満たす必要はない）:**
+
+- [ ] **十分な売上** — SDK ランニングコストを自社開発償却可能な規模
+- [ ] **コスト最適化効果が大きい** — 月次 infra/SDK 費用 vs 自社運用の breakeven 試算
+- [ ] **独自基盤の品質が SDK 同等以上** — 遅延 · 安定性 · 障害復旧 · モバイル互換
+
+**段階移行（想定 · 未確定）:**
+
+1. Interface 導入（FUTURE-01）→ SDK Adapter 本番
+2. トラフィック一部を独自 Provider へカナリア
+3. 品質/コスト KPI 達成後、SDK 縮小または退役
+4. Beauty Engine 独立置換（FUTURE-02）
+
+**禁止（本 Backlog 時点）:** SDK 選定コミット · 契約 · 本番 Live UI 統合 — **Phase 2 で別途**
+
+---
+
+### TLV Live SDK — Phase 状態（2026-06-28）
+
+**正本:** [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) · [tlv-live-zego-poc-e2e.md](../reports/tlv-live-zego-poc-e2e.md) · [tlv-live-waiting-phase-audit.md](../reports/tlv-live-waiting-phase-audit.md)
+
+| Phase | 状態 | 備考 |
+| --- | --- | --- |
+| **Phase 1** PoC | **完了** | Provider · ZEGO · PoC 画面 · Token API |
+| **Phase 1.5** E2E | **実装クローズ** · E2E GO 待ち | Blocker = `.env` ZEGO 3 変数のみ |
+| **Phase 2 事前設計** Session Manager | **完了** | §15 · 実装禁止 |
+| **Phase 2 実装** | **未着手** | 1.5 GO 後 · **待機中は新規実装禁止** |
+
+#### 待機フェーズ（ZEGO 資格情報待ち）
+
+- Blocker: **ZEGO Console → `.env`**（コード問題なし）
+- 禁止: 新規実装 · 既存 Live 変更 · Payment / Wallet / Coin / 投げ銭 / 30分
+- 再開: `npm run verify:live-zego-poc-e2e` 全 PASS → Phase 1.5 GO
+
+#### Phase 1.5 — PASS（E2E 最終 GO）
+
+`.env` 設定後:
+
+```bash
+npm run dev
+npm run verify:live-zego-poc-e2e
+```
+
+**PASS:** Token API · Host/Viewer · Camera/Mic/Switch · Leave/End · Console Error なし · `reports/tlv-live-zego-poc-e2e.json` PASS
+
+#### Phase 2 — 実装計画（未着手 · 1.5 GO 後 · Payment 非結合）
+
+**設計:** [TLV_LIVE_PROVIDER.md §19](./TLV_LIVE_PROVIDER.md#19-phase-2-実装計画細分化--未着手)
+
+- [x] **Phase2-01** Session Manager Skeleton — `live/session/*` · `npm run test:live-session-manager`
+- [x] **Phase2-02** Live Service ↔ Session Manager 配線（PoC のみ · **live-broadcasts 未接続**） — `npm run test:live-service-session`
+- [x] **Phase2-03** live-broadcasts lifecycle 接続準備（feature flag **OFF 既定** · bridge · Session 同期のみ · ZEGO 未接続） — `npm run test:live-broadcasts-session-bridge`
+- [x] **Phase2-04** Session Event UI 表示（Session Debug Panel · flag OFF 既定） — `npm run test:live-session-debug-panel`
+- [x] **Phase2-05** Reconnect / Error Handling（Provider 抽象 signal · recoverable ERROR · flag OFF 既定） — `npm run test:live-session-provider-signals`
+- [x] **Phase2-06** Error Handling 強化（入力検証 · 本番ポリシー · flag OFF 既定） — `npm run test:live-session-error-policy`
+- [x] **Phase2-07** UIKit / Basic Beauty / OBS 評価（調査 · PoC 分離 · 本番非接続） — `npm run verify:live-zego-uikit-eval`
+- [x] **Phase2-08** UIKit / Beauty 実機 PoC — **SKIP**（ZEGO 資格情報未設定 · 実装なし） — `npm run verify:live-zego-uikit-beauty-poc` · [report](../reports/tlv-live-phase2-08-uikit-beauty-poc.md)
+
+**Interface / Security TODO（docs のみ）:** IF-TODO-01〜07 · SEC-TODO-01〜07 — [§17/§18](./TLV_LIVE_PROVIDER.md#17-interface-review--改善-todo実装禁止)
+
+**Phase 2 で触らない:** Payment / Wallet / Coin / Stripe / 投げ銭 / 30分 / 延長 / Membership / Score / Ranking / Moderation / AI
+
+**TLV-LIVE-FUTURE-01:** PoC Interface **Done** · 本番統合 = Phase2-01〜06
+
+---
+
+### Release P1 — 公開後すぐ
+
+| ID | 対象 | 優先度 | 状態 | ブロッカー | 次アクション |
+| --- | --- | --- | --- | --- | --- |
+| **REL-P1-01** | **TASFUL AI** | P1 | **Complete** | Membership=REL-F-04 保留 | [p1 implementation](../reports/tasful-ai-p1-implementation.md) |
+| **REL-P2-01** | **Live Platform 共通基盤** | P2 | **Core Complete（A〜F）** | Edge deploy · surface 接続（Post-MVP） | [summary](../reports/platform-live-platform-summary.md) · [plan](../reports/live-platform-common-foundation-plan.md) |
+| **REL-P1-02** | **Platform** | P1 | 未着手 | なし | featured バッジ · favorites DB · Google OAuth E2E |
+| **REL-P1-03** | **Builder AI** | P1 | staging 準備 | 本番 DB 未適用 | P2-C staging のみ（draft Supabase · RLS · Live E2E） |
+| **REL-P1-04** | **Builder 条件検索** | P1 | P1 実装 Done | LLM 未接続 | P2 Pro 自然文変換 · 統合 UI（[CONDITIONAL_SEARCH](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md)） |
+| **REL-P1-05** | **Builder Monetization** | P1 | 設計 Draft | SKU 未確定 | Contact Reveal M0–M3（**公開範囲に Reveal 含む場合**） |
+| **REL-P1-06** | **Provider Listing** | P1 | 設計 Draft | なし | Free Listing L1–L2 · Boost L3（**掲載者向け公開時**） |
+| **REL-P1-07** | **Business Directory** | P3 | Launch Gate Prep **Complete** | Commercial Launch | OB1–OB8 人間判断 · OB8 Go |
+| **REL-P1-08** | **Builder 未 push** | P1 | 未 | — | Command Dashboard 6-H コミット · Builder AI 系 push/deploy |
+
+---
+
+### Later — 後回し可
+
+| ID | 対象 | 状態 | 次アクション |
+| --- | --- | --- | --- |
+| **REL-L-01** | Builder Gemini Live 4-B | 未着手 | [backlog](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+| **REL-L-02** | Builder AI P2-C 本番 | staging 後 | 本番 DB · dev role 廃止 |
+| **REL-L-03** | Site Assistant Phase 2+ | 未着手 | Feedback Launcher 7 入口 |
+| **REL-L-04** | AI Secretary Trend Scout | 未着手 | 設計のみ |
+| **REL-L-05** | Platform クーポン基盤 | 未着手 | 設計 |
+| **REL-L-06** | TLV Payment DEV/TODO 候補 | 候補 | CAND-P2-02 IAP · DEV-05/07（Needs Decision） |
+
+---
+
+### Future — 将来構想（設計 · 数値未確定 · 実装禁止扱い）
+
+| ID | 対象 | 正本 |
+| --- | --- | --- |
+| **REL-F-01** | Live Platform Vision 制度実装 | AD-014 · [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) |
+| **REL-F-02** | TLV Pricing / Creator Economy 数値 | [MONETIZATION.md](./MONETIZATION.md) · TODO §TLV Pricing |
+| **REL-F-03** | TLV Membership | [tlv-membership-design.md](../reports/tlv-membership-design.md) |
+| **REL-F-04** | AI Membership Pricing 実装 | [AI_MEMBERSHIP_PRICING.md](./AI/AI_MEMBERSHIP_PRICING.md) |
+| **REL-F-05** | Builder Credits BC-1+ | [BUILDER_CREDITS.md](./AI/BUILDER_CREDITS.md) |
+| **REL-F-06** | Provider Listing L6 Enterprise / TOP 入札 | [BUILDER_PROVIDER_LISTING.md](./AI/BUILDER_PROVIDER_LISTING.md) |
+| **REL-F-07** | Builder 条件検索 P3 AI 要約 | [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
+| **REL-F-08** | TLV Live Provider 抽象化 · SDK 置換 | 下記 [TLV Live Provider — Future Backlog](#tlv-live-provider--future-backlog2026-06-28) |
+| **REL-F-09** | Graph-based Collusion Detection | [TLV_PRD.md](./TLV_PRD.md) §7.5 · TODO-COLLUSION-GRAPH |
+| **REL-F-10** | Creator ネガティブ payout ledger（v1 不採用 · v2 ADR 候補） | Design Audit §C · Wallet マイナス禁止 |
+| **REL-F-11** | Creator Marketplace | 下記 §CAND-CREATOR-MARKETPLACE-01 |
+| **REL-F-12** | AI Sound Library | 下記 §CAND-ASSET-LIBRARY-02 |
+
+---
+
+### CAND-CREATOR-MARKETPLACE-01 — Creator Marketplace（Future）
+
+**状態:** Future（未着手）  
+**優先度:** P2〜P3（既存サービス安定後）  
+**種別:** 設計バックログのみ — 実装 · DB · API · UI · migration · deploy **禁止（本条目時点）**
+
+#### 概要
+
+クリエイターがデジタル商品を販売し、そのプロフィールから制作依頼も受けられる Marketplace を追加する。
+
+目的:
+
+- 商品販売
+- ポートフォリオ
+- ワーカー依頼
+
+を 1 つのクリエイターページへ統合する。
+
+#### MVP
+
+- Creator Profile
+- 商品一覧
+- 商品投稿
+- 商品詳細
+- 商品購入
+- レビュー
+- 「この人に依頼する」ボタン
+- Creator 実績表示（販売数 · 評価 · レビュー数）
+
+#### 対応予定カテゴリ
+
+- AI画像
+- AI動画
+- 写真
+- 動画素材
+- BGM
+- 効果音
+- アイコン
+- デザイン
+- HTML/CSS
+- Webテンプレート
+- Builderテンプレート
+- AIプロンプト
+- LoRA
+- その他デジタルコンテンツ
+
+#### 将来拡張
+
+- サブスク販売
+- バンドル販売
+- ライセンス設定
+- クーポン
+- アフィリエイト
+- 売上分析
+- Creator Dashboard
+- AI商品説明生成
+- TLVライブ販売連携
+- Builderテンプレート販売連携
+
+#### 他サービス連携
+
+| サービス | 連携 |
+| --- | --- |
+| **TASFUL AI** | 商品説明生成 · タグ生成 · SEO補助 |
+| **TLV** | ライブ中の商品紹介 · Creatorページへの導線 |
+| **Builder** | テンプレート販売 · 制作実績販売 |
+| **Business Directory** | 企業案件への導線 |
+| **Worker** | 「この人に依頼する」から制作依頼 |
+
+#### 設計メモ
+
+商品販売とワーカー依頼は分離せず、同一 Creator Profile に統合する。
+
+「作品 → 信頼 → 購入 → 制作依頼」という導線を基本設計とする。
+
+---
+
+### CAND-ASSET-LIBRARY-02 — AI Sound Library（Future）
+
+**状態:** Future（未着手）  
+**優先度:** P2〜P3（Platform · Marketplace 安定後）  
+**種別:** 設計バックログのみ — 実装 · DB · API · UI · migration · deploy **禁止（本条目時点）**
+
+#### 概要
+
+TASFUL Platform に AI 生成による音楽 · 効果音ライブラリを追加する。
+
+無料素材を集客入口とし、有料素材 · Creator Marketplace · 制作依頼へ導線を作る。
+
+#### BGM
+
+**生成ツール**
+
+- Suno
+
+**主なカテゴリ**
+
+- Corporate Pack
+- Vlog Pack
+- Podcast Pack
+- Relax Pack
+- Happy Pack
+- Cinematic Pack
+- Gaming Pack（Premium候補）
+
+#### 効果音（SFX）
+
+**生成候補**
+
+- AudioCraft（AudioGen）
+- Stable Audio Open
+
+ローカル GPU を利用し、大量生成可能な環境を前提とする。
+
+#### SFXカテゴリ
+
+**UI**
+
+- Button
+- Hover
+- Notification
+- Success
+- Error
+- Popup
+
+**Game**
+
+- Sword
+- Magic
+- Explosion
+- Gun
+- Bow
+- Heal
+- Item
+- Coin
+- Level Up
+
+**Environment**
+
+- Rain
+- Wind
+- Ocean
+- River
+- Forest
+- Fire
+- Thunder
+- City
+- Crowd
+
+**Horror**
+
+- Whisper
+- Monster
+- Door
+- Scary Hit
+- Heartbeat
+
+**Video**
+
+- Whoosh
+- Transition
+- Impact
+- Click
+- Pop
+- Sweep
+
+#### 将来構想
+
+無料素材
+
+↓
+
+Premium素材
+
+↓
+
+Creator Marketplace
+
+↓
+
+「この人に依頼する」
+
+までを 1 つの導線として構築する。
+
+#### 設計メモ
+
+- BGM は Suno を基本とする。
+- 効果音は AudioCraft / Stable Audio Open を中心に検証する。
+- 効果音はローカル GPU 環境で大量生成できる構成を目指す。
+
+---
+
+### Done — 完了済み（代表 · deploy 残は P1）
+
+| 領域 | 代表成果 | 参照 |
+| --- | --- | --- |
+| **TASFUL AI PR** | Workspace 課金 P1/P2 · Brave Search · CF Access E2E · prod alias | [tasful-ai-production-ready-verification.md](../reports/tasful-ai-production-ready-verification.md) |
+| **TLV Payment 開発** | purchase/tip/chargeback · migration · audit **Development Complete** | [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) |
+| **Business Directory** | Phase 1–7 · Production Step 4 **48/48 Go** | TODO §Business Directory |
+| **Builder AI** | Tools P3 · Vision P2/P5 · Live 4-A · Project 6-A〜6-H 実装 | [BUILDER_AI.md](./AI/BUILDER_AI.md) |
+| **Builder 条件検索** | P0 schema · P1 Repository | [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
+| **Builder 設計** | Monetization · Provider Listing · Credits **Draft** | `docs/AI/BUILDER_*.md` |
+| **AI 秘書 実装** | DeepSeek P1/P2 · Orchestrator P5 · Google 6-B〜7-B | commit `6c70985` 系 |
+| **Live Vision 設計** | AD-014 · 6 設計書 | [ROADMAP.md](./ROADMAP.md) |
+
+---
+
+### Deprecated 候補（統合 · 参照非推奨）
+
+| 項目 | 理由 | 正本へ |
+| --- | --- | --- |
+| `## P0 — 直近` §1「440 件未コミット」 | HEAD clean と矛盾 · 数値古い | **REL-P0-01** |
+| `### AI Membership Pricing` の **P0** チェックリスト | 料金 **Draft** · 実装 Future | **REL-F-04** |
+| `Live Platform Vision` の **P0** ラベル（設計完了部） | Release P0 と混同 | **Done** + **REL-F-01** |
+| `## TLV Pricing` + `## Creator Economy` + `## Platform Economy Phase 2` 後半の **重複 Creator Score 表** | 同一設計の二重記載 | §TLV Pricing 正 · 後半は Deprecated |
+| `Builder AI P2-C` を Release P0 扱い | Builder v1.0 **FROZEN** · staging のみ | **REL-P1-03** |
+| 旧 `優先: 上から順` のみの運用 | Release Readiness 未分類 | 本セクション |
+
+---
+
+### Builder 課金 · 掲載 · 検索 — Release 分類早見
+
+| 機能 | 分類 | 備考 |
+| --- | --- | --- |
+| 条件検索 P0/P1（Repository） | **Done** | 検索は常に無料 |
+| 条件検索 P2（LLM 変換） | **Later/P1** | Pro · Gateway |
+| Contact Reveal 実装 | **P1**（Reveal 公開時 **P0**） | [BUILDER_MONETIZATION.md](./AI/BUILDER_MONETIZATION.md) |
+| Provider Free Listing | **P1** | 掲載無料 |
+| Provider Boost / Sponsored | **P1**（TOP/Enterprise **Future**） | [BUILDER_PROVIDER_LISTING.md](./AI/BUILDER_PROVIDER_LISTING.md) |
+| Builder Credits | **Future** | [BUILDER_CREDITS.md](./AI/BUILDER_CREDITS.md) |
+| Builder AI サブスク | **Future/P1** | entitlements 未接続 |
+
+---
+
+## Legacy 索引 — 旧構成（詳細・履歴）
+
+> 以下は **詳細タスク履歴**。優先度は上記 **Release Readiness** を正とする。
+
+## Legacy — 旧 P0 直近
 
 ### 1. 残存未コミット変更 440 件の整理
 
@@ -55,13 +684,47 @@
 - [x] Cloudflare Access **Service Token** 設定 + prod alias E2E（2026-06-28）
 - [x] formal `build:pages` → prod alias deploy（2026-06-28）
 - [x] Workspace 課金 enforcement **Phase 2**（Edge + DB quota · Production deploy 2026-06-28）
-- [ ] 動画/音楽 API — `ai-media-gen-config.js` で `enabled: true` + Edge Function
+- [x] 動画/音楽 API — Edge `ai-workspace-*-generate` · `AI_MEDIA_GEN_EDGE_ENABLED=1` · 2026-06-28
 
 ---
 
-## P1 — 製品別
+### AI Membership Pricing（Draft · 2026-06-28 · **Future — Release P0 ではない**）
 
-### 3. Builder AI P2-C
+**正本:** [docs/AI/AI_MEMBERSHIP_PRICING.md](./AI/AI_MEMBERSHIP_PRICING.md) · **Release 分類:** [REL-F-04](#future--将来構想設計--数値未確定--実装禁止扱い)  
+**Status:** Draft（**原価・運用検証前 · 実装 Future**）
+
+**Draft doc タスク（実装前 · すべて Future）**
+
+**Pricing Structure（doc）**
+
+- [ ] 仮価格 — Free ¥0 · Lite ¥300 · Pro ¥980 · Max ¥2,980
+- [ ] Lite: Gemini 特化 · 日常用途 · 軽量高速高回数
+- [ ] Pro: 収益コア · マルチ AI（Gemini / ChatGPT / Claude）
+- [ ] Max: フル機能 · フェアユース拡張
+- [ ] 料金 UI「Draft Pricing」明記
+
+**Entry Campaign（doc）**
+
+- [ ] ¥150 プラン（常設しない · Option A/B/C いずれか）— Lite ¥300 への移行促進
+
+**Philosophy（doc）**
+
+- [ ] Unlimited 不採用 · Cursor 型 · 平均原価ベース · ¥150=マーケ装置
+
+**Next Step（原価確定後 · Future）**
+
+- [ ] API 原価モデル · プラン別平均利用量 · フェアユース閾値 · Lite→Pro 移行率
+- [ ] 原価シミュ後の価格再評価（粗利率 Lite/Pro 70% · Max 65〜70%）
+
+**Later**
+
+- [ ] USD 基準価格 · 地域別価格（Purchasing Power）
+
+---
+
+## Legacy — 旧 P1 製品別
+
+### 3. Builder AI P2-C（**Release P1 · REL-P1-03** · staging のみ · 本番 FROZEN）
 
 | 項目 | 内容 |
 | --- | --- |
@@ -95,9 +758,9 @@
 
 **正本 AD:** [DECISIONS.md](./DECISIONS.md) **AD-014** · 詳細: [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) · [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) · [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) · [MONETIZATION.md](./MONETIZATION.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) · [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md)
 
-**注:** TLV v1.0 は **FEATURE FROZEN**。以下は **次世代 Platform Vision**（設計のみ · **実装未着手**）。
+**注:** TLV v1.0 は **FEATURE FROZEN**。以下は **次世代 Platform Vision**（**Future · REL-F-01** · 実装未着手）。
 
-### P0 — 設計正本（完了）
+### Done — 設計正本（旧「P0 — 設計正本」ラベル · Release P0 ではない）
 
 | タスク | 状態 |
 | --- | --- |
@@ -115,6 +778,30 @@
 - [x] AD-014 確定 · DECISIONS 正本登録
 - [x] TODO · ROADMAP 更新
 - [ ] 設計書コミット（選別ステージング · `git add -A` 禁止）
+
+### TLV Design Audit Follow-up — 制度追補（2026-06-28 · docs のみ）
+
+**根拠:** [reports/tlv-design-audit-reconciliation.md](../reports/tlv-design-audit-reconciliation.md) · [reports/tlv-design-audit-followup-policy.md](../reports/tlv-design-audit-followup-policy.md)  
+**正本:** [TLV_PRD.md](./TLV_PRD.md) §5.5.3 · §7.5–7.6 · [ADMIN_SYSTEM.md](./ADMIN_SYSTEM.md) §6.5–6.6 · §9.3 · [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) §6.5
+
+**docs 追記済（本節）:** TS 回復 · Collusion v1 · Clawback 運用 — **Score/Rank/Override/Wallet 根幹は不変**
+
+| ID | 領域 | 内容 | 分類 | 状態 |
+| --- | --- | --- | --- | --- |
+| **TODO-TS-REC-01** | TS 回復 | Ops UI `/admin/tlv/trust` TS Recovery タブ · `creator_score_events` 正 delta 発行 | MVP 前 Ops | 未着手 |
+| **TODO-TS-REC-02** | TS 回復 | 日次 03:30 `TS_CLEAN_PERIOD_RECOVERY` バッチ | P1 · Score バッチ依存 | 未着手 |
+| **TODO-COLLUSION-01** | Collusion | `suspicious_collusion_flag` · CL-01〜05 ルールエンジン（ルールベース） | MVP 前 T&S | 未着手 |
+| **TODO-COLLUSION-02** | Collusion | `/admin/tlv/trust` Collusion Queue UI | MVP 前 Ops | 未着手 |
+| **TODO-CB-OPS-01** | Clawback | FinOps payout 後 manual recovery Runbook 実施 · production 適用 | **REL-P0-02** | 未着手 |
+| **TODO-CB-OPS-02** | Clawback | 将来売上相殺 — payout batch 控除累積（FinOps 承認フロー） | P1 | 未着手 |
+| **TODO-LEGAL-CB-01** | Clawback / Wallet | 利用規約 · 運用ポリシー — clawback · shortfall · frozen · Creator 相殺条文 | MVP 前 法務 | 未着手 |
+
+**Future（実装対象外 · 設計のみ索引）**
+
+| ID | 内容 |
+| --- | --- |
+| **REL-F-09** | Graph-based Collusion Detection（CL グラフ · ML · `trust_signals` 高度化） |
+| **REL-F-10** | Creator ネガティブ payout ledger（**v1 不採用** — 必要時 v2 ADR） |
 
 ### P1 — 実装準備（未着手）
 
@@ -157,13 +844,17 @@
 
 ---
 
-## TLV / Live Platform
+## TLV / Live Platform（**Future 索引** · 詳細は Legacy）
+
+> **Release 分類:** **収益ライブ MVP P0** = 上記 [TLV Release P0](#tlv-release-p0--ライブ配信サービス本番最低条件2026-06-28-再棚卸し) · Payment Release Ops = **REL-P0-02** · Live Provider/SDK 置換 = **REL-F-08** · Pricing/Creator 数値 = **REL-F-02** · Vision 制度 = **REL-F-01**
 
 **前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** · [MONETIZATION.md](./MONETIZATION.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md)  
-**種別:** 料金 · 収益 · PL 制度設計 — **実装未着手 · 数値未確定**  
+**種別:** 料金 · 収益 · PL 制度設計 — **Future · 数値未確定**  
 **詳細:** [TLV Pricing & Business Model v1](#tlv-pricing--business-model-v1) · [Creator Economy v1](#creator-economy-v1) · [Platform Economy Phase 2](#platform-economy-phase-2)
 
 ---
+
+<!-- Legacy duplicate header removed — see Release Readiness REL-F-02 -->
 
 ## TLV Pricing & Business Model v1
 
@@ -374,9 +1065,21 @@ YouTube で無料提供されている機能は **基本無料** とする。
 **前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** · [Creator Economy v1](#creator-economy-v1) · [TLV Pricing & Business Model v1](#tlv-pricing--business-model-v1)  
 **種別:** TLV Platform 設計バックログ — **設計のみ · 実装未着手**
 
-### TLV Payment Engine（開発フェーズ完了 · Production Readiness Review · 2026-06-28）
+### TLV Payment Engine（**Development Complete** · **Phase 1 実装停止** · Release Operations · 2026-06-28）
 
-**正本:** [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) v1.7 · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) · [reports/tlv-payment-production-readiness.md](../reports/tlv-payment-production-readiness.md)
+**正本:** [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) v1.7 · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) · [reports/tlv-payment-production-readiness.md](../reports/tlv-payment-production-readiness.md) · [reports/tlv-phase1-completion-gate.md](../reports/tlv-phase1-completion-gate.md)
+
+**開発・設計・実装・監査フェーズ:** **完了** — [Final Audit](../reports/payment-production-final-audit.md) · Go Readiness Final Review · [Release Execution](../reports/tlv-phase1-production-execution.md) · [Completion Gate](../reports/tlv-phase1-completion-gate.md)
+
+| 結論 | 内容 |
+| --- | --- |
+| 実装 Blocker | **0** — **技術的ブロッカー解消済** |
+| SQL / RPC / Migration / 設計変更 | **不要 · 着手禁止** |
+| Phase 1 実装作業 | **停止（2026-06-28）** — 運用ゲートのみ |
+| Production Go を止める要因 | **運用ゲートのみ**（Backup Dashboard · Stripe · Live smoke · Go Approval） |
+| Phase 2 / Live / Wallet↔Live / Chat / Moderation | **Complete まで着手禁止** |
+
+**以降の方針（凍結）:** 新たな設計レビュー · 改善提案 · リファクタリング · **TODO 追加は行わない**。追加レビューは **Production リリース後**に障害 · 不具合 · 性能 · 運用課題が発生した場合のみ。実施は **Runbook オペレーションのみ**（deploy / migration / コード修正は Runbook 手順・障害対応時のみ）。
 
 | フェーズ | 状態 |
 | --- | --- |
@@ -384,8 +1087,17 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | Staging 検証 | **全スイート PASS** |
 | Production Readiness Review | **確定** — [runbook](../reports/tlv-payment-production-readiness.md) |
 | Migration Recovery | **P1+P2 完了** — [recovery plan](../reports/tlv-payment-migration-recovery-plan.md) · git `dded4b4` |
-| Release Verification RV1 | **2026-06-28 · No-Go** — [RV1 report](../reports/tlv-payment-release-verification.md) · TODO-PROD **0/7 READY** |
-| Production Go | **No-Go** — Release **停止維持** · P0 blocker: PITR · PostgREST `tlv` · Stripe webhook · PS-02〜05 / PS-M01〜05 |
+| Release Verification RV1 | **2026-06-28 · No-Go** — [RV1 report](../reports/tlv-payment-release-verification.md) |
+| Release Verification RV2 | **2026-06-28 · No-Go** — [RV2 report](../reports/tlv-payment-release-verification-rv2.md) · PostgREST 404 誤解解消 · **webhook Edge drift 確定** · TODO-PROD **0/7 READY** |
+| Release Verification RV3 | **2026-06-28 · No-Go** — [RV3 release plan](../reports/tlv-payment-release-plan-rv3.md) · webhook drift **実コード確認** · **PITR false** · Stripe Dashboard 未確認 |
+| FINAL PRE-FLIGHT | **2026-06-28 · No-Go** — [preflight report](../reports/payment-production-final-preflight.md) · deploy plan 確定（webhook のみ）· Checklist **0/6 READY** |
+| Dashboard Verification | **2026-06-28 · NOT READY** — [dashboard verification](../reports/payment-production-dashboard-verification.md) · Backup PITR false · Stripe 未確認 |
+| Final Audit | **2026-06-28 · NO-GO（運用）** — [final audit](../reports/payment-production-final-audit.md) · 実装 Blocker **0** · 運用 Blocker **6** |
+| Go Readiness Final Review | **2026-06-28** — 実装 **READY WITH OPERATIONS** · Production Go **NO-GO** |
+| Release Execution | **2026-06-28 · Step 0-4** — [execution log](../reports/payment-production-release-execution.md) · Step 1-3 FAIL · Go Approval **No-Go** |
+| Lock Order 監査 | **2026-06-28 完了** — [PAYMENT_ENGINE.md](../docs/PAYMENT_ENGINE.md) · [lock order review](../reports/payment-lock-order-review.md) |
+| **Release Operations** | **Paused** — 運用ゲート待ち · [Completion Gate §11](../reports/tlv-phase1-completion-gate.md#11-phase-1-停止--再開条件正本) |
+| **Phase 1 Completion Gate** | **2026-06-28** — 技術 PASS · Complete **No-Go**（運用のみ）· 実装 **停止** |
 
 | ID | 内容 | 判断 | 状態 |
 | --- | --- | --- | --- |
@@ -408,21 +1120,29 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | TODO-RLS-03 | Admin JWT E2E（`talk_is_admin` / `is_ops`） | **候補** | `tlv_admin` 新設 **不要/保留** · 既存 hook + `talk_is_admin()` 再利用 · admin SELECT Policy 未 E2E |
 
 **Phase 2 staging Go/No-Go:** **Go** — 全スイート PASS（logic 26 · RPC 19 · RLS 30 · CB 10 · edge）。  
-**Phase 2 本番 Go/No-Go:** **No-Go** — [RV1](../reports/tlv-payment-release-verification.md) 2026-06-28 · fingerprint/Skip PASS · Platform/Smoke/Go 未完了
+**Phase 1 Complete / Phase 2 本番 Go:** **No-Go** — 運用ゲート pending · 実装停止 · [completion gate](../reports/tlv-phase1-completion-gate.md)
 
-**RV1 Blocker（P0）:** PITR 未確認 · PostgREST remote `tlv` 404 · Stripe 7 events 未確認 · PS-02〜05 / PS-M01〜05 未 PASS
+**Release Operations 残（Runbook 正本 · コード変更禁止）:** ① Backup Dashboard ② snapshot 日時 ③ Stripe 7 events（§2.4 正本 · `refund.updated` 必須）④ test delivery ⑤ Live smoke ⑥ Go Approval ⑦ 24h 監視
 
-**Production Release 手順:** [reports/tlv-payment-production-readiness.md §6](../reports/tlv-payment-production-readiness.md#6-production-release-手順確定版)
+**PRE-FLIGHT Blocker（運用 · P0）:** snapshot 日時未記録 · Stripe 7 events **Dashboard 未確認** · PS-M Live 手動未 PASS · Go Approval なし · **`STRIPE_WEBHOOK_SECRET_TLV` 未分離（推奨）**
 
-#### Production Go チェックリスト（未着手 · Runbook 参照）
+**解消済（技術）:** fingerprint 7/7 · migration apply 0 · Edge v4 deploy · PS-01〜05 自動 PASS · FinOps Runbook
 
-- [ ] **TODO-PROD-01** Migration Inventory → Skip → Verify（Step 0〜5 · [manifest](../reports/tlv-payment-migration-manifest.json)）
-- [ ] **TODO-PROD-02** PostgREST `tlv` expose（RLS 後）
-- [ ] **TODO-PROD-03** Edge deploy（`tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip`）
-- [ ] **TODO-PROD-04** Stripe Production webhook +4 events
-- [ ] **TODO-PROD-05** Production smoke PS-01〜05 + PS-M01〜05
-- [ ] **TODO-PROD-06** FinOps Runbook 運用開始
-- [ ] **TODO-PROD-07** Go/No-Go 承認 · 24h 監視
+**Lock Order（監査完了 · 開発凍結）:** [PAYMENT_ENGINE.md](../docs/PAYMENT_ENGINE.md) · [review](../reports/payment-lock-order-review.md) — Production Go 追加 blocker なし · TODO-LOCK-* は **開発凍結**（障害発生時のみ再開）
+
+**Production Release 手順:** [reports/tlv-payment-production-readiness.md §6](../reports/tlv-payment-production-readiness.md#6-production-release-手順確定版) · [execution log](../reports/payment-production-release-execution.md)
+
+#### Release Operations チェックリスト（Runbook 参照 · 開発 TODO 追加禁止 · 実装停止中）
+
+- [ ] Backup Dashboard 目視 · snapshot 日時記録 · rollback 確認
+- [ ] PITR 方針確認（WAL-G-only · false 継続 · 文書化済）
+- [ ] Stripe Dashboard — endpoint · **§2.4 正本 7 events**（`checkout.session.*` **不要** · `refund.updated` **必須**）· test delivery
+- [ ] `STRIPE_WEBHOOK_SECRET_TLV` 分離（推奨）
+- [ ] Go Approval
+- [x] `tlv-payment-webhook` deploy（v4 · 2026-06-28 execution）
+- [x] PS-02〜05 自動（Gate 再実行 PASS）
+- [ ] PS-M01 · M03 · M04 · M06 · M07 Live 手動
+- [ ] Production Go 宣言 · 24h 監視
 
 **実装済 Edge Functions:** `tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip` · `tlv-e2e-simulate-payment`（prod 非推奨）
 
@@ -828,13 +1548,15 @@ YouTube で無料提供されている機能は **基本無料** とする。
 
 ---
 
-## Creator Economy - Numeric Design（制度数値設計 · AD-014 次フェーズ）
+## Creator Economy - Numeric Design（**Deprecated 候補 · 重複** · AD-014）
 
-**前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** 確定済 · [Live Platform Vision](#live-platform-vision制度設計--2026-06-28-確定) P0 設計正本完了  
-**種別:** 制度設計タスクのみ — **実装 · コード · API · DB · UI 変更禁止**  
-**注:** 数値は本フェーズで **設計案** とし、コスト試算 · PL 確定後に正式決定する。
+> **Release 分類:** **REL-F-02 Future** · 正本は [Creator Economy v1](#creator-economy-v1) + [TLV Pricing](#tlv-pricing--business-model-v1)。本セクションは詳細チェックリストとして残置 · 新規参照は非推奨。
 
-### P0 — 制度設計（未着手）
+**前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** 確定済 · Live Platform Vision 設計 Done  
+**種別:** 制度設計タスクのみ — **実装禁止**  
+**注:** 数値は **Future** · コスト試算 · PL 確定後に正式決定。
+
+### Legacy P0 ラベル — 制度設計（未着手 · Future）
 
 #### Creator Score
 
@@ -992,6 +1714,8 @@ Platform 利益
 - **Production Step 2 Edge:** staging deploy · secrets · smoke · `scripts/test-business-directory-production-step2-edge.mjs --remote` — **15/15 PASS**
 - **Production Step 3 Preview E2E:** Pages preview deploy · mock なし E2E · `scripts/test-business-directory-production-step3-preview-e2e.mjs --e2e` — **15/15 PASS**（Production 本番公開は未実施）
 - **Production Step 4 Deploy:** Production Pages deploy · 最終 smoke · `scripts/test-business-directory-production-step4-production.mjs --all` — **48/48 PASS · Go**
+- **Step 5 Operational Readiness:** [operational readiness](../reports/business-directory-operational-readiness.md) · **Commercial Launch No-Go**
+- **Launch Gate Preparation:** [launch gate prep](../reports/business-directory-launch-gate-prep.md) · OB1–OB8 分類済
 
 ### AI プロバイダ分担
 
@@ -1095,6 +1819,45 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder Notification Center Phase 6-G** | ✅ commit 済 | `74d54b8` · `reports/builder-notification-center-phase6g.md` |
 | **Builder Command Dashboard Phase 6-H** | ✅ 実装 · 未コミット | `reports/builder-dashboard-phase6h.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
+| **Builder AI 条件検索** | P0 ✅ · P1 ✅ · P2 📋 | [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) · `builder-search-repository.js` |
+| **Builder Monetization / Contact Reveal** | 📋 設計 Draft | [BUILDER_MONETIZATION.md](./AI/BUILDER_MONETIZATION.md) · 検索無料 · 連絡先開示都度 · AI サブスク分離 |
+| **Builder Provider Listing / Sponsored** | 📋 設計 Draft | [BUILDER_PROVIDER_LISTING.md](./AI/BUILDER_PROVIDER_LISTING.md) · 無料掲載 · Boost · deterministic ランキング |
+| **Builder Credits（Future）** | 📋 設計 Draft | [BUILDER_CREDITS.md](./AI/BUILDER_CREDITS.md) · Builder 専用 Wallet · 他 Wallet 非統合 |
+
+**Builder Monetization Backlog（設計 Draft · 未実装）**
+
+- 正本: [BUILDER_MONETIZATION.md](./AI/BUILDER_MONETIZATION.md) · レポート: [reports/builder-monetization-design.md](../reports/builder-monetization-design.md)
+- **M0** Stripe Product SKU（Reveal 単品/パック · Builder Pro/Business）
+- **M1** `contact_reveals` migration · RLS · `UNIQUE(user_id, target_type, target_id)`
+- **M2** Checkout + webhook · `payment_id` 紐付け
+- **M3** プロフィール reveal CTA · 既開示再閲覧無料 UI
+- **M4** Builder AI サブスク entitlements（AI gate 分離）
+- **M5** パック残数 · 返金/revoke 運営ツール
+- **禁止:** 検索/プロフィール有料壁 · メッセージ従量 · AI Membership 統合 · サブスク必須
+
+**Builder Provider Listing Backlog（設計 Draft · 未実装）**
+
+- 正本: [BUILDER_PROVIDER_LISTING.md](./AI/BUILDER_PROVIDER_LISTING.md) · レポート: [reports/builder-provider-listing-design.md](../reports/builder-provider-listing-design.md)
+- **L0** SKU · Sponsored 表示ガイドライン · organic/sponsored 比率
+- **L1** `provider_profiles` · `contact_private` 分離 · RLS
+- **L2** 掲載者プロフィール CRUD UI（Free Listing）
+- **L3** `provider_listing_plans` · `provider_boosts` · Stripe サブスク
+- **L4** 検索パイプライン boost merge · Sponsored ラベル UI
+- **L5** `provider_stats_daily` · `search_result_impressions` · 掲載者ダッシュボード
+- **L6** Sponsored TOP 地域枠 · Enterprise
+- **禁止:** 金払い順固定 · Sponsored 非表示 · LLM ランキング · 連絡先無料公開 · Reveal/Boost 混同
+
+**Builder Credits Backlog（Future Draft · 未実装）**
+
+- 正本: [BUILDER_CREDITS.md](./AI/BUILDER_CREDITS.md) · レポート: [reports/builder-credits-design.md](../reports/builder-credits-design.md)
+- **BC-0** 設計 ✅
+- **BC-1** `builder_wallets` · `builder_wallet_ledger` schema · RLS
+- **BC-2** Payment 連携（Builder 専用 · TLV Payment Engine 変更禁止）
+- **BC-3** Credits 購入 UI + Checkout
+- **BC-4** Credits 消費 hook（reason_code · idempotency · transaction）
+- **BC-5** 管理画面（残高 · adjustment · suspend）
+- **BC-6** 監査ログ · 不正検知
+- **禁止:** AI Membership / TLV Wallet / Platform / Coin 統合 · サブスク代替化 · 今回 migration/Stripe 実装
 
 - 店舗・出品者のクーポン発行・管理（円/％ OFF · 期間 · 上限 · 対象商品等）
 - 購入者の表示・カート適用・利用済み/不可理由
