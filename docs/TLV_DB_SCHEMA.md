@@ -350,10 +350,11 @@ platform_revenue_jpy = net_amount_jpy - infra_cost_jpy - creator_payout_jpy
 
 ---
 
-## 9. Row Level Security（RLS · TODO-07 設計 · 未適用）
+## 9. Row Level Security（RLS · TODO-07 · linked DB 適用済）
 
 **正本設計:** [reports/tlv-payment-rls-design.md](../reports/tlv-payment-rls-design.md)  
-**状態:** **staging 適用済（20260628150000）· production 未適用** — [reports/tlv-payment-rls-staging-test.md](../reports/tlv-payment-rls-staging-test.md)
+**適用状態正本:** [reports/tlv-payment-migration-manifest.json](../reports/tlv-payment-migration-manifest.json) · `scripts/sql/tlv-recovery-fingerprints-all.sql`  
+**状態:** **linked DB（`ddojquacsyqesrjhcvmn`）適用済 · 20 policies · `schema_migrations` 未登録** — [reports/tlv-payment-rls-staging-test.md](../reports/tlv-payment-rls-staging-test.md)
 
 ### 9.1 方針
 
@@ -389,9 +390,9 @@ platform_revenue_jpy = net_amount_jpy - infra_cost_jpy - creator_payout_jpy
 
 ### 9.3 Policy SQL
 
-`CREATE POLICY` · `ENABLE ROW LEVEL SECURITY` · `FORCE ROW LEVEL SECURITY` の **SQL 案のみ** — [reports/tlv-payment-rls-design.md §4](../reports/tlv-payment-rls-design.md#4-推奨-policy-sql-案作業3--未適用)。
+`CREATE POLICY` · `ENABLE ROW LEVEL SECURITY` · `FORCE ROW LEVEL SECURITY` — migration `20260628150000` · [reports/tlv-payment-rls-design.md §4](../reports/tlv-payment-rls-design.md#4-推奨-policy-sql-案作業3--未適用)。
 
-**本番 blocker:** TODO-06 chargeback **staging検証済 · production migration 待ち** · **TODO-07 production migration 未適用**（staging RLS PASS 済）。
+**Release gate:** Inventory fingerprint PASS → **Skip（再 apply 禁止）** → Verify（PS-03 30/30）— [recovery plan](../reports/tlv-payment-migration-recovery-plan.md)
 
 ### 9.4 TODO-06 DB 変更（P0 実装済 · staging検証済）
 
@@ -399,13 +400,13 @@ platform_revenue_jpy = net_amount_jpy - infra_cost_jpy - creator_payout_jpy
 
 | 変更 | 状態 | 内容 |
 | --- | --- | --- |
-| `revenue_ledger` CHECK 緩和 | **✅ 適用済（staging）** | `event_kind=adjustment` のみ net/gross 負値可 |
+| `revenue_ledger` CHECK 緩和 | **✅ 適用済（linked DB）** | `event_kind=adjustment` のみ net/gross 負値可 |
 | `tlv.payment_reversals` | **✅ 作成済** | refund/dispute 監査 · shortfall · `manual_finops` |
 | `payments.stripe_charge_id` index | **✅** | charge webhook lookup |
 | RPC 4 本 | **✅** | `handle_payment_refund` · `handle_payment_dispute` · 2 internal |
 | RLS `payment_reversals` | **✅** | admin SELECT only（TODO-07 パターン） |
 
-**Production 適用手順:** [reports/tlv-payment-production-readiness.md §1](../reports/tlv-payment-production-readiness.md#1-production-migration-runbook) — Step 4（RLS）→ Step 5（chargeback）順序厳守
+**Release 手順:** [reports/tlv-payment-production-readiness.md §1](../reports/tlv-payment-production-readiness.md#1-production-migration-runbook) — **Inventory → Skip → Verify**（Step 0〜5 fingerprint 充足時は apply なし）
 
 ---
 

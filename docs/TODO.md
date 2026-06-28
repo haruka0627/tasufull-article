@@ -383,7 +383,8 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | P0 実装（purchase · tip · chargeback · RLS） | **完了** |
 | Staging 検証 | **全スイート PASS** |
 | Production Readiness Review | **確定** — [runbook](../reports/tlv-payment-production-readiness.md) |
-| Production Go | **No-Go** — migration · deploy · webhook 未実施 |
+| Migration Recovery | **計画確定** — [recovery plan](../reports/tlv-payment-migration-recovery-plan.md) · manifest · Inventory → Skip → Verify |
+| Production Go | **No-Go** — RC1 release **Phase 0 STOP**（[release report](../reports/tlv-payment-production-release.md)） |
 
 | ID | 内容 | 判断 | 状態 |
 | --- | --- | --- | --- |
@@ -400,19 +401,19 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | ~~DEV-04~~ | createTip INSERT error チェック | **解消** — TX rollback | v1.2.5 |
 | DEV-05 | extension_contributors 完全仕様 | TODO候補 | RPC は first-payer カウント実装済 |
 | DEV-07 | self_gift text のみ比較 | TODO候補 | 未変更 |
-| TODO-06 | chargeback / clawback | **実装完了 · staging検証済 · production適用待ち** | [design](../reports/tlv-payment-chargeback-clawback-design.md) · [implementation](../reports/tlv-payment-chargeback-clawback-implementation.md) · migration `20260628160000` · T-CB 10/10 PASS |
-| TODO-07 | RLS ポリシー | **staging 検証済 · production 適用待ち** | [reports/tlv-payment-rls-staging-test.md](../reports/tlv-payment-rls-staging-test.md) · migration `20260628150000` |
+| TODO-06 | chargeback / clawback | **実装完了 · linked DB 適用済 · registry 未登録** | [design](../reports/tlv-payment-chargeback-clawback-design.md) · [implementation](../reports/tlv-payment-chargeback-clawback-implementation.md) · migration `20260628160000` · T-CB 10/10 PASS |
+| TODO-07 | RLS ポリシー | **linked DB 適用済 · 20 policies · registry 未登録** | [reports/tlv-payment-rls-staging-test.md](../reports/tlv-payment-rls-staging-test.md) · migration `20260628150000` |
 | ~~TODO-RLS-02~~ | staging 手動 GRANT revoke | **解消済** | migration `20260628150000` — `REVOKE EXECUTE … FROM anon, authenticated` · anon `USAGE` revoke |
 | TODO-RLS-03 | Admin JWT E2E（`talk_is_admin` / `is_ops`） | **候補** | `tlv_admin` 新設 **不要/保留** · 既存 hook + `talk_is_admin()` 再利用 · admin SELECT Policy 未 E2E |
 
 **Phase 2 staging Go/No-Go:** **Go** — 全スイート PASS（logic 26 · RPC 19 · RLS 30 · CB 10 · edge）。  
-**Phase 2 本番 Go/No-Go:** **No-Go** — [Production Readiness Runbook](../reports/tlv-payment-production-readiness.md) 確定 · **実行待ち**（migration · RLS production · Edge deploy · Stripe webhook）。
+**Phase 2 本番 Go/No-Go:** **No-Go** — Release **停止維持** · Recovery 計画確定 · Git Step 0〜4 untracked 解消待ち · [recovery plan](../reports/tlv-payment-migration-recovery-plan.md)
 
 **Production Release 手順:** [reports/tlv-payment-production-readiness.md §6](../reports/tlv-payment-production-readiness.md#6-production-release-手順確定版)
 
 #### Production Go チェックリスト（未着手 · Runbook 参照）
 
-- [ ] **TODO-PROD-01** Production migration Step 0〜5 適用
+- [ ] **TODO-PROD-01** Migration Inventory → Skip → Verify（Step 0〜5 · [manifest](../reports/tlv-payment-migration-manifest.json)）
 - [ ] **TODO-PROD-02** PostgREST `tlv` expose（RLS 後）
 - [ ] **TODO-PROD-03** Edge deploy（`tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip`）
 - [ ] **TODO-PROD-04** Stripe Production webhook +4 events

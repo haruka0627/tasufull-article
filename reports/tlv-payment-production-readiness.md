@@ -13,7 +13,7 @@
 | --- | --- |
 | P0 実装（purchase · tip · chargeback · RLS） | **完了** |
 | Staging 検証 | **全スイート PASS** |
-| Production migration | **未適用** |
+| Production migration | **linked DB 適用済 · registry 未登録** — [recovery plan](./tlv-payment-migration-recovery-plan.md) |
 | Production Edge deploy | **未実施** |
 | Stripe Production webhook | **未更新** |
 | **Production Go/No-Go（現時点）** | **No-Go** |
@@ -24,49 +24,58 @@
 
 ## 1. Production Migration Runbook
 
+**正本（適用状態）:** [tlv-payment-migration-manifest.json](./tlv-payment-migration-manifest.json) · [tlv-payment-migration-recovery-plan.md](./tlv-payment-migration-recovery-plan.md)
+
+**Release 手順:** **Inventory → Skip → Verify**（再 apply 禁止 · fingerprint 充足 Step は skip）
+
 ### 1.1 前提
 
 | 項目 | 要件 |
 | --- | --- |
-| 対象 DB | **Production Supabase project**（staging とは別 link） |
+| 対象 DB | **Production Supabase project**（`ddojquacsyqesrjhcvmn` · link 目視確認） |
+| 適用状態正本 | **`schema_migrations` ではなく** manifest + `scripts/sql/tlv-recovery-fingerprints-all.sql` |
 | バックアップ | **必須** — Supabase PITR または手動 snapshot 直前 |
-| メンテナンス | RPC 追加のみの migration は短時間 · RLS ENABLE は即時 |
-| 禁止 | staging link のまま production 操作 · `git add -A` |
+| メンテナンス | 不足 Step のみ apply（通常 0 件）· Verify は read-only 中心 |
+| 禁止 | fingerprint OK の Step へ **再 apply** · `db push` 一括 · `schema_migrations` 直接更新 · `git add -A` |
 
-### 1.2 適用順（厳守）
+### 1.2 Step 定義（順序 · fingerprint）
 
-Production に `tlv` スキーマが **未存在** の場合、Step 0 から。  
-**既に Phase 2 RPC まで適用済** の場合は、未適用分のみ実行。
-
-| Step | ファイル / 操作 | 内容 | Blocker |
+| Step | ファイル / 操作 | 内容 | Fingerprint（Inventory） |
 | --- | --- | --- | --- |
-| **0** | `db/tlv_schema.sql` | ベース DDL（creators · payments · wallet · ledger 等） | 初回のみ |
-| **1** | `20260628120000_tlv_payment_phase2_rpc.sql` | `handle_payment_webhook_success` · terminal event RPC | Step 0 後 |
-| **2** | `20260628130000_tlv_payer_user_uuid.sql` | payer_user_uuid 整合 · webhook RPC 更新 | Step 1 後 |
-| **3** | `20260628140000_tlv_create_tip_transaction_rpc.sql` | `create_tip_transaction` 単一 TX | Step 2 後 |
-| **4** | `20260628150000_tlv_payment_rls.sql` | **TODO-07** RLS ENABLE+FORCE · 23 policies · RPC REVOKE | Step 3 後 · **PostgREST expose 前** |
-| **5** | `20260628160000_tlv_payment_chargeback_clawback.sql` | **TODO-06** revenue CHECK · payment_reversals · refund/dispute RPC | Step 4 後 |
+| **0** | `db/tlv_schema.sql` | ベース DDL | `tlv` schema + 20 tables |
+| **1** | `20260628120000_tlv_payment_phase2_rpc.sql` | webhook RPC | `handle_payment_webhook_success` |
+| **2** | `20260628130000_tlv_payer_user_uuid.sql` | payer_user_uuid | `payments.payer_user_uuid` column |
+| **3** | `20260628140000_tlv_create_tip_transaction_rpc.sql` | `create_tip_transaction` | RPC exists |
+| **4** | `20260628150000_tlv_payment_rls.sql` | RLS ENABLE+FORCE · **20 policies** | `vw_owner_select` + PS-03 |
+| **5** | `20260628160000_tlv_payment_chargeback_clawback.sql` | chargeback / clawback | `payment_reversals` + refund RPC |
 
-**順序理由:**
+**順序理由:** RPC → RLS → chargeback（変更なし）· RLS は PostgREST `tlv` expose **より先**
 
-- RPC は RLS より先（service_role が書込主体 · RLS は client 防御層）
-- RLS は **PostgREST `tlv` schema expose より必ず先**
-- Chargeback migration は `payment_reversals` 独自 RLS を含む · TODO-07 後が安全
-
-### 1.3 適用コマンド（production link 確認後）
+### 1.3 Inventory → Skip → Verify（Release day 正本）
 
 ```bash
-# 1. production project に link（初回のみ · 要確認）
-npx supabase link --project-ref <PRODUCTION_PROJECT_REF>
+# 0. link 確認
+npx supabase projects list
 
-# 2. 各 migration を順に（例: Step 4 RLS）
-npx supabase db query --linked -f supabase/migrations/20260628150000_tlv_payment_rls.sql
+# 1. Inventory — 全 Step fingerprint（read-only）
+npx supabase db query --linked -f scripts/sql/tlv-recovery-fingerprints-all.sql
 
-# 3. Step 5 chargeback
-npx supabase db query --linked -f supabase/migrations/20260628160000_tlv_payment_chargeback_clawback.sql
+# 2. manifest 照合
+# reports/tlv-payment-migration-manifest.json — db_applied / git_tracked
+
+# 3. 各 Step — fingerprint true → SKIP（db query -f 実行しない）
+#    fingerprint false → Stop · PITR 後 · 単一 Step のみ apply（FinOps 承認）
+
+# 4. Verify — Skip 後も必ず実行
+npx supabase db query --linked -f scripts/sql/tlv-staging-rls-meta.sql   # Step 4+
+node scripts/test-tlv-create-tip-rpc-staging.mjs    # Step 3+ → 19/19
+node scripts/test-tlv-payment-rls-staging.mjs       # Step 4+ → 30/30
+node scripts/test-tlv-payment-chargeback-staging.mjs # Step 5+ → 10/10
 ```
 
 **Verify link target:** Dashboard URL / `supabase projects list` で **production ref** を目視確認してから実行。
+
+**linked DB 現状（2026-06-28 inventory）:** Step 0〜5 fingerprint **すべて true** → Release 時は **Apply 0 件 · Verify のみ** が期待値。
 
 ### 1.4 Rollback 方針
 
@@ -79,33 +88,25 @@ npx supabase db query --linked -f supabase/migrations/20260628160000_tlv_payment
 
 **原則:** ledger / payment_provider_events / wallet_ledger は **INSERT-only** — 本番 rollback は **DB restore** が正本。
 
-### 1.5 Migration 後 Verification（production）
+### 1.5 Verification（Skip 後 · 必須）
 
-各 Step 後に実行:
+各 Step は **Inventory で SKIP しても Verify は実行**:
+
+| Step | Inventory SQL / 操作 | Automated verify | Pass |
+| --- | --- | --- | --- |
+| 0+ | `tlv-recovery-fingerprints-all.sql` | `test-tlv-payment-logic.mjs` | 26/26 |
+| 3+ | `create_tip_transaction` fingerprint | `test-tlv-create-tip-rpc-staging.mjs` | 19/19 |
+| 4+ | `tlv-staging-rls-meta.sql` | `test-tlv-payment-rls-staging.mjs` | 30/30 |
+| 5+ | `payment_reversals` fingerprint | `test-tlv-payment-chargeback-staging.mjs` | 10/10 |
+
+**不足 Step のみ apply（例外）:**
 
 ```bash
-# Meta — RLS enabled（Step 4 後）
-npx supabase db query --linked -f scripts/sql/tlv-staging-rls-meta.sql
-
-# RPC exists
-# SELECT proname FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
-#   WHERE n.nspname='tlv' AND proname IN ('create_tip_transaction','handle_payment_refund','handle_payment_dispute');
-
-# payment_reversals exists（Step 5 後）
-# SELECT count(*) FROM information_schema.tables
-#   WHERE table_schema='tlv' AND table_name='payment_reversals';
+# fingerprint false の Step のみ · PITR 後 · 1 Step ずつ
+npx supabase db query --linked -f supabase/migrations/<STEP_FILE>.sql
 ```
 
-**Automated suites（production DB 向け · staging と同スクリプト）:**
-
-| Script | 期待 | Step |
-| --- | --- | --- |
-| `node scripts/test-tlv-payment-logic.mjs` | 26/26 | 随時（DB 不要） |
-| `node scripts/test-tlv-create-tip-rpc-staging.mjs` | 19/19 | 3+ |
-| `node scripts/test-tlv-payment-rls-staging.mjs` | 30/30 | 4+ |
-| `node scripts/test-tlv-payment-chargeback-staging.mjs` | 10/10 | 5+ |
-
-**注意:** `--linked` は **production ref** であることを確認。fixture SQL は production では **専用 sandbox user** に限定するか、smoke 用に縮小版を別途用意。
+**注意:** `--linked` は **production ref** 確認。fixture SQL は sandbox user に限定。
 
 ---
 
@@ -114,9 +115,9 @@ npx supabase db query --linked -f scripts/sql/tlv-staging-rls-meta.sql
 ### 2.1 推奨リリース順序
 
 ```text
-[Pre] Backup + Go/No-Go 承認
+[Pre] Backup + manifest 確認
   ↓
-[A] DB migration Step 0〜5（§1.2）
+[A] Inventory → Skip → Verify（§1.3 · Step 0〜5）
   ↓
 [B] Supabase config push（PostgREST tlv expose）
   ↓
@@ -229,7 +230,8 @@ npx supabase functions deploy tlv-create-tip --linked
 - [ ] Staging 全スイート PASS 記録あり（logic 26 · RPC 19 · RLS 30 · CB 10 · edge）
 - [ ] Production DB **backup / PITR** 取得
 - [ ] Production project ref **目視確認**（staging 誤 link 防止）
-- [ ] `db/tlv_schema.sql` + Step 1〜5 適用計画承認
+- [ ] Migration manifest + fingerprint Inventory **PASS**（§1.3）
+- [ ] Git Step 0〜5 SQL **commit 済**（[recovery plan §7](./tlv-payment-migration-recovery-plan.md#7-推奨対応優先順)）
 - [ ] RLS migration **PostgREST expose より先** — 順序確認
 - [ ] Edge Secrets 存在確認（`STRIPE_*` · service_role）— **値の変更は別チケット**
 - [ ] FinOps Runbook（§5）配布 · on-call 確認
@@ -237,7 +239,7 @@ npx supabase functions deploy tlv-create-tip --linked
 
 ### 4.2 Release day（順序付き）
 
-- [ ] Step 0〜5 migration 適用 · 各 Step verification PASS
+- [ ] Inventory → Skip → Verify（§1.3）· 各 Step **SKIP または Verify PASS** 記録
 - [ ] `config push` — `tlv` schema expose
 - [ ] Edge 3 functions deploy
 - [ ] Stripe webhook 7 events 登録
@@ -250,7 +252,7 @@ npx supabase functions deploy tlv-create-tip --linked
 | 結果 | 条件 |
 | --- | --- |
 | **Go** | Pre-release ALL + Release day 自動 ALL + PS-M01〜05 PASS |
-| **No-Go** | RLS 未適用 · Edge 未 deploy · webhook 4 event 未登録 · いずれか smoke FAIL |
+| **No-Go** | fingerprint 不足 · Verify smoke FAIL · Edge 未 deploy · webhook 4 event 未登録 |
 
 ### 4.4 Post-release（24h）
 
@@ -322,12 +324,13 @@ npx supabase functions deploy tlv-create-tip --linked
 3. FinOps Runbook §5 周知
 4. Staging 最終 PASS 記録アーカイブ
 
-### Phase B — DB（Release day · 要メンテナンス窓 15〜30min）
+### Phase B — DB（Release day · Inventory → Skip → Verify）
 
 1. production link 確認
-2. Migration Step 0〜5 順次適用（§1.2）
-3. 各 Step verification（§1.5）
-4. PS-02〜04 production linked 実行
+2. **Inventory** — `tlv-recovery-fingerprints-all.sql` + manifest 照合
+3. **Skip** — fingerprint true の Step は apply しない
+4. **Verify** — §1.5 自動スイート（PS-02〜04）
+5. 不足 Step のみ PITR 後 apply（通常 0 件）
 
 ### Phase C — Platform（Release day）
 
@@ -353,7 +356,9 @@ npx supabase functions deploy tlv-create-tip --linked
 
 | ドキュメント | 内容 |
 | --- | --- |
-| [tlv-payment-chargeback-clawback-implementation.md](./tlv-payment-chargeback-clawback-implementation.md) | TODO-06 実装 |
+| [tlv-payment-migration-recovery-plan.md](./tlv-payment-migration-recovery-plan.md) | Inventory · Missing migration · Recovery |
+| [tlv-payment-migration-manifest.json](./tlv-payment-migration-manifest.json) | Step 適用状態正本 |
+| [tlv-payment-production-drift-analysis.md](./tlv-payment-production-drift-analysis.md) | git / DB drift |
 | [tlv-payment-rls-staging-test.md](./tlv-payment-rls-staging-test.md) | TODO-07 RLS |
 | [tlv-payment-chargeback-clawback-design.md](./tlv-payment-chargeback-clawback-design.md) | 設計 ①〜⑩ |
 | [docs/TLV_PAYMENT_ENGINE.md](../docs/TLV_PAYMENT_ENGINE.md) | Engine 正本 |
@@ -365,10 +370,11 @@ npx supabase functions deploy tlv-create-tip --linked
 
 | # | Blocker | Owner |
 | --- | --- | --- |
-| 1 | Production migration Step 0〜5 | Eng |
-| 2 | Production RLS + config push | Eng |
-| 3 | Production Edge deploy | Eng |
-| 4 | Stripe Production webhook（+4 events） | Eng + FinOps |
-| 5 | FinOps payout 後 clawback 運用開始 | FinOps |
+| 1 | Git Step 0〜4 **untracked** — [recovery §7#1](./tlv-payment-migration-recovery-plan.md#7-推奨対応優先順) | Eng |
+| 2 | docs / manifest / Runbook 整合 | Eng |
+| 3 | Production RLS + config push 確認 | Eng |
+| 4 | Production Edge deploy 確認 | Eng |
+| 5 | Stripe Production webhook（+4 events） | Eng + FinOps |
+| 6 | FinOps payout 後 clawback 運用開始 | FinOps |
 
 **開発フェーズ:** **完了** · **Production Readiness Review:** **本ドキュメントで確定**
