@@ -26,10 +26,12 @@
     text = text.replace(/^【返信案[^】]*】\s*/i, "");
     text = text.replace(/\n\n※ read-only[^\n]*$/i, "");
     text = text.replace(/\n\n※ Human Gate[^\n]*$/i, "");
+    text = text.replace(/\n\n※ 返信案 · 未送信[^\n]*$/i, "");
     return text.trim();
   }
 
-  function buildReplyPlanFromFocus(focus, draftBody, reason) {
+  function buildReplyPlanFromFocus(focus, draftBody, reason, meta) {
+    meta = meta || {};
     focus = focus || {};
     const Gmail = getGmailClient();
     const base = Gmail?.buildReplyPlan
@@ -55,7 +57,7 @@
       messageId: trim(focus.id, 120),
       threadId: base.threadId || trim(focus.threadId, 120),
       replyToMessageId: base.replyToMessageId || trim(focus.id, 120),
-      sourceIntent: "context_reply_draft",
+      sourceIntent: trim(meta.sourceIntent, 40) || "context_reply_draft",
     };
   }
 
@@ -83,10 +85,10 @@
     return { ok: true, plan };
   }
 
-  function persistReplyPlanFromDraft(focus, draftBody, reason) {
+  function persistReplyPlanFromDraft(focus, draftBody, reason, meta) {
     const Ctx = getContext();
     if (!Ctx?.saveReplyPlan || !focus) return null;
-    const plan = buildReplyPlanFromFocus(focus, draftBody, reason);
+    const plan = buildReplyPlanFromFocus(focus, draftBody, reason, meta);
     return Ctx.saveReplyPlan(plan);
   }
 
