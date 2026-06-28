@@ -25,6 +25,8 @@
       this._recordingEvents = [];
       /** @private @type {{ phase: string, payload: unknown, at: string }[]} */
       this._monitoringEvents = [];
+      /** @private @type {{ phase: string, payload: unknown, at: string }[]} */
+      this._retryEvents = [];
     }
 
     /** @private */
@@ -87,6 +89,14 @@
       return this._push(this._monitoringEvents, "monitoring", phase, payload);
     }
 
+    /**
+     * @param {"attempt"|"retrying"|"succeeded"|"failed"|"exhausted"|"skipped"} phase
+     * @param {Record<string, unknown>} [payload]
+     */
+    recordRetry(phase, payload = {}) {
+      return this._push(this._retryEvents, "retry", phase, payload);
+    }
+
     snapshot(extra = {}) {
       return {
         timeline: this._timeline.slice(),
@@ -98,6 +108,7 @@
         chatEdgeEvents: this._chatEdgeEvents.slice(),
         recordingEvents: this._recordingEvents.slice(),
         monitoringEvents: this._monitoringEvents.slice(),
+        retryEvents: this._retryEvents.slice(),
         ...extra,
       };
     }
@@ -112,6 +123,7 @@
       this._chatEdgeEvents = [];
       this._recordingEvents = [];
       this._monitoringEvents = [];
+      this._retryEvents = [];
     }
   }
 

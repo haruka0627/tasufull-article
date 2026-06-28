@@ -5,6 +5,7 @@
  * Phase 4 P4-3 · Chat Gateway + joinLive set_watching（opt-in）
  * Phase 4 P4-4 · Recording service wire · candidate event · explicit start/stop
  * Phase 4 P4-5 · MonitoringService wire · diagnostics feed · monitoring edge patch
+ * Phase 4 P4-6 · executeWithRetry · publish / join / joinAsViewer transient only
  *
  * UI / Edge → LivePlatformIntegration → Broadcast / Viewer / Session → Provider → Adapter → SDK
  */
@@ -108,6 +109,8 @@
       this._initialized = false;
       /** @private @type {{ event: string, payload: unknown, at: string }|null} */
       this._lastSessionEvent = null;
+      /** @private @type {object|null} */
+      this._retryLastResult = null;
     }
 
     /** Provider 状態（PoC 互換） */
@@ -203,6 +206,7 @@
         monitoringState: this._monitoringState,
         monitoringLastResult: this._monitoringLastResult ? { ...this._monitoringLastResult } : null,
         monitoringFeed: this._monitoringFeedSnapshot ? { ...this._monitoringFeedSnapshot } : null,
+        retryLastResult: this._retryLastResult ? { ...this._retryLastResult } : null,
       };
       if (this._provider?.getPublishDiagnostics) {
         extra.publishDiagnostics = this._provider.getPublishDiagnostics();
@@ -956,16 +960,18 @@
         if (!cr.ok) return cr;
       }
 
-      const sr = await this._broadcast.startBroadcast({
-        surface,
-        userId,
-        videoContainer: options.videoContainer,
-        manualToken: options.manualToken,
-        userName: options.userName,
-        streamId: options.streamId,
-        roomId,
-        broadcastId,
-      });
+      const sr = await this._executeIntegrationRetry("publish", () =>
+        this._broadcast.startBroadcast({
+          surface,
+          userId,
+          videoContainer: options.videoContainer,
+          manualToken: options.manualToken,
+          userName: options.userName,
+          streamId: options.streamId,
+          roomId,
+          broadcastId,
+        }),
+      );
 
       if (sr?.ok === false) {
         this._diagnostics?.recordLifecycle("publish:failed", { error: sr.error, code: sr.code });
@@ -1038,15 +1044,17 @@
 
       this._diagnostics?.recordLifecycle("viewer:join:start", { broadcastId, userId });
 
-      const jr = await this._viewer.joinViewer({
-        surface,
-        broadcastId,
-        userId,
-        videoContainer: options.videoContainer,
-        manualToken: options.manualToken,
-        userName: options.userName,
-        roomId: this._broadcast?.broadcast?.roomId,
-      });
+      const jr = await this._executeIntegrationRetry("joinAsViewer", () =>
+        this._viewer.joinViewer({
+          surface,
+          broadcastId,
+          userId,
+          videoContainer: options.videoContainer,
+          manualToken: options.manualToken,
+          userName: options.userName,
+          roomId: this._broadcast?.broadcast?.roomId,
+        }),
+      );
 
       if (jr?.ok === false) {
         this._diagnostics?.recordLifecycle("viewer:join:failed", { error: jr.error });
@@ -1231,15 +1239,17 @@
         if (!cr.ok) return { ...cr, diagnostics: this.getDiagnostics() };
       }
 
-      const providerRes = await this._provider.joinLive({
-        roomId,
-        userId,
-        userName: params.userName,
-        surface,
-        videoContainer: params.videoContainer,
-        manualToken: params.manualToken,
-        broadcastId,
-      });
+      const providerRes = await this._executeIntegrationRetry("joinLive", () =>
+        this._provider.joinLive({
+          roomId,
+          userId,
+          userName: params.userName,
+          surface,
+          videoContainer: params.videoContainer,
+          manualToken: params.manualToken,
+          broadcastId,
+        }),
+      );
       if (providerRes?.ok === false) {
         this._diagnostics?.recordLifecycle("viewer:join:failed", { error: providerRes.error });
         return { ...providerRes, diagnostics: this.getDiagnostics() };
@@ -1525,6 +1535,21 @@
     }
 
     /** @private */
+    async _executeIntegrationRetry(operation, fn) {
+      const Retry = global.TasuLivePlatformRetry;
+      if (!Retry?.executeWithRetry) {
+        return fn(1);
+      }
+      return Retry.executeWithRetry(fn, {
+        operation,
+        maxAttempts: 2,
+        diagnostics: this._diagnostics,
+        onComplete: (summary) => {
+          this._retryLastResult = { ...summary };
+        },
+      });
+    }
+
     _ensureReady() {
       if (!this._initialized || !this._provider) {
         throw new Error("initialize を先に呼んでください");
