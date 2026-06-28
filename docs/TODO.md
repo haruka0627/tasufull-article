@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-28（Live Platform Vision 設計書 · TODO 整理）  
+**最終更新:** 2026-06-28（Platform Economy Phase 2 · TODO 追加）  
 **Git HEAD:** `bce78cc`（Bundle E 完了 · working tree clean）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -154,6 +154,784 @@
 | コレクション · マイル · ミッション | [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) §3 |
 | DVR · チケット制 · 4K · コラボ多画面 | [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) §4–5 |
 | ライブコマース · 通訳 · NFT · MCN | [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md) §3 |
+
+---
+
+## TLV / Live Platform
+
+**前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** · [MONETIZATION.md](./MONETIZATION.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md)  
+**種別:** 料金 · 収益 · PL 制度設計 — **実装未着手 · 数値未確定**  
+**詳細:** [TLV Pricing & Business Model v1](#tlv-pricing--business-model-v1) · [Creator Economy v1](#creator-economy-v1) · [Platform Economy Phase 2](#platform-economy-phase-2)
+
+---
+
+## TLV Pricing & Business Model v1
+
+**前提:** AD-014 · [MONETIZATION.md](./MONETIZATION.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) · [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md)  
+**種別:** 設計確定事項 + 料金設計 · 収益設計 — **数値は Financial Model 完成まで未確定**
+
+### 基本方針（採用済み）
+
+- [x] Profit First（利益先行設計）
+- [x] プラットフォームが赤字にならない設計
+- [x] Net Revenue を基準に利益 · 還元を計算する
+- [x] 利益を生み出した Creator へ最大還元する
+- [x] 条件達成者には 90〜95% 還元も可能な設計
+- [x] ライブ · 動画 · ショートを別 PL で管理する
+- [x] Web 決済を基本とした料金設計
+- [x] Apple / Google 決済は別価格で設計する
+
+### ライブ配信
+
+- [x] ライブ 30 分無料を基本仕様とする
+- [x] 30 分単位で延長する
+- [ ] 延長料金を最終決定する
+- [ ] ライブ料金 PL を完成させる
+- [ ] 同接 10 · 100 · 1,000 · 10,000 人で利益シミュレーション
+- [ ] ライブインフラ原価を最終確定する
+- [ ] ライブ料金を正式決定する
+
+### 収益源（採用済み）
+
+#### ★★★★★ — 最優先
+
+- [x] ライブ延長
+- [x] 投げ銭
+- [x] ギフト
+
+#### ★★★★★ — サブスク
+
+- [x] Viewer サブスク
+- [x] Creator サブスク
+
+#### ★★★★☆ — 広告 · 限定コンテンツ
+
+- [x] 動画広告
+- [x] ショート広告
+- [x] メンバー限定動画
+- [x] PPV 動画
+
+#### ★★★★☆ — 企業 · スポンサー
+
+- [x] 企業案件
+- [x] タイアップ
+- [x] スポンサー
+
+#### ★★★★☆ — マーケットプレイス
+
+- [x] マーケットプレイス
+- [x] スタンプ販売
+- [x] ギフト販売
+- [x] アバター販売
+- [x] エフェクト販売
+
+### 料金設計（数値確定待ち）
+
+- [ ] Web コイン価格
+- [ ] アプリコイン価格
+- [ ] ライブ延長料金
+- [ ] Viewer サブスク料金
+- [ ] Creator サブスク料金
+- [ ] 動画プラン料金
+- [ ] ショートプラン料金
+- [ ] PPV 料金
+- [ ] オプション料金
+
+**採用候補（案 · 未確定）:** 延長 30 分 500 コイン案 · 初回無料 100 コイン案 · コイン販売価格 · 投げ銭アイテム価格 · Web / アプリ決済最終料金
+
+### Creator 還元設計（数値確定待ち）
+
+- [ ] Creator Score 設計
+- [ ] Creator Rank 設計
+- [ ] Creator Pool 設計
+- [ ] 90% 還元条件
+- [ ] 95% 還元条件
+
+### 動画 · ショート · オプション（詳細 PL · 料金設計）
+
+- [ ] 通常動画 PL 設計 · ショート動画 PL 設計
+- [ ] 保存 · CDN · AI · API コスト算出
+- [ ] 無料 / 有料 / クリエイタープラン仕様決定
+- [ ] オプション — AI 字幕 · AI 翻訳 · 高画質 · 長期アーカイブ · 大容量アップロード · ダウンロード · メンバー限定 · 限定公開 · 広告なし · 高度分析 · その他
+
+### Financial Model
+
+- [ ] 利益率 10% モデル
+- [ ] 利益率 15% モデル
+- [ ] 利益率 20% モデル
+- [ ] 利益率 25% モデル
+- [ ] 財務モデル（PL）完成
+- [ ] Pricing v1 完成
+
+### 重要 — 無料 · 有料の線引き
+
+YouTube で無料提供されている機能は **基本無料** とする。
+
+**料金を取る基本領域:**
+
+- ライブ延長
+- 投げ銭 · ギフト
+- サブスク
+- PPV
+- 企業向けサービス
+- マーケットプレイス
+- 独自機能
+
+動画 · ライブ · ショートは **YouTube と同じ感覚で利用できる** ことを前提とし、その上で **独自価値** によって収益化する。
+
+**注意:** 現在は料金を確定しない。市場調査 · インフラコスト · PL シミュレーションを基に、**利益を最優先**とした料金体系を確定する。
+
+---
+
+## Creator Economy v1
+
+**前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** · [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) · [MONETIZATION.md](./MONETIZATION.md)  
+**種別:** Creator 制度設計 — **実装未着手 · 数値未確定**
+
+### Creator Score
+
+- [ ] Creator Score 1000 点制度を設計する
+- [ ] 財務スコアを設計する
+- [ ] エンゲージメントスコアを設計する
+- [ ] 健全性（Trust）スコアを設計する
+- [ ] 成長（Growth）スコアを設計する
+- [ ] 最終 Creator Score 算出ロジックを完成させる
+
+### Creator Rank
+
+| ティア | 昇格 | 維持 | 降格 |
+| --- | --- | --- | --- |
+| Bronze | [ ] | [ ] | [ ] |
+| Silver | [ ] | [ ] | [ ] |
+| Gold | [ ] | [ ] | [ ] |
+| Platinum | [ ] | [ ] | [ ] |
+| Diamond | [ ] | [ ] | [ ] |
+| Legend | [ ] | [ ] | [ ] |
+
+- [ ] 6 ティア昇格条件の設計
+- [ ] 6 ティア維持条件の設計
+- [ ] 6 ティア降格条件の設計
+
+### Creator 還元
+
+- [ ] Creator Pool 設計
+- [ ] Net Revenue ベース還元
+- [ ] 利益貢献ベース還元
+- [ ] Creator Score 連動還元
+- [ ] Creator Rank 連動還元
+- [ ] 90% 還元条件
+- [ ] 95% 還元条件
+
+### Profit First
+
+- [ ] Profit First ロジック完成
+- [ ] 利益率管理
+- [ ] Net Revenue 管理
+- [ ] Creator Pool 管理
+- [ ] PL 管理
+
+### Financial
+
+- [ ] Web 決済比率評価
+- [ ] ARPPU 評価
+- [ ] 課金率評価
+- [ ] リピーター評価
+- [ ] 視聴維持率評価
+
+### Trust & Safety
+
+- [ ] 本人確認制度
+- [ ] 通報評価
+- [ ] BAN 評価
+- [ ] 著作権評価
+- [ ] BOT 対策
+- [ ] 自己投げ銭対策
+- [ ] 複数アカウント対策
+- [ ] チャージバック対策
+- [ ] マネーロンダリング対策
+
+### 最終制度設計
+
+- [ ] Creator Economy v1 完成
+- [ ] Creator Program 完成
+- [ ] Financial Model 完成
+- [ ] Pricing Model 完成
+- [ ] 還元制度完成
+
+### 設計方針
+
+- Profit First を最優先とする
+- プラットフォームが赤字にならないことを最優先とする
+- 利益を生み出したクリエイターへ最大還元する
+- 90〜95% 還元は **条件達成者のみ** とする
+- 還元率は Gross ではなく **Net Revenue** を基準とする
+- **長期運営（10 年以上）** を前提とした制度設計とする
+
+---
+
+## Platform Economy Phase 2
+
+**前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** · [Creator Economy v1](#creator-economy-v1) · [TLV Pricing & Business Model v1](#tlv-pricing--business-model-v1)  
+**種別:** TLV Platform 設計バックログ — **設計のみ · 実装未着手**
+
+### TLV Payment Engine（Phase 2 実装済 · 2026-06-28）
+
+**正本:** [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) v1.5 · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) v1.2.5 · [reports/tlv-payment-create-tip-transaction-rpc.md](../reports/tlv-payment-create-tip-transaction-rpc.md)
+
+| ID | 内容 | 判断 | 状態 |
+| --- | --- | --- | --- |
+| ~~CAND-W1~~ | payer_user_uuid 整合 | **解消済み** | 完了 |
+| ~~CAND-P2-01~~ | createTip 単一 TX RPC 化 | **解消済み** — `tlv.create_tip_transaction` | v1.2.5 |
+| ~~W1-GAP-01~~ | Webhook metadata uuid coalesce | **解消済み** — `payer_user_uuid \|\| wallet_user_id` | v1.2.5 |
+| CAND-P2-02 | IAP webhook | Needs Decision | 未実装 |
+| CAND-P2-05 | bot_flag 単独時の gauge 抑止 | Needs Decision | RPC `v_apply_gauge` が `p_bot_flag` 未参照 · staging T-TIP-07 要確認 |
+| ~~CAND-P2-03~~ | auth uuid ↔ wallet | **解消済み** | 完了 |
+| CAND-W2 | `public.users.id` text と Platform 全体 ID 統一 | **別タスク維持** | 未着手 |
+| ~~DEV-01~~ | createTip 非原子性 | **解消** — RPC 単一 TX | v1.2.5 |
+| ~~DEV-02~~ | 同時 tip race | **解消** — FOR UPDATE | v1.2.5 |
+| ~~DEV-03~~ | extension §3.4 grant ガード | **解消** — RPC 内 | v1.2.5 |
+| ~~DEV-04~~ | createTip INSERT error チェック | **解消** — TX rollback | v1.2.5 |
+| DEV-05 | extension_contributors 完全仕様 | TODO候補 | RPC は first-payer カウント実装済 |
+| DEV-07 | self_gift text のみ比較 | TODO候補 | 未変更 |
+| TODO-06 | chargeback / clawback | **実装完了 · staging検証済 · production適用待ち** | [design](../reports/tlv-payment-chargeback-clawback-design.md) · [implementation](../reports/tlv-payment-chargeback-clawback-implementation.md) · migration `20260628160000` · T-CB 10/10 PASS |
+| TODO-07 | RLS ポリシー | **staging 検証済 · production 適用待ち** | [reports/tlv-payment-rls-staging-test.md](../reports/tlv-payment-rls-staging-test.md) · migration `20260628150000` |
+| ~~TODO-RLS-02~~ | staging 手動 GRANT revoke | **解消済** | migration `20260628150000` — `REVOKE EXECUTE … FROM anon, authenticated` · anon `USAGE` revoke |
+| TODO-RLS-03 | Admin JWT E2E（`talk_is_admin` / `is_ops`） | **候補** | `tlv_admin` 新設 **不要/保留** · 既存 hook + `talk_is_admin()` 再利用 · admin SELECT Policy 未 E2E |
+
+**Phase 2 staging Go/No-Go:** **Go** — migration `20260628140000` + `20260628150000_tlv_payment_rls` + Edge deploy + PostgREST `tlv` expose + **T-TIP-01〜10 PASS** + **RLS 30/30 PASS**（[reports/tlv-payment-rls-staging-test.md](../reports/tlv-payment-rls-staging-test.md)）。  
+**Phase 2 本番 Go/No-Go:** **No-Go** — **TODO-06** chargeback **staging検証済 · production migration 待ち** · **TODO-07** RLS **production 未適用** · Edge production deploy 未実施。
+
+**Staging 統合テスト（2026-06-28 再検証）:** PostgREST `tlv` 未公開 → Edge `Invalid schema: tlv` を **`supabase config push` で解消** · edge E2E webhook PASS · T-TIP-01〜10 + DB 整合性 PASS。
+
+**実装済 Edge Functions:** `tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip` · `tlv-e2e-simulate-payment`
+
+### Membership / Subscription（Future · 2026-06-28）
+
+**正本:** [reports/tlv-membership-design.md](../reports/tlv-membership-design.md) · [TLV_PRD.md](./TLV_PRD.md) §11 · [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) §14
+
+**種別:** **Future · 未着手** — 設計バックログのみ · Payment Engine Phase 2 とは **分離**  
+**CAND-MEM-01:** Membership Subscription 追加設計 — **採用 · 設計追加済**（[reports/tlv-membership-design.md](../reports/tlv-membership-design.md)）
+
+**分離原則:** UX は Tip と連動表示可 · 会計/DB/Ledger は完全分離 · サブスクは coin 消費しない · 初期 MVP = Web Stripe Billing · Score / 90/95% 制度 **変更なし**
+
+#### Priority P1 — 設計必須
+
+- [ ] **TODO-MEM-01** Membership Tier 仕様確定 — **Future · 未着手**
+  - Platform 固定価格 Tier
+  - Tier 数
+  - 特典範囲
+  - Creator 編集可能項目
+
+- [ ] **TODO-MEM-02** Subscription Profit Contribution 設計 — **Future · 未着手**
+  - Creator Score 反映係数
+  - PPC への反映方式
+  - Legend 条件への影響
+  - PL シミュレーション
+
+- [ ] **TODO-MEM-03** Membership Payment Engine 設計 — **Future · 未着手**
+  - Stripe Billing
+  - Webhook
+  - Invoice
+  - Revenue Ledger
+  - Creator Payable
+
+- [ ] **TODO-MEM-04** Membership DB 設計 — **Future · 未着手**
+  - `membership_tiers`
+  - `user_subscriptions`
+  - `subscription_invoices`
+  - `membership_events`
+
+#### Priority P2 — 実装前
+
+- [ ] **TODO-MEM-05** Web / App 価格設計 — **Future · 未着手**
+  - Stripe
+  - Apple
+  - Google
+  - 価格差方針
+
+- [ ] **TODO-MEM-06** Membership Revenue Ledger 設計 — **Future · 未着手**
+  - `entry_type`
+  - Creator Payable
+  - Platform Profit
+  - Ledger 整合
+
+- [ ] **TODO-MEM-07** Membership Webhook 一覧確定 — **Future · 未着手**
+  - `subscription.created`
+  - `updated`
+  - `deleted`
+  - `invoice.paid`
+  - `payment_failed`
+  - `refund`
+  - `dispute`
+
+- [ ] **TODO-MEM-08** Grace Period 設計 — **Future · 未着手**
+  - `payment_failed`
+  - 猶予日数
+  - 権利維持期間
+
+- [ ] **TODO-MEM-09** Refund / Chargeback / Clawback 設計 — **Future · 未着手**
+  - Revenue Ledger
+  - Creator 控除
+  - Profit First 整合
+
+#### Priority P3 — UX
+
+- [ ] **TODO-MEM-10** Membership 特典設計 — **Future · 未着手**
+  - バッジ
+  - スタンプ
+  - 限定チャット
+  - 称号
+  - プロフィール装飾
+
+- [ ] **TODO-MEM-11** Creator Club 画面設計 — **Future · 未着手**
+  - Tier 管理
+  - 特典管理
+  - 会員一覧
+  - 売上確認
+
+- [ ] **TODO-MEM-12** Viewer Membership 画面設計 — **Future · 未着手**
+  - 加入
+  - 更新
+  - 解約
+  - 特典表示
+
+- [ ] **TODO-MEM-13** Membership バッジ · 称号仕様 — **Future · 未着手**
+
+#### Priority P4 — 将来
+
+- [ ] **TODO-MEM-14** Monthly Coin Grant 設計 — **Future · 未着手**
+  - Wallet Grant
+  - `wallet_ledger` 記録
+
+- [ ] **TODO-MEM-15** Membership 限定 Gift 設計 — **Future · 未着手**
+
+- [ ] **TODO-MEM-16** Membership イベント設計 — **Future · 未着手**
+  - `membership_events`
+  - `stream_events` との責務分離
+
+- [ ] **TODO-MEM-17** Platform 固定 Tier 価格見直し — **Future · 未着手**
+
+#### 保留 — 設計検証後
+
+- [ ] **TODO-MEM-18** Membership 利益を Legend 条件へどこまで反映するか — **Future · 保留**
+- [ ] **TODO-MEM-19** Membership による Gauge 支援の可否 — **Future · 保留**
+- [ ] **TODO-MEM-20** Passive VIP 導入可否 — **Future · 保留**
+
+### Live Chat System（Future · 2026-06-28）
+
+**種別:** **Future · 未着手** — 設計バックログのみ · **Payment Engine / Membership 実装とは分離**
+
+**CAND-CHAT-01:** Live Chat System 設計採用 — **Future · 未着手**
+
+**参照:** TLV ライブ配信 · 30分サバイバル · Payment Engine とは **別システム**
+
+**分離原則:** Wallet 処理なし · Coin 消費は Payment Engine 経由のみ · リアルタイム表示専用 · 投げ銭イベントは `stream_events` 経由で表示 · 将来 AI 機能を追加可能な設計 · YouTube 風 UI を参考に TLV 独自（延長ゲージ · 投げ銭強調 · ランク表示）を追加
+
+#### Priority P1 — MVP
+
+- [ ] **TODO-CHAT-01** リアルタイムライブチャット設計 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-02** トップチャット / 全チャット切替 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-03** モデレーター機能 — **Future · 未着手**
+  - ピン留め
+  - メッセージ削除
+  - タイムアウト
+  - BAN
+
+- [ ] **TODO-CHAT-04** NGワード · スパム対策 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-05** 返信 · メンション機能 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-06** 絵文字 · リアクション機能 — **Future · 未着手**
+
+#### Priority P2
+
+- [ ] **TODO-CHAT-07** 投げ銭メッセージ強調表示 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-08** 延長ゲージ連携 — **Future · 未着手**
+  - あと○Coin 表示
+  - 延長通知
+
+- [ ] **TODO-CHAT-09** ライブランキング表示 — **Future · 未着手**
+  - 今日のギフター
+  - ライブ中ランキング
+
+- [ ] **TODO-CHAT-10** メンバー限定チャット — **Future · 未着手**
+
+- [ ] **TODO-CHAT-11** Creator / Rank / Membership バッジ表示 — **Future · 未着手**
+
+#### Priority P3 — AI
+
+- [ ] **TODO-CHAT-12** AI翻訳 — **Future · 未着手**
+  - 日本語 · 英語 · 韓国語 · その他
+
+- [ ] **TODO-CHAT-13** AIチャット要約 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-14** AIモデレーター — **Future · 未着手**
+
+- [ ] **TODO-CHAT-15** AIハイライト生成 — **Future · 未着手**
+
+#### Priority P4
+
+- [ ] **TODO-CHAT-16** チャット検索 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-17** お気に入りメッセージ — **Future · 未着手**
+
+- [ ] **TODO-CHAT-18** チャット履歴 — **Future · 未着手**
+
+- [ ] **TODO-CHAT-19** チャット分析 — **Future · 未着手**
+  - 同時接続
+  - 投稿数
+  - アクティブ率
+
+- [ ] **TODO-CHAT-20** ライブチャット API · DB 設計 — **Future · 未着手**
+
+### Future Platform Systems（Future · 2026-06-28）
+
+**種別:** **Future · 未着手** — 設計バックログのみ · **Payment Engine / Membership / Live Chat 実装とは分離**
+
+**CAND-PLATFORM-01:** Platform Systems 設計採用 — **Future · 未着手**
+
+**目的:** Payment Engine · Membership · Live Chat の後に実装する基盤システムを管理する。
+
+**設計メモ:**
+
+- すべて Future 扱い
+- Payment Engine とは責務を分離
+- Membership とは責務を分離
+- Live Chat とは責務を分離
+- AI は各システムへ後付け可能な構成
+- 通知はイベント駆動（Event Driven）を前提
+- Dashboard は集計専用
+- Moderation は監査ログを必須とする
+
+#### Notification System
+
+##### Priority P1
+
+- [ ] **TODO-NOTIFY-01** 通知システム設計 — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-02** ライブ開始通知 — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-03** メンバーシップ通知 — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-04** 投げ銭通知 — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-05** Creator 通知 — **Future · 未着手**
+
+##### Priority P2
+
+- [ ] **TODO-NOTIFY-06** Push Notification — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-07** メール通知 — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-08** アプリ通知 — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-09** 通知設定画面 — **Future · 未着手**
+
+- [ ] **TODO-NOTIFY-10** 通知 API 設計 — **Future · 未着手**
+
+#### Creator Dashboard
+
+##### Priority P1
+
+- [ ] **TODO-DASH-01** Creator Dashboard 設計 — **Future · 未着手**
+
+- [ ] **TODO-DASH-02** 売上分析 — **Future · 未着手**
+
+- [ ] **TODO-DASH-03** 投げ銭分析 — **Future · 未着手**
+
+- [ ] **TODO-DASH-04** メンバー分析 — **Future · 未着手**
+
+- [ ] **TODO-DASH-05** Creator Score 分析 — **Future · 未着手**
+
+##### Priority P2
+
+- [ ] **TODO-DASH-06** 視聴者分析 — **Future · 未着手**
+
+- [ ] **TODO-DASH-07** 配信分析 — **Future · 未着手**
+
+- [ ] **TODO-DASH-08** ランキング分析 — **Future · 未着手**
+
+- [ ] **TODO-DASH-09** 収益予測 — **Future · 未着手**
+
+- [ ] **TODO-DASH-10** Dashboard API 設計 — **Future · 未着手**
+
+#### Moderation System
+
+##### Priority P1
+
+- [ ] **TODO-MOD-01** モデレーション設計 — **Future · 未着手**
+
+- [ ] **TODO-MOD-02** 通報システム — **Future · 未着手**
+
+- [ ] **TODO-MOD-03** BAN — **Future · 未着手**
+
+- [ ] **TODO-MOD-04** タイムアウト — **Future · 未着手**
+
+- [ ] **TODO-MOD-05** NG ワード管理 — **Future · 未着手**
+
+##### Priority P2
+
+- [ ] **TODO-MOD-06** Shadow Ban — **Future · 未着手**
+
+- [ ] **TODO-MOD-07** AI モデレーター — **Future · 未着手**
+
+- [ ] **TODO-MOD-08** AI スパム検知 — **Future · 未着手**
+
+- [ ] **TODO-MOD-09** 管理ダッシュボード — **Future · 未着手**
+
+- [ ] **TODO-MOD-10** 監査ログ — **Future · 未着手**
+
+### Creator Economy
+
+- [ ] Creator Score v1 完成
+- [ ] Creator Rank v1 完成
+- [ ] Creator Program v1 完成
+- [ ] Profit First 完成
+- [ ] Financial Model 完成
+- [ ] Pricing Model 完成
+- [ ] Creator Pool 完成
+- [ ] 90% 還元条件 完成
+- [ ] 95% 還元条件 完成
+
+### Event System
+
+- [ ] 年間イベント設計
+- [ ] 陣取りイベント
+- [ ] 季節イベント
+- [ ] 推し活イベント
+- [ ] ルーキーイベント
+- [ ] サバイバルフェス
+- [ ] イベント報酬設計
+- [ ] デジタル報酬設計
+- [ ] イベント KPI 設計
+
+### Creator Dashboard
+
+- [ ] Creator Dashboard 設計
+- [ ] Creator Score 表示
+- [ ] Creator Rank 表示
+- [ ] Creator Progress 表示
+- [ ] Creator 収益分析
+- [ ] Creator 利益分析
+- [ ] Creator 還元分析
+- [ ] Creator 目標表示
+
+### Viewer System
+
+- [ ] Viewer Progress
+- [ ] 推し活システム
+- [ ] エンジェルサポーター制度（**保留**）
+- [ ] VIP 制度
+- [ ] メンバーシップ → [Membership / Subscription](#membership--subscription-future--2026-06-28)（TODO-MEM-01〜20 · Future）
+- [ ] ライブチャット → [Live Chat System](#live-chat-systemfuture--2026-06-28)（TODO-CHAT-01〜20 · Future）
+- [ ] デジタルバッジ
+- [ ] デジタル称号
+- [ ] プロフィールカスタマイズ
+- [ ] 限定エフェクト
+
+### AI System
+
+- [ ] Creator AI
+- [ ] Viewer AI
+- [ ] Admin AI
+- [ ] Creator AI アドバイス
+- [ ] Viewer おすすめ AI
+- [ ] Admin 利益分析 AI
+- [ ] AI 異常検知
+- [ ] AI リテンション分析
+
+**注:** TLV 専用 AI エンジンは作らない（AD-004）— TASFUL AI 入口経由で設計する。
+
+### Admin Console
+
+- [ ] Executive Dashboard
+- [ ] FinOps Console
+- [ ] Creator CRM
+- [ ] Trust & Safety
+- [ ] CDN 監視
+- [ ] 決済管理
+- [ ] Creator 還元管理
+- [ ] Event 管理
+- [ ] 広告管理
+
+### Security
+
+- [ ] BOT 対策
+- [ ] 自己投げ銭対策
+- [ ] マネロン対策
+- [ ] チャージバック対策
+- [ ] 不正決済対策
+- [ ] AI 不正検知
+- [ ] 本人確認
+- [ ] Trust Score
+
+### Business
+
+- [ ] MCN / Agency 制度（**保留**）
+- [ ] Channel M&A（**保留**）
+- [ ] エコクレジット（**保留**）
+- [ ] Marketplace 設計
+- [ ] B2B スポンサー制度
+- [ ] 企業案件マッチング
+
+### KPI
+
+- [ ] DAU
+- [ ] MAU
+- [ ] 課金率
+- [ ] ARPU
+- [ ] ARPPU
+- [ ] LTV
+- [ ] CAC
+- [ ] Creator Retention
+- [ ] Viewer Retention
+- [ ] Web 決済率
+- [ ] Profit 率
+- [ ] Creator Pool
+- [ ] Platform Profit
+
+### 運営方針
+
+- Profit First を最優先とする
+- プラットフォームが赤字にならないことを最優先とする
+- 利益を生み出したクリエイターへ最大還元する
+- 還元率は Gross ではなく **Net Revenue** 基準とする
+- 90〜95% 還元は **条件達成者のみ** 適用する
+- 初心者でも成長できる制度設計を維持する
+- 課金額だけではなく、利益 · 継続 · 健全性 · コミュニティ貢献を評価する
+- 石油王だけが勝つ設計にはしない
+- **長期（10 年以上）** 運営できる制度を前提とする
+
+---
+
+## Creator Economy - Numeric Design（制度数値設計 · AD-014 次フェーズ）
+
+**前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** 確定済 · [Live Platform Vision](#live-platform-vision制度設計--2026-06-28-確定) P0 設計正本完了  
+**種別:** 制度設計タスクのみ — **実装 · コード · API · DB · UI 変更禁止**  
+**注:** 数値は本フェーズで **設計案** とし、コスト試算 · PL 確定後に正式決定する。
+
+### P0 — 制度設計（未着手）
+
+#### Creator Score
+
+- [ ] 評価項目設計
+- [ ] 重み付け
+- [ ] 利益貢献度
+- [ ] Trust
+- [ ] Growth
+- [ ] Community
+- [ ] 継続率
+- [ ] 最終スコア計算式
+
+#### Creator Rank
+
+| ティア | 設計項目 |
+| --- | --- |
+| Bronze | 昇格条件 · 維持条件 · 降格条件 |
+| Silver | 同上 |
+| Gold | 同上 |
+| Platinum | 同上 |
+| Diamond | 同上 |
+
+- [ ] 5 ティア昇格条件の草案
+- [ ] 5 ティア維持条件の草案
+- [ ] 5 ティア降格条件の草案
+
+#### Net Revenue
+
+基準フロー:
+
+```text
+Gross Revenue
+    ↓
+決済手数料
+    ↓
+Net Revenue
+    ↓
+Creator 還元
+    ↓
+Platform 利益
+```
+
+- [ ] Gross → Net の控除項目定義
+- [ ] Net Revenue 基準の還元計算式（草案）
+- [ ] Platform 利益の留保率設計（草案）
+
+#### 還元率
+
+- [ ] 還元率テーブル設計（**数値はまだ固定しない**）
+- [ ] コスト試算後の還元率決定フロー定義
+
+#### ライブ
+
+```text
+30 分無料
+    ↓
+延長料金
+    ↓
+利益シミュレーション
+    ↓
+最終料金決定
+```
+
+- [ ] 30 分無料枠のコスト上限設計
+- [ ] 延長料金モデル案
+- [ ] 利益シミュレーション前提（同接 · 帯域 · 応援収益）
+- [ ] 最終料金決定基準（赤字禁止 · AD-014 整合）
+
+#### Profit & Loss
+
+- [ ] PL 設計 — 以下を数値化
+  - [ ] 通常動画
+  - [ ] ショート
+  - [ ] ライブ
+  - [ ] CDN
+  - [ ] Storage
+  - [ ] エンコード
+  - [ ] AI
+  - [ ] API
+  - [ ] 決済
+  - [ ] 広告
+  - [ ] サポート
+  - [ ] 不正対策
+
+### P1 — 特典 · 視聴者制度設計（未着手）
+
+#### Creator 特典
+
+- [ ] AI 分析
+- [ ] AI レポート
+- [ ] Creator Dashboard
+- [ ] Creator Lab
+- [ ] Creator Marketplace
+
+#### Viewer 制度
+
+- [ ] レベル
+- [ ] ストリーク
+- [ ] バッジ
+- [ ] サポーター
+- [ ] VIP 制度
+
+### P2 — 利益シミュレーション（未着手）
+
+同時視聴規模別に **売上 · コスト · 利益 · 還元率 · 営業利益** を試算:
+
+- [ ] 10 人同時視聴
+- [ ] 100 人同時視聴
+- [ ] 1,000 人同時視聴
+- [ ] 10,000 人同時視聴
+
+### Future — 2035 年を見据えた制度
+
+- [ ] 利益率自動分析
+- [ ] Creator Economy 最適化
+- [ ] AI による利益予測
+- [ ] 世界対応価格設計
+- [ ] 地域別価格最適化
 
 ---
 
