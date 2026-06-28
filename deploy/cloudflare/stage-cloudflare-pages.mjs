@@ -133,6 +133,20 @@ function writeTlvFeatureFlags() {
     publicEnabled: ${publicEnabled},
     privateTestEnabled: ${privateTestEnabled},
     allowedTestEmails: Object.freeze(${JSON.stringify(emails)}),
+    liveSessionManagerEnabled: false,
+    usePlatformLive: false,
+  });
+  Object.defineProperty(global, "TLV_LIVE_SESSION_MANAGER_ENABLED", {
+    get() {
+      return global.TLV_FEATURE_FLAGS?.liveSessionManagerEnabled === true;
+    },
+    configurable: true,
+  });
+  Object.defineProperty(global, "TLV_USE_PLATFORM_LIVE", {
+    get() {
+      return global.TLV_FEATURE_FLAGS?.usePlatformLive === true;
+    },
+    configurable: true,
   });
 })(typeof window !== "undefined" ? window : globalThis);
 `;
