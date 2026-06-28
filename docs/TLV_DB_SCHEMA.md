@@ -405,6 +405,8 @@ platform_revenue_jpy = net_amount_jpy - infra_cost_jpy - creator_payout_jpy
 | RPC 4 本 | **✅** | `handle_payment_refund` · `handle_payment_dispute` · 2 internal |
 | RLS `payment_reversals` | **✅** | admin SELECT only（TODO-07 パターン） |
 
+**Production 適用手順:** [reports/tlv-payment-production-readiness.md §1](../reports/tlv-payment-production-readiness.md#1-production-migration-runbook) — Step 4（RLS）→ Step 5（chargeback）順序厳守
+
 ---
 
 ## 10. 適用手順

@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-28（Platform Economy Phase 2 · TODO 追加）  
+**最終更新:** 2026-06-28（TLV Payment Engine · Production Readiness Review）  
 **Git HEAD:** `bce78cc`（Bundle E 完了 · working tree clean）  
 **優先:** 上から順。完了したら本ファイルと [PROJECT_STATUS.md](./PROJECT_STATUS.md) を更新。
 
@@ -374,9 +374,16 @@ YouTube で無料提供されている機能は **基本無料** とする。
 **前提:** [DECISIONS.md](./DECISIONS.md) **AD-014** · [Creator Economy v1](#creator-economy-v1) · [TLV Pricing & Business Model v1](#tlv-pricing--business-model-v1)  
 **種別:** TLV Platform 設計バックログ — **設計のみ · 実装未着手**
 
-### TLV Payment Engine（Phase 2 実装済 · 2026-06-28）
+### TLV Payment Engine（開発フェーズ完了 · Production Readiness Review · 2026-06-28）
 
-**正本:** [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) v1.5 · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) v1.2.5 · [reports/tlv-payment-create-tip-transaction-rpc.md](../reports/tlv-payment-create-tip-transaction-rpc.md)
+**正本:** [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) v1.7 · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) · [reports/tlv-payment-production-readiness.md](../reports/tlv-payment-production-readiness.md)
+
+| フェーズ | 状態 |
+| --- | --- |
+| P0 実装（purchase · tip · chargeback · RLS） | **完了** |
+| Staging 検証 | **全スイート PASS** |
+| Production Readiness Review | **確定** — [runbook](../reports/tlv-payment-production-readiness.md) |
+| Production Go | **No-Go** — migration · deploy · webhook 未実施 |
 
 | ID | 内容 | 判断 | 状態 |
 | --- | --- | --- | --- |
@@ -398,12 +405,22 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | ~~TODO-RLS-02~~ | staging 手動 GRANT revoke | **解消済** | migration `20260628150000` — `REVOKE EXECUTE … FROM anon, authenticated` · anon `USAGE` revoke |
 | TODO-RLS-03 | Admin JWT E2E（`talk_is_admin` / `is_ops`） | **候補** | `tlv_admin` 新設 **不要/保留** · 既存 hook + `talk_is_admin()` 再利用 · admin SELECT Policy 未 E2E |
 
-**Phase 2 staging Go/No-Go:** **Go** — migration `20260628140000` + `20260628150000_tlv_payment_rls` + Edge deploy + PostgREST `tlv` expose + **T-TIP-01〜10 PASS** + **RLS 30/30 PASS**（[reports/tlv-payment-rls-staging-test.md](../reports/tlv-payment-rls-staging-test.md)）。  
-**Phase 2 本番 Go/No-Go:** **No-Go** — **TODO-06** chargeback **staging検証済 · production migration 待ち** · **TODO-07** RLS **production 未適用** · Edge production deploy 未実施。
+**Phase 2 staging Go/No-Go:** **Go** — 全スイート PASS（logic 26 · RPC 19 · RLS 30 · CB 10 · edge）。  
+**Phase 2 本番 Go/No-Go:** **No-Go** — [Production Readiness Runbook](../reports/tlv-payment-production-readiness.md) 確定 · **実行待ち**（migration · RLS production · Edge deploy · Stripe webhook）。
 
-**Staging 統合テスト（2026-06-28 再検証）:** PostgREST `tlv` 未公開 → Edge `Invalid schema: tlv` を **`supabase config push` で解消** · edge E2E webhook PASS · T-TIP-01〜10 + DB 整合性 PASS。
+**Production Release 手順:** [reports/tlv-payment-production-readiness.md §6](../reports/tlv-payment-production-readiness.md#6-production-release-手順確定版)
 
-**実装済 Edge Functions:** `tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip` · `tlv-e2e-simulate-payment`
+#### Production Go チェックリスト（未着手 · Runbook 参照）
+
+- [ ] **TODO-PROD-01** Production migration Step 0〜5 適用
+- [ ] **TODO-PROD-02** PostgREST `tlv` expose（RLS 後）
+- [ ] **TODO-PROD-03** Edge deploy（`tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip`）
+- [ ] **TODO-PROD-04** Stripe Production webhook +4 events
+- [ ] **TODO-PROD-05** Production smoke PS-01〜05 + PS-M01〜05
+- [ ] **TODO-PROD-06** FinOps Runbook 運用開始
+- [ ] **TODO-PROD-07** Go/No-Go 承認 · 24h 監視
+
+**実装済 Edge Functions:** `tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip` · `tlv-e2e-simulate-payment`（prod 非推奨）
 
 ### Membership / Subscription（Future · 2026-06-28）
 
