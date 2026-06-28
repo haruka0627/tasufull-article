@@ -1,0 +1,185 @@
+{
+  "date": "2026-06-28",
+  "phase": "2",
+  "summary": {
+    "pass": 31,
+    "fail": 0,
+    "skip": 1
+  },
+  "failures": [],
+  "results": [
+    {
+      "id": "env:zego-configured",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "config:dev-vars-zego",
+      "status": "PASS",
+      "detail": "deploy\\cloudflare\\dist\\.dev.vars"
+    },
+    {
+      "id": "config:platform-dist",
+      "status": "PASS",
+      "detail": "deploy\\cloudflare\\dist\\platform-live\\platform-live-zego-config.js"
+    },
+    {
+      "id": "config:tlv-dist",
+      "status": "PASS",
+      "detail": "deploy\\cloudflare\\dist\\live\\live-zego-config.js"
+    },
+    {
+      "id": "dev:server",
+      "status": "PASS",
+      "detail": "http://127.0.0.1:8788"
+    },
+    {
+      "id": "page:platform-poc",
+      "status": "PASS",
+      "detail": "http://127.0.0.1:8788/platform-live/zego-platform-poc.html"
+    },
+    {
+      "id": "token:host",
+      "status": "PASS",
+      "detail": "len=338"
+    },
+    {
+      "id": "token:audience",
+      "status": "PASS",
+      "detail": "len=338"
+    },
+    {
+      "id": "browser:zego-sdk-loaded",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:initialize",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:adapter-path",
+      "status": "PASS",
+      "detail": "providerId=zego"
+    },
+    {
+      "id": "browser:create-session",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:host-publish",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:audience-initialize",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:audience-join",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:audience-play",
+      "status": "SKIP",
+      "detail": "remote DOM 未検出 — SDK/ネットワーク要確認"
+    },
+    {
+      "id": "browser:reconnect",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:leave",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "browser:cleanup",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "signals:provider",
+      "status": "PASS",
+      "detail": "PROVIDER_CONNECTING, PROVIDER_RECONNECTING, PROVIDER_CONNECTING, PROVIDER_DISCONNECTED"
+    },
+    {
+      "id": "signals:broadcast",
+      "status": "PASS",
+      "detail": "BROADCAST_PROVIDER_STARTING, BROADCAST_PROVIDER_STARTING"
+    },
+    {
+      "id": "browser:console-clean",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "integrity:tlv-poc-html",
+      "status": "PASS",
+      "detail": "live/live-zego-poc.html"
+    },
+    {
+      "id": "integrity:tlv-zego-provider",
+      "status": "PASS",
+      "detail": "live/providers/zego-live-provider.js"
+    },
+    {
+      "id": "integrity:platform-interface",
+      "status": "PASS",
+      "detail": "platform-live/provider/live-provider-interface.js"
+    },
+    {
+      "id": "regression:test:platform-live-zego-adapter-phase1",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "regression:test:platform-live-core-phase-a",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "regression:test:platform-live-broadcast-phase-b",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "regression:test:platform-live-viewer-phase-c",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "regression:test:platform-live-chat-phase-d",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "regression:test:platform-live-recording-phase-e",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "id": "regression:test:platform-live-monitoring-phase-f",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "env": {
+    "ZEGO_APP_ID": "9759…2782",
+    "ZEGO_SERVER": "wss:…m/ws",
+    "ZEGO_SERVER_SECRET": "***(32 chars)"
+  },
+  "integrityBefore": {
+    "live/live-zego-poc.html": "a8e537364a52f1d382064e3bd51d637593ddfc1d9786683e56eecd0da0f7187f",
+    "live/providers/zego-live-provider.js": "cb23fbcda22e64743ec01c890138d5f5a298b25b67a517386b4f9d1e7bbfbc12",
+    "platform-live/provider/live-provider-interface.js": "07ea3258e7f3f870cc117bd023be9bc2985d12519ebe8b5ad8c819e6c4d07fab"
+  },
+  "verdict": "GO",
+  "phase3": "Phase 3（Broadcast/Viewer 本接続）着手可 — 人間 Go 確認後",
+  "pocUrl": "http://127.0.0.1:8788/platform-live/zego-platform-poc.html"
+}

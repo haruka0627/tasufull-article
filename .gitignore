@@ -4,6 +4,7 @@ node_modules/
 .env
 .env.local
 chat-supabase-config.local.js
+live/live-zego-config.js
 
 # Gate-D Playwright OTP session (contains Cloudflare Access cookies)
 reports/gate-d-auth-storage.json
@@ -29,3 +30,4 @@ supabase/.temp/
 # Wrangler dev / bundle temp (regenerated on wrangler pages dev)
 .wrangler/
 deploy/cloudflare/dist/.wrangler/
+deploy/cloudflare/dist/.dev.vars
