@@ -19,6 +19,7 @@
     calendar_search: "calendar_search",
     context_more_detail: "context_more_detail",
     context_reply_draft: "context_reply_draft",
+    context_reply_template: "context_reply_template",
     context_refine_short: "context_refine_short",
     context_refine_keigo: "context_refine_keigo",
     context_refine_polite: "context_refine_polite",
@@ -49,6 +50,10 @@
     "直近のメールや応答がありません。先にメール/予定を取得するか、詳細を表示してください。";
 
   const READONLY_DRAFT_FOOTER = "\n\n※ read-only · 送信・下書き保存は未対応";
+
+  function getTemplateDraftFooter() {
+    return global.TasuSecretaryGoogleReplyTemplates?.TEMPLATE_DRAFT_FOOTER || READONLY_DRAFT_FOOTER;
+  }
 
   const GMAIL_LIST_MAX = 8;
   const GMAIL_SUMMARY_MAX = 5;
@@ -164,8 +169,9 @@
     if (!turn) return false;
     const si = String(turn.sourceIntent || "");
     if (si === INTENTS.context_reply_draft) return true;
+    if (si === INTENTS.context_reply_template) return true;
     if (si.startsWith("context_refine_")) return true;
-    return /返信案|未送信/.test(turn.assistantPreview || "");
+    return /返信案|未送信|テンプレ/.test(turn.assistantPreview || "");
   }
 
   function isRefineText(text) {
@@ -201,13 +207,19 @@
     return map[mode] || INTENTS.none;
   }
 
+  function isTemplateReplyIntent(text) {
+    const Templates = global.TasuSecretaryGoogleReplyTemplates;
+    if (Templates?.isTemplateReplyIntent) return Templates.isTemplateReplyIntent(text);
+    return /テンプレ.*返信|テンプレで返|TASFUL AI.*誘導|受付テンプレ|担当確認で返|詳細聞いて/.test(String(text || ""));
+  }
+
   function isDraftEnqueueIntent(text) {
     return /下書き保存|下書きを保存|この返信案.*下書き|Gmail.*下書き.*保存/.test(String(text || ""));
   }
 
   function isWriteIntent(text) {
     const t = String(text || "");
-    if (isReplyDraftIntent(t) || isDraftEnqueueIntent(t)) return false;
+    if (isReplyDraftIntent(t) || isDraftEnqueueIntent(t) || isTemplateReplyIntent(t)) return false;
     const write =
       /返信して|返信を送|送信して|送信を|下書きを?(作|保存|作成)|下書き保存|下書き作成|予定を追加|予定追加|予定を入|予定変更|予定削除|削除して|スケジュール.*入|ミーティング.*(入|設定|作成)|打ち合わせ.*(入|設定|作成)/i.test(
         t
@@ -234,6 +246,10 @@
 
     if (isWriteIntent(text)) {
       return { intent: INTENTS.write_blocked, params: {} };
+    }
+
+    if (isTemplateReplyIntent(text) && hasResolvableGmailContext(history)) {
+      return { intent: INTENTS.context_reply_template, params: {} };
     }
 
     if (isTriageText(text) && hasResolvableGmailContext(history)) {
@@ -789,8 +805,9 @@
 
   function extractReplyDraftBody(assistantPreview) {
     let text = String(assistantPreview || "");
-    text = text.replace(/^【返信案[^】]*】\s*/i, "");
+    text = text.replace(/^【返信案[^】]*】[^\n]*\n?/i, "");
     text = text.replace(/\n\n※ read-only[^\n]*$/i, "");
+    text = text.replace(/\n\n※ 返信案 · 未送信[^\n]*$/i, "");
     return text.trim();
   }
 
@@ -902,6 +919,38 @@
       ok: true,
       reply: trim(turn.reply, 4000) || det(),
       mock: !!turn.fallback_used || calMock,
+    };
+  }
+
+  async function runContextReplyTemplate(userText) {
+    const focus = resolveGmailFocusForContext();
+    if (!focus) {
+      return { ok: true, reply: NO_FOLLOWUP_REPLY, mock: false };
+    }
+
+    const Templates = global.TasuSecretaryGoogleReplyTemplates;
+    if (!Templates?.buildReplyBody || !Templates?.resolveTemplateId) {
+      return { ok: true, reply: NO_FOLLOWUP_REPLY, mock: false, error: "templates_missing" };
+    }
+
+    const templateId = Templates.resolveTemplateId(userText, focus);
+    const built = Templates.buildReplyBody(templateId);
+    const draftBody = trim(built.body, 12000);
+
+    const Bridge = global.TasuSecretaryGoogleChatWriteBridge;
+    if (Bridge?.persistReplyPlanFromDraft) {
+      Bridge.persistReplyPlanFromDraft(focus, draftBody, userText, {
+        sourceIntent: INTENTS.context_reply_template,
+        reason: `テンプレ: ${built.label}`,
+      });
+    }
+
+    const footer = getTemplateDraftFooter();
+    return {
+      ok: true,
+      reply: `【返信案 · テンプレ · 未送信】（${built.label}）\n${draftBody}${footer}`,
+      mock: false,
+      templateId: built.id,
     };
   }
 
@@ -1139,6 +1188,10 @@
 
     if (intent === INTENTS.context_reply_draft) {
       return runContextReplyDraft(userText);
+    }
+
+    if (intent === INTENTS.context_reply_template) {
+      return runContextReplyTemplate(userText);
     }
 
     if (intent === INTENTS.write_enqueue_gmail_draft) {
