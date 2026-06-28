@@ -37,7 +37,7 @@
     return {
       savedAt: new Date().toISOString(),
       schemaVersion: SCHEMA_VERSION,
-      gmail: { list: null, focus: null, replyPlan: null, pendingGate: null },
+      gmail: { list: null, focus: null, replyPlan: null, pendingGate: null, draftResult: null },
       calendar: { list: null },
       lastTurn: null,
     };
@@ -308,7 +308,7 @@
   function saveReplyPlan(plan) {
     plan = plan || {};
     const ctx = ensureStore();
-    ctx.gmail = ctx.gmail || { list: null, focus: null, replyPlan: null, pendingGate: null };
+    ctx.gmail = ctx.gmail || { list: null, focus: null, replyPlan: null, pendingGate: null, draftResult: null };
     const body = trim(plan.body ?? plan.bodyPreview, 12000);
     let bodyPreview = body.slice(0, BODY_PREVIEW_MAX);
     if (body.length > BODY_PREVIEW_MAX) {
@@ -346,7 +346,7 @@
   function savePendingGate(meta) {
     meta = meta || {};
     const ctx = ensureStore();
-    ctx.gmail = ctx.gmail || { list: null, focus: null, replyPlan: null, pendingGate: null };
+    ctx.gmail = ctx.gmail || { list: null, focus: null, replyPlan: null, pendingGate: null, draftResult: null };
     ctx.gmail.pendingGate = {
       pendingId: trim(meta.pendingId, 120),
       kind: trim(meta.kind, 40) || "gmail_draft",
@@ -355,6 +355,55 @@
     };
     writeStore(ctx);
     return { kind: ctx.gmail.pendingGate.kind, state: ctx.gmail.pendingGate.state };
+  }
+
+  function updatePendingGateState(state, meta) {
+    meta = meta || {};
+    const ctx = getStore();
+    if (!ctx?.gmail?.pendingGate) return null;
+    ctx.gmail.pendingGate.state = trim(state, 20) || ctx.gmail.pendingGate.state;
+    if (meta.sourceIntent) ctx.gmail.pendingGate.sourceIntent = trim(meta.sourceIntent, 40);
+    writeStore(ctx);
+    return getPendingGateMeta();
+  }
+
+  function saveDraftExecuteResult(meta) {
+    meta = meta || {};
+    const ctx = ensureStore();
+    ctx.gmail = ctx.gmail || { list: null, focus: null, replyPlan: null, pendingGate: null, draftResult: null };
+    ctx.gmail.pendingGate = {
+      pendingId: trim(meta.pendingId, 120),
+      kind: trim(meta.kind, 40) || "gmail_draft",
+      state: meta.keepPending ? "pending" : meta.success ? "executed" : "failed",
+      sourceIntent: trim(meta.sourceIntent, 40) || "write_enqueue_gmail_draft",
+    };
+    ctx.gmail.draftResult = {
+      savedAt: new Date().toISOString(),
+      success: Boolean(meta.success),
+      subjectPreview: trim(meta.subjectPreview, 120),
+      draftId: trim(meta.draftId, 120),
+      errorPreview: trim(meta.errorPreview, 80),
+    };
+    writeStore(ctx);
+    return getDraftResultPreview();
+  }
+
+  function getDraftResultPreview() {
+    const r = getStore()?.gmail?.draftResult;
+    if (!r) return null;
+    return {
+      savedAt: r.savedAt || "",
+      success: Boolean(r.success),
+      subjectPreview: r.subjectPreview || "",
+      errorPreview: r.errorPreview || "",
+    };
+  }
+
+  function clearPendingGate() {
+    const ctx = getStore();
+    if (!ctx?.gmail) return;
+    ctx.gmail.pendingGate = null;
+    writeStore(ctx);
   }
 
   function getPendingGateMeta() {
@@ -405,6 +454,10 @@
     savePendingGate,
     getPendingGateMeta,
     hasPendingGate,
+    updatePendingGateState,
+    saveDraftExecuteResult,
+    getDraftResultPreview,
+    clearPendingGate,
     clear,
   };
 })(typeof window !== "undefined" ? window : globalThis);
