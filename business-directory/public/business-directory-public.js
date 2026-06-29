@@ -467,7 +467,7 @@
           <dt>会社名</dt><dd>${escapeHtml(profile.company_name || "—")}</dd>
           <dt>所在地</dt><dd>${escapeHtml([profile.prefecture, profile.city, profile.address_line1].filter(Boolean).join(" "))}</dd>
           <dt>対応地域</dt><dd>${escapeHtml((listing.service_areas || []).join("、"))}</dd>
-          <dt>hp_mode</dt><dd>TASFUL簡易HP（full_page）</dd>
+          <dt>公開形式</dt><dd>${escapeHtml(C?.hpModePublicLabel?.(listing.hp_mode) || "TASFULページを使う")}</dd>
           ${serviceBlock}
           <dt>営業時間</dt><dd>${escapeHtml(hoursText)}</dd>
           <dt>公式サイト</dt><dd>${listing.website_url ? `<a href="${escapeHtml(listing.website_url)}" target="_blank" rel="noopener">${escapeHtml(listing.website_url)}</a>` : "—"}</dd>

@@ -139,7 +139,7 @@
           <p class="live-tip-row__gift">${cfg.escapeHtml(giftName)} · ¥${Number(tip.amount_yen || 0).toLocaleString("ja-JP")}</p>
           <p class="live-tip-row__meta">
             <span>${counterLabel}: ${cfg.escapeHtml(counterparty)}</span>
-            <span>status: ${cfg.escapeHtml(tip.payment_status || "stub")}</span>
+            <span>記録: ${cfg.escapeHtml(tip.payment_status === "stub" ? "テスト" : tip.payment_status || "テスト")}</span>
           </p>
           ${tip.message ? `<p class="live-tip-row__message">${cfg.escapeHtml(tip.message)}</p>` : ""}
           <time class="live-tip-row__time">${cfg.escapeHtml(when)}</time>
@@ -172,7 +172,7 @@
 
       root.innerHTML = `
         <p class="live-hint live-panel--notice" style="padding:12px;border-radius:12px;margin-bottom:16px">
-          P0 stub 決済 · 実送金なし · provider は payment_status=<strong>stub</strong> で記録
+          テスト送信（本番課金なし）· 実送金は行われません。記録はテスト用です。
         </p>
         <section class="live-panel">
           <h2 class="live-panel__title">送った応援</h2>

@@ -10,10 +10,10 @@
   let composerVoiceBound = false;
 
   const VOICE_STATE_LABELS = Object.freeze({
-    ready: "Ready",
+    ready: "待機中",
     listening: "聞取中",
     thinking: "処理中",
-    speaking: "読み上げ",
+    speaking: "読み上げ中",
     error: "エラー",
   });
 
@@ -99,7 +99,7 @@
     wrap.dataset.tasuWorkspaceVoiceComposer = "1";
     wrap.innerHTML =
       '<button type="button" class="tasful-ai-voice-composer__btn" data-tasu-workspace-voice-composer-btn aria-pressed="false" aria-label="音声入力">🎤 音声</button>' +
-      '<span class="tasful-ai-voice-composer__state" data-tasu-workspace-voice-state aria-live="polite">Ready</span>';
+      '<span class="tasful-ai-voice-composer__state" data-tasu-workspace-voice-state aria-live="polite">待機中</span>';
 
     actionsRight.insertBefore(wrap, sendBtn);
 

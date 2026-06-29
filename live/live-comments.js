@@ -95,7 +95,7 @@
           <button type="submit" class="live-btn live-btn--primary">送信</button>
         </form>
       `
-      : `<p class="live-hint">${isStub ? "スタブ配信ではコメント投稿は無効です" : isLive ? "ログインするとコメントできます" : "配信中のみコメント投稿できます"}</p>`;
+      : `<p class="live-hint">${isStub ? "プレビュー配信ではコメント投稿は無効です" : isLive ? "ログインするとコメントできます" : "配信中のみコメント投稿できます"}</p>`;
 
     return `
       <section class="live-comments" data-live-comments>

@@ -382,9 +382,43 @@
     syncView(getActiveModeId());
   }
 
+  function syncWorkspaceUserProfile() {
+    const nameEl = document.querySelector("[data-ai-workspace-user-name]");
+    const avatarEl = document.querySelector("[data-ai-workspace-user-avatar]");
+    const planEl = document.querySelector("[data-ai-workspace-user-plan]");
+    if (!nameEl) return;
+
+    const auth = window.TasuAuthCurrentUser?.getCurrentUser?.();
+    const profile = window.TasuMemberProfile?.getStoredProfile?.() || {};
+    const display =
+      String(auth?.displayName || auth?.nickname || profile.nickname || profile.display_name || "")
+        .trim() ||
+      (auth?.email ? String(auth.email).split("@")[0] : "");
+
+    if (display) {
+      nameEl.textContent = display;
+      if (avatarEl) avatarEl.textContent = display.slice(0, 1);
+    } else {
+      nameEl.textContent = "ゲスト";
+      if (avatarEl) avatarEl.textContent = "G";
+    }
+
+    if (planEl) {
+      const planId = window.TasuAiPlanModels?.resolveUserPlan?.() || "free";
+      const planLabel = window.TasuAiPlanModels?.getPlan?.(planId)?.label || "Free";
+      if (display && planId !== "free") {
+        planEl.textContent = planLabel;
+        planEl.hidden = false;
+      } else {
+        planEl.hidden = true;
+      }
+    }
+  }
+
   function onChatReady() {
     if (shellReady) return;
     shellReady = true;
+    syncWorkspaceUserProfile();
     bindShell();
     applyWorkspaceTool(readStoredTool(), { focusInput: false });
     maybeLoadCategoryDemo();

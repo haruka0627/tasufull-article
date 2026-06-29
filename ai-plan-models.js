@@ -11,22 +11,22 @@
   const MODELS = {
     "gemini-flash": {
       id: "gemini-flash",
-      label: "Gemini",
-      shortLabel: "Gemini",
+      label: "最速",
+      shortLabel: "最速",
       provider: "gemini",
       edge: "gemini-chat",
     },
     gpt: {
       id: "gpt",
-      label: "ChatGPT",
-      shortLabel: "ChatGPT",
+      label: "標準",
+      shortLabel: "標準",
       provider: "openai",
       edge: "openai-chat",
     },
     claude: {
       id: "claude",
-      label: "Claude",
-      shortLabel: "Claude",
+      label: "高精度",
+      shortLabel: "高精度",
       provider: "anthropic",
       edge: "claude-chat",
     },
@@ -171,7 +171,7 @@
         access = "enabled";
       }
       if (workspace && model.comingSoon) {
-        access = "disabled";
+        access = "hidden";
       }
       return {
         ...model,

@@ -6,11 +6,11 @@
   "use strict";
 
   const MOBILE_TABS = Object.freeze([
-    { id: "home", label: "HOME", href: "../dashboard.html", icon: "⌂" },
-    { id: "talk", label: "TALK", href: "../talk-home.html?tab=chat", icon: "💬" },
-    { id: "live", label: "LIVE", href: "index.html", icon: "▶" },
-    { id: "view", label: "VIEW", href: "videos.html", icon: "▦" },
-    { id: "my", label: "MY", href: "my-videos.html", icon: "◎" },
+    { id: "home", label: "ホーム", href: "../dashboard.html", icon: "⌂" },
+    { id: "talk", label: "トーク", href: "../talk-home.html?tab=chat", icon: "💬" },
+    { id: "live", label: "ライブ", href: "index.html", icon: "▶" },
+    { id: "view", label: "動画", href: "videos.html", icon: "▦" },
+    { id: "my", label: "マイ", href: "my-videos.html", icon: "◎" },
   ]);
 
   const DESKTOP_NAV = Object.freeze([
