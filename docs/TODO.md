@@ -1,10 +1,10 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-29（status sync · TLV T1/T2/T4 · Design Audit · Builder 条件検索 · TASFUL AI P1）  
-**Git HEAD:** `f4cf7d8`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
+**最終更新:** 2026-06-29（housekeeping · Materials Phase 0 着手可）  
+**Git HEAD:** `e5c4d24`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
 **優先:** 下記 **Release Readiness** が正本。旧セクション（Legacy）は参照用 · 詳細は各リンク。
 
-**Cursor 開発優先:** **P1 TASFUL AI ✅** → **P2 Live Platform Core ✅** → **P3 Live API（ZEGO）** → **P4 BD 待機** → **P5 Materials Phase 0** → P6 TLV Pause · AI秘書待機
+**Cursor 開発優先:** **P5 Materials Phase 0（着手可）** → P3 Live API（ZEGO）→ P4 BD 待機 → P6 TLV Pause · AI秘書待機
 
 ---
 
@@ -120,6 +120,7 @@
 | 項目 | 状態 |
 | --- | --- |
 | Phase | **0 のみ** — 実装 **開始しない** |
+| **Cursor** | **次に着手可能** — docs 設計のみ（DB/UI/API 禁止） |
 | 実装 | **未着手**（設計のみ） |
 | Phase 0 対象 | 命名 · 法務 checklist · 広告 SDK 候補 · ライセンス整理 |
 | Phase 1 | **禁止**（schema/UI/DB 着手不可） |
@@ -182,7 +183,7 @@
 | **REL-P0-01** | **Repo / Docs** | P0 | 部分 | working tree 残存（dist / reports / 別領域） | 領域別選別ステージング · `git add -A` 禁止 |
 | **REL-P0-02** | **TLV Payment** | P0 | **Paused（運用待ち）** | 運用ゲートのみ（Backup · Stripe · Live smoke） | [Completion Gate §11](../reports/tlv-phase1-completion-gate.md#11-phase-1-停止--再開条件正本) · Runbook Step 1→10 |
 | **REL-P0-03** | **AI 秘書** | P0 | deploy No-Go | `DEEPSEEK_API_KEY` prod · 残高 · HTTP 200 smoke | Production Secret · deploy · 1 往復 smoke |
-| **REL-P0-04** | **Pages 配信** | P0 | 部分 | 未 deploy 資産多数（Builder 6-H 等 · Site Assistant） | `build:pages` → prod alias · 対象範囲の smoke 8788/本番 |
+| **REL-P0-04** | **Pages 配信** | P0 | 部分 | **dist git 未反映**（Design Audit `ee2efea` 等）· prod alias 未 deploy | **本番 deploy 前必須:** `build:pages` → 選別 dist コミット → prod alias · smoke 8788/本番 |
 
 **TLV Payment Release Operations（REL-P0-02 詳細 · 開発凍結 · Runbook のみ · Phase 1 実装停止 2026-06-28）**
 
@@ -407,7 +408,7 @@ npm run verify:live-zego-poc-e2e
 | **REL-P1-05** | **Builder Monetization** | P1 | 設計 Draft | SKU 未確定 | Contact Reveal M0–M3（**公開範囲に Reveal 含む場合**） |
 | **REL-P1-06** | **Provider Listing** | P1 | 設計 Draft | なし | Free Listing L1–L2 · Boost L3（**掲載者向け公開時**） |
 | **REL-P1-07** | **Business Directory** | P3 | Launch Gate Prep **Complete** | Commercial Launch | OB1–OB8 人間判断 · OB8 Go |
-| **REL-P1-08** | **Builder 未 push** | P1 | 未 | — | Command Dashboard 6-H コミット · Builder AI 系 push/deploy |
+| **REL-P1-08** | **Builder 未 push** | P1 | 未 | — | 6-H は `c66c587` コミット済 · push/deploy のみ |
 
 ---
 
@@ -691,10 +692,10 @@ Creator Marketplace
 
 | 項目 | 内容 |
 | --- | --- |
-| 状態 | working tree に **約 300 件**（dist / reports / TLV-Live 別バンドル混在） |
+| 状態 | working tree に **約 299 件**（dist / reports / TLV-Live 別バンドル混在） |
 | 方針 | `git add -A` 禁止。領域別に選別ステージング（AI 時は `reports/ai-selected-staging-plan.md` 参照） |
-| 主要カテゴリ | dist 未同期 · Live/Zego reports · Builder 6-H 未コミット · scratch JSON |
-| 参照 | `reports/ai-selected-staging-result.md` §8 · [PROJECT_STATUS.md](./PROJECT_STATUS.md) |
+| 主要カテゴリ | dist 未同期 · docs 別バンドル · reports/scratch · live/zego PoC（未追跡）· Future |
+| 参照 | `reports/ai-selected-staging-result.md` §8 · [PROJECT_STATUS.md](./PROJECT_STATUS.md) §Working tree |
 
 **サブタスク**
 
@@ -702,7 +703,7 @@ Creator Marketplace
 - [x] `ai-model-gateway.js`（+73 行）— `35d72b2` + dist `0f6328d` コミット済（2026-06-28 確認）
 - [ ] `package.json`（wrangler compatibility-date）— 単独コミットか revert
 - [x] `supabase/functions/_shared/ai-attachments.ts` — `35d72b2` コミット済 · live Vision PASS
-- [ ] 本 `docs/` 正本セットのコミット（別 PR）
+- [x] 本 `docs/` status 正本（TODO / PROJECT_STATUS / ROADMAP / KNOWN_ISSUES）— `e5c4d24` · housekeeping 本更新
 
 ---
 
@@ -1869,7 +1870,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder Contract/Completion Phase 6-E** | ✅ commit 済 | `ac385c6` · `reports/builder-contract-completion-phase6e.md` |
 | **Builder Document Center Phase 6-F** | ✅ commit 済 | `549e562` · `reports/builder-document-center-phase6f.md` |
 | **Builder Notification Center Phase 6-G** | ✅ commit 済 | `74d54b8` · `reports/builder-notification-center-phase6g.md` |
-| **Builder Command Dashboard Phase 6-H** | ✅ 実装 · 未コミット | `reports/builder-dashboard-phase6h.md` |
+| **Builder Command Dashboard Phase 6-H** | ✅ `c66c587` | `reports/builder-dashboard-phase6h.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 | **Builder AI 条件検索** | P0 ✅ · P1 ✅ · P2 📋 | `0857c22` · `b80d868` · [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
 | **Builder Monetization / Contact Reveal** | 📋 設計 Draft | [BUILDER_MONETIZATION.md](./AI/BUILDER_MONETIZATION.md) · 検索無料 · 連絡先開示都度 · AI サブスク分離 |
@@ -1956,7 +1957,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - commit `66051f7` · **未 push · 未デプロイ**
 - 真 Gemini Live / WebSocket / ephemeral token Edge — **未実装**（Phase 4-B）
 
-**Builder AI Vision Phase 5（構造化 Gemini Vision · ✅ 実装 · 未コミット）**
+**Builder AI Vision Phase 5（構造化 Gemini Vision · ✅ commit 済 · `7ef4efd`）**
 
 - `builder-ai-vision-analyzer.js` · JSON 正本 · 11 診断カテゴリ · AI参考診断免責
 - Gateway `runFieldVision` 拡張（prompt override · raw JSON）· テキスト Gateway 非変更
@@ -2017,7 +2018,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 - `test-builder-notification-center-phase6g.mjs` + phase6f/e/d/c/vision 回帰 + build PASS
 - 参照: `reports/builder-notification-center-phase6g.md`
 
-**Builder Command Dashboard Phase 6-H（司令塔 KPI · ✅ 実装 · 未コミット）**
+**Builder Command Dashboard Phase 6-H（司令塔 KPI · ✅ commit 済 · `c66c587`）**
 
 - `project-dashboard.html` — KPI · Today's Work · Active · Notifications · Activity · Upcoming
 - 既存 Store API 読取のみ（新規業務ロジックなし）· AD-012 準拠
@@ -2059,9 +2060,10 @@ Groq / Cerebras / Claude は **現時点では不要**。
 
 ## P2 — ドキュメント・運用
 
-- [x] `docs/` status 正本同期（本更新 · 2026-06-29）
+- [x] `docs/` status 正本同期（`e5c4d24` · 2026-06-29）
+- [x] `docs/` housekeeping（誤記修正 · working tree 分類 · Materials 着手可）— 本更新
 - [ ] `reports/ai-selected-staging-result.md` をコミットまたは docs へ統合
-- [ ] working tree 残件の領域別整理 · [PROJECT_STATUS.md](./PROJECT_STATUS.md) 件数更新
+- [ ] working tree 残件の領域別整理（判定表）· [PROJECT_STATUS.md](./PROJECT_STATUS.md)
 
 ---
 

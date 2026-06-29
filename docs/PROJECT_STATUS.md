@@ -1,8 +1,8 @@
 # TASFUL プロジェクトステータス
 
-**最終更新:** 2026-06-29  
-**Git HEAD:** `f4cf7d8`（参照時点）  
-**開発優先:** **P3 Live API（ZEGO Provider）** · Business Directory **待機** · Materials **Phase 0** · TLV = **Pause**
+**最終更新:** 2026-06-29（housekeeping）  
+**Git HEAD:** `e5c4d24`（参照時点）  
+**開発優先:** **P5 Materials Phase 0（着手可）** · P3 Live API（ZEGO）· Business Directory **待機** · TLV = **Pause**
 
 ---
 
@@ -10,11 +10,13 @@
 
 | SHA | 内容 | dist 同期 |
 | --- | --- | --- |
+| `e5c4d24` | docs status 正本同期 | — |
 | `2ba6d6c` | TLV T1/T2/T4 — watch URL · creator-dashboard non-fatal · main-flow smoke | ソースのみ（TLV `live/`） |
-| `ee2efea` | Design Audit A/D/C polish — 公開面 UI · TLV console 整理 | **未同期**（`build:pages` 別バンドル） |
+| `ee2efea` | Design Audit A/D/C polish — 公開面 UI · TLV console 整理 | **未同期**（`build:pages` 別バンドル · REL-P0-04） |
 | `0857c22` | Builder 条件検索 P0/P1 — repository · UI adapter | ソースのみ |
 | `b80d868` | Builder 条件検索 dist ミラー | **同期済**（`deploy/cloudflare/dist/builder/*`） |
 | `f4cf7d8` | TASFUL AI P1 — Media Edge · Voice Guard · Monitoring | **同期済**（media 3 ファイル dist） |
+| `c66c587` | Builder Command Dashboard Phase 6-H | ソースのみ（`ee2efea` で polish） |
 
 ---
 
@@ -35,23 +37,24 @@
 | **Live Platform（共通）** | **P2 Core Complete** | Phase A–F · [summary](../reports/platform-live-platform-summary.md) |
 | **Live API（ZEGO）** | **Phase 1 Go** | Adapter 実装 · [phase1](../reports/live-platform-zego-adapter-phase1.md) · 77 tests PASS |
 | **Business Directory** | **待機** · Launch Gate Prep Complete | Commercial Launch **No-Go** |
-| **TASFUL Materials（P5）** | **Phase 0** | 設計のみ · 実装未着手 |
-| **Design Audit Polish** | **Done**（ソース） | `ee2efea` · dist は別バンドル |
+| **TASFUL Materials（P5）** | **Phase 0 · 着手可** | 設計のみ · 実装未着手 · [free-download-service-backlog.md](./free-download-service-backlog.md) |
+| **Design Audit Polish** | **Done**（ソース） | `ee2efea` · dist は REL-P0-04 別バンドル |
 
 ---
 
-## Working tree（`f4cf7d8` 以降）
+## Working tree（`e5c4d24` 以降 · 約 299 件）
 
-| 区分 | 件数（概算） |
-| --- | --- |
-| **合計** | **~300** |
-| 主な残件 | dist 未同期（Design Audit 等）· reports/scratch JSON · Live/Zego 別バンドル · Builder 6-H 未コミット |
+| 分類 | 内容 | 扱い |
+| --- | --- | --- |
+| **dist 未同期** | Design Audit（`ee2efea`）等 · `deploy/cloudflare/dist/` 広範 M/?? | **本番 deploy 前必須**（REL-P0-04）· 選別 `build:pages` + commit |
+| **docs 別バンドル** | `docs/AI/*` · TLV/Payment 設計 doc 等 | 領域別 docs コミット |
+| **reports / scratch** | `*-last.json` · probe · `_tmp-*` | 破棄 or 別バンドル · コミット不要が多い |
+| **live / zego PoC** | `live/session/*` · `live-zego-poc*` 等（未追跡） | 別バンドル · flag OFF · 本線外 |
+| **Future** | Vision 制度 · Membership 数値 · Materials Phase 1+ | 着手禁止 |
 
-**分類:** Future / 別バンドル / reports / scratch — 詳細 [TODO.md](./TODO.md) · [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
+**dist 同期済（コミット済）:** TASFUL AI media 3 ファイル（`f4cf7d8`）· Builder 条件検索（`b80d868`）· Platform Live 一部（`9006ead`）
 
-**dist 同期済（HEAD まで）:** TASFUL AI media 3 ファイル（`f4cf7d8`）· Builder 条件検索（`b80d868`）· Platform Live 一部（`9006ead` の `live-broadcasts` 等）
-
-**dist 未同期（代表）:** Design Audit polish（`ee2efea`）· 広範な `deploy/cloudflare/dist/` 変更 · wrangler build 後の全体ミラー
+**dist 未同期（代表）:** Design Audit polish（`ee2efea`）· git 上の dist がソースより古い領域多数
 
 ---
 

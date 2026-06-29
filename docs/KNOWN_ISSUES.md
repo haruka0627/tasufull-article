@@ -12,7 +12,7 @@
 | --- | --- |
 | KI-003 | TASFUL AI Production Ready — 2026-06-28 Go · `reports/tasful-ai-production-ready-verification.md` |
 | KI-008 | AI 秘書 phase ファイル — P0-1 選別コミット後 git 追跡済 |
-| KI-009 | `docs/` status 正本 — 2026-06-29 sync · `f4cf7d8` 整合 |
+| KI-009 | `docs/` status 正本 — 2026-06-29 sync · `e5c4d24` 整合 |
 
 ---
 
@@ -42,10 +42,10 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | `f4cf7d8` 以降も **~300 件**（dist / reports / Live-Zego / Builder 6-H 等） |
+| **状態** | `e5c4d24` 以降も **~299 件**（dist / reports / Live-Zego PoC 等） |
 | **リスク** | 次の `git add -A` で ANPI / Live / Gateway 等が混入 |
-| **対応** | [TODO.md](./TODO.md) · 領域別選別ステージングのみ |
-| **HEAD までコミット済** | TLV T1/T2/T4 · Design Audit ソース · Builder 条件検索 · TASFUL AI P1 · Platform Live P5 本体 |
+| **対応** | [TODO.md](./TODO.md) · [PROJECT_STATUS.md](./PROJECT_STATUS.md) §Working tree · 領域別選別ステージングのみ |
+| **HEAD までコミット済** | TLV T1/T2/T4 · Design Audit ソース · Builder 条件検索 · TASFUL AI P1 · Platform Live P5 · Builder 6-H `c66c587` |
 
 ---
 
@@ -88,8 +88,8 @@ TASFUL AI Production Ready = **Go**（2026-06-28）。CF Access E2E · build · 
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | **解消** — 2026-06-29 `docs: sync project status after release polish` |
-| **内容** | TODO / PROJECT_STATUS / ROADMAP / KNOWN_ISSUES を `f4cf7d8` まで整合 |
+| **状態** | **解消** — 2026-06-29 `docs: sync project status after release polish`（`e5c4d24`）· housekeeping 本更新で追補 |
+| **内容** | TODO / PROJECT_STATUS / ROADMAP / KNOWN_ISSUES を HEAD 整合 |
 | **残** | 設計 Backlog 個別 docs · `reports/tasful-ai-monitoring-runbook.md` は別バンドル |
 
 ---

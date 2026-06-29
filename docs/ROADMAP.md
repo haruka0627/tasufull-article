@@ -1,6 +1,6 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-29（status sync · TLV · Design Audit · Builder 条件検索 · TASFUL AI P1）
+**最終更新:** 2026-06-29（housekeeping · Materials Phase 0 着手可）
 
 ---
 
@@ -12,7 +12,7 @@
 | **P2** | **Live Platform Core** | **Complete** | Phase A–F · [summary](../reports/platform-live-platform-summary.md) |
 | **P3** | **Live API（ZEGO Provider）** | **Phase 1 Go** | Adapter · [phase1](../reports/live-platform-zego-adapter-phase1.md) |
 | **P4** | **Business Directory** | **待機** | Launch Gate Prep Complete · Commercial Launch **No-Go** |
-| **P5** | **TASFUL Materials（無料DL）** | **Phase 0** | 設計のみ · 実装未着手 · [readiness](../reports/free-download-service-implementation-readiness.md) |
+| **P5** | **TASFUL Materials（無料DL）** | **Phase 0 · 着手可** | docs 設計のみ · 実装未着手 · [readiness](../reports/free-download-service-implementation-readiness.md) |
 | **P6** | **TLV** | **Pause** | 運用ゲート待ち · [completion gate](../reports/tlv-phase1-completion-gate.md) |
 | **—** | **AI 秘書** | 待機後 | Gmail · Calendar · Drive 連携完成度 |
 
@@ -225,7 +225,7 @@
 | **Contract/Completion Phase 6-E**（契約・完了基盤 · SCHEMA v5） | ✅ `ac385c6` | `reports/builder-contract-completion-phase6e.md` |
 | **Document Center Phase 6-F**（ドキュメント管理基盤 · SCHEMA v6） | ✅ `549e562` | `reports/builder-document-center-phase6f.md` |
 | **Notification Center Phase 6-G**（通知基盤 Foundation · SCHEMA v7） | ✅ `74d54b8` | `reports/builder-notification-center-phase6g.md` |
-| **Command Dashboard Phase 6-H**（司令塔 KPI · Store 読取のみ） | ✅ 実装 · 未コミット | `reports/builder-dashboard-phase6h.md` |
+| **Command Dashboard Phase 6-H**（司令塔 KPI · Store 読取のみ） | ✅ `c66c587` | `reports/builder-dashboard-phase6h.md` |
 | **条件検索 P0/P1**（Repository · UI adapter · dist） | ✅ | `0857c22` · `b80d868` · [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
 | **条件検索 P2**（Pro 自然文 · LLM） | 📋 Future/P1 | Gateway 接続後 |
 | **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
@@ -314,8 +314,8 @@
 | **Site Assistant Phase 1**（右下 **TASFUL サイトAI** · cross-search/FAQ 流用 · Gateway 非接続） | ✅ 実装 — [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) · **未デプロイ** |
 | **Site Assistant Phase 2+**（Feedback Launcher · 通報/OPS 集約） | 📋 Backlog — 同上 · **UI Critical 優先度外** |
 | Gateway 契約変更 | **意図なし** · `ai-model-gateway.js` は HEAD clean |
-| working tree 残件整理 | 📋 [TODO.md](./TODO.md) · ~300 件（dist / reports / 別バンドル） |
-| `docs/` status 正本 | ✅ 本更新（2026-06-29） |
+| working tree 残件整理 | 📋 [TODO.md](./TODO.md) · ~299 件（dist / docs / reports / PoC / Future） |
+| `docs/` status 正本 | ✅ `e5c4d24` + housekeeping 本更新 |
 | **Design Audit Polish** | ✅ `ee2efea`（ソース）· dist 別バンドル |
 | **Platform Live Phase 5** | ✅ Complete · `798d4a5`〜`9006ead` |
 | **TLV Finish T1/T2/T4** | ✅ `2ba6d6c` |
