@@ -1,7 +1,7 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-29（TLV 仕上げ T1/T2/T4 · 開発優先順位 P1–P5）  
-**Git HEAD:** `aebf23c`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
+**最終更新:** 2026-06-29（status sync · TLV T1/T2/T4 · Design Audit · Builder 条件検索 · TASFUL AI P1）  
+**Git HEAD:** `f4cf7d8`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
 **優先:** 下記 **Release Readiness** が正本。旧セクション（Legacy）は参照用 · 詳細は各リンク。
 
 **Cursor 開発優先:** **P1 TASFUL AI ✅** → **P2 Live Platform Core ✅** → **P3 Live API（ZEGO）** → **P4 BD 待機** → **P5 Materials Phase 0** → P6 TLV Pause · AI秘書待機
@@ -30,14 +30,14 @@
 | Phase | 内容 | 状態 |
 | --- | --- | --- |
 | **P5-1** | TLV ↔ Platform Live 接続ポイント調査 · レポート | **Go** |
-| **P5-2** | TLV Platform Live Adapter（Interface 経由 · ZEGO 非直依存） | **Go**（未コミット） |
-| **P5-3** | `usePlatformLive` feature flag + 条件付き bridge 接続 | **Go**（未コミット） |
-| **P5-4** | 8788 統合スモーク（Flag OFF/ON · bridge/adapter/integration） | **Done / GO** |
-| **P5-5** | Flag ON ZEGO provider lazy load | **Go**（未コミット · `test:platform-live-zego-integration-phase5-p5-5`） |
-| **P5-6** | watch leave · studio preview container | **Go**（未コミット · `test:platform-live-zego-integration-phase5-p5-6`） |
-| **P5-7** | Supabase comments vs Platform Chat 統合方針 | **Go**（方針固定 · [report](../reports/live-platform-zego-phase5-p5-7-comments-chat-policy.md) · Chat 本体統合は Future） |
+| **P5-2** | TLV Platform Live Adapter（Interface 経由 · ZEGO 非直依存） | **Done** `798d4a5` |
+| **P5-3** | `usePlatformLive` feature flag + 条件付き bridge 接続 | **Done** `798d4a5` |
+| **P5-4** | 8788 統合スモーク（Flag OFF/ON · bridge/adapter/integration） | **Done** `c92c9bf` |
+| **P5-5** | Flag ON ZEGO provider lazy load | **Done** `856f6de` |
+| **P5-6** | watch leave · studio preview container | **Done** `9006ead` |
+| **P5-7** | Supabase comments vs Platform Chat 統合方針 | **Done**（方針固定 · [report](../reports/live-platform-zego-phase5-p5-7-comments-chat-policy.md) · Chat 本体統合は Future） |
 | **P5-8** | `renderStreamPlayer` 実映像化（Platform player mount） | **Done** `3640bc6` |
-| **P5-9** | watch URL 正規化 | **Go**（未コミット · `test:platform-live-zego-integration-phase5-p5-9`） |
+| **P5-9** | watch URL 正規化 | **Done** `9006ead` |
 
 **制約:** UI 全面変更 · DB/API/Token 仕様変更 · dist/deploy · 大規模リファクタ **禁止**
 
@@ -51,13 +51,43 @@
 
 | Task | 内容 | 状態 |
 | --- | --- | --- |
-| **T1** | 通知・深リンクを `watch.html?broadcast_id=` に統一（`watch-live.html` は互換リダイレクト維持） | **Done**（未コミット） |
-| **T2** | `creator-dashboard` の `live_creator_monetization` RLS 42501 を non-fatal（`console.warn` + fallback UI） | **Done**（未コミット） |
-| **T4** | 8788 主要導線 smoke（index · videos · watch · studio · creator-dashboard） | **Done**（未コミット） |
+| **T1** | 通知・深リンクを `watch.html?broadcast_id=` に統一（`watch-live.html` は互換リダイレクト維持） | **Done** `2ba6d6c` |
+| **T2** | `creator-dashboard` の `live_creator_monetization` RLS 42501 を non-fatal（`console.warn` + fallback UI） | **Done** `2ba6d6c` |
+| **T4** | 8788 主要導線 smoke（index · videos · watch · studio · creator-dashboard） | **Done** `2ba6d6c` |
 
 **対象外:** Platform Live Phase5 本体変更 · 実 RTC · Payment 本番 · Chat 統合 · Studio DB · UI 全面変更
 
 **検証:** `npm run verify:tlv-finish-main-flow-smoke` · 8788 · viewport 1280/390
+
+---
+
+### Design Audit — Public Release Polish（2026-06-29）
+
+**正本:** `scripts/verify-design-audit-polish-smoke.mjs` · commit `ee2efea`
+
+| 領域 | 内容 | 状態 |
+| --- | --- | --- |
+| **A** | 公開面 UI polish（Workspace · Builder · BD · Dashboard · index-top） | **Done** `ee2efea` |
+| **D** | TLV analytics / studio 系の severe console 整理 | **Done** `ee2efea` |
+| **C** | Wallet マイナス禁止 · Clawback 運用は docs 追補済（制度 Future は維持） | **Done**（docs · `ee2efea` ソース） |
+
+**dist:** 本コミットは **ソースのみ** · `npm run build:pages` 後の dist 同期は **別バンドル**
+
+**検証:** `node scripts/verify-design-audit-polish-smoke.mjs` · 8788 · viewport 1280/768/390
+
+---
+
+### Builder 条件検索 P0/P1（2026-06-29）
+
+**正本:** [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md)
+
+| Phase | 内容 | 状態 |
+| --- | --- | --- |
+| **P0** | Repository · schema 相当 · 単体 smoke | **Done** `0857c22` |
+| **P1** | UI adapter · find-workers / partners 接続 | **Done** `0857c22` |
+| **dist** | Builder 条件検索ミラー | **Done** `b80d868` |
+
+**Future:** P2 Pro 自然文変換（LLM · Gateway）· P3 AI 要約 — [REL-F-07](#future--将来構想設計--数値未確定--実装禁止扱い)
 
 ---
 
@@ -149,7 +179,7 @@
 
 | ID | 対象 | 優先度 | 状態 | ブロッカー | 次アクション |
 | --- | --- | --- | --- | --- | --- |
-| **REL-P0-01** | **Repo / Docs** | P0 | 部分 | docs 正本未コミット群 | 選別ステージング · `docs/` + 設計 Backlog コミット（`git add -A` 禁止） |
+| **REL-P0-01** | **Repo / Docs** | P0 | 部分 | working tree 残存（dist / reports / 別領域） | 領域別選別ステージング · `git add -A` 禁止 |
 | **REL-P0-02** | **TLV Payment** | P0 | **Paused（運用待ち）** | 運用ゲートのみ（Backup · Stripe · Live smoke） | [Completion Gate §11](../reports/tlv-phase1-completion-gate.md#11-phase-1-停止--再開条件正本) · Runbook Step 1→10 |
 | **REL-P0-03** | **AI 秘書** | P0 | deploy No-Go | `DEEPSEEK_API_KEY` prod · 残高 · HTTP 200 smoke | Production Secret · deploy · 1 往復 smoke |
 | **REL-P0-04** | **Pages 配信** | P0 | 部分 | 未 deploy 資産多数（Builder 6-H 等 · Site Assistant） | `build:pages` → prod alias · 対象範囲の smoke 8788/本番 |
@@ -369,11 +399,11 @@ npm run verify:live-zego-poc-e2e
 
 | ID | 対象 | 優先度 | 状態 | ブロッカー | 次アクション |
 | --- | --- | --- | --- | --- | --- |
-| **REL-P1-01** | **TASFUL AI** | P1 | **Complete** | Membership=REL-F-04 保留 | [p1 implementation](../reports/tasful-ai-p1-implementation.md) |
+| **REL-P1-01** | **TASFUL AI** | P1 | **Complete** | Membership=REL-F-04 保留 · Media smoke Gemini flake | `f4cf7d8` · [p1 implementation](../reports/tasful-ai-p1-implementation.md) |
 | **REL-P2-01** | **Live Platform 共通基盤** | P2 | **Core Complete（A〜F）** | Edge deploy · surface 接続（Post-MVP） | [summary](../reports/platform-live-platform-summary.md) · [plan](../reports/live-platform-common-foundation-plan.md) |
 | **REL-P1-02** | **Platform** | P1 | 未着手 | なし | featured バッジ · favorites DB · Google OAuth E2E |
 | **REL-P1-03** | **Builder AI** | P1 | staging 準備 | 本番 DB 未適用 | P2-C staging のみ（draft Supabase · RLS · Live E2E） |
-| **REL-P1-04** | **Builder 条件検索** | P1 | P1 実装 Done | LLM 未接続 | P2 Pro 自然文変換 · 統合 UI（[CONDITIONAL_SEARCH](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md)） |
+| **REL-P1-04** | **Builder 条件検索** | P1 | **Complete**（P0/P1） | P2 LLM 未接続 | `0857c22` · `b80d868` · [CONDITIONAL_SEARCH](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
 | **REL-P1-05** | **Builder Monetization** | P1 | 設計 Draft | SKU 未確定 | Contact Reveal M0–M3（**公開範囲に Reveal 含む場合**） |
 | **REL-P1-06** | **Provider Listing** | P1 | 設計 Draft | なし | Free Listing L1–L2 · Boost L3（**掲載者向け公開時**） |
 | **REL-P1-07** | **Business Directory** | P3 | Launch Gate Prep **Complete** | Commercial Launch | OB1–OB8 人間判断 · OB8 Go |
@@ -610,10 +640,14 @@ Creator Marketplace
 | 領域 | 代表成果 | 参照 |
 | --- | --- | --- |
 | **TASFUL AI PR** | Workspace 課金 P1/P2 · Brave Search · CF Access E2E · prod alias | [tasful-ai-production-ready-verification.md](../reports/tasful-ai-production-ready-verification.md) |
+| **TASFUL AI P1** | Media Edge · Voice Guard · Monitoring smoke | `f4cf7d8` · [p1 implementation](../reports/tasful-ai-p1-implementation.md) |
+| **TLV 仕上げ T1/T2/T4** | watch URL 統一 · creator-dashboard non-fatal · main-flow smoke | `2ba6d6c` |
+| **Design Audit Polish** | 公開面 UI / TLV console 整理 | `ee2efea`（ソース · dist 別途） |
+| **Platform Live Phase 5** | P5-1〜P5-9 TLV 統合 | `798d4a5`〜`9006ead` |
 | **TLV Payment 開発** | purchase/tip/chargeback · migration · audit **Development Complete** | [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) |
 | **Business Directory** | Phase 1–7 · Production Step 4 **48/48 Go** | TODO §Business Directory |
 | **Builder AI** | Tools P3 · Vision P2/P5 · Live 4-A · Project 6-A〜6-H 実装 | [BUILDER_AI.md](./AI/BUILDER_AI.md) |
-| **Builder 条件検索** | P0 schema · P1 Repository | [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
+| **Builder 条件検索** | P0/P1 Repository + dist 同期 | `0857c22` · `b80d868` · [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
 | **Builder 設計** | Monetization · Provider Listing · Credits **Draft** | `docs/AI/BUILDER_*.md` |
 | **AI 秘書 実装** | DeepSeek P1/P2 · Orchestrator P5 · Google 6-B〜7-B | commit `6c70985` 系 |
 | **Live Vision 設計** | AD-014 · 6 設計書 | [ROADMAP.md](./ROADMAP.md) |
@@ -653,14 +687,14 @@ Creator Marketplace
 
 ## Legacy — 旧 P0 直近
 
-### 1. 残存未コミット変更 440 件の整理
+### 1. 残存 working tree 整理
 
 | 項目 | 内容 |
 | --- | --- |
-| 状態 | working tree に 440 件（196 M / 1 D / 243 ??） |
+| 状態 | working tree に **約 300 件**（dist / reports / TLV-Live 別バンドル混在） |
 | 方針 | `git add -A` 禁止。領域別に選別ステージング（AI 時は `reports/ai-selected-staging-plan.md` 参照） |
-| 主要カテゴリ | dist 248 · Live 54 · Builder HTML 36 · Admin AI/Ops 25 · Reports 17 · TLV sim 11 · ANPI 10 等 |
-| 参照 | `reports/ai-selected-staging-result.md` §8 |
+| 主要カテゴリ | dist 未同期 · Live/Zego reports · Builder 6-H 未コミット · scratch JSON |
+| 参照 | `reports/ai-selected-staging-result.md` §8 · [PROJECT_STATUS.md](./PROJECT_STATUS.md) |
 
 **サブタスク**
 
@@ -700,7 +734,9 @@ Creator Marketplace
 - [x] Cloudflare Access **Service Token** 設定 + prod alias E2E（2026-06-28）
 - [x] formal `build:pages` → prod alias deploy（2026-06-28）
 - [x] Workspace 課金 enforcement **Phase 2**（Edge + DB quota · Production deploy 2026-06-28）
-- [x] 動画/音楽 API — Edge `ai-workspace-*-generate` · `AI_MEDIA_GEN_EDGE_ENABLED=1` · 2026-06-28
+- [x] 動画/音楽 API — Edge `ai-workspace-*-generate` · `AI_MEDIA_GEN_EDGE_ENABLED=1` · `f4cf7d8`
+- [x] Voice Hardening Phase 2 — JWT opt-in · user rate limit · `f4cf7d8`
+- [x] Monitoring 横断 smoke — `verify-tasful-ai-monitoring.mjs` · `f4cf7d8`（Media は Gemini 503 flake あり · [KNOWN_ISSUES](./KNOWN_ISSUES.md) KI-014）
 
 ---
 
@@ -1835,7 +1871,7 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | **Builder Notification Center Phase 6-G** | ✅ commit 済 | `74d54b8` · `reports/builder-notification-center-phase6g.md` |
 | **Builder Command Dashboard Phase 6-H** | ✅ 実装 · 未コミット | `reports/builder-dashboard-phase6h.md` |
 | **Builder AI Gemini Live Phase 4-B** | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
-| **Builder AI 条件検索** | P0 ✅ · P1 ✅ · P2 📋 | [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) · `builder-search-repository.js` |
+| **Builder AI 条件検索** | P0 ✅ · P1 ✅ · P2 📋 | `0857c22` · `b80d868` · [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
 | **Builder Monetization / Contact Reveal** | 📋 設計 Draft | [BUILDER_MONETIZATION.md](./AI/BUILDER_MONETIZATION.md) · 検索無料 · 連絡先開示都度 · AI サブスク分離 |
 | **Builder Provider Listing / Sponsored** | 📋 設計 Draft | [BUILDER_PROVIDER_LISTING.md](./AI/BUILDER_PROVIDER_LISTING.md) · 無料掲載 · Boost · deterministic ランキング |
 | **Builder Credits（Future）** | 📋 設計 Draft | [BUILDER_CREDITS.md](./AI/BUILDER_CREDITS.md) · Builder 専用 Wallet · 他 Wallet 非統合 |
@@ -2015,15 +2051,17 @@ Groq / Cerebras / Claude は **現時点では不要**。
 
 **参照:** `reports/voice-phase5d-complete.md` · [AI/README.md](./AI/README.md) §Voice
 
-**次フェーズ候補（未着手）:** Hardening Phase 2 · Redis 等分散 Rate Limit · JWT 認可 · Builder/秘書 Voice UX · TLV Voice 検討
+**次フェーズ候補（未着手）:** Redis 等分散 Rate Limit（`VOICE_REALTIME_RATE_LIMIT_DISTRIBUTED`）· Builder/秘書 Voice UX · TLV Voice 検討
+
+**完了（P1）:** Hardening Phase 2 — JWT opt-in（`VOICE_REALTIME_REQUIRE_JWT=1` · デフォルト OFF）· user bucket 20/min · `f4cf7d8`
 
 ---
 
 ## P2 — ドキュメント・運用
 
-- [ ] `docs/` 正本をコミット
+- [x] `docs/` status 正本同期（本更新 · 2026-06-29）
 - [ ] `reports/ai-selected-staging-result.md` をコミットまたは docs へ統合
-- [ ] 440 件整理後に `PROJECT_STATUS.md` の working tree 件数を更新
+- [ ] working tree 残件の領域別整理 · [PROJECT_STATUS.md](./PROJECT_STATUS.md) 件数更新
 
 ---
 
@@ -2047,3 +2085,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 | Builder AI Tool Integration Phase 3 | `05c32ad` · docs `95a45dd` |
 | Builder AI Live Phase 4-A | `66051f7` · live 18/18 · ui 15/15 · `reports/builder-ai-live-phase4-plan.md` |
 | Voice Core Phase 5-D | `4f1f926` · TASFUL AI / Builder AI / AI秘書 Live opt-in · Hardening Phase 1 · `reports/voice-phase5d-complete.md` |
+| TASFUL AI P1 Media/Voice/Monitoring | `f4cf7d8` · Edge media · JWT guard · monitoring smoke · `reports/tasful-ai-p1-implementation.md` |
+| TLV Finish T1/T2/T4 | `2ba6d6c` · watch URL · creator-dashboard non-fatal · `verify:tlv-finish-main-flow-smoke` |
+| Design Audit Polish | `ee2efea` · `verify-design-audit-polish-smoke.mjs` |
+| Builder 条件検索 P0/P1 | `0857c22` · `b80d868` · `test-builder-conditional-search-p0/p1.mjs` |
+| Platform Live Phase 5 | `798d4a5`〜`9006ead` · P5-1〜P5-9 |
