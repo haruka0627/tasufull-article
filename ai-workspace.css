@@ -209,29 +209,32 @@
   display: none !important;
 }
 
-/* welcome 表示中 — 入力バーをチップ群の下へ（32px） */
+/* welcome 表示中 — composer は下部固定・ウェルカム本文のみスクロール */
 .ai-workspace-page:has(#welcome-screen:not([hidden])) #center-main-stage {
-  justify-content: center;
-  overflow-y: hidden;
+  justify-content: flex-start;
+  overflow: hidden;
   overflow-x: hidden;
 }
 
 .ai-workspace-page:has(#welcome-screen:not([hidden])) #chat-scroller {
-  flex: 0 1 auto;
-  overflow: visible;
-  padding-bottom: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: max(280px, calc(260px + env(safe-area-inset-bottom, 0px)));
 }
 
 .ai-workspace-page:has(#welcome-screen:not([hidden])) #bottom-container {
-  position: relative;
-  bottom: auto;
-  left: auto;
-  transform: none;
+  position: absolute;
+  bottom: max(12px, env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
   flex-shrink: 0;
   width: calc(100% - 140px);
-  margin: 32px auto 0;
-  padding: 0 70px 0;
+  margin: 0;
+  padding: 0 70px max(12px, env(safe-area-inset-bottom, 0px));
   pointer-events: none;
+  z-index: 50;
 }
 
 .ai-workspace-page:has(#welcome-screen:not([hidden])) #neon-bar-area {
@@ -244,16 +247,258 @@
 
 .ai-workspace-page #welcome-screen {
   position: relative;
-  max-width: 720px;
+  max-width: 920px;
   min-height: auto !important;
-  padding: 0 16px;
+  padding: 0 16px 8px;
   box-sizing: border-box;
   justify-content: flex-start;
   transform: none;
+  margin: 0 auto;
+}
+
+.ai-workspace-page .welcome-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 auto 14px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(96, 165, 250, 0.35);
+  background: rgba(30, 58, 138, 0.22);
+  color: rgba(219, 234, 254, 0.92);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 
 .ai-workspace-page .neon-welcome-title {
+  margin: 0 0 10px;
+  font-size: clamp(36px, 5vw, 52px);
+  text-align: center;
+}
+
+.ai-workspace-page .welcome-lead--hero {
+  margin: 0 auto 6px;
+  max-width: 520px;
+  text-align: center;
+  font-size: clamp(18px, 2.4vw, 24px);
+  font-weight: 700;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.ai-workspace-page .welcome-lead-sub {
+  margin: 0 auto 22px;
+  max-width: 520px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.ai-workspace-page .welcome-intent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto 16px;
+  padding: 0;
+}
+
+.ai-workspace-page .welcome-intent-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 14px 12px;
+  border-radius: 14px;
+  border: 1px solid rgba(130, 160, 230, 0.22);
+  background: rgba(12, 20, 40, 0.72);
+  color: #e8f0ff;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+
+.ai-workspace-page .welcome-intent-card:hover {
+  border-color: rgba(96, 165, 250, 0.55);
+  background: rgba(18, 30, 58, 0.88);
+  transform: translateY(-1px);
+}
+
+.ai-workspace-page .welcome-intent-card__icon {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.ai-workspace-page .welcome-intent-card__title {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.ai-workspace-page .welcome-intent-card__sub {
+  font-size: 11px;
+  line-height: 1.45;
+  color: rgba(203, 213, 225, 0.82);
+}
+
+.ai-workspace-page .welcome-footnote {
+  margin: 12px auto 0;
+  max-width: 560px;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.55;
+  color: rgba(148, 163, 184, 0.88);
+}
+
+.ai-workspace-page .welcome-guide-panel--collapsed {
+  max-width: 640px;
+  margin: 8px auto 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+.ai-workspace-page .welcome-guide-panel--collapsed summary {
+  list-style: none;
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.ai-workspace-page .welcome-guide-panel--collapsed summary::-webkit-details-marker {
+  display: none;
+}
+
+.ai-workspace-page .welcome-guide-panel--collapsed[open] .welcome-faq-list {
+  margin-top: 10px;
+}
+
+.ai-workspace-page:has(#welcome-screen:not([hidden])) [data-ai-workspace-usage-status] {
+  display: none;
+}
+
+.ai-workspace-page .tga-sidebar-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0 0 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(52, 119, 255, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  color: #a1aec6;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ai-workspace-page .tga-sidebar-nav-btn:hover {
+  color: #fff;
+  border-color: rgba(70, 140, 255, 0.35);
+  background: rgba(52, 119, 255, 0.08);
+}
+
+.ai-workspace-page .tga-sidebar-nav-btn .material-symbols-outlined {
+  font-size: 18px;
+  color: #8aa0c7;
+}
+
+.ai-workspace-page .ai-sidebar-plan-card {
   margin: 0 0 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(52, 119, 255, 0.16);
+  background: rgba(8, 14, 28, 0.72);
+}
+
+.ai-workspace-page .ai-sidebar-plan-card__title {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #dce7ff;
+  margin-bottom: 4px;
+}
+
+.ai-workspace-page .ai-sidebar-plan-card__usage {
+  margin: 0 0 8px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.ai-workspace-page .ai-sidebar-plan-card__cta {
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 700;
+  color: #67b3ff;
+  text-decoration: none;
+}
+
+.ai-workspace-page .ai-workspace-composer {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.ai-workspace-page .ai-workspace-composer__frame {
+  padding: 14px 16px 12px !important;
+}
+
+.ai-workspace-page .ai-workspace-composer__input {
+  min-height: 56px !important;
+  font-size: 16px !important;
+  line-height: 1.55 !important;
+}
+
+.ai-workspace-page .ai-workspace-composer__actions {
+  margin-top: 8px;
+}
+
+.ai-workspace-page .ai-workspace-composer__mode-btn {
+  min-width: 38px !important;
+  width: 38px;
+  padding: 0 !important;
+  justify-content: center;
+}
+
+.ai-workspace-page .ai-workspace-composer__mode-btn .workspace-mode-btn__text,
+.ai-workspace-page .ai-workspace-composer__mode-btn .workspace-mode-btn__chev {
+  display: none !important;
+}
+
+.ai-workspace-page .ai-workspace-composer__attach-btn {
+  height: 34px;
+  min-height: 34px;
+  padding: 0 10px;
+  font-size: 12px;
+  opacity: 0.88;
+}
+
+.ai-workspace-page .ai-workspace-composer__attach-btn .image-upload-text {
+  display: inline;
+}
+
+.ai-workspace-page .ai-workspace-composer__send {
+  width: 40px;
+  height: 40px;
+}
+
+.ai-workspace-page .tool-dropdown__ai-hint {
+  margin: 8px 4px 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba(52, 119, 255, 0.14);
+  font-size: 10px;
+  line-height: 1.45;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.ai-workspace-page .ai-workspace-composer .ai-workspace-model-host {
+  max-width: none;
+  margin: 0;
+  padding: 10px 0 0;
 }
 
 .ai-workspace-page .welcome-lead {
@@ -834,7 +1079,7 @@
 @media (max-width: 900px) {
   .ai-workspace-page:has(#welcome-screen:not([hidden])) #center-main-stage {
     justify-content: flex-start;
-    overflow-y: hidden;
+    overflow: hidden;
     min-height: 100dvh;
     box-sizing: border-box;
   }
@@ -845,9 +1090,46 @@
   }
 
   .ai-workspace-page:has(#welcome-screen:not([hidden])) #chat-scroller {
-    flex: 0 1 auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
     margin-top: 0;
-    padding: clamp(98px, calc(35vh - 50px), 278px) 16px 0;
+    padding: 4px 12px 0;
+    padding-bottom: max(260px, calc(240px + env(safe-area-inset-bottom, 0px))) !important;
+  }
+
+  .ai-workspace-page .welcome-intent-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .ai-workspace-page .welcome-intent-card {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .ai-workspace-page .welcome-intent-card__sub {
+    margin-left: auto;
+    text-align: right;
+    max-width: 46%;
+  }
+
+  .ai-workspace-page .ai-model-bar__chips {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-workspace-page .ai-workspace-composer__attach-btn .image-upload-text {
+    display: none;
+  }
+
+  .ai-workspace-page .ai-workspace-composer__attach-btn {
+    width: 34px;
+    padding: 0;
+    justify-content: center;
   }
 
   .ai-workspace-page #chat-scroller {
@@ -867,9 +1149,13 @@
   }
 
   .ai-workspace-page:has(#welcome-screen:not([hidden])) #bottom-container {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
     width: 100%;
-    margin: 68px auto 0;
-    padding: 0 10px max(48px, env(safe-area-inset-bottom, 0px));
+    margin: 0;
+    padding: 0 10px max(10px, env(safe-area-inset-bottom, 0px));
   }
 
   .ai-workspace-page .neon-welcome-title {
@@ -2088,12 +2374,12 @@
 
 .ai-workspace-page .ai-model-bar--workspace {
   margin: 0;
-  padding: 10px 12px;
-  background: rgba(8, 16, 36, 0.82);
-  border: 1px solid rgba(120, 150, 220, 0.28);
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
-  backdrop-filter: blur(10px);
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .ai-workspace-page .ai-model-bar__workspace-head {
@@ -2124,9 +2410,32 @@
 }
 
 .ai-workspace-page .ai-model-bar__chips {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
+}
+
+.ai-workspace-page .ai-model-chip--card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+  min-height: 62px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-align: left;
+}
+
+.ai-workspace-page .ai-model-chip__hint {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgba(186, 198, 230, 0.78);
+}
+
+.ai-workspace-page .ai-model-chip.is-active .ai-model-chip__hint {
+  color: rgba(232, 240, 255, 0.88);
 }
 
 .ai-workspace-page .ai-model-chip {

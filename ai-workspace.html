@@ -45,7 +45,6 @@
           </div>
           <span class="brand-name">
             <a href="ai-workspace.html" class="logo">TASFUL AI</a>
-            <small style="font-size: 10px; color: #8E75FF; margin-top: 1px; letter-spacing: 0.05em;">Workspace</small>
           </span>
         </div>
 
@@ -54,19 +53,30 @@
           新しいチャット
         </button>
 
+        <button type="button" class="tga-sidebar-nav-btn" data-ai-sidebar-favorites>
+          <span class="material-symbols-outlined" aria-hidden="true">star</span>
+          お気に入り
+        </button>
+
         <div class="history-search-wrap">
           <span class="history-search-icon">⌕</span>
           <input type="search" id="history-search" data-tga-history-search placeholder="会話を検索..." autocomplete="off">
         </div>
 
-        <div class="history-label">最近の履歴</div>
+        <div class="history-label">チャット履歴</div>
         <div class="history-panel">
           <div id="history-list" data-tga-history></div>
         </div>
       </div>
 
       <div class="sidebar-bottom-wrap">
-        <nav class="tga-sidebar-links" aria-label="関連ページ">
+        <div class="ai-sidebar-plan-card" aria-label="利用プラン">
+          <span class="ai-sidebar-plan-card__title" data-ai-sidebar-plan-title>Free プラン</span>
+          <p class="ai-sidebar-plan-card__usage" data-ai-sidebar-plan-usage aria-live="polite"></p>
+          <a href="gen-ai-workspace.html" class="ai-sidebar-plan-card__cta">プランを見る</a>
+        </div>
+
+        <nav class="tga-sidebar-links" aria-label="関連ページ" hidden>
           <a href="ai-top.html" class="tga-notice-link">AI TOP</a>
           <a href="gen-ai-workspace.html" class="tga-notice-link">生成AI</a>
           <a href="index-top.html" class="tga-notice-link">プラットフォームTOP</a>
@@ -93,31 +103,33 @@
         <a href="index-top.html" class="tga-mobile-bar__link">TOP</a>
       </div>
 
-      <nav class="ai-workspace-categories" data-ai-workspace-categories aria-label="AIカテゴリ">
-        <button type="button" class="ai-workspace-categories__btn is-active" data-ai-workspace-category="chat" aria-pressed="true">💬 チャット</button>
-        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="image" aria-pressed="false">🖼️ 画像</button>
-        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="video" aria-pressed="false">🎬 動画</button>
-        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="music" aria-pressed="false">🎵 音楽</button>
-        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="document" aria-pressed="false">📄 資料</button>
-        <button type="button" class="ai-workspace-categories__btn" data-ai-workspace-category="history" aria-pressed="false">📋 履歴</button>
-      </nav>
-
       <div id="chat-scroller" data-ai-chat-scroll>
         <section id="welcome-screen" data-tga-welcome aria-label="TASFUL AIホーム">
+          <p class="welcome-hero-badge">API統合型 · 最速AIワークスペース</p>
           <h1 class="neon-welcome-title">TASFUL AI</h1>
-          <p class="welcome-lead">Web検索、資料作成、画像 · 動画 · 音楽生成から、<br>業者・求人・商品探し、<br>音声相談までひとつで使える総合AIです。</p>
+          <p class="welcome-lead welcome-lead--hero">何をお手伝いしますか？</p>
+          <p class="welcome-lead-sub">仕事も検索も資料作成も、このAIひとつで。</p>
 
-          <nav class="welcome-starter-chips" data-tga-starter-chips aria-label="ショートカット">
-            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="最新情報を調べたい">Web検索</button>
-            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="提案資料の文章を作りたい">資料作成</button>
-            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="画像の内容を確認したい">画像解析</button>
-            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="草刈り業者を探したい">業者検索</button>
-            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="条件に合う求人を探したい">求人検索</button>
-            <button type="button" class="welcome-starter-chip" data-tga-starter-chip data-starter="音声でAIに相談したい">音声相談</button>
+          <nav class="welcome-intent-grid" data-tga-starter-chips aria-label="用途">
+            <button type="button" class="welcome-intent-card" data-ai-welcome-intent="research">
+              <span class="welcome-intent-card__icon" aria-hidden="true">🔍</span>
+              <span class="welcome-intent-card__title">調べる</span>
+              <span class="welcome-intent-card__sub">Web検索 · 情報収集</span>
+            </button>
+            <button type="button" class="welcome-intent-card" data-ai-welcome-intent="create">
+              <span class="welcome-intent-card__icon" aria-hidden="true">✏️</span>
+              <span class="welcome-intent-card__title">作る</span>
+              <span class="welcome-intent-card__sub">文章 · 資料 · 企画</span>
+            </button>
+            <button type="button" class="welcome-intent-card" data-ai-welcome-intent="analyze">
+              <span class="welcome-intent-card__icon" aria-hidden="true">📊</span>
+              <span class="welcome-intent-card__title">分析する</span>
+              <span class="welcome-intent-card__sub">画像やデータの解析</span>
+            </button>
           </nav>
 
-          <section class="welcome-guide-panel" aria-label="使い方とFAQ">
-            <h2 class="welcome-guide-panel__title">よくある質問</h2>
+          <details class="welcome-guide-panel welcome-guide-panel--collapsed" aria-label="使い方とFAQ">
+            <summary class="welcome-guide-panel__title">よくある質問</summary>
             <dl class="welcome-faq-list">
               <div class="welcome-faq-item">
                 <dt>資料作成はどこまで対応しますか？</dt>
@@ -129,7 +141,9 @@
               </div>
             </dl>
             <p class="welcome-notice">注意: AIは依頼確定・購入・応募・決済は行いません。</p>
-          </section>
+          </details>
+
+          <p class="welcome-footnote">TASFUL AI は最適な AI モデルを自動で選択して回答します。</p>
         </section>
 
         <div data-ai-category-panel hidden></div>
@@ -148,32 +162,31 @@
           <p class="ai-workspace-usage-limit__msg" data-ai-workspace-usage-limit-msg></p>
           <a class="ai-workspace-usage-limit__cta" href="gen-ai-workspace.html">プランを見る</a>
         </div>
-        <div class="ai-workspace-model-host" data-ai-model-selector-host aria-label="AIモデル選択"></div>
-        <div id="neon-bar-area">
-          <div class="neon-input-frame" data-ai-composer-frame>
+        <div id="neon-bar-area" class="ai-workspace-composer">
+          <div class="neon-input-frame ai-workspace-composer__frame" data-ai-composer-frame>
             <div id="image-preview-area" data-ai-attach-preview hidden></div>
 
             <textarea
               id="ai-main-textarea"
-              class="ai-chat__input"
+              class="ai-chat__input ai-workspace-composer__input"
               data-ai-chat-input
-              rows="1"
-              placeholder="相談内容を入力してください"
+              rows="2"
+              placeholder="相談内容を入力してください..."
               autocomplete="off"
               maxlength="2000"
             ></textarea>
 
-            <div class="input-actions-row">
+            <div class="input-actions-row ai-workspace-composer__actions">
               <div class="input-actions-left">
                 <div class="tool-selector-wrap">
                   <button
                     type="button"
                     id="tool-toggle-btn"
-                    class="tool-toggle-btn workspace-mode-btn"
+                    class="tool-toggle-btn workspace-mode-btn ai-workspace-composer__mode-btn"
                     data-tga-mode-toggle
                     aria-expanded="false"
                     aria-haspopup="listbox"
-                    aria-label="ツールを選択"
+                    aria-label="モードを選択"
                   >
                     <span class="material-symbols-outlined workspace-mode-btn__icon" aria-hidden="true">tune</span>
                     <span class="workspace-mode-btn__text">
@@ -188,13 +201,14 @@
                     <div class="tool-item" data-tga-workspace-tool data-tool="web" data-search-target="web" data-desc="Web上の情報を検索して整理">🌐 Web検索</div>
                     <div class="tool-item" data-tga-workspace-tool data-tool="both" data-search-target="both" data-desc="TASFUL内候補とWeb結果を併用">🔀 両方検索</div>
                     <div class="tool-item" data-tga-workspace-tool data-tool="media" data-search-target="tasful" data-desc="画像・PDFを添付して解析">🖼️ 画像・PDF</div>
+                    <p class="tool-dropdown__ai-hint" data-tga-tool-ai-hint aria-live="polite"></p>
                   </div>
                 </div>
 
-                <div class="action-chip workspace-badge" aria-live="polite">
-                  <span class="material-symbols-outlined action-icon" aria-hidden="true">layers</span>
-                  <span class="action-text">AI Workspace</span>
-                </div>
+                <button type="button" class="image-upload-neon ai-workspace-composer__attach-btn" id="image-btn" data-ai-attach-btn aria-label="画像を追加">
+                  <span class="material-symbols-outlined">add_photo_alternate</span>
+                  <span class="image-upload-text">画像を追加</span>
+                </button>
               </div>
 
               <div class="input-actions-right">
@@ -206,16 +220,13 @@
                   multiple
                   hidden
                 >
-                <button type="button" class="image-upload-neon" id="image-btn" data-ai-attach-btn aria-label="画像またはPDFを添付">
-                  <span class="material-symbols-outlined">add_photo_alternate</span>
-                  <span class="image-upload-text">画像・PDF</span>
-                </button>
-                <button type="button" class="send-neon send-btn" id="send-trigger" data-ai-chat-send aria-label="送信">
-                  <span class="material-symbols-outlined" id="send-btn-icon">send</span>
+                <button type="button" class="send-neon send-btn ai-workspace-composer__send" id="send-trigger" data-ai-chat-send aria-label="送信">
+                  <span class="material-symbols-outlined" id="send-btn-icon">arrow_upward</span>
                 </button>
               </div>
             </div>
           </div>
+          <div class="ai-workspace-model-host" data-ai-model-selector-host aria-label="回答スタイルを選択"></div>
         </div>
         <div class="common-ai-disclaimer common-ai-disclaimer--workspace" data-common-ai-disclaimer-banner role="note"></div>
         <div class="bottom-footer">TASFUL AI Workspace · <a href="ai-terms.html">AI利用規約</a> · <a href="ai-disclaimer.html">免責</a></div>
