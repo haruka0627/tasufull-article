@@ -1,6 +1,22 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-28（Live Platform Vision 制度設計）
+**最終更新:** 2026-06-29（status sync · TLV · Design Audit · Builder 条件検索 · TASFUL AI P1）
+
+---
+
+## 開発優先順位（2026-06-28 · Cursor 正本）
+
+| 優先 | プロジェクト | 状態 | 備考 |
+| --- | --- | --- | --- |
+| **P1** | **TASFUL AI** | **Complete** | `f4cf7d8` · Media · Monitoring · Voice P2 |
+| **P2** | **Live Platform Core** | **Complete** | Phase A–F · [summary](../reports/platform-live-platform-summary.md) |
+| **P3** | **Live API（ZEGO Provider）** | **Phase 1 Go** | Adapter · [phase1](../reports/live-platform-zego-adapter-phase1.md) |
+| **P4** | **Business Directory** | **待機** | Launch Gate Prep Complete · Commercial Launch **No-Go** |
+| **P5** | **TASFUL Materials（無料DL）** | **Phase 0** | 設計のみ · 実装未着手 · [readiness](../reports/free-download-service-implementation-readiness.md) |
+| **P6** | **TLV** | **Pause** | 運用ゲート待ち · [completion gate](../reports/tlv-phase1-completion-gate.md) |
+| **—** | **AI 秘書** | 待機後 | Gmail · Calendar · Drive 連携完成度 |
+
+**ルール:** Design Freeze 維持 · 正式 docs 正本 · ADR/DCP なし制度変更禁止 · Future 実装禁止 · 各プロジェクト MVP 優先 · **TLV 再開は運用ゲート ALL PASS 後のみ**
 
 ---
 
@@ -52,8 +68,8 @@
 
 | 領域 | 収益主軸 | 状態 |
 | --- | --- | --- |
-| **店舗・販売** | 月額サブスク掲載料 | 🔄 Phase 6 Stripe · Owner/Ops/Public/課金 接続済 |
-| **業務サービス** | 月額サブスク掲載料 | 🔄 Phase 6 Stripe · Owner/Ops/Public/課金 接続済 |
+| **店舗・販売** | 月額サブスク掲載料 | ✅ MVP-1 完了 · Step 4 Go |
+| **業務サービス** | 月額サブスク掲載料 | ✅ MVP-1 完了 · Step 4 Go |
 | **Marketplace（商品）** | **成約手数料** | ✅ 既存方針 **維持** |
 | **Platform / 案件** | **成約手数料** | ✅ 既存方針 **維持** |
 | **広告枠** | スポンサー · 上位表示 · PR | 📋 将来 |
@@ -89,6 +105,8 @@
 **Production Step 3 Preview E2E:** `reports/business-directory-production-step3-preview-e2e.md` · Pages preview · mock なし E2E **15/15 PASS**
 
 **Production Step 4 Deploy:** `reports/business-directory-production-step4-production.md` · Production Pages · 最終 smoke **48/48 PASS · Go**
+
+**Step 5 Operational Readiness:** `reports/business-directory-operational-readiness.md` — **Complete**（8788 回帰 Go · Runbook）· **Commercial Launch No-Go**
 
 **報告:** `reports/business-directory-subscription-model.md`
 
@@ -166,6 +184,7 @@
 | Builder v1.0 | ✅ 🔒 | `reports/builder-release-status.md` |
 | Platform NB-1M | ✅ 🔒（製品） | スモーク PASS · `reports/platform-nb1m-frontend-prod-deploy-ready.md` |
 | TLV v1.0 | ✅ 🔒 | `reports/tlv-release-status.md` |
+| **TLV Live SDK**（ZEGO PoC · Provider） | ⏸ **待機** | Phase 1/1.5 **完了** · Blocker = ZEGO `.env` のみ · [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) · Phase 2 **未着手** |
 | AI 運営秘書 v1.1 | ✅ 🔒 | `reports/ai-ops-secretary-release-status.md` |
 | TALK / Connect / 安否 | ✅ 🔒 | 各 release-status レポート |
 
@@ -207,6 +226,8 @@
 | **Document Center Phase 6-F**（ドキュメント管理基盤 · SCHEMA v6） | ✅ `549e562` | `reports/builder-document-center-phase6f.md` |
 | **Notification Center Phase 6-G**（通知基盤 Foundation · SCHEMA v7） | ✅ `74d54b8` | `reports/builder-notification-center-phase6g.md` |
 | **Command Dashboard Phase 6-H**（司令塔 KPI · Store 読取のみ） | ✅ 実装 · 未コミット | `reports/builder-dashboard-phase6h.md` |
+| **条件検索 P0/P1**（Repository · UI adapter · dist） | ✅ | `0857c22` · `b80d868` · [BUILDER_AI_CONDITIONAL_SEARCH.md](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
+| **条件検索 P2**（Pro 自然文 · LLM） | 📋 Future/P1 | Gateway 接続後 |
 | **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 Backlog | [builder-ai-gemini-live-field-diagnosis-backlog.md](./builder-ai-gemini-live-field-diagnosis-backlog.md) |
 
 ### Platform（製品機能）
@@ -232,7 +253,9 @@
 | **課金 enforcement Phase 1**（クライアント） | ✅ | `2a43fe5` · Production deploy |
 | **課金 enforcement Phase 2**（Edge + DB） | ✅ Production | `e9c3dd0` · deploy `5437d70e` · `reports/tasful-ai-workspace-phase2-production.md` |
 | **本番接続**（Edge · billing · Access E2E） | ✅ **Go** | 2026-06-28 · `reports/tasful-ai-production-ready-verification.md` |
-| **操作アシスタント**（Gemini · 画面操作案内 · 製品横断ナビ） | 📋 Backlog | [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md) · 本番接続 P0 後 |
+| **操作アシスタント**（Gemini · 画面操作案内 · 製品横断ナビ） | 📋 Backlog | [tasful-ai-ui-operation-assist-backlog.md](./tasful-ai-ui-operation-assist-backlog.md) |
+| **Media API（動画/音楽）** | ✅ Edge | `f4cf7d8` · `gemini_brief` · quota · monitoring smoke |
+| **Monitoring 横断 smoke** | ✅ | `verify-tasful-ai-monitoring.mjs` · Media Gemini 503 flake は [KI-014](./KNOWN_ISSUES.md) |
 
 ### TLV AI
 
@@ -273,7 +296,8 @@
 | **AI秘書 Live** opt-in | ✅ | `e43c9c0` · `surface: ops_secretary` · flags default OFF |
 | **Kill Switch**（`VOICE_REALTIME_EDGE_ENABLED=1`） | ✅ | `d1f6ced` |
 | **Rate Limit Phase 1**（in-memory · 10 req/min/IP） | ✅ | `d1f6ced` |
-| **Hardening Phase 2**（JWT · 分散 Rate Limit） | 📋 | `reports/voice-phase5d-complete.md` §次フェーズ |
+| **Hardening Phase 2**（JWT · user Rate Limit · opt-in） | ✅ | `f4cf7d8` · `VOICE_REALTIME_REQUIRE_JWT=1` デフォルト OFF |
+| **分散 Rate Limit**（Redis 等） | 📋 Future | `VOICE_REALTIME_RATE_LIMIT_DISTRIBUTED` |
 | **TLV / Platform Voice** | 📋 未対応 | AD-003 / AD-004 |
 
 **共通:** 両方の feature flag が ON のときのみ live。デフォルト mock · live 失敗時 mock fallback。
@@ -289,9 +313,12 @@
 | AI 規約 / 免責（共通） | ✅ `5ed9672` |
 | **Site Assistant Phase 1**（右下 **TASFUL サイトAI** · cross-search/FAQ 流用 · Gateway 非接続） | ✅ 実装 — [tasful-site-assistant-backlog.md](./tasful-site-assistant-backlog.md) · **未デプロイ** |
 | **Site Assistant Phase 2+**（Feedback Launcher · 通報/OPS 集約） | 📋 Backlog — 同上 · **UI Critical 優先度外** |
-| Gateway 契約変更 | **意図なし** · working tree に `ai-model-gateway.js` 差分あり → [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) |
-| working tree 440 件整理 | 📋 [TODO.md](./TODO.md) |
-| `docs/` 正本 | 📋 本更新 · **未コミット** |
+| Gateway 契約変更 | **意図なし** · `ai-model-gateway.js` は HEAD clean |
+| working tree 残件整理 | 📋 [TODO.md](./TODO.md) · ~300 件（dist / reports / 別バンドル） |
+| `docs/` status 正本 | ✅ 本更新（2026-06-29） |
+| **Design Audit Polish** | ✅ `ee2efea`（ソース）· dist 別バンドル |
+| **Platform Live Phase 5** | ✅ Complete · `798d4a5`〜`9006ead` |
+| **TLV Finish T1/T2/T4** | ✅ `2ba6d6c` |
 
 ---
 

@@ -1,6 +1,6 @@
 # TASFUL 既知の問題・未確認事項
 
-**最終更新:** 2026-06-28  
+**最終更新:** 2026-06-29  
 **ルール:** 推測で「完了」にしない。解消したら項目を削除または「解決」に更新。
 
 ---
@@ -11,7 +11,30 @@
 | ID | 解決 |
 | --- | --- |
 | KI-003 | TASFUL AI Production Ready — 2026-06-28 Go · `reports/tasful-ai-production-ready-verification.md` |
-| KI-008 | AI 秘書 phase ファイル — P0-1 選別コミット後 git 追跡済 · working tree clean · `docs(secretary): refresh status after p0-1 cleanup` |
+| KI-008 | AI 秘書 phase ファイル — P0-1 選別コミット後 git 追跡済 |
+| KI-009 | `docs/` status 正本 — 2026-06-29 sync · `f4cf7d8` 整合 |
+
+---
+
+## KI-014 — TASFUL AI Media Edge smoke · Gemini 503 flake
+
+| 項目 | 内容 |
+| --- | --- |
+| **状態** | 外部 API 一時負荷 · コード欠陥ではない |
+| **症状** | `test-tasful-ai-media-generate-edge.mjs` / monitoring の media-edge が **503** — `This model is currently experiencing high demand` |
+| **影響** | monitoring が **6/7 PASS** になることがある · Final Phase 31/31 · Voice 32/32 · Workspace severe 0 は独立 |
+| **正本** | `f4cf7d8` · `reports/tasful-ai-p1-implementation.md` |
+| **対応** | 再実行で解消することが多い · 日次 monitoring で追跡 · 専用 Provider（Veo/Suno 等）は Future |
+
+---
+
+## KI-005 — TASFUL AI Monitoring 定期実行
+
+| 項目 | 内容 |
+| --- | --- |
+| **状態** | 横断 smoke 統合済 · prod alias は CF_ACCESS 要 |
+| **正本** | `scripts/verify-tasful-ai-monitoring.mjs` · `reports/tasful-ai-monitoring-runbook.md` |
+| **対応** | 日次 CI / 週次 Service Token smoke |
 
 ---
 
@@ -19,9 +42,10 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | コミット後も Builder / Platform / TLV 等が unstaged 残存 |
+| **状態** | `f4cf7d8` 以降も **~300 件**（dist / reports / Live-Zego / Builder 6-H 等） |
 | **リスク** | 次の `git add -A` で ANPI / Live / Gateway 等が混入 |
-| **対応** | [TODO.md](./TODO.md) P0-1 · 選別ステージングのみ |
+| **対応** | [TODO.md](./TODO.md) · 領域別選別ステージングのみ |
+| **HEAD までコミット済** | TLV T1/T2/T4 · Design Audit ソース · Builder 条件検索 · TASFUL AI P1 · Platform Live P5 本体 |
 
 ---
 
@@ -60,12 +84,13 @@ TASFUL AI Production Ready = **Go**（2026-06-28）。CF Access E2E · build · 
 
 ---
 
-## KI-009 — 本 `docs/` 正本は未コミット
+## KI-009 — 本 `docs/` status 正本
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | 2026-06-26 作成 · git 未 add |
-| **対応** | 内容確認後に別コミット |
+| **状態** | **解消** — 2026-06-29 `docs: sync project status after release polish` |
+| **内容** | TODO / PROJECT_STATUS / ROADMAP / KNOWN_ISSUES を `f4cf7d8` まで整合 |
+| **残** | 設計 Backlog 個別 docs · `reports/tasful-ai-monitoring-runbook.md` は別バンドル |
 
 ---
 
@@ -78,12 +103,14 @@ TASFUL AI Production Ready = **Go**（2026-06-28）。CF Access E2E · build · 
 
 ---
 
-## KI-011 — dist 未コミット 248 件
+## KI-011 — dist 未同期（部分解消）
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | `deploy/cloudflare/dist/` に AI スコープ外の untracked/modified が残存 |
-| **対応** | 領域別 build + 選別 add。`git add -A` 禁止 |
+| **状態** | `deploy/cloudflare/dist/` に広範な modified/untracked が残存 |
+| **同期済（HEAD）** | TASFUL AI media 3 ファイル（`f4cf7d8`）· Builder 条件検索（`b80d868`）· Platform Live 一部（`9006ead`） |
+| **未同期（代表）** | Design Audit polish（`ee2efea` ソースのみ）· その他 dist 一括変更 |
+| **対応** | 領域別 `npm run build:pages` + 選別 add · `git add -A` 禁止 |
 
 ---
 
