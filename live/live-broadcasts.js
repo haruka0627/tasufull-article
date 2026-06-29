@@ -9,7 +9,7 @@
   const STUB_BROADCAST = Object.freeze({
     id: "stub",
     creator_id: "u_creator",
-    title: "スタブ配信（開発プレビュー）",
+    title: "プレビュー配信",
     status: "live",
     stream_provider: "stub",
     playback_url: null,
@@ -226,7 +226,7 @@
     const label =
       provider === "cloudflare_stream"
         ? "Cloudflare Stream（P0 未接続）"
-        : "スタブ配信プレビュー";
+        : "プレビュー配信";
     const sub =
       status === "live"
         ? "実映像配信は次 Phase で接続予定"
@@ -413,7 +413,7 @@
             <p class="live-empty__text">ライブ配信を作成するか、配信開始をお待ちください。</p>
             <p style="margin-top:16px">
               <a class="live-btn live-btn--primary" href="create.html">配信を作成</a>
-              <a class="live-btn live-btn--ghost" href="watch.html?broadcast_id=stub&talkDev=1">スタブ視聴</a>
+              <a class="live-btn live-btn--ghost" href="watch.html?broadcast_id=stub&talkDev=1">プレビュー視聴</a>
             </p>
           </div>
         `;

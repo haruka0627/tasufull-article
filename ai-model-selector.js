@@ -34,7 +34,7 @@
   function renderWorkspaceChips(planId, selectedId) {
     const list = global.TasuAiPlanModels?.listModelsForPlan?.(planId) || [];
     return list
-      .filter((m) => !m.hidden || m.comingSoon)
+      .filter((m) => !m.hidden)
       .map((m) => {
         const active = m.id === selectedId ? " is-active" : "";
         const disabled = !m.selectable ? " is-disabled" : "";
@@ -106,8 +106,8 @@
       bar.innerHTML =
         `<div class="ai-model-bar__workspace">` +
         `<div class="ai-model-bar__workspace-head">` +
-        `<span class="ai-model-bar__workspace-title">AI切替</span>` +
-        `<span class="ai-model-bar__current ai-model-bar__current--workspace">使用中: <strong data-ai-model-current-label>Gemini</strong></span>` +
+        `<span class="ai-model-bar__workspace-title">回答スタイル</span>` +
+        `<span class="ai-model-bar__current ai-model-bar__current--workspace">現在: <strong data-ai-model-current-label>最速</strong></span>` +
         `</div>` +
         `<div class="ai-model-bar__chips" data-ai-model-chips role="tablist" aria-label="AIモデルを選択"></div>` +
         `</div>`;

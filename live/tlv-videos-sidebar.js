@@ -54,7 +54,6 @@
   ]);
 
   const OPERATIONS_NAV = Object.freeze([
-    { id: "ops-creator", label: "クリエイター向け", href: "creator-dashboard.html", icon: "◆" },
     { id: "ops-ads", label: "広告掲載", href: "../company/services.html", icon: "▣" },
     { id: "ops-contact", label: "お問い合わせ", href: "../company/contact.html", icon: "✉" },
     { id: "ops-terms", label: "利用規約", href: "../company/legal/terms.html", icon: "📄" },
@@ -64,7 +63,6 @@
   const TLV_MORE_SERVICES = Object.freeze([
     { id: "creator", label: "収益・分析", href: "creator-dashboard.html", icon: "¥" },
     { id: "upload", label: "投稿", href: "video-upload.html", icon: "＋" },
-    { id: "ops-creator", label: "クリエイター向け", href: "creator-dashboard.html", icon: "◆" },
     { id: "ops-ads", label: "広告掲載", href: "../company/services.html", icon: "▣" },
     { id: "ops-contact", label: "お問い合わせ", href: "../company/contact.html", icon: "✉" },
   ]);

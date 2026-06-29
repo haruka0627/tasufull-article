@@ -269,7 +269,7 @@
         <dt>所在地</dt><dd>${C.escapeHtml([profile.prefecture, profile.city, profile.address_line1].filter(Boolean).join(" "))}</dd>
         <dt>対応地域</dt><dd>${C.escapeHtml((listing.service_areas || []).join("、"))}</dd>
         <dt>カテゴリ</dt><dd>${C.escapeHtml(categoryName(listing.category_id))}</dd>
-        <dt>hp_mode</dt><dd>${C.escapeHtml(hpModeLabel(listing.hp_mode))}</dd>
+        <dt>公開形式</dt><dd>${C.escapeHtml(C.hpModePublicLabel?.(listing.hp_mode) || hpModeLabel(listing.hp_mode))}</dd>
         <dt>公式サイト</dt><dd>${listing.website_url ? `<a href="${C.escapeHtml(listing.website_url)}" target="_blank" rel="noopener">${C.escapeHtml(listing.website_url)}</a>` : "—"}</dd>
         <dt>紹介文</dt><dd>${C.escapeHtml(profile.short_description || "—")}</dd>
         ${serviceBlock}

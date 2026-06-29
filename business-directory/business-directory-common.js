@@ -47,6 +47,10 @@
     return TYPE_LABELS[t] || t;
   }
 
+  function hpModePublicLabel(mode) {
+    return mode === "external_redirect" ? "公式サイトへ誘導" : "TASFULページを使う";
+  }
+
   function isEditLocked(status) {
     return EDIT_LOCKED_STATUSES.has(String(status));
   }
@@ -202,6 +206,7 @@
     escapeHtml,
     statusLabel,
     typeLabel,
+    hpModePublicLabel,
     isEditLocked,
     canSubmitForReview,
     formatDate,

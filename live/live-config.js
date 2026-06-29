@@ -166,7 +166,7 @@
   });
 
   const STREAM_PROVIDER_LABELS = Object.freeze({
-    stub: "スタブ（P0）",
+    stub: "プレビュー",
     cloudflare_stream: "Cloudflare Stream",
   });
 

@@ -5,6 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet" />
   <title>System通知送信 (dev) | TASFUL LIVE</title>
+  <script>
+    (function () {
+      try {
+        var h = String(location.hostname || "");
+        if (h === "127.0.0.1" || h === "localhost" || !h) return;
+        location.replace("index.html");
+      } catch (_e) { /* dev-only page */ }
+    })();
+  </script>
   <link rel="stylesheet" href="live.css" />
 </head>
 <body class="live-body tlv-page" data-page="live-system-notify-dev">

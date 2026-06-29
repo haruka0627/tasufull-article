@@ -26,6 +26,14 @@
       .replace(/"/g, "&quot;");
   }
 
+  function formatHistoryModeLabel(modelId) {
+    const id = String(modelId || "").trim();
+    const fromPlan = global.TasuAiPlanModels?.getModel?.(id)?.label;
+    if (fromPlan) return fromPlan;
+    const legacy = { "gemini-flash": "最速", gpt: "標準", claude: "高精度", grok: "準備中" };
+    return legacy[id] || id || "—";
+  }
+
   function getRoot() {
     return global.document.querySelector("[data-ai-workspace-chat]");
   }
@@ -172,7 +180,7 @@
             <time class="ai-history-item__time">${esc(formatDate(r.updatedAt))}</time>
           </header>
           <h3 class="ai-history-item__title">${esc(r.title)}</h3>
-          <p class="ai-history-item__meta">モデル: ${esc(r.model || "—")} · ${esc(store.folderLabel(r.folderId))}</p>
+          <p class="ai-history-item__meta">モード: ${esc(formatHistoryModeLabel(r.model))} · ${esc(store.folderLabel(r.folderId))}</p>
           <p class="ai-history-item__preview">${esc(r.resultPreview || r.prompt || "")}</p>
           <div class="ai-history-item__actions">
             <button type="button" data-ai-history-resume="${esc(r.id)}">再開</button>
@@ -225,7 +233,7 @@
       durationSec: fd.get("durationSec"),
       quality: fd.get("quality"),
       style: fd.get("style"),
-      allowMock: true,
+      allowMock: global.TasuAiMediaGenConfig?.video?.mock === true,
     };
     const gen = global.TasuAiVideoGenerate;
     if (!gen?.generate) return;
@@ -254,7 +262,7 @@
       lengthSec: fd.get("lengthSec"),
       vocal: fd.get("vocal") === "on",
       lyrics: fd.get("lyrics") === "on",
-      allowMock: true,
+      allowMock: global.TasuAiMediaGenConfig?.music?.mock === true,
     };
     const result = await global.TasuAiMusicGenerate?.generate?.(opts);
     const userText = `音楽生成: ${opts.genre} / ${opts.mood}`;

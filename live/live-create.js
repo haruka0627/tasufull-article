@@ -88,24 +88,23 @@
               </label>
               <label class="live-radio">
                 <input type="radio" name="visibility" value="followers" />
-                <span>フォロワーのみ（未実装）</span>
+                <span>フォロワーのみ（準備中）</span>
               </label>
             </fieldset>
             <fieldset class="live-fieldset">
               <legend class="live-fieldset__legend">初期ステータス</legend>
               <label class="live-radio">
                 <input type="radio" name="status" value="scheduled" checked />
-                <span>予定（scheduled）</span>
+                <span>予定</span>
               </label>
               <label class="live-radio">
                 <input type="radio" name="status" value="preparing" />
-                <span>準備中（preparing）</span>
+                <span>公開準備中</span>
               </label>
             </fieldset>
           </section>
           <section class="live-panel live-panel--notice">
-            <p class="live-hint">stream_provider: <strong>${cfg.escapeHtml(cfg.LIVE_STREAM_PROVIDER_DEFAULT)}</strong>（Cloudflare Stream 本接続なし）</p>
-            <p class="live-hint">作成後はスタジオから「配信開始」で status=live に更新（実映像は未接続）</p>
+            <p class="live-hint">映像配信は<strong>プレビュー</strong>です（本番 ingest 未接続）。作成後は配信スタジオから「配信開始」で状態を更新できます。</p>
           </section>
           <div class="live-settings-form__actions">
             <button type="submit" class="live-btn live-btn--primary">配信を作成</button>

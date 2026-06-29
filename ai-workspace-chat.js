@@ -338,7 +338,7 @@
     const searchContext = String(ctx.searchContext || "").trim();
     const searchNote = searchContext
       ? "\n\n（Web検索結果を参照して整理しています。）"
-      : "\n\n※接続先API未設定時はデモ回答です。正式な相場は見積りまたはWeb検索でご確認ください。";
+      : "\n\n※デモモードで表示中。正式な相場は見積りまたはWeb検索でご確認ください。";
 
     if (searchContext.length > 40) {
       return (
