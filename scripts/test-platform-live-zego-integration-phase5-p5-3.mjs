@@ -219,7 +219,14 @@ async function run() {
   assert(/onWatchJoin/.test(broadcastsSrc), "static:watch-hook");
   assert(/tlv-platform-live-bridge/.test(read(STUDIO_HTML)), "static:studio-bridge-script");
   assert(/tlv-platform-live-bridge/.test(read(WATCH_HTML)), "static:watch-bridge-script");
-  assert(!/TlvZegoLiveProvider|zego-live-provider/.test(bridgeSrc), "static:bridge-no-zego");
+  {
+    const platformStart = bridgeSrc.indexOf("PLATFORM_LIVE_SCRIPTS");
+    const platformEnd = bridgeSrc.indexOf("]);", platformStart);
+    const platformBlock = bridgeSrc.slice(platformStart, platformEnd);
+    assert(!/zego-live-provider/.test(platformBlock), "static:platform-stack-no-eager-zego");
+  }
+  assert(/ZEGO_LIVE_SCRIPTS/.test(bridgeSrc), "static:zego-lazy-scripts");
+  assert(/ensureZegoProviderLoaded/.test(bridgeSrc), "static:ensure-zego-lazy");
 
   console.log("\n--- Flag OFF (default) ---\n");
   {
