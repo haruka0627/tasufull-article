@@ -197,6 +197,9 @@
   <script src="../breadcrumb-config.js"></script>
   <script src="../common-breadcrumb.js"></script>
   <script src="builder.js" defer></script>
+  <script src="builder-conditional-search.js"></script>
+  <script src="builder-search-ui-adapter.js"></script>
+  <script src="builder-search-repository.js"></script>
   <script>
     (function () {
       var DEMO_WORKERS = [
@@ -261,18 +264,37 @@
         );
       }
 
-      function showResults() {
+      function showResults(workers) {
         if (!resultsSection || !resultsGrid) return;
-        resultsGrid.innerHTML = DEMO_WORKERS.map(renderCard).join("");
-        resultsCount.textContent = DEMO_WORKERS.length + "件";
+        var list = workers && workers.length ? workers : DEMO_WORKERS;
+        resultsGrid.innerHTML = list.map(renderCard).join("");
+        resultsCount.textContent = list.length + "件";
         resultsSection.hidden = false;
         resultsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      function runSearch() {
+        var repo = window.TasuBuilderSearchRepository;
+        var ui = window.TasuBuilderSearchUiAdapter;
+        if (repo && ui && form) {
+          var filter = ui.filterFromFindWorkersForm(form);
+          repo
+            .searchWorkers(filter)
+            .then(function (res) {
+              showResults(res && res.items && res.items.length ? res.items : DEMO_WORKERS);
+            })
+            .catch(function () {
+              showResults(DEMO_WORKERS);
+            });
+          return;
+        }
+        showResults(DEMO_WORKERS);
       }
 
       if (form) {
         form.addEventListener("submit", function (ev) {
           ev.preventDefault();
-          showResults();
+          runSearch();
         });
       }
 

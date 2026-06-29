@@ -376,7 +376,15 @@
    * @returns {Promise<object[]>}
    */
   async function fetchCandidates(kind, requirements) {
-    void requirements;
+    const repo = global.TasuBuilderSearchRepository;
+    if (repo?.fetchCandidates) {
+      try {
+        const rows = await repo.fetchCandidates(kind, requirements || {});
+        if (Array.isArray(rows) && rows.length) return rows;
+      } catch {
+        /* demo fallback below */
+      }
+    }
     return kind === "worker" ? [...SAMPLE_WORKERS] : [...SAMPLE_PARTNERS];
   }
 

@@ -6603,14 +6603,31 @@
     const areaEl = form.querySelector("[data-builder-search-area]");
     const availEl = form.querySelector("[data-builder-search-availability]");
 
-    const run = () => {
+    const run = async () => {
       const query = {
         q: qEl?.value || "",
         trade: tradeEl?.value || "",
         area: areaEl?.value || "",
         availability: availEl?.value || "",
       };
-      const rows = filterPartners(query);
+      const repo = global.TasuBuilderSearchRepository;
+      const ui = global.TasuBuilderSearchUiAdapter;
+      let rows;
+      if (repo?.searchPartners && ui?.filterFromPartnerQuery) {
+        try {
+          const filter = ui.filterFromPartnerQuery(query);
+          const res = await repo.searchPartners(filter);
+          const ids = new Set((res?.items || []).map((r) => r.partner_id || r.id));
+          rows = filterPartners(query).filter((p) => ids.has(p.partner_id));
+          if (!rows.length && res?.items?.length) {
+            rows = filterPartners(query);
+          }
+        } catch {
+          rows = filterPartners(query);
+        }
+      } else {
+        rows = filterPartners(query);
+      }
       kpi.textContent = `${rows.length} 件`;
       list.innerHTML = rows.map((p) => buildPartnerListItem(p, { showFav: true })).join("");
     };
@@ -10891,6 +10908,24 @@
         window.TasuBuilderBoardFeed?.matchesBoardTabFilter ||
         ((project, key) => resolveBoardItemType(project) === key);
       rows = rows.filter((p) => matchesTab(p, boardFeedTypeFilter));
+    }
+    const repo = global.TasuBuilderSearchRepository;
+    const ui = global.TasuBuilderSearchUiAdapter;
+    if (
+      repo?.filterSourceRows &&
+      ui?.mapBoardProjectRow &&
+      boardFeedTypeFilter &&
+      boardFeedTypeFilter !== "all"
+    ) {
+      try {
+        const mapped = rows.map((p) => ui.mapBoardProjectRow(p, state.specs?.[p.project_id]));
+        const filter = ui.filterFromBoardTab(boardFeedTypeFilter);
+        const res = repo.filterSourceRows(mapped, filter, "job");
+        const idSet = new Set((res.items || []).map((r) => r.project_id || r.id));
+        if (idSet.size) rows = rows.filter((p) => idSet.has(p.project_id));
+      } catch {
+        /* keep tab-filtered rows */
+      }
     }
     kpi.textContent = `${rows.length} 件`;
     list.innerHTML = rows.length
