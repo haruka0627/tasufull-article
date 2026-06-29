@@ -69,7 +69,33 @@
       return { ok: true, state: this._state, providerId: this.providerId, stub: true };
     }
 
-    /** @param {{ roomId: string, userId: string, surface: string }} options */
+    /** @private @param {HTMLElement|null} container @param {object} [options] */
+    _mountPlayerSurface(container, options = {}) {
+      if (!container || typeof container.appendChild !== "function") {
+        return { ok: false, error: "videoContainer unavailable", playerMounted: false };
+      }
+      try {
+        container.innerHTML = "";
+        const video = document.createElement("video");
+        video.className = "live-watch__video";
+        video.setAttribute("data-live-platform-player-video", "");
+        video.setAttribute("playsinline", "");
+        video.setAttribute("autoplay", "");
+        video.muted = true;
+        video.controls = true;
+        video.setAttribute("aria-label", "ライブ配信");
+        video.setAttribute(
+          "data-platform-live-provider",
+          String(options.providerId || this.providerId || "stub"),
+        );
+        container.appendChild(video);
+        return { ok: true, playerMounted: true, providerId: this.providerId, stub: true };
+      } catch (err) {
+        return { ok: false, error: err?.message || String(err), playerMounted: false };
+      }
+    }
+
+    /** @param {{ roomId: string, userId: string, surface: string, videoContainer?: HTMLElement }} options */
     async joinLive(options = {}) {
       if (this._state === "disposed") {
         return { ok: false, error: "Provider disposed", state: this._state };
@@ -87,7 +113,15 @@
           userId: options.userId || null,
         });
       }
-      return { ok: true, state: this._state, providerId: this.providerId, stub: true };
+      const mount = this._mountPlayerSurface(options.videoContainer, options);
+      return {
+        ok: true,
+        state: this._state,
+        providerId: this.providerId,
+        stub: true,
+        playerMounted: mount.playerMounted === true,
+        ...(mount.playerMounted ? {} : { mountSkipped: true, mountError: mount.error || null }),
+      };
     }
 
     async leaveLive() {
@@ -211,7 +245,7 @@
       return { ok: true, viewerCount: count, providerId: this.providerId, stub: true };
     }
 
-    /** @param {{ surface: string, broadcastId: string, userId: string, roomId?: string }} options */
+    /** @param {{ surface: string, broadcastId: string, userId: string, roomId?: string, videoContainer?: HTMLElement }} options */
     async joinViewer(options = {}) {
       if (this._state === "disposed") return { ok: false, error: "Provider disposed", stub: true };
       this._state = "watching";
@@ -225,7 +259,15 @@
           userId: options.userId,
         });
       }
-      return { ok: true, state: this._state, providerId: this.providerId, stub: true };
+      const mount = this._mountPlayerSurface(options.videoContainer, options);
+      return {
+        ok: true,
+        state: this._state,
+        providerId: this.providerId,
+        stub: true,
+        playerMounted: mount.playerMounted === true,
+        ...(mount.playerMounted ? {} : { mountSkipped: true, mountError: mount.error || null }),
+      };
     }
 
     /** @param {{ surface: string, broadcastId: string, userId: string }} options */
