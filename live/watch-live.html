@@ -10,6 +10,26 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
   <link rel="stylesheet" href="live.css" />
+  <script>
+    (function () {
+      try {
+        var path = String(location.pathname || "");
+        if (!/\/watch-live(?:\.html)?\/?$/i.test(path)) return;
+        var params = new URLSearchParams(location.search || "");
+        var id = String(params.get("broadcast_id") || params.get("id") || params.get("broadcastId") || "").trim();
+        if (!id) return;
+        var next = new URLSearchParams(location.search || "");
+        next.delete("id");
+        next.delete("broadcastId");
+        next.set("broadcast_id", id);
+        var qs = next.toString();
+        var watchPath = path.replace(/watch-live(?:\.html)?\/?$/i, function () {
+          return /\.html$/i.test(path) || path.endsWith(".html/") ? "watch.html" : "watch";
+        });
+        location.replace(watchPath + (qs ? "?" + qs : "") + (location.hash || ""));
+      } catch (_e) { /* non-fatal legacy redirect */ }
+    })();
+  </script>
 </head>
 <body class="live-body" data-page="live-watch">
   <div class="live-shell">
@@ -34,6 +54,16 @@
   <script src="../breadcrumb-config.js" defer></script>
   <script src="../common-breadcrumb.js" defer></script>
   <script src="live-config.js" defer></script>
+  <script src="tlv-feature-flags.js" defer></script>
+  <script src="session/live-session-states.js" defer></script>
+  <script src="session/live-session-events.js" defer></script>
+  <script src="session/live-session-event-bus.js" defer></script>
+  <script src="session/live-provider-signals.js" defer></script>
+  <script src="session/live-session-error-codes.js" defer></script>
+  <script src="session/live-session-validation.js" defer></script>
+  <script src="session/live-session-manager.js" defer></script>
+  <script src="live-broadcasts-session-bridge.js" defer></script>
+  <script src="live-session-debug-panel.js" defer></script>
   <script src="live-broadcasts.js" defer></script>
   <script src="live-comments.js" defer></script>
   <script defer>
