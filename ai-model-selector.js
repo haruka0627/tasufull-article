@@ -31,6 +31,12 @@
       .join("");
   }
 
+  const STYLE_HINTS = Object.freeze({
+    "gemini-flash": "すばやく回答を得たいときに",
+    gpt: "バランスの良い回答",
+    claude: "より深く、正確に答えたいときに",
+  });
+
   function renderWorkspaceChips(planId, selectedId) {
     const list = global.TasuAiPlanModels?.listModelsForPlan?.(planId) || [];
     return list
@@ -38,16 +44,19 @@
       .map((m) => {
         const active = m.id === selectedId ? " is-active" : "";
         const disabled = !m.selectable ? " is-disabled" : "";
-        const hint = m.upgradeHint ? ` aria-label="${escapeHtml(m.label)}（${escapeHtml(m.upgradeHint)}）"` : "";
-        const title = m.upgradeHint ? ` title="${escapeHtml(m.upgradeHint)}"` : "";
+        const hint = STYLE_HINTS[m.id] || "";
+        const hintText = m.upgradeHint || hint;
+        const ariaHint = hintText ? ` aria-label="${escapeHtml(m.label)}（${escapeHtml(hintText)}）"` : "";
+        const title = hintText ? ` title="${escapeHtml(hintText)}"` : "";
         return (
-          `<button type="button" class="ai-model-chip${active}${disabled}"` +
+          `<button type="button" class="ai-model-chip ai-model-chip--card${active}${disabled}"` +
           ` data-ai-model-chip="${escapeHtml(m.id)}"` +
           ` data-ai-provider="${escapeHtml(m.provider || "")}"` +
           (m.selectable ? "" : " disabled") +
           ` aria-pressed="${m.id === selectedId ? "true" : "false"}"` +
-          `${title}${hint}>` +
+          `${title}${ariaHint}>` +
           `<span class="ai-model-chip__label">${escapeHtml(m.shortLabel || m.label)}</span>` +
+          (hint ? `<span class="ai-model-chip__hint">${escapeHtml(hint)}</span>` : "") +
           (m.comingSoon ? `<span class="ai-model-chip__soon">準備中</span>` : "") +
           `</button>`
         );
@@ -107,9 +116,8 @@
         `<div class="ai-model-bar__workspace">` +
         `<div class="ai-model-bar__workspace-head">` +
         `<span class="ai-model-bar__workspace-title">回答スタイル</span>` +
-        `<span class="ai-model-bar__current ai-model-bar__current--workspace">現在: <strong data-ai-model-current-label>最速</strong></span>` +
         `</div>` +
-        `<div class="ai-model-bar__chips" data-ai-model-chips role="tablist" aria-label="AIモデルを選択"></div>` +
+        `<div class="ai-model-bar__chips" data-ai-model-chips role="tablist" aria-label="回答スタイルを選択"></div>` +
         `</div>`;
     } else {
       bar.innerHTML =
@@ -117,7 +125,7 @@
         `<span class="ai-model-bar__current">現在のAI: <strong data-ai-model-current-label>Gemini</strong></span>` +
         `<label class="ai-model-bar__select-wrap">` +
         `<span class="ai-model-bar__select-label">モデル</span>` +
-        `<select class="ai-model-bar__select" data-ai-model-select aria-label="AIモデルを選択"></select>` +
+        `<select class="ai-model-bar__select" data-ai-model-select aria-label="回答スタイルを選択"></select>` +
         `</label>` +
         `</div>`;
     }
