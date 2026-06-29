@@ -166,7 +166,8 @@
     const targetUrl =
       String(opts?.targetUrl || "").trim() ||
       global.TasuTlvNotificationTypes?.liveStartedTargetUrl?.(liveId) ||
-      `watch-live.html?id=${encodeURIComponent(liveId)}`;
+      global.TasuLiveConfig?.watchUrl?.(liveId) ||
+      `watch.html?broadcast_id=${encodeURIComponent(liveId)}`;
 
     const result = await invokeLiveNotify("live_started", {
       live_id: liveId,

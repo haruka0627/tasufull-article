@@ -180,8 +180,11 @@
   }
 
   function liveStartedTargetUrl(liveId) {
-    const id = encodeURIComponent(String(liveId || "").trim());
-    return id ? `watch-live.html?id=${id}` : "#";
+    const raw = String(liveId || "").trim();
+    if (!raw) return "#";
+    const cfg = global.TasuLiveConfig;
+    if (cfg?.watchUrl) return cfg.watchUrl(raw);
+    return `watch.html?broadcast_id=${encodeURIComponent(raw)}`;
   }
 
   function videoPublishedDisplayText(actorName) {

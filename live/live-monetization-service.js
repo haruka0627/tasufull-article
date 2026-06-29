@@ -19,6 +19,18 @@
     );
   }
 
+  /** RLS / permission denied — local fallback（severe console 回避） */
+  function isMonetizationAccessFallbackError(err) {
+    if (!err) return false;
+    const code = String(err.code || "").trim();
+    const msg = String(err.message || err).toLowerCase();
+    return code === "42501" || /permission denied|row-level security|rls/i.test(msg);
+  }
+
+  function isMonetizationDbFallbackError(err) {
+    return isNetworkFallbackError(err) || isMonetizationAccessFallbackError(err);
+  }
+
   function normalizeStatus(status) {
     return C()?.normalizeMonetizationStatus?.(status) || (status === "none" ? "not_applied" : String(status || "not_applied"));
   }
@@ -237,7 +249,7 @@
       if (!cfg?.getClient?.()) return getRecordLocal(userId);
       return await fetchRecordFromDb(userId);
     } catch (err) {
-      if (isNetworkFallbackError(err)) {
+      if (isMonetizationDbFallbackError(err)) {
         console.warn("[TasuLiveMonetization] DB read fallback:", err.message || err);
         return getRecordLocal(userId);
       }
@@ -385,7 +397,7 @@
       adRpmDbCache = { map, at: now };
       return map;
     } catch (err) {
-      if (isNetworkFallbackError(err)) return null;
+      if (isMonetizationDbFallbackError(err)) return null;
       throw err;
     }
   }

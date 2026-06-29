@@ -421,7 +421,7 @@ async function handleLiveStarted(
   const creatorName = String(payload.creator_name || creatorId).trim();
   const broadcastTitle = String(payload.title || broadcast.title || "").trim();
   const displayText = `${creatorName}さんがライブ配信を開始しました`;
-  const defaultTargetUrl = `live/watch-live.html?id=${encodeURIComponent(broadcastId)}`;
+  const defaultTargetUrl = `live/watch.html?broadcast_id=${encodeURIComponent(broadcastId)}`;
   const targetUrl = String(payload.target_url || defaultTargetUrl).trim() || defaultTargetUrl;
   let fanout = 0;
 

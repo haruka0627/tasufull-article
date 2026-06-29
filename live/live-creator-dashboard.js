@@ -20,8 +20,13 @@
 
   async function getMonetizationStatusAsync(userId) {
     const svc = global.TasuLiveMonetizationService;
-    if (svc?.getStatusAsync) return svc.getStatusAsync(userId);
-    return getMonetizationStatus(userId);
+    try {
+      if (svc?.getStatusAsync) return await svc.getStatusAsync(userId);
+      return getMonetizationStatus(userId);
+    } catch (err) {
+      console.warn("[TasuLiveCreatorDashboard] monetization status fallback:", err?.message || err);
+      return "not_applied";
+    }
   }
 
   async function fetchOwnVideosForAnalytics({ limit = 200 } = {}) {
@@ -416,8 +421,17 @@
         bindMonetizationApply(r, talkUserId, eligibility);
       }
     } catch (err) {
-      console.error("[TasuLiveCreatorDashboard]", err);
-      writeToRoots(roots, `<p class="live-error">読み込みに失敗しました: ${cfg.escapeHtml(err.message || err)}</p>`);
+      console.warn("[TasuLiveCreatorDashboard]", err?.message || err);
+      writeToRoots(
+        roots,
+        `
+        <div class="live-empty" data-tlv-creator-dashboard-fallback>
+          <p class="live-empty__title">分析データを表示できません</p>
+          <p class="live-empty__text">ログイン状態または権限を確認してください。収益化ステータスはローカル表示にフォールバックしています。</p>
+          <p style="margin-top:16px"><a class="live-btn live-btn--ghost" href="videos.html">動画ホームへ</a></p>
+        </div>
+      `,
+      );
     }
   }
 

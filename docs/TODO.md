@@ -1,6 +1,6 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-28（開発優先順位 P1–P5 · TLV Pause）  
+**最終更新:** 2026-06-29（TLV 仕上げ T1/T2/T4 · 開発優先順位 P1–P5）  
 **Git HEAD:** `aebf23c`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
 **優先:** 下記 **Release Readiness** が正本。旧セクション（Legacy）は参照用 · 詳細は各リンク。
 
@@ -42,6 +42,22 @@
 **制約:** UI 全面変更 · DB/API/Token 仕様変更 · dist/deploy · 大規模リファクタ **禁止**
 
 **検証:** `npm run verify:platform-live-zego-integration-phase5-p5-4-smoke` · P5-3/P5-2/P5-1/P4-6 regression · 8788
+
+---
+
+### TLV 仕上げ — 公開前導線整理（2026-06-29）
+
+**正本:** [tlv-finish-t1-t2-t4.md](../reports/tlv-finish-t1-t2-t4.md)
+
+| Task | 内容 | 状態 |
+| --- | --- | --- |
+| **T1** | 通知・深リンクを `watch.html?broadcast_id=` に統一（`watch-live.html` は互換リダイレクト維持） | **Done**（未コミット） |
+| **T2** | `creator-dashboard` の `live_creator_monetization` RLS 42501 を non-fatal（`console.warn` + fallback UI） | **Done**（未コミット） |
+| **T4** | 8788 主要導線 smoke（index · videos · watch · studio · creator-dashboard） | **Done**（未コミット） |
+
+**対象外:** Platform Live Phase5 本体変更 · 実 RTC · Payment 本番 · Chat 統合 · Studio DB · UI 全面変更
+
+**検証:** `npm run verify:tlv-finish-main-flow-smoke` · 8788 · viewport 1280/390
 
 ---
 

@@ -254,7 +254,9 @@ const context = await browser.newContext();
 
   const readCheck = await page.evaluate(
     ({ broadcastId, href, followerId }) => ({
-      hrefOk: String(href || "").includes(`watch-live.html?id=${broadcastId}`),
+      hrefOk:
+        String(href || "").includes(`watch.html?broadcast_id=${broadcastId}`) ||
+        String(href || "").includes(`broadcast_id=${encodeURIComponent(broadcastId)}`),
       read: (
         JSON.parse(localStorage.getItem("tlvDevNotifications") || "[]").find(
           (r) => r.type === "live_started" && r.targetId === followerId,
