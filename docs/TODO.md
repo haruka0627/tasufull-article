@@ -36,7 +36,7 @@
 | **P5-5** | Flag ON ZEGO provider lazy load | 未着手（Phase 5 後続） |
 | **P5-6** | watch leave · studio preview container | 未着手（Phase 5 後続） |
 | **P5-7** | Supabase comments vs Platform Chat 統合方針 | 未着手（Phase 5 後続） |
-| **P5-8** | `renderStreamPlayer` 実映像化 | 未着手（Phase 5 後続） |
+| **P5-8** | `renderStreamPlayer` 実映像化（Platform player mount） | **Go**（未コミット） |
 | **P5-9** | watch URL 正規化 | 未着手（Phase 5 後続） |
 
 **制約:** UI 全面変更 · DB/API/Token 仕様変更 · dist/deploy · 大規模リファクタ **禁止**

@@ -133,16 +133,14 @@
     return data;
   }
 
-  function renderStreamPlayer(broadcast) {
+  function isUsePlatformLivePlayer() {
+    return global.TLV_FEATURE_FLAGS?.usePlatformLive === true;
+  }
+
+  function renderStreamPlayerPlaceholder(broadcast) {
     const cfg = C();
     const provider = String(broadcast?.stream_provider || cfg.LIVE_STREAM_PROVIDER_DEFAULT).trim();
     const status = String(broadcast?.status || "").trim();
-    const playbackUrl = String(broadcast?.playback_url || "").trim();
-
-    if (provider === "cloudflare_stream" && playbackUrl && status === "live") {
-      return `<video class="live-watch__video" src="${cfg.escapeHtml(playbackUrl)}" playsinline controls preload="metadata" data-live-watch-video></video>`;
-    }
-
     const label =
       provider === "cloudflare_stream"
         ? "Cloudflare Stream（P0 未接続）"
@@ -162,6 +160,75 @@
         <p class="live-muted">stream_provider: ${cfg.escapeHtml(provider)}</p>
       </div>
     `;
+  }
+
+  /** Phase5 P5-8 · Platform Live player mount（flag ON · live のみ） */
+  function renderPlatformLivePlayerMount(broadcast) {
+    const cfg = C();
+    const status = String(broadcast?.status || "").trim();
+    return `
+      <div class="live-watch__platform-player-mount" data-live-platform-player-mount data-live-watch-player-mount>
+        <p class="live-watch__platform-player-loading live-muted" data-live-platform-player-loading aria-live="polite">
+          ${cfg.escapeHtml(status === "live" ? "配信に接続中…" : "プレイヤーを準備中…")}
+        </p>
+      </div>
+    `;
+  }
+
+  function renderStreamPlayer(broadcast) {
+    const cfg = C();
+    const provider = String(broadcast?.stream_provider || cfg.LIVE_STREAM_PROVIDER_DEFAULT).trim();
+    const status = String(broadcast?.status || "").trim();
+    const playbackUrl = String(broadcast?.playback_url || "").trim();
+
+    if (provider === "cloudflare_stream" && playbackUrl && status === "live") {
+      return `<video class="live-watch__video" src="${cfg.escapeHtml(playbackUrl)}" playsinline controls preload="metadata" data-live-watch-video></video>`;
+    }
+
+    if (!isUsePlatformLivePlayer()) {
+      return renderStreamPlayerPlaceholder(broadcast);
+    }
+
+    if (status === "live") {
+      return renderPlatformLivePlayerMount(broadcast);
+    }
+
+    return renderStreamPlayerPlaceholder(broadcast);
+  }
+
+  /** @param {Element|null} scope @param {object|null} bridgeResult */
+  function finalizePlatformLivePlayerMount(scope, bridgeResult) {
+    if (!scope) return;
+    const loading = scope.querySelector("[data-live-platform-player-loading]");
+    const mount = scope.querySelector("[data-live-platform-player-mount]");
+    const hasVideo = Boolean(scope.querySelector("[data-live-platform-player-video]"));
+
+    if (loading && (hasVideo || bridgeResult?.ok !== false)) {
+      loading.hidden = true;
+      loading.setAttribute("aria-hidden", "true");
+    }
+
+    if (bridgeResult?.ok === false && !hasVideo) {
+      const msg = String(bridgeResult?.error || bridgeResult?.code || "プレイヤー接続に失敗しました");
+      if (mount) {
+        mount.innerHTML = `<p class="live-muted" data-live-platform-player-fallback>${C().escapeHtml(msg)}</p>`;
+      }
+      console.warn("[TasuLiveBroadcasts] platform live player:", msg);
+    }
+  }
+
+  /** Phase5 P5-8 · await bridge join for player mount */
+  async function invokePlatformLiveBridge(method, payload) {
+    const bridge = global.TlvPlatformLiveBridge;
+    if (!bridge?.isEnabled?.()) return { ok: true, skipped: true, reason: "usePlatformLive_disabled" };
+    const fn = bridge[method];
+    if (typeof fn !== "function") return { ok: true, skipped: true, reason: "no_method" };
+    try {
+      return await fn(payload);
+    } catch (err) {
+      console.warn("[TasuLiveBroadcasts] platform live bridge:", err);
+      return { ok: false, partial: true, error: err?.message || String(err) };
+    }
   }
 
   function renderBroadcastCard(broadcast) {
@@ -320,13 +387,28 @@
       });
 
       const watchArticle = root.querySelector("[data-live-watch]");
-      void runPlatformLiveBridge("onWatchJoin", {
-        broadcastId: broadcast.id,
-        viewerId: cfg.getTalkUserId(),
-        viewerName: cfg.resolveDisplayName(cfg.getTalkUserId()),
-        status: broadcast.status,
-        videoContainer: watchArticle?.querySelector(".live-watch__player") || null,
-      });
+      const playerMount =
+        watchArticle?.querySelector("[data-live-platform-player-mount]") ||
+        watchArticle?.querySelector(".live-watch__player");
+
+      if (isUsePlatformLivePlayer() && broadcast.status === "live") {
+        const bridgeRes = await invokePlatformLiveBridge("onWatchJoin", {
+          broadcastId: broadcast.id,
+          viewerId: cfg.getTalkUserId(),
+          viewerName: cfg.resolveDisplayName(cfg.getTalkUserId()),
+          status: broadcast.status,
+          videoContainer: playerMount || null,
+        });
+        finalizePlatformLivePlayerMount(watchArticle, bridgeRes);
+      } else if (!isUsePlatformLivePlayer()) {
+        void runPlatformLiveBridge("onWatchJoin", {
+          broadcastId: broadcast.id,
+          viewerId: cfg.getTalkUserId(),
+          viewerName: cfg.resolveDisplayName(cfg.getTalkUserId()),
+          status: broadcast.status,
+          videoContainer: playerMount || null,
+        });
+      }
 
       mountSessionDebugPanel("watch");
     } catch (err) {
@@ -473,6 +555,12 @@
     updateBroadcastStatus,
     runSessionBridge,
     runPlatformLiveBridge,
+    invokePlatformLiveBridge,
+    isUsePlatformLivePlayer,
+    renderStreamPlayer,
+    renderStreamPlayerPlaceholder,
+    renderPlatformLivePlayerMount,
+    finalizePlatformLivePlayerMount,
     mountHubLiveSection,
     mountWatchPage,
     mountStudioPage,

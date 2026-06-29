@@ -1190,6 +1190,28 @@
   background: #000;
 }
 
+.live-watch__platform-player-mount {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.live-watch__platform-player-mount .live-watch__video {
+  width: 100%;
+  height: 100%;
+}
+
+.live-watch__platform-player-loading {
+  margin: 0;
+  padding: 16px;
+  text-align: center;
+}
+
 .live-watch__placeholder {
   display: flex;
   flex-direction: column;
@@ -17079,4 +17101,3 @@ body[data-page="live-payout-policy"] {
     padding: 10px 12px;
   }
 }
-
