@@ -71,3 +71,9 @@ verify_jwt = false
 
 [functions.tlv-e2e-simulate-payment]
 verify_jwt = false
+
+[functions.ai-workspace-video-generate]
+verify_jwt = false
+
+[functions.ai-workspace-music-generate]
+verify_jwt = false
