@@ -84,6 +84,8 @@
     "test:platform-live-zego-integration-phase5-p5-2": "node scripts/test-platform-live-zego-integration-phase5-p5-2.mjs",
     "test:platform-live-zego-integration-phase5-p5-3": "node scripts/test-platform-live-zego-integration-phase5-p5-3.mjs",
     "verify:platform-live-zego-integration-phase5-p5-4-smoke": "node scripts/verify-platform-live-zego-integration-phase5-p5-4-smoke.mjs",
+    "test:platform-live-zego-integration-phase5-p5-5": "node scripts/test-platform-live-zego-integration-phase5-p5-5.mjs",
+    "verify:platform-live-zego-integration-phase5-p5-5-smoke": "node scripts/verify-platform-live-zego-integration-phase5-p5-5-smoke.mjs",
     "test:platform-live-zego-integration-phase5-p5-8": "node scripts/test-platform-live-zego-integration-phase5-p5-8.mjs",
     "verify:platform-live-zego-integration-phase5-p5-8-smoke": "node scripts/verify-platform-live-zego-integration-phase5-p5-8-smoke.mjs",
     "verify:live-p7": "node scripts/verify-live-p7-notify-counts.mjs",
