@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-29  
 **Scope:** 公開前導線整理 · console severe error 解消 · 主要導線 smoke 追加  
-**Commit:** 未コミット（ユーザー指示）
+**Commit:** `2ba6d6c`（`fix(tlv): finalize watch links and creator dashboard fallback`）
 
 ---
 
@@ -10,9 +10,9 @@
 
 | Task | 内容 | 結果 |
 | --- | --- | --- |
-| **T1** | 通知・深リンクの watch URL を `watch.html?broadcast_id=` に統一。`watch-live.html?id=` は非破壊リダイレクトで互換維持 | 実装済 |
-| **T2** | `live_creator_monetization` RLS 42501 を severe console error にしない。`console.warn` + fallback UI | 実装済 |
-| **T4** | 8788 向け主要導線 smoke 1 本追加（1280 / 390） | 実装済 |
+| **T1** | 通知・深リンクの watch URL を `watch.html?broadcast_id=` に統一。`watch-live.html?id=` は非破壊リダイレクトで互換維持 | **Done** `2ba6d6c` |
+| **T2** | `live_creator_monetization` RLS 42501 を severe console error にしない。`console.warn` + fallback UI | **Done** `2ba6d6c` |
+| **T4** | 8788 向け主要導線 smoke 1 本追加（1280 / 390） | **Done** `2ba6d6c` |
 
 **対象外（触っていない）:** Platform Live Phase5 bridge 本体 · 実 RTC · Payment 本番 · Chat 統合 · Studio DB · UI 全面変更 · Builder / AI / BD
 

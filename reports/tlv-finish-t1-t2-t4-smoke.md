@@ -1,6 +1,7 @@
 # TLV 仕上げ — 主要導線 smoke（T1/T2/T4）
 
-**Date:** 2026-06-29T06:26:21.024Z
+**Date:** 2026-06-29T06:43:10.616Z
+**Commit:** `2ba6d6c`
 **Base URL:** http://127.0.0.1:8788
 **Verdict:** GO
 
