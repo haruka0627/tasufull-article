@@ -137,6 +137,88 @@
     return global.TLV_FEATURE_FLAGS?.usePlatformLive === true;
   }
 
+  /** Phase5 P5-9 · watch URL から broadcast id を解決（優先: broadcast_id → id → broadcastId） */
+  function parseWatchBroadcastIdFromParams(params) {
+    const p = params instanceof URLSearchParams ? params : new URLSearchParams(String(params || ""));
+    const keys = ["broadcast_id", "id", "broadcastId"];
+    for (const key of keys) {
+      const id = String(p.get(key) || "").trim();
+      if (id) return { id, source: key };
+    }
+    return { id: "", source: null };
+  }
+
+  /** @param {string} broadcastId @param {string|URLSearchParams} [existingSearch] */
+  function buildCanonicalWatchSearch(broadcastId, existingSearch = "") {
+    const params =
+      existingSearch instanceof URLSearchParams
+        ? new URLSearchParams(existingSearch)
+        : new URLSearchParams(String(existingSearch || "").replace(/^\?/, ""));
+    params.delete("id");
+    params.delete("broadcastId");
+    params.set("broadcast_id", String(broadcastId || "").trim());
+    return params.toString();
+  }
+
+  /**
+   * Phase5 P5-9 · 別名 query を canonical `broadcast_id` に non-fatal 正規化
+   * @param {string} broadcastId
+   * @param {{ source?: string|null }} parseResult
+   */
+  function maybeNormalizeWatchUrlInHistory(broadcastId, parseResult = {}) {
+    const source = parseResult.source || null;
+    if (!source || source === "broadcast_id") {
+      return { ok: true, normalized: false, skipped: true, reason: "already_canonical" };
+    }
+    if (!global.history?.replaceState || !global.location) {
+      return { ok: true, normalized: false, skipped: true, reason: "history_unavailable" };
+    }
+    try {
+      const qs = buildCanonicalWatchSearch(broadcastId, global.location.search);
+      const path = global.location.pathname || "watch.html";
+      const hash = global.location.hash || "";
+      const next = qs ? `${path}?${qs}${hash}` : `${path}${hash}`;
+      global.history.replaceState(null, "", next);
+      const result = { ok: true, normalized: true, source, canonical: "broadcast_id" };
+      global.__tlvWatchUrlNormalizeLast = { ...result, at: new Date().toISOString() };
+      return result;
+    } catch (err) {
+      const result = {
+        ok: true,
+        normalized: false,
+        partial: true,
+        error: err?.message || String(err),
+        source,
+      };
+      global.__tlvWatchUrlNormalizeLast = { ...result, at: new Date().toISOString() };
+      console.warn("[TasuLiveBroadcasts] watch URL normalize:", result.error);
+      return result;
+    }
+  }
+
+  /**
+   * Phase5 P5-7 · Supabase comments 維持 · Platform Chat 本体統合は Future
+   * @param {Element|null} commentsMount
+   */
+  function applyPlatformLiveCommentsPolicy(commentsMount) {
+    const policy = {
+      phase: "P5-7",
+      watchCommentsBackend: "supabase",
+      platformChatIntegrated: false,
+      platformChatEntry: "TlvPlatformLiveAdapter.sendChatMessage",
+      deferFullMergeTo: "Phase6/Future",
+      flagOnBridgeUnchanged: true,
+    };
+    global.__tlvPlatformLiveCommentsPolicy = policy;
+    if (commentsMount?.setAttribute) {
+      commentsMount.setAttribute("data-live-comments-backend", "supabase");
+      if (isUsePlatformLivePlayer()) {
+        commentsMount.setAttribute("data-live-platform-chat-deferred", "true");
+      }
+    }
+    return policy;
+  }
+
   function renderStreamPlayerPlaceholder(broadcast) {
     const cfg = C();
     const provider = String(broadcast?.stream_provider || cfg.LIVE_STREAM_PROVIDER_DEFAULT).trim();
@@ -228,6 +310,71 @@
     } catch (err) {
       console.warn("[TasuLiveBroadcasts] platform live bridge:", err);
       return { ok: false, partial: true, error: err?.message || String(err) };
+    }
+  }
+
+  /** Phase5 P5-6 · Flag ON watch 離脱 cleanup（pagehide / beforeunload · non-fatal） */
+  function bindPlatformLiveWatchLeave(broadcastId, viewerId) {
+    if (!isUsePlatformLivePlayer()) return;
+    const bid = String(broadcastId || "").trim();
+    const vid = String(viewerId || "").trim();
+    if (!bid || !vid) return;
+
+    if (!global.__tlvPlatformLiveWatchLeaveState) {
+      global.__tlvPlatformLiveWatchLeaveState = { bound: false, active: null };
+    }
+    global.__tlvPlatformLiveWatchLeaveState.active = { broadcastId: bid, viewerId: vid };
+
+    if (global.__tlvPlatformLiveWatchLeaveState.bound) return;
+    global.__tlvPlatformLiveWatchLeaveState.bound = true;
+
+    const cleanup = () => {
+      const active = global.__tlvPlatformLiveWatchLeaveState?.active;
+      if (!active) return;
+      void invokePlatformLiveBridge("onWatchLeave", {
+        broadcastId: active.broadcastId,
+        viewerId: active.viewerId,
+        userId: active.viewerId,
+        reason: "page-unload",
+      });
+      global.__tlvPlatformLiveWatchLeaveState.active = null;
+    };
+
+    global.addEventListener("pagehide", cleanup);
+    global.addEventListener("beforeunload", cleanup);
+  }
+
+  /** Phase5 P5-6 · studio preview mount（flag ON · live のみ） */
+  function renderPlatformLiveStudioPreviewMount(broadcast) {
+    const cfg = C();
+    const status = String(broadcast?.status || "").trim();
+    return `
+      <div class="live-studio__platform-preview-mount" data-live-platform-studio-preview-mount data-live-studio-preview-mount>
+        <p class="live-studio__platform-preview-loading live-muted" data-live-platform-studio-preview-loading aria-live="polite">
+          ${cfg.escapeHtml(status === "live" ? "プレビュー準備中…" : "プレビュー")}
+        </p>
+      </div>
+    `;
+  }
+
+  /** @param {Element|null} scope @param {object|null} bridgeResult */
+  function finalizePlatformLiveStudioPreview(scope, bridgeResult) {
+    if (!scope) return;
+    const loading = scope.querySelector("[data-live-platform-studio-preview-loading]");
+    const mount = scope.querySelector("[data-live-platform-studio-preview-mount]");
+    const hasVideo = Boolean(scope.querySelector("[data-live-platform-studio-preview-video]"));
+
+    if (loading && (hasVideo || bridgeResult?.ok !== false || bridgeResult?.via === "platform-live")) {
+      loading.hidden = true;
+      loading.setAttribute("aria-hidden", "true");
+    }
+
+    if (bridgeResult?.ok === false && !hasVideo && !bridgeResult?.skipped) {
+      const msg = String(bridgeResult?.error || bridgeResult?.code || "プレビュー接続に失敗しました");
+      if (mount) {
+        mount.innerHTML = `<p class="live-muted" data-live-platform-studio-preview-fallback>${C().escapeHtml(msg)}</p>`;
+      }
+      console.warn("[TasuLiveBroadcasts] platform live studio preview:", msg);
     }
   }
 
@@ -342,7 +489,8 @@
   async function mountWatchPage(root) {
     const cfg = C();
     const params = new URLSearchParams(global.location?.search || "");
-    const broadcastId = params.get("broadcast_id") || params.get("id") || "";
+    const parsed = parseWatchBroadcastIdFromParams(params);
+    const broadcastId = parsed.id;
 
     if (!broadcastId) {
       root.innerHTML = '<p class="live-error">broadcast_id が指定されていません。</p>';
@@ -358,8 +506,12 @@
         return;
       }
 
+      const normalizedId = String(broadcast.id || "").trim();
+      maybeNormalizeWatchUrlInHistory(normalizedId, parsed);
+
       const commentsMount = document.createElement("div");
       commentsMount.setAttribute("data-live-comments-root", "");
+      applyPlatformLiveCommentsPolicy(commentsMount);
 
       root.innerHTML = `
         <article class="live-watch" data-live-watch data-broadcast-id="${cfg.escapeHtml(broadcast.id)}">
@@ -381,7 +533,7 @@
       }
 
       void runSessionBridge("onWatchJoin", {
-        broadcastId: broadcast.id,
+        broadcastId: normalizedId,
         viewerId: cfg.getTalkUserId(),
         status: broadcast.status,
       });
@@ -393,16 +545,17 @@
 
       if (isUsePlatformLivePlayer() && broadcast.status === "live") {
         const bridgeRes = await invokePlatformLiveBridge("onWatchJoin", {
-          broadcastId: broadcast.id,
+          broadcastId: normalizedId,
           viewerId: cfg.getTalkUserId(),
           viewerName: cfg.resolveDisplayName(cfg.getTalkUserId()),
           status: broadcast.status,
           videoContainer: playerMount || null,
         });
         finalizePlatformLivePlayerMount(watchArticle, bridgeRes);
+        bindPlatformLiveWatchLeave(normalizedId, cfg.getTalkUserId());
       } else if (!isUsePlatformLivePlayer()) {
         void runPlatformLiveBridge("onWatchJoin", {
-          broadcastId: broadcast.id,
+          broadcastId: normalizedId,
           viewerId: cfg.getTalkUserId(),
           viewerName: cfg.resolveDisplayName(cfg.getTalkUserId()),
           status: broadcast.status,
@@ -421,6 +574,10 @@
     const cfg = C();
     const canStart = broadcast.status === "scheduled" || broadcast.status === "preparing";
     const canEnd = broadcast.status === "live";
+    const previewMount =
+      isUsePlatformLivePlayer() && broadcast.status === "live"
+        ? renderPlatformLiveStudioPreviewMount(broadcast)
+        : "";
     return `
       <article class="live-studio-row" data-broadcast-id="${cfg.escapeHtml(broadcast.id)}">
         <div class="live-studio-row__main">
@@ -431,6 +588,7 @@
             ${Number(broadcast.tip_total_yen_stub || 0) > 0 ? `<span>応援 ¥${Number(broadcast.tip_total_yen_stub).toLocaleString("ja-JP")}</span>` : ""}
           </p>
         </div>
+        ${previewMount}
         <div class="live-studio-row__actions">
           <a class="live-btn live-btn--ghost" href="${cfg.watchUrl(broadcast.id)}">視聴</a>
           ${canStart ? `<button type="button" class="live-btn live-btn--primary" data-live-studio-start>配信開始</button>` : ""}
@@ -475,12 +633,25 @@
           }
           void updated;
           await runSessionBridge("onStudioStart", { broadcastId: id, creatorId: userId });
-          await runPlatformLiveBridge("onStudioStart", {
-            broadcastId: id,
-            creatorId: userId,
-            creatorName: cfg.resolveDisplayName(userId),
-          });
           await mountStudioPage(root);
+          const liveRow = root.querySelector(`[data-broadcast-id="${id}"]`);
+          const previewMount = liveRow?.querySelector("[data-live-platform-studio-preview-mount]") || null;
+          if (isUsePlatformLivePlayer()) {
+            const startRes = await invokePlatformLiveBridge("onStudioStart", {
+              broadcastId: id,
+              creatorId: userId,
+              creatorName: cfg.resolveDisplayName(userId),
+              videoContainer: previewMount,
+            });
+            finalizePlatformLiveStudioPreview(liveRow, startRes);
+          } else {
+            void runPlatformLiveBridge("onStudioStart", {
+              broadcastId: id,
+              creatorId: userId,
+              creatorName: cfg.resolveDisplayName(userId),
+              videoContainer: previewMount,
+            });
+          }
         } catch (err) {
           global.alert(`配信開始に失敗しました: ${err.message || err}`);
           btn.disabled = false;
@@ -557,10 +728,18 @@
     runPlatformLiveBridge,
     invokePlatformLiveBridge,
     isUsePlatformLivePlayer,
+    parseWatchBroadcastIdFromParams,
+    buildCanonicalWatchSearch,
+    maybeNormalizeWatchUrlInHistory,
+    applyPlatformLiveCommentsPolicy,
     renderStreamPlayer,
     renderStreamPlayerPlaceholder,
     renderPlatformLivePlayerMount,
     finalizePlatformLivePlayerMount,
+    bindPlatformLiveWatchLeave,
+    renderPlatformLiveStudioPreviewMount,
+    finalizePlatformLiveStudioPreview,
+    renderStudioRow,
     mountHubLiveSection,
     mountWatchPage,
     mountStudioPage,
