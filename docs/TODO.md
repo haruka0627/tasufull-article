@@ -34,10 +34,10 @@
 | **P5-3** | `usePlatformLive` feature flag + 条件付き bridge 接続 | **Go**（未コミット） |
 | **P5-4** | 8788 統合スモーク（Flag OFF/ON · bridge/adapter/integration） | **Done / GO** |
 | **P5-5** | Flag ON ZEGO provider lazy load | **Go**（未コミット · `test:platform-live-zego-integration-phase5-p5-5`） |
-| **P5-6** | watch leave · studio preview container | 未着手（Phase 5 後続） |
-| **P5-7** | Supabase comments vs Platform Chat 統合方針 | 未着手（Phase 5 後続） |
-| **P5-8** | `renderStreamPlayer` 実映像化（Platform player mount） | **Go**（未コミット） |
-| **P5-9** | watch URL 正規化 | 未着手（Phase 5 後続） |
+| **P5-6** | watch leave · studio preview container | **Go**（未コミット · `test:platform-live-zego-integration-phase5-p5-6`） |
+| **P5-7** | Supabase comments vs Platform Chat 統合方針 | **Go**（方針固定 · [report](../reports/live-platform-zego-phase5-p5-7-comments-chat-policy.md) · Chat 本体統合は Future） |
+| **P5-8** | `renderStreamPlayer` 実映像化（Platform player mount） | **Done** `3640bc6` |
+| **P5-9** | watch URL 正規化 | **Go**（未コミット · `test:platform-live-zego-integration-phase5-p5-9`） |
 
 **制約:** UI 全面変更 · DB/API/Token 仕様変更 · dist/deploy · 大規模リファクタ **禁止**
 
