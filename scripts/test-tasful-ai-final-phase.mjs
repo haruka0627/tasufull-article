@@ -60,8 +60,9 @@ function loadAiFinalStack(extra = {}, opts = {}) {
   if (opts.mediaConfig) {
     sandbox.TasuAiMediaGenConfig = opts.mediaConfig;
   } else {
-    vm.runInContext(fs.readFileSync(path.join(root, "ai-media-gen-config.js"), "utf8"), ctx, {
-      filename: "ai-media-gen-config.js",
+    sandbox.TasuAiMediaGenConfig = Object.freeze({
+      video: Object.freeze({ enabled: false, mock: true, endpoint: "" }),
+      music: Object.freeze({ enabled: false, mock: true, endpoint: "" }),
     });
   }
   for (const rel of [

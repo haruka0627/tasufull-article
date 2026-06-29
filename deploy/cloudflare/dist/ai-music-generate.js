@@ -24,6 +24,15 @@
     return cfg.enabled === true && Boolean(String(cfg.endpoint || "").trim());
   }
 
+  function getSupabaseConfig() {
+    return global.TASU_CHAT_SUPABASE_CONFIG || global.TASU_SUPABASE_CONFIG || {};
+  }
+
+  function resolveUserId() {
+    const cfg = getSupabaseConfig();
+    return String(cfg.currentUserId || cfg.userId || cfg.user_id || "anonymous").trim() || "anonymous";
+  }
+
   function normalizeOpts(opts) {
     const o = opts || {};
     return {
@@ -60,6 +69,63 @@
     };
   }
 
+  async function postEdge(endpoint, body, timeoutMs) {
+    const cfg = getSupabaseConfig();
+    const base = String(cfg.url || "").replace(/\/$/, "");
+    const anonKey = String(cfg.anonKey || "").trim();
+    if (!base || !anonKey) {
+      return { ok: false, error: "supabase_not_configured", message: UNCONFIGURED_MSG };
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(`${base}/functions/v1/${endpoint}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${anonKey}`,
+          apikey: anonKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...body,
+          surface: "ai-workspace",
+          user_id: resolveUserId(),
+        }),
+        signal: controller.signal,
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 402 || data?.error === "quota_exceeded") {
+        return {
+          ok: false,
+          quotaExceeded: true,
+          error: "quota_exceeded",
+          message: "本日の利用上限に達しました。プランをご確認ください。",
+          data,
+        };
+      }
+      if (!res.ok) {
+        return {
+          ok: false,
+          error: String(data?.error || res.status),
+          message: String(data?.message || data?.error || "音楽生成に失敗しました"),
+          httpStatus: res.status,
+          data,
+        };
+      }
+      return { ok: true, data };
+    } catch (err) {
+      const aborted = err && err.name === "AbortError";
+      return {
+        ok: false,
+        error: aborted ? "request_timeout" : String(err?.message || err),
+        message: aborted ? "音楽生成がタイムアウトしました。" : "音楽生成 API に接続できませんでした。",
+      };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
   async function generate(opts) {
     const normalized = normalizeOpts(opts);
     const cfg = getConfig();
@@ -69,7 +135,45 @@
       }
       return { ok: false, unconfigured: true, message: UNCONFIGURED_MSG };
     }
-    return mockResult(normalized);
+
+    const edge = await postEdge(
+      String(cfg.endpoint).trim(),
+      {
+        prompt: normalized.prompt,
+        genre: normalized.genre,
+        bpm: normalized.bpm,
+        mood: normalized.mood,
+        lengthSec: normalized.lengthSec,
+        vocal: normalized.vocal,
+        lyrics: normalized.lyrics,
+      },
+      Math.max(5000, Number(cfg.timeoutMs) || 90000),
+    );
+
+    if (edge.ok && edge.data?.ok) {
+      return {
+        ok: true,
+        mock: false,
+        mode: edge.data.mode || "edge",
+        id: edge.data.id,
+        message: edge.data.message || "音楽制作プランを生成しました",
+        previewUrl: edge.data.previewUrl || "",
+        markdown: edge.data.markdown || "",
+        params: edge.data.params || normalized,
+        quota: edge.data.quota,
+      };
+    }
+
+    if (normalized.allowMock || cfg.mock === true) {
+      return mockResult(normalized);
+    }
+
+    return {
+      ok: false,
+      error: edge.error || "edge_failed",
+      message: edge.message || "音楽生成に失敗しました",
+      quotaExceeded: edge.quotaExceeded === true,
+    };
   }
 
   global.TasuAiMusicGenerate = {

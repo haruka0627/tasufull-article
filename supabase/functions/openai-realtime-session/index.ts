@@ -11,6 +11,10 @@ import {
   VOICE_REALTIME_KILL_SWITCH_ENV,
 } from "../_shared/voice-realtime-edge-guard.ts";
 import {
+  authorizeVoiceRealtimeRequest,
+  voiceJwtFailureResponse,
+} from "../_shared/voice-realtime-jwt.ts";
+import {
   createOpenAiRealtimeSession,
   normalizeRealtimeSessionRequest,
   type RealtimeSessionRequest,
@@ -29,8 +33,14 @@ Deno.serve(async (req) => {
     return jsonResponse(disabled.body, disabled.status, req);
   }
 
+  const jwtAuth = await authorizeVoiceRealtimeRequest(req);
+  if (!jwtAuth.ok) {
+    const fail = voiceJwtFailureResponse(jwtAuth);
+    return jsonResponse(fail.body, fail.status, req);
+  }
+
   const clientIp = extractVoiceRealtimeClientIp(req);
-  const rateLimit = checkVoiceRealtimeRateLimit(clientIp);
+  const rateLimit = checkVoiceRealtimeRateLimit(clientIp, Date.now(), undefined, undefined, jwtAuth.userId);
   if (!rateLimit.ok) {
     return jsonResponse(rateLimit.body, rateLimit.status, req);
   }
