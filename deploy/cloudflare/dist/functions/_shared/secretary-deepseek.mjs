@@ -1,10 +1,15 @@
 /**
  * AI 運営秘書 — DeepSeek chat (OpenAI-compatible API)
  * Secret: DEEPSEEK_API_KEY (Cloudflare Pages / Workers · ローカル .env)
- * Optional: DEEPSEEK_CHAT_MODEL
+ * Optional: DEEPSEEK_CHAT_MODEL (official: deepseek-v4-flash | deepseek-v4-pro)
  */
 
 export const DEEPSEEK_API_BASE = "https://api.deepseek.com";
+
+/** @see https://api-docs.deepseek.com/quick_start/pricing */
+export const DEFAULT_DEEPSEEK_CHAT_MODEL = "deepseek-v4-flash";
+
+const DEPRECATED_DEEPSEEK_MODELS = new Set(["deepseek-chat", "deepseek-reasoner"]);
 
 export function trimSecretaryText(value, maxLen) {
   return String(value ?? "")
@@ -13,7 +18,12 @@ export function trimSecretaryText(value, maxLen) {
 }
 
 export function resolveDeepSeekModel(env) {
-  return String(env?.DEEPSEEK_CHAT_MODEL || "").trim() || "deepseek-chat";
+  const configured = String(env?.DEEPSEEK_CHAT_MODEL || "").trim();
+  const model = configured || DEFAULT_DEEPSEEK_CHAT_MODEL;
+  if (DEPRECATED_DEEPSEEK_MODELS.has(model)) {
+    return DEFAULT_DEEPSEEK_CHAT_MODEL;
+  }
+  return model;
 }
 
 export function buildSecretaryMessages(body) {
