@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-07-03T15:00:28.733Z",
+  "slug": "fee-pay-550",
+  "url": "http://127.0.0.1:8788/platform-chat-fee-pay?listingId=job_demo_full_001&category=job&applicationId=job-app-demo-001&from=notify&talkDev=1",
+  "threadId": "",
+  "diagnostics": {
+    "threadId": null,
+    "roomId": null,
+    "threadKind": null,
+    "threadStatus": null,
+    "listingId": "job_demo_full_001",
+    "applicationId": "job-app-demo-001",
+    "listingTitle": null,
+    "posterUserId": "u_job_demo_full",
+    "applicantUserId": "u_hiro",
+    "partnerUserId": null,
+    "applicationStatus": "awaiting_fee",
+    "messageCount": 0,
+    "hasJobApplicationCard": false,
+    "hasDomJobCard": false,
+    "jobCardTitle": null,
+    "hasBuilderWorkflowState": false
+  },
+  "forbidden": {
+    "builderPanelVisible": false,
+    "visibleWorkflowButtons": 0,
+    "enterExitButtons": 0,
+    "platformJobCompleteButtons": 0,
+    "hasCommissionPctText": false
+  },
+  "notifyPoster": {
+    "notifyFound": false,
+    "cardVisible": false
+  },
+  "chatTextSample": "",
+  "consoleErrorCount": 0
+}

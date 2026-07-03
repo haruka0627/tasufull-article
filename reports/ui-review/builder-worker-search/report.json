@@ -1,0 +1,135 @@
+{
+  "feature": "builder-worker-search",
+  "capturedAt": "2026-07-03T04:52:12.876Z",
+  "outDir": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-worker-search",
+  "stepCount": 6,
+  "consoleErrorCount": 0,
+  "consoleErrors": [],
+  "steps": [
+    {
+      "step": 1,
+      "slug": "find-workers-results",
+      "label": "ワーカー検索 · 結果一覧",
+      "url": "http://127.0.0.1:8788/builder/find-workers.html",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-worker-search\\001-find-workers-results-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 2,
+      "slug": "worker-profile",
+      "label": "ワーカープロフィール",
+      "url": "http://127.0.0.1:8788/builder/find-workers.html",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-worker-search\\002-worker-profile-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 3,
+      "slug": "talk-before-reveal",
+      "label": "550円 連絡先開示前",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054327588-6efd96&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-worker-search\\003-talk-before-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 4,
+      "slug": "talk-after-reveal",
+      "label": "550円 開示後 · Talk 有効",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054327588-6efd96&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-worker-search\\004-talk-after-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 5,
+      "slug": "normal-chat",
+      "label": "通常チャット送信",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054327588-6efd96&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-worker-search\\005-normal-chat-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 6,
+      "slug": "thread-sync",
+      "label": "thread / roomId 同期（user 視点）",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054327588-6efd96&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-worker-search\\006-thread-sync-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    }
+  ],
+  "baseUrl": "http://127.0.0.1:8788",
+  "threadId": "thread-1783054327588-6efd96",
+  "diagnostics": {
+    "workerSearch": {
+      "contactRevealFeeYen": 550,
+      "completionCommission": false
+    },
+    "generalProjectCommissionRange": [
+      5,
+      10
+    ],
+    "threadId": "thread-1783054327588-6efd96",
+    "roomId": "thread-1783054327588-6efd96",
+    "threadKind": "worker_contact",
+    "partnerUserId": "w1",
+    "hasWorkflowState": false,
+    "hasCompletionReport": false
+  },
+  "forbiddenActions": {
+    "user": {
+      "visibleWorkflowButtons": 0,
+      "hasCommissionPctText": false
+    }
+  },
+  "checks": {
+    "contactReveal550": true,
+    "threadCreated": true,
+    "partnerUserIdSet": true,
+    "workerThreadKind": true,
+    "noCompletionCommission": true,
+    "noWorkflowState": true,
+    "noCompletionReport": true,
+    "noWorkflowButtons": true,
+    "noCommissionUi": true
+  }
+}

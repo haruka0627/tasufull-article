@@ -1,0 +1,151 @@
+{
+  "feature": "builder-general",
+  "capturedAt": "2026-07-03T04:21:58.189Z",
+  "outDir": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general",
+  "stepCount": 8,
+  "consoleErrorCount": 0,
+  "consoleErrors": [],
+  "steps": [
+    {
+      "step": 1,
+      "slug": "board-projects",
+      "label": "案件一覧（掲示板）",
+      "url": "http://127.0.0.1:8788/builder/board-projects.html",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\001-board-projects-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 2,
+      "slug": "user-before-reveal",
+      "label": "550円 連絡先開示前（依頼者）",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\002-user-before-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 3,
+      "slug": "user-after-reveal",
+      "label": "550円 開示後 · Talk 有効",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\003-user-after-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 4,
+      "slug": "partner-working",
+      "label": "施工中（作業者）",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=partner",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\004-partner-working-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 5,
+      "slug": "partner-client-confirming",
+      "label": "依頼者確認待ち（作業者）",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=partner",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\005-partner-client-confirming-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 6,
+      "slug": "user-completion-card",
+      "label": "依頼者 · 完了報告カード",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\006-user-completion-card-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 7,
+      "slug": "user-photo-lightbox",
+      "label": "依頼者 · 完了写真ライトボックス",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\007-user-photo-lightbox-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 8,
+      "slug": "user-completed",
+      "label": "依頼者承認 · 案件完了",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-general\\008-user-completed-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    }
+  ],
+  "baseUrl": "http://127.0.0.1:8788",
+  "threadId": "verify-general-project",
+  "billingDiagnostics": {
+    "contactRevealFeeYen": 550,
+    "commissionPctRange": [
+      5,
+      10
+    ],
+    "completionCommission": true,
+    "workflowStatus": "completed",
+    "reportWorkContent": "壁紙張替え完了（一般案件 UI review）",
+    "reportPhotoCount": 3,
+    "reportPreviewCount": 3
+  },
+  "checks": {
+    "contactReveal550": true,
+    "commissionRange5to10": true,
+    "workflowCompleted": true,
+    "completionReportSaved": true,
+    "multiPhotoSaved": true
+  }
+}

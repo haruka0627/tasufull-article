@@ -1,0 +1,83 @@
+{
+  "feature": "builder-vendor-search-manual-review-flow",
+  "capturedAt": "2026-07-03T05:05:31.873Z",
+  "baseUrl": "http://127.0.0.1:8788",
+  "viewports": [
+    {
+      "viewport": "1280",
+      "capturedAt": "2026-07-03T05:05:29.294Z",
+      "flow": "vendor",
+      "steps": [
+        {
+          "slug": "find-partners-results",
+          "ok": true,
+          "phase": "find_workers",
+          "minPhase": "find_workers",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\001-find-partners-results.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\001-find-partners-results.json"
+        },
+        {
+          "slug": "vendor-profile",
+          "ok": true,
+          "phase": "worker_profile",
+          "minPhase": "worker_profile",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\002-vendor-profile.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\002-vendor-profile.json"
+        },
+        {
+          "slug": "talk-before-reveal",
+          "ok": true,
+          "phase": "reveal_ready",
+          "minPhase": "reveal_ready",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\003-talk-before-reveal.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\003-talk-before-reveal.json"
+        },
+        {
+          "slug": "talk-after-reveal",
+          "ok": true,
+          "phase": "no_project_actions",
+          "minPhase": "talk",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\004-talk-after-reveal.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\004-talk-after-reveal.json"
+        },
+        {
+          "slug": "normal-chat",
+          "ok": true,
+          "phase": "no_project_actions",
+          "minPhase": "chat_sent",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\005-normal-chat.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\005-normal-chat.json"
+        },
+        {
+          "slug": "thread-sync",
+          "ok": true,
+          "phase": "no_project_actions",
+          "minPhase": "partner_sync",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\006-thread-sync.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\006-thread-sync.json"
+        },
+        {
+          "slug": "no-project-workflow",
+          "ok": true,
+          "phase": "no_project_actions",
+          "minPhase": "no_project_actions",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\007-no-project-workflow.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-vendor-search\\007-no-project-workflow.json"
+        }
+      ],
+      "diagnostics": {
+        "vendorSearch": {
+          "contactRevealFeeYen": 550,
+          "completionCommission": false
+        },
+        "threadId": "thread-1783055120992-f02e96",
+        "roomId": "thread-1783055120992-f02e96",
+        "threadKind": "vendor_contact",
+        "partnerUserId": "demo-partner-001",
+        "vendorId": "demo-partner-001",
+        "hasWorkflowState": false,
+        "hasCompletionReport": false
+      }
+    }
+  ]
+}

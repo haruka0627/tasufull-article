@@ -1,0 +1,134 @@
+{
+  "feature": "builder-vendor-search",
+  "capturedAt": "2026-07-03T05:03:53.697Z",
+  "outDir": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-vendor-search",
+  "stepCount": 6,
+  "consoleErrorCount": 0,
+  "consoleErrors": [],
+  "steps": [
+    {
+      "step": 1,
+      "slug": "find-partners-results",
+      "label": "業者検索 · 結果一覧",
+      "url": "http://127.0.0.1:8788/builder/partners.html",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-vendor-search\\001-find-partners-results-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 2,
+      "slug": "vendor-profile",
+      "label": "業者プロフィール",
+      "url": "http://127.0.0.1:8788/builder/partners.html",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-vendor-search\\002-vendor-profile-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 3,
+      "slug": "talk-before-reveal",
+      "label": "550円 連絡先開示前",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783055028358-a4977d&from=builder&builderFlow=vendor_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-vendor-search\\003-talk-before-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 4,
+      "slug": "talk-after-reveal",
+      "label": "550円 開示後 · Talk 有効",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783055028358-a4977d&from=builder&builderFlow=vendor_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-vendor-search\\004-talk-after-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 5,
+      "slug": "normal-chat",
+      "label": "通常チャット送信",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783055028358-a4977d&from=builder&builderFlow=vendor_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-vendor-search\\005-normal-chat-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 6,
+      "slug": "thread-sync",
+      "label": "thread / roomId 同期（user 視点）",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783055028358-a4977d&from=builder&builderFlow=vendor_user&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\builder-vendor-search\\006-thread-sync-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    }
+  ],
+  "baseUrl": "http://127.0.0.1:8788",
+  "threadId": "thread-1783055028358-a4977d",
+  "diagnostics": {
+    "vendorSearch": {
+      "contactRevealFeeYen": 550,
+      "completionCommission": false
+    },
+    "threadId": "thread-1783055028358-a4977d",
+    "roomId": "thread-1783055028358-a4977d",
+    "threadKind": "vendor_contact",
+    "partnerUserId": "demo-partner-001",
+    "vendorId": "demo-partner-001",
+    "hasWorkflowState": false,
+    "hasCompletionReport": false
+  },
+  "forbiddenActions": {
+    "user": {
+      "visibleWorkflowButtons": 0,
+      "hasCommissionPctText": false,
+      "statusBadge": "相談中"
+    }
+  },
+  "checks": {
+    "contactReveal550": true,
+    "threadCreated": true,
+    "vendorContactKind": true,
+    "vendorIdSet": true,
+    "badgeConsulting": true,
+    "noCompletionCommission": true,
+    "noWorkflowState": true,
+    "noCompletionReport": true,
+    "noWorkflowButtons": true,
+    "noCommissionUi": true
+  }
+}

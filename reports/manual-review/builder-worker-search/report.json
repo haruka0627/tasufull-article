@@ -1,0 +1,87 @@
+{
+  "feature": "builder-worker-search-manual-review-flow",
+  "capturedAt": "2026-07-03T04:55:04.299Z",
+  "baseUrl": "http://127.0.0.1:8788",
+  "viewports": [
+    {
+      "viewport": "1280",
+      "capturedAt": "2026-07-03T04:55:01.501Z",
+      "flow": "worker",
+      "steps": [
+        {
+          "slug": "find-workers-results",
+          "ok": true,
+          "phase": "find_workers",
+          "minPhase": "find_workers",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\001-find-workers-results.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\001-find-workers-results.json"
+        },
+        {
+          "slug": "worker-profile",
+          "ok": true,
+          "phase": "worker_profile",
+          "minPhase": "worker_profile",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\002-worker-profile.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\002-worker-profile.json"
+        },
+        {
+          "slug": "talk-before-reveal",
+          "ok": true,
+          "phase": "reveal_ready",
+          "minPhase": "reveal_ready",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\003-talk-before-reveal.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\003-talk-before-reveal.json"
+        },
+        {
+          "slug": "talk-after-reveal",
+          "ok": true,
+          "phase": "talk",
+          "minPhase": "talk",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\004-talk-after-reveal.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\004-talk-after-reveal.json"
+        },
+        {
+          "slug": "normal-chat",
+          "ok": true,
+          "phase": "no_project_actions",
+          "minPhase": "chat_sent",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\005-normal-chat.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\005-normal-chat.json"
+        },
+        {
+          "slug": "thread-sync",
+          "ok": true,
+          "phase": "no_project_actions",
+          "minPhase": "partner_sync",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\006-thread-sync.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\006-thread-sync.json"
+        },
+        {
+          "slug": "no-project-workflow",
+          "ok": true,
+          "phase": "no_project_actions",
+          "minPhase": "no_project_actions",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\007-no-project-workflow.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-worker-search\\007-no-project-workflow.json"
+        }
+      ],
+      "diagnostics": {
+        "workerSearch": {
+          "contactRevealFeeYen": 550,
+          "completionCommission": false
+        },
+        "generalProjectCommissionRange": [
+          5,
+          10
+        ],
+        "threadId": "thread-1783054493958-133a0f",
+        "roomId": "thread-1783054493958-133a0f",
+        "threadKind": "worker_contact",
+        "partnerUserId": "w1",
+        "buyerId": "demo-builder-user",
+        "hasWorkflowState": false,
+        "hasCompletionReport": false
+      }
+    }
+  ]
+}

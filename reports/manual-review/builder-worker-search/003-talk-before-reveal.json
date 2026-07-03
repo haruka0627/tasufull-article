@@ -1,0 +1,55 @@
+{
+  "capturedAt": "2026-07-03T04:54:55.219Z",
+  "phase": "reveal_ready",
+  "findWorkers": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054493958-133a0f&from=builder&builderFlow=partner_user&builderRole=user",
+    "onFindWorkers": false,
+    "resultsVisible": false,
+    "profileVisible": false,
+    "cardCount": 0
+  },
+  "diagnostics": {
+    "workerSearch": {
+      "contactRevealFeeYen": 550,
+      "completionCommission": false
+    },
+    "generalProjectCommissionRange": [
+      5,
+      10
+    ],
+    "threadId": "thread-1783054493958-133a0f",
+    "roomId": "thread-1783054493958-133a0f",
+    "threadKind": "worker_contact",
+    "partnerUserId": "w1",
+    "buyerId": "demo-builder-user",
+    "hasWorkflowState": false,
+    "hasCompletionReport": false
+  },
+  "forbidden": {
+    "visibleWorkflowButtons": 0,
+    "forbiddenButtons": [],
+    "hasCommissionPctText": false,
+    "panelTextSample": "\n          \n            ワーカー相談\n            案件名山本 電工 とのやりとり相手山本 電工\n            Builderで確認\n          \n          電話番号・メール等の直接連絡先は開示前に表示されません。担当者: ●● ●●電話: 090-****"
+  },
+  "chatSent": false,
+  "user": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054493958-133a0f&from=builder&builderFlow=partner_user&builderRole=user",
+    "onTalk": true,
+    "builderRole": "user",
+    "threadId": "thread-1783054493958-133a0f",
+    "badge": "受諾済み",
+    "status": "",
+    "workflowVisible": true,
+    "completionModalVisible": false,
+    "buttons": [],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": false,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "partner": null,
+  "threadId": "thread-1783054493958-133a0f",
+  "workflowKind": "ワーカー相談",
+  "partnerKind": ""
+}

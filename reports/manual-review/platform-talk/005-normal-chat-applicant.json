@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-07-03T15:00:34.987Z",
+  "slug": "normal-chat-applicant",
+  "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090828832-tv8ex8&userId=u_hiro&talkDev=1",
+  "threadId": "chat-1783090828832-tv8ex8",
+  "diagnostics": {
+    "threadId": "chat-1783090828832-tv8ex8",
+    "roomId": "chat-1783090828832-tv8ex8",
+    "threadKind": "job_hire",
+    "threadStatus": "open",
+    "listingId": "job_demo_full_001",
+    "applicationId": "job-app-demo-001",
+    "listingTitle": "YouTubeショート動画編集スタッフ募集",
+    "posterUserId": "u_job_demo_full",
+    "applicantUserId": "u_hiro",
+    "partnerUserId": "u_job_demo_full",
+    "applicationStatus": "selected",
+    "messageCount": 4,
+    "hasJobApplicationCard": false,
+    "hasDomJobCard": false,
+    "jobCardTitle": null,
+    "hasBuilderWorkflowState": false
+  },
+  "forbidden": {
+    "builderPanelVisible": false,
+    "visibleWorkflowButtons": 0,
+    "enterExitButtons": 0,
+    "platformJobCompleteButtons": 2,
+    "hasCommissionPctText": false
+  },
+  "notifyPoster": {
+    "notifyFound": false,
+    "cardVisible": false
+  },
+  "chatTextSample": "2026/07/04\n              \n                \n                \n                  \n                    \n                      \n      \n        ︙\n        \n          \n          ブロック\n        \n      \n                      \n                        タスク確認株式会社\n                        ひろ さんとやりとりを開始しました。条件確認・日程調整はこのチャットで進めてください。\n                        \n                      \n                    \n               ",
+  "consoleErrorCount": 0
+}

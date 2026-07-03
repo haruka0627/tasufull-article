@@ -1,0 +1,40 @@
+{
+  "capturedAt": "2026-07-03T04:54:50.339Z",
+  "phase": "find_workers",
+  "findWorkers": {
+    "url": "http://127.0.0.1:8788/builder/find-workers",
+    "onFindWorkers": true,
+    "resultsVisible": true,
+    "profileVisible": false,
+    "cardCount": 6
+  },
+  "diagnostics": {
+    "workerSearch": {
+      "contactRevealFeeYen": 550,
+      "completionCommission": false
+    },
+    "generalProjectCommissionRange": [
+      5,
+      10
+    ],
+    "threadId": null,
+    "roomId": null,
+    "threadKind": null,
+    "partnerUserId": null,
+    "buyerId": null,
+    "hasWorkflowState": false,
+    "hasCompletionReport": false
+  },
+  "forbidden": {
+    "visibleWorkflowButtons": 0,
+    "forbiddenButtons": [],
+    "hasCommissionPctText": false,
+    "panelTextSample": ""
+  },
+  "chatSent": false,
+  "user": null,
+  "partner": null,
+  "threadId": null,
+  "workflowKind": "",
+  "partnerKind": ""
+}

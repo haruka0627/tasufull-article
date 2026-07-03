@@ -1,10 +1,8 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-06-29（housekeeping · Materials Phase 0 着手可）  
+**最終更新:** 2026-07-04  
 **Git HEAD:** `e5c4d24`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
-**優先:** 下記 **Release Readiness** が正本。旧セクション（Legacy）は参照用 · 詳細は各リンク。
-
-**Cursor 開発優先:** **P5 Materials Phase 0（着手可）** → P3 Live API（ZEGO）→ P4 BD 待機 → P6 TLV Pause · AI秘書待機
+**優先:** **リリース前最終整理** — [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md) · REL-P0-04 dist 同期 · P5 Materials Phase 0
 
 ---
 
@@ -91,13 +89,60 @@
 
 ---
 
-### Business Directory（P4 · 待機 · 2026-06-28）
+### Builder → Talk Review 全フロー（2026-07-03）
 
-**状態:** MVP-1/3 Complete · Step 5 + Launch Gate Prep **Complete** · **Commercial Launch No-Go 維持** · **新規実装停止**
+| フロー | threadKind | 状態 |
+| --- | --- | --- |
+| 一般案件 | `partner_user` | **PASS** — `reports/ui-review/builder-general/` |
+| ワーカー検索 | `worker_contact` | **PASS** — `reports/ui-review/builder-worker-search/` |
+| 業者検索 | `vendor_contact` | **PASS** — `reports/ui-review/builder-vendor-search/` |
 
-**Cursor 継続可:** Docs（FAQ/Runbook/Legal）· 8788 regression · smoke · bugfix のみ
+**Builder Talk 検証:** 完成扱い（Production Ready · FROZEN 維持）。開示前 badge HTML 初期値は保留（機能影響なし）。
 
-**正本:** [launch gate prep](../reports/business-directory-launch-gate-prep.md) · [operational readiness](../reports/business-directory-operational-readiness.md)
+---
+
+### Platform → TASFUL Talk 連携 Review（2026-07-03 · **PASS 完了** 2026-07-04 記録）
+
+| 項目 | 状態 |
+| --- | --- |
+| 求人案件 → 550円 → Talk → 双方向チャット | **PASS 完了** |
+| 対象 | `job_demo_full_001` · 応募 `job-app-demo-001`（`u_hiro`）· `threadKind: job_hire` |
+| Screenshot Review | `node scripts/capture-platform-job-talk-ui-review.mjs` |
+| Manual Review Flow | `node scripts/check-platform-talk-flow-headed.mjs --manual-review-flow --viewport=1280` |
+| 出力 | `reports/ui-review/platform-talk/` · `reports/manual-review/platform-talk/` |
+
+**Platform → Talk 連携:** 完成扱い（Production Ready · FROZEN 維持）。
+
+**残課題（製品 / Review 整理）**
+
+| 項目 | 扱い | 優先 |
+| --- | --- | --- |
+| fee-pay URL に `talkDev=1` がないとローカル Review で Supabase 401 | Review スクリプト側 **対応済** · 製品は `data-job-app-proceed` 遷移時に `talkDev=1` 付与 | **P2** |
+| Wrangler の `.html` 除去 | Review スクリプト **対応済** · **製品バグではない** | — |
+| 未読 badge（デモ seed は既読） | 必要なら seed に `is-unread` 付与 · **現時点保留** | 保留 |
+
+---
+
+### Payment Engine Architecture SSOT（Phase 1 · 2026-07-01）
+
+**状態:** Phase 1 **完了** — 実装 / migration / コード変更なし  
+**正本:** [architecture/payment-engine-architecture.md](./architecture/payment-engine-architecture.md)
+
+| 項目 | 内容 |
+| --- | --- |
+| **Phase 2 候補** | Payment Lifecycle · Failure Recovery · Audit Trail · Reconciliation · Marketplace Connect/Escrow · TLV Membership 実装 |
+| **TLV backend** | **実装済み / Go** — DB Step 0–5 · RPC · Edge v4 · **REL-P0-02 運用ゲート未達** |
+| **TLV Live UI** | **未接続 / Production No-Go** · Staging **Conditional Go** — [接続前監査](../reports/tlv-payment-live-ui-connection-audit.md) |
+
+---
+
+### Business Directory（P4 · DB Production Ready · 2026-07-01）
+
+**状態:** MVP-1/3 Complete · **Production Controlled Apply 完了** · **DB 基盤 Production Ready Go** · **Commercial Launch Conditional**
+
+**Production DB 固定（`ddojquacsyqesrjhcvmn`）:** `20260715110000` partial apply 済（view block **未実行**）· `20260716100000` full apply 済 · `20260717120000` 適用済 · VERIFY 全 PASS · S2 **16/0** · S3 **15/0** · Rollback 不要 — [apply result](../reports/business-directory-production-controlled-apply-result.md)
+
+**正本:** [launch gate prep](../reports/business-directory-launch-gate-prep.md) · [operational readiness](../reports/business-directory-operational-readiness.md) · [DB architecture SSOT](./architecture/business-directory-db-architecture.md)
 
 | 項目 | 状態 |
 | --- | --- |
@@ -106,10 +151,22 @@
 | Production Step 4 | **48/48 Go**（2026-06-27） |
 | Step 5 Operational Readiness | **Complete** |
 | Launch Gate Preparation | **Complete** |
-| **運用モード** | **待機** — 新規実装停止 · Docs/regression/bugfix のみ |
-| Commercial Launch | **No-Go**（OB1–OB8 · 明示承認待ち） |
+| **Production Controlled Apply** | **Complete**（2026-07-01） |
+| **DB 依存（Production Ready）** | **Go** |
+| **運用モード** | Commercial Launch 準備 — DB/migration/Edge **変更禁止**（Launch 残タスクのみ） |
+| Commercial Launch | **Conditional** — Stripe E2E · Launch 最終確認 |
 
-**Launch Gate blockers:** OB1–OB8 — [launch gate prep](../reports/business-directory-launch-gate-prep.md)
+**Launch 残課題（DB 外）:**
+
+| ID | 項目 | 状態 |
+| --- | --- | --- |
+| R1 | `public/detail.html` Supabase config | **完了**（2026-07-01 · [config fix](../reports/business-directory-public-detail-config-fix.md)） |
+| R1b | `public/list.html` Supabase config | **完了**（2026-07-01 · [config fix](../reports/business-directory-public-list-config-fix.md)） |
+| R2 | Production Stripe E2E | **Go**（Step 4 48/48 + R2 rich）— Phase 2a 1 fail · H2 6 events 目視残 — [readiness §15](../reports/business-directory-production-stripe-e2e-readiness.md) |
+| R5 | CLI re-link | Staging 作業前に Production → Staging 切替要 |
+| — | Commercial Launch 最終確認 | [checklist](../reports/business-directory-commercial-launch-checklist.md) · OB1–OB8 · 人間 Go/No-Go |
+
+**Launch Gate blockers（Commercial）:** OB1–OB8 — [launch gate prep](../reports/business-directory-launch-gate-prep.md)
 
 ---
 
@@ -187,9 +244,11 @@
 
 **TLV Payment Release Operations（REL-P0-02 詳細 · 開発凍結 · Runbook のみ · Phase 1 実装停止 2026-06-28）**
 
-**技術 Blocker:** **0**（Migration · RPC · RLS · Edge v4 deploy 済）  
+**技術 Blocker:** **0**（Migration · RPC · RLS · Edge v4 deploy 済 · [Live UI 接続前監査](../reports/tlv-payment-live-ui-connection-audit.md)）  
 **残:** 運用ゲートのみ — [tlv-phase1-completion-gate.md](../reports/tlv-phase1-completion-gate.md) §11  
 **着手禁止（TLV Complete まで）:** TLV Phase 2 固有 · Wallet↔Live · TLV Chat UI · TLV Moderation · 収益接続
+
+**環境ギャップ（監査 2026-07-01 · 接続準備）:** Staging ref `ahlxuyvhzqdqaojiywmu` へ TLV 一式 **未セットアップ**（**高優先**）· Stripe 7 events Dashboard 確認（**高優先 / REL-P0-02**）· `STRIPE_WEBHOOK_SECRET_TLV` 分離（**中優先**）
 
 **並行可（P2）:** Live Platform **共通基盤**（`platform-live/` · Edge · stub）— [foundation plan](../reports/live-platform-common-foundation-plan.md)
 
@@ -223,7 +282,7 @@
 
 ### TLV Release P0 — ライブ配信サービス本番最低条件（2026-06-28 再棚卸し）
 
-**監査レポート:** [reports/tlv-release-p0-audit.md](../reports/tlv-release-p0-audit.md)  
+**監査レポート:** [reports/tlv-release-p0-audit.md](../reports/tlv-release-p0-audit.md) · **Live UI 接続前監査:** [reports/tlv-payment-live-ui-connection-audit.md](../reports/tlv-payment-live-ui-connection-audit.md)（2026-07-01）  
 **前提:** [TLV_PRD.md](./TLV_PRD.md) v2 正本 · [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md) · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) · TLV v1.0 **FEATURE FROZEN**（`live/` UI は v1 · **収益ライブ未接続**）
 
 **スコープ定義（本棚卸し）**
@@ -234,7 +293,7 @@
 | **B: 収益ライブ MVP** | 実映像配信 + coin 投げ銭 + 最低限チャット/安全 | **本監査の P0 正本** — **未 Go** |
 | **C: PRD v2 制度全体** | 30分サバイバル · Gauge · Score · Legend | **Future（REL-F-01/02）** — MVP 後 |
 
-**現状ギャップ（要約）:** Payment Engine **開発完了** · `live/` は `public.live_*` + **tip stub** · `tlv.streams`/Wallet **UI 未接続** · 映像 ingest **stub** · Live Chat 設計は TODO Future · `docs/TLV_LIVE_CHAT.md` **未作成**
+**現状ギャップ（要約 · 2026-07-01 監査反映）:** Payment Engine backend **Go**（prod Step 0–5 fingerprint · RPC · Edge v4）· **REL-P0-02 未達** · `live/` は **`public.live_tips` stub**（`tlv-create-tip` / `tlv-create-coin-purchase` **0 呼出** · `payment_status: stub`）· **`stream_id` 未保持** · 残高/coin 購入 UI なし · payout demo JSON · **stub 並存 = Critical（二重計上リスク）**
 
 #### サービス別分類
 
@@ -255,11 +314,11 @@
 | ID | 領域 | 状態 | ブロッカー | 次アクション |
 | --- | --- | --- | --- | --- |
 | **REL-P0-02** | Payment Runbook | No-Go（運用） | Backup/PITR · Stripe · webhook deploy · Go Approval | Runbook Step 1→10（**Wallet 本番の前提**） |
-| **TLV-P0-01** | Live DB + RLS 本番 | 未 Go | `live_p0_schema` **DRAFT · staging 適用待ち** · `tlv.*` payment migration prod 適用待ち | staging 適用 → prod migration · RLS smoke |
+| **TLV-P0-01** | Live DB + RLS 本番 | 部分 | `live_p0_schema` **DRAFT · staging 適用待ち** · `tlv.*` payment Step 0–5 prod **適用済**（監査 2026-07-01） | `live_p0_schema` staging → prod · RLS smoke |
 | **TLV-P0-02** | 映像 ingest（RTMP→HLS） | 未 Go | `stream_provider=stub` · Cloudflare Stream **未接続** | ingest API · playback URL · creator 権限 gate |
 | **TLV-P0-03** | 配信 lifecycle API | 部分 | `live-broadcasts.js` 直 UPDATE のみ · **Edge/RPC なし** · `tlv.streams` **未使用** | start/end/status · creator 権限 · idempotent close |
 | **TLV-P0-04** | 視聴 session / CCU | 未 Go | join/leave **なし** · `peak_viewers` 更新なし | viewer join/leave · 同接カウント · 状態表示 |
-| **TLV-P0-05** | Wallet ↔ Live UI | 未 Go | `live-tips.js` = **`live_tips` stub** · `tlv-create-tip`/coin purchase **未接続** | checkout UI · tip RPC · 残高表示 · stream_id 紐付け |
+| **TLV-P0-05** | Wallet ↔ Live UI | 未 Go | `live-tips.js` → **`public.live_tips` stub** · Engine Edge **未接続** · `stream_id` 未設計 · stub 廃止計画 **未策定** | checkout UI · tip RPC · 残高表示 · `stream_id` 紐付け · **stub 廃止** |
 | **TLV-P0-06** | Live Chat MVP | 部分 | `live-comments.js` 最小 CRUD のみ · Realtime/NG **なし** | 投稿/表示 · `stream_events` 連携 · rate limit |
 | **TLV-P0-07** | Moderation MVP | 未 Go | NG/BAN/mute/mod 削除 **なし**（TODO-CHAT = Future） | NG ワード · timeout/BAN · mod 削除 · 最低限ログ |
 | **TLV-P0-08** | 配信終了処理 | 未 Go | `ended_at` のみ · viewer cleanup/ledger 確定 **なし** | room close · viewer 掃除 · tip/ledger 確定 · 異常終了方針 |
@@ -289,6 +348,20 @@
 ```
 
 **既存 REL-P0-02 との差分:** REL-P0-02 は **Payment 運用ゲートのみ**。本節 **TLV-P0-01〜10** は **ライブ配信サービスとしての追加 blocker**（開発 + 運用 + 接続）。
+
+#### Live UI 接続 Go/No-Go（2026-07-01 監査 · [接続前監査](../reports/tlv-payment-live-ui-connection-audit.md)）
+
+| 領域 | 判定 |
+| --- | --- |
+| Payment Engine backend | **Go** |
+| Production Live UI 接続 | **No-Go** |
+| Staging Live UI 接続 | **Conditional Go** |
+
+**Production 接続前ブロッカー:** REL-P0-02 · TLV-P0-05 · `stream_id` mapping · **stub 廃止計画** · **Staging TLV env 整備**（高優先）
+
+**Critical リスク:** `public.live_tips` stub と Engine（`tlv.tips` / ledger）**並存** → 二重計上 · FinOps 不一致。接続時は stub path **一括廃止または feature flag OFF** が必須。
+
+**Staging Conditional Go 条件:** Staging ref TLV Step 0–5 + Edge 3 本 deploy · REL-P0-02（Stripe 7 events 等）· TLV-P0-05 実装 · `stream_id` 設計 · stub 廃止計画
 
 ---
 
@@ -407,8 +480,149 @@ npm run verify:live-zego-poc-e2e
 | **REL-P1-04** | **Builder 条件検索** | P1 | **Complete**（P0/P1） | P2 LLM 未接続 | `0857c22` · `b80d868` · [CONDITIONAL_SEARCH](./AI/BUILDER_AI_CONDITIONAL_SEARCH.md) |
 | **REL-P1-05** | **Builder Monetization** | P1 | 設計 Draft | SKU 未確定 | Contact Reveal M0–M3（**公開範囲に Reveal 含む場合**） |
 | **REL-P1-06** | **Provider Listing** | P1 | 設計 Draft | なし | Free Listing L1–L2 · Boost L3（**掲載者向け公開時**） |
-| **REL-P1-07** | **Business Directory** | P3 | Launch Gate Prep **Complete** | Commercial Launch | OB1–OB8 人間判断 · OB8 Go |
+| **REL-P1-07** | **Business Directory** | P3 | **DB Production Ready Go** | Commercial Launch **Conditional** | Stripe E2E · Launch 最終確認 · [apply result](../reports/business-directory-production-controlled-apply-result.md) |
 | **REL-P1-08** | **Builder 未 push** | P1 | 未 | — | 6-H は `c66c587` コミット済 · push/deploy のみ |
+
+---
+
+### Gemini Live API 実装前確認 TODO（Phase 3 · 2026-07-02）
+
+**正本:** [Phase 3 design report](../AGENTS.md) · `shared/voice-core/` · `deploy/cloudflare/functions/api/gemini-tts.js`
+
+**前提:** SpeechRecognition（Phase 1）· Gemini TTS（Phase 2）完了済み。Gemini Live API は Phase 3-1〜3-4 に分割実装予定。
+
+- [ ] **Gemini Live API の最新公式仕様を実装直前に再確認する**
+
+  - 対象:
+    - 最新モデル名（候補: `gemini-3.1-flash-live-preview` / `gemini-2.5-flash-native-audio-preview-12-2025`）
+    - WebSocket endpoint（`wss://generativelanguage.googleapis.com/ws/...BidiGenerateContent`）
+    - `setup` message format（`BidiGenerateContentSetup`）
+    - `realtimeInput` / `serverContent` の wire format（`BidiGenerateContentRealtimeInput` / `BidiGenerateContentServerMessage`）
+    - audio MIME type（input: `audio/pcm;rate=16000`, output: `audio/pcm;rate=24000`）
+    - input audio rate（16kHz · 16-bit · little-endian）
+    - output audio rate（24kHz · 16-bit · little-endian）
+  - 参照: [Gemini Live API docs](https://ai.google.dev/gemini-api/docs/live-api) · [WebSocket tutorial](https://ai.google.dev/gemini-api/docs/live-api/get-started-websocket) · [BidiGenerateContent API reference](https://ai.google.dev/api/live)
+
+- [ ] **認証方式を確認する**
+
+  - API Key 直指定が可能か（開発環境では可 · `?key=API_KEY`）
+  - ephemeral token が正式サポートされているか（本番推奨 · `?access_token=...` · `v1alpha` endpoint）
+  - ephemeral token 未対応の場合は **Cloudflare Proxy 方式**（CF Pages Function が全通信を中継）に切り替える設計を残す
+  - CF Pages Function `/api/gemini-live-token` で ephemeral token 発行（`GEMINI_API_KEY` は `context.env` のみで参照）
+
+- [ ] **PCM リサンプリング方式を決める**
+
+  - 候補:
+    - `AudioWorklet`（リアルタイム · 低レイテンシ）
+    - `OfflineAudioContext`（バッファ単位）
+    - 独自 Resampler（依存ゼロ）
+  - 既存 TTS（Phase 2 — `gemini-tts.js`）の PCM→WAV 処理との共通化可否
+  - 入力マイク（ブラウザ通常 44.1k/48kHz）→ 16kHz へのダウンサンプリング方法
+
+- [ ] **Gemini Live API の実装 Phase を分割する**
+
+  | Phase | 内容 | 優先度 |
+  | --- | --- | --- |
+  | **Phase 3-1** | WebSocket 接続 · `setup` 送信 · 音声送信（`realtimeInput`） | 高 |
+  | **Phase 3-2** | 音声受信（`serverContent.modelTurn.parts[].inlineData`）· PCM 再生（AudioContext） | 高 |
+  | **Phase 3-3** | 会話 UI · 状態表示（接続中/聞取中/応答中）· 開始/終了制御 | 中 |
+  | **Phase 3-4** | 利用制限（`voice_live_minute`）· 課金 · `ai-interaction-log.js` 連携 | 中 |
+
+- [ ] **Live API の無料枠・課金単位を再検討する**
+
+  - **日単位ではなく月単位を優先候補** にする
+  - 例:
+    - **Lite**: 月 300 分
+    - **Pro**: 月 1,500 分
+    - **Business**: 無制限
+  - `voice_live_minute` feature key の設計を確認する
+  - `ai-workspace-usage.js` の `resolveFeatureKey()` / `canUseAsync()` と統合
+  - インタラクションログ `event_type: "voice_live_session"` で利用時間を記録
+  - Gemini API の Free ティア料金に依存せず、TASFUL 独自の制限ポリシーを適用
+
+- [ ] **既存機能への影響範囲を明記する**
+
+  | 機能 | 影響 |
+  | --- | --- |
+  | SpeechRecognition 音声入力（Phase 1） | **維持** — `voiceMode: "speech-recognition"` はそのまま |
+  | Gemini TTS（Phase 2） | **維持** — TTS ボタン · Edge Function はそのまま |
+  | 通常チャット送信 | **維持** — `ai-workspace-chat.js` は変更不要 |
+  | Gemini Live | `voiceMode: "gemini-live"` として排他制御（`VoiceController.registerCaptureProvider` + `setVoiceMode`） |
+
+- [ ] **`shared/voice-core` skeleton の更新内容を確定する**
+
+  - 新規: `voice-gemini-live-adapter.js` · `transports/voice-gemini-live-websocket-transport.js`
+  - 修正: `voice-gemini-live-options.js`（モデル名追加）· `voice-gemini-live-event-mapper.js`（wire event → core event マッピング調整）· `voice-core.js`（import 追加）
+  - 修正: `voice-realtime-session-client.js`（CF Pages Function 版 ephemeral token クライアント追加）
+
+- [ ] **Gemini Live API 実装完了後、関連ドキュメントを実装内容に合わせて更新する**
+  - Architecture ドキュメント（`docs/DECISIONS.md` · AD 追加）
+  - Voice 関連ドキュメント（`docs/AI/` · `shared/voice-core/` の README 等）
+  - API 関連ドキュメント（`deploy/cloudflare/functions/api/gemini-*.js` の仕様書）
+  - 必要に応じて `AGENTS.md` / `README` / `TODO` を更新
+  - 実装内容を SSOT と一致させ、設計との差分を残さない（Gemini Live API は Preview 機能のため、実装時に設計との差分が発生する可能性あり）
+
+### Gemini Live API 公開前ブロッカー TODO（Phase 3-4）
+
+- [ ] **`/api/gemini-live-session` を Supabase JWT と連携する**
+  - 現状の `plan = "pro"` 固定を廃止する
+  - Supabase JWT から `user_id` を取得する
+  - DB から実際の plan / subscription 状態を取得する
+  - Free ユーザーには token を発行しない
+  - 未ログイン・期限切れ JWT・不正 JWT は `401` / `403` を返す
+
+- [ ] **`voice_live_minute` quota を token 発行前に確認する**
+  - `ai-workspace-usage.js` / 既存 quota 実装と連携する
+  - 残量がない場合は token を発行しない
+  - Lite / Pro / Business の月間分数制限を確定する
+  - token payload に `feature: "voice_live_minute"` を含める
+
+- [ ] **Gemini Live Worker を本番デプロイ検証する**
+  - `wrangler secret put GEMINI_API_KEY`
+  - `wrangler secret put GEMINI_LIVE_SESSION_SECRET`
+  - Worker URL へ WSS 接続できることを確認する
+  - TASFUL Pages 本番/preview から接続できることを確認する
+  - Origin allowlist を本番ドメインに合わせて更新する
+  - APIキーがブラウザに露出していないことを DevTools で確認する
+
+- [ ] **実ブラウザで Live 音声 E2E 確認を行う**
+  - マイク許可
+  - 音声送信
+  - Gemini 音声応答
+  - 音声再生
+  - Live 終了
+  - マイクトラック停止
+  - WebSocket close
+  - Console Error ゼロ
+
+- [ ] **Gemini Live 関連ドキュメントを実装内容に合わせて更新する**
+  - Architecture
+  - Voice
+  - API
+  - TODO
+  - AGENTS.md / README が必要なら更新
+
+### Gemini Live 本番適用前チェックリスト
+
+- [ ] **Migration 適用**
+  - `sql/ai-workspace-voice-live-minute-migration.sql` をレビュー
+  - `voice_used_minutes` カラム追加（`ai_workspace_usage_daily` テーブル）
+  - `consume_voice_live_minutes` RPC 関数をデプロイ
+  - Staging DB で適用 → `voice_used_minutes` が SELECT/INSERT/UPDATE できることを確認
+  - Production DB に適用（reviewed + approved 後）
+
+- [ ] **consume_minutes バリデーション確認**
+  - integer のみ許可（NaN / null / string / float は 400 `invalid_input`）
+  - 1 以上 480 以下（8 時間が上限）
+  - remaining を超える値は remaining に丸める
+  - consume パスでも必ず JWT → plan → limit → remaining の全チェックが通る
+
+- [ ] **consume 処理の認証確認**
+  - 未ログイン → `401 missing_token`
+  - JWT 不正 → `401 invalid_token`
+  - free プラン → `403 plan_restricted`
+  - basic_300 / pro_980 のみ許可
+  - limit 超過時は consume されない（RPC の WHERE 句 `voice_used_minutes + p_minutes <= p_limit`）
 
 ---
 
@@ -704,6 +918,160 @@ Creator Marketplace
 - [ ] `package.json`（wrangler compatibility-date）— 単独コミットか revert
 - [x] `supabase/functions/_shared/ai-attachments.ts` — `35d72b2` コミット済 · live Vision PASS
 - [x] 本 `docs/` status 正本（TODO / PROJECT_STATUS / ROADMAP / KNOWN_ISSUES）— `e5c4d24` · housekeeping 本更新
+
+---
+
+### TASFUL AI QA レスポンス（設計 · 2026-06-30 · **実装 Future**）
+
+**正本:** [docs/AI/TASFUL_AI_QA.md](./AI/TASFUL_AI_QA.md) · **AD-015**  
+**方針:** **QA 記事コンポーネント = Single Source of Truth** — `/help/*` とサイト内 AI 回答欄で **同一表示** · 検索カード UI と **完全分離**  
+**今回スコープ:** 設計ドキュメントのみ（データ · コンポーネント抽出 · ページ · チャット実装は未着手）
+
+| ID | タスク | 優先 | 状態 |
+| --- | --- | --- | --- |
+| **QA-D-01** | QA マスタデータ（slug · 質問 · 本文ブロック · CTA · 関連 · 更新日） | P1 | **未着手** |
+| **QA-D-02** | **QA 記事コンポーネント** 抽出（`ui-review` 参照 · 1 種類 · データ差し替え） | P1 | **未着手** |
+| **QA-D-03** | `/help/*` ページシェル + コンポーネント配置 + ルーティング | P1 | **未着手** |
+| **QA-D-04** | 意図分類 — QA / 検索カード / QA+検索カード（3 種 · 分離表示） | P2 | **未着手** |
+| **QA-D-05** | Workspace チャット — QA ヒット時に **同一コンポーネント** 描画 | P2 | **未着手** |
+| **QA-D-06** | Site Assistant へ同一 QA 契約適用 | P3 | **未着手** |
+| **QA-D-07** | `uiReview` QA デモを共有コンポーネント実装の参照正本として整理 | P3 | **未着手** |
+
+**禁止（設計）:** AI 専用別 UI · QA ページと AI 用の二重管理 · QA ごとの独自レイアウト · 検索カードへの QA 混在
+
+---
+
+### Future / Research
+
+**種別:** **Future / Research · 未着手** — 調査・設計バックログのみ · 実装 · DB · API 変更 **禁止（本条目時点）**
+
+#### TODO-AI-01 — DeepSeek V4 移行
+
+| 項目 | 内容 |
+| --- | --- |
+| **Priority** | High |
+| **Status** | Future · 未着手 |
+
+**背景:** 旧 `deepseek-chat` · 旧 `deepseek-reasoner` は **2026-07-24 廃止予定**。
+
+**移行先:** TASFUL AI の DeepSeek 接続を `deepseek-v4-pro` · `deepseek-v4-flash` へ移行する。
+
+**調査・移行項目（実装は後日）**
+
+- [ ] モデル名更新
+- [ ] SDK 確認
+- [ ] OpenAI 互換確認
+- [ ] Anthropic 互換確認
+- [ ] 料金比較
+- [ ] 速度比較
+- [ ] 品質比較
+- [ ] フォールバック確認
+
+#### TODO-AI-02 — Gemini Interactions API 調査
+
+| 項目 | 内容 |
+| --- | --- |
+| **Priority** | Medium |
+| **Status** | Future · 未着手 |
+
+**背景:** Gemini API の標準インターフェースが `generateContent` から **Interactions API** へ移行。
+
+**調査項目**
+
+- [ ] 既存 SDK との違い
+- [ ] 移行方法
+- [ ] TASFUL AI への影響
+- [ ] Builder AI への影響
+- [ ] Agent 利用可否
+- [ ] コスト比較
+
+**方針:** 新規機能は **Interactions API を優先候補** とする。
+
+#### TODO-AI-03 — Claude Code 最新版運用
+
+| 項目 | 内容 |
+| --- | --- |
+| **Priority** | High |
+| **Status** | Future · 未着手 |
+
+**内容:** Claude Code 最新版へ更新。
+
+**調査項目**
+
+- [ ] MCP Auto Mode
+- [ ] Computer Use
+- [ ] Agent Loop
+- [ ] Sandbox 運用
+- [ ] 権限管理
+- [ ] 開発フロー最適化
+
+**制約:** **本番コードへの自動変更は禁止** — **開発環境限定** で利用する。
+
+#### TODO-AI-04 — Supabase Agent Skills
+
+| 項目 | 内容 |
+| --- | --- |
+| **Priority** | Medium |
+| **Status** | Future · 未着手 |
+
+**目的:** Supabase Agent Skills を調査し、AI による Supabase コード生成精度を向上する。
+
+**対象領域**
+
+- [ ] RLS
+- [ ] Edge Functions
+- [ ] Auth
+- [ ] Storage
+- [ ] Realtime
+
+**適用検討:** Cursor / Claude Code への適用も検討。
+
+#### TODO-AI-05 — Google Antigravity Agent
+
+| 項目 | 内容 |
+| --- | --- |
+| **Priority** | Low |
+| **Status** | Research · 未着手 |
+
+**内容:** Google Antigravity Agent を調査（**PoC のみ**）。
+
+**調査項目**
+
+- [ ] Linux Sandbox
+- [ ] A2A
+- [ ] Agent
+- [ ] コード実行
+- [ ] Web 操作
+- [ ] ファイル操作
+
+**方針:** 本番導入は **正式版公開後** に判断。
+
+#### TODO-AI-06 — Agent to Agent (A2A)
+
+| 項目 | 内容 |
+| --- | --- |
+| **Priority** | Medium |
+| **Status** | Future · 未着手 |
+
+**内容:** AI エージェント同士が協調動作する **A2A アーキテクチャ** を調査。
+
+**将来的な連携想定**
+
+- TASFUL AI · Builder AI · Platform AI · TLV AI · Talk AI · Material AI · AI 秘書
+
+**調査項目**
+
+- [ ] Google A2A
+- [ ] OpenAI Agents
+- [ ] Anthropic MCP
+- [ ] Microsoft Agent
+- [ ] Agent Router
+- [ ] Agent Memory
+- [ ] Task Delegation
+- [ ] Security
+- [ ] 認可
+
+**方針:** **現時点では実装しない** — 正式仕様・標準化を待って採用判断する。
 
 ---
 
@@ -1130,6 +1498,7 @@ YouTube で無料提供されている機能は **基本無料** とする。
 | SQL / RPC / Migration / 設計変更 | **不要 · 着手禁止** |
 | Phase 1 実装作業 | **停止（2026-06-28）** — 運用ゲートのみ |
 | Production Go を止める要因 | **運用ゲートのみ**（Backup Dashboard · Stripe · Live smoke · Go Approval） |
+| Live UI 接続 | **未接続 / Production No-Go** · Staging **Conditional Go** — [接続前監査](../reports/tlv-payment-live-ui-connection-audit.md) |
 | Phase 2 / Live / Wallet↔Live / Chat / Moderation | **Complete まで着手禁止** |
 
 **以降の方針（凍結）:** 新たな設計レビュー · 改善提案 · リファクタリング · **TODO 追加は行わない**。追加レビューは **Production リリース後**に障害 · 不具合 · 性能 · 運用課題が発生した場合のみ。実施は **Runbook オペレーションのみ**（deploy / migration / コード修正は Runbook 手順・障害対応時のみ）。
@@ -1767,7 +2136,8 @@ Platform 利益
 - **Production Step 2 Edge:** staging deploy · secrets · smoke · `scripts/test-business-directory-production-step2-edge.mjs --remote` — **15/15 PASS**
 - **Production Step 3 Preview E2E:** Pages preview deploy · mock なし E2E · `scripts/test-business-directory-production-step3-preview-e2e.mjs --e2e` — **15/15 PASS**（Production 本番公開は未実施）
 - **Production Step 4 Deploy:** Production Pages deploy · 最終 smoke · `scripts/test-business-directory-production-step4-production.mjs --all` — **48/48 PASS · Go**
-- **Step 5 Operational Readiness:** [operational readiness](../reports/business-directory-operational-readiness.md) · **Commercial Launch No-Go**
+- **Production Controlled Apply:** [apply result](../reports/business-directory-production-controlled-apply-result.md) · DB Production Ready **Go** · Commercial Launch **Conditional**（2026-07-01）
+- **Step 5 Operational Readiness:** [operational readiness](../reports/business-directory-operational-readiness.md) · **Complete** · Commercial Launch **Conditional**
 - **Launch Gate Preparation:** [launch gate prep](../reports/business-directory-launch-gate-prep.md) · OB1–OB8 分類済
 
 ### AI プロバイダ分担

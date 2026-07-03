@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-07-03T05:05:17.120Z",
+  "phase": "find_workers",
+  "findPartners": {
+    "url": "http://127.0.0.1:8788/builder/partners",
+    "onPartners": true,
+    "onPartnerDetail": false,
+    "resultsVisible": true,
+    "profileVisible": false,
+    "cardCount": 3
+  },
+  "diagnostics": {
+    "vendorSearch": {
+      "contactRevealFeeYen": 550,
+      "completionCommission": false
+    },
+    "threadId": null,
+    "roomId": null,
+    "threadKind": null,
+    "partnerUserId": null,
+    "vendorId": null,
+    "hasWorkflowState": false,
+    "hasCompletionReport": false
+  },
+  "forbidden": {
+    "visibleWorkflowButtons": 0,
+    "forbiddenButtons": [],
+    "hasCommissionPctText": false,
+    "panelTextSample": ""
+  },
+  "chatSent": false,
+  "user": null,
+  "threadId": null,
+  "workflowKind": "",
+  "statusBadge": ""
+}

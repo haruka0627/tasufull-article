@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-07-03T14:59:27.155Z",
+  "slug": "job-applications",
+  "url": "http://127.0.0.1:8788/detail-job?id=job_demo_full_001&userId=u_job_demo_full&talkDev=1#applications",
+  "threadId": "",
+  "diagnostics": {
+    "threadId": null,
+    "roomId": null,
+    "threadKind": null,
+    "threadStatus": null,
+    "listingId": "job_demo_full_001",
+    "applicationId": "job-app-demo-001",
+    "listingTitle": null,
+    "posterUserId": "u_job_demo_full",
+    "applicantUserId": "u_hiro",
+    "partnerUserId": null,
+    "applicationStatus": "applied",
+    "messageCount": 0,
+    "hasJobApplicationCard": false,
+    "hasDomJobCard": false,
+    "jobCardTitle": null,
+    "hasBuilderWorkflowState": false
+  },
+  "forbidden": {
+    "builderPanelVisible": false,
+    "visibleWorkflowButtons": 0,
+    "enterExitButtons": 0,
+    "platformJobCompleteButtons": 0,
+    "hasCommissionPctText": false
+  },
+  "notifyPoster": {
+    "notifyFound": false,
+    "cardVisible": false
+  },
+  "chatTextSample": "",
+  "consoleErrorCount": 0
+}

@@ -1,0 +1,126 @@
+{
+  "feature": "builder-general-manual-review-flow",
+  "capturedAt": "2026-07-03T04:23:23.131Z",
+  "baseUrl": "http://127.0.0.1:8788",
+  "viewports": [
+    {
+      "viewport": "1280",
+      "capturedAt": "2026-07-03T04:23:14.653Z",
+      "flow": "general",
+      "steps": [
+        {
+          "slug": "board-projects",
+          "ok": true,
+          "phase": "board",
+          "minPhase": "board",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\001-board-projects.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\001-board-projects.json"
+        },
+        {
+          "slug": "user-before-reveal",
+          "ok": true,
+          "phase": "workflow_ready",
+          "minPhase": "reveal_ready",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\002-user-before-reveal.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\002-user-before-reveal.json"
+        },
+        {
+          "slug": "user-after-reveal",
+          "ok": true,
+          "phase": "workflow_ready",
+          "minPhase": "talk",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\003-user-after-reveal.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\003-user-after-reveal.json"
+        },
+        {
+          "slug": "partner-talk",
+          "ok": true,
+          "phase": "workflow_ready",
+          "minPhase": "workflow_ready",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\004-partner-talk.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\004-partner-talk.json"
+        },
+        {
+          "slug": "partner-started",
+          "ok": true,
+          "phase": "started",
+          "minPhase": "started",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\005-partner-started.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\005-partner-started.json"
+        },
+        {
+          "slug": "partner-working",
+          "ok": true,
+          "phase": "completion_ready",
+          "minPhase": "working",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\006-partner-working.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\006-partner-working.json"
+        },
+        {
+          "slug": "before-completion-modal",
+          "ok": true,
+          "phase": "completion_ready",
+          "minPhase": "completion_ready",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\007-before-completion-modal.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\007-before-completion-modal.json"
+        },
+        {
+          "slug": "completion-photo-attached",
+          "ok": true,
+          "phase": "completion_modal",
+          "minPhase": "completion_modal",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\008-completion-photo-attached.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\008-completion-photo-attached.json"
+        },
+        {
+          "slug": "partner-completion-reported",
+          "ok": true,
+          "phase": "client_awaiting",
+          "minPhase": "client_awaiting",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\009-partner-completion-reported.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\009-partner-completion-reported.json"
+        },
+        {
+          "slug": "user-talk-open",
+          "ok": true,
+          "phase": "user_approve",
+          "minPhase": "client_awaiting",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\010-user-talk-open.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\010-user-talk-open.json"
+        },
+        {
+          "slug": "user-before-approve",
+          "ok": true,
+          "phase": "user_approve",
+          "minPhase": "user_approve",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\011-user-before-approve.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\011-user-before-approve.json"
+        },
+        {
+          "slug": "user-after-approve",
+          "ok": true,
+          "phase": "fee_confirmed",
+          "minPhase": "completed",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\012-user-after-approve.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\012-user-after-approve.json"
+        },
+        {
+          "slug": "partner-completed",
+          "ok": true,
+          "phase": "fee_confirmed",
+          "minPhase": "completed",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\013-partner-completed.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\013-partner-completed.json"
+        },
+        {
+          "slug": "fee-policy",
+          "ok": true,
+          "phase": "fee_confirmed",
+          "minPhase": "completed",
+          "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\014-fee-policy.png",
+          "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\builder-general\\014-fee-policy.json"
+        }
+      ]
+    }
+  ]
+}

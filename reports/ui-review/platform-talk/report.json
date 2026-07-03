@@ -1,0 +1,166 @@
+{
+  "feature": "platform-talk",
+  "capturedAt": "2026-07-03T14:49:28.414Z",
+  "outDir": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk",
+  "stepCount": 7,
+  "consoleErrorCount": 0,
+  "consoleErrors": [],
+  "steps": [
+    {
+      "step": 1,
+      "slug": "job-applications",
+      "label": "応募者確認 · やりとりに進む",
+      "url": "http://127.0.0.1:8788/detail-job.html?id=job_demo_full_001&userId=u_job_demo_full&talkDev=1#applications",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk\\001-job-applications-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": [
+            "Failed to load resource: the server responded with a status of 401 ()",
+            "Failed to load resource: the server responded with a status of 401 ()",
+            "Failed to load resource: the server responded with a status of 401 ()",
+            "Failed to load resource: the server responded with a status of 401 ()"
+          ]
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 2,
+      "slug": "fee-pay-550",
+      "label": "550円 やりとり開始利用料",
+      "url": "http://127.0.0.1:8788/platform-chat-fee-pay?listingId=job_demo_full_001&category=job&applicationId=job-app-demo-001&from=notify&talkDev=1",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk\\002-fee-pay-550-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 3,
+      "slug": "fee-pay-complete",
+      "label": "支払い完了 · チャットへ",
+      "url": "http://127.0.0.1:8788/platform-chat-fee-pay?listingId=job_demo_full_001&category=job&applicationId=job-app-demo-001&from=notify&talkDev=1",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk\\003-fee-pay-complete-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 4,
+      "slug": "talk-room-created",
+      "label": "Talk ルーム · 求人カード",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090162532-7ea7s9&from=notify&talkDev=1&userId=u_job_demo_full",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk\\004-talk-room-created-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 5,
+      "slug": "normal-chat-poster",
+      "label": "通常チャット · 掲載者送信",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090162532-7ea7s9&from=notify&talkDev=1&userId=u_job_demo_full",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk\\005-normal-chat-poster-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 6,
+      "slug": "normal-chat-applicant",
+      "label": "通常チャット · 応募者受信",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090162532-7ea7s9&userId=u_hiro&talkDev=1",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk\\006-normal-chat-applicant-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 7,
+      "slug": "thread-sync",
+      "label": "thread / roomId · 案件文脈",
+      "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090162532-7ea7s9&userId=u_job_demo_full&talkDev=1",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\platform-talk\\007-thread-sync-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    }
+  ],
+  "baseUrl": "http://127.0.0.1:8788",
+  "threadId": "chat-1783090162532-7ea7s9",
+  "diagnostics": {
+    "threadId": "chat-1783090162532-7ea7s9",
+    "roomId": "chat-1783090162532-7ea7s9",
+    "threadKind": "job_hire",
+    "threadStatus": "open",
+    "listingId": "job_demo_full_001",
+    "applicationId": "job-app-demo-001",
+    "listingTitle": "YouTubeショート動画編集スタッフ募集",
+    "posterUserId": "u_job_demo_full",
+    "applicantUserId": "u_hiro",
+    "partnerUserId": "u_job_demo_full",
+    "applicationStatus": "selected",
+    "messageCount": 4,
+    "hasJobApplicationCard": false,
+    "hasDomJobCard": false,
+    "jobCardTitle": null,
+    "hasBuilderWorkflowState": false
+  },
+  "notifyPoster": {
+    "notifyFound": true,
+    "notifyTitle": "この求人に応募がありました",
+    "cardVisible": true,
+    "cardUnread": false
+  },
+  "forbiddenActions": {
+    "builderPanelVisible": false,
+    "visibleWorkflowButtons": 0,
+    "enterExitButtons": 0,
+    "platformJobCompleteButtons": 2,
+    "hasCommissionPctText": false
+  },
+  "checks": {
+    "threadCreated": true,
+    "jobHireKind": true,
+    "listingIdSet": true,
+    "applicationIdSet": true,
+    "listingTitleSet": true,
+    "participantsSet": true,
+    "jobCardInThread": true,
+    "chatBidirectional": true,
+    "applyNotifyExists": true,
+    "noBuilderWorkflowButtons": true,
+    "noBuilderCommissionUi": true
+  }
+}

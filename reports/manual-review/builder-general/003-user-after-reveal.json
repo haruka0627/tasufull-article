@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-07-03T04:22:48.926Z",
+  "phase": "workflow_ready",
+  "board": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+    "onBoard": false
+  },
+  "billing": {
+    "contactRevealFeeYen": 550,
+    "commissionPctRange": [
+      5,
+      10
+    ],
+    "completionCommission": true,
+    "workflowStatus": "",
+    "reportWorkContent": "",
+    "reportPhotoCount": 0
+  },
+  "partner": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+    "onTalk": true,
+    "builderRole": "user",
+    "threadId": "verify-general-project",
+    "badge": "受諾済み",
+    "status": "",
+    "workflowVisible": true,
+    "completionModalVisible": false,
+    "buttons": [],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": false,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "user": null,
+  "threadId": "verify-general-project"
+}

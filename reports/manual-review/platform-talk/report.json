@@ -1,0 +1,331 @@
+{
+  "feature": "platform-talk-manual-review-flow",
+  "capturedAt": "2026-07-03T15:00:38.358Z",
+  "baseUrl": "http://127.0.0.1:8788",
+  "viewport": "1280",
+  "steps": [
+    {
+      "slug": "job-applications",
+      "ok": true,
+      "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\001-job-applications.png",
+      "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\001-job-applications.json",
+      "probe": {
+        "capturedAt": "2026-07-03T14:59:27.155Z",
+        "slug": "job-applications",
+        "url": "http://127.0.0.1:8788/detail-job?id=job_demo_full_001&userId=u_job_demo_full&talkDev=1#applications",
+        "threadId": "",
+        "diagnostics": {
+          "threadId": null,
+          "roomId": null,
+          "threadKind": null,
+          "threadStatus": null,
+          "listingId": "job_demo_full_001",
+          "applicationId": "job-app-demo-001",
+          "listingTitle": null,
+          "posterUserId": "u_job_demo_full",
+          "applicantUserId": "u_hiro",
+          "partnerUserId": null,
+          "applicationStatus": "applied",
+          "messageCount": 0,
+          "hasJobApplicationCard": false,
+          "hasDomJobCard": false,
+          "jobCardTitle": null,
+          "hasBuilderWorkflowState": false
+        },
+        "forbidden": {
+          "builderPanelVisible": false,
+          "visibleWorkflowButtons": 0,
+          "enterExitButtons": 0,
+          "platformJobCompleteButtons": 0,
+          "hasCommissionPctText": false
+        },
+        "notifyPoster": {
+          "notifyFound": false,
+          "cardVisible": false
+        },
+        "chatTextSample": "",
+        "consoleErrorCount": 0
+      }
+    },
+    {
+      "slug": "fee-pay-550",
+      "ok": true,
+      "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\002-fee-pay-550.png",
+      "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\002-fee-pay-550.json",
+      "probe": {
+        "capturedAt": "2026-07-03T15:00:28.733Z",
+        "slug": "fee-pay-550",
+        "url": "http://127.0.0.1:8788/platform-chat-fee-pay?listingId=job_demo_full_001&category=job&applicationId=job-app-demo-001&from=notify&talkDev=1",
+        "threadId": "",
+        "diagnostics": {
+          "threadId": null,
+          "roomId": null,
+          "threadKind": null,
+          "threadStatus": null,
+          "listingId": "job_demo_full_001",
+          "applicationId": "job-app-demo-001",
+          "listingTitle": null,
+          "posterUserId": "u_job_demo_full",
+          "applicantUserId": "u_hiro",
+          "partnerUserId": null,
+          "applicationStatus": "awaiting_fee",
+          "messageCount": 0,
+          "hasJobApplicationCard": false,
+          "hasDomJobCard": false,
+          "jobCardTitle": null,
+          "hasBuilderWorkflowState": false
+        },
+        "forbidden": {
+          "builderPanelVisible": false,
+          "visibleWorkflowButtons": 0,
+          "enterExitButtons": 0,
+          "platformJobCompleteButtons": 0,
+          "hasCommissionPctText": false
+        },
+        "notifyPoster": {
+          "notifyFound": false,
+          "cardVisible": false
+        },
+        "chatTextSample": "",
+        "consoleErrorCount": 0
+      }
+    },
+    {
+      "slug": "talk-room-created",
+      "ok": true,
+      "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\003-talk-room-created.png",
+      "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\003-talk-room-created.json",
+      "probe": {
+        "capturedAt": "2026-07-03T15:00:30.062Z",
+        "slug": "talk-room-created",
+        "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090828832-tv8ex8&from=notify&talkDev=1&userId=u_job_demo_full",
+        "threadId": "chat-1783090828832-tv8ex8",
+        "diagnostics": {
+          "threadId": "chat-1783090828832-tv8ex8",
+          "roomId": "chat-1783090828832-tv8ex8",
+          "threadKind": "job_hire",
+          "threadStatus": "open",
+          "listingId": "job_demo_full_001",
+          "applicationId": "job-app-demo-001",
+          "listingTitle": "YouTubeショート動画編集スタッフ募集",
+          "posterUserId": "u_job_demo_full",
+          "applicantUserId": "u_hiro",
+          "partnerUserId": "u_job_demo_full",
+          "applicationStatus": "selected",
+          "messageCount": 2,
+          "hasJobApplicationCard": false,
+          "hasDomJobCard": false,
+          "jobCardTitle": null,
+          "hasBuilderWorkflowState": false
+        },
+        "forbidden": {
+          "builderPanelVisible": false,
+          "visibleWorkflowButtons": 0,
+          "enterExitButtons": 0,
+          "platformJobCompleteButtons": 2,
+          "hasCommissionPctText": false
+        },
+        "notifyPoster": {
+          "notifyFound": false,
+          "cardVisible": false
+        },
+        "chatTextSample": "2026/07/04\n              \n                \n                  \n                    \n                      ひろ さんとやりとりを開始しました。条件確認・日程調整はこのチャットで進めてください。\n                      \n                    \n                    \n                      \n                      00:00\n                    \n                  \n                \n              \n            \n              \n                \n                \n ",
+        "consoleErrorCount": 0
+      }
+    },
+    {
+      "slug": "normal-chat-poster",
+      "ok": true,
+      "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\004-normal-chat-poster.png",
+      "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\004-normal-chat-poster.json",
+      "probe": {
+        "capturedAt": "2026-07-03T15:00:32.808Z",
+        "slug": "normal-chat-poster",
+        "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090828832-tv8ex8&from=notify&talkDev=1&userId=u_job_demo_full",
+        "threadId": "chat-1783090828832-tv8ex8",
+        "diagnostics": {
+          "threadId": "chat-1783090828832-tv8ex8",
+          "roomId": "chat-1783090828832-tv8ex8",
+          "threadKind": "job_hire",
+          "threadStatus": "open",
+          "listingId": "job_demo_full_001",
+          "applicationId": "job-app-demo-001",
+          "listingTitle": "YouTubeショート動画編集スタッフ募集",
+          "posterUserId": "u_job_demo_full",
+          "applicantUserId": "u_hiro",
+          "partnerUserId": "u_job_demo_full",
+          "applicationStatus": "selected",
+          "messageCount": 3,
+          "hasJobApplicationCard": false,
+          "hasDomJobCard": false,
+          "jobCardTitle": null,
+          "hasBuilderWorkflowState": false
+        },
+        "forbidden": {
+          "builderPanelVisible": false,
+          "visibleWorkflowButtons": 0,
+          "enterExitButtons": 0,
+          "platformJobCompleteButtons": 2,
+          "hasCommissionPctText": false
+        },
+        "notifyPoster": {
+          "notifyFound": false,
+          "cardVisible": false
+        },
+        "chatTextSample": "2026/07/04\n              \n                \n                  \n                    \n                      ひろ さんとやりとりを開始しました。条件確認・日程調整はこのチャットで進めてください。\n                      \n                    \n                    \n                      \n                      00:00\n                    \n                  \n                \n              \n            \n              \n                \n                \n ",
+        "consoleErrorCount": 0
+      }
+    },
+    {
+      "slug": "normal-chat-applicant",
+      "ok": true,
+      "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\005-normal-chat-applicant.png",
+      "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\005-normal-chat-applicant.json",
+      "probe": {
+        "capturedAt": "2026-07-03T15:00:34.987Z",
+        "slug": "normal-chat-applicant",
+        "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090828832-tv8ex8&userId=u_hiro&talkDev=1",
+        "threadId": "chat-1783090828832-tv8ex8",
+        "diagnostics": {
+          "threadId": "chat-1783090828832-tv8ex8",
+          "roomId": "chat-1783090828832-tv8ex8",
+          "threadKind": "job_hire",
+          "threadStatus": "open",
+          "listingId": "job_demo_full_001",
+          "applicationId": "job-app-demo-001",
+          "listingTitle": "YouTubeショート動画編集スタッフ募集",
+          "posterUserId": "u_job_demo_full",
+          "applicantUserId": "u_hiro",
+          "partnerUserId": "u_job_demo_full",
+          "applicationStatus": "selected",
+          "messageCount": 4,
+          "hasJobApplicationCard": false,
+          "hasDomJobCard": false,
+          "jobCardTitle": null,
+          "hasBuilderWorkflowState": false
+        },
+        "forbidden": {
+          "builderPanelVisible": false,
+          "visibleWorkflowButtons": 0,
+          "enterExitButtons": 0,
+          "platformJobCompleteButtons": 2,
+          "hasCommissionPctText": false
+        },
+        "notifyPoster": {
+          "notifyFound": false,
+          "cardVisible": false
+        },
+        "chatTextSample": "2026/07/04\n              \n                \n                \n                  \n                    \n                      \n      \n        ︙\n        \n          \n          ブロック\n        \n      \n                      \n                        タスク確認株式会社\n                        ひろ さんとやりとりを開始しました。条件確認・日程調整はこのチャットで進めてください。\n                        \n                      \n                    \n               ",
+        "consoleErrorCount": 0
+      }
+    },
+    {
+      "slug": "thread-sync",
+      "ok": "u_job_demo_full",
+      "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\006-thread-sync.png",
+      "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\006-thread-sync.json",
+      "probe": {
+        "capturedAt": "2026-07-03T15:00:36.000Z",
+        "slug": "thread-sync",
+        "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090828832-tv8ex8&userId=u_job_demo_full&talkDev=1",
+        "threadId": "chat-1783090828832-tv8ex8",
+        "diagnostics": {
+          "threadId": "chat-1783090828832-tv8ex8",
+          "roomId": "chat-1783090828832-tv8ex8",
+          "threadKind": "job_hire",
+          "threadStatus": "open",
+          "listingId": "job_demo_full_001",
+          "applicationId": "job-app-demo-001",
+          "listingTitle": "YouTubeショート動画編集スタッフ募集",
+          "posterUserId": "u_job_demo_full",
+          "applicantUserId": "u_hiro",
+          "partnerUserId": "u_job_demo_full",
+          "applicationStatus": "selected",
+          "messageCount": 4,
+          "hasJobApplicationCard": false,
+          "hasDomJobCard": false,
+          "jobCardTitle": null,
+          "hasBuilderWorkflowState": false
+        },
+        "forbidden": {
+          "builderPanelVisible": false,
+          "visibleWorkflowButtons": 0,
+          "enterExitButtons": 0,
+          "platformJobCompleteButtons": 2,
+          "hasCommissionPctText": false
+        },
+        "notifyPoster": {
+          "notifyFound": false,
+          "cardVisible": false
+        },
+        "chatTextSample": "2026/07/04\n              \n                \n                  \n                    \n                      ひろ さんとやりとりを開始しました。条件確認・日程調整はこのチャットで進めてください。\n                      \n                    \n                    \n                      \n                      00:00\n                    \n                  \n                \n              \n            \n              \n                \n                \n ",
+        "consoleErrorCount": 0
+      }
+    },
+    {
+      "slug": "notify-and-negative",
+      "ok": true,
+      "png": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\007-notify-and-negative.png",
+      "json": "C:\\Users\\rubih\\tasufull-article\\reports\\manual-review\\platform-talk\\007-notify-and-negative.json",
+      "probe": {
+        "capturedAt": "2026-07-03T15:00:38.259Z",
+        "slug": "notify-and-negative",
+        "url": "http://127.0.0.1:8788/chat-detail?thread=chat-1783090828832-tv8ex8&userId=u_job_demo_full&talkDev=1",
+        "threadId": "chat-1783090828832-tv8ex8",
+        "diagnostics": {
+          "threadId": "chat-1783090828832-tv8ex8",
+          "roomId": "chat-1783090828832-tv8ex8",
+          "threadKind": "job_hire",
+          "threadStatus": "open",
+          "listingId": "job_demo_full_001",
+          "applicationId": "job-app-demo-001",
+          "listingTitle": "YouTubeショート動画編集スタッフ募集",
+          "posterUserId": "u_job_demo_full",
+          "applicantUserId": "u_hiro",
+          "partnerUserId": "u_job_demo_full",
+          "applicationStatus": "selected",
+          "messageCount": 4,
+          "hasJobApplicationCard": false,
+          "hasDomJobCard": false,
+          "jobCardTitle": null,
+          "hasBuilderWorkflowState": false
+        },
+        "forbidden": {
+          "builderPanelVisible": false,
+          "visibleWorkflowButtons": 0,
+          "enterExitButtons": 0,
+          "platformJobCompleteButtons": 2,
+          "hasCommissionPctText": false
+        },
+        "notifyPoster": {
+          "notifyFound": true,
+          "notifyTitle": "この求人に応募がありました",
+          "cardVisible": true,
+          "cardUnread": false
+        },
+        "chatTextSample": "2026/07/04\n              \n                \n                  \n                    \n                      ひろ さんとやりとりを開始しました。条件確認・日程調整はこのチャットで進めてください。\n                      \n                    \n                    \n                      \n                      00:00\n                    \n                  \n                \n              \n            \n              \n                \n                \n ",
+        "consoleErrorCount": 0
+      }
+    }
+  ],
+  "diagnostics": {
+    "threadId": "chat-1783090828832-tv8ex8",
+    "roomId": "chat-1783090828832-tv8ex8",
+    "threadKind": "job_hire",
+    "threadStatus": "open",
+    "listingId": "job_demo_full_001",
+    "applicationId": "job-app-demo-001",
+    "listingTitle": "YouTubeショート動画編集スタッフ募集",
+    "posterUserId": "u_job_demo_full",
+    "applicantUserId": "u_hiro",
+    "partnerUserId": "u_job_demo_full",
+    "applicationStatus": "selected",
+    "messageCount": 4,
+    "hasJobApplicationCard": false,
+    "hasDomJobCard": false,
+    "jobCardTitle": null,
+    "hasBuilderWorkflowState": false
+  },
+  "consoleErrorCount": 0,
+  "consoleErrors": []
+}

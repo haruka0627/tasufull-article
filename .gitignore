@@ -31,3 +31,8 @@ supabase/.temp/
 .wrangler/
 deploy/cloudflare/dist/.wrangler/
 deploy/cloudflare/dist/.dev.vars
+
+# Playwright / manual review trace bundles (>100 MB · GitHub limit)
+reports/**/trace-*.zip
+reports/manual-review/**/trace-*.zip
+reports/manual-review/**/*.zip

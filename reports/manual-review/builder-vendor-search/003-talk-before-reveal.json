@@ -1,0 +1,51 @@
+{
+  "capturedAt": "2026-07-03T05:05:23.036Z",
+  "phase": "reveal_ready",
+  "findPartners": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783055120992-f02e96&from=builder&builderFlow=vendor_user&builderRole=user",
+    "onPartners": false,
+    "onPartnerDetail": false,
+    "resultsVisible": false,
+    "profileVisible": false,
+    "cardCount": 0
+  },
+  "diagnostics": {
+    "vendorSearch": {
+      "contactRevealFeeYen": 550,
+      "completionCommission": false
+    },
+    "threadId": "thread-1783055120992-f02e96",
+    "roomId": "thread-1783055120992-f02e96",
+    "threadKind": "vendor_contact",
+    "partnerUserId": "demo-partner-001",
+    "vendorId": "demo-partner-001",
+    "hasWorkflowState": false,
+    "hasCompletionReport": false
+  },
+  "forbidden": {
+    "visibleWorkflowButtons": 0,
+    "forbiddenButtons": [],
+    "hasCommissionPctText": false,
+    "panelTextSample": "\n          \n            業者相談\n            案件名株式会社オレンジ建装 とのやりとり相手株式会社オレンジ建装\n            Builderで確認\n          \n          電話番号・メール等の直接連絡先は開示前に表示されません。担当者: ●● ●●電話: "
+  },
+  "chatSent": true,
+  "user": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783055120992-f02e96&from=builder&builderFlow=vendor_user&builderRole=user",
+    "onTalk": true,
+    "builderRole": "user",
+    "threadId": "thread-1783055120992-f02e96",
+    "badge": "受諾済み",
+    "status": "",
+    "workflowVisible": true,
+    "completionModalVisible": false,
+    "buttons": [],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": false,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "threadId": "thread-1783055120992-f02e96",
+  "workflowKind": "業者相談",
+  "statusBadge": "受諾済み"
+}

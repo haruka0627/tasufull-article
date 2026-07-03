@@ -1,0 +1,34 @@
+{
+  "capturedAt": "2026-07-03T04:22:42.596Z",
+  "phase": "board",
+  "board": {
+    "url": "http://127.0.0.1:8788/builder/board-projects",
+    "onBoard": true
+  },
+  "billing": {
+    "contactRevealFeeYen": null,
+    "commissionPctRange": null,
+    "completionCommission": null,
+    "workflowStatus": "",
+    "reportWorkContent": "",
+    "reportPhotoCount": 0
+  },
+  "partner": {
+    "url": "http://127.0.0.1:8788/builder/board-projects",
+    "onTalk": false,
+    "builderRole": "",
+    "threadId": "verify-general-project",
+    "badge": "",
+    "status": "",
+    "workflowVisible": false,
+    "completionModalVisible": false,
+    "buttons": [],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": false,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "user": null,
+  "threadId": "verify-general-project"
+}

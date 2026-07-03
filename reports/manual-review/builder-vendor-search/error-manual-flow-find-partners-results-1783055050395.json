@@ -1,0 +1,50 @@
+{
+  "detail": "phase unknown < min find_workers",
+  "url": "http://127.0.0.1:8788/builder/partners",
+  "onChatDetail": false,
+  "acceptVisible": false,
+  "builderConfirmVisible": false,
+  "projectTitleVisible": false,
+  "partnerCalAccept": false,
+  "adminCalEmbedVisible": false,
+  "adminCalBadgeCount": 0,
+  "bodyText": "\n  \n    \n      \n        \n          \n            \n              \n                \n                \n              \n            \n            \n              Builder\n              協力会社検索\n            \n          \n        \n\n        \n          協力会社検索\n          工種・エリア・稼働状況から絞り込み\n        \n\n        \n          \n          \n            会員\n            建設パートナー\n          \n          \n        \n      \n    \n\n    \n\n    \n      \n        \n          検索条件\n        \n\n        \n          \n            キーワード\n            \n          \n          \n            工種\n            \n              すべて\n              大工\n              足場\n              内装\n              電気\n              設備\n            \n          \n          \n            エリア\n            \n              すべて\n              東京\n              神奈川\n              千葉\n              埼玉\n            \n          \n          \n            稼働\n            \n              すべて\n              空きあり\n              一部可\n              満枠\n            \n          \n\n          \n            検索\n            リセット\n          \n        \n      \n\n      \n        \n          検索結果\n          3 件\n        \n\n        株式会社オレンジ建装 内装・大工 · 東京・神奈川 · 稼働中 · 空きあり店舗内装・原状回復をスピード対応標準実績評価：0期日遵守：0クレームなし：0評価回数：0件詳細Talkで相談足場ワークス（個人） 足場 · 東京・埼玉・千葉 · 稼働中 · 一部可安全第一。小規模〜中規模の足場に対応標準実績評価：0期日遵守：0クレームなし：0評価回数：0件詳細Talkで相談株式会社スレート設備 設備・電気 · 神奈川・千葉 · 休止中 · 満枠設備・電気のまとめ依頼歓迎標準実績評価：0期日遵守：0クレームなし：0評価回数：0件詳細Talkで相談\n      \n\n      \n        © 2024 TASFUL. All rights reserved.\n      \n    \n  \n\n  \n    if (\"serviceWorker\" in navigator) {\n      window.addEventListener(\"load\", function () {\n        navigator.serviceWorker.register(\"./service-worker.js\", { scope: \"./\" }).catch(function () {});\n      });\n    }\n  \n  \n  \n    \n  \n  \n    \n  \n  \n  \n  \n  \n  \n  \n    \n  \n  \n\n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n  \n\n\nTASFUL サイトAITASFUL AI · サイト案内モード×TASFULの使い方で困ったことを聞いてください。登録・掲載・応募・各サービス案内に対応できます。会員登録したい案件を掲載したい案件に応募したいBuilderを使いたい問い合わせしたい送信AI",
+  "probePhase": "unknown",
+  "minPhase": "find_workers",
+  "probe": {
+    "capturedAt": "2026-07-03T05:04:10.059Z",
+    "phase": "unknown",
+    "findPartners": {
+      "url": "http://127.0.0.1:8788/builder/partners",
+      "onPartners": false,
+      "onPartnerDetail": false,
+      "resultsVisible": false,
+      "profileVisible": false,
+      "cardCount": 0
+    },
+    "diagnostics": {
+      "vendorSearch": {
+        "contactRevealFeeYen": 550,
+        "completionCommission": false
+      },
+      "threadId": null,
+      "roomId": null,
+      "threadKind": null,
+      "partnerUserId": null,
+      "vendorId": null,
+      "hasWorkflowState": false,
+      "hasCompletionReport": false
+    },
+    "forbidden": {
+      "visibleWorkflowButtons": 0,
+      "forbiddenButtons": [],
+      "hasCommissionPctText": false,
+      "panelTextSample": ""
+    },
+    "chatSent": false,
+    "user": null,
+    "threadId": null,
+    "workflowKind": "",
+    "statusBadge": ""
+  }
+}

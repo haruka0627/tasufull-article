@@ -1,0 +1,43 @@
+{
+  "capturedAt": "2026-07-03T04:22:54.833Z",
+  "phase": "started",
+  "board": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=partner",
+    "onBoard": false
+  },
+  "billing": {
+    "contactRevealFeeYen": 550,
+    "commissionPctRange": [
+      5,
+      10
+    ],
+    "completionCommission": true,
+    "workflowStatus": "started",
+    "reportWorkContent": "",
+    "reportPhotoCount": 0
+  },
+  "partner": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=partner",
+    "onTalk": true,
+    "builderRole": "partner",
+    "threadId": "verify-general-project",
+    "badge": "作業開始",
+    "status": "started",
+    "workflowVisible": true,
+    "completionModalVisible": false,
+    "buttons": [
+      {
+        "label": "施工中",
+        "nextStatus": "working",
+        "visible": true
+      }
+    ],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": false,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "user": null,
+  "threadId": "verify-general-project"
+}

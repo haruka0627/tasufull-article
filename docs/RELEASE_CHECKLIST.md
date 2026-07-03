@@ -1,7 +1,8 @@
 # TASFUL リリースチェックリスト
 
-**最終更新:** 2026-06-26  
-**用途:** 領域別の Go/No-Go ゲート。詳細手順は `docs/production-release-checklist.md` 等のレガシー doc も併用。
+**最終更新:** 2026-07-04  
+**用途:** 領域別の Go/No-Go ゲート。詳細手順は `docs/production-release-checklist.md` 等のレガシー doc も併用。  
+**1 枚サマリー:** [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md)
 
 ---
 
@@ -41,11 +42,13 @@
 ## Platform（Production Ready）
 
 - [ ] Platform NB-1M スモーク（該当スクリプト）PASS
+- [ ] **Platform → Talk 連携 Review PASS** — `node scripts/capture-platform-job-talk-ui-review.mjs` · `node scripts/check-platform-talk-flow-headed.mjs --manual-review-flow --viewport=1280`
 - [ ] Content Gate / moderation 配線漏れなし（NB-1M スコープ）
 - [ ] Google OAuth — Dashboard 設定 + staging E2E（[AI/PLATFORM_AI.md](./AI/PLATFORM_AI.md)）
 - [ ] Featured カード · お気に入り DB — 未完了ならリリースノートに明記
+- [ ] fee-pay `talkDev=1` 製品恒久対応 — **P2**（Review スクリプトは対応済）
 
-参照: `reports/platform-nb1m-frontend-prod-deploy-ready.md`
+参照: `reports/platform-nb1m-frontend-prod-deploy-ready.md` · [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md)
 
 ---
 

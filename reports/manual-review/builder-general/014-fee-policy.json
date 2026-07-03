@@ -1,0 +1,52 @@
+{
+  "capturedAt": "2026-07-03T04:23:14.507Z",
+  "phase": "fee_confirmed",
+  "board": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=partner",
+    "onBoard": false
+  },
+  "billing": {
+    "contactRevealFeeYen": 550,
+    "commissionPctRange": [
+      5,
+      10
+    ],
+    "completionCommission": true,
+    "workflowStatus": "completed",
+    "reportWorkContent": "壁紙張替え完了（一般案件 manual review）",
+    "reportPhotoCount": 3
+  },
+  "partner": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=partner",
+    "onTalk": true,
+    "builderRole": "partner",
+    "threadId": "verify-general-project",
+    "badge": "完了",
+    "status": "completed",
+    "workflowVisible": true,
+    "completionModalVisible": false,
+    "buttons": [],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": true,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "user": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=verify-general-project&from=builder&builderFlow=partner_user&builderRole=user",
+    "onTalk": true,
+    "builderRole": "user",
+    "threadId": "verify-general-project",
+    "badge": "完了",
+    "status": "completed",
+    "workflowVisible": true,
+    "completionModalVisible": false,
+    "buttons": [],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": true,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "threadId": "verify-general-project"
+}

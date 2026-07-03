@@ -1,0 +1,55 @@
+{
+  "capturedAt": "2026-07-03T04:54:57.533Z",
+  "phase": "talk",
+  "findWorkers": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054493958-133a0f&from=builder&builderFlow=partner_user&builderRole=user",
+    "onFindWorkers": false,
+    "resultsVisible": false,
+    "profileVisible": false,
+    "cardCount": 0
+  },
+  "diagnostics": {
+    "workerSearch": {
+      "contactRevealFeeYen": 550,
+      "completionCommission": false
+    },
+    "generalProjectCommissionRange": [
+      5,
+      10
+    ],
+    "threadId": "thread-1783054493958-133a0f",
+    "roomId": "thread-1783054493958-133a0f",
+    "threadKind": "worker_contact",
+    "partnerUserId": "w1",
+    "buyerId": "demo-builder-user",
+    "hasWorkflowState": false,
+    "hasCompletionReport": false
+  },
+  "forbidden": {
+    "visibleWorkflowButtons": 0,
+    "forbiddenButtons": [],
+    "hasCommissionPctText": false,
+    "panelTextSample": "\n          \n            ワーカー相談\n            案件名山本 電工 とのやりとり相手山本 電工連絡先開示済み\n            Builderで確認\n          \n          連絡先 開示済み担当者名山本 健一電話番号090-1234-5678メールyamamo"
+  },
+  "chatSent": false,
+  "user": {
+    "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054493958-133a0f&from=builder&builderFlow=partner_user&builderRole=user",
+    "onTalk": true,
+    "builderRole": "user",
+    "threadId": "thread-1783054493958-133a0f",
+    "badge": "相談中",
+    "status": "",
+    "workflowVisible": true,
+    "completionModalVisible": false,
+    "buttons": [],
+    "hasCompletionButton": false,
+    "approveVisible": false,
+    "completed": false,
+    "isAwaitingOps": false,
+    "isAwaitingClient": false
+  },
+  "partner": null,
+  "threadId": "thread-1783054493958-133a0f",
+  "workflowKind": "ワーカー相談",
+  "partnerKind": ""
+}

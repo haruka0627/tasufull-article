@@ -1,0 +1,69 @@
+{
+  "detail": "phase chat_sent < min partner_sync",
+  "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054394507-04f7aa&from=builder&builderFlow=partner_user&builderRole=user",
+  "onChatDetail": true,
+  "acceptVisible": false,
+  "builderConfirmVisible": true,
+  "projectTitleVisible": false,
+  "partnerCalAccept": false,
+  "adminCalEmbedVisible": false,
+  "adminCalBadgeCount": 0,
+  "bodyText": "\n  \n    \n      🚀 TASFULプラットへようこそ　\n      今月システム利用料5％！　\n      ｜　\n      AI無料キャンペーン中　\n      ｜　\n      \n    \n  \n\n  \n    TALK＞山本 電工\n    \n      \n        ← 戻る\n        \n      \n      山本 電工\n      \n        \n          📞\n          🎥\n          ⋮\n        \n      \n    \n    \n      \n      \n        \n          \n            山\n            \n          \n          \n            山本 健一\n            オフライン\n            \n          \n          \n            \n              📞\n              🎥\n              ⋮\n            \n            進行中\n            ← 一覧\n          \n        \n\n        \n          \n            友達チャット\n            \n            \n              \n              掲載詳細を見る\n            \n          \n          \n            相談中\n          \n        \n\n        \n          【ご注意】\n          安全のため、連絡先交換は禁止されています。メッセージ内容はシステムにより自動確認されます。\n        \n\n        \n          \n            ワーカー相談\n            案件名山本 電工 とのやりとり相手山本 電工連絡先開示済み\n            Builderで確認\n          \n          連絡先 開示済み担当者名山本 健一電話番号090-1234-5678メールyamamoto@denko-worker.example.jpやりとりは TASFUL Talk をご利用ください。\n          \n            相談中\n            \n          \n          \n          \n        \n\n        \n          \n            この取引は期限切れです\n          \n          \n            やりとり完了を承認\n            取引完了\n            キャンセル申請\n            承認する\n            却下する\n            \n              ︙\n              \n                キャンセル\n                通報\n                ブロック\n              \n            \n          \n        \n\n        \n          \n          \n            届いた評価\n            \n            \n            \n            \n              閉じる\n            \n          \n        \n\n        \n          \n          \n            取引相手を評価\n            \n            \n            \n              ★\n              ★\n              ★\n              ★\n              ★\n            \n            コメント（任意）\n            \n            \n              スキップして完了\n              評価を送る\n            \n          \n        \n\n        \n          \n          \n            取引完了\n            \n            \n              配送情報を入力してから発送を確定してください。\n              配送会社 必須\n              \n              追跡番号 任意\n              \n              \n            \n            \n              完了写真\n              \n              スマホではカメラ・写真フォルダから直接選択できます\n              完了報告 必須\n              \n              備考 任意\n              \n              \n            \n            \n              キャンセル\n              完了する\n            \n          \n        \n\n        \n          \n          \n            本当にキャンセルしますか？\n            キャンセルすると、このやりとりは終了します。\n            \n            \n              戻る\n              キャンセルする\n            \n          \n        \n\n        \n          \n          \n            完了報告\n            作業内容と完了写真を入力して完了報告を送信します。\n            完了写真 必須\n            \n              \n              クリックまたはドラッグ&ドロップで完了写真を追加\n              最大5枚\n            \n            \n            作業内容 必須\n            \n            メモ\n            \n            追加費用\n            \n            \n            \n              キャンセル\n              完了報告する\n            \n          \n        \n\n        2026/07/03\n              \n                山\n                \n                  \n                    \n                      \n      \n        ︙\n        \n          \n          ブロック\n        \n      \n                      \n                        山田 太郎\n                        山本 電工 さんへの相談を開始しました。条件や日程は TASFUL Talk でご相談ください。\n                        \n                      \n                    \n                    13:53\n                  \n                \n              \n            \n              \n                \n                  \n                    \n                      ワーカー検索から相談します（manual review）\n                      \n                    \n                    \n                      \n                      13:53\n                    \n                  \n                \n              \n            \n\n        \n          \n          \n            メッセージを通報\n            理由を選択してください\n            \n        \n          \n          連絡先交換\n        \n        \n          \n          外部誘導\n        \n        \n          \n          詐欺\n    ",
+  "probePhase": "chat_sent",
+  "minPhase": "partner_sync",
+  "probe": {
+    "capturedAt": "2026-07-03T04:53:21.248Z",
+    "phase": "chat_sent",
+    "findWorkers": {
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054394507-04f7aa&from=builder&builderFlow=partner_user&builderRole=user",
+      "onFindWorkers": false,
+      "resultsVisible": false,
+      "profileVisible": false,
+      "cardCount": 0
+    },
+    "diagnostics": {
+      "workerSearch": {
+        "contactRevealFeeYen": 550,
+        "completionCommission": false
+      },
+      "generalProjectCommissionRange": [
+        5,
+        10
+      ],
+      "threadId": "thread-1783054394507-04f7aa",
+      "roomId": "thread-1783054394507-04f7aa",
+      "threadKind": "worker_contact",
+      "partnerUserId": "w1",
+      "buyerId": "demo-builder-user",
+      "hasWorkflowState": false,
+      "hasCompletionReport": false
+    },
+    "forbidden": {
+      "visibleWorkflowButtons": 0,
+      "forbiddenButtons": [],
+      "hasCommissionPctText": false,
+      "panelTextSample": "\n          \n            ワーカー相談\n            案件名山本 電工 とのやりとり相手山本 電工連絡先開示済み\n            Builderで確認\n          \n          連絡先 開示済み担当者名山本 健一電話番号090-1234-5678メールyamamo"
+    },
+    "chatSent": true,
+    "user": {
+      "url": "http://127.0.0.1:8788/chat-detail?thread=thread-1783054394507-04f7aa&from=builder&builderFlow=partner_user&builderRole=user",
+      "onTalk": true,
+      "builderRole": "user",
+      "threadId": "thread-1783054394507-04f7aa",
+      "badge": "相談中",
+      "status": "",
+      "workflowVisible": true,
+      "completionModalVisible": false,
+      "buttons": [],
+      "hasCompletionButton": false,
+      "approveVisible": false,
+      "completed": false,
+      "isAwaitingOps": false,
+      "isAwaitingClient": false
+    },
+    "partner": null,
+    "threadId": "thread-1783054394507-04f7aa",
+    "workflowKind": "ワーカー相談",
+    "partnerKind": ""
+  }
+}
