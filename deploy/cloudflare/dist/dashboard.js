@@ -87,6 +87,14 @@
       ],
     },
     {
+      label: "店舗・業務掲載",
+      items: [
+        { id: "bd-owner", label: "掲載管理（店舗・業務）", href: "business-directory/index.html", icon: "briefcase" },
+        { id: "bd-new", label: "店舗・業務を掲載する", href: "business-directory/new.html", icon: "sparkles" },
+        { id: "bd-public", label: "掲載一覧を見る", href: "business-directory/public/list.html", icon: "search" },
+      ],
+    },
+    {
       label: "安否",
       items: [
         {

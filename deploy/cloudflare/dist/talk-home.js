@@ -846,6 +846,7 @@
     document.querySelectorAll('[data-talk-line-nav="ops"]').forEach((el) => {
       el.hidden = !showOpsNav;
     });
+    syncTalkLineRailBuilderHref();
     const leadSimple = $("[data-talk-simple-lead]");
     if (leadSimple) leadSimple.hidden = !caps.simple;
     const chatSubSimple = $("[data-talk-chat-sub-simple]");
@@ -1866,6 +1867,27 @@
       window.TasuTalkRuntime?.isTalkAdmin?.() ||
         window.TasuTalkHomeLayout?.getCapabilities?.()?.admin
     );
+  }
+
+  /** ?talkAdmin=1 の運営プレビュー画面（JWT 運営ロールは含めない） */
+  function isTalkAdminUrlScreen() {
+    try {
+      return new URLSearchParams(global.location?.search || "").get("talkAdmin") === "1";
+    } catch {
+      return false;
+    }
+  }
+
+  const TALK_LINE_RAIL_BUILDER_HREF_USER = "builder/index.html";
+  const TALK_LINE_RAIL_BUILDER_HREF_ADMIN = "builder-admin/admin-index.html";
+
+  function syncTalkLineRailBuilderHref() {
+    const href = isTalkAdminUrlScreen()
+      ? TALK_LINE_RAIL_BUILDER_HREF_ADMIN
+      : TALK_LINE_RAIL_BUILDER_HREF_USER;
+    document.querySelectorAll('[data-talk-line-nav="builder"]').forEach((el) => {
+      if (el.tagName === "A") el.setAttribute("href", href);
+    });
   }
 
   /**

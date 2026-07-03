@@ -7,6 +7,11 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
 
+/platform-live/*
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=()
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
+  Cache-Control: public, max-age=0, must-revalidate
+
 /live/*
   X-Robots-Tag: noindex, nofollow, noarchive, nosnippet
   Cache-Control: public, max-age=0, must-revalidate

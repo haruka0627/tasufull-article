@@ -268,7 +268,10 @@
       const targetUrl =
         item.targetUrl ||
         global.TasuTlvNotificationTypes?.liveStartedTargetUrl?.(broadcastId) ||
-        (broadcastId ? `watch-live.html?id=${encodeURIComponent(broadcastId)}` : "#");
+        (broadcastId
+          ? global.TasuLiveConfig?.watchUrl?.(broadcastId) ||
+            `watch.html?broadcast_id=${encodeURIComponent(broadcastId)}`
+          : "#");
       return {
         id: String(item.id || ""),
         user_id: targetId,
@@ -631,7 +634,8 @@
     const ids = [];
     const targetUrl =
       global.TasuTlvNotificationTypes?.liveStartedTargetUrl?.(broadcastId) ||
-      `watch-live.html?id=${encodeURIComponent(broadcastId)}`;
+      global.TasuLiveConfig?.watchUrl?.(broadcastId) ||
+      `watch.html?broadcast_id=${encodeURIComponent(broadcastId)}`;
     for (const followerId of followers) {
       const id = liveStartedNotifyId(broadcastId, creatorId, followerId);
       store = store.filter((row) => String(row.id || "") !== id);

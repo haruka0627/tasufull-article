@@ -3,9 +3,31 @@
 <head>
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8" />
-  <title>スレッド詳細へ移動中…</title>
+  <title>やりとり詳細へ移動中…</title>
   <script>
-    window.location.replace("mvp-thread.html" + (window.location.search || ""));
+    (function () {
+      var sp = new URLSearchParams(window.location.search || "");
+      var threadId = sp.get("thread_id") || sp.get("id") || "";
+      if (threadId && threadId.indexOf("demo-") === 0 && threadId.indexOf("thread-") !== 0) {
+        threadId = "thread-" + threadId.replace(/^demo-/, "");
+      }
+      var role = sp.get("role") || "partner";
+      var threadType = sp.get("threadType") || "ops_partner";
+      if (threadId) {
+        var qs =
+          "thread=" +
+          encodeURIComponent(threadId) +
+          "&from=builder&builderFlow=" +
+          encodeURIComponent(threadType) +
+          "&builderRole=" +
+          encodeURIComponent(role);
+        if (sp.get("benchEmbed") === "1") qs += "&benchEmbed=1";
+        if (sp.get("benchSide")) qs += "&benchSide=" + encodeURIComponent(sp.get("benchSide"));
+        window.location.replace("../chat-detail.html?" + qs);
+        return;
+      }
+      window.location.replace("../talk-home.html?tab=chat&channel=builder&from=builder");
+    })();
   </script>
 </head>
 <body>  <link rel="stylesheet" href="../tasful-site-assistant.css">

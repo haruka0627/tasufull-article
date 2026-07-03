@@ -70,6 +70,16 @@
     };
   }
 
+  function isBuilderRevealedCallEligible(thread) {
+    const wf = global.TasuTalkBuilderWorkflow;
+    if (!thread || !wf?.shouldShowTalkHeaderActions?.(thread)) return false;
+    const kind = wf.resolveBuilderThreadKind?.(thread);
+    if (!kind || kind === "admin_partner") return false;
+    if (wf.needsContactRevealGate?.(thread, kind)) return false;
+    const contact = wf.getBuilderRevealedContact?.(thread);
+    return Boolean(contact?.phone);
+  }
+
   function syncCallButton(thread) {
     activeThread = thread && typeof thread === "object" ? thread : null;
     const buttons = document.querySelectorAll("[data-talk-call-start-button]");
@@ -77,21 +87,27 @@
 
     const callThread = buildCallThread(activeThread);
     const svc = global.TasuTalkCallService;
-    const eligible = Boolean(callThread && svc?.canCallThread?.(callThread));
+    const headerAllowed =
+      global.TasuTalkBuilderWorkflow?.shouldShowTalkHeaderActions?.(activeThread) !== false;
+    const svcEligible = Boolean(callThread && svc?.canCallThread?.(callThread));
+    const builderEligible = isBuilderRevealedCallEligible(activeThread);
+    const eligible = headerAllowed && (svcEligible || builderEligible);
 
     buttons.forEach((btn) => {
-      if (!getMeId()) {
+      if (!getMeId() || !headerAllowed) {
         btn.hidden = true;
         btn.disabled = true;
         btn.classList.remove("talk-call-btn--enabled");
-        btn.title = "通話（ログインが必要です）";
+        btn.title = !headerAllowed
+          ? "通話（この案件では利用できません）"
+          : "通話（ログインが必要です）";
         return;
       }
       btn.hidden = !eligible;
       btn.disabled = !eligible;
       btn.classList.toggle("talk-call-btn--enabled", eligible);
       if (!svc?.isAvailable?.()) {
-        btn.title = "通話（Supabase 未接続）";
+        btn.title = builderEligible ? "音声通話（Builder 連絡先）" : "通話（Supabase 未接続）";
       } else if (eligible) {
         btn.title = "音声通話";
       } else {
@@ -99,7 +115,7 @@
       }
     });
 
-    if (eligible) {
+    if (svcEligible) {
       svc?.init?.();
       svc?.refreshIncomingForActiveRoom?.().catch?.(() => {});
     }
@@ -117,6 +133,15 @@
       if (!callThread) {
         global.TasuTalkCallUi?.showToast?.("通話できないルームです");
         return;
+      }
+      const svc = global.TasuTalkCallService;
+      if (!svc?.canCallThread?.(callThread) && isBuilderRevealedCallEligible(activeThread)) {
+        const contact = global.TasuTalkBuilderWorkflow?.getBuilderRevealedContact?.(activeThread);
+        const tel = String(contact?.phone || "").replace(/[^\d+]/g, "");
+        if (tel) {
+          global.location.href = `tel:${tel}`;
+          return;
+        }
       }
       global.TasuTalkCallService?.init?.();
       global.TasuTalkCallService?.initiateCall?.(callThread)?.catch((err) => {

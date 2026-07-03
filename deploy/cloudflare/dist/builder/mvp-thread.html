@@ -6,6 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0c0f1d" />
   <title>やりとり詳細 | Builder MVP</title>
+  <script>
+    (function () {
+      var sp = new URLSearchParams(window.location.search || "");
+      var threadId = sp.get("thread_id") || sp.get("id") || "";
+      if (threadId && threadId.indexOf("demo-") === 0 && threadId.indexOf("thread-") !== 0) {
+        threadId = "thread-" + threadId.replace(/^demo-/, "");
+      }
+      if (!threadId) return;
+      var role = sp.get("role") || "partner";
+      var threadType = sp.get("threadType") || "ops_partner";
+      var qs =
+        "thread=" +
+        encodeURIComponent(threadId) +
+        "&from=builder&builderFlow=" +
+        encodeURIComponent(threadType) +
+        "&builderRole=" +
+        encodeURIComponent(role);
+      if (sp.get("benchEmbed") === "1") qs += "&benchEmbed=1";
+      if (sp.get("benchSide")) qs += "&benchSide=" + encodeURIComponent(sp.get("benchSide"));
+      if (sp.get("openReview") === "1") qs += "&openReview=1";
+      window.location.replace("../chat-detail.html?" + qs);
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

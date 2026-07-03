@@ -6,6 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#0c0f1d" />
   <title>案件チャット | Builder</title>
+  <script>
+    (function () {
+      var sp = new URLSearchParams(window.location.search || "");
+      var threadId = sp.get("thread_id") || sp.get("id") || "";
+      if (!threadId) {
+        window.location.replace("../talk-home.html?tab=chat&channel=builder&from=builder");
+        return;
+      }
+      var role = sp.get("role") || "partner";
+      window.location.replace(
+        "../chat-detail.html?thread=" +
+          encodeURIComponent(threadId) +
+          "&from=builder&builderFlow=partner_user&builderRole=" +
+          encodeURIComponent(role)
+      );
+    })();
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

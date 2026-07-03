@@ -54,7 +54,7 @@
     root.innerHTML = `
       <div class="live-gifts" data-live-gifts>
         <section class="live-panel live-panel--notice">
-          <p class="live-hint"><strong>stub決済 / テスト用</strong> — 実決済・Stripe 連携なし（2026年9月以降予定）</p>
+          <p class="live-hint"><strong>テスト送信（本番課金なし）</strong> — 実決済・Stripe 連携は準備中です</p>
           <p class="live-hint">配信: ${cfg.escapeHtml(broadcastId)} · クリエイター: ${cfg.escapeHtml(creatorName)}</p>
         </section>
         <form class="live-gifts-form" data-live-gifts-form>
@@ -71,7 +71,7 @@
             </label>
           </section>
           <div class="live-settings-form__actions">
-            <button type="submit" class="live-btn live-btn--primary">stub で送る</button>
+            <button type="submit" class="live-btn live-btn--primary">テスト送信する</button>
             <a class="live-btn live-btn--ghost" href="${cfg.escapeHtml(watchHref)}">視聴に戻る</a>
             <a class="live-btn live-btn--ghost" href="${cfg.tipsUrl()}${cfg.isTalkDevStubMode() ? "?talkDev=1" : ""}">応援履歴</a>
           </div>
@@ -113,7 +113,7 @@
           gift,
           message,
         });
-        statusEl.textContent = `${gift.name} を送信しました（stub）`;
+        statusEl.textContent = `${gift.name} を送信しました（テスト記録）`;
         statusEl.className = "live-form-status live-form-status--ok";
       } catch (err) {
         console.error("[TasuLiveGifts]", err);
