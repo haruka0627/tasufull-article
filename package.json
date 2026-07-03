@@ -110,6 +110,8 @@
     "verify:live-youtube-p15": "node scripts/verify-live-youtube-p15-production-deploy-checklist.mjs",
     "smoke:pages": "node scripts/smoke-cloudflare-pages.mjs --base http://127.0.0.1:8788",
     "smoke:match:p15-l5": "node scripts/smoke-match-p15-l5-dist-sync.mjs --skip-edge",
+    "smoke:business-directory": "node scripts/smoke-business-directory-ob4.mjs",
+    "smoke:business-directory:prod": "node scripts/smoke-business-directory-ob4.mjs --prod",
     "deploy:pages": "node scripts/deploy-cloudflare-pages.mjs"
   },
   "devDependencies": {
