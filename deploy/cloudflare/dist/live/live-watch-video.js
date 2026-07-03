@@ -23,6 +23,31 @@
     }
   }
 
+  function getViewerUserId() {
+    try {
+      const auth = global.TasuAuthCurrentUser?.getCurrentUser?.();
+      return auth?.talkUserId || "";
+    } catch {
+      return "";
+    }
+  }
+
+  function canViewVideo(video) {
+    if (!video) return false;
+    const visibility = String(video.visibility || "public");
+    // public: anyone can view
+    if (visibility === "public") return true;
+    // unlisted: anyone with the URL can view
+    if (visibility === "unlisted") return true;
+    // private: only the owner can view
+    if (visibility === "private") {
+      const viewerId = getViewerUserId();
+      const ownerId = String(video.talk_user_id || "");
+      return viewerId && viewerId === ownerId;
+    }
+    return false;
+  }
+
   function promptLogin(actionLabel) {
     const label = String(actionLabel || "この操作").trim();
     global.alert(`${label}するにはログインが必要です。`);
@@ -924,6 +949,19 @@
 
       let posterUrl = signed.thumbnail_signed_url || null;
       const video = signed.video || (await fetchVideoMeta(videoId));
+      if (!video) {
+        targets.forEach((t) => renderError(t, "動画が見つかりません", "動画が存在しないか削除されました", navLinks));
+        return;
+      }
+      if (!canViewVideo(video)) {
+        const visibility = String(video.visibility || "public");
+        if (visibility === "private") {
+          targets.forEach((t) => renderError(t, "非公開動画です", "この動画は投稿者のみが視聴できます", navLinks));
+        } else {
+          targets.forEach((t) => renderError(t, "視聴できません", "この動画を視聴する権限がありません", navLinks));
+        }
+        return;
+      }
       if (!posterUrl && video?.thumbnail_path) {
         posterUrl = cfg.getPublicStorageUrl(cfg.STORAGE_BUCKET_VIDEO_THUMBS, video.thumbnail_path);
       }
