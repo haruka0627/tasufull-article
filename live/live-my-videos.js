@@ -24,7 +24,7 @@
       .getClient()
       .from(cfg.TABLES.videos)
       .select(
-        "id, title, thumbnail_path, duration_sec, views_count, likes_count, status, visibility, published_at, created_at",
+        "id, title, video_path, thumbnail_path, duration_sec, views_count, likes_count, status, visibility, published_at, created_at",
       )
       .eq("talk_user_id", talkUserId)
       .order("created_at", { ascending: false })
@@ -136,8 +136,10 @@
       ? `<img src="${cfg.escapeHtml(thumbUrl)}" alt="" loading="lazy" />`
       : `<div class="live-my-videos__thumb-placeholder" aria-hidden="true"><span>動画</span></div>`;
 
+    const videoPath = String(video.video_path || "");
+    const thumbPath = String(video.thumbnail_path || "");
     return `
-      <article class="live-my-videos__row" data-live-my-video-row data-video-id="${cfg.escapeHtml(video.id)}">
+      <article class="live-my-videos__row" data-live-my-video-row data-video-id="${cfg.escapeHtml(video.id)}" data-video-path="${cfg.escapeHtml(videoPath)}" data-thumb-path="${cfg.escapeHtml(thumbPath)}">
         <a class="live-my-videos__thumb" href="${cfg.escapeHtml(cfg.watchVideoUrl(video.id))}">
           ${thumbInner}
         </a>
@@ -172,7 +174,7 @@
         if (!videoId || !action) return;
 
         if (action === "remove") {
-          const ok = global.confirm("この動画を削除しますか？（一覧から非表示になります）");
+          const ok = global.confirm("この動画を削除しますか？（動画ファイル・サムネイルも削除されます）");
           if (!ok) return;
         }
 
@@ -189,6 +191,36 @@
           else if (action === "remove") patch.status = "removed";
 
           await updateOwnVideo(videoId, patch);
+
+          // Storage cleanup after successful DB update
+          if (action === "remove") {
+            const cfg = C();
+            const row = btn.closest("[data-live-my-video-row]");
+            const videoPath = row?.getAttribute("data-video-path") || "";
+            const thumbPath = row?.getAttribute("data-thumb-path") || "";
+            const storagePaths = [];
+            if (videoPath) storagePaths.push({ bucket: cfg.VIDEO_BUCKET, path: videoPath });
+            if (thumbPath) storagePaths.push({ bucket: cfg.STORAGE_BUCKET_VIDEO_THUMBS, path: thumbPath });
+
+            if (storagePaths.length) {
+              try {
+                await cfg.ensureSupabaseSession();
+                const client = cfg.getClient();
+                for (const item of storagePaths) {
+                  try {
+                    await client.storage.from(item.bucket).remove([item.path]);
+                  } catch (rmErr) {
+                    console.warn("[TasuLiveMyVideos] Storage remove failed", item, rmErr);
+                  }
+                }
+              } catch (storageErr) {
+                console.warn("[TasuLiveMyVideos] Storage cleanup skipped:", storageErr?.message || storageErr);
+                if (statusEl) {
+                  statusEl.textContent += "（動画ファイルの削除に失敗しましたが、一覧からは削除されました）";
+                }
+              }
+            }
+          }
           if (
             action === "publish" &&
             global.TasuTlvNotificationService?.createVideoPublishedNotification
@@ -315,7 +347,7 @@
         `
         ${dashBanner}
         <p class="live-hint live-my-videos__hint">
-          非表示・削除は一覧から隠れます。削除は物理削除ではなく status=removed です。
+          非表示・削除は一覧から隠れます。削除すると動画ファイル・サムネイルも Storage から削除されます。
           <a href="${cfg.escapeHtml(cfg.profileUrl(talkUserId))}">チャンネルを見る</a>
         </p>
         <div class="live-my-videos-list" data-live-my-videos-list>
