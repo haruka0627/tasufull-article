@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0c0f1d" />
   <title>やりとり一覧 | Builder MVP</title>
+  <script>
+    window.location.replace(
+      "../talk-home.html?tab=chat&channel=builder&from=builder" +
+        (window.location.search || "").replace(/^\?/, "&")
+    );
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -57,7 +63,10 @@
         </nav>
         <div class="builder-panel__head">
           <h2 class="builder-section-title">一覧</h2>
-          <span class="builder-kpi" data-builder-mvp-thread-kpi>—</span>
+          <div class="mvp-threads-panel__headAside">
+            <a class="mvp-threads-filter__tab" href="project-calendar.html">案件カレンダー</a>
+            <span class="builder-kpi" data-builder-mvp-thread-kpi>—</span>
+          </div>
         </div>
         <ul class="mvp-thread-list" data-builder-mvp-thread-list></ul>
       </section>

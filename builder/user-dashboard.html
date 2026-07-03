@@ -36,22 +36,8 @@
             <p class="builder-partner-sidebar__role">一般ユーザー（依頼者）</p>
           </div>
         </div>
-        <nav class="builder-partner-sidebar__nav" aria-label="一般ユーザーメニュー">
-          <a class="builder-partner-sidebar__link is-active" href="user-dashboard.html">ダッシュボード</a>
-          <a class="builder-partner-sidebar__link" href="board-projects.html">依頼中の案件</a>
-          <a class="builder-partner-sidebar__link" href="../public-board.html">応募・相談中</a>
-          <a class="builder-partner-sidebar__link" href="mvp-threads.html?role=user">やりとり <span class="builder-partner-sidebar__badge is-cyan">6</span></a>
-          <a class="builder-partner-sidebar__link" href="mvp-notifications.html?role=user">通知 <span class="builder-partner-sidebar__badge is-purple">2</span></a>
-          <span class="builder-partner-sidebar__sep" aria-hidden="true"></span>
-          <a class="builder-partner-sidebar__link" href="construction-tools.html" data-builder-sidebar-key="construction-tools">建設ツール</a>
-          <span class="builder-partner-sidebar__sep" aria-hidden="true"></span>
-          <a class="builder-partner-sidebar__link" href="favorites.html">お気に入り</a>
-          <a class="builder-partner-sidebar__link" href="../sales-fees.html">支払い・請求</a>
-          <a class="builder-partner-sidebar__link" href="../job-review.html">レビュー</a>
-          <a class="builder-partner-sidebar__link" href="../profile-settings.html">プロフィール</a>
-          <a class="builder-partner-sidebar__link" href="settings.html">設定</a>
+        <nav class="builder-partner-sidebar__nav" data-builder-nav-autoload data-builder-nav-role="user" aria-label="一般ユーザーメニュー"></nav>
           <button type="button" class="builder-partner-sidebar__link builder-partner-sidebar__link--muted" data-builder-user-logout data-builder-dash-logout>ログアウト</button>
-        </nav>
       </aside>
 
       <div class="builder-dash-shell__content builder-partner-content">
@@ -120,7 +106,7 @@
                 <strong class="builder-stat-card__value" data-builder-user-stat-value="unreadMessages">—</strong>
                 <span class="builder-stat-card__desc">やりとりの未読</span>
               </div>
-              <a class="builder-stat-card__action" href="mvp-threads.html?role=user">やりとりへ ›</a>
+              <a class="builder-stat-card__action" href="../talk-home.html?tab=chat&channel=builder&from=builder&builderRole=user">やりとりへ ›</a>
             </article>
 
             <article class="builder-stat-card" data-builder-stat-card>
@@ -178,7 +164,7 @@
           <section class="builder-panel builder-user-chat-section" aria-labelledby="builderUserChatTitle">
             <div class="builder-recent-section__head">
               <h2 id="builderUserChatTitle" class="builder-section-title">最近やり取りした相手</h2>
-              <a class="builder-section-link" href="mvp-threads.html?role=user">すべて見る ›</a>
+              <a class="builder-section-link" href="../talk-home.html?tab=chat&channel=builder&from=builder&builderRole=user">すべて見る ›</a>
             </div>
             <ul class="builder-user-chat-list" data-builder-user-chat-list></ul>
           </section>
@@ -198,7 +184,7 @@
                 </span>
                 <span class="builder-quick-card__text"><strong>依頼中の案件</strong><span>進行状況を確認</span></span>
               </a>
-              <a class="builder-quick-card" href="mvp-threads.html?role=user">
+              <a class="builder-quick-card" href="../talk-home.html?tab=chat&channel=builder&from=builder&builderRole=user">
                 <span class="builder-quick-card__icon builder-quick-card__icon--orange" aria-hidden="true">
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a4 4 0 0 1-4 4H7l-4 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4z" /></svg>
                 </span>
@@ -300,6 +286,8 @@
   <script src="builder-general-flow.js"></script>
   <script src="../breadcrumb-config.js"></script>
   <script src="../common-breadcrumb.js"></script>
+  <script src="builder-nav-config.js"></script>
+  <script src="builder-nav.js"></script>
   <script src="builder.js" defer></script>
 </body>
 </html>

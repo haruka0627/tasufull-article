@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <title>スレッド一覧へ移動中…</title>
   <script>
-    window.location.replace("mvp-threads.html" + (window.location.search || ""));
+    window.location.replace(
+      "../talk-home.html?tab=chat&channel=builder&from=builder" + (window.location.search || "").replace(/^\?/, "&")
+    );
   </script>
 </head>
 <body></body>
