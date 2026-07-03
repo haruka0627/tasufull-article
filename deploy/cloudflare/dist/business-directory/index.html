@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>店舗・業務掲載 | TASFUL</title>
@@ -53,13 +52,29 @@
           </div>
           <a class="dash-btn dash-btn--primary" href="new.html" data-bd-create-btn>新規掲載を作成</a>
         </div>
+        <section class="bd-banner bd-banner--info" data-bd-onboarding-guide aria-label="はじめての掲載">
+          <p><strong>はじめての掲載</strong></p>
+          <ol>
+            <li>掲載を作成</li>
+            <li>公開申請</li>
+            <li>審査完了後に公開</li>
+          </ol>
+          <p>有料プランは後から変更できます（必須ではありません）。Free プランでも公開申請できます。</p>
+        </section>
         <p class="bd-toast" data-bd-toast hidden role="status"></p>
         <section class="bd-list" data-bd-listings aria-live="polite"></section>
         <div class="bd-empty" data-bd-empty hidden>
           <p class="bd-empty__title">掲載がありません</p>
-          <p class="bd-empty__text">初回掲載は最小フォーム約1〜2分で作成できます。</p>
+          <p class="bd-empty__text">初回は「掲載を作成」→「公開申請」→審査完了後に公開、の3ステップです（約1〜2分）。</p>
           <a class="dash-btn dash-btn--primary" href="new.html">掲載を作成</a>
         </div>
+        <p class="bd-field-hint" data-bd-legal-footer>
+          <a href="terms.html" target="_blank" rel="noopener">掲載規約</a>
+          ·
+          <a href="../company/legal/tokushoho.html" target="_blank" rel="noopener">特商法</a>
+          ·
+          <a href="../company/legal/privacy.html" target="_blank" rel="noopener">プライバシー</a>
+        </p>
       </main>
     </div>
   </div>
@@ -76,8 +91,5 @@
   <script src="business-directory-local-store.js"></script>
   <script src="business-directory-common.js"></script>
   <script src="business-directory-owner.js"></script>
-  <link rel="stylesheet" href="../tasful-site-assistant.css">
-  <script src="../tasful-site-assistant-adapter.js" defer></script>
-  <script src="../tasful-site-assistant.js" defer></script>
 </body>
 </html>
