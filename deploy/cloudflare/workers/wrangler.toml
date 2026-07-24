@@ -1,0 +1,12 @@
+# Gemini Live WebSocket Proxy — Worker
+
+name = "gemini-live-proxy"
+main = "gemini-live-proxy.js"
+compatibility_date = "2026-07-02"
+
+# env.GEMINI_API_KEY — set via:
+#   npx wrangler secret put GEMINI_API_KEY
+
+# Deploy:
+#   cd deploy/cloudflare/workers
+#   npx wrangler deploy

@@ -11,3 +11,14 @@ ZEGO_SERVER_SECRET=
 # AI 運営秘書 DeepSeek（任意）
 # DEEPSEEK_API_KEY=
 # DEEPSEEK_CHAT_MODEL=deepseek-v4-flash
+
+# Supabase（Pages Functions — gemini-live-session / platform-request 等）
+# 値は空のまま。実値はローカル .env / CF 環境変数のみ（Git 禁止）
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# Platform Request P5-7 match sync (/api/platform-request-match-sync) — Staging only
+# 正本: .env.staging（.env.staging が .env より優先して dist/.dev.vars へ同期）
+# TASFUL_SUPABASE_URL=
+# TASFUL_SUPABASE_ANON_KEY=
