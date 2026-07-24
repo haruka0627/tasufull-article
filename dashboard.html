@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="dashboard.css">
   <link rel="stylesheet" href="anpi-line-admin.css">
   <link rel="stylesheet" href="tasful-app-mobile.css">
+  <link rel="stylesheet" href="platform-request.css">
 </head>
 <body class="dash-body" data-page="dashboard" data-breadcrumb-page-label="ダッシュボード">
   <div class="dash-app">
@@ -77,9 +78,10 @@
           <div class="dash-sp-nav__track">
             <a class="dash-sp-nav__chip" href="business-directory/new.html">店舗・業務掲載</a>
             <a class="dash-sp-nav__chip" href="business-directory/index.html">BD掲載管理</a>
+            <a class="dash-sp-nav__chip" href="talk-home.html">TALK</a>
+            <a class="dash-sp-nav__chip" href="talk-home.html">Platform Request</a>
             <a class="dash-sp-nav__chip" href="post.html">掲載する</a>
             <a class="dash-sp-nav__chip" href="my-listings.html">マイ掲載</a>
-            <a class="dash-sp-nav__chip" href="talk-home.html">TALK</a>
             <a class="dash-sp-nav__chip" href="talk-home.html?tab=chat">チャット</a>
             <a class="dash-sp-nav__chip" href="ai-workspace.html">AI相談</a>
             <a class="dash-sp-nav__chip" href="listing-management.html">掲載管理</a>
@@ -87,6 +89,28 @@
         </nav>
 
         <p class="dash-welcome" data-dash-welcome>読み込み中…</p>
+
+        <section class="prq-dash-featured" aria-labelledby="prqDashFeaturedTitle">
+          <div class="prq-dash-featured__head">
+            <h2 class="prq-dash-featured__title" id="prqDashFeaturedTitle">おすすめ機能</h2>
+            <a href="talk-home.html" class="prq-dash-featured__talk-link">Talk Home へ →</a>
+          </div>
+          <section class="prq-entry-cta prq-dash-card" aria-labelledby="prqDashCtaTitle">
+            <div class="prq-entry-cta__head">
+              <div class="prq-entry-cta__copy">
+                <p class="prq-entry-cta__icon" aria-hidden="true">📢</p>
+                <p class="prq-entry-cta__kicker">Platform Request</p>
+                <h3 class="prq-entry-cta__title" id="prqDashCtaTitle">「これできる人いますか？」</h3>
+                <p class="prq-entry-cta__text">Talk Home から依頼を投稿し、条件に合う業者・ワーカー・フリーランスへ届けられます。</p>
+              </div>
+              <div class="prq-entry-cta__actions" role="group" aria-label="Platform Request">
+                <a href="talk-home.html" class="prq-entry-cta__btn prq-entry-cta__btn--ghost-dash">Talk Home</a>
+                <a href="platform-request.html" class="prq-entry-cta__btn">依頼を見る</a>
+                <a href="platform-request-create.html" class="prq-entry-cta__btn prq-entry-cta__btn--gold">依頼を投稿</a>
+              </div>
+            </div>
+          </section>
+        </section>
 
         <section class="dash-stats" id="dashStats" aria-label="サマリー"></section>
 
@@ -108,7 +132,7 @@
             </section>
 
             <p class="dash-disclaimer">
-              TASFULは取引代金を預かりません。支払い・返金・受け渡しは掛載者と依頼者の間で行ってください。成約後のTASFUL手数料は掛載者様よりお支払いいただきます。
+              TASFULは取引代金を預かりません。掲載・ページ作成は無料です。Talk開始・連絡先開示は550円（税込）。取引・決済は当事者間で行ってください。
             </p>
           </div>
 

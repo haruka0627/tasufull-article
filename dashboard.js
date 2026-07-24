@@ -64,6 +64,7 @@
       label: "サービス",
       items: [
         { id: "search", label: "業務サービスを探す", href: "business.html", icon: "search" },
+        { id: "request", label: "Platform Request", href: "talk-home.html", icon: "megaphone" },
         { id: "favorites", label: "お気に入り", href: "favorites-list.html", icon: "heart" },
         { id: "talk", label: "TASFUL TALK", href: "talk-home.html", icon: "message" },
         { id: "chats", label: "すべてのやりとり", href: "talk-home.html?tab=chat", icon: "inbox" },
@@ -83,6 +84,7 @@
       items: [
         { id: "listed", label: "掲載中のサービス", href: "my-listings.html", icon: "briefcase" },
         { id: "manage", label: "掲載管理", href: "listing-management.html", icon: "settings" },
+        { id: "options", label: "掲載オプション", href: "platform-options.html", icon: "sparkles" },
         { id: "sales", label: "売上・手数料管理", href: "sales-fees.html", icon: "wallet" },
       ],
     },
@@ -154,6 +156,8 @@
     grid: '<rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/>',
     upload: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
     chevron: '<path d="m9 18 6-6-6-6"/>',
+    megaphone:
+      '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
   };
 
   const SIDEBAR_SERVICE_GROUP_LABEL = "サービス";
@@ -171,6 +175,7 @@
         { label: "店舗・専門店を探す", href: "shop-vendors.html", icon: "store" },
         { label: "求人を探す", href: "job-top.html", icon: "clipboard" },
         { label: "案件・求人ボード", href: "public-board.html", icon: "grid" },
+        { label: "Platform Request", href: "talk-home.html", icon: "megaphone" },
       ],
     },
     {
