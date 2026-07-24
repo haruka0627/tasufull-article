@@ -9,6 +9,10 @@
   }
 
   function formatYen(n) {
+    const RT = window.TasuPricingRuntime;
+    if (RT?.formatYen) return RT.formatYen(n);
+    const PC = window.TasuPricingCatalog;
+    if (PC?.formatYen) return PC.formatYen(n);
     const v = Math.max(0, Math.round(Number(n) || 0));
     return `¥${v.toLocaleString("ja-JP")}`;
   }
@@ -320,6 +324,7 @@
     const dealId = `local-deal-platform-chat-${threadId}`;
     const isJob = Fee?.isJobCategory?.(category);
     const categoryLabel = Fee?.getCategoryLabel?.(category) || "取引";
+    const jobFeeLabel = formatYen(amount);
     return {
       deal_id: dealId,
       dealId,
@@ -328,7 +333,7 @@
       feeAmount: amount,
       platform_fee_amount: amount,
       title: isJob
-        ? "TASFUL 求人やりとり開始料（550円）"
+        ? `TASFUL 求人やりとり開始料（${jobFeeLabel}）`
         : `TASFUL やりとり手数料（${categoryLabel}）`,
       origin: window.location.origin,
       thread_id: threadId,
@@ -674,7 +679,10 @@
     if (amountEl) amountEl.textContent = formatYen(amount);
     if (amountDefaultEl) amountDefaultEl.textContent = formatYen(amount);
     if (rateEl) {
-      rateEl.textContent = isJob ? "やりとり開始利用料" : "5%（最低550円）";
+      const RT = window.TasuPricingRuntime;
+      rateEl.textContent = isJob
+        ? "やりとり開始利用料"
+        : RT?.formatConnectRateLabel?.() || "—";
     }
     const noteEl = $("[data-platform-fee-note]");
     const securityEl = $("[data-platform-fee-pay-security]");
@@ -694,7 +702,11 @@
       if (jobTitleEl) jobTitleEl.textContent = jobCtx.jobTitle;
       if (jobApplicantEl) jobApplicantEl.textContent = jobCtx.applicantName;
       if (jobAppliedAtEl) jobAppliedAtEl.textContent = jobCtx.appliedAt;
-      if (payBtn) payBtn.textContent = "550円を支払ってチャットを始める";
+      if (payBtn) {
+        const RT = window.TasuPricingRuntime;
+        const label = RT?.formatYenSuffix?.(amount) || formatYen(amount);
+        payBtn.textContent = `${label}を支払ってチャットを始める`;
+      }
       if (securityEl) securityEl.removeAttribute("hidden");
     } else {
       setJobPayLayout(false);

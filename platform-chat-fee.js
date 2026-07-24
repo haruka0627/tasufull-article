@@ -7,9 +7,28 @@
 (function (global) {
   "use strict";
 
-  const FEE_RATE = 0.05;
-  const MIN_FEE_YEN = 550;
-  const JOB_CHAT_FEE_YEN = 550;
+  const Pricing = global.TasuPricingRuntime;
+  const SKU = Pricing?.SKU || {};
+
+  function resolvePricingConstants() {
+    if (!Pricing) {
+      console.warn("[TasuPlatformChatFee] TasuPricingRuntime not loaded — fee amounts unavailable");
+      return { FEE_RATE: 0, MIN_FEE_YEN: 0, JOB_CHAT_FEE_YEN: 0 };
+    }
+    const job = Pricing.getFixedAmount(SKU.MATCH_JOB_CONTACT);
+    const general = Pricing.getFixedAmount(SKU.MATCH_GENERAL_CONTACT);
+    const min = Pricing.getConnectMinAmount();
+    const pct = Pricing.getConnectPercent();
+    const jobFee = Number.isFinite(job) ? job : general;
+    const minFee = Number.isFinite(min) ? min : general;
+    return {
+      FEE_RATE: Number.isFinite(pct) ? pct / 100 : 0,
+      MIN_FEE_YEN: Number.isFinite(minFee) ? minFee : 0,
+      JOB_CHAT_FEE_YEN: Number.isFinite(jobFee) ? jobFee : 0,
+    };
+  }
+
+  const { FEE_RATE, MIN_FEE_YEN, JOB_CHAT_FEE_YEN } = resolvePricingConstants();
   const STORAGE_KEY = "tasful_platform_chat_fees_v1";
 
   const FEE_CATEGORY_KEYS = new Set([
@@ -259,11 +278,21 @@
 
   function calcPlatformFee(amountYen) {
     const base = Math.max(0, Math.round(Number(amountYen) || 0));
-    const raw = Math.round(base * FEE_RATE);
-    return Math.max(MIN_FEE_YEN, raw);
+    const pct = Pricing?.getConnectPercent?.();
+    const min = Pricing?.getConnectMinAmount?.();
+    const rate =
+      Number.isFinite(pct) ? pct / 100 : FEE_RATE;
+    const floor =
+      Number.isFinite(min) ? min : MIN_FEE_YEN;
+    const raw = Math.round(base * rate);
+    return Math.max(floor, raw);
   }
 
   function calcJobChatFee() {
+    if (Pricing?.getFixedAmount) {
+      const fee = Pricing.getFixedAmount(SKU.MATCH_JOB_CONTACT);
+      if (Number.isFinite(fee)) return fee;
+    }
     return JOB_CHAT_FEE_YEN;
   }
 

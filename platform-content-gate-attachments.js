@@ -169,15 +169,20 @@
       return { ok: false, text: "", unscanned: true, reason: "ocr_provider_none" };
     }
     const result = await global.TasuChatOcr.extractTextFromImage(url);
-    if (!result?.ok || !result.text) {
+    if (!result?.ok) {
       return {
         ok: false,
         text: "",
         unscanned: true,
-        reason: result?.error || "ocr_empty",
+        reason: result?.error || "ocr_failed",
       };
     }
-    return { ok: true, text: result.text, provider: result.provider || ocrProviderName() };
+    // 空文字も審査完了（テキスト無し画像は allow）
+    return {
+      ok: true,
+      text: String(result.text || "").trim(),
+      provider: result.provider || ocrProviderName(),
+    };
   }
 
   /**
@@ -230,21 +235,30 @@
     }
 
     if (kind === KIND.TEXT) {
-      extractedText = await readTextFromRef(ref);
+      extractedText = pickStr(ref?.textContent) || (await readTextFromRef(ref));
       inspectMethod = "text_extract";
     } else if (kind === KIND.PDF) {
       const pdf = await extractPdfText(ref);
       if (pdf.ok && pdf.text) {
         extractedText = pdf.text;
         inspectMethod = "pdf_text";
+      } else if (isOcrEnabled()) {
+        const ocr = await extractImageOcr(ref);
+        if (ocr.ok) {
+          extractedText = ocr.text || "";
+          inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
+        } else {
+          unscanned = true;
+          inspectMethod = "pdf_unscanned";
+        }
       } else {
         unscanned = true;
-        inspectMethod = isOcrEnabled() ? "pdf_unscanned" : "pdf_unscanned_no_ocr";
+        inspectMethod = "pdf_unscanned_no_ocr";
       }
     } else if (kind === KIND.IMAGE) {
       const ocr = await extractImageOcr(ref);
-      if (ocr.ok && ocr.text) {
-        extractedText = ocr.text;
+      if (ocr.ok) {
+        extractedText = ocr.text || "";
         inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
       } else {
         unscanned = true;
@@ -252,7 +266,7 @@
       }
     }
 
-    if (unscanned || (!extractedText && kind !== KIND.TEXT)) {
+    if (unscanned) {
       return {
         kind,
         name,
@@ -260,6 +274,20 @@
         flags: ["attachment_unscanned"],
         reasons: ["添付ファイル未審査（OCR/抽出不可）"],
         unscanned: true,
+        inspectMethod,
+        extractedLength: 0,
+      };
+    }
+
+    // OCR/抽出成功かつテキスト無し → 連絡先なしとして allow
+    if (!extractedText) {
+      return {
+        kind,
+        name,
+        verdict: VERDICT.ALLOW,
+        flags: [],
+        reasons: [],
+        unscanned: false,
         inspectMethod,
         extractedLength: 0,
       };

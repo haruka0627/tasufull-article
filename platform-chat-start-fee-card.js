@@ -7,8 +7,20 @@
   const CARD_KIND = "pre_chat_start_fee_card";
   const CARD_TITLE = "やりとり開始料のお支払い";
   const CARD_DESC = "相手とやりとりを開始するには、TASFULのやりとり開始料が必要です。";
-  const PAY_BTN = "550円を支払ってやりとりを開始する";
   const REQUESTER_WAIT = "相手のやりとり開始料のお支払いをお待ちください。";
+
+  function formatCatalogYen(amount) {
+    const RT = global.TasuPricingRuntime;
+    if (RT?.formatYenSuffix) return RT.formatYenSuffix(amount);
+    const PC = global.TasuPricingCatalog;
+    if (PC?.formatYen) return PC.formatYen(amount).replace("¥", "") + "円";
+    const n = Math.round(Number(amount) || 0);
+    return `${n.toLocaleString("ja-JP")}円`;
+  }
+
+  function buildPayButtonLabel(amount) {
+    return `${formatCatalogYen(amount)}を支払ってやりとりを開始する`;
+  }
 
   function pickStr(...vals) {
     for (let i = 0; i < vals.length; i += 1) {
@@ -27,8 +39,7 @@
   }
 
   function fmtYen(amount) {
-    const n = Math.round(Number(amount) || 0);
-    return `${n.toLocaleString("ja-JP")}円`;
+    return formatCatalogYen(amount);
   }
 
   function resolveFeeAmount(thread) {
@@ -36,7 +47,9 @@
     const threadId = pickStr(thread?.id, thread?.threadId);
     const row = Fee?.getFeeRecord?.(threadId);
     if (row?.feeAmount != null) return Math.round(Number(row.feeAmount));
-    return Fee?.MIN_FEE_YEN || 550;
+    return Fee?.MIN_FEE_YEN ?? global.TasuPricingRuntime?.getFixedAmount?.(
+      global.TasuPricingRuntime?.SKU?.MATCH_GENERAL_CONTACT
+    ) ?? 0;
   }
 
   function isFeePendingThread(thread) {
@@ -136,7 +149,7 @@
         title: CARD_TITLE,
         amountYen: amount,
         description: CARD_DESC,
-        payButton: PAY_BTN,
+        payButton: buildPayButtonLabel(amount),
       },
     });
     writeMessages(id, list);
@@ -162,12 +175,13 @@
     const title = pickStr(card.title, CARD_TITLE);
     const amount = resolveFeeAmount(thread);
     const description = pickStr(card.description, CARD_DESC);
+    const payButtonLabel = pickStr(card.payButton, buildPayButtonLabel(amount));
     const payer = isFeePayer(thread, meId);
     const awaiting = isAwaitingStartFee(thread);
 
     let action = "";
     if (payer && awaiting) {
-      action = `<button type="button" class="chat-manual-pay__btn chat-manual-pay__btn--primary" data-start-fee-pay onclick="window.TasuPlatformChatContactGate?.__uiPayFee?.(event)">${esc(PAY_BTN)}</button>`;
+      action = `<button type="button" class="chat-manual-pay__btn chat-manual-pay__btn--primary" data-start-fee-pay onclick="window.TasuPlatformChatContactGate?.__uiPayFee?.(event)">${esc(payButtonLabel)}</button>`;
     } else if (payer && !awaiting) {
       action = `<p class="chat-manual-pay__done" role="status">お支払い済みです</p>`;
     } else if (!payer && awaiting) {

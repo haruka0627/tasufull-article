@@ -25,38 +25,16 @@
     return `${base}/functions/v1/${name}`;
   }
 
-  const PLANS = {
-    featured_7days: {
-      id: "featured_7days",
-      label: "上位掲載（7日）",
-      priceLabel: "¥980",
-      days: 7,
-      amountJpy: 980,
-      kind: "featured",
-      priority: 1,
-      stripePriceId: "",
-    },
-    featured_30days: {
-      id: "featured_30days",
-      label: "上位掲載（30日）",
-      priceLabel: "¥2,980",
-      days: 30,
-      amountJpy: 2980,
-      kind: "featured",
-      priority: 2,
-      stripePriceId: "",
-    },
-    pr_30days: {
-      id: "pr_30days",
-      label: "PR掲載（30日）",
-      priceLabel: "¥4,980",
-      days: 30,
-      amountJpy: 4980,
-      kind: "pr",
-      priority: 3,
-      stripePriceId: "",
-    },
-  };
+  function buildPlans() {
+    const RT = window.TasuPricingRuntime;
+    if (RT?.buildFeaturedPlans) {
+      const fromCatalog = RT.buildFeaturedPlans();
+      if (fromCatalog && Object.keys(fromCatalog).length > 0) return fromCatalog;
+    }
+    return {};
+  }
+
+  const PLANS = buildPlans();
 
   window.TasuStripeFeaturedConfig = {
     supabaseUrl: base,

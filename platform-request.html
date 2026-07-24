@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Platform Request 一覧 | TASFUL</title>
+
+  <meta name="description" content="「これできる人いますか？」条件に合う業者・ワーカー・フリーランスへ依頼を投稿できます。">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link rel="stylesheet" href="style.css">
+
+  <link rel="stylesheet" href="top.css">
+
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+
+  <link rel="stylesheet" href="platform-request.css">
+
+</head>
+
+<body class="top-page prq-page" data-page="platform_request_list" data-prq-page="list" data-breadcrumb-page-label="Platform Request">
+
+  <header class="top-site-header site-header top-portal-header">
+
+    <div class="top-site-header__inner">
+
+      <a href="index-top.html" class="tasful-ai-logo top-site-header__logo top-portal-header__logo" aria-label="TASFUL プラットフォームTOP">
+
+        <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+
+        <div class="tasful-ai-logo-text">
+
+          <span class="main">TASFUL</span>
+
+          <span class="sub">プラットフォーム</span>
+
+        </div>
+
+      </a>
+
+      <nav class="top-site-header__nav top-portal-header__nav" aria-label="メインナビ">
+
+        <a href="/market/">掲載を探す</a>
+
+        <a href="talk-home.html">Talk Home</a>
+
+        <a href="platform-request.html" aria-current="page">Platform Request</a>
+
+        <a href="post.html">掲載する</a>
+
+        <a href="ai-workspace.html">AI相談</a>
+
+        <a href="dashboard.html">ダッシュボード</a>
+
+      </nav>
+
+      <div class="top-portal-header__actions">
+
+        <a href="login.html" class="top-portal-header__login">ログイン</a>
+
+        <a href="signup.html" class="top-site-header__cta top-portal-header__register">無料で登録する</a>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+
+  <main class="prq-shell">
+
+    <a href="talk-home.html" class="prq-back" aria-label="Talk Homeへ戻る">← Talk Home</a>
+
+
+
+    <div class="prq-list-cta" aria-label="メイン操作">
+
+      <a href="platform-request-create.html" class="prq-btn prq-btn--primary prq-list-cta__main">依頼を投稿</a>
+
+      <a href="talk-home.html" class="prq-btn prq-btn--ghost">Talk Home</a>
+
+    </div>
+
+
+
+    <section class="prq-hero" aria-labelledby="prqHeroTitle">
+
+      <span class="prq-hero__badge" aria-hidden="true">📢 Platform Request</span>
+
+      <h1 class="prq-hero__title" id="prqHeroTitle">これできる人いますか？</h1>
+
+      <p class="prq-hero__quote">条件に合う業者・ワーカー・フリーランスへ依頼を届けられます。</p>
+
+      <p class="prq-hero__lead">
+
+        Talk Home から投稿した依頼を一覧できます。対応できる方からご連絡が届く仕組みです（マッチング機能は順次公開予定）。
+
+      </p>
+
+    </section>
+
+
+
+    <section class="prq-toolbar" aria-label="検索と絞り込み">
+
+      <form class="prq-search" role="search" onsubmit="return false;">
+
+        <input
+
+          type="search"
+
+          class="prq-search__input"
+
+          data-prq-search
+
+          placeholder="キーワードで検索（例: 塗装 埼玉）"
+
+          autocomplete="off"
+
+          aria-label="キーワード検索"
+
+        >
+
+        <button type="button" class="prq-btn prq-btn--ghost" data-prq-search-btn aria-hidden="true" tabindex="-1">検索</button>
+
+      </form>
+
+      <div class="prq-cats" data-prq-cats role="group" aria-label="カテゴリ"></div>
+
+    <section class="prq-local-sync" data-prq-local-sync hidden aria-labelledby="prqLocalSyncTitle">
+      <header class="prq-local-sync__head">
+        <h2 class="prq-local-sync__title" id="prqLocalSyncTitle">この端末の依頼をサーバーへ同期</h2>
+        <p class="prq-local-sync__sub" data-prq-local-sync-summary></p>
+      </header>
+      <div class="prq-local-sync__actions">
+        <button type="button" class="prq-btn prq-btn--ghost prq-btn--sm" data-prq-local-sync-btn>同期する</button>
+      </div>
+      <p class="prq-local-sync__status" data-prq-local-sync-status hidden></p>
+    </section>
+
+    <section class="prq-notifications" data-prq-notifications hidden aria-labelledby="prqNotificationsTitle">
+      <header class="prq-notifications__head">
+        <h2 class="prq-notifications__title" id="prqNotificationsTitle">
+          通知 <span class="prq-notifications__unread" data-prq-notifications-unread hidden></span>
+        </h2>
+        <button type="button" class="prq-btn prq-btn--ghost prq-btn--sm" data-prq-notifications-mark-all>すべて既読</button>
+      </header>
+      <div class="prq-notifications__list" data-prq-notifications-list></div>
+      <p class="prq-notifications__empty" data-prq-notifications-empty hidden>通知はまだありません</p>
+    </section>
+
+    <section class="prq-incoming-matches" data-prq-incoming-matches hidden aria-labelledby="prqIncomingMatchesTitle">
+      <header class="prq-incoming-matches__head">
+        <h2 class="prq-incoming-matches__title" id="prqIncomingMatchesTitle">あなた宛のマッチ</h2>
+        <p class="prq-incoming-matches__sub">ログイン中のアカウントに紐づく候補マッチです（Supabase）</p>
+      </header>
+      <div class="prq-incoming-matches__list" data-prq-incoming-matches-list></div>
+      <p class="prq-incoming-matches__empty" data-prq-incoming-matches-empty hidden>自分宛のマッチはまだありません</p>
+    </section>
+
+    </section>
+
+
+
+    <div class="prq-grid" data-prq-grid aria-live="polite" aria-label="依頼一覧"></div>
+
+
+
+    <div class="prq-empty prq-empty-state" data-prq-empty hidden role="status">
+
+      <div class="prq-empty-state__icon" aria-hidden="true">
+
+        <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2"><circle cx="28" cy="28" r="16"/><path d="m44 44 14 14"/><path d="M22 28h12M28 22v12"/></svg>
+
+      </div>
+
+      <h2 class="prq-empty-state__title" data-prq-empty-title>該当する依頼がありません</h2>
+
+      <p class="prq-empty-state__text" data-prq-empty-text>条件を変えるか、最初の依頼を投稿してみてください。</p>
+
+      <div class="prq-empty-state__actions">
+
+        <a href="platform-request-create.html" class="prq-btn prq-btn--primary" data-prq-empty-cta>依頼を投稿</a>
+
+        <a href="talk-home.html" class="prq-btn prq-btn--ghost">Talk Home</a>
+
+      </div>
+
+    </div>
+
+  </main>
+
+
+
+  <div class="prq-toast" data-prq-toast role="status" aria-live="polite"></div>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="platform-request-supabase-store.js"></script>
+  <script src="platform-request-matches-supabase-store.js"></script>
+  <script src="platform-request-notification-store.js"></script>
+  <script src="platform-request.js"></script>
+
+</body>
+
+</html>
+

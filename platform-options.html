@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>掲載オプション | TASFUL Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="platform-options.css">
+</head>
+<body class="dash-body" data-page="platform-options" data-breadcrumb-page-label="掲載オプション">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ"></nav>
+    </aside>
+    <div class="dash-main">
+      <header class="dash-header dash-header--account">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <div class="dash-header__intro">
+              <h1 class="dash-header__title">掲載オプション</h1>
+              <p class="dash-header__sub">露出・信頼・求人などの有料オプション</p>
+            </div>
+          </div>
+          <div class="dash-header__actions">
+            <a href="talk-home.html?tab=chat" class="dash-header-link" aria-label="メッセージ">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="dash-header-link__label">メッセージ</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="profile-settings.html" class="dash-profile" aria-label="プロフィール">
+              <img class="dash-profile__avatar" data-dash-avatar src="https://placehold.co/64x64/f3ead4/967622?text=ME" width="40" height="40" alt="">
+              <span class="dash-profile__text">
+                <span class="dash-profile__name" data-dash-user-name>会員</span>
+                <span class="dash-profile__sub">個人・事業者</span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </header>
+      <main class="dash-content dash-shell">
+        <section class="dash-member-page-head">
+          <h2 class="dash-member-page-head__title">Platform オプション</h2>
+          <p class="dash-member-page-head__sub">掲載の露出や信頼性を高めるオプションです。決済は順次提供予定です。</p>
+        </section>
+
+        <p class="platform-options-intro">
+          <strong>掲載・ページ作成は無料</strong>です。Talk 開始・連絡先開示は <strong>550円（税込）</strong>。
+          以下のオプション課金は今後追加予定です（現時点では申込・決済はできません）。
+        </p>
+
+        <div class="platform-options-grid" data-platform-options-grid aria-label="掲載オプション一覧"></div>
+
+        <p class="platform-options-footnote">
+          料金の詳細は <a href="/help/pricing/">ヘルプ：料金・手数料</a> および
+          <a href="/company/legal/terms.html">利用規約 第7条</a> をご確認ください。
+        </p>
+      </main>
+    </div>
+  </div>
+
+  <script src="dashboard-guard.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="auth-current-user.js"></script>
+  <script src="breadcrumb-config.js"></script>
+  <script src="common-breadcrumb.js"></script>
+  <script src="dashboard.js?v=2026-06-15-sidebar-mega"></script>
+  <script src="platform-options.js"></script>
+</body>
+</html>

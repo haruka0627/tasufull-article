@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サービス詳細 | TASFUL Market</title>
+  <meta name="description" content="TASFUL Market — サービス詳細">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/detail-favorites.css">
+  <link rel="stylesheet" href="/seller-rank-plate.css">
+  <link rel="stylesheet" href="/index-home.css">
+  <link rel="stylesheet" href="/market-service-detail.css">
+  <link rel="stylesheet" href="/tasful-ai-logo.css?v=4">
+</head>
+<body class="market-service-page" data-page="market_service_detail">
+  <header class="home-header top-portal-header" aria-label="TASFUL ヘッダー">
+    <div class="home-header__inner">
+      <a class="tasful-ai-logo home-header__logo" href="/market/" aria-label="TASFUL プラットフォーム">
+        <img src="/images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <nav class="home-nav" aria-label="メインナビ">
+        <a href="/market/" aria-current="page">一般</a>
+        <a href="/job-top.html">求人</a>
+        <a href="/shop-store.html">店舗・販売</a>
+        <a href="/business.html">業務サービス</a>
+        <a href="/ai-workspace.html">AI相談</a>
+      </nav>
+      <div class="home-actions">
+        <a class="home-icon-btn" href="/chat.html" aria-label="メッセージ">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>メッセージ</span>
+        </a>
+        <a class="home-icon-btn" href="/dashboard-favorites" aria-label="お気に入り">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>お気に入り</span>
+        </a>
+        <a class="home-cta" href="/post.html">出品する</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="msd-shell">
+    <a class="msd-back" href="/market/">← マーケット一覧に戻る</a>
+    <div data-market-service-root aria-live="polite">
+      <div class="msd-card msd-empty">
+        <p class="msd-empty__text">読み込み中…</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/chat-supabase-config.js"></script>
+  <script src="/supabase-public-key.js"></script>
+  <script src="/tasu-supabase-client.js"></script>
+  <script src="/favorites-db.js"></script>
+  <script src="/detail-favorites.js"></script>
+  <script src="/listing-route-resolver.js"></script>
+  <script src="/listing-demo-catalog.js"></script>
+  <script src="/platform-portal-listing-ui-demo.js"></script>
+  <script src="/listing-seller-profile.js"></script>
+  <script src="/listings-db.js"></script>
+  <script src="/market-service-data.js"></script>
+  <script src="/market-service-detail.js"></script>
+</body>
+</html>

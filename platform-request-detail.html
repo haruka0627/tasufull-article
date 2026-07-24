@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>依頼詳細 | Platform Request | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="top.css">
+  <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="platform-request.css">
+</head>
+<body class="top-page prq-page" data-page="platform_request_detail" data-prq-page="detail" data-breadcrumb-page-label="投稿詳細">
+  <header class="top-site-header site-header top-portal-header">
+    <div class="top-site-header__inner">
+      <a href="index-top.html" class="tasful-ai-logo top-site-header__logo top-portal-header__logo" aria-label="TASFUL プラットフォームTOP">
+        <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">プラットフォーム</span>
+        </div>
+      </a>
+      <nav class="top-site-header__nav top-portal-header__nav" aria-label="メインナビ">
+        <a href="/market/">掲載を探す</a>
+        <a href="talk-home.html">Talk Home</a>
+        <a href="platform-request.html">Platform Request</a>
+        <a href="post.html">掲載する</a>
+        <a href="ai-workspace.html">AI相談</a>
+      </nav>
+      <div class="top-portal-header__actions">
+        <a href="login.html" class="top-portal-header__login">ログイン</a>
+        <a href="signup.html" class="top-site-header__cta top-portal-header__register">無料で登録する</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="prq-shell">
+    <nav class="prq-breadcrumb" aria-label="パンくず">
+      <ol class="prq-breadcrumb__list">
+        <li class="prq-breadcrumb__item"><a href="talk-home.html">Talk Home</a></li>
+        <li class="prq-breadcrumb__item"><a href="platform-request.html">Platform Request</a></li>
+        <li class="prq-breadcrumb__item" aria-current="page">投稿詳細</li>
+      </ol>
+    </nav>
+
+    <div class="prq-success-banner" data-prq-posted-banner hidden role="status" aria-live="polite">
+      <div class="prq-success-banner__icon" aria-hidden="true">✓</div>
+      <div class="prq-success-banner__body">
+        <p class="prq-success-banner__title">投稿が完了しました。</p>
+        <p class="prq-success-banner__text">条件に合う候補を表示しています。</p>
+      </div>
+      <button type="button" class="prq-success-banner__close" data-prq-posted-banner-close aria-label="閉じる">✕</button>
+    </div>
+
+    <article class="prq-detail" data-prq-detail-content aria-labelledby="prqDetailTitle">
+      <header class="prq-detail__header">
+        <span class="prq-hero__badge">📢 依頼詳細</span>
+        <h1 class="prq-detail__title" id="prqDetailTitle" data-prq-detail-title>読み込み中…</h1>
+
+        <div class="prq-detail__status-bar">
+          <span class="prq-detail__meta-label">ステータス</span>
+          <span class="prq-detail__meta-value prq-detail__status" data-prq-detail-status>—</span>
+        </div>
+
+        <div class="prq-detail__chips" aria-label="カテゴリと地域">
+          <span class="prq-tag prq-tag--cat" data-prq-detail-category-chip>—</span>
+          <span class="prq-tag prq-tag--area" data-prq-detail-area-chip>—</span>
+          <span class="prq-tag" data-prq-detail-urgency-chip hidden>—</span>
+          <span class="prq-tag prq-tag--budget" data-prq-detail-budget-chip hidden>—</span>
+        </div>
+      </header>
+
+      <section class="prq-detail__body-wrap" aria-label="依頼内容">
+        <p class="prq-detail__body" data-prq-detail-body></p>
+      </section>
+
+      <div class="prq-detail__submeta" aria-label="投稿情報">
+        <div class="prq-detail__meta-item">
+          <span class="prq-detail__meta-label">投稿日時</span>
+          <time class="prq-detail__meta-value" data-prq-detail-date datetime>—</time>
+        </div>
+        <div class="prq-detail__meta-item">
+          <span class="prq-detail__meta-label">投稿者</span>
+          <span class="prq-detail__meta-value" data-prq-detail-author>匿名</span>
+        </div>
+      </div>
+
+      <div class="prq-status-controls" data-prq-status-controls hidden aria-label="ステータス変更">
+        <p class="prq-status-controls__label">ステータス変更（この端末の投稿のみ）</p>
+        <div class="prq-status-controls__buttons" role="group" aria-label="ステータスを選択">
+          <button type="button" class="prq-status-btn" data-prq-status-set="open">受付中</button>
+          <button type="button" class="prq-status-btn" data-prq-status-set="closed">終了</button>
+          <button type="button" class="prq-status-btn" data-prq-status-set="cancelled">キャンセル</button>
+        </div>
+      </div>
+
+      <div class="prq-detail__actions">
+        <button type="button" class="prq-btn prq-btn--primary" data-prq-start-talk hidden>Talk開始</button>
+        <button type="button" class="prq-btn prq-btn--cyan" data-prq-respond aria-label="対応できます（候補カードから操作）">対応できます（準備中）</button>
+        <a href="platform-request-create.html" class="prq-btn prq-btn--ghost">自分も依頼を投稿</a>
+      </div>
+
+      <!-- hidden legacy hooks for tests / JS -->
+      <span class="prq-sr-only" data-prq-detail-area hidden></span>
+      <span class="prq-sr-only" data-prq-detail-category hidden></span>
+      <span class="prq-sr-only" data-prq-detail-urgency hidden></span>
+      <span class="prq-sr-only" data-prq-detail-budget hidden></span>
+      <span class="prq-sr-only" data-prq-detail-budget-row hidden></span>
+    </article>
+
+    <section class="prq-notifications" data-prq-notifications hidden aria-labelledby="prqDetailNotificationsTitle">
+      <header class="prq-notifications__head">
+        <h2 class="prq-notifications__title" id="prqDetailNotificationsTitle">
+          通知 <span class="prq-notifications__unread" data-prq-notifications-unread hidden></span>
+        </h2>
+        <button type="button" class="prq-btn prq-btn--ghost prq-btn--sm" data-prq-notifications-mark-all>すべて既読</button>
+      </header>
+      <div class="prq-notifications__list" data-prq-notifications-list></div>
+      <p class="prq-notifications__empty" data-prq-notifications-empty hidden>通知はまだありません</p>
+    </section>
+
+    <section class="prq-candidates" data-prq-candidates-section hidden aria-labelledby="prqCandidatesTitle">
+      <header class="prq-candidates__head">
+        <div>
+          <h2 class="prq-candidates__title" id="prqCandidatesTitle">対応できそうな候補</h2>
+          <p class="prq-candidates__sub" data-prq-candidates-sub>投稿内容から抽出した通知候補です（まだ通知は送信されません）</p>
+        </div>
+        <span class="prq-candidates__count" data-prq-candidates-count aria-label="候補件数">0件</span>
+      </header>
+      <div class="prq-candidates__list" data-prq-candidates-list aria-live="polite"></div>
+      <div class="prq-candidates__empty prq-empty-state" data-prq-candidates-empty hidden role="status">
+        <div class="prq-empty-state__icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="52" height="52" fill="none" stroke="currentColor" stroke-width="2"><rect x="10" y="16" width="44" height="36" rx="6"/><path d="M22 28h20M22 36h14"/><circle cx="46" cy="22" r="8" fill="currentColor" stroke="none" opacity=".25"/></svg>
+        </div>
+        <p class="prq-empty-state__title">まだ条件に合う候補が見つかっていません</p>
+        <p class="prq-empty-state__text">カテゴリや地域を変えると、候補が表示される場合があります。</p>
+      </div>
+    </section>
+
+    <section class="prq-contact-reveal" data-prq-contact-reveal hidden aria-labelledby="prqContactRevealTitle">
+      <header class="prq-contact-reveal__head">
+        <h2 class="prq-contact-reveal__title" id="prqContactRevealTitle">連絡先（開示済み）</h2>
+        <p class="prq-contact-reveal__note">情報開示料のお支払い後に表示されます</p>
+      </header>
+      <dl class="prq-contact-reveal__facts">
+        <div>
+          <dt data-prq-contact-label>連絡先</dt>
+          <dd data-prq-contact-email>—</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="prq-fee-card" data-prq-fee-card hidden aria-labelledby="prqFeeCardTitle">
+      <div class="prq-fee-card__icon" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2"><circle cx="24" cy="24" r="18"/><path d="M24 14v4M24 34v2"/><path d="M18 22h8a4 4 0 0 1 0 8h-4a4 4 0 0 0 0 8h8"/></svg>
+      </div>
+      <div class="prq-fee-card__content">
+        <h2 class="prq-fee-card__title" id="prqFeeCardTitle">情報開示料について</h2>
+        <p class="prq-fee-card__amount"><span class="prq-fee-card__label">情報開示料</span> <strong>550円</strong><span class="prq-fee-card__tax">（税込 · Staging Test）</span></p>
+        <ul class="prq-fee-card__list">
+          <li>候補者が「対応できます」から Stripe Test 決済（¥550）</li>
+          <li>決済完了後に連絡先開示・Talk 開始が可能</li>
+          <li>同一マッチでの重複課金は防止されます</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="prq-not-found prq-empty-state" data-prq-not-found hidden aria-labelledby="prqNotFoundTitle">
+      <div class="prq-empty-state__icon" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="56" height="56" fill="none" stroke="currentColor" stroke-width="2"><circle cx="28" cy="28" r="16"/><path d="m44 44 14 14"/><path d="M24 24l8 8M32 24l-8 8"/></svg>
+      </div>
+      <h1 class="prq-empty-state__title" id="prqNotFoundTitle">依頼が見つかりません</h1>
+      <p class="prq-empty-state__text">指定された ID の依頼は存在しないか、削除された可能性があります。</p>
+      <div class="prq-empty-state__actions">
+        <a href="platform-request.html" class="prq-btn prq-btn--primary">一覧へ戻る</a>
+        <a href="talk-home.html" class="prq-btn prq-btn--ghost">Talk Home</a>
+        <a href="platform-request-create.html" class="prq-btn prq-btn--ghost">依頼を投稿</a>
+      </div>
+    </section>
+  </main>
+
+  <div class="prq-modal" data-prq-respond-modal hidden aria-hidden="true">
+    <div class="prq-modal__backdrop" data-prq-modal-close tabindex="-1" aria-hidden="true"></div>
+    <div class="prq-modal__panel" role="dialog" aria-modal="true" aria-labelledby="prqRespondModalTitle" tabindex="-1">
+      <header class="prq-modal__head">
+        <h2 class="prq-modal__title" id="prqRespondModalTitle">対応の確認</h2>
+        <button type="button" class="prq-modal__close" data-prq-modal-close aria-label="閉じる">✕</button>
+      </header>
+      <div class="prq-modal__body">
+        <dl class="prq-modal__facts">
+          <div>
+            <dt>候補者</dt>
+            <dd data-prq-modal-candidate-name>—</dd>
+          </div>
+          <div>
+            <dt>依頼</dt>
+            <dd data-prq-modal-request-title>—</dd>
+          </div>
+        </dl>
+        <div class="prq-modal__fee-box" aria-label="情報開示料">
+          <p class="prq-modal__fee-label">情報開示料</p>
+          <p class="prq-modal__fee-value" data-prq-modal-fee>¥550</p>
+          <p class="prq-modal__fee-note">Talk開始・連絡先開示時に発生（Stripe Test）</p>
+        </div>
+        <p class="prq-modal__lead">「進む」で <strong>¥550</strong> の情報開示料をお支払いいただきます。</p>
+        <p class="prq-modal__note" role="note">
+          決済完了後、連絡先の開示と Talk 開始が可能になります（Staging Test のみ）。
+        </p>
+      </div>
+      <footer class="prq-modal__foot">
+        <button type="button" class="prq-btn prq-btn--ghost" data-prq-modal-cancel>キャンセル</button>
+        <button type="button" class="prq-btn prq-btn--primary" data-prq-modal-proceed>進む（¥550）</button>
+      </footer>
+    </div>
+  </div>
+
+  <div class="prq-toast" data-prq-toast role="status" aria-live="polite"></div>
+  <script src="chat-supabase-config.js"></script>
+  <script src="supabase-public-key.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="tasu-supabase-client.js"></script>
+  <script src="platform-request-supabase-store.js"></script>
+  <script src="platform-request-matches-supabase-store.js"></script>
+  <script src="platform-request-notification-store.js"></script>
+  <script src="platform-request-talk-bridge.js"></script>
+  <script src="platform-request-payment-bridge.js"></script>
+  <script src="platform-request.js"></script>
+</body>
+</html>
