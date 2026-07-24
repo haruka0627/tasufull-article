@@ -196,6 +196,13 @@
     return `<span class="${cls}">${C.escapeHtml(C.statusLabel(status))}</span>`;
   }
 
+  function updateQueueSummary(count) {
+    const summary = C.qs("[data-bd-admin-summary]");
+    const countEl = C.qs("[data-bd-admin-queue-count]");
+    if (countEl) countEl.textContent = `${count}件`;
+    if (summary) summary.hidden = count <= 0;
+  }
+
   async function loadReviewQueue() {
     const repo = getAdminRepository();
     const host = C.qs("[data-bd-admin-queue]");
@@ -211,6 +218,7 @@
         const listing = item.business_directory_listings || {};
         return String(listing.status) === "review_requested";
       });
+      updateQueueSummary(queue.length);
       if (!queue.length) {
         if (host) host.innerHTML = "";
         if (empty) empty.hidden = false;
@@ -225,13 +233,13 @@
             const listing = item.business_directory_listings || {};
             const listingId = String(listing.id || item.listing_id);
             return `<tr>
-              <td>${C.escapeHtml(listing.display_name || "—")}</td>
-              <td>${C.escapeHtml(C.typeLabel(listing.listing_type))}</td>
-              <td>${C.escapeHtml(String(listing.plan_code || "free").toUpperCase())}</td>
-              <td>${C.escapeHtml(formatDateTime(item.submitted_at))}</td>
-              <td>${C.escapeHtml(String(listing.owner_user_id || "—"))}</td>
-              <td>${renderStatusBadge(listing.status || "review_requested")}</td>
-              <td><a class="bd-admin-btn bd-admin-btn--ghost" href="listing.html?id=${encodeURIComponent(listingId)}">詳細確認</a></td>
+              <td class="bd-admin-table__name" data-label="掲載名">${C.escapeHtml(listing.display_name || "—")}</td>
+              <td data-label="種別">${C.escapeHtml(C.typeLabel(listing.listing_type))}</td>
+              <td data-label="プラン">${C.escapeHtml(String(listing.plan_code || "free").toUpperCase())}</td>
+              <td data-label="申請日時">${C.escapeHtml(formatDateTime(item.submitted_at))}</td>
+              <td data-label="事業者">${C.escapeHtml(String(listing.owner_user_id || "—"))}</td>
+              <td data-label="状態">${renderStatusBadge(listing.status || "review_requested")}</td>
+              <td class="bd-admin-table__action" data-label="操作"><a class="bd-admin-btn bd-admin-btn--ghost" href="listing.html?id=${encodeURIComponent(listingId)}${useAdminMock() ? "&bdAdminMock=1" : ""}">詳細確認</a></td>
             </tr>`;
           })
           .join("")}</tbody></table>`;
@@ -256,12 +264,12 @@
            <dt>料金目安</dt><dd>${C.escapeHtml(profile.price_range_text || "—")}</dd>`;
 
     host.innerHTML = `
-      <p class="bd-admin-notice bd-admin-notice--readonly">運営は読取のみ — 事業者情報の入力代行は行いません</p>
+      <p class="bd-admin-notice bd-admin-notice--readonly">運営は読取のみです。事業者情報の入力代行は行いません。</p>
       <dl class="bd-admin-dl">
         <dt>掲載名</dt><dd>${C.escapeHtml(listing.display_name || "—")}</dd>
         <dt>種別</dt><dd>${C.escapeHtml(C.typeLabel(listing.listing_type))}</dd>
         <dt>プラン</dt><dd>${C.escapeHtml(String(listing.plan_code || "free").toUpperCase())}</dd>
-        <dt>ステータス</dt><dd>${renderStatusBadge(listing.status)}</dd>
+        <dt>公開状態</dt><dd>${renderStatusBadge(listing.status)}</dd>
         <dt>会社名</dt><dd>${C.escapeHtml(profile.company_name || "—")}</dd>
         <dt>担当者</dt><dd>${C.escapeHtml(profile.contact_name || "—")}</dd>
         <dt>メール</dt><dd>${C.escapeHtml(profile.contact_email || "—")}</dd>
@@ -274,15 +282,18 @@
         <dt>紹介文</dt><dd>${C.escapeHtml(profile.short_description || "—")}</dd>
         ${serviceBlock}
       </dl>
-      <div class="bd-admin-section" style="margin-top:16px">
+      <div class="bd-admin-section bd-admin-section--nested">
         <h3 class="bd-admin-section__title">写真</h3>
         <div class="bd-admin-photo-row">${
           photos.length
             ? photos.map((p) => `<img src="${p.url || p.public_url || ""}" alt="">`).join("")
-            : "<span>—</span>"
+            : `<div class="bd-admin-photo-empty" role="status">
+                <span class="bd-admin-photo-empty__frame" aria-hidden="true"></span>
+                <span class="bd-admin-photo-empty__text">画像未登録</span>
+              </div>`
         }</div>
       </div>
-      <div class="bd-admin-section" style="margin-top:16px">
+      <div class="bd-admin-section bd-admin-section--nested">
         <h3 class="bd-admin-section__title">営業時間</h3>
         <p>${C.escapeHtml(hours.map((h) => h.label ? `${h.label}: ${h.value || h.hours_text}` : h.hours_text).join(" / ") || "—")}</p>
       </div>`;
@@ -293,7 +304,7 @@
     if (!host) return;
     const list = requests || [];
     if (!list.length) {
-      host.innerHTML = "<p class=\"bd-admin-empty\">申請履歴なし</p>";
+      host.innerHTML = "<p class=\"bd-admin-empty bd-admin-empty--inline\">申請履歴なし</p>";
       return;
     }
     host.innerHTML = `<ul class="bd-admin-log-list">${list
@@ -313,7 +324,7 @@
     if (!host) return;
     const list = logs || [];
     if (!list.length) {
-      host.innerHTML = "<p class=\"bd-admin-empty\">監査ログなし</p>";
+      host.innerHTML = "<p class=\"bd-admin-empty bd-admin-empty--inline\">監査ログなし</p>";
       return;
     }
     host.innerHTML = `<ul class="bd-admin-log-list">${list
@@ -333,9 +344,9 @@
     const listing = detail.listing || {};
     const profile = detail.profile || {};
     host.innerHTML = `<div class="bd-admin-preview">
-      <p><strong>公開プレビュー</strong>（${C.escapeHtml(C.statusLabel(listing.status))}）</p>
+      <p class="bd-admin-preview__label">公開プレビュー · ${C.escapeHtml(C.statusLabel(listing.status))}</p>
       <h3>${C.escapeHtml(listing.display_name || "")}</h3>
-      <p>${C.escapeHtml(profile.short_description || "")}</p>
+      <p>${C.escapeHtml(profile.short_description || "紹介文なし")}</p>
     </div>`;
   }
 
@@ -435,6 +446,8 @@
       C.qs("[data-bd-admin-listing-title]", document).textContent =
         detail.listing?.display_name || "掲載詳細";
       C.qs("[data-bd-admin-listing-status]", document).innerHTML = renderStatusBadge(status);
+      const back = C.qs(".bd-admin-head__back");
+      if (back && useAdminMock()) back.href = "reviews.html?bdAdminMock=1";
       renderReadonlyDetail(detail);
       renderPreview(detail);
       renderReviewHistory(detail.review_requests);

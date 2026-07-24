@@ -13,14 +13,20 @@
 <body data-page="business-directory-admin-reviews" data-bd-admin-page="reviews">
   <main class="bd-admin-layout" data-bd-admin-root>
     <header class="bd-admin-head">
-      <div>
+      <div class="bd-admin-head__lead">
         <span class="bd-admin-badge">Ops · Business Directory</span>
         <h1 class="bd-admin-head__title">審査キュー</h1>
-        <p class="bd-admin-head__sub">review_requested の掲載 — 読取 + 審査のみ（入力代行なし）</p>
+        <p class="bd-admin-head__sub">公開申請中の掲載を確認し、承認または差戻しを行います。事業者情報の入力代行は行いません。</p>
       </div>
       <a class="bd-admin-btn bd-admin-btn--ghost" href="../../builder-admin/admin-index.html">運営 TOP</a>
     </header>
     <p class="bd-toast" data-bd-admin-toast hidden role="status"></p>
+    <div class="bd-admin-summary" data-bd-admin-summary hidden>
+      <div class="bd-admin-summary__card bd-admin-summary__card--wait">
+        <span class="bd-admin-summary__label">公開待ち</span>
+        <span class="bd-admin-summary__value" data-bd-admin-queue-count>0件</span>
+      </div>
+    </div>
     <div class="bd-admin-table-wrap" data-bd-admin-queue aria-live="polite"></div>
     <div class="bd-admin-empty" data-bd-admin-queue-empty hidden>
       <p>審査待ちの掲載はありません</p>

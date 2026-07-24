@@ -17,45 +17,72 @@
         <div class="bd-page-head">
           <div>
             <h1 class="bd-page-head__title">新規掲載</h1>
-            <p class="bd-page-head__sub">初回は最小項目のみ（約1〜2分）</p>
+            <p class="bd-page-head__sub">初回は最小項目のみで掲載できます。公開前であれば後から自由に編集できます。（約1〜2分）</p>
           </div>
           <a class="dash-btn dash-btn--ghost" href="index.html">← ダッシュボード</a>
         </div>
         <p class="bd-toast" data-bd-toast hidden role="status"></p>
-        <form class="bd-form" data-bd-new-form novalidate>
+        <form class="bd-form bd-form--new" data-bd-new-form novalidate>
           <h2 class="bd-form__section-title">掲載種別</h2>
+          <p class="bd-form__lead">掲載の種類を選んでください。あとから変更できません。</p>
           <div class="bd-type-picker">
-            <label><input type="radio" name="listing_type" value="shop_retail" checked><span>店舗・販売</span></label>
-            <label><input type="radio" name="listing_type" value="business_service"><span>業務サービス</span></label>
+            <label>
+              <input type="radio" name="listing_type" value="shop_retail" checked>
+              <span class="bd-type-picker__body">
+                <span class="bd-type-picker__title">店舗・販売</span>
+                <span class="bd-type-picker__desc">店舗・商品販売・小売向け</span>
+              </span>
+            </label>
+            <label>
+              <input type="radio" name="listing_type" value="business_service">
+              <span class="bd-type-picker__body">
+                <span class="bd-type-picker__title">業務サービス</span>
+                <span class="bd-type-picker__desc">工事・修理・代行・士業など</span>
+              </span>
+            </label>
           </div>
 
           <h2 class="bd-form__section-title">基本情報</h2>
           <label class="bd-field">
             <span class="bd-field__label">掲載名 *</span>
-            <input name="display_name" required maxlength="120" placeholder="例: 田中商店 / 山田工務店">
+            <input name="display_name" required maxlength="120" placeholder="例: 田中商店 / 山田工務店" autocomplete="organization">
           </label>
           <label class="bd-field">
             <span class="bd-field__label">担当者名 *</span>
-            <input name="contact_name" required>
+            <input name="contact_name" required autocomplete="name">
           </label>
           <label class="bd-field">
             <span class="bd-field__label">メール *</span>
-            <input name="contact_email" type="email" required>
+            <input name="contact_email" type="email" required autocomplete="email">
           </label>
           <label class="bd-field">
             <span class="bd-field__label">電話 *</span>
-            <input name="contact_phone" type="tel" required>
+            <input name="contact_phone" type="tel" required autocomplete="tel">
           </label>
 
           <h2 class="bd-form__section-title">所在地 · 対応地域</h2>
           <div class="bd-field">
             <span class="bd-field__label">所在地 *</span>
-            <div style="display:grid;gap:8px;grid-template-columns:repeat(2,minmax(0,1fr));">
-              <input name="prefecture" placeholder="都道府県" required>
-              <input name="city" placeholder="市区町村" required>
+            <div class="bd-addr-grid">
+              <div class="bd-addr-grid__row">
+                <label class="bd-addr-grid__cell">
+                  <span class="bd-addr-grid__label">都道府県</span>
+                  <input name="prefecture" placeholder="例: 東京都" required autocomplete="address-level1">
+                </label>
+                <label class="bd-addr-grid__cell">
+                  <span class="bd-addr-grid__label">市区町村</span>
+                  <input name="city" placeholder="例: 渋谷区" required autocomplete="address-level2">
+                </label>
+              </div>
+              <label class="bd-addr-grid__cell">
+                <span class="bd-addr-grid__label">番地以降</span>
+                <input name="address_line1" placeholder="例: 道玄坂1-2-3" required autocomplete="street-address">
+              </label>
+              <label class="bd-addr-grid__cell bd-addr-grid__cell--postal">
+                <span class="bd-addr-grid__label">郵便番号（任意）</span>
+                <input name="postal_code" placeholder="例: 150-0043" inputmode="numeric" autocomplete="postal-code">
+              </label>
             </div>
-            <input name="address_line1" placeholder="番地以降" required style="margin-top:8px;">
-            <input name="postal_code" placeholder="郵便番号（任意）" style="margin-top:8px;">
           </div>
           <label class="bd-field">
             <span class="bd-field__label">対応地域 *（カンマ区切り）</span>
@@ -69,12 +96,12 @@
           <h2 class="bd-form__section-title">Web · 紹介</h2>
           <label class="bd-field">
             <span class="bd-field__label">公式サイト URL（任意）</span>
-            <input name="website_url" type="url" placeholder="https://">
+            <input name="website_url" type="url" placeholder="https://" autocomplete="url">
           </label>
           <fieldset class="bd-field bd-hp-mode">
-            <span class="bd-field__label">公開形式 *</span>
-            <label><input type="radio" name="hp_mode" value="external_redirect"> 公式サイトへ送客</label>
-            <label><input type="radio" name="hp_mode" value="full_page" checked> TASFULページを簡易HPとして使う</label>
+            <legend class="bd-field__label">公開形式 *</legend>
+            <label class="bd-hp-mode__option"><input type="radio" name="hp_mode" value="external_redirect"><span>公式サイトへ送客</span></label>
+            <label class="bd-hp-mode__option"><input type="radio" name="hp_mode" value="full_page" checked><span>TASFULページを簡易HPとして使う</span></label>
           </fieldset>
           <label class="bd-field">
             <span class="bd-field__label">短文紹介 *</span>
@@ -83,10 +110,10 @@
           <label class="bd-field">
             <span class="bd-field__label">写真 1 枚 *</span>
             <input name="photo" type="file" accept="image/*" required>
-            <span class="bd-field-hint">Free プランは1枚のみ</span>
+            <span class="bd-field-hint">Free プランは1枚のみ。あとから編集画面で差し替えできます。</span>
           </label>
 
-          <div data-bd-type-field="shop_retail">
+          <div class="bd-form__type-block" data-bd-type-field="shop_retail">
             <h2 class="bd-form__section-title">店舗・販売</h2>
             <label class="bd-field">
               <span class="bd-field__label">営業時間</span>
@@ -98,7 +125,7 @@
             </label>
           </div>
 
-          <div data-bd-type-field="business_service" hidden>
+          <div class="bd-form__type-block" data-bd-type-field="business_service" hidden>
             <h2 class="bd-form__section-title">業務サービス</h2>
             <label class="bd-field">
               <span class="bd-field__label">主なサービス内容</span>
@@ -111,35 +138,35 @@
           </div>
 
           <h2 class="bd-form__section-title">プラン</h2>
-          <p class="bd-field-hint">新規作成時は Free プランです。Standard / Pro へのアップグレードは掲載作成後、編集画面のプランタブから Stripe 決済で行えます。</p>
+          <p class="bd-form__lead">新規作成時は Free プランです。Standard / Pro へのアップグレードは掲載作成後、編集画面から Stripe 決済で行えます。</p>
           <input type="hidden" name="plan_code" value="free">
-          <div data-bd-plan-panel></div>
+          <div class="bd-plan-panel" data-bd-plan-panel></div>
 
-          <label class="bd-field">
-            <label>
-              <input type="checkbox" name="terms_accepted" required>
-              <a href="terms.html" target="_blank" rel="noopener">店舗・業務掲載規約</a>に同意する *
-            </label>
+          <label class="bd-field bd-field--check">
+            <input type="checkbox" name="terms_accepted" required>
+            <span class="bd-field__check-text"><a href="terms.html" target="_blank" rel="noopener">店舗・業務掲載規約</a>に同意する *</span>
           </label>
 
-          <p class="bd-field-hint">下書き保存後、編集画面の「公開設定」タブから公開を申請できます。Free プランでも公開申請できます。</p>
+          <p class="bd-form__lead bd-form__lead--actions">下書き保存後、編集画面の「公開設定」タブから公開を申請できます。Free プランでも公開申請できます。</p>
 
           <div class="bd-form__actions">
             <button type="submit" class="dash-btn dash-btn--primary" data-bd-action="create_draft_listing">下書き保存</button>
             <a class="dash-btn dash-btn--ghost" href="index.html">キャンセル</a>
           </div>
         </form>
-        <p class="bd-field-hint" data-bd-legal-footer>
-          <a href="terms.html" target="_blank" rel="noopener">掲載規約</a>
-          ·
-          <a href="../company/legal/tokushoho.html" target="_blank" rel="noopener">特商法</a>
-          ·
-          <a href="../company/legal/privacy.html" target="_blank" rel="noopener">プライバシー</a>
-        </p>
-        <p class="bd-field-hint" data-bd-support-footer>
-          サポート・お問い合わせ:
-          <a href="../iwasho/contact.html" target="_blank" rel="noopener">掲載、課金、不具合、通報などのお問い合わせはこちら</a>
-        </p>
+        <div class="bd-page-foot">
+          <p class="bd-field-hint bd-page-foot__legal" data-bd-legal-footer>
+            <a href="terms.html" target="_blank" rel="noopener">掲載規約</a>
+            <span class="bd-page-foot__sep" aria-hidden="true">·</span>
+            <a href="../company/legal/tokushoho.html" target="_blank" rel="noopener">特商法</a>
+            <span class="bd-page-foot__sep" aria-hidden="true">·</span>
+            <a href="../company/legal/privacy.html" target="_blank" rel="noopener">プライバシー</a>
+          </p>
+          <p class="bd-field-hint bd-page-foot__support" data-bd-support-footer>
+            サポート・お問い合わせ:
+            <a href="../iwasho/contact.html" target="_blank" rel="noopener">掲載、課金、不具合、通報などのお問い合わせはこちら</a>
+          </p>
+        </div>
       </main>
     </div>
   </div>
