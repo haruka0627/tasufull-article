@@ -71,20 +71,61 @@
     };
   }
 
+  function resolveCatalogLimitsForPlanCode(planCode) {
+    const RT = global.TasuPricingRuntime;
+    if (!RT?.resolveGenAiSkuForPlanCode || !RT?.getDailyLimit) return null;
+    const skuId = RT.resolveGenAiSkuForPlanCode(planCode);
+    if (!skuId) return null;
+    const textLimit = RT.getDailyLimit(skuId, "text_turn");
+    const voiceLimit = RT.getDailyLimit(skuId, "voice_turn");
+    const imageLimit = RT.getDailyLimit(skuId, "image_turn");
+    const out = {};
+    if (Number.isFinite(textLimit)) out.dailyTextLimit = textLimit;
+    if (Number.isFinite(voiceLimit)) out.dailyVoiceLimit = voiceLimit;
+    if (Number.isFinite(imageLimit)) out.dailyImageLimit = imageLimit;
+    return Object.keys(out).length ? out : null;
+  }
+
+  function resolveStripePlanLimits(planCode) {
+    const cfg = global.TasuStripeGenAiConfig;
+    const plans = cfg?.PLANS;
+    if (!plans || typeof plans !== "object") return null;
+    const entry = Object.values(plans).find((p) => p && p.plan === planCode);
+    if (!entry) return null;
+    const out = {};
+    if (Number.isFinite(Number(entry.dailyTextLimit))) out.dailyTextLimit = Number(entry.dailyTextLimit);
+    if (Number.isFinite(Number(entry.dailyVoiceLimit))) out.dailyVoiceLimit = Number(entry.dailyVoiceLimit);
+    if (Number.isFinite(Number(entry.dailyImageLimit))) out.dailyImageLimit = Number(entry.dailyImageLimit);
+    return Object.keys(out).length ? out : null;
+  }
+
+  function resolvePaidPlanLimits(planCode) {
+    return resolveCatalogLimitsForPlanCode(planCode) || resolveStripePlanLimits(planCode);
+  }
+
   function readGenAiPlan() {
     try {
       const raw = JSON.parse(global.localStorage.getItem(STORAGE_GENAI_PLAN) || "null");
       if (!raw || typeof raw !== "object") {
         return { ...DEFAULT_FREE_PLAN, ...getDefaultLimits() };
       }
+      const planCode = String(raw.plan || DEFAULT_FREE_PLAN.plan);
       const defaults = getDefaultLimits();
+      const paidLimits = planCode !== "free" ? resolvePaidPlanLimits(planCode) : null;
+      const dailyTextLimit = Math.max(
+        0,
+        Number(
+          raw.dailyTextLimit ??
+            paidLimits?.dailyTextLimit ??
+            defaults.dailyTextLimit
+        ) || defaults.dailyTextLimit
+      );
       return {
-        plan: String(raw.plan || DEFAULT_FREE_PLAN.plan),
-        label: String(raw.label || (raw.plan === "free" ? "無料枠" : raw.plan || DEFAULT_FREE_PLAN.label)),
-        dailyTextLimit: Math.max(
-          0,
-          Number(raw.dailyTextLimit ?? defaults.dailyTextLimit) || defaults.dailyTextLimit
-        ),
+        plan: planCode,
+        label: String(raw.label || (planCode === "free" ? "無料枠" : planCode || DEFAULT_FREE_PLAN.label)),
+        dailyTextLimit,
+        dailyVoiceLimit: paidLimits?.dailyVoiceLimit,
+        dailyImageLimit: paidLimits?.dailyImageLimit,
         status: String(raw.status || "active"),
         subscriptionStatus: raw.subscriptionStatus || null,
       };

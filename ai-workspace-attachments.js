@@ -105,12 +105,13 @@
             sizeBytes,
           });
         } else if (kind === "pdf") {
+          const dataUrl = await readAsDataURL(file);
           attachments.push({
             name: file.name,
             mimeType: "application/pdf",
             kind: "pdf",
+            base64: stripDataUrlPrefix(dataUrl),
             sizeBytes,
-            note: "PDF本文解析は後続フェーズのため、ファイル名とサイズのみ受信しました。",
           });
         }
       } catch (err) {

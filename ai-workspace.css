@@ -1,5 +1,16 @@
 /* ai-workspace — 候補カード等の機能UI微調整 */
 
+/* 設定・プラン比較モーダル — #tasful-ai-viewport-full (z-index:9999) より前面 */
+.ai-workspace-page .ai-ref-settings-backdrop,
+.ai-workspace-page .ai-ref-plan-upgrade-backdrop {
+  z-index: 10050;
+}
+
+/* 請求確認オーバーレイ — 設定ダイアログより前面 */
+.ai-workspace-page .ai-ref-billing-overlay {
+  z-index: 10060;
+}
+
 /* ── サイドバー（workers版・相談窓口向け） ── */
 .ai-workspace-page .usage-counter-box,
 .ai-workspace-page .usage-row,

@@ -1,0 +1,364 @@
+/**
+ * TASFUL AI Workspace — 回答本文の読みやすさ（Markdown / 検索 / uiReview）
+ * 表示のみ · ref レイアウト · Live 音声専用 UI は対象外
+ */
+/* 会話カラム = composer（.neon-input-frame）と同じ外枠 · .ai-ref-center.is-chat-active と同期 */
+.ai-workspace-page--ref:has(#welcome-screen.is-chat-active) #chat-scroller {
+  padding-inline: 0 !important;
+}
+
+.ai-workspace-page--ref:has(#welcome-screen.is-chat-active) #message-wrapper:not([hidden]) {
+  width: 100%;
+  max-width: min(920px, 100%) !important;
+  margin-inline: auto;
+  padding-inline: 28px;
+  box-sizing: border-box;
+}
+
+.ai-workspace-page--ref:has(#welcome-screen.is-chat-active) .user-bubble-row,
+.ai-workspace-page--ref:has(#welcome-screen.is-chat-active) .ai-msg-row {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: 0;
+  box-sizing: border-box;
+}
+
+.ai-workspace-page--ref:has(#welcome-screen.is-chat-active) .ai-message {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.ai-workspace-page--ref:has(#welcome-screen.is-chat-active) .ai-message__content .ai-search-result-section {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  box-sizing: border-box;
+}
+
+/* 一覧UI（カードUIあり）— カード内左右余白 */
+.ai-workspace-page--ref .ai-message__content .ai-search-result-section.ai-search-result-section--card-ui {
+  padding-inline: clamp(14px, 3vw, 18px);
+  padding-block: clamp(12px, 2.5vw, 16px) clamp(14px, 3vw, 18px);
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .ai-workspace-page--ref .ai-message__content .ai-search-result-section.ai-search-result-section--card-ui {
+    padding-inline: 16px;
+  }
+}
+
+/* 読むコンテンツ（Markdown主体）— 外側カードなし */
+.ai-workspace-page--ref .ai-message .ai-search-result-section:not(.ai-search-result-section--card-ui) {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.ai-workspace-page--ref .ai-message .ai-search-result-section:not(.ai-search-result-section--card-ui) > .ai-search-result-section__title {
+  background: transparent !important;
+  border: none !important;
+}
+
+.ai-workspace-page--ref .ai-message .ai-search-result-section--tasful-ai:not(.ai-search-result-section--card-ui) .ai-answer-pattern__loading,
+.ai-workspace-page--ref .ai-message .ai-search-result-section--tasful-ai:not(.ai-search-result-section--card-ui) .ai-answer-pattern__error,
+.ai-workspace-page--ref .ai-message .ai-search-result-section--tasful-ai:not(.ai-search-result-section--card-ui) .ai-answer-pattern__empty {
+  background: transparent !important;
+  border: none !important;
+}
+
+.ai-workspace-page--ref .ai-message .ai-search-result-section--tasful-qa:not(.ai-search-result-section--card-ui):not(:has(.ai-site-qa-layout--per-item-cards)) .ai-site-qa-layout__header,
+.ai-workspace-page--ref .ai-message .ai-search-result-section--tasful-qa:not(.ai-search-result-section--card-ui):not(:has(.ai-site-qa-layout--per-item-cards)) .ai-site-qa-answer__box,
+.ai-workspace-page--ref .ai-message .ai-search-result-section--tasful-qa:not(.ai-search-result-section--card-ui):not(:has(.ai-site-qa-layout--per-item-cards)) .ai-site-qa-result__query {
+  background: transparent !important;
+  border: none !important;
+}
+
+.ai-workspace-page--ref .user-bubble-row,
+.ai-workspace-page--ref .ai-msg-row {
+  max-width: min(940px, 100%);
+}
+
+.ai-workspace-page--ref .ai-message {
+  max-width: min(920px, 100%);
+  font-size: clamp(14px, 3.6vw, 15px);
+  line-height: 1.75;
+  font-weight: 400;
+}
+
+.ai-workspace-page--ref .user-bubble {
+  max-width: min(88%, 860px);
+}
+
+/* カードコンポーネントのみ中央揃え（Markdown本文・見出し・ボタン・アクションは対象外） */
+.ai-workspace-page--ref .ai-message__content .ai-search-result-section,
+.ai-workspace-page--ref .ai-message__content .ai-search-result-section__body,
+.ai-workspace-page--ref .ai-message__content .ai-hybrid-section,
+.ai-workspace-page--ref .ai-message__content .ai-search-candidates,
+.ai-workspace-page--ref .ai-message__content .ai-cross-card,
+.ai-workspace-page--ref .ai-message__content .ai-web-results,
+.ai-workspace-page--ref .ai-message__content .ai-site-qa-layout,
+.ai-workspace-page--ref .ai-message__content .platform-qa-article,
+.ai-workspace-page--ref .ai-message__content .ai-answer-pattern__loading,
+.ai-workspace-page--ref .ai-message__content .ai-answer-pattern__error,
+.ai-workspace-page--ref .ai-message__content .ai-answer-pattern__empty,
+.ai-workspace-page--ref .ai-message__content .ai-site-qa-answer__box {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Web検索 li は width:100% 未満 + margin:auto で中央寄せされ左端がずれる（実DOM確認） */
+.ai-workspace-page--ref .ai-message__content .ai-web-result-card {
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* ── Markdown 本文 ── */
+.ai-workspace-page--ref .ai-message__content.ai-md {
+  line-height: 1.75;
+  font-weight: 400;
+  color: #111827;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-p {
+  margin: 0 0 0.95em;
+  line-height: 1.75;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-p:last-child {
+  margin-bottom: 0;
+}
+
+/* 見出し（h2 / h3 相当） */
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h {
+  margin: 1.35em 0 0.65em;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.4;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h:first-child {
+  margin-top: 0;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h1 {
+  font-size: clamp(18px, 2.6vw, 22px);
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h2 {
+  font-size: clamp(17px, 2.4vw, 20px);
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h3 {
+  font-size: clamp(16px, 2.2vw, 18px);
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h4,
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h5,
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-h6 {
+  font-size: clamp(15px, 2vw, 16px);
+}
+
+.ai-workspace-page--ref .ai-message .ai-md-h2.ai-section-heading,
+.ai-workspace-page--ref .ai-message .ai-hybrid-section__title,
+.ai-workspace-page--ref .ai-message .ai-search-result-section__title {
+  font-size: clamp(17px, 2.4vw, 20px);
+  font-weight: 700;
+  line-height: 1.45;
+  margin: 1.25em 0 0.7em;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md > .ai-md-h2.ai-section-heading:first-child,
+.ai-workspace-page--ref .ai-message__content > .ai-hybrid-section:first-child .ai-hybrid-section__title,
+.ai-workspace-page--ref .ai-message__content > .ai-search-result-section:first-child .ai-search-result-section__title {
+  margin-top: 0;
+}
+
+/* 番号付きリスト */
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol {
+  margin: 0.65em 0 1.15em;
+  padding: 0;
+  list-style: none;
+  counter-reset: ai-reading-ol;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol > li {
+  counter-increment: ai-reading-ol;
+  position: relative;
+  margin: 0 0 1.05em;
+  padding: 0 0 0 2.15em;
+  line-height: 1.75;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol > li:last-child {
+  margin-bottom: 0;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol > li::before {
+  content: counter(ai-reading-ol) ".";
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 1.65em;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #111827;
+  line-height: 1.75;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol > li strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+/* 箇条書き（Markdown ul · enum 以外） */
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ul:not(.ai-enum-list) {
+  margin: 0.65em 0 1.05em;
+  padding-left: 1.55em;
+}
+
+.ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ul:not(.ai-enum-list) > li {
+  margin: 0 0 0.65em;
+  line-height: 1.75;
+}
+
+/* 検索 AI  prose · enum リスト */
+.ai-workspace-page--ref .ai-message .ai-search-ai-prose,
+.ai-workspace-page--ref .ai-message .ai-search-ai-prose p {
+  line-height: 1.75;
+}
+
+.ai-workspace-page--ref .ai-message .ai-search-ai-prose strong {
+  font-weight: 700 !important;
+}
+
+.ai-workspace-page--ref .ai-message .ai-search-ai-prose .ai-enum-list > li,
+.ai-workspace-page--ref .ai-message .ai-search-enum-section .ai-enum-list > li {
+  margin-bottom: 0.75em;
+  line-height: 1.75;
+}
+
+.ai-workspace-page--ref .ai-message .ai-search-enum-section__title.ai-section-heading,
+.ai-workspace-page--ref .ai-message .ai-search-recommend-reasons__title.ai-section-heading {
+  font-size: clamp(17px, 2.4vw, 20px);
+  font-weight: 700;
+}
+
+/* インラインラベル / バッジ */
+.ai-workspace-page--ref .ai-message__meta-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  color: #4b5563;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.ai-workspace-page--ref .ai-message__content .ai-search-source-label {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  margin: 0.35em 0 0;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #6b7280;
+}
+
+.ai-workspace-page--ref .ai-message__content .ai-web-result-source,
+.ai-workspace-page--ref .ai-message__content .ai-search-result-card__badge:not([class*="__badge--"]) {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #6b7280;
+}
+
+/* uiReview テキストカード */
+.ai-workspace-page--ref .ai-ui-review-showcase__text-card.ai-md {
+  line-height: 1.75;
+}
+
+/* アクションバー（本文より控えめ） */
+.ai-workspace-page--ref .ai-message__actions {
+  margin-top: 14px;
+  padding-top: 2px;
+  gap: 4px;
+  opacity: 0.92;
+}
+
+.ai-workspace-page--ref .ai-message__action {
+  height: 30px;
+  min-width: 30px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #9ca3af;
+}
+
+.ai-workspace-page--ref .ai-message__action:hover {
+  color: #6b7280;
+  background: #f9fafb;
+}
+
+.ai-workspace-page--ref .ai-message-next-actions {
+  margin-top: 14px;
+}
+
+.ai-workspace-page--ref .ai-message-next-actions__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.ai-workspace-page--ref .ai-message-next-actions__btn {
+  font-size: 12px;
+}
+
+/* レスポンシブ */
+@media (max-width: 900px) {
+  .ai-workspace-page--ref:has(#welcome-screen.is-chat-active) #message-wrapper:not([hidden]) {
+    padding-inline: clamp(12px, 4vw, 20px);
+  }
+}
+
+@media (max-width: 768px) {
+  .ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol > li {
+    padding-left: 2em;
+  }
+}
+
+@media (max-width: 390px) {
+  .ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol > li {
+    padding-left: 1.85em;
+  }
+
+  .ai-workspace-page--ref .ai-message__content.ai-md .ai-md-ol > li::before {
+    min-width: 1.45em;
+  }
+
+  .ai-workspace-page--ref .ai-message__content.ai-md strong {
+    font-weight: 700;
+    word-break: break-word;
+  }
+}

@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="ai-workspace-chat.css">
   <link rel="stylesheet" href="tasful-ai-voice.css">
   <link rel="stylesheet" href="ai-workspace.css">
+  <link rel="stylesheet" href="ai-workspace-ref-layout.css">
   <link rel="stylesheet" href="ai-workspace-categories.css">
   <link rel="stylesheet" href="tasful-ai-logo.css?v=4">
   <link rel="stylesheet" href="common-breadcrumb.css">
@@ -82,11 +83,67 @@
           <a href="index-top.html" class="tga-notice-link">プラットフォームTOP</a>
         </nav>
 
-        <div class="user-profile-area" aria-label="ログインユーザー">
-          <div class="user-avatar" aria-hidden="true" data-ai-workspace-user-avatar>G</div>
-          <div class="user-info">
-            <span class="user-info__name" data-ai-workspace-user-name>ゲスト</span>
-            <span class="user-plan-badge" data-ai-workspace-user-plan hidden>Free</span>
+        <div class="user-profile-area-wrap" style="position:relative;width:100%;">
+          <button
+            type="button"
+            class="user-profile-area ai-ref-user"
+            data-ai-workspace-user-menu-toggle
+            aria-expanded="false"
+            aria-haspopup="menu"
+            aria-label="ユーザーメニュー"
+          >
+            <div class="user-avatar" aria-hidden="true" data-ai-workspace-user-avatar>G</div>
+            <div class="user-info">
+              <span class="user-info__name" data-ai-workspace-user-name>ゲスト</span>
+              <span class="user-plan-badge" data-ai-workspace-user-plan>Free</span>
+            </div>
+            <span class="material-symbols-outlined ai-ref-user__chevron" aria-hidden="true">expand_less</span>
+          </button>
+
+          <div class="ai-ref-user-menu" data-ai-workspace-user-menu hidden role="menu" aria-label="ユーザーメニュー">
+            <div class="ai-ref-user-menu__header">
+              <span class="ai-ref-user-menu__name" data-ai-user-menu-name>ゲスト</span>
+              <span class="ai-ref-user-menu__plan" data-ai-user-menu-plan>Free</span>
+            </div>
+            <div class="ai-ref-user-menu__divider" role="separator"></div>
+            <button type="button" class="ai-ref-user-menu__item" data-ai-user-menu-upgrade role="menuitem">
+              <span class="material-symbols-outlined" aria-hidden="true">upgrade</span>
+              <span>プランをアップグレード</span>
+            </button>
+            <button type="button" class="ai-ref-user-menu__item" data-ai-workspace-settings-open role="menuitem">
+              <span class="material-symbols-outlined" aria-hidden="true">settings</span>
+              <span>設定</span>
+            </button>
+            <div class="ai-ref-user-menu__flyout" data-ai-user-menu-help-wrap>
+              <button
+                type="button"
+                class="ai-ref-user-menu__item ai-ref-user-menu__item--flyout"
+                data-ai-user-menu-help-trigger
+                aria-expanded="false"
+                aria-haspopup="menu"
+                role="menuitem"
+              >
+                <span class="material-symbols-outlined" aria-hidden="true">help</span>
+                <span class="ai-ref-user-menu__item-label">ヘルプ</span>
+                <span class="material-symbols-outlined ai-ref-user-menu__item-chevron" aria-hidden="true">chevron_right</span>
+              </button>
+              <div class="ai-ref-user-menu__submenu" data-ai-user-menu-help-submenu hidden role="menu" aria-label="ヘルプ">
+                <button type="button" class="ai-ref-user-menu__submenu-item" data-ai-help-item="center" role="menuitem">ヘルプセンター</button>
+                <button type="button" class="ai-ref-user-menu__submenu-item" data-ai-help-item="releases" role="menuitem">リリースノート</button>
+                <button type="button" class="ai-ref-user-menu__submenu-item" data-ai-help-item="shortcuts" role="menuitem">ショートカット</button>
+                <button type="button" class="ai-ref-user-menu__submenu-item" data-ai-help-item="terms" role="menuitem">利用規約</button>
+                <button type="button" class="ai-ref-user-menu__submenu-item" data-ai-help-item="privacy" role="menuitem">プライバシー</button>
+                <button type="button" class="ai-ref-user-menu__submenu-item" data-ai-help-item="bug" role="menuitem">不具合報告</button>
+              </div>
+            </div>
+            <button type="button" class="ai-ref-user-menu__item" data-ai-user-menu-profile role="menuitem">
+              <span class="material-symbols-outlined" aria-hidden="true">person</span>
+              <span>プロフィール</span>
+            </button>
+            <button type="button" class="ai-ref-user-menu__item" data-ai-user-menu-logout role="menuitem">
+              <span class="material-symbols-outlined" aria-hidden="true">logout</span>
+              <span>ログアウト</span>
+            </button>
           </div>
         </div>
       </div>
@@ -242,6 +299,47 @@
     </div>
   </div>
 
+  <div class="ai-ref-settings-backdrop" data-ai-workspace-settings-backdrop hidden>
+    <div
+      class="ai-ref-settings-dialog"
+      data-ai-workspace-settings-dialog
+      role="dialog"
+      aria-modal="true"
+      aria-label="設定"
+    >
+      <header class="ai-ref-settings-dialog__header">
+        <h2 class="ai-ref-settings-dialog__title">設定</h2>
+        <button type="button" class="ai-ref-settings-dialog__close" data-ai-workspace-settings-close aria-label="閉じる">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </header>
+      <div class="ai-ref-settings-shell__body">
+        <nav class="ai-ref-settings-nav" data-ai-settings-nav role="tablist" aria-label="設定カテゴリ"></nav>
+        <div class="ai-ref-settings-panels" data-ai-settings-panels></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ai-ref-plan-upgrade-backdrop" data-ai-workspace-plan-upgrade-backdrop hidden>
+    <div
+      class="ai-ref-plan-upgrade-dialog"
+      data-ai-workspace-plan-upgrade-dialog
+      role="dialog"
+      aria-modal="true"
+      aria-label="プラン比較"
+    >
+      <header class="ai-ref-plan-upgrade-dialog__header">
+        <h2 class="ai-ref-plan-upgrade-dialog__title">プランを比較</h2>
+        <button type="button" class="ai-ref-plan-upgrade-dialog__close" data-ai-workspace-plan-upgrade-close aria-label="閉じる">
+          <span class="material-symbols-outlined" aria-hidden="true">close</span>
+        </button>
+      </header>
+      <div class="ai-ref-plan-upgrade-tabs" data-ai-plan-upgrade-tabs role="tablist" aria-label="比較プラン"></div>
+      <div class="ai-ref-plan-upgrade-compare" data-ai-plan-upgrade-compare></div>
+      <p class="ai-ref-plan-upgrade-footnote" data-ai-plan-upgrade-footnote hidden></p>
+    </div>
+  </div>
+
   <script src="breadcrumb-config.js"></script>
   <script src="common-breadcrumb.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -271,8 +369,29 @@
   <script src="serper-search-service.js" defer></script>
   <script src="ai-interaction-log.js" defer></script>
   <script src="ai-plan-models.js" defer></script>
+  <script src="shared/pricing/generated/tasful-pricing-snapshot.js" defer></script>
+  <script src="shared/pricing/generated/tasful-pricing-config.js" defer></script>
+  <script src="shared/pricing/pricing-catalog-runtime.js" defer></script>
   <script src="stripe-genai-config.js" defer></script>
   <script src="ai-workspace-usage.js" defer></script>
+  <script src="tasful-popover-layer.js" defer></script>
+  <script src="ai-workspace-general-settings.js" defer></script>
+  <script src="ai-workspace-notification-settings.js" defer></script>
+  <script src="ai-workspace-model-catalog.js" defer></script>
+  <script src="ai-workspace-model-router-settings.js" defer></script>
+  <script src="ai-workspace-routing-settings.js" defer></script>
+  <script src="ai-workspace-chat-settings.js" defer></script>
+  <script src="ai-workspace-voice-settings.js" defer></script>
+  <script src="ai-workspace-image-settings.js" defer></script>
+  <script src="ai-workspace-library-settings.js" defer></script>
+  <script src="ai-workspace-personalization-settings.js" defer></script>
+  <script src="ai-workspace-data-settings.js" defer></script>
+  <script src="ai-workspace-security-settings.js" defer></script>
+  <script src="ai-workspace-account-settings.js" defer></script>
+  <script src="ai-workspace-billing-settings.js" defer></script>
+  <script src="ai-workspace-user-menu.js" defer></script>
+  <script src="ai-workspace-plan-upgrade.js" defer></script>
+  <script src="ai-workspace-settings.js" defer></script>
   <script src="ai-workspace-response-ux.js" defer></script>
   <script src="ai-model-gateway.js" defer></script>
   <script src="ai-search-orchestrator.js" defer></script>
@@ -299,6 +418,13 @@
   <script src="ai-workspace-category-demos.js" defer></script>
   <script src="ai-call-consent.js" defer></script>
   <script src="ai-search-state.js" defer></script>
+  <script src="chat-ocr-config.js" defer></script>
+  <script src="chat-ocr.js" defer></script>
+  <script src="chat-moderation.js" defer></script>
+  <script src="platform-content-gate-events.js" defer></script>
+  <script src="platform-content-gate.js" defer></script>
+  <script src="platform-content-gate-attachments.js" defer></script>
+  <script src="attachment-ai-gate.js" defer></script>
   <script src="ai-workspace-attachments.js" defer></script>
   <script src="shared/voice-core/voice-core-events.js" defer></script>
   <script src="shared/voice-core/voice-adapter-interface.js" defer></script>
@@ -319,6 +445,9 @@
   <script src="tasful-ai-voice-integration.js" defer></script>
   <script src="common-ai-disclaimer.js" defer></script>
   <script src="ai-workspace-chat.js" defer></script>
+  <script src="ai-workspace-speech-recognition.js" defer></script>
+  <script src="ai-workspace-tts.js" defer></script>
+  <script src="ai-workspace-live.js" defer></script>
   <script src="ai-workspace-voice.js" defer></script>
   <script src="tasful-general-ai-shell.js" defer></script>
   <script src="ai-workspace-tlv-source.js" defer></script>
