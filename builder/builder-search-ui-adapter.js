@@ -112,6 +112,26 @@
   }
 
   /**
+   * board-projects.html 検索フォーム
+   * @param {{ q?: string, area?: string, trade?: string, status?: string }} query
+   */
+  function filterFromBoardQuery(query) {
+    const q = String(query?.q || "").trim();
+    const area = String(query?.area || "").trim();
+    const trade = String(query?.trade || "").trim();
+    const status = String(query?.status || "").trim();
+
+    /** @type {Record<string, unknown>} */
+    const raw = { target: "job", sort: "newest" };
+    if (q) raw.keyword = q;
+    if (area && PARTNER_AREA_LABELS[area]) raw.area = { prefecture: PARTNER_AREA_LABELS[area] };
+    else if (area) raw.area = area;
+    if (trade) raw.trades = [trade];
+    if (status) raw.availability = status;
+    return normalizeFilter(raw);
+  }
+
+  /**
    * 掲示板 project row → job search row
    * @param {object} project
    * @param {object} [spec]
@@ -165,6 +185,7 @@
     filterFromFindWorkersForm,
     filterFromPartnerQuery,
     filterFromBoardTab,
+    filterFromBoardQuery,
     mapBoardProjectRow,
     filterFromRequirements,
   };

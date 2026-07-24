@@ -51,21 +51,26 @@
         const data = ev.data;
         if (!data || data.type !== "tasu-builder-bench-api") return;
         const bridge = api();
-        let result = { ok: false, error: "no_bridge" };
-        try {
-          const fn = bridge?.[data.method];
-          if (typeof fn === "function") {
-            result = fn.apply(bridge, Array.isArray(data.args) ? data.args : []);
-          } else {
-            result = { ok: false, error: "method_not_found", method: data.method };
+        void (async () => {
+          let result = { ok: false, error: "no_bridge" };
+          try {
+            const fn = bridge?.[data.method];
+            if (typeof fn === "function") {
+              result = fn.apply(bridge, Array.isArray(data.args) ? data.args : []);
+              if (result && typeof result.then === "function") {
+                result = await result;
+              }
+            } else {
+              result = { ok: false, error: "method_not_found", method: data.method };
+            }
+          } catch (err) {
+            result = { ok: false, error: String(err?.message || err) };
           }
-        } catch (err) {
-          result = { ok: false, error: String(err?.message || err) };
-        }
-        ev.source?.postMessage?.(
-          { type: "tasu-builder-bench-api-result", id: data.id, result },
-          "*"
-        );
+          ev.source?.postMessage?.(
+            { type: "tasu-builder-bench-api-result", id: data.id, result },
+            "*"
+          );
+        })();
       });
       window.parent?.postMessage?.({ type: "tasu-builder-bench-bridge-ready" }, "*");
     })();

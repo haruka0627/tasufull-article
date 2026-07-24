@@ -349,8 +349,8 @@
    * }} params
    */
   async function runFieldVision(params) {
-    const userText = String(params?.userText || "").trim();
-    const attachments = Array.isArray(params?.attachments) ? params.attachments : [];
+    let userText = String(params?.userText || "").trim();
+    let attachments = Array.isArray(params?.attachments) ? params.attachments : [];
     const actor = params?.actor || getContext()?.resolveActor?.({}) || { actorType: "guest", label: "ゲスト" };
     const Vision = global.TasuBuilderAIVision;
 
@@ -368,6 +368,36 @@
 
     if (!userText) {
       return { ok: false, error: "empty_text", draft: "", action: "field_vision" };
+    }
+
+    // Gemini OCR → 共通 Moderation（生 OCR は AI へ渡さない）
+    if (global.TasuAttachmentAiGate?.gateAttachmentsForAi) {
+      const gate = await global.TasuAttachmentAiGate.gateAttachmentsForAi({
+        text: userText,
+        attachments,
+        surface: "builder_ai_vision",
+      });
+      if (!gate.allowed) {
+        return {
+          ok: true,
+          draft: wrapDraft(gate.message || "送信できません。"),
+          action: "field_vision",
+          blocked: true,
+          blockedKind: "moderation",
+          surface: SURFACE,
+          moderationEvents: gate.events || [],
+        };
+      }
+      userText = gate.safeText;
+      attachments = gate.safeAttachments || [];
+    } else if (attachments.length) {
+      return {
+        ok: false,
+        error: "gate_missing",
+        draft: wrapDraft("添付審査モジュールが読み込まれていません。"),
+        action: "field_vision",
+        surface: SURFACE,
+      };
     }
 
     const Gateway = global.TasuAiModelGateway;

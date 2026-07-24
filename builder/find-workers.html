@@ -46,6 +46,37 @@
           </span>
           <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </a>
+
+        <div class="builder-detail-menu" data-builder-detail-menu>
+          <button
+            type="button"
+            class="builder-detail-menu__toggle"
+            data-builder-detail-menu-toggle
+            aria-label="メニューを開く"
+            aria-expanded="false"
+            aria-controls="builder-fw-menu-panel"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+          <div
+            class="builder-detail-menu__panel"
+            id="builder-fw-menu-panel"
+            data-builder-detail-menu-panel
+            role="menu"
+            aria-label="アカウントメニュー"
+            hidden
+          >
+            <div class="builder-detail-menu__identity" role="presentation">
+              <span class="builder-detail-menu__name" data-builder-detail-menu-name>会員</span>
+              <span class="builder-detail-menu__role" data-builder-detail-menu-role>建設パートナー</span>
+            </div>
+            <a class="builder-detail-menu__item" role="menuitem" href="index.html">ダッシュボードへ戻る</a>
+            <a class="builder-detail-menu__item" role="menuitem" href="settings.html">設定</a>
+            <button type="button" class="builder-detail-menu__item builder-detail-menu__item--muted" role="menuitem" data-builder-detail-logout>ログアウト</button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -235,18 +266,38 @@
         return "★ " + esc(rating);
       }
 
+      function tagHtml(kind, label) {
+        return (
+          '<span class="builder-fw-tag builder-fw-tag--' +
+          esc(kind) +
+          '" data-tag-kind="' +
+          esc(kind) +
+          '">' +
+          esc(label) +
+          "</span>"
+        );
+      }
+
       function renderCard(worker) {
-        var tags = (worker.tags || [])
-          .map(function (t) {
-            return '<span class="builder-fw-tag">' + esc(t) + "</span>";
-          })
-          .join("");
+        var pills = [];
+        if (worker.trade) pills.push(tagHtml("trade", worker.trade));
+        if (worker.area) pills.push(tagHtml("area", worker.area));
+        (worker.tags || []).forEach(function (t) {
+          pills.push(tagHtml("availability", t));
+        });
+        if (worker.license && worker.license !== "—") {
+          pills.push(tagHtml("license", worker.license));
+        }
 
         return (
           '<article class="builder-fw-card" data-builder-fw-card="' + esc(worker.id) + '">' +
           '<div class="builder-fw-card__head">' +
           '<h3 class="builder-fw-card__name">' + esc(worker.name) + "</h3>" +
-          '<span class="builder-fw-card__rating" aria-label="評価 ' + esc(worker.rating) + '">' + renderStars(worker.rating) + "</span>" +
+          '<span class="builder-fw-card__rating builder-fw-tag--rating" data-tag-kind="rating" aria-label="評価 ' +
+          esc(worker.rating) +
+          '">' +
+          renderStars(worker.rating) +
+          "</span>" +
           "</div>" +
           '<dl class="builder-fw-card__meta">' +
           "<div><dt>職種</dt><dd>" + esc(worker.trade) + "</dd></div>" +
@@ -255,7 +306,7 @@
           "<div><dt>資格</dt><dd>" + esc(worker.license) + "</dd></div>" +
           "<div><dt>法人/個人</dt><dd>" + esc(worker.entity) + "</dd></div>" +
           "</dl>" +
-          (tags ? '<div class="builder-fw-card__tags">' + tags + "</div>" : "") +
+          (pills.length ? '<div class="builder-fw-card__tags">' + pills.join("") + "</div>" : "") +
           '<div class="builder-fw-card__actions">' +
           '<button type="button" class="builder-btn builder-btn--ghost" data-builder-fw-demo>詳細を見る</button>' +
           '<button type="button" class="builder-btn builder-btn--primary" data-builder-fw-demo>お気に入り</button>' +

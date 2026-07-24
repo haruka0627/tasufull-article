@@ -50,6 +50,7 @@
   }
 
   const OWNER_ID = "demo-owner-001";
+  const BUILDER_GENERAL_TALK_CTA_LABEL = "TASFUL Talkで相談";
   const MVP_STORAGE_KEY = "tasful:builder:mvp:v1";
   const MVP_THREADS_STORAGE_KEY = "tasful:builder:mvp:threads:v1";
   const MVP_ROLE_KEY = "tasful:builder:mvp:role";
@@ -1053,8 +1054,8 @@
     const r = normalizeMvpRole(role || getRole());
     const tt = normalizeBuilderThreadType(threadType);
     if (tt) return getBuilderThreadListTitle(tt, r);
-    if (r === "partner" || r === "user" || r === "vendor") return "やりとり";
-    return "やりとり一覧";
+    if (r === "partner" || r === "user" || r === "vendor") return "TASFUL Talk";
+    return "TASFUL Talk";
   }
 
   function getMvpThreadsPageSub(role, threadType) {
@@ -1510,9 +1511,15 @@
       });
     }
     if (type === "completed" && pid) {
+      if (project && isBoardFeedItem(project)) {
+        return `board-project-detail.html?id=${encodeURIComponent(pid)}&role=owner`;
+      }
       return `mvp-project-detail.html?id=${encodeURIComponent(pid)}`;
     }
     if ((type === "dispatch" || type === "admin") && pid) {
+      if (project && isBoardFeedItem(project)) {
+        return `board-project-detail.html?id=${encodeURIComponent(pid)}&view=applications&role=owner`;
+      }
       return `mvp-project-detail.html?id=${encodeURIComponent(pid)}`;
     }
     if (type === "calendar_assignment" && pid) {
@@ -1543,13 +1550,21 @@
       return resolvePublicBoardDetailHref(project);
     }
     if ((type === "application" || type === "selected" || type === "attachment" || type === "template") && pid) {
-      if (
-        type === "application" &&
-        (isGeneralBoardMvpProject(project) || (project && isBoardFeedItem(project) && !usesMvpPartnerThread(project)))
-      ) {
-        const explicit = String(n?.href || "");
-        if (explicit && /board-project-detail/.test(explicit)) return explicit;
-        return `board-project-detail.html?id=${encodeURIComponent(pid)}&view=applications&role=owner`;
+      const isGeneralBoard =
+        isGeneralBoardMvpProject(project) ||
+        (project && isBoardFeedItem(project) && !usesMvpPartnerThread(project));
+      if (isGeneralBoard) {
+        if (type === "application") {
+          const explicit = String(n?.href || "");
+          if (explicit && /board-project-detail/.test(explicit)) return explicit;
+          return `board-project-detail.html?id=${encodeURIComponent(pid)}&view=applications&role=owner`;
+        }
+        if (type === "attachment" || type === "template") {
+          return `board-project-detail.html?id=${encodeURIComponent(pid)}&role=${encodeURIComponent(getRole())}`;
+        }
+        if (type === "selected" && !threadId) {
+          return `board-project-detail.html?id=${encodeURIComponent(pid)}&role=partner`;
+        }
       }
       return `mvp-project-detail.html?id=${encodeURIComponent(pid)}`;
     }
@@ -1591,6 +1606,10 @@
       createdAt: String(n.createdAt || n.created_at || n.ts || nowIso()),
       read: Boolean(n.read),
       href: n.href ? String(n.href) : null,
+      // CAL-MAIN-08: Hub 連携フィールド（既存導線は href / projectId を維持）
+      hubProjectId: n.hubProjectId || n.hub_project_id ? String(n.hubProjectId || n.hub_project_id) : "",
+      hubHref: n.hubHref || n.hub_href ? String(n.hubHref || n.hub_href) : "",
+      legacyProjectId: n.legacyProjectId || n.legacy_project_id ? String(n.legacyProjectId || n.legacy_project_id) : "",
     };
     row.href = resolveMvpNotificationHref(row, state || mvp().reload());
     return row;
@@ -1724,6 +1743,9 @@
         createdAt: payload.createdAt || nowIso(),
         read: false,
         href: payload.href || null,
+        hubProjectId: payload.hubProjectId || payload.hub_project_id || project?.hub_project_id || "",
+        hubHref: payload.hubHref || payload.hub_href || "",
+        legacyProjectId: payload.legacyProjectId || payload.legacy_project_id || projectId || "",
       },
       state
     );
@@ -2506,9 +2528,10 @@
     return Number.isFinite(n) ? n : 0;
   }
 
-  function buildMvpPdStat(label, value) {
+  function buildMvpPdStat(label, value, mod) {
+    const modClass = mod ? ` mvp-pd-stat--${esc(mod)}` : "";
     return (
-      `<div class="mvp-pd-stat">` +
+      `<div class="mvp-pd-stat${modClass}">` +
       `<dt class="mvp-pd-stat__label">${esc(label)}</dt>` +
       `<dd class="mvp-pd-stat__value">${esc(value)}</dd>` +
       `</div>`
@@ -3301,10 +3324,20 @@
       if (getPage() !== "builder-partner-dashboard") return;
       const unreadEl = document.querySelector('[data-builder-stat-value="unreadNotifications"]');
       if (unreadEl) unreadEl.textContent = `${getMvpUnreadNotificationCount()}件`;
+      syncBuilderGeneralJobsNotificationChrome();
     });
   }
 
-  const PARTNER_CALENDAR_ACCENT = ["#00f2fe", "#22c55e", "#f97316", "#bd00ff", "#38bdf8"];
+  function wireBuilderGeneralJobsNotificationChrome() {
+    if (document.body.dataset.builderGeneralNotifWired === "1") return;
+    document.body.dataset.builderGeneralNotifWired = "1";
+    document.addEventListener("builder:mvp-notifications-changed", () => {
+      syncBuilderGeneralJobsNotificationChrome();
+      if (getPage() === "builder-user-dashboard") renderGeneralUserStats();
+    });
+  }
+
+  const PARTNER_CALENDAR_ACCENT = ["#00ffff", "#34d399", "#fb7185", "#c084fc", "#60a5fa"];
 
   const PARTNER_CALENDAR_EVENTS = [
     {
@@ -3437,10 +3470,22 @@
 
   const partnerCalendarUi = {
     month: new Date(2026, 5, 1),
+    /** PC: month | week | day */
     mode: "month",
+    /** スマホ: agenda | month（将来 week / day3 / day1）デフォルト一覧 */
+    mobileViewMode: "agenda",
     selectedEventId: "cal-001",
+    selectedDate: "",
     wired: false,
   };
+
+  function isPartnerCalMobile() {
+    return typeof window.matchMedia === "function" && window.matchMedia("(max-width: 640px)").matches;
+  }
+
+  function getPartnerCalViewMode() {
+    return isPartnerCalMobile() ? partnerCalendarUi.mobileViewMode : partnerCalendarUi.mode;
+  }
 
   function pad2(n) {
     return String(n).padStart(2, "0");
@@ -3588,6 +3633,11 @@
     const backdrop = document.querySelector("[data-builder-sidebar-backdrop]");
     if (toggle) toggle.setAttribute("aria-expanded", "false");
     if (backdrop) backdrop.hidden = true;
+    try {
+      getBuilderMobileDrawerApi().close();
+    } catch {
+      /* drawer not ready */
+    }
   }
 
   function syncSidebarNavActive() {
@@ -3639,12 +3689,21 @@
     const toggle = document.querySelector("[data-builder-sidebar-toggle]");
     const backdrop = document.querySelector("[data-builder-sidebar-backdrop]");
     const openSidebar = () => {
+      // ≤768px は共通左 Drawer（Dashboard サイドバーと同構成）
+      if (isBuilderMobileDrawerViewport()) {
+        getBuilderMobileDrawerApi().open();
+        return;
+      }
       document.body.classList.add("builder-partner-sidebar-open", "builder-dash-shell-open");
       if (toggle) toggle.setAttribute("aria-expanded", "true");
       if (backdrop) backdrop.hidden = false;
     };
     if (toggle) {
       toggle.addEventListener("click", () => {
+        if (isBuilderMobileDrawerViewport()) {
+          getBuilderMobileDrawerApi().toggle();
+          return;
+        }
         if (document.body.classList.contains("builder-partner-sidebar-open")) closeDashSidebar();
         else openSidebar();
       });
@@ -3662,18 +3721,26 @@
     const host = document.querySelector("[data-builder-cal-toolbar]");
     if (!host) return;
     const label = formatPartnerCalMonthLabel(partnerCalendarUi.month);
+    const mobile = isPartnerCalMobile();
+    const activeMode = getPartnerCalViewMode();
+    const viewsHtml = mobile
+      ? `<button type="button" class="builder-partner-cal__toolBtn${activeMode === "agenda" ? " is-active" : ""}" data-cal-mode="agenda">一覧</button>` +
+        `<button type="button" class="builder-partner-cal__toolBtn${activeMode === "month" ? " is-active" : ""}" data-cal-mode="month">月</button>`
+      : `<button type="button" class="builder-partner-cal__toolBtn${partnerCalendarUi.mode === "month" ? " is-active" : ""}" data-cal-mode="month">月</button>` +
+        `<button type="button" class="builder-partner-cal__toolBtn${partnerCalendarUi.mode === "week" ? " is-active" : ""}" data-cal-mode="week">週</button>` +
+        `<button type="button" class="builder-partner-cal__toolBtn${partnerCalendarUi.mode === "day" ? " is-active" : ""}" data-cal-mode="day">日</button>` +
+        `<button type="button" class="builder-partner-cal__toolBtn" data-cal-filter>フィルター</button>`;
     host.innerHTML =
+      `<span class="builder-partner-cal__monthLabel">${esc(label)}</span>` +
+      `<div class="builder-partner-cal__toolbarControls">` +
       `<div class="builder-partner-cal__toolbarNav">` +
       `<button type="button" class="builder-partner-cal__toolBtn" data-cal-prev aria-label="前月">‹</button>` +
       `<button type="button" class="builder-partner-cal__toolBtn" data-cal-today>今日</button>` +
       `<button type="button" class="builder-partner-cal__toolBtn" data-cal-next aria-label="次月">›</button>` +
       `</div>` +
-      `<span class="builder-partner-cal__monthLabel">${esc(label)}</span>` +
       `<div class="builder-partner-cal__toolbarViews">` +
-      `<button type="button" class="builder-partner-cal__toolBtn${partnerCalendarUi.mode === "month" ? " is-active" : ""}" data-cal-mode="month">月</button>` +
-      `<button type="button" class="builder-partner-cal__toolBtn${partnerCalendarUi.mode === "week" ? " is-active" : ""}" data-cal-mode="week">週</button>` +
-      `<button type="button" class="builder-partner-cal__toolBtn${partnerCalendarUi.mode === "day" ? " is-active" : ""}" data-cal-mode="day">日</button>` +
-      `<button type="button" class="builder-partner-cal__toolBtn" data-cal-filter>フィルター</button>` +
+      viewsHtml +
+      `</div>` +
       `</div>`;
 
     host.querySelector("[data-cal-prev]")?.addEventListener("click", () => {
@@ -3681,6 +3748,11 @@
         partnerCalendarUi.month.getFullYear(),
         partnerCalendarUi.month.getMonth() - 1,
         1
+      );
+      partnerCalendarUi.selectedDate = partnerCalDateKey(
+        partnerCalendarUi.month.getFullYear(),
+        partnerCalendarUi.month.getMonth() + 1,
+        1,
       );
       renderPartnerCalendarView();
     });
@@ -3690,16 +3762,31 @@
         partnerCalendarUi.month.getMonth() + 1,
         1
       );
+      partnerCalendarUi.selectedDate = partnerCalDateKey(
+        partnerCalendarUi.month.getFullYear(),
+        partnerCalendarUi.month.getMonth() + 1,
+        1,
+      );
       renderPartnerCalendarView();
     });
     host.querySelector("[data-cal-today]")?.addEventListener("click", () => {
       const now = new Date();
       partnerCalendarUi.month = new Date(now.getFullYear(), now.getMonth(), 1);
+      partnerCalendarUi.selectedDate = partnerCalDateKey(
+        now.getFullYear(),
+        now.getMonth() + 1,
+        now.getDate(),
+      );
       renderPartnerCalendarView();
     });
     host.querySelectorAll("[data-cal-mode]").forEach((btn) => {
       btn.addEventListener("click", () => {
-        partnerCalendarUi.mode = btn.getAttribute("data-cal-mode") || "month";
+        const mode = btn.getAttribute("data-cal-mode") || "month";
+        if (isPartnerCalMobile()) {
+          if (mode === "agenda" || mode === "month") partnerCalendarUi.mobileViewMode = mode;
+        } else if (mode === "month" || mode === "week" || mode === "day") {
+          partnerCalendarUi.mode = mode;
+        }
         renderPartnerCalendarView();
       });
     });
@@ -3708,9 +3795,168 @@
     });
   }
 
+  function renderPartnerCalendarMobileList() {
+    const wrap = document.querySelector("[data-builder-cal-grid-wrap]");
+    const detail = document.querySelector("[data-builder-cal-detail]");
+    const bottom = document.querySelector(".builder-partner-cal__bottom");
+    if (!wrap) return;
+    if (detail) detail.hidden = true;
+    if (bottom) bottom.hidden = true;
+
+    const events = getPartnerCalendarEventsForMe();
+    const year = partnerCalendarUi.month.getFullYear();
+    const month = partnerCalendarUi.month.getMonth();
+    const todayKey = partnerCalDateKey(
+      new Date().getFullYear(),
+      new Date().getMonth() + 1,
+      new Date().getDate(),
+    );
+    if (!partnerCalendarUi.selectedDate) {
+      const selEv = getPartnerCalendarEventById(partnerCalendarUi.selectedEventId);
+      partnerCalendarUi.selectedDate = selEv?.date || todayKey;
+    }
+    const sel = parsePartnerCalDateKey(partnerCalendarUi.selectedDate);
+    if (!sel || sel.getFullYear() !== year || sel.getMonth() !== month) {
+      const hasToday =
+        Number(todayKey.slice(0, 4)) === year && Number(todayKey.slice(5, 7)) === month + 1;
+      partnerCalendarUi.selectedDate = hasToday
+        ? todayKey
+        : partnerCalDateKey(year, month + 1, 1);
+    }
+
+    const byDate = new Map();
+    events.forEach((ev) => {
+      const list = byDate.get(ev.date) || [];
+      list.push(ev);
+      byDate.set(ev.date, list);
+    });
+
+    const last = new Date(year, month + 1, 0).getDate();
+    let picker = `<div class="builder-partner-cal__dayPicker" data-partner-cal-day-picker role="listbox" aria-label="日付選択">`;
+    for (let d = 1; d <= last; d += 1) {
+      const key = partnerCalDateKey(year, month + 1, d);
+      const count = (byDate.get(key) || []).length;
+      const cell = new Date(year, month, d);
+      const wd = formatPartnerCalWeekdayJa(cell);
+      const isSel = key === partnerCalendarUi.selectedDate;
+      const isToday = key === todayKey;
+      const classes = ["builder-partner-cal__dayChip"];
+      if (isSel) classes.push("is-selected");
+      if (isToday) classes.push("is-today");
+      picker +=
+        `<button type="button" class="${classes.join(" ")}" data-partner-cal-day="${esc(key)}" aria-selected="${isSel ? "true" : "false"}">` +
+        `<span class="builder-partner-cal__dayChipNum">${d}</span>` +
+        `<span class="builder-partner-cal__dayChipWd">${esc(wd)}</span>` +
+        (count > 0 ? `<span class="builder-partner-cal__dayChipDot" aria-label="${count}件"></span>` : "") +
+        `</button>`;
+    }
+    picker += `</div>`;
+
+    // 選択日のみのタイムライン（Googleカレンダー風）
+    const key = partnerCalendarUi.selectedDate;
+    const dayEvents = (byDate.get(key) || [])
+      .slice()
+      .sort((a, b) => a.startTime.localeCompare(b.startTime));
+    const isToday = key === todayKey;
+    let agendaHtml = `<div class="builder-partner-cal__agenda" data-partner-cal-agenda>`;
+    agendaHtml += `<section class="builder-partner-cal__agendaDay${isToday ? " is-today" : ""}">`;
+    agendaHtml += `<h3 class="builder-partner-cal__agendaDayHead">${esc(formatPartnerCalDisplayDate(key))}</h3>`;
+    if (!dayEvents.length) {
+      agendaHtml += `<p class="builder-partner-cal__agendaEmpty">予定なし</p>`;
+    } else {
+      agendaHtml += `<ul class="builder-partner-cal__agendaList">`;
+      dayEvents.forEach((ev) => {
+        const fieldMeta = partnerCalFieldStatusMeta(ev.fieldStatus);
+        const accent = partnerCalAccentColor(ev);
+        const selected = ev.id === partnerCalendarUi.selectedEventId ? " is-selected" : "";
+        agendaHtml +=
+          `<li class="builder-partner-cal__agendaItem">` +
+          `<div class="builder-partner-cal__agendaTime"><span>${esc(ev.startTime)}</span><span class="builder-partner-cal__agendaTimeEnd">${esc(ev.endTime)}</span></div>` +
+          `<button type="button" class="builder-partner-cal__agendaBlock${selected}" data-cal-event="${esc(ev.id)}" style="--cal-accent:${esc(accent)}">` +
+          `<span class="builder-partner-cal__agendaBar" aria-hidden="true"></span>` +
+          `<span class="builder-partner-cal__agendaBody">` +
+          `<span class="builder-partner-cal__agendaTitle">${esc(ev.title)}</span>` +
+          `<span class="builder-partner-cal__agendaRow">` +
+          `<span class="builder-partner-cal__agendaStatus is-${esc(fieldMeta.tone)}">${esc(fieldMeta.label)}</span>` +
+          `<span class="builder-partner-cal__agendaPlace">${esc(ev.address || "—")}</span>` +
+          `</span>` +
+          `</span>` +
+          `</button></li>`;
+      });
+      agendaHtml += `</ul>`;
+    }
+    agendaHtml += `</section></div>`;
+
+    const selEv = getPartnerCalendarEventById(partnerCalendarUi.selectedEventId);
+    let actions = "";
+    if (selEv) {
+      actions =
+        `<div class="builder-partner-cal__agendaActions">` +
+        (selEv.threadId
+          ? `<a class="builder-btn builder-btn--primary builder-partner-cal__threadBtn" href="${esc(
+              mvpThreadHref(selEv.threadId, "partner", "ops_partner"),
+            )}">運営とのやりとり</a>`
+          : "") +
+        (selEv.mapUrl
+          ? `<a class="builder-partner-cal__mapBtn" href="${esc(selEv.mapUrl)}" target="_blank" rel="noopener noreferrer">Googleマップで開く</a>`
+          : "") +
+        `</div>`;
+    }
+
+    wrap.innerHTML =
+      `<div class="builder-partner-cal__mobile" data-partner-cal-mobile>` +
+      picker +
+      agendaHtml +
+      actions +
+      `</div>`;
+
+    wrap.querySelectorAll("[data-partner-cal-day]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        partnerCalendarUi.selectedDate = btn.getAttribute("data-partner-cal-day") || "";
+        const first = (byDate.get(partnerCalendarUi.selectedDate) || [])[0];
+        if (first) partnerCalendarUi.selectedEventId = first.id;
+        renderPartnerCalendarView();
+      });
+    });
+    wrap.querySelectorAll("[data-cal-event]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        partnerCalendarUi.selectedEventId = btn.getAttribute("data-cal-event") || "";
+        const ev = getPartnerCalendarEventById(partnerCalendarUi.selectedEventId);
+        if (ev?.date) partnerCalendarUi.selectedDate = ev.date;
+        renderPartnerCalendarView();
+      });
+    });
+
+    requestAnimationFrame(() => {
+      wrap.querySelector(".builder-partner-cal__dayChip.is-selected")?.scrollIntoView({
+        inline: "center",
+        block: "nearest",
+      });
+    });
+  }
+
   function renderPartnerCalendarGrid() {
     const grid = document.querySelector("[data-builder-cal-grid]");
-    if (!grid) return;
+    const wrap = document.querySelector("[data-builder-cal-grid-wrap]");
+    const detail = document.querySelector("[data-builder-cal-detail]");
+    const bottom = document.querySelector(".builder-partner-cal__bottom");
+
+    if (isPartnerCalMobile() && partnerCalendarUi.mobileViewMode === "agenda") {
+      renderPartnerCalendarMobileList();
+      return;
+    }
+
+    if (detail) detail.hidden = isPartnerCalMobile();
+    if (bottom) bottom.hidden = isPartnerCalMobile();
+    if (wrap && !grid) {
+      wrap.innerHTML =
+        `<div class="builder-partner-cal__weekdays" aria-hidden="true">` +
+        `<span>日</span><span>月</span><span>火</span><span>水</span><span>木</span><span>金</span><span>土</span>` +
+        `</div>` +
+        `<div class="builder-partner-cal__grid" data-builder-cal-grid role="grid" aria-label="月間カレンダー"></div>`;
+    }
+    const gridEl = document.querySelector("[data-builder-cal-grid]");
+    if (!gridEl) return;
     const events = getPartnerCalendarEventsForMe();
     const byDate = new Map();
     events.forEach((ev) => {
@@ -3744,12 +3990,17 @@
       cells.push({ y: d.getFullYear(), m: d.getMonth() + 1, day: d.getDate(), outside: true });
     }
 
-    grid.innerHTML = cells
+    gridEl.innerHTML = cells
       .map((cell) => {
         const key = partnerCalDateKey(cell.y, cell.m, cell.day);
         const dayEvents = (byDate.get(key) || []).slice().sort((a, b) => a.startTime.localeCompare(b.startTime));
         const isToday = key === todayKey;
-        const eventHtml = dayEvents
+        const isSelected =
+          key === partnerCalendarUi.selectedDate ||
+          dayEvents.some((ev) => ev.id === partnerCalendarUi.selectedEventId);
+        const maxEv = isPartnerCalMobile() ? 2 : 4;
+        const visible = dayEvents.slice(0, maxEv);
+        let eventHtml = visible
           .map((ev) => {
             const accent = partnerCalAccentColor(ev);
             const selected = ev.id === partnerCalendarUi.selectedEventId ? " is-selected" : "";
@@ -3761,8 +4012,11 @@
             );
           })
           .join("");
+        if (dayEvents.length > maxEv) {
+          eventHtml += `<span class="builder-partner-cal__eventMore">+${dayEvents.length - maxEv}</span>`;
+        }
         return (
-          `<div class="builder-partner-cal__cell${cell.outside ? " is-outside" : ""}${isToday ? " is-today" : ""}" role="gridcell" data-cal-date="${esc(key)}">` +
+          `<div class="builder-partner-cal__cell${cell.outside ? " is-outside" : ""}${isToday ? " is-today" : ""}${isSelected ? " is-selected" : ""}" role="gridcell" data-cal-date="${esc(key)}">` +
           `<span class="builder-partner-cal__dayNum">${cell.day}</span>` +
           `<div class="builder-partner-cal__events">${eventHtml}</div>` +
           `</div>`
@@ -3770,22 +4024,45 @@
       })
       .join("");
 
-    const wrap = document.querySelector("[data-builder-cal-grid-wrap]");
-    wrap?.querySelector("[data-cal-mode-hint]")?.remove();
-    if (partnerCalendarUi.mode !== "month" && wrap) {
-      wrap.insertAdjacentHTML(
+    const gridWrap = document.querySelector("[data-builder-cal-grid-wrap]");
+    gridWrap?.querySelector("[data-cal-mode-hint]")?.remove();
+    if (partnerCalendarUi.mode !== "month" && gridWrap) {
+      gridWrap.insertAdjacentHTML(
         "afterbegin",
         `<p class="builder-partner-cal__modeHint" data-cal-mode-hint style="margin:0 0 10px;font-size:0.78rem;color:rgba(255,255,255,0.55);">` +
           `デモ: ${partnerCalendarUi.mode === "week" ? "週" : "日"}表示は月表示と同じデータを表示しています。</p>`
       );
     }
 
-    grid.querySelectorAll("[data-cal-event]").forEach((btn) => {
+    gridEl.querySelectorAll(".builder-partner-cal__cell").forEach((cell) => {
+      cell.addEventListener("pointerdown", () => {
+        cell.classList.add("is-press");
+        window.setTimeout(() => cell.classList.remove("is-press"), 150);
+      });
+      if (isPartnerCalMobile()) {
+        cell.addEventListener("click", () => {
+          const key = cell.getAttribute("data-cal-date") || "";
+          if (!key || cell.classList.contains("is-outside")) return;
+          partnerCalendarUi.selectedDate = key;
+          const first = getPartnerCalendarEventsForMe().find((ev) => ev.date === key);
+          if (first) partnerCalendarUi.selectedEventId = first.id;
+          renderPartnerCalendarView();
+        });
+      }
+    });
+    gridEl.querySelectorAll("[data-cal-event]").forEach((btn) => {
       btn.addEventListener("click", (ev) => {
         ev.stopPropagation();
         partnerCalendarUi.selectedEventId = btn.getAttribute("data-cal-event") || "";
+        const pev = getPartnerCalendarEventById(partnerCalendarUi.selectedEventId);
+        if (pev?.date) partnerCalendarUi.selectedDate = pev.date;
+        const cell = btn.closest(".builder-partner-cal__cell");
+        if (cell) {
+          cell.classList.add("is-press");
+          window.setTimeout(() => cell.classList.remove("is-press"), 150);
+        }
         renderPartnerCalendarGrid();
-        renderPartnerCalendarDetail();
+        if (!isPartnerCalMobile()) renderPartnerCalendarDetail();
       });
     });
   }
@@ -3924,15 +4201,20 @@
   }
 
   function renderPartnerCalendarView() {
+    const mobile = isPartnerCalMobile();
+    document.body.classList.toggle("builder-partner-cal-mobile", mobile);
+    document.body.dataset.builderPartnerCalView = getPartnerCalViewMode();
     if (!getPartnerCalendarEventsForMe().some((ev) => ev.id === partnerCalendarUi.selectedEventId)) {
       const first = getPartnerCalendarEventsForMe()[0];
       partnerCalendarUi.selectedEventId = first?.id || "";
     }
     renderPartnerCalendarToolbar();
     renderPartnerCalendarGrid();
-    renderPartnerCalendarDetail();
-    renderPartnerCalendarUpcoming();
-    renderPartnerCalendarSummary();
+    if (!mobile) {
+      renderPartnerCalendarDetail();
+      renderPartnerCalendarUpcoming();
+      renderPartnerCalendarSummary();
+    }
   }
 
   function wirePartnerCalendarDelegates() {
@@ -3941,6 +4223,16 @@
     document.querySelector("[data-builder-cal-upcoming-all]")?.addEventListener("click", () => {
       setPartnerDashboardView("calendar");
     });
+    let resizeTimer = 0;
+    window.addEventListener(
+      "resize",
+      () => {
+        if (!document.body.classList.contains("builder-dash-view-calendar")) return;
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => renderPartnerCalendarView(), 120);
+      },
+      { passive: true },
+    );
   }
 
   const DEMO_STATS_GENERAL_USER = {
@@ -4060,9 +4352,14 @@
 
   function renderGeneralUserStats() {
     Object.entries(DEMO_STATS_GENERAL_USER).forEach(([key, val]) => {
+      if (key === "unreadNotifications") return;
       const el = document.querySelector(`[data-builder-user-stat-value="${key}"]`);
       if (el) el.textContent = val;
     });
+    ensureMvpNotificationsDemoData();
+    const unreadEl = document.querySelector('[data-builder-user-stat-value="unreadNotifications"]');
+    if (unreadEl) unreadEl.textContent = `${getMvpUnreadNotificationCount()}件`;
+    syncBuilderGeneralJobsNotificationChrome();
   }
 
   function renderGeneralUserRecentList() {
@@ -6300,6 +6597,13 @@
     if (idx < 0) return false;
 
     const app = apps[idx];
+    const project = (state.projects || []).find((p) => p.project_id === app.project_id);
+    if (!project) return false;
+
+    if (isBoardFeedItem(project) && (nextStatus === "selected" || nextStatus === "rejected")) {
+      return commitBoardApplicationDecision(api, project, app.partner_id, nextStatus === "selected");
+    }
+
     const pidx = (state.projects || []).findIndex((p) => p.project_id === app.project_id);
     if (pidx < 0) return false;
 
@@ -6659,30 +6963,303 @@
     list.innerHTML = favorites.map((p) => buildPartnerListItem(p, { showFav: false })).join("");
   }
 
+  /**
+   * Builder スマホ共通：左スライド Drawer（≤768px）
+   * Partner Dashboard サイドバー構成を基準。右 Drawer / Portal は使わない。
+   */
+  function isBuilderMobileDrawerViewport() {
+    return typeof window.matchMedia === "function" && window.matchMedia("(max-width: 768px)").matches;
+  }
+
+  /** @type {null | { open: () => void, close: () => void, toggle: () => void, isOpen: () => boolean }} */
+  let builderMobileDrawerApi = null;
+
+  function ensureBuilderMobileDrawer() {
+    let drawer = document.querySelector("[data-builder-mobile-drawer]");
+    if (drawer) return drawer;
+
+    drawer = document.createElement("div");
+    drawer.className = "builder-mobile-drawer";
+    drawer.setAttribute("data-builder-mobile-drawer", "");
+    drawer.setAttribute("aria-hidden", "true");
+    drawer.hidden = true;
+    drawer.innerHTML =
+      `<button type="button" class="builder-mobile-drawer__overlay" data-builder-mobile-drawer-close aria-label="メニューを閉じる"></button>` +
+      `<aside class="builder-mobile-drawer__panel" role="dialog" aria-modal="true" aria-label="メニュー" data-builder-mobile-drawer-panel>` +
+      `<div class="builder-mobile-drawer__brand">` +
+      `<span class="builder-mobile-drawer__logo" aria-hidden="true">` +
+      `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">` +
+      `<path d="M3 21h18"/><path d="M7 21V7l8-4v18"/><path d="M17 21V11l-6-4"/>` +
+      `</svg></span>` +
+      `<span class="builder-mobile-drawer__brandText">` +
+      `<span class="builder-mobile-drawer__brandMain">Builder</span>` +
+      `<span class="builder-mobile-drawer__brandSub">TASFUL Builder</span>` +
+      `</span></div>` +
+      `<div class="builder-mobile-drawer__profile">` +
+      `<img class="builder-mobile-drawer__avatar" data-builder-mobile-drawer-avatar src="https://placehold.co/64x64/0c0f1d/00f2fe?text=BU" width="44" height="44" alt="" />` +
+      `<div class="builder-mobile-drawer__identity">` +
+      `<p class="builder-mobile-drawer__name" data-builder-mobile-drawer-name>会員</p>` +
+      `<p class="builder-mobile-drawer__role" data-builder-mobile-drawer-role>認定パートナー</p>` +
+      `</div></div>` +
+      `<nav class="builder-mobile-drawer__nav" aria-label="メニューリンク">` +
+      `<a class="builder-mobile-drawer__item" href="index.html" data-builder-mobile-drawer-link>ダッシュボード</a>` +
+      `<a class="builder-mobile-drawer__item" href="project-calendar.html" data-builder-mobile-drawer-link>案件カレンダー</a>` +
+      `<a class="builder-mobile-drawer__item" href="board-projects.html" data-builder-mobile-drawer-link>案件一覧</a>` +
+      `<a class="builder-mobile-drawer__item" href="project-dashboard.html" data-builder-mobile-drawer-link>司令塔ダッシュボード</a>` +
+      `<a class="builder-mobile-drawer__item" href="project-hub.html" data-builder-mobile-drawer-link>案件ハブ</a>` +
+      `<a class="builder-mobile-drawer__item" href="../talk-home.html?tab=chat&channel=builder&from=builder&builderRole=partner" data-builder-mobile-drawer-link>やりとり</a>` +
+      `<a class="builder-mobile-drawer__item" href="mvp-notifications.html" data-builder-mobile-drawer-link>お知らせ</a>` +
+      `<span class="builder-mobile-drawer__sep" aria-hidden="true"></span>` +
+      `<a class="builder-mobile-drawer__item" href="construction-tools.html" data-builder-mobile-drawer-link>建設ツール</a>` +
+      `<span class="builder-mobile-drawer__sep" aria-hidden="true"></span>` +
+      `<a class="builder-mobile-drawer__item" href="partner.html?partner_id=demo-partner-001" data-builder-mobile-drawer-link>パートナープロフィール</a>` +
+      `<a class="builder-mobile-drawer__item" href="mvp-templates.html" data-builder-mobile-drawer-link>書類・提出物</a>` +
+      `<a class="builder-mobile-drawer__item" href="../sales-fees.html" data-builder-mobile-drawer-link>売上・報酬</a>` +
+      `<a class="builder-mobile-drawer__item" href="favorites.html" data-builder-mobile-drawer-link>評価・レビュー</a>` +
+      `<a class="builder-mobile-drawer__item" href="settings.html" data-builder-mobile-drawer-link>設定</a>` +
+      `<button type="button" class="builder-mobile-drawer__item builder-mobile-drawer__item--muted" data-builder-mobile-drawer-logout>ログアウト</button>` +
+      `</nav></aside>`;
+
+    // body 直下・末尾に置き、ページヘッダーより前面の stacking を保証
+    document.body.appendChild(drawer);
+    return drawer;
+  }
+
+  function mountBuilderMobileDrawerToBody(drawer) {
+    if (!drawer || !document.body) return;
+    if (drawer.parentElement !== document.body || document.body.lastElementChild !== drawer) {
+      document.body.appendChild(drawer);
+    }
+  }
+
+  function getBuilderMobileDrawerApi() {
+    if (builderMobileDrawerApi) return builderMobileDrawerApi;
+
+    const drawer = ensureBuilderMobileDrawer();
+    let closeTimer = 0;
+    /** @type {Element[]} */
+    const toggles = [];
+
+    const syncIdentity = () => {
+      const nameDst = drawer.querySelector("[data-builder-mobile-drawer-name]");
+      const roleDst = drawer.querySelector("[data-builder-mobile-drawer-role]");
+      const avatarDst = drawer.querySelector("[data-builder-mobile-drawer-avatar]");
+      const brandMain = drawer.querySelector(".builder-mobile-drawer__brandMain");
+      const brandSub = drawer.querySelector(".builder-mobile-drawer__brandSub");
+      const nameSrc =
+        document.querySelector(".builder-account [data-dash-user-name]") ||
+        document.querySelector(".builder-partner-sidebar__name[data-dash-user-name]") ||
+        document.querySelector("[data-dash-user-name]");
+      const roleSrc =
+        document.querySelector(".builder-account [data-builder-member-type]") ||
+        document.querySelector(".builder-partner-sidebar__role");
+      const avatarSrc = document.querySelector(
+        ".builder-account [data-dash-avatar], .builder-partner-sidebar__avatar[data-dash-avatar], [data-dash-avatar]",
+      );
+      // 共通ヘッダー文言（全画面同一。三本線は描画しない）
+      if (brandMain) brandMain.textContent = "Builder";
+      if (brandSub) brandSub.textContent = "TASFUL Builder";
+      if (nameDst) nameDst.textContent = nameSrc?.textContent?.trim() || "会員";
+      if (roleDst) {
+        roleDst.textContent =
+          roleSrc?.textContent?.trim() ||
+          (typeof getRole === "function" && getRole() === "owner"
+            ? "オーナー"
+            : "認定パートナー");
+      }
+      if (avatarDst && avatarSrc?.getAttribute("src")) {
+        avatarDst.setAttribute("src", avatarSrc.getAttribute("src"));
+      }
+    };
+
+    const syncActiveNav = () => {
+      const page = String(document.body?.getAttribute("data-page") || "").trim();
+      const pathFile = String(window.location.pathname || "")
+        .split("/")
+        .pop()
+        .replace(/[?#].*$/, "");
+      const pageToFile = {
+        "builder-partner-dashboard": "index.html",
+        "builder-user-dashboard": "user-dashboard.html",
+        "builder-mvp-projects": "mvp-projects.html",
+        "builder-mvp-project-detail": "mvp-projects.html",
+        "builder-mvp-calendar": "project-calendar.html",
+        "builder-project-calendar": "project-calendar.html",
+        "builder-partner-detail": "partner.html",
+        "builder-partners": "partners.html",
+        "builder-find-workers": "find-workers.html",
+        "builder-mvp-notifications": "mvp-notifications.html",
+        "builder-templates": "mvp-templates.html",
+        "builder-settings": "settings.html",
+        "builder-favorites": "favorites.html",
+      };
+      const activeFile = pageToFile[page] || pathFile;
+      drawer.querySelectorAll("[data-builder-mobile-drawer-link]").forEach((link) => {
+        const href = String(link.getAttribute("href") || "");
+        const file = href.split("?")[0].split("/").pop();
+        const isActive = Boolean(file && activeFile && file === activeFile);
+        link.classList.toggle("is-active", isActive);
+        if (isActive) link.setAttribute("aria-current", "page");
+        else link.removeAttribute("aria-current");
+      });
+    };
+
+    const syncToggleState = (open) => {
+      toggles.forEach((toggle) => {
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+        toggle.setAttribute("aria-label", open ? "メニューを閉じる" : "メニューを開く");
+        toggle.closest("[data-builder-detail-menu]")?.classList.toggle("is-open", open);
+      });
+    };
+
+    const setOpen = (open) => {
+      if (open && !isBuilderMobileDrawerViewport()) return;
+
+      document.body.classList.toggle("builder-mobile-drawer-open", open);
+      document.body.classList.toggle("builder-detail-menu-open", open);
+      // Dashboard 埋め込みサイドバーはモバイルでは使わない
+      if (open) {
+        document.body.classList.remove("builder-partner-sidebar-open", "builder-dash-shell-open");
+      }
+      syncToggleState(open);
+
+      if (closeTimer) {
+        window.clearTimeout(closeTimer);
+        closeTimer = 0;
+      }
+
+      if (open) {
+        mountBuilderMobileDrawerToBody(drawer);
+        syncIdentity();
+        syncActiveNav();
+        drawer.hidden = false;
+        drawer.setAttribute("aria-hidden", "false");
+        window.requestAnimationFrame(() => drawer.classList.add("is-open"));
+      } else {
+        drawer.classList.remove("is-open");
+        drawer.setAttribute("aria-hidden", "true");
+        closeTimer = window.setTimeout(() => {
+          if (!drawer.classList.contains("is-open")) drawer.hidden = true;
+          closeTimer = 0;
+        }, 260);
+      }
+    };
+
+    const api = {
+      open: () => setOpen(true),
+      close: () => setOpen(false),
+      toggle: () => setOpen(!drawer.classList.contains("is-open")),
+      isOpen: () => drawer.classList.contains("is-open"),
+      registerToggle(toggle) {
+        if (!toggle || toggles.includes(toggle)) return;
+        toggles.push(toggle);
+        toggle.addEventListener("click", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!isBuilderMobileDrawerViewport()) return;
+          api.toggle();
+        });
+      },
+    };
+
+    drawer.querySelectorAll("[data-builder-mobile-drawer-close]").forEach((el) => {
+      el.addEventListener("click", () => api.close());
+    });
+    drawer.querySelectorAll("[data-builder-mobile-drawer-link]").forEach((el) => {
+      el.addEventListener("click", () => api.close());
+    });
+    drawer.querySelector("[data-builder-mobile-drawer-logout]")?.addEventListener("click", () => {
+      api.close();
+      window.location.href = "../dashboard.html";
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") api.close();
+    });
+    window.addEventListener(
+      "resize",
+      () => {
+        if (!isBuilderMobileDrawerViewport() && api.isOpen()) api.close();
+      },
+      { passive: true },
+    );
+
+    builderMobileDrawerApi = api;
+    return api;
+  }
+
+  function wirePartnerDetailMenu() {
+    // 旧名互換: 全 Builder 画面の左 Drawer を配線
+    wireBuilderMobileDrawer();
+  }
+
+  function wireBuilderMobileDrawer() {
+    if (document.body.dataset.builderMobileDrawerWired === "1") return;
+    document.body.dataset.builderMobileDrawerWired = "1";
+
+    document.querySelectorAll("[data-builder-detail-menu-panel]").forEach((legacyPanel) => {
+      legacyPanel.hidden = true;
+      legacyPanel.setAttribute("aria-hidden", "true");
+      legacyPanel.setAttribute("data-builder-legacy-dropdown", "1");
+      legacyPanel.style.display = "none";
+    });
+
+    const api = getBuilderMobileDrawerApi();
+    // サイドバートグルは wireDashShellBase が担当（Dashboard）
+    document
+      .querySelectorAll("[data-builder-detail-menu-toggle]")
+      .forEach((toggle) => api.registerToggle(toggle));
+  }
+
   function renderPartnerDetailPage() {
     const id = getParam("partner_id") || "demo-partner-001";
     const p = DEMO_PARTNERS.find((x) => x.partner_id === id) || DEMO_PARTNERS[0];
     if (!p) return;
 
+    wirePartnerDetailMenu();
+
     setText("[data-builder-partner-name]", p.display_name);
-    const meta = `${(p.trades || []).map(formatTrade).join("・")} · ${(p.areas || [])
-      .map(formatArea)
-      .join("・")}`;
-    setText("[data-builder-partner-meta]", meta || "—");
+    const availabilityLabel =
+      p.availability === "available" ? "空きあり" : p.availability === "limited" ? "一部可" : "満枠";
+    const statusLabel = p.status === "paused" ? "休止中" : "稼働中";
+    const statusKind = p.status === "paused" ? "status-paused" : "status";
+    const metaEl = document.querySelector("[data-builder-partner-meta]");
+    if (metaEl) {
+      // 上部要約ピルのみ接頭辞で種別を明示（対応カード内タグは従来表記のまま）
+      const metaPills = [
+        ...(p.trades || []).map((t) => ({ kind: "trade", label: `工：${formatTrade(t)}` })),
+        ...(p.areas || []).map((a) => ({ kind: "area", label: `エ：${formatArea(a)}` })),
+      ];
+      metaEl.className = "builder-partner-meta";
+      metaEl.innerHTML = metaPills.length
+        ? metaPills
+            .map(
+              (x) =>
+                `<span class="builder-kpi builder-kpi--${esc(x.kind)}" data-tag-kind="${esc(x.kind)}">${esc(
+                  x.label,
+                )}</span>`,
+            )
+            .join("")
+        : `<span class="builder-kpi">—</span>`;
+    }
     setText("[data-builder-partner-headline]", p.profile || p.headline || "—");
     setText("[data-builder-partner-contact]", formatContactPolicy(p.contact_policy));
 
     const tags = document.querySelector("[data-builder-partner-tags]");
     if (tags) {
       const items = [
-        ...(p.trades || []).map((t) => `工種: ${formatTrade(t)}`),
-        ...(p.areas || []).map((a) => `エリア: ${formatArea(a)}`),
-        `稼働: ${
-          p.availability === "available" ? "空きあり" : p.availability === "limited" ? "一部可" : "満枠"
-        }`,
-        `状態: ${p.status === "paused" ? "休止中" : "稼働中"}`,
+        ...(p.trades || []).map((t) => ({ kind: "trade", label: `工種: ${formatTrade(t)}` })),
+        ...(p.areas || []).map((a) => ({ kind: "area", label: `エリア: ${formatArea(a)}` })),
+        { kind: "availability", label: `稼働: ${availabilityLabel}` },
+        { kind: statusKind, label: `状態: ${statusLabel}` },
       ];
-      tags.innerHTML = items.map((x) => `<li class="builder-tag">${esc(x)}</li>`).join("");
+      tags.innerHTML = items
+        .map(
+          (x) =>
+            `<li class="builder-tag builder-tag--${esc(x.kind)}" data-tag-kind="${esc(x.kind)}">${esc(
+              x.label,
+            )}</li>`,
+        )
+        .join("");
     }
 
     const favBtn = document.querySelector("[data-builder-fav-toggle]");
@@ -7049,6 +7626,16 @@
         const partner_id = (sel || rej).getAttribute("data-partner-id");
         if (!partner_id) return;
 
+        const api = mvp();
+        const nextReload = api.reload();
+        const prBoard = (nextReload.projects || []).find((x) => x.project_id === proj.project_id) || proj;
+        if (isBoardFeedItem(prBoard)) {
+          if (commitBoardApplicationDecision(api, prBoard, partner_id, Boolean(sel))) {
+            renderProjectDetailPage();
+          }
+          return;
+        }
+
         const partnerAdapter = global.TasuBuilderPartnerAdapter;
         if (partnerAdapter?.updateApplicationStatus) {
           const result = partnerAdapter.updateApplicationStatus({
@@ -7260,30 +7847,35 @@
         const pid = getProjectIdParam();
         if (!pid) return;
         if (applyBtn) {
-          const result = applyGeneralFlowProject(pid);
-          if (result?.ok) {
-            renderMvpProjectDetailPage();
-            if (isBuilderBenchEmbedPage()) {
-              try {
-                global.parent?.postMessage?.(
-                  {
-                    type: "tasu-builder-bench-general-applied",
-                    projectId: pid,
-                    benchSide: getParam("benchSide"),
-                  },
-                  "*"
-                );
-              } catch {
-                /* ignore */
+          const st = mvp().reload();
+          const pr = (st.projects || []).find((p) => p.project_id === pid);
+          if (pr?.bench_flow_id) {
+            const result = applyGeneralFlowProject(pid);
+            if (result?.ok) {
+              renderMvpProjectDetailPage();
+              if (isBuilderBenchEmbedPage()) {
+                try {
+                  global.parent?.postMessage?.(
+                    {
+                      type: "tasu-builder-bench-general-applied",
+                      projectId: pid,
+                      benchSide: getParam("benchSide"),
+                    },
+                    "*"
+                  );
+                } catch {
+                  /* ignore */
+                }
               }
             }
+            return;
           }
+          // 標準案件の応募は renderMvpTalkEntryCta 側ハンドラへ委譲
           return;
         }
         if (startBtn) {
           const result = startGeneralFlowChat(pid);
           if (result?.ok) {
-            renderMvpProjectDetailPage();
             if (isBuilderBenchEmbedPage()) {
               try {
                 global.parent?.postMessage?.(
@@ -7299,6 +7891,12 @@
                 /* ignore */
               }
             }
+            // Talk entry: 作成したスレッドへ直接遷移
+            if (result.threadId) {
+              window.location.href = mvpThreadHref(result.threadId, getRole(), result.threadType);
+              return;
+            }
+            renderMvpProjectDetailPage();
           }
           return;
         }
@@ -7372,23 +7970,38 @@
     }
     setText("[data-builder-mvp-pd-hero-summary]", `${area} · ${budgetText} · ${period}`);
 
+    const tradeLabels = (spec.trades || spec.trade_tags || [])
+      .map((t) => formatTrade(t) || String(t || "").trim())
+      .filter(Boolean)
+      .slice(0, 4);
     const badges = document.querySelector("[data-builder-mvp-pd-badges]");
     if (badges) {
       badges.innerHTML =
-        `<span class="mvp-pill mvp-pill--kind">${esc(kindLabel)}</span>` +
-        `<span class="mvp-pill mvp-pill--${esc(statusPillMod)}">${esc(statusLabel)}</span>` +
-        (urgent && statusLabel !== "締切間近" ? `<span class="mvp-pill mvp-pill--urgent">急募</span>` : "");
+        `<span class="mvp-pill mvp-pill--kind" data-tag-kind="kind">${esc(kindLabel)}</span>` +
+        `<span class="mvp-pill mvp-pill--${esc(statusPillMod)}" data-tag-kind="status">${esc(statusLabel)}</span>` +
+        (urgent && statusLabel !== "締切間近"
+          ? `<span class="mvp-pill mvp-pill--urgent" data-tag-kind="urgent">急募</span>`
+          : "") +
+        (statusLabel === "締切間近"
+          ? `<span class="mvp-pill mvp-pill--deadline" data-tag-kind="deadline">締切間近</span>`
+          : "") +
+        tradeLabels
+          .map((t) => `<span class="mvp-pill mvp-pill--trade" data-tag-kind="trade">${esc(t)}</span>`)
+          .join("") +
+        (area && area !== "—"
+          ? `<span class="mvp-pill mvp-pill--area" data-tag-kind="area">${esc(area)}</span>`
+          : "");
     }
 
     const stats = document.querySelector("[data-builder-mvp-pd-stats]");
     if (stats) {
       stats.innerHTML =
-        buildMvpPdStat("エリア", area) +
-        buildMvpPdStat("予算", budgetText) +
-        buildMvpPdStat("工期", period) +
-        buildMvpPdStat("募集人数", `${required} 名`) +
-        buildMvpPdStat("応募数", `${appCount} 件`) +
-        buildMvpPdStat("選定", `${selectedCount} / ${required}`) +
+        buildMvpPdStat("エリア", area, "area") +
+        buildMvpPdStat("予算", budgetText, "budget") +
+        buildMvpPdStat("工期", period, "period") +
+        buildMvpPdStat("募集人数", `${required} 名`, "open") +
+        buildMvpPdStat("応募数", `${appCount} 件`, appCount > 0 ? "applied" : "") +
+        buildMvpPdStat("選定", `${selectedCount} / ${required}`, selectedCount > 0 ? "selected" : "") +
         buildMvpPdStat("運営手配", assignedPartners.length ? `${assignedPartners.length} 名` : "未手配");
     }
 
@@ -7399,8 +8012,10 @@
 
     const tradesHost = document.querySelector("[data-builder-mvp-pd-trades]");
     if (tradesHost) {
-      const chips = (spec.trades || []).length
-        ? spec.trades.map((t) => `<span class="mvp-pill mvp-pill--open">${esc(t)}</span>`).join("")
+      const chips = tradeLabels.length
+        ? tradeLabels
+            .map((t) => `<span class="mvp-pill mvp-pill--trade" data-tag-kind="trade">${esc(t)}</span>`)
+            .join("")
         : `<span class="mvp-pd-body">—</span>`;
       tradesHost.innerHTML = chips;
     }
@@ -7445,14 +8060,17 @@
       if (threadId) {
         threadBtn.hidden = false;
         threadHint.hidden = true;
+        // 既存スレッド詳細へ直リンク（一覧ではなく Talk entry）
         threadBtn.setAttribute(
           "href",
-          `${mvpThreadsHref(getBuilderThreadTypeForId(threadId), getRole())}&project_id=${encodeURIComponent(project.project_id)}`
+          mvpThreadHref(threadId, getRole(), getBuilderThreadTypeForId(threadId)),
         );
+        threadBtn.textContent = "スレッドを見る";
         threadBtn.removeAttribute("aria-disabled");
       } else {
         threadBtn.hidden = true;
         threadHint.hidden = false;
+        threadHint.textContent = "スレッド未作成のため、Talkへは遷移できません。";
       }
     }
 
@@ -7600,6 +8218,13 @@
           const partner_id = (sel || rej).getAttribute("data-partner-id");
           if (!partner_id) return;
 
+          if (pr && isBoardFeedItem(pr)) {
+            if (commitBoardApplicationDecision(api, pr, partner_id, Boolean(sel))) {
+              renderMvpProjectDetailPage();
+            }
+            return;
+          }
+
           const pidx = (next.projects || []).findIndex((x) => x.project_id === project.project_id);
           if (pidx < 0) return;
           const req = Number(pr.required_partners || 1);
@@ -7651,8 +8276,170 @@
 
     renderMvpProjectTemplateSaveButton(project.project_id);
     renderGeneralFlowProjectDetailCta(project, state, api);
+    renderMvpTalkEntryCta(project, state);
     applyMvpApplicationsViewDom(project);
     scheduleBoardApplicationsFocus();
+  }
+
+  /**
+   * Talk entry CTA 整理（mvp-project-detail）
+   * - 主CTAの優先順位: 応募 → やりとり開始 → スレッドを見る → 一覧へ戻る
+   * - スレッドは mvp-thread.html 直リンク
+   * - 550円 / 手数料は表示メモのみ（決済未実装）
+   */
+  function resolveTalkEntryBillingLane(project, threadId) {
+    const tt = String(getBuilderThreadTypeForId(threadId) || project?.bench_thread_type || "").trim();
+    const source = String(project?.source || "").trim();
+    const kind = String(project?.kind || "").trim();
+    if (
+      tt === "ops_partner" ||
+      kind === "tasful_managed" ||
+      source === "admin_calendar" ||
+      source === "tasful_talk_notify" ||
+      project?.board_type === "calendar"
+    ) {
+      return "ops";
+    }
+    return "general";
+  }
+
+  function talkEntryPolicyText(lane) {
+    const fee = global.TasuBuilderBillingPolicy?.CONTACT_REVEAL_FEE_YEN || 550;
+    const minC = global.TasuBuilderBillingPolicy?.PROJECT_COMMISSION_MIN_PCT || 5;
+    const maxC = global.TasuBuilderBillingPolicy?.PROJECT_COMMISSION_MAX_PCT || 10;
+    if (lane === "ops") {
+      return "運営案件のやりとりは TASFUL Talk で行います。連絡先開示料（550円）の対象外です。完了手数料は運営案件方針に従います（決済は別途）。";
+    }
+    return `Builderでは原則 TASFUL Talk でやりとりします。連絡先開示が必要な場合は ${fee}円（税込）。一般案件の成約完了時は手数料 ${minC}〜${maxC}% の対象です（決済は別途）。`;
+  }
+
+  function renderMvpTalkEntryCta(project, state) {
+    const stack = document.querySelector("[data-builder-mvp-pd-cta-stack]") || document.querySelector(".mvp-pd-ctaStack");
+    const policyEl = document.querySelector("[data-builder-mvp-pd-talk-policy]");
+    const applyBtn = document.querySelector(".mvp-pd-ctaStack [data-builder-mvp-pd-apply]");
+    const startChatBtn = document.querySelector("[data-builder-mvp-pd-start-chat]");
+    const threadBtn = document.querySelector("[data-builder-mvp-pd-thread]");
+    const backList = document.querySelector("[data-builder-mvp-pd-back-list]");
+    const threadHint = document.querySelector("[data-builder-mvp-pd-thread-hint]");
+    if (!stack) return;
+
+    const threadId = String(project?.main_thread_id || "").trim();
+    const lane = resolveTalkEntryBillingLane(project, threadId);
+    const role = getRole();
+    const myId = getPartnerId();
+    const apps = (state.applications || []).filter((a) => a.project_id === project.project_id);
+    const myApp = apps.find((a) => a.partner_id === myId);
+    const isOps = lane === "ops";
+
+    if (policyEl) {
+      policyEl.hidden = false;
+      policyEl.textContent = talkEntryPolicyText(lane);
+      policyEl.classList.toggle("mvp-pd-ctaPolicy--ops", isOps);
+    }
+
+    // 標準パートナー応募（bench_flow 以外）: 未応募なら応募CTAを表示
+    if (!project.bench_flow_id && role === "partner" && applyBtn) {
+      const required = Math.max(1, Number(project.required_partners || 1));
+      const selectedIds = Array.isArray(project.selected_partner_ids) ? project.selected_partner_ids : [];
+      const filled = selectedIds.length >= required;
+      const canApply = !myApp && !filled && !threadId;
+      applyBtn.hidden = !canApply;
+      if (canApply) {
+        applyBtn.textContent = "この案件に応募する";
+        applyBtn.classList.add("mvp-pd-btnPrimary");
+        applyBtn.classList.remove("builder-btn", "builder-btn--ghost", "builder-btn--secondary");
+      }
+      if (!document.body.dataset.mvpStandardApplyWired) {
+        document.body.dataset.mvpStandardApplyWired = "1";
+        document.addEventListener("click", (ev) => {
+          const btn = ev.target?.closest?.(".mvp-pd-ctaStack [data-builder-mvp-pd-apply]");
+          if (!btn || btn.hidden) return;
+          const pid = getProjectIdParam();
+          if (!pid) return;
+          const api = mvp();
+          const next = api.reload();
+          const pr = (next.projects || []).find((p) => p.project_id === pid);
+          if (!pr || pr.bench_flow_id) return;
+          if (getRole() !== "partner") return;
+          const partnerId = getPartnerId();
+          const already = (next.applications || []).some(
+            (a) => a.project_id === pid && a.partner_id === partnerId,
+          );
+          if (already) return;
+          next.applications = [
+            ...(next.applications || []),
+            {
+              project_id: pid,
+              partner_id: partnerId,
+              status: "applied",
+              ts: nowIso(),
+              message: `${pr.title || "案件"} に応募しました。`,
+            },
+          ];
+          api.commit(next);
+          api.pushNotification({
+            type: "application",
+            body: `案件に応募がありました（${pr.title || pid}）`,
+            project_id: pid,
+            thread_id: pr.main_thread_id || null,
+          });
+          renderMvpProjectDetailPage();
+        });
+      }
+    }
+
+    // 主CTAクラス整理（同時に複数の primary 見た目にしない）
+    const markPrimary = (el, on) => {
+      if (!el || el.hidden) return;
+      if (on) {
+        el.classList.add("mvp-pd-btnPrimary", "mvp-pd-cta--primary");
+        el.classList.remove("builder-btn", "builder-btn--ghost", "builder-btn--secondary", "mvp-pd-cta--secondary");
+      } else {
+        el.classList.remove("mvp-pd-btnPrimary", "mvp-pd-cta--primary");
+        el.classList.add("builder-btn", "builder-btn--secondary", "mvp-pd-cta--secondary");
+        el.classList.remove("builder-btn--ghost");
+      }
+    };
+
+    const applyVisible = applyBtn && !applyBtn.hidden;
+    const startVisible = startChatBtn && !startChatBtn.hidden;
+    const threadVisible = threadBtn && !threadBtn.hidden;
+
+    if (startChatBtn && startVisible) {
+      startChatBtn.textContent = isOps ? "運営とTalkでやりとり" : "TASFUL Talkでやりとり";
+    }
+    if (threadBtn && threadVisible) {
+      threadBtn.textContent = "スレッドを見る";
+      if (threadId) {
+        threadBtn.setAttribute(
+          "href",
+          mvpThreadHref(threadId, role, getBuilderThreadTypeForId(threadId)),
+        );
+      }
+    }
+
+    // 優先: 応募 > やりとり開始 > スレッド > その他
+    markPrimary(applyBtn, applyVisible);
+    markPrimary(startChatBtn, !applyVisible && startVisible);
+    markPrimary(threadBtn, !applyVisible && !startVisible && threadVisible);
+
+    if (threadHint && !threadId && !startVisible && !applyVisible) {
+      threadHint.hidden = false;
+      threadHint.textContent = isOps
+        ? "運営案件のスレッドは未作成です。運営手配後に Talk でやりとりできます。"
+        : "スレッド未作成です。応募・選定後に TASFUL Talk でやりとりできます。";
+    }
+
+    if (backList) {
+      backList.hidden = false;
+      backList.classList.add("mvp-pd-cta--back");
+    }
+
+    // flex order（data-cta-order）
+    stack.querySelectorAll("[data-cta-order]").forEach((el) => {
+      const n = Number(el.getAttribute("data-cta-order") || 99);
+      el.style.order = String(n);
+    });
   }
 
   function renderReRequestPage() {
@@ -7890,6 +8677,8 @@
     applyBuilderBenchEmbedChrome();
     applyMvpRoleFromUrl();
     wireHeaderDemo();
+    wirePartnerDetailMenu();
+    wireBuilderGeneralJobsNotificationChrome();
     const page = getPage();
 
     if (page === "builder-partner-dashboard") {
@@ -8150,6 +8939,9 @@
   window.TasuBuilder = {
     renderStats,
     renderRecentList,
+    getUnreadNotificationCount: () => getMvpUnreadNotificationCount(),
+    refreshGeneralJobsNotificationChrome: () => syncBuilderGeneralJobsNotificationChrome(),
+    GENERAL_TALK_CTA_LABEL: BUILDER_GENERAL_TALK_CTA_LABEL,
     demo: {
       OWNER_ID,
       DEMO_PARTNERS,
@@ -8197,23 +8989,25 @@
   function renderMvpRole() {
     const host = document.querySelector("[data-builder-role]");
     if (!host) return;
-    const role = getRole();
-    const label = role === "owner" ? "オーナー" : role === "user" ? "利用者" : "パートナー";
+    if (isBuilderProdHost()) {
+      host.innerHTML = "";
+      host.hidden = true;
+      return;
+    }
+    host.hidden = false;
     const state = mvp().reload();
     const partnerId = getPartnerId();
     const partnerName = partnerLabel(state, partnerId);
     host.innerHTML =
-      `<span class="builder-role__pill">表示: <strong>${esc(label)}</strong></span>` +
-      (role === "partner" ? `<span class="builder-role__pill">協力会社: <strong>${esc(partnerName)}</strong></span>` : "") +
-      (role === "user" ? `<span class="builder-role__pill">利用者: <strong>山田 太郎</strong></span>` : "") +
       `<details class="mvp-demoMenu">` +
-      `<summary class="mvp-demoMenu__summary"><span class="mvp-demoMenu__icon" aria-hidden="true">▶</span> デモ操作</summary>` +
+      `<summary class="mvp-demoMenu__summary"><span class="mvp-demoMenu__icon" aria-hidden="true">▶</span> 検証用ロール</summary>` +
       `<div class="mvp-demoMenu__panel">` +
-      `<button type="button" class="mvp-demoMenu__btn" data-builder-mvp-role-owner>オーナー表示</button>` +
+      `<p class="mvp-demoMenu__hint">ローカル検証のみ。本番ではログイン情報が使われます。</p>` +
+      `<button type="button" class="mvp-demoMenu__btn" data-builder-mvp-role-owner>依頼者表示</button>` +
       `<button type="button" class="mvp-demoMenu__btn" data-builder-mvp-role-partner>協力会社表示</button>` +
-      `<button type="button" class="mvp-demoMenu__btn" data-builder-mvp-role-user>利用者表示</button>` +
-      `<button type="button" class="mvp-demoMenu__btn" data-builder-mvp-partner-toggle>協力会社切替</button>` +
-      `<button type="button" class="mvp-demoMenu__btn is-danger" data-builder-mvp-reset>デモデータ初期化</button>` +
+      `<button type="button" class="mvp-demoMenu__btn" data-builder-mvp-role-user>一般ユーザー表示</button>` +
+      `<button type="button" class="mvp-demoMenu__btn" data-builder-mvp-role-partner-toggle>協力会社切替（${esc(partnerName)}）</button>` +
+      `<button type="button" class="mvp-demoMenu__btn is-danger" data-builder-mvp-reset>データを初期化</button>` +
       `</div>` +
       `</details>`;
     host.querySelector("[data-builder-mvp-role-owner]")?.addEventListener("click", () => {
@@ -8232,12 +9026,12 @@
       document.dispatchEvent(new CustomEvent("builder:mvp-refresh"));
     });
     host.querySelector("[data-builder-mvp-reset]")?.addEventListener("click", () => {
-      if (!confirm("demoData を初期化します。よろしいですか？")) return;
+      if (!confirm("保存データを初期化します。よろしいですか？")) return;
       mvp().reset();
-      window.location.href = "mvp-projects.html";
+      window.location.href = "board-projects.html";
     });
 
-    host.querySelector("[data-builder-mvp-partner-toggle]")?.addEventListener("click", () => {
+    host.querySelector("[data-builder-mvp-role-partner-toggle]")?.addEventListener("click", () => {
       const ids = (mvp().reload().partners || []).map((p) => p.partner_id);
       const idx = Math.max(0, ids.indexOf(getPartnerId()));
       const next = ids[(idx + 1) % ids.length] || "demo-partner-001";
@@ -8269,6 +9063,8 @@
   }
 
   function getApplication(state, project_id, partner_id) {
+    const dual = global.TasuBuilderGeneralJobsDualWrite;
+    if (dual?.isWithdrawnInState?.(state, project_id, partner_id)) return null;
     const adapter = global.TasuBuilderPartnerAdapter;
     if (adapter?.getApplication) {
       return adapter.getApplication(project_id, partner_id, { state });
@@ -8594,84 +9390,8 @@
   }
 
   function renderMvpProjectsPage() {
-    const api = mvp();
-    const state = api.reload();
-    const list = document.querySelector("[data-builder-mvp-project-list]");
-    const kpi = document.querySelector("[data-builder-mvp-project-count]");
-    const topKpi = document.querySelector("[data-builder-mvp-kpi]");
-    if (!list || !kpi || !topKpi) return;
-    topKpi.textContent = `role: ${getRole()}`;
-
-    const rows = (state.projects || []).slice().sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
-    kpi.textContent = `${rows.length} 件`;
-    list.innerHTML = rows.map((p) => buildMvpProjectCard(p, state.specs?.[p.project_id], state)).join("");
-
-    if (!list.dataset.detailNavBound) {
-      list.dataset.detailNavBound = "1";
-      list.addEventListener("click", (ev) => {
-        if (ev.target?.closest?.("a, button, input, label")) return;
-        const card = ev.target?.closest?.("[data-project-id]");
-        const projectId = card?.getAttribute("data-project-id");
-        if (!projectId) return;
-        window.location.href = `mvp-project-detail.html?id=${encodeURIComponent(projectId)}`;
-      });
-    }
-
-    list.addEventListener("click", (ev) => {
-      const btn = ev.target?.closest?.("[data-builder-mvp-apply]");
-      if (!btn) return;
-      const projectId = btn.getAttribute("data-project-id");
-      if (!projectId) return;
-      const role = getRole();
-      if (role !== "partner") return;
-
-      const next = api.reload();
-      const myPartnerId = getPartnerId();
-      const already = (next.applications || []).some(
-        (a) => a.project_id === projectId && a.partner_id === myPartnerId
-      );
-      if (already) return;
-      next.applications = [
-        ...(next.applications || []),
-        { project_id: projectId, partner_id: myPartnerId, status: "applied", ts: nowIso() },
-      ];
-      const proj = (next.projects || []).find((x) => x.project_id === projectId);
-      const status = computeProjectStatus(next, proj);
-      if (status === "completed" || status === "invoiced") return;
-      const required = Number(proj?.required_partners || 1);
-      const selectedIds = Array.isArray(proj?.selected_partner_ids) ? proj.selected_partner_ids : [];
-      if (selectedIds.length >= required) return;
-      const threadId = proj?.main_thread_id || "";
-      if (threadId && next.threads?.[threadId]) {
-        const pname = partnerLabel(next, myPartnerId);
-        next.threads[threadId].events.push({
-          type: "applied",
-          actor: { id: myPartnerId, type: "partner", name: pname },
-          ts: nowIso(),
-          text: "応募がありました（demo）",
-        });
-        next.threads[threadId].messages.push({
-          msg_id: uid("msg"),
-          from: { id: myPartnerId, type: "partner", name: pname },
-          ts: nowIso(),
-          text: "応募します。条件確認をお願いします。",
-        });
-        next.threads[threadId].events.push({
-          type: "message",
-          actor: { id: myPartnerId, type: "partner", name: pname },
-          ts: nowIso(),
-          text: "Talk: 応募します。条件確認をお願いします。",
-        });
-      }
-      api.commit(next);
-      api.pushNotification({
-        type: "application",
-        body: `案件に応募がありました（${proj?.title || projectId}）`,
-        project_id: projectId,
-        thread_id: proj?.main_thread_id || null,
-      });
-      renderMvpProjectsPage();
-    });
+    const q = String(window.location.search || "");
+    window.location.replace(`board-projects.html${q}`);
   }
 
   function buildMvpProjectCard(project, spec, state) {
@@ -8710,14 +9430,27 @@
     const barMod = urgent ? "urgent" : status === "applied" ? "applied" : status === "open" ? "open" : "neutral";
     const accentMod = urgent ? "key" : status === "open" ? "msg" : status === "applied" ? "warn" : "neutral";
 
+    const tradeLabels = (spec?.trades || spec?.trade_tags || [])
+      .map((t) => formatTrade(t) || String(t || "").trim())
+      .filter(Boolean)
+      .slice(0, 3);
+    const tagPills =
+      tradeLabels.map((t) => `<span class="mvp-pill mvp-pill--trade" data-tag-kind="trade">${esc(t)}</span>`).join("") +
+      (area && area !== "—"
+        ? `<span class="mvp-pill mvp-pill--area" data-tag-kind="area">${esc(area)}</span>`
+        : "") +
+      (urgent || statusLabel === "締切間近"
+        ? `<span class="mvp-pill mvp-pill--deadline" data-tag-kind="deadline">期限: ${esc(deadline)}</span>`
+        : "");
+
     return (
       `<article class="mvp-card mvp-card--${esc(accentMod)}" data-project-id="${esc(project.project_id)}">` +
       `<div class="mvp-card__statusBar is-${esc(barMod)}" aria-hidden="true"></div>` +
       `<div class="mvp-card__top">` +
       `<div class="mvp-card__badges">` +
-      `<span class="mvp-pill mvp-pill--kind">${esc(kindLabel)}</span>` +
-      `<span class="mvp-pill mvp-pill--${esc(statusMod)}">${esc(statusLabel)}</span>` +
-      (urgent ? `<span class="mvp-pill mvp-pill--urgent">急募</span>` : "") +
+      `<span class="mvp-pill mvp-pill--kind" data-tag-kind="kind">${esc(kindLabel)}</span>` +
+      `<span class="mvp-pill mvp-pill--${esc(statusMod)}" data-tag-kind="status">${esc(statusLabel)}</span>` +
+      (urgent ? `<span class="mvp-pill mvp-pill--urgent" data-tag-kind="urgent">急募</span>` : "") +
       `</div>` +
       `<div class="mvp-card__triple">` +
       `<div class="mvp-triple mvp-triple--budget"><span class="mvp-triple__label">予算</span><strong class="mvp-triple__value">${esc(
@@ -8729,6 +9462,7 @@
       `<h3 class="mvp-card__title"><a class="mvp-card__titleLink" href="mvp-project-detail.html?id=${esc(
         project.project_id
       )}">${esc(project.title || "—")}</a></h3>` +
+      (tagPills ? `<div class="mvp-card__tags">${tagPills}</div>` : "") +
       `<div class="mvp-card__meta">` +
       `<div class="mvp-metaRow"><span>エリア</span><strong>${esc(area)}</strong></div>` +
       `<div class="mvp-metaRow"><span>期間</span><strong>${esc(period)}</strong></div>` +
@@ -8819,6 +9553,38 @@
     );
   }
 
+  function syncBuilderGeneralJobsNotificationChrome() {
+    ensureMvpNotificationsDemoData();
+    const unread = getMvpUnreadNotificationCount();
+    document.querySelectorAll("[data-builder-general-notif-count]").forEach((el) => {
+      if (unread > 0) {
+        el.textContent = String(unread);
+        el.hidden = false;
+      } else {
+        el.textContent = "";
+        el.hidden = true;
+      }
+    });
+    document.querySelectorAll("[data-builder-general-notif-badge]").forEach((el) => {
+      el.textContent = unread > 0 ? `${unread}件未読` : "未読なし";
+    });
+    if (global.TasuBuilderNav?.mountSidebarNav) {
+      document.querySelectorAll("[data-builder-nav-autoload]").forEach((host) => {
+        global.TasuBuilderNav.mountSidebarNav(host.getAttribute("data-builder-nav-role"));
+      });
+    }
+  }
+
+  function applyBuilderGeneralTalkCta(root) {
+    const scope = root && root.querySelectorAll ? root : document;
+    scope.querySelectorAll("[data-builder-board-pd-thread]").forEach((el) => {
+      if (!el.hidden) el.textContent = BUILDER_GENERAL_TALK_CTA_LABEL;
+    });
+    scope.querySelectorAll("[data-builder-general-talk-cta]").forEach((el) => {
+      el.textContent = BUILDER_GENERAL_TALK_CTA_LABEL;
+    });
+  }
+
   function isBoardFeedItem(project) {
     if (window.TasuBuilderBoardFeed?.isBoardFeedProject?.(project)) return true;
     return isBoardKindProject(project);
@@ -8865,6 +9631,161 @@
     sp.set("role", normalizeMvpRole(role || getRole()));
     if (getParam("from") === "talk") sp.set("from", "talk");
     return `board-thread.html?${sp.toString()}`;
+  }
+
+  /** 一般案件: DB talk_room_id（UUID 優先） */
+  function resolveBoardTalkRoomId(project) {
+    const Talk = global.TasuBuilderProjectTalkRoom;
+    const direct = String(project?.talk_room_id || project?.talkRoomId || "").trim();
+    if (Talk?.isUuidRoomId?.(direct) || Talk?.isStableTalkRoomId?.(direct)) return direct;
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(direct)) {
+      return direct;
+    }
+    return "";
+  }
+
+  /**
+   * Talk 遷移 href 解決: 1) DB UUID 2) Hub ensure 3) MVP thread fallback
+   */
+  function resolveBoardChatHref(project, state, role) {
+    const Talk = global.TasuBuilderProjectTalkRoom;
+    if (Talk?.resolveGeneralTalkTarget) {
+      const target = Talk.resolveGeneralTalkTarget(project, state);
+      if (target?.kind === "uuid" || target?.kind === "stable") {
+        const href = String(target.href || "").trim();
+        if (href) return href;
+      }
+      if (target?.kind === "mvp_thread" && target.id) {
+        return boardThreadHref(target.id, role);
+      }
+    }
+    const talkRoomId = resolveBoardTalkRoomId(project);
+    if (talkRoomId && Talk?.buildGeneralTalkHref) {
+      return Talk.buildGeneralTalkHref(project?.project_id, talkRoomId, { role: role || getRole() });
+    }
+    const threadId = resolveBoardMainThreadId(state, project);
+    if (threadId) return boardThreadHref(threadId, role);
+    return "";
+  }
+
+  function runBoardPostDecisionSync(api, project, partnerId, selected, threadId) {
+    const dw = global.TasuBuilderGeneralJobsDualWrite;
+    if (!dw?.syncDecisionWithMirror) return;
+    void dw.syncDecisionWithMirror({ project, partnerId, selected }).then(async () => {
+      global.TasuBuilderBoardAdapter?.clearApplicationsCache?.(project.project_id);
+      if (!selected || !dw.syncTalkRoomAfterSelection) return;
+      const talkRes = await dw.syncTalkRoomAfterSelection({
+        project,
+        partnerId,
+        api,
+        threadId,
+        selected: true,
+      });
+      const state = api.reload();
+      const updatedProject =
+        (state.projects || []).find((x) => x.project_id === project.project_id) || {
+          ...project,
+          talk_room_id: talkRes?.talkRoomId || project.talk_room_id,
+          talkRoomId: talkRes?.talkRoomId || project.talkRoomId,
+        };
+      pushBoardSelectionTalkNotifications({
+        api,
+        project: updatedProject,
+        state,
+        partnerId,
+        threadId,
+        talkRoomId: talkRes?.talkRoomId || resolveBoardTalkRoomId(updatedProject),
+      });
+    });
+  }
+
+  function pushBoardSelectionTalkNotifications({ api, project, state, partnerId, threadId, talkRoomId }) {
+    const ptitle = project.title || project.project_id;
+    const typeCfg = { ...getBoardTypeConfig(project), projectId: project.project_id };
+    const projectKind = resolveBoardItemType(project);
+    const partnerHref = resolveBoardChatHref(project, state, "partner");
+    const ownerHref = resolveBoardChatHref(project, state, "owner");
+    const hasUuid = Boolean(pickStr(talkRoomId) && global.TasuBuilderProjectTalkRoom?.isUuidRoomId?.(talkRoomId));
+
+    const applicantBody = `${ptitle} — ${typeCfg.hireBodyApplicant}`;
+    const posterBody = `${typeCfg.hireBodyPoster}`;
+
+    api.pushNotification({
+      type: "selected_talk",
+      title: typeCfg.hireNotifyApplicant,
+      body: applicantBody,
+      project_id: project.project_id,
+      projectTitle: ptitle,
+      thread_id: hasUuid ? talkRoomId : threadId,
+      talk_room_id: talkRoomId || null,
+      href: partnerHref || null,
+      partnerId,
+      recipientRole: "partner",
+      projectKind,
+      board_type: projectKind,
+    });
+    api.pushNotification({
+      type: "hire_confirmed_talk",
+      title: typeCfg.hireNotifyPoster,
+      body: posterBody,
+      project_id: project.project_id,
+      projectTitle: ptitle,
+      thread_id: hasUuid ? talkRoomId : threadId,
+      talk_room_id: talkRoomId || null,
+      href: ownerHref || null,
+      recipientRole: "owner",
+      projectKind,
+      board_type: projectKind,
+    });
+
+    if (partnerHref && hasUuid) {
+      pushBoardTalkNotification({
+        title: typeCfg.hireNotifyApplicant,
+        body: applicantBody,
+        href: partnerHref,
+        typeCfg,
+        actionLabel: BUILDER_GENERAL_TALK_CTA_LABEL,
+        role: "partner",
+        projectKind,
+      });
+      pushBoardTalkNotification({
+        title: typeCfg.hireNotifyPoster,
+        body: posterBody,
+        href: ownerHref,
+        typeCfg,
+        actionLabel: BUILDER_GENERAL_TALK_CTA_LABEL,
+        role: "owner",
+        projectKind,
+      });
+      return;
+    }
+
+    pushBoardTalkNotification({
+      title: typeCfg.hireNotifyApplicant,
+      body: applicantBody,
+      threadId,
+      typeCfg,
+      actionLabel: BUILDER_GENERAL_TALK_CTA_LABEL,
+      role: "partner",
+      projectKind,
+    });
+    pushBoardTalkNotification({
+      title: typeCfg.hireNotifyPoster,
+      body: posterBody,
+      threadId,
+      typeCfg,
+      actionLabel: BUILDER_GENERAL_TALK_CTA_LABEL,
+      role: "owner",
+      projectKind,
+    });
+  }
+
+  function pickStr(...vals) {
+    for (let i = 0; i < vals.length; i += 1) {
+      const s = String(vals[i] ?? "").trim();
+      if (s) return s;
+    }
+    return "";
   }
 
   function resolveBoardOrMvpThreadNotifyHref(threadId, role, project, threadType, options = {}) {
@@ -8978,15 +9899,52 @@
     replaceBoardThreadUrl({ threadId, role: urlRole });
   }
 
+  function resolveGeneralJobsDashBack(role) {
+    const r = String(role || "").trim();
+    if (r === "user" || r === "owner") {
+      return {
+        dashHref: "user-dashboard.html",
+        dashLabel: "一般ダッシュボードへ",
+        listHref: "board-projects.html",
+        listLabel: "案件を探す",
+      };
+    }
+    return {
+      dashHref: "index.html",
+      dashLabel: "Builderダッシュボードへ",
+      listHref: "board-projects.html",
+      listLabel: "案件を探す",
+    };
+  }
+
   function applyBoardPageBackLinks() {
     const back = document.querySelector("[data-builder-page-back]");
-    if (!back) return;
-    if (getParam("from") !== "talk") return;
-    const href = resolveBoardTalkBackHref();
-    const label = "TASFUL TALKへ";
-    back.setAttribute("href", href);
-    back.setAttribute("aria-label", label);
-    back.textContent = `‹ ${label}`;
+    const role = getRole();
+    const nav = resolveGeneralJobsDashBack(role);
+
+    if (getParam("from") === "talk") {
+      const href = resolveBoardTalkBackHref();
+      const label = "TASFUL TALKへ";
+      if (back) {
+        back.setAttribute("href", href);
+        back.setAttribute("aria-label", label);
+        back.textContent = `‹ ${label}`;
+      }
+      return;
+    }
+
+    if (back) {
+      back.setAttribute("href", nav.listHref);
+      back.setAttribute("aria-label", nav.listLabel);
+      back.textContent = `‹ ${nav.listLabel}`;
+    }
+    const brand = document.querySelector(".builder-brand[href]");
+    if (brand) {
+      brand.setAttribute("href", nav.dashHref);
+      brand.setAttribute("aria-label", nav.dashLabel);
+    }
+    const cancel = document.querySelector("[data-builder-mvp-project-cancel]");
+    if (cancel) cancel.setAttribute("href", nav.listHref);
   }
 
   /** 選定・依頼受諾時のみやりとりチャットを作成（応募・依頼時は作成しない） */
@@ -9086,7 +10044,7 @@
         category: typeCfg?.label || "Builder",
         title,
         body,
-        actionLabel: actionLabel || (threadId ? "チャットを開く" : "内容を確認"),
+        actionLabel: actionLabel || BUILDER_GENERAL_TALK_CTA_LABEL,
         href: chatUrl,
         targetUrl: chatUrl,
         priority: threadId ? "high" : "medium",
@@ -9132,6 +10090,15 @@
 
   function isGeneralBoardMvpProject(project) {
     return Boolean(project && isBoardFeedItem(project) && !usesMvpPartnerThread(project));
+  }
+
+  function canEditGeneralBoardProject(project, state) {
+    if (!project || !isGeneralBoardMvpProject(project)) return false;
+    if (getRole() !== "owner") return false;
+    const selectedCount = Array.isArray(project.selected_partner_ids) ? project.selected_partner_ids.length : 0;
+    if (selectedCount > 0) return false;
+    const status = computeProjectStatus(state, project);
+    return status === "open" || status === "applied" || status === "draft";
   }
 
   function threadCompletionSelectedApplicantId(project, state) {
@@ -10666,20 +11633,7 @@
         projectKind,
         board_type: projectKind,
       });
-      pushBoardTalkNotification({
-        title: typeCfg.hireNotifyApplicant,
-        body: applicantBody,
-        threadId,
-        typeCfg,
-        actionLabel: "チャットを開く",
-      });
-      pushBoardTalkNotification({
-        title: typeCfg.hireNotifyPoster,
-        body: posterBody,
-        threadId,
-        typeCfg,
-        actionLabel: "チャットを開く",
-      });
+      /* Talk Platform 通知（UUID href）は runBoardPostDecisionSync → pushBoardSelectionTalkNotifications で送信 */
       return;
     }
 
@@ -10785,6 +11739,7 @@
         selected,
         threadId,
       });
+      runBoardPostDecisionSync(api, updatedProject, partnerId, selected, threadId);
       return true;
     }
 
@@ -10798,10 +11753,11 @@
       selected,
       threadId: result.threadId,
     });
+    runBoardPostDecisionSync(api, result.project, partnerId, selected, result.threadId);
     return true;
   }
 
-  function boardApplyToProject(api, projectId) {
+  async function boardApplyToProject(api, projectId) {
     const adapter = global.TasuBuilderBoardAdapter;
     if (adapter?.applyToProject) {
       const res = adapter.applyToProject(projectId, getPartnerId(), {
@@ -10826,10 +11782,28 @@
     const required = Number(project.required_partners || 1);
     const selectedIds = Array.isArray(project.selected_partner_ids) ? project.selected_partner_ids : [];
     if (selectedIds.length >= required) return false;
+
+    const dual = global.TasuBuilderGeneralJobsDualWrite;
+    if (dual?.applyWithMirror) {
+      return await dual.applyWithMirror({
+        api,
+        projectId,
+        partnerId: myPartnerId,
+        project,
+        typeCfg,
+      });
+    }
+
     next.applications = [
       ...(next.applications || []),
       { project_id: projectId, partner_id: myPartnerId, status: "applied", ts: nowIso() },
     ];
+    next.withdrawn_board_applications = (next.withdrawn_board_applications || []).filter(
+      (w) =>
+        !(
+          String(w.project_id) === String(projectId) && String(w.partner_id) === String(myPartnerId)
+        )
+    );
     api.commit(next);
     api.pushNotification({
       type: "application",
@@ -10843,7 +11817,62 @@
     return true;
   }
 
+  function canWithdrawBoardApplication(state, project, partnerId) {
+    const pid = String(project?.project_id || "").trim();
+    const myId = String(partnerId || "").trim();
+    if (!pid || !myId || !project) return false;
+    const dual = global.TasuBuilderGeneralJobsDualWrite;
+    if (dual?.isWithdrawnInState?.(state, pid, myId)) return false;
+    const myApp = getApplication(state, pid, myId);
+    if (!myApp || String(myApp.status) !== "applied") return false;
+    const selectedIds = Array.isArray(project.selected_partner_ids) ? project.selected_partner_ids : [];
+    if (selectedIds.includes(myId)) return false;
+    const status = computeProjectStatus(state, project);
+    if (status === "completed" || status === "invoiced" || status === "selected") return false;
+    return true;
+  }
+
+  async function boardWithdrawApplication(api, projectId, partnerId) {
+    const adapter = global.TasuBuilderBoardAdapter;
+    if (adapter?.withdrawApplication) {
+      const res = adapter.withdrawApplication(projectId, partnerId, {
+        isBoardFeedItem,
+        computeProjectStatus,
+        getBoardTypeConfig,
+      });
+      return res?.ok === true;
+    }
+
+    const next = api.reload();
+    const myPartnerId = String(partnerId || getPartnerId()).trim();
+    const project = (next.projects || []).find((x) => x.project_id === projectId);
+    if (!project || !isBoardFeedItem(project)) return false;
+    if (!canWithdrawBoardApplication(next, project, myPartnerId)) return false;
+
+    const dual = global.TasuBuilderGeneralJobsDualWrite;
+    if (dual?.withdrawWithMirror) {
+      return await dual.withdrawWithMirror({
+        api,
+        projectId,
+        partnerId: myPartnerId,
+        project,
+      });
+    }
+
+    next.applications = (next.applications || []).filter(
+      (a) => !(a.project_id === projectId && a.partner_id === myPartnerId)
+    );
+    next.withdrawn_board_applications = [
+      ...(next.withdrawn_board_applications || []),
+      { project_id: projectId, partner_id: myPartnerId, ts: nowIso() },
+    ];
+    api.commit(next);
+    global.TasuBuilderBoardAdapter?.clearApplicationsCache?.(projectId);
+    return true;
+  }
+
   let boardFeedTypeFilter = "all";
+  let boardListSearchFilter = { q: "", area: "", trade: "", status: "" };
 
   function renderBoardTypeTabs(host, onChange) {
     if (!host) return;
@@ -10871,6 +11900,67 @@
     }
   }
 
+  function isBoardMyApplicationsView() {
+    return getParam("view") === "my-applications";
+  }
+
+  function readBoardListSearchFilterFromDom() {
+    const form = document.querySelector("[data-builder-board-search-form]");
+    if (!form) return boardListSearchFilter;
+    return {
+      q: form.querySelector("[data-builder-board-search-q]")?.value?.trim() || "",
+      area: form.querySelector("[data-builder-board-search-area]")?.value?.trim() || "",
+      trade: form.querySelector("[data-builder-board-search-trade]")?.value?.trim() || "",
+      status: form.querySelector("[data-builder-board-search-status]")?.value?.trim() || "",
+    };
+  }
+
+  function matchesBoardListSearchFilter(project, spec, state, filter) {
+    if (!filter) return true;
+    const keyword = String(filter.q || "").trim().toLowerCase();
+    if (keyword) {
+      const hay = [
+        project?.title,
+        spec?.description,
+        spec?.overview,
+        spec?.work_content,
+        ...(spec?.trade_tags || []),
+        ...(spec?.area_codes || []),
+        spec?.area?.label,
+        spec?.area,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      if (!hay.includes(keyword)) return false;
+    }
+    const areaKey = String(filter.area || "").trim();
+    if (areaKey) {
+      const areaHay = [
+        spec?.area?.label,
+        spec?.area,
+        ...(spec?.area_codes || []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      const areaLabel =
+        global.TasuBuilderSearchUiAdapter?.PARTNER_AREA_LABELS?.[areaKey] || areaKey;
+      if (!areaHay.includes(String(areaLabel).toLowerCase())) return false;
+    }
+    const trade = String(filter.trade || "").trim().toLowerCase();
+    if (trade) {
+      const tradeHay = (spec?.trade_tags || []).join(" ").toLowerCase();
+      if (!tradeHay.includes(trade)) return false;
+    }
+    const statusKey = String(filter.status || "").trim();
+    if (statusKey) {
+      const st = computeProjectStatus(state, project);
+      if (st !== statusKey) return false;
+    }
+    return true;
+  }
+
   function renderBoardProjectsPage() {
     applyBoardPageBackLinks();
     const threadsShortcut = document.querySelector("[data-builder-board-threads-link]");
@@ -10883,6 +11973,21 @@
     }
     const typeTabsHost = document.querySelector("[data-builder-board-type-tabs]");
     renderBoardTypeTabs(typeTabsHost, () => renderBoardProjectsPage());
+    const myAppsShortcut = document.querySelector("[data-builder-board-my-apps-link]");
+    const role = getRole();
+    if (myAppsShortcut) {
+      const showMyApps = role === "partner";
+      myAppsShortcut.hidden = !showMyApps;
+      if (showMyApps) {
+        const partnerQ = `role=partner&partner_id=${encodeURIComponent(getPartnerId())}`;
+        myAppsShortcut.setAttribute("href", `board-projects.html?view=my-applications&${partnerQ}`);
+        myAppsShortcut.classList.toggle("is-active", isBoardMyApplicationsView());
+      }
+    }
+    const listTitle = document.querySelector("[data-builder-board-list-title]");
+    if (listTitle) {
+      listTitle.textContent = isBoardMyApplicationsView() ? "応募中の案件" : "投稿一覧";
+    }
     const api = mvp();
     const adapter = global.TasuBuilderBoardAdapter;
     let state;
@@ -10901,7 +12006,9 @@
     const kpi = document.querySelector("[data-builder-board-project-count]");
     const topKpi = document.querySelector("[data-builder-board-kpi]");
     if (!list || !kpi || !topKpi) return;
-    topKpi.textContent = `role: ${getRole()}`;
+    syncBuilderGeneralJobsNotificationChrome();
+    const unread = getMvpUnreadNotificationCount();
+    topKpi.textContent = unread > 0 ? `未読通知 ${unread}件` : "一般案件";
 
     if (boardFeedTypeFilter && boardFeedTypeFilter !== "all") {
       const matchesTab =
@@ -10909,18 +12016,72 @@
         ((project, key) => resolveBoardItemType(project) === key);
       rows = rows.filter((p) => matchesTab(p, boardFeedTypeFilter));
     }
+
+    boardListSearchFilter = readBoardListSearchFilterFromDom();
+    if (
+      boardListSearchFilter.q ||
+      boardListSearchFilter.area ||
+      boardListSearchFilter.trade ||
+      boardListSearchFilter.status
+    ) {
+      rows = rows.filter((p) =>
+        matchesBoardListSearchFilter(p, state.specs?.[p.project_id], state, boardListSearchFilter)
+      );
+    }
+
     const repo = global.TasuBuilderSearchRepository;
     const ui = global.TasuBuilderSearchUiAdapter;
     if (
       repo?.filterSourceRows &&
       ui?.mapBoardProjectRow &&
+      ui?.filterFromBoardQuery &&
+      (boardListSearchFilter.q ||
+        boardListSearchFilter.area ||
+        boardListSearchFilter.trade ||
+        boardListSearchFilter.status)
+    ) {
+      try {
+        const mapped = rows.map((p) => {
+          const row = ui.mapBoardProjectRow(p, state.specs?.[p.project_id]);
+          const st = computeProjectStatus(state, p);
+          return { ...row, availability: st, keyword: `${row.keyword || ""} ${p.title || ""}`.trim() };
+        });
+        const filter = ui.filterFromBoardQuery(boardListSearchFilter);
+        const res = repo.filterSourceRows(mapped, filter, "job");
+        const idSet = new Set((res.items || []).map((r) => r.project_id || r.id));
+        if (idSet.size) rows = rows.filter((p) => idSet.has(p.project_id));
+      } catch {
+        /* keep filtered rows */
+      }
+    }
+
+    if (isBoardMyApplicationsView() && role === "partner") {
+      const myPartnerId = getPartnerId();
+      const adapter = global.TasuBuilderBoardAdapter;
+      const myApps = adapter?.listMyApplications?.(myPartnerId, state);
+      if (Array.isArray(myApps)) {
+        const idSet = new Set(myApps.map((a) => a.project_id));
+        rows = rows.filter((p) => idSet.has(p.project_id));
+      } else {
+        rows = rows.filter((p) => {
+          const app = getApplication(state, p.project_id, myPartnerId);
+          return app && String(app.status) === "applied";
+        });
+      }
+    }
+
+    const repoTab = global.TasuBuilderSearchRepository;
+    const uiTab = global.TasuBuilderSearchUiAdapter;
+    if (
+      repoTab?.filterSourceRows &&
+      uiTab?.mapBoardProjectRow &&
       boardFeedTypeFilter &&
       boardFeedTypeFilter !== "all"
     ) {
       try {
-        const mapped = rows.map((p) => ui.mapBoardProjectRow(p, state.specs?.[p.project_id]));
-        const filter = ui.filterFromBoardTab(boardFeedTypeFilter);
-        const res = repo.filterSourceRows(mapped, filter, "job");
+        const mapped = rows.map((p) => uiTab.mapBoardProjectRow(p, state.specs?.[p.project_id]));
+        const filter = uiTab.filterFromBoardTab(boardFeedTypeFilter);
+        const res = repoTab.filterSourceRows(mapped, filter, "job");
         const idSet = new Set((res.items || []).map((r) => r.project_id || r.id));
         if (idSet.size) rows = rows.filter((p) => idSet.has(p.project_id));
       } catch {
@@ -10930,7 +12091,30 @@
     kpi.textContent = `${rows.length} 件`;
     list.innerHTML = rows.length
       ? rows.map((p) => buildBoardProjectCard(p, state.specs?.[p.project_id], state)).join("")
-      : `<p class="talk-empty">表示できる投稿はありません。</p>`;
+      : `<p class="talk-empty">${
+          isBoardMyApplicationsView() ? "応募中の案件はありません。" : "表示できる投稿はありません。"
+        }</p>`;
+
+    const searchForm = document.querySelector("[data-builder-board-search-form]");
+    if (searchForm && !searchForm.dataset.bound) {
+      searchForm.dataset.bound = "1";
+      const runSearch = () => renderBoardProjectsPage();
+      searchForm.addEventListener("submit", (ev) => {
+        ev.preventDefault();
+        runSearch();
+      });
+      searchForm.querySelector("[data-builder-board-search-reset]")?.addEventListener("click", () => {
+        const qEl = searchForm.querySelector("[data-builder-board-search-q]");
+        const areaEl = searchForm.querySelector("[data-builder-board-search-area]");
+        const tradeEl = searchForm.querySelector("[data-builder-board-search-trade]");
+        const statusEl = searchForm.querySelector("[data-builder-board-search-status]");
+        if (qEl) qEl.value = "";
+        if (areaEl) areaEl.value = "";
+        if (tradeEl) tradeEl.value = "";
+        if (statusEl) statusEl.value = "";
+        runSearch();
+      });
+    }
 
     if (!list.dataset.detailNavBound) {
       list.dataset.detailNavBound = "1";
@@ -10949,7 +12133,20 @@
       if (!btn) return;
       const projectId = btn.getAttribute("data-project-id");
       if (!projectId || getRole() !== "partner") return;
-      if (boardApplyToProject(api, projectId)) renderBoardProjectsPage();
+      void boardApplyToProject(api, projectId).then((ok) => {
+        if (ok) renderBoardProjectsPage();
+      });
+    });
+
+    list.addEventListener("click", (ev) => {
+      const btn = ev.target?.closest?.("[data-builder-board-withdraw]");
+      if (!btn) return;
+      const projectId = btn.getAttribute("data-project-id");
+      if (!projectId || getRole() !== "partner") return;
+      if (!window.confirm("この案件への応募を取り下げますか？")) return;
+      void boardWithdrawApplication(api, projectId, getPartnerId()).then((ok) => {
+        if (ok) renderBoardProjectsPage();
+      });
     });
   }
 
@@ -10973,6 +12170,7 @@
     const myPartnerId = getPartnerId();
     const myApp = getApplication(state, project.project_id, myPartnerId);
     const applied = !!myApp;
+    const canWithdraw = role === "partner" && canWithdrawBoardApplication(state, project, myPartnerId);
     const filled = selectedCount >= required;
     const disabled = applied || filled || status === "completed" || status === "invoiced";
     const threadId = resolveBoardMainThreadId(state, project);
@@ -10986,6 +12184,11 @@
           )}" ${disabled ? "disabled" : ""}>${
             applied ? typeCfg.appliedCta : filled ? "募集終了" : typeCfg.applyCta
           }</button>` +
+          (canWithdraw
+            ? `<button type="button" class="mvp-card__btn mvp-card__btn--outline" data-builder-board-withdraw data-project-id="${esc(
+                project.project_id
+              )}">応募を取り下げ</button>`
+            : "") +
           `<a class="mvp-card__btn mvp-card__btn--outline" href="${esc(detailHref)}">詳細を見る</a>`
         : `<a class="mvp-card__btn mvp-card__btn--primary" href="${esc(
             `${detailHref}${detailHref.includes("?") ? "&" : "?"}view=applications`
@@ -11045,6 +12248,7 @@
   }
 
   let boardApplicationsFocusToken = 0;
+  let boardAppsHydrateToken = 0;
 
   function isBoardApplicationsView() {
     return getParam("view") === "applications";
@@ -11189,12 +12393,19 @@
     const rewardText = spec.reward || budgetText;
     const required = Math.max(1, Number(project.required_partners || 1));
     const selectedCount = Array.isArray(project.selected_partner_ids) ? project.selected_partner_ids.length : 0;
-    const apps =
-      global.TasuBuilderBoardAdapter?.listBoardApplications?.(project.project_id, { state }) ||
-      (state.applications || []).filter((a) => a.project_id === project.project_id);
+    const appsBundle =
+      global.TasuBuilderBoardAdapter?.getApplicationsForProject?.(project.project_id, state) || {
+        apps: (state.applications || []).filter((a) => a.project_id === project.project_id),
+        source: "mvp_local",
+      };
+    const apps = appsBundle.apps || [];
+    const appsSource = appsBundle.source || "mvp_local";
     const appCount = apps.length;
+    document.body.dataset.boardAppsSource = appsSource;
     const threadId = resolveBoardMainThreadId(state, project);
+    const talkRoomId = resolveBoardTalkRoomId(project);
     const role = getRole();
+    const chatHref = resolveBoardChatHref(project, state, role);
     const myId = getPartnerId();
     const myApp = apps.find((a) => a.partner_id === myId);
     const selectedIds = Array.isArray(project.selected_partner_ids) ? project.selected_partner_ids : [];
@@ -11292,18 +12503,24 @@
     const editBtn = document.querySelector("[data-builder-board-pd-edit]");
     const appsSection = document.querySelector("[data-builder-board-pd-apps-section]");
 
-    if (threadsLink) threadsLink.setAttribute("href", boardThreadsHref(project.project_id));
-    if (editBtn) {
-      editBtn.hidden = role !== "owner";
-      editBtn.setAttribute("href", `mvp-project-new.html?project_id=${encodeURIComponent(project.project_id)}`);
+    if (threadsLink) {
+      const talkListHref =
+        global.TasuBuilderNavConfig?.talkChatHref?.(role) ||
+        `../talk-home.html?tab=chat&channel=builder&from=builder&builderRole=${encodeURIComponent(role)}`;
+      threadsLink.setAttribute("href", talkListHref);
     }
 
+    const withdrawBtn = document.querySelector("[data-builder-board-pd-withdraw]");
     if (role === "partner") {
       if (appsSection) appsSection.hidden = true;
       const canApply = !myApp && !filled && status !== "completed" && status !== "invoiced";
+      const canWithdraw = canWithdrawBoardApplication(state, project, myId);
       if (applyBtn) {
         applyBtn.hidden = !canApply;
         applyBtn.textContent = typeCfg.applyDetailCta;
+      }
+      if (withdrawBtn) {
+        withdrawBtn.hidden = !canWithdraw;
       }
       if (applyStatus) {
         applyStatus.hidden = false;
@@ -11318,25 +12535,37 @@
               : "";
       }
       if (threadBtn && threadHint) {
-        const showThread = Boolean(threadId) && (hired || myApp);
+        const showThread = Boolean(chatHref || threadId || talkRoomId) && (hired || myApp);
         threadBtn.hidden = !showThread;
         threadHint.hidden = showThread;
-        if (showThread) threadBtn.setAttribute("href", boardThreadHref(threadId));
+        if (showThread) {
+          threadBtn.setAttribute("href", chatHref || boardThreadHref(threadId, role));
+          threadBtn.textContent = BUILDER_GENERAL_TALK_CTA_LABEL;
+        }
       }
     } else {
+      if (withdrawBtn) withdrawBtn.hidden = true;
       if (appsSection) appsSection.hidden = false;
       if (applyBtn) applyBtn.hidden = true;
       if (applyStatus) applyStatus.hidden = true;
       if (threadBtn && threadHint) {
-        if (threadId) {
+        if (chatHref || threadId || talkRoomId) {
           threadBtn.hidden = false;
           threadHint.hidden = true;
-          threadBtn.setAttribute("href", boardThreadHref(threadId));
-          threadBtn.textContent = "チャットを開く";
+          threadBtn.setAttribute("href", chatHref || boardThreadHref(threadId, role));
+          threadBtn.textContent = BUILDER_GENERAL_TALK_CTA_LABEL;
         } else {
           threadBtn.hidden = true;
           threadHint.hidden = false;
         }
+      }
+    }
+
+    if (editBtn) {
+      const canEdit = role === "owner" && canEditGeneralBoardProject(project, state);
+      editBtn.hidden = !canEdit;
+      if (canEdit) {
+        editBtn.setAttribute("href", `mvp-project-new.html?project_id=${encodeURIComponent(project.project_id)}`);
       }
     }
 
@@ -11367,6 +12596,7 @@
 
       const buildRow = (a) => {
         const partner =
+          global.TasuBuilderPartnerAdapter?.resolvePartnerForApplication?.(a, state) ||
           (state.partners || []).find((x) => x.partner_id === a.partner_id) ||
           DEMO_PARTNERS.find((x) => x.partner_id === a.partner_id);
         const name = partner?.display_name || a.partner_id;
@@ -11430,40 +12660,79 @@
       applyBtn.dataset.bound = "1";
       applyBtn.addEventListener("click", () => {
         if (getRole() !== "partner") return;
-        if (boardApplyToProject(api, project.project_id)) renderBoardProjectDetailPage();
+        void boardApplyToProject(api, project.project_id).then((ok) => {
+          if (ok) renderBoardProjectDetailPage();
+        });
+      });
+    }
+
+    const withdrawBtnBind = document.querySelector("[data-builder-board-pd-withdraw]");
+    if (withdrawBtnBind && !withdrawBtnBind.dataset.bound) {
+      withdrawBtnBind.dataset.bound = "1";
+      withdrawBtnBind.addEventListener("click", () => {
+        if (getRole() !== "partner") return;
+        if (!canWithdrawBoardApplication(api.reload(), project, myId)) return;
+        if (!window.confirm("この案件への応募を取り下げますか？")) return;
+        void boardWithdrawApplication(api, project.project_id, myId).then((ok) => {
+          if (ok) {
+            if (isBoardMyApplicationsView()) {
+              window.location.href = "board-projects.html?view=my-applications";
+            } else {
+              renderBoardProjectDetailPage();
+            }
+          }
+        });
       });
     }
 
     syncBoardPdApplyDock({
       canApply: role === "partner" && applyBtn && !applyBtn.hidden,
+      canWithdraw: role === "partner" && canWithdrawBoardApplication(state, project, myId),
       typeCfg,
     });
 
     scheduleBoardApplicationsFocus();
+
+    const hydrateToken = ++boardAppsHydrateToken;
+    const adapterHydrate = global.TasuBuilderBoardAdapter?.hydrateApplications;
+    if (typeof adapterHydrate === "function" && isGeneralBoardMvpProject(project)) {
+      void adapterHydrate(project, state).then((result) => {
+        if (hydrateToken !== boardAppsHydrateToken) return;
+        if (result?.source === "supabase" && Array.isArray(result.apps)) {
+          renderBoardProjectDetailPage();
+        }
+      });
+    }
+    applyBuilderGeneralTalkCta();
   }
 
   function isBoardPdApplyDockViewport() {
     try {
-      return global.matchMedia("(max-width: 480px)").matches;
+      return global.matchMedia("(max-width: 768px)").matches;
     } catch {
       return false;
     }
   }
 
-  function syncBoardPdApplyDock({ canApply, typeCfg }) {
+  function syncBoardPdApplyDock({ canApply, canWithdraw, typeCfg }) {
     const dock = document.querySelector("[data-builder-board-pd-apply-dock]");
     const dockBtn = document.querySelector("[data-builder-board-pd-apply-dock-btn]");
-    if (!dock || !dockBtn) return;
+    const withdrawDockBtn = document.querySelector("[data-builder-board-pd-withdraw-dock-btn]");
+    if (!dock) return;
 
-    const show = Boolean(canApply && isBoardPdApplyDockViewport());
+    const showApply = Boolean(canApply && isBoardPdApplyDockViewport());
+    const showWithdraw = Boolean(canWithdraw && isBoardPdApplyDockViewport());
+    const show = showApply || showWithdraw;
     dock.hidden = !show;
     document.body.classList.toggle("builder-board-pd-apply-dock-on", show);
 
-    if (show && typeCfg) {
-      dockBtn.textContent = typeCfg.applyCta || "応募する";
+    if (dockBtn) {
+      dockBtn.hidden = !showApply;
+      if (showApply && typeCfg) dockBtn.textContent = typeCfg.applyCta || "応募する";
     }
+    if (withdrawDockBtn) withdrawDockBtn.hidden = !showWithdraw;
 
-    if (!dockBtn.dataset.bound) {
+    if (dockBtn && !dockBtn.dataset.bound) {
       dockBtn.dataset.bound = "1";
       dockBtn.addEventListener("click", () => {
         if (getRole() !== "partner") return;
@@ -11472,10 +12741,19 @@
       });
     }
 
+    if (withdrawDockBtn && !withdrawDockBtn.dataset.bound) {
+      withdrawDockBtn.dataset.bound = "1";
+      withdrawDockBtn.addEventListener("click", () => {
+        if (getRole() !== "partner") return;
+        const primary = document.querySelector("[data-builder-board-pd-withdraw]");
+        if (primary && !primary.hidden) primary.click();
+      });
+    }
+
     if (!document.body.dataset.boardPdApplyDockMq) {
       document.body.dataset.boardPdApplyDockMq = "1";
       try {
-        global.matchMedia("(max-width: 480px)").addEventListener("change", () => {
+        global.matchMedia("(max-width: 768px)").addEventListener("change", () => {
           if (getPage() === "builder-board-project-detail") renderBoardProjectDetailPage();
         });
       } catch {
@@ -12171,7 +13449,7 @@
     const kpi = document.querySelector("[data-builder-mvp-kpi]");
     const callouts = document.querySelector("[data-builder-mvp-project-callouts]");
     if (!form || !kpi || !callouts) return;
-    kpi.textContent = `role: ${getRole()}`;
+    kpi.textContent = "一般案件の投稿";
 
     const titleEl = form.querySelector("[data-builder-mvp-project-title]");
     const categoryEl = form.querySelector("[data-builder-mvp-project-category]");
@@ -12190,6 +13468,10 @@
     const chipAreasHost = form.querySelector('[data-mvp-chiprow="areas"]');
     const counterEl = form.querySelector("[data-mvp-desc-count]");
 
+    if (kindEl) kindEl.value = "builder_board";
+    if (cpEl) cpEl.value = "tasful_talk_only";
+    if (srcEl) srcEl.value = getRole() === "user" ? "public_user" : "company";
+
     const setCommaValues = (el, values) => {
       if (!el) return;
       const next = (values || []).map((s) => String(s || "").trim()).filter(Boolean);
@@ -12201,6 +13483,32 @@
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
+
+    const editProjectId = getParam("project_id");
+    if (editProjectId) {
+      const editProject = (state.projects || []).find((p) => p.project_id === editProjectId) || null;
+      if (editProject && canEditGeneralBoardProject(editProject, state)) {
+        const editSpec = getProjectSpec(state, editProjectId);
+        kpi.textContent = "一般案件の編集";
+        if (titleEl) titleEl.value = editProject.title || "";
+        if (categoryEl) categoryEl.value = editProject.project_category || "";
+        if (visEl) visEl.value = editProject.visibility || "partner_only";
+        if (cpEl) cpEl.value = editProject.contact_policy || "tasful_talk_only";
+        if (srcEl) srcEl.value = editProject.source || (getRole() === "user" ? "public_user" : "company");
+        if (startEl) startEl.value = editSpec.period?.start || "";
+        if (endEl) endEl.value = editSpec.period?.end || "";
+        setCommaValues(tradesEl, editSpec.trade_tags || []);
+        setCommaValues(areasEl, editSpec.area_codes || []);
+        if (descEl) {
+          const rawDesc = String(editSpec.description || "").trim();
+          descEl.value = rawDesc && rawDesc !== "—" ? rawDesc : "";
+        }
+        form.dataset.editProjectId = editProjectId;
+      } else {
+        kpi.textContent = "この案件は編集できません";
+        form.querySelector('button[type="submit"]')?.setAttribute("disabled", "disabled");
+      }
+    }
 
     const renderChips = (host, values, { onRemove }) => {
       if (!host) return;
@@ -12225,16 +13533,17 @@
       renderPolicyHints({ visibility: visEl?.value, contact_policy: cpEl?.value });
 
       const v = VISIBILITY_UI[visEl?.value];
-      const cp = CONTACT_POLICY_UI[cpEl?.value];
-      const src = SOURCE_UI[srcEl?.value];
       const items = [];
       if (v) items.push(buildMvpInfoCard({ kind: "key", title: "公開範囲", text: `${v.label}：${v.desc}` }));
-      if (cp) items.push(buildMvpInfoCard({ kind: "msg", title: "連絡ポリシー", text: `${cp.label}：${cp.desc}` }));
-      if (src) items.push(buildMvpInfoCard({ kind: "flag", title: "案件区分", text: `${src.label}：${src.desc}` }));
-      if (cp?.danger && cpEl?.value === "tasful_talk_only")
-        items.push(buildMvpInfoCard({ kind: "warn", title: "注意", text: cp.danger }));
+      items.push(
+        buildMvpInfoCard({
+          kind: "msg",
+          title: "やりとり",
+          text: "応募・選定後の連絡は TASFUL Talk で行います。電話番号やメールの直接共有は不要です。",
+        })
+      );
       callouts.innerHTML = items.join("");
-      if (srcHint) srcHint.textContent = src ? src.desc : "—";
+      if (srcHint) srcHint.textContent = "—";
 
       renderChips(chipTradesHost, parseCommaValues(tradesEl?.value), {
         onRemove: (t) => setCommaValues(tradesEl, parseCommaValues(tradesEl?.value).filter((x) => x !== t)),
@@ -12283,9 +13592,67 @@
     form.addEventListener("submit", (ev) => {
       ev.preventDefault();
       if (getRole() !== "owner") {
-        alert("demo: オーナー表示に切り替えて投稿してください");
+        alert("案件の投稿には依頼者としてログインしてください。");
         return;
       }
+      if (kindEl) kindEl.value = "builder_board";
+      if (cpEl) cpEl.value = "tasful_talk_only";
+      if (srcEl) srcEl.value = getRole() === "user" ? "public_user" : "company";
+      if (visEl && getRole() === "user" && visEl.value === "partner_only") visEl.value = "public";
+
+      const budgetNote = String(
+        form.dataset.sourceReRequestBudget || form.dataset.sourceTemplateBudget || ""
+      ).trim();
+      const spec = {
+        trade_tags: String(tradesEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
+        area_codes: String(areasEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
+        period: { start: startEl?.value || "", end: endEl?.value || "" },
+        description: String(descEl?.value || "").trim(),
+      };
+      if (budgetNote && budgetNote !== "—") spec.budget_note = budgetNote;
+
+      const editPid = String(form.dataset.editProjectId || "").trim();
+      if (editPid) {
+        const fresh = api.reload();
+        const base = (fresh.projects || []).find((p) => p.project_id === editPid);
+        if (!base || !canEditGeneralBoardProject(base, fresh)) {
+          alert("この案件は編集できません。");
+          return;
+        }
+        const updated = {
+          ...base,
+          title: String(titleEl?.value || "").trim() || base.title || "無題案件",
+          project_category: String(categoryEl?.value || "").trim() || base.project_category || "協力会社募集",
+          visibility: visEl?.value || base.visibility || "partner_only",
+          contact_policy: cpEl?.value || base.contact_policy || "tasful_talk_only",
+          source: srcEl?.value || base.source || "company",
+        };
+        const afterUpdate = (savedProject) => {
+          const pid = savedProject?.project_id || editPid;
+          try {
+            global.TasuTalkFollowNotify?.onProjectChanged?.(savedProject || updated, "update");
+          } catch (err) {
+            console.warn("[Builder] follow notify skipped:", err);
+          }
+          window.location.href = `board-project-detail.html?id=${encodeURIComponent(pid)}`;
+        };
+        const dualEdit = global.TasuBuilderGeneralJobsDualWrite;
+        if (dualEdit?.updateProjectWithMirror) {
+          void dualEdit.updateProjectWithMirror({ project: updated, spec, api }).then((res) => {
+            if (res?.ok) afterUpdate(res.project || updated);
+          });
+          return;
+        }
+        const nextEdit = api.reload();
+        const idx = (nextEdit.projects || []).findIndex((x) => x.project_id === editPid);
+        if (idx < 0) return;
+        nextEdit.projects[idx] = { ...nextEdit.projects[idx], ...updated, updated_at: nowIso() };
+        nextEdit.specs = { ...(nextEdit.specs || {}), [editPid]: spec };
+        api.commit(nextEdit, { project: nextEdit.projects[idx], mode: "update" });
+        afterUpdate(nextEdit.projects[idx]);
+        return;
+      }
+
       const project_id = uid("proj");
       const project = {
         project_id,
@@ -12305,36 +13672,42 @@
         source_re_request_id: form.dataset.sourceReRequestId || null,
         created_at: nowIso(),
       };
-      const budgetNote = String(
-        form.dataset.sourceReRequestBudget || form.dataset.sourceTemplateBudget || ""
-      ).trim();
-      const spec = {
-        trade_tags: String(tradesEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
-        area_codes: String(areasEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
-        period: { start: startEl?.value || "", end: endEl?.value || "" },
-        description: String(descEl?.value || "").trim(),
+
+      const afterCreate = (savedProject) => {
+        const pid = savedProject?.project_id || project_id;
+        try {
+          global.TasuTalkFollowNotify?.onProjectChanged?.(savedProject || project, "create");
+        } catch (err) {
+          console.warn("[Builder] follow notify skipped:", err);
+        }
+        api.pushNotification({
+          type: "admin",
+          body: `${(savedProject || project).title} を投稿しました。`,
+          project_id: pid,
+          thread_id: null,
+        });
+        window.location.href = `board-project-detail.html?id=${encodeURIComponent(pid)}`;
       };
-      if (budgetNote && budgetNote !== "—") spec.budget_note = budgetNote;
+
+      const dual = global.TasuBuilderGeneralJobsDualWrite;
+      if (dual?.createProjectWithMirror) {
+        void dual.createProjectWithMirror({ project, spec, api }).then((res) => {
+          if (res?.ok) afterCreate(res.project || project);
+        });
+        return;
+      }
+
       const next = api.reload();
       next.projects = [project, ...(next.projects || [])];
       next.specs = { ...(next.specs || {}), [project_id]: spec };
       api.commit(next, { project, mode: "create" });
-      try {
-        global.TasuTalkFollowNotify?.onProjectChanged?.(project, "create");
-      } catch (err) {
-        console.warn("[Builder] follow notify skipped:", err);
-      }
-      api.pushNotification({
-        type: "admin",
-        body: `${project.title} を投稿しました。`,
-        project_id,
-        thread_id: null,
-      });
-      window.location.href = `board-project-detail.html?id=${encodeURIComponent(project_id)}`;
+      afterCreate(project);
     });
   }
 
   function renderMvpProjectNewPage() {
+    applyBoardPageBackLinks();
+    syncBuilderGeneralJobsNotificationChrome();
     initMvpProjectFormPage({ applyTemplate: false });
     // TALK AI 下書き連携（現状維持）— TASFUL AI 導線ではない。Builder AI 本実装時に専用下書きへ移行予定。
     try {
@@ -14406,6 +15779,12 @@
         : { href: "index.html", label: "Builderダッシュボードへ" };
     setBuilderPageBack(dashBack.href, dashBack.label);
     document.querySelector(".builder-brand[href]")?.setAttribute("href", dashBack.href);
+    const subEl = document.querySelector("[data-builder-mvp-notif-sub]");
+    if (subEl) {
+      subEl.textContent =
+        "応募・選定・案件更新のお知らせです。チャット本文は TASFUL Talk のやりとりタブで確認できます。";
+    }
+    syncBuilderGeneralJobsNotificationChrome();
 
     const list = document.querySelector("[data-builder-mvp-notif-list]");
     const kpi = document.querySelector("[data-builder-mvp-notif-kpi]");
@@ -14926,7 +16305,7 @@
     if (titleEl) titleEl.textContent = getMvpThreadsPageTitle(role, pageThreadType);
     if (subEl) subEl.textContent = getMvpThreadsPageSub(role, pageThreadType);
     document.body.dataset.builderThreadType = pageThreadType || "all";
-    document.title = `${titleEl?.textContent || "やりとり"} | Builder MVP`;
+    document.title = `${titleEl?.textContent || "やりとり"} | TASFUL Builder`;
     renderMvpThreadsTypeFilter(role);
 
     const dashBack =
@@ -15577,39 +16956,80 @@
     const state = api.reload();
     const pname = partnerLabel(state, partnerId);
     const ptitle = project.title || project.project_id;
-    const typeCfg = { ...getCalendarTypeConfig(project), projectId: project.project_id };
+    const Dispatch = global.TasuBuilderNotifyDispatch;
+    const hubProjectId = String(project?.hub_project_id || "").trim();
+    const legacyProjectId = String(project?.project_id || "").trim();
 
     if (selected && threadId) {
       const threadHref = mvpThreadHref(threadId, "partner", "ops_partner");
       const calendarKind = "calendar";
-      api.pushNotification({
-        type: "selected",
-        title: "案件を受け付けました",
-        body: "運営とのやりとりを開始できます。",
-        project_id: project.project_id,
-        projectTitle: ptitle,
-        thread_id: threadId,
-        partnerId,
-        recipientRole: "partner",
-        recipientPartnerId: partnerId,
-        href: threadHref,
-        projectKind: calendarKind,
-        board_type: calendarKind,
-      });
-      api.pushNotification({
-        type: "hire_confirmed",
-        title: "パートナーが案件を受けました",
-        body: `${pname} が「${ptitle}」を受諾しました。`,
-        project_id: project.project_id,
-        projectTitle: ptitle,
-        thread_id: threadId,
-        recipientRole: "owner",
-        href: threadHref,
-        projectKind: calendarKind,
-        board_type: calendarKind,
-      });
+
+      // CAL-MAIN-15: Talk へ運営向け受諾通知。成功時は MVP ベルをスキップ。
+      let talkResult = null;
+      try {
+        talkResult = Dispatch?.notifyCalendarAccepted?.({
+          legacyProjectId,
+          hubProjectId,
+          title: ptitle,
+          partnerName: pname,
+          partnerId,
+          threadId,
+          href: threadHref,
+        });
+      } catch {
+        talkResult = null;
+      }
+      const skipMvp = Dispatch?.shouldSkipMvpCalendarBell?.("calendar_accepted", talkResult);
+
+      if (!skipMvp) {
+        api.pushNotification({
+          type: "selected",
+          title: "案件を受け付けました",
+          body: "運営とのやりとりを開始できます。",
+          project_id: project.project_id,
+          projectTitle: ptitle,
+          thread_id: threadId,
+          partnerId,
+          recipientRole: "partner",
+          recipientPartnerId: partnerId,
+          href: threadHref,
+          projectKind: calendarKind,
+          board_type: calendarKind,
+          hubProjectId,
+          legacyProjectId,
+        });
+        api.pushNotification({
+          type: "hire_confirmed",
+          title: "パートナーが案件を受けました",
+          body: `${pname} が「${ptitle}」を受諾しました。`,
+          project_id: project.project_id,
+          projectTitle: ptitle,
+          thread_id: threadId,
+          recipientRole: "owner",
+          href: threadHref,
+          projectKind: calendarKind,
+          board_type: calendarKind,
+          hubProjectId,
+          legacyProjectId,
+        });
+      }
       return;
     }
+
+    let talkResult = null;
+    try {
+      talkResult = Dispatch?.notifyCalendarDeclined?.({
+        legacyProjectId,
+        hubProjectId,
+        title: ptitle,
+        partnerName: pname,
+        partnerId,
+      });
+    } catch {
+      talkResult = null;
+    }
+    const skipMvp = Dispatch?.shouldSkipMvpCalendarBell?.("calendar_declined", talkResult);
+    if (skipMvp) return;
 
     api.pushNotification({
       type: "request_declined",
@@ -15624,6 +17044,8 @@
       board_type: "calendar",
       href: "#",
       notifyOnly: true,
+      hubProjectId,
+      legacyProjectId,
     });
   }
 
@@ -15657,8 +17079,48 @@
     return mvpThreadHref(threadId, role, "ops_partner");
   }
 
+  /**
+   * CAL-MAIN-18: 本線表示用 status
+   * 1) Hub assignment.status（Read 正本）
+   * 2) live MVP projects[].assignment_status（fallback）
+   * 3) 引数 project 上の assignment_status（埋め込み）
+   * @param {object|null|undefined} project
+   * @returns {"pending"|"accepted"|"declined"}
+   */
+  function resolveCalendarAssignmentStatus(project) {
+    const Hub = global.TasuBuilderPartnerAssignmentHubAdapter;
+    const hubStatus =
+      typeof Hub?.readHubAssignmentStatus === "function"
+        ? Hub.readHubAssignmentStatus(project)
+        : "";
+    if (hubStatus) return hubStatus;
+
+    const legacyId = String(project?.project_id || "").trim();
+    if (legacyId) {
+      try {
+        const row = (mvp().reload()?.projects || []).find(
+          (p) => String(p.project_id) === legacyId
+        );
+        const live = String(row?.assignment_status || "")
+          .trim()
+          .toLowerCase();
+        if (live === "accepted" || live === "declined" || live === "pending") return live;
+      } catch {
+        /* ignore */
+      }
+    }
+
+    const embedded = String(project?.assignment_status || project?.assignmentStatus || "pending")
+      .trim()
+      .toLowerCase();
+    if (embedded === "accepted" || embedded === "declined" || embedded === "pending") {
+      return embedded;
+    }
+    return "pending";
+  }
+
   function getCalendarAssignmentStatusLabel(project, state) {
-    const assignmentStatus = String(project?.assignment_status || "").trim();
+    const assignmentStatus = resolveCalendarAssignmentStatus(project);
     if (assignmentStatus === "accepted") return "受諾済み";
     if (assignmentStatus === "declined") return "辞退済み";
     if (assignmentStatus === "pending") return "未回答";
@@ -15701,14 +17163,14 @@
   function isPartnerDeclinedAssignment(project, partnerId) {
     const pid = String(partnerId || "").trim();
     if (!project || !pid) return false;
-    if (String(project.assignment_status || "").trim() !== "declined") return false;
+    if (resolveCalendarAssignmentStatus(project) !== "declined") return false;
     return isPartnerAssignmentProject(project, pid);
   }
 
   function isPartnerPendingAssignment(project, partnerId) {
     const pid = String(partnerId || "").trim();
     if (!project || !pid) return false;
-    const status = String(project.assignment_status || "pending").trim();
+    const status = resolveCalendarAssignmentStatus(project);
     if (status === "accepted" || status === "declined") return false;
     return isPartnerAssignmentProject(project, pid);
   }
@@ -15726,7 +17188,7 @@
 
   function isPartnerAcceptedAssignment(project, partnerId) {
     if (!isPartnerAssignmentProject(project, partnerId)) return false;
-    return String(project?.assignment_status || "").trim() === "accepted";
+    return resolveCalendarAssignmentStatus(project) === "accepted";
   }
 
   function ensurePartnerFilterDemoPartners() {
@@ -15912,9 +17374,23 @@
         assignments.push(assignmentRow);
         assignmentsChanged = true;
       } else {
-        const merged = normalizeCalendarAssignment({ ...assignments[assignmentIdx], ...assignmentRow });
-        if (JSON.stringify(merged) !== JSON.stringify(assignments[assignmentIdx])) {
-          assignments[assignmentIdx] = merged;
+        // タイムスタンプ以外が同じなら更新しない（save → event → render の無限ループ防止）
+        const prev = assignments[assignmentIdx];
+        const merged = normalizeCalendarAssignment({
+          ...prev,
+          ...assignmentRow,
+          createdAt: prev.createdAt,
+          updatedAt: prev.updatedAt,
+        });
+        const stable = (row) => {
+          const copy = { ...row, createdAt: "", updatedAt: "" };
+          return JSON.stringify(copy);
+        };
+        if (stable(merged) !== stable(prev)) {
+          assignments[assignmentIdx] = normalizeCalendarAssignment({
+            ...merged,
+            updatedAt: ts,
+          });
           assignmentsChanged = true;
         }
       }
@@ -16139,7 +17615,7 @@
     const view = buildPartnerCalendarViewModel(adminAssignment, project, spec);
     const partnerId = getPartnerId();
     const pending = project ? isPartnerPendingAssignment(project, partnerId) : false;
-    const status = String(project?.assignment_status || "pending").trim();
+    const status = resolveCalendarAssignmentStatus(project);
 
     let statusNote = "";
     let actions = "";
@@ -16181,7 +17657,7 @@
   }
 
   function partnerAcceptedThreadHref(project, partnerId, state) {
-    if (!project || String(project.assignment_status || "").trim() !== "accepted") return "";
+    if (!project || resolveCalendarAssignmentStatus(project) !== "accepted") return "";
     const href = mvpCalendarThreadHref(project, "partner", state);
     if (href && href.includes("mvp-thread.html")) return href;
     const threadId = resolveCalendarMainThreadId(state, project);
@@ -16220,7 +17696,8 @@
     const view = buildPartnerCalendarViewModel(adminAssignment, project, spec);
     const partnerId = getPartnerId();
     const pending = project ? isPartnerPendingAssignment(project, partnerId) : false;
-    const status = String(project?.assignment_status || "pending").trim();
+    // CAL-MAIN-18: Hub assignment 優先（MVP assignment_status は fallback）
+    const status = resolveCalendarAssignmentStatus(project);
 
     let statusNote = "";
     let actions = "";
@@ -16274,8 +17751,9 @@
       const acceptBtn = ev.target?.closest?.("[data-partner-assignment-accept]");
       if (acceptBtn) {
         const projectId = acceptBtn.getAttribute("data-project-id") || "";
-        const result = acceptCalendarAssignment(projectId);
-        if (result.ok) {
+        void (async () => {
+          const result = await acceptCalendarAssignment(projectId);
+          if (!result?.ok) return;
           const st = mvp().reload();
           const project = st.projects?.find((p) => p.project_id === projectId) || result.project;
           const href = mvpCalendarThreadHref(project, "partner", st);
@@ -16292,14 +17770,15 @@
             return;
           }
           window.location.assign(href);
-        }
+        })();
         return;
       }
       const declineBtn = ev.target?.closest?.("[data-partner-assignment-decline]");
       if (declineBtn) {
         const projectId = declineBtn.getAttribute("data-project-id") || "";
-        const result = declineCalendarAssignment(projectId);
-        if (result.ok) {
+        void (async () => {
+          const result = await declineCalendarAssignment(projectId);
+          if (!result?.ok) return;
           const declineHref = partnerAssignmentPageHref(projectId, {
             partnerId: getPartnerId() || undefined,
           });
@@ -16310,7 +17789,7 @@
             return;
           }
           renderPartnerAssignmentPage();
-        }
+        })();
       }
     });
   }
@@ -16328,16 +17807,61 @@
       detail.innerHTML = `<p class="mvp-cal-detail__empty">案件が指定されていません。</p>`;
       return;
     }
-    if (!isPartnerAssignedToCalendarProject(projectId, getPartnerId())) {
+
+    const partnerId = getPartnerId();
+    const HubAdapter = global.TasuBuilderPartnerAssignmentHubAdapter;
+
+    // CAL-MAIN-07: Hub 読取を優先。失敗時のみ MVP fallback。
+    if (HubAdapter?.tryLoadHubDetail) {
+      const hubCtx = HubAdapter.tryLoadHubDetail(projectId, partnerId, {
+        findAssignment: (pid, ppid) => findPartnerAdminCalendarAssignment(pid, ppid),
+      });
+      if (hubCtx?.ok && hubCtx.project) {
+        detail.innerHTML = renderPartnerAssignmentDetailOnly(
+          hubCtx.project,
+          hubCtx.spec,
+          state,
+          hubCtx.assignment
+        );
+        detail.setAttribute("data-partner-assignment-source", "hub");
+        if (hubCtx.hubProjectId) {
+          detail.setAttribute("data-hub-project-id", hubCtx.hubProjectId);
+        }
+        return;
+      }
+      // Hub は解決できたが未割当 → denied（MVP にも無ければそのまま）
+      if (hubCtx?.denied && hubCtx.reason === "not_assigned") {
+        const mvpAssigned = isPartnerAssignedToCalendarProject(projectId, partnerId);
+        if (!mvpAssigned) {
+          detail.innerHTML = renderPartnerCalendarDeniedDetail(projectId);
+          detail.setAttribute("data-partner-assignment-source", "denied");
+          return;
+        }
+      }
+    }
+
+    // MVP fallback（既存）
+    const idCandidates = HubAdapter?.resolveIds?.(projectId)?.idCandidates || [projectId];
+    const assigned = idCandidates.some((id) => isPartnerAssignedToCalendarProject(id, partnerId));
+    if (!assigned) {
       detail.innerHTML = renderPartnerCalendarDeniedDetail(projectId);
+      detail.setAttribute("data-partner-assignment-source", "denied");
       return;
     }
-    const ctx = resolvePartnerCalendarDetailContext({ projectId }, state, projectId);
+    let ctx = null;
+    for (let i = 0; i < idCandidates.length; i += 1) {
+      const candidateId = idCandidates[i];
+      ctx = resolvePartnerCalendarDetailContext({ projectId: candidateId }, state, candidateId);
+      if (ctx && !ctx.denied && ctx.project) break;
+      ctx = null;
+    }
     if (!ctx || ctx.denied) {
       detail.innerHTML = renderPartnerCalendarDeniedDetail(projectId);
+      detail.setAttribute("data-partner-assignment-source", "denied");
       return;
     }
     detail.innerHTML = renderPartnerAssignmentDetailOnly(ctx.project, ctx.spec, state, ctx.assignment);
+    detail.setAttribute("data-partner-assignment-source", "mvp");
   }
 
   function renderPartnerAcceptedScheduleList(state, partnerId) {
@@ -16487,7 +18011,7 @@
     );
   }
 
-  function acceptCalendarAssignment(projectId) {
+  async function acceptCalendarAssignment(projectId) {
     const pid = String(projectId || "").trim();
     if (!pid) return { ok: false };
     const api = mvp();
@@ -16495,32 +18019,65 @@
     const idx = (next.projects || []).findIndex((p) => p.project_id === pid);
     if (idx < 0) return { ok: false, error: "not_found" };
     const myPartnerId = getPartnerId();
+    const HubAdapter = global.TasuBuilderPartnerAssignmentHubAdapter;
+
+    // CAL-MAIN-10/17: Hub local は常に維持。DB 成功+hydrate 時のみ MVP assignment_status を止める。
+    let hubAssignment = null;
+    try {
+      const maybe = HubAdapter?.writeAssignmentDecision?.({
+        legacyProjectId: pid,
+        hubProjectId: next.projects[idx]?.hub_project_id,
+        status: "accepted",
+        partnerId: myPartnerId,
+      });
+      hubAssignment =
+        maybe && typeof maybe.then === "function" ? await maybe : maybe || { ok: false };
+    } catch {
+      hubAssignment = { ok: false, reason: "exception", dbConfirmed: false };
+    }
+
+    const skipMvpStatus =
+      HubAdapter?.shouldSkipMvpAssignmentStatusWrite?.(hubAssignment) === true;
+
     const threadId = ensureCalendarRequestThread(next, pid, myPartnerId);
     const project = {
       ...next.projects[idx],
-      assignment_status: "accepted",
       updated_at: nowIso(),
       board_type: "calendar",
       projectKind: "calendar",
       calendar_assigned_partner_id:
-        String(next.projects[idx]?.calendar_assigned_partner_id || myPartnerId || "").trim() || myPartnerId,
+        String(next.projects[idx]?.calendar_assigned_partner_id || myPartnerId || "").trim() ||
+        myPartnerId,
     };
+    // CAL-MAIN-17: accepted の assignment_status のみ条件付き no-op（thread / selected は維持）
+    if (!skipMvpStatus) {
+      project.assignment_status = "accepted";
+    }
     const selected = Array.isArray(project.selected_partner_ids) ? [...project.selected_partner_ids] : [];
     if (!selected.includes(myPartnerId)) selected.push(myPartnerId);
     project.selected_partner_ids = selected;
     if (threadId) project.main_thread_id = threadId;
     next.projects[idx] = project;
     api.commit(next);
+
     notifyCalendarAssignmentDecision(api, {
       project: next.projects[idx],
       partnerId: myPartnerId,
       selected: true,
       threadId,
     });
-    return { ok: true, project: next.projects[idx], threadId };
+    return {
+      ok: true,
+      project: next.projects[idx],
+      threadId,
+      hub_assignment: hubAssignment?.ok ? hubAssignment : null,
+      hub_assignment_ok: hubAssignment?.ok === true,
+      mvp_assignment_status_written: !skipMvpStatus,
+      mvp_assignment_status_skipped: skipMvpStatus,
+    };
   }
 
-  function declineCalendarAssignment(projectId) {
+  async function declineCalendarAssignment(projectId) {
     const pid = String(projectId || "").trim();
     if (!pid) return { ok: false };
     const api = mvp();
@@ -16528,19 +18085,51 @@
     const idx = (next.projects || []).findIndex((p) => p.project_id === pid);
     if (idx < 0) return { ok: false, error: "not_found" };
     const myPartnerId = getPartnerId();
-    next.projects[idx] = {
-      ...next.projects[idx],
-      assignment_status: "declined",
-      updated_at: nowIso(),
-    };
-    api.commit(next);
+    const HubAdapter = global.TasuBuilderPartnerAssignmentHubAdapter;
+
+    // CAL-MAIN-10/17: Hub local は常に維持。DB 成功+hydrate 時のみ MVP assignment_status を止める。
+    let hubAssignment = null;
+    try {
+      const maybe = HubAdapter?.writeAssignmentDecision?.({
+        legacyProjectId: pid,
+        hubProjectId: next.projects[idx]?.hub_project_id,
+        status: "declined",
+        partnerId: myPartnerId,
+      });
+      hubAssignment =
+        maybe && typeof maybe.then === "function" ? await maybe : maybe || { ok: false };
+    } catch {
+      hubAssignment = { ok: false, reason: "exception", dbConfirmed: false };
+    }
+
+    const skipMvpStatus =
+      HubAdapter?.shouldSkipMvpAssignmentStatusWrite?.(hubAssignment) === true;
+
+    if (!skipMvpStatus) {
+      next.projects[idx] = {
+        ...next.projects[idx],
+        assignment_status: "declined",
+        updated_at: nowIso(),
+      };
+      api.commit(next);
+    }
+
     notifyCalendarAssignmentDecision(api, {
-      project: next.projects[idx],
+      project: {
+        ...next.projects[idx],
+        assignment_status: skipMvpStatus ? "declined" : next.projects[idx]?.assignment_status,
+      },
       partnerId: myPartnerId,
       selected: false,
       threadId: null,
     });
-    return { ok: true };
+    return {
+      ok: true,
+      hub_assignment: hubAssignment?.ok ? hubAssignment : null,
+      hub_assignment_ok: hubAssignment?.ok === true,
+      mvp_assignment_status_written: !skipMvpStatus,
+      mvp_assignment_status_skipped: skipMvpStatus,
+    };
   }
 
   function getCalendarProjectIdParam() {
@@ -16553,8 +18142,9 @@
     if (item.kind === "assignment") cls += " is-assignment";
     if (item.projectId) {
       const project = (state.projects || []).find((p) => p.project_id === item.projectId);
-      if (project?.assignment_status === "declined") cls += " is-declined";
-      if (project?.assignment_status === "accepted") cls += " is-accepted";
+      const status = resolveCalendarAssignmentStatus(project);
+      if (status === "declined") cls += " is-declined";
+      if (status === "accepted") cls += " is-accepted";
     }
     return cls;
   }
@@ -16565,7 +18155,7 @@
     return getProjectCalendarAssignedPartnerId(project) === pid;
   }
 
-  function sendCalendarAssignmentNotification(state, { project, partnerId, assignmentId }) {
+  function sendCalendarAssignmentNotification(state, { project, partnerId, assignmentId, hubProjectId }) {
     if (!project || !partnerId) return;
     const aid = String(assignmentId || "").trim();
     const mvpPid = adminPartnerToMvpPartnerId(partnerId) || partnerId;
@@ -16573,12 +18163,16 @@
       partnerId: mvpPid,
       calendarEventId: aid,
     });
-    mvp().pushNotification({
+    const HubWrite = global.TasuBuilderAdminCalendarHubWrite;
+    const Dispatch = global.TasuBuilderNotifyDispatch;
+    const hubId = String(hubProjectId || project.hub_project_id || "").trim();
+    const baseNotify = {
       type: "calendar_assignment",
       label: "現場予定追加",
       title: "現場予定を追加",
       to: mvpPid,
       project_id: project.project_id,
+      projectId: project.project_id,
       projectTitle: project.title || "",
       thread_id: null,
       body: `${project.title || "現場"}の現場予定がカレンダーに追加されました。`,
@@ -16589,8 +18183,36 @@
       assignmentId: aid,
       projectKind: "calendar",
       board_type: "calendar",
-    });
+      hubProjectId: hubId,
+      legacyProjectId: project.project_id,
+    };
+    const notifyPayload = HubWrite?.enrichNotifyWithHub
+      ? HubWrite.enrichNotifyWithHub(baseNotify, project.project_id)
+      : baseNotify;
+
+    // CAL-MAIN-15: Talk 通知タブへ先に配信。成功時は MVP ベルを no-op。
+    let talkResult = null;
+    try {
+      talkResult = Dispatch?.notifyCalendarAssignment?.({
+        legacyProjectId: project.project_id,
+        hubProjectId: hubId,
+        title: project.title || "",
+        partnerId: mvpPid,
+        assignmentId: aid,
+        href: calHref,
+        body: notifyPayload.body,
+        hubHref: notifyPayload.hubHref,
+      });
+    } catch {
+      talkResult = null;
+    }
+    if (Dispatch?.shouldSkipMvpCalendarBell?.("calendar_assignment", talkResult)) {
+      return { ok: true, mvpBell: false, talk: talkResult };
+    }
+
+    mvp().pushNotification(notifyPayload);
     dispatchMvpNotificationsChanged();
+    return { ok: true, mvpBell: true, talk: talkResult };
   }
 
   function assignAdminCalendarPartner(projectId, partnerId) {
@@ -16658,19 +18280,90 @@
             api.commit(next);
           }
         }
+        // CAL-MAIN-11: 重複時も Hub を正本として確保
+        let hubProjectId = String(existingProject.hub_project_id || "").trim();
+        let primary = hubProjectId ? "hub" : "mvp";
+        try {
+          const hubResult = global.TasuBuilderAdminCalendarHubWrite?.createHubPrimaryProject?.({
+            legacyProjectId: fixedProjectId,
+            payload: { title, start, end, location, instructions, category, partnerId },
+            partnerName: payload.partnerName,
+          });
+          if (hubResult?.ok && hubResult.hubProjectId) {
+            hubProjectId = String(hubResult.hubProjectId).trim();
+            primary = "hub";
+            const pidx = (next.projects || []).findIndex((p) => p.project_id === fixedProjectId);
+            if (pidx >= 0 && next.projects[pidx].hub_project_id !== hubProjectId) {
+              next.projects[pidx] = {
+                ...next.projects[pidx],
+                hub_project_id: hubProjectId,
+                hub_primary: true,
+                data_role: "hub_mirror",
+              };
+              api.commit(next);
+            }
+          }
+        } catch {
+          /* Hub 失敗は無視 */
+        }
         return {
           ok: true,
           project_id: fixedProjectId,
           assignment_id: existingAssignment.id,
           thread_id: isOpsBenchSession() ? null : existingProject.main_thread_id || null,
           duplicate: true,
+          hub_project_id: hubProjectId || null,
+          primary,
         };
       }
     }
-    const project_id = fixedProjectId || uid("proj-cal");
+
+    const partner =
+      getAdminPartnerById(partnerId) ||
+      (next.partners || []).find((p) => p.partner_id === partnerId);
+    const partnerName =
+      payload.partnerName ||
+      partner?.display_name ||
+      partner?.companyName ||
+      partnerLabel(next, partnerId);
+
+    const hubPayload = {
+      title,
+      start,
+      end,
+      location,
+      instructions,
+      category,
+      partnerId,
+      startTime: payload.startTime,
+      endTime: payload.endTime,
+      reward: payload.reward,
+    };
+
+    // CAL-MAIN-11: Hub-primary — 先に Hub 正本を作成
+    let project_id = fixedProjectId || "";
+    let hubProjectId = "";
+    let primary = "mvp";
+    try {
+      const hubResult = global.TasuBuilderAdminCalendarHubWrite?.createHubPrimaryProject?.({
+        legacyProjectId: fixedProjectId || undefined,
+        payload: hubPayload,
+        partnerName,
+      });
+      if (hubResult?.ok && hubResult.hubProjectId) {
+        hubProjectId = String(hubResult.hubProjectId).trim();
+        project_id = String(hubResult.legacyProjectId || project_id || fixedProjectId).trim();
+        primary = "hub";
+      }
+    } catch {
+      /* MVP fallback below */
+    }
+    if (!project_id) project_id = fixedProjectId || uid("proj-cal");
+
     const ts = nowIso();
     const existingProjectIdx = (next.projects || []).findIndex((p) => p.project_id === project_id);
 
+    // MVP projects[] は互換ミラー（Hub 成功時は hub_project_id 必須）
     const project = {
       ...(existingProjectIdx >= 0 ? next.projects[existingProjectIdx] : {}),
       project_id,
@@ -16688,10 +18381,17 @@
       assignedPartners: [{ partnerId, assignedAt: ts }],
       visibility: "partner_only",
       contact_policy: "tasful_talk_only",
-      main_thread_id: isOpsBenchSession() ? null : existingProjectIdx >= 0 ? next.projects[existingProjectIdx].main_thread_id || null : null,
+      main_thread_id: isOpsBenchSession()
+        ? null
+        : existingProjectIdx >= 0
+          ? next.projects[existingProjectIdx].main_thread_id || null
+          : null,
       source: "admin_calendar",
       source_template_id: null,
       created_at: existingProjectIdx >= 0 ? next.projects[existingProjectIdx].created_at || ts : ts,
+      hub_project_id: hubProjectId || null,
+      hub_primary: primary === "hub",
+      data_role: primary === "hub" ? "hub_mirror" : "mvp_primary",
     };
 
     if (existingProjectIdx >= 0) {
@@ -16711,19 +18411,14 @@
         description: instructions,
         overview: instructions,
         work_content: instructions,
-        notes: "運営カレンダーから登録された案件です。",
+        notes:
+          primary === "hub"
+            ? "運営カレンダーから登録（Hub 正本 · MVP ミラー）。"
+            : "運営カレンダーから登録された案件です。",
         attachments: [],
       },
     };
 
-    const partner =
-      getAdminPartnerById(partnerId) ||
-      (next.partners || []).find((p) => p.partner_id === partnerId);
-    const partnerName =
-      payload.partnerName ||
-      partner?.display_name ||
-      partner?.companyName ||
-      partnerLabel(next, partnerId);
     const assignment = normalizeCalendarAssignment({
       id: fixedAssignmentId || uid("calendar-job"),
       projectId: project_id,
@@ -16747,11 +18442,13 @@
     saveAdminCalendarAssignments([assignment, ...getAdminCalendarAssignments()]);
 
     api.commit(next);
+
     if (!payload.skipNotification) {
       sendCalendarAssignmentNotification(next, {
         project,
         partnerId,
         assignmentId: assignment.id,
+        hubProjectId,
       });
     }
     if (isOpsBenchSession()) {
@@ -16763,7 +18460,14 @@
     }
     document.dispatchEvent(new CustomEvent("builder:mvp-changed"));
     document.dispatchEvent(new CustomEvent("builder:admin-calendar-assignments-changed"));
-    return { ok: true, project_id, assignment_id: assignment.id, thread_id: null };
+    return {
+      ok: true,
+      project_id,
+      assignment_id: assignment.id,
+      thread_id: null,
+      hub_project_id: hubProjectId || null,
+      primary,
+    };
   }
 
   function renderAdminCalendarPartnerPick(state, ev) {
@@ -18449,6 +20153,7 @@
     createAdminCalendarProject,
     acceptCalendarAssignment,
     declineCalendarAssignment,
+    resolveCalendarAssignmentStatus,
     sendMvpThreadMessage,
     markMvpThreadEnterLeave,
     submitThreadCompletionReport(threadId, payload) {
@@ -18502,6 +20207,37 @@
     });
     global.TasuBuilderB3Init.finish();
   }
+
+  function recordBoardEventHook(state, type, payload) {
+    if (!state || typeof state !== "object") return;
+    const row = { type: String(type || ""), ts: nowIso(), ...(payload && typeof payload === "object" ? payload : {}) };
+    state.board_audit_events = [...(state.board_audit_events || []).slice(-99), row];
+  }
+
+  global.TasuBuilderBoardAdapter?.bindRuntime?.({
+    reload: () => mvp().reload(),
+    mvpApi: () => mvp(),
+    commitBoardMutation(mutator, opts) {
+      const api = mvp();
+      const next = api.reload();
+      const out = mutator(next);
+      if (!out) return null;
+      api.commit(out);
+      if (opts?.boardEvent?.type) {
+        recordBoardEventHook(out, opts.boardEvent.type, opts.boardEvent.payload);
+      }
+      return out;
+    },
+    ensureFeedListings(loaded) {
+      return window.TasuBuilderBoardFeed?.ensureBoardFeedListings?.(loaded) || loaded;
+    },
+    recordBoardEvent: recordBoardEventHook,
+  });
+
+  global.TasuBuilderPartnerAdapter?.bindRuntime?.({
+    reload: () => mvp().reload(),
+    recordPartnerEvent() {},
+  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);

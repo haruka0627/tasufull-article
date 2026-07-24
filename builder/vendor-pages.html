@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>業者ページ管理 | Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body builder-body--partner-dash" data-page="builder-vendor-pages">
+  <div class="builder-app" data-builder-root>
+    <div class="builder-partner-layout">
+      <aside class="builder-partner-sidebar" data-builder-partner-sidebar aria-label="パートナーメニュー">
+        <div class="builder-partner-sidebar__brand">
+          <span class="builder-partner-sidebar__logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18" /><path d="M7 21V7l8-4v18" /><path d="M17 21V11l-6-4" />
+            </svg>
+          </span>
+          <span class="builder-partner-sidebar__brandText">
+            <span class="builder-partner-sidebar__brandMain">Builder</span>
+            <span class="builder-partner-sidebar__brandSub">業者ページ</span>
+          </span>
+        </div>
+        <nav class="builder-partner-sidebar__nav" data-builder-nav-autoload data-builder-nav-role="partner" aria-label="メニュー"></nav>
+        <button type="button" class="builder-partner-sidebar__link builder-partner-sidebar__link--muted" data-builder-partner-logout>ログアウト</button>
+      </aside>
+      <div class="builder-partner-content">
+        <header class="builder-header" aria-label="Builder ヘッダー">
+          <div class="builder-shell builder-header__inner">
+            <h1 class="builder-header__title">業者ページ管理</h1>
+            <span class="builder-kpi" data-vendor-subscription-badge>Pro（デモ）</span>
+          </div>
+        </header>
+        <nav data-breadcrumb aria-label="パンくず"></nav>
+        <main class="builder-shell builder-main">
+          <section class="builder-panel" data-vendor-pages-list-section aria-label="業者ページ一覧">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">業者ページ一覧</h2>
+              <span class="builder-kpi" data-vendor-pages-count>0 件</span>
+            </div>
+            <p class="builder-detail__text">紹介ページを作成・公開すると、協力会社検索に表示されます。Talk相談・連絡先開示（550円）と連携します。</p>
+            <div class="builder-actions">
+              <button type="button" class="builder-btn builder-btn--primary" data-vendor-page-create>新規作成</button>
+              <a class="builder-btn builder-btn--secondary" href="partners.html">協力会社検索を見る</a>
+            </div>
+            <div class="builder-vendor-pages-list" data-vendor-pages-list></div>
+          </section>
+
+          <section class="builder-panel" data-vendor-pages-editor-section hidden aria-label="業者ページ編集">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">ページ編集</h2>
+              <span class="builder-kpi" data-vendor-page-status-label>下書き</span>
+            </div>
+            <button type="button" class="builder-btn builder-btn--ghost builder-vendor-pages-back" data-vendor-pages-back>← 一覧へ</button>
+
+            <form class="builder-form builder-vendor-page-form" data-vendor-page-form novalidate>
+              <input type="hidden" name="pageId" value="" />
+
+              <div class="builder-vendor-form__grid">
+                <label class="builder-field">
+                  <span class="builder-field__label">会社名 <span class="builder-field__req">必須</span></span>
+                  <input class="builder-input" name="companyName" required placeholder="例: 株式会社オレンジ建装" />
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">代表者名</span>
+                  <input class="builder-input" name="representativeName" placeholder="例: 田中 一郎" />
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">対応エリア</span>
+                  <input class="builder-input" name="areasText" placeholder="例: 東京都, 神奈川県" />
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">対応工種</span>
+                  <input class="builder-input" name="tradesText" placeholder="例: interior, carpenter または 内装, 大工" />
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">紹介文</span>
+                  <textarea class="builder-textarea" name="intro" rows="3"></textarea>
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">強み</span>
+                  <textarea class="builder-textarea" name="strengths" rows="3"></textarea>
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">実績</span>
+                  <textarea class="builder-textarea" name="achievements" rows="2"></textarea>
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">料金目安</span>
+                  <input class="builder-input" name="priceGuide" placeholder="例: 1日 22,000円〜" />
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">営業時間</span>
+                  <input class="builder-input" name="businessHours" placeholder="例: 9:00-18:00" />
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">電話番号</span>
+                  <input class="builder-input" name="phone" type="tel" placeholder="03-1234-5678" />
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">メール</span>
+                  <input class="builder-input" name="email" type="email" placeholder="info@example.jp" />
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">住所</span>
+                  <input class="builder-input" name="address" placeholder="東京都..." />
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">Webサイト</span>
+                  <input class="builder-input" name="website" type="url" placeholder="https://..." />
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">SEOタイトル</span>
+                  <input class="builder-input" name="seoTitle" />
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">SEO説明文</span>
+                  <textarea class="builder-textarea" name="seoDescription" rows="2"></textarea>
+                </label>
+                <label class="builder-field">
+                  <span class="builder-field__label">サブスクプラン</span>
+                  <select class="builder-select" name="subscriptionPlan">
+                    <option value="free_demo">Free（デモ）</option>
+                    <option value="pro_demo" selected>Pro（デモ）</option>
+                    <option value="enterprise_demo">Enterprise（デモ）</option>
+                  </select>
+                </label>
+                <label class="builder-field builder-field--check">
+                  <input type="checkbox" name="businessDirectoryEnabled" />
+                  <span>Business Directory 掲載 ON（将来連携 · 掲載予定バッジ表示）</span>
+                </label>
+              </div>
+
+              <div class="builder-panel builder-panel--nested" aria-label="AIページ作成">
+                <div class="builder-panel__head">
+                  <h3 class="builder-section-title">AIで文章作成（デモ）</h3>
+                </div>
+                <p class="builder-detail__hint">入力内容から紹介文・強み・SEO説明を mock 生成します。生成後に編集できます。</p>
+                <button type="button" class="builder-btn builder-btn--secondary" data-vendor-page-ai-generate>AIで文章作成</button>
+              </div>
+
+              <div class="builder-panel builder-panel--nested" aria-label="コード編集">
+                <div class="builder-panel__head">
+                  <h3 class="builder-section-title">コード編集（上級者 · デモ）</h3>
+                </div>
+                <p class="builder-detail__hint">HTML/CSS を保存できます。script は除去され、プレビューでは実行されません。</p>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">カスタム HTML</span>
+                  <textarea class="builder-textarea builder-textarea--code" name="customHtml" rows="4" placeholder="&lt;section&gt;...&lt;/section&gt;"></textarea>
+                </label>
+                <label class="builder-field builder-field--full">
+                  <span class="builder-field__label">カスタム CSS</span>
+                  <textarea class="builder-textarea builder-textarea--code" name="customCss" rows="3" placeholder=".hero { ... }"></textarea>
+                </label>
+              </div>
+
+              <div class="builder-actions builder-actions--wrap">
+                <button type="button" class="builder-btn builder-btn--ghost" data-vendor-page-save-draft>下書き保存</button>
+                <button type="button" class="builder-btn builder-btn--secondary" data-vendor-page-save>保存</button>
+                <button type="button" class="builder-btn builder-btn--primary" data-vendor-page-publish>公開</button>
+                <button type="button" class="builder-btn builder-btn--secondary" data-vendor-page-unpublish>非公開</button>
+                <button type="button" class="builder-btn builder-btn--ghost" data-vendor-page-preview>プレビュー</button>
+                <button type="button" class="builder-btn builder-btn--ghost" data-vendor-page-delete>削除</button>
+              </div>
+            </form>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="builder-vendor-preview-modal" data-vendor-page-preview-modal hidden role="dialog" aria-modal="true" aria-label="プレビュー">
+    <div class="builder-vendor-preview-modal__backdrop" data-vendor-preview-close></div>
+    <div class="builder-vendor-preview-modal__panel">
+      <div class="builder-panel__head">
+        <h2 class="builder-section-title">プレビュー</h2>
+        <button type="button" class="builder-btn builder-btn--ghost" data-vendor-preview-close>閉じる</button>
+      </div>
+      <div data-vendor-page-preview-body class="builder-vendor-preview-modal__body"></div>
+    </div>
+  </div>
+
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-billing-policy.js"></script>
+  <script src="builder-nav-config.js"></script>
+  <script src="builder-nav.js"></script>
+  <script src="builder-vendor-pages-store.js"></script>
+  <script src="builder-vendor-pages-ai-mock.js"></script>
+  <script src="builder-vendor-pages-ui.js"></script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

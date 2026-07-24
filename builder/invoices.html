@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0c0f1d" />
+  <title>請求書 | Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="builder.css" />
+  <link rel="stylesheet" href="../common-breadcrumb.css" />
+</head>
+<body class="builder-body builder-body--partner-dash" data-page="builder-invoices">
+  <div class="builder-app" data-builder-root>
+    <div class="builder-partner-layout">
+      <aside class="builder-partner-sidebar" data-builder-partner-sidebar aria-label="パートナーメニュー">
+        <div class="builder-partner-sidebar__brand">
+          <span class="builder-partner-sidebar__logo" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 21h18" /><path d="M7 21V7l8-4v18" /><path d="M17 21V11l-6-4" />
+            </svg>
+          </span>
+          <span class="builder-partner-sidebar__brandText">
+            <span class="builder-partner-sidebar__brandMain">Builder</span>
+            <span class="builder-partner-sidebar__brandSub">請求書</span>
+          </span>
+        </div>
+        <nav class="builder-partner-sidebar__nav" data-builder-nav-autoload data-builder-nav-role="partner" aria-label="メニュー"></nav>
+        <button type="button" class="builder-partner-sidebar__link builder-partner-sidebar__link--muted" data-builder-partner-logout>ログアウト</button>
+      </aside>
+      <div class="builder-partner-content">
+        <header class="builder-header" aria-label="Builder ヘッダー">
+          <div class="builder-shell builder-header__inner">
+            <h1 class="builder-header__title">請求書</h1>
+          </div>
+        </header>
+        <nav data-breadcrumb aria-label="パンくず"></nav>
+        <main class="builder-shell builder-main">
+          <section class="builder-panel" aria-label="請求書一覧">
+            <div class="builder-panel__head">
+              <h2 class="builder-section-title">請求書・案件手数料（準備中）</h2>
+            </div>
+            <p class="builder-detail__text">運営案件・一般案件の完了後手数料、情報開示料の履歴をここで管理します。</p>
+            <p class="builder-detail__hint" data-builder-billing-hint></p>
+            <div class="builder-actions">
+              <a class="builder-btn builder-btn--secondary" href="../sales-fees.html">売上・報酬（Platform）</a>
+              <a class="builder-btn builder-btn--ghost" href="mvp-templates.html">書類・提出物</a>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  </div>
+  <script src="../breadcrumb-config.js"></script>
+  <script src="../common-breadcrumb.js"></script>
+  <script src="builder-billing-policy.js"></script>
+  <script src="builder-nav-config.js"></script>
+  <script src="builder-nav.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var el = document.querySelector("[data-builder-billing-hint]");
+      var pol = window.TasuBuilderBillingPolicy;
+      if (el && pol) {
+        el.textContent =
+          "一般案件: " +
+          pol.contactRevealLabel() +
+          " + 完了手数料 " +
+          pol.PROJECT_COMMISSION_MIN_PCT +
+          "〜" +
+          pol.PROJECT_COMMISSION_MAX_PCT +
+          "% / 運営案件: 情報開示料なし";
+      }
+    });
+  </script>
+  <script src="builder.js" defer></script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f97316" />
+  <meta name="theme-color" content="#0c0f1d" />
   <title>パートナー詳細 | Builder</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,6 +46,37 @@
           </span>
           <svg class="builder-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </a>
+
+        <div class="builder-detail-menu" data-builder-detail-menu>
+          <button
+            type="button"
+            class="builder-detail-menu__toggle"
+            data-builder-detail-menu-toggle
+            aria-label="メニューを開く"
+            aria-expanded="false"
+            aria-controls="builder-detail-menu-panel"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+          <div
+            class="builder-detail-menu__panel"
+            id="builder-detail-menu-panel"
+            data-builder-detail-menu-panel
+            role="menu"
+            aria-label="アカウントメニュー"
+            hidden
+          >
+            <div class="builder-detail-menu__identity" role="presentation">
+              <span class="builder-detail-menu__name" data-builder-detail-menu-name>会員</span>
+              <span class="builder-detail-menu__role" data-builder-detail-menu-role>建設パートナー</span>
+            </div>
+            <a class="builder-detail-menu__item" role="menuitem" href="index.html">ダッシュボードへ戻る</a>
+            <a class="builder-detail-menu__item" role="menuitem" href="settings.html">設定</a>
+            <button type="button" class="builder-detail-menu__item builder-detail-menu__item--muted" role="menuitem" data-builder-detail-logout>ログアウト</button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -55,7 +86,7 @@
       <section class="builder-panel" aria-label="パートナー概要">
         <div class="builder-panel__head">
           <h2 class="builder-section-title" data-builder-partner-name>—</h2>
-          <span class="builder-kpi" data-builder-partner-meta>—</span>
+          <span class="builder-partner-meta" data-builder-partner-meta aria-label="工種・エリア"></span>
         </div>
 
         <div class="builder-detail">

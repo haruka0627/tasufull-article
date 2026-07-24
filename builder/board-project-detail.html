@@ -21,7 +21,7 @@
     <header class="builder-header" aria-label="Builder ヘッダー">
       <div class="builder-shell builder-header__inner">
         <div class="builder-brandWrap">
-          <a class="builder-brand" href="index.html" aria-label="Builderダッシュボードへ">
+          <a class="builder-brand" href="user-dashboard.html" aria-label="一般ダッシュボードへ">
             <span class="builder-brand__mark" aria-hidden="true">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M3 21h18" />
@@ -125,13 +125,17 @@
               </div>
               <div class="mvp-pd-ctaStack">
                 <button type="button" class="mvp-pd-btnPrimary" data-builder-board-pd-apply hidden>この案件に応募する</button>
+                <button type="button" class="builder-btn builder-btn--ghost" data-builder-board-pd-withdraw hidden>応募を取り下げる</button>
                 <p class="mvp-pd-ctaHint" data-builder-board-pd-apply-status hidden></p>
-                <a class="builder-btn builder-btn--secondary" href="board-threads.html" data-builder-board-pd-threads>やり取り一覧</a>
-                <a class="builder-btn builder-btn--ghost" href="../talk-home.html?tab=notify" data-builder-board-pd-talk>TASFUL TALK</a>
-                <a class="mvp-pd-btnPrimary" href="#" data-builder-board-pd-thread hidden>チャットで相談する</a>
-                <a class="builder-btn builder-btn--ghost" href="mvp-project-new.html" data-builder-board-pd-edit hidden>案件を編集</a>
+                <a class="builder-btn builder-btn--secondary" href="../talk-home.html?tab=chat&channel=builder&from=builder" data-builder-board-pd-threads>TASFUL Talk</a>
+                <a class="builder-btn builder-btn--ghost" href="mvp-notifications.html" data-builder-board-pd-builder-notify>
+                  案件通知
+                  <span class="builder-chip builder-chip--open" data-builder-general-notif-count hidden aria-label="未読通知件数"></span>
+                </a>
+                <a class="mvp-pd-btnPrimary" href="#" data-builder-board-pd-thread data-builder-general-talk-cta hidden>TASFUL Talkで相談</a>
+                <a class="builder-btn builder-btn--ghost" href="#" data-builder-board-pd-edit hidden>案件を編集</a>
               </div>
-              <p class="mvp-pd-ctaHint" data-builder-board-pd-thread-hint hidden>選定後にチャットが利用できます。</p>
+              <p class="mvp-pd-ctaHint" data-builder-board-pd-thread-hint hidden>選定後に TASFUL Talk で相談できます。</p>
             </section>
           </div>
         </aside>
@@ -142,7 +146,10 @@
   </div>
 
   <div class="builder-board-pd-apply-dock" data-builder-board-pd-apply-dock hidden aria-label="応募操作">
-    <button type="button" class="builder-board-pd-apply-dock__btn" data-builder-board-pd-apply-dock-btn>応募する</button>
+    <div class="builder-board-pd-apply-dock__actions">
+      <button type="button" class="builder-board-pd-apply-dock__btn" data-builder-board-pd-apply-dock-btn hidden>応募する</button>
+      <button type="button" class="builder-board-pd-apply-dock__btn builder-board-pd-apply-dock__btn--ghost" data-builder-board-pd-withdraw-dock-btn hidden>応募を取り下げ</button>
+    </div>
   </div>
 
   <script>
@@ -160,7 +167,14 @@
     <script src="../talk-runtime.js"></script>
   <script src="../auth-current-user.js"></script>
   <script src="builder-actor-identity.js"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../supabase-public-key.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../chat-supabase.js"></script>
+  <script src="builder-project-talk-room.js"></script>
     <script src="builder-config.js"></script>
+  <script src="builder-general-jobs-staging-flags.js"></script>
   <script src="builder-mvp-store-local.js"></script>
   <script src="builder-repositories-local.js"></script>
   <script src="builder-repositories-supabase.js"></script>
@@ -168,6 +182,11 @@
   <script src="builder-session.js"></script>
   <script src="builder-data-provider.js"></script>
   <script src="builder-repository.js"></script>
+  <script src="builder-general-mapper.js"></script>
+  <script src="builder-project-repository.js"></script>
+  <script src="builder-application-repository.js"></script>
+  <script src="builder-general-jobs-dual-write.js"></script>
+  <script src="builder-board-applications-hydrate.js"></script>
     <script src="builder-partner-adapter.js"></script>
   <script src="builder-storage-adapter.js"></script>
   <script src="builder-pdf-adapter.js"></script>

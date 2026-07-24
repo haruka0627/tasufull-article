@@ -8,23 +8,38 @@
   <script>
     (function () {
       var sp = new URLSearchParams(window.location.search || "");
-      var threadId = sp.get("thread_id") || sp.get("id") || "";
+      var threadId = sp.get("thread_id") || sp.get("id") || sp.get("talkRoomId") || "";
       if (threadId && threadId.indexOf("demo-") === 0 && threadId.indexOf("thread-") !== 0) {
         threadId = "thread-" + threadId.replace(/^demo-/, "");
       }
       if (!threadId) return;
       var role = sp.get("role") || "partner";
       var threadType = sp.get("threadType") || "ops_partner";
+      var from = sp.get("from") || sp.get("source") || "builder";
       var qs =
         "thread=" +
         encodeURIComponent(threadId) +
-        "&from=builder&builderFlow=" +
+        "&from=" +
+        encodeURIComponent(from) +
+        "&builderFlow=" +
         encodeURIComponent(threadType) +
         "&builderRole=" +
         encodeURIComponent(role);
       if (sp.get("benchEmbed") === "1") qs += "&benchEmbed=1";
       if (sp.get("benchSide")) qs += "&benchSide=" + encodeURIComponent(sp.get("benchSide"));
       if (sp.get("openReview") === "1") qs += "&openReview=1";
+      var projectId = sp.get("builderProjectId") || sp.get("projectId") || "";
+      if (projectId) {
+        qs +=
+          "&builderProjectId=" +
+          encodeURIComponent(projectId) +
+          "&projectId=" +
+          encodeURIComponent(projectId);
+      }
+      var talkRoomId = sp.get("talkRoomId") || threadId;
+      if (talkRoomId) qs += "&talkRoomId=" + encodeURIComponent(talkRoomId);
+      var returnTo = sp.get("returnTo") || "";
+      if (returnTo) qs += "&returnTo=" + encodeURIComponent(returnTo);
       window.location.replace("../chat-detail.html?" + qs);
     })();
   </script>

@@ -787,13 +787,49 @@
     return { ...f };
   }
 
+  function normalizeSitePhoto(raw) {
+    const ph = raw && typeof raw === "object" ? raw : {};
+    return {
+      id: String(ph.id || uid("sph")),
+      label: String(ph.label || ph.title || "現場写真"),
+      url: String(ph.url || ""),
+      at: String(ph.at || ""),
+    };
+  }
+
+  /** CAL-MAIN-10: local assignment（schema なし · Supabase 列は書かない） */
+  function normalizeAssignment(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    const status = String(raw.status || "").trim().toLowerCase();
+    if (!status && !raw.partnerId && !raw.partner_id) return null;
+    const allowed = status === "accepted" || status === "declined" || status === "pending";
+    return {
+      status: allowed ? status : "pending",
+      partnerId: String(raw.partnerId || raw.partner_id || "").trim(),
+      partnerName: String(raw.partnerName || raw.partner_name || "").trim(),
+      acceptedAt: String(raw.acceptedAt || raw.accepted_at || "").trim(),
+      declinedAt: String(raw.declinedAt || raw.declined_at || "").trim(),
+      updatedAt: String(raw.updatedAt || raw.updated_at || "").trim(),
+      source: String(raw.source || "partner_assignment").trim() || "partner_assignment",
+    };
+  }
+
   function normalizeProject(raw) {
     const p = raw && typeof raw === "object" ? raw : {};
     const status = String(p.status || "inquiry");
     const category = String(p.category || "other");
     const schedulePhase = String(p.schedulePhase || "inquiry");
+    const estimate = normalizeEstimate(p.estimate, p);
+    const completion = normalizeCompletion(p.completion);
+    const id = String(p.id || uid("PRJ"));
+    const sitePhotosRaw = Array.isArray(p.sitePhotos)
+      ? p.sitePhotos
+      : Array.isArray(completion.photos)
+        ? completion.photos
+        : [];
+    const assignment = normalizeAssignment(p.assignment);
     return {
-      id: String(p.id || uid("PRJ")),
+      id,
       name: String(p.name || "（無題）"),
       category,
       categoryLabel: String(p.categoryLabel || categoryLabel(category)),
@@ -806,11 +842,20 @@
       scheduleEndDate: String(p.scheduleEndDate || ""),
       schedulePhase,
       schedulePhaseLabel: String(p.schedulePhaseLabel || schedulePhaseLabel(schedulePhase)),
+      workStartTime: String(p.workStartTime || "09:00"),
+      workEndTime: String(p.workEndTime || "17:00"),
+      siteAddress: String(p.siteAddress || estimate.customerAddress || ""),
+      managerName: String(p.managerName || p.assignedVendor || p.customerName || ""),
+      managerPhone: String(p.managerPhone || p.customerContact || ""),
+      // CAL-MAIN-01: 仮 ID builder-cal-* は新規発行しない（空のまま → Talk 開始時に実 room を確保）
+      talkThreadId: String(p.talkThreadId || p.talkRoomId || ""),
+      talkRoomId: String(p.talkRoomId || p.talkThreadId || ""),
+      sitePhotos: sitePhotosRaw.map(normalizeSitePhoto),
       finance: normalizeFinance(p.finance || p),
-      estimate: normalizeEstimate(p.estimate, p),
+      estimate,
       invoice: normalizeInvoice(p.invoice),
       contract: normalizeContract(p.contract),
-      completion: normalizeCompletion(p.completion),
+      completion,
       documents: normalizeDocuments(p.documents),
       notifications: normalizeNotifications(p.notifications),
       memo: String(p.memo || ""),
@@ -819,6 +864,7 @@
       visionDiagnoses: Array.isArray(p.visionDiagnoses) ? p.visionDiagnoses : [],
       timeline: Array.isArray(p.timeline) ? p.timeline : [],
       source: String(p.source || "builder"),
+      assignment: assignment,
     };
   }
 
@@ -847,6 +893,14 @@
         customerContact: "03-1234-5678",
         assignedVendor: "株式会社イワショウリフォーム",
         status: "estimating",
+        workStartTime: "09:00",
+        workEndTime: "17:00",
+        siteAddress: "東京都世田谷区 1-2-3",
+        managerName: "鈴木 現場監督",
+        managerPhone: "090-1111-2222",
+        talkThreadId: "builder-cal-PRJ-2026-001",
+        talkRoomId: "builder-cal-PRJ-2026-001",
+        sitePhotos: [],
         scheduleStartDate: dateOnlyOffset(14),
         scheduleEndDate: dateOnlyOffset(20),
         schedulePhase: "estimate",
@@ -912,9 +966,19 @@
         name: "横浜市 マンション 水回りリフォーム",
         category: "wet_area",
         customerName: "佐藤 様",
-        customerContact: "info@sato-home.example.jp",
+        customerContact: "045-987-6543",
         assignedVendor: "（未アサイン）",
         status: "inquiry",
+        workStartTime: "10:00",
+        workEndTime: "16:00",
+        siteAddress: "神奈川県横浜市中区本町 4-5-6",
+        managerName: "佐藤 様",
+        managerPhone: "045-987-6543",
+        talkThreadId: "builder-cal-PRJ-2026-002",
+        talkRoomId: "builder-cal-PRJ-2026-002",
+        sitePhotos: [
+          { id: "ph_w1", label: "キッチン解体前", url: "", at: dateOnlyOffset(-1) },
+        ],
         scheduleStartDate: dateOnlyOffset(2),
         scheduleEndDate: dateOnlyOffset(9),
         schedulePhase: "inquiry",
@@ -980,8 +1044,20 @@
         name: "大阪市 店舗 内装工事",
         category: "interior",
         customerName: "山本商事",
+        customerContact: "06-1234-5678",
         assignedVendor: "関西内装工業",
         status: "in_progress",
+        workStartTime: "08:30",
+        workEndTime: "17:30",
+        siteAddress: "大阪府大阪市中央区本町 1-2-3",
+        managerName: "山本 太郎",
+        managerPhone: "06-1234-5678",
+        talkThreadId: "builder-cal-PRJ-2026-003",
+        talkRoomId: "builder-cal-PRJ-2026-003",
+        sitePhotos: [
+          { id: "ph_c1", label: "竣工写真（正面）", url: "", at: dateOnlyOffset(-3) },
+          { id: "ph_c2", label: "竣工写真（内装）", url: "", at: dateOnlyOffset(-3) },
+        ],
         scheduleStartDate: dateOnlyOffset(-20),
         scheduleEndDate: dateOnlyOffset(-2),
         schedulePhase: "construction",
@@ -1059,17 +1135,143 @@
     return data;
   }
 
-  function listProjects() {
+  /** @type {object[]|null} Supabase hydrate 結果（null=未取得 / Demo 使用） */
+  let remoteProjectsCache = null;
+  /** demo | supabase | demo_fallback */
+  let dataSourceMode = "demo";
+  let lastHydrateError = "";
+
+  function listProjectsLocal() {
     ensureSeed();
     return readAll()
       .projects.map(normalizeProject)
       .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
   }
 
+  function listProjects() {
+    if (Array.isArray(remoteProjectsCache) && remoteProjectsCache.length) {
+      return remoteProjectsCache
+        .map(normalizeProject)
+        .sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+    }
+    return listProjectsLocal();
+  }
+
+  function getDataSourceMode() {
+    return dataSourceMode;
+  }
+
+  function getLastHydrateError() {
+    return lastHydrateError;
+  }
+
+  /**
+   * Supabase read（失敗・空・未設定は Demo / localStorage fallback）
+   * write は行わない。
+   * @returns {Promise<{ ok: boolean, source: string, projects: object[], error?: string, table?: string }>}
+   */
+  async function hydrateFromSupabase() {
+    lastHydrateError = "";
+    const adapter = global.TasuBuilderProjectCalendarData;
+    if (!adapter?.fetchProjectsFromSupabase) {
+      remoteProjectsCache = null;
+      dataSourceMode = "demo";
+      return { ok: true, source: "demo", projects: listProjectsLocal() };
+    }
+    try {
+      const result = await adapter.fetchProjectsFromSupabase();
+      if (!result?.ok || !Array.isArray(result.projects) || !result.projects.length) {
+        remoteProjectsCache = null;
+        dataSourceMode = "demo_fallback";
+        lastHydrateError = String(result?.error || "empty_or_failed");
+        return {
+          ok: true,
+          source: "demo_fallback",
+          projects: listProjectsLocal(),
+          error: lastHydrateError,
+          table: result?.table,
+        };
+      }
+      // CAL-MAIN-13: DB assignment があれば優先。無ければ local assignment を維持。
+      const localById = new Map(
+        listProjectsLocal().map((p) => [String(p.id), p])
+      );
+      remoteProjectsCache = result.projects.map((raw) => {
+        const remote = normalizeProject(raw);
+        const hasDbAssignment =
+          raw &&
+          typeof raw === "object" &&
+          raw.assignment &&
+          typeof raw.assignment === "object" &&
+          (raw.assignment.status || raw.assignment.partnerId);
+        if (hasDbAssignment) return remote;
+        const local = localById.get(String(remote.id));
+        if (local?.assignment) {
+          return normalizeProject({ ...remote, assignment: local.assignment });
+        }
+        return remote;
+      });
+      dataSourceMode = "supabase";
+      return {
+        ok: true,
+        source: "supabase",
+        projects: remoteProjectsCache.slice(),
+        table: result.table,
+      };
+    } catch (err) {
+      remoteProjectsCache = null;
+      dataSourceMode = "demo_fallback";
+      lastHydrateError = err && err.message ? err.message : String(err);
+      return {
+        ok: true,
+        source: "demo_fallback",
+        projects: listProjectsLocal(),
+        error: lastHydrateError,
+      };
+    }
+  }
+
+  function resetRemoteCacheForTests() {
+    remoteProjectsCache = null;
+    dataSourceMode = "demo";
+    lastHydrateError = "";
+  }
+
   function getProject(id) {
     const pid = String(id || "").trim();
     if (!pid) return null;
-    return listProjects().find((p) => p.id === pid) || null;
+    return (
+      listProjects().find((p) => p.id === pid) ||
+      listProjectsLocal().find((p) => p.id === pid) ||
+      null
+    );
+  }
+
+  /**
+   * localStorage + remote cache のみ更新（adapter 非経由 · Console ノイズなし）
+   * Talk Room ID 昇格など、未認証時でも UI 正本を保つ用途。
+   */
+  function patchProjectLocal(id, patch) {
+    const existing = getProject(id);
+    if (!existing) return { ok: false, error: "not_found" };
+    const next = normalizeProject({ ...existing, ...patch, id: existing.id });
+    next.updatedAt = nowIso();
+    const data = readAll();
+    const idx = data.projects.findIndex((x) => x.id === id);
+    if (idx >= 0) data.projects[idx] = next;
+    else data.projects.push(next);
+    writeAll(data);
+    if (Array.isArray(remoteProjectsCache)) {
+      const ridx = remoteProjectsCache.findIndex((x) => x.id === id);
+      if (ridx >= 0) remoteProjectsCache[ridx] = next;
+      else remoteProjectsCache.push(next);
+    }
+    try {
+      global.TasuBuilderProjectIdMap?.linkHubProject?.(next);
+    } catch {
+      /* map optional */
+    }
+    return { ok: true, project: next };
   }
 
   /**
@@ -1094,25 +1296,90 @@
     });
   }
 
-  function saveProject(project) {
-    const data = readAll();
+  /**
+   * 案件保存。新規作成時は Talk Room を自動 ensure（CAL-MAIN-02）。
+   * - 同期: 直後から talkRoomId が非空（provisional local or 既存）
+   * - 非同期: UUID 実 room への昇格（inflight ロックで重複作成しない）
+   * - ensure 失敗しても案件保存は成功
+   * @param {object} project
+   * @param {{ skipTalkRoom?: boolean }} [options]
+   * @returns {object} project（`_talkRoomEnsurePromise` 付きの場合あり）
+   */
+  function saveProject(project, options) {
+    const opts = options && typeof options === "object" ? options : {};
     const p = normalizeProject(project);
     p.updatedAt = nowIso();
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+
+    // Supabase write（失敗しても localStorage は保存）
+    if (adapter) {
+      adapter.writeProject(p).catch(() => {
+        /* 未認証 RLS 等 — Console を汚さない */
+      });
+    }
+
+    const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === p.id);
+    const isNew = idx < 0;
     if (idx >= 0) data.projects[idx] = p;
     else {
       addTimelineEvent(p, "project_created", "案件ハブで作成");
       data.projects.push(p);
     }
     writeAll(data);
-    return p;
+    if (Array.isArray(remoteProjectsCache)) {
+      const ridx = remoteProjectsCache.findIndex((x) => x.id === p.id);
+      if (ridx >= 0) remoteProjectsCache[ridx] = p;
+      else if (isNew) remoteProjectsCache.push(p);
+    }
+    try {
+      global.TasuBuilderProjectIdMap?.linkHubProject?.(p);
+    } catch {
+      /* map optional */
+    }
+
+    // CAL-MAIN-02: 新規作成時に Talk Room を ensure
+    if (isNew && !opts.skipTalkRoom) {
+      const Talk = global.TasuBuilderProjectTalkRoom;
+      if (Talk?.assignProvisionalTalkRoom && Talk?.ensureTalkRoomForProject) {
+        // 1) 同期で安定 ID を付与（UI 非ブロック · 直後から talkRoomId あり）
+        Talk.assignProvisionalTalkRoom(p.id);
+        // 2) 非同期で実 UUID へ昇格（inflight で Talk 開始時 ensure と競合しない）
+        const ensurePromise = Talk.ensureTalkRoomForProject(p.id)
+          .then(() => getProject(p.id) || p)
+          .catch(() => getProject(p.id) || p);
+        const out = getProject(p.id) || p;
+        out._talkRoomEnsurePromise = ensurePromise;
+        return out;
+      }
+    }
+    return getProject(p.id) || p;
+  }
+
+  /**
+   * 案件保存 + Talk Room ensure 完了を待つ（作成フロー向け）
+   * @param {object} project
+   * @param {{ skipTalkRoom?: boolean }} [options]
+   */
+  async function saveProjectAsync(project, options) {
+    const saved = saveProject(project, options);
+    if (saved && saved._talkRoomEnsurePromise) {
+      try {
+        return await saved._talkRoomEnsurePromise;
+      } catch {
+        return getProject(saved.id) || saved;
+      }
+    }
+    return saved;
   }
 
   function updateProject(id, patch) {
     const existing = getProject(id);
     if (!existing) return { ok: false, error: "not_found" };
     const next = normalizeProject({ ...existing, ...patch, id: existing.id });
-    if (patch.status && patch.status !== existing.status) {
+    const statusChanged = Boolean(patch.status && patch.status !== existing.status);
+    const oldStatus = existing.status;
+    if (statusChanged) {
       addTimelineEvent(
         next,
         "status_changed",
@@ -1136,10 +1403,33 @@
       addTimelineEvent(next, "schedule_updated", detail);
     }
     next.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(next).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] updateProject → adapter failed:", res.error);
+        }
+      });
+    }
+
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === id);
-    data.projects[idx] = next;
+    if (idx >= 0) data.projects[idx] = next;
+    else data.projects.push(next);
     writeAll(data);
+    // remote cache がある場合は該当行を同期（Talk room ID 昇格など）
+    if (Array.isArray(remoteProjectsCache)) {
+      const ridx = remoteProjectsCache.findIndex((x) => x.id === id);
+      if (ridx >= 0) remoteProjectsCache[ridx] = next;
+      else remoteProjectsCache.push(next);
+    }
+
+    // CAL-MAIN-03: ステータス変更を Talk に連携（失敗しても保存成功）
+    if (statusChanged) {
+      global.TasuBuilderProjectTalkEvents?.emitStatusChanged?.(id, oldStatus, next.status, next);
+    }
     return { ok: true, project: next };
   }
 
@@ -1177,6 +1467,16 @@
       `Builder AI Vision: ${label} — ${entry.summary || "参考診断を保存"}`
     );
     project.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(project).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] saveVisionDiagnosis → adapter failed:", res.error);
+        }
+      });
+    }
 
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === projectId);
@@ -1420,6 +1720,17 @@
         : formatFinanceDetail(merged)
     );
     next.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(next).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] updateFinance → adapter failed:", res.error);
+        }
+      });
+    }
+
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === projectId);
     data.projects[idx] = next;
@@ -1570,6 +1881,17 @@
         : formatEstimateDetail(merged)
     );
     next.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(next).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] updateEstimate → adapter failed:", res.error);
+        }
+      });
+    }
+
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === projectId);
     data.projects[idx] = next;
@@ -1599,6 +1921,17 @@
         : formatInvoiceDetail(merged)
     );
     next.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(next).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] updateInvoice → adapter failed:", res.error);
+        }
+      });
+    }
+
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === projectId);
     data.projects[idx] = next;
@@ -1777,6 +2110,17 @@
         : formatContractDetail(merged)
     );
     next.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(next).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] updateContract → adapter failed:", res.error);
+        }
+      });
+    }
+
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === projectId);
     data.projects[idx] = next;
@@ -1811,10 +2155,38 @@
         : formatCompletionDetail(merged)
     );
     next.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(next).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] updateCompletion → adapter failed:", res.error);
+        }
+      });
+    }
+
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === projectId);
-    data.projects[idx] = next;
+    if (idx >= 0) data.projects[idx] = next;
+    else data.projects.push(next);
     writeAll(data);
+    if (Array.isArray(remoteProjectsCache)) {
+      const ridx = remoteProjectsCache.findIndex((x) => x.id === projectId);
+      if (ridx >= 0) remoteProjectsCache[ridx] = next;
+      else remoteProjectsCache.push(next);
+    }
+
+    // CAL-MAIN-03: 完了報告を Talk に連携（失敗しても保存成功）
+    global.TasuBuilderProjectTalkEvents?.emitCompletionReported?.(
+      projectId,
+      next.completion,
+      next,
+      {
+        submittedAt: nowIso(),
+        memo: merged.completionMemo,
+      },
+    );
     return { ok: true, project: next, completion: next.completion };
   }
 
@@ -1964,6 +2336,17 @@
       addTimelineEvent(next, result.timelineType, result.timelineDetail || "");
     }
     next.updatedAt = nowIso();
+
+    // Supabase write（二重書き込み: Supabase → localStorage）
+    const adapter = global.TasuBuilderProjectWriteAdapter;
+    if (adapter) {
+      adapter.writeProject(next).then((res) => {
+        if (!res.ok) {
+          console.error("[Store] persistProjectDocuments → adapter failed:", res.error);
+        }
+      });
+    }
+
     const data = readAll();
     const idx = data.projects.findIndex((x) => x.id === projectId);
     data.projects[idx] = next;
@@ -2611,6 +2994,7 @@
   }
 
   function clearForTests() {
+    resetRemoteCacheForTests();
     try {
       localStorage.removeItem(STORAGE_KEY);
     } catch {
@@ -2681,9 +3065,16 @@
     hasScheduleRange,
     isDelayedProject,
     listProjects,
+    listProjectsLocal,
+    patchProjectLocal,
+    hydrateFromSupabase,
+    getDataSourceMode,
+    getLastHydrateError,
+    resetRemoteCacheForTests,
     getProject,
     searchProjects,
     saveProject,
+    saveProjectAsync,
     updateProject,
     updateSchedule,
     saveVisionDiagnosis,

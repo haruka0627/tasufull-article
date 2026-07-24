@@ -47,6 +47,21 @@
         </div>
 
         <div class="builder-role" data-builder-role></div>
+
+        <div class="builder-detail-menu" data-builder-detail-menu>
+          <button
+            type="button"
+            class="builder-detail-menu__toggle"
+            data-builder-detail-menu-toggle
+            aria-label="メニューを開く"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
       </div>
     </header>
 
@@ -125,18 +140,22 @@
               <ul class="mvp-pd-appList" data-builder-mvp-pd-app-list></ul>
             </section>
 
-            <section class="builder-panel mvp-pd-cta" aria-label="アクション">
+            <section class="builder-panel mvp-pd-cta" aria-label="アクション" data-builder-mvp-pd-talk-entry>
               <div class="builder-panel__head">
-                <h2 class="builder-section-title">操作</h2>
+                <h2 class="builder-section-title">TASFUL Talk</h2>
               </div>
-              <div class="mvp-pd-ctaStack">
-                <button type="button" class="mvp-pd-btnPrimary" data-builder-mvp-pd-apply hidden>この案件に応募する</button>
-                <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-pd-decline-applicant hidden>見送る</button>
-                <button type="button" class="mvp-pd-btnPrimary" data-builder-mvp-pd-start-chat hidden>やりとりを開始する</button>
-                <a class="mvp-pd-btnPrimary" href="#" data-builder-mvp-pd-thread>スレッドを見る</a>
-                <a class="builder-btn builder-btn--secondary" href="#" data-builder-mvp-pd-re-request>再依頼する</a>
-                <a class="builder-btn builder-btn--ghost" href="#" data-builder-mvp-pd-edit>案件編集</a>
-                <button type="button" class="builder-btn builder-btn--secondary builder-template-save-button" data-builder-mvp-pd-save-template>テンプレとして保存</button>
+              <p class="mvp-pd-ctaPolicy" data-builder-mvp-pd-talk-policy>
+                Builderでは原則 TASFUL Talk でやりとりします。
+              </p>
+              <div class="mvp-pd-ctaStack" data-builder-mvp-pd-cta-stack>
+                <button type="button" class="mvp-pd-btnPrimary" data-builder-mvp-pd-apply data-cta-order="1" hidden>この案件に応募する</button>
+                <button type="button" class="mvp-pd-btnPrimary" data-builder-mvp-pd-start-chat data-cta-order="2" hidden>TASFUL Talkでやりとり</button>
+                <a class="mvp-pd-btnPrimary" href="#" data-builder-mvp-pd-thread data-cta-order="3" hidden>スレッドを見る</a>
+                <button type="button" class="builder-btn builder-btn--ghost" data-builder-mvp-pd-decline-applicant data-cta-order="4" hidden>見送る</button>
+                <a class="builder-btn builder-btn--secondary" href="#" data-builder-mvp-pd-re-request data-cta-order="5">再依頼する</a>
+                <a class="builder-btn builder-btn--ghost" href="#" data-builder-mvp-pd-edit data-cta-order="6">案件編集</a>
+                <button type="button" class="builder-btn builder-btn--secondary builder-template-save-button" data-builder-mvp-pd-save-template data-cta-order="7">テンプレとして保存</button>
+                <a class="builder-btn builder-btn--ghost" href="mvp-projects.html" data-builder-mvp-pd-back-list data-cta-order="8">一覧へ戻る</a>
               </div>
               <p class="mvp-pd-ctaHint" data-builder-mvp-pd-thread-hint hidden>スレッド未作成のため、Talkへは遷移できません。</p>
             </section>
@@ -181,6 +200,7 @@
   <script src="builder-ai-core.js"></script>
   <script src="builder-b3-init.js"></script>
   <script src="builder-general-flow.js"></script>
+  <script src="builder-billing-policy.js"></script>
   <script src="../breadcrumb-config.js"></script>
   <script src="../common-breadcrumb.js"></script>
   <script src="builder.js" defer></script>

@@ -8,12 +8,26 @@
   <script>
     (function () {
       var sp = new URLSearchParams(window.location.search || "");
+      var talkRoomId = sp.get("talk_room_id") || sp.get("talkRoomId") || "";
       var threadId = sp.get("thread_id") || sp.get("id") || "";
+      var role = sp.get("role") || "partner";
+      if (talkRoomId && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(talkRoomId)) {
+        window.location.replace(
+          "../chat-detail.html?thread=" +
+            encodeURIComponent(talkRoomId) +
+            "&roomId=" +
+            encodeURIComponent(talkRoomId) +
+            "&from=builder&builderFlow=partner_user&builderRole=" +
+            encodeURIComponent(role) +
+            "&talkRoomId=" +
+            encodeURIComponent(talkRoomId)
+        );
+        return;
+      }
       if (!threadId) {
         window.location.replace("../talk-home.html?tab=chat&channel=builder&from=builder");
         return;
       }
-      var role = sp.get("role") || "partner";
       window.location.replace(
         "../chat-detail.html?thread=" +
           encodeURIComponent(threadId) +

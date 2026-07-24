@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TASFUL Talk へ移動中…</title>
+  <script src="../chat-thread-store.js"></script>
+  <script src="builder-talk-bridge.js"></script>
+  <script src="builder-mvp-store-local.js"></script>
+  <script src="builder-b3-init.js"></script>
+  <script src="builder.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (window.TasuBuilderTalkBridge?.ensureAndRedirectFromLocation) {
+        window.TasuBuilderTalkBridge.ensureAndRedirectFromLocation();
+        return;
+      }
+      window.location.replace("../talk-home.html?tab=chat&channel=builder&from=builder");
+    });
+  </script>
+</head>
+<body>
+  <p>TASFUL Talk の案件スレッドを開いています…</p>
+</body>
+</html>
