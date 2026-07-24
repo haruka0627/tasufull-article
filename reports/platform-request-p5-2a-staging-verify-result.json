@@ -1,0 +1,122 @@
+{
+  "linkedRef": "ahlxuyvhzqdqaojiywmu",
+  "queries": {
+    "column": {
+      "ok": true,
+      "rows": [
+        {
+          "column_name": "candidate_user_id",
+          "data_type": "uuid",
+          "is_nullable": "YES"
+        }
+      ]
+    },
+    "rls": {
+      "ok": true,
+      "rows": [
+        {
+          "relname": "platform_request_matches",
+          "relrowsecurity": true
+        }
+      ]
+    },
+    "policies": {
+      "ok": true,
+      "rows": [
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_matches_select_candidate",
+          "qual": "((candidate_user_id IS NOT NULL) AND (candidate_user_id = auth.uid()))",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_matches_select_owner",
+          "qual": "(EXISTS ( SELECT 1\n   FROM platform_requests r\n  WHERE ((r.id = platform_request_matches.request_id) AND (r.owner_id = auth.uid()))))",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_matches"
+        }
+      ]
+    },
+    "policyCount": {
+      "ok": true,
+      "rows": [
+        {
+          "cnt": 10
+        }
+      ]
+    },
+    "index": {
+      "ok": true,
+      "rows": [
+        {
+          "indexname": "platform_request_matches_candidate_user_id_idx"
+        }
+      ]
+    },
+    "platformRequestsPolicies": {
+      "ok": true,
+      "rows": [
+        {
+          "cnt": 4
+        }
+      ]
+    },
+    "platformRequestsRls": {
+      "ok": true,
+      "rows": [
+        {
+          "relrowsecurity": true
+        }
+      ]
+    }
+  },
+  "checks": [
+    {
+      "label": "candidate_user_id column",
+      "pass": true,
+      "detail": "uuid nullable=YES"
+    },
+    {
+      "label": "matches RLS enabled",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "label": "select_owner policy exists",
+      "pass": true,
+      "detail": "platform_request_matches_select_owner"
+    },
+    {
+      "label": "select_candidate uses candidate_user_id",
+      "pass": true,
+      "detail": "((candidate_user_id IS NOT NULL) AND (candidate_user_id = auth.uid()))"
+    },
+    {
+      "label": "matches policy count",
+      "pass": true,
+      "detail": "2"
+    },
+    {
+      "label": "candidate_user_id index",
+      "pass": true,
+      "detail": "platform_request_matches_candidate_user_id_idx"
+    },
+    {
+      "label": "platform_requests policies unchanged",
+      "pass": true,
+      "detail": "4"
+    },
+    {
+      "label": "platform_requests RLS enabled",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "label": "total platform_request policies",
+      "pass": true,
+      "detail": "10"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "phase": "P0-03-schema-verify",
+  "timestamp": "2026-07-05T01:30:48.260Z",
+  "projectRef": "ahlxuyvhzqdqaojiywmu",
+  "checks": [
+    {
+      "name": "builder_projects (base)",
+      "ok": true,
+      "detail": "HTTP 200"
+    },
+    {
+      "name": "builder_projects.spec",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "builder_projects.project_category",
+      "ok": true,
+      "detail": "with spec cols"
+    },
+    {
+      "name": "builder_projects.board_type",
+      "ok": true,
+      "detail": "with spec cols"
+    },
+    {
+      "name": "builder_project_applications",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "builder_partners (optional seed)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "RLS policies (manual)",
+      "ok": true,
+      "detail": "apply supabase/manual/staging_builder_general_jobs_p0_01_rls.sql — verified at E2E runtime"
+    }
+  ],
+  "missingSql": [],
+  "decision": "Go"
+}

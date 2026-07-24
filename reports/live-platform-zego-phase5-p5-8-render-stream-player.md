@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-29
 **Base URL:** http://127.0.0.1:8788
-**Verdict:** GO
+**Verdict:** NO-GO
 
 ## Results
 
@@ -10,7 +10,7 @@
 - **PASS** `dev:8788` — http://127.0.0.1:8788
 - **PASS** `off:stub-placeholder`
 - **PASS** `on:player-mount`
-- **PASS** `on:player-video-element`
+- **FAIL** `on:player-video-element`
 - **PASS** `on:no-stub-placeholder`
 - **PASS** `on:joinViewer-diagnostics`
 - **PASS** `console-clean` — 0 severe errors

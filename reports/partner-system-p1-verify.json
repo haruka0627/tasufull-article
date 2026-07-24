@@ -1,11 +1,11 @@
 {
-  "checkedAt": "2026-06-22T23:25:12.993Z",
+  "checkedAt": "2026-07-01T22:52:55.312Z",
   "base": "http://127.0.0.1:8788",
-  "liveApi": true,
+  "liveApi": false,
   "summary": {
-    "total": 53,
-    "passed": 53,
-    "failed": 0
+    "total": 42,
+    "passed": 18,
+    "failed": 24
   },
   "results": [
     {
@@ -77,148 +77,104 @@
       "message": "migration excludes partner_audit_log (P1)"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load iwasho-register@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 iwasho-register@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load iwasho-register@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 iwasho-register@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load iwasho-register@1280"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 iwasho-register@1280"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load tasful-register@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 tasful-register@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load tasful-register@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 tasful-register@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load tasful-register@1280"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 tasful-register@1280"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load builder-mgmt-mock@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 builder-mgmt-mock@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load builder-mgmt-mock@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 builder-mgmt-mock@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load builder-mgmt-mock@1280"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 builder-mgmt-mock@1280"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load builder-detail-mock@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 builder-detail-mock@390"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load builder-detail-mock@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 builder-detail-mock@768"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "UI load builder-detail-mock@1280"
     },
     {
-      "ok": true,
+      "ok": false,
       "message": "console 0 builder-detail-mock@1280"
     },
     {
       "ok": true,
-      "message": "required fields return 400"
-    },
-    {
-      "ok": true,
-      "message": "partner-create iwasho (201)"
-    },
-    {
-      "ok": true,
-      "message": "partner-create returns partner_id"
-    },
-    {
-      "ok": true,
-      "message": "partner-create tasful (201)"
-    },
-    {
-      "ok": true,
-      "message": "partner-list (200)"
-    },
-    {
-      "ok": true,
-      "message": "partner-get (200)"
-    },
-    {
-      "ok": true,
-      "message": "pending → hold (200)"
-    },
-    {
-      "ok": true,
-      "message": "pending → approved (200)"
-    },
-    {
-      "ok": true,
-      "message": "pending → rejected (200)"
-    },
-    {
-      "ok": true,
-      "message": "partner_reviews history persisted"
-    },
-    {
-      "ok": true,
-      "message": "partner-document-verify"
-    },
-    {
-      "ok": true,
-      "message": "unauthorized partner-list denied"
+      "message": "live API tests skipped (set PARTNER_P1_LIVE=1)"
     }
   ]
 }

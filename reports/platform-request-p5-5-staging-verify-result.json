@@ -1,0 +1,263 @@
+{
+  "linkedRef": "ahlxuyvhzqdqaojiywmu",
+  "queries": {
+    "summary": {
+      "ok": true,
+      "rows": [
+        {
+          "cnt": "5",
+          "kind": "tables"
+        },
+        {
+          "cnt": "10",
+          "kind": "policies"
+        },
+        {
+          "cnt": "5",
+          "kind": "rls_enabled"
+        },
+        {
+          "cnt": "3",
+          "kind": "triggers"
+        },
+        {
+          "cnt": "1",
+          "kind": "function"
+        }
+      ]
+    },
+    "tables": {
+      "ok": true,
+      "rows": [
+        {
+          "table_name": "platform_request_matches"
+        },
+        {
+          "table_name": "platform_request_notifications"
+        },
+        {
+          "table_name": "platform_request_payments"
+        },
+        {
+          "table_name": "platform_request_subscriptions"
+        },
+        {
+          "table_name": "platform_requests"
+        }
+      ]
+    },
+    "rls": {
+      "ok": true,
+      "rows": [
+        {
+          "relname": "platform_request_matches",
+          "relrowsecurity": true
+        },
+        {
+          "relname": "platform_request_notifications",
+          "relrowsecurity": true
+        },
+        {
+          "relname": "platform_request_payments",
+          "relrowsecurity": true
+        },
+        {
+          "relname": "platform_request_subscriptions",
+          "relrowsecurity": true
+        },
+        {
+          "relname": "platform_requests",
+          "relrowsecurity": true
+        }
+      ]
+    },
+    "policies": {
+      "ok": true,
+      "rows": [
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_matches_select_candidate",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_matches_select_owner",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_notifications_select_recipient",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_notifications"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_payments_select_payer",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_payments"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_payments_select_request_owner",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_payments"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_request_subscriptions_select_self",
+          "roles": "{authenticated}",
+          "tablename": "platform_request_subscriptions"
+        },
+        {
+          "cmd": "INSERT",
+          "policyname": "platform_requests_insert_owner",
+          "roles": "{authenticated}",
+          "tablename": "platform_requests"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_requests_select_open",
+          "roles": "{authenticated}",
+          "tablename": "platform_requests"
+        },
+        {
+          "cmd": "SELECT",
+          "policyname": "platform_requests_select_owner",
+          "roles": "{authenticated}",
+          "tablename": "platform_requests"
+        },
+        {
+          "cmd": "UPDATE",
+          "policyname": "platform_requests_update_owner",
+          "roles": "{authenticated}",
+          "tablename": "platform_requests"
+        }
+      ]
+    },
+    "indexes": {
+      "ok": true,
+      "rows": [
+        {
+          "indexname": "platform_request_matches_candidate_idx",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "indexname": "platform_request_matches_candidate_user_id_idx",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "indexname": "platform_request_matches_pkey",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "indexname": "platform_request_matches_request_candidate_uniq",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "indexname": "platform_request_matches_request_id_idx",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "indexname": "platform_request_matches_status_idx",
+          "tablename": "platform_request_matches"
+        },
+        {
+          "indexname": "platform_request_notifications_pkey",
+          "tablename": "platform_request_notifications"
+        },
+        {
+          "indexname": "platform_request_notifications_recipient_idx",
+          "tablename": "platform_request_notifications"
+        },
+        {
+          "indexname": "platform_request_notifications_request_idx",
+          "tablename": "platform_request_notifications"
+        },
+        {
+          "indexname": "platform_request_payments_checkout_session_uidx",
+          "tablename": "platform_request_payments"
+        },
+        {
+          "indexname": "platform_request_payments_match_idx",
+          "tablename": "platform_request_payments"
+        },
+        {
+          "indexname": "platform_request_payments_payer_idx",
+          "tablename": "platform_request_payments"
+        },
+        {
+          "indexname": "platform_request_payments_pkey",
+          "tablename": "platform_request_payments"
+        },
+        {
+          "indexname": "platform_request_subscriptions_pkey",
+          "tablename": "platform_request_subscriptions"
+        },
+        {
+          "indexname": "platform_request_subscriptions_user_id_idx",
+          "tablename": "platform_request_subscriptions"
+        },
+        {
+          "indexname": "platform_request_subscriptions_user_role_uniq",
+          "tablename": "platform_request_subscriptions"
+        },
+        {
+          "indexname": "platform_requests_category_idx",
+          "tablename": "platform_requests"
+        },
+        {
+          "indexname": "platform_requests_legacy_local_id_key",
+          "tablename": "platform_requests"
+        },
+        {
+          "indexname": "platform_requests_owner_id_idx",
+          "tablename": "platform_requests"
+        },
+        {
+          "indexname": "platform_requests_pkey",
+          "tablename": "platform_requests"
+        },
+        {
+          "indexname": "platform_requests_status_created_idx",
+          "tablename": "platform_requests"
+        }
+      ]
+    },
+    "triggers": {
+      "ok": true,
+      "rows": [
+        {
+          "table_name": "platform_request_matches",
+          "tgname": "platform_request_matches_set_updated_at"
+        },
+        {
+          "table_name": "platform_request_subscriptions",
+          "tgname": "platform_request_subscriptions_set_updated_at"
+        },
+        {
+          "table_name": "platform_requests",
+          "tgname": "platform_requests_set_updated_at"
+        }
+      ]
+    },
+    "existing": {
+      "ok": true,
+      "rows": [
+        {
+          "exists_flag": 1,
+          "table_name": "builder_partners"
+        },
+        {
+          "exists_flag": 1,
+          "table_name": "builder_projects"
+        },
+        {
+          "exists_flag": 0,
+          "table_name": "talk_notifications"
+        }
+      ]
+    }
+  }
+}

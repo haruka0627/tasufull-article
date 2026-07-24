@@ -46,7 +46,7 @@
 
 | 項目 | 値 |
 | --- | --- |
-| roomId | `browser-play-1782668122147` |
+| roomId | `browser-play-1782682244765` |
 | 判定 | PASS |
 | 詳細 | remote=1 video=0 stageChildren=1 |
 
@@ -59,7 +59,7 @@
   "stageChildCount": 1,
   "stageHtmlLen": 200,
   "status": "audience join · provider=watching · session=CONNECTED",
-  "providerState": "watching"
+  "providerState": "live"
 }
 ```
 

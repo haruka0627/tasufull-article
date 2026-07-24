@@ -1,0 +1,264 @@
+{
+  "scanDate": "2026-07-04",
+  "scannedBy": "cursor-agent",
+  "scope": {
+    "includedRoots": [
+      "AGENTS.md",
+      "package.json",
+      ".env.example",
+      ".env.staging.example",
+      "supabase/config.toml",
+      "deploy/cloudflare/workers/wrangler.toml",
+      "deploy/cloudflare/functions/",
+      "supabase/functions/",
+      "supabase/migrations/",
+      "scripts/",
+      "docs/",
+      "root JS/HTML/CSS",
+      "shared/",
+      "live/",
+      "builder/",
+      "business-directory/"
+    ],
+    "excludedRoots": [
+      "node_modules/",
+      "deploy/cloudflare/dist/",
+      ".git/",
+      "screenshots/",
+      "backups/",
+      "agent-transcripts/",
+      "scripts/_*.txt (scratch)"
+    ]
+  },
+  "summary": {
+    "totalPatterns": 12,
+    "hitsWithProductionImpact": 0,
+    "hitsAlreadyProtected": 3,
+    "hitsHistoricalOnly": 1,
+    "noHit": 8,
+    "needsManualCheck": 1
+  },
+  "findings": {
+    "P0": {
+      "deepseek-chat / deepseek-reasoner": {
+        "status": "PROTECTED (already normalized)",
+        "productionImpact": "NONE — code auto-normalizes deprecated model IDs",
+        "sunsetDate": "2026-07-24",
+        "hits": [
+          {
+            "file": "deploy/cloudflare/functions/_shared/secretary-deepseek.mjs",
+            "line": 12,
+            "context": "const DEPRECATED_DEEPSEEK_MODELS = new Set([\"deepseek-chat\", \"deepseek-reasoner\"]);",
+            "role": "protection guard"
+          },
+          {
+            "file": "deploy/cloudflare/functions/_shared/secretary-deepseek.mjs",
+            "line": 10,
+            "context": "export const DEFAULT_DEEPSEEK_CHAT_MODEL = \"deepseek-v4-flash\";",
+            "role": "current default (post-migration)"
+          },
+          {
+            "file": "deploy/cloudflare/functions/_shared/secretary-deepseek.mjs",
+            "lineRange": "20-27",
+            "context": "resolveDeepSeekModel(env) → DEPRECATED → DEFAULT_DEEPSEEK_CHAT_MODEL",
+            "role": "runtime normalization"
+          },
+          {
+            "file": ".env.example",
+            "line": 8,
+            "context": "# deepseek-chat / deepseek-reasoner は 2026-07-24 廃止予定（設定しても v4-flash に正規化）",
+            "role": "documented"
+          },
+          {
+            "file": "scripts/test-secretary-deepseek-model.mjs",
+            "lineRange": "34-43",
+            "context": "assert(resolveDeepSeekModel({DEEPSEEK_CHAT_MODEL:'deepseek-chat'}) === 'deepseek-v4-flash'); + reasoner",
+            "role": "regression test"
+          },
+          {
+            "file": "docs/TODO.md",
+            "line": 955,
+            "context": "旧 deepseek-chat · 旧 deepseek-reasoner は 2026-07-24 廃止予定",
+            "role": "backlog note"
+          },
+          {
+            "file": "reports/*deepseek*.{md,json}",
+            "count": 20,
+            "role": "historical smoke evidence — NO functional impact"
+          }
+        ],
+        "action": "既に対応済。追加コミット不要。Cloudflare Pages 環境変数 `DEEPSEEK_CHAT_MODEL` が明示的に `deepseek-chat/reasoner` に設定されていないか確認のみ推奨（設定されていても実行時に v4-flash へ正規化される）。"
+      },
+      "GitHub Models (models.inference.ai.azure.com)": {
+        "status": "CLEAN",
+        "productionImpact": "NONE",
+        "hits": [],
+        "action": "対応不要。"
+      },
+      "Assistants API (beta.assistants / v1/assistants)": {
+        "status": "CLEAN",
+        "productionImpact": "NONE",
+        "hits": [],
+        "notes": "`/assistants` 文字列検索でヒットしたのは `thread_id` / `chat_thread` 系（Talk 機能）で、OpenAI Assistants API とは無関係。package.json に `openai` npm dep なし。",
+        "action": "対応不要。"
+      },
+      "Supabase Postgres 14": {
+        "status": "NEEDS MANUAL CHECK",
+        "productionImpact": "UNKNOWN — repository には Postgres バージョン明示なし",
+        "hits": [
+          {
+            "file": "supabase/config.toml",
+            "lineRange": "全体",
+            "context": "PG バージョン指定なし（Supabase Cloud 管理）",
+            "role": "config"
+          },
+          {
+            "file": "supabase/migrations/*.sql",
+            "count": "多数",
+            "context": "PostgreSQL 15+ 機能（`grants` / `security definer` / `rls` 等）を使用",
+            "role": "schema"
+          }
+        ],
+        "action": "Supabase Dashboard で Production ref `ddojquacsyqesrjhcvmn` と Staging ref `ahlxuyvhzqdqaojiywmu` の PostgreSQL major version を確認。14 なら 15/17 アップグレード計画を `docs/supabase-environments.md` に記載。今回は調査のみ。"
+      }
+    },
+    "P1": {
+      "v1/prompts (OpenAI Prompts API)": {
+        "status": "CLEAN",
+        "productionImpact": "NONE",
+        "hits": [],
+        "action": "対応不要。"
+      },
+      "Cloudflare Sandbox SDK": {
+        "status": "CLEAN",
+        "productionImpact": "NONE",
+        "hits": [],
+        "notes": "package.json に `@cloudflare/sandbox` / `sandbox-sdk` なし。wrangler.toml 1 本のみ（gemini-live-proxy Worker · compat 2026-07-02）。",
+        "action": "対応不要。"
+      },
+      "HTTP transport / WebSocket transport (OpenAI Realtime)": {
+        "status": "IN USE — needs review vs OpenAI Realtime deprecation news",
+        "productionImpact": "PARTIAL — 本番未接続（`useWebSocketTransport: true` は staging/mock のみ）",
+        "hits": [
+          {
+            "file": "shared/voice-core/transports/voice-openai-realtime-websocket-transport.js",
+            "context": "Phase 5-B WebSocket transport module (opt-in)",
+            "role": "transport implementation"
+          },
+          {
+            "file": "shared/voice-core/adapters/voice-openai-realtime-adapter.js",
+            "lineRange": "38-59",
+            "context": "shouldUseWebSocketTransport() / createWebSocketTransport()",
+            "role": "adapter"
+          },
+          {
+            "file": "shared/voice-core/voice-realtime-session-client.js",
+            "line": 103,
+            "context": "useWebSocketTransport: true",
+            "role": "session client (opt-in default in test)"
+          },
+          {
+            "file": "supabase/functions/_shared/openai-realtime-session.ts",
+            "line": 47,
+            "context": "endpoint: wss://api.openai.com/v1/realtime",
+            "role": "current OpenAI Realtime WS endpoint"
+          },
+          {
+            "file": "ai-workspace.html / builder/builder-ai.html / admin-operations-dashboard.html",
+            "context": "<script src=voice-openai-realtime-websocket-transport.js> ロード",
+            "role": "opt-in module (mockCompatible default)"
+          },
+          {
+            "file": "admin-ai-secretary-voice-controller.js / builder/builder-voice-controller.js / tasful-ai-voice-controller.js",
+            "context": "config.useWebSocketTransport: false デフォルト、mockCompatible ON がデフォルト",
+            "role": "production surface disables WS live by default"
+          }
+        ],
+        "notes": "`wss://api.openai.com/v1/realtime` は OpenAI 公式 Realtime API 現行エンドポイント。HTTP transport（Realtime over SSE/HTTP）は本 repo で不使用。本番 Voice Live は `mockCompatible: true` / `useWebSocketTransport: false` がデフォルトで、Live 接続は staging スクリプトのみ。",
+        "action": "OpenAI Realtime WebSocket は現時点で存続。もし今後 WebRTC 一本化のアナウンスがあれば `voice-openai-realtime-websocket-transport.js` の代替（WebRTC transport 追加）を検討。今回は現状記録のみ。"
+      },
+      "DOCKER_CONTENT_TRUST": {
+        "status": "CLEAN",
+        "productionImpact": "NONE",
+        "hits": [],
+        "notes": "Docker 未使用（Cloudflare Pages / Wrangler Pages Dev のみ）。",
+        "action": "対応不要。"
+      }
+    }
+  },
+  "environmentReview": {
+    ".env.example": {
+      "hasDeepseekDeprecationNote": true,
+      "requiresProductionSecretCheck": ["DEEPSEEK_API_KEY", "DEEPSEEK_CHAT_MODEL (optional · normalized)"]
+    },
+    ".env.staging.example": {
+      "notReviewed": true,
+      "reason": "untracked · Supabase / Edge スコープ外指示のため精査保留"
+    },
+    "wrangler.toml": {
+      "path": "deploy/cloudflare/workers/wrangler.toml",
+      "purpose": "Gemini Live WebSocket Proxy Worker のみ",
+      "compatibilityDate": "2026-07-02",
+      "concerns": "なし"
+    },
+    "package.json": {
+      "openaiSdk": "none (fetch-based)",
+      "anthropicSdk": "none",
+      "googleSdk": "none",
+      "cloudflareSandboxSdk": "none",
+      "concerns": "なし"
+    },
+    "supabase/config.toml": {
+      "pgVersion": "not specified (Supabase Cloud managed)",
+      "action": "Dashboard で Production / Staging PG major version を確認"
+    }
+  },
+  "priorityAction": {
+    "P0-immediate": [],
+    "P0-verify-only": [
+      {
+        "id": "BC-P0-1",
+        "task": "Cloudflare Pages Production の環境変数 DEEPSEEK_CHAT_MODEL 現行値を Dashboard で確認",
+        "risk": "設定されていても resolveDeepSeekModel() で v4-flash に正規化される → 実質影響なし",
+        "action": "確認のみ（変更不要）"
+      },
+      {
+        "id": "BC-P0-2",
+        "task": "Supabase Production/Staging PostgreSQL major version を Dashboard で確認",
+        "risk": "PG 14 の場合は 2026 後半に EOL 予定 → アップグレード計画を docs 化",
+        "action": "確認のみ（今回スコープ外）"
+      }
+    ],
+    "P1-schedule": [
+      {
+        "id": "BC-P1-1",
+        "task": "OpenAI Realtime API のプロトコル進化を四半期ごとに確認（WebSocket → WebRTC 一本化の可能性）",
+        "risk": "現時点で WS 存続 · staging のみ · 本番未接続",
+        "action": "四半期レビュー"
+      }
+    ]
+  },
+  "reproScript": {
+    "toolsUsed": ["rg"],
+    "flags": [
+      "--no-ignore-vcs",
+      "-g '!node_modules'",
+      "-g '!deploy/cloudflare/dist/**'",
+      "-g '!.git'",
+      "-g '!reports/**' (第 2 パスのみ)",
+      "-g '!screenshots/**'",
+      "-g '!backups/**'",
+      "-g '!agent-transcripts/**'"
+    ],
+    "patterns": [
+      "deepseek-chat|deepseek-reasoner",
+      "models\\.inference\\.ai\\.azure\\.com|GitHub Models|githubcopilot",
+      "beta\\.assistants|/v1/assistants|/assistants/|AssistantsAPI|Assistants API",
+      "v1/prompts|v1\\.prompts",
+      "cloudflare sandbox|@cloudflare/sandbox|sandbox-sdk",
+      "DOCKER_CONTENT_TRUST",
+      "HTTP transport|WebSocket transport|WebSocketTransport|httpTransport|wsTransport",
+      "Postgres|PostgreSQL|major_version"
+    ]
+  }
+}
