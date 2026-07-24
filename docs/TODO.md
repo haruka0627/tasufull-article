@@ -21,6 +21,45 @@
 
 ---
 
+### Builder Calendar 本実装（P5 基盤完了後 · 2026-07-04） — **Hub Primary 完了**
+
+**状態:** ✅ **CAL-MAIN-01〜19 · Hub Primary 完了（Go）** — [hub-primary-completion](./builder-calendar-hub-primary-completion.md) · [mainline-plan](./builder-calendar-mainline-plan.md)  
+**基盤:** P3 Read · P3.5–P3.8 · P4 Write · P5 RLS / Auth Write E2E — **凍結（触らない）**  
+**後続（優先外）:** Production Migration · partner RPC · MVP キー段階廃止 — 10月ウィンドウ
+
+| 優先 | ID | 内容 | 状態 |
+| --- | --- | --- | --- |
+| **P0** | CAL-MAIN-01 | Talk Room 正本化（実 room ID · `talk_room_id`） | ✅ Talk 開始時 ensure |
+| **P0** | CAL-MAIN-02 | 案件作成時に Room 自動 ensure（saveProject） | ✅ provisional + 非同期昇格 |
+| **P1** | CAL-MAIN-03 | ステータス / 完了報告 → Talk システムメッセージ | ✅ `builder-project-talk-events.js` |
+| **P0** | CAL-MAIN-04 | `builder_projects` Realtime → Calendar refresh | ✅ `builder-project-calendar-realtime.js` |
+| **P0** | CAL-MAIN-05 | Hub / MVP 統合方針 | ✅ [builder-calendar-hub-mvp-integration-design.md](./builder-calendar-hub-mvp-integration-design.md) |
+| **P0** | CAL-MAIN-06 | ID マッピング層 + 通知ディスパッチ入口 | ✅ `builder-project-id-map.js` · `builder-notify-dispatch.js` |
+| **P1** | CAL-MAIN-07 | partner-assignment の Hub 読取アダプタ | ✅ `builder-partner-assignment-hub-adapter.js` |
+| **P1** | CAL-MAIN-08 | 運営案件作成を Hub `saveProject` に寄せる | ✅ `builder-admin-calendar-hub-write.js` |
+| **P2** | CAL-MAIN-09 | MVP write 停止条件 · Hub 正本化範囲 | ✅ 設計 [builder-calendar-mvp-write-stop-design.md](./builder-calendar-mvp-write-stop-design.md) |
+| **P1** | CAL-MAIN-10 | 受諾/辞退 Hub dual-write（local assignment） | ✅ `writeAssignmentDecision` · Hub `assignment` |
+| **P1** | CAL-MAIN-11 | 運営作成 Hub-primary（MVP は互換ミラー） | ✅ `createHubPrimaryProject` |
+| **P2** | CAL-MAIN-12 | assignment jsonb + MVP 通知縮小 | ✅ 設計 [builder-calendar-assignment-jsonb-design.md](./builder-calendar-assignment-jsonb-design.md) |
+| **P1** | CAL-MAIN-13 | assignment Read/Write Adapter 往復（列がある環境のみ） | ✅ `writeAssignment` · mapRowToProject |
+| **P2** | CAL-MAIN-14 | Staging 手動 Migration + partner RPC 設計 | ✅ [runbook](./builder-calendar-assignment-staging-runbook.md) · `supabase/manual/` |
+| **P2** | CAL-MAIN-15 | MVP 通知縮小（calendar_assignment 系） | ✅ Talk 成功時 MVP ベル no-op |
+| **P2** | CAL-MAIN-16 | assignment jsonb DB 往復 preflight（P5-5 Auth） | ✅ Go — `verify-builder-assignment-db-roundtrip.mjs` |
+| **P2** | CAL-MAIN-17 | MVP assignment_status write 停止（条件付き） | ✅ Hub DB write 成功 + hydrate 確認時のみ no-op（flag 付き） |
+| **P2** | CAL-MAIN-18 | assignment_status Read 棚卸し · Hub 表示優先 | ✅ 本線表示は Hub → MVP fallback（削除なし） |
+| **P2** | CAL-MAIN-19 | Hub Primary 最終監査 · 完了判定 | ✅ **Hub Primary 完了（Go）** |
+
+**CAL-MAIN-19（2026-07-04）:** assignment 領域の Hub Write/Read/Hydrate/Realtime 最終監査。MVP は fallback/demo/admin/test のみ。削除なし。完了レポート: [hub-primary-completion](./builder-calendar-hub-primary-completion.md)。
+
+- 監査: `node scripts/test-builder-calendar-cal-main-19-hub-primary-close.mjs`
+- 回帰: CAL-MAIN-10/13/15/16/17/18
+| **P2** | — | Production Migration · partner RPC 適用 · MVP キー段階廃止 | 📋 Hub Primary 外（後続） |
+
+**禁止（基盤）:** Production Migration / RLS 修正 / Write Adapter 改修 / Calendar UI 変更 / 既存 E2E 破壊
+
+**調査成果物:** [mainline-plan](./builder-calendar-mainline-plan.md) · [hub-mvp 統合方針](./builder-calendar-hub-mvp-integration-design.md)
+
+---
 
 ### Live API — ZEGO Provider（P3 · 2026-06-28）
 
