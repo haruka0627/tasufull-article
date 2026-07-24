@@ -33,11 +33,11 @@
   const STUB_BROADCAST_TIP_TARGET_ID = "00000000-0000-4000-8000-0000000000bb";
 
   const LIVE_P0_GIFTS = Object.freeze([
-    { id: "flower", name: "花", emoji: "🌸", priceYen: 100 },
-    { id: "coffee", name: "コーヒー", emoji: "☕", priceYen: 300 },
-    { id: "giftbox", name: "ギフトBOX", emoji: "🎁", priceYen: 500 },
-    { id: "crown", name: "王冠", emoji: "👑", priceYen: 1000 },
-    { id: "rocket", name: "ロケット", emoji: "🚀", priceYen: 3000 },
+    { id: "flower", name: "花", emoji: "🌸", priceYen: 100, coins: 100 },
+    { id: "coffee", name: "コーヒー", emoji: "☕", priceYen: 300, coins: 300 },
+    { id: "giftbox", name: "ギフトBOX", emoji: "🎁", priceYen: 500, coins: 500 },
+    { id: "crown", name: "王冠", emoji: "👑", priceYen: 1000, coins: 1000 },
+    { id: "rocket", name: "ロケット", emoji: "🚀", priceYen: 3000, coins: 3000 },
   ]);
 
   const LIVE_SIGNED_URL_TTL_SECONDS = 300;
@@ -69,6 +69,7 @@
   });
   const MONETIZATION_ADMIN_FUNCTION = "live-monetization-admin";
   const SECURITY_EVENTS_FUNCTION = "live-security-events";
+  const TLV_CREATE_TIP_FUNCTION = "tlv-create-tip";
 
   const SECURITY_VIEW_MIN_SECONDS = 10;
   const SECURITY_VIEW_MIN_RATIO = 0.3;
@@ -337,9 +338,61 @@
     return LIVE_P0_GIFTS.find((g) => g.priceYen === n) || null;
   }
 
+  function giftByCoins(coins) {
+    const n = Number(coins);
+    return LIVE_P0_GIFTS.find((g) => g.coins === n) || null;
+  }
+
   function parseGiftNameFromMessage(message) {
     const m = String(message || "").match(/^【([^】]+)】/);
     return m ? m[1] : null;
+  }
+
+  async function createGiftTip({ streamId, creatorId, coins, idempotencyKey }) {
+    if (isTalkDevStubMode()) {
+      throw new Error("talkDev stub — edge skipped");
+    }
+    const base = getFunctionsBase();
+    if (!base) throw new Error("Edge functions base URL が未設定です");
+
+    const cfg = global.TASU_CHAT_SUPABASE_CONFIG || {};
+    const anonKey = String(cfg.anonKey || "").trim();
+    const token = await getAccessTokenForEdge();
+    if (!token) throw new Error("認証トークンがありません");
+
+    const res = await fetch(`${base}/${TLV_CREATE_TIP_FUNCTION}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: anonKey,
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        stream_id: String(streamId || "").trim(),
+        creator_id: String(creatorId || "").trim(),
+        coins: Number(coins),
+        tip_kind: "gift",
+        idempotency_key: String(idempotencyKey || "").trim(),
+      }),
+    });
+
+    let data = {};
+    try {
+      data = await res.json();
+    } catch {
+      data = {};
+    }
+
+    if (!res.ok) {
+      const msg = data?.error || data?.message || `HTTP ${res.status}`;
+      const err = new Error(msg);
+      err.status = res.status;
+      err.code = data?.code;
+      err.payload = data;
+      throw err;
+    }
+
+    return data;
   }
 
   function profileUrl(userId) {
@@ -981,6 +1034,7 @@
     VIDEO_CAPTION_STATUS,
     MONETIZATION_ADMIN_FUNCTION,
     SECURITY_EVENTS_FUNCTION,
+    TLV_CREATE_TIP_FUNCTION,
     SECURITY_VIEW_MIN_SECONDS,
     SECURITY_VIEW_MIN_RATIO,
     SECURITY_DEVICE_KEY_STORAGE,
@@ -1020,6 +1074,8 @@
     giftsUrl,
     tipsUrl,
     giftByPriceYen,
+    giftByCoins,
+    createGiftTip,
     parseGiftNameFromMessage,
     profileUrl,
     buildShortStoragePath,
