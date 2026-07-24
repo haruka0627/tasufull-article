@@ -4,9 +4,9 @@ Gemini Edge Function・静的検証・`browser-test-gen-ai.mjs` が通過した�
 
 ## 事前準備
 
-- [ ] 開発サーバー起動: `npm run dev`（または Vite **5173**）
+- [ ] 開発サーバー起動: `npm run dev`（**http://127.0.0.1:8788**）
 - [ ] 開く URL:  
-  `http://localhost:5173/gen-ai-workspace.html?mode=AI%E3%82%AD%E3%83%A3%E3%83%A9%E4%BC%9A%E8%A9%B1`  
+  `http://127.0.0.1:8788/gen-ai-workspace.html?mode=AI%E3%82%AD%E3%83%A3%E3%83%A9%E4%BC%9A%E8%A9%B1`  
   （表示名: **AIキャラ会話**）
 - [ ] マイク付き PC ブラウザ（推奨: **Chrome / Edge** 最新）
 - [ ] iPhone Safari は音声認識非対応 → 案内 `data-gen-ai-voice-unsupported` のみ確認

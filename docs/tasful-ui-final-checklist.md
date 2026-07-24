@@ -5,13 +5,13 @@ PC **1280px** / SP **390px** / **360px** で主要ページのレイアウト・
 ## 自動スモーク
 
 ```bash
-# 開発サーバー起動後（例: 5173）
-BASE_URL=http://127.0.0.1:5173 node scripts/test-tasful-ui-final-smoke.mjs
+# 開発サーバー起動後（`npm run dev` → 8788）
+BASE_URL=http://127.0.0.1:8788 node scripts/test-tasful-ui-final-smoke.mjs
 
 # 既存回帰
-BASE_URL=http://127.0.0.1:5173 node scripts/test-platform-all-browser.mjs
-BASE_URL=http://127.0.0.1:5173 node scripts/test-listing-detail-link-browser.mjs
-BASE_URL=http://127.0.0.1:5173 node scripts/test-favorite-actions-browser.mjs
+BASE_URL=http://127.0.0.1:8788 node scripts/test-platform-all-browser.mjs
+BASE_URL=http://127.0.0.1:8788 node scripts/test-listing-detail-link-browser.mjs
+BASE_URL=http://127.0.0.1:8788 node scripts/test-favorite-actions-browser.mjs
 node scripts/browser-test-gen-ai.mjs
 node scripts/verify-gen-ai-voice-ui-smoke.mjs
 node scripts/verify-voice-input.mjs

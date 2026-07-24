@@ -206,6 +206,18 @@ JOIN tlv.viewer_wallets w ON w.user_id = p.payer_user_uuid;
 - `review_required`（self_gift 疑義）→ `revenue_ledger` なし（TODO-03）
 - extension grant → ENGINE §3.4 ガード（DEV-03 解消）
 
+**Lock Order（正式 · v1.0）:** [PAYMENT_ENGINE.md](./PAYMENT_ENGINE.md) — Wallet → FIFO lots → reversals → ledgers → score。冪等は `payment_provider_events` / `payments` を Wallet 前可。
+
+| 関数 | Lock Order 監査 | migration |
+| --- | --- | --- |
+| `tlv.handle_payment_webhook_success` | 副次 · event→payment→wallet→lot | `20260628120000` · `20260628130000` |
+| **`tlv.create_tip_transaction`** | ⚠️ stream/gauge が wallet 前 — TODO-LOCK-01 | **`20260628140000`** |
+| `tlv.handle_payment_refund` | ⚠️ 入口 payment 無ロック — TODO-LOCK-03 | `20260628160000` |
+| `tlv.handle_payment_dispute` | ⚠️ open: lot→wallet — **TODO-LOCK-02 P1** | `20260628160000` |
+| `tlv.apply_coin_clawback_for_payment` | payment→wallet→lot（clawback 標準） | `20260628160000` |
+
+**監査:** [payment-lock-order-review.md](../reports/payment-lock-order-review.md)
+
 ### 5.3 `tlv.viewer_wallets` — コイン残高正本
 
 | カラム | 型 | 備考 |
@@ -540,6 +552,7 @@ psql "$DATABASE_URL" -f db/tlv_schema.sql
 
 | 日付 | 版 | 内容 |
 | --- | --- | --- |
+| 2026-06-28 | 1.2.10 | Lock Order 正式仕様 — [PAYMENT_ENGINE.md](./PAYMENT_ENGINE.md) · RPC 監査 [payment-lock-order-review.md](../reports/payment-lock-order-review.md) |
 | 2026-06-28 | 1.2.9 | §9.4 TODO-06 設計完成（chargeback/clawback · ①〜⑩） |
 | 2026-06-28 | 1.2.7 | RLS migration staging 適用 · reports/tlv-payment-rls-staging-test.md |
 | 2026-06-28 | 1.2.6 | §9 RLS 設計（TODO-07 · admin= talk_is_admin · revenue admin-only · 未適用） |

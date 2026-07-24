@@ -197,4 +197,4 @@ node scripts/verify-platform-notify-unified.mjs
 node scripts/verify-chat-dual-window-demo.mjs
 ```
 
-Dev: `http://localhost:5173/talk-home.html?tab=notify&talkDev=1`
+Dev: `http://127.0.0.1:8788/talk-home.html?tab=notify&talkDev=1`

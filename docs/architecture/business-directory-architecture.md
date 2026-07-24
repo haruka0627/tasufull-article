@@ -25,6 +25,7 @@
 | [business-directory-self-service-design.md](../business-directory-self-service-design.md) | 登録 · 公開申請 · 公開後編集 |
 | [business-directory-subscription-model.md](../business-directory-subscription-model.md) | サブスク · プラン · 収益分離 |
 | [business-directory-ui-flow-design.md](../business-directory-ui-flow-design.md) | Owner / Admin / Public UI フロー |
+| [business-directory-verification-architecture.md](./business-directory-verification-architecture.md) | **Verification** — 本人/資格/許可/保険 · AI 審査補助（設計 SSOT） |
 
 ---
 
@@ -39,8 +40,10 @@
 | **Stripe Phase 6** | migration 存在 | `supabase/migrations/20260712100000_business_directory_phase6_stripe_subscription.sql` |
 | **Owner / Admin / Public UI** | MVP-1 Complete（Phase 3–5） | `business-directory/` |
 | **Production Deploy** | Step 4 **48/48 Go** | [TODO.md](../TODO.md) §Business Directory |
-| **Commercial Launch** | **No-Go** | Step 5 Operational Readiness · Launch Gate OB1–OB8 |
+| **DB 基盤（Production）** | **Production Ready Go** | Controlled Apply 完了（2026-07-01）· [DB SSOT](./business-directory-db-architecture.md) |
+| **Commercial Launch** | **Conditional** | DB 基盤 Go と **別判断** · Stripe E2E · Launch 最終確認 · OB1–OB8 |
 | **MVP-2 / Premium / 予約 / 決済代行** | **未着手** | [business-directory-mvp-design.md](../business-directory-mvp-design.md) §9 |
+| **Order / Reservation Engine（Future）** | **設計のみ · 実装禁止** | [business-directory-order-reservation-engine.md](../business-directory-order-reservation-engine.md) · REL-F-14 |
 
 ---
 
@@ -66,6 +69,7 @@
 | **Builder AI / TASFUL AI / AI 秘書** | AD-013 適用外 · 別 surface |
 | **TLV 動画ホスティング本体** | 掲載ページへの **embed のみ**（Pro+） |
 | **予約 · 見積 · TALK · Connect 決済** | Premium / Future（TBD） |
+| **Order / Reservation Engine** | Future 仕様のみ — [order-reservation-engine](../business-directory-order-reservation-engine.md) · **実装禁止** |
 
 ### 3.3 将来連携（TBD · 設計のみ）
 
@@ -73,6 +77,7 @@
 - TLV 動画 embed（`business_directory_tlv_videos`）
 - TALK 問い合わせ導線（Pro+ · `contact_mode = talk`）
 - 口コミ · アクセス解析（Standard+ / Pro+）
+- **Order / Reservation Engine**（掲載無料 · TASFUL 経由成果報酬 · BD / Builder / Platform 共通）— [order-reservation-engine](../business-directory-order-reservation-engine.md)
 
 ---
 
@@ -157,7 +162,7 @@ business_directory_plan_features (プランマスタ)
 | `free` | 基本掲載 · 写真少数 |
 | `standard` | 営業時間 · SNS · 口コミ閲覧等 |
 | `pro` | 上位表示 · TLV · 問い合わせ · AI 紹介対象 |
-| `premium` | **Future / TBD** — 複数店舗 · 広告 · 予約 · 成果報酬 |
+| `premium` | **Future / TBD** — 複数店舗 · 広告（[SPONSOR_ADS.md](../SPONSOR_ADS.md) スポンサー掲載）· 予約 · 成果報酬 |
 
 機能上限は **`business_directory_plan_features`** マスタで制御（migration seed 参照）。
 
@@ -219,6 +224,7 @@ Business Directory DB Architecture を深掘りする際、本 SSOT から派生
 | `type_specific` jsonb 深構造 | Self-Service 正本 · 公開後項目 |
 | Marketplace 既存 listings 移行 | 別 Epic · スキーマ未確定 |
 | AI おすすめランキング用 DB | TASFUL AI 連携 · 未設計 |
+| **Verification レイヤー** | 本人/資格/許可/保険 · AI 審査補助 · [business-directory-verification-architecture.md](./business-directory-verification-architecture.md) |
 
 ---
 

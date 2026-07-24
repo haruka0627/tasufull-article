@@ -1,8 +1,8 @@
 # TASFUL AI Workspace
 
-**最終更新:** 2026-06-26（Site Assistant Phase 1 · cross-matching 流用）  
-**ステータス:** 機能完成 · **本番接続タスク残**  
-**直近コミット:** `5ed9672`
+**最終更新:** 2026-07-25  
+**ステータス:** **機能完成（Feature-complete）** · **本番 Production Ready ではない**（本番接続・課金 enforcement タスク残）  
+**直近参照:** `reports/tasful-ai-production-ready-verification.md`（履歴資料）
 
 ---
 
@@ -13,9 +13,11 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | 項目 | 内容 |
 | --- | --- |
 | **展開方針** | 日本発 · 将来は海外ユーザー利用可能な設計 · 多言語・音声・専門 AI は段階追加 — [DECISIONS.md](../DECISIONS.md) **AD-011** |
-| **Production Ready** | **NO**（本番 preflight）— 機能実装は完了 |
-| **本番 AI API** | **OpenAI**（AI 秘書 DeepSeek · Builder OpenAI と分担 — [DECISIONS.md](../DECISIONS.md) AD-010） |
+| **本番ステータス** | **Feature-complete ≠ Production Ready** — CF / quota / alias 等の検証記録あり · **本番接続・課金 enforcement は残タスク** |
+| **本番 AI API** | **OpenAI**（AI 秘書 DeepSeek · Builder OpenAI と分担 — [DECISIONS.md](../DECISIONS.md) AD-010）· provider key は **Edge / Secrets のみ**（browser 非露出） |
 | **Gateway** | `TasuAiModelGateway` · 契約変更はフェーズ外方針（未コミット diff あり → [KNOWN_ISSUES.md](../KNOWN_ISSUES.md) KI-001） |
+| **サイト内 QA** | **QA 記事コンポーネント SSOT**（[TASFUL_AI_QA.md](./TASFUL_AI_QA.md) · **AD-015**）— `/help/*` と AI 回答欄で同一表示 |
+| **GenAI Stripe E2E Functions** | `stripe-e2e-simulate-genai-*` / `stripe-e2e-pay-genai-checkout` は **push / deploy 前の監査対象** · production deploy **除外候補** · JWT 本人確認・production 拒否は未確認 |
 
 ---
 
@@ -68,9 +70,12 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | --- | --- |
 | P0 | Edge デプロイ · Gemini/Serper credits · CF Access E2E |
 | P0/P1 | 課金 enforcement（Gateway + Edge quota） |
-| P1 | 動画/音楽 API `enabled: true` + Edge |
+| P1 | 動画/音楽 API `enabled: true` + Edge | ✅ 2026-06-28 · `gemini_brief` |
+| P1 | **Monitoring 横断 smoke** | ✅ `verify-tasful-ai-monitoring.mjs` |
+| P1 | **AI Membership Pricing（Draft）** — [AI_MEMBERSHIP_PRICING.md](./AI_MEMBERSHIP_PRICING.md) · 原価シミュレーション後に最終決定 |
 | P2 | 履歴 Supabase 同期 · PDF/PPT エクスポート · サイドバー履歴統合 |
 | Backlog | **操作アシスタント** — Gemini · 現在ページ理解 · 画面操作案内 · 製品横断ナビ — [tasful-ai-ui-operation-assist-backlog.md](../tasful-ai-ui-operation-assist-backlog.md) |
+| **Backlog** | **サイト内 QA** — QA 記事コンポーネント SSOT — [TASFUL_AI_QA.md](./TASFUL_AI_QA.md) · [TODO.md](../TODO.md) §TASFUL AI QA |
 
 ---
 

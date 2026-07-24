@@ -1,123 +1,284 @@
-# Live Platform — 配信者制度（CREATOR PROGRAM）
+# TLV Creator Program — 実装仕様 v1
 
-**最終更新:** 2026-06-28  
-**種別:** 制度設計正本（**実装なし**）  
-**親:** [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) · [MONETIZATION.md](./MONETIZATION.md)  
-**AD:** [DECISIONS.md](./DECISIONS.md) **AD-014**（Creator Program 採用）
+**最終更新:** 2026-06-28（v1.2 · Score OS — [TLV_PRD.md](./TLV_PRD.md) §5 同期 · Membership 追加設計 §2.7）  
+**種別:** 実装可能仕様（Platform Vision v2+ · TLV v1.0 FROZEN 対象外）  
+**AD:** [DECISIONS.md](./DECISIONS.md) **AD-014**  
+**関連:** [PRICING.md](./PRICING.md) · [FINANCIAL_MODEL.md](./FINANCIAL_MODEL.md) · [ADMIN_SYSTEM.md](./ADMIN_SYSTEM.md) · [EVENT_SYSTEM.md](./EVENT_SYSTEM.md) · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) · [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md)
 
----
-
-## 1. 目的
-
-クリエイターの **成長 · 収益 · 公平性 · 継続** を制度で支える。  
-還元は [MONETIZATION.md](./MONETIZATION.md) の **条件達成型** に従う。
+**通貨単位:** JPY（円）· 内部コイン（1 コイン = Web 基準 ¥1 相当 · [PRICING.md](./PRICING.md) §1）
 
 ---
 
-## 2. 採用（✅ Adopted — 制度として採用）
+## 1. 用語 · データ境界
 
-| 制度 | 概要 |
-| --- | --- |
-| **ランク制度** | Standard / Proven / Top Contributor — 条件達成型 |
-| **還元制度** | 利益成立後の tier 還元 · 還元率先行禁止 |
-| **条件達成型高還元** | 利益 · 品質 · 継続 · コスト効率の複合条件 |
-| **Creator Score** | 活動 · 収益 · 品質 · 視聴者満足の内部スコア（非公開数値） |
-| **利益貢献度** | プラットフォーム net 利益への寄与を還元判断に使用 |
-| **継続配信評価** | ストリーク · active 日数 · 投稿頻度 |
-| **GitHub 風ヒートマップ** | 配信/投稿カレンダー可視化 — クリエイター本人 + 公開プロフィール |
-| **Creator Credit** | 内部信用スコア — 還元 · 機能解禁 · Incubator 選考に利用 |
-
----
-
-## 3. 保留（⏸ Hold — 設計済み · 実装・数値未確定）
-
-| 制度 | 概要 | 保留理由 |
+| 用語 | 定義 | DB フィールド（案） |
 | --- | --- | --- |
-| **Creator Challenge** | 期間限定ミッション · ボーナス | 不正対策 · 報酬設計の検証が必要 |
-| **エコボーナス** | 低コスト時間帯配信のインセンティブ | infra コスト実測後 |
-| **時間帯ボーナス** | オフピーク配信の還元加算 | 同上 |
-| **Creator Lab** | 分析ダッシュボード · 改善提案 | Ops / TASFUL AI 連携設計中 |
-| **Creator Marketplace** | テンプレ · BGM · サムネ等の内部マーケット | 著作権 · 審査体制が必要 |
-| **Creator Incubator** | 新人支援プログラム | 再投資余力 · 選考基準の確定待ち |
+| **Gross Revenue** | 決済前ユーザー支払総額 | `ledger.gross_amount_jpy` |
+| **Net Revenue** | 決済手数料控除後 · 還元計算基準 | `ledger.net_amount_jpy` |
+| **Creator-attributed Net** | 当該 Creator チャンネルに帰属する Net Revenue 合計 | `creator_ledger.net_attributed_jpy` |
+| **Platform Profit (Creator)** | Creator 帰属 Net − infra 按分 − Creator 還元 | `creator_pl.platform_profit_jpy` |
+| **Creator Score** | 0〜1000 整数 · 日次再計算 | `creators.score_total` |
+| **Creator Rank** | Bronze / Silver / Gold / Platinum / Diamond / Legend | `creators.rank_tier` |
+| **Creator Pool** | 月次利益から按分するボーナスプール | `creator_pool.month_id` |
+
+**計算タイムゾーン:** `Asia/Tokyo` · **集計サイクル:** 暦月（`YYYY-MM-01 00:00:00 JST` 〜 月末 23:59:59 JST）
 
 ---
 
-## 4. 将来（📋 Future）
+## 2. Creator Score（1000 点満点）
 
-| 制度 | 概要 |
-| --- | --- |
-| **コラボ配信ランク** | 複数クリエイター共同配信の評価 |
-| **メンター制度** | Top Contributor が新人を支援 |
-| **チャンネル NFT / デジタルコレクション** | 収益源 · コミュニティ（法務確認後） |
-| **多言語チャンネル** | AD-011 将来 · 字幕 · 翻訳 |
-| **法人クリエイター / MCN 契約** | B2B · 一括還元 |
+**正本:** 数式 · 更新タイミング · OS 出力の **唯一正本は [TLV_PRD.md](./TLV_PRD.md) §5**。本節は実装向け要約。
 
----
+### 2.1 構成（固定 · v1.2）
 
-## 5. 不採用 / 禁止
+```text
+CreatorScore = clamp(FS + ES + GS + TS, 0, 1000)
+```
 
-| 項目 | 理由 |
-| --- | --- |
-| 還元率の固定常時最高宣言 | [MONETIZATION.md](./MONETIZATION.md) §3 |
-| ランキング公開による収益率晒し | 摩擦 · 不正 |
-| AI による自動返信 / 自動投稿 | 人間最終判断 · 秘書ポリシーと整合 |
-| TLV 専用 AI エンジン | AD-004 |
-
----
-
-## 6. ランク制度（詳細案）
-
-### 6.1 ティア
-
-| ティア | 条件（概念） | 特典（概念） |
+| サブスコア | 記号 | 満点 |
 | --- | --- | --- |
-| **Standard** | 登録 · ポリシー同意 | 基本配信 · 基本還元 |
-| **Proven** | 利益 · 品質 · 継続条件クリア | 高還元候補 · 延長ライブ · Lab 一部 |
-| **Top Contributor** | 上位利益貢献 · 高品質 | 最高還元候補 · Incubator メンター · イベント招待 |
+| Financial Score | `FS` | **400** |
+| Engagement Score | `ES` | **300** |
+| Growth Score | `GS` | **200** |
+| Trust / Safety Score | `TS` | **100** |
 
-### 6.2 降格
+### 2.2 FS（0〜400）— PPC 250 + WR 150
 
-- ポリシー違反 · 著作権問題 · ボット視聴 · 通報急増 → 即時降格 / 還元停止
-- 長期 inactive → Standard 維持または機能制限
+```text
+PPC_30d = Σ (Gross - fee - infra) WHERE NOT self_gift_confirmed
+FS_PPC  = min(250, floor(PPC_30d × 250 / 100000))
+FS_WR   = fsWebRatio(WR_30d)    // ≥0.85→150 · 0.75-0.85 線形 · <0.75 減点
+FS      = FS_PPC + FS_WR
+```
 
----
+**更新:** リアルタイム
 
-## 7. Creator Score（内部指標）
+### 2.3 ES（0〜300）— 視聴100 + チャット100 + 延長参加100
 
-| 次元 | 例 |
+```text
+ES_WATCH = min(100, floor(watch_time_avg_min / 25 * 100))
+ES_CHAT  = min(100, floor(chat_active_rate / 0.30 * 100))
+ES_EXT   = min(100, floor(ext_contrib_rate / 0.10 * 100))
+ES       = ES_WATCH + ES_CHAT + ES_EXT
+```
+
+**更新:** リアルタイム · 実効 CCU ベース · BOT 除外
+
+### 2.4 GS（0〜200）— 成長120 + 新規80
+
+```text
+GS_REV = rev_ratio>=1 ? min(120, floor((rev_ratio-1)*120)) : max(0, floor(rev_ratio*60))
+GS_NEW = min(80, floor(new_user_ratio / 0.30 * 80))
+GS     = GS_REV + GS_NEW
+```
+
+**更新:** 日次 03:00 JST
+
+### 2.5 TS（0〜100）— 初期100 · イベント減点
+
+| イベント | 減点 |
 | --- | --- |
-| **Activity** | 投稿数 · 配信時間 · ヒートマップ密度 |
-| **Revenue** | 広告 · ギフト · メンバー |
-| **Quality** | 視聴維持 · 完視聴率 · 低スキップ |
-| **Trust** | 通報率 · クレーム · 本人確認 |
-| **Cost Efficiency** | ライブあたり infra コスト |
+| 軽微違反 | −10〜−30 |
+| 通報 | −20 |
+| DMCA 確定 | **−100** |
+| 自己投げ / BOT 確定 | **−100** |
 
-**公開:** ランク名 · バッジのみ。生スコア · 内部 ID は非公開。
+**更新:** イベント駆動 + 日次監査 03:30 JST
+
+### 2.6 Rank / 還元判定
+
+```text
+Score_MA30 = avg(daily_total, 30d)
+Rank       = tierFromScore(Score_MA30)   // TLV_PRD §5.7
+```
+
+**DB:** `creator_score_daily` · `creator_score_monthly` · `creator_score_events`（[TLV_PRD.md](./TLV_PRD.md) §5.10）
+
+### 2.7 Subscription Profit Contribution（SPC · 追加設計 · 未実装）
+
+**正本:** [reports/tlv-membership-design.md](../reports/tlv-membership-design.md) · [TLV_PRD.md](./TLV_PRD.md) §11
+
+**重要:** 既存 FS/ES/GS/TS 数式 · Rank 閾値 · Override 90/95% 条件は **変更しない**。
+
+月額メンバーシップ収益は Score に **反映可能** だが、Tip 由来 PPC と **同じ重みにしない**。
+
+| 指標 | ソース | FS 反映（候補） |
+| --- | --- | --- |
+| **PPC**（既存） | Tip · `revenue_ledger` gift/extension | **100%** |
+| **SPC**（新候補） | Subscription · `subscription_revenue` | **30〜50%**（TODO-MEM-01 · PL 検証後確定） |
+
+```text
+// 概念式（係数未確定 · 実装しない）
+SPC_30d = Σ creator_payable_jpy FROM subscription_invoices WHERE paid
+FS_SPC  = min(cap, floor(SPC_30d × coefficient × FS_weight))
+FS      = FS_PPC + FS_WR + FS_SPC   // FS_SPC 追加は将来 · 現行式は不変
+```
+
+**Legend / 95% ガード:**
+
+- サブスクだけで Legend 条件（Score ≥ 950 · T95-5 PPC ≥ ¥500k）を **突破できない** 設計
+- T95-5 等の **Tip PPC 要件は維持**（TODO-MEM-02 · PL 検証）
+- PPC / WR / TS / 定員 100 / PPR 順の構造 **変更禁止**
 
 ---
 
-## 8. ヒートマップ（GitHub 風）
+## 3. Creator Rank（Bronze 〜 Legend）
 
-| 項目 | 内容 |
+**正本:** [TLV_PRD.md](./TLV_PRD.md) §5.7 · §6
+
+### 3.1 ティア閾値（Score_MA30 ベース · 月次確定）
+
+| Rank | Score レンジ | 還元ベース率（Net） |
+| --- | --- | --- |
+| Bronze | 0 – 499 | 50% |
+| Silver | 500 – 649 | 60% |
+| Gold | 650 – 749 | 70% |
+| Platinum | 750 – 849 | 80% |
+| Diamond | 850 – 929 | 85% |
+| Legend | 930 – 1000 | 88% |
+
+**Legend:** 定員 **100** · Score ≥ 930 かつ **PPR 降順** 選抜 · 待機リスト · 動的入替（TLV_PRD §6.4）
+
+**維持:** `maintain_floor = RANK_SCORE_FLOOR[tier] - 40` · 7 日連続未満 → 1 段降格
+
+**即時降格（Score 無関係）:**
+
+| 条件 | 結果 |
 | --- | --- |
-| **表示** | 日別 activity 強度（投稿 · 配信 · ショート） |
-| **公開範囲** | チャンネルプロフィール（クリエイター opt-in） |
-| **用途** | 視聴者への「継続」の可視化 · Creator Challenge 連動（将来） |
+| DMCA strike 確定 | → Bronze + base 30% cap 90 日 · TS=0 |
+| 自己投げ銭確定 | → Bronze + 還元停止 30 日 · TS−100 |
+| マネロン CONFIRMED | → 還元停止 + 永久 Bronze cap |
+| `TS < 50` | → 還元停止至レビュー PASS |
 
 ---
 
-## 9. TASFUL AI との関係
+## 4. 還元率 — Override Layer（90% / 95%）
 
-| 項目 | 方針 |
+**還元計算基準は常に Net Revenue（Gross 禁止 · AD-014）**
+
+### 4.1 Base Layer
+
+```text
+base_payout_rate = RANK_BASE_RATE[rank_tier]
+```
+
+### 4.2 90% Override（Diamond 以上 · ALL PASS）
+
+| # | 条件 | 閾値 |
+| --- | --- | --- |
+| T90-1 | rank_tier | ≥ Diamond |
+| T90-2 | Score_MA30 | ≥ 900 |
+| T90-3 | WR_month | ≥ 0.70 |
+| T90-4 | TS | ≥ 80 |
+| T90-5 | 自己投げ / BOT 疑義 | 0 件 |
+
+### 4.3 95% Override（Legend のみ · ALL PASS）
+
+| # | 条件 | 閾値 |
+| --- | --- | --- |
+| T95-1 | rank_tier | Legend（定員内） |
+| T95-2 | Score_MA30 | ≥ 950 |
+| T95-3 | WR_month | ≥ 0.85 |
+| T95-4 | TS | ≥ 90 |
+| T95-5 | 月間 PPC | ≥ ¥500,000 |
+
+**上限:** `effective_rate = min(0.95, max(base, override))`
+
+### 4.4 還元額計算
+
+```text
+creator_payout_jpy = floor(net_attributed_clean * effective_rate)
+platform_retained  = net_attributed_clean - creator_payout_jpy - infra_allocated_jpy
+```
+
+**赤字ガード:** PF-06（[TLV_PRD.md](./TLV_PRD.md) §3.1）
+
+---
+
+## 5. Creator Pool
+
+### 5.1 プール原資
+
+**月次（翌月 5 営業日確定）:**
+
+```text
+pool_fund_jpy = floor( sum(platform_profit_jpy for all creators) * 0.10 )
+pool_fund_jpy = max(pool_fund_jpy, 0)   // プラットフォーム月次赤字なら pool_fund = 0
+```
+
+**Profit First:** 当月プラットフォーム全体 `total_platform_profit < 0` → **Pool 分配スキップ**
+
+### 5.2 分配 weight
+
+対象 Creator（当月）:
+
+- `CreatorScore` ≥ 500（Score MA30）
+- `TS` ≥ 80
+- 還元停止フラグなし
+
+```text
+weight_i = creator_score_i * net_attributed_jpy_i
+share_i  = weight_i / sum(weight_all)
+bonus_i  = floor(pool_fund_jpy * share_i)
+```
+
+**1 Creator 上限:** `bonus_i <= min(¥500,000, pool_fund_jpy * 0.15)`
+
+---
+
+## 6. Profit First との関係
+
+```text
+[収益イベント] → Gross → Net（手数料控除）
+    → infra 按分 → Creator 還元（effective_rate · Pool 別）
+    → Platform Profit
+```
+
+| ルール ID | 内容 |
 | --- | --- |
-| Creator Lab 分析 | **TASFUL AI 入口**（`source=tlv` 等）— 専用 AI なし |
-| タイトル · 概要案 | AI 提案 · 人間が確定 |
-| 自動投稿 / 自動返信 | **禁止** |
+| PF-01 | 還元計算入力は **Net Revenue のみ** |
+| PF-02 | 90/95% は **Platform Profit Rate 条件** 必須 — 赤字 Creator には適用不可 |
+| PF-03 | ライブ 30 分無料 infra は Creator 按分 **¥0**（Platform 負担 cap · [FINANCIAL_MODEL.md](./FINANCIAL_MODEL.md) §4） |
+| PF-04 | 延長 30 分は **500 コイン以上** のルーム収益が infra 按分を上回るまで延長不可 |
+| PF-05 | 月次全体赤字 → Creator Pool = 0 · 95% 新規付与停止 |
+| PF-06 | `effective_rate` 再計算で `platform_retained < 0` なら **自動 rate ダウン**（§4.4） |
 
 ---
 
-## 10. 変更履歴
+## 7. API · バッチ（実装インターフェース）
+
+### 7.1 日次ジョブ `creator-score-daily`
+
+```
+Input:  creator_id, date_jst
+Output: { fs, es, ts, gs, total, rank_tier, effective_rate_preview }
+Idempotent: yes (upsert creator_daily_scores)
+```
+
+### 7.2 月次ジョブ `creator-payout-monthly`
+
+```
+Input:  month_yyyy_mm
+Output: { payout_jpy, pool_bonus_jpy, effective_rate, tier_90, tier_95 }
+Trigger: 毎月 1 日 06:00 JST（前月確定）
+```
+
+### 7.3 Creator 公開 API（読取）
+
+| エンドポイント | 返却 |
+| --- | --- |
+| `GET /api/tlv/creator/me/score` | `{ rank, score_total, subscores: {fs,es,ts,gs}, next_rank_at }` |
+| `GET /api/tlv/creator/me/payout-preview` | `{ base_rate, tier_90_eligible, tier_95_eligible, missing_conditions[] }` |
+
+**非公開:** 生 `PPR_month` · 他 Creator 比較 · Pool 総額
+
+---
+
+## 8. 変更履歴
 
 | 日付 | 内容 |
 | --- | --- |
-| 2026-06-28 | 初版 — 採用/保留/将来分類 |
+| 2026-06-28 | 初版 — 概念設計 |
+| 2026-06-28 | **v1.2 + MEM** | §2.7 SPC 追加設計 — Subscription Score 反映方針（係数未確定 · 制度不変） |
+| 2026-06-28 | **v1.2** — Score OS 確定（TLV_PRD §5 同期）· FS400/ES300/GS200/TS100 · Rank レンジ · Override 条件 |
+| 2026-06-28 | v1 実装仕様 — Score 1000 · Rank 6 段 · 90/95% · Pool · Profit First |

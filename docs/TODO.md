@@ -1645,7 +1645,8 @@ YouTube で無料提供されている機能は **基本無料** とする。
 - [ ] PS-M01 · M03 · M04 · M06 · M07 Live 手動
 - [ ] Production Go 宣言 · 24h 監視
 
-**実装済 Edge Functions:** `tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip` · `tlv-e2e-simulate-payment`（prod 非推奨）
+**実装済 Edge Functions:** `tlv-create-coin-purchase` · `tlv-payment-webhook` · `tlv-create-tip`  
+**削除済み（再作成禁止まで）:** `tlv-e2e-simulate-payment` — 認証なし・client 金額・webhook 迂回のためローカルから破棄。本番決済は署名検証済み Webhook のみ。Production 上の旧 Function 残存有無は deploy 前に確認。
 
 ### Membership / Subscription（Future · 2026-06-28）
 

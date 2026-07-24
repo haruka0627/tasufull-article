@@ -418,12 +418,24 @@ MVP は **初回 + 全主要変更を審査** でも可（シンプル優先）�
 | `business_directory_reports` | 通報 |
 | `business_directory_analytics_daily` | Pro アクセス解析 |
 | `business_directory_listing_group` | Premium 複数店舗 |
+| **Verification（設計）** | [business-directory-verification-architecture.md](./architecture/business-directory-verification-architecture.md) — rules · requests · checks · documents |
 
 MVP 設計 doc §6 の `business_directory_reviews` / `reports` は上記に統合命名。
 
 ---
 
 **実装:** `supabase/migrations/20260711100000_business_directory_phase1_schema.sql` · seed `20260711100001_*` · `scripts/test-business-directory-phase1-schema.mjs`
+
+**追記 migration（Git 正本 · DB 未適用）:**
+
+| Migration | 内容 |
+| --- | --- |
+| `20260715100000_business_directory_storage.sql` | Storage **bucket** `business-directory` 作成のみ · **`storage.objects` policy は未定義** · アップロードは Edge **service_role** + owner assert 前提 |
+| `20260715110000_business_directory_content_update.sql` | pending content · public view（published / 再審査中の公開済） |
+| `20260716100000_business_directory_ai_draft_usage.sql` | AI draft 日次 quota · RPC `consume_business_directory_ai_draft_quota(uuid, text, integer)` は **service_role のみ**（PUBLIC/anon/authenticated REVOKE） |
+| `20260717120000_business_directory_page_content_phase2a.sql` | SEO / FAQ / recommended_uses 列 |
+
+**AI 方針:** draft 生成のみ · **自動公開なし** · owner / admin 制御は Edge + RLS。
 
 **Migration 適用:** 未実施（リポジトリ追加のみ · staging で別途 apply）
 

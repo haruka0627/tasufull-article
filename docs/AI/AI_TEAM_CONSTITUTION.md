@@ -98,6 +98,7 @@ TASFUL AI 開発チームは、19 体の Cursor Sub Agent が **共通思想** �
 | **テスト必須** | 領域に応じた `scripts/test-*.mjs` を実行し、結果を報告する。 |
 | **Review 必須** | マージ/コミット前に review-agent 観点（scope · AD · security）を満たす。 |
 | **Release 承認必須** | release-agent による Go/No-Go と Human Approval を経る。 |
+| **Supabase MCP** | Staging 専用 · `read_only=true` · Production MCP 禁止 · 手動承認 · 調査/確認/レビュー/SELECT 草案のみ — 正本 [AGENTS.md](../../AGENTS.md) §Supabase MCP · [.cursor/mcp/README.md](../../.cursor/mcp/README.md) |
 
 ---
 

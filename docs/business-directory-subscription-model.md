@@ -1,9 +1,10 @@
 # TASFUL Business Directory — サブスク掲載モデル
 
-**最終更新:** 2026-06-27  
+**最終更新:** 2026-07-04  
 **正本 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)  
-**状態:** 方針確定 · **Phase 6 Stripe 連携実装済**（Premium / 予約 / 決済代行は未着手）
+**状態:** 方針確定 · **Phase 6 Stripe 連携実装済**（Premium / 予約 / 決済代行は未着手）  
+**Future:** [business-directory-order-reservation-engine.md](./business-directory-order-reservation-engine.md)（掲載無料 · TASFUL 経由成果報酬 · **実装禁止**）
 
 ---
 
@@ -23,7 +24,19 @@ TASFUL の **店舗・販売** と **業務サービス** を、成約手数料�
 | **業務サービス** | 月額サブスク掲載料 | 本ドキュメントの対象 |
 | **Marketplace（商品マーケット）** | **成約手数料** | **既存方針維持** — Checkout · Connect · GMV |
 | **Platform / 案件・仕事** | **成約手数料** | **既存方針維持** — Connect · deal · 手数料ゲート |
-| **広告枠** | スポンサー掲載 · 上位表示 · PR 枠 | 将来 |
+| **広告枠** | スポンサー掲載 · 上位表示 · PR 枠 | 将来（[SPONSOR_ADS.md](./SPONSOR_ADS.md) · REL-F-13） |
+| **注文 · 予約 · 決済（Future）** | **TASFUL 経由のみ成果報酬** | 掲載無料 · 店頭/電話/他サービス経由は対象外 — [order-reservation-engine](./business-directory-order-reservation-engine.md) · REL-F-14 |
+
+### Future 収益モデル（Order / Reservation Engine · 実装禁止）
+
+| 項目 | Future 方針 |
+| --- | --- |
+| **掲載料** | **無料** |
+| **収益** | TASFUL 経由注文手数料 · TASFUL 経由予約手数料 · Premium（月額）· スポンサー掲載 |
+| **対象外** | 店頭決済 · 電話注文 · 他サービス経由 |
+| **共通化** | Business Directory · Builder · Platform で共通エンジン利用前提 |
+
+現行 AD-013（月額サブスク掲載プラン）は **MVP 方針として維持**。Future 着手時に ADR で移行方針を確定する。詳細: [business-directory-order-reservation-engine.md](./business-directory-order-reservation-engine.md)。
 
 ---
 

@@ -32,6 +32,8 @@ TASFUL のスクショ検証は **Screenshots QA Center**（`screenshots-viewer.
 ローカルでサーバー起動中ならフル URL でも可:  
 `http://127.0.0.1:5500/screenshots-viewer.html?search=問い合わせ`
 
+**新規 UI 実装レビュー**（Playwright · `reports/ui-review/` · `report.json`）は [review-mode.md](./review-mode.md) を正とする。
+
 ### 4. Gemini レビュー用画像は search URL で特定
 
 Gemini や人間レビューに出す画像は、ファイルパス直書きではなく **QA Center の search URL** で指す。

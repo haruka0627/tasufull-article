@@ -694,6 +694,60 @@ function resolveEffectiveRate(monthly: CreatorScoreMonthly): RateResult {
 
 **原則:** `creator_score_monthly.locked_at IS NOT NULL` の月は **直接 UPDATE 禁止** · adjustment 行で修正。
 
+### 6.5 Creator Clawback 運用ルール（v1 · 2026-06-28 追記）
+
+**正本:** [TLV_PRD.md](./TLV_PRD.md) §7.6 · [reports/tlv-payment-chargeback-clawback-design.md](../reports/tlv-payment-chargeback-clawback-design.md) ②–⑦ · [ADMIN_SYSTEM.md](./ADMIN_SYSTEM.md) §9.3
+
+**不変原則（v1）**
+
+| 項目 | 方針 |
+| --- | --- |
+| **`coin_balance`** | **≥ 0 固定**（DDL CHECK · 変更禁止） |
+| **negative balance** | **❌ 禁止** — shortfall は `payment_reversals.coins_shortfall` + wallet `frozen` |
+| **Connect 自動逆送金** | **v1 外** — payout 後は FinOps manual |
+
+**Creator 相殺フロー**
+
+```text
+chargeback / refund 確定
+  → apply_coin_clawback_for_payment（viewer coin + revenue adjustment）
+  → creator_score_events TS−20
+  → creators.payout_hold = true
+
+payout 前（未出金）
+  → 当月 creator 還元 **未振込分**から adjustment で相殺
+  → payout_log 生成時に net_payout 減算
+
+将来売上相殺（v1 · ネガティブ ledger なし）
+  → 回収残 = CB 按分 − 既出 adjustment
+  → 次回以降 payout batch で **控除累積**（FinOps 承認）
+  → 完済まで payout_hold 維持可
+  → Wallet / coin_balance には触れない
+
+payout 済み
+  → Stripe Connect manual recovery（FinOps Runbook）
+  → 回収不能 → account_review · payout_hold 継続 · Ops 還元停止判断
+```
+
+**payout_hold 連動**
+
+| トリガ | hold | 解除 |
+| --- | --- | --- |
+| dispute.created | 即時 | won → unlock · lost → 30d from last CB |
+| refund / CB lost | 30d | 相殺完了 + 30d + TS ゲート |
+| shortfall / wallet frozen | 解消まで | claw 完済 or FinOps 免除 |
+| collusion confirmed | 30〜180d | Ops PASS（[TLV_PRD.md](./TLV_PRD.md) §7.5） |
+
+**回収不能時（Creator）**
+
+1. `creators.payout_hold = true` 継続  
+2. `account_review = true`（metadata · Ops フラグ）  
+3. 還元 batch から **除外**  
+4. repeat / fraud → 還元永久停止 · アカウント閉鎖フロー（ADMIN §6.3 整合）  
+5. **利用規約・通知文案** — `TODO-LEGAL-CB-01`（`docs/TODO.md`）
+
+**Viewer shortfall（参考）:** claw 可能分のみ debit → `frozen` · createTip / 購入 RPC 拒否 — design §⑥
+
 ---
 
 ## 7. Score Event Emission
@@ -710,7 +764,8 @@ Score **計算式の実装は Score サービス担当**。本 Engine は **イ�
 | extension grant | ES | `EXTENSION_GRANTED` | streams.id |
 | extension tip（有効） | ES | `ES_EXTENSION_PARTICIPATION` | tips.id |
 | chat/active 閾値 | ES | `ES_CHAT_THRESHOLD` | streams.id |
-| fraud 確定 | TS | `SELF_GIFT_CONFIRMED` / `BOT_FRAUD_CONFIRMED` | tips.id |
+| fraud 確定 | TS | `SELF_GIFT_CONFIRMED` / `BOT_FRAUD_CONFIRMED` / `COLLUSION_CONFIRMED` | tips.id |
+| TS 回復 | TS | `TS_FALSE_POSITIVE_REVERSAL` / `TS_CLEAN_PERIOD_RECOVERY` / `TS_KYC_COMPLETED` / `TS_OPS_REVIEW_PASS` | trust case id |
 | chargeback | TS | `CHARGEBACK_RECEIVED` | payments.id |
 | DMCA | TS | `DMCA_STRIKE` | trust case id |
 
@@ -746,7 +801,7 @@ Score ワーカーが `creator_score_daily` / `creators.fs_live` を更新。
 | `tlv-create-coin-purchase` | `supabase/functions/tlv-create-coin-purchase/` | POST | PI 開始 · 見積もり | **Phase 2 実装済** |
 | `tlv-payment-webhook` | `supabase/functions/tlv-payment-webhook/` | POST webhook | 購入確定 · 冪等 | **Phase 2 実装済** |
 | `tlv-create-tip` | `supabase/functions/tlv-create-tip/` | POST | tip · lot · gauge | **Phase 2 実装済** |
-| `tlv-e2e-simulate-payment` | `supabase/functions/tlv-e2e-simulate-payment/` | POST | E2E テスト用 | **Phase 2 実装済** |
+| ~~`tlv-e2e-simulate-payment`~~ | （削除済み） | — | 旧 E2E 決済シミュレーター | **ローカル作業ツリーから削除済み** · 本番決済は署名検証済み `tlv-payment-webhook` のみ · Production 上の旧 Function 残存有無は **deploy 前に確認** |
 | `applyTipToGauge` | `_shared/tlv-create-tip.ts` | internal | gauge 加算 | **Phase 2 実装済** |
 | `grantExtension` | `_shared/tlv-create-tip.ts` | internal | 30分延長 · events | **Phase 2 実装済** |
 | `createMonthlyPayout` | — | cron | 還元確定 | 未実装 |
@@ -884,13 +939,37 @@ PostgREST  → authenticated → SELECT only（RLS 適用後）
 | `tlv.handle_payment_dispute` | ✅ staging |
 | `tlv.payment_reversals` | ✅ DDL |
 | `revenue_ledger` adjustment 負値 | ✅ CHECK 緩和 |
-| Edge `charge.refunded` / `refund.updated` / `dispute.*` | ✅ 実装（deploy 待ち） |
+| Edge `charge.refunded` / `refund.updated` / `dispute.*` | ✅ 実装 · **Edge v4 production deploy 済** |
 
-**現行 webhook:** PI succeeded/failed/canceled + **refund/dispute P0 追加済**（Edge deploy で有効化）。
+**Stripe webhook 7 events 正本（Runbook §2.4 = コード）:** `payment_intent.succeeded` · `payment_intent.payment_failed` · `payment_intent.canceled` · `charge.refunded` · **`refund.updated`** · `charge.dispute.created` · `charge.dispute.closed` — **`checkout.session.*` は登録不要**（handler 未処理）。
 
-### 9.6 Production Readiness（開発フェーズ完了 · 2026-06-28）
+**現行 webhook:** PI succeeded/failed/canceled + refund/dispute P0 — **Edge v4 deploy 済** · Stripe Dashboard 登録は **運用ゲート待ち**。
 
-**状態:** 開発フェーズ **完了** → **Production Readiness Review 確定** · Production 変更 **未実施**
+### 9.7 Payment Concurrency — Lock Order · Deadlock · Double Spend（2026-06-28）
+
+**正本:** [PAYMENT_ENGINE.md](./PAYMENT_ENGINE.md) · **監査:** [payment-lock-order-review.md](../reports/payment-lock-order-review.md)
+
+| ルール | 要点 |
+| --- | --- |
+| **Lock Order** | ① Wallet → ② FIFO lots → ③ reversals → ④ wallet_ledger → ⑤ revenue_ledger → ⑥ creator score → Commit |
+| **Deadlock** | 全 RPC 同一順 · 複数 wallet 同時 lock 禁止 · TX 内外部 API 禁止 |
+| **Double Spend** | 残高判定は **Wallet `FOR UPDATE` 後のみ** |
+
+**冪等例外（Wallet 前可）:** `payment_provider_events` → `payments` の `FOR UPDATE`（PAYMENT_ENGINE §2.2）。
+
+**RPC レビュー:** `create_tip_transaction` · `handle_payment_refund` · `handle_payment_dispute` — staging PASS · 順序差分 **TODO-LOCK-*** · **Production Go 追加 blocker なし**。
+
+### 9.6 Production Readiness（**Development Complete** · Release Operations · 2026-06-28）
+
+**状態:** 開発・設計・実装・監査フェーズ **完了** → **Release Operations フェーズ** · Production 変更 **未実施**（Runbook 手順のみ）
+
+**監査正本:** [payment-production-final-audit.md](../reports/payment-production-final-audit.md) · Go Readiness Final Review · [payment-production-release-execution.md](../reports/payment-production-release-execution.md)
+
+| 結論 | 内容 |
+| --- | --- |
+| 実装 Blocker | **0** |
+| Production Go を止める要因 | **運用ゲートのみ** |
+| 以降 | Runbook オペレーションのみ · 新規設計レビュー / TODO 追加 **禁止**（障害発生時のみ再開） |
 
 **正本 Runbook:** [reports/tlv-payment-production-readiness.md](../reports/tlv-payment-production-readiness.md)
 
@@ -902,7 +981,13 @@ PostgREST  → authenticated → SELECT only（RLS 適用後）
 | Go/No-Go Checklist | Pre-release · Release day · Post-release 24h |
 | FinOps Runbook | payout 後 clawback · frozen · manual_finops |
 
-**Production Go/No-Go（現時点）:** **No-Go** — migration · RLS production · Edge deploy · Stripe webhook 未実施
+**Production Go/No-Go（現時点）:** **No-Go（運用）** — Release Operations Step 1〜3 · Go Approval **未完了**（2026-06-28 execution）
+
+| 項目 | 状態 |
+| --- | --- |
+| 開発フェーズ | **完了** |
+| Release Operations | Step 0 PASS · Step 1-3 FAIL · Step 3b PASS · Go Approval **No-Go** |
+| 再開条件 | Backup 記録 · PITR 方針 · Stripe 確認 · **Go Approval** → Runbook Step 5 以降 |
 
 ---
 
@@ -1111,6 +1196,7 @@ invoice.paid
 
 | 日付 | 版 | 内容 |
 | --- | --- | --- |
+| 2026-06-28 | 1.7.1 | §6.5 Creator Clawback 運用 · §7.1 collusion/TS recovery events（Design Audit 追補 · Wallet マイナス禁止維持） |
 | 2026-06-28 | 1.7.0 | §9.6 Production Readiness Review 確定（reports/tlv-payment-production-readiness.md） |
 | 2026-06-28 | 1.6.6 | §9.5 TODO-06 実装完了 · staging検証済 |
 | 2026-06-28 | 1.6.3 | RLS migration staging 適用 · 30/30 RLS test PASS |

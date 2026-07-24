@@ -1,23 +1,51 @@
 # ローカル開発・確認手順
 
-TasuFull フロントのローカル確認は **Cloudflare Pages 相当の dist** を **`http://127.0.0.1:8788/`** で配信する運用に統一します。
+TasuFull フロントのローカル確認は **Cloudflare Pages 相当の dist** を **Wrangler Pages Dev**（`npm run dev`）で **`http://127.0.0.1:8788/`** に統一します。
+
+## 標準開発サーバー（必読）
+
+| 項目 | 値 |
+|------|-----|
+| 起動コマンド | **`npm run dev`**（Wrangler Pages Dev） |
+| 標準 URL | **`http://127.0.0.1:8788`** |
+| 配信元 | `deploy/cloudflare/dist/` |
+| バインド | `127.0.0.1:8788` |
+
+### 案内してはいけないもの
+
+エージェント・ドキュメント・完了報告では、以下を **案内・推奨しない**:
+
+- `localhost:5173` / `127.0.0.1:5173`
+- Vite 開発 URL（5173 系）
+- `npm run dev:vite`
+
+5173 は Vite 専用ポートで、**このプロジェクトの通常ローカル開発では使用しません**。
+
+### Talk · Playwright · UI 確認
+
+**Talk ページ**（`talk-home.html` 等）の手動確認、**Playwright** キャプチャ / verify、スクリーンショット、完了報告は **必ず `http://127.0.0.1:8788` 配下** を使用してください。
+
+例: `http://127.0.0.1:8788/talk-home.html`
 
 | 用途 | 標準 URL |
 |------|----------|
 | 手動ブラウザ確認 | `http://127.0.0.1:8788/` |
 | HP レビュー（IWASHO / company） | `http://127.0.0.1:8788/iwasho/` 等 |
 | UI レビュー | `http://127.0.0.1:8788/<page>.html` |
+| Talk ホーム | `http://127.0.0.1:8788/talk-home.html` |
 | Playwright キャプチャ / verify | 自動検出 → **8788**（`scripts/lib/dev-server-url.mjs`） |
 | smoke test | `npm run smoke:pages` → **8788** |
 
-**使用しない:** `npm run dev:vite`（5173）、Live Server 5500、`file://` 直開き。
+**UI レビュー運用（Screenshot / Manual / Interactive）:** [review-mode.md](./review-mode.md)
+
+**使用しない:** Live Server 5500、`file://` 直開き、VS Code Preview、**5173 / Vite URL**。
 
 ---
 
 ## 前提
 
 - Node.js 18+
-- リポジトリルート: `c:\Users\rubih\tasufull-article`
+- 作業ディレクトリ: **リポジトリルート**（本ファイル `docs/local-dev.md` の親の親）
 - Supabase 設定: ルートの `chat-supabase-config.js`（例: `chat-supabase-config.example.js` をコピー）
 
 ---
@@ -25,7 +53,7 @@ TasuFull フロントのローカル確認は **Cloudflare Pages 相当の dist*
 ## 初回セットアップ
 
 ```powershell
-cd c:\Users\rubih\tasufull-article
+cd <repository-root>
 npm install
 ```
 
@@ -47,9 +75,12 @@ npm run verify:pages-stage
 ```
 
 `TASFUL_*` は Dashboard → Settings → API の **Project URL** と **anon public** を使用します。  
-（本番 dist には `currentUserId` / `me` / `u_me` は含まれません。）
+Production / Staging の使い分け: **[supabase-environments.md](./supabase-environments.md)**（Staging ref `ahlxuyvhzqdqaojiywmu` · Production `ddojquacsyqesrjhcvmn`）。
 
 ソースを編集したら **必ず `npm run build:pages` を再実行**してから確認してください。
+
+**Pricing Catalog 変更時:** JSON 編集 → `node scripts/generate-pricing-config.mjs` → `npm run verify:pricing-catalog` → build。  
+**CF_PAGES / Preview / Production の env guard:** [pricing-catalog.md §8](./pricing-catalog.md#8-build-運用cf_pages--env-guard) を参照。ローカルでは `CF_PAGES` 未設定で build する。
 
 ### 2. ローカルサーバー起動
 
@@ -189,15 +220,20 @@ npm run build:pages
 - ファイアウォールで `127.0.0.1:8788` をブロックしていないか確認
 - ソース変更後に `npm run build:pages` を忘れていないか確認
 
-### 5173 で開いてしまう
+### 5173 / localhost:5173 で開けない
 
-5173 は **Vite 専用（非推奨）** です。Gen AI 3D 等の Vite HMR が必要な場合のみ:
+**原因:** 5173 は Vite 専用ポートです。このプロジェクトの標準開発サーバーは **8788（Wrangler）** です。
+
+**対処:**
 
 ```powershell
-npm run dev:vite
+npm run build:pages
+npm run dev
 ```
 
-通常の HP / UI / 市場 / Talk / Builder 確認は **8788 + wrangler** を使用してください。
+ブラウザ: **http://127.0.0.1:8788/talk-home.html**（Talk 等すべて 8788 配下）
+
+`npm run dev:vite` や 5173 URL は **通常の HP / UI / 市場 / Talk / Builder 確認では使いません**。
 
 ### `npx wrangler` が初回だけ遅い
 

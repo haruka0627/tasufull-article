@@ -16,6 +16,7 @@ Builder AI は **建設・リフォーム現場業務 AI**（チャット AI で
 | **Builder 製品** | Production Ready v1.0 · RELEASE FROZEN |
 | **Builder AI 画面** | `builder/builder-ai.html` + `builder/builder-ai-*.js` |
 | **surface** | `builder_ai`（Gateway 経由） |
+| **課金** | サブスク · Contact Reveal · Provider Boost · **Credits（Future）** — [BUILDER_MONETIZATION.md](./BUILDER_MONETIZATION.md) · [BUILDER_PROVIDER_LISTING.md](./BUILDER_PROVIDER_LISTING.md) · [BUILDER_CREDITS.md](./BUILDER_CREDITS.md) |
 | **Vision** | **Gemini Vision** — 既存 `gemini-chat` Edge（Gateway `attachments`） |
 
 ### 育成方向（3 柱）
@@ -337,6 +338,10 @@ Builder AI は **「AI を売る」** のではなく **現場業務効率化プ
 | 項目 | 状態 | 参照 |
 | --- | --- | --- |
 | **Gemini Live Phase 4-B**（WebSocket · ephemeral token · 真 Live） | 📋 未着手 | [builder-ai-gemini-live-field-diagnosis-backlog.md](../builder-ai-gemini-live-field-diagnosis-backlog.md) · `reports/builder-ai-live-phase4-plan.md` §4-B |
+| **条件検索**（案件 · ワーカー · 業者 · DB フィルタ + AI 補助） | P0 ✅ · P1 ✅ · P2 📋 | [BUILDER_AI_CONDITIONAL_SEARCH.md](./BUILDER_AI_CONDITIONAL_SEARCH.md) · `builder-search-repository.js` |
+| **Monetization / Contact Reveal** | 📋 設計 Draft | [BUILDER_MONETIZATION.md](./BUILDER_MONETIZATION.md) · [reports/builder-monetization-design.md](../reports/builder-monetization-design.md) |
+| **Provider Listing / Sponsored Visibility** | 📋 設計 Draft | [BUILDER_PROVIDER_LISTING.md](./BUILDER_PROVIDER_LISTING.md) · [reports/builder-provider-listing-design.md](../reports/builder-provider-listing-design.md) |
+| **Builder Credits（Future）** | 📋 設計 Draft | [BUILDER_CREDITS.md](./BUILDER_CREDITS.md) · [reports/builder-credits-design.md](../reports/builder-credits-design.md) |
 | **会計補助**（白/青 · インボイス · 確定申告） | 📋 将来 | 本 doc §育成方向 |
 
 ---
