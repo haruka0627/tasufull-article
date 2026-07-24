@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>退会・アカウント削除 | TASFUL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="account-delete.css">
+</head>
+<body class="dash-body" data-page="account-delete">
+  <div class="dash-app">
+    <div class="dash-sidebar__overlay" data-dash-overlay aria-hidden="true"></div>
+    <aside class="dash-sidebar" id="dashSidebar" aria-label="会員メニュー">
+      <div class="dash-sidebar__brand">
+        <a href="index-top.html" class="tasful-ai-logo dash-sidebar__logo" aria-label="TASFUL">
+          <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+          <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+        </a>
+      </div>
+      <nav class="dash-sidebar__nav" id="dashSidebarNav" aria-label="サイドナビ"></nav>
+    </aside>
+    <div class="dash-main">
+      <header class="dash-header dash-header--account">
+        <div class="dash-shell dash-header__inner">
+          <div class="dash-header__left">
+            <button type="button" class="dash-menu-btn" data-dash-menu aria-label="メニューを開く">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+            </button>
+            <a href="index-top.html" class="tasful-ai-logo dash-header__logo" aria-label="TASFUL">
+              <img src="images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+              <div class="tasful-ai-logo-text"><span class="main">TASFUL</span></div>
+            </a>
+          </div>
+          <div class="dash-header__actions">
+            <a href="talk-home.html?tab=chat" class="dash-header-link" aria-label="メッセージ">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span class="dash-header-link__label">メッセージ</span>
+              <span class="dash-header-link__badge" data-dash-msg-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="dashboard.html#dash-notices" class="dash-header-link" aria-label="通知">
+              <svg class="dash-header-link__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <span class="dash-header-link__label">通知</span>
+              <span class="dash-header-link__badge" data-dash-notice-badge hidden>0</span>
+            </a>
+            <span class="dash-header__sep" aria-hidden="true"></span>
+            <a href="profile-settings.html" class="dash-profile" aria-label="プロフィール">
+              <img class="dash-profile__avatar" data-dash-avatar src="https://placehold.co/64x64/f3ead4/967622?text=ME" width="40" height="40" alt="">
+              <span class="dash-profile__text">
+                <span class="dash-profile__name" data-dash-user-name>会員</span>
+                <span class="dash-profile__sub">個人・事業者</span>
+              </span>
+              <svg class="dash-profile__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main class="dash-content dash-shell">
+        <div class="acct-delete-page">
+          <nav class="acct-delete-breadcrumb" aria-label="パンくず">
+            <ol class="acct-delete-breadcrumb__list">
+              <li class="acct-delete-breadcrumb__item"><a href="profile-settings.html">マイページ</a></li>
+              <li class="acct-delete-breadcrumb__item"><span class="acct-delete-breadcrumb__current" aria-current="page">退会・アカウント削除</span></li>
+            </ol>
+          </nav>
+
+          <header class="acct-delete-head">
+            <h1 class="acct-delete-head__title">退会・アカウント削除</h1>
+            <p class="acct-delete-head__lead">退会を行うと、アカウント情報など各種サービスのデータが利用できなくなります。内容をご確認のうえ、ご判断ください。</p>
+          </header>
+
+          <div class="acct-delete-stack">
+            <section class="acct-delete-card acct-delete-card--warning" aria-labelledby="acctDeleteWarningTitle">
+              <div class="acct-delete-card__head">
+                <span class="acct-delete-card__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </span>
+                <h2 class="acct-delete-card__title" id="acctDeleteWarningTitle">退会すると、以下の情報が利用できなくなります</h2>
+              </div>
+              <ul class="acct-delete-list">
+                <li class="acct-delete-list__item">
+                  <svg class="acct-delete-list__glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  <span>プロフィール情報（表示名・画像・自己紹介 など）</span>
+                </li>
+                <li class="acct-delete-list__item">
+                  <svg class="acct-delete-list__glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  <span>取引履歴・サービス利用履歴</span>
+                </li>
+                <li class="acct-delete-list__item">
+                  <svg class="acct-delete-list__glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7"/><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/></svg>
+                  <span>掲載中のサービス・出品情報</span>
+                </li>
+                <li class="acct-delete-list__item">
+                  <svg class="acct-delete-list__glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <span>TASFUL TALK のメッセージ履歴・やり取り</span>
+                </li>
+                <li class="acct-delete-list__item">
+                  <svg class="acct-delete-list__glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></svg>
+                  <span>AIワークスペースの利用履歴・生成データ</span>
+                </li>
+              </ul>
+            </section>
+
+            <section class="acct-delete-card acct-delete-card--info" aria-labelledby="acctDeleteInfoTitle">
+              <div class="acct-delete-card__head">
+                <span class="acct-delete-card__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </span>
+                <h2 class="acct-delete-card__title" id="acctDeleteInfoTitle">ご注意ください</h2>
+              </div>
+              <p class="acct-delete-card__text">一部の取引・決済・不正対策に関する情報は、法令または運営上必要な範囲で一定期間保存される場合があります。</p>
+              <p class="acct-delete-card__text">退会後、同じメールアドレスですぐに再登録できない場合があります。</p>
+            </section>
+
+            <section class="acct-delete-card acct-delete-card--notice" aria-labelledby="acctDeleteNoticeTitle">
+              <div class="acct-delete-card__head">
+                <span class="acct-delete-card__icon" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </span>
+                <h2 class="acct-delete-card__title" id="acctDeleteNoticeTitle">現時点では、退会機能は準備中です</h2>
+              </div>
+              <p class="acct-delete-card__text">現在は退会機能を準備中です。</p>
+              <p class="acct-delete-card__text">正式リリース後、このページから退会申請を行えるようになります。</p>
+            </section>
+          </div>
+
+          <div class="acct-delete-actions">
+            <a href="profile-settings.html" class="dash-btn dash-btn--secondary acct-delete-btn--back">
+              <span aria-hidden="true">←</span>
+              戻る（プロフィール設定へ戻る）
+            </a>
+            <button type="button" class="dash-btn acct-delete-btn--disabled" disabled aria-disabled="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+              現在は準備中
+            </button>
+          </div>
+
+          <section class="acct-delete-faq" aria-labelledby="acctDeleteFaqTitle">
+            <h2 class="acct-delete-faq__title" id="acctDeleteFaqTitle">よくあるご質問</h2>
+            <div class="acct-delete-faq__list">
+              <details class="acct-delete-faq__item" data-acct-delete-faq>
+                <summary>退会するとデータは削除されますか？</summary>
+                <p class="acct-delete-faq__answer">退会手続き完了後、プロフィールや利用履歴など多くのデータは削除または閲覧できなくなります。ただし、法令や運営上必要な取引・決済記録は一定期間保存される場合があります。</p>
+              </details>
+              <details class="acct-delete-faq__item" data-acct-delete-faq>
+                <summary>同じメールアドレスで再登録できますか？</summary>
+                <p class="acct-delete-faq__answer">退会後、同じメールアドレスですぐに再登録できない場合があります。詳細はお問い合わせよりご確認ください。</p>
+              </details>
+            </div>
+            <a class="acct-delete-help-link" href="/help/account-delete/">
+              退会に関するヘルプを見る
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="dashboard-guard.js"></script>
+  <script src="member-profile.js"></script>
+  <script src="member-auth.js"></script>
+  <script src="dashboard-data.js"></script>
+  <script src="dashboard.js"></script>
+  <script src="account-delete.js"></script>
+</body>
+</html>

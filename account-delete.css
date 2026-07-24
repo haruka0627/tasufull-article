@@ -1,0 +1,328 @@
+/* 退会・アカウント削除ページ（account-delete.html） */
+
+.acct-delete-page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding-bottom: 2.5rem;
+}
+
+.acct-delete-breadcrumb {
+  margin: 0 0 1rem;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.acct-delete-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.acct-delete-breadcrumb__item + .acct-delete-breadcrumb__item::before {
+  content: ">";
+  margin-right: 0.5rem;
+  color: #94a3b8;
+}
+
+.acct-delete-breadcrumb a {
+  color: #64748b;
+  text-decoration: none;
+}
+
+.acct-delete-breadcrumb a:hover {
+  color: #334155;
+  text-decoration: underline;
+}
+
+.acct-delete-breadcrumb__current {
+  color: #334155;
+  font-weight: 600;
+}
+
+.acct-delete-head {
+  margin-bottom: 1.5rem;
+}
+
+.acct-delete-head__title {
+  margin: 0 0 0.65rem;
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  font-weight: 800;
+  line-height: 1.25;
+  color: #0f172a;
+}
+
+.acct-delete-head__lead {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: #475569;
+}
+
+.acct-delete-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.acct-delete-card {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 1.125rem 1.25rem;
+}
+
+.acct-delete-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
+}
+
+.acct-delete-card__icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  margin-top: 0.1rem;
+}
+
+.acct-delete-card__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.acct-delete-card--warning {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.acct-delete-card--warning .acct-delete-card__icon {
+  color: #dc2626;
+}
+
+.acct-delete-card--warning .acct-delete-card__title {
+  color: #991b1b;
+}
+
+.acct-delete-card--info {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.acct-delete-card--info .acct-delete-card__icon {
+  color: #2563eb;
+}
+
+.acct-delete-card--info .acct-delete-card__title {
+  color: #1e40af;
+}
+
+.acct-delete-card--notice {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.acct-delete-card--notice .acct-delete-card__icon {
+  color: #d97706;
+}
+
+.acct-delete-card--notice .acct-delete-card__title {
+  color: #92400e;
+}
+
+.acct-delete-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.acct-delete-list__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #334155;
+}
+
+.acct-delete-list__glyph {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-top: 0.15rem;
+  color: #64748b;
+}
+
+.acct-delete-card__text {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #334155;
+}
+
+.acct-delete-card__text + .acct-delete-card__text {
+  margin-top: 0.65rem;
+}
+
+.acct-delete-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.acct-delete-actions .dash-btn {
+  min-width: min(100%, 220px);
+  min-height: 44px;
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+}
+
+.acct-delete-btn--back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+}
+
+.acct-delete-btn--disabled,
+.acct-delete-btn--disabled:disabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: #e2e8f0;
+  border-color: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 1;
+}
+
+.acct-delete-faq {
+  margin-top: 2.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.acct-delete-faq__title {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.acct-delete-faq__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.acct-delete-faq__item {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.acct-delete-faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #0f172a;
+  cursor: pointer;
+  list-style: none;
+}
+
+.acct-delete-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.acct-delete-faq__item summary::after {
+  content: "";
+  flex-shrink: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #64748b;
+  border-bottom: 2px solid #64748b;
+  transform: rotate(45deg);
+  transition: transform 0.15s ease;
+}
+
+.acct-delete-faq__item[open] summary::after {
+  transform: rotate(-135deg);
+  margin-top: 0.2rem;
+}
+
+.acct-delete-faq__answer {
+  padding: 0 1rem 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.acct-delete-help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.acct-delete-help-link:hover {
+  text-decoration: underline;
+}
+
+body[data-page="account-delete"] .dash-nav-link.is-active {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+body[data-page="account-delete"] .dash-nav-link.is-active svg {
+  color: #dc2626;
+}
+
+@media (max-width: 767px) {
+  .acct-delete-page {
+    padding-bottom: 1.5rem;
+  }
+
+  .acct-delete-card {
+    padding: 1rem;
+  }
+
+  .acct-delete-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .acct-delete-actions .dash-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .acct-delete-page {
+    max-width: 100%;
+  }
+}

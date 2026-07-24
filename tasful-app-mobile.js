@@ -56,6 +56,8 @@
     "board-project-detail.html",
     "board-thread.html",
     "board-projects.html",
+    "mvp-project-new.html",
+    "mvp-notifications.html",
     "public-board-detail.html",
     "chat-detail.html",
     "platform-chat-fee-pay.html",
