@@ -32,6 +32,11 @@
 | [PROJECT_STATUS.md](./PROJECT_STATUS.md) | **現状スナップショット**（製品別ステータス・直近コミット） |
 | [commercial-prep-inventory-2026-07.md](./commercial-prep-inventory-2026-07.md) | **商用前整理棚卸し**（2026-07-05 · Future/保留の分類） |
 | [builder-calendar-hub-primary-completion.md](./builder-calendar-hub-primary-completion.md) | **Builder Calendar Hub Primary 完了**（Go） |
+| [builder-calendar-mainline-plan.md](./builder-calendar-mainline-plan.md) | **Builder Calendar 本実装計画**（完了済 · 参照用） |
+| [builder-calendar-hub-mvp-integration-design.md](./builder-calendar-hub-mvp-integration-design.md) | **Hub Calendar / MVP Talk 統合方針**（CAL-MAIN-05 · 設計） |
+| [builder-calendar-mvp-write-stop-design.md](./builder-calendar-mvp-write-stop-design.md) | **MVP write 停止条件と Hub 正本化範囲**（CAL-MAIN-09 · 設計） |
+| [builder-calendar-assignment-jsonb-design.md](./builder-calendar-assignment-jsonb-design.md) | **assignment jsonb + MVP 通知縮小**（CAL-MAIN-12 · 設計） |
+| [builder-calendar-assignment-staging-runbook.md](./builder-calendar-assignment-staging-runbook.md) | **Staging assignment 手動 Migration · partner RPC 設計**（CAL-MAIN-14） |
 | [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md) | **リリース前 1 枚サマリー**（完成 / 残タスク / P2 以下） |
 | [TODO.md](./TODO.md) | **次にやること**（優先順 · 担当領域） |
 | [ROADMAP.md](./ROADMAP.md) | 中長期フェーズ · 展開方針（AD-011）· UI/UX（AD-012）· Business Directory（AD-013）· **Platform Vision（AD-014）** |
