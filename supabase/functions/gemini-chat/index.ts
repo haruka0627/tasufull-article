@@ -5,9 +5,9 @@ import {
   normalizeAttachments,
 } from "../_shared/ai-attachments.ts";
 import {
-  enforceWorkspaceQuotaEntry,
-  finalizeWorkspaceQuotaConsume,
-} from "../_shared/ai-workspace-quota.ts";
+  enforceGuardChatEntry,
+  finalizeGuardChatConsume,
+} from "../_shared/ai-usage-guard.ts";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE =
@@ -514,7 +514,7 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "message is required", reply: "" }, 400, req);
   }
 
-  const quotaEntry = await enforceWorkspaceQuotaEntry(req, body);
+  const quotaEntry = await enforceGuardChatEntry(req, body);
   if (quotaEntry.blocked) return quotaEntry.blocked;
 
   const intent = resolveIntent(body.intent, message, body.mode);
@@ -548,7 +548,7 @@ Deno.serve(async (req) => {
     const outcome = await callGeminiWithRetry(geminiUrl, geminiPayload);
 
     if (outcome.ok) {
-      await finalizeWorkspaceQuotaConsume(body);
+      await finalizeGuardChatConsume(body);
       return jsonResponse(
         {
           reply: outcome.reply,

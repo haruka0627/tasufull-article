@@ -6,9 +6,9 @@ import {
   normalizeAttachments,
 } from "../_shared/ai-attachments.ts";
 import {
-  enforceWorkspaceQuotaEntry,
-  finalizeWorkspaceQuotaConsume,
-} from "../_shared/ai-workspace-quota.ts";
+  enforceGuardChatEntry,
+  finalizeGuardChatConsume,
+} from "../_shared/ai-usage-guard.ts";
 
 type HistoryItem = { role?: string; content?: string };
 
@@ -76,7 +76,7 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "message is required", reply: "" }, 400);
   }
 
-  const quotaEntry = await enforceWorkspaceQuotaEntry(req, body);
+  const quotaEntry = await enforceGuardChatEntry(req, body);
   if (quotaEntry.blocked) return quotaEntry.blocked;
 
   try {
@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
         res.ok ? 502 : res.status >= 400 && res.status < 500 ? res.status : 502
       );
     }
-    await finalizeWorkspaceQuotaConsume(body);
+    await finalizeGuardChatConsume(body);
     return jsonResponse({ reply, usedOpenAi: true, model: OPENAI_MODEL });
   } catch (err) {
     return jsonResponse(

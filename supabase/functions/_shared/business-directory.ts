@@ -4,6 +4,11 @@
  */
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { corsHeadersFor } from "./cors.ts";
+import { resolveEffectivePlanCode } from "./business-directory-plans.ts";
+
+export const BD_PHOTO_BUCKET = "business-directory";
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 
 export const LISTING_TYPES = ["shop_retail", "business_service"] as const;
 export const LISTING_STATUSES = [
@@ -19,11 +24,18 @@ export const LISTING_STATUSES = [
 export type ListingStatus = (typeof LISTING_STATUSES)[number];
 export type ListingType = (typeof LISTING_TYPES)[number];
 
+const MEDIA_EDITABLE_STATUSES = new Set<ListingStatus>([
+  "draft",
+  "rejected",
+  "published",
+  "unpublished",
+]);
+
 /** Service-layer allowed status transitions (strict + ops restore) */
 export const ALLOWED_STATUS_TRANSITIONS: Readonly<Record<ListingStatus, readonly ListingStatus[]>> = {
   draft: ["review_requested"],
   review_requested: ["published", "rejected"],
-  published: ["suspended", "unpublished"],
+  published: ["suspended", "unpublished", "review_requested"],
   rejected: ["draft"],
   suspended: ["review_requested", "published"],
   unpublished: ["review_requested", "published"],
@@ -261,6 +273,8 @@ export function slugify(input: string): string {
   return base || "listing";
 }
 
+export type ProfileFaqItem = { q: string; a: string };
+
 export type DraftListingInput = {
   listing_type?: string;
   plan_code?: string;
@@ -280,11 +294,48 @@ export type DraftListingInput = {
   address_line1?: string;
   address_line2?: string | null;
   short_description?: string;
+  full_description?: string | null;
+  seo_title?: string | null;
+  meta_description?: string | null;
+  faq_items?: ProfileFaqItem[];
+  recommended_uses?: string[];
   shop_sales_genre?: string | null;
   service_summary?: string | null;
   price_range_text?: string | null;
   terms_accepted?: boolean;
 };
+
+function trimProfileText(value: unknown, maxLen: number): string {
+  return String(value ?? "").trim().slice(0, maxLen);
+}
+
+export function normalizeProfileFaqItems(value: unknown): ProfileFaqItem[] {
+  if (value === undefined || value === null) return [];
+  if (!Array.isArray(value)) {
+    throw new BusinessDirectoryError("validation_error", "faq_items must be an array", 400);
+  }
+  const items = value
+    .map((raw) => {
+      const row = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+      const q = trimProfileText(row.q, 120);
+      const a = trimProfileText(row.a, 600);
+      if (!q && !a) return null;
+      return { q: q || "ご質問", a: a || "詳細はお問い合わせください。" };
+    })
+    .filter(Boolean) as ProfileFaqItem[];
+  return items.slice(0, 5);
+}
+
+export function normalizeRecommendedUses(value: unknown): string[] {
+  if (value === undefined || value === null) return [];
+  if (!Array.isArray(value)) {
+    throw new BusinessDirectoryError("validation_error", "recommended_uses must be an array", 400);
+  }
+  return value
+    .map((u) => trimProfileText(u, 120))
+    .filter(Boolean)
+    .slice(0, 5);
+}
 
 function validateListingType(v: string): ListingType {
   if (!LISTING_TYPES.includes(v as ListingType)) {
@@ -348,25 +399,42 @@ function validateDraftInput(body: DraftListingInput, partial = false): Record<st
 }
 
 function profileFromDraft(body: DraftListingInput, listingId: string): Record<string, unknown> | null {
-  const company = pickString(body.company_name);
-  if (!company && body.company_name === undefined) return null;
-  return {
-    listing_id: listingId,
-    company_name: company,
-    contact_name: pickString(body.contact_name),
-    contact_email: pickString(body.contact_email),
-    contact_phone: pickString(body.contact_phone),
-    postal_code: pickString(body.postal_code) || null,
-    prefecture: pickString(body.prefecture),
-    city: pickString(body.city),
-    address_line1: pickString(body.address_line1),
-    address_line2: pickString(body.address_line2) || null,
-    short_description: pickString(body.short_description),
-    shop_sales_genre: pickString(body.shop_sales_genre) || null,
-    service_summary: pickString(body.service_summary) || null,
-    price_range_text: pickString(body.price_range_text) || null,
-    terms_accepted_at: body.terms_accepted ? new Date().toISOString() : null,
-  };
+  const row: Record<string, unknown> = { listing_id: listingId };
+
+  if (body.company_name !== undefined) row.company_name = pickString(body.company_name);
+  if (body.contact_name !== undefined) row.contact_name = pickString(body.contact_name);
+  if (body.contact_email !== undefined) row.contact_email = pickString(body.contact_email);
+  if (body.contact_phone !== undefined) row.contact_phone = pickString(body.contact_phone);
+  if (body.postal_code !== undefined) row.postal_code = pickString(body.postal_code) || null;
+  if (body.prefecture !== undefined) row.prefecture = pickString(body.prefecture);
+  if (body.city !== undefined) row.city = pickString(body.city);
+  if (body.address_line1 !== undefined) row.address_line1 = pickString(body.address_line1);
+  if (body.address_line2 !== undefined) row.address_line2 = pickString(body.address_line2) || null;
+  if (body.short_description !== undefined) row.short_description = pickString(body.short_description);
+  if (body.shop_sales_genre !== undefined) row.shop_sales_genre = pickString(body.shop_sales_genre) || null;
+  if (body.service_summary !== undefined) row.service_summary = pickString(body.service_summary) || null;
+  if (body.price_range_text !== undefined) row.price_range_text = pickString(body.price_range_text) || null;
+  if (body.terms_accepted !== undefined) {
+    row.terms_accepted_at = body.terms_accepted ? new Date().toISOString() : null;
+  }
+  if (body.full_description !== undefined) {
+    row.full_description = trimProfileText(body.full_description, 8000) || null;
+  }
+  if (body.seo_title !== undefined) {
+    row.seo_title = trimProfileText(body.seo_title, 60) || null;
+  }
+  if (body.meta_description !== undefined) {
+    row.meta_description = trimProfileText(body.meta_description, 160) || null;
+  }
+  if (body.faq_items !== undefined) {
+    row.faq_items = normalizeProfileFaqItems(body.faq_items);
+  }
+  if (body.recommended_uses !== undefined) {
+    row.recommended_uses = normalizeRecommendedUses(body.recommended_uses);
+  }
+
+  const patchKeys = Object.keys(row).filter((key) => key !== "listing_id");
+  return patchKeys.length > 0 ? row : null;
 }
 
 export async function appendAuditLog(
@@ -417,6 +485,592 @@ async function assertOwner(
   if (String(listing.owner_user_id) !== ownerUserId) {
     throw new BusinessDirectoryError("forbidden", "Not listing owner", 403);
   }
+}
+
+function assertMediaEditable(status: ListingStatus): void {
+  if (!MEDIA_EDITABLE_STATUSES.has(status)) {
+    throw new BusinessDirectoryError(
+      "invalid_state",
+      "Photos and business hours cannot be edited in current status",
+      400,
+    );
+  }
+}
+
+type ContentBundle = {
+  listing: Record<string, unknown>;
+  profile: Record<string, unknown> | null;
+  photos: Record<string, unknown>[];
+  business_hours: Record<string, unknown>[];
+};
+
+async function fetchLiveContentBundle(
+  supabase: SupabaseClient,
+  listingId: string,
+): Promise<ContentBundle> {
+  const listing = await getListingOrThrow(supabase, listingId);
+  const [{ data: profile }, { data: photos }, { data: hours }] = await Promise.all([
+    supabase.from("business_directory_profiles").select("*").eq("listing_id", listingId).maybeSingle(),
+    supabase.from("business_directory_photos").select("*").eq("listing_id", listingId).order("sort_order"),
+    supabase.from("business_directory_business_hours").select("*").eq("listing_id", listingId).order("sort_order"),
+  ]);
+  return {
+    listing: listing as Record<string, unknown>,
+    profile: (profile as Record<string, unknown>) ?? null,
+    photos: (photos ?? []) as Record<string, unknown>[],
+    business_hours: (hours ?? []) as Record<string, unknown>[],
+  };
+}
+
+function parsePendingContent(raw: unknown): ContentBundle | null {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+  const o = raw as Record<string, unknown>;
+  return {
+    listing: (o.listing && typeof o.listing === "object" ? o.listing : {}) as Record<string, unknown>,
+    profile: (o.profile && typeof o.profile === "object" ? o.profile : null) as Record<string, unknown> | null,
+    photos: Array.isArray(o.photos) ? (o.photos as Record<string, unknown>[]) : [],
+    business_hours: Array.isArray(o.business_hours) ? (o.business_hours as Record<string, unknown>[]) : [],
+  };
+}
+
+async function loadPendingContent(
+  supabase: SupabaseClient,
+  listingId: string,
+): Promise<ContentBundle | null> {
+  const { data, error } = await supabase
+    .from("business_directory_pending_updates")
+    .select("content_json")
+    .eq("listing_id", listingId)
+    .maybeSingle();
+  if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+  if (!data) return null;
+  return parsePendingContent(data.content_json);
+}
+
+async function savePendingContent(
+  supabase: SupabaseClient,
+  listingId: string,
+  content: ContentBundle,
+): Promise<void> {
+  const { error } = await supabase
+    .from("business_directory_pending_updates")
+    .upsert({
+      listing_id: listingId,
+      content_json: content,
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "listing_id" });
+  if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+}
+
+async function ensurePendingFromLive(
+  supabase: SupabaseClient,
+  listingId: string,
+): Promise<ContentBundle> {
+  const existing = await loadPendingContent(supabase, listingId);
+  if (existing) return existing;
+  const live = await fetchLiveContentBundle(supabase, listingId);
+  const pending: ContentBundle = {
+    listing: { ...live.listing },
+    profile: live.profile ? { ...live.profile } : null,
+    photos: live.photos.map((p) => ({ ...p })),
+    business_hours: live.business_hours.map((h) => ({ ...h })),
+  };
+  await savePendingContent(supabase, listingId, pending);
+  return pending;
+}
+
+async function clearPendingContent(supabase: SupabaseClient, listingId: string): Promise<void> {
+  const { error } = await supabase
+    .from("business_directory_pending_updates")
+    .delete()
+    .eq("listing_id", listingId);
+  if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+}
+
+function buildFullContentSnapshot(bundle: ContentBundle): Record<string, unknown> {
+  return {
+    listing_id: bundle.listing.id,
+    listing: bundle.listing,
+    profile: bundle.profile,
+    photos: bundle.photos,
+    business_hours: bundle.business_hours,
+    captured_at: new Date().toISOString(),
+  };
+}
+
+async function getOpenReviewRequest(
+  supabase: SupabaseClient,
+  listingId: string,
+): Promise<Record<string, unknown> | null> {
+  const { data, error } = await supabase
+    .from("business_directory_review_requests")
+    .select("*")
+    .eq("listing_id", listingId)
+    .eq("status", "open")
+    .order("submitted_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+  return (data as Record<string, unknown>) ?? null;
+}
+
+function isPubliclyVisibleListing(listing: Record<string, unknown>): boolean {
+  const status = String(listing.status);
+  if (status === "published") return true;
+  if (status === "review_requested" && listing.published_at) return true;
+  return false;
+}
+
+async function applyContentSnapshotToLive(
+  supabase: SupabaseClient,
+  listingId: string,
+  snapshot: Record<string, unknown>,
+): Promise<void> {
+  const listingPatch = (snapshot.listing && typeof snapshot.listing === "object"
+    ? snapshot.listing
+    : {}) as Record<string, unknown>;
+  const profilePatch = (snapshot.profile && typeof snapshot.profile === "object"
+    ? snapshot.profile
+    : null) as Record<string, unknown> | null;
+  const photos = Array.isArray(snapshot.photos) ? (snapshot.photos as Record<string, unknown>[]) : [];
+  const hours = Array.isArray(snapshot.business_hours)
+    ? (snapshot.business_hours as Record<string, unknown>[])
+    : [];
+
+  const allowedListingKeys = [
+    "listing_type", "category_id", "display_name", "slug",
+    "service_areas", "hp_mode", "website_url",
+  ];
+  const patch: Record<string, unknown> = {};
+  for (const key of allowedListingKeys) {
+    if (listingPatch[key] !== undefined) patch[key] = listingPatch[key];
+  }
+  if (Object.keys(patch).length > 0) {
+    const { error } = await supabase.from("business_directory_listings").update(patch).eq("id", listingId);
+    if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+  }
+
+  if (profilePatch) {
+    const { listing_id: _drop, id: _id, ...profileFields } = profilePatch;
+    const { error } = await supabase
+      .from("business_directory_profiles")
+      .upsert({ listing_id: listingId, ...profileFields }, { onConflict: "listing_id" });
+    if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+  }
+
+  const { error: delPhotosErr } = await supabase
+    .from("business_directory_photos")
+    .delete()
+    .eq("listing_id", listingId);
+  if (delPhotosErr) throw new BusinessDirectoryError("db_error", delPhotosErr.message, 500);
+
+  if (photos.length) {
+    const rows = photos.map((p, idx) => ({
+      listing_id: listingId,
+      kind: p.kind || (idx === 0 ? "cover" : "gallery"),
+      storage_bucket: p.storage_bucket || BD_PHOTO_BUCKET,
+      storage_path: p.storage_path,
+      alt_text: p.alt_text ?? null,
+      sort_order: Number(p.sort_order ?? idx),
+      is_primary: Boolean(p.is_primary ?? idx === 0),
+    }));
+    const { error: insPhotosErr } = await supabase.from("business_directory_photos").insert(rows);
+    if (insPhotosErr) throw new BusinessDirectoryError("db_error", insPhotosErr.message, 500);
+  }
+
+  const { error: delHoursErr } = await supabase
+    .from("business_directory_business_hours")
+    .delete()
+    .eq("listing_id", listingId);
+  if (delHoursErr) throw new BusinessDirectoryError("db_error", delHoursErr.message, 500);
+
+  if (hours.length) {
+    const rows = hours.map((h, idx) => ({
+      listing_id: listingId,
+      day_of_week: h.day_of_week ?? null,
+      opens_at: h.opens_at ?? null,
+      closes_at: h.closes_at ?? null,
+      is_closed: Boolean(h.is_closed ?? false),
+      note: h.note ?? null,
+      sort_order: Number(h.sort_order ?? idx),
+    }));
+    const { error: insHoursErr } = await supabase.from("business_directory_business_hours").insert(rows);
+    if (insHoursErr) throw new BusinessDirectoryError("db_error", insHoursErr.message, 500);
+  }
+}
+
+async function updatePublishedPendingListing(
+  supabase: SupabaseClient,
+  ownerUserId: string,
+  listingId: string,
+  body: DraftListingInput,
+): Promise<Record<string, unknown>> {
+  const listing = await getListingOrThrow(supabase, listingId);
+  await assertOwner(listing, ownerUserId);
+  if (String(listing.status) !== "published") {
+    throw new BusinessDirectoryError("invalid_state", "Not a published listing", 400);
+  }
+
+  const pending = await ensurePendingFromLive(supabase, listingId);
+  const validated = validateDraftInput(body, true);
+
+  for (const key of [
+    "listing_type", "category_id", "display_name", "slug",
+    "service_areas", "hp_mode", "website_url",
+  ]) {
+    if (validated[key] !== undefined) pending.listing[key] = validated[key];
+  }
+
+  const profilePatch = profileFromDraft(body, listingId);
+  if (profilePatch) {
+    pending.profile = { ...(pending.profile || {}), ...profilePatch };
+  }
+
+  await savePendingContent(supabase, listingId, pending);
+
+  await appendAuditLog(supabase, {
+    listingId,
+    actorUserId: ownerUserId,
+    actorRole: "owner",
+    action: "listing.pending_update",
+    fromStatus: "published",
+    toStatus: "published",
+  });
+
+  return listing as Record<string, unknown>;
+}
+
+function overlayOwnerDetailFromPending(
+  live: ContentBundle,
+  pending: ContentBundle | null,
+): { listing: Record<string, unknown>; profile: Record<string, unknown> | null; photos: Record<string, unknown>[]; business_hours: Record<string, unknown>[] } {
+  if (!pending) {
+    return {
+      listing: live.listing,
+      profile: live.profile,
+      photos: live.photos,
+      business_hours: live.business_hours,
+    };
+  }
+  return {
+    listing: { ...live.listing, ...pending.listing, id: live.listing.id, status: live.listing.status },
+    profile: pending.profile ? { ...live.profile, ...pending.profile } : live.profile,
+    photos: pending.photos.length ? pending.photos : live.photos,
+    business_hours: pending.business_hours.length ? pending.business_hours : live.business_hours,
+  };
+}
+
+function extensionForContentType(contentType: string): string {
+  if (contentType === "image/png") return "png";
+  if (contentType === "image/webp") return "webp";
+  return "jpg";
+}
+
+function decodeBase64Image(contentBase64: string): Uint8Array {
+  const raw = contentBase64.includes(",") ? contentBase64.split(",").pop()! : contentBase64;
+  const cleaned = raw.replace(/\s/g, "");
+  let binary: string;
+  try {
+    binary = atob(cleaned);
+  } catch {
+    throw new BusinessDirectoryError("validation_error", "content_base64 is invalid", 422);
+  }
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  if (!bytes.length) {
+    throw new BusinessDirectoryError("validation_error", "content_base64 is empty", 422);
+  }
+  if (bytes.length > MAX_PHOTO_BYTES) {
+    throw new BusinessDirectoryError("validation_error", "Image exceeds 5MB limit", 422);
+  }
+  return bytes;
+}
+
+function photoPublicUrl(supabase: SupabaseClient, bucket: string, path: string): string {
+  const { data } = supabase.storage.from(bucket).getPublicUrl(path);
+  return data?.publicUrl || "";
+}
+
+function enrichPhotoRow(
+  supabase: SupabaseClient,
+  row: Record<string, unknown>,
+): Record<string, unknown> {
+  const bucket = String(row.storage_bucket || BD_PHOTO_BUCKET);
+  const path = String(row.storage_path || "");
+  const publicUrl = path ? photoPublicUrl(supabase, bucket, path) : "";
+  return { ...row, public_url: publicUrl, url: publicUrl };
+}
+
+function enrichPhotos(
+  supabase: SupabaseClient,
+  rows: Record<string, unknown>[],
+): Record<string, unknown>[] {
+  return (rows ?? []).map((row) => enrichPhotoRow(supabase, row));
+}
+
+async function getMaxPhotosForListing(
+  supabase: SupabaseClient,
+  listing: Record<string, unknown>,
+): Promise<number> {
+  const planCode = resolveEffectivePlanCode(listing);
+  const { data, error } = await supabase
+    .from("business_directory_plan_features")
+    .select("max_photos")
+    .eq("plan_code", planCode)
+    .maybeSingle();
+  if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+  const max = Number(data?.max_photos);
+  return Number.isFinite(max) && max > 0 ? max : 1;
+}
+
+export async function uploadListingPhoto(
+  supabase: SupabaseClient,
+  ownerUserId: string,
+  listingId: string,
+  input: { content_base64: string; content_type: string; alt_text?: string | null },
+): Promise<Record<string, unknown>> {
+  let listing = await getListingOrThrow(supabase, listingId);
+  await assertOwner(listing, ownerUserId);
+
+  const status = String(listing.status) as ListingStatus;
+  if (status === "rejected") {
+    listing = await transitionListingStatus(supabase, listing, "draft", {
+      actorUserId: ownerUserId,
+      actorRole: "owner",
+      action: "listing.reopen_after_reject",
+    });
+  } else if (status === "published") {
+    const pending = await ensurePendingFromLive(supabase, listingId);
+    const contentType = pickString(input.content_type);
+    if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
+      throw new BusinessDirectoryError("validation_error", "Unsupported image type", 422);
+    }
+    const bytes = decodeBase64Image(pickString(input.content_base64));
+    const maxPhotos = await getMaxPhotosForListing(supabase, listing);
+    const currentCount = pending.photos.length;
+    if (currentCount >= maxPhotos) {
+      throw new BusinessDirectoryError("plan_limit", "Photo limit reached for current plan", 403);
+    }
+    const ext = extensionForContentType(contentType);
+    const objectPath = `${listingId}/pending/${crypto.randomUUID()}.${ext}`;
+    const { error: uploadErr } = await supabase.storage
+      .from(BD_PHOTO_BUCKET)
+      .upload(objectPath, bytes, { contentType, upsert: false });
+    if (uploadErr) {
+      throw new BusinessDirectoryError("storage_error", uploadErr.message, 500);
+    }
+    const sortOrder = currentCount;
+    const isPrimary = currentCount === 0;
+    const photo = {
+      id: `pending-${crypto.randomUUID()}`,
+      kind: isPrimary ? "cover" : "gallery",
+      storage_bucket: BD_PHOTO_BUCKET,
+      storage_path: objectPath,
+      alt_text: pickString(input.alt_text) || null,
+      sort_order: sortOrder,
+      is_primary: isPrimary,
+    };
+    pending.photos = [...pending.photos, photo];
+    await savePendingContent(supabase, listingId, pending);
+    return enrichPhotoRow(supabase, photo as Record<string, unknown>);
+  } else {
+    assertMediaEditable(status);
+  }
+
+  const contentType = pickString(input.content_type);
+  if (!ALLOWED_IMAGE_TYPES.has(contentType)) {
+    throw new BusinessDirectoryError("validation_error", "Unsupported image type", 422);
+  }
+  const bytes = decodeBase64Image(pickString(input.content_base64));
+
+  const { count, error: countErr } = await supabase
+    .from("business_directory_photos")
+    .select("id", { count: "exact", head: true })
+    .eq("listing_id", listingId);
+  if (countErr) throw new BusinessDirectoryError("db_error", countErr.message, 500);
+
+  const maxPhotos = await getMaxPhotosForListing(supabase, listing);
+  const currentCount = count ?? 0;
+  if (currentCount >= maxPhotos) {
+    throw new BusinessDirectoryError("plan_limit", "Photo limit reached for current plan", 403);
+  }
+
+  const ext = extensionForContentType(contentType);
+  const objectPath = `${listingId}/${crypto.randomUUID()}.${ext}`;
+  const { error: uploadErr } = await supabase.storage
+    .from(BD_PHOTO_BUCKET)
+    .upload(objectPath, bytes, { contentType, upsert: false });
+  if (uploadErr) {
+    throw new BusinessDirectoryError("storage_error", uploadErr.message, 500);
+  }
+
+  const sortOrder = currentCount;
+  const isPrimary = currentCount === 0;
+  const { data: photo, error: insertErr } = await supabase
+    .from("business_directory_photos")
+    .insert({
+      listing_id: listingId,
+      kind: isPrimary ? "cover" : "gallery",
+      storage_bucket: BD_PHOTO_BUCKET,
+      storage_path: objectPath,
+      alt_text: pickString(input.alt_text) || null,
+      sort_order: sortOrder,
+      is_primary: isPrimary,
+    })
+    .select("*")
+    .single();
+  if (insertErr || !photo) {
+    throw new BusinessDirectoryError("db_error", insertErr?.message || "photo insert failed", 500);
+  }
+
+  return enrichPhotoRow(supabase, photo as Record<string, unknown>);
+}
+
+export async function deleteListingPhoto(
+  supabase: SupabaseClient,
+  ownerUserId: string,
+  listingId: string,
+  photoId: string,
+): Promise<{ deleted: true }> {
+  let listing = await getListingOrThrow(supabase, listingId);
+  await assertOwner(listing, ownerUserId);
+
+  const status = String(listing.status) as ListingStatus;
+  if (status === "rejected") {
+    listing = await transitionListingStatus(supabase, listing, "draft", {
+      actorUserId: ownerUserId,
+      actorRole: "owner",
+      action: "listing.reopen_after_reject",
+    });
+  } else if (status === "published") {
+    const pending = await ensurePendingFromLive(supabase, listingId);
+    const idx = pending.photos.findIndex(
+      (p) => String(p.id) === photoId || String(p.storage_path) === photoId,
+    );
+    if (idx < 0) throw new BusinessDirectoryError("not_found", "Photo not found", 404);
+    const removed = pending.photos[idx];
+    const objectPath = String(removed.storage_path || "");
+    if (objectPath.startsWith(`${listingId}/pending/`)) {
+      await supabase.storage.from(BD_PHOTO_BUCKET).remove([objectPath]);
+    }
+    pending.photos = pending.photos.filter((_, i) => i !== idx);
+    if (pending.photos.length) {
+      pending.photos = pending.photos.map((p, i) => ({
+        ...p,
+        sort_order: i,
+        is_primary: i === 0,
+        kind: i === 0 ? "cover" : "gallery",
+      }));
+    }
+    await savePendingContent(supabase, listingId, pending);
+    return { deleted: true };
+  } else {
+    assertMediaEditable(status);
+  }
+
+  const { data: photo, error: fetchErr } = await supabase
+    .from("business_directory_photos")
+    .select("*")
+    .eq("id", photoId)
+    .eq("listing_id", listingId)
+    .maybeSingle();
+  if (fetchErr) throw new BusinessDirectoryError("db_error", fetchErr.message, 500);
+  if (!photo) throw new BusinessDirectoryError("not_found", "Photo not found", 404);
+
+  const bucket = String(photo.storage_bucket || BD_PHOTO_BUCKET);
+  const objectPath = String(photo.storage_path || "");
+  if (objectPath) {
+    await supabase.storage.from(bucket).remove([objectPath]);
+  }
+
+  const { error: delErr } = await supabase
+    .from("business_directory_photos")
+    .delete()
+    .eq("id", photoId)
+    .eq("listing_id", listingId);
+  if (delErr) throw new BusinessDirectoryError("db_error", delErr.message, 500);
+
+  const { data: remaining } = await supabase
+    .from("business_directory_photos")
+    .select("id")
+    .eq("listing_id", listingId)
+    .order("sort_order");
+  if (remaining?.length) {
+    await supabase
+      .from("business_directory_photos")
+      .update({ is_primary: false, kind: "gallery" })
+      .eq("listing_id", listingId);
+    await supabase
+      .from("business_directory_photos")
+      .update({ is_primary: true, kind: "cover", sort_order: 0 })
+      .eq("id", remaining[0].id);
+  }
+
+  return { deleted: true };
+}
+
+export async function saveBusinessHoursText(
+  supabase: SupabaseClient,
+  ownerUserId: string,
+  listingId: string,
+  hoursText: string,
+): Promise<Record<string, unknown>[]> {
+  let listing = await getListingOrThrow(supabase, listingId);
+  await assertOwner(listing, ownerUserId);
+
+  const status = String(listing.status) as ListingStatus;
+  if (status === "rejected") {
+    listing = await transitionListingStatus(supabase, listing, "draft", {
+      actorUserId: ownerUserId,
+      actorRole: "owner",
+      action: "listing.reopen_after_reject",
+    });
+  } else if (status === "published") {
+    const pending = await ensurePendingFromLive(supabase, listingId);
+    const text = String(hoursText ?? "").trim();
+    pending.business_hours = text
+      ? [{
+        day_of_week: null,
+        opens_at: null,
+        closes_at: null,
+        is_closed: false,
+        note: text,
+        sort_order: 0,
+      }]
+      : [];
+    await savePendingContent(supabase, listingId, pending);
+    return pending.business_hours;
+  } else {
+    assertMediaEditable(status);
+  }
+
+  const text = String(hoursText ?? "").trim();
+  const { error: delErr } = await supabase
+    .from("business_directory_business_hours")
+    .delete()
+    .eq("listing_id", listingId);
+  if (delErr) throw new BusinessDirectoryError("db_error", delErr.message, 500);
+
+  if (!text) return [];
+
+  const { data: row, error: insErr } = await supabase
+    .from("business_directory_business_hours")
+    .insert({
+      listing_id: listingId,
+      day_of_week: null,
+      opens_at: null,
+      closes_at: null,
+      is_closed: false,
+      note: text,
+      sort_order: 0,
+    })
+    .select("*")
+    .single();
+  if (insErr || !row) {
+    throw new BusinessDirectoryError("db_error", insErr?.message || "hours insert failed", 500);
+  }
+
+  return [row as Record<string, unknown>];
 }
 
 async function transitionListingStatus(
@@ -532,6 +1186,9 @@ export async function updateDraftListing(
   await assertOwner(listing, ownerUserId);
 
   const status = String(listing.status) as ListingStatus;
+  if (status === "published") {
+    return updatePublishedPendingListing(supabase, ownerUserId, listingId, body);
+  }
   if (!["draft", "rejected"].includes(status)) {
     throw new BusinessDirectoryError(
       "invalid_state",
@@ -572,29 +1229,11 @@ export async function updateDraftListing(
 
   const profilePatch = profileFromDraft(body, listingId);
   if (profilePatch) {
-    const { company_name, contact_name, contact_email, contact_phone, postal_code,
-      prefecture, city, address_line1, address_line2, short_description,
-      shop_sales_genre, service_summary, price_range_text, terms_accepted_at } = profilePatch;
-
+    const { listing_id: _listingId, ...patch } = profilePatch;
     const { error: profileErr } = await supabase
       .from("business_directory_profiles")
-      .upsert({
-        listing_id: listingId,
-        company_name,
-        contact_name,
-        contact_email,
-        contact_phone,
-        postal_code,
-        prefecture,
-        city,
-        address_line1,
-        address_line2,
-        short_description,
-        shop_sales_genre,
-        service_summary,
-        price_range_text,
-        terms_accepted_at: terms_accepted_at || undefined,
-      }, { onConflict: "listing_id" });
+      .update(patch)
+      .eq("listing_id", listingId);
     if (profileErr) {
       throw new BusinessDirectoryError("db_error", profileErr.message, 500);
     }
@@ -648,7 +1287,57 @@ export async function getOwnerListingDetail(
     .eq("listing_id", listingId)
     .order("sort_order");
 
-  return { listing, profile: profile ?? null, photos: photos ?? [] };
+  const { data: hours } = await supabase
+    .from("business_directory_business_hours")
+    .select("*")
+    .eq("listing_id", listingId)
+    .order("sort_order");
+
+  const { data: lastReject } = await supabase
+    .from("business_directory_review_requests")
+    .select("reject_reason_code, reject_reason_note, reviewed_at, request_type")
+    .eq("listing_id", listingId)
+    .eq("status", "rejected")
+    .eq("request_type", "initial_publish")
+    .order("reviewed_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const pendingRow = await loadPendingContent(supabase, listingId);
+  const openReview = await getOpenReviewRequest(supabase, listingId);
+  const liveBundle = {
+    listing,
+    profile: (profile as Record<string, unknown>) ?? null,
+    photos: (photos ?? []) as Record<string, unknown>[],
+    business_hours: (hours ?? []) as Record<string, unknown>[],
+  };
+
+  let overlaySource = pendingRow;
+  if (String(listing.status) === "review_requested" && openReview?.request_type === "content_update") {
+    overlaySource = parsePendingContent(openReview.snapshot_json);
+  }
+
+  const merged = overlayOwnerDetailFromPending(liveBundle, overlaySource);
+  const listingForOwner = {
+    ...listing,
+    ...merged.listing,
+    id: listing.id,
+    status: listing.status,
+    published_at: listing.published_at,
+    owner_user_id: listing.owner_user_id,
+  };
+
+  return {
+    listing: listingForOwner,
+    profile: merged.profile,
+    photos: enrichPhotos(supabase, merged.photos),
+    business_hours: merged.business_hours,
+    reject_reason: lastReject ?? null,
+    has_pending_update: Boolean(pendingRow),
+    content_update_review: openReview?.request_type === "content_update"
+      ? { status: openReview.status, request_type: openReview.request_type }
+      : null,
+  };
 }
 
 function buildListingSnapshot(listing: Record<string, unknown>, profile: unknown): Record<string, unknown> {
@@ -670,10 +1359,66 @@ export async function submitListingForReview(
   listingId: string,
   requestType: "initial_publish" | "content_update" = "initial_publish",
 ): Promise<Record<string, unknown>> {
-  const listing = await getListingOrThrow(supabase, listingId);
+  let listing = await getListingOrThrow(supabase, listingId);
   await assertOwner(listing, ownerUserId);
 
-  const from = String(listing.status) as ListingStatus;
+  let from = String(listing.status) as ListingStatus;
+  if (from === "rejected") {
+    listing = await transitionListingStatus(supabase, listing, "draft", {
+      actorUserId: ownerUserId,
+      actorRole: "owner",
+      action: "listing.reopen_after_reject",
+    });
+    from = "draft";
+  }
+
+  if (requestType === "content_update") {
+    if (from !== "published") {
+      throw new BusinessDirectoryError(
+        "invalid_state",
+        "content_update requires published listing",
+        400,
+      );
+    }
+    const pending = await loadPendingContent(supabase, listingId);
+    if (!pending) {
+      throw new BusinessDirectoryError(
+        "validation_error",
+        "No pending changes to submit for content update",
+        400,
+      );
+    }
+    const liveBundle = await fetchLiveContentBundle(supabase, listingId);
+    const publishedSnapshot = buildFullContentSnapshot(liveBundle);
+    const pendingSnapshot = buildFullContentSnapshot(pending);
+
+    const updated = await transitionListingStatus(supabase, listing, "review_requested", {
+      actorUserId: ownerUserId,
+      actorRole: "owner",
+      action: "listing.submit_content_update",
+      metadata: { request_type: "content_update" },
+    });
+
+    const { data: reviewReq, error: reviewErr } = await supabase
+      .from("business_directory_review_requests")
+      .insert({
+        listing_id: listingId,
+        request_type: "content_update",
+        status: "open",
+        submitted_by: ownerUserId,
+        snapshot_json: pendingSnapshot,
+        published_snapshot_json: publishedSnapshot,
+      })
+      .select("*")
+      .single();
+
+    if (reviewErr || !reviewReq) {
+      throw new BusinessDirectoryError("db_error", reviewErr?.message || "review insert failed", 500);
+    }
+
+    return { listing: updated, review_request: reviewReq };
+  }
+
   if (!["draft", "suspended", "unpublished"].includes(from)) {
     throw new BusinessDirectoryError(
       "invalid_state",
@@ -742,13 +1487,13 @@ export async function getPublicListingDetail(
   let q = supabase
     .from("business_directory_listings")
     .select("*")
-    .eq("slug", slug)
-    .eq("status", "published");
+    .eq("slug", slug);
 
   if (listingType) q = q.eq("listing_type", listingType);
 
-  const { data: listing, error } = await q.maybeSingle();
+  const { data: rows, error } = await q;
   if (error) throw new BusinessDirectoryError("db_error", error.message, 500);
+  const listing = (rows ?? []).find((row) => isPubliclyVisibleListing(row as Record<string, unknown>));
   if (!listing) throw new BusinessDirectoryError("not_found", "Published listing not found", 404);
 
   const listingId = String(listing.id);
@@ -764,7 +1509,7 @@ export async function getPublicListingDetail(
   return {
     listing,
     profile: profile ?? null,
-    photos: photos ?? [],
+    photos: enrichPhotos(supabase, (photos ?? []) as Record<string, unknown>[]),
     business_hours: hours ?? [],
     social_links: sns ?? [],
     tlv_videos: tlv ?? [],
@@ -840,12 +1585,24 @@ export async function approveListing(
     throw new BusinessDirectoryError("invalid_state", "Listing is not awaiting review", 400);
   }
 
+  const openReview = await getOpenReviewRequest(supabase, listingId);
+  const isContentUpdate = openReview?.request_type === "content_update";
+
   const review = await closeOpenReviewRequest(supabase, listingId, opsUserId, "approved");
   const note = pickString(options.note);
+
+  if (isContentUpdate) {
+    const snapshot = (review.snapshot_json && typeof review.snapshot_json === "object"
+      ? review.snapshot_json
+      : {}) as Record<string, unknown>;
+    await applyContentSnapshotToLive(supabase, listingId, snapshot);
+    await clearPendingContent(supabase, listingId);
+  }
+
   const updated = await transitionListingStatus(supabase, listing, "published", {
     actorUserId: opsUserId,
     actorRole: "ops",
-    action: "listing.approve",
+    action: isContentUpdate ? "listing.approve_content_update" : "listing.approve",
     metadata: note ? { approve_note: note } : {},
   });
 
@@ -866,7 +1623,25 @@ export async function rejectListing(
     throw new BusinessDirectoryError("invalid_state", "Listing is not awaiting review", 400);
   }
 
+  const openReview = await getOpenReviewRequest(supabase, listingId);
+  const isContentUpdate = openReview?.request_type === "content_update";
+
   const review = await closeOpenReviewRequest(supabase, listingId, opsUserId, "rejected", rejectReason);
+
+  if (isContentUpdate) {
+    await clearPendingContent(supabase, listingId);
+    const updated = await transitionListingStatus(supabase, listing, "published", {
+      actorUserId: opsUserId,
+      actorRole: "ops",
+      action: "listing.reject_content_update",
+      metadata: {
+        reject_reason_code: rejectReason.code ?? null,
+        keep_published: true,
+      },
+    });
+    return { listing: updated, review_request: review };
+  }
+
   const updated = await transitionListingStatus(supabase, listing, "rejected", {
     actorUserId: opsUserId,
     actorRole: "ops",
@@ -980,7 +1755,7 @@ export async function getOpsListingDetail(
   return {
     listing,
     profile: profile ?? null,
-    photos: photos ?? [],
+    photos: enrichPhotos(supabase, (photos ?? []) as Record<string, unknown>[]),
     business_hours: hours ?? [],
     social_links: sns ?? [],
     tlv_videos: tlv ?? [],

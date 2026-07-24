@@ -1,4 +1,9 @@
 import { GENAI_PLANS, type GenAiPlanId } from "./genai-plans.ts";
+import {
+  getPricingFixedAmount,
+  getPricingSku,
+  resolveStripePriceEnvKey,
+} from "./generated/tasful-pricing-config.ts";
 
 export type GenAiAddonPlanId = "genai_2d_live_300" | "genai_3d_generate_500";
 
@@ -14,27 +19,60 @@ export type GenAiCheckoutPlanDef = {
   orderType: string;
   lookupKey: string;
   stripeProductRef: string;
+  catalogSku?: string;
 };
 
-export const GENAI_ADDON_PLANS: Record<GenAiAddonPlanId, GenAiCheckoutPlanDef> = {
+const GENAI_ADDON_SKU_BY_PLAN: Record<GenAiAddonPlanId, string> = {
+  genai_2d_live_300: "tasful_ai_addon_2d_live_300",
+  genai_3d_generate_500: "tasful_ai_addon_3d_generate_500",
+};
+
+/** Checkout metadata not stored in catalog (legacy Stripe product / order types). */
+const ADDON_CHECKOUT_META: Record<
+  GenAiAddonPlanId,
+  { mode: GenAiCheckoutMode; orderType: string; lookupKey: string; stripeProductRef: string }
+> = {
   genai_2d_live_300: {
-    id: "genai_2d_live_300",
-    label: "TASFUL AI 2D Live",
-    amountJpy: 300,
     mode: "subscription",
     orderType: "genai_2d_live_subscription",
     lookupKey: "tasful_genai_2d_live_300",
     stripeProductRef: "prod_TASFUL_GENAI_2D_LIVE_300",
   },
   genai_3d_generate_500: {
-    id: "genai_3d_generate_500",
-    label: "TASFUL AI 3D Generate",
-    amountJpy: 500,
     mode: "payment",
     orderType: "genai_3d_ticket",
     lookupKey: "tasful_genai_3d_generate_500",
     stripeProductRef: "prod_TASFUL_GENAI_3D_GENERATE_500",
   },
+};
+
+function resolveAddonCheckoutMode(planId: GenAiAddonPlanId): GenAiCheckoutMode {
+  const skuId = GENAI_ADDON_SKU_BY_PLAN[planId];
+  const row = getPricingSku(skuId);
+  if (row?.billingType === "subscription") return "subscription";
+  return ADDON_CHECKOUT_META[planId].mode;
+}
+
+function buildGenAiAddonCheckoutPlan(planId: GenAiAddonPlanId): GenAiCheckoutPlanDef {
+  const skuId = GENAI_ADDON_SKU_BY_PLAN[planId];
+  const row = getPricingSku(skuId);
+  const meta = ADDON_CHECKOUT_META[planId];
+  const amountJpy = getPricingFixedAmount(skuId) ?? 0;
+  return {
+    id: planId,
+    label: String(row?.label || planId),
+    amountJpy,
+    mode: resolveAddonCheckoutMode(planId),
+    orderType: meta.orderType,
+    lookupKey: meta.lookupKey,
+    stripeProductRef: meta.stripeProductRef,
+    catalogSku: skuId,
+  };
+}
+
+export const GENAI_ADDON_PLANS: Record<GenAiAddonPlanId, GenAiCheckoutPlanDef> = {
+  genai_2d_live_300: buildGenAiAddonCheckoutPlan("genai_2d_live_300"),
+  genai_3d_generate_500: buildGenAiAddonCheckoutPlan("genai_3d_generate_500"),
 };
 
 export const ENTITLEMENT_2D_LIVE = "2d_live_unlimited";
@@ -69,17 +107,23 @@ export function getCheckoutPlanDef(planId: GenAiCheckoutPlanId): GenAiCheckoutPl
   };
 }
 
+function resolveStripePriceIdFromCatalogSku(skuId: string): string {
+  const envKey = resolveStripePriceEnvKey(skuId);
+  if (!envKey) return "";
+  return String(Deno.env.get(envKey) || "").trim();
+}
+
 export function resolveStripePriceIdForCheckout(planId: GenAiCheckoutPlanId): string {
   if (planId === "genai_basic_300") {
-    return String(Deno.env.get("STRIPE_GENAI_PRICE_BASIC_300") || "").trim();
+    return resolveStripePriceIdFromCatalogSku("tasful_ai_lite");
   }
   if (planId === "genai_pro_980") {
-    return String(Deno.env.get("STRIPE_GENAI_PRICE_PRO_980") || "").trim();
+    return resolveStripePriceIdFromCatalogSku("tasful_ai_pro");
   }
   if (planId === "genai_2d_live_300") {
-    return String(Deno.env.get("STRIPE_GENAI_PRICE_2D_LIVE_300") || "").trim();
+    return resolveStripePriceIdFromCatalogSku("tasful_ai_addon_2d_live_300");
   }
-  return String(Deno.env.get("STRIPE_GENAI_PRICE_3D_GENERATE_500") || "").trim();
+  return resolveStripePriceIdFromCatalogSku("tasful_ai_addon_3d_generate_500");
 }
 
 export function resolveGenAiCheckoutPlanIdFromStripePrice(

@@ -27,8 +27,12 @@ import {
   suspendListing,
   unpublishListing,
   updateDraftListing,
+  uploadListingPhoto,
+  deleteListingPhoto,
+  saveBusinessHoursText,
   type DraftListingInput,
 } from "../_shared/business-directory.ts";
+import { generateListingDraft } from "../_shared/business-directory-ai.ts";
 import {
   createBusinessDirectoryBillingPortalSession,
   createBusinessDirectorySubscriptionCheckout,
@@ -70,6 +74,15 @@ type ActionBody = DraftListingInput & {
   success_path?: string;
   cancel_path?: string;
   return_path?: string;
+  photo_id?: string;
+  content_base64?: string;
+  content_type?: string;
+  alt_text?: string | null;
+  hours_text?: string;
+  shop_sales_genre?: string | null;
+  service_summary?: string | null;
+  price_range_text?: string | null;
+  service_areas?: string | string[];
 };
 
 export async function handler(req: Request): Promise<Response> {
@@ -142,6 +155,11 @@ export async function handler(req: Request): Promise<Response> {
       return okResponse({ detail }, req);
     }
 
+    if (action === "generate_listing_draft") {
+      const result = await generateListingDraft(supabase, auth, body);
+      return okResponse(result, req);
+    }
+
     if (action === "submit_listing_for_review") {
       const listingId = String(body.listing_id ?? "").trim();
       if (!listingId) {
@@ -150,6 +168,51 @@ export async function handler(req: Request): Promise<Response> {
       const requestType = body.request_type === "content_update" ? "content_update" : "initial_publish";
       const result = await submitListingForReview(supabase, auth.userId, listingId, requestType);
       return okResponse(result as Record<string, unknown>, req);
+    }
+
+    if (action === "upload_listing_photo") {
+      const listingId = String(body.listing_id ?? "").trim();
+      if (!listingId || !body.content_base64 || !body.content_type) {
+        return okResponse(
+          { code: "validation_error", message: "listing_id, content_base64, content_type required" },
+          req,
+          400,
+        );
+      }
+      const photo = await uploadListingPhoto(supabase, auth.userId, listingId, {
+        content_base64: String(body.content_base64),
+        content_type: String(body.content_type),
+        alt_text: body.alt_text ?? null,
+      });
+      return okResponse({ photo }, req, 201);
+    }
+
+    if (action === "delete_listing_photo") {
+      const listingId = String(body.listing_id ?? "").trim();
+      const photoId = String(body.photo_id ?? "").trim();
+      if (!listingId || !photoId) {
+        return okResponse(
+          { code: "validation_error", message: "listing_id and photo_id required" },
+          req,
+          400,
+        );
+      }
+      const result = await deleteListingPhoto(supabase, auth.userId, listingId, photoId);
+      return okResponse(result, req);
+    }
+
+    if (action === "save_business_hours") {
+      const listingId = String(body.listing_id ?? "").trim();
+      if (!listingId) {
+        return okResponse({ code: "validation_error", message: "listing_id required" }, req, 400);
+      }
+      const rows = await saveBusinessHoursText(
+        supabase,
+        auth.userId,
+        listingId,
+        String(body.hours_text ?? ""),
+      );
+      return okResponse({ business_hours: rows }, req);
     }
 
     if (action === "unpublish_listing") {
