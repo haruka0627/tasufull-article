@@ -817,12 +817,28 @@
           roomId,
         });
 
+        // 生 OCR は審査後に破棄（ログ・DB へ残さない）
+        const ocrRan = Boolean(ocrText);
+        ocrText = "";
+        attachmentScan.items?.forEach((item) => {
+          if (item && Object.prototype.hasOwnProperty.call(item, "extractedText")) {
+            delete item.extractedText;
+          }
+        });
+
+        result._moderationEvents = buildModerationLogEvents(result, attachmentScan, ocrRan);
+
         if (attachmentScan.unscanned || attachmentScan.verdict === "needs_review") {
           result.level = "warning";
           result.reasons = [
             ...new Set([...(result.reasons || []), ...(attachmentScan.reasons || []), "添付未審査"]),
           ];
-          result._attachmentScan = attachmentScan;
+          result._attachmentScan = {
+            verdict: attachmentScan.verdict,
+            flags: attachmentScan.flags,
+            reasons: attachmentScan.reasons,
+            unscanned: attachmentScan.unscanned,
+          };
           root.TasuPlatformContentGate?.emitGateEvent?.("moderation.needs_review", {
             surface: "chat_attachment",
             roomId,
@@ -837,10 +853,12 @@
 
     const imageUrls = collectImageUrls(messageInput);
     let ocrText = "";
+    let ocrRan = false;
 
     if (imageUrls.length && window.TasuChatOcr?.extractTextFromImages) {
       const { ocrText: extracted } = await window.TasuChatOcr.extractTextFromImages(imageUrls);
       ocrText = extracted || "";
+      ocrRan = Boolean(ocrText);
     }
 
     const result = moderateMessage({
@@ -850,36 +868,76 @@
       userId: messageInput.senderId,
       roomId,
     });
-    if (ocrText) {
-      result._ocrText = ocrText;
-    }
+    ocrText = "";
+    result._moderationEvents = buildModerationLogEvents(result, null, ocrRan);
     return result;
   }
 
+  /**
+   * ログ用イベント種別のみ（電話番号・メール等の生データは含めない）
+   */
+  function buildModerationLogEvents(mod, attachmentScan, ocrRan) {
+    /** @type {string[]} */
+    const events = [];
+    if (ocrRan) events.push("ocr");
+    const kinds =
+      window.TasuChatModeration?.reasonsToEventKinds?.(mod?.reasons || []) || [];
+    kinds.forEach((k) => {
+      if (!events.includes(k)) events.push(k);
+    });
+    (attachmentScan?.flags || []).forEach((f) => {
+      const map = {
+        phone: "phone",
+        email: "email",
+        line: "sns",
+        discord: "sns",
+        instagram: "sns",
+        telegram: "sns",
+        external_url: "url",
+        url_shortener: "url",
+        qr_hint: "qr",
+      };
+      const k = map[f];
+      if (k && !events.includes(k)) events.push(k);
+    });
+    if (mod && mod.allowed === false) {
+      if (!events.includes("block")) events.push("block");
+    } else if (mod?.level === "warning" && kinds.length) {
+      if (!events.includes("mask")) events.push("mask");
+    }
+    return events;
+  }
+
   function shouldPersistModerationLog(mod) {
-    return mod && (mod.level === "blocked" || mod.level === "warning");
+    if (!mod) return false;
+    if (mod.level === "blocked" || mod.level === "warning") return true;
+    const events = mod._moderationEvents || [];
+    return events.some((e) =>
+      ["ocr", "phone", "email", "url", "sns", "qr", "block", "mask"].includes(e),
+    );
   }
 
   /**
    * 審査ログ保存（失敗しても送信フローは継続）
+   * 生メッセージ・OCR・data URL は保存しない（イベント種別のみ）
    * @param {string} roomId
    * @param {object} messageInput
-   * @param {{ allowed: boolean, level: string, reasons: string[] }} mod
+   * @param {{ allowed: boolean, level: string, reasons: string[], _moderationEvents?: string[] }} mod
    */
   async function persistModerationLog(roomId, messageInput, mod) {
     if (!shouldPersistModerationLog(mod)) return;
     if (!supabaseReady || !window.TasuChatSupabase?.insertModerationLog) return;
 
     try {
-      const logText = [messageInput.text || "", messageInput._ocrText || ""]
-        .filter(Boolean)
-        .join("\n---OCR---\n");
+      const events = Array.isArray(mod._moderationEvents)
+        ? mod._moderationEvents
+        : buildModerationLogEvents(mod, mod._attachmentScan, false);
 
       await window.TasuChatSupabase.insertModerationLog({
         roomId,
         userId: messageInput.senderId || getConfigMeId(),
-        messageText: logText,
-        imageUrls: collectImageUrls(messageInput),
+        messageText: JSON.stringify({ events, reasons: mod.reasons || [] }),
+        imageUrls: [],
         reasons: mod.reasons || [],
         level: mod.level,
         allowed: mod.allowed,
@@ -1392,9 +1450,6 @@
     }
 
     const mod = await runModeration(id, messageInput);
-    if (mod._ocrText) {
-      messageInput._ocrText = mod._ocrText;
-    }
     if (shouldPersistModerationLog(mod)) {
       void persistModerationLog(id, messageInput, mod);
     }

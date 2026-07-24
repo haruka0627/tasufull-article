@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="chat-ui-interaction.css">
   <link rel="stylesheet" href="tasful-app-mobile.css">
   <link rel="stylesheet" href="common-breadcrumb.css">
+  <link rel="stylesheet" href="platform-request.css">
 </head>
 <body class="dash-body talk-home-page" data-page="talk-home">
   <div class="dash-app">
@@ -45,6 +46,7 @@
         <div class="dash-nav-group">
           <p class="dash-nav-group__label">会員</p>
           <a class="dash-nav-link" href="dashboard.html">ダッシュボード</a>
+          <a class="dash-nav-link" href="platform-request.html">Platform Request</a>
           <a class="dash-nav-link" href="ai-workspace.html">AI相談</a>
         </div>
       </nav>
@@ -74,6 +76,21 @@
         <p class="talk-home-lead" data-talk-simple-lead>
           トーク・AI・通知をまとめた TASFUL の連絡アプリです。
         </p>
+
+        <section class="prq-entry-cta prq-entry-cta--featured" aria-labelledby="prqTalkCtaTitle">
+          <div class="prq-entry-cta__head">
+            <div class="prq-entry-cta__copy">
+              <p class="prq-entry-cta__icon" aria-hidden="true">📢</p>
+              <p class="prq-entry-cta__kicker">Platform Request</p>
+              <h2 class="prq-entry-cta__title" id="prqTalkCtaTitle">「これできる人いますか？」</h2>
+              <p class="prq-entry-cta__text">条件に合う業者・ワーカー・フリーランスへ依頼できます。</p>
+            </div>
+            <div class="prq-entry-cta__actions" role="group" aria-label="Platform Request">
+              <a href="platform-request.html" class="prq-entry-cta__btn">依頼を見る</a>
+              <a href="platform-request-create.html" class="prq-entry-cta__btn prq-entry-cta__btn--gold">依頼を投稿</a>
+            </div>
+          </div>
+        </section>
         <p class="talk-home-lead talk-home-lead--power" data-talk-power-only hidden>
           TASFUL全体の通知・連絡・AI操作のホームです。Builder の案件チャット本体は変更せず、ここから遷移できます。
         </p>
@@ -858,9 +875,15 @@
   <script src="talk-chat-demo-review-mode.js"></script>
   <script src="platform-chat-bench-embed-bridge.js"></script>
   <script src="talk-worker-review-mode.js"></script>
+  <script src="builder/builder-project-id-map.js"></script>
+  <script src="builder/builder-notify-dispatch.js"></script>
   <script src="talk-builder-notify-master-v1.js"></script>
   <script src="talk-anpi-notify-master-v1.js"></script>
   <script src="shop-payout.js"></script>
+  <script src="shared/pricing/generated/tasful-pricing-snapshot.js"></script>
+  <script src="shared/pricing/generated/tasful-pricing-config.js"></script>
+  <script src="shared/pricing/pricing-catalog-runtime.js"></script>
+
   <script src="platform-chat-fee.js"></script>
   <script src="listing-demo-catalog.js"></script>
   <script src="shop-store-demo.js"></script>

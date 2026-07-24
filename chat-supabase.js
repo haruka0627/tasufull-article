@@ -25,7 +25,14 @@
   const LEGACY_CHAT_STORAGE_KEY = "tasu_chat_seed";
 
   function isLocalRoomId(roomId) {
-    return /^local-room-/i.test(normalizeRoomId(roomId));
+    const id = normalizeRoomId(roomId);
+    return /^local-room-/i.test(id) || /^builder-cal-/i.test(id);
+  }
+
+  function isUuidRoomId(roomId) {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+      normalizeRoomId(roomId)
+    );
   }
 
   function safeJsonParse(text, fallback) {
@@ -641,6 +648,7 @@
     const id = normalizeRoomId(roomId);
     const uid = String(userId || "").trim();
     if (!id || !uid) return "";
+    if (isLocalRoomId(id) || !isUuidRoomId(id)) return "";
 
     const sb = getClient();
     try {
@@ -694,7 +702,8 @@
   }
 
   async function fetchReadsByRoomIds(roomIds) {
-    if (!roomIds.length) return {};
+    const uuidIds = (roomIds || []).map(normalizeRoomId).filter((id) => id && isUuidRoomId(id) && !isLocalRoomId(id));
+    if (!uuidIds.length) return {};
     const sb = getClient();
     const userId = getCurrentUserId();
     try {
@@ -702,7 +711,7 @@
         .from("transaction_reads")
         .select("room_id, last_read_at")
         .eq("user_id", userId)
-        .in("room_id", roomIds);
+        .in("room_id", uuidIds);
 
       if (error) {
         logSupabaseError("fetch transaction_reads", error);
@@ -994,7 +1003,8 @@
   async function fetchRoomById(roomId) {
     const id = normalizeRoomId(roomId);
     if (!id) return null;
-    if (isLocalRoomId(id)) {
+    // Demo / 非 UUID（Builder Calendar talkRoomId 等）は Supabase を叩かない
+    if (isLocalRoomId(id) || !isUuidRoomId(id)) {
       const thread = fetchLocalThreadById(id);
       return thread ? localThreadToRoomRow(thread) : null;
     }

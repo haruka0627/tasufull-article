@@ -138,6 +138,92 @@
   }
 
   /**
+   * 既存 BLOCK_RULES と同じパターンで連絡先・URL をマスク（生データは残さない）
+   * @param {string} text
+   * @returns {{ text: string, masked: boolean, kinds: string[] }}
+   */
+  function maskSensitiveText(text) {
+    let s = String(text || "");
+    /** @type {string[]} */
+    const kinds = [];
+    const mark = (kind) => {
+      if (!kinds.includes(kind)) kinds.push(kind);
+    };
+    const stars = (m) => "*".repeat(Math.min(Math.max(String(m).length, 8), 24));
+
+    s = s.replace(/[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/gi, (m) => {
+      mark("email");
+      return stars(m);
+    });
+    s = s.replace(/\bhttps?:\/\/[^\s<>"']+/gi, () => {
+      mark("url");
+      return "***********";
+    });
+    s = s.replace(/\bwww\.[^\s<>"']+/gi, () => {
+      mark("url");
+      return "***********";
+    });
+    s = s.replace(/(?:\+?\d{1,3}[-\s.]?)?(?:\d{2,4}[-\s.]?){2}\d{2,4}/g, (m) => {
+      mark("phone");
+      return stars(m);
+    });
+    s = s.replace(/\b0\d{1,4}[-\s.]?\d{1,4}[-\s.]?\d{3,4}\b/g, (m) => {
+      mark("phone");
+      return stars(m);
+    });
+    s = s.replace(/\bline\s*[@:id｜|]?\s*[a-z0-9._-]{3,}/gi, () => {
+      mark("sns");
+      return "***********";
+    });
+    s = s.replace(/\bline\.me\/[^\s<>"']+/gi, () => {
+      mark("sns");
+      return "***********";
+    });
+    s = s.replace(
+      /\b(?:instagram\.com|discord\.gg|discordapp\.com|t\.me|telegram\.me)\/[^\s<>"']+/gi,
+      () => {
+        mark("sns");
+        return "***********";
+      },
+    );
+    s = s.replace(
+      /\b(?:bit\.ly|t\.co|goo\.gl|tinyurl\.com|ow\.ly|is\.gd|buff\.ly|rebrand\.ly|cutt\.ly|shorturl\.at)\/[^\s<>"']+/gi,
+      () => {
+        mark("url");
+        return "***********";
+      },
+    );
+
+    return { text: s, masked: kinds.length > 0, kinds };
+  }
+
+  /**
+   * reasons ラベルからログ用イベント種別へ（生データは含めない）
+   * @param {string[]} reasons
+   * @returns {string[]}
+   */
+  function reasonsToEventKinds(reasons) {
+    const map = {
+      電話番号: "phone",
+      メールアドレス: "email",
+      "LINE ID / LINE誘導": "sns",
+      Instagram: "sns",
+      Discord: "sns",
+      Telegram: "sns",
+      外部URL: "url",
+      URL短縮: "url",
+      QRコード誘導: "qr",
+    };
+    /** @type {string[]} */
+    const out = [];
+    (reasons || []).forEach((r) => {
+      const k = map[r] || "other";
+      if (!out.includes(k)) out.push(k);
+    });
+    return out;
+  }
+
+  /**
    * @param {ModerationInput} input
    * @returns {ModerationResult}
    */
@@ -192,6 +278,8 @@
 
   window.TasuChatModeration = {
     moderateMessage,
+    maskSensitiveText,
+    reasonsToEventKinds,
     BLOCKED_USER_MESSAGE,
   };
 })();

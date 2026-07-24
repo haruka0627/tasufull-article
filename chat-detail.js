@@ -4079,16 +4079,43 @@
     return "";
   }
 
+  function isSafeChatReturnTo(raw) {
+    const s = String(raw || "").trim();
+    if (!s) return false;
+    if (/^[a-z]+:/i.test(s) || s.startsWith("//") || s.includes("..")) return false;
+    return true;
+  }
+
+  function resolveBuilderCalendarReturnUrl(params) {
+    const returnTo = String(params.get("returnTo") || "").trim();
+    if (returnTo && isSafeChatReturnTo(returnTo)) return buildChatBackUrl(returnTo);
+    const projectId = String(params.get("builderProjectId") || params.get("projectId") || "").trim();
+    if (!projectId) return "";
+    return buildChatBackUrl(
+      `builder/project-calendar.html?projectId=${encodeURIComponent(projectId)}&openDetail=1`
+    );
+  }
+
   function resolveChatBackUrl(thread) {
-    const from = String(new URLSearchParams(window.location.search).get("from") || "")
+    const params = new URLSearchParams(window.location.search);
+    const from = String(params.get("from") || "")
       .trim()
       .toLowerCase();
     const listingId = String(
       thread?.listingId ||
         thread?.listing?.id ||
-        new URLSearchParams(window.location.search).get("listingId") ||
+        params.get("listingId") ||
         ""
     ).trim();
+
+    if (from === "builder_calendar" || from === "builder-calendar") {
+      const calBack = resolveBuilderCalendarReturnUrl(params);
+      if (calBack) return calBack;
+    }
+    const returnToEarly = String(params.get("returnTo") || "").trim();
+    if (returnToEarly && isSafeChatReturnTo(returnToEarly) && from === "builder") {
+      return buildChatBackUrl(returnToEarly);
+    }
 
     if (from === "applications" && listingId) {
       return buildChatBackUrl(
@@ -4109,11 +4136,56 @@
     }
     if (
       window.TasuPlatformChatDualWindowDemo?.isDemoThread?.(thread?.id || thread) === true ||
-      new URLSearchParams(window.location.search).get("review") === "chat-demo"
+      params.get("review") === "chat-demo"
     ) {
       return buildChatBackUrl("talk-home.html?tab=notify");
     }
     return "";
+  }
+
+  function applyBuilderCalendarReturnChrome() {
+    const params = new URLSearchParams(window.location.search);
+    const from = String(params.get("from") || "").trim().toLowerCase();
+    if (from !== "builder_calendar" && from !== "builder-calendar") return;
+    const backUrl = resolveBuilderCalendarReturnUrl(params);
+    if (!backUrl) return;
+    const listLink =
+      document.querySelector(".chat-peer-header__actions a.chat-pill[data-builder-cal-return]") ||
+      document.querySelector(".chat-peer-header__actions a.chat-pill[href*='talk-home']") ||
+      document.querySelector(".chat-peer-header__actions a.chat-pill");
+    if (listLink) {
+      listLink.setAttribute("href", backUrl);
+      listLink.textContent = "← 案件カレンダー";
+      listLink.setAttribute("aria-label", "案件カレンダーへ戻る");
+      listLink.setAttribute("data-builder-cal-return", "1");
+    }
+    const mobileBack = document.getElementById("chatMobileBack");
+    if (mobileBack) {
+      mobileBack.setAttribute("aria-label", "案件カレンダーへ戻る");
+      mobileBack.setAttribute("data-builder-cal-return", "1");
+    }
+    let bar = document.querySelector("[data-builder-cal-return-bar]");
+    if (!bar) {
+      bar = document.createElement("div");
+      bar.setAttribute("data-builder-cal-return-bar", "1");
+      bar.style.cssText =
+        "display:flex;align-items:center;gap:8px;padding:10px 12px;margin:0 0 10px;border:1px solid rgba(0,255,255,0.35);border-radius:10px;background:rgba(28,48,82,0.72);";
+      const link = document.createElement("a");
+      link.setAttribute("data-builder-cal-return", "1");
+      link.setAttribute("href", backUrl);
+      link.textContent = "← 案件カレンダーへ戻る";
+      link.style.cssText = "color:#a5f3fc;font-weight:700;text-decoration:none;";
+      bar.appendChild(link);
+      const host =
+        document.querySelector(".chat-detail") ||
+        document.querySelector(".chat-card") ||
+        document.querySelector("main.chat-shell") ||
+        document.body;
+      host.insertBefore(bar, host.firstChild);
+    } else {
+      const link = bar.querySelector("a[data-builder-cal-return]");
+      if (link) link.setAttribute("href", backUrl);
+    }
   }
 
   function goChatBack() {
@@ -4136,6 +4208,7 @@
   function syncMobileHead(thread) {
     const titleEl = document.getElementById("chatMobileTitle");
     if (titleEl) titleEl.textContent = getMobileHeadTitle(thread);
+    applyBuilderCalendarReturnChrome();
     if (mobileHeadBound) return;
     const backBtn = document.getElementById("chatMobileBack");
     if (!backBtn) return;
@@ -4147,6 +4220,7 @@
   }
 
   function setPeerHeader(thread) {
+    applyBuilderCalendarReturnChrome();
     const row = window.TasuTalkChatThreadModel?.enrichThread?.(thread) || thread;
     const profile = row?.partnerProfile || window.TasuTalkChatProfile?.resolveProfile?.(row?.partner?.id);
     const presence = window.TasuTalkChatProfile?.getOnlinePresence?.(profile?.user_id) || {
@@ -4470,22 +4544,49 @@
 
   function showRoomNotFound(messagesEl, roomId) {
     currentRoom = null;
+    applyBuilderCalendarReturnChrome();
     const Flow = window.TasuPlatformChatJobFlow;
     const recovery = Flow?.resolveJobChatRecoveryLinks?.(roomId) || {};
     const applicationsUrl = escapeHtml(recovery.applicationsUrl || "detail-job.html?id=job_demo_full_001&view=applications#applications");
     const notifyUrl = escapeHtml(recovery.notifyUrl || "talk-home.html?tab=notify&talkDev=1");
     const talkUrl = escapeHtml(recovery.talkUrl || "talk-home.html?tab=chat&talkDev=1");
+    const params = new URLSearchParams(window.location.search);
+    const fromParam = String(params.get("from") || "").trim().toLowerCase();
+    const calBack =
+      fromParam === "builder_calendar" || fromParam === "builder-calendar"
+        ? resolveBuilderCalendarReturnUrl(params)
+        : "";
+    const isBuilderCalReturn = Boolean(calBack);
     const isJobContext =
       /review=job-full/.test(window.location.search) ||
       String(roomId || "").includes("job") ||
       String(roomId || "").startsWith("chat-demo-job");
 
     if (messagesEl) {
-      if (isJobContext) {
+      if (isBuilderCalReturn) {
+        const calUrl = escapeHtml(calBack);
+        messagesEl.innerHTML = `
+          <div class="chat-room-unavailable" role="alert" data-builder-cal-talk-demo="1">
+            <p class="chat-room-unavailable__title">Builder 案件トーク（Demo）</p>
+            <p class="chat-room-unavailable__body">Talk ルーム入口です。本番のメッセージ同期は次Phaseです。</p>
+            <div class="chat-room-unavailable__actions">
+              <a class="chat-room-unavailable__btn chat-room-unavailable__btn--primary" href="${calUrl}" data-builder-cal-return="1">案件カレンダーへ戻る</a>
+              <a class="chat-room-unavailable__btn" href="${talkUrl}">TASFUL TALKへ</a>
+            </div>
+          </div>`;
+      } else if (isJobContext) {
+        const RT = window.TasuPricingRuntime;
+        const Fee = window.TasuPlatformChatFee;
+        const jobFeeAmount =
+          Fee?.calcJobChatFee?.() ??
+          RT?.getFixedAmount?.(RT?.SKU?.MATCH_JOB_CONTACT) ??
+          Fee?.JOB_CHAT_FEE_YEN ??
+          0;
+        const jobFeeLabel = RT?.formatYenSuffix?.(jobFeeAmount) || `${jobFeeAmount}円`;
         messagesEl.innerHTML = `
           <div class="chat-room-unavailable" role="alert">
             <p class="chat-room-unavailable__title">やりとりを開始できませんでした</p>
-            <p class="chat-room-unavailable__body">応募状況から再度お試しください。550円のお支払い後にチャットが開きます。</p>
+            <p class="chat-room-unavailable__body">応募状況から再度お試しください。${jobFeeLabel}のお支払い後にチャットが開きます。</p>
             <div class="chat-room-unavailable__actions">
               <a class="chat-room-unavailable__btn chat-room-unavailable__btn--primary" href="${applicationsUrl}">応募状況へ戻る</a>
               <a class="chat-room-unavailable__btn" href="${notifyUrl}">通知へ戻る</a>
@@ -4504,7 +4605,7 @@
           </div>`;
       }
     }
-    setComposerEnabled(false, "チャットを開けませんでした。");
+    setComposerEnabled(false, isBuilderCalReturn ? "Demo トーク入口です。" : "チャットを開けませんでした。");
   }
 
   function bindComposerFocus() {
