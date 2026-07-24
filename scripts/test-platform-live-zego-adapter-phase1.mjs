@@ -94,6 +94,8 @@ function loadRuntime(extra = {}) {
     String,
     Number,
     Boolean,
+    setTimeout,
+    clearTimeout,
     fetch: mockFetch,
     PLATFORM_LIVE_ZEGO_CONFIG: {
       appId: 12345,

@@ -1,6 +1,7 @@
 /**
  * ローカル dev サーバー URL（Playwright / 手動確認共通）
  * 標準: http://127.0.0.1:8788 （wrangler pages dev / Cloudflare Pages dist）
+ * 5173 / Vite URL は通常使用しない — 案内しない
  * file:// 直開きは不可。
  */
 export const STANDARD_LOCAL_BASE = "http://127.0.0.1:8788";

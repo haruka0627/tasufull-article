@@ -29,6 +29,9 @@ const STATIC_FILES = [
   "live/create.html",
   "live/studio.html",
   "live/live-broadcasts.js",
+  "live/live-broadcasts-session-bridge.js",
+  "live/live-session-debug-panel.js",
+  "live/tlv-feature-flags.js",
   "live/live-create.js",
   "live/live-comments.js",
   "live/live-config.js",
@@ -93,6 +96,27 @@ function verifyStaticCode() {
   if (!broadcastsJs.includes("cloudflare.com") && !broadcastsJs.includes("CLOUDFLARE_STREAM_API")) {
     pass("P5-code-no-stream-api");
   } else fail("P5-code-no-stream-api");
+
+  const flagsJs = read("live/tlv-feature-flags.js");
+  if (flagsJs.includes("liveSessionManagerEnabled: false")) pass("P5-code-session-flag-off");
+  else fail("P5-code-session-flag-off");
+
+  const bridgeJs = read("live/live-broadcasts-session-bridge.js");
+  if (bridgeJs.includes("TlvLiveBroadcastsSessionBridge") && !bridgeJs.includes("TlvLiveService")) {
+    pass("P5-code-session-bridge-no-service");
+  } else fail("P5-code-session-bridge-no-service");
+
+  if (broadcastsJs.includes("runSessionBridge") && broadcastsJs.includes("onStudioStart")) {
+    pass("P5-code-broadcasts-bridge-hooks");
+  } else fail("P5-code-broadcasts-bridge-hooks");
+
+  const debugPanel = read("live/live-session-debug-panel.js");
+  if (debugPanel.includes("TlvLiveSessionDebugPanel") && debugPanel.includes("if (!isEnabled()) return null")) {
+    pass("P5-code-session-debug-panel");
+  } else fail("P5-code-session-debug-panel");
+
+  if (broadcastsJs.includes("mountSessionDebugPanel")) pass("P5-code-broadcasts-debug-mount");
+  else fail("P5-code-broadcasts-debug-mount");
 
   const commentsJs = read("live/live-comments.js");
   if (commentsJs.includes("broadcastMessages") && commentsJs.includes('status === "live"')) {

@@ -93,16 +93,17 @@ for (const [tag, w, h] of [
 
   await captureGenerate(page, "image", "ハウスクリーニング業者の広告画像を作って", tag);
   const broken = await page.evaluate(() => {
-    const imgs = [...document.querySelectorAll(".ai-generate-panel--image .ai-image-preview__demo")];
+    const imgs = [...document.querySelectorAll(".ai-generate-panel--image .ai-image-tile__img")];
     return imgs.filter((img) => img.complete && img.naturalWidth === 0).length;
   });
-  const demoCount = await page.locator(".ai-generate-panel--image .ai-image-demo-card").count();
-  const resultImgs = await page.locator("[data-ai-image-result]").count();
-  if (broken > 0 || resultImgs > 0 || demoCount !== 3) {
-    console.log(`${tag} generate-image broken-check FAIL`, { broken, resultImgs, demoCount });
+  const tileCount = await page.locator(".ai-generate-panel--image .ai-image-tile").count();
+  const toolbarCount = await page.locator(".ai-generate-panel--image .ai-generate-panel__action").count();
+  const hasLegacyForm = await page.locator("[data-ai-generate-image-start]").count();
+  if (broken > 0 || tileCount !== 1 || toolbarCount < 4 || hasLegacyForm > 0) {
+    console.log(`${tag} generate-image layout-check FAIL`, { broken, tileCount, toolbarCount, hasLegacyForm });
     fails += 1;
   } else {
-    console.log(`${tag} generate-image broken-check OK`);
+    console.log(`${tag} generate-image layout-check OK`);
   }
 
   await captureGenerate(page, "code", "お問い合わせフォームのHTMLとCSSを作って", tag);

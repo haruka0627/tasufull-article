@@ -12,6 +12,7 @@ const files = [
   "detail-job.html",
   "post.html",
   "detail-product.html",
+  "dashboard-favorites.html",
   "favorites-list.html",
   "skill.html",
   "chat-detail.html",

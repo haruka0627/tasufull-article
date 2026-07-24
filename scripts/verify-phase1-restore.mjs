@@ -26,6 +26,7 @@ const RESTORED = [
   "skill.html",
   "worker.html",
   "job-top.html",
+  "dashboard-favorites.html",
   "favorites-list.html",
   "detail.html",
 ];

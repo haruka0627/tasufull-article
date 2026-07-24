@@ -10,11 +10,22 @@ import { loadDotEnvFile } from "./lib/zego-env.mjs";
 import { writeLiveZegoConfigToDist } from "./lib/write-live-zego-config.mjs";
 import { writePlatformZegoConfigToDist } from "./lib/write-platform-zego-config.mjs";
 import { syncPagesDevVars } from "./lib/sync-pages-dev-vars.mjs";
+import { syncPlatformQaCurationToDist } from "./lib/sync-platform-qa-curation-to-dist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CF_DIR = path.join(ROOT, "deploy/cloudflare");
 const DIST = path.join(CF_DIR, "dist");
 const marker = path.join(DIST, "index.html");
+
+const ROOT_SYNC_EXT = new Set([".js", ".css", ".html"]);
+const ROOT_SYNC_SKIP = new Set([
+  "chat-supabase-config.js",
+  "chat-supabase-config.local.js",
+  "platform-qa-admin-ui.js",
+  "platform-qa-curation.js",
+  "platform-qa-curation-ui.js",
+  "platform-qa-dev.js",
+]);
 
 const CF_META = ["robots.txt", "_headers", "_redirects"];
 const FUNCTIONS_SRC = path.join(CF_DIR, "functions");
@@ -99,6 +110,68 @@ function syncCfMeta() {
   return synced;
 }
 
+function syncChatSupabaseConfigForDev() {
+  const src = path.join(ROOT, "chat-supabase-config.js");
+  const dest = path.join(DIST, "chat-supabase-config.js");
+  if (!fs.existsSync(src)) return false;
+  const js = fs.readFileSync(src, "utf8");
+  const anonKey = js.match(/anonKey:\s*"(eyJ[^"]+)"/)?.[1] || "";
+  if (!anonKey) return false;
+  if (fs.existsSync(dest)) {
+    const distAnon = fs.readFileSync(dest, "utf8").match(/anonKey:\s*"([^"]+)"/)?.[1] || "";
+    if (distAnon.startsWith("eyJ") && distAnon.length > 80) return false;
+  }
+  fs.copyFileSync(src, dest);
+  console.log("[ensure-pages-dist] synced chat-supabase-config.js from repo root (dev staging)");
+  return true;
+}
+
+/**
+ * ルート直下の .js / .css / .html のうち dist に未存在のものを
+ * 増分同期する（stage-cloudflare-pages.mjs の copyRecursive と同じ
+ * 除外ルールを dev 起動時にも適用）。
+ */
+function syncRootStaticAssets() {
+  let synced = 0;
+  const entries = fs.readdirSync(ROOT, { withFileTypes: true });
+  for (const ent of entries) {
+    if (!ent.isFile()) continue;
+    const ext = path.extname(ent.name).toLowerCase();
+    if (!ROOT_SYNC_EXT.has(ext)) continue;
+    if (ROOT_SYNC_SKIP.has(ent.name)) continue;
+    if (ent.name.endsWith(".log") || ent.name.startsWith(".git-")) continue;
+
+    const src = path.join(ROOT, ent.name);
+    const dest = path.join(DIST, ent.name);
+    if (copyFileIfChanged(src, dest)) {
+      synced += 1;
+    }
+  }
+  if (synced > 0) {
+    console.log(`[ensure-pages-dist] synced ${synced} root asset(s) → dist/`);
+  }
+  return synced;
+}
+
+/**
+ * build の applyRootTopRouting と同様 — dev 増分同期後も `/` が platform TOP になるよう維持。
+ * syncRootStaticAssets が repo 直下 index.html（legacy market）を dist に上書きするため。
+ */
+function applyRootTopRoutingToDist() {
+  const distIndex = path.join(DIST, "index.html");
+  const distIndexTop = path.join(DIST, "index-top.html");
+  if (!fs.existsSync(distIndexTop) || !fs.existsSync(distIndex)) return false;
+
+  const marketDir = path.join(DIST, "market");
+  const marketIndex = path.join(marketDir, "index.html");
+  fs.mkdirSync(marketDir, { recursive: true });
+  if (!fs.existsSync(marketIndex)) {
+    fs.copyFileSync(distIndex, marketIndex);
+  }
+  fs.copyFileSync(distIndexTop, distIndex);
+  return true;
+}
+
 if (!fs.existsSync(marker)) {
   console.error("[ensure-pages-dist] deploy/cloudflare/dist が見つかりません。");
   console.error("  npm run build:pages");
@@ -119,6 +192,12 @@ if (stillMissing.length) {
   process.exit(1);
 }
 
+const rootSynced = syncRootStaticAssets();
+syncChatSupabaseConfigForDev();
+if (applyRootTopRoutingToDist()) {
+  console.log("[ensure-pages-dist] root routing: index-top.html → dist/index.html");
+}
+
 const liveSynced = syncLiveDir();
 if (liveSynced > 0) {
   console.log(`[ensure-pages-dist] synced live/ → dist/live/ (${liveSynced} file(s))`);
@@ -131,9 +210,15 @@ if (fnSynced > 0) {
 
 loadDotEnvFile();
 const devVars = syncPagesDevVars(DIST);
+const sb = devVars.stagingSupabase || { ok: false, issues: ["unknown"] };
 console.log(
-  `[ensure-pages-dist] synced dist/.dev.vars (ZEGO_APP_ID=${devVars.presence.ZEGO_APP_ID}, ZEGO_SERVER=${devVars.presence.ZEGO_SERVER}, ZEGO_SERVER_SECRET=${devVars.presence.ZEGO_SERVER_SECRET ? `present(${devVars.zegoSecretLen} chars)` : "missing"})`,
+  `[ensure-pages-dist] synced dist/.dev.vars (ZEGO_APP_ID=${devVars.presence.ZEGO_APP_ID}, ZEGO_SERVER=${devVars.presence.ZEGO_SERVER}, ZEGO_SERVER_SECRET=${devVars.presence.ZEGO_SERVER_SECRET ? `present(${devVars.zegoSecretLen} chars)` : "missing"}, SUPABASE_URL=${devVars.presence.SUPABASE_URL}, SUPABASE_ANON_KEY=${devVars.presence.SUPABASE_ANON_KEY}, SUPABASE_SERVICE_ROLE_KEY=${devVars.presence.SUPABASE_SERVICE_ROLE_KEY}, staging_ok=${sb.ok})`,
 );
+if (!sb.ok) {
+  console.warn(
+    `[ensure-pages-dist] Supabase staging vars incomplete: ${(sb.issues || []).join(", ")} — set .env.staging (see docs/supabase-environments.md)`,
+  );
+}
 
 const zegoCfg = writeLiveZegoConfigToDist(LIVE_DEST);
 if (zegoCfg.ok) {
@@ -144,4 +229,11 @@ const platformLiveDest = path.join(DIST, "platform-live");
 const platformCfg = writePlatformZegoConfigToDist(platformLiveDest);
 if (platformCfg.ok) {
   console.log(`[ensure-pages-dist] generated dist/platform-live/platform-live-zego-config.js (appId=${platformCfg.appId})`);
+}
+
+const qaSync = syncPlatformQaCurationToDist();
+if (qaSync.copied > 0 || qaSync.htmlPatched > 0) {
+  console.log(
+    `[ensure-pages-dist] Q&A curation sync: ${qaSync.copied} file(s), ${qaSync.htmlPatched} HTML patched`,
+  );
 }

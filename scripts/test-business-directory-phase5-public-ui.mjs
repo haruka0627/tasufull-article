@@ -54,8 +54,7 @@ mustInclude(pubJs, "bdPublicMock", "public mock mode");
 mustInclude(pubJs, "status !== \"published\"", "mock excludes non-published");
 mustInclude(pubJs, "external_redirect", "hp_mode redirect");
 mustInclude(pubJs, "full_page", "hp_mode full page");
-mustInclude(pubJs, "TLV", "TLV placeholder");
-mustInclude(pubJs, "SNS", "SNS placeholder");
+mustInclude(pubJs, "renderBusinessDirectoryPage", "public uses shared renderer");
 
 mustInclude(read("index-top.html"), "business-directory/public/list.html", "market TOP BD entry");
 mustInclude(read("business.html"), "business-directory/public/list.html", "business page BD entry");
@@ -110,7 +109,7 @@ async function browserSmoke() {
     await page.goto(`${base}/list.html?bdPublicMock=1`, { waitUntil: "domcontentloaded" });
     await page.waitForSelector("[data-bd-public-card]", { timeout: 8000 });
     const count = await page.locator("[data-bd-public-card]").count();
-    if (count === 2) ok("browser: published only (2 cards, draft hidden)");
+    if (count === 3) ok("browser: published only (3 cards, draft hidden)");
     else bad("browser: published count", String(count));
 
     await page.locator('select[name="type"]').selectOption("business_service");
@@ -133,11 +132,15 @@ async function browserSmoke() {
       waitUntil: "domcontentloaded",
     });
     const fullText = await page.locator("[data-bd-public-detail]").innerText();
-    if (fullText.includes("簡易HP") && fullText.includes("営業時間")) ok("browser: full_page detail");
+    if (fullText.includes("TASFUL") && fullText.includes("営業時間")) ok("browser: full_page detail");
     else bad("browser: full_page detail");
 
-    if (fullText.includes("TLV") && fullText.includes("SNS")) ok("browser: TLV/SNS placeholders");
-    else bad("browser: placeholders");
+    if (fullText.includes("詳細紹介") && fullText.includes("よくある質問")) ok("browser: full_page rich sections");
+    else bad("browser: full_page rich sections");
+
+    if (fullText.includes("問い合わせ") && (await page.locator("[data-bd-page-hero]").count()) >= 1) {
+      ok("browser: shared renderer sections");
+    } else bad("browser: shared renderer sections");
   } catch (e) {
     bad("browser smoke", String(e.message || e));
   } finally {

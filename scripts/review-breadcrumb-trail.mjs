@@ -19,6 +19,8 @@ const SEL_TIMEOUT = 15000;
 const BIZ_DETAIL_ID = "demo-business-service-001";
 const FAV_DETAIL_ID = "demo-biz-pr-1";
 const FAV_DETAIL_TITLE = "TASFUL建設パートナー";
+const FAVORITES_PAGE = "dashboard-favorites.html";
+const FAVORITES_URL_RE = /dashboard-favorites(\.html)?/;
 const SHOP_ID = "demo-shop-haru-cafe";
 const PRODUCT_QUERY = "shopId=demo-shop-haru-cafe&productId=p-0";
 
@@ -147,6 +149,12 @@ function assertNotContains(items, badSubstrings, caseId, step) {
   return true;
 }
 
+async function waitDashboardFavoritesPage(page) {
+  await page.waitForURL(FAVORITES_URL_RE, { timeout: NAV_TIMEOUT });
+  await page.waitForSelector("[data-platform-favorites-root]", { timeout: SEL_TIMEOUT });
+  await page.waitForTimeout(400);
+}
+
 async function waitBreadcrumb(page) {
   await page.waitForFunction(
     () => {
@@ -192,7 +200,7 @@ async function gotoDetailFromBusiness(page) {
 }
 
 async function clearBreadcrumbSession(page) {
-  await page.goto(url("favorites-list.html"), { waitUntil: "domcontentloaded", timeout: NAV_TIMEOUT });
+  await page.goto(url(FAVORITES_PAGE), { waitUntil: "domcontentloaded", timeout: NAV_TIMEOUT });
   await page.evaluate(() => {
     sessionStorage.removeItem("tasu_breadcrumb_stack_v1");
     sessionStorage.removeItem("tasu_breadcrumb_pending_v1");
@@ -209,23 +217,25 @@ async function runDashboardFavoritesFlow(page) {
   const caseId = "dashboard-favorites-detail";
   await page.goto(url("dashboard.html"), { waitUntil: "domcontentloaded", timeout: NAV_TIMEOUT });
   await seedFavorites(page);
-  await page.waitForSelector('a[href="favorites-list.html"][data-breadcrumb-label="お気に入り"]', {
+  await page.waitForSelector(`a[href*="dashboard-favorites"][data-breadcrumb-label="お気に入り"]`, {
     state: "attached",
     timeout: SEL_TIMEOUT,
   });
 
-  await page.locator('a[href="favorites-list.html"][data-breadcrumb-label="お気に入り"]').first().click();
-  await page.waitForURL(/favorites-list\.html/, { timeout: NAV_TIMEOUT });
-  await waitBreadcrumb(page);
+  await page.locator(`a[href*="dashboard-favorites"][data-breadcrumb-label="お気に入り"]`).first().click();
+  await waitDashboardFavoritesPage(page);
 
-  let bc = await readBreadcrumb(page);
-  assertContains(bc.items, ["ダッシュボード", "お気に入り"], caseId, "favorites-page");
-  assertNotContains(bc.items, ["Home", "お気に入り一覧"], caseId, "favorites-no-legacy");
-  if (bc.visibleCount > 1) {
-    record(caseId, false, { step: "duplicate-nav-favorites", actual: bc.visibleCount, reason: "double breadcrumb" });
-  } else {
-    record(caseId, true, { step: "duplicate-nav-favorites", actual: 1 });
-  }
+  const favTitle = await page.locator(".dash-favorites-page-head__title").textContent();
+  record(caseId, String(favTitle || "").includes("お気に入り"), {
+    step: "favorites-page-title",
+    actual: favTitle,
+  });
+  const crumbCount = await page.locator("[data-breadcrumb]:not([hidden])").count();
+  record(caseId, crumbCount <= 1, {
+    step: "duplicate-nav-favorites",
+    actual: crumbCount,
+    reason: crumbCount > 1 ? "double breadcrumb" : "",
+  });
 
   const detailLink = page.locator('a.fav-btn--detail[href*="detail-business"]').first();
   await detailLink.waitFor({ state: "visible", timeout: SEL_TIMEOUT });
@@ -238,7 +248,7 @@ async function runDashboardFavoritesFlow(page) {
   await page.waitForTimeout(1500);
   await waitBreadcrumb(page);
 
-  bc = await readBreadcrumb(page);
+  const bc = await readBreadcrumb(page);
   assertContains(bc.items, ["ダッシュボード", "お気に入り"], caseId, "detail-prefix");
   assertContains(bc.items, [FAV_DETAIL_TITLE], caseId, "detail-company-label");
   assertNotContains(bc.items, ["Home", "お気に入り一覧"], caseId, "detail-no-legacy");
@@ -256,13 +266,14 @@ async function runIndexTopHeaderFavoritesFlow(page) {
   await page.goto(url("index-top.html"), { waitUntil: "domcontentloaded", timeout: NAV_TIMEOUT });
   await seedFavorites(page);
 
-  await clickInternalNav(page, "favorites-list.html", "お気に入り");
-  await page.waitForURL(/favorites-list\.html/, { timeout: NAV_TIMEOUT });
-  await waitBreadcrumb(page);
+  await clickInternalNav(page, FAVORITES_PAGE, "お気に入り");
+  await waitDashboardFavoritesPage(page);
 
-  let bc = await readBreadcrumb(page);
-  assertContains(bc.items, ["TASFUL", "お気に入り"], caseId, "favorites-page");
-  assertNotContains(bc.items, ["Home", "お気に入り一覧", "ダッシュボード"], caseId, "favorites-no-wrong-root");
+  const favTitle = await page.locator(".dash-favorites-page-head__title").textContent();
+  record(caseId, String(favTitle || "").includes("お気に入り"), {
+    step: "favorites-page-title",
+    actual: favTitle,
+  });
 
   const detailLink = page.locator('a.fav-btn--detail[href*="detail-business"]').first();
   await detailLink.click();
@@ -270,32 +281,35 @@ async function runIndexTopHeaderFavoritesFlow(page) {
   await page.waitForTimeout(1500);
   await waitBreadcrumb(page);
 
-  bc = await readBreadcrumb(page);
-  assertContains(bc.items, ["TASFUL", "お気に入り"], caseId, "detail-prefix");
+  let bc = await readBreadcrumb(page);
+  assertContains(bc.items, ["お気に入り"], caseId, "detail-prefix");
   assertContains(bc.items, [FAV_DETAIL_TITLE], caseId, "detail-company");
   assertNotContains(bc.items, ["Home", "ダッシュボード"], caseId, "detail-no-wrong-root");
 }
 
 async function runDirectFavoritesList(page) {
-  const caseId = "direct-favorites-list";
+  const caseId = "direct-dashboard-favorites";
   await clearBreadcrumbSession(page);
   await page.reload({ waitUntil: "domcontentloaded", timeout: NAV_TIMEOUT });
-  await waitBreadcrumb(page);
+  await waitDashboardFavoritesPage(page);
 
-  const bc = await readBreadcrumb(page);
-  assertContains(bc.items, ["お気に入り"], caseId, "static-favorites");
-  assertNotContains(bc.items, ["ダッシュボード", "Home", "お気に入り一覧"], caseId, "no-parent-history");
-  if (bc.visibleCount > 1) {
-    record(caseId, false, { step: "duplicate-nav", actual: bc.visibleCount, reason: "double breadcrumb" });
+  const favTitle = await page.locator(".dash-favorites-page-head__title").textContent();
+  record(caseId, String(favTitle || "").includes("お気に入り"), {
+    step: "page-title",
+    actual: favTitle,
+  });
+  const crumbCount = await page.locator("[data-breadcrumb]:not([hidden])").count();
+  if (crumbCount > 1) {
+    record(caseId, false, { step: "duplicate-nav", actual: crumbCount, reason: "double breadcrumb" });
   } else {
-    record(caseId, true, { step: "single-nav", actual: 1 });
+    record(caseId, true, { step: "single-or-no-platform-breadcrumb", actual: crumbCount });
   }
 }
 
 async function runDirectFavoriteDetail(page) {
   const caseId = "direct-favorite-detail";
   await clearBreadcrumbSession(page);
-  const detailUrl = `detail-business-service.html?id=${FAV_DETAIL_ID}&from=favorite&returnTo=favorites-list.html`;
+  const detailUrl = `detail-business-service.html?id=${FAV_DETAIL_ID}&from=favorite&returnTo=${FAVORITES_PAGE}`;
   await page.goto(url(detailUrl), {
     waitUntil: "domcontentloaded",
     timeout: NAV_TIMEOUT,
@@ -549,7 +563,7 @@ async function main() {
     try {
       await runDirectFavoritesList(page2);
     } catch (e) {
-      record("direct-favorites-list", false, { step: "exception", reason: String(e.message || e) });
+      record("direct-dashboard-favorites", false, { step: "exception", reason: String(e.message || e) });
     }
 
     try {

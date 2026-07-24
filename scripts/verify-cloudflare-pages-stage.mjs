@@ -33,6 +33,7 @@ const REQUIRED_PATHS = [
   "connect-state.js",
   "market-identity.js",
   "builder/builder-actor-identity.js",
+  "builder/builder-general-jobs-deploy-flags.js",
   "chat-supabase-config.js",
   "chat.css",
   "dashboard.css",

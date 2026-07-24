@@ -192,13 +192,14 @@ function loadPlatformStack(extra = {}) {
 // --- HTML wiring ---
 {
   const product = fs.readFileSync(path.join(root, "product.html"), "utf8");
-  const fav = fs.readFileSync(path.join(root, "favorites-list.html"), "utf8");
+  const fav = fs.readFileSync(path.join(root, "dashboard-favorites.html"), "utf8");
   const business = fs.readFileSync(path.join(root, "business.html"), "utf8");
   const login = fs.readFileSync(path.join(root, "login.html"), "utf8");
   const loginJs = fs.readFileSync(path.join(root, "login.js"), "utf8");
   assert("html: product badges scripts", product.includes("platform-badges.js"));
   assert("html: favorites folder nav", fav.includes("data-favorites-folders"));
   assert("html: favorites folder script", fav.includes("platform-favorites-folders.js"));
+  assert("html: favorites dashboard panel", fav.includes("platform-favorites-panel.js"));
   assert("html: business badges", business.includes("platform-badges.js"));
   assert("html: google auth", login.includes("platform-google-auth.js"));
   assert("html: no line oauth primary", loginJs.includes("LINE ログインは現在利用できません"));

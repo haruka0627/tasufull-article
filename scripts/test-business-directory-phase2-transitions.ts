@@ -62,6 +62,13 @@ for (const [from, to] of MVP_REQUIRED) {
   }
 }
 
+const CONTENT_UPDATE_TRANSITION: [ListingStatus, ListingStatus] = ["published", "review_requested"];
+if (!(ALLOWED_STATUS_TRANSITIONS[CONTENT_UPDATE_TRANSITION[0]] ?? []).includes(CONTENT_UPDATE_TRANSITION[1])) {
+  bad(`ALLOWED_STATUS_TRANSITIONS includes ${CONTENT_UPDATE_TRANSITION[0]} → ${CONTENT_UPDATE_TRANSITION[1]} (content_update)`);
+} else {
+  ok(`ALLOWED_STATUS_TRANSITIONS includes published → review_requested (content_update)`);
+}
+
 for (const [from, to] of MVP_REQUIRED) {
   expectAllowed(from, to);
 }
@@ -73,7 +80,7 @@ expectAllowed("rejected", "draft");
 
 // Block invalid jumps
 expectBlocked("draft", "published");
-expectBlocked("published", "review_requested");
+expectAllowed("published", "review_requested");
 expectBlocked("archived", "draft");
 
 console.log(`\n${pass} passed, ${fail} failed`);

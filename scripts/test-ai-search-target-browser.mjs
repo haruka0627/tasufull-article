@@ -100,8 +100,8 @@ async function main() {
     } else {
       pass("tasful mode no legacy web badge");
     }
-    if (/TASFUL内の候補|AI検索結果/.test(tasfulReply.text)) {
-      pass(`tasful result header: ${tasfulReply.text.match(/TASFUL内の候補|AI検索結果/)?.[0]}`);
+    if (/TASFUL内の候補|AI検索結果|サイト内QA/.test(tasfulReply.text)) {
+      pass(`tasful result header: ${tasfulReply.text.match(/TASFUL内の候補|AI検索結果|サイト内QA/)?.[0]}`);
     } else {
       fail(`tasful result header missing: ${tasfulReply.text.slice(0, 160)}`);
     }

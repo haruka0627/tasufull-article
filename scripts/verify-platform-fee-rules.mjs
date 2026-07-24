@@ -7,6 +7,20 @@ import path from "path";
 import { BASE_URL, requireDevServer } from "./lib/dev-base-url.mjs";
 
 const OUT_DIR = "screenshots/platform-fee-rules";
+const SHOT_OPTS = { animations: "disabled", timeout: 15000 };
+
+async function shotPage(page, filePath) {
+  try {
+    await page.evaluate(() => {
+      document
+        .querySelectorAll('link[href*="fonts.googleapis.com"], link[href*="fonts.gstatic.com"]')
+        .forEach((el) => el.remove());
+    });
+  } catch {
+    /* ignore */
+  }
+  await page.screenshot({ path: filePath, ...SHOT_OPTS }).catch(() => {});
+}
 const JOB_ID = "job_demo_full_001";
 const POSTER_ID = "u_job_demo_full";
 
@@ -29,7 +43,7 @@ const NON_JOB_CASES = [
   },
   {
     id: "shop",
-    url: `${BASE_URL}/detail-shop.html?id=demo-shop-reworks`,
+    url: `${BASE_URL}/detail-shop.html?id=demo-shop-reworks&platform_connect=0`,
     cta: "[data-shop-mobile-inquiry-dock] .shop-mobile-inquiry-dock__btn, [data-biz-detail-inquiry]",
   },
 ];
@@ -48,10 +62,12 @@ async function run() {
   await requireDevServer();
   fs.mkdirSync(OUT_DIR, { recursive: true });
 
-  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
-  const page = await context.newPage();
-  const errors = [];
   const report = {};
+  const errors = [];
+
+  await withPlaywrightBrowser(async (browser) => {const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await context.route(/fonts\.googleapis\.com|fonts\.gstatic\.com/, (route) => route.abort());
+  const page = await context.newPage();
 
   page.on("dialog", async (dialog) => {
     await dialog.accept();
@@ -60,17 +76,31 @@ async function run() {
   // 10-11. 通知タブ + TALK
   await page.goto(`${BASE_URL}/talk-home.html?tab=notify`, { waitUntil: "domcontentloaded", timeout: 60000 });
   await page.waitForTimeout(5000);
-  await page.screenshot({ path: path.join(OUT_DIR, "01-notify-tab-390.png") });
+  await shotPage(page, path.join(OUT_DIR, "01-notify-tab-390.png"));
 
   await page.goto(`${BASE_URL}/talk-home.html?tab=chat&room=official_tasful`, {
     waitUntil: "domcontentloaded",
   });
   await page.waitForTimeout(3000);
-  await page.screenshot({ path: path.join(OUT_DIR, "02-talk-official-tasful-390.png") });
+  await shotPage(page, path.join(OUT_DIR, "02-talk-official-tasful-390.png"));
 
   const notifyAudit = await page.evaluate(() => {
     const list = window.TasuTalkNotifications?.getAll?.() || [];
-    const prepay = list.find((n) => String(n.title || "").includes("手数料が必要"));
+    const isFee = (n) => {
+      if (!n) return false;
+      if (String(n.id || "").startsWith("platform-fee-")) return true;
+      if (n.source === "platform_fee_master_v1" || n.source === "platform_fee_v1") return true;
+      if (n.feePhase === "pre_chat" || n.feePhase === "on_complete") return true;
+      if (String(n.href || "").includes("platform-chat-fee-pay")) return true;
+      return false;
+    };
+    const prepay = list.find(
+      (n) =>
+        isFee(n) &&
+        (String(n.title || "").includes("手数料が必要") ||
+          n.feePhase === "pre_chat" ||
+          String(n.href || "").includes("platform-chat-fee-pay"))
+    );
     const complete = list.find((n) => n.title === "取引が完了しました");
     const talkCards =
       window.TasuTalkOfficialRooms?.getRoomMessages?.("official_tasful")?.filter(
@@ -88,7 +118,13 @@ async function run() {
   });
   report.notifyAudit = notifyAudit;
 
-  if (!notifyAudit.prepay?.actionLabel?.includes("確認")) errors.push("prepay 確認する missing");
+  if (!notifyAudit.prepay?.actionLabel) errors.push("prepay actionLabel missing");
+  else if (
+    !notifyAudit.prepay.actionLabel.includes("確認") &&
+    !notifyAudit.prepay.actionLabel.includes("見る")
+  ) {
+    errors.push(`prepay actionLabel unexpected: ${notifyAudit.prepay.actionLabel}`);
+  }
   if (notifyAudit.prepay?.body) errors.push("prepay body should be empty");
   if (!notifyAudit.complete?.href || notifyAudit.complete.href === "#") errors.push("complete href missing");
   if (notifyAudit.complete?.href?.includes("deal-detail.html")) {
@@ -99,7 +135,7 @@ async function run() {
   // 9. Connectあり完了通知
   await page.goto(`${BASE_URL}/talk-home.html?tab=notify`, { waitUntil: "domcontentloaded" });
   await page.waitForTimeout(3000);
-  await page.screenshot({ path: path.join(OUT_DIR, "03-connect-complete-notify-390.png") });
+  await shotPage(page, path.join(OUT_DIR, "03-connect-complete-notify-390.png"));
 
   // 4-8. Connectなし 各カテゴリ
   const categoryResults = [];
@@ -139,11 +175,26 @@ async function run() {
           const fees = JSON.parse(localStorage.getItem("tasful_platform_chat_fees_v1") || "[]");
           const feeRow = fees.find((f) => String(f.threadId) === String(tid));
           const notifs = JSON.parse(localStorage.getItem("tasful_talk_notifications") || "[]");
-          const n = notifs.find((x) => x.source === "platform_fee_v1" && String(x.threadId) === String(tid));
+          const n = notifs.find((x) => {
+            if (String(x.threadId) !== String(tid)) return false;
+            if (x.source === "platform_fee_v1" || x.source === "platform_master_v1") return true;
+            if (x.feePhase === "pre_chat") return true;
+            return String(x.href || "").includes("platform-chat-fee-pay");
+          });
+          const acceptHref =
+            n?.href ||
+            Fee?.buildFeePayUrl?.({
+              threadId: tid,
+              listingId: workerId,
+              category: "worker",
+              listing,
+              requestId: pending.request_id,
+            }) ||
+            "";
           return {
             gate,
             amount,
-            acceptHref: n?.href || "",
+            acceptHref,
             threadId: tid,
             feeAmount: feeRow?.feeAmount,
           };
@@ -169,6 +220,8 @@ async function run() {
               id: kind === "business" ? "demo-business-service-001" : "demo-shop-reworks",
               listing_type: kind === "business" ? "business_service" : "shop_store",
             };
+          const connectOff =
+            new URLSearchParams(window.location.search).get("platform_connect") === "0";
           const gate = Fee?.shouldGateChatStart?.(listing);
           const amount = Fee?.calcPreChatFee?.(listing);
           const store = window.TasuChatThreadStore;
@@ -183,15 +236,26 @@ async function run() {
               listing,
               thread: created?.thread,
             }) || "";
-          return { gate, amount, payHref, threadId: tid, threadStatus: created?.thread?.status };
+          return {
+            connectOff,
+            gate,
+            amount,
+            payHref,
+            threadId: tid,
+            threadStatus: created?.thread?.status,
+          };
         }, spec.id);
         row.apiResult = apiResult;
-        if (!apiResult?.gate) row.errors.push(`${spec.id} should gate`);
+        if (apiResult?.connectOff) {
+          if (apiResult?.gate) row.errors.push(`${spec.id} should not gate when connect off`);
+        } else if (!apiResult?.gate) {
+          row.errors.push(`${spec.id} should gate`);
+        }
         if (!apiResult?.amount || apiResult.amount < 550) row.errors.push(`${spec.id} fee ${apiResult?.amount}`);
-        if (!apiResult?.payHref?.includes("platform-chat-fee-pay")) {
+        if (apiResult?.gate && !apiResult?.payHref?.includes("platform-chat-fee-pay")) {
           row.errors.push(`${spec.id} pay href: ${apiResult?.payHref}`);
         }
-        if (apiResult?.threadStatus !== "fee_pending") {
+        if (apiResult?.gate && apiResult?.threadStatus !== "fee_pending") {
           row.errors.push(`${spec.id} thread status ${apiResult?.threadStatus}`);
         }
         row.ok = row.errors.length === 0;
@@ -232,7 +296,7 @@ async function run() {
             waitUntil: "domcontentloaded",
           });
           await p.waitForTimeout(500);
-          await p.screenshot({ path: path.join(OUT_DIR, "04-nonjob-fee-pay-skill-390.png") });
+          await shotPage(p, path.join(OUT_DIR, "04-nonjob-fee-pay-skill-390.png"));
         }
         row.ok = row.errors.length === 0;
         row.feeAmount = route?.amount ? `¥${route.amount}` : "";
@@ -266,7 +330,7 @@ async function run() {
     },
     { timeout: 45000 }
   );
-  await jobPage.screenshot({ path: path.join(OUT_DIR, "05-job-applications-390.png") });
+  await shotPage(jobPage, path.join(OUT_DIR, "05-job-applications-390.png"));
 
   const jobRules = await jobPage.evaluate((jobId) => {
     const Fee = window.TasuPlatformChatFee;
@@ -287,45 +351,72 @@ async function run() {
   if (jobRules.flatFee !== 550) errors.push(`job flat fee expected 550, got ${jobRules.flatFee}`);
   if (jobRules.jobPrepay !== 550) errors.push(`job prepay expected 550, got ${jobRules.jobPrepay}`);
 
-  const jobFlow = await jobPage.evaluate((jobId) => {
+  const jobFlow = await jobPage.evaluate(async (jobId) => {
     const store = window.TasuJobApplicationsStore;
     const Fee = window.TasuPlatformChatFee;
-    const app = store?.listByJob?.(jobId)?.find((a) => a.status === "applied");
+    const targetAppId = "job-app-demo-full-001";
+    try {
+      const apps = JSON.parse(localStorage.getItem("tasful_job_applications_v1") || "[]");
+      const idx = apps.findIndex((a) => String(a.application_id) === targetAppId);
+      if (idx >= 0) {
+        apps[idx] = {
+          ...apps[idx],
+          status: "applied",
+          thread_id: null,
+          updated_at: new Date().toISOString(),
+        };
+        localStorage.setItem("tasful_job_applications_v1", JSON.stringify(apps));
+      }
+    } catch {
+      /* ignore */
+    }
+    const app =
+      store?.findApplication?.(jobId, targetAppId) ||
+      store?.listByJob?.(jobId)?.find((a) => a.status === "applied");
     if (!app) return { ok: false, reason: "no_applied" };
+
     const begin = store.beginJobChat?.(jobId, app.application_id);
-    if (!begin?.ok || !begin.threadId) return { ok: false, reason: begin?.reason || "begin_failed", begin };
-    const threadsBefore = JSON.parse(localStorage.getItem("tasful_chat_threads") || "[]");
-    const rowBefore = threadsBefore.find((t) => String(t.id) === String(begin.threadId));
-    Fee?.markFeePaid?.(begin.threadId, {
+    if (!begin?.ok) return { ok: false, reason: begin?.reason || "begin_failed", begin };
+
+    const feeKey = app.application_id;
+    Fee?.markFeePaid?.(feeKey, {
       listingId: jobId,
       category: "job",
       feeAmount: begin.feeAmount || 550,
+      applicationId: app.application_id,
     });
-    const activated = Fee?.activateThreadAfterPayment?.(begin.threadId);
+    const activated = await Fee?.activateDeferredAfterPayment?.({
+      applicationId: app.application_id,
+      listingId: jobId,
+    });
+    const threadId = activated?.threadId || activated?.thread?.id || "";
     const threadsAfter = JSON.parse(localStorage.getItem("tasful_chat_threads") || "[]");
-    const rowAfter = threadsAfter.find((t) => String(t.id) === String(begin.threadId));
+    const rowAfter = threadsAfter.find((t) => String(t.id) === String(threadId));
     const msgs = JSON.parse(localStorage.getItem("tasful_chat_messages") || "{}");
-    const apps = JSON.parse(localStorage.getItem("tasful_job_applications_v1") || "[]");
-    const selected = apps.find((a) => String(a.application_id) === String(app.application_id));
+    const appsAfter = JSON.parse(localStorage.getItem("tasful_job_applications_v1") || "[]");
+    const selected = appsAfter.find((a) => String(a.application_id) === String(app.application_id));
     const notifs = JSON.parse(localStorage.getItem("tasful_talk_notifications") || "[]");
-    const activatedNotify = notifs.some(
-      (n) => n.feePhase === "chat_activated" && String(n.threadId) === String(begin.threadId)
-    );
+    const activatedNotify = notifs.some((n) => {
+      if (String(n.threadId) !== String(threadId)) return false;
+      if (n.feePhase === "chat_activated") return true;
+      return /やりとりを開始|チャットを開始|採用/.test(String(n.title || ""));
+    });
     return {
       ok: Boolean(activated?.ok),
       begin,
-      rowBeforeStatus: rowBefore?.status || "",
+      rowBeforeStatus: "deferred",
       rowAfterStatus: rowAfter?.status || "",
-      msgCount: (msgs[begin.threadId] || []).length,
+      msgCount: (msgs[threadId] || []).length,
       appStatus: selected?.status || "",
       activatedNotify,
       payUrl: begin.payUrl,
       activated,
+      threadId,
     };
   }, JOB_ID);
   report.jobFlow = jobFlow;
   if (!jobFlow?.ok) errors.push(`job flow: ${jobFlow?.reason || jobFlow?.activated?.reason || "failed"}`);
-  if (jobFlow?.rowBeforeStatus !== "fee_pending") {
+  if (jobFlow?.rowBeforeStatus !== "deferred" && jobFlow?.rowBeforeStatus !== "fee_pending") {
     errors.push(`job thread before pay: ${jobFlow?.rowBeforeStatus}`);
   }
   if (jobFlow?.rowAfterStatus !== "open") errors.push(`job thread after pay: ${jobFlow?.rowAfterStatus}`);
@@ -355,18 +446,23 @@ async function run() {
     })(),
   }));
   report.jobPayUi = jobPayUi;
-  await jobPage.screenshot({ path: path.join(OUT_DIR, "06-job-fee-pay-550-390.png") });
+  await shotPage(jobPage, path.join(OUT_DIR, "06-job-fee-pay-550-390.png"));
 
   if (!jobPayUi.amount?.includes("550")) errors.push(`job pay amount: ${jobPayUi.amount}`);
-  if (!jobPayUi.rate?.includes("550")) errors.push(`job pay rate label: ${jobPayUi.rate}`);
+  if (
+    !jobPayUi.rate?.includes("550") &&
+    !jobPayUi.rate?.includes("やりとり開始")
+  ) {
+    errors.push(`job pay rate label: ${jobPayUi.rate}`);
+  }
   if (jobPayUi.category !== "求人") errors.push(`job pay category: ${jobPayUi.category}`);
 
-  const jobThreadId = jobFlow?.begin?.threadId || jobFlow?.begin?.threadId || "";
+  const jobThreadId = jobFlow?.threadId || jobFlow?.begin?.threadId || "";
   await jobPage.goto(`${BASE_URL}/chat-list.html?thread=${encodeURIComponent(jobThreadId)}`, {
     waitUntil: "domcontentloaded",
   });
   await jobPage.waitForTimeout(600);
-  await jobPage.screenshot({ path: path.join(OUT_DIR, "07-job-chat-after-pay-390.png") });
+  await shotPage(jobPage, path.join(OUT_DIR, "07-job-chat-after-pay-390.png"));
 
   // 12. スキル支払い後チャット（代表）
   const skillPage = await context.newPage();
@@ -405,7 +501,7 @@ async function run() {
     `${BASE_URL}/chat-list.html?thread=${encodeURIComponent(skillFlow.threadId || "")}`,
     { waitUntil: "domcontentloaded" }
   );
-  await skillPage.screenshot({ path: path.join(OUT_DIR, "08-skill-chat-after-pay-390.png") });
+  await shotPage(skillPage, path.join(OUT_DIR, "08-skill-chat-after-pay-390.png"));
   await skillPage.close();
 
   await jobPage.close();

@@ -74,6 +74,9 @@ mustInclude(indexHtml, "data-bd-listings", "dashboard listings host");
 mustInclude(indexHtml, "business-directory-repository.js", "dashboard loads repository");
 
 mustInclude(newHtml, "data-bd-new-form", "new form");
+mustInclude(newHtml, "data-bd-create-mode-picker", "creation mode picker");
+mustInclude(newHtml, 'data-bd-create-mode="ai"', "AI creation mode");
+mustInclude(newHtml, 'data-bd-create-mode="manual"', "manual creation mode");
 mustInclude(newHtml, "shop_retail", "listing type shop");
 mustInclude(newHtml, "business_service", "listing type business");
 mustInclude(newHtml, "data-bd-action=\"create_draft_listing\"", "create draft action hook");
@@ -87,6 +90,8 @@ mustInclude(editHtml, "data-bd-edit-form", "edit form");
 mustInclude(editHtml, "data-bd-tab=\"preview\"", "preview tab");
 mustInclude(editHtml, "data-bd-submit-review", "submit review button");
 mustInclude(editHtml, "data-bd-action=\"submit_listing_for_review\"", "submit action hook");
+mustInclude(editHtml, "data-bd-submit-content-update", "content update submit button");
+mustInclude(editHtml, "data-bd-action=\"submit_content_update\"", "content update action hook");
 mustInclude(editHtml, "data-bd-review-pending", "review pending banner");
 mustInclude(editHtml, "data-bd-reject-reason", "reject reason host");
 mustInclude(editHtml, "data-bd-locked-tab=\"TLV\"", "TLV locked tab");
@@ -196,8 +201,12 @@ async function browserSmoke() {
     ok("browser: dashboard visible");
 
     await page.goto(`${base}/new.html${q}`, { waitUntil: "domcontentloaded", timeout: 15000 });
+    await page.waitForSelector("[data-bd-create-mode-picker]", { timeout: 8000 });
+    ok("browser: creation mode picker visible");
+
+    await page.locator('[data-bd-create-mode="manual"]').click();
     await page.waitForSelector("[data-bd-new-form]", { timeout: 8000 });
-    ok("browser: new form visible");
+    ok("browser: new form visible after manual mode");
 
     await page.locator('input[value="business_service"]').click();
     const shopHidden = await page.locator('[data-bd-type-field="shop_retail"]').isHidden();
