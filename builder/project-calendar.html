@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f97316" />
+  <meta name="theme-color" content="#0c0f1d" />
   <title>案件カレンダー | TASFUL Builder</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="builder.css" />
-  <link rel="stylesheet" href="builder-project-hub.css" />
   <link rel="stylesheet" href="builder-project-calendar.css" />
   <link rel="stylesheet" href="../common-breadcrumb.css" />
 </head>
@@ -19,16 +18,35 @@
       <div class="builder-shell builder-header__inner">
         <div class="builder-brandWrap">
           <a class="builder-brand" href="./index.html" aria-label="Builder ダッシュボード">
+            <span class="builder-brand__mark" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 21h18"/><path d="M7 21V7l8-4v18"/><path d="M17 21V11l-6-4"/>
+              </svg>
+            </span>
             <span class="builder-brand__text">
               <span class="builder-brand__main">Builder</span>
-              <span class="builder-brand__sub">案件カレンダー · Phase 6-B</span>
+              <span class="builder-brand__sub">案件カレンダー</span>
             </span>
           </a>
           <a class="builder-page-back" href="project-hub.html">‹ 案件ハブ</a>
         </div>
         <div class="builder-header__center">
           <h1 class="builder-header__title">案件カレンダー</h1>
-          <p class="builder-header__sub">工程・日程の一元管理（ProjectStore 正本）</p>
+          <p class="builder-header__sub">工程・日程の一元管理</p>
+        </div>
+        <div class="builder-detail-menu" data-builder-detail-menu>
+          <button
+            type="button"
+            class="builder-detail-menu__toggle"
+            data-builder-detail-menu-toggle
+            aria-label="メニューを開く"
+            aria-expanded="false"
+            aria-haspopup="dialog"
+          >
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+          </button>
         </div>
       </div>
     </header>
@@ -52,30 +70,74 @@
           </section>
         </aside>
 
-        <section class="builder-panel" aria-label="カレンダー">
+        <section class="builder-panel builder-pc-main" aria-label="カレンダー">
           <div class="builder-pc-toolbar">
-            <div class="builder-pc-toolbar__nav">
-              <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-pc-prev aria-label="前へ">‹</button>
-              <p class="builder-pc-toolbar__label" data-builder-pc-period-label>—</p>
-              <button type="button" class="builder-btn builder-btn--ghost builder-btn--sm" data-builder-pc-next aria-label="次へ">›</button>
-              <button type="button" class="builder-btn builder-btn--secondary builder-btn--sm" data-builder-pc-today-btn>今日</button>
-            </div>
-            <div class="builder-pc-view-tabs" role="tablist" aria-label="表示切替">
-              <button type="button" class="is-active" data-builder-pc-view="month" role="tab" aria-selected="true">月</button>
-              <button type="button" data-builder-pc-view="week" role="tab" aria-selected="false">週</button>
+            <p class="builder-pc-toolbar__label" data-builder-pc-period-label>—</p>
+            <div class="builder-pc-toolbar__controls">
+              <div class="builder-pc-toolbar__nav">
+                <button type="button" class="builder-pc-toolBtn" data-builder-pc-prev aria-label="前へ">‹</button>
+                <button type="button" class="builder-pc-toolBtn" data-builder-pc-today-btn>今日</button>
+                <button type="button" class="builder-pc-toolBtn" data-builder-pc-next aria-label="次へ">›</button>
+              </div>
+              <div class="builder-pc-view-tabs" role="tablist" aria-label="表示切替">
+                <button type="button" class="builder-pc-toolBtn builder-pc-viewTab--mobile is-active" data-builder-pc-view="agenda" role="tab" aria-selected="true">一覧</button>
+                <button type="button" class="builder-pc-toolBtn builder-pc-viewTab--month is-active" data-builder-pc-view="month" role="tab" aria-selected="true">月</button>
+                <button type="button" class="builder-pc-toolBtn builder-pc-viewTab--desktop" data-builder-pc-view="week" role="tab" aria-selected="false">週</button>
+              </div>
             </div>
           </div>
           <div data-builder-pc-calendar-body></div>
         </section>
+
+        <aside class="builder-pc-detail" aria-label="案件詳細" data-builder-pc-detail>
+          <div class="builder-pc-detail__summary" data-builder-pc-detail-summary>
+            <h3 class="builder-pc-detail__summaryTitle">案件詳細</h3>
+            <p class="builder-pc-detail__summaryHint">案件を選択すると詳細情報を表示します</p>
+          </div>
+        </aside>
       </div>
 
-      <footer class="builder-footer"><p>© 2026 TASFUL inc. Builder Project Calendar MVP</p></footer>
+      <footer class="builder-footer"><p>© 2026 TASFUL inc. Builder Project Calendar</p></footer>
     </main>
   </div>
 
+  <script src="../talk-runtime.js"></script>
+  <script src="../auth-current-user.js"></script>
+  <script src="builder-actor-identity.js"></script>
+  <script src="builder-config.js"></script>
+  <script src="builder-mvp-store-local.js"></script>
+  <script src="builder-repositories-local.js"></script>
+  <script src="builder-repositories-supabase.js"></script>
+  <script src="builder-actor-resolver.js"></script>
+  <script src="builder-session.js"></script>
+  <script src="builder-data-provider.js"></script>
+  <script src="builder-repository.js"></script>
+  <script src="builder-partner-adapter.js"></script>
+  <script src="builder-storage-adapter.js"></script>
+  <script src="builder-pdf-adapter.js"></script>
+  <script src="builder-event-hub.js"></script>
+  <script src="builder-notification-adapter.js"></script>
+  <script src="builder-ai-adapter.js"></script>
+  <script src="builder-ai-tools.js"></script>
+  <script src="builder-ai-tool-router.js"></script>
+  <script src="builder-ai-core.js"></script>
+  <script src="builder-b3-init.js"></script>
+  <script src="builder-general-flow.js"></script>
   <script src="../breadcrumb-config.js"></script>
   <script src="../common-breadcrumb.js"></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="../supabase-public-key.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../chat-supabase.js"></script>
+  <script src="builder-project-id-map.js"></script>
   <script src="builder-project-store.js"></script>
+  <script src="builder-project-calendar-supabase.js"></script>
+  <script src="builder-project-write-adapter.js"></script>
+  <script src="builder-project-talk-room.js"></script>
+  <script src="builder-project-talk-events.js"></script>
+  <script src="builder-project-calendar-realtime.js"></script>
   <script src="builder-project-calendar.js"></script>
+  <script src="builder.js" defer></script>
 </body>
 </html>
