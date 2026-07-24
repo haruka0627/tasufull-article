@@ -37,9 +37,15 @@ const EXCLUDE_FILES = new Set([
   ".gitignore",
   ".env",
   ".env.local",
+  ".env.staging",
   "chat-supabase-config.js",
   "chat-supabase-config.local.js",
 ]);
+
+/** Dotenv family must never land in Pages dist (secrets / local-only). */
+function isDotEnvFamily(base) {
+  return base === ".env" || base.startsWith(".env.");
+}
 
 function shouldSkip(relPath) {
   const norm = relPath.replace(/\\/g, "/");
@@ -47,6 +53,7 @@ function shouldSkip(relPath) {
   if (parts.some((p) => EXCLUDE_DIRS.has(p))) return true;
   const base = parts[parts.length - 1];
   if (EXCLUDE_FILES.has(base)) return true;
+  if (isDotEnvFamily(base)) return true;
   if (base.endsWith(".log")) return true;
   if (base.startsWith(".git-")) return true;
 
@@ -316,6 +323,30 @@ function copyPagesFunctions() {
   console.log("[stage-cloudflare-pages] copied deploy/cloudflare/functions → dist/functions");
 }
 
+/** Fail closed if any dotenv family file was copied into dist (never log contents). */
+function assertNoDotEnvInDist() {
+  const hits = [];
+  const walk = (dir) => {
+    if (!fs.existsSync(dir)) return;
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, ent.name);
+      if (ent.isDirectory()) {
+        walk(full);
+        continue;
+      }
+      if (isDotEnvFamily(ent.name)) {
+        hits.push(path.relative(OUT_DIR, full).replace(/\\/g, "/"));
+      }
+    }
+  };
+  walk(OUT_DIR);
+  if (hits.length) {
+    console.error("[stage-cloudflare-pages] ERROR: dotenv family files must not appear in dist:");
+    for (const h of hits) console.error(`  - ${h}`);
+    process.exit(1);
+  }
+}
+
 function main() {
   if (fs.existsSync(OUT_DIR)) {
     fs.rmSync(OUT_DIR, { recursive: true, force: true });
@@ -333,6 +364,8 @@ function main() {
 
   copyCfMeta();
   copyPagesFunctions();
+
+  assertNoDotEnvInDist();
 
   writeChatSupabaseConfig();
   writeTlvFeatureFlags();

@@ -3,7 +3,10 @@ node_modules/
 *.log
 .env
 .env.local
+.env.staging
+**/.env.staging
 chat-supabase-config.local.js
+**/chat-supabase-config.js.production-backup
 live/live-zego-config.js
 
 # Gate-D Playwright OTP session (contains Cloudflare Access cookies)
@@ -12,11 +15,18 @@ reports/gate-d-auth-storage.json
 # Local backups / regression artifacts (not for deploy)
 backups/
 screenshots/
+images/**/_backup-*/
 
 # One-off investigation scripts and HTML fragments
 scripts/_*
 scripts/_*/
 scripts/*.html
+scripts/tmp-*
+scripts/tmp-*/
+
+# Scratch / ephemeral verify outputs (do not commit)
+reports/_tmp-*
+reports/*-last.json
 
 # Supabase CLI temp
 supabase/.temp/
