@@ -1,10 +1,26 @@
 # TASFUL TODO（正本）
 
-**最終更新:** 2026-07-04  
-**Git HEAD:** `e5c4d24`（参照時点 · 以降は [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
-**優先:** **リリース前最終整理** — [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md) · REL-P0-04 dist 同期 · P5 Materials Phase 0
+**最終更新:** 2026-07-25（Step 2a · 冒頭同期）  
+**現在HEAD:** `d0ed090`（詳細ステータスは [PROJECT_STATUS.md](./PROJECT_STATUS.md) を正とする）  
+**優先:** working tree 整理（領域別分割コミット） · **REL-P0-04** · **10月公開準備** · Business Directory Launch 残 · Calendar Hub Primary は **完了**（次優先にしない）
+
+**Future / CAND:** 下記 Future 節・CAND 項目は **未承認・実装禁止**（改稿しない · 着手しない）。
 
 ---
+
+### 商用前整理（2026-07-05 · 今月締め）
+
+| # | 内容 | 状態 |
+| --- | --- | --- |
+| 1 | Platform 利用規約・FAQ（掲載無料 · 550円 · 独自決済等） | **Done** |
+| 2 | Platform オプション UI（準備中 · 決済なし） | **Done** — `platform-options.html` |
+| 3 | Future/TODO 棚卸し（Builder · BD · Talk · TLV · Platform） | **Done** — [commercial-prep-inventory-2026-07.md](./commercial-prep-inventory-2026-07.md) |
+| 4 | 10月 Production 前 E2E チェックリスト | **Done** — [production-prelaunch-e2e-checklist-oct2026.md](../reports/production-prelaunch-e2e-checklist-oct2026.md) |
+
+**禁止遵守:** Production SQL · Stripe Live · CF Production deploy · AI Router 本体 — **未実施**
+
+---
+
 
 ### Live API — ZEGO Provider（P3 · 2026-06-28）
 
@@ -98,6 +114,21 @@
 | 業者検索 | `vendor_contact` | **PASS** — `reports/ui-review/builder-vendor-search/` |
 
 **Builder Talk 検証:** 完成扱い（Production Ready · FROZEN 維持）。開示前 badge HTML 初期値は保留（機能影響なし）。
+
+### Builder 一般案件 — Production（**10月リリース · 本番凍結** · 2026-07-05）
+
+**正本:** [builder-general-jobs-production-freeze-oct2026.md](./builder-general-jobs-production-freeze-oct2026.md) · [10月チェックリスト](../reports/builder-general-jobs-october-release-checklist.md)
+
+| 項目 | 状態 |
+| --- | --- |
+| Staging 商用（P0〜P3 · RL） | **Go** — Launch Smoke 10/10 · RL-02 23/23 |
+| Production SQL 準備 | **Go**（ファイルのみ · Dashboard **未適用**） |
+| RL-04 フラグコード | **Go**（**Production deploy は10月まで保留**） |
+| **Builder Production Ready** | **No-Go** — **10月リリース予定のため、本番適用は保留** |
+
+**10月直前まで禁止:** Production Dashboard SQL · Cloudflare Production deploy · Supabase MCP Production
+
+**10月実行:** `reports/builder-general-jobs-october-release-checklist.md` → RL-05 → RL-04 → RL-03
 
 ---
 
@@ -237,10 +268,25 @@
 
 | ID | 対象 | 優先度 | 状態 | ブロッカー | 次アクション |
 | --- | --- | --- | --- | --- | --- |
-| **REL-P0-01** | **Repo / Docs** | P0 | 部分 | working tree 残存（dist / reports / 別領域） | 領域別選別ステージング · `git add -A` 禁止 |
+| **REL-P0-01** | **Repo / Docs** | P0 | 部分 | 大量の未整理差分を領域別に分類済み · 分割コミット予定 | 領域別選別ステージング · `git add -A` 禁止 · [PROJECT_STATUS](./PROJECT_STATUS.md) |
 | **REL-P0-02** | **TLV Payment** | P0 | **Paused（運用待ち）** | 運用ゲートのみ（Backup · Stripe · Live smoke） | [Completion Gate §11](../reports/tlv-phase1-completion-gate.md#11-phase-1-停止--再開条件正本) · Runbook Step 1→10 |
-| **REL-P0-03** | **AI 秘書** | P0 | deploy No-Go | `DEEPSEEK_API_KEY` prod · 残高 · HTTP 200 smoke | Production Secret · deploy · 1 往復 smoke |
-| **REL-P0-04** | **Pages 配信** | P0 | 部分 | **dist git 未反映**（Design Audit `ee2efea` 等）· prod alias 未 deploy | **本番 deploy 前必須:** `build:pages` → 選別 dist コミット → prod alias · smoke 8788/本番 |
+| **REL-P0-03** | **AI 秘書** | P0 | deploy No-Go | prod secret · 残高 · HTTP 200 smoke | Production Secret · deploy · 1 往復 smoke |
+| **REL-P0-04** | **Pages 配信** | P0 | 部分 | **dist git 同期済**（`6d323dd`）· **prod alias 未 deploy** | 8788 smoke → prod alias · 本番 smoke |
+
+**Breaking Change 依存調査（2026-07-04）— PASS**
+
+| 項目 | 状態 |
+| --- | --- |
+| **スキャン** | **PASS** — P0 blocker **0** · 追加修正・追加コミット **不要** |
+| **証跡** | [breaking-change-dependency-scan-2026-07-04.md](../reports/breaking-change-dependency-scan-2026-07-04.md) · `.json`（reports バンドルは未コミット可） |
+| **DeepSeek 旧 ID** | 保護済 — `resolveDeepSeekModel(env)` が `deepseek-chat` / `deepseek-reasoner` を `deepseek-v4-flash` へ正規化（廃止 2026-07-24） |
+
+**残る要確認（Dashboard 目視のみ · コード変更不要）**
+
+| ID | 内容 | 即時本番影響 |
+| --- | --- | --- |
+| **BC-P0-PG** | Supabase Production (`ddojquacsyqesrjhcvmn`) / Staging (`ahlxuyvhzqdqaojiywmu`) の **Postgres major version** | 不明 — Dashboard 確認後に記録 |
+| **BC-P0-DS-ENV** | Cloudflare Pages env の `DEEPSEEK_CHAT_MODEL` 現行値 | **なし** — 旧 ID でも runtime 正規化 |
 
 **TLV Payment Release Operations（REL-P0-02 詳細 · 開発凍結 · Runbook のみ · Phase 1 実装停止 2026-06-28）**
 
@@ -656,8 +702,6 @@ npm run verify:live-zego-poc-e2e
 | **REL-F-11** | Creator Marketplace | 下記 §CAND-CREATOR-MARKETPLACE-01 |
 | **REL-F-12** | AI Sound Library | 下記 §CAND-ASSET-LIBRARY-02 |
 
----
-
 ### CAND-CREATOR-MARKETPLACE-01 — Creator Marketplace（Future）
 
 **状態:** Future（未着手）  
@@ -949,23 +993,19 @@ Creator Marketplace
 
 | 項目 | 内容 |
 | --- | --- |
-| **Priority** | High |
-| **Status** | Future · 未着手 |
+| **Priority** | High（コード側は完了） |
+| **Status** | **AI 秘書 runtime 保護済** · Breaking Change scan **PASS**（2026-07-04）· Dashboard 要確認のみ |
 
 **背景:** 旧 `deepseek-chat` · 旧 `deepseek-reasoner` は **2026-07-24 廃止予定**。
 
-**移行先:** TASFUL AI の DeepSeek 接続を `deepseek-v4-pro` · `deepseek-v4-flash` へ移行する。
+**実装状況（AI 秘書 · AD-010）:** default = `deepseek-v4-flash` · `resolveDeepSeekModel(env)` が旧 ID を正規化 · 回帰 `scripts/test-secretary-deepseek-model.mjs`。**追加コード修正不要。** env が古くても即時本番影響なし。
 
-**調査・移行項目（実装は後日）**
+**残（Dashboard 目視のみ）**
 
-- [ ] モデル名更新
-- [ ] SDK 確認
-- [ ] OpenAI 互換確認
-- [ ] Anthropic 互換確認
-- [ ] 料金比較
-- [ ] 速度比較
-- [ ] 品質比較
-- [ ] フォールバック確認
+- [ ] Cloudflare Pages env の `DEEPSEEK_CHAT_MODEL` 現行値確認（**BC-P0-DS-ENV**）
+- [ ] （任意）明示値を `deepseek-v4-flash` / `deepseek-v4-pro` に揃える
+
+**参照:** [breaking-change-dependency-scan-2026-07-04.md](../reports/breaking-change-dependency-scan-2026-07-04.md) · [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md) §Breaking Change
 
 #### TODO-AI-02 — Gemini Interactions API 調査
 
@@ -2425,6 +2465,8 @@ Groq / Cerebras / Claude は **現時点では不要**。
 **次フェーズ候補（未着手）:** Redis 等分散 Rate Limit（`VOICE_REALTIME_RATE_LIMIT_DISTRIBUTED`）· Builder/秘書 Voice UX · TLV Voice 検討
 
 **完了（P1）:** Hardening Phase 2 — JWT opt-in（`VOICE_REALTIME_REQUIRE_JWT=1` · デフォルト OFF）· user bucket 20/min · `f4cf7d8`
+
+**2026-08 予定（TASFUL AI 正式展開前）:** [TASFUL AI 安全運用基盤](./AI/TASFUL_AI_SAFE_OPS_FOUNDATION.md) — WAF · Turnstile · Usage Guard · 利用ログ/コスト · 秘書毎朝レポート · **API 呼び出し前ガード必須**（実行後制限禁止）
 
 ---
 

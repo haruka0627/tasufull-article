@@ -9,14 +9,22 @@
 ### Added
 
 - `docs/` 正本ドキュメントセット（PROJECT_STATUS · TODO · ROADMAP · DECISIONS · AI/* 等）
+- 商用前整理棚卸し — [commercial-prep-inventory-2026-07.md](./commercial-prep-inventory-2026-07.md)
+- dotenv 系の Pages dist 混入防止（gitignore · ビルド除外 · dist 事後検査）— Git 履歴への混入なし（KI-016）
+
+### Changed
+
+- ステータス正本を現在HEAD `d0ed090` へ同期（Step 2a）— Calendar Hub Primary 完了 · 開発優先の再配置 · working tree 固定件数の廃止
+- TASFUL AI 表記を **Production Ready Go** に統一（根拠: [tasful-ai-production-ready-verification.md](../reports/tasful-ai-production-ready-verification.md)）
 
 ### Pending
 
-- working tree 440 件の整理
-- TASFUL AI 本番接続
+- working tree の領域別分割コミット（大量差分 · 分類済）
 - Builder AI P2-C
 - Platform Featured / favorites DB / Google OAuth E2E
-- `docs/` 自体の git コミット
+- REL-P0-04 prod alias deploy
+- Business Directory Commercial Launch（Conditional · Human OB / Stripe Live 残）
+- `docs/` ステータス正本の git コミット（本 Unreleased）
 
 ---
 

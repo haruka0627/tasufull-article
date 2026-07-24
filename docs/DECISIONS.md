@@ -1,7 +1,17 @@
 # TASFUL 決定事項（Architecture Decisions）
 
-**最終更新:** 2026-06-28（AD-014 Platform Vision · 条件達成型 Creator Economy）  
+**最終更新:** 2026-07-25（Step 2a · AD-015 / AD-016 索引整合 · 現在HEAD `d0ed090`）  
 **形式:** 決定 ID · 日付 · 状態 · 内容 · 根拠
+
+### 決定一覧（索引）
+
+| ID | 要約 |
+| --- | --- |
+| AD-001〜005 | AI サーフェス分離 · Gateway 凍結 等 |
+| AD-008 | TLV v1.0 FROZEN |
+| AD-011〜014 | 国内優先 · UI/UX · Business Directory · Platform Vision |
+| **AD-015** | TASFUL AI サイト内 QA = QA 記事コンポーネント SSOT |
+| **AD-016** | TASFUL AI Free 枠は Pricing Catalog 外 |
 
 ---
 
@@ -309,6 +319,80 @@ TASFUL市場
 | **AD-008** | TLV v1.0 **FROZEN** — 本 AD は **次世代 Platform Vision** |
 
 | **根拠** | [ROADMAP.md](./ROADMAP.md) § Platform Vision · [TODO.md](./TODO.md) § Live Platform Vision |
+
+---
+
+## AD-015 — TASFUL AI サイト内 QA は QA 記事コンポーネントを Single Source of Truth
+
+| 項目 | 内容 |
+| --- | --- |
+| **決定** | QA は **AI 専用回答を別で作らない**。QA 記事として定義した **共通コンポーネント** を、**QA 詳細ページ** と **サイト内 AI 回答欄** の双方で **そのまま** 表示する |
+| **日付** | 2026-06-30（**改定** — 同日早版「要約 + CTA 導線」方針を **本決定で置換**） |
+| **状態** | **確定（設計）** — QA データ · コンポーネント抽出 · ページ · チャット実装は **未着手** |
+
+### AI の役割
+
+- ユーザー質問に **該当する QA 記事を検索** する
+- ヒットした QA データを **QA 記事コンポーネント** に渡して描画する
+- **別回答文の生成 · 別 UI の生成はしない**
+
+### QA 記事コンポーネント（1 種類）
+
+- 質問カード · AI 回答ボックス · 手順 · 注意 · CTA · 関連ページ · フィードバック等を **共通レイアウト** で表示
+- **QA ごとの独自レイアウト禁止** — 中身のみ QA データで差し替え
+- **QA ページ用と AI 用で二重管理禁止**
+
+### 検索結果種別（3 種のみ）
+
+| 種別 | 表示 |
+| --- | --- |
+| **QA** | QA 記事コンポーネント（全文） |
+| **検索カード** | 既存カード UI（業者 · 求人 · 商品等）— **QA と完全分離** |
+| **QA + 検索カード** | QA コンポーネントの **後に** 検索カード |
+
+### 詳細ページ
+
+- パス例: `/help/pricing`, `/help/signup`, `/help/direct-trading`, `/help/beginner`
+- ページシェル + **同一 QA 記事コンポーネント** + ページ専用ラッパー（更新日 · 前後 QA 等）
+- **本 AD 時点ではページ未作成**
+
+### 既存 AD との関係
+
+| AD | 関係 |
+| --- | --- |
+| **AD-005** | Gateway 契約変更は Q4 実装時に ADR 追加で扱う（安易な破壊的変更禁止は継続） |
+| **AD-012** | QA は **共通コンポーネントで一貫表示** — チャットと詳細ページで内容を分けない |
+| **AD-003/004** | Platform/TLV は TASFUL AI 入口経由 — 本 QA 契約を共有 |
+
+| **根拠** | [AI/TASFUL_AI_QA.md](./AI/TASFUL_AI_QA.md) · [TODO.md](./TODO.md) §TASFUL AI QA |
+
+---
+
+## AD-016 — TASFUL AI Free 枠は Pricing Catalog 外
+
+| 項目 | 内容 |
+| --- | --- |
+| **決定** | **Free プラン（`GENAI_FREE_PLAN` / `stripe-genai-config.js` `FREE_PLAN`）は Pricing Catalog SKU に含めない** |
+| **日付** | 2026-07-05 |
+| **状態** | **確定** — Pricing Config P3 |
+
+### 理由
+
+- Free は **Stripe 課金 SKU ではない**（¥0 · デフォルト entitlement）
+- 有料プラン（Lite / Pro / Max placeholder / Add-on）のみ catalog で価格・上限を SSOT 化する
+- Free の日次上限（text/voice/image）は **`stripe-genai-config.js` と Edge `genai-plans.ts` の `GENAI_FREE_PLAN` に単一定義**し、UI は hydrate 後の `FREE_PLAN` を参照する
+
+### 有料 SKU（catalog 正本）
+
+| Legacy ID | Catalog SKU |
+| --- | --- |
+| `genai_basic_300` | `tasful_ai_lite` |
+| `genai_pro_980` | `tasful_ai_pro` |
+| Max placeholder | `tasful_ai_max_placeholder`（`enabled: false` · checkout なし） |
+| `genai_2d_live_300` | `tasful_ai_addon_2d_live_300`（`provisional: true`） |
+| `genai_3d_generate_500` | `tasful_ai_addon_3d_generate_500`（`provisional: true` · `enabled: false` · draft） |
+
+| **根拠** | `shared/pricing/tasful-pricing-catalog.json` · Pricing Config P2–P3 |
 
 ---
 

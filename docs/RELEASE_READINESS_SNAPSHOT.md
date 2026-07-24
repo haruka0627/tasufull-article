@@ -1,6 +1,6 @@
 # TASFUL リリース前スナップショット
 
-**最終更新:** 2026-07-04  
+**最終更新:** 2026-07-25（Step 2a · 現在HEAD `d0ed090`）  
 **用途:** リリース前に「何が完成していて、何が残っているか」を **1 枚** で把握する。  
 **正本:** 詳細ステータスは [PROJECT_STATUS.md](./PROJECT_STATUS.md) · 次タスクは [TODO.md](./TODO.md) · 決定は [DECISIONS.md](./DECISIONS.md)。
 
@@ -10,12 +10,12 @@
 
 | 領域 | 完成度 | 状態 | 主な残タスク |
 | --- | --- | --- | --- |
-| **TASFUL AI** | 機能 + P1 実装完了 | 🔄 本番運用タスク一部残 | Media flake 監視 · Membership=Future |
-| **Builder** | v1.0 + Talk 全フロー Review | 🔒 **Production Ready · FROZEN** | 条件検索 P2 LLM · Monetization 設計のみ |
+| **TASFUL AI** | 機能 + P1 · **Production Ready Go** | 🔄 運用監視残 | Media flake（KI-014）· Membership=Future |
+| **Builder** | v1.0 + Talk Review · Calendar Hub Primary **Go** | 🔒 **FROZEN**（一般案件 Production は10月） | working tree 整理 · 10月 Production 適用 |
 | **Platform** | NB-1M + **→Talk 連携 Review PASS** | 🔒 **Production Ready · FROZEN** | featured バッジ · favorites DB · OAuth E2E · fee-pay `talkDev` P2 |
-| **TASFUL Talk** | コア + Platform/Builder 連携 Review | 🔒 **Production Ready · FROZEN** | 未読 badge seed（保留）· 通知 seed 調整（任意） |
-| **Business Directory** | MVP-1 + DB prod apply | 🔄 **DB Go · Launch Conditional** | Stripe E2E · Commercial Launch 最終確認 |
-| **TLV** | v1.0 静的 + Payment backend | ⏸ **FROZEN · Live UI No-Go** | REL-P0-02 運用ゲート · Live UI 接続 · stub 廃止 |
+| **TASFUL Talk** | コア + Platform/Builder 連携 Review | 🔒 **Production Ready · FROZEN** | 未読 badge seed（保留） |
+| **Business Directory** | MVP-1 + DB prod apply · Launch 準備コミット一部あり | 🔄 **DB Go · Launch Conditional** | Human OB / Stripe Live / OB8 · [checklist](../reports/business-directory-commercial-launch-checklist.md) |
+| **TLV** | v1.0 静的 + Payment backend | ⏸ **FROZEN · Live UI No-Go** | REL-P0-02 · Live UI 接続 · stub 廃止 |
 
 **凡例:** 🔒 凍結（Critical/Security/仕様追従のみ） · 🔄 機能完成だが本番/運用タスク残 · ⏸ 開発 Pause
 
@@ -26,7 +26,7 @@
 | 項目 | 状態 |
 | --- | --- |
 | **機能** | チャット · Voice · Vision · Media · Monitoring · 課金 enforcement Phase 1–2 |
-| **Production Ready** | **Go**（2026-06-28）— CF Access E2E · formal build · prod alias |
+| **Production Ready** | **Go**（2026-06-28）— [verification](../reports/tasful-ai-production-ready-verification.md) · CF Access E2E · formal build · prod alias |
 | **Gateway** | `ai-model-gateway.js` 契約凍結（AD-005） |
 
 **完成済み（代表）**
@@ -63,12 +63,14 @@
 **完成済み（その他）**
 
 - 条件検索 P0/P1 · Builder AI（TASFUL AI 非統合 · AD-002）
+- **Builder Calendar Hub Primary（Hub Primary）完了** — [hub-primary-completion](./builder-calendar-hub-primary-completion.md)
 - `node scripts/check-builder-production-ready.mjs`
 
 **残タスク / 保留**
 
 | 優先 | 内容 | 扱い |
 | --- | --- | --- |
+| P0 | 一般案件 **10月** Production 適用 | Staging Go · Production 凍結 · [october checklist](../reports/builder-general-jobs-october-release-checklist.md) |
 | 保留 | 開示前 badge HTML 初期値「受諾済み」 | diagnostics のみ · UI 非表示 · 機能影響なし |
 | P2 | 条件検索 P2 LLM 自然文 | Future · REL-F-07 |
 | P1 | Builder AI P2-C staging | REL-P1-03 · 本番 FROZEN |
@@ -144,13 +146,14 @@
 
 - Owner / Admin / Public UI · Phase 6 Stripe Test · Production DB migrations 適用済
 - `reports/business-directory-production-controlled-apply-result.md`
+- HEAD 以降の Launch 準備（完了扱いしない）: public Supabase config · owner onboarding guidance · legal clarify · OB4 runbook/smoke · OB7 contact links
 
 **残タスク**
 
 | 優先 | 内容 |
 | --- | --- |
-| P1 | Stripe Production E2E |
-| P1 | Launch 最終確認 · Runbook 実施 |
+| P1 | Human OB / Stripe Live / OB8 明示 Go — [commercial-launch-checklist](../reports/business-directory-commercial-launch-checklist.md)（Launch **Conditional** 維持） |
+| P1 | Portal 解約 E2E · Dashboard 目視残（checklist 記載どおり） |
 | Future | MVP-2（公開後編集 · Pro TLV · 問い合わせ） |
 
 ---
@@ -176,7 +179,7 @@
 | P0 | **REL-P0-02** Payment Runbook（Backup · Stripe webhook · Go Approval） |
 | P0 | Live UI 接続（`stream_id` · stub 廃止 · tip/coin UI） |
 | P0 | Staging TLV env 整備 |
-| — | dist 未同期（Design Audit `ee2efea`）— **REL-P0-04** |
+| — | **REL-P0-04** dist git 同期済 · **prod alias 未 deploy** |
 
 ---
 
@@ -184,10 +187,28 @@
 
 | ID | 内容 | 状態 |
 | --- | --- | --- |
-| **REL-P0-01** | working tree / dist 選別ステージング | 部分 — `build:pages` → 選別 commit |
+| **REL-P0-01** | working tree / dist 選別ステージング | 部分 — 領域別分類済 · 分割コミット予定（調査時点の概数は [PROJECT_STATUS](./PROJECT_STATUS.md)） |
 | **REL-P0-02** | TLV Payment 運用ゲート | **Paused** — Runbook のみ |
 | **REL-P0-03** | AI 秘書 DeepSeek prod smoke | No-Go |
-| **REL-P0-04** | Pages dist 本番反映 | Design Audit 等 **未同期** |
+| **REL-P0-04** | Pages dist 本番反映 | **dist git 同期済**（`6d323dd`）· **prod alias 未 deploy** |
+
+---
+
+## Breaking Change 依存調査（2026-07-04）
+
+| 項目 | 状態 |
+| --- | --- |
+| **スキャン** | **PASS** — P0 blocker **0** · 追加修正・追加コミット **不要** |
+| **証跡** | [breaking-change-dependency-scan-2026-07-04.md](../reports/breaking-change-dependency-scan-2026-07-04.md) · `.json`（reports バンドルは未コミット可） |
+
+**クリア（HIT ゼロ or 保護済）:** GitHub Models / Azure Inference · Assistants API · `v1/prompts` · Cloudflare Sandbox SDK · `DOCKER_CONTENT_TRUST` · DeepSeek 旧モデル ID（`resolveDeepSeekModel` で `deepseek-v4-flash` へ正規化済 · 廃止 2026-07-24）
+
+**残る要確認（Dashboard 目視のみ · コード変更不要）**
+
+| ID | 内容 | 即時本番影響 |
+| --- | --- | --- |
+| **BC-P0-PG** | Supabase Production (`ddojquacsyqesrjhcvmn`) / Staging (`ahlxuyvhzqdqaojiywmu`) の **Postgres major version** | 不明 — Dashboard 確認後に記録 |
+| **BC-P0-DS-ENV** | Cloudflare Pages env の `DEEPSEEK_CHAT_MODEL` 現行値 | **なし** — 旧 ID でも runtime 正規化 |
 
 ---
 

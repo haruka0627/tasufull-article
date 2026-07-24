@@ -1,9 +1,10 @@
 # TASFUL 開発ドキュメント（正本）
 
-**最終更新:** 2026-07-04  
+**最終更新:** 2026-07-25（Step 2a · 現在HEAD `d0ed090`）  
 **目的:** 「次に何をやるか」「どこまで終わったか」「何を決定したか」を、会話ログではなく **リポジトリ内** から確認する。
 
-**リリース前 1 枚サマリー:** [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md)
+**リリース前 1 枚サマリー:** [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md)  
+**現状スナップショット:** [PROJECT_STATUS.md](./PROJECT_STATUS.md)
 
 ---
 
@@ -11,16 +12,16 @@
 
 | サービス | 状態 | ドキュメント |
 | --- | --- | --- |
-| **Builder** | Production Ready · 凍結 | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) |
+| **Builder** | Production Ready · 凍結 · Calendar Hub Primary **完了** | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) · [hub-primary-completion](./builder-calendar-hub-primary-completion.md) |
 | **Platform** | Production Ready · **→Talk Review PASS** · 凍結 | [AI/PLATFORM_AI.md](./AI/PLATFORM_AI.md) |
 | **TLV** | v1.0 **FROZEN** · Engine backend **Go** · Live UI **未接続 / Production No-Go** · Staging **Conditional Go** | [接続前監査](../reports/tlv-payment-live-ui-connection-audit.md) · [AI/TLV_AI.md](./AI/TLV_AI.md) |
-| **TLV Live SDK**（ZEGO Provider） | ⏸ 待機 · Phase 1/1.5 完了 | [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) · Blocker = ZEGO `.env` |
-| **TASFUL AI Workspace** | 機能完成 · 本番接続残 | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) |
+| **TLV Live SDK**（ZEGO Provider） | ⏸ 待機 · Phase 1/1.5 完了 | [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) |
+| **TASFUL AI Workspace** | **Production Ready Go**（2026-06-28）· P1 監視残（KI-014） | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) · [verification](../reports/tasful-ai-production-ready-verification.md) |
 | **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
 | **TALK / Connect / 安否（TASFUL Talk）** | Production Ready · Platform/Builder 連携 Review PASS · 凍結 | [review-mode.md](./review-mode.md) · [snapshot](./RELEASE_READINESS_SNAPSHOT.md) |
 | **TASFUL Materials（素材DL）** | 📋 Phase 0 のみ | [backlog](./free-download-service-backlog.md) · [readiness](../reports/free-download-service-implementation-readiness.md) |
 | **Live API（ZEGO）** | Phase 1 Go | [adapter](../docs/LIVE_PLATFORM_ZEGO_ADAPTER.md) · [phase1](../reports/live-platform-zego-adapter-phase1.md) |
-| **Business Directory** | ✅ **DB Production Ready Go** · Commercial Launch **Conditional** | [controlled apply result](../reports/business-directory-production-controlled-apply-result.md) · [DB SSOT](./architecture/business-directory-db-architecture.md) |
+| **Business Directory** | ✅ **DB Production Ready Go** · Commercial Launch **Conditional** | [controlled apply result](../reports/business-directory-production-controlled-apply-result.md) · [DB SSOT](./architecture/business-directory-db-architecture.md) · [launch checklist](../reports/business-directory-commercial-launch-checklist.md) |
 
 ---
 
@@ -29,10 +30,12 @@
 | ファイル | 用途 |
 | --- | --- |
 | [PROJECT_STATUS.md](./PROJECT_STATUS.md) | **現状スナップショット**（製品別ステータス・直近コミット） |
+| [commercial-prep-inventory-2026-07.md](./commercial-prep-inventory-2026-07.md) | **商用前整理棚卸し**（2026-07-05 · Future/保留の分類） |
+| [builder-calendar-hub-primary-completion.md](./builder-calendar-hub-primary-completion.md) | **Builder Calendar Hub Primary 完了**（Go） |
 | [RELEASE_READINESS_SNAPSHOT.md](./RELEASE_READINESS_SNAPSHOT.md) | **リリース前 1 枚サマリー**（完成 / 残タスク / P2 以下） |
 | [TODO.md](./TODO.md) | **次にやること**（優先順 · 担当領域） |
 | [ROADMAP.md](./ROADMAP.md) | 中長期フェーズ · 展開方針（AD-011）· UI/UX（AD-012）· Business Directory（AD-013）· **Platform Vision（AD-014）** |
-| [DECISIONS.md](./DECISIONS.md) | **決定事項**（AD-011 展開 · AD-012 UI/UX · AD-013 Business Directory · **AD-014 Platform Vision**） |
+| [DECISIONS.md](./DECISIONS.md) | **決定事項**（AD-001〜016 · AD-015 QA · AD-016 Free 枠） |
 | [RELEASE_CHECKLIST.md](./RELEASE_CHECKLIST.md) | リリース前ゲート |
 | [CHANGELOG.md](./CHANGELOG.md) |  notable 変更履歴 |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | 未解決・要確認・矛盾の記録 |
@@ -66,7 +69,8 @@
 | `reports/builder-ai-*.md` | Builder AI 設計・P1/P2 |
 | `reports/platform-finish-phase.md` | Platform バッジ・お気に入り・AI 入口 |
 | `reports/tasful-ai-final-phase.md` | TASFUL AI Final（履歴・メディア・資料） |
-| `reports/tasful-ai-production-preflight.md` | 本番接続 preflight（Production Ready: NO） |
+| `reports/tasful-ai-production-ready-verification.md` | **TASFUL AI Production Ready Go**（2026-06-28） |
+| `reports/tasful-ai-production-preflight.md` | 本番接続 preflight（歴史記録 · その後 verification で Go） |
 | `reports/business-directory-subscription-model.md` | Business Directory サブスク方針 |
 | `reports/business-directory-mvp-design.md` | Business Directory MVP 設計 |
 | `reports/business-directory-self-service-design.md` | Business Directory Self-Service 設計 |

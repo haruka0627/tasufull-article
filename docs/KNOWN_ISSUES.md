@@ -1,6 +1,6 @@
 # TASFUL 既知の問題・未確認事項
 
-**最終更新:** 2026-06-29  
+**最終更新:** 2026-07-25（Step 2a · working tree / シークレット対策）  
 **ルール:** 推測で「完了」にしない。解消したら項目を削除または「解決」に更新。
 
 ---
@@ -12,7 +12,9 @@
 | --- | --- |
 | KI-003 | TASFUL AI Production Ready — 2026-06-28 Go · `reports/tasful-ai-production-ready-verification.md` |
 | KI-008 | AI 秘書 phase ファイル — P0-1 選別コミット後 git 追跡済 |
-| KI-009 | `docs/` status 正本 — 2026-06-29 sync · `e5c4d24` 整合 |
+| KI-009 | `docs/` status 正本 — 2026-06-29 sync（以降 Step 2a で現在HEAD `d0ed090` へ再同期） |
+| KI-015 | Workspace UI レビュー QA デモ vs AD-015 — **2026-06-30 解決** · AD-015 改定で ui-review = QA 記事コンポーネント参照実装に整合 |
+| KI-016 | dotenv 系の Pages dist 混入 — **2026-07-25 対策** · 履歴へのコミットなし · ビルド除外 + dist 事後検査（値は記録しない） |
 
 ---
 
@@ -42,16 +44,22 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | `e5c4d24` 以降も **~299 件**（dist / reports / Live-Zego PoC 等） |
-| **リスク** | 次の `git add -A` で ANPI / Live / Gateway 等が混入 |
-| **対応** | [TODO.md](./TODO.md) · [PROJECT_STATUS.md](./PROJECT_STATUS.md) §Working tree · 領域別選別ステージングのみ |
-| **HEAD までコミット済** | TLV T1/T2/T4 · Design Audit ソース · Builder 条件検索 · TASFUL AI P1 · Platform Live P5 · Builder 6-H `c66c587` |
+| **状態** | 大量の未整理差分を領域別に分類済み。分割コミット予定（`git add -A` 禁止） |
+| **調査時点の概数** | 2026-07-25 時点で porcelain 約 1500 件前後（分類・ignore・再ビルドで変動） |
+| **リスク** | 一括 add で PoC / scratch / 秘密ファイル候補が混入 |
+| **対応** | [PROJECT_STATUS.md](./PROJECT_STATUS.md) §Working tree · 領域別選別のみ |
+| **関連** | REL-P0-01 · REL-P0-04 |
 
 ---
 
-## KI-003 — （解決済み · 上記）
+## KI-016 — （解決済み · 上記）dotenv dist 混入対策
 
-TASFUL AI Production Ready = **Go**（2026-06-28）。CF Access E2E · build · deploy · Brave live 完了。
+| 項目 | 内容 |
+| --- | --- |
+| **事象** | ステージングビルドがリポジトリ直下の dotenv 系を dist へコピーしうる状態だった |
+| **確認** | Git **追跡なし** · **履歴へのコミットなし** |
+| **対策** | `.gitignore` 拡充 · `stage-cloudflare-pages.mjs` で dotenv 系をコピー除外 · dist 事後検査で検出時はビルド失敗 |
+| **注意** | 秘密の値は docs / ログに書かない |
 
 ---
 

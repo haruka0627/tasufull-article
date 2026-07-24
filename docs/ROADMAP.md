@@ -1,22 +1,36 @@
 # TASFUL ロードマップ
 
-**最終更新:** 2026-06-29（housekeeping · Materials Phase 0 着手可）
+**最終更新:** 2026-07-25（Calendar Hub Primary 完了反映 · 現在HEAD `d0ed090`）
 
 ---
 
-## 開発優先順位（2026-06-28 · Cursor 正本）
+## Builder Calendar（Hub · 2026-07-04）
 
-| 優先 | プロジェクト | 状態 | 備考 |
+| 段階 | 状態 | 備考 |
+| --- | --- | --- |
+| UI · 操作性 · P1 詳細 · P2 Talk 入口 | ✅ | UI 凍結 |
+| P3〜P5 Supabase 基盤 | ✅ **凍結** | Read / Write / RLS / Auth E2E |
+| **本実装（Talk Room 正本 · Realtime · 系統統合）** | ✅ **Hub Primary 完了（Go）** | [hub-primary-completion](./builder-calendar-hub-primary-completion.md) |
+| Production 移行 | 📋 | Migration / partner RPC · MVP キー段階廃止 · 10月ウィンドウ · MCP Production 禁止 |
+
+B3 全体: [builder-b3-production-roadmap.md](./builder-b3-production-roadmap.md)（Phase 6 Talk · 7 完了報告 · 10 通知 と対応）
+
+---
+
+## 開発優先順位（2026-07-25 · Cursor 正本）
+
+| 優先 | 項目 | 状態 | 備考 |
 | --- | --- | --- | --- |
-| **P1** | **TASFUL AI** | **Complete** | `f4cf7d8` · Media · Monitoring · Voice P2 |
-| **P2** | **Live Platform Core** | **Complete** | Phase A–F · [summary](../reports/platform-live-platform-summary.md) |
-| **P3** | **Live API（ZEGO Provider）** | **Phase 1 Go** | Adapter · [phase1](../reports/live-platform-zego-adapter-phase1.md) |
-| **P4** | **Business Directory** | **待機** | Launch Gate Prep Complete · Commercial Launch **No-Go** |
-| **P5** | **TASFUL Materials（無料DL）** | **Phase 0 · 着手可** | docs 設計のみ · 実装未着手 · [readiness](../reports/free-download-service-implementation-readiness.md) |
-| **P6** | **TLV** | **Pause** | 運用ゲート待ち · [completion gate](../reports/tlv-phase1-completion-gate.md) |
-| **—** | **AI 秘書** | 待機後 | Gmail · Calendar · Drive 連携完成度 |
+| **1** | **working tree 整理** | 進行中 | 領域別分類済 · 分割コミット予定 · `git add -A` 禁止 · [PROJECT_STATUS](./PROJECT_STATUS.md) |
+| **2** | **REL-P0-04** Pages prod alias | 部分 | dist git 同期済（`6d323dd`）· **prod alias 未 deploy** |
+| **3** | **10月公開準備** | 準備 | Builder 一般案件 Production 凍結 · [october checklist](../reports/builder-general-jobs-october-release-checklist.md) |
+| **4** | **Business Directory Launch 残** | Conditional | DB Go · Human OB / Stripe Live 残 · [commercial-launch-checklist](../reports/business-directory-commercial-launch-checklist.md) |
+| **—** | TASFUL AI | **Complete · Production Ready Go** | [verification](../reports/tasful-ai-production-ready-verification.md) · KI-014 flake 監視 |
+| **—** | Live Platform Core / ZEGO Adapter | Complete / Phase 1 Go | 共通基盤 · TLV 固有は Pause |
+| **—** | TLV | **Pause** | Live UI 未接続 · REL-P0-02 待ち |
+| **—** | TASFUL Materials | Phase 0 | 設計のみ · 実装未着手 |
 
-**ルール:** Design Freeze 維持 · 正式 docs 正本 · ADR/DCP なし制度変更禁止 · Future 実装禁止 · 各プロジェクト MVP 優先 · **TLV 再開は運用ゲート ALL PASS 後のみ**
+**ルール:** Design Freeze 維持 · 正式 docs 正本 · ADR/DCP なし制度変更禁止 · Future 実装禁止 · 各プロジェクト MVP 優先 · **TLV 再開は運用ゲート ALL PASS 後のみ** · **Builder Calendar 本実装は次優先に戻さない**（完了済）
 
 ---
 
@@ -106,7 +120,7 @@
 
 **Production Step 4 Deploy:** `reports/business-directory-production-step4-production.md` · Production Pages · 最終 smoke **48/48 PASS · Go**
 
-**Step 5 Operational Readiness:** `reports/business-directory-operational-readiness.md` — **Complete**（8788 回帰 Go · Runbook）· **Commercial Launch No-Go**
+**Step 5 Operational Readiness:** `reports/business-directory-operational-readiness.md` — **Complete**（8788 回帰 Go · Runbook）· **Commercial Launch Conditional**（DB 基盤 Production Ready Go · [apply result](../reports/business-directory-production-controlled-apply-result.md)）
 
 **報告:** `reports/business-directory-subscription-model.md`
 
@@ -315,7 +329,7 @@
 | **Site Assistant Phase 2+**（Feedback Launcher · 通報/OPS 集約） | 📋 Backlog — 同上 · **UI Critical 優先度外** |
 | Gateway 契約変更 | **意図なし** · `ai-model-gateway.js` は HEAD clean |
 | working tree 残件整理 | 📋 [TODO.md](./TODO.md) · ~299 件（dist / docs / reports / PoC / Future） |
-| `docs/` status 正本 | ✅ `e5c4d24` + housekeeping 本更新 |
+| `docs/` status 正本 | ✅ 現在HEAD `d0ed090` へ Step 2a 同期（本更新） |
 | **Design Audit Polish** | ✅ `ee2efea`（ソース）· dist 別バンドル |
 | **Platform Live Phase 5** | ✅ Complete · `798d4a5`〜`9006ead` |
 | **TLV Finish T1/T2/T4** | ✅ `2ba6d6c` |
