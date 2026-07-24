@@ -14,6 +14,13 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { verifyTlvDist, TLV_REQUIRED_DIST } from "../../scripts/lib/tlv-dist-manifest.mjs";
+import {
+  detectCfDeployTarget,
+  detectSupabaseTier,
+  renderBuilderDeployFlagsJs,
+  resolveBuilderDeployFlags,
+  validateSupabaseTierAlignment,
+} from "../../scripts/lib/builder-deploy-flags.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = path.resolve(__dirname, "../..");
@@ -120,6 +127,72 @@ window.TASU_CHAT_SUPABASE_CONFIG = {
 window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {};
 `;
   fs.writeFileSync(path.join(OUT_DIR, "chat-supabase-config.js"), body, "utf8");
+  return url.replace(/\/$/, "");
+}
+
+const BUILDER_DEPLOY_FLAGS_MARKER = "builder-general-jobs-deploy-flags.js";
+
+function writeBuilderGeneralJobsDeployFlags(supabaseUrl) {
+  const alignment = validateSupabaseTierAlignment(supabaseUrl);
+  if (!alignment.ok) {
+    console.error(`[stage-cloudflare-pages] ERROR: ${alignment.reason}`);
+    console.error(
+      `[stage-cloudflare-pages]   supabaseTier=${alignment.supabaseTier} cfDeployTarget=${alignment.cfDeployTarget}`,
+    );
+    process.exit(1);
+  }
+
+  const flags = resolveBuilderDeployFlags();
+  const body = renderBuilderDeployFlagsJs({
+    storageMode: flags.storageMode,
+    generalJobsRepo: flags.generalJobsRepo,
+    supabaseTier: alignment.supabaseTier,
+    cfDeployTarget: alignment.cfDeployTarget,
+  });
+
+  const builderDir = path.join(OUT_DIR, "builder");
+  fs.mkdirSync(builderDir, { recursive: true });
+  fs.writeFileSync(path.join(builderDir, "builder-general-jobs-deploy-flags.js"), body, "utf8");
+
+  const flagSummary = [
+    flags.hasStorageMode ? `STORAGE_MODE=${flags.storageMode}` : "STORAGE_MODE=(unset→staging-flags/local default)",
+    flags.hasGeneralJobsRepo
+      ? `GENERAL_JOBS_REPO=${flags.generalJobsRepo}`
+      : "GENERAL_JOBS_REPO=(unset→staging-flags/local default)",
+  ].join(" · ");
+
+  console.log(
+    `[stage-cloudflare-pages] Builder flags tier=${alignment.supabaseTier} cf=${alignment.cfDeployTarget} · ${flagSummary}`,
+  );
+}
+
+function injectBuilderDeployFlagsToDist() {
+  const builderDir = path.join(OUT_DIR, "builder");
+  if (!fs.existsSync(builderDir)) return;
+
+  let injected = 0;
+  let skipped = 0;
+  walkHtmlFiles(builderDir, (filePath) => {
+    const raw = fs.readFileSync(filePath, "utf8");
+    if (!raw.includes("builder-config.js")) {
+      skipped += 1;
+      return;
+    }
+    if (raw.includes(BUILDER_DEPLOY_FLAGS_MARKER)) return;
+
+    const snippet = '<script src="builder-general-jobs-deploy-flags.js"></script>';
+    const next = raw.replace(
+      /(\s*<script\s+src="builder-config\.js"><\/script>)/i,
+      `\n    ${snippet}$1`,
+    );
+    if (next === raw) return;
+    fs.writeFileSync(filePath, next, "utf8");
+    injected += 1;
+  });
+
+  console.log(
+    `[stage-cloudflare-pages] builder deploy-flags script: ${injected} HTML injected, ${skipped} without builder-config`,
+  );
 }
 
 function writeTlvFeatureFlags() {
@@ -368,10 +441,20 @@ function main() {
   assertNoDotEnvInDist();
 
   writeChatSupabaseConfig();
+  const supabaseUrl = (() => {
+    try {
+      const cfg = fs.readFileSync(path.join(OUT_DIR, "chat-supabase-config.js"), "utf8");
+      return cfg.match(/url:\s*"([^"]+)"/)?.[1] || "";
+    } catch {
+      return "";
+    }
+  })();
+  writeBuilderGeneralJobsDeployFlags(supabaseUrl);
   writeTlvFeatureFlags();
   applyRootTopRouting();
   applySearchBlockingToDist();
   applySiteAssistantToDist();
+  injectBuilderDeployFlagsToDist();
 
   const tlvErrors = verifyTlvDist(REPO_ROOT, path.relative(REPO_ROOT, OUT_DIR));
   if (tlvErrors.length) {
