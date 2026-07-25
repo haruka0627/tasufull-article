@@ -16,6 +16,9 @@
   /** @type {Promise<unknown>|null} */
   let tesseractLoadPromise = null;
 
+  /** Gemini OCR 送信先は same-origin 固定（config.gemini.endpoint は使用しない） */
+  const GEMINI_OCR_ENDPOINT_PATH = "/api/gemini-ocr";
+
   function getConfig() {
     return window.TASU_CHAT_OCR_CONFIG || {};
   }
@@ -48,6 +51,58 @@
   }
 
   /**
+   * Gemini OCR fetch URL を same-origin `/api/gemini-ocr` のみに固定する。
+   * config.gemini.endpoint は読まない（改ざんによる任意 origin 送信を防止）。
+   * @returns {string|null} 検証済み absolute URL · 取得不能時は null
+   */
+  function resolveGeminiOcrFetchUrl() {
+    const originRaw = window.location && window.location.origin;
+    if (typeof originRaw !== "string") return null;
+    const origin = originRaw.trim();
+    if (!origin || origin === "null" || origin === "undefined") return null;
+
+    let pageOrigin;
+    let url;
+    try {
+      pageOrigin = new URL(origin);
+      url = new URL(GEMINI_OCR_ENDPOINT_PATH, pageOrigin.origin);
+    } catch {
+      return null;
+    }
+
+    if (
+      url.origin !== pageOrigin.origin ||
+      url.pathname !== GEMINI_OCR_ENDPOINT_PATH ||
+      url.search !== "" ||
+      url.hash !== "" ||
+      url.username !== "" ||
+      url.password !== "" ||
+      url.protocol !== pageOrigin.protocol
+    ) {
+      return null;
+    }
+    return url.href;
+  }
+
+  /**
+   * Gemini OCR 成功 response の最低 shape 検証
+   * @param {unknown} data
+   * @returns {{ ok: true, text: string } | { ok: false, error: string }}
+   */
+  function normalizeGeminiOcrResponse(data) {
+    if (data == null || typeof data !== "object" || Array.isArray(data)) {
+      return { ok: false, error: "invalid_response" };
+    }
+    if (data.ok !== true) {
+      return { ok: false, error: String(data.error || "ocr_not_ok") };
+    }
+    if (typeof data.text !== "string") {
+      return { ok: false, error: "invalid_text" };
+    }
+    return { ok: true, text: data.text.trim() };
+  }
+
+  /**
    * Gemini OCR（Edge `/api/gemini-ocr` · API キーはサーバのみ）
    * @param {string} imageUrl data URL
    * @param {{ user_id?: string, userId?: string, surface?: string } | undefined} options
@@ -58,8 +113,11 @@
     if (!parsed?.base64) {
       return { ok: false, text: "", error: "invalid_data_url", provider: "gemini" };
     }
+    const endpoint = resolveGeminiOcrFetchUrl();
+    if (!endpoint) {
+      return { ok: false, text: "", error: "invalid_origin", provider: "gemini" };
+    }
     const guard = resolveOcrGuardContext(options);
-    const endpoint = String(getConfig().gemini?.endpoint || "/api/gemini-ocr").trim();
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -71,18 +129,21 @@
         feature: "ocr_turn",
       }),
     });
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok || data?.ok === false) {
-      return {
-        ok: false,
-        text: "",
-        error: String(data?.error || `http_${res.status}`),
-        provider: "gemini",
-      };
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      const err =
+        data && typeof data === "object" && !Array.isArray(data) && data.error
+          ? String(data.error)
+          : `http_${res.status}`;
+      return { ok: false, text: "", error: err, provider: "gemini" };
+    }
+    const normalized = normalizeGeminiOcrResponse(data);
+    if (!normalized.ok) {
+      return { ok: false, text: "", error: normalized.error, provider: "gemini" };
     }
     return {
       ok: true,
-      text: String(data?.text || "").trim(),
+      text: normalized.text,
       provider: "gemini",
     };
   }
