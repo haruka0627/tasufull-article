@@ -171,19 +171,29 @@ async function applyDualHoverStyles(page) {
   });
 }
 
-async function readActionBackground(page) {
+async function readActionStyle(page) {
   return page.evaluate((sel) => {
     const el = document.querySelector(sel);
-    return el ? getComputedStyle(el).backgroundColor : "";
+    if (!el) return { background: "", opacity: "" };
+    const style = getComputedStyle(el);
+    return { background: style.backgroundColor, opacity: style.opacity };
   }, HOVER_ACTION_SEL);
 }
 
 /**
  * Simulate the hover state and keep the pointer on the card while the shot is taken.
- * @returns {Promise<{ before: string, after: string, changed: boolean, hoverError: string }>}
+ * Style change is diagnostic only (focus may already match hover colors).
+ * @returns {Promise<{
+ *   beforeBackground: string,
+ *   afterBackground: string,
+ *   beforeOpacity: string,
+ *   afterOpacity: string,
+ *   hoverStyleChanged: boolean,
+ *   hoverError: string
+ * }>}
  */
 async function applyHoverActions(page) {
-  const before = await readActionBackground(page);
+  const before = await readActionStyle(page);
   await applyDualHoverStyles(page);
   let hoverError = "";
   try {
@@ -192,8 +202,17 @@ async function applyHoverActions(page) {
     hoverError = String(err?.message || err).split("\n")[0];
   }
   await page.waitForTimeout(200);
-  const after = await readActionBackground(page);
-  return { before, after, changed: before !== after, hoverError };
+  const after = await readActionStyle(page);
+  const hoverStyleChanged =
+    before.background !== after.background || before.opacity !== after.opacity;
+  return {
+    beforeBackground: before.background,
+    afterBackground: after.background,
+    beforeOpacity: before.opacity,
+    afterOpacity: after.opacity,
+    hoverStyleChanged,
+    hoverError,
+  };
 }
 
 /**
@@ -380,6 +399,17 @@ async function readCardState(page) {
       hoverActionPresent: Boolean(hoverAction),
       hoverActionVisible: isVisible(hoverAction),
       hoverActionBox: rectOf(hoverAction),
+      hoverActionPointerEvents: hoverAction ? getComputedStyle(hoverAction).pointerEvents : "",
+      hoverActionInsidePanel: (() => {
+        const actionBox = rectOf(hoverAction);
+        if (!actionBox || !panelBox) return false;
+        return (
+          actionBox.x >= panelBox.x &&
+          actionBox.y >= panelBox.y &&
+          actionBox.x + actionBox.width <= panelBox.x + panelBox.width &&
+          actionBox.y + actionBox.height <= panelBox.y + panelBox.height
+        );
+      })(),
     };
   }, {
     card: CARD_SEL,
@@ -405,8 +435,15 @@ function logCardState(label, state, hoverInfo, waitFailures) {
   console.log(`  cover=${state.coverSrc ? head(state.coverSrc, 60) : "(none)"} loaded=${state.coverLoaded}`);
   console.log(`  avatar=${state.avatarSrc ? head(state.avatarSrc, 60) : "(none)"} loaded=${state.avatarLoaded}`);
   console.log(
-    `  hoverAction=${HOVER_ACTION_SEL} visible=${state.hoverActionVisible} favoriteHidden=${state.favoriteHidden}` +
-      (hoverInfo ? ` changed=${hoverInfo.changed} error=${hoverInfo.hoverError || "(none)"}` : "")
+    `  hoverAction=${HOVER_ACTION_SEL} visible=${state.hoverActionVisible}` +
+      ` insidePanel=${state.hoverActionInsidePanel}` +
+      ` pointerEvents=${state.hoverActionPointerEvents || "(none)"}` +
+      ` favoriteHidden=${state.favoriteHidden}` +
+      (hoverInfo
+        ? ` hoverStyleChanged=${hoverInfo.hoverStyleChanged}` +
+          ` bg=${hoverInfo.beforeBackground}->${hoverInfo.afterBackground}` +
+          ` error=${hoverInfo.hoverError || "(none)"}`
+        : "")
   );
   if (waitFailures.length) {
     waitFailures.forEach((f) => console.log(`  wait-failed: ${f}`));
@@ -459,9 +496,16 @@ function evaluateShotIssues(label, state, { expectCoverMode, expectHover, hoverI
     if (hoverInfo?.hoverError) issues.push(`${label}: hover failed — ${hoverInfo.hoverError}`);
     if (!state.hoverActionPresent) issues.push(`${label}: hover action element missing`);
     if (!state.hoverActionVisible) issues.push(`${label}: hover action element is not visible`);
-    if (!hoverInfo?.changed) {
-      issues.push(`${label}: hover produced no computed change on ${HOVER_ACTION_SEL} (${hoverInfo?.before} -> ${hoverInfo?.after})`);
+    if (!state.hoverActionBox || state.hoverActionBox.width <= 0 || state.hoverActionBox.height <= 0) {
+      issues.push(`${label}: hover action has no bounding box`);
     }
+    if (!state.hoverActionInsidePanel) {
+      issues.push(`${label}: hover action is outside the profile panel`);
+    }
+    if (state.hoverActionPointerEvents === "none") {
+      issues.push(`${label}: hover action has pointer-events:none`);
+    }
+    // hoverStyleChanged is diagnostic only — focus may already match hover colors.
   }
   return issues;
 }
@@ -528,6 +572,8 @@ async function captureShot(page, filename, viewport, options = {}) {
     avatarLoaded: state.avatarLoaded,
     coverLoaded: state.coverLoaded,
     hoverActionVisible: expectHover ? state.hoverActionVisible : null,
+    hoverActionInsidePanel: expectHover ? state.hoverActionInsidePanel : null,
+    hoverStyleChanged: expectHover ? Boolean(hoverInfo?.hoverStyleChanged) : null,
   };
 }
 
