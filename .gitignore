@@ -46,3 +46,29 @@ deploy/cloudflare/dist/.dev.vars
 reports/**/trace-*.zip
 reports/manual-review/**/trace-*.zip
 reports/manual-review/**/*.zip
+
+# Agent / local audit scratch
+.git-scratch/
+
+# Browser automation profile
+reports/.secretary-google-live-profile/
+
+# Playwright / manual-review video artifacts
+reports/**/*.webm
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Materials transient exports
+materials/**/__tmp*
+materials/**/*.__tmp.png
+
+# Ad-hoc SQL probes at repository root
+/.tmp-*.sql
+
+# ComfyUI local runtime artifacts
+ComfyUI-AutoGenerator/.cache/
+ComfyUI-AutoGenerator/logs/
+ComfyUI-AutoGenerator/progress.json
+ComfyUI-AutoGenerator/__pycache__/
