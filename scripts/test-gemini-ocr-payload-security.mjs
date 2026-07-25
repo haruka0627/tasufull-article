@@ -12,6 +12,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const STAGING_URL = "https://ahlxuyvhzqdqaojiywmu.supabase.co";
+const FUNCTION_ORIGIN = "https://tasufull-article.pages.dev";
 
 const PNG_1X1 =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
@@ -64,10 +65,11 @@ function defaultBody(extra = {}) {
 }
 
 function makeRequest(headers, body) {
-  return new Request("https://app.tasful.example/api/gemini-ocr", {
+  return new Request(`${FUNCTION_ORIGIN}/api/gemini-ocr`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Origin: FUNCTION_ORIGIN,
       ...(headers || {}),
     },
     body: JSON.stringify(body === undefined ? defaultBody() : body),

@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIXED_PATH = "/api/gemini-ocr";
 const ORIGIN = "https://app.tasful.example";
+const FUNCTION_ORIGIN = "https://tasufull-article.pages.dev";
 const PNG_1X1 =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
 const SAMPLE = `data:image/png;base64,${PNG_1X1}`;
@@ -50,10 +51,11 @@ function envBase(extra = {}) {
 }
 
 function makeRequest(headers, body) {
-  return new Request("https://app.tasful.example/api/gemini-ocr", {
+  return new Request(`${FUNCTION_ORIGIN}/api/gemini-ocr`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Origin: FUNCTION_ORIGIN,
       ...(headers || {}),
     },
     body: JSON.stringify(

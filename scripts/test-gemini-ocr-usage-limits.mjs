@@ -14,6 +14,7 @@ import { fileURLToPath } from "node:url";
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const FIXED_PATH = "/api/gemini-ocr";
 const ORIGIN = "https://app.tasful.example";
+const FUNCTION_ORIGIN = "https://tasufull-article.pages.dev";
 const STAGING_URL = "https://ahlxuyvhzqdqaojiywmu.supabase.co";
 const PROD_URL = "https://ddojquacsyqesrjhcvmn.supabase.co";
 const PNG_1X1 =
@@ -62,10 +63,11 @@ function defaultBody(extra = {}) {
 }
 
 function makeRequest(headers, body) {
-  return new Request("https://app.tasful.example/api/gemini-ocr", {
+  return new Request(`${FUNCTION_ORIGIN}/api/gemini-ocr`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Origin: FUNCTION_ORIGIN,
       ...(headers || {}),
     },
     body: JSON.stringify(body === undefined ? defaultBody() : body),
@@ -535,9 +537,8 @@ const authH = { Authorization: "Bearer good-token" };
   const { res, mock } = await callOcr(authH, defaultBody({ surface: "chat" }), {
     geminiInvalid: true,
   });
-  // empty candidates → ok true text ""
-  assert("46 invalid/empty candidates still 200", res.status === 200);
-  assert("46 consume on empty text success path", mock.consumeCalls.length === 1);
+  assert("46 invalid/empty candidates → 502", res.status === 502);
+  assert("46 invalid upstream response → no consume", mock.consumeCalls.length === 0);
 }
 {
   const { mock } = await callOcr({}, defaultBody({ surface: "chat" }));

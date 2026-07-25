@@ -3,7 +3,9 @@
  *
  * Secret: GEMINI_API_KEY（クライアントへ渡さない）
  * Auth: Authorization Bearer → Supabase `/auth/v1/user` で検証（全 surface）
+ * Origin: same-origin + production / preview / local allowlist
  * Payload: MIME · base64 · size · magic bytes（guard / Gemini より前）
+ * Upstream: fixed timeout + sanitized errors
  * SAFE-05: 許可 surface すべて Usage Guard（user ID / feature は server-derived）
  */
 import {
@@ -14,23 +16,87 @@ import {
 } from "../_shared/ai-usage-guard.mjs";
 import { validateOcrPayload } from "../_shared/ocr-payload-validation.mjs";
 
-function jsonResponse(body, status = 200) {
+const PRODUCTION_ORIGINS = new Set([
+  "https://tasful.jp",
+  "https://www.tasful.jp",
+  "https://tasufull-article.pages.dev",
+]);
+const LOCAL_ORIGINS = new Set([
+  "http://127.0.0.1:8788",
+  "http://localhost:8788",
+]);
+const PAGES_PREVIEW_HOST =
+  /^(?:cf-pages-deploy|[a-f0-9]{8})\.tasufull-article\.pages\.dev$/;
+const GEMINI_UPSTREAM_TIMEOUT_MS = 15_000;
+
+function corsHeaders(origin) {
+  if (!origin) return {};
+  return {
+    "Access-Control-Allow-Origin": origin,
+    Vary: "Origin",
+  };
+}
+
+function jsonResponse(body, status = 200, origin = "") {
   return new Response(JSON.stringify(body), {
     status,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
+      ...corsHeaders(origin),
     },
   });
 }
 
-function handleOptions() {
+function withCors(response, origin) {
+  const headers = new Headers(response.headers);
+  Object.entries(corsHeaders(origin)).forEach(([name, value]) => headers.set(name, value));
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+function isAllowedOrigin(origin) {
+  if (PRODUCTION_ORIGINS.has(origin) || LOCAL_ORIGINS.has(origin)) return true;
+  try {
+    const parsed = new URL(origin);
+    return (
+      parsed.origin === origin &&
+      parsed.protocol === "https:" &&
+      parsed.port === "" &&
+      PAGES_PREVIEW_HOST.test(parsed.hostname)
+    );
+  } catch {
+    return false;
+  }
+}
+
+function resolveRequestOrigin(request) {
+  const rawOrigin = request.headers.get("Origin");
+  if (!rawOrigin || rawOrigin === "null" || rawOrigin !== rawOrigin.trim()) return "";
+  if (!isAllowedOrigin(rawOrigin)) return "";
+  try {
+    if (new URL(request.url).origin !== rawOrigin) return "";
+  } catch {
+    return "";
+  }
+  return rawOrigin;
+}
+
+function originForbidden() {
+  return jsonResponse({ ok: false, error: "origin_forbidden", provider: "gemini" }, 403);
+}
+
+function handleOptions(origin) {
   return new Response(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      "Access-Control-Max-Age": "86400",
+      ...corsHeaders(origin),
+      "Access-Control-Allow-Methods": "POST",
+      "Access-Control-Allow-Headers": "Authorization, Content-Type",
+      "Access-Control-Max-Age": "600",
     },
   });
 }
@@ -83,7 +149,12 @@ async function verifySupabaseJwt(bearerToken, supabaseUrl, anonKey) {
     if (!res.ok) {
       return { ok: false, error: "auth_required", status: 401 };
     }
-    const data = await res.json().catch(() => null);
+    let data;
+    try {
+      data = await res.json();
+    } catch {
+      return { ok: false, error: "auth_unavailable", status: 503 };
+    }
     const userId = String(data?.id || "").trim();
     if (!userId) {
       return { ok: false, error: "auth_required", status: 401 };
@@ -99,22 +170,27 @@ async function verifySupabaseJwt(bearerToken, supabaseUrl, anonKey) {
  * @param {Record<string, string>} env
  * @returns {Promise<{ ok: true, userId: string } | Response>}
  */
-async function requireAuthenticatedUser(request, env) {
+async function requireAuthenticatedUser(request, env, origin) {
   const parsed = parseBearerToken(request);
   if (parsed.error) {
-    return jsonResponse({ ok: false, error: parsed.error, provider: "gemini" }, 401);
+    return jsonResponse({ ok: false, error: parsed.error, provider: "gemini" }, 401, origin);
   }
 
   const { url, anonKey } = getSupabaseAuthConfig(env);
   if (!url || !anonKey) {
-    return jsonResponse({ ok: false, error: "auth_unavailable", provider: "gemini" }, 503);
+    return jsonResponse(
+      { ok: false, error: "auth_unavailable", provider: "gemini" },
+      503,
+      origin
+    );
   }
 
   const verified = await verifySupabaseJwt(parsed.token, url, anonKey);
   if (!verified.ok) {
     return jsonResponse(
       { ok: false, error: verified.error, provider: "gemini" },
-      verified.status
+      verified.status,
+      origin
     );
   }
   return { ok: true, userId: verified.userId };
@@ -123,36 +199,55 @@ async function requireAuthenticatedUser(request, env) {
 export async function onRequest(context) {
   const { request, env } = context;
 
-  if (request.method === "OPTIONS") return handleOptions();
-  if (request.method !== "POST") {
+  if (request.method !== "POST" && request.method !== "OPTIONS") {
     return jsonResponse({ ok: false, error: "method_not_allowed" }, 405);
   }
 
-  const auth = await requireAuthenticatedUser(request, env);
+  const origin = resolveRequestOrigin(request);
+  if (!origin) return originForbidden();
+  if (request.method === "OPTIONS") return handleOptions(origin);
+
+  const auth = await requireAuthenticatedUser(request, env, origin);
   if (auth instanceof Response) return auth;
   const authenticatedUserId = auth.userId;
 
   const apiKey = String(env.GEMINI_API_KEY || "").trim();
   if (!apiKey) {
-    return jsonResponse({ ok: false, error: "GEMINI_API_KEY not configured", provider: "gemini" }, 503);
+    return jsonResponse(
+      { ok: false, error: "provider_configuration_error", provider: "gemini" },
+      503,
+      origin
+    );
   }
 
   let body;
   try {
     body = await request.json();
   } catch {
-    return jsonResponse({ ok: false, error: "invalid_request", provider: "gemini" }, 400);
+    return jsonResponse(
+      { ok: false, error: "invalid_request", provider: "gemini" },
+      400,
+      origin
+    );
   }
 
   const surface = normalizeOcrSurface(body?.surface);
   if (!surface) {
-    return jsonResponse({ ok: false, error: "invalid_surface", provider: "gemini" }, 400);
+    return jsonResponse(
+      { ok: false, error: "invalid_surface", provider: "gemini" },
+      400,
+      origin
+    );
   }
 
   // 案A: payload 検証 → guard → Gemini（不正 payload で quota RPC を叩かない）
   const payload = validateOcrPayload(body);
   if (!payload.ok) {
-    return jsonResponse({ ok: false, error: payload.error, provider: "gemini" }, payload.status);
+    return jsonResponse(
+      { ok: false, error: payload.error, provider: "gemini" },
+      payload.status,
+      origin
+    );
   }
 
   const guardBody = Object.assign({}, body && typeof body === "object" ? body : {}, {
@@ -162,11 +257,14 @@ export async function onRequest(context) {
   });
 
   const guard = await enforceCfOcrGuard(request, guardBody, env);
-  if (guard.blocked) return guard.blocked;
+  if (guard.blocked) return withCors(guard.blocked, origin);
 
   const url = `${GEMINI_API_BASE}/${GEMINI_OCR_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const controller = new AbortController();
+  let timer = null;
 
   try {
+    timer = setTimeout(() => controller.abort(), GEMINI_UPSTREAM_TIMEOUT_MS);
     const geminiRes = await fetch(url, {
       method: "POST",
       headers: {
@@ -191,24 +289,69 @@ export async function onRequest(context) {
           maxOutputTokens: 4096,
         },
       }),
+      signal: controller.signal,
     });
 
-    const geminiJson = await geminiRes.json().catch(() => ({}));
     if (!geminiRes.ok) {
+      if (geminiRes.status === 400) {
+        return jsonResponse(
+          { ok: false, error: "upstream_request_failed", provider: "gemini" },
+          502,
+          origin
+        );
+      }
+      if (geminiRes.status === 401 || geminiRes.status === 403) {
+        return jsonResponse(
+          { ok: false, error: "provider_configuration_error", provider: "gemini" },
+          503,
+          origin
+        );
+      }
+      if (geminiRes.status === 429) {
+        return jsonResponse(
+          { ok: false, error: "upstream_rate_limited", provider: "gemini" },
+          503,
+          origin
+        );
+      }
       return jsonResponse(
-        {
-          ok: false,
-          error: "gemini_upstream_error",
-          provider: "gemini",
-          status: geminiRes.status,
-        },
-        502
+        { ok: false, error: "upstream_unavailable", provider: "gemini" },
+        502,
+        origin
       );
     }
 
-    const parts = geminiJson?.candidates?.[0]?.content?.parts || [];
+    let geminiJson;
+    try {
+      geminiJson = await geminiRes.json();
+    } catch {
+      return jsonResponse(
+        { ok: false, error: "invalid_upstream_response", provider: "gemini" },
+        502,
+        origin
+      );
+    }
+
+    const candidate = geminiJson?.candidates?.[0];
+    const finishReason = String(candidate?.finishReason || "").toUpperCase();
+    if (["SAFETY", "BLOCKLIST", "PROHIBITED_CONTENT", "RECITATION"].includes(finishReason)) {
+      return jsonResponse(
+        { ok: false, error: "ocr_unavailable", provider: "gemini" },
+        422,
+        origin
+      );
+    }
+    const parts = candidate?.content?.parts;
+    if (!Array.isArray(parts) || !parts.some((part) => typeof part?.text === "string")) {
+      return jsonResponse(
+        { ok: false, error: "invalid_upstream_response", provider: "gemini" },
+        502,
+        origin
+      );
+    }
     const text = parts
-      .map((p) => String(p?.text || ""))
+      .filter((part) => typeof part?.text === "string")
+      .map((part) => part.text)
       .join("\n")
       .trim();
 
@@ -220,8 +363,21 @@ export async function onRequest(context) {
       ok: true,
       text,
       provider: "gemini",
-    });
-  } catch {
-    return jsonResponse({ ok: false, error: "ocr_request_failed", provider: "gemini" }, 502);
+    }, 200, origin);
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      return jsonResponse(
+        { ok: false, error: "upstream_timeout", provider: "gemini" },
+        504,
+        origin
+      );
+    }
+    return jsonResponse(
+      { ok: false, error: "upstream_unavailable", provider: "gemini" },
+      502,
+      origin
+    );
+  } finally {
+    if (timer !== null) clearTimeout(timer);
   }
 }
