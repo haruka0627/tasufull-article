@@ -1108,6 +1108,21 @@ body.ai-call-consent-open {
   font-weight: 800;
 }
 
+.ai-model-bar__mode-badge {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #0f4c81;
+  background: #e8f1fb;
+  border: 1px solid #b6d0ea;
+  border-radius: 999px;
+  vertical-align: middle;
+}
+
 .ai-model-bar__select-wrap {
   display: inline-flex;
   align-items: center;

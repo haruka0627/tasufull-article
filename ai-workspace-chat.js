@@ -47,6 +47,63 @@
     return base ? `${base}\n（添付: ${names}）` : `（添付: ${names}）`;
   }
 
+  /**
+   * Settings Auto/Manual Router → Gateway modelId + routing decision（プラン許可は Gateway 側で再検証）。
+   */
+  function resolveTurnModelId(context = {}) {
+    const Routing = window.TasuAiWorkspaceRoutingSettings;
+    if (typeof Routing?.resolveModelId === "function") {
+      return Routing.resolveModelId(context);
+    }
+    const ModelRouter = window.TasuAiWorkspaceModelRouterSettings;
+    if (typeof ModelRouter?.resolveGatewayModelId === "function") {
+      return ModelRouter.resolveGatewayModelId(context);
+    }
+    return window.TasuAiPlanModels?.getSelectedModelId?.() || undefined;
+  }
+
+  function resolveTurnDecision(context = {}) {
+    const Routing = window.TasuAiWorkspaceRoutingSettings;
+    if (typeof Routing?.resolveTurnDecision === "function") {
+      return Routing.resolveTurnDecision(context);
+    }
+    const ModelRouter = window.TasuAiWorkspaceModelRouterSettings;
+    if (typeof ModelRouter?.resolveTurnDecision === "function") {
+      return ModelRouter.resolveTurnDecision(context);
+    }
+    const modelId = resolveTurnModelId(context);
+    return {
+      ok: Boolean(modelId),
+      requestedMode: "manual",
+      requestedModel: modelId,
+      resolvedWorkspaceId: modelId,
+      gatewayModelId: modelId,
+      routingReason: "legacy",
+      fallbackUsed: false,
+    };
+  }
+
+  function buildGatewayTurnArgs(base) {
+    const hasImage = Boolean(
+      base.attachments?.some(
+        (a) => a && (a.kind === "image" || String(a.mimeType || "").startsWith("image/"))
+      )
+    );
+    const turnContext = {
+      userText: base.userText,
+      modeId: base.modeId,
+      hasAttachments: Boolean(base.attachments?.length),
+      hasImage,
+    };
+    const decision = resolveTurnDecision(turnContext);
+    return {
+      ...base,
+      modelId: decision?.gatewayModelId || decision?.resolvedWorkspaceId || resolveTurnModelId(turnContext),
+      routingDecision: decision,
+      surface: base.surface || "ai-workspace",
+    };
+  }
+
   async function requestGatewayWithAttachments({
     modeId,
     userText,
@@ -56,17 +113,19 @@
     attachments,
   }) {
     const target = window.TasuAiSearchTarget?.normalizeTarget?.(searchTarget) || "tasful";
-    const turn = await window.TasuAiModelGateway.completeTurn({
-      userText,
-      modeId,
-      messages,
-      systemPrompt,
-      skipSearch: true,
-      surface: "ai-workspace",
-      attachments,
-      mockFallback: () =>
-        mockGenerateReply(modeId, userText, messages, window.TasuAiModes?.getMode(modeId)),
-    });
+    const turn = await window.TasuAiModelGateway.completeTurn(
+      buildGatewayTurnArgs({
+        userText,
+        modeId,
+        messages,
+        systemPrompt,
+        skipSearch: true,
+        surface: "ai-workspace",
+        attachments,
+        mockFallback: () =>
+          mockGenerateReply(modeId, userText, messages, window.TasuAiModes?.getMode(modeId)),
+      })
+    );
     const wrapped = withModelFromTurn(
       wrapAssistantPayload(turn.reply, {
         search_used: turn.search_used,
@@ -380,19 +439,21 @@
 
   async function runWebSearchTurn({ modeId, userText, messages, systemPrompt, siteContext, forceSearch, attachments }) {
     if (!window.TasuAiModelGateway?.completeTurn) return null;
-    const turn = await window.TasuAiModelGateway.completeTurn({
-      userText,
-      modeId,
-      messages,
-      systemPrompt,
-      siteContext: siteContext || "",
-      skipSearch: false,
-      forceSearch: forceSearch !== false,
-      surface: "ai-workspace",
-      attachments: attachments || undefined,
-      mockFallback: ({ searchContext }) =>
-        mockWebKnowledgeReply(userText, { searchContext, modeId }),
-    });
+    const turn = await window.TasuAiModelGateway.completeTurn(
+      buildGatewayTurnArgs({
+        userText,
+        modeId,
+        messages,
+        systemPrompt,
+        siteContext: siteContext || "",
+        skipSearch: false,
+        forceSearch: forceSearch !== false,
+        surface: "ai-workspace",
+        attachments: attachments || undefined,
+        mockFallback: ({ searchContext }) =>
+          mockWebKnowledgeReply(userText, { searchContext, modeId }),
+      })
+    );
     if (turn?.searchFailed && forceSearch !== false) {
       return withModelFromTurn(
         wrapAssistantPayload(formatWebSearchUnavailableMessage(turn.searchMessage), {
@@ -468,17 +529,19 @@
     if (!window.TasuAiModelGateway?.completeTurn) return null;
 
     const target = window.TasuAiSearchTarget?.normalizeTarget?.(searchTarget) || "tasful";
-    const turn = await window.TasuAiModelGateway.completeTurn({
-      userText,
-      modeId,
-      messages,
-      systemPrompt: buildWritingSystemPrompt(systemPrompt),
-      skipSearch: true,
-      intent: "work",
-      preferRemote: true,
-      surface: "ai-workspace",
-      attachments: attachments || undefined,
-    });
+    const turn = await window.TasuAiModelGateway.completeTurn(
+      buildGatewayTurnArgs({
+        userText,
+        modeId,
+        messages,
+        systemPrompt: buildWritingSystemPrompt(systemPrompt),
+        skipSearch: true,
+        intent: "work",
+        preferRemote: true,
+        surface: "ai-workspace",
+        attachments: attachments || undefined,
+      })
+    );
     if (!turn?.reply) return null;
 
     const plain = String(
@@ -772,18 +835,20 @@
     const needsWeb = false;
 
     if (window.TasuAiModelGateway?.completeTurn) {
-      const turn = await window.TasuAiModelGateway.completeTurn({
-        userText: safeUserText,
-        modeId,
-        messages,
-        systemPrompt,
-        siteContext: sitePlain,
-        skipSearch: !needsWeb,
-        surface: "ai-workspace",
-        attachments: attachList.length ? attachList : undefined,
-        mockFallback: () =>
-          mockGenerateReply(modeId, safeUserText, messages, window.TasuAiModes?.getMode(modeId)),
-      });
+      const turn = await window.TasuAiModelGateway.completeTurn(
+        buildGatewayTurnArgs({
+          userText: safeUserText,
+          modeId,
+          messages,
+          systemPrompt,
+          siteContext: sitePlain,
+          skipSearch: !needsWeb,
+          surface: "ai-workspace",
+          attachments: attachList.length ? attachList : undefined,
+          mockFallback: () =>
+            mockGenerateReply(modeId, safeUserText, messages, window.TasuAiModes?.getMode(modeId)),
+        })
+      );
 
       const wrapped = withModelFromTurn(
         wrapAssistantPayload(turn.reply, {

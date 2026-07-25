@@ -45,8 +45,8 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | --- | --- | --- | --- |
 | **1** | SAFE-05 | Usage Guard（Chat + OCR） | **完了** |
 | **2** | SAFE-06 | Usage Log（`ai_usage_events` + ingest） | **完了（コード）** · Staging DB 適用は別ゲート · [phase2 report](../reports/tasful-ai-core-phase2-safe06-report.md) |
-| **3** | — | Auto Router → Gateway 配線 | **完了**（`ai-workspace-chat.js` → `resolveModelId`） |
-| **4** | — | Billing UI → Stripe Edge | 未着手 |
+| **3** | — | Auto Mode 完成（Auto/Manual · Identity · Usage routing） | **完了（コード）** · [phase3 report](../reports/tasful-ai-core-phase3-auto-mode-report.md) |
+| **4** | — | 利用ゲージ | 未着手 |
 | **5** | — | manual SQL → migrations（Staging） | 未着手（`ai_usage_events` migration は追加済 · 適用は Staging 手動） |
 | **6** | SAFE-07 | Cost Ledger | **完了（コード）** · Staging 適用は別ゲート · [cost ledger report](../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **7** | SAFE-05 拡張 | 秘書 · Vision · TTS 等 | 未着手 |
@@ -89,8 +89,9 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | テーブル | `public.ai_usage_events` · `request_id` UNIQUE 冪等 |
 | 書き込み | `ingest_ai_usage_event` RPC · **service_role のみ** · RLS deny-all |
 | 公開 API | **作らない**（browser → service_role 直接禁止） |
-| 接続（本 Phase） | `gemini-chat` · `/api/gemini-ocr` のみ |
-| 未接続 | openai-chat · claude-chat · Voice · Media · 秘書 · BD · Search |
+| 接続（本 Phase） | `gemini-chat` · `/api/gemini-ocr` のみ（初期） |
+| 接続（Phase 3 拡張） | `openai-chat` · `claude-chat`（Workspace Chat · routing metadata） |
+| 未接続 | Voice · Media · 秘書 · BD · Search |
 | 原価 | `estimated_cost` は **null**（SAFE-07 Cost Ledger で集計） |
 | 保存しない | プロンプト · 回答本文 · OCR 原文 · 添付 · 個人情報本文 |
 | Production | **適用しない** · deploy / push しない |
@@ -134,18 +135,46 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 
 ---
 
-## Phase 3〜10（概要）
+## Phase 3 — Auto Mode 完成（ユーザー Phase 3）
+
+**ゴール:** モデルを選ばなくても用途に応じて自動ルーティング · Auto/Manual 明確分離 · 実行モデルを SAFE-06/07 で追跡。
+
+| 項目 | 方針 |
+| --- | --- |
+| Identity | `ai-model-identity.js` が UI / Workspace / Gateway / Provider / Cost Ledger ID の正本 |
+| Auto | intent + モードプリセット（決定的）· 高度分類器 / 新 Router API なし |
+| Manual | チップ選択を尊重 · 無言で Auto に戻さない · 不可時のみ明示 1 回 FB |
+| Fallback | 最大 1 回 · metadata 記録 · silent failure 禁止 |
+| Usage Log | `requested_mode` 等を allowlist 拡張 · gemini/openai/claude-chat |
+| Cost Ledger | 価格変更なし · `providerModelId` で lookup 整合 |
+| 非対象 | OpenRouter · ゲージ · Billing · OCR/Voice/Media/秘書/Builder 横展開 |
+
+**完了条件（コード）**
+
+- [x] Auto/Manual 分離 · `resolveTurnDecision`
+- [x] Gateway allowlist 再検証 · Provider 障害時 1 回 FB
+- [x] Usage Log routing metadata · 3 Chat Edge
+- [x] `scripts/test-tasful-ai-auto-mode-phase3.mjs`
+- [x] [phase3 report](../reports/tasful-ai-core-phase3-auto-mode-report.md)
+
+**後続フック（未実装）:** 安価/高性能優先の高度最適化 · 残量低下時切替 · OpenRouter · プラン別 allowlist 強化（構造のみ用意）
+
+---
+
+## Phase 4〜10（概要）
 
 | Phase | 主要成果物 | 状態 |
 | --- | --- | --- |
-| 3 | `ai-workspace-chat.js` ← `resolveGatewayModelId` | **完了** |
-| 4 | `ai-workspace-billing-settings.js` demo 廃止 | 未着手 |
+| 3 | Auto Mode（上記） | **コード完了** |
+| 4 | 利用ゲージ | 未着手 |
 | 5 | `gen_ai_*` / `ai_workspace_usage_daily` migrations 昇格 | 未着手 |
 | 6 | Cost Ledger（SAFE-07） | **コード完了**（上記） |
 | 7 | 秘書 CF · gemini-image-character · gemini-tts Guard 拡張 | 未着手 |
 | 8 | `docs/runbooks/cf-waf-turnstile-staging.md` | 未着手 |
 | 9 | CF Queue + async worker 設計 | 未着手（後回し可） |
 | 10 | Admin 画面（Usage/Cost/Events） | 未着手 |
+
+> **historical:** 旧「Phase 3 = Router→Gateway 配線のみ」は Phase 3 Auto Mode に吸収。配線単体の記述は本節を正本とする。
 
 **Future（後回し）:** Queue · Redis · BYOK · 従量パック · OpenRouter 全面 · 高度分析 · PDF/PPT · 履歴 Supabase 同期 · 操作アシスタント · Site Assistant Phase 2+
 
@@ -160,6 +189,7 @@ node scripts/test-tasful-ai-final-phase.mjs
 node scripts/test-tasful-ai-safe-ops-guard-phase1.mjs   # Phase 1 SAFE-05
 node scripts/test-tasful-ai-safe-ops-usage-log-phase2.mjs  # Phase 2 SAFE-06
 node scripts/test-tasful-ai-safe-ops-cost-ledger-phase2.mjs  # SAFE-07 Cost Ledger
+node scripts/test-tasful-ai-auto-mode-phase3.mjs  # Phase 3 Auto Mode
 ```
 
 ---

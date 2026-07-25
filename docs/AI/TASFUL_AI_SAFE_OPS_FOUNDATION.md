@@ -42,7 +42,7 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 | **SAFE-03** | Cloudflare Rate Limiting | Edge / CF |
 | **SAFE-04** | Bot 対策 | CF + アプリ |
 | **SAFE-05** | AI Usage Guard（実行前チェック統合） | Edge / RPC |
-| **SAFE-06** | AI 利用ログ | Supabase / Edge · **コード完了**（`ai_usage_events` · gemini-chat / OCR）· Staging 適用は別ゲート · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) |
+| **SAFE-06** | AI 利用ログ | Supabase / Edge · **コード完了**（`ai_usage_events` · gemini/openai/claude-chat · OCR · routing metadata）· Staging 適用は別ゲート · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) · [phase3 Auto](../../reports/tasful-ai-core-phase3-auto-mode-report.md) |
 | **SAFE-07** | AI コスト集計 | Supabase · **コード完了**（query 時推定 · `ai_model_price_rates` + aggregate RPC）· Staging 適用は別ゲート · [report](../../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **SAFE-08** | Queue 化（非同期 · バースト吸収） | CF Queue / Worker |
 | **SAFE-09** | 同時実行数制限 | Edge / KV |
@@ -147,9 +147,11 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 | request_id · user_id（JWT 検証時のみ）· anonymous_id · feature · provider · model · status · units · error_code · 許可 metadata | プロンプト · 回答 · OCR 原文 · 添付 · 個人情報本文 |
 
 **書き込み:** `ingest_ai_usage_event` · service_role のみ · 公開 ingest endpoint なし  
-**接続済:** gemini-chat · gemini-ocr  
-**未接続:** 他 Chat / Voice / Media / 秘書 等  
-**Cost Ledger 境界:** `estimated_cost` 列は生イベント上 **書き換えない**（選択 A）。単価は `ai_model_price_rates` · 集計は `ai_cost_ledger_aggregate`（service_role）。顧客請求・利益倍率は対象外。
+**接続済:** gemini-chat · openai-chat · claude-chat · gemini-ocr  
+**未接続:** Voice / Media / 秘書 等（Auto Mode 横展開なし）  
+**routing metadata（Phase 3）:** `requested_mode` · `requested_model` · `resolved_workspace_id` · `routing_reason` · `fallback_*` · `use_case`（prompt/response 禁止）  
+**Cost Ledger 境界:** `estimated_cost` 列は生イベント上 **書き換えない**（選択 A）。単価は `ai_model_price_rates` · 集計は `ai_cost_ledger_aggregate`（service_role）。顧客請求・利益倍率は対象外。Model ID 正本は `ai-model-identity.js`。  
+**Auto Mode:** [phase3 report](../../reports/tasful-ai-core-phase3-auto-mode-report.md) · Workspace Chat のみ · 利用ゲージは次 Phase。
 
 ---
 

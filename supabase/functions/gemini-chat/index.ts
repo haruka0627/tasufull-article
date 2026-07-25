@@ -16,6 +16,7 @@ import {
   createUsageLogOnce,
   newUsageRequestId,
   resolveUsageActor,
+  sanitizeRoutingMetadata,
 } from "../_shared/ai-usage-log.ts";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
@@ -530,6 +531,9 @@ Deno.serve(async (req) => {
     bodyUserId: body.user_id ?? body.userId,
   });
   const usageFeature = normalizeGuardFeature(undefined, body);
+  const routingMeta = sanitizeRoutingMetadata(
+    body && typeof body === "object" ? (body as { routing?: unknown }).routing : null
+  );
 
   const quotaEntry = await enforceGuardChatEntry(req, body);
   if (quotaEntry.blocked) {
@@ -555,6 +559,7 @@ Deno.serve(async (req) => {
         source: "gemini-chat",
         surface: String(body.surface || "").trim().slice(0, 64) || undefined,
         http_status: quotaEntry.blocked.status,
+        ...routingMeta,
       },
     });
     return quotaEntry.blocked;
@@ -618,6 +623,7 @@ Deno.serve(async (req) => {
           surface: String(body.surface || "").trim().slice(0, 64) || undefined,
           intent,
           http_status: 200,
+          ...routingMeta,
         },
       });
       return jsonResponse(
@@ -649,6 +655,7 @@ Deno.serve(async (req) => {
         surface: String(body.surface || "").trim().slice(0, 64) || undefined,
         intent,
         http_status: httpStatus,
+        ...routingMeta,
       },
     });
     return jsonResponse(
@@ -679,6 +686,7 @@ Deno.serve(async (req) => {
         source: "gemini-chat",
         surface: String(body.surface || "").trim().slice(0, 64) || undefined,
         http_status: 502,
+        ...routingMeta,
       },
     });
     return jsonResponse(

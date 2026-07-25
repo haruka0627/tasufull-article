@@ -41,7 +41,42 @@ const METADATA_ALLOWLIST = new Set([
   "http_status",
   "source",
   "quota_feature",
+  "requested_mode",
+  "requested_model",
+  "resolved_workspace_id",
+  "routing_reason",
+  "fallback_used",
+  "fallback_from",
+  "fallback_reason",
+  "use_case",
 ]);
+
+/** Client routing オブジェクトを安全な metadata 断片へ（本文・secret 禁止） */
+export function sanitizeRoutingMetadata(raw: unknown): Record<string, unknown> {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return {};
+  const src = raw as Record<string, unknown>;
+  const out: Record<string, unknown> = {};
+  const mode = String(src.requested_mode ?? src.requestedMode ?? "").trim().toLowerCase();
+  if (mode === "auto" || mode === "manual") out.requested_mode = mode;
+  const reqModel = String(src.requested_model ?? src.requestedModel ?? "").trim().slice(0, 64);
+  if (reqModel) out.requested_model = reqModel;
+  const ws = String(src.resolved_workspace_id ?? src.resolvedWorkspaceId ?? "").trim().slice(0, 64);
+  if (ws) out.resolved_workspace_id = ws;
+  const reason = String(src.routing_reason ?? src.routingReason ?? "").trim().slice(0, 64);
+  if (reason) out.routing_reason = reason;
+  if (src.fallback_used === true || src.fallbackUsed === true || src.fallback_used === "true") {
+    out.fallback_used = true;
+  } else if (src.fallback_used === false || src.fallbackUsed === false) {
+    out.fallback_used = false;
+  }
+  const fbFrom = String(src.fallback_from ?? src.fallbackFrom ?? "").trim().slice(0, 64);
+  if (fbFrom) out.fallback_from = fbFrom;
+  const fbReason = String(src.fallback_reason ?? src.fallbackReason ?? "").trim().slice(0, 64);
+  if (fbReason) out.fallback_reason = fbReason;
+  const useCase = String(src.use_case ?? src.useCase ?? "").trim().slice(0, 32);
+  if (useCase) out.use_case = useCase;
+  return out;
+}
 
 const METADATA_FORBIDDEN = new Set([
   "message",

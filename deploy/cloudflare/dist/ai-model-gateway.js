@@ -168,6 +168,35 @@
     );
   }
 
+  function buildRoutingPayload(decision, extra = {}) {
+    if (!decision || typeof decision !== "object") return undefined;
+    const payload = {
+      requested_mode: String(decision.requestedMode || "").slice(0, 16),
+      requested_model: String(decision.requestedModel || "").slice(0, 64),
+      resolved_workspace_id: String(decision.resolvedWorkspaceId || decision.gatewayModelId || "").slice(0, 64),
+      routing_reason: String(decision.routingReason || "").slice(0, 128),
+      fallback_used: Boolean(decision.fallbackUsed),
+      fallback_from: decision.fallbackFrom ? String(decision.fallbackFrom).slice(0, 64) : "",
+      fallback_reason: decision.fallbackReason ? String(decision.fallbackReason).slice(0, 64) : "",
+      use_case: decision.useCase ? String(decision.useCase).slice(0, 32) : "",
+    };
+    if (extra.provider_fallback_used) {
+      payload.fallback_used = true;
+      payload.fallback_from = String(extra.fallback_from || payload.fallback_from || "").slice(0, 64);
+      payload.fallback_reason = String(extra.fallback_reason || "provider_error").slice(0, 64);
+      payload.routing_reason = String(extra.routing_reason || "provider_fallback_once").slice(0, 128);
+    }
+    return payload;
+  }
+
+  function shouldTryProviderFallback(remote) {
+    if (!remote || remote.usedRemote) return false;
+    const status = Number(remote.httpStatus) || 0;
+    if (status === 429 || status >= 500) return true;
+    const err = String(remote.error || "").toLowerCase();
+    return /timeout|unavailable|rate|5\d\d|429/.test(err);
+  }
+
   async function callModel(model, params) {
     const attachments = normalizeAttachments(params.attachments);
     const message = mergeMessageWithAttachments(
@@ -180,18 +209,25 @@
     const mode = String(params.modeId || "").trim();
     const writing = global.TasuAiGenerateUi?.isGenerationIntent?.(message);
     const timeoutMs = writing ? WRITING_TIMEOUT_MS : DEFAULT_TIMEOUT_MS;
+    const routing = buildRoutingPayload(params.routingDecision, params.routingExtra);
+
+    const basePayload = {
+      message,
+      history,
+      mode,
+      searchContext: searchContext || undefined,
+      attachments: attachments.length ? attachments : undefined,
+      surface: params.surface || "ai-workspace",
+      routing: routing || undefined,
+    };
 
     if (model.provider === "gemini") {
       const out = await postEdge(
         "gemini-chat",
         {
-          message,
-          history,
-          mode,
+          ...basePayload,
           intent: resolveGeminiIntent({ ...params, message }),
-          searchContext: searchContext || undefined,
           character: params.character || null,
-          attachments: attachments.length ? attachments : undefined,
         },
         { timeoutMs }
       );
@@ -212,12 +248,8 @@
       const out = await postEdge(
         "openai-chat",
         {
-          message,
-          history,
-          mode,
-          searchContext: searchContext || undefined,
+          ...basePayload,
           systemPrompt: systemPrompt || undefined,
-          attachments: attachments.length ? attachments : undefined,
         },
         { timeoutMs }
       );
@@ -238,12 +270,8 @@
       const out = await postEdge(
         "claude-chat",
         {
-          message,
-          history,
-          mode,
-          searchContext: searchContext || undefined,
+          ...basePayload,
           systemPrompt: systemPrompt || undefined,
-          attachments: attachments.length ? attachments : undefined,
         },
         { timeoutMs }
       );
@@ -264,13 +292,21 @@
       return {
         reply: "",
         usedRemote: false,
-        provider: model.provider,
-        error: "coming_soon",
+        provider: model.provider || "xai",
+        edge: "",
+        error: "model_unavailable",
         httpStatus: 503,
       };
     }
 
-    return { reply: "", usedRemote: false, provider: model.provider, error: "unsupported_provider" };
+    return {
+      reply: "",
+      usedRemote: false,
+      provider: model.provider || "unknown",
+      edge: "",
+      error: "unknown_provider",
+      httpStatus: 400,
+    };
   }
 
   function logTurn(entry) {
@@ -297,15 +333,45 @@
    */
   async function completeTurn(params) {
     const Plans = global.TasuAiPlanModels;
+    const Identity = global.TasuAiModelIdentity;
     const Orchestrator = global.TasuAiSearchOrchestrator;
     const attachments = normalizeAttachments(params?.attachments);
     const hasAttachments = attachments.length > 0;
     const userPlan = Plans?.resolveUserPlan?.() || "free";
-    let modelId = params?.modelId || Plans?.getSelectedModelId?.() || "gemini-flash";
-    if (!Plans?.isModelAllowed?.(modelId, userPlan)) {
-      modelId = Plans?.getDefaultModelIdForPlan?.(userPlan) || "gemini-flash";
+
+    let routingDecision =
+      params?.routingDecision && typeof params.routingDecision === "object"
+        ? { ...params.routingDecision }
+        : null;
+
+    let modelId = String(
+      routingDecision?.gatewayModelId ||
+        routingDecision?.resolvedWorkspaceId ||
+        params?.modelId ||
+        ""
+    ).trim();
+
+    // クライアント任意注入対策: workspace allowlist + plan 再検証のみ
+    if (!Identity?.isKnownWorkspaceId?.(modelId) || !Plans?.isModelAllowed?.(modelId, userPlan)) {
+      const fallbackId = Plans?.getDefaultModelIdForPlan?.(userPlan) || "gemini-flash";
+      if (routingDecision && modelId && modelId !== fallbackId) {
+        routingDecision = {
+          ...routingDecision,
+          fallbackUsed: true,
+          fallbackFrom: modelId,
+          fallbackReason: "gateway_allowlist_reject",
+          routingReason: "gateway_revalidate_default",
+          resolvedWorkspaceId: fallbackId,
+          gatewayModelId: fallbackId,
+          resolvedProvider: Identity?.toProvider?.(fallbackId) || null,
+          resolvedModel: Identity?.toProviderModelId?.(fallbackId) || null,
+        };
+      }
+      modelId = fallbackId;
     }
-    const model = Plans?.getModel?.(modelId) || { id: modelId, label: modelId, provider: "gemini" };
+
+    let model = Plans?.getModel?.(modelId) || { id: modelId, label: modelId, provider: "gemini" };
+    let providerFallbackUsed = false;
 
     const prep = Orchestrator?.prepare
       ? await Orchestrator.prepare({
@@ -332,7 +398,7 @@
       !prep.searchUsed &&
       (prep.searchResultCount === 0 || prep.searchQuery);
 
-    let remote = await callModel(model, {
+    const callParams = {
       message: prep.messageForAi,
       searchContext: prep.contextForAi,
       messages: params.messages,
@@ -342,9 +408,51 @@
       modeId: params.modeId,
       userText: params.userText,
       attachments,
-    });
+      surface: params.surface,
+      routingDecision,
+    };
 
-    let fallback_used = false;
+    let remote = await callModel(model, callParams);
+
+    // Provider 障害時の安全なフォールバック最大1回（無限禁止）
+    if (shouldTryProviderFallback(remote) && !routingDecision?.fallbackUsed) {
+      const alts = (Identity?.listFallbackWorkspaceIds?.(modelId) || []).filter((id) =>
+        Plans?.isModelAllowed?.(id, userPlan)
+      );
+      const altId = alts[0];
+      if (altId) {
+        const altModel = Plans?.getModel?.(altId);
+        if (altModel) {
+          providerFallbackUsed = true;
+          const fromId = modelId;
+          modelId = altId;
+          model = altModel;
+          routingDecision = {
+            ...(routingDecision || {}),
+            fallbackUsed: true,
+            fallbackFrom: fromId,
+            fallbackReason: `provider_http_${remote.httpStatus || "error"}`,
+            routingReason: "provider_fallback_once",
+            resolvedWorkspaceId: altId,
+            gatewayModelId: altId,
+            resolvedProvider: Identity?.toProvider?.(altId) || altModel.provider,
+            resolvedModel: Identity?.toProviderModelId?.(altId) || null,
+          };
+          remote = await callModel(model, {
+            ...callParams,
+            routingDecision,
+            routingExtra: {
+              provider_fallback_used: true,
+              fallback_from: fromId,
+              fallback_reason: routingDecision.fallbackReason,
+              routing_reason: "provider_fallback_once",
+            },
+          });
+        }
+      }
+    }
+
+    let fallback_used = Boolean(providerFallbackUsed || routingDecision?.fallbackUsed);
     let reply = remote?.reply || "";
     let apiError = "";
 
@@ -390,6 +498,8 @@
       surface: params.surface || "",
       api_error: apiError || undefined,
       used_remote: Boolean(remote?.usedRemote),
+      requested_mode: routingDecision?.requestedMode || "",
+      routing_reason: routingDecision?.routingReason || "",
     });
 
     return {
@@ -397,8 +507,10 @@
       modelId: model.id,
       modelLabel: model.label,
       modelProvider: model.provider,
+      providerModelId: Identity?.toProviderModelId?.(model.id) || null,
       usedRemote: Boolean(remote?.usedRemote),
       fallback_used: Boolean(fallback_used || searchFallback),
+      routingDecision,
       apiError,
       apiHttpStatus: remote?.httpStatus || 0,
       apiEdge: remote?.edge || "",

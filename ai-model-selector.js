@@ -73,6 +73,10 @@
       if (!btn || btn.disabled) return;
       const next = btn.getAttribute("data-ai-model-chip");
       if (!next) return;
+      const Router = global.TasuAiWorkspaceModelRouterSettings;
+      if (Router?.isAutoMode?.()) {
+        Router.setAutoRoutingEnabled?.(false);
+      }
       if (global.TasuAiPlanModels?.setSelectedModelId?.(next)) {
         updateBar(bar);
       }
@@ -82,23 +86,48 @@
   function updateBar(root) {
     if (!root) return;
     const Plans = global.TasuAiPlanModels;
+    const Router = global.TasuAiWorkspaceModelRouterSettings;
+    const Identity = global.TasuAiModelIdentity;
     const planId = Plans?.resolveUserPlan?.() || "free";
+    const isAuto = Router?.isAutoMode?.() ?? Router?.getState?.()?.modelAutoRouting ?? true;
     const selectedId = Plans?.getSelectedModelId?.() || "gemini-flash";
-    const model = Plans?.getModel?.(selectedId);
+    const resolvedId = isAuto
+      ? Router?.resolveGatewayModelId?.({ userText: "", modeId: "" }) || selectedId
+      : selectedId;
+    const model = Plans?.getModel?.(resolvedId);
     const labelEl = root.querySelector("[data-ai-model-current-label]");
     const selectEl = root.querySelector("[data-ai-model-select]");
     const chipsEl = root.querySelector("[data-ai-model-chips]");
-    if (labelEl) labelEl.textContent = model?.label || selectedId;
+    const modeEl = root.querySelector("[data-ai-selection-mode-label]");
+    const titleEl = root.querySelector(".ai-model-bar__workspace-title");
+    if (modeEl) {
+      modeEl.textContent = isAuto ? "自動" : "手動";
+    }
+    if (titleEl) {
+      titleEl.textContent = isAuto ? "回答スタイル（自動選択）" : "回答スタイル（手動）";
+    }
+    if (labelEl) {
+      const label = Identity?.toUiLabel?.(resolvedId) || model?.label || resolvedId;
+      labelEl.textContent = isAuto ? `自動 · ${label}` : label;
+    }
     if (selectEl) {
       selectEl.innerHTML = renderOptions(planId, selectedId);
       selectEl.value = selectedId;
+      selectEl.disabled = Boolean(isAuto);
     }
     if (chipsEl) {
-      chipsEl.innerHTML = renderWorkspaceChips(planId, selectedId);
+      chipsEl.innerHTML = renderWorkspaceChips(planId, isAuto ? resolvedId : selectedId);
+      chipsEl.setAttribute("data-ai-selection-mode", isAuto ? "auto" : "manual");
       bindChipEvents(root);
+      chipsEl.querySelectorAll("[data-ai-model-chip]").forEach((btn) => {
+        if (isAuto) {
+          btn.setAttribute("title", "自動モード中 · タップすると手動選択に切替します");
+        }
+      });
     }
     root.setAttribute("data-ai-user-plan", planId);
     root.setAttribute("data-ai-selected-model", selectedId);
+    root.setAttribute("data-ai-selection-mode", isAuto ? "auto" : "manual");
   }
 
   function mount(host, options) {
@@ -116,6 +145,7 @@
         `<div class="ai-model-bar__workspace">` +
         `<div class="ai-model-bar__workspace-head">` +
         `<span class="ai-model-bar__workspace-title">回答スタイル</span>` +
+        `<span class="ai-model-bar__mode-badge" data-ai-selection-mode-label>自動</span>` +
         `</div>` +
         `<div class="ai-model-bar__chips" data-ai-model-chips role="tablist" aria-label="回答スタイルを選択"></div>` +
         `</div>`;
@@ -145,6 +175,8 @@
     const onPlanChange = () => updateBar(bar);
     global.addEventListener("tasu:ai-plan-changed", onPlanChange);
     global.addEventListener("tasu:ai-model-changed", onPlanChange);
+    global.addEventListener("tasu:ai-selection-mode-changed", onPlanChange);
+    global.addEventListener("tasu:ai-model-router-settings-changed", onPlanChange);
 
     updateBar(bar);
     return bar;

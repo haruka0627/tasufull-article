@@ -66,8 +66,12 @@ async function main() {
   assert("gemini-chat resolveUsageActor", geminiChat.includes("resolveUsageActor"));
   assert("gemini-ocr imports usage log", geminiOcr.includes("ai-usage-log.mjs"));
   assert("gemini-ocr records denied/success/error", geminiOcr.includes("USAGE_STATUS_DENIED") && geminiOcr.includes("USAGE_STATUS_SUCCESS") && geminiOcr.includes("USAGE_STATUS_ERROR"));
-  assert("openai-chat not wired this phase", !openaiChat.includes("ai-usage-log"));
-  assert("claude-chat not wired this phase", !claudeChat.includes("ai-usage-log"));
+  assert("openai-chat imports usage log", openaiChat.includes("ai-usage-log"));
+  assert("claude-chat imports usage log", claudeChat.includes("ai-usage-log"));
+  assert("openai-chat records success", openaiChat.includes("USAGE_STATUS_SUCCESS"));
+  assert("claude-chat records success", claudeChat.includes("USAGE_STATUS_SUCCESS"));
+  assert("openai-chat sanitizeRoutingMetadata", openaiChat.includes("sanitizeRoutingMetadata"));
+  assert("claude-chat sanitizeRoutingMetadata", claudeChat.includes("sanitizeRoutingMetadata"));
   assert("no public browser ingest endpoint added", !logTs.includes("/api/ai-usage") && !logMjs.includes("onRequest"));
 
   // --- module unit tests ---
