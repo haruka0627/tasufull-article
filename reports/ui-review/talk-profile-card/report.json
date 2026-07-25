@@ -1,0 +1,124 @@
+{
+  "feature": "talk-profile-card",
+  "capturedAt": "2026-07-25T05:56:45.110Z",
+  "baseUrl": "http://127.0.0.1:8788",
+  "outDir": "reports/ui-review/talk-profile-card",
+  "consoleErrorCount": 0,
+  "consoleErrors": [],
+  "overflowOk": true,
+  "overflowIssues": [],
+  "assertionOk": true,
+  "assertionIssues": [],
+  "shots": [
+    {
+      "filename": "001-default.png",
+      "viewport": "1280",
+      "overflow": {
+        "ok": true,
+        "issues": []
+      },
+      "coverMode": "gradient",
+      "cardVisible": true,
+      "cardInViewport": true,
+      "cardBox": {
+        "x": 440,
+        "y": 278,
+        "width": 400,
+        "height": 344
+      },
+      "avatarLoaded": true,
+      "coverLoaded": false,
+      "hoverActionVisible": null,
+      "hoverActionInsidePanel": null,
+      "hoverStyleChanged": null
+    },
+    {
+      "filename": "002-cover-photo.png",
+      "viewport": "1280",
+      "overflow": {
+        "ok": true,
+        "issues": []
+      },
+      "coverMode": "photo",
+      "cardVisible": true,
+      "cardInViewport": true,
+      "cardBox": {
+        "x": 440,
+        "y": 278,
+        "width": 400,
+        "height": 344
+      },
+      "avatarLoaded": true,
+      "coverLoaded": true,
+      "hoverActionVisible": null,
+      "hoverActionInsidePanel": null,
+      "hoverStyleChanged": null
+    },
+    {
+      "filename": "003-hover-actions.png",
+      "viewport": "1280",
+      "overflow": {
+        "ok": true,
+        "issues": []
+      },
+      "coverMode": "photo",
+      "cardVisible": true,
+      "cardInViewport": true,
+      "cardBox": {
+        "x": 440,
+        "y": 278,
+        "width": 400,
+        "height": 344
+      },
+      "avatarLoaded": true,
+      "coverLoaded": true,
+      "hoverActionVisible": true,
+      "hoverActionInsidePanel": true,
+      "hoverStyleChanged": false
+    },
+    {
+      "filename": "004-mobile-390.png",
+      "viewport": "390",
+      "overflow": {
+        "ok": true,
+        "issues": []
+      },
+      "coverMode": "photo",
+      "cardVisible": true,
+      "cardInViewport": true,
+      "cardBox": {
+        "x": 12,
+        "y": 260,
+        "width": 366,
+        "height": 324
+      },
+      "avatarLoaded": true,
+      "coverLoaded": true,
+      "hoverActionVisible": null,
+      "hoverActionInsidePanel": null,
+      "hoverStyleChanged": null
+    },
+    {
+      "filename": "005-tablet-768.png",
+      "viewport": "768",
+      "overflow": {
+        "ok": true,
+        "issues": []
+      },
+      "coverMode": "photo",
+      "cardVisible": true,
+      "cardInViewport": true,
+      "cardBox": {
+        "x": 184,
+        "y": 340,
+        "width": 400,
+        "height": 344
+      },
+      "avatarLoaded": true,
+      "coverLoaded": true,
+      "hoverActionVisible": null,
+      "hoverActionInsidePanel": null,
+      "hoverStyleChanged": null
+    }
+  ]
+}
