@@ -7180,3 +7180,216 @@ body.talk-worker-review-mode .talk-notify-toolbar__sub {
   box-shadow: none !important;
 }
 
+/* --- Talk profile card (viewport overlay) --- */
+.talk-profile-card {
+  position: fixed;
+  inset: 0;
+  z-index: 1260;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.talk-profile-card[hidden] {
+  display: none;
+}
+
+.talk-profile-card.is-closing {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+body.talk-profile-card-open {
+  overflow: hidden;
+}
+
+.talk-profile-card__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+}
+
+.talk-profile-card__panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 400px);
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 32px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 18px;
+  border: 1px solid var(--talk-border, #e2e8f0);
+  background: #fff;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.22);
+}
+
+.talk-profile-card__cover {
+  position: relative;
+  flex: 0 0 auto;
+  height: 148px;
+  background-color: #f3ead4;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.talk-profile-card__cover--gradient {
+  background-image: linear-gradient(135deg, #fff6df 0%, #e8d9a8 42%, #967622 100%);
+}
+
+.talk-profile-card__cover--photo {
+  background-color: #334155;
+}
+
+.talk-profile-card__close,
+.talk-profile-card__favorite {
+  position: absolute;
+  top: 10px;
+  z-index: 3;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.4);
+  color: #fff;
+  font-size: 1.125rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.talk-profile-card__close {
+  right: 10px;
+}
+
+.talk-profile-card__favorite {
+  right: 52px;
+}
+
+.talk-profile-card__close:hover,
+.talk-profile-card__favorite:hover,
+.talk-profile-card__close:focus-visible,
+.talk-profile-card__favorite:focus-visible {
+  background: rgba(30, 41, 59, 0.72);
+  outline: none;
+}
+
+.talk-profile-card__favorite[hidden] {
+  display: none;
+}
+
+.talk-profile-card__favorite.is-active {
+  color: #fbbf24;
+}
+
+.talk-profile-card__body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0 1.25rem 1.25rem;
+  text-align: center;
+}
+
+.talk-profile-card__avatar-slot {
+  margin-top: -57px;
+  width: 114px;
+  height: 114px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px #fff;
+}
+
+.talk-profile-card__avatar,
+.talk-profile-card__avatar--img {
+  display: block;
+  width: 114px;
+  height: 114px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f8fafc;
+}
+
+.talk-profile-card__avatar--initials {
+  --talk-avatar-size: 114px;
+  width: 114px;
+  height: 114px;
+}
+
+.talk-profile-card__name {
+  margin: 0.15rem 0 0;
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.talk-profile-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.talk-profile-card__action {
+  flex: 1 1 96px;
+  min-width: 96px;
+  max-width: 120px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.65rem 0.5rem;
+  border-radius: 12px;
+  border: 1px solid var(--talk-border, #e2e8f0);
+  background: #fff;
+  color: #0f172a;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.talk-profile-card__action:hover,
+.talk-profile-card__action:focus-visible {
+  background: var(--talk-accent-soft, #fffbeb);
+  border-color: #e8d9a8;
+  outline: none;
+}
+
+.talk-profile-card__action-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.talk-profile-card__action-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+@media (max-width: 480px) {
+  .talk-profile-card {
+    padding: 12px;
+  }
+
+  .talk-profile-card__panel {
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100vh - 24px);
+    border-radius: 14px;
+  }
+
+  .talk-profile-card__cover {
+    height: 128px;
+  }
+}
