@@ -754,7 +754,7 @@ async function probeMime(mime, allowedMimeTypes) {
     calls[0].body.mimeType === "image/png" &&
       calls[0].body.base64 === PNG_1X1 &&
       calls[0].body.user_id === "u9" &&
-      calls[0].body.surface === "chat_attachment" &&
+      calls[0].body.surface === "chat" &&
       calls[0].body.feature === "ocr_turn"
   );
 }

@@ -46,33 +46,46 @@ async function main() {
   assert("gemini-ocr imports guard", geminiOcr.includes("ai-usage-guard.mjs"));
   assert("gemini-ocr enforces guard", geminiOcr.includes("enforceCfOcrGuard"));
   assert("gemini-ocr consumes quota", geminiOcr.includes("finalizeCfOcrConsume"));
+  assert("gemini-ocr normalizes surface", geminiOcr.includes("normalizeOcrSurface"));
+  assert("gemini-ocr server feature", geminiOcr.includes("getOcrQuotaFeature"));
 
   assert("chat-ocr passes user_id", chatOcr.includes("user_id: guard.user_id"));
   assert("chat-ocr passes surface", chatOcr.includes("surface: guard.surface"));
   assert("chat-ocr ocr_turn feature", chatOcr.includes('feature: "ocr_turn"'));
   assert("chat-ocr sends Authorization Bearer", chatOcr.includes('Authorization: "Bearer "'));
   assert("chat-ocr uses getSession", chatOcr.includes("getSession"));
+  assert("chat-ocr surface allowlist", chatOcr.includes("OCR_ALLOWED_SURFACES"));
   assert("gemini-ocr verifies /auth/v1/user", geminiOcr.includes("/auth/v1/user"));
   assert("gemini-ocr uses authenticatedUserId", geminiOcr.includes("authenticatedUserId"));
 
-  assert("CF guard rejects production ref", guardMjs.includes('PRODUCTION_REF = "ddojquacsyqesrjhcvmn"'));
+  assert("CF guard rejects unknown host helper retained", guardMjs.includes('PRODUCTION_REF = "ddojquacsyqesrjhcvmn"'));
   assert("CF guard staging ref", guardMjs.includes('STAGING_REF = "ahlxuyvhzqdqaojiywmu"'));
-  assert("CF guard maps ocr to vision", guardMjs.includes('explicit === FEATURE_OCR'));
+  assert("CF guard OCR allows production URL", guardMjs.includes("assertOcrGuardSupabaseUrl"));
+  assert("CF guard fail-closed usage_guard_unavailable", guardMjs.includes("usage_guard_unavailable"));
+  assert("CF guard maps ocr to vision", guardMjs.includes("OCR_QUOTA_FEATURE"));
+  assert("CF no workspace-only OCR skip", !guardMjs.includes("if (!isWorkspaceSurface(body))"));
 
   const modUrl = new URL("../deploy/cloudflare/functions/_shared/ai-usage-guard.mjs", import.meta.url);
-  const cf = await import(modUrl.href);
+  const cf = await import(`${modUrl.href}?t=${Date.now()}`);
 
   assert("CF normalize ocr_turn", cf.normalizeGuardFeature("ocr_turn") === "vision_turn");
   assert("CF normalize vision_turn", cf.normalizeGuardFeature("vision_turn") === "vision_turn");
   assert("CF workspace surface detect", cf.isWorkspaceSurface({ surface: "ai-workspace" }) === true);
-  assert("CF non-workspace skip", cf.isWorkspaceSurface({ surface: "talk" }) === false);
+  assert("CF non-workspace detect", cf.isWorkspaceSurface({ surface: "talk" }) === false);
+  assert("CF OCR surface chat allowed", cf.isAllowedOcrSurface("chat") === true);
+  assert("CF OCR surface talk rejected", cf.isAllowedOcrSurface("talk") === false);
+  assert("CF OCR quota feature fixed", cf.getOcrQuotaFeature() === "vision_turn");
   assert(
     "CF staging url ok",
     cf.assertStagingSupabaseUrl("https://ahlxuyvhzqdqaojiywmu.supabase.co") === true
   );
   assert(
-    "CF production url blocked",
+    "CF production url blocked by staging-only helper",
     cf.assertStagingSupabaseUrl("https://ddojquacsyqesrjhcvmn.supabase.co") === false
+  );
+  assert(
+    "CF OCR production url allowed",
+    cf.assertOcrGuardSupabaseUrl("https://ddojquacsyqesrjhcvmn.supabase.co") === true
   );
 
   const blocked = await cf.enforceCfOcrGuard(
@@ -86,12 +99,27 @@ async function main() {
     assert("OCR guard error code", payload.error === "guard_missing_user_id", payload.error);
   }
 
-  const skipped = await cf.enforceCfOcrGuard(
+  const invalidSurface = await cf.enforceCfOcrGuard(
     new Request("http://127.0.0.1/api/gemini-ocr", { method: "POST" }),
     { surface: "talk", user_id: "u_test" },
-    {}
+    { SUPABASE_URL: "https://ahlxuyvhzqdqaojiywmu.supabase.co", SUPABASE_SERVICE_ROLE_KEY: "k" }
   );
-  assert("Non-workspace OCR passes guard", skipped.blocked === null);
+  assert("Non-allowlist OCR rejected", invalidSurface.blocked !== null);
+  if (invalidSurface.blocked) {
+    const payload = await invalidSurface.blocked.json();
+    assert("invalid_surface error", payload.error === "invalid_surface", payload.error);
+  }
+
+  const noKey = await cf.enforceCfOcrGuard(
+    new Request("http://127.0.0.1/api/gemini-ocr", { method: "POST" }),
+    { surface: "chat", user_id: "u_test" },
+    { SUPABASE_URL: "https://ahlxuyvhzqdqaojiywmu.supabase.co" }
+  );
+  assert("missing service key fail-closed", noKey.blocked !== null);
+  if (noKey.blocked) {
+    const payload = await noKey.blocked.json();
+    assert("usage_guard_unavailable", payload.error === "usage_guard_unavailable", payload.error);
+  }
 
   const failed = results.filter((r) => !r.ok);
   console.log(`\n--- ${results.length - failed.length}/${results.length} PASS ---`);

@@ -158,7 +158,7 @@ function noExternal(calls) {
       typeof body.base64 === "string" &&
       body.base64.length > 0 &&
       body.user_id === "u1" &&
-      body.surface === "chat_attachment" &&
+      body.surface === "chat" &&
       body.feature === "ocr_turn"
   );
   assert("5 valid response → ok:true", result.ok === true && result.text === "hello");

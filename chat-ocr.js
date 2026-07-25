@@ -45,6 +45,54 @@
     return String(getConfig().provider || "none").toLowerCase();
   }
 
+  /** Function allowlist と一致（分類用 · entitlement 根拠にしない） */
+  var OCR_ALLOWED_SURFACES = {
+    "ai-workspace": true,
+    chat: true,
+    listing: true,
+    "builder-ai": true,
+  };
+
+  /** 既存 caller 別名 → allowlist surface */
+  var OCR_SURFACE_ALIASES = {
+    chat_attachment: "chat",
+    "chat-attachment": "chat",
+    listing_attachment: "listing",
+    "listing-attachment": "listing",
+    builder_ai: "builder-ai",
+    builder_ai_vision: "builder-ai",
+    ai_workspace: "ai-workspace",
+    workspace: "ai-workspace",
+  };
+
+  /**
+   * @param {unknown} raw
+   * @returns {string}
+   */
+  function normalizeClientOcrSurface(raw) {
+    if (typeof raw !== "string") return "";
+    var s = raw.trim().toLowerCase();
+    if (!s) return "";
+    if (OCR_SURFACE_ALIASES[s]) s = OCR_SURFACE_ALIASES[s];
+    return OCR_ALLOWED_SURFACES[s] ? s : "";
+  }
+
+  /**
+   * pathname から OCR 分類 surface を推論（未知は空 → Function が拒否）
+   * @param {string} path
+   * @returns {string}
+   */
+  function inferOcrSurfaceFromPath(path) {
+    var p = String(path || "");
+    if (/\/ai-workspace\.html$/i.test(p)) return "ai-workspace";
+    if (/\/builder\/builder-ai\.html$/i.test(p) || /\/builder-ai\.html$/i.test(p)) {
+      return "builder-ai";
+    }
+    if (/\/chat-detail\.html$/i.test(p) || /\/talk-home\.html$/i.test(p)) return "chat";
+    if (/\/post\.html$/i.test(p) || /shop-market-listing/i.test(p)) return "listing";
+    return "";
+  }
+
   /**
    * SAFE-05 guard コンテキスト（user_id + surface）
    * @param {{ user_id?: string, userId?: string, surface?: string } | undefined} options
@@ -55,9 +103,8 @@
       options?.user_id || options?.userId || cfg.currentUserId || cfg.userId || cfg.user_id || ""
     ).trim();
     const path = String(window.location?.pathname || "");
-    const surface =
-      String(options?.surface || "").trim() ||
-      (/\/ai-workspace\.html$/i.test(path) ? "ai-workspace" : "");
+    const fromOpts = normalizeClientOcrSurface(options?.surface);
+    const surface = fromOpts || inferOcrSurfaceFromPath(path);
     return { user_id: userId, surface };
   }
 
@@ -270,15 +317,25 @@
           : "auth_required";
       return { error: err, reason: err };
     }
+    if (status === 402) {
+      return { error: dataError || "quota_exceeded", reason: "quota_exceeded" };
+    }
     if (status === 403) {
       return { error: dataError || "auth_forbidden", reason: "auth_forbidden" };
     }
     if (status === 400) {
-      return { error: dataError || "http_400", reason: "http_400" };
+      const err = dataError || "http_400";
+      return {
+        error: err,
+        reason: err === "invalid_surface" ? "invalid_surface" : "http_400",
+      };
     }
     if (status >= 500) {
       if (dataError === "auth_unavailable") {
         return { error: "auth_unavailable", reason: "auth_unavailable" };
+      }
+      if (dataError === "usage_guard_unavailable") {
+        return { error: "usage_guard_unavailable", reason: "usage_guard_unavailable" };
       }
       return { error: dataError || `http_${status}`, reason: "http_5xx" };
     }

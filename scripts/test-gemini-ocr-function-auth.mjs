@@ -44,6 +44,7 @@ function envBase(extra = {}) {
     GEMINI_API_KEY: "test-gemini-key",
     SUPABASE_URL: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
     SUPABASE_ANON_KEY: "test-anon-key",
+    SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
     ...extra,
   };
 }
@@ -117,10 +118,24 @@ function installFetchMock(opts = {}) {
     }
     // guard / rest
     guardRestCalls.push({ url: u, init });
+    if (u.includes("/rest/v1/rpc/")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, allowed: true, used: 0, remaining: 5 }),
+      };
+    }
+    if (u.includes("gen_ai_subscriptions")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => [],
+      };
+    }
     return {
       ok: true,
       status: 200,
-      json: async () => [{ allowed: true, used: 0 }],
+      json: async () => ({ ok: true }),
     };
   };
 
@@ -416,7 +431,7 @@ function loadClient(opts = {}) {
       body.base64 === PNG_1X1 &&
       body.feature === "ocr_turn" &&
       "user_id" in body &&
-      "surface" in body
+      body.surface === "chat"
   );
 }
 {

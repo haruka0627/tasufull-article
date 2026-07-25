@@ -3,11 +3,13 @@
  *
  * Secret: GEMINI_API_KEY（クライアントへ渡さない）
  * Auth: Authorization Bearer → Supabase `/auth/v1/user` で検証（全 surface）
- * SAFE-05: surface=ai-workspace 時は Usage Guard 経由（user ID は server-derived）
+ * SAFE-05: 許可 surface すべて Usage Guard（user ID / feature は server-derived）
  */
 import {
   enforceCfOcrGuard,
   finalizeCfOcrConsume,
+  getOcrQuotaFeature,
+  normalizeOcrSurface,
 } from "../_shared/ai-usage-guard.mjs";
 
 function jsonResponse(body, status = 200) {
@@ -148,9 +150,16 @@ export async function onRequest(context) {
     return jsonResponse({ ok: false, error: "invalid_json", provider: "gemini" }, 400);
   }
 
-  // body.user_id は互換上残ってもよいが、guard / 帰属は server-derived のみ
+  const surface = normalizeOcrSurface(body?.surface);
+  if (!surface) {
+    return jsonResponse({ ok: false, error: "invalid_surface", provider: "gemini" }, 400);
+  }
+
+  // body.user_id / feature は互換上残ってもよいが、guard / 帰属は server-derived のみ
   const guardBody = Object.assign({}, body && typeof body === "object" ? body : {}, {
     user_id: authenticatedUserId,
+    surface,
+    feature: getOcrQuotaFeature(),
   });
 
   const guard = await enforceCfOcrGuard(request, guardBody, env);
