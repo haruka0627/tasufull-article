@@ -1,13 +1,13 @@
+#!/usr/bin/env node
+/**
+ * TLV view/studio account menu verify (localhost :8788)
+ * Usage: node scripts/verify-tlv-view-account-menu.mjs
+ */
 import { chromium } from "playwright";
 import fs from "node:fs";
 import path from "node:path";
 
-const PAGES = [
-  "videos.html",
-  "watch-video.html",
-  "shorts.html",
-  "channel-content.html",
-];
+const PAGES = ["videos.html", "watch-video.html", "shorts.html", "channel-content.html"];
 const WIDTHS = [390, 768, 1280];
 const OUT_DIR = path.resolve("scripts/tmp-view-acct-menu-verify");
 fs.mkdirSync(OUT_DIR, { recursive: true });
@@ -59,9 +59,11 @@ async function verifyPage(browser, pageName, width, consoleErrors) {
   if (menuType === "view") {
     await openAccountMenu(page, width, false);
     const labels = await page.evaluate(() =>
-      [...document.querySelectorAll(".tlv-view-acct__row-label, .tlv-view-acct__guest-text, .tlv-view-acct__guest-actions a")].map(
-        (el) => el.textContent.trim(),
-      ),
+      [
+        ...document.querySelectorAll(
+          ".tlv-view-acct__row-label, .tlv-view-acct__guest-text, .tlv-view-acct__guest-actions a",
+        ),
+      ].map((el) => el.textContent.trim()),
     );
     const hrefs = await page.evaluate(() =>
       [...document.querySelectorAll(".tlv-view-acct__row[href]")].map((el) => ({
@@ -79,6 +81,7 @@ async function verifyPage(browser, pageName, width, consoleErrors) {
         return r.right > window.innerWidth || r.left < 0;
       })(),
     }));
+    const missing = REQUIRED_VIEW.filter((t) => !labels.some((l) => l.includes(t)));
     const shot = path.join(OUT_DIR, `view-${pageName.replace(".html", "")}-${width}.png`);
     await page.screenshot({ path: shot, fullPage: false });
     await page.close();
@@ -88,7 +91,8 @@ async function verifyPage(browser, pageName, width, consoleErrors) {
       menuType,
       labels,
       hrefs,
-      hasRequired: REQUIRED_VIEW.every((t) => labels.some((l) => l.includes(t))),
+      hasRequired: missing.length === 0,
+      missing,
       overflow,
       screenshot: shot,
     };
@@ -96,9 +100,11 @@ async function verifyPage(browser, pageName, width, consoleErrors) {
 
   await openAccountMenu(page, width, true);
   const labels = await page.evaluate(() =>
-    [...document.querySelectorAll(".tlv-studio-acct__row-label, .tlv-studio-acct__guest-text, .tlv-studio-acct__guest-actions a")].map(
-      (el) => el.textContent.trim(),
-    ),
+    [
+      ...document.querySelectorAll(
+        ".tlv-studio-acct__row-label, .tlv-studio-acct__guest-text, .tlv-studio-acct__guest-actions a",
+      ),
+    ].map((el) => el.textContent.trim()),
   );
   const overflow = await page.evaluate(() => ({
     scrollW: document.documentElement.scrollWidth,
@@ -107,7 +113,15 @@ async function verifyPage(browser, pageName, width, consoleErrors) {
   const shot = path.join(OUT_DIR, `studio-${pageName.replace(".html", "")}-${width}.png`);
   await page.screenshot({ path: shot, fullPage: false });
   await page.close();
-  return { page: pageName, width, menuType, labels, overflow, screenshot: shot };
+  return {
+    page: pageName,
+    width,
+    menuType,
+    labels,
+    overflow,
+    screenshot: shot,
+    hasMenuItems: labels.length > 0,
+  };
 }
 
 async function verifyGuest(browser, consoleErrors) {
@@ -123,23 +137,73 @@ async function verifyGuest(browser, consoleErrors) {
   });
   await openAccountMenu(page, 1280, false);
   const labels = await page.evaluate(() =>
-    [...document.querySelectorAll(".tlv-view-acct__guest-actions a")].map((el) => el.textContent.trim()),
+    [...document.querySelectorAll(".tlv-view-acct__guest-actions a")].map((el) =>
+      el.textContent.trim(),
+    ),
   );
+  const missing = REQUIRED_GUEST.filter((t) => !labels.includes(t));
   await page.close();
-  return { guest: true, labels, hasGuest: REQUIRED_GUEST.every((t) => labels.includes(t)) };
+  return { guest: true, labels, hasGuest: missing.length === 0, missing };
 }
 
-const browser = await chromium.launch();
 const consoleErrors = [];
 const results = [];
-for (const pageName of PAGES) {
-  for (const width of WIDTHS) {
-    results.push(await verifyPage(browser, pageName, width, consoleErrors));
+const failures = [];
+let browser;
+
+try {
+  browser = await chromium.launch();
+  for (const pageName of PAGES) {
+    for (const width of WIDTHS) {
+      results.push(await verifyPage(browser, pageName, width, consoleErrors));
+    }
+  }
+  results.push(await verifyGuest(browser, consoleErrors));
+  await browser.close();
+  browser = null;
+
+  for (const r of results) console.log(JSON.stringify(r, null, 2));
+  console.log(`\nconsoleErrors: ${consoleErrors.length}`);
+  if (consoleErrors.length) consoleErrors.forEach((e) => console.log(e));
+
+  for (const r of results) {
+    if (r.guest) {
+      if (!r.hasGuest) {
+        failures.push(
+          `guest@1280: missing guest actions ${JSON.stringify(r.missing || [])} (got ${JSON.stringify(r.labels)})`,
+        );
+      }
+      continue;
+    }
+    if (r.menuType === "view") {
+      if (!r.hasRequired) {
+        failures.push(
+          `${r.page}@${r.width}: missing required labels ${JSON.stringify(r.missing || [])}`,
+        );
+      }
+    } else if (r.menuType === "studio") {
+      if (!r.hasMenuItems) {
+        failures.push(`${r.page}@${r.width}: studio account menu empty`);
+      }
+    }
+  }
+} catch (err) {
+  console.error(err);
+  process.exitCode = 1;
+} finally {
+  if (browser) {
+    try {
+      await browser.close();
+    } catch {
+      /* ignore */
+    }
   }
 }
-results.push(await verifyGuest(browser, consoleErrors));
-await browser.close();
 
-for (const r of results) console.log(JSON.stringify(r, null, 2));
-console.log(`\nconsoleErrors: ${consoleErrors.length}`);
-if (consoleErrors.length) consoleErrors.forEach((e) => console.log(e));
+if (failures.length) {
+  console.error("verification failed:");
+  for (const f of failures) console.error(` - ${f}`);
+  process.exitCode = 1;
+} else if (!process.exitCode) {
+  console.log("verification passed");
+}
