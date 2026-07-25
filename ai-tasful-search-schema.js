@@ -15,7 +15,7 @@
     "availability",
     "recent",
   ]);
-  const PLATFORM_TYPES = new Set(["job", "business_service"]);
+  const PLATFORM_TYPES = new Set(["job", "business_service", "skill"]);
   const MAX_EMPLOYMENT = 40;
   const MAX_WORK_STYLE = 40;
   const MAX_CATEGORY = 64;
@@ -136,6 +136,7 @@
     const v = String(raw).trim().toLowerCase();
     if (v === "job") return "job";
     if (v === "business_service") return "business_service";
+    if (v === "skill") return "skill";
     return null;
   }
 
@@ -144,6 +145,8 @@
     if (i === "job_search") return "job";
     // Phase 3 wave 1: service_request only (not repair/delivery)
     if (i === "service_request") return "business_service";
+    // Phase 4 wave 1: skill_request only (not worker)
+    if (i === "skill_request") return "skill";
     return null;
   }
 
@@ -180,7 +183,7 @@
       type = null;
     }
     if (vertical === "platform") {
-      if (type !== "job" && type !== "business_service") {
+      if (type !== "job" && type !== "business_service" && type !== "skill") {
         if (src.type != null && String(src.type).trim()) {
           vertical = null;
           type = null;
@@ -201,7 +204,7 @@
         return loc || null;
       })(),
       category:
-        vertical === "platform" && type === "business_service"
+        vertical === "platform" && (type === "business_service" || type === "skill")
           ? trimStr(src.category, MAX_CATEGORY) || null
           : null,
       dateFrom: normalizeDate(src.dateFrom),
@@ -218,7 +221,7 @@
       value.employmentType = null;
       value.workStyle = null;
     }
-    if (value.type !== "business_service") {
+    if (value.type !== "business_service" && value.type !== "skill") {
       value.category = null;
     }
 
@@ -295,7 +298,8 @@
       normalizePlatformType(opts.type) ||
       intentToType(intent) ||
       (intent === "job_search" ? "job" : null) ||
-      (intent === "service_request" ? "business_service" : null);
+      (intent === "service_request" ? "business_service" : null) ||
+      (intent === "skill_request" ? "skill" : null);
 
     const action = intentToAction(intent, {
       ...hints,

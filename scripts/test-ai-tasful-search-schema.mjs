@@ -157,7 +157,9 @@ function main() {
   );
   assert("intentToType repair_request stays unmapped", Schema.intentToType("repair_request") == null);
   assert("intentToType delivery_request stays unmapped", Schema.intentToType("delivery_request") == null);
+  assert("intentToType worker_request stays unmapped", Schema.intentToType("worker_request") == null);
   assert("intentToType job_search", Schema.intentToType("job_search") === "job");
+  assert("intentToType skill_request", Schema.intentToType("skill_request") === "skill");
   assert("intentToType product_search", Schema.intentToType("product_search") == null);
 
   const bizValidate = Schema.validate({
@@ -175,6 +177,48 @@ function main() {
       bizValidate.value.type === "business_service" &&
       bizValidate.value.category === "cleaning",
     JSON.stringify(bizValidate.value)
+  );
+
+  const skillIntent = Intent.classifyIntent("動画編集のスキル探して");
+  assert("intent skill_request", skillIntent.intent === "skill_request");
+  const skillSchema = Schema.fromUserText("動画編集サービス", { intent: "skill_request" });
+  assert(
+    "fromUserText platform skill",
+    skillSchema.ok &&
+      skillSchema.value.vertical === "platform" &&
+      skillSchema.value.type === "skill" &&
+      skillSchema.value.action === "search",
+    JSON.stringify(skillSchema.value)
+  );
+  const skillValidate = Schema.validate({
+    action: "search",
+    vertical: "platform",
+    type: "skill",
+    query: "動画編集サービス",
+    category: "video_editing",
+    location: "東京",
+    priceMin: 3000,
+    priceMax: 30000,
+    sort: "relevance",
+  });
+  assert(
+    "schema platform skill",
+    skillValidate.ok &&
+      skillValidate.value.type === "skill" &&
+      skillValidate.value.category === "video_editing" &&
+      skillValidate.value.priceMin === 3000 &&
+      skillValidate.value.priceMax === 30000,
+    JSON.stringify(skillValidate.value)
+  );
+
+  // skill / worker mutual misfire
+  assert(
+    "skill vs worker: ワーカー探して → worker",
+    Intent.classifyIntent("明日手伝ってくれるワーカー探して").intent === "worker_request"
+  );
+  assert(
+    "skill vs worker: 動画編集探して → skill",
+    Intent.classifyIntent("動画編集できる人探して").intent === "skill_request"
   );
 
   const negatives = [

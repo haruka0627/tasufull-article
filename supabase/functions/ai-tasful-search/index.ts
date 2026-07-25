@@ -3,6 +3,7 @@
  * Phase 1: Marketplace products
  * Phase 2: Platform jobs (listings.listing_type=job)
  * Phase 3: Platform business_service (non-shop_store business_listings)
+ * Phase 4: Platform skill (listings.listing_type=skill)
  * - No AI Provider / no service role / no Talk / no fee-pay
  */
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
@@ -22,6 +23,9 @@ const PRODUCT_SELECT =
 /** Public job fields only — never phone / contact_email / form_data / user_id */
 const JOB_SELECT =
   "id,title,description,tags,image_url,thumbnail_url,category,subcategory,publish_status,listing_type,job_location,work_style,employment_type,salary_type,salary_amount,company_name,created_at";
+/** Public skill fields only — never phone / contact_email / form_data / user_id / payment */
+const SKILL_SELECT =
+  "id,title,description,tags,image_url,thumbnail_url,category,subcategory,publish_status,listing_type,price_amount,created_at";
 /** Public business service fields — never phone / form_data / user_id / payment */
 const BUSINESS_SERVICE_SELECT =
   "id,company_name,title,description,business_category,business_subcategory,service_area,tags,publish_status,rating,review_count,status,created_at";
@@ -33,6 +37,7 @@ const DETAIL_ALLOW = new Set([
   "detail-shop-product.html",
   "detail-job.html",
   "detail-business-service.html",
+  "detail-skill.html",
 ]);
 
 type CatalogResult = {
@@ -466,6 +471,117 @@ async function searchPlatformJobs(
   };
 }
 
+function formatSkillPriceLabel(row: Record<string, unknown>): string {
+  const amount = row.price_amount;
+  if (amount != null && Number.isFinite(Number(amount)) && Number(amount) > 0) {
+    return `¥${Number(amount).toLocaleString("ja-JP")}`;
+  }
+  return "";
+}
+
+function skillToResult(
+  row: Record<string, unknown>,
+  intent: SearchIntent,
+): CatalogResult | null {
+  if (String(row.publish_status || "") !== "public") return null;
+  if (String(row.listing_type || "") !== "skill") return null;
+  const id = String(row.id || "").trim();
+  const title = String(row.title || "").trim();
+  if (!id || !title) return null;
+
+  const category = String(row.category || "").trim();
+  const subcategory = String(row.subcategory || "").trim();
+  if (intent.category) {
+    const want = intent.category.toLowerCase();
+    const hayCat = `${category} ${subcategory}`.toLowerCase();
+    if (!hayCat.includes(want) && want !== category.toLowerCase()) {
+      return null;
+    }
+  }
+
+  const summary = String(row.description || "")
+    .trim()
+    .slice(0, 200);
+  const imageUrl = String(row.image_url || row.thumbnail_url || "").trim();
+  const priceLabel = formatSkillPriceLabel(row);
+  const detailUrl = buildDetailUrl("detail-skill.html", { id }, intent.query);
+  if (!detailUrl) return null;
+
+  const hay = [
+    title,
+    summary,
+    row.tags,
+    category,
+    subcategory,
+    priceLabel,
+  ]
+    .join(" ")
+    .toLowerCase();
+  const score = scoreHay(hay, intent);
+  if (tokens(intent.query).length && score <= 0) return null;
+
+  const badges: string[] = [];
+  if (category) badges.push(category.slice(0, 24));
+  else if (subcategory) badges.push(subcategory.slice(0, 24));
+
+  return omitEmpty({
+    id,
+    vertical: "platform" as const,
+    type: "skill",
+    kind: "skill",
+    title: title.slice(0, 120),
+    summary: summary || undefined,
+    imageUrl: imageUrl || undefined,
+    priceLabel: priceLabel || undefined,
+    locationLabel: undefined,
+    availabilityLabel: undefined,
+    detailUrl,
+    primaryActionLabel: "依頼相談へ進む",
+    badges: badges.length ? badges.slice(0, 3) : undefined,
+    _priceYen:
+      row.price_amount != null && Number.isFinite(Number(row.price_amount))
+        ? Number(row.price_amount)
+        : null,
+    _score: score,
+  }) as CatalogResult;
+}
+
+async function searchPlatformSkills(
+  client: SupabaseClient,
+  intent: SearchIntent,
+): Promise<{ results: CatalogResult[]; truncated: boolean }> {
+  const fetchLimit = 40;
+  const results: CatalogResult[] = [];
+
+  let q = client
+    .from("listings")
+    .select(SKILL_SELECT)
+    .eq("listing_type", "skill")
+    .eq("publish_status", "public")
+    .order("created_at", { ascending: false })
+    .limit(fetchLimit);
+
+  if (intent.category) {
+    q = q.eq("category", intent.category);
+  }
+
+  const listingsRes = await q;
+  if (!listingsRes.error && Array.isArray(listingsRes.data)) {
+    for (const row of listingsRes.data) {
+      const item = skillToResult(row as Record<string, unknown>, intent);
+      if (item) results.push(item);
+    }
+  }
+
+  const filtered = applyPriceFilter(results, intent);
+  const sorted = sortResults(filtered, intent);
+  const truncated = sorted.length > intent.limit;
+  return {
+    results: sorted.slice(0, intent.limit),
+    truncated,
+  };
+}
+
 function statusAvailabilityLabel(status: unknown): string {
   const s = String(status || "").toLowerCase();
   if (s === "available") return "受付中";
@@ -591,6 +707,9 @@ async function searchPlatform(
 ): Promise<{ results: CatalogResult[]; truncated: boolean }> {
   if (intent.type === "business_service") {
     return searchPlatformBusinessServices(client, intent);
+  }
+  if (intent.type === "skill") {
+    return searchPlatformSkills(client, intent);
   }
   return searchPlatformJobs(client, intent);
 }

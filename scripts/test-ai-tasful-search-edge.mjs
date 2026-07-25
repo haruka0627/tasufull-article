@@ -198,16 +198,6 @@ function runSchemaTests() {
     }).ok === false
   );
   assert(
-    "schema platform skill unsupported",
-    validateSearchBody({
-      action: "search",
-      vertical: "platform",
-      type: "skill",
-      query: "x",
-      sort: "relevance",
-    }).ok === false
-  );
-  assert(
     "schema platform business_service ok",
     validateSearchBody({
       action: "search",
@@ -229,6 +219,33 @@ function runSchemaTests() {
         sort: "relevance",
         limit: 5,
       }).value.type === "business_service"
+  );
+  assert(
+    "schema platform skill ok",
+    validateSearchBody({
+      action: "search",
+      vertical: "platform",
+      type: "skill",
+      query: "動画編集サービス",
+      category: "video_editing",
+      location: "東京",
+      priceMin: 3000,
+      priceMax: 30000,
+      sort: "relevance",
+      limit: 5,
+    }).ok === true &&
+      validateSearchBody({
+        action: "search",
+        vertical: "platform",
+        type: "skill",
+        query: "動画編集サービス",
+        category: "video_editing",
+        location: "東京",
+        priceMin: 3000,
+        priceMax: 30000,
+        sort: "relevance",
+        limit: 5,
+      }).value.type === "skill"
   );
   assert(
     "schema platform worker unsupported",
@@ -326,6 +343,14 @@ function runSchemaTests() {
     assertSafeDetailUrl("detail-business-service.html?id=abc&from=ai") === true
   );
   assert(
+    "detail url allow skill",
+    assertSafeDetailUrl("detail-skill.html?id=abc&from=ai") === true
+  );
+  assert(
+    "detail url reject worker detail",
+    assertSafeDetailUrl("detail-worker.html?id=abc") === false
+  );
+  assert(
     "detail url reject shop_store detail",
     assertSafeDetailUrl("detail-shop-store.html?id=abc") === false
   );
@@ -370,11 +395,12 @@ function assertSafePublicPayload(data, label) {
         u.startsWith("detail-product.html") ||
           u.startsWith("detail-shop-product.html") ||
           u.startsWith("detail-job.html") ||
-          u.startsWith("detail-business-service.html")
+          u.startsWith("detail-business-service.html") ||
+          u.startsWith("detail-skill.html")
       );
       assert(
-        `${label} not shop_store detail`,
-        !u.startsWith("detail-shop-store.html")
+        `${label} not shop_store or worker detail`,
+        !u.startsWith("detail-shop-store.html") && !u.startsWith("detail-worker.html")
       );
     }
   }
@@ -485,15 +511,6 @@ async function runLiveTests(cfg) {
     assert("platform job types", typesOk || platformJob.data.results.length === 0);
   }
 
-  const platformSkill = await postEdge(base, anonKey, {
-    action: "search",
-    vertical: "platform",
-    type: "skill",
-    query: "x",
-    sort: "relevance",
-  });
-  assert("platform skill → 400", platformSkill.status === 400);
-
   const platformBiz = await postEdge(base, anonKey, {
     action: "search",
     vertical: "platform",
@@ -532,6 +549,54 @@ async function runLiveTests(cfg) {
       );
     }
   }
+
+  const platformSkill = await postEdge(base, anonKey, {
+    action: "search",
+    vertical: "platform",
+    type: "skill",
+    query: "動画編集サービス",
+    category: "video_editing",
+    location: "東京",
+    priceMin: 3000,
+    priceMax: 30000,
+    sort: "relevance",
+    limit: 5,
+  });
+  assert(
+    "POST platform skill shape",
+    platformSkill.status === 200 &&
+      platformSkill.data?.ok === true &&
+      Array.isArray(platformSkill.data.results),
+    `status=${platformSkill.status}`
+  );
+  if (platformSkill.data?.ok) {
+    assert("platform skill count ≤ 5", platformSkill.data.results.length <= 5);
+    assertSafePublicPayload(platformSkill.data, "skill");
+    const typesOk = platformSkill.data.results.every(
+      (r) =>
+        r.type === "skill" &&
+        r.kind === "skill" &&
+        r.vertical === "platform" &&
+        String(r.detailUrl || "").startsWith("detail-skill.html")
+    );
+    assert("platform skill types", typesOk || platformSkill.data.results.length === 0);
+    const noWorker = platformSkill.data.results.every(
+      (r) => !String(r.detailUrl || "").includes("detail-worker")
+    );
+    assert("platform skill no worker detail", noWorker);
+    if (platformSkill.data.results.length === 0) {
+      pass("0-result skill", "no public skill listings in Staging (acceptable)");
+    }
+  }
+
+  const platformWorker = await postEdge(base, anonKey, {
+    action: "search",
+    vertical: "platform",
+    type: "worker",
+    query: "x",
+    sort: "relevance",
+  });
+  assert("platform worker → 400", platformWorker.status === 400);
 
   const history = await postEdge(base, anonKey, {
     action: "history_lookup",

@@ -165,7 +165,13 @@ async function main() {
     if (hasBizFetch) pass("fetchBusinessServicesViaEdge exported");
     else fail("fetchBusinessServicesViaEdge exported");
 
-    // Phase 2 job + Phase 3 business_service smoke (fallback off)
+    const hasSkillFetch = await page.evaluate(
+      () => typeof window.TasuAiSearch?.fetchSkillsViaEdge === "function"
+    );
+    if (hasSkillFetch) pass("fetchSkillsViaEdge exported");
+    else fail("fetchSkillsViaEdge exported");
+
+    // Phase 2 job + Phase 3 business_service + Phase 4 skill smoke (fallback off)
     const platformSmoke = await page.evaluate(async () => {
       window.__TASU_AI_TASFUL_SEARCH_CLIENT_FALLBACK__ = false;
       const job = await window.TasuAiSearch.queryJobItems({
@@ -187,6 +193,22 @@ async function main() {
           sort: "relevance",
         },
       });
+      const skill = await window.TasuAiSearch.querySkillItems({
+        userText: "動画編集サービス",
+        messages: [],
+        intentHints: {},
+        searchIntentSchema: {
+          action: "search",
+          vertical: "platform",
+          type: "skill",
+          query: "動画編集サービス",
+          category: "video_editing",
+          location: "東京",
+          priceMin: 3000,
+          priceMax: 30000,
+          sort: "relevance",
+        },
+      });
       return {
         jobSource: job?.source || "",
         jobError: job?.error || "",
@@ -199,6 +221,15 @@ async function main() {
             String(i.detailUrl || "").includes("detail-shop-store") ||
             i.type === "shop_store" ||
             i.kind === "shop_store"
+        ),
+        skillSource: skill?.source || "",
+        skillError: skill?.error || "",
+        skillCount: (skill?.items || []).length,
+        skillWorkerMix: (skill?.items || []).some(
+          (i) =>
+            String(i.detailUrl || "").includes("detail-worker") ||
+            i.type === "worker" ||
+            i.kind === "worker"
         ),
       };
     });
@@ -231,6 +262,22 @@ async function main() {
 
     if (!platformSmoke.bizShopMix) pass("business_service no shop_store mix");
     else fail("business_service no shop_store mix");
+
+    if (
+      platformSmoke.skillSource === "edge" ||
+      platformSmoke.skillError === "search_unavailable" ||
+      platformSmoke.skillError === "invalid_search"
+    ) {
+      pass(
+        "skill edge path (no silent client)",
+        `source=${platformSmoke.skillSource || "err:" + platformSmoke.skillError} count=${platformSmoke.skillCount}`
+      );
+    } else {
+      fail("skill edge path (no silent client)", JSON.stringify(platformSmoke));
+    }
+
+    if (!platformSmoke.skillWorkerMix) pass("skill no worker mix");
+    else fail("skill no worker mix");
 
     if (wiring.endpointUrl.includes("/functions/v1/ai-tasful-search")) {
       pass("endpoint resolves", wiring.endpointUrl.replace(/https?:\/\/[^/]+/, "<host>"));

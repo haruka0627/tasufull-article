@@ -203,7 +203,7 @@
   }
 
   const CATALOG_DETAIL_RE =
-    /^(detail-shop-product\.html|detail-product\.html|detail-shop-store\.html|detail-job\.html|detail-business-service\.html)(\?|$)/i;
+    /^(detail-shop-product\.html|detail-product\.html|detail-shop-store\.html|detail-job\.html|detail-business-service\.html|detail-skill\.html)(\?|$)/i;
 
   function toInternalRelativeDetailUrl(url) {
     const raw = String(url || "").trim();
@@ -4295,24 +4295,226 @@
   async function querySkillItems(ctx) {
     const crossCtx = makeCrossCtx(ctx);
     const criteria = extractSkillCriteria(crossCtx);
+    const schemaIntent = ctx.searchIntentSchema || ctx.validatedIntent || null;
+    if (schemaIntent && typeof schemaIntent === "object") {
+      if (schemaIntent.location) criteria.area = criteria.area || schemaIntent.location;
+      if (schemaIntent.category) criteria.categoryId = criteria.categoryId || schemaIntent.category;
+      if (schemaIntent.priceMin != null) criteria.priceMin = criteria.priceMin ?? schemaIntent.priceMin;
+      if (schemaIntent.priceMax != null) criteria.priceMax = criteria.priceMax ?? schemaIntent.priceMax;
+      criteria.schemaSort = schemaIntent.sort || "relevance";
+    }
     ensureRelaxedCriteria(criteria);
     if (!hasMinimumSkillCriteria(criteria) && criteria.text.length < 2) {
-      return { items: [], criteria, insufficient: true };
+      return { items: [], criteria, insufficient: true, vertical: "platform" };
     }
+
+    const edge = await fetchSkillsViaEdge(crossCtx, criteria);
+    if (edge.ok) {
+      return {
+        items: edge.items.slice(0, MAX_RESULTS),
+        criteria,
+        insufficient: false,
+        vertical: "platform",
+        source: "edge",
+        meta: edge.meta,
+      };
+    }
+
+    if (global.__TASU_AI_TASFUL_SEARCH_CLIENT_FALLBACK__ === true) {
+      return querySkillItemsClientFallback(crossCtx, criteria);
+    }
+
+    return {
+      items: [],
+      criteria,
+      insufficient: false,
+      error: edge.validation ? "invalid_search" : "search_unavailable",
+      vertical: "platform",
+      source: "edge",
+    };
+  }
+
+  function edgeSkillItemToCard(item) {
+    if (!item || typeof item !== "object") return null;
+    if (item.type && item.type !== "skill") return null;
+    if (item.kind && item.kind !== "skill") return null;
+    const detailUrl = toInternalRelativeDetailUrl(item.detailUrl);
+    if (!detailUrl) return null;
+    if (!/^detail-skill\.html/i.test(detailUrl)) return null;
+    const card = {
+      id: String(item.id || "").trim(),
+      vertical: "platform",
+      type: "skill",
+      kind: "skill",
+      title: String(item.title || "").trim(),
+      detailUrl,
+      primaryActionLabel: String(item.primaryActionLabel || "依頼相談へ進む"),
+      consultUrl: detailUrl,
+      chatUrl: detailUrl,
+      applyUrl: detailUrl,
+      purchaseUrl: "",
+      estimateUrl: "",
+    };
+    if (!card.id || !card.title) return null;
+    if (item.summary) {
+      card.summary = String(item.summary);
+      card.description = card.summary;
+    }
+    if (item.imageUrl) card.imageUrl = String(item.imageUrl);
+    if (item.priceLabel) {
+      card.priceLabel = String(item.priceLabel);
+      card.price = card.priceLabel;
+    }
+    if (item.locationLabel) {
+      card.locationLabel = String(item.locationLabel);
+      card.region = card.locationLabel;
+    }
+    if (Array.isArray(item.badges) && item.badges.length) {
+      card.badges = item.badges.map((b) => String(b)).filter(Boolean).slice(0, 5);
+      if (card.badges[0]) card.category = card.badges[0];
+    }
+    return normalizeSearchCard(card);
+  }
+
+  function buildSkillEdgePayload(ctx, criteria) {
+    const text = String(ctx.userText || ctx.text || criteria.text || "").trim();
+    const Schema = global.TasuAiTasfulSearchSchema;
+    const fromSchema =
+      Schema?.fromUserText?.(text, {
+        intent: "skill_request",
+        hints: {
+          location: criteria.area || null,
+          category: criteria.categoryId || null,
+          priceMin: criteria.priceMin ?? null,
+          priceMax: criteria.priceMax ?? null,
+        },
+        vertical: "platform",
+        type: "skill",
+        category: criteria.categoryId || null,
+        sort: criteria.schemaSort || "relevance",
+      })?.value || {
+        action: "search",
+        vertical: "platform",
+        type: "skill",
+        query: text,
+        location: criteria.area || null,
+        category: criteria.categoryId || null,
+        priceMin: criteria.priceMin ?? null,
+        priceMax: criteria.priceMax ?? null,
+        sort: criteria.schemaSort || "relevance",
+      };
+    return {
+      action: fromSchema.action === "compare" ? "compare" : "search",
+      vertical: "platform",
+      type: "skill",
+      query: String(fromSchema.query || text || "").slice(0, 300),
+      location: fromSchema.location || criteria.area || null,
+      category: fromSchema.category || criteria.categoryId || null,
+      dateFrom: fromSchema.dateFrom || null,
+      dateTo: fromSchema.dateTo || null,
+      priceMin: fromSchema.priceMin ?? criteria.priceMin ?? null,
+      priceMax: fromSchema.priceMax ?? criteria.priceMax ?? null,
+      sort: fromSchema.sort || "relevance",
+      limit: MAX_RESULTS,
+    };
+  }
+
+  async function fetchSkillsViaEdge(ctx, criteria) {
+    const Gateway = global.TasuAiModelGateway;
+    const endpoint = Gateway?.getSupabaseEndpoint?.("ai-tasful-search");
+    if (!endpoint?.url || !endpoint?.anonKey) {
+      return { ok: false, error: "search_unavailable", httpStatus: 0 };
+    }
+
+    let accessToken = "";
+    try {
+      const client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        const { data } = await client.auth.getSession();
+        accessToken = String(data?.session?.access_token || "").trim();
+      }
+    } catch (_err) {
+      /* ignore */
+    }
+
+    const payload = buildSkillEdgePayload(ctx, criteria);
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch(endpoint.url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken || endpoint.anonKey}`,
+          apikey: endpoint.anonKey,
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 400) {
+        return {
+          ok: false,
+          error: data?.error?.code || "invalid_search",
+          httpStatus: 400,
+          validation: true,
+        };
+      }
+      if (!res.ok || data?.ok !== true || !Array.isArray(data?.results)) {
+        return {
+          ok: false,
+          error: data?.error?.code || "search_unavailable",
+          httpStatus: res.status || 0,
+        };
+      }
+      const items = data.results.map(edgeSkillItemToCard).filter(Boolean);
+      return {
+        ok: true,
+        items,
+        meta: data.meta || { count: items.length, truncated: false },
+      };
+    } catch (_err) {
+      return { ok: false, error: "search_unavailable", httpStatus: 0 };
+    }
+  }
+
+  async function querySkillItemsClientFallback(ctx, criteria) {
     if (!global.TasuListingStore?.fetchPublishedListings) {
-      return { items: [], criteria, insufficient: false };
+      return {
+        items: [],
+        criteria,
+        insufficient: false,
+        error: "search_unavailable",
+        vertical: "platform",
+        source: "client_fallback",
+      };
     }
     let candidates;
     try {
       candidates = await fetchPublishedSkillListings();
     } catch {
-      return { items: [], criteria, insufficient: false };
+      return {
+        items: [],
+        criteria,
+        insufficient: false,
+        error: "search_unavailable",
+        vertical: "platform",
+        source: "client_fallback",
+      };
     }
+    // Phase 4: never mix worker listings into skill results
+    candidates = (candidates || []).filter((c) => {
+      const type = String(c?.listing_type || c?.type || c?.listing?.listing_type || "").trim();
+      return !type || type === "skill";
+    });
     const ranked = preferUserFacingRanked(rankSkillWithFallback(candidates, criteria));
     return {
       items: ranked.map(skillCandidateToCard),
       criteria,
       insufficient: false,
+      vertical: "platform",
+      source: "client_fallback",
     };
   }
 
@@ -4383,6 +4585,7 @@
     fetchMarketplaceViaEdge,
     fetchJobsViaEdge,
     fetchBusinessServicesViaEdge,
+    fetchSkillsViaEdge,
     businessListingToCard,
     productCandidateToCard,
     toMarketplaceSearchResult,

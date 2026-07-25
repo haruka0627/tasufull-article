@@ -3,6 +3,7 @@
  * Phase 1: marketplace
  * Phase 2: platform + type=job
  * Phase 3: platform + type=business_service
+ * Phase 4: platform + type=skill
  */
 
 export const MAX_QUERY = 300;
@@ -15,7 +16,7 @@ export const MAX_CATEGORY = 64;
 
 const ACTIONS = new Set(["search", "compare", "history_lookup", "none"]);
 const VERTICALS = new Set(["marketplace", "platform", "builder", "all"]);
-const PLATFORM_TYPES = new Set(["job", "business_service"]);
+const PLATFORM_TYPES = new Set(["job", "business_service", "skill"]);
 const SORTS = new Set([
   "relevance",
   "price_asc",
@@ -27,7 +28,7 @@ const SORTS = new Set([
 const FORBIDDEN_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
-export type PlatformType = "job" | "business_service";
+export type PlatformType = "job" | "business_service" | "skill";
 
 export type SearchIntent = {
   action: "search" | "compare" | "history_lookup" | "none";
@@ -148,6 +149,7 @@ function normalizePlatformType(raw: unknown): PlatformType | "invalid" | null {
   const v = String(raw).trim().toLowerCase();
   if (v === "job") return "job";
   if (v === "business_service") return "business_service";
+  if (v === "skill") return "skill";
   return "invalid";
 }
 
@@ -284,11 +286,11 @@ export function validateSearchBody(input: unknown): SchemaResult {
   if (typeRaw === "invalid") {
     return { ok: false, code: "invalid_type", message: "Unsupported platform type" };
   }
-  if (typeRaw !== "job" && typeRaw !== "business_service") {
+  if (typeRaw !== "job" && typeRaw !== "business_service" && typeRaw !== "skill") {
     return {
       ok: false,
       code: "unsupported_type",
-      message: "Only type=job|business_service is supported for platform",
+      message: "Only type=job|business_service|skill is supported for platform",
     };
   }
 
@@ -300,7 +302,8 @@ export function validateSearchBody(input: unknown): SchemaResult {
       type: typeRaw,
       query,
       location,
-      category: typeRaw === "business_service" ? category : null,
+      category:
+        typeRaw === "business_service" || typeRaw === "skill" ? category : null,
       dateFrom,
       dateTo,
       priceMin,
