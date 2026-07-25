@@ -1,0 +1,180 @@
+{
+  "feature": "talk",
+  "capturedAt": "2026-07-25T06:34:18.601Z",
+  "outDir": "reports/ui-review/talk",
+  "stepCount": 6,
+  "consoleErrorCount": 0,
+  "consoleErrors": [],
+  "steps": [
+    {
+      "step": 1,
+      "slug": "talk-home",
+      "label": "Talk ホーム（友達一覧）",
+      "url": "http://127.0.0.1:8788/talk-home.html?tab=chat",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "reports/ui-review/talk/001-talk-home-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "768",
+          "path": "reports/ui-review/talk/001-talk-home-768.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "390",
+          "path": "reports/ui-review/talk/001-talk-home-390.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 2,
+      "slug": "profile-card",
+      "label": "プロフィールカード（開いた状態）",
+      "url": "http://127.0.0.1:8788/talk-home.html?tab=chat",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "reports/ui-review/talk/002-profile-card-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "768",
+          "path": "reports/ui-review/talk/002-profile-card-768.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "390",
+          "path": "reports/ui-review/talk/002-profile-card-390.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 3,
+      "slug": "worker-before-reveal",
+      "label": "ワーカー検索 · 開示前（550円ゲート）",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-worker-contact&from=builder&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "reports/ui-review/talk/003-worker-before-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "768",
+          "path": "reports/ui-review/talk/003-worker-before-reveal-768.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "390",
+          "path": "reports/ui-review/talk/003-worker-before-reveal-390.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 4,
+      "slug": "worker-after-reveal",
+      "label": "ワーカー検索 · 開示後（連絡先 + 電話）",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-worker-contact&from=builder&builderRole=user",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "reports/ui-review/talk/004-worker-after-reveal-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "768",
+          "path": "reports/ui-review/talk/004-worker-after-reveal-768.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "390",
+          "path": "reports/ui-review/talk/004-worker-after-reveal-390.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 5,
+      "slug": "admin-talk",
+      "label": "運営案件 Talk（ヘッダーアクション非表示）",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-admin-partner&from=builder&builderFlow=ops_partner&builderRole=partner",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "reports/ui-review/talk/005-admin-talk-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "768",
+          "path": "reports/ui-review/talk/005-admin-talk-768.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "390",
+          "path": "reports/ui-review/talk/005-admin-talk-390.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    },
+    {
+      "step": 6,
+      "slug": "normal-chat",
+      "label": "通常 Talk（ヘッダーアクション表示）",
+      "url": "http://127.0.0.1:8788/chat-detail.html?thread=verify-normal-chat",
+      "files": [
+        {
+          "viewport": "1280",
+          "path": "reports/ui-review/talk/006-normal-chat-1280.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        },
+        {
+          "viewport": "390",
+          "path": "reports/ui-review/talk/006-normal-chat-390.png",
+          "httpStatus": 200,
+          "consoleErrors": []
+        }
+      ],
+      "consoleErrorCount": 0
+    }
+  ],
+  "baseUrl": "http://127.0.0.1:8788",
+  "pageCount": 12,
+  "pageIsolationCount": 12,
+  "pageStatsCount": 12,
+  "duplicateSnapshotCount": 0,
+  "pageIsolationSkips": 6,
+  "stagingIsolation": {
+    "geminiChat": 65,
+    "transactionRooms": 11,
+    "unexpectedHttp": 0,
+    "realtimeChannels": 8,
+    "realtimeSubscribes": 8,
+    "unexpectedRealtime": 0
+  }
+}
