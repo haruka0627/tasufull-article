@@ -37,36 +37,23 @@
     if (!creator) throw new Error("creator_user_id が必要です");
     if (tipperId === creator) throw new Error("自分自身への投げ銭はできません");
 
+    const coins = Number(gift?.coins || 0);
     const giftName = String(gift?.name || "").trim();
-    const amountYen = Number(gift?.priceYen || 0);
-    if (!giftName || amountYen <= 0) throw new Error("ギフトが不正です");
+    if (!giftName || coins <= 0) throw new Error("ギフトが不正です");
 
-    await cfg.ensureSupabaseSession();
+    const idempotencyKey = newIdempotencyKey();
 
-    const row = {
-      tipper_id: tipperId,
-      creator_id: creator,
-      target_type: "broadcast",
-      target_id: resolveTargetId(broadcastId),
-      amount_yen: amountYen,
-      message: formatTipMessage(giftName, message),
-      payment_status: cfg.LIVE_TIP_PAYMENT_STATUS_STUB,
-      idempotency_key: newIdempotencyKey(),
-    };
-
-    const { data, error } = await cfg
-      .getClient()
-      .from(cfg.TABLES.tips)
-      .insert(row)
-      .select("*")
-      .single();
-
-    if (error) throw error;
+    const data = await cfg.createGiftTip({
+      streamId: broadcastId,
+      creatorId: creator,
+      coins,
+      idempotencyKey,
+    });
 
     if (global.TasuLiveNotify?.notifyTipCreated) {
       try {
         await global.TasuLiveNotify.notifyTipCreated({
-          tipId: data.id,
+          tipId: data?.tip_id || "",
           creatorId: creator,
           tipperName: cfg.resolveDisplayName(tipperId),
         });
