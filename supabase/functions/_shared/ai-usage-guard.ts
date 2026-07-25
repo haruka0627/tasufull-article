@@ -24,6 +24,12 @@ import {
   isModelAllowedForPolicy,
   type PlanPolicy,
 } from "./ai-plan-policy.ts";
+import {
+  OPENROUTER_POC_SURFACE,
+  evaluateOpenRouterPocGate,
+  getOpenRouterPocEntry,
+  readOpenRouterPocEnvGate,
+} from "./ai-openrouter-poc.ts";
 
 export const GUARD_FEATURE_OCR = "ocr_turn";
 
@@ -256,3 +262,150 @@ export async function finalizeGuardOcrConsume(
     return null;
   }
 }
+
+type OpenRouterPocGuardBody = GuardBody & {
+  enable_openrouter?: boolean;
+  enableOpenRouter?: boolean;
+  plan_id?: string;
+  planId?: string;
+  admin_override?: boolean;
+  adminOverride?: boolean;
+};
+
+/**
+ * OpenRouter PoC — JWT + server harness gate + quota。
+ * 一般 plan feature には openrouter を載せない（Production 常時不可）。
+ * Provider 呼び出し前に必ず通す。
+ */
+export async function enforceGuardOpenRouterPocEntry(
+  req: Request,
+  body: OpenRouterPocGuardBody
+): Promise<{ blocked: Response | null; status: WorkspaceQuotaStatus | null }> {
+  const actor = await resolveAuthenticatedWorkspaceUser(req, {
+    ...body,
+    // JWT 照合のみ · surface は PoC 専用
+    surface: WORKSPACE_SURFACE,
+  });
+  if (!actor.ok) {
+    return {
+      blocked: jsonResponse(
+        {
+          ok: false,
+          error: actor.error,
+          reply: "",
+          feature: "openrouter_poc",
+        },
+        actor.http,
+        req
+      ),
+      status: { ok: false, error: actor.error, feature: WORKSPACE_FEATURE_TEXT },
+    };
+  }
+
+  const clientEnable = body.enable_openrouter === true || body.enableOpenRouter === true;
+  const clientPlan = String(body.plan_id ?? body.planId ?? "").trim();
+  const clientAdmin = body.admin_override === true || body.adminOverride === true;
+
+  const envGate = readOpenRouterPocEnvGate(req, actor.userId);
+  if (!envGate.ok) {
+    return {
+      blocked: jsonResponse(
+        { ok: false, error: envGate.error, reply: "" },
+        envGate.http,
+        req
+      ),
+      status: { ok: false, error: envGate.error, feature: WORKSPACE_FEATURE_TEXT },
+    };
+  }
+
+  const flagGate = evaluateOpenRouterPocGate({
+    pocEnabled: "true",
+    harnessTokenExpected: "ok",
+    harnessTokenProvided: "ok",
+    userId: actor.userId,
+    clientEnableFlag: clientEnable,
+    clientPlanId: clientPlan || null,
+    clientAdminOverride: clientAdmin,
+  });
+  if (!flagGate.ok) {
+    return {
+      blocked: jsonResponse(
+        { ok: false, error: flagGate.error, reply: "" },
+        flagGate.http,
+        req
+      ),
+      status: { ok: false, error: flagGate.error, feature: WORKSPACE_FEATURE_TEXT },
+    };
+  }
+
+  const workspaceModel = extractWorkspaceModelId(body);
+  if (!workspaceModel || !getOpenRouterPocEntry(workspaceModel)) {
+    return {
+      blocked: planDeniedResponse("plan_model_denied", req, {
+        model: workspaceModel || null,
+        reason: "openrouter_poc_allowlist",
+      }),
+      status: {
+        ok: false,
+        error: "plan_model_denied",
+        feature: WORKSPACE_FEATURE_TEXT,
+      },
+    };
+  }
+
+  // Production plan の openrouter_chat は常に未許可 · PoC は plan feature をバイパスせず
+  // 「plan 外の internal のみ」として feature gate をスキップし quota のみ適用。
+  try {
+    const status = await checkWorkspaceQuota({
+      userId: actor.userId,
+      feature: WORKSPACE_FEATURE_TEXT,
+    });
+    if (!status.allowed) {
+      return {
+        blocked: guardQuotaExceededResponse(status, req, "openrouter_poc"),
+        status,
+      };
+    }
+    return {
+      blocked: null,
+      status: {
+        ...status,
+        // surface 監査用（DB 列ではない）
+        feature: status.feature,
+      },
+    };
+  } catch (err) {
+    console.error("[ai-usage-guard] openrouter poc enforce failed:", err);
+    return {
+      blocked: jsonResponse(
+        { ok: false, error: "guard_unavailable", reply: "" },
+        503,
+        req
+      ),
+      status: { ok: false, error: "guard_unavailable", feature: WORKSPACE_FEATURE_TEXT },
+    };
+  }
+}
+
+/** OpenRouter PoC 成功後 consume（text_turn バケット共有） */
+export async function finalizeGuardOpenRouterPocConsume(
+  req: Request,
+  _body: GuardBody
+): Promise<WorkspaceQuotaStatus | null> {
+  const actor = await resolveAuthenticatedWorkspaceUser(req, {
+    surface: WORKSPACE_SURFACE,
+  });
+  if (!actor.ok) return null;
+  try {
+    return await consumeWorkspaceQuota({
+      userId: actor.userId,
+      feature: WORKSPACE_FEATURE_TEXT,
+    });
+  } catch (err) {
+    console.error("[ai-usage-guard] openrouter poc consume failed:", err);
+    return null;
+  }
+}
+
+/** @deprecated surface 定数の再エクスポート（テスト用） */
+export { OPENROUTER_POC_SURFACE };

@@ -20,6 +20,7 @@ var ALLOWED_PROVIDERS = {
   brave: true,
   serper: true,
   deepseek: true,
+  openrouter: true,
   unknown: true,
 };
 
@@ -43,6 +44,10 @@ var METADATA_ALLOWLIST = {
   fallback_from: true,
   fallback_reason: true,
   use_case: true,
+  route_type: true,
+  upstream_provider: true,
+  openrouter_model: true,
+  usage_source: true,
 };
 
 var METADATA_FORBIDDEN = {

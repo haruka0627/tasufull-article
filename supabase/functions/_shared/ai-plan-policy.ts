@@ -185,6 +185,8 @@ const EDGE_TO_FEATURE: Record<string, string> = {
   "openai-chat": "openai_chat",
   "claude-chat": "claude_chat",
   "gemini-ocr": "ocr",
+  /** Phase 6 PoC — production plan には openrouter_chat を付与しない */
+  "openrouter-chat": "openrouter_chat",
 };
 
 export function normalizePlanId(raw: unknown): CanonicalPlanId {

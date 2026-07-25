@@ -221,6 +221,34 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 
 ---
 
+## Phase 6 — OpenRouter Limited Evaluation（ユーザー Phase 6）
+
+**ゴール:** OpenRouter を本番機能として導入せず、既存 direct Provider と比較可能な **限定 PoC** を作り、採用判断材料を揃える。
+
+| 項目 | 内容 |
+| --- | --- |
+| 対象モデル（最大 2） | `google/gemini-2.5-flash` · `openai/gpt-4o-mini`（workspace `or-gemini-flash` / `or-gpt`） |
+| Edge | `supabase/functions/openrouter-chat` |
+| Gate | `OPENROUTER_POC_ENABLED` + `OPENROUTER_POC_HARNESS_TOKEN` + JWT · allowlist 任意 |
+| Plan | 全 production plan で `openrouter_chat` **不可** |
+| Gateway | Workspace `ai-model-gateway.js` **非接続**（AD-005 維持） |
+| UI | `/ai-workspace` · Billing · Manual/Auto **非表示** |
+| Usage Log | `provider=openrouter` · slug · `route_type` / `upstream_provider` |
+| Cost Ledger | provider 分離 · 公式単価 **未 seed** · test-only provisional fixture のみ |
+| Fallback | Production route 無効 · PoC でも無言 Manual fallback なし |
+| 採用判断 | **限定用途のみ候補**（全面移行はしない） |
+
+**完了条件（コード）**
+
+- [x] Identity / Edge / Guard / Usage Log / Cost Ledger 整合
+- [x] migration（apply は Staging 再開後）
+- [x] mock unit + static verify
+- [x] [phase6 report](../reports/tasful-ai-core-phase6-openrouter-poc-report.md)
+
+**Staging 未検証:** live OpenRouter secret · live JWT · migration apply
+
+---
+
 ## Phase 5〜10（概要）
 
 | Phase | 主要成果物 | 状態 |
@@ -228,8 +256,8 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | 4 | 利用ゲージ | **コード完了** |
 | 5 | プラン制御（上記） | **コード完了** |
 | 5b | `gen_ai_*` migrations 昇格 | 未着手 |
-| 6 | Cost Ledger（SAFE-07） / OpenRouter 限定検証（ユーザー次 Phase） | Cost Ledger コード完了 · OpenRouter 未着手 |
-| 7 | 秘書 CF · Guard 拡張 | 未着手 |
+| 6 | OpenRouter 限定検証（上記） / Cost Ledger（SAFE-07） | **コード完了**（OpenRouter PoC · Cost Ledger） |
+| 7 | Guard 対象拡張 · 秘書 CF | 未着手 |
 | 8 | WAF / Turnstile runbook | 未着手 |
 | 9 | Queue | 未着手 |
 | 10 | Admin | 未着手 |
@@ -254,6 +282,8 @@ node scripts/test-tasful-ai-usage-gauge-phase4.mjs  # Phase 4 Usage Gauge
 node scripts/verify-ai-usage-gauge-phase4.mjs
 node scripts/test-tasful-ai-plan-policy-phase5.mjs  # Phase 5 Plan Policy
 node scripts/verify-ai-plan-policy-phase5.mjs
+node scripts/test-tasful-ai-openrouter-poc-phase6.mjs  # Phase 6 OpenRouter PoC
+node scripts/verify-ai-openrouter-poc-phase6.mjs
 ```
 
 ---

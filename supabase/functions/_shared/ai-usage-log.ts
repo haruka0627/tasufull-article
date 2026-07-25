@@ -26,6 +26,7 @@ const ALLOWED_PROVIDERS = new Set([
   "brave",
   "serper",
   "deepseek",
+  "openrouter",
   "unknown",
 ]);
 
@@ -49,6 +50,10 @@ const METADATA_ALLOWLIST = new Set([
   "fallback_from",
   "fallback_reason",
   "use_case",
+  "route_type",
+  "upstream_provider",
+  "openrouter_model",
+  "usage_source",
 ]);
 
 /** Client routing オブジェクトを安全な metadata 断片へ（本文・secret 禁止） */
@@ -75,6 +80,14 @@ export function sanitizeRoutingMetadata(raw: unknown): Record<string, unknown> {
   if (fbReason) out.fallback_reason = fbReason;
   const useCase = String(src.use_case ?? src.useCase ?? "").trim().slice(0, 32);
   if (useCase) out.use_case = useCase;
+  const routeType = String(src.route_type ?? src.routeType ?? "").trim().toLowerCase().slice(0, 32);
+  if (routeType === "direct" || routeType === "openrouter") out.route_type = routeType;
+  const upstream = String(src.upstream_provider ?? src.upstreamProvider ?? "").trim().slice(0, 64);
+  if (upstream) out.upstream_provider = upstream;
+  const orModel = String(src.openrouter_model ?? src.openrouterModel ?? "").trim().slice(0, 64);
+  if (orModel) out.openrouter_model = orModel;
+  const usageSource = String(src.usage_source ?? src.usageSource ?? "").trim().slice(0, 32);
+  if (usageSource) out.usage_source = usageSource;
   return out;
 }
 

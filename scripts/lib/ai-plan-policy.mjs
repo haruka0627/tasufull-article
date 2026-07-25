@@ -177,6 +177,8 @@ const EDGE_TO_FEATURE = Object.freeze({
   "openai-chat": "openai_chat",
   "claude-chat": "claude_chat",
   "gemini-ocr": "ocr",
+  /** Phase 6 PoC — いずれの production plan にも openrouter_chat を付与しない */
+  "openrouter-chat": "openrouter_chat",
 });
 
 const WORKSPACE_TO_EDGE = Object.freeze({
