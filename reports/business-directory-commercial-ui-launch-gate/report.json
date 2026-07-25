@@ -1,0 +1,1326 @@
+{
+  "baseUrl": "http://127.0.0.1:8788",
+  "timestamp": "2026-07-03T22:55:24.937Z",
+  "environment": "local mock (bdMock / bdAdminMock / bdPublicMock)",
+  "checks": [
+    {
+      "step": "dev server",
+      "ok": true,
+      "detail": "8788 up"
+    },
+    {
+      "step": "dev server",
+      "ok": true,
+      "detail": "8788 up"
+    },
+    {
+      "step": "owner-dashboard HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-dashboard overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-dashboard input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "owner-dashboard console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-dashboard overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-dashboard input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "owner-dashboard console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-dashboard overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-dashboard input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "owner-dashboard console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-new overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new input 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-new overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new input 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-new overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new input 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-reviews overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-reviews input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "admin-reviews console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-reviews overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-reviews input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "admin-reviews console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-reviews overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-reviews input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "admin-reviews console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-listing overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-listing input 1280",
+      "ok": true,
+      "detail": "88px"
+    },
+    {
+      "step": "admin-listing console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-listing overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-listing input 768",
+      "ok": true,
+      "detail": "88px"
+    },
+    {
+      "step": "admin-listing console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-listing overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-listing input 390",
+      "ok": true,
+      "detail": "88px"
+    },
+    {
+      "step": "admin-listing console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-list overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-list input 1280",
+      "ok": true,
+      "detail": "46px"
+    },
+    {
+      "step": "public-list console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-list overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-list input 768",
+      "ok": true,
+      "detail": "46px"
+    },
+    {
+      "step": "public-list console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-list overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-list input 390",
+      "ok": true,
+      "detail": "46px"
+    },
+    {
+      "step": "public-list console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-photo overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-photo input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-photo console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-photo overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-photo input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-photo console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-photo overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-photo input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-photo console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-empty overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-empty input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-empty console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-empty overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-empty input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-empty console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-empty overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-empty input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-empty console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "Owner dashboard → 新規掲載",
+      "ok": true,
+      "detail": "new.html"
+    },
+    {
+      "step": "掲載種別選択",
+      "ok": true,
+      "detail": "business_service fields"
+    },
+    {
+      "step": "必須入力フィールド",
+      "ok": true,
+      "detail": "12 fields"
+    },
+    {
+      "step": "新規掲載 → 下書き保存",
+      "ok": true,
+      "detail": "id=a08bbbbf-296d-4c1d-83e2-a4102de53330"
+    },
+    {
+      "step": "下書き後 URL 正規化（bdMock + edit.html）",
+      "ok": true,
+      "detail": "mock-only recovery"
+    },
+    {
+      "step": "編集画面 → 公開申請",
+      "ok": true,
+      "detail": "審査中"
+    },
+    {
+      "step": "公開申請",
+      "ok": true,
+      "detail": "submitted"
+    },
+    {
+      "step": "下書き保存",
+      "ok": true,
+      "detail": "a08bbbbf-296d-4c1d-83e2-a4102de53330"
+    },
+    {
+      "step": "審査キュー表示",
+      "ok": true,
+      "detail": "1件"
+    },
+    {
+      "step": "Admin 審査キュー → 掲載詳細",
+      "ok": true,
+      "detail": "http://127.0.0.1:8788/business-directory/admin/listing?id=admin-mock-1&bdAdminMock=1"
+    },
+    {
+      "step": "掲載詳細表示",
+      "ok": true,
+      "detail": "dl present"
+    },
+    {
+      "step": "掲載詳細 → 承認",
+      "ok": true,
+      "detail": "公開中"
+    },
+    {
+      "step": "承認",
+      "ok": true,
+      "detail": "公開中"
+    },
+    {
+      "step": "差戻し",
+      "ok": true,
+      "detail": "差戻し"
+    },
+    {
+      "step": "公開一覧表示",
+      "ok": true,
+      "detail": "3 cards"
+    },
+    {
+      "step": "承認後 → Public 一覧（Mock境界）",
+      "ok": true,
+      "detail": "Owner/Admin/Public mocks are separate — Public uses bdPublicMock seed (published listings)"
+    },
+    {
+      "step": "Public 一覧 → 詳細ページ",
+      "ok": true,
+      "detail": "http://127.0.0.1:8788/business-directory/public/detail?slug=tanaka-shop&type=shop_retail&bdPublicMock=1"
+    },
+    {
+      "step": "詳細表示",
+      "ok": true,
+      "detail": "title present"
+    },
+    {
+      "step": "詳細 → メール問い合わせ",
+      "ok": true,
+      "detail": "mailto:info@tanaka.example"
+    },
+    {
+      "step": "問い合わせ導線",
+      "ok": true,
+      "detail": "mailto:info@tanaka.example"
+    },
+    {
+      "step": "詳細 → 電話",
+      "ok": true,
+      "detail": "tel:0311112222"
+    },
+    {
+      "step": "詳細 → 公式サイト",
+      "ok": true,
+      "detail": "https://example.com/tanaka"
+    },
+    {
+      "step": "公式サイト導線",
+      "ok": true,
+      "detail": "https://example.com/tanaka"
+    },
+    {
+      "step": "画像あり表示",
+      "ok": true,
+      "detail": "hero img"
+    },
+    {
+      "step": "画像なし表示",
+      "ok": true,
+      "detail": "画像未登録"
+    }
+  ],
+  "flows": [
+    {
+      "step": "Owner dashboard → 新規掲載",
+      "ok": true,
+      "detail": "new.html"
+    },
+    {
+      "step": "新規掲載 → 下書き保存",
+      "ok": true,
+      "detail": "id=a08bbbbf-296d-4c1d-83e2-a4102de53330"
+    },
+    {
+      "step": "下書き後 URL 正規化（bdMock + edit.html）",
+      "ok": true,
+      "detail": "mock-only recovery"
+    },
+    {
+      "step": "編集画面 → 公開申請",
+      "ok": true,
+      "detail": "審査中"
+    },
+    {
+      "step": "Admin 審査キュー → 掲載詳細",
+      "ok": true,
+      "detail": "http://127.0.0.1:8788/business-directory/admin/listing?id=admin-mock-1&bdAdminMock=1"
+    },
+    {
+      "step": "掲載詳細 → 承認",
+      "ok": true,
+      "detail": "公開中"
+    },
+    {
+      "step": "承認後 → Public 一覧（Mock境界）",
+      "ok": true,
+      "detail": "Owner/Admin/Public mocks are separate — Public uses bdPublicMock seed (published listings)"
+    },
+    {
+      "step": "Public 一覧 → 詳細ページ",
+      "ok": true,
+      "detail": "http://127.0.0.1:8788/business-directory/public/detail?slug=tanaka-shop&type=shop_retail&bdPublicMock=1"
+    },
+    {
+      "step": "詳細 → メール問い合わせ",
+      "ok": true,
+      "detail": "mailto:info@tanaka.example"
+    },
+    {
+      "step": "詳細 → 電話",
+      "ok": true,
+      "detail": "tel:0311112222"
+    },
+    {
+      "step": "詳細 → 公式サイト",
+      "ok": true,
+      "detail": "https://example.com/tanaka"
+    }
+  ],
+  "ui": [
+    {
+      "step": "owner-dashboard HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-dashboard overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-dashboard input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "owner-dashboard console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-dashboard overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-dashboard input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "owner-dashboard console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-dashboard overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-dashboard btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-dashboard input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "owner-dashboard console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-new overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new input 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-new overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new input 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "owner-new overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "owner-new btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new input 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "owner-new console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-reviews overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-reviews input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "admin-reviews console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-reviews overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-reviews input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "admin-reviews console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-reviews overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-reviews btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-reviews input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "admin-reviews console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-listing overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-listing input 1280",
+      "ok": true,
+      "detail": "88px"
+    },
+    {
+      "step": "admin-listing console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-listing overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-listing input 768",
+      "ok": true,
+      "detail": "88px"
+    },
+    {
+      "step": "admin-listing console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "admin-listing overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "admin-listing btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "admin-listing input 390",
+      "ok": true,
+      "detail": "88px"
+    },
+    {
+      "step": "admin-listing console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-list overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-list input 1280",
+      "ok": true,
+      "detail": "46px"
+    },
+    {
+      "step": "public-list console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-list overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-list input 768",
+      "ok": true,
+      "detail": "46px"
+    },
+    {
+      "step": "public-list console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-list overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-list btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-list input 390",
+      "ok": true,
+      "detail": "46px"
+    },
+    {
+      "step": "public-list console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-photo overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-photo input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-photo console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-photo overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-photo input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-photo console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-photo overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-photo btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-photo input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-photo console 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty HTTP 1280",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-empty overflow 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty btn 1280",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-empty input 1280",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-empty console 1280",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty HTTP 768",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-empty overflow 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty btn 768",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-empty input 768",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-empty console 768",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty HTTP 390",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "public-detail-empty overflow 390",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "step": "public-detail-empty btn 390",
+      "ok": true,
+      "detail": "44px"
+    },
+    {
+      "step": "public-detail-empty input 390",
+      "ok": true,
+      "detail": "n/a"
+    },
+    {
+      "step": "public-detail-empty console 390",
+      "ok": true,
+      "detail": "0"
+    }
+  ],
+  "functions": [
+    {
+      "step": "掲載種別選択",
+      "ok": true,
+      "detail": "business_service fields"
+    },
+    {
+      "step": "必須入力フィールド",
+      "ok": true,
+      "detail": "12 fields"
+    },
+    {
+      "step": "公開申請",
+      "ok": true,
+      "detail": "submitted"
+    },
+    {
+      "step": "下書き保存",
+      "ok": true,
+      "detail": "a08bbbbf-296d-4c1d-83e2-a4102de53330"
+    },
+    {
+      "step": "審査キュー表示",
+      "ok": true,
+      "detail": "1件"
+    },
+    {
+      "step": "掲載詳細表示",
+      "ok": true,
+      "detail": "dl present"
+    },
+    {
+      "step": "承認",
+      "ok": true,
+      "detail": "公開中"
+    },
+    {
+      "step": "差戻し",
+      "ok": true,
+      "detail": "差戻し"
+    },
+    {
+      "step": "公開一覧表示",
+      "ok": true,
+      "detail": "3 cards"
+    },
+    {
+      "step": "詳細表示",
+      "ok": true,
+      "detail": "title present"
+    },
+    {
+      "step": "問い合わせ導線",
+      "ok": true,
+      "detail": "mailto:info@tanaka.example"
+    },
+    {
+      "step": "公式サイト導線",
+      "ok": true,
+      "detail": "https://example.com/tanaka"
+    },
+    {
+      "step": "画像あり表示",
+      "ok": true,
+      "detail": "hero img"
+    },
+    {
+      "step": "画像なし表示",
+      "ok": true,
+      "detail": "画像未登録"
+    }
+  ],
+  "pass": 131,
+  "fail": 0,
+  "verdict": "CONDITIONAL GO"
+}
