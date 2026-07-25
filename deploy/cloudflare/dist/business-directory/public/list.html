@@ -14,7 +14,7 @@
   <div class="bd-public-shell">
     <header class="bd-public-head">
       <h1 class="bd-public-head__title">店舗・業務掲載</h1>
-      <p class="bd-public-head__sub">店舗・販売 / 業務サービスの公開掲載（published のみ）</p>
+      <p class="bd-public-head__sub">地域の店舗・業務サービスを探せます。気になる掲載から安心して問い合わせできます。</p>
     </header>
 
     <nav class="bd-public-nav" aria-label="種別">
@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="bd-public-filters__row">
-        <div class="bd-public-field" style="grid-column:1/-1">
+        <div class="bd-public-field bd-public-field--wide">
           <label for="bd-q">キーワード</label>
           <input id="bd-q" name="q" type="search" placeholder="掲載名 · 紹介文 · カテゴリ">
         </div>
@@ -71,6 +71,7 @@
     <div class="bd-public-pagination" data-bd-public-pagination></div>
   </div>
 
+  <script src="../../chat-supabase-config.js"></script>
   <script src="../../business-directory-repository.js"></script>
   <script src="../business-directory-categories.js"></script>
   <script src="../business-directory-common.js"></script>

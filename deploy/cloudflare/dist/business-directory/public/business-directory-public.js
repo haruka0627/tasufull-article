@@ -6,7 +6,7 @@
 
   const C = global.TasuBusinessDirectoryCommon;
   const Cats = global.TasuBusinessDirectoryCategories;
-  const MOCK_KEY = "bd_public_mock_v1";
+  const MOCK_KEY = "bd_public_mock_v2";
   const PAGE_SIZE = 12;
 
   const PLAN_WEIGHT = { premium: 4, pro: 3, standard: 2, free: 1 };
@@ -91,6 +91,23 @@
         prefecture: "大阪府",
         city: "大阪市",
       },
+      {
+        id: "pub-4",
+        listing_type: "shop_retail",
+        plan_code: "free",
+        category_id: "a1000001-0001-4000-8000-000000000001",
+        display_name: "写真なしカフェ",
+        slug: "no-photo-cafe",
+        service_areas: ["東京都"],
+        hp_mode: "full_page",
+        website_url: null,
+        published_at: "2026-06-15T10:00:00Z",
+        company_name: "写真なしカフェ",
+        short_description: "画像未登録表示の確認用掲載です。",
+        prefecture: "東京都",
+        city: "新宿区",
+        photo_url: null,
+      },
     ];
     const details = {
       "pub-1": {
@@ -105,7 +122,10 @@
           short_description: published[0].short_description,
           shop_sales_genre: "食品・加工品",
         },
-        photos: [{ url: "https://placehold.co/800x500/e2e8f0/64748b?text=Shop", sort_order: 0 }],
+        photos: [
+          { url: "https://placehold.co/800x500/e2e8f0/64748b?text=Shop", sort_order: 0 },
+          { url: "https://placehold.co/400x300/f1f5f9/64748b?text=Gallery", sort_order: 1 },
+        ],
         business_hours: [{ label: "平日", value: "10:00-19:00" }],
         social_links: [],
         tlv_videos: [],
@@ -125,6 +145,23 @@
         },
         photos: [{ url: "https://placehold.co/800x500/dbeafe/1e40af?text=Service", sort_order: 0 }],
         business_hours: [],
+        social_links: [],
+        tlv_videos: [],
+      },
+      "pub-4": {
+        listing: published[3],
+        profile: {
+          company_name: "写真なしカフェ",
+          contact_email: "hello@nophoto.example",
+          contact_phone: "03-5555-6666",
+          prefecture: "東京都",
+          city: "新宿区",
+          address_line1: "7-8-9",
+          short_description: published[3].short_description,
+          shop_sales_genre: "カフェ",
+        },
+        photos: [],
+        business_hours: [{ label: "毎日", value: "9:00-18:00" }],
         social_links: [],
         tlv_videos: [],
       },
@@ -183,7 +220,11 @@
   }
 
   function detailUrl(slug, listingType) {
-    return `detail.html?slug=${encodeURIComponent(slug)}&type=${encodeURIComponent(listingType)}`;
+    const p = new URLSearchParams();
+    p.set("slug", slug);
+    p.set("type", listingType);
+    if (usePublicMock()) p.set("bdPublicMock", "1");
+    return `detail.html?${p.toString()}`;
   }
 
   function applyFilters(listings, state) {
@@ -267,12 +308,17 @@
     });
   }
 
+  function renderMediaEmpty(extraClass) {
+    return `<div class="bd-public-media-empty${extraClass ? ` ${extraClass}` : ""}" role="img" aria-label="画像未登録">
+      <span class="bd-public-media-empty__frame" aria-hidden="true"></span>
+      <span class="bd-public-media-empty__text">画像未登録</span>
+    </div>`;
+  }
+
   function renderListingCard(item) {
     const thumb = item.photo_url
       ? `<img class="bd-public-card__thumb" src="${escapeHtml(item.photo_url)}" alt="">`
-      : `<div class="bd-public-card__thumb bd-public-card__thumb--placeholder" aria-hidden="true">${escapeHtml(
-          String(item.display_name || "?").slice(0, 1),
-        )}</div>`;
+      : `<div class="bd-public-card__thumb bd-public-card__thumb--placeholder">画像未登録</div>`;
     const cat = categoryName(item.category_id);
     const areas = (item.service_areas || []).slice(0, 2).join(" · ");
     const website = item.website_url
@@ -383,7 +429,70 @@
   }
 
   function renderPlaceholder(title, note) {
-    return `<div class="bd-public-placeholder"><strong>${escapeHtml(title)}</strong><br>${escapeHtml(note)}</div>`;
+    return `<div class="bd-public-placeholder"><strong>${escapeHtml(title)}</strong>${escapeHtml(note)}</div>`;
+  }
+
+  function displayOrUnset(value) {
+    const text = String(value || "").trim();
+    return text ? escapeHtml(text) : "未登録";
+  }
+
+  function buildCtaRow(profile, listing, opts) {
+    const preferWebsite = !!opts?.preferWebsite;
+    const contactEmail = profile.contact_email
+      ? `<a class="bd-public-btn bd-public-btn--primary" href="mailto:${escapeHtml(profile.contact_email)}">メールで問い合わせ</a>`
+      : "";
+    const phoneCta = profile.contact_phone
+      ? `<a class="bd-public-btn bd-public-btn--phone" href="tel:${escapeHtml(String(profile.contact_phone).replace(/[^\d+]/g, ""))}">電話する</a>`
+      : "";
+    const websiteCta = listing.website_url
+      ? `<a class="bd-public-btn ${preferWebsite ? "bd-public-btn--primary" : "bd-public-btn--ghost"}" href="${escapeHtml(listing.website_url)}" target="_blank" rel="noopener">公式サイト</a>`
+      : "";
+    const talkCta = `<span class="bd-public-btn bd-public-btn--muted" aria-disabled="true" title="準備中">Talk（準備中）</span>`;
+    if (preferWebsite) return `${websiteCta}${contactEmail}${phoneCta}${talkCta}`;
+    return `${contactEmail}${phoneCta}${talkCta}${websiteCta}`;
+  }
+
+  function renderIdentityBlock(listing, profile, hoursText) {
+    const company = profile.company_name || "";
+    const cat = categoryName(listing.category_id);
+    const location = [profile.prefecture, profile.city].filter(Boolean).join(" ");
+    const hoursChip = hoursText && hoursText !== "未登録"
+      ? `<span class="bd-public-chip bd-public-chip--hours">営業時間あり</span>`
+      : `<span class="bd-public-chip">営業時間は下記を確認</span>`;
+    return `
+      <div class="bd-public-section bd-public-identity">
+        <h1 class="bd-public-detail__title">${escapeHtml(listing.display_name || "掲載")}</h1>
+        ${company ? `<p class="bd-public-detail__company">${escapeHtml(company)}</p>` : ""}
+        <div class="bd-public-chips">
+          <span class="bd-public-chip">${escapeHtml(typeLabel(listing.listing_type))}</span>
+          ${cat ? `<span class="bd-public-chip">${escapeHtml(cat)}</span>` : ""}
+          ${location ? `<span class="bd-public-chip bd-public-chip--loc">${escapeHtml(location)}</span>` : ""}
+          ${hoursChip}
+          <span class="bd-public-chip bd-public-chip--future">評価（準備中）</span>
+          ${planBadge(listing.plan_code)}
+        </div>
+        ${profile.short_description ? `<p class="bd-public-lead">${escapeHtml(profile.short_description)}</p>` : ""}
+      </div>`;
+  }
+
+  function renderGallery(photos) {
+    const list = (photos || []).filter((p) => p?.url || p?.public_url);
+    if (!list.length) {
+      return `<div class="bd-public-section">
+        <h2 class="bd-public-section__title">ギャラリー</h2>
+        ${renderMediaEmpty()}
+      </div>`;
+    }
+    const rest = list.slice(1);
+    return rest.length
+      ? `<div class="bd-public-section">
+          <h2 class="bd-public-section__title">ギャラリー</h2>
+          <div class="bd-public-gallery">${rest
+            .map((p) => `<img src="${escapeHtml(p.url || p.public_url)}" alt="">`)
+            .join("")}</div>
+        </div>`
+      : "";
   }
 
   function renderDetail(detail) {
@@ -398,21 +507,26 @@
 
     host.classList.toggle("bd-public-detail--redirect", isRedirect);
 
-    const hero = photos[0]?.url || photos[0]?.public_url
-      ? `<div class="bd-public-hero"><img src="${escapeHtml(photos[0].url || photos[0].public_url)}" alt=""></div>`
-      : "";
+    const photoUrls = photos.filter((p) => p?.url || p?.public_url);
+    const heroSrc = photoUrls[0]?.url || photoUrls[0]?.public_url || "";
+    const hero = heroSrc
+      ? `<div class="bd-public-hero"><img src="${escapeHtml(heroSrc)}" alt="${escapeHtml(listing.display_name || "")}"></div>`
+      : `<div class="bd-public-hero">${renderMediaEmpty()}</div>`;
 
     const serviceBlock =
       listing.listing_type === "shop_retail"
-        ? `<dt>販売ジャンル</dt><dd>${escapeHtml(profile.shop_sales_genre || "—")}</dd>`
-        : `<dt>サービス内容</dt><dd>${escapeHtml(profile.service_summary || "—")}</dd>
-           <dt>料金目安</dt><dd>${escapeHtml(profile.price_range_text || "—")}</dd>`;
+        ? `<dt>販売ジャンル</dt><dd>${displayOrUnset(profile.shop_sales_genre)}</dd>`
+        : `<dt>サービス内容</dt><dd>${displayOrUnset(profile.service_summary)}</dd>
+           <dt>料金目安</dt><dd>${displayOrUnset(profile.price_range_text)}</dd>`;
 
     const hoursText =
       hours
         .map((h) => (h.label ? `${h.label}: ${h.value || h.hours_text || ""}` : h.hours_text || h.value))
         .filter(Boolean)
-        .join(" / ") || "—";
+        .join(" / ") || "未登録";
+
+    const address = [profile.prefecture, profile.city, profile.address_line1].filter(Boolean).join(" ");
+    const areas = (listing.service_areas || []).join("、");
 
     const snsBlock =
       plan === "free"
@@ -424,31 +538,28 @@
         ? renderPlaceholder("TLV 動画", "近日公開 — Pro プラン")
         : renderPlaceholder("TLV 動画", "Pro プラン以上で表示予定");
 
-    const contactEmail = profile.contact_email
-      ? `<a class="bd-public-btn bd-public-btn--primary" href="mailto:${escapeHtml(profile.contact_email)}">お問い合わせ（メール）</a>`
-      : "";
-
-    const websiteCta = listing.website_url
-      ? `<a class="bd-public-btn bd-public-btn--primary" href="${escapeHtml(listing.website_url)}" target="_blank" rel="noopener">公式サイトへ</a>`
-      : "";
+    const phoneDd = profile.contact_phone
+      ? `<a href="tel:${escapeHtml(String(profile.contact_phone).replace(/[^\d+]/g, ""))}">${escapeHtml(profile.contact_phone)}</a>`
+      : "未登録";
+    const websiteDd = listing.website_url
+      ? `<a href="${escapeHtml(listing.website_url)}" target="_blank" rel="noopener">${escapeHtml(listing.website_url)}</a>`
+      : "未登録";
 
     if (isRedirect) {
       host.innerHTML = `
-        <div class="bd-public-section">
-          <h1 style="margin:0 0 8px;font-size:1.5rem">${escapeHtml(listing.display_name)}</h1>
-          <p>${escapeHtml(profile.short_description || "")}</p>
-          <p><small>${escapeHtml(typeLabel(listing.listing_type))} · ${escapeHtml(categoryName(listing.category_id))}</small></p>
-        </div>
+        ${hero}
+        ${renderIdentityBlock(listing, profile, hoursText)}
         <div class="bd-public-cta-box">
           <p>この掲載は公式サイトへの送客が主導線です。</p>
-          ${websiteCta}
-          ${contactEmail}
+          <div class="bd-public-cta-row">${buildCtaRow(profile, listing, { preferWebsite: true })}</div>
         </div>
         <div class="bd-public-section">
-          <h2>最小情報</h2>
+          <h2 class="bd-public-section__title">店舗情報</h2>
           <dl class="bd-public-dl">
-            <dt>所在地</dt><dd>${escapeHtml([profile.prefecture, profile.city].filter(Boolean).join(" "))}</dd>
-            <dt>対応地域</dt><dd>${escapeHtml((listing.service_areas || []).join("、"))}</dd>
+            <dt>所在地</dt><dd>${displayOrUnset(address)}</dd>
+            <dt>対応エリア</dt><dd>${displayOrUnset(areas)}</dd>
+            <dt>電話</dt><dd>${phoneDd}</dd>
+            <dt>Webサイト</dt><dd>${websiteDd}</dd>
           </dl>
         </div>`;
       return;
@@ -456,29 +567,27 @@
 
     host.innerHTML = `
       ${hero}
-      <div class="bd-public-section">
-        <h1 style="margin:0 0 8px;font-size:1.625rem;font-weight:900">${escapeHtml(listing.display_name)}</h1>
-        <p style="margin:0 0 12px;color:#64748b">${escapeHtml(typeLabel(listing.listing_type))} · ${escapeHtml(categoryName(listing.category_id))} · ${planBadge(listing.plan_code)}</p>
-        <p>${escapeHtml(profile.short_description || "")}</p>
+      ${renderIdentityBlock(listing, profile, hoursText)}
+      <div class="bd-public-cta-bar" aria-label="お問い合わせ">
+        ${buildCtaRow(profile, listing)}
       </div>
       <div class="bd-public-section">
-        <h2>基本情報</h2>
+        <h2 class="bd-public-section__title">店舗情報</h2>
         <dl class="bd-public-dl">
-          <dt>会社名</dt><dd>${escapeHtml(profile.company_name || "—")}</dd>
-          <dt>所在地</dt><dd>${escapeHtml([profile.prefecture, profile.city, profile.address_line1].filter(Boolean).join(" "))}</dd>
-          <dt>対応地域</dt><dd>${escapeHtml((listing.service_areas || []).join("、"))}</dd>
-          <dt>公開形式</dt><dd>${escapeHtml(C?.hpModePublicLabel?.(listing.hp_mode) || "TASFULページを使う")}</dd>
-          ${serviceBlock}
+          <dt>紹介文</dt><dd>${displayOrUnset(profile.short_description)}</dd>
+          <dt>会社名</dt><dd>${displayOrUnset(profile.company_name)}</dd>
           <dt>営業時間</dt><dd>${escapeHtml(hoursText)}</dd>
-          <dt>公式サイト</dt><dd>${listing.website_url ? `<a href="${escapeHtml(listing.website_url)}" target="_blank" rel="noopener">${escapeHtml(listing.website_url)}</a>` : "—"}</dd>
+          <dt>定休日</dt><dd>未登録</dd>
+          <dt>住所</dt><dd>${displayOrUnset(address)}</dd>
+          <dt>電話</dt><dd>${phoneDd}</dd>
+          <dt>Webサイト</dt><dd>${websiteDd}</dd>
+          <dt>対応エリア</dt><dd>${displayOrUnset(areas)}</dd>
+          ${serviceBlock}
         </dl>
       </div>
-      <div class="bd-public-section">
-        <h2>問い合わせ</h2>
-        <div class="bd-public-card__actions">${contactEmail}${websiteCta}</div>
-      </div>
-      <div class="bd-public-section"><h2>SNS</h2>${snsBlock}</div>
-      <div class="bd-public-section"><h2>TLV</h2>${tlvBlock}</div>`;
+      ${renderGallery(photos)}
+      <div class="bd-public-section"><h2 class="bd-public-section__title">SNS</h2>${snsBlock}</div>
+      <div class="bd-public-section"><h2 class="bd-public-section__title">TLV</h2>${tlvBlock}</div>`;
   }
 
   async function initDetailPage() {
@@ -486,16 +595,25 @@
     const slug = params.get("slug") || "";
     const type = params.get("type") || "";
     const toast = qs("[data-bd-public-toast]");
+    const back = qs("[data-bd-public-back]");
+    if (back && usePublicMock()) back.href = "list.html?bdPublicMock=1";
     const repo = getRepository();
     if (!slug || !repo) {
-      if (toast) toast.textContent = "掲載が見つかりません";
+      if (toast) {
+        toast.hidden = false;
+        toast.textContent = "掲載が見つかりません";
+      }
       return;
     }
     try {
       const res = await repo.getPublicListingDetail(slug, type || undefined);
       renderDetail(res.detail || res);
+      document.title = `${(res.detail || res).listing?.display_name || "掲載詳細"} | 店舗・業務掲載`;
     } catch (err) {
-      if (toast) toast.textContent = err.message || "詳細の取得に失敗しました";
+      if (toast) {
+        toast.hidden = false;
+        toast.textContent = err.message || "詳細の取得に失敗しました";
+      }
     }
   }
 

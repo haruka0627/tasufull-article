@@ -1,10 +1,10 @@
 # Business Directory MVP 設計
 
-**最終更新:** 2026-06-27（Self-Service 投稿/編集設計）  
+**最終更新:** 2026-06-28（Step 5 Operational Readiness 同期）  
 **前提 AD:** [DECISIONS.md](./DECISIONS.md) **AD-013**  
 **方針正本:** [business-directory-subscription-model.md](./business-directory-subscription-model.md)  
 **Self-Service:** [business-directory-self-service-design.md](./business-directory-self-service-design.md)  
-**状態:** **Phase 6 Stripe 連携実装済** — Premium / 予約 / 決済代行 **未着手**
+**状態:** **MVP-1 Complete** · Production Step 4 Go · **Step 5 運用準備** · MVP-2 / Premium / 予約 / 決済代行 **未着手** · **Commercial Launch 未実施**
 
 ---
 
@@ -130,7 +130,7 @@ TASFUL市場
 | アクセス解析 | — | — | ✅ | ✅ |
 | AI 紹介対象 | — | — | ✅ | ✅ |
 | 複数店舗管理 | — | — | — | ✅ |
-| 広告枠 | — | — | — | ✅ |
+| 広告枠 | — | — | — | ✅（将来 · [SPONSOR_ADS.md](./SPONSOR_ADS.md) スポンサー掲載） |
 | 予約 · 見積 · チャット · Connect | — | — | — | ✅ |
 | 成果報酬オプション | — | — | — | ✅（月額 + 成果報酬） |
 
@@ -252,26 +252,41 @@ MVP 段階の概要テーブルは data model 正本に統合。以下は **参�
 
 ---
 
-## 10. MVP スコープ外
+## 10. 実装状態（2026-06-28 · Step 5 同期）
 
-| 項目 | 扱い |
+| 項目 | 状態 |
 | --- | --- |
-| コード変更 | ❌ 本フェーズ |
-| DB migration | ❌ 設計案のみ |
-| UI 実装 | ❌ |
-| Stripe / 決済 | ❌ 列余地のみ |
-| Builder AI / TASFUL AI / AI 秘書 | ❌ 変更なし |
+| Phase 1–7 実装 | ✅ 完了 |
+| MVP-1（Self-Service · 審査 · 公開 · 検索） | ✅ 完了 |
+| MVP-3（Stripe Test サブスク） | ✅ 完了 |
+| Production Step 4 | ✅ **48/48 Go**（Pages deploy · 2026-06-27） |
+| MVP-2 / Premium / 予約 / Connect | ❌ 未着手 |
+| Commercial Launch（一般公開） | ❌ **未実施 · No-Go** |
+
+**証跡:** [production-step4-production.md](../reports/business-directory-production-step4-production.md) · [operational-readiness.md](../reports/business-directory-operational-readiness.md)
 
 ---
 
-## 11. 実装フェーズ案（参考 · 未確定）
+## 10a. 旧・設計フェーズ注記（docs-only 当時）
 
-| Phase | 内容 |
+| 項目 | 扱い（2026-06-27 設計時） |
 | --- | --- |
-| **MVP-1** | Self-Service 初回申請 · 審査 · 公開ページ · 検索（Free/Standard） |
-| **MVP-2** | 公開後編集マイページ · Pro（TLV · 問い合わせ） |
-| **MVP-3** | Stripe サブスク · プラン自動反映 |
-| **Future** | Premium · Connect · 成果報酬 |
+| コード変更 | 設計フェーズでは未実施 → **以降 Phase 1–7 で実施済** |
+| DB migration | 設計案のみ → **staging apply 済** |
+| Stripe / 決済 | 列余地のみ → **Test mode 実装済** |
+
+---
+
+## 11. 実装フェーズ（状態 · 2026-06-28）
+
+| Phase | 内容 | 状態 |
+| --- | --- | --- |
+| **MVP-1** | Self-Service 初回申請 · 審査 · 公開ページ · 検索（Free/Standard） | ✅ **Complete** |
+| **MVP-2** | 公開後編集マイページ · Pro（TLV · 問い合わせ） | ❌ 未着手 |
+| **MVP-3** | Stripe サブスク · プラン自動反映 | ✅ **Complete**（Test mode） |
+| **Future** | Premium · Connect · 成果報酬 | ❌ 未着手 |
+| **Future: Order / Reservation Engine** | 掲載無料 · TASFUL 経由注文/予約手数料 · BD/Builder/Platform 共通 | 📋 **設計のみ** — [order-reservation-engine](./business-directory-order-reservation-engine.md) · REL-F-14 · **実装禁止** |
+| **Step 5** | Operational Readiness · Runbook · 8788 回帰 | ✅ **Complete** |
 
 ---
 
@@ -281,5 +296,6 @@ MVP 段階の概要テーブルは data model 正本に統合。以下は **参�
 - [business-directory-self-service-design.md](./business-directory-self-service-design.md)
 - [business-directory-data-model-design.md](./business-directory-data-model-design.md)
 - [business-directory-ui-flow-design.md](./business-directory-ui-flow-design.md)
+- [business-directory-order-reservation-engine.md](./business-directory-order-reservation-engine.md) — **Future** Order / Reservation Engine
 - [reports/business-directory-mvp-design.md](../reports/business-directory-mvp-design.md)
 - [reports/business-directory-self-service-design.md](../reports/business-directory-self-service-design.md)

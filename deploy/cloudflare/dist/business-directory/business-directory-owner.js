@@ -93,6 +93,7 @@
           <span class="bd-plan-card__badge">現在のプラン</span>
         </div>
         <ul class="bd-plan-card__list">${notes.map((n) => `<li>${C.escapeHtml(n)}</li>`).join("")}</ul>
+        <p class="bd-field-hint">Free プランでも公開申請できます。有料プランは必須ではありません。必要なときだけアップグレードしてください。</p>
         ${
           subStatus
             ? `<p class="bd-field-hint">Stripe: ${C.escapeHtml(subStatus)}${
@@ -315,7 +316,9 @@
             <strong class="bd-plan-card__name">${C.escapeHtml(plan.label)}</strong>
             <span class="bd-plan-card__badge">初期プラン</span>
           </div>
+          <p class="bd-plan-card__tagline">無料で掲載を開始できます</p>
           <ul class="bd-plan-card__list">${notes.map((n) => `<li>${C.escapeHtml(n)}</li>`).join("")}</ul>
+          <p class="bd-plan-card__note">Free プランでも公開申請できます。有料プランは必須ではありません。</p>
         </div>`;
     }
 
@@ -347,8 +350,14 @@
         if (listing?.id && hours) {
           Local.merge(listing.id, { hours: [{ label: "営業時間", value: hours }] });
         }
-        C.toast(toastEl, "下書きを保存しました", "ok");
-        global.location.href = `edit.html?id=${encodeURIComponent(listing.id)}`;
+        C.toast(toastEl, "下書きを保存しました。次は「公開設定」タブから公開を申請してください。", "ok");
+        const draftQs = new URLSearchParams({
+          id: listing.id,
+          tab: "publish",
+          bd_onboarding: "draft_saved",
+        });
+        if (C.useMockMode()) draftQs.set("bdMock", "1");
+        global.location.href = `edit.html?${draftQs.toString()}`;
       } catch (err) {
         C.toast(toastEl, err.message || "保存に失敗しました", "error");
       }
@@ -396,11 +405,30 @@
           ? "停止中のため編集できません。運営にお問い合わせください。"
           : "";
 
-    if (status === "rejected" && local.rejectMeta) {
+    if (status === "rejected") {
       const rejectEl = C.qs("[data-bd-reject-reason]", root);
       if (rejectEl) {
         rejectEl.hidden = false;
-        rejectEl.innerHTML = `<strong>差戻し理由:</strong> ${C.escapeHtml(local.rejectMeta.note || local.rejectMeta.code || "内容をご確認ください")}`;
+        const reason = local.rejectMeta
+          ? C.escapeHtml(local.rejectMeta.note || local.rejectMeta.code || "内容をご確認ください")
+          : "内容をご確認ください";
+        rejectEl.innerHTML =
+          `<strong>差戻し理由:</strong> ${reason}` +
+          `<br><strong>再申請手順:</strong> ① 基本情報を修正して保存 ②「公開設定」タブから再度「公開を申請する」`;
+      }
+    }
+
+    const nextStep = C.qs("[data-bd-next-step]", root);
+    const onboarding = new URLSearchParams(global.location.search).get("bd_onboarding");
+    if (nextStep) {
+      if (onboarding === "draft_saved" || status === "draft") {
+        nextStep.hidden = false;
+        nextStep.textContent =
+          "次のステップ: 内容を確認したら「公開設定」タブから公開を申請してください。Free プランでも申請できます。";
+      } else if (status === "rejected") {
+        nextStep.hidden = false;
+        nextStep.textContent =
+          "差戻し後は内容を修正・保存し、「公開設定」タブから再申請してください。";
       }
     }
 
