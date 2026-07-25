@@ -27,29 +27,17 @@
   ];
 
   const QA_UI_REVIEW_SLUGS = [
-    "signup",
-    "pricing",
-    "direct-trading",
-    "search-no-results",
-    "beginner",
-    "apply",
-    "contact-vendor",
-    "faq",
-    "password-reset",
-    "account-delete",
-    "listing-request",
-    "trouble-support",
+    "business-directory",
+    "business-directory-beginner",
+    "business-directory-worker",
+    "business-directory-q2",
   ];
 
   const QA_FEATURED_SLUGS = [
-    "signup",
-    "pricing",
-    "direct-trading",
-    "search-no-results",
-    "beginner",
-    "ai-workspace-start",
-    "tlv-start",
-    "talk-start",
+    "business-directory",
+    "business-directory-beginner",
+    "business-directory-creator",
+    "business-directory-viewer",
   ];
 
   const QA_ARTICLES = Array.isArray(global.PLATFORM_QA_ARTICLES_GENERATED)

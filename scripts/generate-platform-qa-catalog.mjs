@@ -2,6 +2,8 @@
 /**
  * Generate platform Q&A catalog → articles + separated search keywords
  * Run: node scripts/generate-platform-qa-catalog.mjs
+ *
+ * Scope: Business Directory allowlist only (40 slugs).
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -20,13 +22,22 @@ import {
   QA_KEYWORDS_BY_SLUG,
   QA_KEYWORDS_BY_TOPIC,
 } from "./lib/platform-qa-catalog-keywords-seed.mjs";
+import {
+  PLATFORM_QA_BD_ALLOWLIST,
+  PLATFORM_QA_BD_ALLOWLIST_SET,
+  PLATFORM_QA_BD_TOPIC_KEY,
+  isPlatformQaBdSlug,
+} from "./lib/platform-qa-catalog-bd-allowlist.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_ARTICLES = path.join(ROOT, "platform-qa-articles.generated.js");
 const OUT_KEYWORDS = path.join(ROOT, "platform-qa-keywords.generated.js");
 
-const SEED_SLUGS = new Set(QA_SEED_ARTICLES.map((a) => a.slug));
-const ALL_SPECS = [...QA_TOPIC_SPECS, ...QA_EXTRA_TOPIC_SPECS, ...QA_EXTENDED_TOPIC_SPECS];
+const SEED_ARTICLES = QA_SEED_ARTICLES.filter((a) => isPlatformQaBdSlug(a.slug));
+const SEED_SLUGS = new Set(SEED_ARTICLES.map((a) => a.slug));
+const ALL_SPECS = [...QA_TOPIC_SPECS, ...QA_EXTRA_TOPIC_SPECS, ...QA_EXTENDED_TOPIC_SPECS].filter(
+  (spec) => spec.key === PLATFORM_QA_BD_TOPIC_KEY,
+);
 
 function stripSearchFields(article) {
   const { keywords, aliases, synonyms, ...rest } = article;
@@ -75,6 +86,10 @@ function buildSearchMeta(slug, spec, question, persona) {
   return { slug, ...merged };
 }
 
+function sanitizeRelatedSlugs(slugs) {
+  return [...new Set((slugs || []).filter((s) => isPlatformQaBdSlug(s)))].slice(0, 6);
+}
+
 function buildArticle(spec, question, variantIndex, idNum, usedSlugs, opts = {}) {
   const persona = opts.persona || spec.persona || "beginner";
   const topicKey = spec.key;
@@ -87,6 +102,7 @@ function buildArticle(spec, question, variantIndex, idNum, usedSlugs, opts = {})
   );
 
   if (SEED_SLUGS.has(slug)) return null;
+  if (!isPlatformQaBdSlug(slug)) return null;
 
   const id = String(idNum).padStart(4, "0");
   const intro = [
@@ -123,7 +139,7 @@ function buildArticle(spec, question, variantIndex, idNum, usedSlugs, opts = {})
     updatedAt: "2026-06-30",
     intro,
     ...body,
-    relatedQaSlugs: (spec.relatedSlugs || []).slice(0, 6),
+    relatedQaSlugs: sanitizeRelatedSlugs(spec.relatedSlugs),
   };
 
   const searchMeta = buildSearchMeta(slug, spec, question, persona);
@@ -146,13 +162,24 @@ function generateCatalog() {
   const usedSlugs = new Set(SEED_SLUGS);
   const articles = [];
   const searchBySlug = {};
-  let idNum = QA_SEED_ARTICLES.length + 1;
+  let idNum = SEED_ARTICLES.length + 1;
 
-  for (const raw of QA_SEED_ARTICLES) {
+  for (const raw of SEED_ARTICLES) {
     const article = stripSearchFields(raw);
+    article.relatedQaSlugs = sanitizeRelatedSlugs(article.relatedQaSlugs);
     articles.push(article);
-    const spec = { key: article.slug, service: article.service, category: article.category, title: article.title };
-    searchBySlug[article.slug] = buildSearchMeta(article.slug, spec, article.question, article.persona);
+    const spec = {
+      key: article.slug,
+      service: article.service,
+      category: article.category,
+      title: article.title,
+    };
+    searchBySlug[article.slug] = buildSearchMeta(
+      article.slug,
+      spec,
+      article.question,
+      article.persona,
+    );
   }
 
   for (const spec of ALL_SPECS) {
@@ -182,7 +209,39 @@ function generateCatalog() {
     }
   }
 
-  return { articles, searchBySlug };
+  const filteredArticles = articles.filter((a) => isPlatformQaBdSlug(a.slug));
+  const filteredSearch = {};
+  for (const a of filteredArticles) {
+    if (searchBySlug[a.slug]) filteredSearch[a.slug] = searchBySlug[a.slug];
+  }
+
+  const produced = new Set(filteredArticles.map((a) => a.slug));
+  const missing = PLATFORM_QA_BD_ALLOWLIST.filter((s) => !produced.has(s));
+  const unexpected = filteredArticles
+    .map((a) => a.slug)
+    .filter((s) => !PLATFORM_QA_BD_ALLOWLIST_SET.has(s));
+  if (
+    filteredArticles.length !== PLATFORM_QA_BD_ALLOWLIST.length ||
+    missing.length ||
+    unexpected.length
+  ) {
+    console.error("[generate-platform-qa-catalog] allowlist mismatch", {
+      produced: filteredArticles.length,
+      expected: PLATFORM_QA_BD_ALLOWLIST.length,
+      missing,
+      unexpected,
+    });
+    process.exit(1);
+  }
+
+  const bySlug = new Map(filteredArticles.map((a) => [a.slug, a]));
+  const orderedArticles = PLATFORM_QA_BD_ALLOWLIST.map((slug) => bySlug.get(slug));
+  const orderedSearch = {};
+  for (const slug of PLATFORM_QA_BD_ALLOWLIST) {
+    orderedSearch[slug] = filteredSearch[slug];
+  }
+
+  return { articles: orderedArticles, searchBySlug: orderedSearch };
 }
 
 function countKeywordEntries(searchBySlug) {
@@ -233,6 +292,7 @@ const stats = {
   keywordSlugs: Object.keys(searchBySlug).length,
   keywordEntries: countKeywordEntries(searchBySlug),
   relatedLinks: countRelatedLinks(articles),
+  allowlist: PLATFORM_QA_BD_ALLOWLIST.length,
   articlesFile: OUT_ARTICLES,
   keywordsFile: OUT_KEYWORDS,
   articlesBytes: fs.statSync(OUT_ARTICLES).size,
@@ -240,7 +300,11 @@ const stats = {
 };
 
 fs.mkdirSync(path.join(ROOT, "reports"), { recursive: true });
-fs.writeFileSync(path.join(ROOT, "reports", "platform-qa-catalog-stats.json"), JSON.stringify(stats, null, 2), "utf8");
+fs.writeFileSync(
+  path.join(ROOT, "reports", "platform-qa-catalog-stats.json"),
+  JSON.stringify(stats, null, 2),
+  "utf8",
+);
 
 console.log("[generate-platform-qa-catalog]");
 console.log(JSON.stringify(stats, null, 2));
