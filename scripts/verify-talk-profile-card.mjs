@@ -59,37 +59,43 @@ await withPlaywrightBrowser(async (browser) => {
   });
 
   await page.goto(buildLocalPageUrl(base, "builder/builder-top.html"), { waitUntil: "domcontentloaded" });
-  await page.evaluate(() => {
-    localStorage.setItem(
-      "tasful_chat_threads",
-      JSON.stringify([
-        {
-          id: "talk-mock-friend-001",
-          chatDomain: "friend",
-          threadKind: "direct",
-          partnerUserId: "u_demo_friend_001",
-          partnerProfile: {
-            user_id: "u_demo_friend_001",
-            display_name: "田中 一郎",
-            profile_image: REVIEW_AVATAR_DATA_URL,
-            cover_image: REVIEW_COVER_DATA_URL,
+  await page.evaluate(
+    ({ avatarDataUrl, coverDataUrl }) => {
+      localStorage.setItem(
+        "tasful_chat_threads",
+        JSON.stringify([
+          {
+            id: "talk-mock-friend-001",
+            chatDomain: "friend",
+            threadKind: "direct",
+            partnerUserId: "u_demo_friend_001",
+            partnerProfile: {
+              user_id: "u_demo_friend_001",
+              display_name: "田中 一郎",
+              profile_image: avatarDataUrl,
+              cover_image: coverDataUrl,
+            },
+            partner: { id: "u_demo_friend_001", displayName: "田中 一郎" },
+            lastMessagePreview: "test",
+            updatedAt: new Date().toISOString(),
           },
-          partner: { id: "u_demo_friend_001", displayName: "田中 一郎" },
-          lastMessagePreview: "test",
-          updatedAt: new Date().toISOString(),
-        },
-        {
-          id: "verify-admin-partner",
-          chatDomain: "builder",
-          threadKind: "calendar_request",
-          builderThreadType: "admin_partner",
-          builderFlow: "ops_partner",
-          partner: { displayName: "運営" },
-          updatedAt: new Date().toISOString(),
-        },
-      ])
-    );
-  });
+          {
+            id: "verify-admin-partner",
+            chatDomain: "builder",
+            threadKind: "calendar_request",
+            builderThreadType: "admin_partner",
+            builderFlow: "ops_partner",
+            partner: { displayName: "運営" },
+            updatedAt: new Date().toISOString(),
+          },
+        ])
+      );
+    },
+    {
+      avatarDataUrl: REVIEW_AVATAR_DATA_URL,
+      coverDataUrl: REVIEW_COVER_DATA_URL,
+    }
+  );
 
   await page.goto(buildLocalPageUrl(base, "talk-home.html?tab=chat"), { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.waitForTimeout(2500);
