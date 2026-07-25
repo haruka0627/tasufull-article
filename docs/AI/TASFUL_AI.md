@@ -77,6 +77,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | Backlog | **操作アシスタント** — Gemini · 現在ページ理解 · 画面操作案内 · 製品横断ナビ — [tasful-ai-ui-operation-assist-backlog.md](../tasful-ai-ui-operation-assist-backlog.md) |
 | **Backlog** | **サイト内 QA** — QA 記事コンポーネント SSOT — [TASFUL_AI_QA.md](./TASFUL_AI_QA.md) · [TODO.md](../TODO.md) §TASFUL AI QA |
 | SAFE | **SAFE-06 Usage Log** — コード完了（gemini-chat / OCR）· Staging 適用ゲート待ち — [august plan](../tasful-ai-core-august-2026-plan.md) · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) |
+| SAFE | **SAFE-07 Cost Ledger** — コード完了（query 時推定原価）· Staging 適用ゲート待ち — [cost ledger report](../../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 
 ---
 

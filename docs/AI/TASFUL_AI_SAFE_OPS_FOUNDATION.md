@@ -43,7 +43,7 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 | **SAFE-04** | Bot 対策 | CF + アプリ |
 | **SAFE-05** | AI Usage Guard（実行前チェック統合） | Edge / RPC |
 | **SAFE-06** | AI 利用ログ | Supabase / Edge · **コード完了**（`ai_usage_events` · gemini-chat / OCR）· Staging 適用は別ゲート · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) |
-| **SAFE-07** | AI コスト集計 | Supabase + バッチ |
+| **SAFE-07** | AI コスト集計 | Supabase · **コード完了**（query 時推定 · `ai_model_price_rates` + aggregate RPC）· Staging 適用は別ゲート · [report](../../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **SAFE-08** | Queue 化（非同期 · バースト吸収） | CF Queue / Worker |
 | **SAFE-09** | 同時実行数制限 | Edge / KV |
 | **SAFE-10** | ユーザー別利用制限 | RLS + Edge |
@@ -149,7 +149,7 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 **書き込み:** `ingest_ai_usage_event` · service_role のみ · 公開 ingest endpoint なし  
 **接続済:** gemini-chat · gemini-ocr  
 **未接続:** 他 Chat / Voice / Media / 秘書 等  
-**Cost Ledger 境界:** `estimated_cost` は当面 null · 単価・日次集計は SAFE-07
+**Cost Ledger 境界:** `estimated_cost` 列は生イベント上 **書き換えない**（選択 A）。単価は `ai_model_price_rates` · 集計は `ai_cost_ledger_aggregate`（service_role）。顧客請求・利益倍率は対象外。
 
 ---
 
@@ -160,6 +160,7 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 node scripts/test-tasful-ai-final-phase.mjs
 node scripts/test-tasful-ai-safe-ops-guard-phase1.mjs
 node scripts/test-tasful-ai-safe-ops-usage-log-phase2.mjs
+node scripts/test-tasful-ai-safe-ops-cost-ledger-phase2.mjs
 ```
 
 **完了報告:** HTTP 200 @ `http://127.0.0.1:8788` · Console Error 0 · ガード拒否時は 4xx + ユーザー向け文言（toast 方針 AD-012）

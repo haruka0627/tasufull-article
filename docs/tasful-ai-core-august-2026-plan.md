@@ -48,7 +48,7 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | **3** | — | Auto Router → Gateway 配線 | **完了**（`ai-workspace-chat.js` → `resolveModelId`） |
 | **4** | — | Billing UI → Stripe Edge | 未着手 |
 | **5** | — | manual SQL → migrations（Staging） | 未着手（`ai_usage_events` migration は追加済 · 適用は Staging 手動） |
-| **6** | SAFE-07 | Cost Ledger | 未着手 |
+| **6** | SAFE-07 | Cost Ledger | **完了（コード）** · Staging 適用は別ゲート · [cost ledger report](../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **7** | SAFE-05 拡張 | 秘書 · Vision · TTS 等 | 未着手 |
 | **8** | SAFE-01〜03 | WAF · Turnstile · Rate Limit runbook | 未着手 |
 | **9** | SAFE-08 | Queue | 未着手 |
@@ -105,7 +105,32 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 
 **Rollback:** migration を Staging で `drop function ingest_ai_usage_event(...); drop table ai_usage_events;`（適用後のみ）。Edge は usage log 呼び出しを削除して戻す。
 
-**SAFE-07 境界:** 本テーブルは raw event / units。日次コスト集計・プロバイダ単価・粗利は Phase 6（SAFE-07）の責務。
+**SAFE-07 境界:** 本テーブルは raw event / units。日次コスト集計・プロバイダ単価は **SAFE-07（下記 Phase）** で query 時算出 · `estimated_cost` 列は書き換えない（選択 A）。
+
+---
+
+## Phase — SAFE-07 Minimum Cost Ledger（8月計画 Phase 6 · ユーザー Phase 2）
+
+**ゴール:** `ai_usage_events` の units から **推定 API 原価**を Provider/model/feature/user · 日次/月次で集計（顧客請求・Stripe ではない）。
+
+| 項目 | 方針 |
+| --- | --- |
+| 価格表 | `ai_model_price_rates` · effective_from/to · overlap 禁止 · service_role のみ |
+| 算出 | **選択 A** — query 時に価格表 join · 生イベント非破壊 · 再計算可 |
+| 課金対象 | **success のみ** · error/denied は `not_billable` |
+| 未知 model | `unknown_rate` · **0 円確定しない** |
+| 集計 RPC | `ai_cost_ledger_aggregate` · service_role のみ |
+| fixture | gemini-2.5-flash provisional（公式単価ではない） |
+| Production | **適用しない** |
+
+**完了条件（コード）**
+
+- [x] migration `20260726200000_ai_cost_ledger_safe07.sql`
+- [x] `scripts/lib/ai-cost-ledger.mjs`（計算鏡）
+- [x] `scripts/test-tasful-ai-safe-ops-cost-ledger-phase2.mjs`
+- [ ] Staging DB 適用（paused / ゲート待ち）
+
+**Rollback:** Staging 適用後のみ `drop function ai_cost_ledger_aggregate(...); drop function ai_estimate_event_cost(...); drop view ai_usage_cost_enriched; drop table ai_model_price_rates;`
 
 ---
 
@@ -116,7 +141,7 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | 3 | `ai-workspace-chat.js` ← `resolveGatewayModelId` | **完了** |
 | 4 | `ai-workspace-billing-settings.js` demo 廃止 | 未着手 |
 | 5 | `gen_ai_*` / `ai_workspace_usage_daily` migrations 昇格 | 未着手 |
-| 6 | `ai_cost_ledger`（仮称）+ 日次集計（SAFE-07） | 未着手 |
+| 6 | Cost Ledger（SAFE-07） | **コード完了**（上記） |
 | 7 | 秘書 CF · gemini-image-character · gemini-tts Guard 拡張 | 未着手 |
 | 8 | `docs/runbooks/cf-waf-turnstile-staging.md` | 未着手 |
 | 9 | CF Queue + async worker 設計 | 未着手（後回し可） |
@@ -134,6 +159,7 @@ npm run dev
 node scripts/test-tasful-ai-final-phase.mjs
 node scripts/test-tasful-ai-safe-ops-guard-phase1.mjs   # Phase 1 SAFE-05
 node scripts/test-tasful-ai-safe-ops-usage-log-phase2.mjs  # Phase 2 SAFE-06
+node scripts/test-tasful-ai-safe-ops-cost-ledger-phase2.mjs  # SAFE-07 Cost Ledger
 ```
 
 ---
