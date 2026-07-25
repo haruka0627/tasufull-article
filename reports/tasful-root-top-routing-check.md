@@ -142,8 +142,8 @@ deploy `5ffea447` / commit `1b32aba` — **PASS**（上表と同一）
 ```powershell
 npm run build:pages
 npm run verify:pages-stage
-node scripts/tmp-tasful-root-top-check.mjs
-node scripts/tmp-tasful-root-top-check.mjs --base=https://cf-pages-deploy.tasufull-article.pages.dev
+node scripts/report-repro/tasful-root-top-check.mjs
+node scripts/report-repro/tasful-root-top-check.mjs --base=https://cf-pages-deploy.tasufull-article.pages.dev
 ```
 
 ---

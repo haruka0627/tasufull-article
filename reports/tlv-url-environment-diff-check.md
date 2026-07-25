@@ -167,7 +167,7 @@ http://127.0.0.1:8788/live/videos?talkDev=1
 | 1920 | **4列**, sidebar **72px** |
 
 ```powershell
-node scripts/tmp-tlv-v2-cascade-check.mjs
+node scripts/report-repro/tlv-v2-cascade-check.mjs
 npm run verify:live-youtube-p15
 ```
 
@@ -256,4 +256,4 @@ flowchart LR
 | `live/tlv-private-test-gate.js` | 本番テストバナー |
 | `deploy/cloudflare/stage-cloudflare-pages.mjs` | ビルド・flags 生成 |
 | `deploy/cloudflare/_headers` | キャッシュポリシー |
-| `scripts/tmp-tlv-v2-cascade-check.mjs` | 環境比較スクリプト |
+| `scripts/report-repro/tlv-v2-cascade-check.mjs` | 環境比較スクリプト |

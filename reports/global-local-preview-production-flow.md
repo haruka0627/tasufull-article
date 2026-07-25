@@ -264,7 +264,7 @@ Clean URLs 有効（`*.html` 省略可）。Local は `.html` 付きでも可。
 | 動画管理 | `/live/admin-videos` | |
 
 **TLV UI 検証:** `npm run verify:live-youtube-p15`  
-**TLV カスケード:** `node scripts/tmp-tlv-v2-cascade-check.mjs`
+**TLV カスケード:** `node scripts/report-repro/tlv-v2-cascade-check.mjs`
 
 ### TALK
 

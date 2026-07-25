@@ -154,4 +154,4 @@ DevTools → Network → `live.css` Size **~62KB** を確認。
 ## 関連
 
 - 根本原因: [tlv-videos-v2-not-applied-root-cause.md](./tlv-videos-v2-not-applied-root-cause.md)
-- キャプチャスクリプト: `scripts/tmp-tlv-videos-v2-redeploy-capture.mjs`
+- キャプチャスクリプト: `scripts/report-repro/tlv-videos-v2-redeploy-capture.mjs`

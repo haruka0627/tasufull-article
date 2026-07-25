@@ -1,9 +1,9 @@
 /**
  * TASFUL root TOP routing check — Local / Preview / Production
- * Usage: node scripts/tmp-tasful-root-top-check.mjs [--base URL]
+ * Usage: node scripts/report-repro/tasful-root-top-check.mjs [--base URL]
  */
 import { chromium } from "playwright";
-import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
+import { findDevServerBaseUrl } from "../lib/dev-server-url.mjs";
 
 const baseArg = process.argv.find((a) => a.startsWith("--base="));
 const base =

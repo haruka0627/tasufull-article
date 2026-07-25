@@ -285,7 +285,7 @@ flowchart LR
 ### 自動検証（ローカル / CI 向け）
 
 ```bash
-node scripts/tmp-tlv-v2-cascade-check.mjs
+node scripts/report-repro/tlv-v2-cascade-check.mjs
 # または
 npm run verify:live-youtube-p15
 ```
@@ -302,8 +302,8 @@ npm run verify:live-youtube-p15
 
 | ファイル | 用途 |
 |----------|------|
-| `scripts/tmp-tlv-v2-cascade-check.mjs` | v1/v2 deploy の列数・カスケード比較 |
-| `scripts/tmp-tlv-prod-investigate.mjs` | HTTP + DOM プローブ |
+| `scripts/report-repro/tlv-v2-cascade-check.mjs` | v1/v2 deploy の列数・カスケード比較 |
+| `scripts/report-repro/tlv-prod-investigate.mjs` | HTTP + DOM プローブ |
 | `reports/tlv-production-clean-url-cache-check.md` | 前回の deploy alias / キャッシュ調査 |
 
 ---

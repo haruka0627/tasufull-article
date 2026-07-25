@@ -270,7 +270,7 @@ flowchart TD
 ## 検証コマンド・スクリプト
 
 - `npx wrangler@4.103.0 pages deployment list --project-name tasufull-article`
-- `node scripts/tmp-tlv-prod-investigate.mjs`（HTTP + Playwright DOM 比較、JSON 出力）
+- `node scripts/report-repro/tlv-prod-investigate.mjs`（HTTP + Playwright DOM 比較、JSON 出力）
 - 手動: `curl -sI https://6407eaf4.tasufull-article.pages.dev/live/live.css`
 
 ---

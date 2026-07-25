@@ -1,15 +1,15 @@
 /**
  * TLV /live/videos v2 — Local / Preview screenshot + layout verification
- * Usage: node scripts/tmp-tlv-videos-v2-redeploy-capture.mjs [--base URL]
+ * Usage: node scripts/report-repro/tlv-videos-v2-redeploy-capture.mjs [--base URL]
  */
 import { chromium } from "playwright";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { findDevServerBaseUrl } from "./lib/dev-server-url.mjs";
+import { findDevServerBaseUrl } from "../lib/dev-server-url.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const OUT_DIR = path.join(__dirname, "..", "reports");
+const OUT_DIR = path.join(__dirname, "../..", "reports");
 const VIEWPORTS = [
   { width: 390, height: 844, suffix: "390" },
   { width: 1280, height: 900, suffix: "1280" },

@@ -3,7 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.join(__dirname, "../..");
 const URLS = {
   deploy564: "https://48d49d9c.tasufull-article.pages.dev",
   deploy538: "https://6407eaf4.tasufull-article.pages.dev",
