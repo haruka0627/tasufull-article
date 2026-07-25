@@ -112,6 +112,9 @@
     "smoke:match:p15-l5": "node scripts/smoke-match-p15-l5-dist-sync.mjs --skip-edge",
     "smoke:business-directory": "node scripts/smoke-business-directory-ob4.mjs",
     "smoke:business-directory:prod": "node scripts/smoke-business-directory-ob4.mjs --prod",
+    "generate:pricing-config": "node scripts/generate-pricing-config.mjs",
+    "verify:pricing-catalog": "node scripts/verify-pricing-catalog.mjs",
+    "verify:builder-general-jobs-deploy-flags": "node scripts/verify-builder-general-jobs-deploy-flags.mjs",
     "deploy:pages": "node scripts/deploy-cloudflare-pages.mjs"
   },
   "devDependencies": {
