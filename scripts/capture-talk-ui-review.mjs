@@ -15,6 +15,8 @@ import { createUiReviewSession } from "./lib/ui-review-capture.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FEATURE = "talk";
+const FRIEND_THREAD_ID = "talk-mock-friend-001";
+const FRIEND_ROW_SEL = `[data-talk-select-thread][data-talk-thread-id="${FRIEND_THREAD_ID}"]`;
 
 const THREADS_KEY = "tasful_chat_threads";
 const MESSAGES_KEY = "tasful_chat_messages";
@@ -22,6 +24,25 @@ const REVEAL_KEY = "tasful:builder:contact-reveals:v1";
 const WORKFLOW_KEY = "tasful:talk:builder-workflow-state:v1";
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
+
+async function openFriendProfileCard(page) {
+  await page.locator(FRIEND_ROW_SEL).first().waitFor({ state: "visible", timeout: 20000 });
+  await page.evaluate((threadId) => {
+    const Card = window.TasuTalkProfileCard;
+    if (!Card?.buildPayloadFromThread || !Card?.showTalkProfileCard) {
+      throw new Error("TasuTalkProfileCard API missing");
+    }
+    const fromStore = (window.TasuChatThreadStore?.readAll?.() || []).find((t) => String(t.id) === threadId);
+    const fromList = (window.TasuChatThreadStore?.getAllForChatList?.() || []).find((t) => String(t.id) === threadId);
+    const fromLs = JSON.parse(localStorage.getItem("tasful_chat_threads") || "[]").find(
+      (t) => String(t.id) === threadId
+    );
+    const thread = fromStore || fromList || fromLs || null;
+    if (!thread) throw new Error(`thread not found: ${threadId}`);
+    Card.showTalkProfileCard(Card.buildPayloadFromThread(thread));
+  }, FRIEND_THREAD_ID);
+  await page.locator("[data-talk-profile-card]:not([hidden])").waitFor({ state: "visible", timeout: 8000 });
+}
 
 function chatUrl(threadId, extra = {}) {
   const q = new URLSearchParams({ thread: threadId, from: "builder", ...extra });
@@ -120,7 +141,10 @@ async function main() {
       label: "Talk ホーム（友達一覧）",
       url: buildLocalPageUrl(base, "talk-home.html?tab=chat"),
       beforeGoto: reviewBeforeGoto,
-      waitFor: "[data-talk-profile-trigger]",
+      waitFor: FRIEND_ROW_SEL,
+      prepare: async (p) => {
+        await p.locator(FRIEND_ROW_SEL).first().waitFor({ state: "visible", timeout: 20000 });
+      },
     });
 
     await session.captureStep(page, browser, {
@@ -130,8 +154,7 @@ async function main() {
       viewports: ["1280", "768", "390"],
       beforeGoto: reviewBeforeGoto,
       prepare: async (p) => {
-        await p.locator('[data-talk-profile-trigger][data-talk-thread-id="talk-mock-friend-001"]').first().click();
-        await p.locator("[data-talk-profile-card]:not([hidden])").waitFor({ state: "visible", timeout: 8000 });
+        await openFriendProfileCard(p);
         await p.waitForTimeout(350);
       },
     });

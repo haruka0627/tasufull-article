@@ -64,10 +64,22 @@ async function openProfileCard(page) {
     waitUntil: "domcontentloaded",
     timeout: 30000,
   });
-  await page.waitForTimeout(800);
-  const trigger = page.locator(`[data-talk-profile-trigger][data-talk-thread-id="${THREAD_ID}"]`).first();
-  await trigger.waitFor({ state: "visible", timeout: 15000 });
-  await trigger.click();
+  const rowSel = `[data-talk-select-thread][data-talk-thread-id="${THREAD_ID}"]`;
+  await page.locator(rowSel).first().waitFor({ state: "visible", timeout: 20000 });
+  await page.evaluate((threadId) => {
+    const Card = window.TasuTalkProfileCard;
+    if (!Card?.buildPayloadFromThread || !Card?.showTalkProfileCard) {
+      throw new Error("TasuTalkProfileCard API missing");
+    }
+    const fromStore = (window.TasuChatThreadStore?.readAll?.() || []).find((t) => String(t.id) === threadId);
+    const fromList = (window.TasuChatThreadStore?.getAllForChatList?.() || []).find((t) => String(t.id) === threadId);
+    const fromLs = JSON.parse(localStorage.getItem("tasful_chat_threads") || "[]").find(
+      (t) => String(t.id) === threadId
+    );
+    const thread = fromStore || fromList || fromLs || null;
+    if (!thread) throw new Error(`thread not found: ${threadId}`);
+    Card.showTalkProfileCard(Card.buildPayloadFromThread(thread));
+  }, THREAD_ID);
   await page.locator("[data-talk-profile-card]:not([hidden])").waitFor({ state: "visible", timeout: 8000 });
   await page.waitForTimeout(400);
 }

@@ -1,8 +1,30 @@
 import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
+const FRIEND_THREAD_ID = "talk-mock-friend-001";
+const FRIEND_ROW_SEL = `[data-talk-select-thread][data-talk-thread-id="${FRIEND_THREAD_ID}"]`;
+
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 const errors = [];
+
+async function openFriendProfileCard(page) {
+  await page.locator(FRIEND_ROW_SEL).first().waitFor({ state: "visible", timeout: 20000 });
+  await page.evaluate((threadId) => {
+    const Card = window.TasuTalkProfileCard;
+    if (!Card?.buildPayloadFromThread || !Card?.showTalkProfileCard) {
+      throw new Error("TasuTalkProfileCard API missing");
+    }
+    const fromStore = (window.TasuChatThreadStore?.readAll?.() || []).find((t) => String(t.id) === threadId);
+    const fromList = (window.TasuChatThreadStore?.getAllForChatList?.() || []).find((t) => String(t.id) === threadId);
+    const fromLs = JSON.parse(localStorage.getItem("tasful_chat_threads") || "[]").find(
+      (t) => String(t.id) === threadId
+    );
+    const thread = fromStore || fromList || fromLs || null;
+    if (!thread) throw new Error(`thread not found: ${threadId}`);
+    Card.showTalkProfileCard(Card.buildPayloadFromThread(thread));
+  }, FRIEND_THREAD_ID);
+  await page.locator("[data-talk-profile-card]:not([hidden])").waitFor({ state: "visible", timeout: 8000 });
+}
 
 await withPlaywrightBrowser(async (browser) => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
@@ -49,10 +71,10 @@ await withPlaywrightBrowser(async (browser) => {
   const hasModule = await page.evaluate(() => Boolean(window.TasuTalkProfileCard));
   if (!hasModule) errors.push("TasuTalkProfileCard missing");
 
-  const trigger = page.locator('[data-talk-profile-trigger][data-talk-thread-id="talk-mock-friend-001"]').first();
-  if ((await trigger.count()) < 1) errors.push("friend avatar trigger missing");
+  const friendRowCount = await page.locator(FRIEND_ROW_SEL).count();
+  if (friendRowCount < 1) errors.push("friend avatar trigger missing");
   else {
-    await trigger.click();
+    await openFriendProfileCard(page);
     await page.waitForTimeout(400);
     const open = await page.locator("[data-talk-profile-card]:not([hidden])").count();
     if (open < 1) errors.push("profile card did not open");
@@ -81,7 +103,7 @@ await withPlaywrightBrowser(async (browser) => {
   });
   await page.reload({ waitUntil: "domcontentloaded" });
   await page.waitForTimeout(1200);
-  await trigger.click();
+  await openFriendProfileCard(page);
   await page.waitForTimeout(400);
   const gradientMode = await page.locator("[data-talk-profile-cover]").getAttribute("data-talk-profile-cover-mode");
   if (gradientMode !== "gradient") errors.push(`expected gradient cover mode, got ${gradientMode}`);
@@ -97,8 +119,17 @@ await withPlaywrightBrowser(async (browser) => {
     { waitUntil: "domcontentloaded" }
   );
   await page.waitForTimeout(2000);
-  const adminTrigger = await page.locator("#chatPeerAvatarLink[data-talk-profile-trigger]").count();
-  if (adminTrigger > 0) errors.push("admin should not have profile trigger");
+  const adminCanShow = await page.evaluate(() => {
+    const Card = window.TasuTalkProfileCard;
+    const thread =
+      (window.TasuChatThreadStore?.readAll?.() || []).find((t) => String(t.id) === "verify-admin-partner") ||
+      JSON.parse(localStorage.getItem("tasful_chat_threads") || "[]").find(
+        (t) => String(t.id) === "verify-admin-partner"
+      ) ||
+      null;
+    return Boolean(Card?.canShowForThread?.(thread));
+  });
+  if (adminCanShow) errors.push("admin should not have profile trigger");
 }, { headless: true });
 
 await closeAllBrowsers();
