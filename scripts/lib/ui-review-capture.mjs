@@ -47,6 +47,241 @@ export function attachUiReviewConsole(page) {
   return errors;
 }
 
+/** Staging project used by local Talk review pages (isolate only known probes). */
+export const TALK_REVIEW_STAGING_HOST = "ahlxuyvhzqdqaojiywmu.supabase.co";
+
+/**
+ * Deterministic isolation for Talk UI review scripts.
+ * HTTP mocks only:
+ * - POST /functions/v1/gemini-chat
+ * - GET  /rest/v1/transaction_rooms?select=id&limit=1
+ * Realtime: no-op stub of staging Supabase client.channel / removeChannel (no product code change).
+ * Other Staging HTTP requests are recorded then continued (so they stay visible).
+ *
+ * @param {import('playwright').Page} page
+ */
+export async function installTalkReviewStagingIsolation(page) {
+  /** @type {{
+   *   geminiChat: number,
+   *   transactionRooms: number,
+   *   unexpected: Array<{ method: string, url: string, pathname: string }>,
+   *   realtime: null | {
+   *     installed: boolean,
+   *     channels: number,
+   *     subscribes: number,
+   *     unsubscribes: number,
+   *     topics: string[],
+   *     unexpectedRealtime: number,
+   *   },
+   * }} */
+  const hits = {
+    geminiChat: 0,
+    transactionRooms: 0,
+    unexpected: [],
+    realtime: null,
+  };
+
+  await page.addInitScript((stagingHost) => {
+    const stats = {
+      installed: true,
+      channels: 0,
+      subscribes: 0,
+      unsubscribes: 0,
+      topics: /** @type {string[]} */ ([]),
+      unexpectedRealtime: 0,
+    };
+    window.__TASUFUL_TALK_REVIEW_REALTIME_STATS__ = stats;
+
+    function makeMockChannel(topic) {
+      stats.channels += 1;
+      stats.topics.push(String(topic || ""));
+      const channel = {
+        topic: String(topic || ""),
+        on() {
+          return channel;
+        },
+        subscribe(callback) {
+          stats.subscribes += 1;
+          queueMicrotask(() => {
+            try {
+              if (typeof callback === "function") callback("SUBSCRIBED");
+            } catch {
+              /* ignore */
+            }
+          });
+          return channel;
+        },
+        unsubscribe() {
+          stats.unsubscribes += 1;
+          return Promise.resolve("ok");
+        },
+      };
+      return channel;
+    }
+
+    function patchClient(client, url) {
+      if (!client || client.__tasuTalkReviewRealtimePatched) return client;
+      let hostOk = false;
+      try {
+        hostOk = new URL(String(url || "")).hostname === stagingHost;
+      } catch {
+        hostOk = false;
+      }
+      if (!hostOk) return client;
+
+      client.__tasuTalkReviewRealtimePatched = true;
+      client.channel = function (name) {
+        return makeMockChannel(name);
+      };
+      client.removeChannel = function (channel) {
+        stats.unsubscribes += 1;
+        try {
+          if (channel && typeof channel.unsubscribe === "function") channel.unsubscribe();
+        } catch {
+          /* ignore */
+        }
+        return "ok";
+      };
+      try {
+        if (client.realtime && typeof client.realtime === "object") {
+          client.realtime.connect = function () {};
+          client.realtime.disconnect = function () {};
+        }
+      } catch {
+        /* ignore */
+      }
+      return client;
+    }
+
+    function patchCreateClient(api) {
+      if (!api?.createClient || api.__tasuTalkReviewCreatePatched) return;
+      api.__tasuTalkReviewCreatePatched = true;
+      const orig = api.createClient.bind(api);
+      api.createClient = function (url, key, options) {
+        return patchClient(orig(url, key, options), url);
+      };
+    }
+
+    let stored = window.supabase;
+    Object.defineProperty(window, "supabase", {
+      configurable: true,
+      enumerable: true,
+      get() {
+        return stored;
+      },
+      set(value) {
+        stored = value;
+        patchCreateClient(value);
+      },
+    });
+    if (stored) patchCreateClient(stored);
+  }, TALK_REVIEW_STAGING_HOST);
+
+  await page.route(`https://${TALK_REVIEW_STAGING_HOST}/**`, async (route) => {
+    const request = route.request();
+    const rawUrl = request.url();
+    let url;
+    try {
+      url = new URL(rawUrl);
+    } catch {
+      hits.unexpected.push({ method: request.method(), url: rawUrl, pathname: "" });
+      await route.continue();
+      return;
+    }
+
+    const method = request.method();
+    const pathname = url.pathname;
+
+    if (method === "OPTIONS" && (pathname === "/functions/v1/gemini-chat" || pathname === "/rest/v1/transaction_rooms")) {
+      await route.fulfill({
+        status: 204,
+        headers: {
+          "access-control-allow-origin": "*",
+          "access-control-allow-headers": "authorization, apikey, content-type, x-client-info, prefer",
+          "access-control-allow-methods": "GET,POST,OPTIONS",
+        },
+      });
+      return;
+    }
+
+    if (pathname === "/functions/v1/gemini-chat") {
+      hits.geminiChat += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        headers: {
+          "access-control-allow-origin": "*",
+        },
+        // Gateway treats empty reply as usedRemote:false (no-op for Talk review UI).
+        body: JSON.stringify({ reply: "" }),
+      });
+      return;
+    }
+
+    if (
+      pathname === "/rest/v1/transaction_rooms" &&
+      url.searchParams.get("select") === "id" &&
+      url.searchParams.get("limit") === "1"
+    ) {
+      hits.transactionRooms += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        headers: {
+          "access-control-allow-origin": "*",
+          "content-range": "*/0",
+          "content-type": "application/json; charset=utf-8",
+        },
+        body: "[]",
+      });
+      return;
+    }
+
+    hits.unexpected.push({ method, url: rawUrl, pathname });
+    await route.continue();
+  });
+
+  hits.collectRealtimeStats = async () => {
+    hits.realtime = await page.evaluate(() => window.__TASUFUL_TALK_REVIEW_REALTIME_STATS__ || null);
+    return hits.realtime;
+  };
+
+  return hits;
+}
+
+/**
+ * @param {{
+ *   geminiChat: number,
+ *   transactionRooms: number,
+ *   unexpected: Array<{ method: string, url: string, pathname: string }>,
+ *   realtime?: null | {
+ *     installed?: boolean,
+ *     channels?: number,
+ *     subscribes?: number,
+ *     unsubscribes?: number,
+ *     topics?: string[],
+ *     unexpectedRealtime?: number,
+ *   },
+ *   collectRealtimeStats?: () => Promise<unknown>,
+ * }} hits
+ */
+export function reportTalkReviewStagingIsolation(hits) {
+  console.log("Talk review staging isolation:");
+  console.log(`  gemini-chat mock hits: ${hits.geminiChat}`);
+  console.log(`  transaction_rooms mock hits: ${hits.transactionRooms}`);
+  console.log(`  unexpected Staging Supabase requests: ${hits.unexpected.length}`);
+  for (const row of hits.unexpected) {
+    console.log(`    ${row.method} ${row.url}`);
+  }
+  const rt = hits.realtime;
+  console.log(`  realtime isolation installed: ${rt?.installed ? "yes" : "no"}`);
+  console.log(`  realtime channel creates: ${rt?.channels ?? 0}`);
+  console.log(`  realtime subscribes: ${rt?.subscribes ?? 0}`);
+  console.log(`  realtime unsubscribes: ${rt?.unsubscribes ?? 0}`);
+  console.log(`  realtime topics: ${(rt?.topics || []).join(", ") || "(none)"}`);
+  console.log(`  unexpected Realtime endpoints: ${rt?.unexpectedRealtime ?? 0}`);
+}
+
 /**
  * @param {string} featureName
  * @param {{ viewports?: string[], baseUrl?: string }} [opts]

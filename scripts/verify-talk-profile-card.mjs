@@ -1,5 +1,9 @@
 import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
+import {
+  installTalkReviewStagingIsolation,
+  reportTalkReviewStagingIsolation,
+} from "./lib/ui-review-capture.mjs";
 
 const FRIEND_THREAD_ID = "talk-mock-friend-001";
 const FRIEND_ROW_SEL = `[data-talk-select-thread][data-talk-thread-id="${FRIEND_THREAD_ID}"]`;
@@ -106,6 +110,7 @@ await withPlaywrightBrowser(async (browser) => {
       errorText: request.failure()?.errorText || "",
     });
   });
+  const stagingHits = await installTalkReviewStagingIsolation(page);
 
   await page.goto(buildLocalPageUrl(base, "builder/builder-top.html"), { waitUntil: "domcontentloaded" });
   await page.evaluate(
@@ -232,6 +237,8 @@ await withPlaywrightBrowser(async (browser) => {
     return Boolean(Card?.canShowForThread?.(thread));
   });
   if (adminCanShow) errors.push("admin should not have profile trigger");
+  await stagingHits.collectRealtimeStats();
+  reportTalkReviewStagingIsolation(stagingHits);
 }, { headless: true });
 
 await closeAllBrowsers();

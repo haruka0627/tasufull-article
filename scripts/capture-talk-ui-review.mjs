@@ -11,7 +11,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
-import { createUiReviewSession } from "./lib/ui-review-capture.mjs";
+import { createUiReviewSession, installTalkReviewStagingIsolation, reportTalkReviewStagingIsolation } from "./lib/ui-review-capture.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const FEATURE = "talk";
@@ -163,6 +163,7 @@ async function main() {
 
   await withPlaywrightBrowser(async (browser) => {
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const stagingHits = await installTalkReviewStagingIsolation(page);
     await seedReviewThreads(page);
 
     await session.captureStep(page, browser, {
@@ -228,6 +229,8 @@ async function main() {
       viewports: ["1280", "390"],
     });
 
+    await stagingHits.collectRealtimeStats();
+    reportTalkReviewStagingIsolation(stagingHits);
     await page.close();
   }, { headless: true });
 

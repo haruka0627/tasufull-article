@@ -11,6 +11,10 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join, relative } from "node:path";
 import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
+import {
+  installTalkReviewStagingIsolation,
+  reportTalkReviewStagingIsolation,
+} from "./lib/ui-review-capture.mjs";
 
 const OUT_DIR = join(process.cwd(), "reports", "ui-review", "talk-profile-card");
 const THREAD_ID = "talk-mock-friend-001";
@@ -182,6 +186,7 @@ async function main() {
     page.on("pageerror", (err) => {
       consoleErrors.push(String(err?.message || err));
     });
+    const stagingHits = await installTalkReviewStagingIsolation(page);
 
     shots.push(
       await captureShot(page, "001-default.png", { width: 1280, height: 900, label: "1280" }, { withCover: false })
@@ -202,6 +207,8 @@ async function main() {
       await captureShot(page, "005-tablet-768.png", { width: 768, height: 1024, label: "768" }, { withCover: true })
     );
 
+    await stagingHits.collectRealtimeStats();
+    reportTalkReviewStagingIsolation(stagingHits);
     await page.close();
   }, { headless: true });
 
