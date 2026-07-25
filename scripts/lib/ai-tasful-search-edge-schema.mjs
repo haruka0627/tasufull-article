@@ -1,6 +1,5 @@
 /**
  * Node mirror of supabase/functions/ai-tasful-search/schema.ts (keep in sync).
- * Used for offline unit tests without Deno.
  */
 export const MAX_QUERY = 300;
 export const MAX_LOCATION = 100;
@@ -8,10 +7,10 @@ export const MAX_BODY_BYTES = 8 * 1024;
 export const MAX_LIMIT = 5;
 export const MAX_EMPLOYMENT = 40;
 export const MAX_WORK_STYLE = 40;
+export const MAX_CATEGORY = 64;
 
 const ACTIONS = new Set(["search", "compare", "history_lookup", "none"]);
 const VERTICALS = new Set(["marketplace", "platform", "builder", "all"]);
-const PLATFORM_TYPES = new Set(["job"]);
 const SORTS = new Set([
   "relevance",
   "price_asc",
@@ -107,7 +106,8 @@ function normalizeVertical(raw) {
 function normalizePlatformType(raw) {
   if (raw == null || raw === "") return null;
   const v = String(raw).trim().toLowerCase();
-  if (PLATFORM_TYPES.has(v)) return "job";
+  if (v === "job") return "job";
+  if (v === "business_service") return "business_service";
   return "invalid";
 }
 
@@ -194,6 +194,7 @@ export function validateSearchBody(input) {
   }
 
   const location = trimStr(src.location, MAX_LOCATION) || null;
+  const category = trimStr(src.category, MAX_CATEGORY) || null;
   const employmentType = trimStr(src.employmentType, MAX_EMPLOYMENT) || null;
   const workStyle = normalizeWorkStyle(src.workStyle);
 
@@ -214,6 +215,7 @@ export function validateSearchBody(input) {
         type: null,
         query,
         location,
+        category: null,
         dateFrom,
         dateTo,
         priceMin,
@@ -230,11 +232,11 @@ export function validateSearchBody(input) {
   if (typeRaw === "invalid") {
     return { ok: false, code: "invalid_type", message: "Unsupported platform type" };
   }
-  if (typeRaw !== "job") {
+  if (typeRaw !== "job" && typeRaw !== "business_service") {
     return {
       ok: false,
       code: "unsupported_type",
-      message: "Only type=job is supported for platform",
+      message: "Only type=job|business_service is supported for platform",
     };
   }
 
@@ -243,15 +245,16 @@ export function validateSearchBody(input) {
     value: {
       action,
       vertical: "platform",
-      type: "job",
+      type: typeRaw,
       query,
       location,
+      category: typeRaw === "business_service" ? category : null,
       dateFrom,
       dateTo,
       priceMin,
       priceMax,
-      employmentType,
-      workStyle,
+      employmentType: typeRaw === "job" ? employmentType : null,
+      workStyle: typeRaw === "job" ? workStyle : null,
       sort,
       limit,
     },
@@ -263,5 +266,7 @@ export function assertSafeDetailUrl(url) {
   if (!u) return false;
   if (/^https?:/i.test(u) || u.startsWith("//") || /^javascript:/i.test(u)) return false;
   if (u.includes("..")) return false;
-  return /^(detail-product\.html|detail-shop-product\.html|detail-job\.html)(\?|$)/i.test(u);
+  return /^(detail-product\.html|detail-shop-product\.html|detail-job\.html|detail-business-service\.html)(\?|$)/i.test(
+    u
+  );
 }

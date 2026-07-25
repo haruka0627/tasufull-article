@@ -15,9 +15,10 @@
     "availability",
     "recent",
   ]);
-  const PLATFORM_TYPES = new Set(["job"]);
+  const PLATFORM_TYPES = new Set(["job", "business_service"]);
   const MAX_EMPLOYMENT = 40;
   const MAX_WORK_STYLE = 40;
+  const MAX_CATEGORY = 64;
 
   const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
   const MAX_QUERY = 300;
@@ -133,13 +134,16 @@
   function normalizePlatformType(raw) {
     if (raw == null || raw === "") return null;
     const v = String(raw).trim().toLowerCase();
-    if (PLATFORM_TYPES.has(v)) return "job";
+    if (v === "job") return "job";
+    if (v === "business_service") return "business_service";
     return null;
   }
 
   function intentToType(intent) {
     const i = String(intent || "");
     if (i === "job_search") return "job";
+    // Phase 3 wave 1: service_request only (not repair/delivery)
+    if (i === "service_request") return "business_service";
     return null;
   }
 
@@ -172,23 +176,19 @@
     let vertical = normalizeVertical(src.vertical);
     let type = normalizePlatformType(src.type);
 
-    // Platform Phase 2: only job. Soft-drop unsupported platform types on client.
-    if (vertical === "platform" && type !== "job") {
-      if (src.type != null && String(src.type).trim() && type == null) {
-        type = null;
-        vertical = null;
-      } else if (!type) {
-        type = null;
-      }
-    }
     if (vertical === "marketplace") {
       type = null;
     }
-    if (vertical === "platform" && type === "job") {
-      /* ok */
-    } else if (vertical === "platform") {
-      vertical = null;
-      type = null;
+    if (vertical === "platform") {
+      if (type !== "job" && type !== "business_service") {
+        if (src.type != null && String(src.type).trim()) {
+          vertical = null;
+          type = null;
+        } else {
+          vertical = null;
+          type = null;
+        }
+      }
     }
 
     const value = {
@@ -200,6 +200,10 @@
         const loc = trimStr(src.location, MAX_LOCATION);
         return loc || null;
       })(),
+      category:
+        vertical === "platform" && type === "business_service"
+          ? trimStr(src.category, MAX_CATEGORY) || null
+          : null,
       dateFrom: normalizeDate(src.dateFrom),
       dateTo: normalizeDate(src.dateTo),
       priceMin,
@@ -210,9 +214,12 @@
       missingRequiredFields: normalizeMissing(src.missingRequiredFields),
     };
 
-    if (value.vertical !== "platform") {
+    if (value.type !== "job") {
       value.employmentType = null;
       value.workStyle = null;
+    }
+    if (value.type !== "business_service") {
+      value.category = null;
     }
 
     if (value.dateFrom && value.dateTo && value.dateFrom > value.dateTo) {
@@ -287,7 +294,8 @@
     const type =
       normalizePlatformType(opts.type) ||
       intentToType(intent) ||
-      (vertical === "platform" && intent === "job_search" ? "job" : null);
+      (intent === "job_search" ? "job" : null) ||
+      (intent === "service_request" ? "business_service" : null);
 
     const action = intentToAction(intent, {
       ...hints,
@@ -311,6 +319,9 @@
       else if (/出社|オフィス/.test(text)) workStyle = "onsite";
     }
 
+    const category =
+      trimStr(opts.category || hints.category || parsed?.category || "", MAX_CATEGORY) || null;
+
     const missingRequiredFields = [];
     if (action === "search" && vertical === "marketplace") {
       const stripped = keyword
@@ -325,15 +336,16 @@
     return validate({
       action,
       vertical,
-      type: vertical === "platform" ? type || "job" : null,
+      type: type || null,
       query: keyword,
       location,
+      category,
       dateFrom: opts.dateFrom ?? hints.dateFrom ?? null,
       dateTo: opts.dateTo ?? hints.dateTo ?? null,
       priceMin,
       priceMax,
-      employmentType: vertical === "platform" ? employmentType : null,
-      workStyle: vertical === "platform" ? workStyle : null,
+      employmentType: type === "job" ? employmentType : null,
+      workStyle: type === "job" ? workStyle : null,
       sort: parsed?.sort || opts.sort || "relevance",
       missingRequiredFields,
     });
@@ -346,6 +358,7 @@
       type: null,
       query: "",
       location: null,
+      category: null,
       dateFrom: null,
       dateTo: null,
       priceMin: null,

@@ -1,9 +1,8 @@
 /**
  * TASFUL AI catalog search — request schema (Zod 非依存)
- * クライアント ai-tasful-search-schema.js と意味を揃え、サーバー側をより厳格にする。
- *
  * Phase 1: marketplace
- * Phase 2: platform + type=job only
+ * Phase 2: platform + type=job
+ * Phase 3: platform + type=business_service
  */
 
 export const MAX_QUERY = 300;
@@ -12,10 +11,11 @@ export const MAX_BODY_BYTES = 8 * 1024;
 export const MAX_LIMIT = 5;
 export const MAX_EMPLOYMENT = 40;
 export const MAX_WORK_STYLE = 40;
+export const MAX_CATEGORY = 64;
 
 const ACTIONS = new Set(["search", "compare", "history_lookup", "none"]);
 const VERTICALS = new Set(["marketplace", "platform", "builder", "all"]);
-const PLATFORM_TYPES = new Set(["job"]);
+const PLATFORM_TYPES = new Set(["job", "business_service"]);
 const SORTS = new Set([
   "relevance",
   "price_asc",
@@ -27,12 +27,15 @@ const SORTS = new Set([
 const FORBIDDEN_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
+export type PlatformType = "job" | "business_service";
+
 export type SearchIntent = {
   action: "search" | "compare" | "history_lookup" | "none";
   vertical: "marketplace" | "platform";
-  type: "job" | null;
+  type: PlatformType | null;
   query: string;
   location: string | null;
+  category: string | null;
   dateFrom: string | null;
   dateTo: string | null;
   priceMin: number | null;
@@ -140,10 +143,11 @@ function normalizeVertical(raw: unknown): SearchIntent["vertical"] | "invalid" |
   return "invalid";
 }
 
-function normalizePlatformType(raw: unknown): "job" | "invalid" | null {
+function normalizePlatformType(raw: unknown): PlatformType | "invalid" | null {
   if (raw == null || raw === "") return null;
   const v = String(raw).trim().toLowerCase();
-  if (PLATFORM_TYPES.has(v)) return "job";
+  if (v === "job") return "job";
+  if (v === "business_service") return "business_service";
   return "invalid";
 }
 
@@ -242,6 +246,7 @@ export function validateSearchBody(input: unknown): SchemaResult {
   }
 
   const location = trimStr(src.location, MAX_LOCATION) || null;
+  const category = trimStr(src.category, MAX_CATEGORY) || null;
   const employmentType = trimStr(src.employmentType, MAX_EMPLOYMENT) || null;
   const workStyle = normalizeWorkStyle(src.workStyle);
 
@@ -254,7 +259,6 @@ export function validateSearchBody(input: unknown): SchemaResult {
   }
 
   if (verticalRaw === "marketplace") {
-    // Marketplace ignores type / employment / workStyle (Phase 1 compatible).
     return {
       ok: true,
       value: {
@@ -263,6 +267,7 @@ export function validateSearchBody(input: unknown): SchemaResult {
         type: null,
         query,
         location,
+        category: null,
         dateFrom,
         dateTo,
         priceMin,
@@ -275,16 +280,15 @@ export function validateSearchBody(input: unknown): SchemaResult {
     };
   }
 
-  // platform — Phase 2: job only
   const typeRaw = normalizePlatformType(src.type);
   if (typeRaw === "invalid") {
     return { ok: false, code: "invalid_type", message: "Unsupported platform type" };
   }
-  if (typeRaw !== "job") {
+  if (typeRaw !== "job" && typeRaw !== "business_service") {
     return {
       ok: false,
       code: "unsupported_type",
-      message: "Only type=job is supported for platform",
+      message: "Only type=job|business_service is supported for platform",
     };
   }
 
@@ -293,15 +297,16 @@ export function validateSearchBody(input: unknown): SchemaResult {
     value: {
       action,
       vertical: "platform",
-      type: "job",
+      type: typeRaw,
       query,
       location,
+      category: typeRaw === "business_service" ? category : null,
       dateFrom,
       dateTo,
       priceMin,
       priceMax,
-      employmentType,
-      workStyle,
+      employmentType: typeRaw === "job" ? employmentType : null,
+      workStyle: typeRaw === "job" ? workStyle : null,
       sort,
       limit,
     },

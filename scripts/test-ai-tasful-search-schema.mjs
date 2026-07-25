@@ -142,6 +142,40 @@ function main() {
 
   const service = Intent.classifyIntent("エアコン掃除できる業者ある？");
   assert("intent service_request", service.intent === "service_request");
+  const serviceSchema = Schema.fromUserText("東京の清掃業者", { intent: "service_request" });
+  assert(
+    "fromUserText platform business_service",
+    serviceSchema.ok &&
+      serviceSchema.value.vertical === "platform" &&
+      serviceSchema.value.type === "business_service" &&
+      serviceSchema.value.action === "search",
+    JSON.stringify(serviceSchema.value)
+  );
+  assert(
+    "intentToType service_request",
+    Schema.intentToType("service_request") === "business_service"
+  );
+  assert("intentToType repair_request stays unmapped", Schema.intentToType("repair_request") == null);
+  assert("intentToType delivery_request stays unmapped", Schema.intentToType("delivery_request") == null);
+  assert("intentToType job_search", Schema.intentToType("job_search") === "job");
+  assert("intentToType product_search", Schema.intentToType("product_search") == null);
+
+  const bizValidate = Schema.validate({
+    action: "search",
+    vertical: "platform",
+    type: "business_service",
+    query: "東京の清掃業者",
+    location: "東京",
+    category: "cleaning",
+    sort: "relevance",
+  });
+  assert(
+    "schema platform business_service",
+    bizValidate.ok &&
+      bizValidate.value.type === "business_service" &&
+      bizValidate.value.category === "cleaning",
+    JSON.stringify(bizValidate.value)
+  );
 
   const negatives = [
     ["バグの原因を探して", "none"],
@@ -155,6 +189,8 @@ function main() {
     ["求人ページのバグを探して", "none"],
     ["サービス説明を書いて", "none"],
     ["この文章から募集条件を抽出して", "none"],
+    ["業者の探し方を教えて", "none"],
+    ["業務サービスのコードを直して", "none"],
   ];
   for (const [text, expect] of negatives) {
     const r = Intent.classifyIntent(text);
@@ -164,6 +200,19 @@ function main() {
       Intent.shouldUseCrossSearch("cross-matching", text) === false
     );
   }
+
+  // Phase 1 / Phase 2 regressions
+  const productReg = Intent.classifyIntent("こういう商品ある？ 古着 ジャケット");
+  assert("regression product_search", productReg.intent === "product_search");
+  const productSchemaReg = Schema.fromUserText("こういう商品ある？ 古着 ジャケット", {
+    intent: "product_search",
+  });
+  assert(
+    "regression marketplace schema",
+    productSchemaReg.ok &&
+      productSchemaReg.value.vertical === "marketplace" &&
+      productSchemaReg.value.type == null
+  );
 
   const jobIntent = Intent.classifyIntent("求人探したい 動画編集");
   assert("intent job_search", jobIntent.intent === "job_search");
@@ -176,6 +225,7 @@ function main() {
       jobSchema.value.action === "search",
     JSON.stringify(jobSchema.value)
   );
+  assert("regression job_search intent", jobIntent.intent === "job_search");
 
   assert(
     "探して alone → none",

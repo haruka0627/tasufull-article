@@ -159,6 +159,79 @@ async function main() {
     if (hasJobFetch) pass("fetchJobsViaEdge exported");
     else fail("fetchJobsViaEdge exported");
 
+    const hasBizFetch = await page.evaluate(
+      () => typeof window.TasuAiSearch?.fetchBusinessServicesViaEdge === "function"
+    );
+    if (hasBizFetch) pass("fetchBusinessServicesViaEdge exported");
+    else fail("fetchBusinessServicesViaEdge exported");
+
+    // Phase 2 job + Phase 3 business_service smoke (fallback off)
+    const platformSmoke = await page.evaluate(async () => {
+      window.__TASU_AI_TASFUL_SEARCH_CLIENT_FALLBACK__ = false;
+      const job = await window.TasuAiSearch.queryJobItems({
+        userText: "求人探したい 動画編集",
+        messages: [],
+        intentHints: {},
+      });
+      const biz = await window.TasuAiSearch.queryBusinessItems({
+        userText: "東京の清掃業者",
+        messages: [],
+        intentHints: { categoryId: "cleaning" },
+        searchIntentSchema: {
+          action: "search",
+          vertical: "platform",
+          type: "business_service",
+          query: "東京の清掃業者",
+          location: "東京",
+          category: "cleaning",
+          sort: "relevance",
+        },
+      });
+      return {
+        jobSource: job?.source || "",
+        jobError: job?.error || "",
+        jobCount: (job?.items || []).length,
+        bizSource: biz?.source || "",
+        bizError: biz?.error || "",
+        bizCount: (biz?.items || []).length,
+        bizShopMix: (biz?.items || []).some(
+          (i) =>
+            String(i.detailUrl || "").includes("detail-shop-store") ||
+            i.type === "shop_store" ||
+            i.kind === "shop_store"
+        ),
+      };
+    });
+
+    if (
+      platformSmoke.jobSource === "edge" ||
+      platformSmoke.jobError === "search_unavailable" ||
+      platformSmoke.jobError === "invalid_search"
+    ) {
+      pass(
+        "job edge path (no silent client)",
+        `source=${platformSmoke.jobSource || "err:" + platformSmoke.jobError}`
+      );
+    } else {
+      fail("job edge path (no silent client)", JSON.stringify(platformSmoke));
+    }
+
+    if (
+      platformSmoke.bizSource === "edge" ||
+      platformSmoke.bizError === "search_unavailable" ||
+      platformSmoke.bizError === "invalid_search"
+    ) {
+      pass(
+        "business_service edge path (no silent client)",
+        `source=${platformSmoke.bizSource || "err:" + platformSmoke.bizError} count=${platformSmoke.bizCount}`
+      );
+    } else {
+      fail("business_service edge path (no silent client)", JSON.stringify(platformSmoke));
+    }
+
+    if (!platformSmoke.bizShopMix) pass("business_service no shop_store mix");
+    else fail("business_service no shop_store mix");
+
     if (wiring.endpointUrl.includes("/functions/v1/ai-tasful-search")) {
       pass("endpoint resolves", wiring.endpointUrl.replace(/https?:\/\/[^/]+/, "<host>"));
     } else {

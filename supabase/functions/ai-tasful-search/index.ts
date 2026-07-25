@@ -2,6 +2,7 @@
  * TASFUL AI — catalog search
  * Phase 1: Marketplace products
  * Phase 2: Platform jobs (listings.listing_type=job)
+ * Phase 3: Platform business_service (non-shop_store business_listings)
  * - No AI Provider / no service role / no Talk / no fee-pay
  */
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
@@ -21,11 +22,17 @@ const PRODUCT_SELECT =
 /** Public job fields only — never phone / contact_email / form_data / user_id */
 const JOB_SELECT =
   "id,title,description,tags,image_url,thumbnail_url,category,subcategory,publish_status,listing_type,job_location,work_style,employment_type,salary_type,salary_amount,company_name,created_at";
+/** Public business service fields — never phone / form_data / user_id / payment */
+const BUSINESS_SERVICE_SELECT =
+  "id,company_name,title,description,business_category,business_subcategory,service_area,tags,publish_status,rating,review_count,status,created_at";
+
+const SHOP_CATEGORIES = new Set(["shop_store", "store_field_service"]);
 
 const DETAIL_ALLOW = new Set([
   "detail-product.html",
   "detail-shop-product.html",
   "detail-job.html",
+  "detail-business-service.html",
 ]);
 
 type CatalogResult = {
@@ -459,6 +466,135 @@ async function searchPlatformJobs(
   };
 }
 
+function statusAvailabilityLabel(status: unknown): string {
+  const s = String(status || "").toLowerCase();
+  if (s === "available") return "受付中";
+  if (s === "busy") return "混雑";
+  if (s === "closed") return "受付停止";
+  return "";
+}
+
+function businessServiceToResult(
+  row: Record<string, unknown>,
+  intent: SearchIntent,
+): CatalogResult | null {
+  if (String(row.publish_status || "") !== "public") return null;
+  const cat = String(row.business_category || "").trim();
+  if (!cat || SHOP_CATEGORIES.has(cat)) return null;
+
+  const id = String(row.id || "").trim();
+  const title = String(row.company_name || row.title || "").trim();
+  if (!id || !title) return null;
+
+  if (intent.category) {
+    const want = intent.category.toLowerCase();
+    const hayCat = `${cat} ${row.business_subcategory || ""}`.toLowerCase();
+    if (!hayCat.includes(want) && want !== cat.toLowerCase()) {
+      return null;
+    }
+  }
+
+  const summary = String(row.description || "")
+    .trim()
+    .slice(0, 200);
+  const locationLabel = String(row.service_area || "").trim();
+  const detailUrl = buildDetailUrl("detail-business-service.html", { id }, intent.query);
+  if (!detailUrl) return null;
+
+  const hay = [
+    title,
+    row.company_name,
+    row.title,
+    summary,
+    row.tags,
+    cat,
+    row.business_subcategory,
+    locationLabel,
+  ]
+    .join(" ")
+    .toLowerCase();
+  const score = scoreHay(hay, intent);
+  if (tokens(intent.query).length && score <= 0) return null;
+
+  const rating =
+    row.rating != null && Number.isFinite(Number(row.rating)) && Number(row.rating) > 0
+      ? Number(row.rating)
+      : undefined;
+  const reviewCount =
+    row.review_count != null &&
+    Number.isFinite(Number(row.review_count)) &&
+    Number(row.review_count) > 0
+      ? Number(row.review_count)
+      : undefined;
+
+  const badges: string[] = [];
+  if (cat) badges.push(cat.slice(0, 24));
+
+  return omitEmpty({
+    id,
+    vertical: "platform" as const,
+    type: "business_service",
+    kind: "business_service",
+    title: title.slice(0, 120),
+    summary: summary || undefined,
+    priceLabel: undefined,
+    rating,
+    reviewCount,
+    locationLabel: locationLabel || undefined,
+    availabilityLabel: statusAvailabilityLabel(row.status) || undefined,
+    detailUrl,
+    primaryActionLabel: "見積相談へ進む",
+    badges: badges.length ? badges.slice(0, 3) : undefined,
+    _priceYen: null,
+    _score: score,
+  }) as CatalogResult;
+}
+
+async function searchPlatformBusinessServices(
+  client: SupabaseClient,
+  intent: SearchIntent,
+): Promise<{ results: CatalogResult[]; truncated: boolean }> {
+  const fetchLimit = 40;
+  const results: CatalogResult[] = [];
+
+  let q = client
+    .from("business_listings")
+    .select(BUSINESS_SERVICE_SELECT)
+    .eq("publish_status", "public")
+    .not("business_category", "in", "(shop_store,store_field_service)")
+    .order("created_at", { ascending: false })
+    .limit(fetchLimit);
+
+  if (intent.category) {
+    q = q.eq("business_category", intent.category);
+  }
+
+  const res = await q;
+  if (!res.error && Array.isArray(res.data)) {
+    for (const row of res.data) {
+      const item = businessServiceToResult(row as Record<string, unknown>, intent);
+      if (item) results.push(item);
+    }
+  }
+
+  const sorted = sortResults(results, intent);
+  const truncated = sorted.length > intent.limit;
+  return {
+    results: sorted.slice(0, intent.limit),
+    truncated,
+  };
+}
+
+async function searchPlatform(
+  client: SupabaseClient,
+  intent: SearchIntent,
+): Promise<{ results: CatalogResult[]; truncated: boolean }> {
+  if (intent.type === "business_service") {
+    return searchPlatformBusinessServices(client, intent);
+  }
+  return searchPlatformJobs(client, intent);
+}
+
 async function searchMarketplace(
   client: SupabaseClient,
   intent: SearchIntent,
@@ -606,7 +742,7 @@ export async function handler(req: Request): Promise<Response> {
   try {
     const searched =
       intent.vertical === "platform"
-        ? await searchPlatformJobs(client, intent)
+        ? await searchPlatform(client, intent)
         : await searchMarketplace(client, intent);
     return ok(
       {

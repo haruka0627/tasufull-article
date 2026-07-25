@@ -208,6 +208,39 @@ function runSchemaTests() {
     }).ok === false
   );
   assert(
+    "schema platform business_service ok",
+    validateSearchBody({
+      action: "search",
+      vertical: "platform",
+      type: "business_service",
+      query: "東京の清掃業者",
+      location: "東京",
+      category: "cleaning",
+      sort: "relevance",
+      limit: 5,
+    }).ok === true &&
+      validateSearchBody({
+        action: "search",
+        vertical: "platform",
+        type: "business_service",
+        query: "東京の清掃業者",
+        location: "東京",
+        category: "cleaning",
+        sort: "relevance",
+        limit: 5,
+      }).value.type === "business_service"
+  );
+  assert(
+    "schema platform worker unsupported",
+    validateSearchBody({
+      action: "search",
+      vertical: "platform",
+      type: "worker",
+      query: "x",
+      sort: "relevance",
+    }).ok === false
+  );
+  assert(
     "schema history_lookup unsupported",
     validateSearchBody({
       action: "history_lookup",
@@ -289,6 +322,14 @@ function runSchemaTests() {
     assertSafeDetailUrl("detail-job.html?id=abc&from=ai") === true
   );
   assert(
+    "detail url allow business_service",
+    assertSafeDetailUrl("detail-business-service.html?id=abc&from=ai") === true
+  );
+  assert(
+    "detail url reject shop_store detail",
+    assertSafeDetailUrl("detail-shop-store.html?id=abc") === false
+  );
+  assert(
     "detail url reject https",
     assertSafeDetailUrl("https://evil.example/x") === false
   );
@@ -326,7 +367,14 @@ function assertSafePublicPayload(data, label) {
       );
       assert(
         `${label} detail page allowlist`,
-        u.startsWith("detail-product.html") || u.startsWith("detail-shop-product.html")
+        u.startsWith("detail-product.html") ||
+          u.startsWith("detail-shop-product.html") ||
+          u.startsWith("detail-job.html") ||
+          u.startsWith("detail-business-service.html")
+      );
+      assert(
+        `${label} not shop_store detail`,
+        !u.startsWith("detail-shop-store.html")
       );
     }
   }
@@ -445,6 +493,45 @@ async function runLiveTests(cfg) {
     sort: "relevance",
   });
   assert("platform skill → 400", platformSkill.status === 400);
+
+  const platformBiz = await postEdge(base, anonKey, {
+    action: "search",
+    vertical: "platform",
+    type: "business_service",
+    query: "東京の清掃業者",
+    location: "東京",
+    category: "cleaning",
+    sort: "relevance",
+    limit: 5,
+  });
+  assert(
+    "POST platform business_service shape",
+    platformBiz.status === 200 &&
+      platformBiz.data?.ok === true &&
+      Array.isArray(platformBiz.data.results),
+    `status=${platformBiz.status}`
+  );
+  if (platformBiz.data?.ok) {
+    assert("platform business_service count ≤ 5", platformBiz.data.results.length <= 5);
+    assertSafePublicPayload(platformBiz.data, "business_service");
+    const typesOk = platformBiz.data.results.every(
+      (r) =>
+        r.type === "business_service" &&
+        r.kind === "business_service" &&
+        r.vertical === "platform" &&
+        String(r.detailUrl || "").startsWith("detail-business-service.html")
+    );
+    assert(
+      "platform business_service types",
+      typesOk || platformBiz.data.results.length === 0
+    );
+    if (platformBiz.data.results.length === 0) {
+      pass(
+        "0-result business_service",
+        "no public non-shop business_listings in Staging (acceptable)"
+      );
+    }
+  }
 
   const history = await postEdge(base, anonKey, {
     action: "history_lookup",
