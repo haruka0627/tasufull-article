@@ -824,18 +824,54 @@
       ),
     ];
 
-    return [...boardRows, ...adminOpsRouteRows, ...adminOpsRows].map((row) =>
-      withTalkDelivery({
+    function attachLegacyIds(row) {
+      const href = String(row.href || "");
+      let legacyProjectId = OPS_PROJECT_ID;
+      let threadId = OPS_THREAD_ID;
+      if (row.audienceScope === "builder_board") {
+        if (href.includes(BOARD_PUBLIC_JOB_ID)) legacyProjectId = BOARD_PUBLIC_JOB_ID;
+        else if (href.includes(BOARD_PUBLIC_PROJECT_ID)) legacyProjectId = BOARD_PUBLIC_PROJECT_ID;
+        else legacyProjectId = BOARD_PROJECT_ID;
+        threadId = href.includes("thread_id=") ? BOARD_THREAD_ID : "";
+      } else if (href.includes("mvp-thread") || href.includes(OPS_THREAD_ID)) {
+        legacyProjectId = OPS_PROJECT_ID;
+        threadId = OPS_THREAD_ID;
+      } else if (href.includes("partner-assignment") || href.includes(OPS_PROJECT_ID)) {
+        legacyProjectId = OPS_PROJECT_ID;
+        threadId = OPS_THREAD_ID;
+      }
+      return {
         ...row,
-        category: CATEGORY,
-        serviceType: "builder",
-        type: "builder",
-        targetUrl: row.href,
-        source: SOURCE,
-        builderMasterVersion: VERSION,
-        readAt: null,
-      })
+        projectId: row.projectId || legacyProjectId,
+        legacyProjectId: row.legacyProjectId || legacyProjectId,
+        threadId: row.threadId || threadId,
+      };
+    }
+
+    const rows = [...boardRows, ...adminOpsRouteRows, ...adminOpsRows].map((row) =>
+      withTalkDelivery(
+        attachLegacyIds({
+          ...row,
+          category: CATEGORY,
+          serviceType: "builder",
+          type: "builder",
+          targetUrl: row.href,
+          source: SOURCE,
+          builderMasterVersion: VERSION,
+          readAt: null,
+        })
+      )
     );
+
+    const Dispatch = global.TasuBuilderNotifyDispatch;
+    if (Dispatch && typeof Dispatch.enrichMasterRows === "function") {
+      return Dispatch.enrichMasterRows(rows);
+    }
+    const MapApi = global.TasuBuilderProjectIdMap;
+    if (MapApi && typeof MapApi.enrichNotifyPayload === "function") {
+      return rows.map((row) => MapApi.enrichNotifyPayload(row));
+    }
+    return rows;
   }
 
   const BUILDER_OPS_FLOW_IDS = new Set(BUILDER_OPS_FLOW_CASES.map((c) => c.id));
