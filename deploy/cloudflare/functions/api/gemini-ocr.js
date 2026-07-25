@@ -4,6 +4,7 @@
  * Secret: GEMINI_API_KEY（クライアントへ渡さない）
  * Auth: Authorization Bearer → Supabase `/auth/v1/user` で検証（全 surface）
  * Origin: same-origin + production / preview / local allowlist
+ * IP rate limit: CF-Connecting-IP · HMAC bucket · atomic RPC（auth / quota / Gemini より前）
  * Payload: MIME · base64 · size · magic bytes（guard / Gemini より前）
  * Upstream: fixed timeout + sanitized errors
  * Quota: upstream 実行前に atomic 予約 → 成功のみ確定 · 失敗系は解放
@@ -16,6 +17,7 @@ import {
   normalizeOcrSurface,
   releaseCfOcrReservation,
 } from "../_shared/ai-usage-guard.mjs";
+import { enforceOcrIpRateLimit } from "../_shared/ocr-ip-rate-limit.mjs";
 import { validateOcrPayload } from "../_shared/ocr-payload-validation.mjs";
 
 const PRODUCTION_ORIGINS = new Set([
@@ -208,6 +210,10 @@ export async function onRequest(context) {
   const origin = resolveRequestOrigin(request);
   if (!origin) return originForbidden();
   if (request.method === "OPTIONS") return handleOptions(origin);
+
+  // IP rate limit — auth / payload / quota / Gemini より前（DoS · burst 抑制）
+  const rate = await enforceOcrIpRateLimit(request, env, origin);
+  if (rate.blocked) return withCors(rate.blocked, origin);
 
   const auth = await requireAuthenticatedUser(request, env, origin);
   if (auth instanceof Response) return auth;

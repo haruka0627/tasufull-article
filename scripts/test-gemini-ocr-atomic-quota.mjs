@@ -56,6 +56,7 @@ function env(extra = {}) {
     SUPABASE_URL: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
     SUPABASE_ANON_KEY: "test-anon-key",
     SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
+    OCR_IP_RATE_HMAC_SECRET: "test-ocr-ip-hmac-secret-32b",
     ...extra,
   };
 }
@@ -70,13 +71,14 @@ function body(extra = {}) {
   };
 }
 
-function request(requestBody = body(), token = "token-user-a") {
+function request(requestBody = body(), token = "token-user-a", ip = "203.0.113.10") {
   return new Request(`${ORIGIN}/api/gemini-ocr`, {
     method: "POST",
     headers: {
       Origin: ORIGIN,
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
+      "CF-Connecting-IP": ip,
     },
     body: JSON.stringify(requestBody),
   });
@@ -243,6 +245,16 @@ function installFetchMock(db, options = {}) {
         ok: true,
         status: 200,
         json: async () => ({ ok: true, allowed: current < payload.p_limit, used: current }),
+      };
+    }
+
+    if (value.includes("/rpc/consume_ocr_ip_rate_limit")) {
+      calls.rate = calls.rate || [];
+      calls.rate.push({ url: value, init, payload });
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, count: 1, limit: 10, remaining: 9 }),
       };
     }
 

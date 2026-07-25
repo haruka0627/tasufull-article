@@ -46,6 +46,7 @@ function envBase(extra = {}) {
     SUPABASE_URL: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
     SUPABASE_ANON_KEY: "test-anon-key",
     SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
+    OCR_IP_RATE_HMAC_SECRET: "test-ocr-ip-hmac-secret-32b",
     ...extra,
   };
 }
@@ -56,6 +57,7 @@ function makeRequest(headers, body) {
     headers: {
       "Content-Type": "application/json",
       Origin: FUNCTION_ORIGIN,
+      "CF-Connecting-IP": "203.0.113.10",
       ...(headers || {}),
     },
     body: JSON.stringify(
@@ -120,6 +122,13 @@ function installFetchMock(opts = {}) {
     }
     // guard / rest
     guardRestCalls.push({ url: u, init });
+    if (u.includes("/rest/v1/rpc/consume_ocr_ip_rate_limit")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, count: 1, limit: 10, remaining: 9 }),
+      };
+    }
     if (u.includes("/rest/v1/rpc/reserve_ai_workspace_quota")) {
       return {
         ok: true,

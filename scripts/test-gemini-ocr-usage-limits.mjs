@@ -48,6 +48,7 @@ function envBase(extra = {}) {
     SUPABASE_URL: STAGING_URL,
     SUPABASE_ANON_KEY: "test-anon-key",
     SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
+    OCR_IP_RATE_HMAC_SECRET: "test-ocr-ip-hmac-secret-32b",
     ...extra,
   };
 }
@@ -68,6 +69,7 @@ function makeRequest(headers, body) {
     headers: {
       "Content-Type": "application/json",
       Origin: FUNCTION_ORIGIN,
+      "CF-Connecting-IP": "203.0.113.10",
       ...(headers || {}),
     },
     body: JSON.stringify(body === undefined ? defaultBody() : body),
@@ -148,6 +150,13 @@ function installFetchMock(opts = {}) {
       }
       const rows = opts.planRows === undefined ? [] : opts.planRows;
       return { ok: status >= 200 && status < 300, status, json: async () => rows };
+    }
+    if (u.includes("/rest/v1/rpc/consume_ocr_ip_rate_limit")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, count: 1, limit: 10, remaining: 9 }),
+      };
     }
     if (u.includes("/rest/v1/rpc/check_ai_workspace_quota")) {
       checkCalls.push({ url: u, init: { ...init, body: init.body } });
@@ -375,7 +384,7 @@ const authH = { Authorization: "Bearer good-token" };
     {},
     { SUPABASE_SERVICE_ROLE_KEY: "" }
   );
-  assert("25/27 service key missing → 503", res.status === 503 && json?.error === "usage_guard_unavailable");
+  assert("25/27 service key missing → 503", res.status === 503 && json?.error === "rate_limit_unavailable");
   assert("25 Gemini 0", mock.geminiCalls.length === 0);
 }
 {
@@ -623,7 +632,7 @@ const authH = { Authorization: "Bearer good-token" };
       },
     });
     const json2 = await res2.json();
-    assert("54 env missing service key", res2.status === 503 && json2.error === "usage_guard_unavailable");
+    assert("54 env missing service key", res2.status === 503 && json2.error === "rate_limit_unavailable");
     assert("54 Gemini 0", mock2.geminiCalls.length === 0);
   } finally {
     mock2.restore();

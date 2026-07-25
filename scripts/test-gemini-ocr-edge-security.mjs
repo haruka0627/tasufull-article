@@ -19,7 +19,10 @@ const DEPLOY_PREVIEW = "https://deadbeef.tasufull-article.pages.dev";
 const LOCAL = "http://127.0.0.1:8788";
 const PNG =
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==";
-const authHeader = { Authorization: "Bearer test-token" };
+const authHeader = {
+  Authorization: "Bearer test-token",
+  "CF-Connecting-IP": "203.0.113.10",
+};
 const results = [];
 
 function assert(name, condition, detail = "") {
@@ -38,6 +41,7 @@ function env(extra = {}) {
     SUPABASE_URL: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
     SUPABASE_ANON_KEY: "test-anon-key",
     SUPABASE_SERVICE_ROLE_KEY: "test-service-role",
+    OCR_IP_RATE_HMAC_SECRET: "test-ocr-ip-hmac-secret-32b",
     ...extra,
   };
 }
@@ -78,6 +82,7 @@ function installFetchMock(options = {}) {
     consume: [],
     commit: [],
     release: [],
+    rate: [],
     gemini: [],
   };
   const originalFetch = globalThis.fetch;
@@ -112,6 +117,15 @@ function installFetchMock(options = {}) {
           allowed: options.quotaAllowed !== false,
           used: options.quotaAllowed === false ? 5 : 0,
         }),
+      };
+    }
+    if (value.includes("/rpc/consume_ocr_ip_rate_limit")) {
+      calls.rate = calls.rate || [];
+      calls.rate.push({ url: value, init });
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({ ok: true, count: 1, limit: 10, remaining: 9 }),
       };
     }
     if (value.includes("/rpc/reserve_ai_workspace_quota")) {
@@ -325,7 +339,9 @@ for (const [name, origin] of [
   assert("invalid Origin 403", response.status === 403);
 }
 {
-  const { response, json, calls } = await invoke(request({ headers: {} }));
+  const { response, json, calls } = await invoke(
+    request({ headers: { "CF-Connecting-IP": "203.0.113.10" } })
+  );
   assert("30 valid Origin auth failure", response.status === 401 && json?.error === "auth_required");
   assert("30 valid Origin auth failure CORS", response.headers.get("Access-Control-Allow-Origin") === PROD);
   assert("30 auth failure Gemini 0", calls.gemini.length === 0);
