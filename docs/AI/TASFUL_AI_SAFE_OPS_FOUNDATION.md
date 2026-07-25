@@ -1,7 +1,7 @@
 # TASFUL AI — 安全運用基盤（2026年8月予定）
 
-**Status:** **Future · 設計のみ** — 実装は正式展開前（2026-08 目標）  
-**最終更新:** 2026-07-05  
+**Status:** SAFE-05 / SAFE-06 / SAFE-07 / Phase 7 は**コード完了** · Staging 適用は別ゲート
+**最終更新:** 2026-07-26
 **関連:** [TASFUL_AI.md](./TASFUL_AI.md) · [SECRETARY_AI.md](./SECRETARY_AI.md) · [DECISIONS.md](../DECISIONS.md) AD-005 · AD-010 · AD-011
 
 ---
@@ -29,7 +29,7 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 | Gateway 契約 | 🔒 凍結 | `ai-model-gateway.js`（AD-005） |
 | 秘書 利用状況集計 | ✅ 部分 | [SECRETARY_AI.md](./SECRETARY_AI.md) |
 
-本基盤は **Voice 限定ではなく** Chat · OCR · Vision · Media 全 API 入口に横断適用する。
+本基盤は **Voice 限定ではなく** Chat · OCR · Vision · Media 全 API 入口に横断適用する。Phase 7 で Workspace の Search / TTS / Character Vision / Media に JWT・plan feature・quota を追加した（[report](../../reports/tasful-ai-core-phase7-guard-coverage-report.md)）。Voice Live と AI 秘書は Workspace scope 外のまま。
 
 ---
 
@@ -42,8 +42,8 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 | **SAFE-03** | Cloudflare Rate Limiting | Edge / CF |
 | **SAFE-04** | Bot 対策 | CF + アプリ |
 | **SAFE-05** | AI Usage Guard（実行前チェック統合） | Edge / RPC |
-| **SAFE-06** | AI 利用ログ | Supabase / Edge · **コード完了**（`ai_usage_events` · gemini/openai/claude-chat · OCR · routing metadata · **Phase 6: `openrouter` provider allowlist**）· Staging 適用は別ゲート · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) · [phase6 OpenRouter](../../reports/tasful-ai-core-phase6-openrouter-poc-report.md) |
-| **SAFE-07** | AI コスト集計 | Supabase · **コード完了**（query 時推定 · `ai_model_price_rates` + aggregate RPC · OpenRouter は provider 列準備済 · **公式単価未 seed**）· Staging 適用は別ゲート · [report](../../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
+| **SAFE-06** | AI 利用ログ | Supabase / Edge · **コード完了**（`ai_usage_events` · gemini/openai/claude-chat · OCR · routing metadata）· Staging 適用は別ゲート · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) · [phase3 Auto](../../reports/tasful-ai-core-phase3-auto-mode-report.md) |
+| **SAFE-07** | AI コスト集計 | Supabase · **コード完了**（query 時推定 · `ai_model_price_rates` + aggregate RPC）· Staging 適用は別ゲート · [report](../../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **SAFE-08** | Queue 化（非同期 · バースト吸収） | CF Queue / Worker |
 | **SAFE-09** | 同時実行数制限 | Edge / KV |
 | **SAFE-10** | ユーザー別利用制限 | RLS + Edge |

@@ -98,6 +98,8 @@ export async function enforceAiUsageGuard(input: {
   feature?: GuardFeatureKey;
   requireSurface?: boolean;
   edgeName?: string;
+  /** Explicit plan feature for edges whose quota bucket differs from entitlement. */
+  planFeature?: string;
 }): Promise<{ blocked: Response | null; status: WorkspaceQuotaStatus | null }> {
   const body = input.body || {};
   const displayFeature = String(input.feature || body.feature || "").trim() || undefined;
@@ -144,11 +146,11 @@ export async function enforceAiUsageGuard(input: {
     const policy = status.policy as PlanPolicy | undefined;
 
     if (policy) {
-      const edgeFeature = input.edgeName
+      const edgeFeature = input.planFeature || (input.edgeName
         ? featureForEdge(input.edgeName)
         : displayFeature === GUARD_FEATURE_OCR
           ? "ocr"
-          : "workspace_chat";
+          : "workspace_chat");
       if (edgeFeature && !isFeatureAllowedForPolicy(policy, edgeFeature)) {
         return {
           blocked: planDeniedResponse("plan_feature_denied", input.req, {
@@ -185,7 +187,18 @@ export async function enforceAiUsageGuard(input: {
     return { blocked: null, status };
   } catch (err) {
     console.error("[ai-usage-guard] enforce failed:", err);
-    return { blocked: null, status: null };
+    return {
+      blocked: jsonResponse(
+        { ok: false, error: "usage_guard_unavailable", reply: "" },
+        503,
+        input.req
+      ),
+      status: {
+        ok: false,
+        error: "usage_guard_unavailable",
+        feature: displayFeature || quotaFeature,
+      },
+    };
   }
 }
 
@@ -229,6 +242,53 @@ export async function enforceGuardOcrEntry(
     requireSurface: true,
     edgeName: "gemini-ocr",
   });
+}
+
+/**
+ * Non-chat Workspace feature entry. An omitted surface is normalized to the
+ * Workspace surface so new protected endpoints cannot silently bypass guard.
+ */
+export async function enforceGuardFeatureEntry(
+  req: Request,
+  body: GuardBody,
+  options: {
+    edgeName: string;
+    planFeature?: string;
+    quotaFeature?: GuardFeatureKey;
+    requireSurface?: boolean;
+  }
+): Promise<{ blocked: Response | null; status: WorkspaceQuotaStatus | null }> {
+  const normalized = {
+    ...body,
+    surface: String(body?.surface || "").trim() || WORKSPACE_SURFACE,
+  };
+  return enforceAiUsageGuard({
+    req,
+    body: normalized,
+    feature: options.quotaFeature,
+    requireSurface: options.requireSurface !== false,
+    edgeName: options.edgeName,
+    planFeature: options.planFeature,
+  });
+}
+
+/** Successful feature calls consume only the JWT-derived Workspace user quota. */
+export async function finalizeGuardFeatureConsume(
+  req: Request,
+  body: GuardBody,
+  quotaFeature: GuardFeatureKey
+): Promise<WorkspaceQuotaStatus | null> {
+  const actor = await resolveAuthenticatedWorkspaceUser(req, {
+    ...body,
+    surface: String(body?.surface || "").trim() || WORKSPACE_SURFACE,
+  });
+  if (!actor.ok) return null;
+  try {
+    return await consumeWorkspaceQuota({ userId: actor.userId, feature: quotaFeature });
+  } catch (err) {
+    console.error("[ai-usage-guard] feature consume failed:", err);
+    return null;
+  }
 }
 
 /** 成功後 consume（Chat） */

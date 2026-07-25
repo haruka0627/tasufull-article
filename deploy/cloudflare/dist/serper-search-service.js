@@ -31,6 +31,26 @@
     return Boolean(url && anonKey);
   }
 
+  async function resolveAccessToken() {
+    try {
+      var client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        var sessionRes = await client.auth.getSession();
+        var token = sessionRes?.data?.session?.access_token;
+        if (token) return String(token).trim();
+      }
+    } catch (_e) {
+      /* ignore */
+    }
+    var config = global.TASU_CHAT_SUPABASE_CONFIG || global.TASU_SUPABASE_CONFIG || {};
+    return String(
+      config?.auth?.access_token ||
+        config?.session?.access_token ||
+        global.TASU_SUPABASE_SESSION?.access_token ||
+        ""
+    ).trim();
+  }
+
   function normalizeResult(item) {
     return {
       title: String(item?.title || "").trim().slice(0, 300),
@@ -63,8 +83,12 @@
     }
 
     const { url, anonKey } = getEndpoint();
+    const accessToken = await resolveAccessToken();
     if (!url || !anonKey) {
       return { ok: false, query: q, results: [], provider: PROVIDER, message: "not_configured" };
+    }
+    if (!accessToken) {
+      return { ok: false, query: q, results: [], provider: PROVIDER, message: "auth_required" };
     }
 
     try {
@@ -72,10 +96,10 @@
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${anonKey}`,
+          Authorization: `Bearer ${accessToken}`,
           apikey: anonKey,
         },
-        body: JSON.stringify({ query: q, num }),
+        body: JSON.stringify({ query: q, num, surface: "ai-workspace" }),
       });
 
       let data;
@@ -144,6 +168,8 @@
     PROVIDER,
     DEFAULT_NUM,
     getEndpoint,
+    getAccessToken: resolveAccessToken,
+    resolveAccessToken,
     isConfigured,
     search,
     formatContextForAi,

@@ -58,6 +58,8 @@ if (disabledVideo.status === 200 && disabledVideo.data?.ok) {
   results.push({ name: "video_generate", status: disabledVideo.status, ok: true, mode: disabledVideo.data.mode });
 } else if (disabledVideo.status === 402) {
   check("video quota path", disabledVideo.data?.error === "quota_exceeded", "402");
+} else if (disabledVideo.status === 401 || disabledVideo.data?.error === "auth_required") {
+  check("video auth required without JWT", true, "401 auth_required");
 } else if (disabledVideo.status === 503 && disabledVideo.data?.error !== "media_gen_disabled") {
   check("video provider configured", false, disabledVideo.data?.error || "");
 }
@@ -70,7 +72,8 @@ const disabledMusic = await post("ai-workspace-music-generate", {
 });
 const musicOk =
   (disabledMusic.status === 503 && disabledMusic.data?.error === "media_gen_disabled") ||
-  (disabledMusic.status === 200 && disabledMusic.data?.ok);
+  (disabledMusic.status === 200 && disabledMusic.data?.ok) ||
+  (disabledMusic.status === 401 || disabledMusic.data?.error === "auth_required");
 check(
   "music edge response",
   musicOk,

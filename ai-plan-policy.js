@@ -43,6 +43,64 @@ const PLAN_ID_ALIASES = Object.freeze({
 const WORKSPACE_MODELS = Object.freeze(["gemini-flash", "gpt", "claude"]);
 
 /**
+ * Canonical plan features（実装済みのみ active · 未接続は FUTURE_FEATURES）
+ * openrouter_chat は Phase 6 PoC 専用 — production plan には付与しない
+ */
+const CANONICAL_FEATURES = Object.freeze([
+  "workspace_chat",
+  "gemini_chat",
+  "openai_chat",
+  "claude_chat",
+  "ocr",
+  "search",
+  "text_to_speech",
+  "image_analysis",
+  "openrouter_chat",
+]);
+
+/** 将来 · policy 欄のみ（今回 Guard 接続しない） */
+const FUTURE_FEATURES = Object.freeze([
+  "vision",
+  "image_generation",
+  "voice_input",
+  "speech_to_text",
+  "site_assistant",
+  "document_analysis",
+  "media",
+]);
+
+/**
+ * Plan feature → quota bucket（DB: text / vision）
+ * OCR は vision_turn を共有（Phase 1 · DB 変更なし）
+ * search / TTS / media brief は text_turn（日次 limit 値は変更しない）
+ * unknown → null（無制限扱い禁止）
+ */
+const QUOTA_CATEGORY_MAP = Object.freeze({
+  workspace_chat: "text_turn",
+  gemini_chat: "text_turn",
+  openai_chat: "text_turn",
+  claude_chat: "text_turn",
+  openrouter_chat: "text_turn",
+  search: "text_turn",
+  text_to_speech: "text_turn",
+  text_turn: "text_turn",
+  ocr: "vision_turn",
+  ocr_turn: "vision_turn",
+  vision_turn: "vision_turn",
+  image_analysis: "vision_turn",
+  media_video: "text_turn",
+  media_music: "text_turn",
+});
+
+const AUTH_CHAT_FEATURES = Object.freeze([
+  "workspace_chat",
+  "gemini_chat",
+  "ocr",
+  "search",
+  "text_to_speech",
+]);
+
+/**
  * @type {Record<string, object>}
  * 料金・Stripe・販売開始は含めない（REL-F-04 / Draft）。
  */
@@ -75,11 +133,7 @@ const PLAN_POLICIES = Object.freeze({
     dailyTextLimit: 5,
     monthlyTextLimit: null,
     allowedWorkspaceModels: Object.freeze(["gemini-flash"]),
-    allowedFeatures: Object.freeze([
-      "workspace_chat",
-      "gemini_chat",
-      "ocr",
-    ]),
+    allowedFeatures: Object.freeze([...AUTH_CHAT_FEATURES]),
     autoModeAllowed: true,
     manualModeAllowed: true,
     highCostModelAllowed: false,
@@ -100,11 +154,7 @@ const PLAN_POLICIES = Object.freeze({
     dailyTextLimit: 30,
     monthlyTextLimit: null,
     allowedWorkspaceModels: Object.freeze(["gemini-flash"]),
-    allowedFeatures: Object.freeze([
-      "workspace_chat",
-      "gemini_chat",
-      "ocr",
-    ]),
+    allowedFeatures: Object.freeze([...AUTH_CHAT_FEATURES]),
     autoModeAllowed: true,
     manualModeAllowed: true,
     highCostModelAllowed: false,
@@ -126,11 +176,10 @@ const PLAN_POLICIES = Object.freeze({
     monthlyTextLimit: null,
     allowedWorkspaceModels: Object.freeze(["gemini-flash", "gpt", "claude"]),
     allowedFeatures: Object.freeze([
-      "workspace_chat",
-      "gemini_chat",
+      ...AUTH_CHAT_FEATURES,
       "openai_chat",
       "claude_chat",
-      "ocr",
+      "image_analysis",
     ]),
     autoModeAllowed: true,
     manualModeAllowed: true,
@@ -153,11 +202,10 @@ const PLAN_POLICIES = Object.freeze({
     monthlyTextLimit: null,
     allowedWorkspaceModels: Object.freeze(["gemini-flash", "gpt", "claude"]),
     allowedFeatures: Object.freeze([
-      "workspace_chat",
-      "gemini_chat",
+      ...AUTH_CHAT_FEATURES,
       "openai_chat",
       "claude_chat",
-      "ocr",
+      "image_analysis",
     ]),
     autoModeAllowed: true,
     manualModeAllowed: true,
@@ -179,6 +227,11 @@ const EDGE_TO_FEATURE = Object.freeze({
   "openai-chat": "openai_chat",
   "claude-chat": "claude_chat",
   "gemini-ocr": "ocr",
+  "serper-search": "search",
+  "gemini-tts": "text_to_speech",
+  "ai-workspace-video-generate": "workspace_chat",
+  "ai-workspace-music-generate": "workspace_chat",
+  "gemini-image-character-analyze": "image_analysis",
   /** Phase 6 PoC — いずれの production plan にも openrouter_chat を付与しない */
   "openrouter-chat": "openrouter_chat",
 });
@@ -290,17 +343,46 @@ function isModelAllowedForPolicy(policy, workspaceModelId) {
 function isFeatureAllowedForPolicy(policy, featureKey) {
   if (!isPlanExecutable(policy)) return false;
   const f = String(featureKey || "").trim();
-  if (f === "ocr" || f === "ocr_turn" || f === "vision_turn") {
+  if (!f) return false;
+  if (FUTURE_FEATURES.includes(f)) return false;
+  if (f === "openrouter_chat") return false;
+  if (f === "ocr" || f === "ocr_turn") {
     return Boolean(policy.ocrAllowed) && policy.allowedFeatures.includes("ocr");
+  }
+  if (f === "vision_turn") {
+    return (
+      (Boolean(policy.ocrAllowed) && policy.allowedFeatures.includes("ocr")) ||
+      policy.allowedFeatures.includes("image_analysis")
+    );
   }
   if (f === "text_turn" || f === "workspace_chat") {
     return policy.allowedFeatures.includes("workspace_chat");
   }
+  if (f === "text_to_speech") {
+    return policy.allowedFeatures.includes("text_to_speech");
+  }
+  if (f === "search") {
+    return policy.allowedFeatures.includes("search");
+  }
+  if (f === "image_analysis") {
+    return policy.allowedFeatures.includes("image_analysis");
+  }
+  if (!CANONICAL_FEATURES.includes(f)) return false;
   return policy.allowedFeatures.includes(f);
 }
 
 function featureForEdge(edgeName) {
   return EDGE_TO_FEATURE[String(edgeName || "").trim()] || null;
+}
+
+/**
+ * @param {string} featureKey
+ * @returns {"text_turn"|"vision_turn"|null}
+ */
+function resolveQuotaCategory(featureKey) {
+  const f = String(featureKey || "").trim();
+  const cat = QUOTA_CATEGORY_MAP[f];
+  return cat === "text_turn" || cat === "vision_turn" ? cat : null;
 }
 
 function edgeForWorkspaceModel(workspaceModelId) {
@@ -377,6 +459,9 @@ function evaluateLimitAction(policy, usageRatio) {
     CANONICAL_PLAN_IDS,
     PLAN_ID_ALIASES,
     PLAN_POLICIES,
+    CANONICAL_FEATURES,
+    FUTURE_FEATURES,
+    QUOTA_CATEGORY_MAP,
     normalizePlanId,
     getPlanPolicy,
     getAnonymousPolicy,
@@ -386,6 +471,7 @@ function evaluateLimitAction(policy, usageRatio) {
     isModelAllowedForPolicy,
     isFeatureAllowedForPolicy,
     featureForEdge,
+    resolveQuotaCategory,
     edgeForWorkspaceModel,
     listAllowedModels,
     listFallbackModels,

@@ -2,6 +2,9 @@
  * Gemini TTS プロキシ（Cloudflare Pages Function）
  * Secret: GEMINI_API_KEY · クライアントへキーは渡さない
  */
+import { policyFromGenAiPlan, isFeatureAllowedForPolicy } from "../_shared/ai-plan-policy.mjs";
+import { recordAiUsageEvent, newUsageRequestId } from "../_shared/ai-usage-log.mjs";
+
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -17,7 +20,7 @@ function handleOptions() {
     status: 204,
     headers: {
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
       "Access-Control-Max-Age": "86400",
     },
   });
@@ -71,17 +74,76 @@ function writeStr(view, offset, str) {
   }
 }
 
+async function resolveAuthenticatedUser(request, env, body) {
+  const match = String(request.headers.get("Authorization") || "").match(/^Bearer\s+(\S+)$/i);
+  const token = match?.[1] || "";
+  const url = String(env.TASFUL_SUPABASE_URL || env.SUPABASE_URL || "").replace(/\/$/, "");
+  const anonKey = String(env.TASFUL_SUPABASE_ANON_KEY || env.SUPABASE_ANON_KEY || "").trim();
+  if (!token || !url || !anonKey) return { ok: false, error: "auth_required", http: 401 };
+  try {
+    const res = await fetch(`${url}/auth/v1/user`, {
+      headers: { Authorization: `Bearer ${token}`, apikey: anonKey },
+    });
+    const user = res.ok ? await res.json() : null;
+    const userId = String(user?.id || "").trim();
+    if (!userId) return { ok: false, error: "auth_required", http: 401 };
+    const claimed = String(body?.user_id ?? body?.userId ?? "").trim();
+    if (claimed && claimed !== userId) return { ok: false, error: "user_mismatch", http: 403 };
+    return { ok: true, userId, url };
+  } catch {
+    return { ok: false, error: "auth_required", http: 401 };
+  }
+}
+
+async function enforceTtsGuard(request, env, body) {
+  const actor = await resolveAuthenticatedUser(request, env, body);
+  if (!actor.ok) return actor;
+  const serviceRoleKey = String(env.SUPABASE_SERVICE_ROLE_KEY || "").trim();
+  if (!serviceRoleKey) return { ok: false, error: "usage_guard_unavailable", http: 503 };
+  try {
+    const planRes = await fetch(`${actor.url}/rest/v1/gen_ai_subscriptions?user_id=eq.${encodeURIComponent(actor.userId)}&select=plan_code,plan_label,daily_text_limit,status,subscription_status&limit=1`, {
+      headers: { Authorization: `Bearer ${serviceRoleKey}`, apikey: serviceRoleKey },
+    });
+    const rows = planRes.ok ? await planRes.json() : null;
+    if (!Array.isArray(rows)) throw new Error("plan_unavailable");
+    const row = rows[0];
+    const policy = policyFromGenAiPlan(row ? {
+      plan: row.plan_code, label: row.plan_label, dailyTextLimit: row.daily_text_limit,
+      status: row.status, subscriptionStatus: row.subscription_status,
+    } : null);
+    if (!isFeatureAllowedForPolicy(policy, "text_to_speech")) {
+      return { ok: false, error: "plan_feature_denied", http: 403, userId: actor.userId, planId: policy.planId };
+    }
+    const limit = Number(policy.dailyTextLimit);
+    const quota = await fetch(`${actor.url}/rest/v1/rpc/check_ai_workspace_quota`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}`, apikey: serviceRoleKey },
+      body: JSON.stringify({ p_user_id: actor.userId, p_date_jst: new Date().toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" }), p_feature: "text_turn", p_limit: limit }),
+    });
+    const status = quota.ok ? await quota.json() : null;
+    if (!status || status.allowed !== true) return { ok: false, error: "quota_exceeded", http: 402, userId: actor.userId };
+    return { ok: true, userId: actor.userId, url: actor.url, serviceRoleKey, limit };
+  } catch {
+    return { ok: false, error: "usage_guard_unavailable", http: 503, userId: actor.userId };
+  }
+}
+
+async function consumeTtsQuota(guard) {
+  const res = await fetch(`${guard.url}/rest/v1/rpc/consume_ai_workspace_quota`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${guard.serviceRoleKey}`, apikey: guard.serviceRoleKey },
+    body: JSON.stringify({ p_user_id: guard.userId, p_date_jst: new Date().toLocaleDateString("ja-JP", { timeZone: "Asia/Tokyo" }), p_feature: "text_turn", p_limit: guard.limit }),
+  });
+  const row = res.ok ? await res.json() : null;
+  return row?.ok === true;
+}
+
 export async function onRequest(context) {
   const { request, env } = context;
 
   if (request.method === "OPTIONS") return handleOptions();
   if (request.method !== "POST") {
     return jsonResponse({ error: "Method not allowed" }, 405);
-  }
-
-  const apiKey = String(env.GEMINI_API_KEY || "").trim();
-  if (!apiKey) {
-    return jsonResponse({ error: "GEMINI_API_KEY not configured" }, 503);
   }
 
   let body;
@@ -97,6 +159,21 @@ export async function onRequest(context) {
   }
   if (text.length > MAX_TEXT_LENGTH) {
     return jsonResponse({ error: `text exceeds ${MAX_TEXT_LENGTH} characters` }, 400);
+  }
+  const requestId = newUsageRequestId();
+  const guard = await enforceTtsGuard(request, env, { ...body, surface: "ai-workspace" });
+  if (!guard.ok) {
+    await recordAiUsageEvent({
+      requestId, userId: guard.userId || null, feature: "text_turn", provider: "gemini",
+      model: GEMINI_TTS_MODEL, status: "denied", errorCode: guard.error,
+      metadata: { surface: "ai-workspace", use_case: "tts" },
+    }, env);
+    return jsonResponse({ ok: false, error: guard.error, planId: guard.planId }, guard.http);
+  }
+
+  const apiKey = String(env.GEMINI_API_KEY || "").trim();
+  if (!apiKey) {
+    return jsonResponse({ error: "provider_configuration_error", provider: "gemini" }, 503);
   }
 
   const voice = String(body?.voice || "Puck").trim();
@@ -135,10 +212,14 @@ export async function onRequest(context) {
     const data = await geminiRes.json().catch(() => ({}));
 
     if (!geminiRes.ok) {
-      console.error(`[gemini-tts] Gemini API error ${geminiRes.status}:`, JSON.stringify(data).slice(0, 500));
+      await recordAiUsageEvent({
+        requestId, userId: guard.userId, feature: "text_turn", provider: "gemini",
+        model: GEMINI_TTS_MODEL, status: "error", errorCode: "provider_error",
+        metadata: { surface: "ai-workspace", use_case: "tts", http_status: geminiRes.status },
+      }, env);
       return jsonResponse(
-        { error: `Gemini API error: ${geminiRes.status}`, detail: data },
-        geminiRes.status,
+        { error: "provider_unavailable" },
+        502,
       );
     }
 
@@ -157,9 +238,13 @@ export async function onRequest(context) {
     }
 
     if (!audioBase64) {
-      console.error("[gemini-tts] No audio data in response:", JSON.stringify(data).slice(0, 500));
+      await recordAiUsageEvent({
+        requestId, userId: guard.userId, feature: "text_turn", provider: "gemini",
+        model: GEMINI_TTS_MODEL, status: "error", errorCode: "invalid_provider_response",
+        metadata: { surface: "ai-workspace", use_case: "tts" },
+      }, env);
       return jsonResponse(
-        { error: "No audio data in Gemini response", detail: data },
+        { error: "provider_unavailable" },
         502,
       );
     }
@@ -168,6 +253,12 @@ export async function onRequest(context) {
     const pcmMatch = audioMimeType.match(/rate=(\d+)/);
     const sampleRate = pcmMatch ? parseInt(pcmMatch[1], 10) : 24000;
     const wavBase64 = pcmToWavBase64(audioBase64, sampleRate);
+    if (!(await consumeTtsQuota(guard))) return jsonResponse({ error: "quota_exceeded" }, 402);
+    await recordAiUsageEvent({
+      requestId, userId: guard.userId, feature: "text_turn", provider: "gemini",
+      model: GEMINI_TTS_MODEL, status: "success",
+      metadata: { surface: "ai-workspace", use_case: "tts" },
+    }, env);
 
     return jsonResponse({
       ok: true,
@@ -176,9 +267,12 @@ export async function onRequest(context) {
       voice,
       textLength: text.length,
     });
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("[gemini-tts] Unexpected error:", message);
-    return jsonResponse({ error: message }, 500);
+  } catch {
+    await recordAiUsageEvent({
+      requestId, userId: guard.userId, feature: "text_turn", provider: "gemini",
+      model: GEMINI_TTS_MODEL, status: "error", errorCode: "provider_unavailable",
+      metadata: { surface: "ai-workspace", use_case: "tts" },
+    }, env);
+    return jsonResponse({ error: "provider_unavailable" }, 502);
   }
 }

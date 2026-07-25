@@ -4,6 +4,15 @@
  * APIキーはサーバーサイドのみで参照し、フロントに露出させない。
  */
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import { WORKSPACE_FEATURE_TEXT } from "../_shared/ai-workspace-quota.ts";
+import { enforceGuardFeatureEntry, finalizeGuardFeatureConsume } from "../_shared/ai-usage-guard.ts";
+import {
+  createUsageLogOnce,
+  newUsageRequestId,
+  USAGE_STATUS_DENIED,
+  USAGE_STATUS_ERROR,
+  USAGE_STATUS_SUCCESS,
+} from "../_shared/ai-usage-log.ts";
 
 const GEMINI_TTS_MODEL = "gemini-2.5-flash-preview-tts";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
@@ -17,6 +26,8 @@ interface TtsRequestBody {
   language?: string;
   surface?: string;
   session_id?: string;
+  user_id?: string;
+  userId?: string;
 }
 
 Deno.serve(async (req) => {
@@ -25,11 +36,6 @@ Deno.serve(async (req) => {
 
   if (req.method !== "POST") {
     return jsonResponse({ error: "Method not allowed" }, 405, req);
-  }
-
-  const apiKey = Deno.env.get("GEMINI_API_KEY")?.trim();
-  if (!apiKey) {
-    return jsonResponse({ error: "GEMINI_API_KEY not configured" }, 503, req);
   }
 
   let body: TtsRequestBody;
@@ -45,6 +51,36 @@ Deno.serve(async (req) => {
   }
   if (text.length > MAX_TEXT_LENGTH) {
     return jsonResponse({ error: `text exceeds ${MAX_TEXT_LENGTH} characters` }, 400, req);
+  }
+  const guardBody = { ...body, surface: String(body.surface || "").trim() || "ai-workspace" };
+  const requestId = newUsageRequestId();
+  const usageOnce = createUsageLogOnce();
+  const guard = await enforceGuardFeatureEntry(req, guardBody, {
+    edgeName: "gemini-tts",
+    quotaFeature: WORKSPACE_FEATURE_TEXT,
+    requireSurface: true,
+  });
+  if (guard.blocked) {
+    await usageOnce.record({
+      requestId,
+      feature: WORKSPACE_FEATURE_TEXT,
+      provider: "gemini",
+      model: GEMINI_TTS_MODEL,
+      status: USAGE_STATUS_DENIED,
+      errorCode: guard.status?.error || "guard_denied",
+      metadata: { surface: "ai-workspace", use_case: "tts" },
+    });
+    return guard.blocked;
+  }
+  const userId = guard.status?.userId || null;
+  const apiKey = Deno.env.get("GEMINI_API_KEY")?.trim();
+  if (!apiKey) {
+    await usageOnce.record({
+      requestId, userId, feature: WORKSPACE_FEATURE_TEXT, provider: "gemini",
+      model: GEMINI_TTS_MODEL, status: USAGE_STATUS_ERROR, errorCode: "provider_unavailable",
+      metadata: { surface: "ai-workspace", use_case: "tts" },
+    });
+    return jsonResponse({ error: "provider_unavailable" }, 503, req);
   }
 
   const voice = String(body?.voice || DEFAULT_VOICE).trim();
@@ -78,10 +114,13 @@ Deno.serve(async (req) => {
     });
 
     if (!geminiRes.ok) {
-      const errText = await geminiRes.text().catch(() => "");
-      console.error("[gemini-tts] Gemini API error:", geminiRes.status, errText.slice(0, 500));
+      await usageOnce.record({
+        requestId, userId, feature: WORKSPACE_FEATURE_TEXT, provider: "gemini",
+        model: GEMINI_TTS_MODEL, status: USAGE_STATUS_ERROR, errorCode: "provider_error",
+        metadata: { surface: "ai-workspace", use_case: "tts", http_status: geminiRes.status },
+      });
       return jsonResponse(
-        { error: `Gemini API error: ${geminiRes.status}` },
+        { error: "provider_unavailable" },
         502,
         req,
       );
@@ -102,14 +141,25 @@ Deno.serve(async (req) => {
     }
 
     if (!audioBase64) {
-      console.error("[gemini-tts] No audio data in response");
+      await usageOnce.record({
+        requestId, userId, feature: WORKSPACE_FEATURE_TEXT, provider: "gemini",
+        model: GEMINI_TTS_MODEL, status: USAGE_STATUS_ERROR, errorCode: "invalid_provider_response",
+        metadata: { surface: "ai-workspace", use_case: "tts" },
+      });
       return jsonResponse(
-        { error: "No audio data in Gemini response" },
+        { error: "provider_unavailable" },
         502,
         req,
       );
     }
 
+    const consumed = await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_TEXT);
+    if (consumed && !consumed.ok) return jsonResponse({ error: "quota_exceeded" }, 402, req);
+    await usageOnce.record({
+      requestId, userId, feature: WORKSPACE_FEATURE_TEXT, provider: "gemini",
+      model: GEMINI_TTS_MODEL, status: USAGE_STATUS_SUCCESS,
+      metadata: { surface: "ai-workspace", use_case: "tts" },
+    });
     return jsonResponse(
       {
         ok: true,
@@ -122,9 +172,12 @@ Deno.serve(async (req) => {
       200,
       req,
     );
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    console.error("[gemini-tts] Unexpected error:", message);
-    return jsonResponse({ error: message }, 500, req);
+  } catch {
+    await usageOnce.record({
+      requestId, userId, feature: WORKSPACE_FEATURE_TEXT, provider: "gemini",
+      model: GEMINI_TTS_MODEL, status: USAGE_STATUS_ERROR, errorCode: "provider_unavailable",
+      metadata: { surface: "ai-workspace", use_case: "tts" },
+    });
+    return jsonResponse({ error: "provider_unavailable" }, 502, req);
   }
 });

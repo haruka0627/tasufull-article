@@ -1,4 +1,6 @@
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
+import { WORKSPACE_FEATURE_VISION } from "../_shared/ai-workspace-quota.ts";
+import { enforceGuardFeatureEntry, finalizeGuardFeatureConsume } from "../_shared/ai-usage-guard.ts";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE =
@@ -108,6 +110,9 @@ type RequestBody = {
   imageData?: string;
   imageUrl?: string;
   purpose?: string;
+  surface?: string;
+  user_id?: string;
+  userId?: string;
 };
 
 function sleep(ms: number): Promise<void> {
@@ -446,11 +451,6 @@ Deno.serve(async (req) => {
     return jsonResponse({ ok: false, error: "Method not allowed" }, 405);
   }
 
-  const apiKey = Deno.env.get("GEMINI_API_KEY")?.trim();
-  if (!apiKey) {
-    return jsonResponse({ ok: false, error: "GEMINI_API_KEY not configured" }, 503);
-  }
-
   let body: RequestBody;
   try {
     body = await req.json();
@@ -462,6 +462,17 @@ Deno.serve(async (req) => {
   const imageUrl = String(body.imageUrl || "").trim();
   const purposeRaw = String(body.purpose || "appearance_only").trim();
   const mode = resolveAnalyzeMode(purposeRaw);
+  // Phase 7: image_analysis is Pro-only. Existing non-Pro callers are denied
+  // before image processing or Gemini; this is intentional security coverage.
+  const guardBody = { ...body, surface: String(body.surface || "").trim() || "ai-workspace" };
+  const guard = await enforceGuardFeatureEntry(req, guardBody, {
+    edgeName: "gemini-image-character-analyze",
+    quotaFeature: WORKSPACE_FEATURE_VISION,
+    requireSurface: true,
+  });
+  if (guard.blocked) return guard.blocked;
+  const apiKey = Deno.env.get("GEMINI_API_KEY")?.trim();
+  if (!apiKey) return jsonResponse({ ok: false, error: "provider_unavailable" }, 503, req);
 
   if (!imageData && !imageUrl) {
     return jsonResponse({ ok: false, error: "imageData または imageUrl が必要です" }, 400);
@@ -492,6 +503,7 @@ Deno.serve(async (req) => {
   }
 
   if (mode === "mouth_hint_only") {
+    await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_VISION);
     return jsonResponse({
       ok: true,
       mouthHint: outcome.mouthHint ?? null,
@@ -501,6 +513,7 @@ Deno.serve(async (req) => {
   }
 
   if (mode === "appearance_and_character_seed") {
+    await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_VISION);
     return jsonResponse({
       ok: true,
       appearance: outcome.appearance,
@@ -511,6 +524,7 @@ Deno.serve(async (req) => {
     });
   }
 
+  await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_VISION);
   return jsonResponse({
     ok: true,
     appearance: outcome.appearance,

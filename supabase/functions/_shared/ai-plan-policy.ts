@@ -38,6 +38,24 @@ export const PLAN_ID_ALIASES: Record<string, CanonicalPlanId> = {
 export type PlanStatus = "active" | "inactive" | "suspended" | "expired";
 export type LimitAction = "warn" | "lightweight_only" | "deny" | "reset_wait" | "ok";
 
+export const CANONICAL_FEATURES = [
+  "workspace_chat", "gemini_chat", "openai_chat", "claude_chat", "ocr",
+  "search", "text_to_speech", "image_analysis", "openrouter_chat",
+] as const;
+
+export const FUTURE_FEATURES = [
+  "vision", "image_generation", "voice_input", "speech_to_text",
+  "site_assistant", "document_analysis", "media",
+] as const;
+
+export const QUOTA_CATEGORY_MAP: Record<string, "text_turn" | "vision_turn"> = {
+  workspace_chat: "text_turn", gemini_chat: "text_turn", openai_chat: "text_turn",
+  claude_chat: "text_turn", openrouter_chat: "text_turn", search: "text_turn",
+  text_to_speech: "text_turn", text_turn: "text_turn", ocr: "vision_turn",
+  ocr_turn: "vision_turn", vision_turn: "vision_turn", image_analysis: "vision_turn",
+  media_video: "text_turn", media_music: "text_turn",
+};
+
 export type PlanPolicy = {
   planId: CanonicalPlanId;
   displayName: string;
@@ -60,7 +78,7 @@ export type PlanPolicy = {
   nearLimitRatio: number;
 };
 
-const PLAN_POLICIES: Record<CanonicalPlanId, PlanPolicy> = {
+export const PLAN_POLICIES: Record<CanonicalPlanId, PlanPolicy> = {
   anonymous: {
     planId: "anonymous",
     displayName: "未ログイン",
@@ -89,7 +107,7 @@ const PLAN_POLICIES: Record<CanonicalPlanId, PlanPolicy> = {
     dailyTextLimit: 5,
     monthlyTextLimit: null,
     allowedWorkspaceModels: ["gemini-flash"],
-    allowedFeatures: ["workspace_chat", "gemini_chat", "ocr"],
+    allowedFeatures: ["workspace_chat", "gemini_chat", "ocr", "search", "text_to_speech"],
     autoModeAllowed: true,
     manualModeAllowed: true,
     highCostModelAllowed: false,
@@ -110,7 +128,7 @@ const PLAN_POLICIES: Record<CanonicalPlanId, PlanPolicy> = {
     dailyTextLimit: 30,
     monthlyTextLimit: null,
     allowedWorkspaceModels: ["gemini-flash"],
-    allowedFeatures: ["workspace_chat", "gemini_chat", "ocr"],
+    allowedFeatures: ["workspace_chat", "gemini_chat", "ocr", "search", "text_to_speech"],
     autoModeAllowed: true,
     manualModeAllowed: true,
     highCostModelAllowed: false,
@@ -137,6 +155,9 @@ const PLAN_POLICIES: Record<CanonicalPlanId, PlanPolicy> = {
       "openai_chat",
       "claude_chat",
       "ocr",
+      "search",
+      "text_to_speech",
+      "image_analysis",
     ],
     autoModeAllowed: true,
     manualModeAllowed: true,
@@ -164,6 +185,9 @@ const PLAN_POLICIES: Record<CanonicalPlanId, PlanPolicy> = {
       "openai_chat",
       "claude_chat",
       "ocr",
+      "search",
+      "text_to_speech",
+      "image_analysis",
     ],
     autoModeAllowed: true,
     manualModeAllowed: true,
@@ -180,11 +204,16 @@ const PLAN_POLICIES: Record<CanonicalPlanId, PlanPolicy> = {
   },
 };
 
-const EDGE_TO_FEATURE: Record<string, string> = {
+export const EDGE_TO_FEATURE: Record<string, string> = {
   "gemini-chat": "gemini_chat",
   "openai-chat": "openai_chat",
   "claude-chat": "claude_chat",
   "gemini-ocr": "ocr",
+  "serper-search": "search",
+  "gemini-tts": "text_to_speech",
+  "ai-workspace-video-generate": "workspace_chat",
+  "ai-workspace-music-generate": "workspace_chat",
+  "gemini-image-character-analyze": "image_analysis",
   /** Phase 6 PoC — production plan には openrouter_chat を付与しない */
   "openrouter-chat": "openrouter_chat",
 };
@@ -291,17 +320,33 @@ export function isFeatureAllowedForPolicy(
 ): boolean {
   if (!isPlanExecutable(policy)) return false;
   const f = String(featureKey || "").trim();
-  if (f === "ocr" || f === "ocr_turn" || f === "vision_turn") {
+  if (!f || (FUTURE_FEATURES as readonly string[]).includes(f) || f === "openrouter_chat") {
+    return false;
+  }
+  if (f === "ocr" || f === "ocr_turn") {
     return Boolean(policy.ocrAllowed) && policy.allowedFeatures.includes("ocr");
+  }
+  if (f === "vision_turn") {
+    return (Boolean(policy.ocrAllowed) && policy.allowedFeatures.includes("ocr")) ||
+      policy.allowedFeatures.includes("image_analysis");
   }
   if (f === "text_turn" || f === "workspace_chat") {
     return policy.allowedFeatures.includes("workspace_chat");
   }
+  if (f === "text_to_speech" || f === "search" || f === "image_analysis") {
+    return policy.allowedFeatures.includes(f);
+  }
+  if (!(CANONICAL_FEATURES as readonly string[]).includes(f)) return false;
   return policy.allowedFeatures.includes(f);
 }
 
 export function featureForEdge(edgeName: string): string | null {
   return EDGE_TO_FEATURE[String(edgeName || "").trim()] || null;
+}
+
+export function resolveQuotaCategory(featureKey: string): "text_turn" | "vision_turn" | null {
+  const category = QUOTA_CATEGORY_MAP[String(featureKey || "").trim()];
+  return category === "text_turn" || category === "vision_turn" ? category : null;
 }
 
 export function listAllowedModels(policy: PlanPolicy): string[] {

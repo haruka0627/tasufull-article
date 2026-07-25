@@ -5,6 +5,8 @@
  * OCR: 全許可 surface で強制。env / RPC 失敗は fail-closed。
  * Quota 帰属は server-derived user_id（body 申告を信用しない前提で呼び出し側が上書き）。
  */
+import { policyFromGenAiPlan, isFeatureAllowedForPolicy } from "./ai-plan-policy.mjs";
+
 
 var STAGING_REF = "ahlxuyvhzqdqaojiywmu";
 var PRODUCTION_REF = "ddojquacsyqesrjhcvmn";
@@ -395,6 +397,30 @@ export async function enforceCfOcrGuard(request, body, env) {
     if (!Number.isFinite(plan.dailyLimit) || plan.dailyLimit < 0) {
       return {
         blocked: guardUnavailableResponse(FEATURE_OCR),
+        shouldConsume: false,
+        meta: null,
+      };
+    }
+    var policy = policyFromGenAiPlan({
+      plan: plan.planCode,
+      label: plan.planLabel,
+      dailyTextLimit: plan.dailyLimit,
+    });
+    if (!isFeatureAllowedForPolicy(policy, "ocr")) {
+      return {
+        blocked: new Response(
+          JSON.stringify({
+            ok: false,
+            error: "plan_feature_denied",
+            feature: FEATURE_OCR,
+            planId: policy.planId,
+            provider: "gemini",
+          }),
+          {
+            status: 403,
+            headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
+          }
+        ),
         shouldConsume: false,
         meta: null,
       };

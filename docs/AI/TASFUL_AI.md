@@ -81,7 +81,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | Core | **Phase 3 Auto Mode** — コード完了（Auto/Manual · Identity · routing metadata）— [phase3 report](../../reports/tasful-ai-core-phase3-auto-mode-report.md) |
 | Core | **Phase 4 Usage Gauge** — コード完了（日次消費率 · quota SSOT · 原価非公開）— [phase4 report](../../reports/tasful-ai-core-phase4-usage-gauge-report.md) |
 | Core | **Phase 5 Plan Enforcement** — コード完了（Plan Policy SSOT · JWT 必須 · model/feature 再検証 · 料金未確定）— [phase5 report](../../reports/tasful-ai-core-phase5-plan-policy-report.md) |
-| Core | **Phase 6 OpenRouter Limited PoC** — コード完了（内部 harness のみ · Production / 一般 UI / Auto 非接続 · 採用判断は「限定用途のみ候補」）— [phase6 report](../../reports/tasful-ai-core-phase6-openrouter-poc-report.md) |
+| Core | **Phase 7 Guard Coverage** — コード完了（Workspace OCR / Media / Search / TTS / Character Vision を JWT・plan・quota で事前判定）— [report](../../reports/tasful-ai-core-phase7-guard-coverage-report.md) |
 
 ---
 

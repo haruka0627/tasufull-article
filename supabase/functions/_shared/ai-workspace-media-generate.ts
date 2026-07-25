@@ -1,13 +1,15 @@
 import { jsonResponse } from "./cors.ts";
 import {
-  checkWorkspaceQuota,
-  consumeWorkspaceQuota,
   quotaExceededResponse,
-  resolveWorkspaceUserId,
+  resolveAuthenticatedWorkspaceUser,
   WORKSPACE_FEATURE_TEXT,
   WORKSPACE_SURFACE,
   type WorkspaceQuotaBody,
 } from "./ai-workspace-quota.ts";
+import {
+  enforceGuardFeatureEntry,
+  finalizeGuardFeatureConsume,
+} from "./ai-usage-guard.ts";
 
 export const AI_MEDIA_GEN_KILL_SWITCH_ENV = "AI_MEDIA_GEN_EDGE_ENABLED";
 export const AI_MEDIA_REQUEST_TIMEOUT_MS = 85_000;
@@ -147,25 +149,22 @@ export async function handleWorkspaceMediaGenerate(
     return jsonResponse({ ok: false, error: "unsupported_surface" }, 400, req);
   }
 
-  const userId = resolveWorkspaceUserId(body);
-  if (!userId || userId === "anonymous") {
-    return jsonResponse({ ok: false, error: "missing_user_id" }, 400, req);
-  }
-
   const prompt = trimText(body.prompt, 4000);
   if (kind === "video" && !prompt) {
     return jsonResponse({ ok: false, error: "empty_prompt", message: "プロンプトを入力してください。" }, 400, req);
   }
 
-  try {
-    const check = await checkWorkspaceQuota({ userId, feature: WORKSPACE_FEATURE_TEXT });
-    if (!check.allowed) {
-      return quotaExceededResponse(check, req);
-    }
-  } catch (err) {
-    console.error("[ai-workspace-media-generate] quota check failed:", err);
-    return jsonResponse({ ok: false, error: "quota_check_failed" }, 500, req);
+  const guardBody = { ...body, surface: WORKSPACE_SURFACE };
+  const actor = await resolveAuthenticatedWorkspaceUser(req, guardBody);
+  if (!actor.ok) {
+    return jsonResponse({ ok: false, error: actor.error }, actor.http, req);
   }
+  const guard = await enforceGuardFeatureEntry(req, guardBody, {
+    edgeName: kind === "video" ? "ai-workspace-video-generate" : "ai-workspace-music-generate",
+    quotaFeature: WORKSPACE_FEATURE_TEXT,
+    requireSurface: true,
+  });
+  if (guard.blocked) return guard.blocked;
 
   const userPrompt = kind === "video" ? buildVideoPrompt(body) : buildMusicPrompt(body);
   const gemini = await callGeminiBrief(userPrompt);
@@ -183,8 +182,8 @@ export async function handleWorkspaceMediaGenerate(
   }
 
   try {
-    const consumed = await consumeWorkspaceQuota({ userId, feature: WORKSPACE_FEATURE_TEXT });
-    if (!consumed.ok) {
+    const consumed = await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_TEXT);
+    if (consumed && !consumed.ok) {
       return quotaExceededResponse(consumed, req);
     }
   } catch (err) {
@@ -222,7 +221,7 @@ export async function handleWorkspaceMediaGenerate(
         vocal: body.vocal,
         lyrics: body.lyrics,
       },
-      quota: { feature: WORKSPACE_FEATURE_TEXT, userId },
+      quota: { feature: WORKSPACE_FEATURE_TEXT },
     },
     200,
     req,

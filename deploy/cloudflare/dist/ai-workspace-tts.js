@@ -6,7 +6,7 @@
 (function (global) {
   "use strict";
 
-  var SURFACE = "tasful_ai";
+  var SURFACE = "ai-workspace";
   var PLAYING_CLASS = "tts-playing";
   var GENERATING_CLASS = "tts-generating";
 
@@ -16,6 +16,26 @@
   /* ---- Cloudflare Pages Function を呼び出す ---- */
   var EDGE_URL = "/api/gemini-tts";
 
+  async function resolveAccessToken() {
+    try {
+      var client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        var sessionRes = await client.auth.getSession();
+        var token = sessionRes?.data?.session?.access_token;
+        if (token) return String(token).trim();
+      }
+    } catch (_e) {
+      /* ignore */
+    }
+    var config = global.TASU_CHAT_SUPABASE_CONFIG || global.TASU_SUPABASE_CONFIG || {};
+    return String(
+      config?.auth?.access_token ||
+        config?.session?.access_token ||
+        global.TASU_SUPABASE_SESSION?.access_token ||
+        ""
+    ).trim();
+  }
+
   /**
    * Gemini TTS を呼び出し base64 audio を返す
    * @param {string} text
@@ -24,11 +44,19 @@
    */
   async function fetchTts(text, options) {
     var opts = options || {};
+    var token = await resolveAccessToken();
+    if (!token) {
+      return { ok: false, error: "auth_required" };
+    }
+    var headers = {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + token,
+    };
 
     try {
       var res = await fetch(EDGE_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: headers,
         body: JSON.stringify({
           text: text,
           voice: opts.voice,
@@ -313,6 +341,8 @@
   /* ---- 公開API ---- */
   global.TasuWorkspaceTts = {
     fetchTts: fetchTts,
+    getAccessToken: resolveAccessToken,
+    resolveAccessToken: resolveAccessToken,
     playAudioBase64: playAudioBase64,
     stop: stopCurrentAudio,
     adapter: geminiTtsAdapter,
