@@ -23,6 +23,39 @@ const REVIEW_COVER_DATA_URL =
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 const errors = [];
+/** @type {Array<{ url: string, hostname: string, method: string, resourceType: string, errorText: string }>} */
+const failedRequests = [];
+
+function countBy(items, keyFn) {
+  /** @type {Record<string, number>} */
+  const counts = {};
+  for (const item of items) {
+    const key = keyFn(item) || "(empty)";
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  return Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+
+function reportFailedRequests() {
+  if (!failedRequests.length) return;
+  console.error("Failed requests total:", failedRequests.length);
+  console.error("Failed requests by hostname:");
+  for (const [key, count] of countBy(failedRequests, (r) => r.hostname)) {
+    console.error(`  ${key}: ${count}`);
+  }
+  console.error("Failed requests by URL:");
+  for (const [key, count] of countBy(failedRequests, (r) => r.url)) {
+    console.error(`  ${key}: ${count}`);
+  }
+  console.error("Failed requests by resourceType:");
+  for (const [key, count] of countBy(failedRequests, (r) => r.resourceType)) {
+    console.error(`  ${key}: ${count}`);
+  }
+  console.error("Failed requests by errorText:");
+  for (const [key, count] of countBy(failedRequests, (r) => r.errorText)) {
+    console.error(`  ${key}: ${count}`);
+  }
+}
 
 async function openFriendProfileCard(page) {
   await page.locator(FRIEND_ROW_SEL).first().waitFor({ state: "visible", timeout: 20000 });
@@ -56,6 +89,22 @@ await withPlaywrightBrowser(async (browser) => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.on("console", (msg) => {
     if (msg.type() === "error") errors.push(msg.text());
+  });
+  page.on("requestfailed", (request) => {
+    const url = request.url();
+    let hostname = "";
+    try {
+      hostname = new URL(url).hostname;
+    } catch {
+      hostname = "";
+    }
+    failedRequests.push({
+      url,
+      hostname,
+      method: request.method(),
+      resourceType: request.resourceType(),
+      errorText: request.failure()?.errorText || "",
+    });
   });
 
   await page.goto(buildLocalPageUrl(base, "builder/builder-top.html"), { waitUntil: "domcontentloaded" });
@@ -189,6 +238,8 @@ await closeAllBrowsers();
 
 if (errors.length) {
   console.error("FAIL", errors);
+  reportFailedRequests();
   process.exit(1);
 }
 console.log("PASS talk-profile-card smoke");
+reportFailedRequests();
