@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-01",
+  "production": {
+    "ref": "ddojquacsyqesrjhcvmn",
+    "name": "tasful-ai",
+    "url": "https://ddojquacsyqesrjhcvmn.supabase.co",
+    "region": "ap-northeast-1",
+    "plan": "free"
+  },
+  "staging": {
+    "ref": "ahlxuyvhzqdqaojiywmu",
+    "name": "tasful-staging",
+    "url": "https://ahlxuyvhzqdqaojiywmu.supabase.co",
+    "region": "ap-northeast-1",
+    "plan": "free"
+  },
+  "cloudflare_pages": {
+    "production_branch": "cf-pages-deploy",
+    "production_host": "tasufull-article.pages.dev",
+    "preview_uses_staging_supabase": true
+  },
+  "guards": {
+    "bd_production_project_ref_env": "BD_PRODUCTION_PROJECT_REF",
+    "staging_remote_requires_link_not_production": true
+  },
+  "notes": [
+    "Machine-readable SSOT for Production / Staging refs. Human doc: docs/supabase-environments.md",
+    "Do not commit secrets. Keys live in .env / .env.staging / Cloudflare Dashboard only."
+  ]
+}
