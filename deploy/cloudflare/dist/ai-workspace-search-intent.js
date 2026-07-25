@@ -42,14 +42,48 @@
   }
 
   function extractPriceRange(text) {
-    const budget = text.match(/(\d+[\d,]*\s*円|\d+\s*万円?|予算\s*[\d,万円]+|〜\s*[\d,万円]+)/)?.[0] || "";
+    const budget =
+      text.match(/(\d+[\d,]*\s*円|\d+\s*万円?|予算\s*[\d,万円]+|〜\s*[\d,万円]+)/)?.[0] || "";
     return budget;
   }
 
+  /** @returns {{ priceMin: number|null, priceMax: number|null }} */
+  function extractPriceBounds(text) {
+    const t = normalizeText(text);
+    let priceMin = null;
+    let priceMax = null;
+    const range = t.match(/(\d[\d,]*)\s*円\s*[〜~\-－]\s*(\d[\d,]*)\s*円/);
+    if (range) {
+      priceMin = Number(range[1].replace(/,/g, ""));
+      priceMax = Number(range[2].replace(/,/g, ""));
+    } else {
+      const maxYen = t.match(/(\d[\d,]*)\s*円\s*(以下|まで|以内)/);
+      const minYen = t.match(/(\d[\d,]*)\s*円\s*(以上|から)/);
+      const manMax = t.match(/(\d+)\s*万\s*(円)?\s*(以下|まで|以内)?/);
+      if (maxYen) priceMax = Number(maxYen[1].replace(/,/g, ""));
+      if (minYen) priceMin = Number(minYen[1].replace(/,/g, ""));
+      if (priceMax == null && manMax && /以下|まで|以内|予算/.test(t)) {
+        priceMax = Number(manMax[1]) * 10000;
+      }
+      if (priceMax == null && priceMin == null) {
+        const plain = t.match(/(\d[\d,]*)\s*円/);
+        if (plain && /以下|まで|以内|予算|安い/.test(t)) {
+          priceMax = Number(plain[1].replace(/,/g, ""));
+        }
+      }
+    }
+    if (priceMin != null && (!Number.isFinite(priceMin) || priceMin < 0)) priceMin = null;
+    if (priceMax != null && (!Number.isFinite(priceMax) || priceMax < 0)) priceMax = null;
+    return { priceMin, priceMax };
+  }
+
   function inferSort(text) {
-    if (/安い|価格順|予算/.test(text)) return "price_asc";
-    if (/評価|口コミ|人気/.test(text)) return "rating_desc";
-    if (/近い|近く|距離/.test(text)) return "nearby";
+    if (/安い|価格順|予算|安い順/.test(text)) return "price_asc";
+    if (/高い順|高い方/.test(text)) return "price_desc";
+    if (/評価|口コミ/.test(text)) return "rating";
+    if (/新着|最近|最新/.test(text)) return "recent";
+    if (/空き|予約できる|今日|今週/.test(text)) return "availability";
+    if (/近い|近く|距離/.test(text)) return "relevance";
     return "relevance";
   }
 
@@ -58,7 +92,6 @@
     if (TYPE_PATTERNS.product.test(text) && !TYPE_PATTERNS.vendor.test(text)) return "product";
     if (TYPE_PATTERNS.worker.test(text) && !TYPE_PATTERNS.vendor.test(text)) return "worker";
     if (TYPE_PATTERNS.vendor.test(text)) return "vendor";
-    if (/探して|比較|紹介/.test(text)) return "vendor";
     return "";
   }
 
@@ -72,6 +105,7 @@
 
   function parseWorkspaceSearchQuery(userText) {
     const text = normalizeText(userText);
+    const bounds = extractPriceBounds(text);
     return {
       text,
       type: inferType(text),
@@ -91,6 +125,8 @@
       nearby: /近く|近所|周辺|付近|近い/.test(text),
       compareMode: /比較/.test(text),
       priceRange: extractPriceRange(text),
+      priceMin: bounds.priceMin,
+      priceMax: bounds.priceMax,
       sort: inferSort(text),
     };
   }
@@ -102,6 +138,8 @@
     if (parsed.category) lines.push(`・カテゴリ: ${parsed.category}`);
     if (parsed.prefecture) lines.push(`・地域: ${parsed.prefecture}`);
     if (parsed.minRating) lines.push(`・評価: ${parsed.minRating}以上`);
+    if (parsed.priceMin != null) lines.push(`・価格下限: ${parsed.priceMin}円`);
+    if (parsed.priceMax != null) lines.push(`・価格上限: ${parsed.priceMax}円`);
     if (parsed.connectOnly) lines.push("・Connect対応");
     if (parsed.nearby) lines.push("・近くの候補");
     if (parsed.compareMode) lines.push("・比較モード");
@@ -109,10 +147,40 @@
     return lines.join("\n");
   }
 
+  /**
+   * Schema 検証済みの検索条件を返す（失敗時は null）
+   */
+  function toValidatedSearchIntent(userText, options) {
+    const Schema = global.TasuAiTasfulSearchSchema;
+    if (!Schema?.fromUserText) {
+      const parsed = parseWorkspaceSearchQuery(userText);
+      return {
+        ok: true,
+        value: {
+          action: "search",
+          vertical: parsed.type === "product" ? "marketplace" : null,
+          query: parsed.keyword || "",
+          location: parsed.prefecture || null,
+          dateFrom: null,
+          dateTo: null,
+          priceMin: parsed.priceMin,
+          priceMax: parsed.priceMax,
+          sort: parsed.sort || "relevance",
+          missingRequiredFields: [],
+        },
+        parsed,
+      };
+    }
+    const result = Schema.fromUserText(userText, options || {});
+    return { ...result, parsed: parseWorkspaceSearchQuery(userText) };
+  }
+
   global.TasuAiWorkspaceSearchIntent = {
     parseWorkspaceSearchQuery,
     formatCriteriaSummary,
     extractPrefecture,
     extractMinRating,
+    extractPriceBounds,
+    toValidatedSearchIntent,
   };
 })(typeof window !== "undefined" ? window : globalThis);

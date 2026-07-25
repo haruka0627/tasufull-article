@@ -1,0 +1,246 @@
+/**
+ * TASFUL AI catalog search — request schema (Zod 非依存)
+ * クライアント ai-tasful-search-schema.js と意味を揃え、サーバー側をより厳格にする。
+ */
+
+export const MAX_QUERY = 300;
+export const MAX_LOCATION = 100;
+export const MAX_BODY_BYTES = 8 * 1024;
+export const MAX_LIMIT = 5;
+
+const ACTIONS = new Set(["search", "compare", "history_lookup", "none"]);
+const VERTICALS = new Set(["marketplace", "platform", "builder", "all"]);
+const SORTS = new Set([
+  "relevance",
+  "price_asc",
+  "price_desc",
+  "rating",
+  "availability",
+  "recent",
+]);
+const FORBIDDEN_KEYS = new Set(["__proto__", "prototype", "constructor"]);
+const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+export type SearchIntent = {
+  action: "search" | "compare" | "history_lookup" | "none";
+  vertical: "marketplace" | "platform" | "builder" | "all" | null;
+  query: string;
+  location: string | null;
+  dateFrom: string | null;
+  dateTo: string | null;
+  priceMin: number | null;
+  priceMax: number | null;
+  sort:
+    | "relevance"
+    | "price_asc"
+    | "price_desc"
+    | "rating"
+    | "availability"
+    | "recent";
+  limit: number;
+};
+
+export type SchemaOk = { ok: true; value: SearchIntent };
+export type SchemaErr = { ok: false; code: string; message: string };
+export type SchemaResult = SchemaOk | SchemaErr;
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  if (value == null || typeof value !== "object") return false;
+  if (Array.isArray(value)) return false;
+  const proto = Object.getPrototypeOf(value);
+  return proto === Object.prototype || proto === null;
+}
+
+function copyOwnSafe(input: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = Object.create(null);
+  for (const key of Reflect.ownKeys(input)) {
+    if (typeof key !== "string") continue;
+    if (FORBIDDEN_KEYS.has(key)) continue;
+    if (key.startsWith("__")) continue;
+    out[key] = input[key];
+  }
+  return out;
+}
+
+function trimStr(value: unknown, max: number): string {
+  if (value == null) return "";
+  if (typeof value !== "string" && typeof value !== "number") return "";
+  const text = String(value).replace(/\s+/g, " ").trim();
+  if (!text) return "";
+  return text.slice(0, max);
+}
+
+function normalizePrice(raw: unknown): number | null {
+  if (raw == null || raw === "") return null;
+  if (typeof raw === "string" && !String(raw).trim()) return null;
+  const n = typeof raw === "number" ? raw : Number(String(raw).replace(/,/g, ""));
+  if (!Number.isFinite(n)) return null;
+  if (n < 0) return null;
+  return n;
+}
+
+function normalizeDate(raw: unknown): string | null {
+  if (raw == null || raw === "") return null;
+  const text = String(raw).trim();
+  const m = text.match(DATE_RE);
+  if (!m) return null;
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const d = Number(m[3]);
+  if (mo < 1 || mo > 12 || d < 1 || d > 31) return null;
+  const dt = new Date(Date.UTC(y, mo - 1, d));
+  if (
+    dt.getUTCFullYear() !== y ||
+    dt.getUTCMonth() !== mo - 1 ||
+    dt.getUTCDate() !== d
+  ) {
+    return null;
+  }
+  return `${m[1]}-${m[2]}-${m[3]}`;
+}
+
+function normalizeSort(raw: unknown): SearchIntent["sort"] | null {
+  const v = String(raw || "")
+    .trim()
+    .toLowerCase();
+  if (!v) return "relevance";
+  if (v === "rating_desc") return "rating";
+  if (v === "nearby" || v === "distance") return "relevance";
+  if (SORTS.has(v)) return v as SearchIntent["sort"];
+  return null;
+}
+
+function normalizeAction(raw: unknown): SearchIntent["action"] | null {
+  const v = String(raw || "")
+    .trim()
+    .toLowerCase();
+  if (!v) return null;
+  if (ACTIONS.has(v)) return v as SearchIntent["action"];
+  return null;
+}
+
+function normalizeVertical(raw: unknown): SearchIntent["vertical"] | "invalid" {
+  if (raw == null || raw === "") return null;
+  const v = String(raw).trim().toLowerCase();
+  if (VERTICALS.has(v)) return v as Exclude<SearchIntent["vertical"], null>;
+  return "invalid";
+}
+
+/**
+ * サーバー厳格検証。不明 vertical/action/sort は黙って拡張せずエラー。
+ */
+export function validateSearchBody(input: unknown): SchemaResult {
+  if (input == null) {
+    return { ok: false, code: "invalid_input", message: "Request body is required" };
+  }
+  if (typeof input !== "object" || Array.isArray(input)) {
+    return { ok: false, code: "invalid_input_type", message: "JSON object body required" };
+  }
+  if (!isPlainObject(input)) {
+    return { ok: false, code: "invalid_input_type", message: "JSON object body required" };
+  }
+
+  const src = copyOwnSafe(input);
+
+  const action = normalizeAction(src.action);
+  if (!action) {
+    return { ok: false, code: "invalid_action", message: "Unsupported action" };
+  }
+
+  const verticalRaw = normalizeVertical(src.vertical);
+  if (verticalRaw === "invalid") {
+    return { ok: false, code: "invalid_vertical", message: "Unsupported vertical" };
+  }
+
+  const sort = normalizeSort(src.sort);
+  if (!sort) {
+    return { ok: false, code: "invalid_sort", message: "Unsupported sort" };
+  }
+
+  const query = trimStr(src.query, MAX_QUERY);
+  if (typeof src.query === "string" && src.query.trim().length > MAX_QUERY) {
+    return { ok: false, code: "query_too_long", message: "query exceeds max length" };
+  }
+
+  let priceMin = normalizePrice(src.priceMin);
+  let priceMax = normalizePrice(src.priceMax);
+  if (src.priceMin != null && src.priceMin !== "" && priceMin == null) {
+    return { ok: false, code: "invalid_price", message: "Invalid priceMin" };
+  }
+  if (src.priceMax != null && src.priceMax !== "" && priceMax == null) {
+    return { ok: false, code: "invalid_price", message: "Invalid priceMax" };
+  }
+  if (
+    (typeof src.priceMin === "number" && src.priceMin < 0) ||
+    (typeof src.priceMax === "number" && src.priceMax < 0)
+  ) {
+    return { ok: false, code: "invalid_price", message: "Negative price is not allowed" };
+  }
+  if (priceMin != null && priceMax != null && priceMin > priceMax) {
+    return { ok: false, code: "invalid_price_range", message: "priceMin must be <= priceMax" };
+  }
+
+  let dateFrom: string | null = null;
+  let dateTo: string | null = null;
+  if (src.dateFrom != null && src.dateFrom !== "") {
+    dateFrom = normalizeDate(src.dateFrom);
+    if (!dateFrom) {
+      return { ok: false, code: "invalid_date", message: "Invalid dateFrom" };
+    }
+  }
+  if (src.dateTo != null && src.dateTo !== "") {
+    dateTo = normalizeDate(src.dateTo);
+    if (!dateTo) {
+      return { ok: false, code: "invalid_date", message: "Invalid dateTo" };
+    }
+  }
+  if (dateFrom && dateTo && dateFrom > dateTo) {
+    return { ok: false, code: "invalid_date_range", message: "dateFrom must be <= dateTo" };
+  }
+
+  let limit = MAX_LIMIT;
+  if (src.limit != null && src.limit !== "") {
+    const n = typeof src.limit === "number" ? src.limit : Number(src.limit);
+    if (!Number.isFinite(n) || !Number.isInteger(n) || n < 1) {
+      return { ok: false, code: "invalid_limit", message: "Invalid limit" };
+    }
+    if (n > MAX_LIMIT) {
+      return { ok: false, code: "limit_exceeded", message: `limit must be <= ${MAX_LIMIT}` };
+    }
+    limit = n;
+  }
+
+  const location = trimStr(src.location, MAX_LOCATION) || null;
+
+  // Phase 1: marketplace search only
+  if (action !== "search" && action !== "compare") {
+    return {
+      ok: false,
+      code: "unsupported_action",
+      message: "Only search/compare are supported in Phase 1",
+    };
+  }
+  if (verticalRaw !== "marketplace") {
+    return {
+      ok: false,
+      code: "unsupported_vertical",
+      message: "Only marketplace vertical is supported in Phase 1",
+    };
+  }
+
+  return {
+    ok: true,
+    value: {
+      action,
+      vertical: "marketplace",
+      query,
+      location,
+      dateFrom,
+      dateTo,
+      priceMin,
+      priceMax,
+      sort,
+      limit,
+    },
+  };
+}

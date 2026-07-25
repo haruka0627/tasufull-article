@@ -35,11 +35,11 @@ function startServer(port = 8778) {
 }
 
 async function sendConsult(page, text, timeoutMs = 20000) {
-  const before = await page.locator("[data-ai-chat-messages] .ai-chat__msg--assistant").count();
+  const before = await page.locator("[data-ai-chat-messages] .ai-msg-row").count();
   await page.fill("[data-ai-chat-input]", text);
   await page.click("[data-ai-chat-send]");
   await page.waitForFunction(
-    (n) => document.querySelectorAll("[data-ai-chat-messages] .ai-chat__msg--assistant").length > n,
+    (n) => document.querySelectorAll("[data-ai-chat-messages] .ai-msg-row").length > n,
     before,
     { timeout: timeoutMs }
   );
@@ -86,7 +86,7 @@ async function main() {
 
     await sendConsult(page, "草刈り業者探したい");
     const tasfulReply = await page.evaluate(() => {
-      const last = document.querySelector("[data-ai-chat-messages] .ai-chat__msg--assistant:last-child");
+      const last = document.querySelector("[data-ai-chat-messages] .ai-msg-row:last-of-type");
       return {
         label: last?.querySelector("[data-ai-search-source]")?.textContent?.trim() || "",
         text: last?.textContent?.trim() || "",
@@ -117,7 +117,7 @@ async function main() {
     await page.locator('input[data-ai-search-target-input][value="web"]').check({ force: true });
     await sendConsult(page, "インボイス制度とは");
     const webLabel = await page.evaluate(() => {
-      const last = document.querySelector("[data-ai-chat-messages] .ai-chat__msg--assistant:last-child");
+      const last = document.querySelector("[data-ai-chat-messages] .ai-msg-row:last-of-type");
       const stored = JSON.parse(sessionStorage.getItem("tasu_ai_chat_cross-matching") || "[]");
       const lastMsg = stored[stored.length - 1];
       return {
@@ -138,7 +138,7 @@ async function main() {
     await page.locator('input[data-ai-search-target-input][value="web"]').check({ force: true });
     await sendConsult(page, "外壁塗装の相場を知りたい");
     const webMarket = await page.evaluate(() => {
-      const last = document.querySelector("[data-ai-chat-messages] .ai-chat__msg--assistant:last-child");
+      const last = document.querySelector("[data-ai-chat-messages] .ai-msg-row:last-of-type");
       return last?.textContent?.trim() || "";
     });
     if (/もう少し条件を具体的に/.test(webMarket)) {
@@ -161,7 +161,7 @@ async function main() {
     await page.locator('input[data-ai-search-target-input][value="both"]').check({ force: true });
     await sendConsult(page, "外壁塗装の相場と業者を探したい", 35000);
     const bothReply = await page.evaluate(() => {
-      const last = document.querySelector("[data-ai-chat-messages] .ai-chat__msg--assistant:last-child");
+      const last = document.querySelector("[data-ai-chat-messages] .ai-msg-row:last-of-type");
       return {
         text: last?.textContent?.trim() || "",
         html: last?.innerHTML || "",
@@ -202,7 +202,7 @@ async function main() {
 
     const bothOrder = await page.evaluate(() => {
       const bubble = document.querySelector(
-        "[data-ai-chat-messages] .ai-chat__msg--assistant:last-child .ai-chat__bubble--rich"
+        "[data-ai-chat-messages] .ai-msg-row:last-of-type .ai-message"
       );
       const html = bubble?.innerHTML || "";
       const idx = (needle) => html.indexOf(needle);
@@ -235,7 +235,7 @@ async function main() {
     await page.setViewportSize({ width: 390, height: 844 });
     const mobileLayout = await page.evaluate(() => {
       const bubble = document.querySelector(
-        "[data-ai-chat-messages] .ai-chat__msg--assistant:last-child .ai-chat__bubble--rich"
+        "[data-ai-chat-messages] .ai-msg-row:last-of-type .ai-message"
       );
       const summary = bubble?.querySelector(".ai-search-summary__list");
       const cta = bubble?.querySelector(".ai-cross-cta, .ai-cross-card__ctas a, .ai-cross-card a");

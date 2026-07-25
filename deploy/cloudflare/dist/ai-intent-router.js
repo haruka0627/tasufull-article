@@ -15,8 +15,18 @@
     REPAIR_REQUEST: "repair_request",
     LISTING_SUPPORT: "listing_support",
     SITE_NAVIGATION: "site_navigation",
+    NONE: "none",
     UNKNOWN: "unknown",
   };
+
+  /** カタログ検索に吸わせない否定例（コード調査・一般質問・探し方の説明など） */
+  const NON_CATALOG_PATTERNS = [
+    /バグ|デバッグ|スタックトレース|例外|エラーの原因|原因を探|問題を探|不具合を探/,
+    /コードから|コードの|このコード|ソースコード|リファクタ|関数を|実装を/,
+    /探し方を|探し方は|探し方について|おすすめの探し方|どうやって探|検索の(仕方|方法|使い方)/,
+    /検索機能について|検索について説明|サイトの検索/,
+    /要約して|翻訳して|コードを書いて|アイデアを出して|この画像を説明/,
+  ];
 
   const NAV_RULES = [
     {
@@ -102,10 +112,18 @@
       .trim();
   }
 
+  function isNonCatalogQuery(text) {
+    return NON_CATALOG_PATTERNS.some((re) => re.test(text));
+  }
+
   function classifyIntent(userText) {
     const text = normalizeText(userText);
     if (!text) {
-      return { intent: INTENTS.UNKNOWN, navKey: "", hints: {} };
+      return { intent: INTENTS.NONE, navKey: "", hints: {} };
+    }
+
+    if (isNonCatalogQuery(text)) {
+      return { intent: INTENTS.NONE, navKey: "", hints: { reason: "non_catalog" } };
     }
 
     for (const rule of NAV_RULES) {
@@ -154,21 +172,36 @@
     if (
       /商品|買いたい|購入|在庫|古着|ジャケット|物販|価格.*円|送料/i.test(text) &&
       (/ある\?|探して|ない\?|ほしい|欲しい|教えて|近く|近所|周辺/i.test(text) ||
-        /こういう商品/.test(text))
+        /こういう商品/.test(text) ||
+        /円以下|円まで|予算/.test(text))
     ) {
       return {
         intent: INTENTS.PRODUCT_SEARCH,
         navKey: "",
-        hints: { nearby: /近く|近所|周辺|付近/.test(text) },
+        hints: {
+          nearby: /近く|近所|周辺|付近/.test(text),
+          vertical: "marketplace",
+        },
       };
     }
 
     if (/近く|近所|周辺|付近/.test(text) && /商品|買|購入|ショップ|店/.test(text)) {
-      return { intent: INTENTS.PRODUCT_SEARCH, navKey: "", hints: { nearby: true } };
+      return {
+        intent: INTENTS.PRODUCT_SEARCH,
+        navKey: "",
+        hints: { nearby: true, vertical: "marketplace" },
+      };
     }
 
-    if (/店舗|お店|ショップ|カフェ|レストラン|実店舗|店頭/i.test(text) && /探|ある|行きたい|教えて/i.test(text)) {
-      return { intent: INTENTS.SHOP_SEARCH, navKey: "", hints: {} };
+    if (
+      /店舗|お店|ショップ|カフェ|レストラン|実店舗|店頭/i.test(text) &&
+      /探|ある|行きたい|教えて/i.test(text)
+    ) {
+      return {
+        intent: INTENTS.SHOP_SEARCH,
+        navKey: "",
+        hints: { vertical: "marketplace" },
+      };
     }
 
     if (/Connect|コネクト|connect対応/i.test(text) && /ワーカー|作業|人手|探/.test(text)) {
@@ -190,7 +223,8 @@
       /スキル|デザイン|動画編集|ライティング|プログラミング|コーディング|イラスト|翻訳|マーケ/i.test(
         text
       ) &&
-      /いる|探|ある|相談|頼/.test(text)
+      /いる|探|ある|相談|頼/.test(text) &&
+      !/コード|バグ|エラー|デバッグ/.test(text)
     ) {
       return { intent: INTENTS.SKILL_REQUEST, navKey: "", hints: {} };
     }
@@ -242,22 +276,31 @@
       };
     }
 
-    if (/商品/.test(text)) {
-      return { intent: INTENTS.PRODUCT_SEARCH, navKey: "", hints: {} };
+    if (/商品/.test(text) && /探|買|購入|ほしい|欲しい|ある/.test(text)) {
+      return {
+        intent: INTENTS.PRODUCT_SEARCH,
+        navKey: "",
+        hints: { vertical: "marketplace" },
+      };
     }
 
-    if (/探して|ある\?|いない\?|おすすめ|マッチング|紹介して/.test(text)) {
+    // 「探して」「おすすめ」単独では service_request に落とさない
+    if (
+      /探して|ある\?|いない\?|マッチング|紹介して/.test(text) &&
+      /業者|店舗|商品|サービス|ワーカー|求人|スキル|ショップ|お店/.test(text)
+    ) {
       return { intent: INTENTS.SERVICE_REQUEST, navKey: "", hints: {} };
     }
 
-    return { intent: INTENTS.UNKNOWN, navKey: "", hints: {} };
+    return { intent: INTENTS.NONE, navKey: "", hints: {} };
   }
 
   function shouldUseCrossSearch(modeId, userText) {
     const mode = String(modeId || "").trim();
-    if (mode === "cross-matching") return true;
     if (global.TasuAiModes?.isConciergeMode?.(mode)) return false;
     const { intent } = classifyIntent(userText);
+    if (intent === INTENTS.NONE || intent === INTENTS.UNKNOWN) return false;
+    if (mode === "cross-matching") return true;
     if (intent !== INTENTS.UNKNOWN) return true;
     if (global.TasuAiModes?.isMatchingMode?.(mode)) return true;
     return false;
@@ -265,7 +308,9 @@
 
   global.TasuAiIntentRouter = {
     INTENTS,
+    NON_CATALOG_PATTERNS,
     classifyIntent,
     shouldUseCrossSearch,
+    isNonCatalogQuery,
   };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -314,67 +314,84 @@
     return "要確認";
   }
 
+  function metaLi(label, value) {
+    const v = String(value ?? "").trim();
+    if (!v || /^[—\-–]$|^未分類$|^情報なし$|^評価なし$/.test(v)) return "";
+    return `<li><span>${esc(label)}</span> ${esc(v)}</li>`;
+  }
+
   function buildCardMetaBlock(card, profile) {
     if (profile.id === "job") {
       return (
         `<ul class="ai-cross-card__meta ai-compare-card__meta">` +
-        `<li><span>職種</span> ${esc(card.category)}</li>` +
-        `<li><span>給与</span> ${esc(card.price)}</li>` +
-        `<li><span>勤務地</span> ${esc(card.region)}</li>` +
-        `<li><span>雇用形態</span> ${esc(inferEmploymentType(card))}</li>` +
+        metaLi("職種", card.category) +
+        metaLi("給与", card.price || card.priceLabel) +
+        metaLi("勤務地", card.region || card.locationLabel) +
+        metaLi("雇用形態", inferEmploymentType(card)) +
         `</ul>`
       );
     }
     if (profile.id === "product") {
-      const shopLine = card.shopName ? `<li><span>店舗</span> ${esc(card.shopName)}</li>` : "";
+      const shopLine = card.shopName ? metaLi("店舗", card.shopName) : "";
+      const ratingLine =
+        card.rating != null && card.rating !== ""
+          ? metaLi(
+              "評価",
+              typeof card.rating === "number" ? `★ ${card.rating}` : card.rating
+            )
+          : "";
+      const reviewLine =
+        card.reviewCount != null ? metaLi("口コミ", `${card.reviewCount}件`) : "";
       return (
         `<ul class="ai-cross-card__meta ai-compare-card__meta">` +
-        `<li><span>価格</span> ${esc(card.price)}</li>` +
-        `<li><span>カテゴリ</span> ${esc(card.category)}</li>` +
+        metaLi("価格", card.priceLabel || card.price) +
+        metaLi("カテゴリ", card.category) +
+        metaLi("地域", card.locationLabel || card.region) +
+        metaLi("在庫", card.availabilityLabel) +
         shopLine +
+        ratingLine +
+        reviewLine +
         `</ul>`
       );
     }
     if (profile.id === "worker") {
-      const connectLine = card.connectSupported
-        ? `<li><span>Connect</span> 対応</li>`
-        : "";
+      const connectLine = card.connectSupported ? `<li><span>Connect</span> 対応</li>` : "";
       return (
         `<ul class="ai-cross-card__meta ai-compare-card__meta">` +
-        `<li><span>対応カテゴリ</span> ${esc(card.category)}</li>` +
-        `<li><span>地域</span> ${esc(card.region)}</li>` +
-        `<li><span>料金目安</span> ${esc(card.price)}</li>` +
-        `<li><span>評価</span> ${esc(card.rating || "—")}</li>` +
+        metaLi("対応カテゴリ", card.category) +
+        metaLi("地域", card.region || card.locationLabel) +
+        metaLi("料金目安", card.price || card.priceLabel) +
+        metaLi("評価", card.rating) +
         connectLine +
         `</ul>`
       );
     }
     return (
       `<ul class="ai-cross-card__meta ai-compare-card__meta">` +
-      `<li><span>カテゴリ</span> ${esc(card.category)}</li>` +
-      `<li><span>地域</span> ${esc(card.region)}</li>` +
-      `<li><span>料金</span> ${esc(card.price)}</li>` +
-      `<li><span>評価</span> ${esc(card.rating || "—")}</li>` +
+      metaLi("カテゴリ", card.category) +
+      metaLi("地域", card.region || card.locationLabel) +
+      metaLi("料金", card.price || card.priceLabel) +
+      metaLi("評価", card.rating) +
       `</ul>`
     );
   }
 
   function buildComparePoint(card, userText) {
-    const hay = `${card.title} ${card.category} ${card.description}`.toLowerCase();
+    const hay = `${card.title} ${card.category || ""} ${card.description || card.summary || ""}`.toLowerCase();
     const words = String(userText || "")
       .replace(/してほしい|したい|探して|教えて|ください/g, " ")
       .split(/[\s、。]+/)
       .map((w) => w.trim())
       .filter((w) => w.length >= 2);
     const hit = words.find((w) => hay.includes(w.toLowerCase()));
-    if (hit) return `「${hit}」に近いカテゴリ・掲載内容です`;
-    if (card.kind === "business_service") return "業務サービス掲載として条件に近い候補です";
-    if (card.kind === "worker") return "作業・人手の依頼条件に近い候補です";
-    if (card.kind === "skill") return "スキル出品として関連が高い候補です";
-    if (card.kind === "product" || card.kind === "shop_product") return "商品条件に近い候補です";
-    if (card.kind === "job") return "求人条件に近い募集です";
-    if (card.kind === "shop") return "店舗・販売カテゴリの候補です";
-    return "ご希望のキーワードに関連する候補です";
+    if (hit) return `「${hit}」に関連する候補です`;
+    if (card.kind === "business_service") return "業務サービスの候補です";
+    if (card.kind === "worker") return "ワーカー掲載の候補です";
+    if (card.kind === "skill") return "スキル出品の候補です";
+    if (card.kind === "product" || card.kind === "shop_product") return "関連する商品です";
+    if (card.kind === "job") return "求人掲載の候補です";
+    if (card.kind === "shop") return "店舗・販売の候補です";
+    return "検索条件に一致する候補です";
   }
 
   function buildReason(card, userText) {
@@ -392,28 +409,23 @@
     desc = "",
     contactHtml = "",
     profile = CATEGORY_PROFILES.vendor,
+    showMetrics = false,
   }) {
-    const m = metrics || {};
     const head =
       rank != null
         ? `<p class="ai-compare-card__rank">${rank}. <strong>${esc(title)}</strong></p>`
         : `<p class="ai-compare-card__title"><strong>${esc(title)}</strong></p>`;
-    const metricRows = profile.metrics
-      .map(
-        (def) =>
-          `<div class="ai-compare-card__metric"><dt>${def.label}</dt>` +
-          `<dd aria-label="${m[def.key] || 0}点満点中5">${starsDisplay(m[def.key])}</dd></div>`
-      )
-      .join("");
+    // 疑似スコア・hashScore 由来の星表示は出さない（実データ meta のみ）
+    void metrics;
+    void matchScore;
+    void showMetrics;
     return (
       `<article class="ai-cross-card ai-compare-card ai-compare-card--${esc(profile.id)}" data-ai-cross-card data-ai-compare-profile="${esc(profile.id)}">` +
       head +
       metaBlock +
       (desc ? `<p class="ai-compare-card__desc">${esc(desc)}</p>` : "") +
-      `<dl class="ai-compare-card__metrics">${metricRows}</dl>` +
-      `<p class="ai-compare-card__score"><span>条件一致度</span> <strong>${matchScore}点</strong></p>` +
       (comparePoint
-        ? `<p class="ai-compare-card__point"><span>比較ポイント</span> ${esc(comparePoint)}</p>`
+        ? `<p class="ai-compare-card__point"><span>関連</span> ${esc(comparePoint)}</p>`
         : "") +
       contactHtml +
       (ctasHtml ? `<div class="ai-cross-card__ctas ai-cross-card__ctas--stack">${ctasHtml}</div>` : "") +
@@ -465,7 +477,7 @@
     const detailUrl = esc(card.detailUrl || "");
     return (
       `<div class="ai-compare-recommend">` +
-      `<p class="ai-compare-recommend__label">おすすめ:</p>` +
+      `<p class="ai-compare-recommend__label">候補の一例:</p>` +
       `<p class="ai-compare-recommend__name"><strong>${esc(card.title)}</strong></p>` +
       (detailUrl
         ? `<p class="ai-compare-recommend__cta"><a class="ai-cross-cta" href="${detailUrl}">詳細を見る</a></p>`
@@ -476,37 +488,14 @@
 
   function buildComparisonSummaryHtml(items, userText, options = {}) {
     if (!items || items.length < 2) return "";
-    const profile =
-      options.profile || resolveProfile(options.intent || items[0]?.searchIntent, items[0]?.kind);
-    const scored = items.map((card, i) => ({
-      title: card.title,
-      metrics:
-        card.compareMetrics ||
-        deriveProfileMetrics(card, userText, i, profile),
-    }));
+    void userText;
     const countLabel = options.countLabel || `${items.length}件`;
-    const axes = profile.summaryAxes || CATEGORY_PROFILES.vendor.summaryAxes;
-    const recommendHtml = renderRecommendPickHtml(pickRecommendedCard(items, userText, profile));
-
-    let body = recommendHtml + `<p>今回の条件では<br>${esc(countLabel)}とも対応可能な候補です。</p>`;
-    const used = new Set();
-    axes.forEach((axis) => {
-      const best = [...scored].sort((a, b) => (b.metrics[axis.key] || 0) - (a.metrics[axis.key] || 0))[0];
-      if (!best || used.has(best.title)) return;
-      used.add(best.title);
-      body += `<p>${esc(axis.label)}<br><strong>${esc(best.title)}</strong></p>`;
-    });
-    if (options.weekendPick) {
-      body += `<p>土日対応重視なら<br><strong>${esc(options.weekendPick)}</strong></p>`;
-    }
-    body +=
-      `<p>という傾向があります。</p>` +
-      `<p class="ai-compare-result__note">最終判断は利用者自身で行ってください。</p>`;
-
+    // 疑似スコアに基づく「〜重視なら」推薦は行わない
     return (
       `<section class="ai-search-summary ai-compare-result">` +
       `<h3 class="ai-search-summary__title">整理結果</h3>` +
-      body +
+      `<p>検索条件に一致する候補が ${esc(countLabel)} あります。詳細は各ページでご確認ください。</p>` +
+      `<p class="ai-compare-result__note">最終判断は利用者自身で行ってください。</p>` +
       `</section>`
     );
   }
@@ -770,20 +759,21 @@
 
   function renderCardHtml(card, index, userText, intent) {
     const profile = resolveProfile(intent || card.searchIntent, card.kind);
-    const metrics = deriveProfileMetrics(card, userText, index - 1, profile);
     const comparePoint = buildComparePoint(card, userText);
     const showContact = profile.id === "vendor" || profile.id === "worker";
+    const desc = card.summary || card.description || "";
     return renderCompareCard({
       rank: index,
       title: card.title,
-      metrics,
-      matchScore: metrics.matchScore,
+      metrics: null,
+      matchScore: null,
       comparePoint,
       metaBlock: buildCardMetaBlock(card, profile),
-      desc: card.description,
+      desc,
       profile,
       contactHtml: showContact ? renderContactBlock(card) : "",
       ctasHtml: ctasForCard(card),
+      showMetrics: false,
     });
   }
 
@@ -918,16 +908,36 @@
 
   function introForIntent(intent) {
     const map = {
-      service_request: "業務サービス（法人・業者）の掲載から候補を探しました。",
-      worker_request: "ワーカー掲載から、作業・人手の候補を探しました。",
-      skill_request: "スキル・ワーカー掲載から候補を探しました。",
-      product_search: "商品・店舗販売の掲載から候補を探しました。",
-      job_search: "求人掲載から候補を探しました。",
-      shop_search: "店舗・販売の掲載から店舗候補を探しました。",
-      delivery_request: "配送・デリバリー・代行に近い候補を横断検索しました。",
-      repair_request: "水道修理・緊急対応に近い業務サービス・ワーカーを探しました。",
+      service_request: "業務サービス（法人・業者）の掲載から、検索条件に一致する候補を表示します。",
+      worker_request: "ワーカー掲載から、検索条件に一致する候補を表示します。",
+      skill_request: "スキル・ワーカー掲載から、検索条件に一致する候補を表示します。",
+      product_search: "Marketplace の商品・店舗販売から、関連する商品を表示します。",
+      job_search: "求人掲載から、検索条件に一致する候補を表示します。",
+      shop_search: "店舗・販売の掲載から、関連する店舗候補を表示します。",
+      delivery_request: "配送・デリバリー・代行に関連する候補を表示します。",
+      repair_request: "修理・緊急対応に関連する業務サービス・ワーカーを表示します。",
     };
-    return map[intent] || "TASFUL内を横断検索しました。";
+    return map[intent] || "TASFUL内の検索条件に一致する候補を表示します。";
+  }
+
+  function formatClarifyQuestion(question) {
+    const q = String(question || "何を探していますか？").trim();
+    const plain = q;
+    const html =
+      `<div class="ai-cross-intro ai-cross-clarify">` +
+      `<p>${esc(q)}</p>` +
+      `<p class="ai-cross-note">※ 条件が分かれば TASFUL内を検索します。AIは購入・決済を実行しません。</p>` +
+      `</div>`;
+    return { plain, html, intent: "clarify", clarify: true, search_used: false };
+  }
+
+  function formatSearchError() {
+    const plain =
+      "TASFUL内の検索を完了できませんでした。しばらくしてから再度お試しください。";
+    const html =
+      `<div class="ai-cross-intro"><p class="ai-cross-error">${esc(plain)}</p></div>` +
+      `<p class="ai-cross-note">※ AIは依頼・購入・応募・決済を実行しません。</p>`;
+    return { plain, html, intent: "search_error", searchError: true };
   }
 
   function renderContactDraftCta(topCard) {
@@ -942,7 +952,7 @@
     );
   }
 
-  function formatSearchResult(intent, userText, items) {
+  function formatSearchResult(intent, userText, items, options = {}) {
     const intro = introForIntent(intent);
     const criteriaSummary =
       global.TasuAiWorkspaceSearchIntent?.formatCriteriaSummary?.(
@@ -950,20 +960,25 @@
       ) || "";
     const safety = needsSafetyNotice(intent) ? safetyNoticeHtml() : "";
 
+    if (options.searchError) {
+      return formatSearchError();
+    }
+
     if (!items.length) {
-      const plain = `${intro}\n\n該当する候補が見つかりませんでした。`;
+      const emptyMsg =
+        "条件に合う候補が見つかりませんでした。キーワードや予算を変えて再検索できます。";
+      const plain = `${intro}\n\n${emptyMsg}`;
       const html =
         `<div class="ai-cross-intro"><p>${esc(intro)}</p>${safety}` +
-        `<p class="ai-cross-empty">該当する候補が見つかりませんでした。</p></div>` +
+        `<p class="ai-cross-empty">${esc(emptyMsg)}</p></div>` +
         `<p class="ai-cross-note">※ AIは依頼・購入・応募・決済を実行しません。</p>`;
-      return { plain, html, intent };
+      return { plain, html, intent, resultCount: 0 };
     }
 
     let plain = `${intro}\n\n候補:\n\n`;
     items.forEach((card, i) => {
       plain +=
         `${i + 1}. ${card.title}\n` +
-        `   電話: ${card.phoneCallEligible ? card.phone : "詳細ページで確認"}\n` +
         `   詳細: ${card.detailUrl}\n\n`;
     });
     plain += `※ 問い合わせ文は「AIで問い合わせ文を作成する」から生成できます。最終操作は各ページでご自身が行ってください。`;
@@ -985,7 +1000,7 @@
     html += renderContactDraftCta(items[0]);
     html += `<p class="ai-cross-note">※ AIは依頼確定・購入確定・応募確定・決済・個人情報送信・取引完了・レビュー投稿は行いません。電話・チャット・詳細ページからご確認ください。</p>`;
 
-    return { plain, html, intent };
+    return { plain, html, intent, resultCount: items.length };
   }
 
   function notifyAnpiSearch(userText, result, extra = {}) {
@@ -1011,6 +1026,10 @@
     const text = String(userText || "").trim();
     if (!text) return null;
 
+    if (intent === INTENTS.NONE || intent === INTENTS.UNKNOWN) {
+      return null;
+    }
+
     if (intent === INTENTS.SITE_NAVIGATION) {
       const result = formatSiteNavigation(navKey || "contact");
       notifyAnpiSearch(text, result, { navKey: navKey || "contact" });
@@ -1023,31 +1042,90 @@
       return result;
     }
 
-    if (intent === INTENTS.UNKNOWN && modeId !== "cross-matching") {
+    const plan = SEARCH_PLANS[intent];
+    if (!plan) {
       return null;
     }
 
-    const plan = SEARCH_PLANS[intent];
-    if (!plan) {
-      if (modeId === "cross-matching") {
-        const result = {
-          plain: "意図を特定できませんでした。地域・予算を添えて再度お試しください。",
-          html: "<p>意図を特定できませんでした。</p>",
-          intent: INTENTS.UNKNOWN,
-        };
-        notifyAnpiSearch(text, result);
-        return result;
-      }
-      return null;
+    const schemaResult =
+      global.TasuAiTasfulSearchSchema?.fromUserText?.(text, { intent, hints }) ||
+      global.TasuAiWorkspaceSearchIntent?.toValidatedSearchIntent?.(text, { intent, hints });
+
+    if (schemaResult && schemaResult.ok === false) {
+      return formatSearchError();
+    }
+
+    const validated = schemaResult?.ok ? schemaResult.value : null;
+    const schemaValue = validated;
+
+    if (
+      schemaValue &&
+      (intent === INTENTS.PRODUCT_SEARCH || intent === INTENTS.SHOP_SEARCH) &&
+      Array.isArray(schemaValue.missingRequiredFields) &&
+      schemaValue.missingRequiredFields.includes("query")
+    ) {
+      const hasCategoryHint = Boolean(
+        global.TasuAiWorkspaceSearchIntent?.parseWorkspaceSearchQuery?.(text)?.category
+      );
+      const question = hasCategoryHint
+        ? "予算や希望条件はありますか？"
+        : "何を探していますか？";
+      const clarify = formatClarifyQuestion(question);
+      notifyAnpiSearch(text, clarify, { intent });
+      return clarify;
     }
 
     const ctx = buildSearchCtx(text, messages, hints);
-    const items = await runSearchPlan(plan, ctx);
-    const result = formatSearchResult(intent, text, items);
+    if (schemaValue) {
+      ctx.searchIntentSchema = schemaValue;
+      ctx.validatedIntent = schemaValue;
+    }
+
+    let items = [];
+    let searchError = false;
+    let insufficient = false;
+    try {
+      if (
+        (intent === INTENTS.PRODUCT_SEARCH || intent === INTENTS.SHOP_SEARCH) &&
+        global.TasuAiSearch?.queryProductItems
+      ) {
+        if (intent === INTENTS.SHOP_SEARCH) {
+          const shopResult = await global.TasuAiSearch.queryShopItems(ctx);
+          if (shopResult?.error) searchError = true;
+          if (shopResult?.insufficient) insufficient = true;
+          items = mergeItems([shopResult?.items || []]);
+        } else {
+          const productResult = await global.TasuAiSearch.queryProductItems(ctx);
+          if (productResult?.error) searchError = true;
+          if (productResult?.insufficient) insufficient = true;
+          items = mergeItems([productResult?.items || []]);
+        }
+      } else {
+        items = await runSearchPlan(plan, ctx);
+      }
+    } catch (err) {
+      console.warn("[TasuAiCrossSearch] search failed:", err);
+      searchError = true;
+    }
+
+    if (searchError) {
+      const result = formatSearchError();
+      notifyAnpiSearch(text, result, { intent });
+      return result;
+    }
+
+    if (insufficient && !items.length) {
+      const clarify = formatClarifyQuestion("何を探していますか？");
+      notifyAnpiSearch(text, clarify, { intent });
+      return clarify;
+    }
+
+    const result = formatSearchResult(intent, text, items, { searchError: false });
     global.TasuAnpiNotifications?.setLastSearchContext?.({
       userText: text,
       intent,
       items,
+      vertical: schemaValue?.vertical || null,
     });
     notifyAnpiSearch(text, result, { items });
     return result;
@@ -1061,6 +1139,8 @@
     SAFETY_INTENTS,
     CATEGORY_PROFILES,
     tryHandle,
+    formatClarifyQuestion,
+    formatSearchError,
     buildContactDraft,
     buildReason,
     buildComparePoint,

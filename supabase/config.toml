@@ -77,3 +77,7 @@ verify_jwt = false
 
 [functions.ai-workspace-music-generate]
 verify_jwt = false
+
+# Public marketplace catalog search (anon allowed; no service role)
+[functions.ai-tasful-search]
+verify_jwt = false

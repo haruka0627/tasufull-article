@@ -35,19 +35,16 @@ function isIgnorableConsoleError(text) {
 
 async function sendChat(page, message) {
   const countsBefore = await page.evaluate(() => ({
-    users: document.querySelectorAll("[data-ai-chat-messages] .ai-chat__msg--user").length,
-    assistants: document.querySelectorAll("[data-ai-chat-messages] .ai-chat__msg--assistant")
-      .length,
+    users: document.querySelectorAll("[data-ai-chat-messages] .user-bubble-row").length,
+    assistants: document.querySelectorAll("[data-ai-chat-messages] .ai-msg-row").length,
   }));
   await page.locator("[data-ai-chat-input]").fill(message);
   await page.locator("[data-ai-chat-send]").click();
   await page.waitForFunction(
     ({ uc, ac }) => {
-      const users = document.querySelectorAll("[data-ai-chat-messages] .ai-chat__msg--user");
+      const users = document.querySelectorAll("[data-ai-chat-messages] .user-bubble-row");
       if (users.length <= uc) return false;
-      const assistants = document.querySelectorAll(
-        "[data-ai-chat-messages] .ai-chat__msg--assistant"
-      );
+      const assistants = document.querySelectorAll("[data-ai-chat-messages] .ai-msg-row");
       if (assistants.length <= ac) return false;
       const last = assistants[assistants.length - 1];
       return last && (last.textContent || "").trim().length > 40;
@@ -59,7 +56,7 @@ async function sendChat(page, message) {
 
 async function lastAssistantHtml(page) {
   return page.evaluate(() => {
-    const msgs = document.querySelectorAll("[data-ai-chat-messages] .ai-chat__msg--assistant");
+    const msgs = document.querySelectorAll("[data-ai-chat-messages] .ai-msg-row .ai-message");
     const last = msgs[msgs.length - 1];
     return last ? last.innerHTML : "";
   });
@@ -79,8 +76,8 @@ async function runViewport(browser, vp) {
     waitUntil: "domcontentloaded",
   });
   await page.waitForFunction(
-    () => Boolean(window.TasuAiCrossSearch && window.TasuAiContactInfo),
-    { timeout: 10000 }
+    () => Boolean(window.TasuAiCrossSearch && window.TasuAiIntentRouter),
+    { timeout: 15000 }
   );
 
   await sendChat(page, "水漏れ直してほしい");

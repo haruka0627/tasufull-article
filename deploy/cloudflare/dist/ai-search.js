@@ -115,9 +115,22 @@
     return parts.length ? parts.join(separator) : fallback;
   }
 
+  function isMarketplaceCardKind(kind) {
+    const k = String(kind || "");
+    return k === "product" || k === "shop_product";
+  }
+
+  function omitPlaceholderLabel(value) {
+    const text = toDisplayLabel(value, "");
+    if (!text) return "";
+    if (/^[—\-–]$|^未分類$|^情報なし$|^評価なし$|^未設定$/.test(text)) return "";
+    return text;
+  }
+
   function normalizeSearchCard(card) {
     if (!card || typeof card !== "object") return card;
     const kind = String(card.kind || "");
+    const marketplace = isMarketplaceCardKind(kind) || card.vertical === "marketplace";
     const mapKind =
       kind === "business_service"
         ? "vendor"
@@ -132,6 +145,48 @@
                 : kind === "product" || kind === "shop_product"
                   ? "product"
                   : "default";
+    if (marketplace) {
+      const title = sanitizeUserFacingTitle(card.title, mapKind, card.id);
+      const category = omitPlaceholderLabel(card.category);
+      const region = omitPlaceholderLabel(card.region || card.locationLabel);
+      const price = omitPlaceholderLabel(card.price || card.priceLabel);
+      const rating = omitPlaceholderLabel(card.rating);
+      const description = omitPlaceholderLabel(
+        sanitizeUserFacingText(card.description || card.summary, "")
+      );
+      const next = { ...card, title };
+      if (category) next.category = category;
+      else delete next.category;
+      if (region) {
+        next.region = region;
+        next.locationLabel = region;
+      } else {
+        delete next.region;
+        delete next.locationLabel;
+      }
+      if (price) {
+        next.price = price;
+        next.priceLabel = price;
+      } else {
+        delete next.price;
+        delete next.priceLabel;
+      }
+      if (rating) next.rating = rating;
+      else delete next.rating;
+      if (description) {
+        next.description = description;
+        next.summary = description;
+      } else {
+        delete next.description;
+        delete next.summary;
+      }
+      if (card.shopName != null) {
+        const shop = omitPlaceholderLabel(sanitizeUserFacingText(card.shopName, ""));
+        if (shop) next.shopName = shop;
+        else delete next.shopName;
+      }
+      return next;
+    }
     return {
       ...card,
       title: sanitizeUserFacingTitle(card.title, mapKind, card.id),
@@ -145,6 +200,135 @@
           ? sanitizeUserFacingText(card.shopName, "店舗")
           : card.shopName,
     };
+  }
+
+  const MARKETPLACE_DETAIL_RE =
+    /^(detail-shop-product\.html|detail-product\.html|detail-shop-store\.html)(\?|$)/i;
+
+  function toInternalRelativeDetailUrl(url) {
+    const raw = String(url || "").trim();
+    if (!raw) return "";
+    if (/^javascript:/i.test(raw) || raw.startsWith("//")) return "";
+    let path = raw;
+    if (/^https?:\/\//i.test(raw)) {
+      try {
+        const u = new URL(raw);
+        const loc = global.location;
+        if (loc?.origin && u.origin !== loc.origin) return "";
+        path = `${u.pathname.replace(/^\//, "")}${u.search || ""}`;
+      } catch {
+        return "";
+      }
+    }
+    path = path.replace(/^\.\//, "").replace(/^\//, "");
+    if (!MARKETPLACE_DETAIL_RE.test(path.split("#")[0])) return "";
+    return path;
+  }
+
+  function applyAiDetailNav(relativeUrl, navOpts) {
+    const base = toInternalRelativeDetailUrl(relativeUrl);
+    if (!base) return "";
+    if (global.TasuDetailNav?.buildAiDetailUrl) {
+      return global.TasuDetailNav.buildAiDetailUrl(base, navOpts || {});
+    }
+    return base;
+  }
+
+  function pickRealNumeric(...values) {
+    for (const v of values) {
+      if (v == null || v === "") continue;
+      const n = typeof v === "number" ? v : Number(String(v).replace(/[^\d.]/g, ""));
+      if (Number.isFinite(n) && n > 0) return n;
+    }
+    return undefined;
+  }
+
+  function toMarketplaceSearchResult(item, navOpts) {
+    if (!item || typeof item !== "object") return null;
+    const listing = item.listing || {};
+    const product = item.product || {};
+    const kind = item.source === "shop_store" ? "shop_product" : "product";
+    const id = String(listing?.id || product?.id || item.product?.id || "").trim();
+    const title = sanitizeUserFacingTitle(
+      item.productName || product.title || product.product_name || "",
+      "product",
+      id
+    );
+    if (!title) return null;
+
+    const detailUrl = applyAiDetailNav(item.detailUrl, navOpts);
+    if (!detailUrl) return null;
+
+    const priceRaw = omitPlaceholderLabel(
+      item.price && item.price !== "要相談" ? item.price : ""
+    );
+    const summary = omitPlaceholderLabel(item.features);
+    const locationLabel = omitPlaceholderLabel(
+      String(item.regionDelivery || "").replace(/^対応地域:\s*/, "")
+    );
+    const rating = pickRealNumeric(
+      product.rating,
+      product.rating_average,
+      listing.rating_average,
+      listing.review_average
+    );
+    const reviewCount = pickRealNumeric(
+      product.review_count,
+      listing.review_count,
+      listing.form_data?.review_count
+    );
+    const imageUrl = omitPlaceholderLabel(
+      product.image_url || product.thumbnail_url || listing.image_url || listing.cover_image || ""
+    );
+    const stock = omitPlaceholderLabel(item.stockLabel);
+    const availabilityLabel =
+      stock && !/なし|売切|欠品|在庫切れ/i.test(stock)
+        ? stock
+        : stock && /なし|売切|欠品|在庫切れ/i.test(stock)
+          ? stock
+          : undefined;
+
+    const result = {
+      id: id || detailUrl,
+      vertical: "marketplace",
+      type: kind,
+      kind,
+      title,
+      detailUrl,
+      primaryActionLabel: "購入ページへ",
+    };
+    if (summary) {
+      result.summary = summary;
+      result.description = summary;
+    }
+    if (imageUrl) result.imageUrl = imageUrl;
+    if (priceRaw) {
+      result.priceLabel = priceRaw;
+      result.price = priceRaw;
+    }
+    if (rating != null) result.rating = rating;
+    if (reviewCount != null) result.reviewCount = reviewCount;
+    if (locationLabel) {
+      result.locationLabel = locationLabel;
+      result.region = locationLabel;
+    }
+    if (availabilityLabel) result.availabilityLabel = availabilityLabel;
+    const category = omitPlaceholderLabel(item.category);
+    if (category) result.category = category;
+    const shopName = omitPlaceholderLabel(item.shopName);
+    if (shopName) result.shopName = shopName;
+    if (listing?.id) {
+      const shopUrl = applyAiDetailNav(
+        `detail-shop-store.html?id=${encodeURIComponent(String(listing.id))}`,
+        navOpts
+      );
+      if (shopUrl) result.shopDetailUrl = shopUrl;
+    }
+    result.consultUrl = detailUrl;
+    result.chatUrl = detailUrl;
+    result.purchaseUrl = detailUrl;
+    result.raw = item;
+    return normalizeSearchCard(result);
   }
 
   function getFieldMatch() {
@@ -964,9 +1148,9 @@
       regionDelivery: toDisplayJoin(
         [norm?.deliveryMethod, fd.service_area, fd.area, listing.service_area],
         " / ",
-        "—"
+        ""
       ),
-      features: toDisplayJoin(tags, "、", "—")
+      features: toDisplayJoin(tags, "、", "")
         .split("、")
         .filter(Boolean)
         .slice(0, 5)
@@ -1009,8 +1193,8 @@
       ),
       price: formatPriceText(product.price, null),
       priceYen: parsePriceYen(product.price, null),
-      regionDelivery: toDisplayJoin(deliveryParts, " / ", visitArea || "—"),
-      features: toDisplayJoin(tags, "、", "—")
+      regionDelivery: toDisplayJoin(deliveryParts, " / ", visitArea || ""),
+      features: toDisplayJoin(tags, "、", "")
         .split("、")
         .filter(Boolean)
         .slice(0, 5)
@@ -3247,31 +3431,12 @@
     return normalizeSearchCard(enrichCardContact(card, item));
   }
 
-  function productCandidateToCard(item) {
-    const detailUrl = absDetailUrl(item.detailUrl);
-    const listing = item.listing || {};
-    const card = {
-      kind: item.source === "shop_store" ? "shop_product" : "product",
-      id: String(listing?.id || item.product?.id || ""),
-      title: item.productName || "商品",
-      category: toDisplayLabel(item.category, "商品"),
-      region: toDisplayLabel(item.regionDelivery, DISPLAY_FALLBACK.region),
-      price: toDisplayLabel(item.price, DISPLAY_FALLBACK.price),
-      rating: DISPLAY_FALLBACK.rating,
-      description: toDisplayLabel(item.features, DISPLAY_FALLBACK.description),
-      detailUrl,
-      estimateUrl: "",
-      consultUrl: detailUrl,
-      chatUrl: detailUrl,
-      applyUrl: "",
-      purchaseUrl: detailUrl,
-      shopName: item.shopName,
-      shopDetailUrl: listing?.id
-        ? absDetailUrl(`detail-shop-store.html?id=${encodeURIComponent(String(listing.id))}`)
-        : "",
-      raw: item,
-    };
-    return normalizeSearchCard(enrichCardContact(card, listing));
+  function productCandidateToCard(item, navOpts) {
+    const searchQ = String(navOpts?.q || "").trim();
+    const result = toMarketplaceSearchResult(item, searchQ ? { q: searchQ } : {});
+    if (!result) return null;
+    const listing = item?.listing || {};
+    return enrichCardContact(result, listing);
   }
 
   function shopFromProductCard(item) {
@@ -3432,24 +3597,238 @@
     };
   }
 
-  async function queryProductItems(ctx) {
-    const crossCtx = makeCrossCtx(ctx);
-    const criteria = extractProductCriteria(crossCtx);
-    ensureRelaxedCriteria(criteria);
-    if (!hasMinimumProductCriteria(criteria) && criteria.text.length < 2) {
-      return { items: [], criteria, insufficient: true };
+  function edgeMarketplaceItemToCard(item) {
+    if (!item || typeof item !== "object") return null;
+    const detailUrl = toInternalRelativeDetailUrl(item.detailUrl);
+    if (!detailUrl) return null;
+    const kind = String(item.kind || item.type || "product");
+    const card = {
+      id: String(item.id || "").trim(),
+      vertical: "marketplace",
+      type: String(item.type || kind),
+      kind,
+      title: String(item.title || "").trim(),
+      detailUrl,
+      primaryActionLabel: String(item.primaryActionLabel || "購入ページへ"),
+      purchaseUrl: detailUrl,
+      consultUrl: detailUrl,
+      chatUrl: detailUrl,
+    };
+    if (!card.id || !card.title) return null;
+    if (item.summary) {
+      card.summary = String(item.summary);
+      card.description = card.summary;
     }
+    if (item.imageUrl) card.imageUrl = String(item.imageUrl);
+    if (item.priceLabel) {
+      card.priceLabel = String(item.priceLabel);
+      card.price = card.priceLabel;
+    }
+    if (item.rating != null && Number.isFinite(Number(item.rating))) {
+      card.rating = Number(item.rating);
+    }
+    if (item.reviewCount != null && Number.isFinite(Number(item.reviewCount))) {
+      card.reviewCount = Number(item.reviewCount);
+    }
+    if (item.locationLabel) {
+      card.locationLabel = String(item.locationLabel);
+      card.region = card.locationLabel;
+    }
+    if (item.availabilityLabel) card.availabilityLabel = String(item.availabilityLabel);
+    if (Array.isArray(item.badges) && item.badges.length) {
+      card.badges = item.badges.map((b) => String(b)).filter(Boolean).slice(0, 5);
+    }
+    return normalizeSearchCard(card);
+  }
+
+  function buildMarketplaceEdgePayload(ctx, criteria) {
+    const schemaIntent = ctx.searchIntentSchema || ctx.validatedIntent || null;
+    const text = String(ctx.userText || ctx.text || criteria.text || "").trim();
+    const Schema = global.TasuAiTasfulSearchSchema;
+    const fromSchema =
+      Schema?.fromUserText?.(text, {
+        intent: "product_search",
+        hints: ctx.intentHints || {},
+        vertical: "marketplace",
+      }) || null;
+    const value = (schemaIntent && typeof schemaIntent === "object"
+      ? schemaIntent
+      : fromSchema?.ok
+        ? fromSchema.value
+        : null) || {
+      action: "search",
+      vertical: "marketplace",
+      query: criteria.productText || text,
+      location: criteria.area || null,
+      dateFrom: null,
+      dateTo: null,
+      priceMin: criteria.priceMin ?? null,
+      priceMax: criteria.priceMax ?? criteria.budgetYen ?? null,
+      sort: criteria.schemaSort || "relevance",
+      missingRequiredFields: [],
+    };
+    return {
+      action: value.action === "compare" ? "compare" : "search",
+      vertical: "marketplace",
+      query: String(value.query || criteria.productText || text || "").slice(0, 300),
+      location: value.location || criteria.area || null,
+      dateFrom: value.dateFrom || null,
+      dateTo: value.dateTo || null,
+      priceMin: value.priceMin ?? null,
+      priceMax: value.priceMax ?? criteria.budgetYen ?? null,
+      sort: value.sort || "relevance",
+      limit: MAX_RESULTS,
+    };
+  }
+
+  async function fetchMarketplaceViaEdge(ctx, criteria) {
+    const Gateway = global.TasuAiModelGateway;
+    const endpoint = Gateway?.getSupabaseEndpoint?.("ai-tasful-search");
+    if (!endpoint?.url || !endpoint?.anonKey) {
+      return { ok: false, error: "search_unavailable", httpStatus: 0 };
+    }
+
+    let accessToken = "";
+    try {
+      const client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        const { data } = await client.auth.getSession();
+        accessToken = String(data?.session?.access_token || "").trim();
+      }
+    } catch (_err) {
+      /* ignore */
+    }
+
+    const payload = buildMarketplaceEdgePayload(ctx, criteria);
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch(endpoint.url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken || endpoint.anonKey}`,
+          apikey: endpoint.anonKey,
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 400) {
+        return {
+          ok: false,
+          error: data?.error?.code || "invalid_search",
+          httpStatus: 400,
+          validation: true,
+        };
+      }
+      if (!res.ok || data?.ok !== true || !Array.isArray(data?.results)) {
+        return {
+          ok: false,
+          error: data?.error?.code || "search_unavailable",
+          httpStatus: res.status || 0,
+        };
+      }
+      const items = data.results.map(edgeMarketplaceItemToCard).filter(Boolean);
+      return {
+        ok: true,
+        items,
+        meta: data.meta || { count: items.length, truncated: false },
+      };
+    } catch (_err) {
+      return { ok: false, error: "search_unavailable", httpStatus: 0 };
+    }
+  }
+
+  async function queryProductItemsClientFallback(ctx, criteria) {
     let candidates;
     try {
       candidates = await fetchAllProductCandidates();
-    } catch {
-      return { items: [], criteria, insufficient: false };
+    } catch (_err) {
+      return {
+        items: [],
+        criteria,
+        insufficient: false,
+        error: "search_unavailable",
+        vertical: "marketplace",
+      };
     }
-    const ranked = preferUserFacingRanked(rankProductWithFallback(candidates, criteria));
+    if (criteria.priceMin != null) {
+      candidates = candidates.filter(
+        (c) => c.priceYen == null || c.priceYen >= criteria.priceMin
+      );
+    }
+    if (criteria.priceMax != null || criteria.budgetYen != null) {
+      const max = criteria.priceMax != null ? criteria.priceMax : criteria.budgetYen;
+      candidates = candidates.filter((c) => c.priceYen == null || c.priceYen <= max);
+    }
+    let ranked = preferUserFacingRanked(rankProductWithFallback(candidates, criteria));
+    if (criteria.schemaSort === "price_asc") {
+      ranked = [...ranked].sort((a, b) => (a.priceYen ?? 1e15) - (b.priceYen ?? 1e15));
+    } else if (criteria.schemaSort === "price_desc") {
+      ranked = [...ranked].sort((a, b) => (b.priceYen ?? -1) - (a.priceYen ?? -1));
+    }
+    const searchQ = String(ctx.userText || ctx.text || criteria.text || "").trim();
+    const items = ranked
+      .map((row) => productCandidateToCard(row, { q: searchQ }))
+      .filter(Boolean)
+      .slice(0, MAX_RESULTS);
     return {
-      items: ranked.map(productCandidateToCard),
+      items,
       criteria,
       insufficient: false,
+      vertical: "marketplace",
+      source: "client_fallback",
+    };
+  }
+
+  async function queryProductItems(ctx) {
+    const crossCtx = makeCrossCtx(ctx);
+    const criteria = extractProductCriteria(crossCtx);
+    const schemaIntent = ctx.searchIntentSchema || ctx.validatedIntent || null;
+    if (schemaIntent && typeof schemaIntent === "object") {
+      if (schemaIntent.priceMax != null && Number.isFinite(schemaIntent.priceMax)) {
+        criteria.budgetYen = schemaIntent.priceMax;
+        criteria.priceMax = schemaIntent.priceMax;
+      }
+      if (schemaIntent.priceMin != null && Number.isFinite(schemaIntent.priceMin)) {
+        criteria.priceMin = schemaIntent.priceMin;
+      }
+      if (schemaIntent.location) {
+        criteria.area = criteria.area || schemaIntent.location;
+      }
+      criteria.schemaSort = schemaIntent.sort || "relevance";
+    }
+    ensureRelaxedCriteria(criteria);
+    if (!hasMinimumProductCriteria(criteria) && criteria.text.length < 2) {
+      return { items: [], criteria, insufficient: true, vertical: "marketplace" };
+    }
+
+    const edge = await fetchMarketplaceViaEdge(crossCtx, criteria);
+    if (edge.ok) {
+      return {
+        items: edge.items.slice(0, MAX_RESULTS),
+        criteria,
+        insufficient: false,
+        vertical: "marketplace",
+        source: "edge",
+        meta: edge.meta,
+      };
+    }
+
+    // Explicit local/dev flag only — never a silent production fallback.
+    if (global.__TASU_AI_TASFUL_SEARCH_CLIENT_FALLBACK__ === true) {
+      return queryProductItemsClientFallback(crossCtx, criteria);
+    }
+
+    return {
+      items: [],
+      criteria,
+      insufficient: false,
+      error: edge.validation ? "invalid_search" : "search_unavailable",
+      vertical: "marketplace",
+      source: "edge",
     };
   }
 
@@ -3458,12 +3837,31 @@
     const seen = new Set();
     const shops = [];
     (productResult.items || []).forEach((item) => {
-      const shopId = String(item.raw?.listing?.id || item.id || "").trim();
-      if (!shopId || seen.has(shopId)) return;
-      seen.add(shopId);
-      shops.push(shopFromProductCard(item.raw));
+      const shopId = String(item.raw?.listing?.id || item.shopDetailUrl || "").trim();
+      if (item.raw?.listing) {
+        const id = String(item.raw.listing.id || "").trim();
+        if (!id || seen.has(id)) return;
+        seen.add(id);
+        shops.push(shopFromProductCard(item.raw));
+        return;
+      }
+      // Edge marketplace cards: keep product cards (shop_product) as marketplace results
+      if (item.vertical === "marketplace" || item.kind === "shop_product" || item.kind === "product") {
+        if (!seen.has(item.id)) {
+          seen.add(item.id);
+          shops.push(item);
+        }
+      }
+      void shopId;
     });
-    return { items: shops, criteria: productResult.criteria, insufficient: productResult.insufficient };
+    return {
+      items: shops.length ? shops : productResult.items || [],
+      criteria: productResult.criteria,
+      insufficient: productResult.insufficient,
+      error: productResult.error,
+      vertical: "marketplace",
+      source: productResult.source,
+    };
   }
 
   async function queryJobItems(ctx) {
@@ -3586,8 +3984,11 @@
     queryJobItems,
     querySkillItems,
     queryWorkerItems,
+    fetchMarketplaceViaEdge,
     businessListingToCard,
     productCandidateToCard,
+    toMarketplaceSearchResult,
+    toInternalRelativeDetailUrl,
     extractBusinessCriteria,
     rankListings,
     extractProductCriteria,
