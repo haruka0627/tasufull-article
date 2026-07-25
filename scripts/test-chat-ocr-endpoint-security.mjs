@@ -83,6 +83,9 @@ function loadOcr(opts = {}) {
   const sandbox = {
     console,
     URL,
+    AbortController,
+    setTimeout,
+    clearTimeout,
     fetch: fetchImpl,
     window: win,
     location: location === null ? undefined : location,
@@ -123,9 +126,10 @@ function noExternal(calls) {
     "static: config.gemini.endpoint not used for fetch",
     !/getConfig\(\)\.gemini\?\.endpoint/.test(src) && !/gemini\?\.endpoint\s*\|\|/.test(src)
   );
-  assert("static: no AbortController (Commit2 out of scope)", !src.includes("AbortController"));
-  assert("static: no maxBytes (Commit2 out of scope)", !src.includes("maxBytes"));
-  assert("static: no allowedMime (Commit2 out of scope)", !src.includes("allowedMime"));
+  assert("static: AbortController present (hardening)", src.includes("AbortController"));
+  assert("static: maxBytes gate present (hardening)", src.includes("maxBytes") || src.includes("DEFAULT_MAX_BYTES"));
+  assert("static: MIME allowlist present (hardening)", src.includes("allowedMimeTypes") || src.includes("DEFAULT_ALLOWED_MIME"));
+  assert("static: fetch uses resolveGeminiOcrFetchUrl", src.includes("resolveGeminiOcrFetchUrl()"));
 }
 
 // --- 1–5 normal ---

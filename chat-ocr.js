@@ -10,6 +10,7 @@
    * @property {boolean} ok
    * @property {string} text
    * @property {string} [error]
+   * @property {string} [reason]
    * @property {string} [provider]
    */
 
@@ -18,6 +19,23 @@
 
   /** Gemini OCR 送信先は same-origin 固定（config.gemini.endpoint は使用しない） */
   const GEMINI_OCR_ENDPOINT_PATH = "/api/gemini-ocr";
+
+  /** Edge Function `MAX_BASE64_CHARS` と一致（base64 文字列長） */
+  const SERVER_MAX_BASE64_CHARS = 6 * 1024 * 1024;
+  /** decoded byte 上限（server base64 上限から換算 · client はこれを超えられない） */
+  const DEFAULT_MAX_BYTES = Math.floor((SERVER_MAX_BASE64_CHARS * 3) / 4);
+  const DEFAULT_TIMEOUT_MS = 15000;
+  const MIN_TIMEOUT_MS = 1000;
+  const MAX_TIMEOUT_MS = 30000;
+  const DEFAULT_ALLOWED_MIME_TYPES = Object.freeze([
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/bmp",
+    "application/pdf",
+  ]);
 
   function getConfig() {
     return window.TASU_CHAT_OCR_CONFIG || {};
@@ -48,6 +66,119 @@
     const m = src.match(/^data:([^;]+);base64,(.+)$/i);
     if (!m) return null;
     return { mimeType: m[1].trim(), base64: m[2].trim() };
+  }
+
+  function normalizeTimeoutMs(value) {
+    const n = typeof value === "number" ? value : Number(value);
+    if (!Number.isFinite(n) || n <= 0) return DEFAULT_TIMEOUT_MS;
+    if (n < MIN_TIMEOUT_MS) return DEFAULT_TIMEOUT_MS;
+    if (n > MAX_TIMEOUT_MS) return MAX_TIMEOUT_MS;
+    return Math.floor(n);
+  }
+
+  function normalizeMaxBytes(value) {
+    const n = typeof value === "number" ? value : Number(value);
+    if (!Number.isFinite(n) || n <= 0) return DEFAULT_MAX_BYTES;
+    return Math.min(Math.floor(n), DEFAULT_MAX_BYTES);
+  }
+
+  function normalizeAllowedMimeTypes(value) {
+    if (!Array.isArray(value)) return DEFAULT_ALLOWED_MIME_TYPES.slice();
+    /** @type {string[]} */
+    const out = [];
+    for (let i = 0; i < value.length; i += 1) {
+      const item = value[i];
+      if (typeof item !== "string") continue;
+      const mime = item.trim().toLowerCase();
+      if (mime && DEFAULT_ALLOWED_MIME_TYPES.includes(mime) && !out.includes(mime)) {
+        out.push(mime);
+      }
+    }
+    return out.length ? out : DEFAULT_ALLOWED_MIME_TYPES.slice();
+  }
+
+  /**
+   * Gemini runtime 用 config snapshot（global を freeze しない）
+   * @returns {{ timeoutMs: number, maxBytes: number, allowedMimeTypes: readonly string[], endpoint: string }}
+   */
+  function snapshotGeminiRuntimeConfig() {
+    const fallback = () =>
+      Object.freeze({
+        timeoutMs: DEFAULT_TIMEOUT_MS,
+        maxBytes: DEFAULT_MAX_BYTES,
+        allowedMimeTypes: Object.freeze(DEFAULT_ALLOWED_MIME_TYPES.slice()),
+        endpoint: "",
+      });
+
+    try {
+      const raw = getConfig();
+      let gemini = {};
+      try {
+        gemini =
+          raw && typeof raw === "object" && raw.gemini && typeof raw.gemini === "object"
+            ? raw.gemini
+            : {};
+      } catch {
+        gemini = {};
+      }
+
+      let timeoutMs;
+      let maxBytes;
+      let allowedMimeTypes;
+      let endpoint;
+      try {
+        timeoutMs = gemini.timeoutMs;
+      } catch {
+        timeoutMs = undefined;
+      }
+      try {
+        maxBytes = gemini.maxBytes;
+      } catch {
+        maxBytes = undefined;
+      }
+      try {
+        allowedMimeTypes = gemini.allowedMimeTypes;
+      } catch {
+        allowedMimeTypes = undefined;
+      }
+      try {
+        endpoint = gemini.endpoint;
+      } catch {
+        endpoint = undefined;
+      }
+
+      return Object.freeze({
+        timeoutMs: normalizeTimeoutMs(timeoutMs),
+        maxBytes: normalizeMaxBytes(maxBytes),
+        allowedMimeTypes: Object.freeze(normalizeAllowedMimeTypes(allowedMimeTypes)),
+        // 互換用に保持するが fetch 先には使わない
+        endpoint: typeof endpoint === "string" ? endpoint : "",
+      });
+    } catch {
+      return fallback();
+    }
+  }
+
+  function normalizeMimeType(mime) {
+    if (typeof mime !== "string") return "";
+    return mime.trim().toLowerCase();
+  }
+
+  /**
+   * base64 → decoded byte 長（実decodeなし）。invalid は -1
+   * @param {string} base64
+   * @returns {number}
+   */
+  function estimateDecodedByteLength(base64) {
+    const cleaned = String(base64 || "").replace(/\s+/g, "");
+    if (!cleaned) return -1;
+    if (!/^[A-Za-z0-9+/]*={0,2}$/.test(cleaned)) return -1;
+    if (cleaned.length % 4 === 1) return -1;
+    let padding = 0;
+    if (cleaned.endsWith("==")) padding = 2;
+    else if (cleaned.endsWith("=")) padding = 1;
+    else if (cleaned.includes("=")) return -1;
+    return Math.floor((cleaned.length * 3) / 4) - padding;
   }
 
   /**
@@ -103,49 +234,144 @@
   }
 
   /**
+   * @param {string} error
+   * @param {string} [reason]
+   * @returns {OcrExtractResult}
+   */
+  function failGemini(error, reason) {
+    const code = String(error || "ocr_failed");
+    return {
+      ok: false,
+      text: "",
+      error: code,
+      reason: String(reason || code),
+      provider: "gemini",
+    };
+  }
+
+  /**
+   * @param {number} status
+   * @param {string} dataError
+   */
+  function classifyHttpError(status, dataError) {
+    if (status === 413) {
+      return { error: dataError || "payload_too_large", reason: "attachment_too_large" };
+    }
+    if (status === 415) {
+      return { error: dataError || "unsupported_mime", reason: "unsupported_mime_type" };
+    }
+    if (status === 429) {
+      return { error: dataError || "http_429", reason: "http_429" };
+    }
+    if (status === 401 || status === 403) {
+      return { error: dataError || `http_${status}`, reason: "auth_error" };
+    }
+    if (status === 400) {
+      return { error: dataError || "http_400", reason: "http_400" };
+    }
+    if (status >= 500) {
+      return { error: dataError || `http_${status}`, reason: "http_5xx" };
+    }
+    return { error: dataError || `http_${status}`, reason: `http_${status}` };
+  }
+
+  function isAbortError(err) {
+    if (!err) return false;
+    if (err.name === "AbortError") return true;
+    return /aborted|AbortError/i.test(String(err.message || err));
+  }
+
+  /**
    * Gemini OCR（Edge `/api/gemini-ocr` · API キーはサーバのみ）
    * @param {string} imageUrl data URL
    * @param {{ user_id?: string, userId?: string, surface?: string } | undefined} options
+   * @param {ReturnType<typeof snapshotGeminiRuntimeConfig>} [runtimeCfg]
    * @returns {Promise<OcrExtractResult>}
    */
-  async function extractViaGeminiVision(imageUrl, options) {
+  async function extractViaGeminiVision(imageUrl, options, runtimeCfg) {
+    const cfg = runtimeCfg || snapshotGeminiRuntimeConfig();
     const parsed = parseDataUrl(imageUrl);
     if (!parsed?.base64) {
-      return { ok: false, text: "", error: "invalid_data_url", provider: "gemini" };
+      return failGemini("invalid_data_url", "invalid_data_url");
     }
+
+    const mime = normalizeMimeType(parsed.mimeType);
+    if (!mime || !cfg.allowedMimeTypes.includes(mime)) {
+      return failGemini("unsupported_mime_type", "unsupported_mime_type");
+    }
+
+    const base64Clean = String(parsed.base64).replace(/\s+/g, "");
+    if (base64Clean.length > SERVER_MAX_BASE64_CHARS) {
+      return failGemini("attachment_too_large", "attachment_too_large");
+    }
+    const decodedBytes = estimateDecodedByteLength(base64Clean);
+    if (decodedBytes < 0) {
+      return failGemini("invalid_data_url", "invalid_data_url");
+    }
+    if (decodedBytes > cfg.maxBytes) {
+      return failGemini("attachment_too_large", "attachment_too_large");
+    }
+
     const endpoint = resolveGeminiOcrFetchUrl();
     if (!endpoint) {
-      return { ok: false, text: "", error: "invalid_origin", provider: "gemini" };
+      return failGemini("invalid_origin", "invalid_origin");
     }
+
     const guard = resolveOcrGuardContext(options);
-    const res = await fetch(endpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        mimeType: parsed.mimeType,
-        base64: parsed.base64,
-        user_id: guard.user_id,
-        surface: guard.surface,
-        feature: "ocr_turn",
-      }),
-    });
-    const data = await res.json().catch(() => null);
-    if (!res.ok) {
-      const err =
-        data && typeof data === "object" && !Array.isArray(data) && data.error
-          ? String(data.error)
-          : `http_${res.status}`;
-      return { ok: false, text: "", error: err, provider: "gemini" };
+    const controller = new AbortController();
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      try {
+        controller.abort();
+      } catch {
+        /* ignore */
+      }
+    }, cfg.timeoutMs);
+
+    try {
+      const res = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mimeType: mime,
+          base64: base64Clean,
+          user_id: guard.user_id,
+          surface: guard.surface,
+          feature: "ocr_turn",
+        }),
+        signal: controller.signal,
+      });
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        const dataError =
+          data && typeof data === "object" && !Array.isArray(data) && data.error
+            ? String(data.error)
+            : "";
+        const classified = classifyHttpError(res.status, dataError);
+        return failGemini(classified.error, classified.reason);
+      }
+      const normalized = normalizeGeminiOcrResponse(data);
+      if (!normalized.ok) {
+        const reason =
+          normalized.error === "invalid_text" || normalized.error === "invalid_response"
+            ? "invalid_response"
+            : normalized.error;
+        return failGemini(normalized.error, reason);
+      }
+      return {
+        ok: true,
+        text: normalized.text,
+        provider: "gemini",
+      };
+    } catch (err) {
+      if (timedOut || isAbortError(err)) {
+        return failGemini("ocr_timeout", "ocr_timeout");
+      }
+      return failGemini(err instanceof Error ? err.message : String(err), "network_error");
+    } finally {
+      clearTimeout(timer);
     }
-    const normalized = normalizeGeminiOcrResponse(data);
-    if (!normalized.ok) {
-      return { ok: false, text: "", error: normalized.error, provider: "gemini" };
-    }
-    return {
-      ok: true,
-      text: normalized.text,
-      provider: "gemini",
-    };
   }
 
   /**
@@ -238,7 +464,8 @@
    */
   async function extractTextFromImages(imageUrls, options) {
     const list = Array.isArray(imageUrls) ? imageUrls.filter(Boolean) : [];
-    if (!list.length || getProviderName() === "none") {
+    const provider = getProviderName();
+    if (!list.length || provider === "none") {
       return { ocrText: "", results: [] };
     }
 
@@ -246,9 +473,24 @@
     const results = [];
     /** @type {string[]} */
     const texts = [];
+    const geminiCfg = provider === "gemini" ? snapshotGeminiRuntimeConfig() : null;
 
     for (const url of list) {
-      const result = await extractTextFromImage(url, options);
+      let result;
+      if (provider === "gemini" && geminiCfg) {
+        try {
+          result = await extractViaGeminiVision(url, options, geminiCfg);
+        } catch (err) {
+          result = {
+            ok: false,
+            text: "",
+            error: err instanceof Error ? err.message : String(err),
+            provider: "gemini",
+          };
+        }
+      } else {
+        result = await extractTextFromImage(url, options);
+      }
       results.push(result);
       if (result.ok && result.text) {
         texts.push(result.text);

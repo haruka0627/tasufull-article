@@ -35,6 +35,10 @@ function loadStack(ocrImpl) {
     window: {},
     globalThis: {},
     console,
+    URL,
+    AbortController,
+    setTimeout,
+    clearTimeout,
     fetch: async () => ({
       ok: false,
       status: 503,
