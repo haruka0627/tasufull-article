@@ -1,7 +1,9 @@
 /**
- * Gemini OCR payload validation（MIME · base64 · size · magic bytes）
+ * Gemini OCR payload validation（MIME · base64 · size · magic bytes · structure）
  * Cloudflare Pages Function / Node test 共用
  */
+
+import { validateOcrStructure } from "./ocr-payload-structure.mjs";
 
 export const OCR_MAX_BASE64_CHARS = 6 * 1024 * 1024;
 /** client DEFAULT_MAX_BYTES と一致: floor(MAX_BASE64_CHARS * 3 / 4) */
@@ -256,6 +258,12 @@ export function validateOcrPayload(body) {
   }
   if (!ocrMagicMatches(mimeResult.mime, bytes)) {
     return { ok: false, error: "payload_type_mismatch", status: 415 };
+  }
+
+  // structural limits（同一 decode · quota / Gemini より前）
+  var structure = validateOcrStructure(mimeResult.mime, bytes);
+  if (!structure.ok) {
+    return { ok: false, error: structure.error, status: structure.status };
   }
 
   return {

@@ -5,7 +5,7 @@
  * Auth: Authorization Bearer → Supabase `/auth/v1/user` で検証（全 surface）
  * Origin: same-origin + production / preview / local allowlist
  * IP rate limit: CF-Connecting-IP · HMAC bucket · atomic RPC（auth / quota / Gemini より前）
- * Payload: MIME · base64 · size · magic bytes（guard / Gemini より前）
+ * Payload: MIME · base64 · size · magic bytes · structural limits（guard / Gemini より前）
  * Upstream: fixed timeout + sanitized errors
  * Quota: upstream 実行前に atomic 予約 → 成功のみ確定 · 失敗系は解放
  * SAFE-05: 許可 surface すべて Usage Guard（user ID / feature は server-derived）
