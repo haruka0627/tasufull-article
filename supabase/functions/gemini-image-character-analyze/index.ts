@@ -1,6 +1,13 @@
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import { WORKSPACE_FEATURE_VISION } from "../_shared/ai-workspace-quota.ts";
 import { enforceGuardFeatureEntry, finalizeGuardFeatureConsume } from "../_shared/ai-usage-guard.ts";
+import {
+  createUsageLogOnce,
+  newUsageRequestId,
+  USAGE_STATUS_DENIED,
+  USAGE_STATUS_ERROR,
+  USAGE_STATUS_SUCCESS,
+} from "../_shared/ai-usage-log.ts";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE =
@@ -465,14 +472,41 @@ Deno.serve(async (req) => {
   // Phase 7: image_analysis is Pro-only. Existing non-Pro callers are denied
   // before image processing or Gemini; this is intentional security coverage.
   const guardBody = { ...body, surface: String(body.surface || "").trim() || "ai-workspace" };
+  const requestId = newUsageRequestId();
+  const usageOnce = createUsageLogOnce();
   const guard = await enforceGuardFeatureEntry(req, guardBody, {
     edgeName: "gemini-image-character-analyze",
     quotaFeature: WORKSPACE_FEATURE_VISION,
     requireSurface: true,
   });
-  if (guard.blocked) return guard.blocked;
+  if (guard.blocked) {
+    await usageOnce.record({
+      requestId,
+      userId: guard.status?.userId || null,
+      feature: WORKSPACE_FEATURE_VISION,
+      provider: "gemini",
+      model: GEMINI_MODEL,
+      status: USAGE_STATUS_DENIED,
+      errorCode: guard.status?.error || "guard_denied",
+      metadata: { surface: "ai-workspace", use_case: "image_analysis" },
+    });
+    return guard.blocked;
+  }
+  const userId = guard.status?.userId || null;
   const apiKey = Deno.env.get("GEMINI_API_KEY")?.trim();
-  if (!apiKey) return jsonResponse({ ok: false, error: "provider_unavailable" }, 503, req);
+  if (!apiKey) {
+    await usageOnce.record({
+      requestId,
+      userId,
+      feature: WORKSPACE_FEATURE_VISION,
+      provider: "gemini",
+      model: GEMINI_MODEL,
+      status: USAGE_STATUS_ERROR,
+      errorCode: "provider_unavailable",
+      metadata: { surface: "ai-workspace", use_case: "image_analysis" },
+    });
+    return jsonResponse({ ok: false, error: "provider_unavailable" }, 503, req);
+  }
 
   if (!imageData && !imageUrl) {
     return jsonResponse({ ok: false, error: "imageData または imageUrl が必要です" }, 400);
@@ -496,14 +530,37 @@ Deno.serve(async (req) => {
   const outcome = await callGeminiVisionWithRetry(apiKey, inline, mode);
   if (!outcome.ok) {
     const status = outcome.status >= 400 && outcome.status < 500 ? outcome.status : 502;
+    await usageOnce.record({
+      requestId,
+      userId,
+      feature: WORKSPACE_FEATURE_VISION,
+      provider: "gemini",
+      model: GEMINI_MODEL,
+      status: USAGE_STATUS_ERROR,
+      errorCode: "provider_error",
+      metadata: { surface: "ai-workspace", use_case: "image_analysis", http_status: status },
+    });
     return jsonResponse(
       { ok: false, error: outcome.error, appearance: "", seed: null },
       status
     );
   }
 
+  await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_VISION);
+  await usageOnce.record({
+    requestId,
+    userId,
+    feature: WORKSPACE_FEATURE_VISION,
+    provider: "gemini",
+    model: GEMINI_MODEL,
+    status: USAGE_STATUS_SUCCESS,
+    inputUnits: 1,
+    outputUnits: 1,
+    totalUnits: 1,
+    metadata: { surface: "ai-workspace", use_case: "image_analysis", usage_source: "provider" },
+  });
+
   if (mode === "mouth_hint_only") {
-    await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_VISION);
     return jsonResponse({
       ok: true,
       mouthHint: outcome.mouthHint ?? null,
@@ -513,7 +570,6 @@ Deno.serve(async (req) => {
   }
 
   if (mode === "appearance_and_character_seed") {
-    await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_VISION);
     return jsonResponse({
       ok: true,
       appearance: outcome.appearance,
@@ -524,7 +580,6 @@ Deno.serve(async (req) => {
     });
   }
 
-  await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_VISION);
   return jsonResponse({
     ok: true,
     appearance: outcome.appearance,

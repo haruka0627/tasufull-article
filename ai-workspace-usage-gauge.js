@@ -258,7 +258,7 @@
     }
     const rem =
       gauge.displayPercent == null ? "—" : `${Math.max(0, 100 - gauge.displayPercent)}%`;
-    return `本日 ${gauge.displayPercent}% · 残り目安 ${rem} · ${gauge.statusLabel}`;
+    return `本日のテキスト ${gauge.displayPercent}% · 残り目安 ${rem} · ${gauge.statusLabel}`;
   }
 
   global.TasuAiUsageGauge = {

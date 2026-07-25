@@ -353,7 +353,14 @@ export async function enforceWorkspaceQuotaEntry(
     return { blocked: null, status };
   } catch (err) {
     console.error("[ai-workspace-quota] entry enforce failed:", err);
-    return { blocked: null, status: null };
+    return {
+      blocked: jsonResponse(
+        { ok: false, error: "usage_guard_unavailable", reply: "" },
+        503,
+        req
+      ),
+      status: { ok: false, error: "usage_guard_unavailable" },
+    };
   }
 }
 

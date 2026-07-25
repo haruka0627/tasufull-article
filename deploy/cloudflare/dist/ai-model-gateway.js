@@ -44,6 +44,20 @@
     return "chat";
   }
 
+  async function resolveAccessToken() {
+    try {
+      const client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        const { data } = await client.auth.getSession();
+        const token = data?.session?.access_token;
+        if (token) return String(token).trim();
+      }
+    } catch (_err) {
+      /* ignore */
+    }
+    return "";
+  }
+
   async function postEdge(edgeName, payload, options = {}) {
     const { url, anonKey } = getSupabaseEndpoint(edgeName);
     if (!url || !anonKey) {
@@ -58,11 +72,12 @@
       const controller = new AbortController();
       const timeoutMs = Number(options.timeoutMs) || DEFAULT_TIMEOUT_MS;
       const timer = setTimeout(() => controller.abort(), timeoutMs);
+      const accessToken = await resolveAccessToken();
       const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${anonKey}`,
+          Authorization: `Bearer ${accessToken || anonKey}`,
           apikey: anonKey,
         },
         body: JSON.stringify(payload),
@@ -189,7 +204,11 @@
     return payload;
   }
 
-  function shouldTryProviderFallback(remote) {
+  function shouldTryProviderFallback(remote, routingDecision) {
+    // Manual: 無言の別モデル置換禁止
+    if (String(routingDecision?.requestedMode || "").toLowerCase() === "manual") {
+      return false;
+    }
     if (!remote || remote.usedRemote) return false;
     const status = Number(remote.httpStatus) || 0;
     if (status === 429 || status >= 500) return true;
@@ -276,12 +295,12 @@
         { timeoutMs }
       );
       if (out.ok && out.reply) {
-        return { reply: out.reply, usedRemote: true, provider: "anthropic", edge: "claude-chat" };
+        return { reply: out.reply, usedRemote: true, provider: "claude", edge: "claude-chat" };
       }
       return {
         reply: "",
         usedRemote: false,
-        provider: "anthropic",
+        provider: "claude",
         edge: "claude-chat",
         error: out.error,
         httpStatus: out.httpStatus,
@@ -344,6 +363,29 @@
         ? { ...params.routingDecision }
         : null;
 
+    // Manual / Router 明示拒否 — 無言ダウングレード禁止
+    if (routingDecision && routingDecision.ok === false) {
+      const denyCode = String(routingDecision.error || "plan_model_denied").trim() || "plan_model_denied";
+      return {
+        reply: "選択したモデルは現在の利用区分では使えません。別のモデルを選ぶか、Auto に切り替えてください。",
+        usedRemote: false,
+        provider: "",
+        edge: "",
+        error: denyCode,
+        httpStatus: 403,
+        search_used: false,
+        search_query: "",
+        search_provider: "",
+        search_result_count: 0,
+        uiBadgeHtml: "",
+        fallback_used: false,
+        modelId: "",
+        modelLabel: "",
+        routingDecision,
+        ok: false,
+      };
+    }
+
     let modelId = String(
       routingDecision?.gatewayModelId ||
         routingDecision?.resolvedWorkspaceId ||
@@ -363,6 +405,27 @@
         ? Policy.isModelAllowedForPolicy(policy || Policy.getPlanPolicy("free"), modelId)
         : Plans?.isModelAllowed?.(modelId, userPlan));
     if (!modelOk) {
+      const requestedMode = String(routingDecision?.requestedMode || "").toLowerCase();
+      if (requestedMode === "manual") {
+        return {
+          reply: "選択したモデルは利用できません（プラン外または不明なモデルです）。",
+          usedRemote: false,
+          provider: "",
+          edge: "",
+          error: "plan_model_denied",
+          httpStatus: 403,
+          search_used: false,
+          search_query: "",
+          search_provider: "",
+          search_result_count: 0,
+          uiBadgeHtml: "",
+          fallback_used: false,
+          modelId: modelId || "",
+          modelLabel: "",
+          routingDecision,
+          ok: false,
+        };
+      }
       const fallbackId =
         (policy && Policy?.getDefaultModelForPolicy?.(policy)) ||
         Plans?.getDefaultModelIdForPlan?.(userPlan) ||
@@ -427,8 +490,8 @@
 
     let remote = await callModel(model, callParams);
 
-    // Provider 障害時の安全なフォールバック最大1回（無限禁止）
-    if (shouldTryProviderFallback(remote) && !routingDecision?.fallbackUsed) {
+    // Provider 障害時の安全なフォールバック最大1回（無限禁止 · Manual は置換しない）
+    if (shouldTryProviderFallback(remote, routingDecision) && !routingDecision?.fallbackUsed) {
       const Policy = global.TasuAiPlanPolicy;
       const policy = Plans?.getActivePolicy?.() || Policy?.getPlanPolicy?.(userPlan);
       const alts = (
@@ -483,7 +546,11 @@
 
     if (!reply) {
       apiError = String(remote?.error || "").trim();
-      if (params.preferRemote) {
+      // Workspace: 黙ってモック成功に見せない（明示 preferRemote:false のみモック可）
+      const preferRemote =
+        params.preferRemote === true ||
+        (params.preferRemote !== false && String(params.surface || "") === "ai-workspace");
+      if (preferRemote) {
         reply = formatApiErrorReply(model, remote);
         fallback_used = true;
       } else {

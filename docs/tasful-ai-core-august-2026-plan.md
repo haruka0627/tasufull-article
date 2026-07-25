@@ -50,7 +50,7 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | **5** | — | プラン制御 | **完了（コード）** · [phase5 report](../reports/tasful-ai-core-phase5-plan-policy-report.md) |
 | **6** | SAFE-07 | Cost Ledger | **完了（コード）** · Staging 適用は別ゲート · [cost ledger report](../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **7** | SAFE-05 拡張 | Workspace の OCR · Media · Search · TTS · Character Vision guard | **完了（コード）** · [Phase 7 report](../reports/tasful-ai-core-phase7-guard-coverage-report.md) |
-| **8** | SAFE-01〜03 | WAF · Turnstile · Rate Limit runbook | 未着手 |
+| **8** | Final Integration | Gateway / Workspace 最終統合 | **完了（コード）** · Staging paused · [final report](../reports/tasful-ai-core-phase8-final-integration-report.md) · [Staging checklist](AI/TASFUL_AI_STAGING_LIVE_CHECKLIST.md) · [release readiness](AI/TASFUL_AI_RELEASE_READINESS.md) |
 | **9** | SAFE-08 | Queue | 未着手 |
 | **10** | SAFE-16 | AI Admin Console | 未着手 |
 
@@ -230,7 +230,7 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | 5b | `gen_ai_*` migrations 昇格 | 未着手 |
 | 6 | Cost Ledger（SAFE-07） / OpenRouter 限定検証（ユーザー次 Phase） | Cost Ledger コード完了 · OpenRouter 未着手 |
 | 7 | Workspace Guard 拡張 | **完了（コード）** · [report](../reports/tasful-ai-core-phase7-guard-coverage-report.md) |
-| 8 | WAF / Turnstile runbook | 未着手 |
+| 8 | Final Integration | **完了（コード）** · Staging paused · [report](../reports/tasful-ai-core-phase8-final-integration-report.md) · [checklists](AI/TASFUL_AI_STAGING_LIVE_CHECKLIST.md) |
 | 9 | Queue | 未着手 |
 | 10 | Admin | 未着手 |
 
@@ -254,6 +254,8 @@ node scripts/test-tasful-ai-usage-gauge-phase4.mjs  # Phase 4 Usage Gauge
 node scripts/verify-ai-usage-gauge-phase4.mjs
 node scripts/test-tasful-ai-plan-policy-phase5.mjs  # Phase 5 Plan Policy
 node scripts/verify-ai-plan-policy-phase5.mjs
+node scripts/test-tasful-ai-final-integration-phase8.mjs  # Phase 8 Final Integration
+node scripts/verify-ai-final-integration-phase8.mjs
 ```
 
 ---

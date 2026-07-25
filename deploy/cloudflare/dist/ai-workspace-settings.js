@@ -433,12 +433,12 @@
           <div class="ai-ref-billing-grid">
             <section class="ai-ref-billing-card">
               <header class="ai-ref-billing-card__header">
-                <h4 class="ai-ref-billing-card__title">本日の利用状況</h4>
-                <p class="ai-ref-billing-card__lead">日次利用枠（Asia/Tokyo）に対する消費の目安です。内部原価は表示しません。</p>
+                <h4 class="ai-ref-billing-card__title">本日のテキスト利用枠</h4>
+                <p class="ai-ref-billing-card__lead">日次テキスト利用枠（Asia/Tokyo）の目安です。OCR等の vision 枠や内部原価は含みません。</p>
               </header>
               <div class="ai-ref-billing-card__body ai-ref-billing-card__body--usage">${usageBody}</div>
               <footer class="ai-ref-billing-card__footer">
-                <button type="button" class="ai-ref-billing-outline-btn ai-ref-billing-outline-btn--block" data-billing-action="view-all-usage">すべての利用状況を見る</button>
+                <button type="button" class="ai-ref-billing-outline-btn ai-ref-billing-outline-btn--block" data-billing-action="view-all-usage">テキスト利用の詳細を見る</button>
               </footer>
             </section>
 

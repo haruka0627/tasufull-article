@@ -10,6 +10,13 @@ import {
   enforceGuardFeatureEntry,
   finalizeGuardFeatureConsume,
 } from "./ai-usage-guard.ts";
+import {
+  createUsageLogOnce,
+  newUsageRequestId,
+  USAGE_STATUS_DENIED,
+  USAGE_STATUS_ERROR,
+  USAGE_STATUS_SUCCESS,
+} from "./ai-usage-log.ts";
 
 export const AI_MEDIA_GEN_KILL_SWITCH_ENV = "AI_MEDIA_GEN_EDGE_ENABLED";
 export const AI_MEDIA_REQUEST_TIMEOUT_MS = 85_000;
@@ -155,8 +162,20 @@ export async function handleWorkspaceMediaGenerate(
   }
 
   const guardBody = { ...body, surface: WORKSPACE_SURFACE };
+  const requestId = newUsageRequestId();
+  const usageOnce = createUsageLogOnce();
+  const useCase = kind === "video" ? "media_video" : "media_music";
+  const logFeature = kind === "video" ? "media_video" : "media_music";
   const actor = await resolveAuthenticatedWorkspaceUser(req, guardBody);
   if (!actor.ok) {
+    await usageOnce.record({
+      requestId,
+      feature: logFeature,
+      provider: "gemini",
+      status: USAGE_STATUS_DENIED,
+      errorCode: actor.error,
+      metadata: { surface: WORKSPACE_SURFACE, use_case: useCase },
+    });
     return jsonResponse({ ok: false, error: actor.error }, actor.http, req);
   }
   const guard = await enforceGuardFeatureEntry(req, guardBody, {
@@ -164,12 +183,32 @@ export async function handleWorkspaceMediaGenerate(
     quotaFeature: WORKSPACE_FEATURE_TEXT,
     requireSurface: true,
   });
-  if (guard.blocked) return guard.blocked;
+  if (guard.blocked) {
+    await usageOnce.record({
+      requestId,
+      userId: actor.userId,
+      feature: logFeature,
+      provider: "gemini",
+      status: USAGE_STATUS_DENIED,
+      errorCode: guard.status?.error || "guard_denied",
+      metadata: { surface: WORKSPACE_SURFACE, use_case: useCase },
+    });
+    return guard.blocked;
+  }
 
   const userPrompt = kind === "video" ? buildVideoPrompt(body) : buildMusicPrompt(body);
   const gemini = await callGeminiBrief(userPrompt);
   if (!gemini.ok) {
     const http = gemini.status;
+    await usageOnce.record({
+      requestId,
+      userId: actor.userId,
+      feature: logFeature,
+      provider: "gemini",
+      status: USAGE_STATUS_ERROR,
+      errorCode: gemini.error === "request_timeout" ? "provider_timeout" : "provider_error",
+      metadata: { surface: WORKSPACE_SURFACE, use_case: useCase, http_status: http },
+    });
     return jsonResponse(
       {
         ok: false,
@@ -184,11 +223,33 @@ export async function handleWorkspaceMediaGenerate(
   try {
     const consumed = await finalizeGuardFeatureConsume(req, guardBody, WORKSPACE_FEATURE_TEXT);
     if (consumed && !consumed.ok) {
+      await usageOnce.record({
+        requestId,
+        userId: actor.userId,
+        feature: logFeature,
+        provider: "gemini",
+        status: USAGE_STATUS_DENIED,
+        errorCode: "quota_exceeded",
+        metadata: { surface: WORKSPACE_SURFACE, use_case: useCase },
+      });
       return quotaExceededResponse(consumed, req);
     }
   } catch (err) {
     console.error("[ai-workspace-media-generate] quota consume failed:", err);
   }
+
+  await usageOnce.record({
+    requestId,
+    userId: actor.userId,
+    feature: logFeature,
+    provider: "gemini",
+    model: Deno.env.get("AI_MEDIA_GEMINI_MODEL")?.trim() || "gemini-2.5-flash",
+    status: USAGE_STATUS_SUCCESS,
+    inputUnits: 1,
+    outputUnits: 1,
+    totalUnits: 1,
+    metadata: { surface: WORKSPACE_SURFACE, use_case: useCase, usage_source: "provider" },
+  });
 
   const id = `${kind}-${crypto.randomUUID()}`;
   const title = kind === "video" ? "動画制作プラン" : "音楽制作プラン";

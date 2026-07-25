@@ -82,6 +82,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | Core | **Phase 4 Usage Gauge** — コード完了（日次消費率 · quota SSOT · 原価非公開）— [phase4 report](../../reports/tasful-ai-core-phase4-usage-gauge-report.md) |
 | Core | **Phase 5 Plan Enforcement** — コード完了（Plan Policy SSOT · JWT 必須 · model/feature 再検証 · 料金未確定）— [phase5 report](../../reports/tasful-ai-core-phase5-plan-policy-report.md) |
 | Core | **Phase 7 Guard Coverage** — コード完了（Workspace OCR / Media / Search / TTS / Character Vision を JWT・plan・quota で事前判定）— [report](../../reports/tasful-ai-core-phase7-guard-coverage-report.md) |
+| Core | **Phase 8 Final Integration** — **CONDITIONAL PASS**（Staging paused）。Gateway Manual deny / JWT postEdge / no-fallback、Workspace remote-first、quota fail-closed、Media/Character Usage Log、テキスト利用枠を静的検証済み — [report](../../reports/tasful-ai-core-phase8-final-integration-report.md) · [Staging checklist](./TASFUL_AI_STAGING_LIVE_CHECKLIST.md) · [release readiness](./TASFUL_AI_RELEASE_READINESS.md) |
 
 ---
 

@@ -1,6 +1,6 @@
 # TASFUL AI — 安全運用基盤（2026年8月予定）
 
-**Status:** SAFE-05 / SAFE-06 / SAFE-07 / Phase 7 は**コード完了** · Staging 適用は別ゲート
+**Status:** SAFE-05 / SAFE-06 / SAFE-07 / Phase 7 は**コード完了** · Phase 8 Final Integration は **CONDITIONAL PASS（Staging paused）** · Staging 適用は別ゲート
 **最終更新:** 2026-07-26
 **関連:** [TASFUL_AI.md](./TASFUL_AI.md) · [SECRETARY_AI.md](./SECRETARY_AI.md) · [DECISIONS.md](../DECISIONS.md) AD-005 · AD-010 · AD-011
 
@@ -30,6 +30,9 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 | 秘書 利用状況集計 | ✅ 部分 | [SECRETARY_AI.md](./SECRETARY_AI.md) |
 
 本基盤は **Voice 限定ではなく** Chat · OCR · Vision · Media 全 API 入口に横断適用する。Phase 7 で Workspace の Search / TTS / Character Vision / Media に JWT・plan feature・quota を追加した（[report](../../reports/tasful-ai-core-phase7-guard-coverage-report.md)）。Voice Live と AI 秘書は Workspace scope 外のまま。
+
+- **Phase 8 Final Integration:** Gateway の Manual deny / JWT `postEdge` / Manual no-fallback、Workspace remote-first、`usage_guard_unavailable` fail-closed、Media + Character usage log、**テキスト利用枠**を静的検証済み。Staging paused のため **CONDITIONAL PASS**（[report](../../reports/tasful-ai-core-phase8-final-integration-report.md) · [Staging checklist](./TASFUL_AI_STAGING_LIVE_CHECKLIST.md)）。
+- **境界:** OpenRouter は一般 Workspace から隔離された PoC。Voice Live は flags OFF 中は Workspace blocker ではないが、Live 有効化時は `VOICE_REALTIME_REQUIRE_JWT=1` が必須。
 
 ---
 

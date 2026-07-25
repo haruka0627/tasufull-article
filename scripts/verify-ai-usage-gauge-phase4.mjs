@@ -92,7 +92,7 @@ await withPlaywrightBrowser(async (browser) => {
     const panel = page.locator("[data-ai-settings-panel='billing']");
     await panel.waitFor({ state: "visible", timeout: 10000 });
     const billingText = await panel.innerText();
-    if (!billingText.includes("本日の利用状況")) errors.push(`${vp.n}: billing missing daily usage`);
+    if (!/本日のテキスト利用枠|本日の利用状況/.test(billingText)) errors.push(`${vp.n}: billing missing daily usage`);
     if (!billingText.includes("次回更新")) errors.push(`${vp.n}: billing missing reset`);
     if (billingText.includes("unit_price") || billingText.includes("estimated_cost")) {
       errors.push(`${vp.n}: cost leaked into billing UI`);
