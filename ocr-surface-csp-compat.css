@@ -1,0 +1,53 @@
+/**
+ * OCR surface CSP 互換スタイル
+ * inline style 属性を排除するための最小クラス（OCR 4 surface のみ）
+ */
+
+/* バナー装飾の空スペーサ（旧 style="color:#94a3b8"） */
+.tasu-banner-spacer {
+  color: #94a3b8;
+}
+
+/* chat-detail: 一覧リンク */
+.chat-pill--plain {
+  text-decoration: none;
+}
+
+/* chat-detail: アラート初期非表示（JS の style.display 上書きを維持） */
+#chatAlert {
+  display: none;
+}
+
+#chatInlineError {
+  display: none;
+  margin-top: 0.55rem;
+  background: transparent;
+  border: none;
+  color: #b45309;
+  padding: 0;
+}
+
+/* post: 余白ユーティリティ */
+.post-field--flush {
+  margin: 0;
+}
+
+.post-field--spaced {
+  margin-top: 0.75rem;
+}
+
+.post-check--bare {
+  padding: 0;
+  border: none;
+  background: transparent;
+}
+
+/* ai-workspace: material icon / profile wrap */
+.ai-workspace-icon--md {
+  font-size: 20px;
+}
+
+.user-profile-area-wrap--full {
+  position: relative;
+  width: 100%;
+}

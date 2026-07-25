@@ -16,67 +16,9 @@
   <link rel="stylesheet" href="tasful-app-mobile-detail.css">
   <link rel="stylesheet" href="tasful-mobile-detail-template.css">
   <link rel="stylesheet" href="ocr-privacy-consent.css">
+  <link rel="stylesheet" href="ocr-surface-csp-compat.css">
   <link rel="stylesheet" href="common-breadcrumb.css">
-  <script>
-    window.global = window.global || window;
-    (function () {
-      var VERSION = "20260609-script-trace-v2";
-      window.__tasuChatDetailHtmlReached = true;
-      window.__tasuChatDetailExpectedScriptVersion = VERSION;
-      window.__tasuChatDetailScriptLoadError = "";
-      window.__tasuChatDetailScriptPipelinePhase = "head_bootstrap";
-      try {
-        document.documentElement.dataset.chatDetailExpectedVersion = VERSION;
-        document.documentElement.dataset.chatDetailHtmlReached = "1";
-      } catch (e) {
-        /* ignore */
-      }
-      window.__tasuChatDetailInstallFileSupabaseStub = function () {
-        if (window.supabase && typeof window.supabase.createClient === "function") return;
-        var chain = function () {
-          var api = {
-            select: function () { return api; },
-            insert: function () { return api; },
-            update: function () { return api; },
-            delete: function () { return api; },
-            eq: function () { return api; },
-            in: function () { return api; },
-            limit: function () { return api; },
-            order: function () { return api; },
-            single: function () {
-              return Promise.resolve({ data: null, error: { message: "file_protocol_stub" } });
-            },
-            maybeSingle: function () {
-              return Promise.resolve({ data: null, error: null });
-            },
-          };
-          api.then = function (resolve) {
-            return Promise.resolve(resolve({ data: [], error: null }));
-          };
-          return api;
-        };
-        window.supabase = {
-          createClient: function () {
-            return {
-              from: function () { return chain(); },
-              channel: function () {
-                return { on: function () { return this; }, subscribe: function () { return this; } };
-              },
-              removeChannel: function () {},
-              auth: {
-                getUser: function () {
-                  return Promise.resolve({ data: { user: null }, error: null });
-                },
-              },
-            };
-          },
-        };
-      };
-      if (location.protocol === "file:") {
-        window.__tasuChatDetailInstallFileSupabaseStub();
-      }
-    })();
-  </script>
+  <script src="chat-detail-head-bootstrap.js"></script>
 </head>
 <body data-page="chat">
   <div class="tasu-banner">
@@ -86,7 +28,7 @@
       ｜　
       <a href="ai-workspace.html" class="link accent">AI無料キャンペーン中</a>　
       ｜　
-      <span style="color: #94a3b8;"></span>
+      <span class="tasu-banner-spacer"></span>
     </div>
   </div>
 
@@ -114,7 +56,7 @@
           </div>
           <div class="chat-peer-header__actions">
             <span id="chatStatusPill" class="chat-pill chat-pill--active">ACTIVE</span>
-            <a class="chat-pill" href="talk-home.html?tab=chat&amp;from=chat" style="text-decoration:none;">← 一覧</a>
+            <a class="chat-pill chat-pill--plain" href="talk-home.html?tab=chat&amp;from=chat">← 一覧</a>
           </div>
         </header>
 
@@ -301,8 +243,8 @@
             </div>
           </div>
           <input id="chatFileInput" type="file" accept="image/*" class="chat-file" tabindex="-1" aria-hidden="true">
-          <div id="chatInlineError" class="chat-alert" style="display:none;margin-top:0.55rem;background:transparent;border:none;color:#b45309;padding:0;" aria-live="polite"></div>
-          <div id="chatAlert" class="chat-alert" style="display:none;" aria-live="polite"></div>
+          <div id="chatInlineError" class="chat-alert" aria-live="polite"></div>
+          <div id="chatAlert" class="chat-alert" aria-live="polite"></div>
         </div>
       </section>
     </main>
@@ -310,7 +252,7 @@
 
   <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    onerror="window.__tasuChatDetailInstallFileSupabaseStub && window.__tasuChatDetailInstallFileSupabaseStub()"
+    data-tasu-supabase-cdn
   ></script>
   <script src="breadcrumb-config.js"></script>
   <script src="common-breadcrumb.js"></script>
@@ -382,155 +324,7 @@
   <script src="service-deal-fee-payment.js"></script>
   <script src="business-service-reviews-db.js"></script>
   <script src="business-service-chat-ui.js"></script>
-  <script>
-    (function () {
-      var VERSION = "20260609-script-trace-v2";
-      var MAIN_SCRIPT_ID = "chat-detail-main-script";
-      var RETRY_KEY = "__tasuChatDetailMainScriptRetried";
-      window.__tasuChatDetailHtmlReached = true;
-      window.__tasuChatDetailExpectedScriptVersion = VERSION;
-      window.__tasuChatDetailScriptLoadError = window.__tasuChatDetailScriptLoadError || "";
-      window.__tasuChatDetailScriptPipelinePhase = "pre_main_script";
-
-      function resolveSameDirScriptUrl(filename) {
-        try {
-          return new URL(filename, document.baseURI || window.location.href).href;
-        } catch (e) {
-          return filename;
-        }
-      }
-
-      function stampDomEvidence(patch) {
-        try {
-          var host = document.body || document.documentElement;
-          if (!host) return;
-          Object.keys(patch || {}).forEach(function (key) {
-            host.dataset[key] = String(patch[key]);
-          });
-        } catch (e2) {
-          /* ignore */
-        }
-      }
-
-      window.__tasuOnChatDetailScriptLoad = function (ev) {
-        var ts = new Date().toISOString();
-        var el = ev && ev.target ? ev.target : document.getElementById(MAIN_SCRIPT_ID);
-        var src = (el && el.src) || resolveSameDirScriptUrl("chat-detail.js");
-        window.__tasuChatDetailScriptLoaded = true;
-        window.__tasuChatDetailScriptVersion = VERSION;
-        window.__tasuChatDetailScriptLoadAt = ts;
-        window.__tasuChatDetailScriptLoadError = "";
-        window.__tasuChatDetailScriptPipelinePhase = "main_script_loaded";
-        try {
-          if (el) {
-            el.dataset.loaded = "1";
-            el.dataset.loadedAt = ts;
-            el.dataset.loadedSrc = src;
-            delete el.dataset.loadError;
-            delete el.dataset.loadErrorAt;
-          }
-          stampDomEvidence({
-            chatDetailScriptLoaded: "1",
-            chatDetailScriptVersion: VERSION,
-            chatDetailScriptLoadAt: ts,
-          });
-          delete (document.body || document.documentElement).dataset.chatDetailScriptLoadError;
-        } catch (e2) {
-          /* ignore */
-        }
-      };
-
-      window.__tasuOnChatDetailScriptError = function (ev) {
-        var ts = new Date().toISOString();
-        var el = ev && ev.target ? ev.target : document.getElementById(MAIN_SCRIPT_ID);
-        var src = (el && el.src) || resolveSameDirScriptUrl("chat-detail.js");
-        var detail = {
-          src: src,
-          error: "script_load_failed",
-          at: ts,
-          pageHref: String(window.location.href || ""),
-          pageProtocol: String(window.location.protocol || ""),
-          expectedVersion: VERSION,
-          pipelinePhase: String(window.__tasuChatDetailScriptPipelinePhase || ""),
-        };
-        var msg = JSON.stringify(detail);
-        window.__tasuChatDetailScriptLoadError = msg;
-        window.__tasuChatDetailScriptPipelinePhase = "main_script_error";
-        try {
-          if (el) {
-            el.dataset.loadError = msg;
-            el.dataset.loadErrorAt = ts;
-          }
-          stampDomEvidence({ chatDetailScriptLoadError: msg });
-        } catch (e2) {
-          /* ignore */
-        }
-      };
-
-      function loadChatDetailMainScript(reason) {
-        window.__tasuChatDetailScriptPipelinePhase = "loading_main_script:" + String(reason || "initial");
-        var urls = [
-          resolveSameDirScriptUrl("chat-detail.js"),
-          "chat-detail.js",
-          "./chat-detail.js",
-        ];
-        var seen = {};
-        urls = urls.filter(function (url) {
-          if (!url || seen[url]) return false;
-          seen[url] = true;
-          return true;
-        });
-
-        var existing = document.getElementById(MAIN_SCRIPT_ID);
-        if (existing) existing.parentNode.removeChild(existing);
-
-        var index = 0;
-        function tryNext() {
-          if (index >= urls.length) {
-            window.__tasuOnChatDetailScriptError({ target: { src: urls.join(" | ") } });
-            return;
-          }
-          var url = urls[index++];
-          var script = document.createElement("script");
-          script.id = MAIN_SCRIPT_ID;
-          script.dataset.expectedVersion = VERSION;
-          script.dataset.loadReason = String(reason || "initial");
-          script.src = url;
-          script.addEventListener("load", function (ev) {
-            window.__tasuOnChatDetailScriptLoad(ev);
-          });
-          script.addEventListener("error", function () {
-            if (index < urls.length) {
-              script.parentNode && script.parentNode.removeChild(script);
-              tryNext();
-              return;
-            }
-            window.__tasuOnChatDetailScriptError({ target: script });
-          });
-          document.body.appendChild(script);
-        }
-        tryNext();
-      }
-
-      window.__tasuLoadChatDetailMainScript = loadChatDetailMainScript;
-      loadChatDetailMainScript("after_deps");
-
-      window.addEventListener("load", function () {
-        if (window.__tasuChatDetailScriptLoaded === true) return;
-        window.setTimeout(function () {
-          if (window.__tasuChatDetailScriptLoaded === true) return;
-          if (window[RETRY_KEY] === true) {
-            window.__tasuOnChatDetailScriptError({
-              target: { src: resolveSameDirScriptUrl("chat-detail.js") },
-            });
-            return;
-          }
-          window[RETRY_KEY] = true;
-          loadChatDetailMainScript("retry_after_window_load");
-        }, 0);
-      });
-    })();
-  </script>
+  <script src="chat-detail-main-loader.js"></script>
   <script src="tasful-app-mobile.js" defer></script>
 </body>
 </html>

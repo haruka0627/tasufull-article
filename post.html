@@ -20,6 +20,7 @@
 
   <link rel="stylesheet" href="tasful-mobile-detail-template.css">
   <link rel="stylesheet" href="ocr-privacy-consent.css">
+  <link rel="stylesheet" href="ocr-surface-csp-compat.css">
   <link rel="stylesheet" href="common-breadcrumb.css">
 </head>
 <body data-post-form-type="skill" data-post-scope="general">
@@ -31,7 +32,7 @@
       ｜　
       <a href="ai-workspace.html" class="link accent">AI無料キャンペーン中</a>　
       ｜　
-      <span style="color: #94a3b8;"></span>
+      <span class="tasu-banner-spacer"></span>
     </div>
   </div>
 
@@ -155,7 +156,7 @@
             <input type="radio" name="businessModePick" value="field_service" data-business-mode-pick id="bizModeFieldService">
           </div>
 
-          <div class="post-category-pick post-category-pick--business" role="radiogroup" aria-label="業務サービスカテゴリ" data-business-category-pick-group hidden aria-hidden="true" style="display:none">
+          <div class="post-category-pick post-category-pick--business" role="radiogroup" aria-label="業務サービスカテゴリ" data-business-category-pick-group hidden aria-hidden="true">
             <label class="post-category-pick__item" data-category="transport">
               <input type="radio" name="businessCategoryPick" value="transport" data-business-category-pick data-category="transport">
               <span class="post-category-pick__label">送迎・運搬</span>
@@ -206,7 +207,7 @@
             </label>
           </div>
 
-          <div class="post-category-pick post-category-pick--business" role="radiogroup" aria-label="店舗・販売カテゴリ" data-shop-store-category-pick-group hidden aria-hidden="true" style="display:none">
+          <div class="post-category-pick post-category-pick--business" role="radiogroup" aria-label="店舗・販売カテゴリ" data-shop-store-category-pick-group hidden aria-hidden="true">
             <label class="post-category-pick__item post-category-pick__item--center" data-shop-store-category="restaurant">
               <input type="radio" name="shopStoreCategoryPick" value="restaurant" data-shop-store-category-pick>
               <span class="post-category-pick__label">飲食・カフェ</span>
@@ -264,7 +265,7 @@
       <!-- 掲載種別（一般カテゴリ選択時のみ表示） -->
       <div class="post-type-bar" data-post-type-bar data-general-only hidden>
         <p class="post-type-bar__label">掲載種別</p>
-        <div class="post-type-bar__select-wrap post-field" style="margin:0">
+        <div class="post-type-bar__select-wrap post-field post-field--flush">
           <label class="visually-hidden" for="listingType">掲載種別</label>
           <select id="listingType" class="post-select" data-listing-type aria-controls="listingForm">
             <option value="skill" selected>スキル</option>
@@ -528,7 +529,7 @@
                 </span>
               </label>
             </div>
-            <p class="post-field" style="margin-top:0.75rem">
+            <p class="post-field post-field--spaced">
               <label for="publishAt">予約日時（予約公開時）</label>
               <input type="datetime-local" id="publishAt" name="publishAt">
             </p>
@@ -832,7 +833,7 @@
             </p>
 
             <p class="post-field post-field--full">
-              <label class="post-check" style="padding:0;border:none;background:transparent">
+              <label class="post-check post-check--bare">
                 <input type="checkbox" name="urgent" value="yes">
                 急募として表示する
               </label>
@@ -1576,20 +1577,6 @@
       </div>
     </div>
   </div>
-
-  <style>
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-  </style>
 
   <script src="breadcrumb-config.js"></script>
   <script src="common-breadcrumb.js"></script>

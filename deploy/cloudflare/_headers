@@ -52,3 +52,24 @@
 
 /*.js
   Cache-Control: public, max-age=300
+
+# ---------------------------------------------------------------------------
+# Gemini OCR surfaces — path-scoped CSP（F9）
+# SSOT: scripts/lib/ocr-csp-policy.mjs
+# meta CSP は置かない（header のみ · duplicate AND 回避）
+# Gemini Generative Language API は browser connect に含めない（Function 経由）
+# localhost / 127.0.0.1 は production policy に含めない
+# upgrade-insecure-requests は http://127.0.0.1:8788 開発を壊すため未設定
+# ---------------------------------------------------------------------------
+
+/chat-detail.html
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; frame-src 'none'; manifest-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://placehold.co; worker-src 'self' https://cdnjs.cloudflare.com; media-src 'self' blob:; connect-src 'self' https://ddojquacsyqesrjhcvmn.supabase.co https://ahlxuyvhzqdqaojiywmu.supabase.co wss://ddojquacsyqesrjhcvmn.supabase.co wss://ahlxuyvhzqdqaojiywmu.supabase.co
+
+/post.html
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; frame-src 'none'; manifest-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://placehold.co; worker-src 'self' https://cdnjs.cloudflare.com; media-src 'self' blob:; connect-src 'self' https://ddojquacsyqesrjhcvmn.supabase.co https://ahlxuyvhzqdqaojiywmu.supabase.co wss://ddojquacsyqesrjhcvmn.supabase.co wss://ahlxuyvhzqdqaojiywmu.supabase.co
+
+/ai-workspace.html
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; frame-src 'none'; manifest-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://placehold.co; worker-src 'self' https://cdnjs.cloudflare.com; media-src 'self' blob:; connect-src 'self' https://ddojquacsyqesrjhcvmn.supabase.co https://ahlxuyvhzqdqaojiywmu.supabase.co wss://ddojquacsyqesrjhcvmn.supabase.co wss://ahlxuyvhzqdqaojiywmu.supabase.co wss://gemini-live-proxy.tasful-article.workers.dev
+
+/builder/builder-ai.html
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; frame-ancestors 'self'; frame-src 'none'; manifest-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://placehold.co; worker-src 'self' https://cdnjs.cloudflare.com; media-src 'self' blob:; connect-src 'self' https://ddojquacsyqesrjhcvmn.supabase.co https://ahlxuyvhzqdqaojiywmu.supabase.co wss://ddojquacsyqesrjhcvmn.supabase.co wss://ahlxuyvhzqdqaojiywmu.supabase.co
