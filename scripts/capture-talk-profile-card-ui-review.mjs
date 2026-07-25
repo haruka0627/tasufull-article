@@ -8,13 +8,18 @@
  * 出力: reports/ui-review/talk-profile-card/
  */
 import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { withPlaywrightBrowser, closeAllBrowsers } from "./lib/playwright-browser.mjs";
 import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mjs";
 
 const OUT_DIR = join(process.cwd(), "reports", "ui-review", "talk-profile-card");
 const THREAD_ID = "talk-mock-friend-001";
 const THREADS_KEY = "tasful_chat_threads";
+
+/** Repo-root-relative path with `/` separators (for report.json only). */
+function toRepoRelativePath(filepath) {
+  return relative(process.cwd(), filepath).replaceAll("\\", "/");
+}
 
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 
@@ -173,7 +178,7 @@ async function main() {
     feature: "talk-profile-card",
     capturedAt: new Date().toISOString(),
     baseUrl: base,
-    outDir: OUT_DIR,
+    outDir: toRepoRelativePath(OUT_DIR),
     consoleErrorCount: uniqueErrors.length,
     consoleErrors: uniqueErrors,
     overflowOk: overflowIssues.length === 0,

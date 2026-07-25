@@ -7,7 +7,7 @@
  *   import { createUiReviewSession, UI_REVIEW_VIEWPORTS } from "./lib/ui-review-capture.mjs";
  */
 import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { join, relative } from "node:path";
 import { BUILDER_QA_VIEWPORTS } from "./playwright-viewport.mjs";
 
 /** @typedef {{ id: string, width: number, height: number, label: string }} UiReviewViewport */
@@ -15,6 +15,11 @@ import { BUILDER_QA_VIEWPORTS } from "./playwright-viewport.mjs";
 export const UI_REVIEW_VIEWPORTS = BUILDER_QA_VIEWPORTS;
 
 const DEFAULT_VIEWPORT_IDS = Object.freeze(["1280", "768", "390"]);
+
+/** Repo-root-relative path with `/` separators (for report.json only). */
+function toRepoRelativePath(filepath) {
+  return relative(process.cwd(), filepath).replaceAll("\\", "/");
+}
 
 /**
  * @param {string} featureName
@@ -128,7 +133,12 @@ export function createUiReviewSession(featureName, opts = {}) {
       const filepath = join(outDir, filename);
       await shotPage.screenshot({ path: filepath, fullPage: step.fullPage === true });
 
-      files.push({ viewport: vpId, path: filepath, httpStatus, consoleErrors: [...consoleErrors] });
+      files.push({
+        viewport: vpId,
+        path: toRepoRelativePath(filepath),
+        httpStatus,
+        consoleErrors: [...consoleErrors],
+      });
 
       if (shotPage !== page) await shotPage.close();
     }
@@ -158,7 +168,7 @@ export function createUiReviewSession(featureName, opts = {}) {
     const report = {
       feature: featureName,
       capturedAt: new Date().toISOString(),
-      outDir,
+      outDir: toRepoRelativePath(outDir),
       stepCount: stepCounter,
       consoleErrorCount: uniqueErrors.length,
       consoleErrors: uniqueErrors,
