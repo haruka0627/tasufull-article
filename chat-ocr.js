@@ -263,13 +263,23 @@
     if (status === 429) {
       return { error: dataError || "http_429", reason: "http_429" };
     }
-    if (status === 401 || status === 403) {
-      return { error: dataError || `http_${status}`, reason: "auth_error" };
+    if (status === 401) {
+      const err =
+        dataError === "auth_invalid" || dataError === "auth_unavailable"
+          ? dataError
+          : "auth_required";
+      return { error: err, reason: err };
+    }
+    if (status === 403) {
+      return { error: dataError || "auth_forbidden", reason: "auth_forbidden" };
     }
     if (status === 400) {
       return { error: dataError || "http_400", reason: "http_400" };
     }
     if (status >= 500) {
+      if (dataError === "auth_unavailable") {
+        return { error: "auth_unavailable", reason: "auth_unavailable" };
+      }
       return { error: dataError || `http_${status}`, reason: "http_5xx" };
     }
     return { error: dataError || `http_${status}`, reason: `http_${status}` };
@@ -279,6 +289,40 @@
     if (!err) return false;
     if (err.name === "AbortError") return true;
     return /aborted|AbortError/i.test(String(err.message || err));
+  }
+
+  /**
+   * 現在の Supabase session access token（Bearer 用）
+   * localStorage 直接 parse はしない。token は返却のみ・ログしない。
+   * @returns {Promise<{ token: string, error: string }>}
+   */
+  async function resolveOcrAccessToken() {
+    try {
+      let sb = null;
+      try {
+        sb = window.TasuSupabase?.getClient?.() || null;
+      } catch {
+        sb = null;
+      }
+      if (!sb) {
+        try {
+          sb = window.TasuChatSupabase?.getClient?.() || null;
+        } catch {
+          sb = null;
+        }
+      }
+      if (!sb || !sb.auth || typeof sb.auth.getSession !== "function") {
+        return { token: "", error: "auth_unavailable" };
+      }
+      const res = await sb.auth.getSession();
+      const token = String(res?.data?.session?.access_token || "").trim();
+      if (!token) {
+        return { token: "", error: "auth_required" };
+      }
+      return { token, error: "" };
+    } catch {
+      return { token: "", error: "auth_unavailable" };
+    }
   }
 
   /**
@@ -317,6 +361,11 @@
       return failGemini("invalid_origin", "invalid_origin");
     }
 
+    const auth = await resolveOcrAccessToken();
+    if (!auth.token) {
+      return failGemini(auth.error || "auth_required", auth.error || "auth_required");
+    }
+
     const guard = resolveOcrGuardContext(options);
     const controller = new AbortController();
     let timedOut = false;
@@ -332,7 +381,10 @@
     try {
       const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + auth.token,
+        },
         body: JSON.stringify({
           mimeType: mime,
           base64: base64Clean,

@@ -75,6 +75,15 @@ function loadOcr(opts = {}) {
       gemini: { endpoint: FIXED_PATH },
       tesseract: { lang: "jpn+eng" },
     },
+    TasuSupabase: {
+      getClient: () => ({
+        auth: {
+          getSession: async () => ({
+            data: { session: { access_token: "test-ocr-token" } },
+          }),
+        },
+      }),
+    },
   };
   if (location !== null) {
     win.location = location;

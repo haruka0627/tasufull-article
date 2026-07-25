@@ -50,6 +50,10 @@ async function main() {
   assert("chat-ocr passes user_id", chatOcr.includes("user_id: guard.user_id"));
   assert("chat-ocr passes surface", chatOcr.includes("surface: guard.surface"));
   assert("chat-ocr ocr_turn feature", chatOcr.includes('feature: "ocr_turn"'));
+  assert("chat-ocr sends Authorization Bearer", chatOcr.includes('Authorization: "Bearer "'));
+  assert("chat-ocr uses getSession", chatOcr.includes("getSession"));
+  assert("gemini-ocr verifies /auth/v1/user", geminiOcr.includes("/auth/v1/user"));
+  assert("gemini-ocr uses authenticatedUserId", geminiOcr.includes("authenticatedUserId"));
 
   assert("CF guard rejects production ref", guardMjs.includes('PRODUCTION_REF = "ddojquacsyqesrjhcvmn"'));
   assert("CF guard staging ref", guardMjs.includes('STAGING_REF = "ahlxuyvhzqdqaojiywmu"'));

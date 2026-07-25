@@ -47,6 +47,15 @@ function loadStack(ocrImpl) {
   };
   sandbox.window = sandbox;
   sandbox.globalThis = sandbox;
+  sandbox.TasuSupabase = {
+    getClient: () => ({
+      auth: {
+        getSession: async () => ({
+          data: { session: { access_token: "test-ocr-token" } },
+        }),
+      },
+    }),
+  };
   vm.createContext(sandbox);
 
   vm.runInContext(read("chat-ocr-config.js"), sandbox, { filename: "chat-ocr-config.js" });

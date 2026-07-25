@@ -98,6 +98,15 @@ function loadOcr(opts = {}) {
         ],
       },
     },
+    TasuSupabase: {
+      getClient: () => ({
+        auth: {
+          getSession: async () => ({
+            data: { session: { access_token: "test-ocr-token" } },
+          }),
+        },
+      }),
+    },
   };
   if (location) win.location = location;
 
@@ -636,8 +645,8 @@ async function probeMime(mime, allowedMimeTypes) {
 {
   const table = [
     [400, "http_400", "49 400"],
-    [401, "auth_error", "50 401"],
-    [403, "auth_error", "51 403"],
+    [401, "auth_required", "50 401"],
+    [403, "auth_forbidden", "51 403"],
     [413, "attachment_too_large", "52 413"],
     [415, "unsupported_mime_type", "53 415"],
     [429, "http_429", "54 429"],
