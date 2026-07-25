@@ -156,20 +156,24 @@ async function bdPost(token, body) {
   return { status: res.status, data };
 }
 
-function runQuery(sql) {
-  const tmp = path.join(os.tmpdir(), `bd-step4-${process.pid}-${Date.now()}.sql`);
-  fs.writeFileSync(tmp, sql, "utf8");
+async function runQuery(sql) {
+  const url = process.env.SUPABASE_URL;
+  const srk = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  if (!url || !srk) return null;
+  // Extract listing ID from SQL and query via REST API
+  const idMatch = sql.match(/'([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})'/i);
+  if (!idMatch) return null;
+  const listingId = idMatch[1];
   try {
-    const r = spawnSync(process.platform === "win32" ? "npx.cmd" : "npx", [
-      "supabase", "db", "query", "--linked", "--output", "json", "-f", tmp,
-    ], { cwd: root, encoding: "utf8", shell: process.platform === "win32" });
-    const out = `${r.stdout || ""}\n${r.stderr || ""}`;
-    const start = out.indexOf("{");
-    const end = out.lastIndexOf("}");
-    if (start < 0 || r.status !== 0) return null;
-    return JSON.parse(out.slice(start, end + 1));
-  } finally {
-    try { fs.unlinkSync(tmp); } catch { /* ignore */ }
+    const res = await fetch(
+      `${url}/rest/v1/business_directory_listings?id=eq.${encodeURIComponent(listingId)}&select=plan_code,status`,
+      { headers: { apikey: srk, Authorization: `Bearer ${srk}` } },
+    );
+    const data = await res.json().catch(() => []);
+    if (!res.ok) return null;
+    return { rows: Array.isArray(data) ? data : [] };
+  } catch {
+    return null;
   }
 }
 
@@ -634,7 +638,7 @@ async function runApiSmoke(cfg) {
   if (searchHit) ok("public search q=Step4");
   else bad("public search", JSON.stringify(search.data).slice(0, 80));
 
-  const db = runQuery(
+  const db = await runQuery(
     `select plan_code, status from business_directory_listings where id='${listingId}';`,
   );
   if (db?.rows?.[0]?.status === "published") ok(`db published plan=${db.rows[0].plan_code}`);
