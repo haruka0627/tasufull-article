@@ -130,11 +130,28 @@ await withPlaywrightBrowser(async (browser) => {
     const threads = JSON.parse(localStorage.getItem("tasful_chat_threads") || "[]");
     const idx = threads.findIndex((t) => t.id === "talk-mock-friend-001");
     if (idx >= 0) {
-      const profile = { ...(threads[idx].partnerProfile || {}) };
+      const row = { ...threads[idx] };
+      const profile = { ...(row.partnerProfile || {}) };
       delete profile.cover_image;
       delete profile.coverImage;
-      threads[idx] = { ...threads[idx], partnerProfile: profile };
+      const partner = { ...(row.partner || {}) };
+      delete partner.cover_image;
+      delete partner.coverImage;
+      threads[idx] = { ...row, partnerProfile: profile, partner };
       localStorage.setItem("tasful_chat_threads", JSON.stringify(threads));
+
+      const userId = String(row.partnerUserId || partner.id || "").trim();
+      const profilesKey = window.TasuTalkChatProfile?.STORAGE_KEY || "tasful_talk_profiles_v1";
+      if (userId) {
+        const map = JSON.parse(localStorage.getItem(profilesKey) || "{}");
+        if (map[userId] && typeof map[userId] === "object") {
+          const cached = { ...map[userId] };
+          delete cached.cover_image;
+          delete cached.coverImage;
+          map[userId] = cached;
+          localStorage.setItem(profilesKey, JSON.stringify(map));
+        }
+      }
     }
   });
   await page.reload({ waitUntil: "domcontentloaded" });
