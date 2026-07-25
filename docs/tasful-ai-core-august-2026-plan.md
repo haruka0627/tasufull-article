@@ -47,7 +47,7 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | **2** | SAFE-06 | Usage Log（`ai_usage_events` + ingest） | **完了（コード）** · Staging DB 適用は別ゲート · [phase2 report](../reports/tasful-ai-core-phase2-safe06-report.md) |
 | **3** | — | Auto Mode 完成（Auto/Manual · Identity · Usage routing） | **完了（コード）** · [phase3 report](../reports/tasful-ai-core-phase3-auto-mode-report.md) |
 | **4** | — | 利用ゲージ | **完了（コード）** · [phase4 report](../reports/tasful-ai-core-phase4-usage-gauge-report.md) |
-| **5** | — | プラン制御 | 未着手 |
+| **5** | — | プラン制御 | **完了（コード）** · [phase5 report](../reports/tasful-ai-core-phase5-plan-policy-report.md) |
 | **6** | SAFE-07 | Cost Ledger | **完了（コード）** · Staging 適用は別ゲート · [cost ledger report](../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **7** | SAFE-05 拡張 | 秘書 · Vision · TTS 等 | 未着手 |
 | **8** | SAFE-01〜03 | WAF · Turnstile · Rate Limit runbook | 未着手 |
@@ -192,18 +192,47 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 
 ---
 
+## Phase 5 — プラン制御（ユーザー Phase 5）
+
+**ゴール:** plan / quota / model / feature を Plan Policy SSOT で統一し、UI とサーバー enforcement を一致させる（料金・Stripe は未確定のまま）。
+
+| 項目 | 方針 |
+| --- | --- |
+| 正本 | `scripts/lib/ai-plan-policy.mjs` · `ai-plan-policy.js` · Edge `ai-plan-policy.ts` |
+| Canonical ID | `anonymous` · `free` · `lite` · `pro` · `max`(inactive) |
+| Alias | `basic_300`/`light`→lite · `pro_980`/`standard`→pro 等 |
+| Quota | Policy.dailyTextLimit → Gauge / Guard 同一 |
+| Models | allowedWorkspaceModels · Auto/Manual/Gateway/Edge 再検証 |
+| Features | workspace_chat · gemini/openai/claude_chat · ocr（接続） |
+| 未接続 | voice · image · media · search 専用制限 |
+| claimed-only | **廃止**（quota/chat は JWT 必須 · `auth_required`） |
+| 料金 | **非掲載** · Draft · 販売導線なし |
+
+**完了条件（コード）**
+
+- [x] Plan Policy SSOT
+- [x] Guard/Quota JWT + model/feature deny
+- [x] Auto/Manual plan 内ルーティング · Manual プラン外は明示拒否
+- [x] Workspace bypass / URL plan override 権限無効化
+- [x] `scripts/test-tasful-ai-plan-policy-phase5.mjs` · Playwright
+- [x] [phase5 report](../reports/tasful-ai-core-phase5-plan-policy-report.md)
+
+**Staging 未検証:** live JWT · live quota · subscription status
+
+---
+
 ## Phase 5〜10（概要）
 
 | Phase | 主要成果物 | 状態 |
 | --- | --- | --- |
-| 4 | 利用ゲージ（上記） | **コード完了** |
-| 5 | プラン制御 | 未着手 |
-| 5b | `gen_ai_*` / `ai_workspace_usage_daily` migrations 昇格 | 未着手（historical Billing Adapter 系） |
-| 6 | Cost Ledger（SAFE-07） | **コード完了** |
-| 7 | 秘書 CF · gemini-image-character · gemini-tts Guard 拡張 | 未着手 |
-| 8 | `docs/runbooks/cf-waf-turnstile-staging.md` | 未着手 |
-| 9 | CF Queue + async worker 設計 | 未着手（後回し可） |
-| 10 | Admin 画面（Usage/Cost/Events） | 未着手 |
+| 4 | 利用ゲージ | **コード完了** |
+| 5 | プラン制御（上記） | **コード完了** |
+| 5b | `gen_ai_*` migrations 昇格 | 未着手 |
+| 6 | Cost Ledger（SAFE-07） / OpenRouter 限定検証（ユーザー次 Phase） | Cost Ledger コード完了 · OpenRouter 未着手 |
+| 7 | 秘書 CF · Guard 拡張 | 未着手 |
+| 8 | WAF / Turnstile runbook | 未着手 |
+| 9 | Queue | 未着手 |
+| 10 | Admin | 未着手 |
 
 > **historical:** 旧「Phase 4 = Billing UI→Stripe」は後続プラン制御 / Billing Adapter へ。本 Phase 4 は利用ゲージのみ。
 
@@ -223,6 +252,8 @@ node scripts/test-tasful-ai-safe-ops-cost-ledger-phase2.mjs  # SAFE-07 Cost Ledg
 node scripts/test-tasful-ai-auto-mode-phase3.mjs  # Phase 3 Auto Mode
 node scripts/test-tasful-ai-usage-gauge-phase4.mjs  # Phase 4 Usage Gauge
 node scripts/verify-ai-usage-gauge-phase4.mjs
+node scripts/test-tasful-ai-plan-policy-phase5.mjs  # Phase 5 Plan Policy
+node scripts/verify-ai-plan-policy-phase5.mjs
 ```
 
 ---

@@ -3,6 +3,16 @@ import { getGenAiPlanForUser } from "./apply-genai-plan.ts";
 import { jsonResponse } from "./cors.ts";
 import { attachUsageGaugeToStatus } from "./ai-usage-gauge.ts";
 import { resolveUsageActor } from "./ai-usage-log.ts";
+import {
+  buildPublicPlanSummary,
+  getAnonymousPolicy,
+  getPlanPolicy,
+  isFeatureAllowedForPolicy,
+  isModelAllowedForPolicy,
+  isPlanExecutable,
+  policyFromGenAiPlan,
+  type PlanPolicy,
+} from "./ai-plan-policy.ts";
 
 export const WORKSPACE_SURFACE = "ai-workspace";
 
@@ -34,6 +44,7 @@ export type WorkspaceQuotaStatus = {
   used?: number;
   remaining?: number;
   dateJst?: string;
+  policy?: PlanPolicy;
 };
 
 export function getTokyoDateKey(now = new Date()): string {
@@ -102,23 +113,27 @@ async function getDailyLimitForUser(userId: string): Promise<{
   planLabel: string;
   dailyTextLimit: number;
   dailyVisionLimit: number;
+  policy: PlanPolicy;
 }> {
   const planResult = await getGenAiPlanForUser(userId);
   if (!planResult.ok) {
+    const policy = getPlanPolicy("free");
     return {
-      planCode: "free",
-      planLabel: "無料枠",
-      dailyTextLimit: 5,
-      dailyVisionLimit: 5,
+      planCode: policy.planId,
+      planLabel: policy.displayName,
+      dailyTextLimit: policy.dailyTextLimit,
+      dailyVisionLimit: policy.dailyTextLimit,
+      policy,
     };
   }
-  const plan = planResult.plan;
-  const textLimit = Math.max(0, Number(plan.dailyTextLimit) || 5);
+  const policy = policyFromGenAiPlan(planResult.plan);
+  const textLimit = Math.max(0, Number(policy.dailyTextLimit) || 0);
   return {
-    planCode: plan.plan || "free",
-    planLabel: plan.label || "無料枠",
+    planCode: policy.planId,
+    planLabel: policy.displayName,
     dailyTextLimit: textLimit,
     dailyVisionLimit: textLimit,
+    policy,
   };
 }
 
@@ -169,10 +184,12 @@ export async function getWorkspaceQuotaStatus(input: {
   const used =
     feature === WORKSPACE_FEATURE_VISION ? usage.visionUsed : usage.textUsed;
   const remaining = Math.max(0, limit - used);
+  const executable = isPlanExecutable(limits.policy);
+  const allowed = executable && remaining > 0;
 
   return {
     ok: true,
-    allowed: remaining > 0,
+    allowed,
     feature,
     userId,
     planCode: limits.planCode,
@@ -181,7 +198,12 @@ export async function getWorkspaceQuotaStatus(input: {
     used,
     remaining,
     dateJst,
-    error: remaining > 0 ? undefined : "quota_exceeded",
+    policy: limits.policy,
+    error: allowed
+      ? undefined
+      : executable
+        ? "quota_exceeded"
+        : `plan_${limits.policy.status}`,
   };
 }
 
@@ -213,7 +235,8 @@ export async function checkWorkspaceQuota(input: {
   }
 
   const row = (data || {}) as Record<string, unknown>;
-  const allowed = row.allowed === true;
+  const executable = isPlanExecutable(limits.policy);
+  const allowed = executable && row.allowed === true;
   return {
     ok: true,
     allowed,
@@ -225,7 +248,12 @@ export async function checkWorkspaceQuota(input: {
     used: Math.max(0, Number(row.used) || 0),
     remaining: Math.max(0, Number(row.remaining) || 0),
     dateJst,
-    error: allowed ? undefined : String(row.error || "quota_exceeded"),
+    policy: limits.policy,
+    error: allowed
+      ? undefined
+      : executable
+        ? String(row.error || "quota_exceeded")
+        : `plan_${limits.policy.status}`,
   };
 }
 
@@ -242,6 +270,22 @@ export async function consumeWorkspaceQuota(input: {
   }
 
   const limits = await getDailyLimitForUser(userId);
+  if (!isPlanExecutable(limits.policy)) {
+    return {
+      ok: false,
+      allowed: false,
+      feature,
+      userId,
+      planCode: limits.planCode,
+      planLabel: limits.planLabel,
+      dailyLimit: limitForFeature(feature, limits),
+      used: 0,
+      remaining: 0,
+      dateJst,
+      policy: limits.policy,
+      error: `plan_${limits.policy.status}`,
+    };
+  }
   const limit = limitForFeature(feature, limits);
   const supabase = getServiceSupabase();
   const { data, error } = await supabase.rpc("consume_ai_workspace_quota", {
@@ -269,11 +313,12 @@ export async function consumeWorkspaceQuota(input: {
     used: Math.max(0, Number(row.used) || 0),
     remaining: Math.max(0, Number(row.remaining) || 0),
     dateJst,
+    policy: limits.policy,
     error: success ? undefined : String(row.error || "quota_exceeded"),
   };
 }
 
-/** Chat Edge 入口 — quota 超過時は 402 Response、通過時は status */
+/** Chat Edge 入口 — JWT 必須 · quota 超過時は 402 Response、通過時は status */
 export async function enforceWorkspaceQuotaEntry(
   req: Request,
   body: WorkspaceQuotaBody
@@ -282,11 +327,26 @@ export async function enforceWorkspaceQuotaEntry(
     return { blocked: null, status: null };
   }
 
-  const userId = resolveWorkspaceUserId(body);
+  const actor = await resolveAuthenticatedWorkspaceUser(req, body);
+  if (!actor.ok) {
+    return {
+      blocked: jsonResponse(
+        {
+          ok: false,
+          error: actor.error,
+          reply: "",
+        },
+        actor.http,
+        req
+      ),
+      status: { ok: false, error: actor.error },
+    };
+  }
+
   const feature = resolveWorkspaceFeature(body);
 
   try {
-    const status = await checkWorkspaceQuota({ userId, feature });
+    const status = await checkWorkspaceQuota({ userId: actor.userId, feature });
     if (!status.allowed) {
       return { blocked: quotaExceededResponse(status, req), status };
     }
@@ -297,13 +357,23 @@ export async function enforceWorkspaceQuotaEntry(
   }
 }
 
-/** Chat Edge 成功後 — usage increment */
+/** Chat Edge 成功後 — usage increment（JWT user のみ） */
 export async function finalizeWorkspaceQuotaConsume(
+  req: Request | undefined,
   body: WorkspaceQuotaBody
 ): Promise<WorkspaceQuotaStatus | null> {
   if (!isWorkspaceSurface(body)) return null;
 
-  const userId = resolveWorkspaceUserId(body);
+  let userId = "";
+  if (req) {
+    const actor = await resolveAuthenticatedWorkspaceUser(req, body);
+    if (!actor.ok) return null;
+    userId = actor.userId;
+  } else {
+    // backward-compatible call sites without req — refuse claimed body
+    return null;
+  }
+
   const feature = resolveWorkspaceFeature(body);
 
   try {
@@ -321,14 +391,14 @@ function isUuidLike(value: string): boolean {
 }
 
 /**
- * JWT 検証済み user を優先。JWT ありで body が別 UUID を名乗ったら拒否。
- * JWT なしの claimed id は既存 Workspace 互換のため許可（authMode=claimed）。
+ * JWT 検証済み user のみ許可。body の user_id は帰属に使わない（claimed-only 廃止）。
+ * JWT ありで body が別 UUID を名乗ったら拒否。
  */
 async function resolveQuotaActor(
   req: Request,
   body: WorkspaceQuotaBody
 ): Promise<
-  | { ok: true; userId: string; authMode: "jwt" | "claimed" }
+  | { ok: true; userId: string; authMode: "jwt" }
   | { ok: false; error: string; http: number }
 > {
   const claimed = resolveWorkspaceUserId(body);
@@ -337,33 +407,59 @@ async function resolveQuotaActor(
     bodyUserId: body.user_id ?? body.userId,
   });
 
-  if (actor.userId) {
-    if (
-      claimed &&
-      claimed !== "anonymous" &&
-      isUuidLike(claimed) &&
-      claimed !== actor.userId
-    ) {
-      return { ok: false, error: "user_mismatch", http: 403 };
-    }
-    return { ok: true, userId: actor.userId, authMode: "jwt" };
+  if (!actor.userId) {
+    return { ok: false, error: "auth_required", http: 401 };
   }
 
-  if (!claimed || claimed === "anonymous") {
-    return { ok: false, error: "missing_user_id", http: 400 };
+  if (
+    claimed &&
+    claimed !== "anonymous" &&
+    isUuidLike(claimed) &&
+    claimed !== actor.userId
+  ) {
+    return { ok: false, error: "user_mismatch", http: 403 };
   }
-  return { ok: true, userId: claimed, authMode: "claimed" };
+
+  return { ok: true, userId: actor.userId, authMode: "jwt" };
 }
 
 function publicQuotaError(code: string): string {
   const allow = new Set([
     "missing_user_id",
+    "auth_required",
     "user_mismatch",
     "quota_exceeded",
     "invalid_action",
     "usage_unavailable",
+    "plan_feature_denied",
+    "plan_model_denied",
+    "plan_suspended",
+    "plan_expired",
+    "plan_inactive",
   ]);
   return allow.has(code) ? code : "usage_unavailable";
+}
+
+function enrichQuotaPayload(
+  status: WorkspaceQuotaStatus,
+  authMode: string
+): Record<string, unknown> {
+  const policy = status.policy || getPlanPolicy(status.planCode || "free");
+  const gaugePayload = attachUsageGaugeToStatus(status, {
+    authoritative: authMode === "jwt",
+    authMode,
+  });
+  const plan = buildPublicPlanSummary(policy, {
+    used: status.used,
+    remaining: status.remaining,
+  });
+  const { userId: _u, policy: _p, ...rest } = status as Record<string, unknown>;
+  return {
+    ...gaugePayload,
+    ...rest,
+    plan,
+    authMode,
+  };
 }
 
 export async function handleWorkspaceQuotaAction(
@@ -387,21 +483,17 @@ export async function handleWorkspaceQuotaAction(
   try {
     if (action === "check") {
       const status = await checkWorkspaceQuota({ userId, feature });
-      const payload = attachUsageGaugeToStatus(status, {
-        authoritative: authMode === "jwt",
-        authMode,
-      });
-      return jsonResponse(payload, 200, req);
+      return jsonResponse(enrichQuotaPayload(status, authMode), 200, req);
     }
 
     if (action === "consume") {
       const status = await consumeWorkspaceQuota({ userId, feature });
       const http = status.ok ? 200 : 402;
-      const payload = attachUsageGaugeToStatus(status, {
-        authoritative: authMode === "jwt",
-        authMode,
-      });
-      return jsonResponse({ ...payload, ok: status.ok }, http, req);
+      return jsonResponse(
+        { ...enrichQuotaPayload(status, authMode), ok: status.ok },
+        http,
+        req
+      );
     }
 
     if (action !== "status" && action !== "") {
@@ -409,13 +501,27 @@ export async function handleWorkspaceQuotaAction(
     }
 
     const status = await getWorkspaceQuotaStatus({ userId, feature });
-    const payload = attachUsageGaugeToStatus(status, {
-      authoritative: authMode === "jwt",
-      authMode,
-    });
-    return jsonResponse(payload, 200, req);
+    return jsonResponse(enrichQuotaPayload(status, authMode), 200, req);
   } catch (err) {
     console.error("[ai-workspace-quota] action failed:", err);
     return jsonResponse({ ok: false, error: "usage_unavailable" }, 500, req);
   }
 }
+
+/** Guard / Chat 用 — JWT 必須の user 解決（claimed 廃止） */
+export async function resolveAuthenticatedWorkspaceUser(
+  req: Request,
+  body: WorkspaceQuotaBody
+): Promise<
+  | { ok: true; userId: string }
+  | { ok: false; error: string; http: number }
+> {
+  return resolveQuotaActor(req, body);
+}
+
+export {
+  isModelAllowedForPolicy,
+  isFeatureAllowedForPolicy,
+  getAnonymousPolicy,
+  buildPublicPlanSummary,
+};

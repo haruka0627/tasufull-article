@@ -21,6 +21,26 @@ await withPlaywrightBrowser(async (browser) => {
 
   await page.evaluate(() => {
     localStorage.removeItem("tasu_ai_model_router_settings");
+    const P = window.TasuAiPlanPolicy;
+    const pro = P?.getPlanPolicy?.("pro");
+    if (pro && window.TasuAiWorkspaceUsage?.applyServerStatusToCache) {
+      window.TasuAiWorkspaceUsage.applyServerStatusToCache({
+        ok: true,
+        planCode: "pro",
+        planLabel: "Pro",
+        dailyLimit: 100,
+        used: 0,
+        remaining: 100,
+        allowed: true,
+        plan: P.buildPublicPlanSummary(pro, { used: 0, remaining: 100 }),
+        authMode: "jwt",
+      });
+    } else {
+      localStorage.setItem(
+        "tasu_genai_plan",
+        JSON.stringify({ plan: "pro_980", label: "Pro", dailyTextLimit: 100 })
+      );
+    }
     window.TasuAiWorkspaceModelRouterSettings?.setState?.({
       modelMode: "auto",
       modelAutoRouting: true,

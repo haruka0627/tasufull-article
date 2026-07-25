@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
   const routingMeta = sanitizeRoutingMetadata(body.routing);
   const inputUnits = message.length > 0 ? message.length : null;
 
-  const quotaEntry = await enforceGuardChatEntry(req, body);
+  const quotaEntry = await enforceGuardChatEntry(req, body, "claude-chat");
   if (quotaEntry.blocked) {
     let denyCode = "quota_denied";
     try {
@@ -171,7 +171,7 @@ Deno.serve(async (req) => {
         httpStatus
       );
     }
-    await finalizeGuardChatConsume(body);
+    await finalizeGuardChatConsume(req, body);
     const outputUnits = reply.length > 0 ? reply.length : null;
     await usageOnce.record({
       requestId,

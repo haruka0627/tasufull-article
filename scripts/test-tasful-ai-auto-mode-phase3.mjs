@@ -111,6 +111,7 @@ async function main() {
 
   const g = createSandbox();
   runIife(g, "ai-model-identity.js");
+  runIife(g, "ai-plan-policy.js");
   runIife(g, "ai-plan-models.js");
   runIife(g, "ai-workspace-model-router-settings.js");
 
@@ -121,6 +122,12 @@ async function main() {
   assert("identity catalog map", Id.catalogToWorkspaceId("claude-sonnet") === "claude");
   assert("identity provider model", Id.toProviderModelId("gemini-flash") === "gemini-2.5-flash");
   assert("cost ledger key", Id.toCostLedgerKey("gpt")?.model === "gpt-4o-mini");
+
+  // Phase 5: multi-model routes require Pro policy
+  g.localStorage.setItem(
+    "tasu_genai_plan",
+    JSON.stringify({ plan: "pro_980", label: "Pro", dailyTextLimit: 100 })
+  );
 
   g.localStorage.removeItem("tasu_ai_model_router_settings");
   Router.setState({

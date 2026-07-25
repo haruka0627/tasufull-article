@@ -61,6 +61,21 @@ await withPlaywrightBrowser(async (browser) => {
     if (meter !== "40") errors.push(`${vp.n}: meter aria-valuenow=${meter}`);
 
     await page.evaluate(() => {
+      const P = window.TasuAiPlanPolicy;
+      const pro = P.getPlanPolicy("pro");
+      window.TasuAiWorkspaceUsage.applyServerStatusToCache({
+        ok: true,
+        dailyLimit: 100,
+        used: 2,
+        remaining: 98,
+        allowed: true,
+        dateJst: "2026/07/26",
+        planCode: "pro",
+        planLabel: "Pro",
+        usage: window.TasuAiUsageGauge.buildUsageGauge({ used: 2, limit: 100, dateJst: "2026/07/26" }),
+        plan: P.buildPublicPlanSummary(pro, { used: 2, remaining: 98 }),
+        authMode: "jwt",
+      });
       window.TasuAiWorkspaceModelRouterSettings?.setAutoRoutingEnabled?.(false);
       window.TasuAiPlanModels?.setSelectedModelId?.("claude");
       window.TasuAiWorkspaceUsage.updateUsageUi();

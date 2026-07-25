@@ -1,10 +1,10 @@
 /**
- * TASFUL AI — プラン別モデル定義（課金接続なし・表示・選択用）
+ * TASFUL AI — プラン別モデル定義（表示 · 選択）
+ * 権限の正本は TasuAiPlanPolicy（サーバー再検証必須）。localStorage / URL の plan 改ざんは権限に使わない。
  */
 (function (global) {
   "use strict";
 
-  const STORAGE_PLAN_OVERRIDE = "tasu_ai_user_plan";
   const STORAGE_SELECTED_MODEL = "tasu_ai_selected_model";
 
   /** @type {Record<string, { id: string, label: string, provider: string, edge?: string, comingSoon?: boolean }>} */
@@ -45,115 +45,66 @@
   function isWorkspaceSurface() {
     try {
       const path = String(global.location?.pathname || "");
-      return path.includes("ai-workspace") || Boolean(global.document?.querySelector?.("[data-ai-workspace-chat]"));
+      return (
+        path.includes("ai-workspace") ||
+        Boolean(global.document?.querySelector?.("[data-ai-workspace-chat]"))
+      );
     } catch {
       return false;
     }
   }
 
-  /** @type {Record<string, { id: string, label: string, modelAccess: Record<string, "enabled"|"disabled"|"hidden"> }>} */
-  const PLANS = {
-    free: {
-      id: "free",
-      label: "Free",
-      modelAccess: {
-        "gemini-flash": "enabled",
-        gpt: "hidden",
-        claude: "hidden",
-        grok: "hidden",
-      },
-    },
-    trial: {
-      id: "trial",
-      label: "Trial",
-      modelAccess: {
-        "gemini-flash": "enabled",
-        gpt: "hidden",
-        claude: "hidden",
-        grok: "hidden",
-      },
-    },
-    light: {
-      id: "light",
-      label: "Light",
-      modelAccess: {
-        "gemini-flash": "enabled",
-        gpt: "disabled",
-        claude: "hidden",
-        grok: "hidden",
-      },
-    },
-    standard: {
-      id: "standard",
-      label: "Standard",
-      modelAccess: {
-        "gemini-flash": "enabled",
-        gpt: "enabled",
-        claude: "enabled",
-        grok: "hidden",
-      },
-    },
-    premium: {
-      id: "premium",
-      label: "Premium",
-      modelAccess: {
-        "gemini-flash": "enabled",
-        gpt: "enabled",
-        claude: "enabled",
-        grok: "disabled",
-      },
-    },
-  };
-
-  const GENAI_PLAN_TO_TIER = {
-    free: "free",
-    basic_300: "light",
-    pro_980: "standard",
-    genai_basic_300: "light",
-    genai_pro_980: "standard",
-  };
-
-  function normalizePlanId(raw) {
-    const id = String(raw || "")
-      .trim()
-      .toLowerCase();
-    if (id in PLANS) return id;
-    if (id === "genai_basic_300" || id === "basic_300") return "light";
-    if (id === "genai_pro_980" || id === "pro_980") return "standard";
-    return "";
+  function policyApi() {
+    return global.TasuAiPlanPolicy || null;
   }
 
-  function readPlanOverride() {
-    try {
-      const params = new URLSearchParams(global.location?.search || "");
-      const fromUrl = params.get("ai_plan") || params.get("tasu_ai_plan");
-      if (fromUrl) return normalizePlanId(fromUrl);
-      return normalizePlanId(localStorage.getItem(STORAGE_PLAN_OVERRIDE));
-    } catch {
-      return "";
+  /** サーバー同期 plan を優先。localStorage / URL override は権限に使わない。 */
+  function resolveUserPlan() {
+    const Usage = global.TasuAiWorkspaceUsage;
+    const fromServer = Usage?.getServerPlanId?.();
+    const Policy = policyApi();
+    if (fromServer && Policy?.normalizePlanId) {
+      return Policy.normalizePlanId(fromServer);
     }
-  }
-
-  function readGenAiPlanCode() {
     try {
-      const raw = JSON.parse(localStorage.getItem("tasu_genai_plan") || "null");
-      if (!raw || typeof raw !== "object") return "free";
-      return String(raw.plan || "free").trim();
+      const raw = JSON.parse(global.localStorage.getItem("tasu_genai_plan") || "null");
+      const code = raw && typeof raw === "object" ? String(raw.plan || "free") : "free";
+      return Policy?.normalizePlanId?.(code) || "free";
     } catch {
       return "free";
     }
   }
 
-  function resolveUserPlan() {
-    const override = readPlanOverride();
-    if (override) return override;
-    const code = readGenAiPlanCode();
-    return GENAI_PLAN_TO_TIER[code] || GENAI_PLAN_TO_TIER[String(code).toLowerCase()] || "free";
+  function getActivePolicy(planId) {
+    const Policy = policyApi();
+    const id = planId || resolveUserPlan();
+    if (Policy?.getPlanPolicy) return Policy.getPlanPolicy(id);
+    return {
+      planId: "free",
+      displayName: "無料枠",
+      allowedWorkspaceModels: ["gemini-flash"],
+      status: "active",
+    };
+  }
+
+  function normalizePlanId(raw) {
+    return policyApi()?.normalizePlanId?.(raw) || "free";
   }
 
   function getPlan(planId) {
-    const id = normalizePlanId(planId) || resolveUserPlan();
-    return PLANS[id] || PLANS.free;
+    const policy = getActivePolicy(planId);
+    return {
+      id: policy.planId,
+      label: policy.displayName,
+      modelAccess: Object.fromEntries(
+        Object.keys(MODELS).map((mid) => {
+          if (MODELS[mid].comingSoon) return [mid, "hidden"];
+          if (policy.allowedWorkspaceModels?.includes(mid)) return [mid, "enabled"];
+          if (WORKSPACE_MODEL_IDS.includes(mid)) return [mid, "disabled"];
+          return [mid, "hidden"];
+        })
+      ),
+    };
   }
 
   function getModel(modelId) {
@@ -163,28 +114,29 @@
 
   function listModelsForPlan(planId) {
     const plan = getPlan(planId);
-    const workspace = isWorkspaceSurface();
     return Object.keys(MODELS).map((id) => {
       const model = MODELS[id];
-      let access = plan.modelAccess[id] || "hidden";
-      if (workspace && WORKSPACE_MODEL_IDS.includes(id) && !model.comingSoon) {
-        access = "enabled";
-      }
-      if (workspace && model.comingSoon) {
-        access = "hidden";
-      }
+      const access = plan.modelAccess[id] || "hidden";
       return {
         ...model,
         access,
         selectable: access === "enabled",
         disabled: access === "disabled",
         hidden: access === "hidden",
-        upgradeHint: access === "disabled" ? (model.comingSoon ? "準備中" : "上位プランで利用可能") : "",
+        upgradeHint:
+          access === "disabled"
+            ? model.comingSoon
+              ? "準備中"
+              : "現在の利用区分では利用できません"
+            : "",
       };
     });
   }
 
   function getDefaultModelIdForPlan(planId) {
+    const Policy = policyApi();
+    const policy = getActivePolicy(planId);
+    if (Policy?.getDefaultModelForPolicy) return Policy.getDefaultModelForPolicy(policy);
     const list = listModelsForPlan(planId).filter((m) => m.selectable);
     return list[0]?.id || "gemini-flash";
   }
@@ -192,7 +144,7 @@
   function getSelectedModelId() {
     try {
       const plan = resolveUserPlan();
-      const stored = String(localStorage.getItem(STORAGE_SELECTED_MODEL) || "").trim();
+      const stored = String(global.localStorage.getItem(STORAGE_SELECTED_MODEL) || "").trim();
       const list = listModelsForPlan(plan);
       const row = list.find((m) => m.id === stored);
       if (row?.selectable) return row.id;
@@ -208,7 +160,7 @@
     const row = list.find((m) => m.id === modelId);
     if (!row?.selectable) return false;
     try {
-      localStorage.setItem(STORAGE_SELECTED_MODEL, row.id);
+      global.localStorage.setItem(STORAGE_SELECTED_MODEL, row.id);
       global.dispatchEvent(
         new CustomEvent("tasu:ai-model-changed", {
           detail: { modelId: row.id, planId: plan },
@@ -220,35 +172,24 @@
     }
   }
 
-  function setPlanOverrideForBeta(planId) {
-    const id = normalizePlanId(planId);
-    if (!id) return false;
-    try {
-      localStorage.setItem(STORAGE_PLAN_OVERRIDE, id);
-      const defaultModel = getDefaultModelIdForPlan(id);
-      localStorage.setItem(STORAGE_SELECTED_MODEL, defaultModel);
-      global.dispatchEvent(new CustomEvent("tasu:ai-plan-changed", { detail: { planId: id } }));
-      return true;
-    } catch {
-      return false;
-    }
+  /** @deprecated Phase 5 — 権限に使わない。 */
+  function setPlanOverrideForBeta() {
+    return false;
   }
 
   function isModelAllowed(modelId, planId) {
     const id = String(modelId || "").trim();
-    if (isWorkspaceSurface() && WORKSPACE_MODEL_IDS.includes(id)) {
-      const model = MODELS[id];
-      return Boolean(model && !model.comingSoon);
+    const Policy = policyApi();
+    const policy = getActivePolicy(planId);
+    if (Policy?.isModelAllowedForPolicy) {
+      return Policy.isModelAllowedForPolicy(policy, id);
     }
-    const plan = getPlan(planId);
-    return plan.modelAccess[id] === "enabled";
+    return getPlan(planId).modelAccess[id] === "enabled";
   }
 
   global.TasuAiPlanModels = {
     MODELS,
-    PLANS,
     WORKSPACE_MODEL_IDS,
-    STORAGE_PLAN_OVERRIDE,
     STORAGE_SELECTED_MODEL,
     isWorkspaceSurface,
     resolveUserPlan,
@@ -261,5 +202,6 @@
     getDefaultModelIdForPlan,
     isModelAllowed,
     normalizePlanId,
+    getActivePolicy,
   };
 })(typeof window !== "undefined" ? window : globalThis);

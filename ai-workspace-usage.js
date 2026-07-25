@@ -17,7 +17,7 @@
     dailyTextLimit: 5,
   };
 
-  /** @type {{ remaining: number | null, dailyLimit: number | null, used: number | null, syncedAt: number, gauge: object | null, fetchError: boolean }} */
+  /** @type {{ remaining: number | null, dailyLimit: number | null, used: number | null, syncedAt: number, gauge: object | null, fetchError: boolean, planSummary: object | null, serverPlanId: string | null }} */
   const serverCache = {
     remaining: null,
     dailyLimit: null,
@@ -25,6 +25,8 @@
     syncedAt: 0,
     gauge: null,
     fetchError: false,
+    planSummary: null,
+    serverPlanId: null,
   };
 
   function isPhase2ServerEnabled() {
@@ -214,6 +216,19 @@
         source: "quota-derived",
       });
     }
+    if (status.plan && typeof status.plan === "object") {
+      serverCache.planSummary = status.plan;
+      serverCache.serverPlanId = String(status.plan.planId || status.planCode || "").trim() || null;
+    } else if (status.planCode) {
+      serverCache.serverPlanId = String(status.planCode).trim();
+      const Policy = global.TasuAiPlanPolicy;
+      if (Policy?.buildPublicPlanSummary && Policy?.getPlanPolicy) {
+        serverCache.planSummary = Policy.buildPublicPlanSummary(
+          Policy.getPlanPolicy(status.planCode),
+          { used, remaining }
+        );
+      }
+    }
     const today = getTokyoDateKey();
     saveUsage({ date: today, textTurnUsed: used });
     if (status.planCode || status.planLabel) {
@@ -256,33 +271,34 @@
     });
   }
 
-  function getGaugeSnapshot() {
-    if (serverCache.fetchError) {
-      return (
-        buildLocalGauge({ forceUnavailable: true, source: "fetch_error" }) || {
-          status: "unavailable",
-          statusLabel: "利用状況を取得できません",
-          canExecute: false,
-        }
-      );
-    }
-    if (serverCache.gauge) return serverCache.gauge;
-    const userId = getUserId();
-    if (userId === "anonymous") {
-      return buildLocalGauge({
-        authoritative: false,
-        source: "anonymous_local",
-      });
-    }
-    return buildLocalGauge({
-      authoritative: false,
-      source: "local_cache",
+  function getServerPlanId() {
+    if (serverCache.serverPlanId) return serverCache.serverPlanId;
+    const Policy = global.TasuAiPlanPolicy;
+    if (getUserId() === "anonymous") return "anonymous";
+    return Policy?.normalizePlanId?.(readGenAiPlan().plan) || "free";
+  }
+
+  function getPlanSummary() {
+    if (serverCache.planSummary) return serverCache.planSummary;
+    const Policy = global.TasuAiPlanPolicy;
+    if (!Policy?.buildPublicPlanSummary) return null;
+    const planId = getServerPlanId();
+    const policy =
+      planId === "anonymous" ? Policy.getAnonymousPolicy() : Policy.getPlanPolicy(planId);
+    return Policy.buildPublicPlanSummary(policy, {
+      used: serverCache.used ?? getUsage().textTurnUsed,
+      remaining: getDailyRemaining(),
     });
   }
 
   function getDailyLimit() {
     if (serverCache.dailyLimit != null) {
       return Math.max(0, Number(serverCache.dailyLimit) || DEFAULT_FREE_PLAN.dailyTextLimit);
+    }
+    const Policy = global.TasuAiPlanPolicy;
+    if (Policy?.getPlanPolicy) {
+      const policy = Policy.getPlanPolicy(getServerPlanId());
+      if (Number.isFinite(policy.dailyTextLimit)) return Math.max(0, policy.dailyTextLimit);
     }
     const plan = readGenAiPlan();
     return Math.max(0, Number(plan.dailyTextLimit) || DEFAULT_FREE_PLAN.dailyTextLimit);
@@ -488,6 +504,30 @@
     return false;
   }
 
+  function getGaugeSnapshot() {
+    if (serverCache.fetchError) {
+      return (
+        buildLocalGauge({ forceUnavailable: true, source: "fetch_error" }) || {
+          status: "unavailable",
+          statusLabel: "利用状況を取得できません",
+          canExecute: false,
+        }
+      );
+    }
+    if (serverCache.gauge) return serverCache.gauge;
+    const userId = getUserId();
+    if (userId === "anonymous") {
+      return buildLocalGauge({
+        authoritative: false,
+        source: "anonymous_local",
+      });
+    }
+    return buildLocalGauge({
+      authoritative: false,
+      source: "local_cache",
+    });
+  }
+
   function installEdgePayloadHook() {
     if (!isPhase2ServerEnabled() || global.__tasuWorkspaceEdgeHookInstalled) return;
     global.__tasuWorkspaceEdgeHookInstalled = true;
@@ -500,6 +540,12 @@
           body.surface = WORKSPACE_SURFACE;
           body.user_id = getUserId();
           init = { ...init, body: JSON.stringify(body) };
+          const token = await resolveAccessToken();
+          if (token) {
+            const headers = new Headers(init.headers || {});
+            headers.set("Authorization", `Bearer ${token}`);
+            init = { ...init, headers };
+          }
         } catch {
           /* keep original body */
         }
@@ -651,15 +697,21 @@
         : g.authoritative
           ? "サーバー上の本日の利用枠に基づきます。"
           : "直近の同期結果または端末キャッシュに基づく目安です。";
+    const plan = getPlanSummary();
+    const planLine = plan
+      ? `利用区分: ${plan.displayName}（${plan.planId}） · モデル: ${(plan.allowedModels || []).join(", ") || "—"}`
+      : "";
 
     detail.innerHTML =
       `<p class="ai-usage-gauge-detail__status"><strong>${escapeHtml(g.statusLabel || "—")}</strong> — ${escapeHtml(g.statusHint || "")}</p>` +
+      (planLine ? `<p class="ai-usage-gauge-detail__plan">${escapeHtml(planLine)}</p>` : "") +
       `<ul class="ai-usage-gauge-detail__list">` +
       `<li>利用期間: 本日（Asia/Tokyo）</li>` +
       `<li>現在の利用状況: ${pct == null ? "—" : `${pct}%`}</li>` +
       `<li>残り目安: ${escapeHtml(remPct)}</li>` +
       `<li>次回更新: ${escapeHtml(resetLabel)}</li>` +
-      `<li>実行: ${g.canExecute ? "可能" : "停止または上限"}</li>` +
+      `<li>上限時: 新規送信を停止（更新待ち）</li>` +
+      `<li>実行: ${g.canExecute && plan?.canExecute !== false ? "可能" : "停止または上限"}</li>` +
       `</ul>` +
       `<p class="ai-usage-gauge-detail__note">${escapeHtml(g.heavyModelNote || Gauge?.HEAVY_MODEL_NOTE || "")}</p>` +
       `<p class="ai-usage-gauge-detail__auth">${escapeHtml(authNote)}</p>` +
@@ -745,6 +797,8 @@
     resetDailyIfNeeded,
     getUsage,
     getGaugeSnapshot,
+    getServerPlanId,
+    getPlanSummary,
     getManualHeavyModelHint,
     isPhase2ServerEnabled,
     applyServerStatusToCache,

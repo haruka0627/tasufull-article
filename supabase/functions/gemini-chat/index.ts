@@ -535,7 +535,7 @@ Deno.serve(async (req) => {
     body && typeof body === "object" ? (body as { routing?: unknown }).routing : null
   );
 
-  const quotaEntry = await enforceGuardChatEntry(req, body);
+  const quotaEntry = await enforceGuardChatEntry(req, body, "gemini-chat");
   if (quotaEntry.blocked) {
     let denyCode = "quota_denied";
     try {
@@ -598,7 +598,7 @@ Deno.serve(async (req) => {
     const outcome = await callGeminiWithRetry(geminiUrl, geminiPayload);
 
     if (outcome.ok) {
-      await finalizeGuardChatConsume(body);
+      await finalizeGuardChatConsume(req, body);
       const outputUnits =
         typeof outcome.reply === "string" && outcome.reply.length > 0
           ? outcome.reply.length

@@ -351,9 +351,22 @@
         ""
     ).trim();
 
-    // クライアント任意注入対策: workspace allowlist + plan 再検証のみ
-    if (!Identity?.isKnownWorkspaceId?.(modelId) || !Plans?.isModelAllowed?.(modelId, userPlan)) {
-      const fallbackId = Plans?.getDefaultModelIdForPlan?.(userPlan) || "gemini-flash";
+    // クライアント任意注入対策: workspace allowlist + plan policy 再検証
+    const Policy = global.TasuAiPlanPolicy;
+    const policy =
+      Plans?.getActivePolicy?.() ||
+      Policy?.getPlanPolicy?.(userPlan) ||
+      null;
+    const modelOk =
+      Identity?.isKnownWorkspaceId?.(modelId) &&
+      (Policy?.isModelAllowedForPolicy
+        ? Policy.isModelAllowedForPolicy(policy || Policy.getPlanPolicy("free"), modelId)
+        : Plans?.isModelAllowed?.(modelId, userPlan));
+    if (!modelOk) {
+      const fallbackId =
+        (policy && Policy?.getDefaultModelForPolicy?.(policy)) ||
+        Plans?.getDefaultModelIdForPlan?.(userPlan) ||
+        "gemini-flash";
       if (routingDecision && modelId && modelId !== fallbackId) {
         routingDecision = {
           ...routingDecision,
@@ -416,8 +429,16 @@
 
     // Provider 障害時の安全なフォールバック最大1回（無限禁止）
     if (shouldTryProviderFallback(remote) && !routingDecision?.fallbackUsed) {
-      const alts = (Identity?.listFallbackWorkspaceIds?.(modelId) || []).filter((id) =>
-        Plans?.isModelAllowed?.(id, userPlan)
+      const Policy = global.TasuAiPlanPolicy;
+      const policy = Plans?.getActivePolicy?.() || Policy?.getPlanPolicy?.(userPlan);
+      const alts = (
+        Policy?.listFallbackModels && policy
+          ? Policy.listFallbackModels(policy, modelId)
+          : Identity?.listFallbackWorkspaceIds?.(modelId) || []
+      ).filter((id) =>
+        Policy?.isModelAllowedForPolicy
+          ? Policy.isModelAllowedForPolicy(policy || Policy.getPlanPolicy("free"), id)
+          : Plans?.isModelAllowed?.(id, userPlan)
       );
       const altId = alts[0];
       if (altId) {

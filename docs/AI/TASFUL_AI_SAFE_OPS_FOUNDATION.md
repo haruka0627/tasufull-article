@@ -152,7 +152,8 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 **routing metadata（Phase 3）:** `requested_mode` · `requested_model` · `resolved_workspace_id` · `routing_reason` · `fallback_*` · `use_case`（prompt/response 禁止）  
 **Cost Ledger 境界:** `estimated_cost` 列は生イベント上 **書き換えない**（選択 A）。単価は `ai_model_price_rates` · 集計は `ai_cost_ledger_aggregate`（service_role）。顧客請求・利益倍率は対象外。Model ID 正本は `ai-model-identity.js`。  
 **Auto Mode:** [phase3 report](../../reports/tasful-ai-core-phase3-auto-mode-report.md) · Workspace Chat のみ  
-**Usage Gauge（Phase 4）:** 数値正本は `ai-workspace-quota` / `ai_workspace_usage_daily`（日次 JST）。Cost Ledger 単価はゲージに使わない · UI に原価を出さない · [phase4 report](../../reports/tasful-ai-core-phase4-usage-gauge-report.md)。プラン制御は次 Phase。
+**Usage Gauge（Phase 4）:** 数値正本は `ai-workspace-quota` / `ai_workspace_usage_daily`（日次 JST）。Cost Ledger 単価はゲージに使わない · UI に原価を出さない · [phase4 report](../../reports/tasful-ai-core-phase4-usage-gauge-report.md)。  
+**Plan Enforcement（Phase 5）:** `ai-plan-policy` が plan/quota/model/feature の正本 · claimed-only 廃止（JWT 必須）· 料金は Draft のまま未確定 · [phase5 report](../../reports/tasful-ai-core-phase5-plan-policy-report.md)。
 
 ---
 

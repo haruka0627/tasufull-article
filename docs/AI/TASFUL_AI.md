@@ -80,6 +80,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | SAFE | **SAFE-07 Cost Ledger** — コード完了（query 時推定原価）· Staging 適用ゲート待ち — [cost ledger report](../../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | Core | **Phase 3 Auto Mode** — コード完了（Auto/Manual · Identity · routing metadata）— [phase3 report](../../reports/tasful-ai-core-phase3-auto-mode-report.md) |
 | Core | **Phase 4 Usage Gauge** — コード完了（日次消費率 · quota SSOT · 原価非公開）— [phase4 report](../../reports/tasful-ai-core-phase4-usage-gauge-report.md) |
+| Core | **Phase 5 Plan Enforcement** — コード完了（Plan Policy SSOT · JWT 必須 · model/feature 再検証 · 料金未確定）— [phase5 report](../../reports/tasful-ai-core-phase5-plan-policy-report.md) |
 
 ---
 

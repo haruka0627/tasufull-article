@@ -317,6 +317,7 @@
   function pickAllowedWorkspace(workspaceId, reason) {
     const Plans = global.TasuAiPlanModels;
     const Id = identity();
+    const Policy = global.TasuAiPlanPolicy;
     const id = String(workspaceId || "").trim();
     if (!Id?.isKnownWorkspaceId?.(id)) {
       return {
@@ -324,6 +325,15 @@
         error: "unknown_model",
         workspaceId: null,
         reason: reason || "unknown_model",
+      };
+    }
+    const policy = Plans?.getActivePolicy?.() || Policy?.getPlanPolicy?.(Plans?.resolveUserPlan?.());
+    if (Policy?.isModelAllowedForPolicy && policy && !Policy.isModelAllowedForPolicy(policy, id)) {
+      return {
+        ok: false,
+        error: "plan_model_denied",
+        workspaceId: id,
+        reason: "not_allowed_for_plan",
       };
     }
     if (Plans?.isModelAllowed && !Plans.isModelAllowed(id)) {
@@ -374,7 +384,24 @@
 
     if (!pick.ok) {
       if (requestedMode === "manual") {
-        // Manual: 無言で別モデルへ切替しない · 明示1回フォールバックのみ（既定モデル）
+        // Manual: プラン外・不可は明示拒否（無言フォールバック禁止）
+        if (pick.error === "plan_model_denied" || pick.error === "model_unavailable") {
+          return {
+            ok: false,
+            error: pick.error,
+            requestedMode,
+            requestedModel,
+            resolvedWorkspaceId: null,
+            resolvedProvider: null,
+            resolvedModel: null,
+            routingReason: "manual_plan_denied",
+            fallbackUsed: false,
+            fallbackFrom: null,
+            fallbackReason: pick.error,
+            useCase,
+          };
+        }
+        // unknown のみ plan 既定へ明示 1 回
         const fb = pickAllowedWorkspace(defaultId, "manual_fallback_default");
         if (fb.ok && fb.workspaceId !== candidate) {
           fallbackUsed = true;
@@ -399,7 +426,12 @@
           };
         }
       } else {
-        const alts = Id?.listFallbackWorkspaceIds?.(candidate) || [defaultId];
+        const Policy = global.TasuAiPlanPolicy;
+        const policy = Plans?.getActivePolicy?.() || Policy?.getPlanPolicy?.(Plans?.resolveUserPlan?.());
+        const alts =
+          (Policy?.listFallbackModels && policy
+            ? Policy.listFallbackModels(policy, candidate)
+            : Id?.listFallbackWorkspaceIds?.(candidate)) || [defaultId];
         const alt = alts.find((id) => pickAllowedWorkspace(id).ok) || defaultId;
         const fb = pickAllowedWorkspace(alt, "auto_fallback");
         if (fb.ok) {
