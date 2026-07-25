@@ -100,6 +100,7 @@ function installFetchMock(opts = {}) {
   const planCalls = [];
   const checkCalls = [];
   const consumeCalls = [];
+  const releaseCalls = [];
   const original = globalThis.fetch;
 
   globalThis.fetch = async (url, init = {}) => {
@@ -184,6 +185,10 @@ function installFetchMock(opts = {}) {
       if (opts.consumeThrow) throw new TypeError("consume network");
       return { ok: true, status: 200, json: async () => ({ ok: true, allowed: true, used: 1 }) };
     }
+    if (u.includes("/rest/v1/rpc/release_ai_workspace_quota")) {
+      releaseCalls.push({ url: u, init: { ...init, body: init.body } });
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0 }) };
+    }
     return { ok: true, status: 200, json: async () => ({}) };
   };
 
@@ -193,6 +198,7 @@ function installFetchMock(opts = {}) {
     planCalls,
     checkCalls,
     consumeCalls,
+    releaseCalls,
     restore() {
       globalThis.fetch = original;
     },
@@ -525,20 +531,29 @@ const authH = { Authorization: "Bearer good-token" };
 // --- consume ---
 {
   const { res, mock } = await callOcr(authH, defaultBody({ surface: "chat" }));
-  assert("44 success → consume", res.status === 200 && mock.consumeCalls.length === 1);
+  assert(
+    "44 success → consume",
+    res.status === 200 && mock.consumeCalls.length === 1 && mock.releaseCalls.length === 0
+  );
 }
 {
   const { res, mock } = await callOcr(authH, defaultBody({ surface: "chat" }), {
     geminiOk: false,
   });
-  assert("45 Gemini HTTP fail → no consume", res.status === 502 && mock.consumeCalls.length === 0);
+  assert(
+    "45 Gemini HTTP fail → reservation released",
+    res.status === 502 && mock.consumeCalls.length === 1 && mock.releaseCalls.length === 1
+  );
 }
 {
   const { res, mock } = await callOcr(authH, defaultBody({ surface: "chat" }), {
     geminiInvalid: true,
   });
   assert("46 invalid/empty candidates → 502", res.status === 502);
-  assert("46 invalid upstream response → no consume", mock.consumeCalls.length === 0);
+  assert(
+    "46 invalid upstream response → reservation released",
+    mock.consumeCalls.length === 1 && mock.releaseCalls.length === 1
+  );
 }
 {
   const { mock } = await callOcr({}, defaultBody({ surface: "chat" }));

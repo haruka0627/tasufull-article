@@ -76,6 +76,7 @@ function installFetchMock(options = {}) {
     plan: [],
     check: [],
     consume: [],
+    release: [],
     gemini: [],
   };
   const originalFetch = globalThis.fetch;
@@ -115,6 +116,10 @@ function installFetchMock(options = {}) {
     if (value.includes("/rpc/consume_ai_workspace_quota")) {
       calls.consume.push({ url: value, init });
       return { ok: true, status: 200, json: async () => ({ ok: true, used: 1 }) };
+    }
+    if (value.includes("/rpc/release_ai_workspace_quota")) {
+      calls.release.push({ url: value, init });
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0 }) };
     }
     if (value.includes("generativelanguage.googleapis.com")) {
       calls.gemini.push({ url: value, init });
@@ -178,6 +183,11 @@ async function invoke(requestValue, options = {}, envExtra = {}) {
   } finally {
     mock.restore();
   }
+}
+
+/** 予約 1 件が確保され、upstream 失敗で解放されている（実消費 net 0） */
+function reservedAndReleased(calls) {
+  return calls.consume.length === 1 && calls.release.length === 1;
 }
 
 function noWork(calls) {
@@ -375,7 +385,7 @@ async function invokeWithTimer(options, fireImmediately) {
   assert("36 pending Gemini aborted", calls.gemini[0]?.init?.signal?.aborted === true);
   assert("37 AbortError normalized", json?.error === "upstream_timeout");
   assert("38 timeout HTTP 504", response.status === 504);
-  assert("39 timeout consume 0", calls.consume.length === 0);
+  assert("39 timeout reservation released", reservedAndReleased(calls));
   assert("44 timer clear abort", timerState.cleared.length === 1);
 }
 {
@@ -416,7 +426,7 @@ for (const [name, upstreamStatus, expectedStatus, expectedError] of upstreamCase
   );
   assert(`${name} status`, response.status === expectedStatus, String(response.status));
   assert(`${name} taxonomy`, json?.error === expectedError, String(json?.error));
-  assert(`${name} consume 0`, calls.consume.length === 0);
+  assert(`${name} reservation released`, reservedAndReleased(calls));
   const serialized = JSON.stringify(json);
   assert(`${name} no raw body`, !serialized.includes("SECRET") && !serialized.includes("google"));
   assert(`${name} no raw status field`, !Object.prototype.hasOwnProperty.call(json || {}, "status"));
@@ -428,7 +438,7 @@ for (const [name, upstreamStatus, expectedStatus, expectedError] of upstreamCase
   );
   assert("47 network reject status", response.status === 502);
   assert("47 network reject taxonomy", json?.error === "upstream_unavailable");
-  assert("47 network consume 0", calls.consume.length === 0);
+  assert("47 network reservation released", reservedAndReleased(calls));
   assert("47 network raw hidden", !JSON.stringify(json).includes("SECRET"));
 }
 {
@@ -438,7 +448,7 @@ for (const [name, upstreamStatus, expectedStatus, expectedError] of upstreamCase
   );
   assert("55 invalid JSON status", response.status === 502);
   assert("55 invalid JSON taxonomy", json?.error === "invalid_upstream_response");
-  assert("55 invalid JSON consume 0", calls.consume.length === 0);
+  assert("55 invalid JSON reservation released", reservedAndReleased(calls));
 }
 for (const [name, geminiJson] of [
   ["56 empty response", null],
@@ -451,7 +461,7 @@ for (const [name, geminiJson] of [
   );
   assert(`${name} status`, response.status === 502);
   assert(`${name} taxonomy`, json?.error === "invalid_upstream_response");
-  assert(`${name} consume 0`, calls.consume.length === 0);
+  assert(`${name} reservation released`, reservedAndReleased(calls));
 }
 {
   const { response, json, calls } = await invoke(
@@ -460,7 +470,7 @@ for (const [name, geminiJson] of [
   );
   assert("58 blocked result status", response.status === 422);
   assert("58 blocked result taxonomy", json?.error === "ocr_unavailable");
-  assert("58 blocked consume 0", calls.consume.length === 0);
+  assert("58 blocked reservation released", reservedAndReleased(calls));
 }
 {
   const { response, json } = await invoke(
@@ -547,11 +557,14 @@ for (const [name, geminiJson] of [
     request({ headers: authHeader }),
     { geminiStatus: 500 }
   );
-  assert("75 upstream failure consume 0", calls.consume.length === 0);
+  assert("75 upstream failure reservation released", reservedAndReleased(calls));
 }
 {
   const { calls } = await invoke(request({ headers: authHeader }));
-  assert("76 upstream success consume 1", calls.consume.length === 1);
+  assert(
+    "76 upstream success consume 1",
+    calls.consume.length === 1 && calls.release.length === 0
+  );
 }
 {
   const { calls } = await invoke(

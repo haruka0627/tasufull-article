@@ -6,6 +6,7 @@
  * Origin: same-origin + production / preview / local allowlist
  * Payload: MIME · base64 · size · magic bytes（guard / Gemini より前）
  * Upstream: fixed timeout + sanitized errors
+ * Quota: upstream 実行前に atomic 予約 → 成功のみ確定 · 失敗系は解放
  * SAFE-05: 許可 surface すべて Usage Guard（user ID / feature は server-derived）
  */
 import {
@@ -13,6 +14,7 @@ import {
   finalizeCfOcrConsume,
   getOcrQuotaFeature,
   normalizeOcrSurface,
+  releaseCfOcrReservation,
 } from "../_shared/ai-usage-guard.mjs";
 import { validateOcrPayload } from "../_shared/ocr-payload-validation.mjs";
 
@@ -259,6 +261,34 @@ export async function onRequest(context) {
   const guard = await enforceCfOcrGuard(request, guardBody, env);
   if (guard.blocked) return withCors(guard.blocked, origin);
 
+  const outcome = await requestGeminiOcr(apiKey, payload);
+
+  if (!outcome.ok) {
+    // 予約は必ずここ一箇所で解放する（catch/finally の二重解放を作らない）
+    await releaseCfOcrReservation(guard.reservation);
+    return jsonResponse(
+      { ok: false, error: outcome.error, provider: "gemini" },
+      outcome.status,
+      origin
+    );
+  }
+
+  if (guard.shouldConsume) {
+    await finalizeCfOcrConsume(guard.meta, guard.reservation);
+  }
+
+  return jsonResponse({
+    ok: true,
+    text: outcome.text,
+    provider: "gemini",
+  }, 200, origin);
+}
+
+/**
+ * Gemini upstream 呼び出し（固定 timeout · sanitized error taxonomy）
+ * @returns {Promise<{ ok: true, text: string } | { ok: false, error: string, status: number }>}
+ */
+async function requestGeminiOcr(apiKey, payload) {
   const url = `${GEMINI_API_BASE}/${GEMINI_OCR_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
   const controller = new AbortController();
   let timer = null;
@@ -294,60 +324,32 @@ export async function onRequest(context) {
 
     if (!geminiRes.ok) {
       if (geminiRes.status === 400) {
-        return jsonResponse(
-          { ok: false, error: "upstream_request_failed", provider: "gemini" },
-          502,
-          origin
-        );
+        return { ok: false, error: "upstream_request_failed", status: 502 };
       }
       if (geminiRes.status === 401 || geminiRes.status === 403) {
-        return jsonResponse(
-          { ok: false, error: "provider_configuration_error", provider: "gemini" },
-          503,
-          origin
-        );
+        return { ok: false, error: "provider_configuration_error", status: 503 };
       }
       if (geminiRes.status === 429) {
-        return jsonResponse(
-          { ok: false, error: "upstream_rate_limited", provider: "gemini" },
-          503,
-          origin
-        );
+        return { ok: false, error: "upstream_rate_limited", status: 503 };
       }
-      return jsonResponse(
-        { ok: false, error: "upstream_unavailable", provider: "gemini" },
-        502,
-        origin
-      );
+      return { ok: false, error: "upstream_unavailable", status: 502 };
     }
 
     let geminiJson;
     try {
       geminiJson = await geminiRes.json();
     } catch {
-      return jsonResponse(
-        { ok: false, error: "invalid_upstream_response", provider: "gemini" },
-        502,
-        origin
-      );
+      return { ok: false, error: "invalid_upstream_response", status: 502 };
     }
 
     const candidate = geminiJson?.candidates?.[0];
     const finishReason = String(candidate?.finishReason || "").toUpperCase();
     if (["SAFETY", "BLOCKLIST", "PROHIBITED_CONTENT", "RECITATION"].includes(finishReason)) {
-      return jsonResponse(
-        { ok: false, error: "ocr_unavailable", provider: "gemini" },
-        422,
-        origin
-      );
+      return { ok: false, error: "ocr_unavailable", status: 422 };
     }
     const parts = candidate?.content?.parts;
     if (!Array.isArray(parts) || !parts.some((part) => typeof part?.text === "string")) {
-      return jsonResponse(
-        { ok: false, error: "invalid_upstream_response", provider: "gemini" },
-        502,
-        origin
-      );
+      return { ok: false, error: "invalid_upstream_response", status: 502 };
     }
     const text = parts
       .filter((part) => typeof part?.text === "string")
@@ -355,28 +357,12 @@ export async function onRequest(context) {
       .join("\n")
       .trim();
 
-    if (guard.shouldConsume && guard.meta) {
-      await finalizeCfOcrConsume(guard.meta);
-    }
-
-    return jsonResponse({
-      ok: true,
-      text,
-      provider: "gemini",
-    }, 200, origin);
+    return { ok: true, text };
   } catch (error) {
     if (error?.name === "AbortError") {
-      return jsonResponse(
-        { ok: false, error: "upstream_timeout", provider: "gemini" },
-        504,
-        origin
-      );
+      return { ok: false, error: "upstream_timeout", status: 504 };
     }
-    return jsonResponse(
-      { ok: false, error: "upstream_unavailable", provider: "gemini" },
-      502,
-      origin
-    );
+    return { ok: false, error: "upstream_unavailable", status: 502 };
   } finally {
     if (timer !== null) clearTimeout(timer);
   }

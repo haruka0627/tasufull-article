@@ -120,6 +120,12 @@ function installFetchMock(opts = {}) {
     }
     // guard / rest
     guardRestCalls.push({ url: u, init });
+    if (u.includes("/rest/v1/rpc/consume_ai_workspace_quota")) {
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 1, remaining: 4 }) };
+    }
+    if (u.includes("/rest/v1/rpc/release_ai_workspace_quota")) {
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0 }) };
+    }
     if (u.includes("/rest/v1/rpc/")) {
       return {
         ok: true,

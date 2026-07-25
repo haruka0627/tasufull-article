@@ -81,6 +81,7 @@ function installFetchMock(opts = {}) {
   const geminiCalls = [];
   const checkCalls = [];
   const consumeCalls = [];
+  const releaseCalls = [];
   const original = globalThis.fetch;
 
   globalThis.fetch = async (url, init = {}) => {
@@ -130,7 +131,11 @@ function installFetchMock(opts = {}) {
     }
     if (u.includes("/rest/v1/rpc/consume_ai_workspace_quota")) {
       consumeCalls.push({ url: u, init });
-      return { ok: true, status: 200, json: async () => ({ ok: true }) };
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 1 }) };
+    }
+    if (u.includes("/rest/v1/rpc/release_ai_workspace_quota")) {
+      releaseCalls.push({ url: u, init });
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0 }) };
     }
     return { ok: true, status: 200, json: async () => ({}) };
   };
@@ -140,6 +145,7 @@ function installFetchMock(opts = {}) {
     geminiCalls,
     checkCalls,
     consumeCalls,
+    releaseCalls,
     restore() {
       globalThis.fetch = original;
     },
@@ -410,11 +416,17 @@ const authH = { Authorization: "Bearer good" };
 }
 {
   const { res, mock } = await callOcr(authH, defaultBody(), { geminiOk: false });
-  assert("72 Gemini fail consume 0", res.status === 502 && mock.consumeCalls.length === 0);
+  assert(
+    "72 Gemini fail → reservation released",
+    res.status === 502 && mock.consumeCalls.length === 1 && mock.releaseCalls.length === 1
+  );
 }
 {
   const { res, mock } = await callOcr(authH, defaultBody());
-  assert("73 success consume 1", res.status === 200 && mock.consumeCalls.length === 1);
+  assert(
+    "73 success consume 1",
+    res.status === 200 && mock.consumeCalls.length === 1 && mock.releaseCalls.length === 0
+  );
 }
 {
   const { res, mock } = await callOcr({}, defaultBody());
