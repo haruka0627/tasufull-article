@@ -242,6 +242,10 @@ export async function installTalkReviewStagingIsolation(page) {
   });
 
   hits.collectRealtimeStats = async () => {
+    // Auxiliary guard only — callers must snapshot before page.close().
+    if (typeof page.isClosed === "function" && page.isClosed()) {
+      return hits.realtime;
+    }
     hits.realtime = await page.evaluate(() => window.__TASUFUL_TALK_REVIEW_REALTIME_STATS__ || null);
     return hits.realtime;
   };
@@ -305,12 +309,19 @@ export function sumUiReviewFileConsoleErrors(stepList) {
  *   viewports?: string[],
  *   baseUrl?: string,
  *   preparePage?: (page: import('playwright').Page) => Promise<void>,
+ *   finalizePage?: (
+ *     page: import('playwright').Page,
+ *     meta: { isPrimary: boolean, viewportId: string, slug: string }
+ *   ) => Promise<void>,
  * }} [opts]
  *
  * `preparePage` runs for every shot page (primary + secondary) after creation and
  * before console listeners / beforeGoto / first navigation. Opt-in; Talk uses it
  * for Staging isolation. Other callers omit it and keep prior behavior aside from
  * consoleErrorCount now matching files[].consoleErrors totals.
+ *
+ * `finalizePage` runs after screenshot and before secondary page.close() so callers
+ * can snapshot network/Realtime stats while the page is still open.
  */
 export function createUiReviewSession(featureName, opts = {}) {
   const outDir = uiReviewOutputDir(featureName);
@@ -327,6 +338,7 @@ export function createUiReviewSession(featureName, opts = {}) {
 
   const defaultViewportIds = opts.viewports || DEFAULT_VIEWPORT_IDS;
   const preparePage = typeof opts.preparePage === "function" ? opts.preparePage : null;
+  const finalizePage = typeof opts.finalizePage === "function" ? opts.finalizePage : null;
 
   const viewportMap = new Map(UI_REVIEW_VIEWPORTS.map((vp) => [vp.id, vp]));
 
@@ -358,8 +370,10 @@ export function createUiReviewSession(featureName, opts = {}) {
       const vp = viewportMap.get(vpId);
       if (!vp) continue;
 
-      const shotPage =
-        vpId === vpIds[0] ? page : await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
+      const isPrimary = vpId === vpIds[0];
+      const shotPage = isPrimary
+        ? page
+        : await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
 
       // Isolation / page setup must run before any navigation (including beforeGoto).
       if (preparePage) {
@@ -410,7 +424,13 @@ export function createUiReviewSession(featureName, opts = {}) {
         consoleErrors: fileConsoleErrors,
       });
 
-      if (shotPage !== page) await shotPage.close();
+      // Secondary pages: snapshot stats while open, then close. Primary stays open.
+      if (!isPrimary) {
+        if (finalizePage) {
+          await finalizePage(shotPage, { isPrimary: false, viewportId: vpId, slug: step.slug });
+        }
+        await shotPage.close();
+      }
     }
 
     const fileConsoleTotal = files.reduce((n, f) => n + (f.consoleErrors?.length || 0), 0);

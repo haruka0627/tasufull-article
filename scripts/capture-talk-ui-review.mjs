@@ -361,68 +361,112 @@ async function prepareAdminTalk(page) {
 }
 
 /**
- * Per-page Staging isolation (WeakSet prevents double route/initScript registration).
- * Used for the primary page and every secondary viewport page created inside captureStep.
+ * Per-page Staging isolation + close-before snapshot.
+ * WeakSet prevents double route/initScript registration and duplicate snapshots.
  */
 function createTalkReviewIsolationTracker() {
   const isolatedPages = new WeakSet();
-  /** @type {Awaited<ReturnType<typeof installTalkReviewStagingIsolation>>[]} */
-  const hitsList = [];
+  const snapshottedPages = new WeakSet();
+  /** @type {WeakMap<import('playwright').Page, Awaited<ReturnType<typeof installTalkReviewStagingIsolation>>>} */
+  const pageHits = new WeakMap();
+  /** @type {Array<{
+   *   isPrimary?: boolean,
+   *   viewportId?: string,
+   *   slug?: string,
+   *   geminiChat: number,
+   *   transactionRooms: number,
+   *   unexpected: Array<{ method: string, url: string, pathname: string }>,
+   *   realtime: null | {
+   *     installed?: boolean,
+   *     channels?: number,
+   *     subscribes?: number,
+   *     unsubscribes?: number,
+   *     topics?: string[],
+   *     unexpectedRealtime?: number,
+   *   },
+   * }>} */
+  const pageStats = [];
   let pageCount = 0;
   let isolationInstallCount = 0;
   let isolationSkipCount = 0;
+  let duplicateSnapshotCount = 0;
+  let closedPageEvaluateAttempts = 0;
 
   /**
    * @param {import('playwright').Page} page
    */
   async function ensureIsolation(page) {
-    pageCount += 1;
     if (isolatedPages.has(page)) {
       isolationSkipCount += 1;
       return;
     }
     isolatedPages.add(page);
+    pageCount += 1;
     isolationInstallCount += 1;
-    hitsList.push(await installTalkReviewStagingIsolation(page));
+    const hits = await installTalkReviewStagingIsolation(page);
+    pageHits.set(page, hits);
   }
 
-  async function collectMergedHits() {
-    for (const hits of hitsList) {
-      if (typeof hits.collectRealtimeStats === "function") {
-        await hits.collectRealtimeStats();
-      }
+  /**
+   * Snapshot live hits + Realtime while the page is still open. Call once per page, before close.
+   * @param {import('playwright').Page} page
+   * @param {{ isPrimary?: boolean, viewportId?: string, slug?: string }} [meta]
+   */
+  async function snapshotPageStats(page, meta = {}) {
+    if (snapshottedPages.has(page)) {
+      duplicateSnapshotCount += 1;
+      return;
     }
-    /** @type {{
-     *   geminiChat: number,
-     *   transactionRooms: number,
-     *   unexpected: Array<{ method: string, url: string, pathname: string }>,
-     *   realtime: {
-     *     installed: boolean,
-     *     channels: number,
-     *     subscribes: number,
-     *     unsubscribes: number,
-     *     topics: string[],
-     *     unexpectedRealtime: number,
-     *   },
-     * }} */
+    if (typeof page.isClosed === "function" && page.isClosed()) {
+      closedPageEvaluateAttempts += 1;
+      throw new Error("Talk review: refused to snapshot closed page (stats must be collected before close)");
+    }
+    const hits = pageHits.get(page);
+    if (!hits) {
+      throw new Error("Talk review: snapshotPageStats called before isolation install");
+    }
+    snapshottedPages.add(page);
+    const realtime = await hits.collectRealtimeStats();
+    pageStats.push({
+      isPrimary: Boolean(meta.isPrimary),
+      viewportId: meta.viewportId || "",
+      slug: meta.slug || "",
+      geminiChat: hits.geminiChat || 0,
+      transactionRooms: hits.transactionRooms || 0,
+      unexpected: [...(hits.unexpected || [])],
+      realtime: realtime
+        ? {
+            installed: Boolean(realtime.installed),
+            channels: realtime.channels || 0,
+            subscribes: realtime.subscribes || 0,
+            unsubscribes: realtime.unsubscribes || 0,
+            topics: [...(realtime.topics || [])],
+            unexpectedRealtime: realtime.unexpectedRealtime || 0,
+          }
+        : null,
+    });
+  }
+
+  /** Merge plain snapshots only — never touches live page objects. */
+  function mergeSnapshots() {
     const merged = {
       geminiChat: 0,
       transactionRooms: 0,
-      unexpected: [],
+      unexpected: /** @type {Array<{ method: string, url: string, pathname: string }>} */ ([]),
       realtime: {
         installed: false,
         channels: 0,
         subscribes: 0,
         unsubscribes: 0,
-        topics: [],
+        topics: /** @type {string[]} */ ([]),
         unexpectedRealtime: 0,
       },
     };
-    for (const hits of hitsList) {
-      merged.geminiChat += hits.geminiChat || 0;
-      merged.transactionRooms += hits.transactionRooms || 0;
-      merged.unexpected.push(...(hits.unexpected || []));
-      const rt = hits.realtime;
+    for (const snap of pageStats) {
+      merged.geminiChat += snap.geminiChat || 0;
+      merged.transactionRooms += snap.transactionRooms || 0;
+      merged.unexpected.push(...(snap.unexpected || []));
+      const rt = snap.realtime;
       if (rt?.installed) merged.realtime.installed = true;
       merged.realtime.channels += rt?.channels || 0;
       merged.realtime.subscribes += rt?.subscribes || 0;
@@ -435,12 +479,15 @@ function createTalkReviewIsolationTracker() {
 
   return {
     ensureIsolation,
-    collectMergedHits,
+    snapshotPageStats,
+    mergeSnapshots,
     getStats: () => ({
       pageCount,
       isolationInstallCount,
       isolationSkipCount,
-      isolationHitsTracked: hitsList.length,
+      pageStatsCount: pageStats.length,
+      duplicateSnapshotCount,
+      closedPageEvaluateAttempts,
     }),
   };
 }
@@ -465,15 +512,20 @@ async function main() {
     preparePage: async (page) => {
       await isolation.ensureIsolation(page);
     },
+    finalizePage: async (page, meta) => {
+      await isolation.snapshotPageStats(page, meta);
+    },
   });
 
   /** @type {ReturnType<typeof isolation.getStats> | null} */
   let isolationStats = null;
-  /** @type {Awaited<ReturnType<typeof isolation.collectMergedHits>> | null} */
+  /** @type {ReturnType<typeof isolation.mergeSnapshots> | null} */
   let stagingHits = null;
+  /** @type {{ ok: boolean, report: Record<string, unknown>, reportPath: string } | null} */
+  let writeResult = null;
 
   await withPlaywrightBrowser(async (browser) => {
-    // Order: newPage → isolation (via ensure) → seed goto → capture steps
+    // Order: newPage → isolation → seed → capture → primary snapshot → report → close
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
     await isolation.ensureIsolation(page);
     await seedReviewThreads(page);
@@ -538,44 +590,72 @@ async function main() {
       viewports: ["1280", "390"],
     });
 
-    stagingHits = await isolation.collectMergedHits();
+    await isolation.snapshotPageStats(page, { isPrimary: true, viewportId: "1280", slug: "primary" });
+    stagingHits = isolation.mergeSnapshots();
     isolationStats = isolation.getStats();
     console.log(
-      `[talk-review] pages seen=${isolationStats.pageCount} isolationInstalls=${isolationStats.isolationInstallCount} skips=${isolationStats.isolationSkipCount}`
+      `[talk-review] pageCount=${isolationStats.pageCount} isolation=${isolationStats.isolationInstallCount} stats=${isolationStats.pageStatsCount} dup=${isolationStats.duplicateSnapshotCount} closedEval=${isolationStats.closedPageEvaluateAttempts} skips=${isolationStats.isolationSkipCount}`
     );
     reportTalkReviewStagingIsolation(stagingHits);
+
+    writeResult = session.writeReport({
+      baseUrl: base,
+      pageCount: isolationStats.pageCount,
+      pageIsolationCount: isolationStats.isolationInstallCount,
+      pageStatsCount: isolationStats.pageStatsCount,
+      duplicateSnapshotCount: isolationStats.duplicateSnapshotCount,
+      pageIsolationSkips: isolationStats.isolationSkipCount,
+      stagingIsolation: {
+        geminiChat: stagingHits.geminiChat,
+        transactionRooms: stagingHits.transactionRooms,
+        unexpectedHttp: stagingHits.unexpected.length,
+        realtimeChannels: stagingHits.realtime.channels,
+        realtimeSubscribes: stagingHits.realtime.subscribes,
+        unexpectedRealtime: stagingHits.realtime.unexpectedRealtime,
+      },
+    });
+
     await page.close();
   }, { headless: true });
 
-  const { ok, report, reportPath } = session.writeReport({
-    baseUrl: base,
-    pageCount: isolationStats?.isolationInstallCount ?? 0,
-    pageIsolationCount: isolationStats?.isolationInstallCount ?? 0,
-    pageIsolationSkips: isolationStats?.isolationSkipCount ?? 0,
-    stagingIsolation: {
-      geminiChat: stagingHits?.geminiChat ?? 0,
-      transactionRooms: stagingHits?.transactionRooms ?? 0,
-      unexpectedHttp: stagingHits?.unexpected?.length ?? 0,
-      realtimeChannels: stagingHits?.realtime?.channels ?? 0,
-      realtimeSubscribes: stagingHits?.realtime?.subscribes ?? 0,
-      unexpectedRealtime: stagingHits?.realtime?.unexpectedRealtime ?? 0,
-    },
-  });
   await closeAllBrowsers();
 
+  if (!writeResult || !isolationStats || !stagingHits) {
+    console.error("\nFAIL talk UI review capture: missing write/isolation result");
+    process.exitCode = 1;
+    return;
+  }
+
+  const { ok, report, reportPath } = writeResult;
   const fileErrorTotal = (report.steps || []).reduce(
     (n, step) => n + (step.files || []).reduce((m, f) => m + (f.consoleErrors?.length || 0), 0),
     0
   );
   const topMatchesFiles = report.consoleErrorCount === fileErrorTotal;
   const forbidden = (report.consoleErrors || []).filter(hasForbiddenRuntimeError);
-  const unexpectedHttp = stagingHits?.unexpected?.length ?? 0;
-  const unexpectedRealtime = stagingHits?.realtime?.unexpectedRealtime ?? 0;
+  const unexpectedHttp = stagingHits.unexpected.length;
+  const unexpectedRealtime = stagingHits.realtime.unexpectedRealtime || 0;
+  const lifecycleOk =
+    isolationStats.pageCount === isolationStats.isolationInstallCount &&
+    isolationStats.pageCount === isolationStats.pageStatsCount &&
+    isolationStats.duplicateSnapshotCount === 0 &&
+    isolationStats.closedPageEvaluateAttempts === 0;
 
-  if (!ok || fileErrorTotal > 0 || !topMatchesFiles || forbidden.length > 0 || unexpectedHttp > 0 || unexpectedRealtime > 0) {
+  if (
+    !ok ||
+    fileErrorTotal > 0 ||
+    !topMatchesFiles ||
+    forbidden.length > 0 ||
+    unexpectedHttp > 0 ||
+    unexpectedRealtime > 0 ||
+    !lifecycleOk
+  ) {
     console.error("\nFAIL talk UI review capture");
     console.error(`  consoleErrorCount(top)=${report.consoleErrorCount} filesTotal=${fileErrorTotal} match=${topMatchesFiles}`);
     console.error(`  forbiddenRuntime=${forbidden.length} unexpectedHttp=${unexpectedHttp} unexpectedRealtime=${unexpectedRealtime}`);
+    console.error(
+      `  lifecycle page=${isolationStats.pageCount} isolation=${isolationStats.isolationInstallCount} stats=${isolationStats.pageStatsCount} dup=${isolationStats.duplicateSnapshotCount} closedEval=${isolationStats.closedPageEvaluateAttempts}`
+    );
     process.exitCode = 1;
     return;
   }
