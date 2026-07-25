@@ -16,6 +16,23 @@ const OUT_DIR = join(process.cwd(), "reports", "ui-review", "talk-profile-card")
 const THREAD_ID = "talk-mock-friend-001";
 const THREADS_KEY = "tasful_chat_threads";
 
+const REVIEW_AVATAR_DATA_URL =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="114" height="114" viewBox="0 0 114 114">' +
+      '<rect width="114" height="114" fill="#fff6df"/>' +
+      '<circle cx="57" cy="57" r="34" fill="#7a5710"/>' +
+      "</svg>"
+  );
+const REVIEW_COVER_DATA_URL =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520">' +
+      '<rect width="1200" height="520" fill="#2563eb"/>' +
+      '<rect x="80" y="100" width="1040" height="320" fill="#3b82f6"/>' +
+      "</svg>"
+  );
+
 /** Repo-root-relative path with `/` separators (for report.json only). */
 function toRepoRelativePath(filepath) {
   return relative(process.cwd(), filepath).replaceAll("\\", "/");
@@ -32,10 +49,10 @@ function buildFriendThread(withCover) {
   const profile = {
     user_id: "u_demo_friend_001",
     display_name: "田中 一郎",
-    profile_image: "https://placehold.co/114x114/fff6df/7a5710?text=T",
+    profile_image: REVIEW_AVATAR_DATA_URL,
   };
   if (withCover) {
-    profile.cover_image = "https://placehold.co/800x520/2563eb/ffffff?text=TASFUL+Cover";
+    profile.cover_image = REVIEW_COVER_DATA_URL;
   }
   return {
     id: THREAD_ID,

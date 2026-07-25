@@ -4,6 +4,23 @@ import { findDevServerBaseUrl, buildLocalPageUrl } from "./lib/dev-server-url.mj
 const FRIEND_THREAD_ID = "talk-mock-friend-001";
 const FRIEND_ROW_SEL = `[data-talk-select-thread][data-talk-thread-id="${FRIEND_THREAD_ID}"]`;
 
+const REVIEW_AVATAR_DATA_URL =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96">' +
+      '<rect width="96" height="96" fill="#fff6df"/>' +
+      '<circle cx="48" cy="48" r="28" fill="#7a5710"/>' +
+      "</svg>"
+  );
+const REVIEW_COVER_DATA_URL =
+  "data:image/svg+xml;charset=utf-8," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400">' +
+      '<rect width="1200" height="400" fill="#4a6741"/>' +
+      '<rect x="80" y="80" width="1040" height="240" fill="#5f7f55"/>' +
+      "</svg>"
+  );
+
 const base = await findDevServerBaseUrl({ probePath: "talk-home.html" });
 const errors = [];
 
@@ -54,8 +71,8 @@ await withPlaywrightBrowser(async (browser) => {
           partnerProfile: {
             user_id: "u_demo_friend_001",
             display_name: "田中 一郎",
-            profile_image: "https://placehold.co/96x96/fff6df/7a5710?text=T",
-            cover_image: "https://placehold.co/600x400/4a6741/ffffff?text=Cover",
+            profile_image: REVIEW_AVATAR_DATA_URL,
+            cover_image: REVIEW_COVER_DATA_URL,
           },
           partner: { id: "u_demo_friend_001", displayName: "田中 一郎" },
           lastMessagePreview: "test",
