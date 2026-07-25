@@ -26,6 +26,15 @@ async function openFriendProfileCard(page) {
   await page.locator("[data-talk-profile-card]:not([hidden])").waitFor({ state: "visible", timeout: 8000 });
 }
 
+async function closeFriendProfileCard(page) {
+  await page.evaluate(() => {
+    const close = window.TasuTalkProfileCard?.closeTalkProfileCard;
+    if (!close) throw new Error("TasuTalkProfileCard.closeTalkProfileCard missing");
+    close();
+  });
+  await page.locator("[data-talk-profile-card]").waitFor({ state: "hidden" });
+}
+
 await withPlaywrightBrowser(async (browser) => {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   page.on("console", (msg) => {
@@ -84,8 +93,7 @@ await withPlaywrightBrowser(async (browser) => {
     if (coverMode !== "photo") errors.push(`expected cover photo mode, got ${coverMode}`);
     const hasPhotoClass = await page.locator(".talk-profile-card__cover--photo").count();
     if (hasPhotoClass < 1) errors.push("cover photo class missing");
-    await page.locator(".talk-profile-card__close").click();
-    await page.waitForTimeout(350);
+    await closeFriendProfileCard(page);
     const closed = await page.locator("[data-talk-profile-card][hidden]").count();
     if (closed < 1) errors.push("profile card did not close");
   }
@@ -109,7 +117,7 @@ await withPlaywrightBrowser(async (browser) => {
   if (gradientMode !== "gradient") errors.push(`expected gradient cover mode, got ${gradientMode}`);
   const hasGradientClass = await page.locator(".talk-profile-card__cover--gradient").count();
   if (hasGradientClass < 1) errors.push("cover gradient class missing");
-  await page.locator(".talk-profile-card__close").click();
+  await closeFriendProfileCard(page);
 
   await page.goto(
     buildLocalPageUrl(
