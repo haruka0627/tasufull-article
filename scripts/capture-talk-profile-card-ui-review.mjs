@@ -60,7 +60,12 @@ function buildFriendThread(withCover) {
     threadKind: "direct",
     partnerUserId: "u_demo_friend_001",
     partnerProfile: profile,
-    partner: { id: "u_demo_friend_001", displayName: "田中 一郎" },
+    partner: {
+      id: "u_demo_friend_001",
+      displayName: "田中 一郎",
+      profile_image: REVIEW_AVATAR_DATA_URL,
+      ...(withCover ? { cover_image: REVIEW_COVER_DATA_URL } : {}),
+    },
     lastMessagePreview: "こんにちは",
     updatedAt: new Date().toISOString(),
   };

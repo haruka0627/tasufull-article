@@ -75,7 +75,12 @@ await withPlaywrightBrowser(async (browser) => {
               profile_image: avatarDataUrl,
               cover_image: coverDataUrl,
             },
-            partner: { id: "u_demo_friend_001", displayName: "田中 一郎" },
+            partner: {
+              id: "u_demo_friend_001",
+              displayName: "田中 一郎",
+              profile_image: avatarDataUrl,
+              cover_image: coverDataUrl,
+            },
             lastMessagePreview: "test",
             updatedAt: new Date().toISOString(),
           },

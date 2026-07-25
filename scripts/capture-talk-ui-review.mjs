@@ -69,7 +69,7 @@ function chatUrl(threadId, extra = {}) {
 async function seedReviewThreads(page) {
   await page.goto(buildLocalPageUrl(base, "builder/builder-top.html"), { waitUntil: "domcontentloaded" });
   await page.evaluate(
-    ({ threadsKey, messagesKey, revealKey, workflowKey }) => {
+    ({ threadsKey, messagesKey, revealKey, workflowKey, avatarDataUrl, coverDataUrl }) => {
       localStorage.removeItem(revealKey);
       localStorage.removeItem(workflowKey);
       const threads = [
@@ -81,10 +81,15 @@ async function seedReviewThreads(page) {
             partnerProfile: {
               user_id: "u_demo_friend_001",
               display_name: "田中 一郎",
-              profile_image: REVIEW_AVATAR_DATA_URL,
-              cover_image: REVIEW_COVER_DATA_URL,
+              profile_image: avatarDataUrl,
+              cover_image: coverDataUrl,
             },
-            partner: { id: "u_demo_friend_001", displayName: "田中 一郎" },
+            partner: {
+              id: "u_demo_friend_001",
+              displayName: "田中 一郎",
+              profile_image: avatarDataUrl,
+              cover_image: coverDataUrl,
+            },
             lastMessagePreview: "こんにちは",
             updatedAt: new Date().toISOString(),
           },
@@ -136,7 +141,14 @@ async function seedReviewThreads(page) {
         })
       );
     },
-    { threadsKey: THREADS_KEY, messagesKey: MESSAGES_KEY, revealKey: REVEAL_KEY, workflowKey: WORKFLOW_KEY }
+    {
+      threadsKey: THREADS_KEY,
+      messagesKey: MESSAGES_KEY,
+      revealKey: REVEAL_KEY,
+      workflowKey: WORKFLOW_KEY,
+      avatarDataUrl: REVIEW_AVATAR_DATA_URL,
+      coverDataUrl: REVIEW_COVER_DATA_URL,
+    }
   );
 }
 
