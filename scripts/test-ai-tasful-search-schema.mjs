@@ -150,6 +150,11 @@ function main() {
     ["おすすめの探し方は？", "none"],
     ["検索機能について説明して", "none"],
     ["文章を要約して", "none"],
+    ["求人コードを直して", "none"],
+    ["依頼文を要約して", "none"],
+    ["求人ページのバグを探して", "none"],
+    ["サービス説明を書いて", "none"],
+    ["この文章から募集条件を抽出して", "none"],
   ];
   for (const [text, expect] of negatives) {
     const r = Intent.classifyIntent(text);
@@ -159,6 +164,18 @@ function main() {
       Intent.shouldUseCrossSearch("cross-matching", text) === false
     );
   }
+
+  const jobIntent = Intent.classifyIntent("求人探したい 動画編集");
+  assert("intent job_search", jobIntent.intent === "job_search");
+  const jobSchema = Schema.fromUserText("求人探したい 動画編集", { intent: "job_search" });
+  assert(
+    "fromUserText platform job",
+    jobSchema.ok &&
+      jobSchema.value.vertical === "platform" &&
+      jobSchema.value.type === "job" &&
+      jobSchema.value.action === "search",
+    JSON.stringify(jobSchema.value)
+  );
 
   assert(
     "探して alone → none",

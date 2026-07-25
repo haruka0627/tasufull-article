@@ -6,9 +6,12 @@ export const MAX_QUERY = 300;
 export const MAX_LOCATION = 100;
 export const MAX_BODY_BYTES = 8 * 1024;
 export const MAX_LIMIT = 5;
+export const MAX_EMPLOYMENT = 40;
+export const MAX_WORK_STYLE = 40;
 
 const ACTIONS = new Set(["search", "compare", "history_lookup", "none"]);
 const VERTICALS = new Set(["marketplace", "platform", "builder", "all"]);
+const PLATFORM_TYPES = new Set(["job"]);
 const SORTS = new Set([
   "relevance",
   "price_asc",
@@ -94,8 +97,28 @@ function normalizeAction(raw) {
 function normalizeVertical(raw) {
   if (raw == null || raw === "") return null;
   const v = String(raw).trim().toLowerCase();
-  if (VERTICALS.has(v)) return v;
+  if (VERTICALS.has(v)) {
+    if (v === "marketplace" || v === "platform") return v;
+    return "invalid";
+  }
   return "invalid";
+}
+
+function normalizePlatformType(raw) {
+  if (raw == null || raw === "") return null;
+  const v = String(raw).trim().toLowerCase();
+  if (PLATFORM_TYPES.has(v)) return "job";
+  return "invalid";
+}
+
+function normalizeWorkStyle(raw) {
+  const text = trimStr(raw, MAX_WORK_STYLE);
+  if (!text) return null;
+  const lower = text.toLowerCase();
+  if (lower === "remote" || lower === "リモート" || lower === "在宅") return "remote";
+  if (lower === "hybrid" || lower === "ハイブリッド") return "hybrid";
+  if (lower === "onsite" || lower === "出社" || lower === "オフィス") return "onsite";
+  return text.slice(0, MAX_WORK_STYLE);
 }
 
 export function validateSearchBody(input) {
@@ -114,7 +137,7 @@ export function validateSearchBody(input) {
   if (!action) return { ok: false, code: "invalid_action", message: "Unsupported action" };
 
   const verticalRaw = normalizeVertical(src.vertical);
-  if (verticalRaw === "invalid") {
+  if (verticalRaw === "invalid" || verticalRaw == null) {
     return { ok: false, code: "invalid_vertical", message: "Unsupported vertical" };
   }
 
@@ -171,19 +194,47 @@ export function validateSearchBody(input) {
   }
 
   const location = trimStr(src.location, MAX_LOCATION) || null;
+  const employmentType = trimStr(src.employmentType, MAX_EMPLOYMENT) || null;
+  const workStyle = normalizeWorkStyle(src.workStyle);
 
   if (action !== "search" && action !== "compare") {
     return {
       ok: false,
       code: "unsupported_action",
-      message: "Only search/compare are supported in Phase 1",
+      message: "Only search/compare are supported",
     };
   }
-  if (verticalRaw !== "marketplace") {
+
+  if (verticalRaw === "marketplace") {
+    return {
+      ok: true,
+      value: {
+        action,
+        vertical: "marketplace",
+        type: null,
+        query,
+        location,
+        dateFrom,
+        dateTo,
+        priceMin,
+        priceMax,
+        employmentType: null,
+        workStyle: null,
+        sort,
+        limit,
+      },
+    };
+  }
+
+  const typeRaw = normalizePlatformType(src.type);
+  if (typeRaw === "invalid") {
+    return { ok: false, code: "invalid_type", message: "Unsupported platform type" };
+  }
+  if (typeRaw !== "job") {
     return {
       ok: false,
-      code: "unsupported_vertical",
-      message: "Only marketplace vertical is supported in Phase 1",
+      code: "unsupported_type",
+      message: "Only type=job is supported for platform",
     };
   }
 
@@ -191,13 +242,16 @@ export function validateSearchBody(input) {
     ok: true,
     value: {
       action,
-      vertical: "marketplace",
+      vertical: "platform",
+      type: "job",
       query,
       location,
       dateFrom,
       dateTo,
       priceMin,
       priceMax,
+      employmentType,
+      workStyle,
       sort,
       limit,
     },
@@ -209,5 +263,5 @@ export function assertSafeDetailUrl(url) {
   if (!u) return false;
   if (/^https?:/i.test(u) || u.startsWith("//") || /^javascript:/i.test(u)) return false;
   if (u.includes("..")) return false;
-  return /^(detail-product\.html|detail-shop-product\.html)(\?|$)/i.test(u);
+  return /^(detail-product\.html|detail-shop-product\.html|detail-job\.html)(\?|$)/i.test(u);
 }

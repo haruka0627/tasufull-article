@@ -172,10 +172,37 @@ function runSchemaTests() {
     }).ok === false
   );
   assert(
-    "schema platform unsupported",
+    "schema platform job ok",
     validateSearchBody({
       action: "search",
       vertical: "platform",
+      type: "job",
+      query: "動画編集",
+      sort: "relevance",
+    }).ok === true &&
+      validateSearchBody({
+        action: "search",
+        vertical: "platform",
+        type: "job",
+        query: "動画編集",
+        sort: "relevance",
+      }).value.type === "job"
+  );
+  assert(
+    "schema platform missing type",
+    validateSearchBody({
+      action: "search",
+      vertical: "platform",
+      query: "x",
+      sort: "relevance",
+    }).ok === false
+  );
+  assert(
+    "schema platform skill unsupported",
+    validateSearchBody({
+      action: "search",
+      vertical: "platform",
+      type: "skill",
       query: "x",
       sort: "relevance",
     }).ok === false
@@ -256,6 +283,10 @@ function runSchemaTests() {
   assert(
     "detail url allow product",
     assertSafeDetailUrl("detail-product.html?id=abc&from=ai") === true
+  );
+  assert(
+    "detail url allow job",
+    assertSafeDetailUrl("detail-job.html?id=abc&from=ai") === true
   );
   assert(
     "detail url reject https",
@@ -382,13 +413,38 @@ async function runLiveTests(cfg) {
   });
   assert("builder → unsupported 400", builder.status === 400);
 
-  const platform = await postEdge(base, anonKey, {
+  const platformJob = await postEdge(base, anonKey, {
     action: "search",
     vertical: "platform",
+    type: "job",
+    query: "求人",
+    sort: "relevance",
+    limit: 5,
+  });
+  assert(
+    "POST platform job shape",
+    platformJob.status === 200 &&
+      platformJob.data?.ok === true &&
+      Array.isArray(platformJob.data.results),
+    `status=${platformJob.status}`
+  );
+  if (platformJob.data?.ok) {
+    assert("platform job count ≤ 5", platformJob.data.results.length <= 5);
+    assertSafePublicPayload(platformJob.data, "job");
+    const typesOk = platformJob.data.results.every(
+      (r) => r.type === "job" || r.kind === "job" || r.vertical === "platform"
+    );
+    assert("platform job types", typesOk || platformJob.data.results.length === 0);
+  }
+
+  const platformSkill = await postEdge(base, anonKey, {
+    action: "search",
+    vertical: "platform",
+    type: "skill",
     query: "x",
     sort: "relevance",
   });
-  assert("platform → unsupported 400", platform.status === 400);
+  assert("platform skill → 400", platformSkill.status === 400);
 
   const history = await postEdge(base, anonKey, {
     action: "history_lookup",

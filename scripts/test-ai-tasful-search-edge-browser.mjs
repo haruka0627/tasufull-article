@@ -153,6 +153,12 @@ async function main() {
     if (wiring.hasFetch) pass("fetchMarketplaceViaEdge exported");
     else fail("fetchMarketplaceViaEdge exported");
 
+    const hasJobFetch = await page.evaluate(
+      () => typeof window.TasuAiSearch?.fetchJobsViaEdge === "function"
+    );
+    if (hasJobFetch) pass("fetchJobsViaEdge exported");
+    else fail("fetchJobsViaEdge exported");
+
     if (wiring.endpointUrl.includes("/functions/v1/ai-tasful-search")) {
       pass("endpoint resolves", wiring.endpointUrl.replace(/https?:\/\/[^/]+/, "<host>"));
     } else {

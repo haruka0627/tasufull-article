@@ -202,8 +202,8 @@
     };
   }
 
-  const MARKETPLACE_DETAIL_RE =
-    /^(detail-shop-product\.html|detail-product\.html|detail-shop-store\.html)(\?|$)/i;
+  const CATALOG_DETAIL_RE =
+    /^(detail-shop-product\.html|detail-product\.html|detail-shop-store\.html|detail-job\.html)(\?|$)/i;
 
   function toInternalRelativeDetailUrl(url) {
     const raw = String(url || "").trim();
@@ -221,7 +221,7 @@
       }
     }
     path = path.replace(/^\.\//, "").replace(/^\//, "");
-    if (!MARKETPLACE_DETAIL_RE.test(path.split("#")[0])) return "";
+    if (!CATALOG_DETAIL_RE.test(path.split("#")[0])) return "";
     return path;
   }
 
@@ -3864,9 +3864,195 @@
     };
   }
 
+  function edgeJobItemToCard(item) {
+    if (!item || typeof item !== "object") return null;
+    const detailUrl = toInternalRelativeDetailUrl(item.detailUrl);
+    if (!detailUrl) return null;
+    const card = {
+      id: String(item.id || "").trim(),
+      vertical: "platform",
+      type: "job",
+      kind: "job",
+      title: String(item.title || "").trim(),
+      detailUrl,
+      primaryActionLabel: String(item.primaryActionLabel || "求人を見る"),
+      consultUrl: detailUrl,
+      chatUrl: detailUrl,
+      applyUrl: detailUrl,
+      purchaseUrl: "",
+      estimateUrl: "",
+    };
+    if (!card.id || !card.title) return null;
+    if (item.summary) {
+      card.summary = String(item.summary);
+      card.description = card.summary;
+    }
+    if (item.imageUrl) card.imageUrl = String(item.imageUrl);
+    if (item.priceLabel) {
+      card.priceLabel = String(item.priceLabel);
+      card.price = card.priceLabel;
+    }
+    if (item.locationLabel) {
+      card.locationLabel = String(item.locationLabel);
+      card.region = card.locationLabel;
+    }
+    if (item.availabilityLabel) {
+      card.availabilityLabel = String(item.availabilityLabel);
+      card.rating = card.availabilityLabel;
+    }
+    if (Array.isArray(item.badges) && item.badges.length) {
+      card.badges = item.badges.map((b) => String(b)).filter(Boolean).slice(0, 5);
+    }
+    return normalizeSearchCard(card);
+  }
+
+  function buildJobEdgePayload(ctx, criteria) {
+    const schemaIntent = ctx.searchIntentSchema || ctx.validatedIntent || null;
+    const text = String(ctx.userText || ctx.text || criteria.text || "").trim();
+    const Schema = global.TasuAiTasfulSearchSchema;
+    const fromSchema =
+      Schema?.fromUserText?.(text, {
+        intent: "job_search",
+        hints: {
+          location: criteria.area || null,
+          employmentType: criteria.employmentType || null,
+        },
+        vertical: "platform",
+        type: "job",
+        employmentType: criteria.employmentType || null,
+        sort: criteria.schemaSort || "relevance",
+      })?.value || {
+        action: "search",
+        vertical: "platform",
+        type: "job",
+        query: criteria.jobText || text,
+        location: criteria.area || null,
+        employmentType: criteria.employmentType || null,
+        workStyle: null,
+        sort: criteria.schemaSort || "relevance",
+      };
+    return {
+      action: fromSchema.action === "compare" ? "compare" : "search",
+      vertical: "platform",
+      type: "job",
+      query: String(fromSchema.query || criteria.jobText || text || "").slice(0, 300),
+      location: fromSchema.location || criteria.area || null,
+      dateFrom: fromSchema.dateFrom || null,
+      dateTo: fromSchema.dateTo || null,
+      priceMin: fromSchema.priceMin ?? null,
+      priceMax: fromSchema.priceMax ?? criteria.salaryYen ?? null,
+      employmentType: fromSchema.employmentType || criteria.employmentType || null,
+      workStyle: fromSchema.workStyle || null,
+      sort: fromSchema.sort || "relevance",
+      limit: MAX_RESULTS,
+    };
+  }
+
+  async function fetchJobsViaEdge(ctx, criteria) {
+    const Gateway = global.TasuAiModelGateway;
+    const endpoint = Gateway?.getSupabaseEndpoint?.("ai-tasful-search");
+    if (!endpoint?.url || !endpoint?.anonKey) {
+      return { ok: false, error: "search_unavailable", httpStatus: 0 };
+    }
+
+    let accessToken = "";
+    try {
+      const client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        const { data } = await client.auth.getSession();
+        accessToken = String(data?.session?.access_token || "").trim();
+      }
+    } catch (_err) {
+      /* ignore */
+    }
+
+    const payload = buildJobEdgePayload(ctx, criteria);
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 15000);
+      const res = await fetch(endpoint.url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken || endpoint.anonKey}`,
+          apikey: endpoint.anonKey,
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal,
+      });
+      clearTimeout(timer);
+      const data = await res.json().catch(() => ({}));
+      if (res.status === 400) {
+        return {
+          ok: false,
+          error: data?.error?.code || "invalid_search",
+          httpStatus: 400,
+          validation: true,
+        };
+      }
+      if (!res.ok || data?.ok !== true || !Array.isArray(data?.results)) {
+        return {
+          ok: false,
+          error: data?.error?.code || "search_unavailable",
+          httpStatus: res.status || 0,
+        };
+      }
+      const items = data.results.map(edgeJobItemToCard).filter(Boolean);
+      return {
+        ok: true,
+        items,
+        meta: data.meta || { count: items.length, truncated: false },
+      };
+    } catch (_err) {
+      return { ok: false, error: "search_unavailable", httpStatus: 0 };
+    }
+  }
+
+  async function queryJobItemsClientFallback(ctx, criteria) {
+    if (!global.TasuListingStore?.fetchPublishedListings) {
+      return {
+        items: [],
+        criteria,
+        insufficient: false,
+        error: "search_unavailable",
+        vertical: "platform",
+        source: "client_fallback",
+      };
+    }
+    let candidates;
+    try {
+      candidates = await fetchPublishedJobListings();
+    } catch {
+      return {
+        items: [],
+        criteria,
+        insufficient: false,
+        error: "search_unavailable",
+        vertical: "platform",
+        source: "client_fallback",
+      };
+    }
+    const ranked = preferUserFacingRanked(rankJobWithFallback(candidates, criteria));
+    return {
+      items: ranked.map(jobCandidateToCard),
+      criteria,
+      insufficient: false,
+      vertical: "platform",
+      source: "client_fallback",
+    };
+  }
+
   async function queryJobItems(ctx) {
     const crossCtx = makeCrossCtx(ctx);
     const criteria = extractJobCriteria(crossCtx);
+    const schemaIntent = ctx.searchIntentSchema || ctx.validatedIntent || null;
+    if (schemaIntent && typeof schemaIntent === "object") {
+      if (schemaIntent.location) criteria.area = criteria.area || schemaIntent.location;
+      if (schemaIntent.employmentType) {
+        criteria.employmentType = criteria.employmentType || schemaIntent.employmentType;
+      }
+      criteria.schemaSort = schemaIntent.sort || "relevance";
+    }
     if (!hasMinimumJobCriteria(criteria) && criteria.text?.length >= 2) {
       ensureRelaxedCriteria(criteria);
       if (!criteria.jobKeywords?.length) {
@@ -3877,22 +4063,32 @@
       }
     }
     if (!hasMinimumJobCriteria(criteria)) {
-      return { items: [], criteria, insufficient: true };
+      return { items: [], criteria, insufficient: true, vertical: "platform" };
     }
-    if (!global.TasuListingStore?.fetchPublishedListings) {
-      return { items: [], criteria, insufficient: false };
+
+    const edge = await fetchJobsViaEdge(crossCtx, criteria);
+    if (edge.ok) {
+      return {
+        items: edge.items.slice(0, MAX_RESULTS),
+        criteria,
+        insufficient: false,
+        vertical: "platform",
+        source: "edge",
+        meta: edge.meta,
+      };
     }
-    let candidates;
-    try {
-      candidates = await fetchPublishedJobListings();
-    } catch {
-      return { items: [], criteria, insufficient: false };
+
+    if (global.__TASU_AI_TASFUL_SEARCH_CLIENT_FALLBACK__ === true) {
+      return queryJobItemsClientFallback(crossCtx, criteria);
     }
-    const ranked = preferUserFacingRanked(rankJobWithFallback(candidates, criteria));
+
     return {
-      items: ranked.map(jobCandidateToCard),
+      items: [],
       criteria,
       insufficient: false,
+      error: edge.validation ? "invalid_search" : "search_unavailable",
+      vertical: "platform",
+      source: "edge",
     };
   }
 
@@ -3985,6 +4181,7 @@
     querySkillItems,
     queryWorkerItems,
     fetchMarketplaceViaEdge,
+    fetchJobsViaEdge,
     businessListingToCard,
     productCandidateToCard,
     toMarketplaceSearchResult,

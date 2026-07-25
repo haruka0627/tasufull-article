@@ -1,8 +1,8 @@
 /**
- * TASFUL AI — Marketplace catalog search (Phase 1)
- * - No AI Provider
- * - Anon/JWT client only (no service role)
- * - Public marketplace products only
+ * TASFUL AI — catalog search
+ * Phase 1: Marketplace products
+ * Phase 2: Platform jobs (listings.listing_type=job)
+ * - No AI Provider / no service role / no Talk / no fee-pay
  */
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
 import { handleOptions, jsonResponse } from "../_shared/cors.ts";
@@ -18,15 +18,19 @@ const SHOP_SELECT =
   "id,company_name,title,description,business_category,service_area,tags,publish_status,rating,review_count";
 const PRODUCT_SELECT =
   "id,listing_id,product_name,product_category,product_description,product_image_url,price,stock_status,stock_quantity,is_active,same_day_shipping,delivery_method,display_order";
+/** Public job fields only — never phone / contact_email / form_data / user_id */
+const JOB_SELECT =
+  "id,title,description,tags,image_url,thumbnail_url,category,subcategory,publish_status,listing_type,job_location,work_style,employment_type,salary_type,salary_amount,company_name,created_at";
 
 const DETAIL_ALLOW = new Set([
   "detail-product.html",
   "detail-shop-product.html",
+  "detail-job.html",
 ]);
 
 type CatalogResult = {
   id: string;
-  vertical: "marketplace";
+  vertical: "marketplace" | "platform";
   type: string;
   kind: string;
   title: string;
@@ -319,6 +323,142 @@ function stripInternal(item: CatalogResult): Record<string, unknown> {
   return omitEmpty(rest as Record<string, unknown>);
 }
 
+function formatSalaryLabel(row: Record<string, unknown>): string {
+  const amount = row.salary_amount;
+  const stype = String(row.salary_type || "").trim();
+  if (amount != null && Number.isFinite(Number(amount))) {
+    const n = Number(amount);
+    const yen = `¥${n.toLocaleString("ja-JP")}`;
+    if (stype) return `${stype} ${yen}`.slice(0, 80);
+    return yen;
+  }
+  if (stype) return stype.slice(0, 80);
+  return "";
+}
+
+function jobToResult(
+  row: Record<string, unknown>,
+  intent: SearchIntent,
+): CatalogResult | null {
+  if (String(row.publish_status || "") !== "public") return null;
+  if (String(row.listing_type || "") !== "job") return null;
+  const id = String(row.id || "").trim();
+  const title = String(row.title || "").trim();
+  if (!id || !title) return null;
+
+  const summary = String(row.description || "")
+    .trim()
+    .slice(0, 200);
+  const imageUrl = String(row.image_url || row.thumbnail_url || "").trim();
+  const locationLabel = String(row.job_location || "").trim();
+  const employment = String(row.employment_type || "").trim();
+  const workStyle = String(row.work_style || "").trim();
+  const priceLabel = formatSalaryLabel(row);
+  const company = String(row.company_name || "").trim();
+  const detailUrl = buildDetailUrl("detail-job.html", { id }, intent.query);
+  if (!detailUrl) return null;
+
+  if (intent.employmentType) {
+    const want = intent.employmentType.toLowerCase();
+    if (!employment.toLowerCase().includes(want) && !want.includes(employment.toLowerCase())) {
+      // soft match: also allow query hay below to catch synonyms
+      if (!`${employment} ${title} ${summary}`.toLowerCase().includes(want)) {
+        return null;
+      }
+    }
+  }
+  if (intent.workStyle) {
+    const ws = workStyle.toLowerCase();
+    const want = intent.workStyle.toLowerCase();
+    const remoteOk =
+      want === "remote"
+        ? /remote|リモート|在宅|テレワーク/.test(`${ws} ${summary} ${title}`)
+        : want === "hybrid"
+          ? /hybrid|ハイブリッド/.test(`${ws} ${summary} ${title}`)
+          : want === "onsite"
+            ? /onsite|出社|オフィス|現地/.test(`${ws} ${summary} ${title}`) ||
+              (ws && !/remote|リモート|在宅/.test(ws))
+            : ws.includes(want) || `${summary} ${title}`.toLowerCase().includes(want);
+    if (!remoteOk && want) {
+      return null;
+    }
+  }
+
+  const hay = [
+    title,
+    summary,
+    row.tags,
+    row.category,
+    row.subcategory,
+    locationLabel,
+    employment,
+    workStyle,
+    priceLabel,
+    company,
+  ]
+    .join(" ")
+    .toLowerCase();
+  const score = scoreHay(hay, intent);
+  if (tokens(intent.query).length && score <= 0) return null;
+
+  const badges: string[] = [];
+  if (employment) badges.push(employment.slice(0, 20));
+  if (workStyle) badges.push(workStyle.slice(0, 20));
+
+  return omitEmpty({
+    id,
+    vertical: "platform" as const,
+    type: "job",
+    kind: "job",
+    title: title.slice(0, 120),
+    summary: summary || undefined,
+    imageUrl: imageUrl || undefined,
+    priceLabel: priceLabel || undefined,
+    locationLabel: locationLabel || undefined,
+    availabilityLabel: employment || undefined,
+    detailUrl,
+    primaryActionLabel: "求人を見る",
+    badges: badges.length ? badges.slice(0, 3) : undefined,
+    _priceYen:
+      row.salary_amount != null && Number.isFinite(Number(row.salary_amount))
+        ? Number(row.salary_amount)
+        : null,
+    _score: score,
+  }) as CatalogResult;
+}
+
+async function searchPlatformJobs(
+  client: SupabaseClient,
+  intent: SearchIntent,
+): Promise<{ results: CatalogResult[]; truncated: boolean }> {
+  const fetchLimit = 40;
+  const results: CatalogResult[] = [];
+
+  let q = client
+    .from("listings")
+    .select(JOB_SELECT)
+    .eq("listing_type", "job")
+    .eq("publish_status", "public")
+    .order("created_at", { ascending: false })
+    .limit(fetchLimit);
+
+  const listingsRes = await q;
+  if (!listingsRes.error && Array.isArray(listingsRes.data)) {
+    for (const row of listingsRes.data) {
+      const item = jobToResult(row as Record<string, unknown>, intent);
+      if (item) results.push(item);
+    }
+  }
+
+  const filtered = applyPriceFilter(results, intent);
+  const sorted = sortResults(filtered, intent);
+  const truncated = sorted.length > intent.limit;
+  return {
+    results: sorted.slice(0, intent.limit),
+    truncated,
+  };
+}
+
 async function searchMarketplace(
   client: SupabaseClient,
   intent: SearchIntent,
@@ -464,12 +604,15 @@ export async function handler(req: Request): Promise<Response> {
   }
 
   try {
-    const { results, truncated } = await searchMarketplace(client, intent);
+    const searched =
+      intent.vertical === "platform"
+        ? await searchPlatformJobs(client, intent)
+        : await searchMarketplace(client, intent);
     return ok(
       {
         ok: true,
-        results: results.map(stripInternal),
-        meta: { count: results.length, truncated },
+        results: searched.results.map(stripInternal),
+        meta: { count: searched.results.length, truncated: searched.truncated },
       },
       req,
     );

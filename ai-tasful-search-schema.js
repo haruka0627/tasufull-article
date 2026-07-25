@@ -15,6 +15,9 @@
     "availability",
     "recent",
   ]);
+  const PLATFORM_TYPES = new Set(["job"]);
+  const MAX_EMPLOYMENT = 40;
+  const MAX_WORK_STYLE = 40;
 
   const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
   const MAX_QUERY = 300;
@@ -117,6 +120,29 @@
     return out;
   }
 
+  function normalizeWorkStyle(raw) {
+    const text = trimStr(raw, MAX_WORK_STYLE);
+    if (!text) return null;
+    const lower = text.toLowerCase();
+    if (lower === "remote" || lower === "リモート" || lower === "在宅") return "remote";
+    if (lower === "hybrid" || lower === "ハイブリッド") return "hybrid";
+    if (lower === "onsite" || lower === "出社" || lower === "オフィス") return "onsite";
+    return text.slice(0, MAX_WORK_STYLE);
+  }
+
+  function normalizePlatformType(raw) {
+    if (raw == null || raw === "") return null;
+    const v = String(raw).trim().toLowerCase();
+    if (PLATFORM_TYPES.has(v)) return "job";
+    return null;
+  }
+
+  function intentToType(intent) {
+    const i = String(intent || "");
+    if (i === "job_search") return "job";
+    return null;
+  }
+
   /**
    * @returns {{ ok: true, value: object } | { ok: false, error: string, value?: object }}
    */
@@ -143,9 +169,32 @@
       priceMax = tmp;
     }
 
+    let vertical = normalizeVertical(src.vertical);
+    let type = normalizePlatformType(src.type);
+
+    // Platform Phase 2: only job. Soft-drop unsupported platform types on client.
+    if (vertical === "platform" && type !== "job") {
+      if (src.type != null && String(src.type).trim() && type == null) {
+        type = null;
+        vertical = null;
+      } else if (!type) {
+        type = null;
+      }
+    }
+    if (vertical === "marketplace") {
+      type = null;
+    }
+    if (vertical === "platform" && type === "job") {
+      /* ok */
+    } else if (vertical === "platform") {
+      vertical = null;
+      type = null;
+    }
+
     const value = {
       action: normalizeAction(src.action),
-      vertical: normalizeVertical(src.vertical),
+      vertical,
+      type: vertical === "platform" ? type : null,
       query: trimStr(src.query, MAX_QUERY),
       location: (() => {
         const loc = trimStr(src.location, MAX_LOCATION);
@@ -155,9 +204,16 @@
       dateTo: normalizeDate(src.dateTo),
       priceMin,
       priceMax,
+      employmentType: trimStr(src.employmentType, MAX_EMPLOYMENT) || null,
+      workStyle: normalizeWorkStyle(src.workStyle),
       sort: normalizeSort(src.sort),
       missingRequiredFields: normalizeMissing(src.missingRequiredFields),
     };
+
+    if (value.vertical !== "platform") {
+      value.employmentType = null;
+      value.workStyle = null;
+    }
 
     if (value.dateFrom && value.dateTo && value.dateFrom > value.dateTo) {
       const a = value.dateFrom;
@@ -228,10 +284,32 @@
       intentToVertical(intent) ||
       (parsed?.type === "product" ? "marketplace" : null);
 
+    const type =
+      normalizePlatformType(opts.type) ||
+      intentToType(intent) ||
+      (vertical === "platform" && intent === "job_search" ? "job" : null);
+
     const action = intentToAction(intent, {
       ...hints,
       compareMode: hints.compareMode || parsed?.compareMode,
     });
+
+    let employmentType =
+      trimStr(opts.employmentType || hints.employmentType || "", MAX_EMPLOYMENT) || null;
+    let workStyle = normalizeWorkStyle(opts.workStyle || hints.workStyle || null);
+    if (!employmentType && text) {
+      if (/正社員/.test(text)) employmentType = "正社員";
+      else if (/アルバイト|バイト/.test(text)) employmentType = "アルバイト";
+      else if (/パート/.test(text)) employmentType = "パート";
+      else if (/業務委託|フリーランス/.test(text)) employmentType = "業務委託";
+      else if (/派遣/.test(text)) employmentType = "派遣";
+      else if (/契約社員|契約/.test(text)) employmentType = "契約";
+    }
+    if (!workStyle && text) {
+      if (/リモート|在宅|テレワーク/.test(text)) workStyle = "remote";
+      else if (/ハイブリッド/.test(text)) workStyle = "hybrid";
+      else if (/出社|オフィス/.test(text)) workStyle = "onsite";
+    }
 
     const missingRequiredFields = [];
     if (action === "search" && vertical === "marketplace") {
@@ -247,12 +325,15 @@
     return validate({
       action,
       vertical,
+      type: vertical === "platform" ? type || "job" : null,
       query: keyword,
       location,
       dateFrom: opts.dateFrom ?? hints.dateFrom ?? null,
       dateTo: opts.dateTo ?? hints.dateTo ?? null,
       priceMin,
       priceMax,
+      employmentType: vertical === "platform" ? employmentType : null,
+      workStyle: vertical === "platform" ? workStyle : null,
       sort: parsed?.sort || opts.sort || "relevance",
       missingRequiredFields,
     });
@@ -262,12 +343,15 @@
     return validate({
       action: "none",
       vertical: null,
+      type: null,
       query: "",
       location: null,
       dateFrom: null,
       dateTo: null,
       priceMin: null,
       priceMax: null,
+      employmentType: null,
+      workStyle: null,
       sort: "relevance",
       missingRequiredFields: [],
     });
@@ -277,6 +361,7 @@
     ACTIONS: Array.from(ACTIONS),
     VERTICALS: Array.from(VERTICALS),
     SORTS: Array.from(SORTS),
+    PLATFORM_TYPES: Array.from(PLATFORM_TYPES),
     MAX_QUERY,
     validate,
     fromUserText,
@@ -287,5 +372,6 @@
     normalizePrice,
     normalizeDate,
     intentToVertical,
+    intentToType,
   };
 })(typeof window !== "undefined" ? window : globalThis);
