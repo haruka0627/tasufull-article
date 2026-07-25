@@ -3,6 +3,7 @@
  *
  * Secret: GEMINI_API_KEY（クライアントへ渡さない）
  * Auth: Authorization Bearer → Supabase `/auth/v1/user` で検証（全 surface）
+ * Payload: MIME · base64 · size · magic bytes（guard / Gemini より前）
  * SAFE-05: 許可 surface すべて Usage Guard（user ID / feature は server-derived）
  */
 import {
@@ -11,6 +12,7 @@ import {
   getOcrQuotaFeature,
   normalizeOcrSurface,
 } from "../_shared/ai-usage-guard.mjs";
+import { validateOcrPayload } from "../_shared/ocr-payload-validation.mjs";
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -35,18 +37,10 @@ function handleOptions() {
 
 const GEMINI_OCR_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
-const MAX_BASE64_CHARS = 6 * 1024 * 1024;
 const OCR_PROMPT =
   "Extract all visible text from this document or image. " +
   "Return plain text only. Do not summarize, translate, interpret, or add commentary. " +
   "If there is no text, return an empty string.";
-
-function parseDataUrl(dataUrl) {
-  const src = String(dataUrl || "");
-  const m = src.match(/^data:([^;]+);base64,(.+)$/i);
-  if (!m) return null;
-  return { mimeType: m[1].trim(), base64: m[2].trim() };
-}
 
 function getSupabaseAuthConfig(env) {
   const url = String(env.TASFUL_SUPABASE_URL || env.SUPABASE_URL || "")
@@ -147,7 +141,7 @@ export async function onRequest(context) {
   try {
     body = await request.json();
   } catch {
-    return jsonResponse({ ok: false, error: "invalid_json", provider: "gemini" }, 400);
+    return jsonResponse({ ok: false, error: "invalid_request", provider: "gemini" }, 400);
   }
 
   const surface = normalizeOcrSurface(body?.surface);
@@ -155,7 +149,12 @@ export async function onRequest(context) {
     return jsonResponse({ ok: false, error: "invalid_surface", provider: "gemini" }, 400);
   }
 
-  // body.user_id / feature は互換上残ってもよいが、guard / 帰属は server-derived のみ
+  // 案A: payload 検証 → guard → Gemini（不正 payload で quota RPC を叩かない）
+  const payload = validateOcrPayload(body);
+  if (!payload.ok) {
+    return jsonResponse({ ok: false, error: payload.error, provider: "gemini" }, payload.status);
+  }
+
   const guardBody = Object.assign({}, body && typeof body === "object" ? body : {}, {
     user_id: authenticatedUserId,
     surface,
@@ -164,31 +163,6 @@ export async function onRequest(context) {
 
   const guard = await enforceCfOcrGuard(request, guardBody, env);
   if (guard.blocked) return guard.blocked;
-
-  let mimeType = String(body?.mimeType || body?.mime || "").trim();
-  let base64 = String(body?.base64 || body?.imageBase64 || "").trim();
-
-  if (!base64 && body?.dataUrl) {
-    const parsed = parseDataUrl(body.dataUrl);
-    if (!parsed) {
-      return jsonResponse({ ok: false, error: "invalid_data_url", provider: "gemini" }, 400);
-    }
-    mimeType = parsed.mimeType;
-    base64 = parsed.base64;
-  }
-
-  if (!base64) {
-    return jsonResponse({ ok: false, error: "base64_required", provider: "gemini" }, 400);
-  }
-
-  if (base64.length > MAX_BASE64_CHARS) {
-    return jsonResponse({ ok: false, error: "payload_too_large", provider: "gemini" }, 413);
-  }
-
-  const allowedMime = /^(image\/(jpeg|jpg|png|webp|gif|bmp)|application\/pdf)$/i;
-  if (!allowedMime.test(mimeType || "image/jpeg")) {
-    return jsonResponse({ ok: false, error: "unsupported_mime", provider: "gemini" }, 415);
-  }
 
   const url = `${GEMINI_API_BASE}/${GEMINI_OCR_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
@@ -205,8 +179,8 @@ export async function onRequest(context) {
               { text: OCR_PROMPT },
               {
                 inlineData: {
-                  mimeType: mimeType || "image/jpeg",
-                  data: base64,
+                  mimeType: payload.mimeType,
+                  data: payload.base64,
                 },
               },
             ],
