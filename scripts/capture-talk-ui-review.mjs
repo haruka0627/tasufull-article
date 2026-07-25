@@ -360,16 +360,122 @@ async function prepareAdminTalk(page) {
   await page.locator(WORKFLOW_PANEL_SEL).waitFor({ state: "visible", timeout: 15000 });
 }
 
+/**
+ * Per-page Staging isolation (WeakSet prevents double route/initScript registration).
+ * Used for the primary page and every secondary viewport page created inside captureStep.
+ */
+function createTalkReviewIsolationTracker() {
+  const isolatedPages = new WeakSet();
+  /** @type {Awaited<ReturnType<typeof installTalkReviewStagingIsolation>>[]} */
+  const hitsList = [];
+  let pageCount = 0;
+  let isolationInstallCount = 0;
+  let isolationSkipCount = 0;
+
+  /**
+   * @param {import('playwright').Page} page
+   */
+  async function ensureIsolation(page) {
+    pageCount += 1;
+    if (isolatedPages.has(page)) {
+      isolationSkipCount += 1;
+      return;
+    }
+    isolatedPages.add(page);
+    isolationInstallCount += 1;
+    hitsList.push(await installTalkReviewStagingIsolation(page));
+  }
+
+  async function collectMergedHits() {
+    for (const hits of hitsList) {
+      if (typeof hits.collectRealtimeStats === "function") {
+        await hits.collectRealtimeStats();
+      }
+    }
+    /** @type {{
+     *   geminiChat: number,
+     *   transactionRooms: number,
+     *   unexpected: Array<{ method: string, url: string, pathname: string }>,
+     *   realtime: {
+     *     installed: boolean,
+     *     channels: number,
+     *     subscribes: number,
+     *     unsubscribes: number,
+     *     topics: string[],
+     *     unexpectedRealtime: number,
+     *   },
+     * }} */
+    const merged = {
+      geminiChat: 0,
+      transactionRooms: 0,
+      unexpected: [],
+      realtime: {
+        installed: false,
+        channels: 0,
+        subscribes: 0,
+        unsubscribes: 0,
+        topics: [],
+        unexpectedRealtime: 0,
+      },
+    };
+    for (const hits of hitsList) {
+      merged.geminiChat += hits.geminiChat || 0;
+      merged.transactionRooms += hits.transactionRooms || 0;
+      merged.unexpected.push(...(hits.unexpected || []));
+      const rt = hits.realtime;
+      if (rt?.installed) merged.realtime.installed = true;
+      merged.realtime.channels += rt?.channels || 0;
+      merged.realtime.subscribes += rt?.subscribes || 0;
+      merged.realtime.unsubscribes += rt?.unsubscribes || 0;
+      merged.realtime.unexpectedRealtime += rt?.unexpectedRealtime || 0;
+      for (const topic of rt?.topics || []) merged.realtime.topics.push(topic);
+    }
+    return merged;
+  }
+
+  return {
+    ensureIsolation,
+    collectMergedHits,
+    getStats: () => ({
+      pageCount,
+      isolationInstallCount,
+      isolationSkipCount,
+      isolationHitsTracked: hitsList.length,
+    }),
+  };
+}
+
+function hasForbiddenRuntimeError(text) {
+  const s = String(text || "");
+  return (
+    /ERR_NAME_NOT_RESOLVED/i.test(s) ||
+    /CHANNEL_ERROR/i.test(s) ||
+    /transport failure/i.test(s)
+  );
+}
+
 async function main() {
   console.log(`\n=== Talk UI review capture ===`);
   console.log(`Base: ${base}`);
   console.log(`Output: reports/ui-review/${FEATURE}/\n`);
 
-  const session = createUiReviewSession(FEATURE, { baseUrl: base });
+  const isolation = createTalkReviewIsolationTracker();
+  const session = createUiReviewSession(FEATURE, {
+    baseUrl: base,
+    preparePage: async (page) => {
+      await isolation.ensureIsolation(page);
+    },
+  });
+
+  /** @type {ReturnType<typeof isolation.getStats> | null} */
+  let isolationStats = null;
+  /** @type {Awaited<ReturnType<typeof isolation.collectMergedHits>> | null} */
+  let stagingHits = null;
 
   await withPlaywrightBrowser(async (browser) => {
+    // Order: newPage → isolation (via ensure) → seed goto → capture steps
     const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-    const stagingHits = await installTalkReviewStagingIsolation(page);
+    await isolation.ensureIsolation(page);
     await seedReviewThreads(page);
 
     await session.captureStep(page, browser, {
@@ -432,16 +538,44 @@ async function main() {
       viewports: ["1280", "390"],
     });
 
-    await stagingHits.collectRealtimeStats();
+    stagingHits = await isolation.collectMergedHits();
+    isolationStats = isolation.getStats();
+    console.log(
+      `[talk-review] pages seen=${isolationStats.pageCount} isolationInstalls=${isolationStats.isolationInstallCount} skips=${isolationStats.isolationSkipCount}`
+    );
     reportTalkReviewStagingIsolation(stagingHits);
     await page.close();
   }, { headless: true });
 
-  const { ok, reportPath } = session.writeReport({ baseUrl: base });
+  const { ok, report, reportPath } = session.writeReport({
+    baseUrl: base,
+    pageCount: isolationStats?.isolationInstallCount ?? 0,
+    pageIsolationCount: isolationStats?.isolationInstallCount ?? 0,
+    pageIsolationSkips: isolationStats?.isolationSkipCount ?? 0,
+    stagingIsolation: {
+      geminiChat: stagingHits?.geminiChat ?? 0,
+      transactionRooms: stagingHits?.transactionRooms ?? 0,
+      unexpectedHttp: stagingHits?.unexpected?.length ?? 0,
+      realtimeChannels: stagingHits?.realtime?.channels ?? 0,
+      realtimeSubscribes: stagingHits?.realtime?.subscribes ?? 0,
+      unexpectedRealtime: stagingHits?.realtime?.unexpectedRealtime ?? 0,
+    },
+  });
   await closeAllBrowsers();
 
-  if (!ok) {
-    console.error("\nFAIL: console errors detected — see report");
+  const fileErrorTotal = (report.steps || []).reduce(
+    (n, step) => n + (step.files || []).reduce((m, f) => m + (f.consoleErrors?.length || 0), 0),
+    0
+  );
+  const topMatchesFiles = report.consoleErrorCount === fileErrorTotal;
+  const forbidden = (report.consoleErrors || []).filter(hasForbiddenRuntimeError);
+  const unexpectedHttp = stagingHits?.unexpected?.length ?? 0;
+  const unexpectedRealtime = stagingHits?.realtime?.unexpectedRealtime ?? 0;
+
+  if (!ok || fileErrorTotal > 0 || !topMatchesFiles || forbidden.length > 0 || unexpectedHttp > 0 || unexpectedRealtime > 0) {
+    console.error("\nFAIL talk UI review capture");
+    console.error(`  consoleErrorCount(top)=${report.consoleErrorCount} filesTotal=${fileErrorTotal} match=${topMatchesFiles}`);
+    console.error(`  forbiddenRuntime=${forbidden.length} unexpectedHttp=${unexpectedHttp} unexpectedRealtime=${unexpectedRealtime}`);
     process.exitCode = 1;
     return;
   }

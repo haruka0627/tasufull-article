@@ -283,8 +283,34 @@ export function reportTalkReviewStagingIsolation(hits) {
 }
 
 /**
+ * Sum of every files[].consoleErrors length across steps (source of truth for report totals).
+ * @param {Array<Record<string, unknown>>} stepList
+ */
+export function sumUiReviewFileConsoleErrors(stepList) {
+  /** @type {string[]} */
+  const all = [];
+  for (const step of stepList || []) {
+    for (const file of /** @type {Array<{ consoleErrors?: string[] }>} */ (step?.files || [])) {
+      for (const err of file.consoleErrors || []) {
+        if (err) all.push(err);
+      }
+    }
+  }
+  return all;
+}
+
+/**
  * @param {string} featureName
- * @param {{ viewports?: string[], baseUrl?: string }} [opts]
+ * @param {{
+ *   viewports?: string[],
+ *   baseUrl?: string,
+ *   preparePage?: (page: import('playwright').Page) => Promise<void>,
+ * }} [opts]
+ *
+ * `preparePage` runs for every shot page (primary + secondary) after creation and
+ * before console listeners / beforeGoto / first navigation. Opt-in; Talk uses it
+ * for Staging isolation. Other callers omit it and keep prior behavior aside from
+ * consoleErrorCount now matching files[].consoleErrors totals.
  */
 export function createUiReviewSession(featureName, opts = {}) {
   const outDir = uiReviewOutputDir(featureName);
@@ -300,6 +326,7 @@ export function createUiReviewSession(featureName, opts = {}) {
   const allConsoleErrors = [];
 
   const defaultViewportIds = opts.viewports || DEFAULT_VIEWPORT_IDS;
+  const preparePage = typeof opts.preparePage === "function" ? opts.preparePage : null;
 
   const viewportMap = new Map(UI_REVIEW_VIEWPORTS.map((vp) => [vp.id, vp]));
 
@@ -322,7 +349,7 @@ export function createUiReviewSession(featureName, opts = {}) {
     stepCounter += 1;
     const stepNum = String(stepCounter).padStart(3, "0");
     const vpIds = step.viewports || defaultViewportIds;
-    /** @type {string[]} */
+    /** @type {Array<{ viewport: string, path: string, httpStatus: number, consoleErrors: string[] }>} */
     const files = [];
     /** @type {string[]} */
     const stepErrors = [];
@@ -334,9 +361,12 @@ export function createUiReviewSession(featureName, opts = {}) {
       const shotPage =
         vpId === vpIds[0] ? page : await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
 
+      // Isolation / page setup must run before any navigation (including beforeGoto).
+      if (preparePage) {
+        await preparePage(shotPage);
+      }
+
       const consoleErrors = attachUiReviewConsole(shotPage);
-      stepErrors.push(...consoleErrors);
-      allConsoleErrors.push(...consoleErrors);
 
       if (step.beforeGoto) {
         await step.beforeGoto(shotPage);
@@ -351,7 +381,7 @@ export function createUiReviewSession(featureName, opts = {}) {
           httpStatus = 200;
         }
       } catch (err) {
-        stepErrors.push(`goto failed (${vpId}): ${String(err?.message || err)}`);
+        consoleErrors.push(`goto failed (${vpId}): ${String(err?.message || err)}`);
       }
 
       if (step.waitFor) {
@@ -368,28 +398,34 @@ export function createUiReviewSession(featureName, opts = {}) {
       const filepath = join(outDir, filename);
       await shotPage.screenshot({ path: filepath, fullPage: step.fullPage === true });
 
+      // Collect after navigation/prepare so the live array is populated.
+      const fileConsoleErrors = [...consoleErrors];
+      stepErrors.push(...fileConsoleErrors);
+      allConsoleErrors.push(...fileConsoleErrors);
+
       files.push({
         viewport: vpId,
         path: toRepoRelativePath(filepath),
         httpStatus,
-        consoleErrors: [...consoleErrors],
+        consoleErrors: fileConsoleErrors,
       });
 
       if (shotPage !== page) await shotPage.close();
     }
 
+    const fileConsoleTotal = files.reduce((n, f) => n + (f.consoleErrors?.length || 0), 0);
     const entry = {
       step: stepCounter,
       slug: step.slug,
       label: step.label || step.slug,
       url: step.url,
       files,
-      consoleErrorCount: stepErrors.length,
+      consoleErrorCount: fileConsoleTotal,
     };
     steps.push(entry);
 
     console.log(
-      `  [ui-review] STEP ${stepNum} ${step.slug} — ${files.length} shot(s) · console errors: ${stepErrors.length}`
+      `  [ui-review] STEP ${stepNum} ${step.slug} — ${files.length} shot(s) · console errors: ${fileConsoleTotal}`
     );
 
     return entry;
@@ -399,22 +435,22 @@ export function createUiReviewSession(featureName, opts = {}) {
    * @param {{ feature?: string, baseUrl?: string, extra?: Record<string, unknown> }} [meta]
    */
   function writeReport(meta = {}) {
-    const uniqueErrors = [...new Set(allConsoleErrors.filter(Boolean))];
+    const fromFiles = sumUiReviewFileConsoleErrors(steps);
     const report = {
       feature: featureName,
       capturedAt: new Date().toISOString(),
       outDir: toRepoRelativePath(outDir),
       stepCount: stepCounter,
-      consoleErrorCount: uniqueErrors.length,
-      consoleErrors: uniqueErrors,
+      consoleErrorCount: fromFiles.length,
+      consoleErrors: fromFiles,
       steps,
       ...meta,
     };
     const reportPath = join(outDir, "report.json");
     writeFileSync(reportPath, JSON.stringify(report, null, 2), "utf8");
     console.log(`\n[ui-review] report: ${reportPath}`);
-    console.log(`[ui-review] console errors: ${uniqueErrors.length}`);
-    return { report, reportPath, ok: uniqueErrors.length === 0 };
+    console.log(`[ui-review] console errors: ${fromFiles.length}`);
+    return { report, reportPath, ok: fromFiles.length === 0 };
   }
 
   return {
