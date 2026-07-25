@@ -162,6 +162,33 @@
     }
   }
 
+  /** usable 抽出文字列のみ（非string・空白のみは空扱い） */
+  function normalizeExtractedText(value) {
+    if (typeof value !== "string") return "";
+    return value.trim();
+  }
+
+  /** 未知 / null / typo は needs_review（allow に落とさない） */
+  function normalizeVerdict(value) {
+    if (value === VERDICT.BLOCK || value === "block") return VERDICT.BLOCK;
+    if (value === VERDICT.NEEDS_REVIEW || value === "needs_review") return VERDICT.NEEDS_REVIEW;
+    if (value === VERDICT.ALLOW || value === "allow") return VERDICT.ALLOW;
+    return VERDICT.NEEDS_REVIEW;
+  }
+
+  function emptyExtractResult(kind, name, inspectMethod) {
+    return {
+      kind,
+      name,
+      verdict: VERDICT.NEEDS_REVIEW,
+      flags: ["attachment_empty_extract"],
+      reasons: ["添付から文字を抽出できませんでした（要確認）"],
+      unscanned: false,
+      inspectMethod,
+      extractedLength: 0,
+    };
+  }
+
   async function extractImageOcr(ref) {
     const url = pickStr(ref?.dataUrl, ref?.url);
     if (!url) return { ok: false, text: "", unscanned: true, reason: "no_url" };
@@ -177,10 +204,10 @@
         reason: result?.error || "ocr_failed",
       };
     }
-    // 空文字も審査完了（テキスト無し画像は allow）
+    // 空・非string・欠落は ok:true + text:"" → 呼出側で needs_review
     return {
       ok: true,
-      text: String(result.text || "").trim(),
+      text: normalizeExtractedText(result.text),
       provider: result.provider || ocrProviderName(),
     };
   }
@@ -235,17 +262,32 @@
     }
 
     if (kind === KIND.TEXT) {
-      extractedText = pickStr(ref?.textContent) || (await readTextFromRef(ref));
+      extractedText = normalizeExtractedText(
+        pickStr(ref?.textContent) || (await readTextFromRef(ref))
+      );
       inspectMethod = "text_extract";
     } else if (kind === KIND.PDF) {
       const pdf = await extractPdfText(ref);
-      if (pdf.ok && pdf.text) {
-        extractedText = pdf.text;
-        inspectMethod = "pdf_text";
+      if (pdf.ok) {
+        extractedText = normalizeExtractedText(pdf.text);
+        if (extractedText) {
+          inspectMethod = "pdf_text";
+        } else if (isOcrEnabled()) {
+          const ocr = await extractImageOcr(ref);
+          if (ocr.ok) {
+            extractedText = normalizeExtractedText(ocr.text);
+            inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
+          } else {
+            unscanned = true;
+            inspectMethod = "pdf_unscanned";
+          }
+        } else {
+          inspectMethod = "pdf_text";
+        }
       } else if (isOcrEnabled()) {
         const ocr = await extractImageOcr(ref);
         if (ocr.ok) {
-          extractedText = ocr.text || "";
+          extractedText = normalizeExtractedText(ocr.text);
           inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
         } else {
           unscanned = true;
@@ -258,7 +300,7 @@
     } else if (kind === KIND.IMAGE) {
       const ocr = await extractImageOcr(ref);
       if (ocr.ok) {
-        extractedText = ocr.text || "";
+        extractedText = normalizeExtractedText(ocr.text);
         inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
       } else {
         unscanned = true;
@@ -279,25 +321,16 @@
       };
     }
 
-    // OCR/抽出成功かつテキスト無し → 連絡先なしとして allow
+    // 抽出成功扱いでも usable 文字が無い → needs_review（fail-closed）
     if (!extractedText) {
-      return {
-        kind,
-        name,
-        verdict: VERDICT.ALLOW,
-        flags: [],
-        reasons: [],
-        unscanned: false,
-        inspectMethod,
-        extractedLength: 0,
-      };
+      return emptyExtractResult(kind, name, inspectMethod);
     }
 
     const textScan = gate().scanText
       ? gate().scanText(extractedText, { surface: "attachment" })
       : { verdict: VERDICT.ALLOW, flags: [], reasons: [] };
 
-    const verdict = resolveAttachmentTextVerdict(textScan);
+    const verdict = normalizeVerdict(resolveAttachmentTextVerdict(textScan));
 
     return {
       kind,
@@ -320,7 +353,8 @@
 
   /** 明確な連絡先・外部決済は block、それ以外は needs_review 優先 */
   function resolveAttachmentTextVerdict(textScan) {
-    if (!textScan || textScan.verdict === VERDICT.ALLOW) return VERDICT.ALLOW;
+    if (!textScan) return VERDICT.NEEDS_REVIEW;
+    if (textScan.verdict === VERDICT.ALLOW) return VERDICT.ALLOW;
     const blockIds = new Set([
       "phone",
       "email",
@@ -346,12 +380,16 @@
     const flags = textScan.flags || [];
     if (flags.some((f) => blockIds.has(f))) return VERDICT.BLOCK;
     if (textScan.verdict === VERDICT.BLOCK) return VERDICT.NEEDS_REVIEW;
-    return textScan.verdict === VERDICT.NEEDS_REVIEW ? VERDICT.NEEDS_REVIEW : VERDICT.ALLOW;
+    if (textScan.verdict === VERDICT.NEEDS_REVIEW) return VERDICT.NEEDS_REVIEW;
+    return VERDICT.NEEDS_REVIEW;
   }
 
+  /** block > needs_review > allow。未知は needs_review */
   function mergeVerdict(a, b) {
     const order = { block: 3, needs_review: 2, allow: 1 };
-    return (order[a] || 0) >= (order[b] || 0) ? a : b;
+    const na = normalizeVerdict(a);
+    const nb = normalizeVerdict(b);
+    return order[na] >= order[nb] ? na : nb;
   }
 
   async function scanAttachments(refs) {
@@ -369,7 +407,20 @@
 
     const items = [];
     for (let i = 0; i < list.length; i += 1) {
-      items.push(await scanAttachmentRef(list[i]));
+      try {
+        items.push(await scanAttachmentRef(list[i]));
+      } catch {
+        items.push({
+          kind: KIND.UNKNOWN,
+          name: pickStr(list[i]?.name, "attachment"),
+          verdict: VERDICT.NEEDS_REVIEW,
+          flags: ["attachment_scan_error"],
+          reasons: ["添付審査中にエラーが発生しました"],
+          unscanned: true,
+          inspectMethod: "exception",
+          extractedLength: 0,
+        });
+      }
     }
 
     let verdict = VERDICT.ALLOW;
@@ -378,17 +429,17 @@
     let unscanned = false;
 
     items.forEach((item) => {
-      verdict = mergeVerdict(verdict, item.verdict);
-      flags.push(...(item.flags || []));
-      reasons.push(...(item.reasons || []));
-      if (item.unscanned) unscanned = true;
+      verdict = mergeVerdict(verdict, item?.verdict);
+      flags.push(...(item?.flags || []));
+      reasons.push(...(item?.reasons || []));
+      if (item?.unscanned) unscanned = true;
     });
 
     flags.push("has_attachments");
     if (unscanned) flags.push("attachment_unscanned");
 
     return {
-      verdict,
+      verdict: normalizeVerdict(verdict),
       flags: [...new Set(flags)],
       reasons: [...new Set(reasons)],
       items,
@@ -474,6 +525,9 @@
     collectListingAttachmentRefs,
     collectChatAttachmentRefs,
     resolveAttachmentTextVerdict,
+    normalizeVerdict,
+    normalizeExtractedText,
+    mergeVerdict,
     isOcrEnabled,
   };
 })(typeof window !== "undefined" ? window : globalThis);

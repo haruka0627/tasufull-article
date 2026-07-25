@@ -16,7 +16,13 @@ import {
   scanExtractedAttachmentTextCore,
   simulateUnscannedImageCore,
   simulateArchiveAttachmentCore,
+  simulateEmptyExtractCore,
+  normalizeVerdictCore,
+  normalizeExtractedTextCore,
+  mergeVerdictCore,
+  aggregateAttachmentVerdictsCore,
   KIND,
+  VERDICT,
 } from "./lib/platform-content-gate-attachments-core.mjs";
 
 function assert(cond, msg) {
@@ -145,6 +151,88 @@ function runTests() {
   const paypayScan = { verdict: "block", flags: ["paypay"], reasons: ["PayPay"] };
   const paypayVerdict = resolveAttachmentTextVerdictCore(paypayScan);
   assert(paypayVerdict === "needs_review", "ambiguous payment -> needs_review not block");
+
+  // --- P0 fail-closed: empty extract / unknown / aggregate ---
+  assert(normalizeExtractedTextCore("") === "", "normalize empty string");
+  assert(normalizeExtractedTextCore("   ") === "", "normalize whitespace-only");
+  assert(normalizeExtractedTextCore(null) === "", "normalize null -> empty");
+  assert(normalizeExtractedTextCore(undefined) === "", "normalize undefined -> empty");
+  assert(normalizeExtractedTextCore(123) === "", "normalize non-string -> empty");
+  assert(normalizeExtractedTextCore("  hi  ") === "hi", "normalize trims usable text");
+
+  assert(normalizeVerdictCore("allow") === VERDICT.ALLOW, "normalize allow");
+  assert(normalizeVerdictCore("needs_review") === VERDICT.NEEDS_REVIEW, "normalize needs_review");
+  assert(normalizeVerdictCore("block") === VERDICT.BLOCK, "normalize block");
+  assert(normalizeVerdictCore("typo") === VERDICT.NEEDS_REVIEW, "unknown string -> needs_review");
+  assert(normalizeVerdictCore(null) === VERDICT.NEEDS_REVIEW, "null verdict -> needs_review");
+  assert(normalizeVerdictCore(undefined) === VERDICT.NEEDS_REVIEW, "undefined verdict -> needs_review");
+  assert(normalizeVerdictCore("") === VERDICT.NEEDS_REVIEW, "empty verdict -> needs_review");
+  assert(normalizeVerdictCore(true) === VERDICT.NEEDS_REVIEW, "boolean verdict -> needs_review");
+  assert(normalizeVerdictCore(1) === VERDICT.NEEDS_REVIEW, "number verdict -> needs_review");
+  assert(normalizeVerdictCore({}) === VERDICT.NEEDS_REVIEW, "object verdict -> needs_review");
+
+  const safeNonEmpty = scanExtractedAttachmentTextCore("渋谷で買い物代行します");
+  assert(safeNonEmpty.verdict === VERDICT.ALLOW, "safe non-empty extract -> allow");
+
+  const emptyStr = scanExtractedAttachmentTextCore("");
+  assert(emptyStr.verdict === VERDICT.NEEDS_REVIEW, "empty string extract -> needs_review");
+  assert(emptyStr.flags.includes("attachment_empty_extract"), "empty extract flag");
+
+  const blankOnly = scanExtractedAttachmentTextCore("   \n\t  ");
+  assert(blankOnly.verdict === VERDICT.NEEDS_REVIEW, "whitespace-only extract -> needs_review");
+
+  const nullExtract = scanExtractedAttachmentTextCore(null);
+  assert(nullExtract.verdict === VERDICT.NEEDS_REVIEW, "null extract -> needs_review");
+
+  const missingField = scanExtractedAttachmentTextCore(undefined);
+  assert(missingField.verdict === VERDICT.NEEDS_REVIEW, "missing text field -> needs_review");
+
+  const emptyPdfSim = scanExtractedAttachmentTextCore("");
+  assert(emptyPdfSim.verdict === VERDICT.NEEDS_REVIEW, "empty PDF/text sim -> needs_review");
+
+  const emptyOcrSim = simulateEmptyExtractCore(KIND.IMAGE);
+  assert(emptyOcrSim.verdict === VERDICT.NEEDS_REVIEW, "empty OCR sim -> needs_review");
+
+  assert(
+    aggregateAttachmentVerdictsCore([]) === VERDICT.ALLOW,
+    "empty attachment list -> allow"
+  );
+  assert(
+    aggregateAttachmentVerdictsCore([VERDICT.ALLOW, VERDICT.ALLOW]) === VERDICT.ALLOW,
+    "allow + allow -> allow"
+  );
+  assert(
+    aggregateAttachmentVerdictsCore([VERDICT.ALLOW, VERDICT.NEEDS_REVIEW]) === VERDICT.NEEDS_REVIEW,
+    "allow + needs_review -> needs_review"
+  );
+  assert(
+    aggregateAttachmentVerdictsCore([VERDICT.ALLOW, VERDICT.BLOCK]) === VERDICT.BLOCK,
+    "allow + block -> block"
+  );
+  assert(
+    aggregateAttachmentVerdictsCore([VERDICT.NEEDS_REVIEW, VERDICT.NEEDS_REVIEW]) ===
+      VERDICT.NEEDS_REVIEW,
+    "needs_review + needs_review -> needs_review"
+  );
+  assert(
+    aggregateAttachmentVerdictsCore([VERDICT.NEEDS_REVIEW, VERDICT.BLOCK]) === VERDICT.BLOCK,
+    "needs_review + block -> block"
+  );
+  assert(
+    aggregateAttachmentVerdictsCore(["typo", VERDICT.ALLOW]) === VERDICT.NEEDS_REVIEW,
+    "unknown + allow -> needs_review"
+  );
+  assert(
+    aggregateAttachmentVerdictsCore([null, VERDICT.ALLOW]) === VERDICT.NEEDS_REVIEW,
+    "null + allow -> needs_review"
+  );
+  assert(
+    mergeVerdictCore("exception_marker", VERDICT.ALLOW) === VERDICT.NEEDS_REVIEW,
+    "exception-like unknown + allow -> needs_review"
+  );
+
+  const unknownTextScan = resolveAttachmentTextVerdictCore({ verdict: "weird", flags: [] });
+  assert(unknownTextScan === VERDICT.NEEDS_REVIEW, "unknown textScan verdict -> needs_review");
 
   console.log("ALL PASS (NB-1M content gate + attachments)");
 }

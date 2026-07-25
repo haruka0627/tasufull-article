@@ -166,7 +166,7 @@ function loadStack(ocrImpl) {
   assert("clean ocr events include ocr", gate.events.includes("ocr"));
 }
 
-// --- image OCR empty text → allow ---
+// --- image OCR empty text → needs_review (AI blocks) ---
 {
   const s = loadStack(async () => ({ ok: true, text: "", provider: "gemini" }));
   const gate = await s.TasuAttachmentAiGate.gateAttachmentsForAi({
@@ -174,7 +174,46 @@ function loadStack(ocrImpl) {
     attachments: [{ name: "a.png", kind: "image", mimeType: "image/png", base64: "CC" }],
     surface: "test",
   });
-  assert("empty ocr allowed", gate.allowed === true, gate.message);
+  assert("empty ocr not allowed", gate.allowed === false, gate.message);
+  assert("empty ocr blocks ai path", gate.level === "blocked" || gate.events.includes("block"));
+  assert(
+    "empty ocr reasons mention review/unscanned/empty",
+    (gate.reasons || []).some((r) => /未審査|抽出|確認|empty|unscanned/i.test(String(r))) ||
+      (gate.events || []).includes("block"),
+  );
+}
+
+// --- image OCR whitespace-only → needs_review (AI blocks) ---
+{
+  const s = loadStack(async () => ({ ok: true, text: "   \n\t  ", provider: "gemini" }));
+  const gate = await s.TasuAttachmentAiGate.gateAttachmentsForAi({
+    text: "写真のみ",
+    attachments: [{ name: "b.png", kind: "image", mimeType: "image/png", base64: "WW" }],
+    surface: "test",
+  });
+  assert("whitespace ocr not allowed", gate.allowed === false, gate.message);
+}
+
+// --- image OCR null text → needs_review (AI blocks) ---
+{
+  const s = loadStack(async () => ({ ok: true, text: null, provider: "gemini" }));
+  const gate = await s.TasuAttachmentAiGate.gateAttachmentsForAi({
+    text: "写真のみ",
+    attachments: [{ name: "c.png", kind: "image", mimeType: "image/png", base64: "NN" }],
+    surface: "test",
+  });
+  assert("null ocr text not allowed", gate.allowed === false, gate.message);
+}
+
+// --- image OCR missing text field → needs_review (AI blocks) ---
+{
+  const s = loadStack(async () => ({ ok: true, provider: "gemini" }));
+  const gate = await s.TasuAttachmentAiGate.gateAttachmentsForAi({
+    text: "写真のみ",
+    attachments: [{ name: "d.png", kind: "image", mimeType: "image/png", base64: "MM" }],
+    surface: "test",
+  });
+  assert("missing ocr text field not allowed", gate.allowed === false, gate.message);
 }
 
 // --- OCR failure → block for AI path ---

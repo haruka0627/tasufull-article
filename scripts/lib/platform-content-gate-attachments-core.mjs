@@ -1,5 +1,6 @@
 /**
  * Platform NB-1M 添付監視コア（Node テスト用）
+ * Browser: platform-content-gate-attachments.js と verdict semantics を一致させる
  */
 import { scanTextCore } from "./platform-content-gate-core.mjs";
 
@@ -11,6 +12,12 @@ export const KIND = Object.freeze({
   EXCEL: "excel",
   ARCHIVE: "archive",
   UNKNOWN: "unknown",
+});
+
+export const VERDICT = Object.freeze({
+  ALLOW: "allow",
+  NEEDS_REVIEW: "needs_review",
+  BLOCK: "block",
 });
 
 export function extOf(name) {
@@ -47,9 +54,24 @@ export function classifyAttachmentCore(ref) {
   return KIND.UNKNOWN;
 }
 
+/** usable 抽出文字列のみ（非string・空白のみは空扱い） */
+export function normalizeExtractedTextCore(value) {
+  if (typeof value !== "string") return "";
+  return value.trim();
+}
+
+/** 未知 / null / typo は needs_review（allow に落とさない） */
+export function normalizeVerdictCore(value) {
+  if (value === VERDICT.BLOCK || value === "block") return VERDICT.BLOCK;
+  if (value === VERDICT.NEEDS_REVIEW || value === "needs_review") return VERDICT.NEEDS_REVIEW;
+  if (value === VERDICT.ALLOW || value === "allow") return VERDICT.ALLOW;
+  return VERDICT.NEEDS_REVIEW;
+}
+
 /** 明確な連絡先・外部決済は block、それ以外 block 相当は needs_review */
 export function resolveAttachmentTextVerdictCore(textScan) {
-  if (!textScan || textScan.verdict === "allow") return "allow";
+  if (!textScan) return VERDICT.NEEDS_REVIEW;
+  if (textScan.verdict === VERDICT.ALLOW) return VERDICT.ALLOW;
   const blockIds = new Set([
     "phone",
     "email",
@@ -73,14 +95,24 @@ export function resolveAttachmentTextVerdictCore(textScan) {
     "scam",
   ]);
   const flags = textScan.flags || [];
-  if (flags.some((f) => blockIds.has(f))) return "block";
-  if (textScan.verdict === "block") return "needs_review";
-  return textScan.verdict === "needs_review" ? "needs_review" : "allow";
+  if (flags.some((f) => blockIds.has(f))) return VERDICT.BLOCK;
+  if (textScan.verdict === VERDICT.BLOCK) return VERDICT.NEEDS_REVIEW;
+  if (textScan.verdict === VERDICT.NEEDS_REVIEW) return VERDICT.NEEDS_REVIEW;
+  return VERDICT.NEEDS_REVIEW;
 }
 
+/** block > needs_review > allow。未知は needs_review */
 export function mergeVerdictCore(a, b) {
   const order = { block: 3, needs_review: 2, allow: 1 };
-  return (order[a] || 0) >= (order[b] || 0) ? a : b;
+  const na = normalizeVerdictCore(a);
+  const nb = normalizeVerdictCore(b);
+  return order[na] >= order[nb] ? na : nb;
+}
+
+/** 複数添付の集約。空配列は添付なし → allow */
+export function aggregateAttachmentVerdictsCore(verdicts) {
+  if (!Array.isArray(verdicts) || !verdicts.length) return VERDICT.ALLOW;
+  return verdicts.reduce((acc, v) => mergeVerdictCore(acc, v), VERDICT.ALLOW);
 }
 
 /**
@@ -97,7 +129,7 @@ export function applyListingAttachmentGateCore(baseGate, attachmentScan, request
     ...new Set([...(Array.isArray(row.moderation_flags) ? row.moderation_flags : []), ...(attachmentScan.flags || [])]),
   ];
 
-  if (attachmentScan.verdict === "block") {
+  if (normalizeVerdictCore(attachmentScan.verdict) === VERDICT.BLOCK) {
     return {
       ok: false,
       blocked: true,
@@ -125,33 +157,69 @@ export function applyListingAttachmentGateCore(baseGate, attachmentScan, request
   };
 }
 
-/** 抽出済みテキストから添付1件分の判定（PDF/txt シミュレーション） */
+/**
+ * 抽出済みテキストから添付1件分の判定（PDF/txt/OCR シミュレーション）
+ * 空・非string → needs_review（Browser emptyExtract と一致）
+ */
 export function scanExtractedAttachmentTextCore(extractedText) {
-  const textScan = scanTextCore(extractedText);
-  const verdict = resolveAttachmentTextVerdictCore(textScan);
-  return { textScan, verdict, unscanned: false };
+  const text = normalizeExtractedTextCore(extractedText);
+  if (!text) {
+    return {
+      textScan: {
+        verdict: VERDICT.NEEDS_REVIEW,
+        flags: ["attachment_empty_extract"],
+        reasons: ["添付から文字を抽出できませんでした（要確認）"],
+      },
+      verdict: VERDICT.NEEDS_REVIEW,
+      unscanned: false,
+      flags: ["attachment_empty_extract"],
+      extractedLength: 0,
+    };
+  }
+  const textScan = scanTextCore(text);
+  const verdict = normalizeVerdictCore(resolveAttachmentTextVerdictCore(textScan));
+  return { textScan, verdict, unscanned: false, extractedLength: text.length };
 }
 
 export function simulateUnscannedImageCore() {
   return {
     kind: KIND.IMAGE,
-    verdict: "needs_review",
+    verdict: VERDICT.NEEDS_REVIEW,
     flags: ["attachment_unscanned", "has_attachments"],
     reasons: ["添付ファイル未審査（OCR/抽出不可）"],
     unscanned: true,
     hasAttachments: true,
-    items: [{ kind: KIND.IMAGE, unscanned: true, verdict: "needs_review" }],
+    items: [{ kind: KIND.IMAGE, unscanned: true, verdict: VERDICT.NEEDS_REVIEW }],
   };
 }
 
 export function simulateArchiveAttachmentCore() {
   return {
     kind: KIND.ARCHIVE,
-    verdict: "needs_review",
+    verdict: VERDICT.NEEDS_REVIEW,
     flags: ["attachment_archive", "has_attachments"],
     reasons: ["圧縮ファイル（中身未検査）"],
     unscanned: true,
     hasAttachments: true,
-    items: [{ kind: KIND.ARCHIVE, unscanned: true, verdict: "needs_review" }],
+    items: [{ kind: KIND.ARCHIVE, unscanned: true, verdict: VERDICT.NEEDS_REVIEW }],
+  };
+}
+
+export function simulateEmptyExtractCore(kind = KIND.IMAGE) {
+  return {
+    kind,
+    verdict: VERDICT.NEEDS_REVIEW,
+    flags: ["attachment_empty_extract", "has_attachments"],
+    reasons: ["添付から文字を抽出できませんでした（要確認）"],
+    unscanned: false,
+    hasAttachments: true,
+    items: [
+      {
+        kind,
+        verdict: VERDICT.NEEDS_REVIEW,
+        flags: ["attachment_empty_extract"],
+        unscanned: false,
+      },
+    ],
   };
 }
