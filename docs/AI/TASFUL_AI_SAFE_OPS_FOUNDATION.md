@@ -42,7 +42,7 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 | **SAFE-03** | Cloudflare Rate Limiting | Edge / CF |
 | **SAFE-04** | Bot 対策 | CF + アプリ |
 | **SAFE-05** | AI Usage Guard（実行前チェック統合） | Edge / RPC |
-| **SAFE-06** | AI 利用ログ | Supabase / Edge |
+| **SAFE-06** | AI 利用ログ | Supabase / Edge · **コード完了**（`ai_usage_events` · gemini-chat / OCR）· Staging 適用は別ゲート · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) |
 | **SAFE-07** | AI コスト集計 | Supabase + バッチ |
 | **SAFE-08** | Queue 化（非同期 · バースト吸収） | CF Queue / Worker |
 | **SAFE-09** | 同時実行数制限 | Edge / KV |
@@ -136,9 +136,20 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 ## 着手条件（2026-08）
 
 1. TASFUL AI Production Ready 検証の残タスク整理（[tasful-ai-production-ready-verification.md](../../reports/tasful-ai-production-ready-verification.md)）
-2. Staging で Usage Guard + ログの縦スライス 1 本（例: OCR または Chat 1 feature）
+2. Staging で Usage Guard + ログの縦スライス 1 本（例: OCR または Chat 1 feature）— **SAFE-05 完了 · SAFE-06 コード完了 · Staging DB 適用はゲート待ち**
 3. CF WAF / Turnstile の Staging Preview 設定手順（runbook）
-4. 秘書毎朝レポートのデータソース確定（SAFE-06/07）
+4. 秘書毎朝レポートのデータソース確定（SAFE-06/07）— SAFE-06 テーブルがイベント正本 · コスト集計は SAFE-07
+
+### SAFE-06 記録契約（要約）
+
+| 保存する | 保存しない |
+| --- | --- |
+| request_id · user_id（JWT 検証時のみ）· anonymous_id · feature · provider · model · status · units · error_code · 許可 metadata | プロンプト · 回答 · OCR 原文 · 添付 · 個人情報本文 |
+
+**書き込み:** `ingest_ai_usage_event` · service_role のみ · 公開 ingest endpoint なし  
+**接続済:** gemini-chat · gemini-ocr  
+**未接続:** 他 Chat / Voice / Media / 秘書 等  
+**Cost Ledger 境界:** `estimated_cost` は当面 null · 単価・日次集計は SAFE-07
 
 ---
 
@@ -147,9 +158,8 @@ TASFUL AI の正式展開前に、**AI API コスト管理 · 不正利用防止
 ```bash
 # 回帰（既存）
 node scripts/test-tasful-ai-final-phase.mjs
-
-# 新規（未作成 · SAFE 実装時に追加）
-# node scripts/test-tasful-ai-safe-ops-guard.mjs
+node scripts/test-tasful-ai-safe-ops-guard-phase1.mjs
+node scripts/test-tasful-ai-safe-ops-usage-log-phase2.mjs
 ```
 
 **完了報告:** HTTP 200 @ `http://127.0.0.1:8788` · Console Error 0 · ガード拒否時は 4xx + ユーザー向け文言（toast 方針 AD-012）

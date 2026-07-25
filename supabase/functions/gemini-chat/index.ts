@@ -7,7 +7,16 @@ import {
 import {
   enforceGuardChatEntry,
   finalizeGuardChatConsume,
+  normalizeGuardFeature,
 } from "../_shared/ai-usage-guard.ts";
+import {
+  USAGE_STATUS_DENIED,
+  USAGE_STATUS_ERROR,
+  USAGE_STATUS_SUCCESS,
+  createUsageLogOnce,
+  newUsageRequestId,
+  resolveUsageActor,
+} from "../_shared/ai-usage-log.ts";
 
 const GEMINI_MODEL = "gemini-2.5-flash";
 const GEMINI_API_BASE =
@@ -514,8 +523,42 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "message is required", reply: "" }, 400, req);
   }
 
+  const requestId = newUsageRequestId();
+  const usageOnce = createUsageLogOnce();
+  const actor = await resolveUsageActor({
+    req,
+    bodyUserId: body.user_id ?? body.userId,
+  });
+  const usageFeature = normalizeGuardFeature(undefined, body);
+
   const quotaEntry = await enforceGuardChatEntry(req, body);
-  if (quotaEntry.blocked) return quotaEntry.blocked;
+  if (quotaEntry.blocked) {
+    let denyCode = "quota_denied";
+    try {
+      const cloned = quotaEntry.blocked.clone();
+      const payload = await cloned.json();
+      denyCode = String(payload?.error || denyCode).slice(0, 128);
+    } catch {
+      /* ignore parse */
+    }
+    await usageOnce.record({
+      requestId,
+      userId: actor.userId,
+      anonymousId: actor.anonymousId,
+      feature: usageFeature,
+      provider: "gemini",
+      model: GEMINI_MODEL,
+      status: USAGE_STATUS_DENIED,
+      estimatedCost: null,
+      errorCode: denyCode,
+      metadata: {
+        source: "gemini-chat",
+        surface: String(body.surface || "").trim().slice(0, 64) || undefined,
+        http_status: quotaEntry.blocked.status,
+      },
+    });
+    return quotaEntry.blocked;
+  }
 
   const intent = resolveIntent(body.intent, message, body.mode);
 
@@ -544,11 +587,39 @@ Deno.serve(async (req) => {
   const geminiUrl =
     `${GEMINI_API_BASE}/${GEMINI_MODEL}:generateContent?key=${encodeURIComponent(apiKey)}`;
 
+  const inputUnits = message.length > 0 ? message.length : null;
+
   try {
     const outcome = await callGeminiWithRetry(geminiUrl, geminiPayload);
 
     if (outcome.ok) {
       await finalizeGuardChatConsume(body);
+      const outputUnits =
+        typeof outcome.reply === "string" && outcome.reply.length > 0
+          ? outcome.reply.length
+          : null;
+      await usageOnce.record({
+        requestId,
+        userId: actor.userId,
+        anonymousId: actor.anonymousId,
+        feature: usageFeature,
+        provider: "gemini",
+        model: GEMINI_MODEL,
+        status: USAGE_STATUS_SUCCESS,
+        inputUnits,
+        outputUnits,
+        totalUnits:
+          inputUnits != null || outputUnits != null
+            ? (inputUnits || 0) + (outputUnits || 0)
+            : null,
+        estimatedCost: null,
+        metadata: {
+          source: "gemini-chat",
+          surface: String(body.surface || "").trim().slice(0, 64) || undefined,
+          intent,
+          http_status: 200,
+        },
+      });
       return jsonResponse(
         {
           reply: outcome.reply,
@@ -562,6 +633,24 @@ Deno.serve(async (req) => {
     }
 
     const httpStatus = outcome.status >= 400 && outcome.status < 500 ? outcome.status : 502;
+    await usageOnce.record({
+      requestId,
+      userId: actor.userId,
+      anonymousId: actor.anonymousId,
+      feature: usageFeature,
+      provider: "gemini",
+      model: GEMINI_MODEL,
+      status: USAGE_STATUS_ERROR,
+      inputUnits,
+      estimatedCost: null,
+      errorCode: String(outcome.error || "provider_error").slice(0, 128),
+      metadata: {
+        source: "gemini-chat",
+        surface: String(body.surface || "").trim().slice(0, 64) || undefined,
+        intent,
+        http_status: httpStatus,
+      },
+    });
     return jsonResponse(
       {
         reply: "",
@@ -575,6 +664,23 @@ Deno.serve(async (req) => {
     );
   } catch (err) {
     console.error("[gemini-chat] request failed:", err);
+    await usageOnce.record({
+      requestId,
+      userId: actor.userId,
+      anonymousId: actor.anonymousId,
+      feature: usageFeature,
+      provider: "gemini",
+      model: GEMINI_MODEL,
+      status: USAGE_STATUS_ERROR,
+      inputUnits,
+      estimatedCost: null,
+      errorCode: "provider_exception",
+      metadata: {
+        source: "gemini-chat",
+        surface: String(body.surface || "").trim().slice(0, 64) || undefined,
+        http_status: 502,
+      },
+    });
     return jsonResponse(
       {
         reply: "",

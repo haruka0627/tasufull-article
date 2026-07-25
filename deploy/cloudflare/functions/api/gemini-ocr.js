@@ -17,6 +17,13 @@ import {
   normalizeOcrSurface,
   releaseCfOcrReservation,
 } from "../_shared/ai-usage-guard.mjs";
+import {
+  USAGE_STATUS_DENIED,
+  USAGE_STATUS_ERROR,
+  USAGE_STATUS_SUCCESS,
+  createUsageLogOnce,
+  newUsageRequestId,
+} from "../_shared/ai-usage-log.mjs";
 import { enforceOcrIpRateLimit } from "../_shared/ocr-ip-rate-limit.mjs";
 import { validateOcrPayload } from "../_shared/ocr-payload-validation.mjs";
 
@@ -264,14 +271,65 @@ export async function onRequest(context) {
     feature: getOcrQuotaFeature(),
   });
 
+  const requestId = newUsageRequestId();
+  const usageOnce = createUsageLogOnce();
+
   const guard = await enforceCfOcrGuard(request, guardBody, env);
-  if (guard.blocked) return withCors(guard.blocked, origin);
+  if (guard.blocked) {
+    let denyCode = "quota_denied";
+    try {
+      const cloned = guard.blocked.clone();
+      const payload = await cloned.json();
+      denyCode = String(payload?.error || denyCode).slice(0, 128);
+    } catch {
+      /* ignore */
+    }
+    await usageOnce.record(
+      {
+        requestId,
+        userId: authenticatedUserId,
+        feature: "ocr_turn",
+        provider: "gemini",
+        model: GEMINI_OCR_MODEL,
+        status: USAGE_STATUS_DENIED,
+        estimatedCost: null,
+        errorCode: denyCode,
+        metadata: {
+          source: "gemini-ocr",
+          surface,
+          quota_feature: getOcrQuotaFeature(),
+          http_status: guard.blocked.status,
+        },
+      },
+      env
+    );
+    return withCors(guard.blocked, origin);
+  }
 
   const outcome = await requestGeminiOcr(apiKey, payload);
 
   if (!outcome.ok) {
     // 予約は必ずここ一箇所で解放する（catch/finally の二重解放を作らない）
     await releaseCfOcrReservation(guard.reservation);
+    await usageOnce.record(
+      {
+        requestId,
+        userId: authenticatedUserId,
+        feature: "ocr_turn",
+        provider: "gemini",
+        model: GEMINI_OCR_MODEL,
+        status: USAGE_STATUS_ERROR,
+        estimatedCost: null,
+        errorCode: String(outcome.error || "provider_error").slice(0, 128),
+        metadata: {
+          source: "gemini-ocr",
+          surface,
+          quota_feature: getOcrQuotaFeature(),
+          http_status: outcome.status,
+        },
+      },
+      env
+    );
     return jsonResponse(
       { ok: false, error: outcome.error, provider: "gemini" },
       outcome.status,
@@ -282,6 +340,31 @@ export async function onRequest(context) {
   if (guard.shouldConsume) {
     await finalizeCfOcrConsume(guard.meta, guard.reservation);
   }
+
+  const outputUnits =
+    typeof outcome.text === "string" && outcome.text.length > 0
+      ? outcome.text.length
+      : null;
+  await usageOnce.record(
+    {
+      requestId,
+      userId: authenticatedUserId,
+      feature: "ocr_turn",
+      provider: "gemini",
+      model: GEMINI_OCR_MODEL,
+      status: USAGE_STATUS_SUCCESS,
+      outputUnits,
+      totalUnits: outputUnits,
+      estimatedCost: null,
+      metadata: {
+        source: "gemini-ocr",
+        surface,
+        quota_feature: getOcrQuotaFeature(),
+        http_status: 200,
+      },
+    },
+    env
+  );
 
   return jsonResponse({
     ok: true,
