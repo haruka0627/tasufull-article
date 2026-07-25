@@ -486,8 +486,10 @@ async function main() {
     record(
       "11b-consult-attach",
       "chat-detail",
-      "attachment gate · unscanned (OCR none)",
-      chatAttach.scanUnscanned === true && chatAttach.scanVerdict === "needs_review",
+      "attachment gate · unscanned blocks send",
+      chatAttach.scanUnscanned === true &&
+        chatAttach.scanVerdict === "needs_review" &&
+        chatAttach.saveOk === false,
       JSON.stringify(chatAttach)
     );
 

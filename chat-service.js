@@ -778,77 +778,204 @@
     return { allowed: true, level: "ok", reasons: [], message: "" };
   }
 
+  const ATTACH_REVIEW_FAIL_MESSAGE =
+    "添付ファイルの安全確認が完了しませんでした。添付を削除するか、時間をおいて再試行してください。";
+
+  /** @type {Map<string, Promise>} */
+  const saveMessageInFlight = new Map();
+
+  function normalizeChatAttachmentVerdict(value) {
+    if (value === "block") return "block";
+    if (value === "needs_review") return "needs_review";
+    if (value === "allow") return "allow";
+    return "needs_review";
+  }
+
+  function messageHasChatAttachments(messageInput) {
+    if (messageInput?.attachment?.dataUrl || messageInput?.attachment?.url) return true;
+    if (Array.isArray(messageInput?.attachments)) {
+      if (messageInput.attachments.some((a) => a && (a.dataUrl || a.url))) return true;
+    }
+    if (Array.isArray(messageInput?.imageUrls) && messageInput.imageUrls.some(Boolean)) {
+      return true;
+    }
+    return false;
+  }
+
+  function attachmentItemsConflictWithAllow(items) {
+    if (!Array.isArray(items) || !items.length) return true;
+    return items.some((item) => {
+      if (!item || typeof item !== "object") return true;
+      if (item.unscanned === true) return true;
+      return normalizeChatAttachmentVerdict(item.verdict) !== "allow";
+    });
+  }
+
+  function blockedAttachmentModeration(opts) {
+    const verdict = normalizeChatAttachmentVerdict(opts?.verdict);
+    const isBlock = verdict === "block";
+    return {
+      allowed: false,
+      level: "blocked",
+      verdict: isBlock ? "block" : "needs_review",
+      reasons: Array.isArray(opts?.reasons) ? opts.reasons : [],
+      message:
+        opts?.message ||
+        (isBlock
+          ? "添付ファイルに連絡先・外部誘導・危険な内容が含まれている可能性があるため、送信できません。"
+          : ATTACH_REVIEW_FAIL_MESSAGE),
+      _attachmentScan: opts?.attachmentScan || null,
+      _moderationEvents: opts?._moderationEvents || ["block"],
+    };
+  }
+
   /**
-   * 画像 OCR → moderateMessage（OCR失敗時は warn のみでテキスト審査継続）
+   * 添付あり → scanAttachments fail-closed。添付なし → テキスト審査のみ。
    * @param {string} roomId
    * @param {object} messageInput
    */
   async function runModeration(roomId, messageInput) {
     const root = typeof window !== "undefined" ? window : globalThis;
+    const hasAttach = messageHasChatAttachments(messageInput);
     const Attach = root.TasuPlatformContentGateAttachments;
-    if (Attach?.scanAttachments && Attach.collectChatAttachmentRefs) {
-      const refs = Attach.collectChatAttachmentRefs(messageInput);
-      if (refs.length) {
-        const attachmentScan = await Attach.scanAttachments(refs);
-        if (attachmentScan.verdict === "block") {
-          return {
-            allowed: false,
-            level: "blocked",
-            reasons: attachmentScan.reasons || [],
-            message:
-              "添付ファイルに連絡先・外部誘導・危険な内容が含まれている可能性があるため、送信できません。",
-            _attachmentScan: attachmentScan,
-          };
+
+    if (hasAttach) {
+      if (
+        !Attach ||
+        typeof Attach.scanAttachments !== "function" ||
+        typeof Attach.collectChatAttachmentRefs !== "function"
+      ) {
+        return blockedAttachmentModeration({
+          verdict: "needs_review",
+          reasons: ["添付審査モジュール未読込"],
+        });
+      }
+
+      let refs;
+      try {
+        refs = Attach.collectChatAttachmentRefs(messageInput);
+        if (!Array.isArray(refs) || !refs.length) {
+          refs = collectImageUrls(messageInput).map((url, i) => ({
+            name: `image-${i}`,
+            mime: "image/jpeg",
+            dataUrl: String(url).startsWith("data:") ? String(url) : "",
+            url: String(url),
+          }));
         }
-
-        const imageUrls = collectImageUrls(messageInput);
-        let ocrText = "";
-        attachmentScan.items?.forEach((item) => {
-          if (item.extractedLength > 0 && item.extractedText) {
-            ocrText = [ocrText, item.extractedText].filter(Boolean).join("\n");
-          }
+      } catch {
+        return blockedAttachmentModeration({
+          verdict: "needs_review",
+          reasons: ["添付参照の収集に失敗しました"],
         });
+      }
 
-        const result = moderateMessage({
-          text: messageInput.text,
-          imageUrls,
-          ocrText,
-          userId: messageInput.senderId,
-          roomId,
+      if (!Array.isArray(refs) || !refs.length) {
+        return blockedAttachmentModeration({
+          verdict: "needs_review",
+          reasons: ["添付を審査できませんでした"],
         });
+      }
 
-        // 生 OCR は審査後に破棄（ログ・DB へ残さない）
-        const ocrRan = Boolean(ocrText);
-        ocrText = "";
-        attachmentScan.items?.forEach((item) => {
-          if (item && Object.prototype.hasOwnProperty.call(item, "extractedText")) {
-            delete item.extractedText;
-          }
+      let attachmentScan;
+      try {
+        attachmentScan = await Attach.scanAttachments(refs);
+      } catch {
+        return blockedAttachmentModeration({
+          verdict: "needs_review",
+          reasons: ["添付審査中にエラーが発生しました"],
         });
+      }
 
-        result._moderationEvents = buildModerationLogEvents(result, attachmentScan, ocrRan);
+      if (
+        attachmentScan == null ||
+        typeof attachmentScan !== "object" ||
+        Array.isArray(attachmentScan)
+      ) {
+        return blockedAttachmentModeration({
+          verdict: "needs_review",
+          reasons: ["添付審査結果が不正です"],
+        });
+      }
 
-        if (attachmentScan.unscanned || attachmentScan.verdict === "needs_review") {
-          result.level = "warning";
-          result.reasons = [
-            ...new Set([...(result.reasons || []), ...(attachmentScan.reasons || []), "添付未審査"]),
-          ];
-          result._attachmentScan = {
-            verdict: attachmentScan.verdict,
-            flags: attachmentScan.flags,
-            reasons: attachmentScan.reasons,
-            unscanned: attachmentScan.unscanned,
-          };
-          root.TasuPlatformContentGate?.emitGateEvent?.("moderation.needs_review", {
+      const verdict = normalizeChatAttachmentVerdict(attachmentScan.verdict);
+      const unscanned = attachmentScan.unscanned === true;
+      const itemsConflict = attachmentItemsConflictWithAllow(attachmentScan.items);
+      const itemHasBlock =
+        Array.isArray(attachmentScan.items) &&
+        attachmentScan.items.some(
+          (item) => normalizeChatAttachmentVerdict(item?.verdict) === "block"
+        );
+
+      if (verdict !== "allow" || unscanned || itemsConflict || itemHasBlock) {
+        const finalVerdict =
+          verdict === "block" || itemHasBlock ? "block" : "needs_review";
+        const reasons = [
+          ...new Set([
+            ...(Array.isArray(attachmentScan.reasons) ? attachmentScan.reasons : []),
+            ...(finalVerdict === "needs_review" ? ["添付未審査"] : []),
+          ]),
+        ];
+        const scanMeta = {
+          verdict: finalVerdict,
+          flags: attachmentScan.flags,
+          reasons: attachmentScan.reasons,
+          unscanned,
+        };
+        root.TasuPlatformContentGate?.emitGateEvent?.(
+          finalVerdict === "block" ? "moderation.blocked" : "moderation.needs_review",
+          {
             surface: "chat_attachment",
             roomId,
-            unscanned: attachmentScan.unscanned,
+            unscanned,
             flags: attachmentScan.flags,
-          });
-        }
-
-        return result;
+          }
+        );
+        const blocked = blockedAttachmentModeration({
+          verdict: finalVerdict,
+          reasons,
+          attachmentScan: scanMeta,
+        });
+        blocked._moderationEvents = buildModerationLogEvents(
+          blocked,
+          attachmentScan,
+          false
+        );
+        return blocked;
       }
+
+      const imageUrls = collectImageUrls(messageInput);
+      let ocrText = "";
+      attachmentScan.items.forEach((item) => {
+        if (item.extractedLength > 0 && item.extractedText) {
+          ocrText = [ocrText, item.extractedText].filter(Boolean).join("\n");
+        }
+      });
+
+      const result = moderateMessage({
+        text: messageInput.text,
+        imageUrls,
+        ocrText,
+        userId: messageInput.senderId,
+        roomId,
+      });
+
+      const ocrRan = Boolean(ocrText);
+      ocrText = "";
+      attachmentScan.items.forEach((item) => {
+        if (item && Object.prototype.hasOwnProperty.call(item, "extractedText")) {
+          delete item.extractedText;
+        }
+      });
+
+      result.verdict = "allow";
+      result._moderationEvents = buildModerationLogEvents(result, attachmentScan, ocrRan);
+      result._attachmentScan = {
+        verdict: "allow",
+        flags: attachmentScan.flags,
+        reasons: attachmentScan.reasons,
+        unscanned: false,
+      };
+      return result;
     }
 
     const imageUrls = collectImageUrls(messageInput);
@@ -1393,6 +1520,21 @@
       return { ok: false, reason: "チャットが見つかりません" };
     }
 
+    const existing = saveMessageInFlight.get(id);
+    if (existing) {
+      return existing;
+    }
+
+    const flight = saveMessageUnlocked(id, messageInput, roomContext).finally(() => {
+      if (saveMessageInFlight.get(id) === flight) {
+        saveMessageInFlight.delete(id);
+      }
+    });
+    saveMessageInFlight.set(id, flight);
+    return flight;
+  }
+
+  async function saveMessageUnlocked(id, messageInput, roomContext) {
     await ensureInitialized();
 
     const lifecycleBlock = getMessagingBlockReason(roomContext);
@@ -1749,6 +1891,7 @@
     submitReview,
     completeTransaction,
     moderateMessage,
+    runModeration,
     subscribeRoomMessages,
     unsubscribeRoomMessages,
     getReadReceiptMessageId,
