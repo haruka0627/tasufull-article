@@ -28,6 +28,9 @@ scripts/tmp-*/
 reports/_tmp-*
 reports/*-last.json
 
+# Local regeneratable UI audit screenshots
+reports/ui-audit-week-screenshots/**
+
 # Supabase CLI temp
 supabase/.temp/
 
