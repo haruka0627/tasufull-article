@@ -1,0 +1,217 @@
+/* OCR プライバシー説明 / 送信前確認モーダル（ocr-privacy-consent.js が生成） */
+
+.ocr-privacy-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.ocr-privacy-gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.55);
+}
+
+.ocr-privacy-gate__dialog {
+  position: relative;
+  width: min(560px, 100%);
+  max-height: min(86vh, 720px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #fff;
+  color: #1f2937;
+  border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.28);
+  padding: 22px 20px 18px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.ocr-privacy-gate__dialog:focus-visible,
+.ocr-privacy-gate__btn:focus-visible,
+.ocr-privacy-gate__close:focus-visible,
+.ocr-privacy-gate__link:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.ocr-privacy-gate__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #4b5563;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ocr-privacy-gate__close:hover {
+  background: #f3f4f6;
+}
+
+.ocr-privacy-gate__title {
+  margin: 0 44px 10px 0;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.ocr-privacy-gate__lead {
+  margin: 0 0 12px;
+}
+
+.ocr-privacy-gate__list {
+  margin: 0 0 14px;
+  padding-left: 1.2em;
+}
+
+.ocr-privacy-gate__list li {
+  margin-bottom: 4px;
+}
+
+.ocr-privacy-gate__warn {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  border: 1px solid #f59e0b;
+  border-left-width: 5px;
+  border-radius: 10px;
+  background: #fffbeb;
+}
+
+.ocr-privacy-gate__warn-head {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-weight: 700;
+}
+
+.ocr-privacy-gate__warn-icon {
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: #b45309;
+  color: #fff;
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.ocr-privacy-gate__warn-list {
+  margin: 0 0 6px;
+  padding-left: 1.2em;
+}
+
+.ocr-privacy-gate__warn-note {
+  margin: 0;
+}
+
+.ocr-privacy-gate__note {
+  margin: 0 0 12px;
+}
+
+.ocr-privacy-gate__links {
+  margin: 0 0 16px;
+  font-size: 13px;
+}
+
+.ocr-privacy-gate__link {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* 本文が長い / 画面が低い場合でも操作ボタンを画面内に保つ */
+.ocr-privacy-gate__actions {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0 -20px -18px;
+  padding: 10px 20px 18px;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ocr-privacy-gate__btn {
+  min-height: 44px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ocr-privacy-gate__btn--cancel {
+  border: 1px solid #9ca3af;
+  background: #fff;
+  color: #374151;
+}
+
+.ocr-privacy-gate__btn--confirm {
+  border: 1px solid #1d4ed8;
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.ocr-privacy-gate__btn--confirm:hover {
+  background: #1e40af;
+}
+
+body.ocr-privacy-gate-open {
+  overflow: hidden;
+}
+
+.ocr-privacy-status {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 12001;
+  max-width: calc(100% - 32px);
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(17, 24, 39, 0.9);
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.5;
+  pointer-events: none;
+}
+
+.ocr-privacy-status:empty {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .ocr-privacy-gate {
+    padding: 10px;
+    align-items: flex-end;
+  }
+
+  .ocr-privacy-gate__dialog {
+    max-height: 88vh;
+    padding: 18px 14px 14px;
+    border-radius: 14px;
+  }
+
+  .ocr-privacy-gate__actions {
+    flex-direction: column-reverse;
+    margin: 0 -14px -14px;
+    padding: 10px 14px 14px;
+  }
+
+  .ocr-privacy-gate__btn {
+    width: 100%;
+  }
+}

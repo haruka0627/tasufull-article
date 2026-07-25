@@ -398,6 +398,15 @@ function loadClient(opts = {}) {
       provider: "gemini",
       gemini: { endpoint: FIXED_PATH, timeoutMs: 5000, maxBytes: 1024 * 1024 },
     },
+    TasuOcrPrivacyConsent: {
+      ensureConsent: async () => ({
+        granted: true,
+        reason: "already_granted",
+        disclosureVersion: "test",
+      }),
+      notifyRunStart() {},
+      notifyRunEnd() {},
+    },
   };
   if (opts.session !== undefined) {
     const session = opts.session;

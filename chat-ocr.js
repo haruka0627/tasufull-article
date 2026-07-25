@@ -12,6 +12,7 @@
    * @property {string} [error]
    * @property {string} [reason]
    * @property {string} [provider]
+   * @property {boolean} [cancelled] ユーザーが送信前確認をキャンセルした
    */
 
   /** @type {Promise<unknown>|null} */
@@ -283,17 +284,69 @@
   /**
    * @param {string} error
    * @param {string} [reason]
+   * @param {{ cancelled?: boolean }} [extra]
    * @returns {OcrExtractResult}
    */
-  function failGemini(error, reason) {
+  function failGemini(error, reason, extra) {
     const code = String(error || "ocr_failed");
-    return {
+    /** @type {OcrExtractResult} */
+    const result = {
       ok: false,
       text: "",
       error: code,
       reason: String(reason || code),
       provider: "gemini",
     };
+    if (extra?.cancelled) result.cancelled = true;
+    return result;
+  }
+
+  /** privacy gate 未ロード時は fail-closed（外部送信しない） */
+  function resolvePrivacyGate() {
+    try {
+      const gate = window.TasuOcrPrivacyConsent;
+      if (!gate || typeof gate.ensureConsent !== "function") return null;
+      return gate;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * 外部送信前のプライバシー説明と明示操作。granted のときだけ送信してよい。
+   * @param {string[]} sources data URL
+   * @param {{ user_id?: string, userId?: string, surface?: string, objectUrls?: string[] } | undefined} options
+   * @returns {Promise<{ granted: boolean, reason: string }>}
+   */
+  async function ensureGeminiOcrConsent(sources, options) {
+    const gate = resolvePrivacyGate();
+    if (!gate) return { granted: false, reason: "unavailable" };
+    const guard = resolveOcrGuardContext(options);
+    try {
+      const decision = await gate.ensureConsent({
+        surface: guard.surface || "unknown",
+        provider: "gemini",
+        sources,
+        objectUrls: Array.isArray(options?.objectUrls) ? options.objectUrls : [],
+      });
+      return {
+        granted: decision?.granted === true,
+        reason: String(decision?.reason || ""),
+      };
+    } catch {
+      return { granted: false, reason: "unavailable" };
+    }
+  }
+
+  /**
+   * @param {{ granted: boolean, reason: string }} consent
+   * @returns {OcrExtractResult}
+   */
+  function consentFailure(consent) {
+    if (consent.reason === "unavailable" || consent.reason === "no_source") {
+      return failGemini("ocr_consent_unavailable", "ocr_consent_unavailable");
+    }
+    return failGemini("ocr_consent_declined", "user_cancelled", { cancelled: true });
   }
 
   /**
@@ -423,7 +476,16 @@
       return failGemini(auth.error || "auth_required", auth.error || "auth_required");
     }
 
+    const consent = options?._privacyGranted
+      ? { granted: true, reason: "already_granted" }
+      : await ensureGeminiOcrConsent([imageUrl], options);
+    if (!consent.granted) {
+      return consentFailure(consent);
+    }
+
     const guard = resolveOcrGuardContext(options);
+    const gate = resolvePrivacyGate();
+    let succeeded = false;
     const controller = new AbortController();
     let timedOut = false;
     const timer = setTimeout(() => {
@@ -434,6 +496,12 @@
         /* ignore */
       }
     }, cfg.timeoutMs);
+
+    try {
+      gate?.notifyRunStart?.();
+    } catch {
+      /* 状態通知の失敗で送信を止めない */
+    }
 
     try {
       const res = await fetch(endpoint, {
@@ -468,6 +536,7 @@
             : normalized.error;
         return failGemini(normalized.error, reason);
       }
+      succeeded = true;
       return {
         ok: true,
         text: normalized.text,
@@ -480,6 +549,21 @@
       return failGemini(err instanceof Error ? err.message : String(err), "network_error");
     } finally {
       clearTimeout(timer);
+      if (options?._skipPrivacyCleanup) {
+        /* batch 側でまとめて cleanup */
+      } else {
+        // 同意は都度確認（使い切り）· object URL もここで解放
+        try {
+          gate?.notifyRunEnd?.({
+            surface: guard.surface || "unknown",
+            provider: "gemini",
+            sources: [imageUrl],
+            ok: succeeded,
+          });
+        } catch {
+          /* cleanup 失敗で結果を変えない */
+        }
+      }
     }
   }
 
@@ -584,11 +668,34 @@
     const texts = [];
     const geminiCfg = provider === "gemini" ? snapshotGeminiRuntimeConfig() : null;
 
+    // batch は 1 回の説明でまとめて確認（各 URL 個別に grant される）
+    /** @type {{ user_id?: string, userId?: string, surface?: string, objectUrls?: string[], _privacyGranted?: boolean, _skipPrivacyCleanup?: boolean } | undefined} */
+    let runOptions = options;
+    if (provider === "gemini") {
+      const consent = await ensureGeminiOcrConsent(list, options);
+      if (!consent.granted) {
+        const failure = consentFailure(consent);
+        return {
+          ocrText: "",
+          results: list.map(() => ({ ...failure })),
+        };
+      }
+      runOptions = Object.assign({}, options || {}, {
+        _privacyGranted: true,
+        _skipPrivacyCleanup: true,
+      });
+      try {
+        resolvePrivacyGate()?.notifyRunStart?.();
+      } catch {
+        /* 状態通知の失敗で送信を止めない */
+      }
+    }
+
     for (const url of list) {
       let result;
       if (provider === "gemini" && geminiCfg) {
         try {
-          result = await extractViaGeminiVision(url, options, geminiCfg);
+          result = await extractViaGeminiVision(url, runOptions, geminiCfg);
         } catch (err) {
           result = {
             ok: false,
@@ -598,11 +705,27 @@
           };
         }
       } else {
-        result = await extractTextFromImage(url, options);
+        result = await extractTextFromImage(url, runOptions);
       }
       results.push(result);
       if (result.ok && result.text) {
         texts.push(result.text);
+      }
+    }
+
+    if (provider === "gemini") {
+      try {
+        const gate = resolvePrivacyGate();
+        const guard = resolveOcrGuardContext(options);
+        const anyOk = results.some((r) => r.ok);
+        gate?.notifyRunEnd?.({
+          surface: guard.surface || "unknown",
+          provider: "gemini",
+          sources: list,
+          ok: anyOk,
+        });
+      } catch {
+        /* cleanup 失敗で結果を変えない */
       }
     }
 

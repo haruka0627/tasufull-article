@@ -202,6 +202,8 @@
         text: "",
         unscanned: true,
         reason: result?.error || "ocr_failed",
+        // 送信前確認のキャンセルは失敗ではない
+        cancelled: result?.cancelled === true,
       };
     }
     // 空・非string・欠落は ok:true + text:"" → 呼出側で needs_review
@@ -221,6 +223,7 @@
     let extractedText = "";
     let unscanned = false;
     let inspectMethod = "none";
+    let ocrCancelled = false;
 
     if (kind === KIND.ARCHIVE) {
       return {
@@ -279,7 +282,8 @@
             inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
           } else {
             unscanned = true;
-            inspectMethod = "pdf_unscanned";
+            ocrCancelled = ocr.cancelled === true;
+            inspectMethod = ocrCancelled ? "ocr_declined" : "pdf_unscanned";
           }
         } else {
           inspectMethod = "pdf_text";
@@ -291,7 +295,8 @@
           inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
         } else {
           unscanned = true;
-          inspectMethod = "pdf_unscanned";
+          ocrCancelled = ocr.cancelled === true;
+          inspectMethod = ocrCancelled ? "ocr_declined" : "pdf_unscanned";
         }
       } else {
         unscanned = true;
@@ -304,7 +309,8 @@
         inspectMethod = ocr.provider ? `ocr_${ocr.provider}` : "ocr";
       } else {
         unscanned = true;
-        inspectMethod = "image_unscanned";
+        ocrCancelled = ocr.cancelled === true;
+        inspectMethod = ocrCancelled ? "ocr_declined" : "image_unscanned";
       }
     }
 
@@ -314,7 +320,11 @@
         name,
         verdict: VERDICT.NEEDS_REVIEW,
         flags: ["attachment_unscanned"],
-        reasons: ["添付ファイル未審査（OCR/抽出不可）"],
+        reasons: [
+          ocrCancelled
+            ? "外部AIへの送信をキャンセルしました（添付は未審査）"
+            : "添付ファイル未審査（OCR/抽出不可）",
+        ],
         unscanned: true,
         inspectMethod,
         extractedLength: 0,

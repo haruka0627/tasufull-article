@@ -84,6 +84,16 @@ function loadOcr(opts = {}) {
         },
       }),
     },
+    // privacy UI は専用 suite で検証 · ここは endpoint pinning を測る
+    TasuOcrPrivacyConsent: {
+      ensureConsent: async () => ({
+        granted: true,
+        reason: "already_granted",
+        disclosureVersion: "test",
+      }),
+      notifyRunStart() {},
+      notifyRunEnd() {},
+    },
   };
   if (location !== null) {
     win.location = location;

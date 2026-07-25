@@ -107,6 +107,16 @@ function loadOcr(opts = {}) {
         },
       }),
     },
+    // privacy UI は専用 suite で検証 · ここは送信経路の hardening を測る
+    TasuOcrPrivacyConsent: {
+      ensureConsent: async () => ({
+        granted: true,
+        reason: "already_granted",
+        disclosureVersion: "test",
+      }),
+      notifyRunStart() {},
+      notifyRunEnd() {},
+    },
   };
   if (location) win.location = location;
 
