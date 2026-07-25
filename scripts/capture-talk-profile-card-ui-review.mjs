@@ -75,14 +75,44 @@ function buildFriendThread(withCover) {
   };
 }
 
-async function seedThread(page, withCover) {
+/**
+ * Seed friend thread for a shot. Clears only the partner user entry from
+ * `tasful_talk_profiles_v1` so prior shots cannot leak cover_image into later shots.
+ * @returns {Promise<{ storageKey: string, userId: string, deleted: boolean }>}
+ */
+async function seedThread(page, withCover, shotLabel = "") {
   await page.goto(buildLocalPageUrl(base, "builder/builder-top.html"), { waitUntil: "domcontentloaded" });
-  await page.evaluate(
+  const isolation = await page.evaluate(
     ({ threadsKey, thread }) => {
+      const storageKey =
+        (typeof window.TasuTalkChatProfile?.STORAGE_KEY === "string" &&
+          window.TasuTalkChatProfile.STORAGE_KEY) ||
+        "tasful_talk_profiles_v1";
+      const userId = String(thread.partnerUserId || thread.partner?.id || "").trim();
+      let deleted = false;
+      if (userId) {
+        try {
+          const raw = localStorage.getItem(storageKey);
+          const cache = raw ? JSON.parse(raw) : {};
+          if (cache && typeof cache === "object") {
+            deleted = Object.prototype.hasOwnProperty.call(cache, userId);
+            delete cache[userId];
+            localStorage.setItem(storageKey, JSON.stringify(cache));
+          }
+        } catch {
+          localStorage.removeItem(storageKey);
+          deleted = true;
+        }
+      }
       localStorage.setItem(threadsKey, JSON.stringify([thread]));
+      return { storageKey, userId, deleted };
     },
     { threadsKey: THREADS_KEY, thread: buildFriendThread(withCover) }
   );
+  console.log(
+    `[profile-cache] shot=${shotLabel || "?"} key=${isolation.storageKey} userId=${isolation.userId || "(none)"} deleted=${isolation.deleted ? "yes" : "no"}`
+  );
+  return isolation;
 }
 
 async function openProfileCard(page) {
@@ -154,7 +184,7 @@ async function checkOverflow(page, label) {
 async function captureShot(page, filename, viewport, options = {}) {
   await page.setViewportSize({ width: viewport.width, height: viewport.height });
   if (options.withCover !== undefined) {
-    await seedThread(page, options.withCover);
+    await seedThread(page, options.withCover, filename);
   }
   await openProfileCard(page);
 
