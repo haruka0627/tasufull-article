@@ -39,7 +39,7 @@
     bc.setTrail(
       [
         { label: "ホーム", href: "/index-top.html" },
-        { label: "ヘルプ・Q&A", href: "/help/" },
+        { label: "ヘルプ・Q&A", href: "/help/business-directory/" },
         { label: articleTitle || "記事" },
       ],
       { replace: true, source: "help-detail" },
@@ -52,7 +52,7 @@
     root.innerHTML =
       `<div class="platform-qa-hub-empty">` +
       `<p>「${Article.escapeHtml(slug)}」に該当するQ&amp;A記事が見つかりませんでした。</p>` +
-      `<p><a href="/help/">ヘルプ・Q&A一覧へ戻る</a></p>` +
+      `<p><a href="/help/business-directory/">Business Directory ヘルプへ戻る</a></p>` +
       `</div>`;
   }
 
@@ -135,7 +135,7 @@
   if (adminMode) {
     Admin?.bindActions?.(root, {
       onDeleted: () => {
-        window.location.href = "/help/";
+        window.location.href = "/help/business-directory/";
       },
     });
   }

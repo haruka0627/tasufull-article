@@ -112,7 +112,7 @@
     if (!root || !isEnabled()) {
       if (root) {
         root.innerHTML =
-          `<div class="platform-qa-curation-denied"><p>Q&amp;A整理管理は開発モード（<code>?qa_dev=1</code>）でのみ利用できます。</p><p><a href="/help/">ヘルプ一覧へ</a></p></div>`;
+          `<div class="platform-qa-curation-denied"><p>Q&amp;A整理管理は開発モード（<code>?qa_dev=1</code>）でのみ利用できます。</p><p><a href="/help/business-directory/">Business Directory ヘルプへ</a></p></div>`;
       }
       return null;
     }
@@ -151,7 +151,7 @@
           `<div class="platform-qa-curation-header__top">` +
           `<h1 class="platform-qa-curation-header__title">Q&amp;A 整理管理</h1>` +
           `<p class="platform-qa-curation-header__lead">重複・低品質候補を優先してレビュー（全${escapeHtml(String(Data()?.QA_ARTICLES?.length || 0))}件）</p>` +
-          `<a class="platform-qa-curation-header__back" href="/help/?qa_dev=1">← ヘルプ一覧</a>` +
+          `<a class="platform-qa-curation-header__back" href="/help/business-directory/">← Business Directory ヘルプ</a>` +
           `</div>` +
           `<div class="platform-qa-curation-tabs" role="tablist">${renderTabs(state.tab, counts)}</div>` +
           `</header>` +

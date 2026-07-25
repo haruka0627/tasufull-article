@@ -74,7 +74,6 @@
       `</span>` +
       `<span class="platform-qa-admin-banner__hint">不要なQ&amp;Aは「削除」で整理（ブラウザ内のみ）</span>` +
       `<div class="platform-qa-admin-banner__tools">` +
-      `<a class="platform-qa-admin-btn platform-qa-admin-btn--export" href="/help/curation/?qa_dev=1">整理管理を開く</a>` +
       `<button type="button" class="platform-qa-admin-btn platform-qa-admin-btn--export" data-qa-admin-export-lines title="改行区切りでコピー（catalog seed 除去用）">削除リストをコピー</button>` +
       `<button type="button" class="platform-qa-admin-btn platform-qa-admin-btn--export" data-qa-admin-export-json title="JSON配列でコピー">JSONでコピー</button>` +
       `<span class="platform-qa-admin-banner__copy-status" data-qa-admin-export-status hidden role="status"></span>` +

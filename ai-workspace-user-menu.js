@@ -7,13 +7,12 @@
   let helpSubmenuHoverTimer = null;
   let helpSubmenuOpenedAt = 0;
 
+  /* Unfinished non-BD QA hubs (/help/, /help/faq/, …) are not linked.
+   * Only formal tracked pages remain as help destinations. */
   const HELP_HREFS = Object.freeze({
-    center: "/help/",
-    releases: "/help/faq/",
-    shortcuts: "/help/beginner/",
-    terms: "/help/terms-of-service/",
-    privacy: "/help/privacy-policy/",
-    bug: "/help/contact-support/",
+    terms: "/ai-terms.html",
+    privacy: "/company/legal/privacy.html",
+    bug: "/company/contact.html",
   });
 
   function $(sel, root) {
