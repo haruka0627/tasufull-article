@@ -129,13 +129,24 @@ function installFetchMock(opts = {}) {
         json: async () => ({ ok: true, allowed: true, used: 0, remaining: 5 }),
       };
     }
-    if (u.includes("/rest/v1/rpc/consume_ai_workspace_quota")) {
+    if (u.includes("/rest/v1/rpc/reserve_ai_workspace_quota")) {
       consumeCalls.push({ url: u, init });
-      return { ok: true, status: 200, json: async () => ({ ok: true, used: 1 }) };
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          ok: true,
+          used: 1,
+          reservation_id: "33333333-3333-4333-8333-333333333333",
+        }),
+      };
     }
-    if (u.includes("/rest/v1/rpc/release_ai_workspace_quota")) {
+    if (u.includes("/rest/v1/rpc/commit_ai_workspace_quota_reservation")) {
+      return { ok: true, status: 200, json: async () => ({ ok: true, state: "committed" }) };
+    }
+    if (u.includes("/rest/v1/rpc/release_ai_workspace_quota_reservation")) {
       releaseCalls.push({ url: u, init });
-      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0 }) };
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0, state: "released" }) };
     }
     return { ok: true, status: 200, json: async () => ({}) };
   };

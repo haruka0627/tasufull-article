@@ -76,6 +76,7 @@ function installFetchMock(options = {}) {
     plan: [],
     check: [],
     consume: [],
+    commit: [],
     release: [],
     gemini: [],
   };
@@ -113,13 +114,26 @@ function installFetchMock(options = {}) {
         }),
       };
     }
-    if (value.includes("/rpc/consume_ai_workspace_quota")) {
+    if (value.includes("/rpc/reserve_ai_workspace_quota")) {
       calls.consume.push({ url: value, init });
-      return { ok: true, status: 200, json: async () => ({ ok: true, used: 1 }) };
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          ok: true,
+          used: 1,
+          reservation_id: "44444444-4444-4444-8444-444444444444",
+        }),
+      };
     }
-    if (value.includes("/rpc/release_ai_workspace_quota")) {
+    if (value.includes("/rpc/commit_ai_workspace_quota_reservation")) {
+      calls.commit = calls.commit || [];
+      calls.commit.push({ url: value, init });
+      return { ok: true, status: 200, json: async () => ({ ok: true, state: "committed" }) };
+    }
+    if (value.includes("/rpc/release_ai_workspace_quota_reservation")) {
       calls.release.push({ url: value, init });
-      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0 }) };
+      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0, state: "released" }) };
     }
     if (value.includes("generativelanguage.googleapis.com")) {
       calls.gemini.push({ url: value, init });

@@ -219,18 +219,20 @@ async function callQuotaRpc(rpcName, userId, feature, limit, supabaseUrl, servic
   return await res.json();
 }
 
-async function callQuotaReleaseRpc(userId, dateJst, feature, supabaseUrl, serviceRoleKey) {
-  var res = await fetch(supabaseUrl + "/rest/v1/rpc/release_ai_workspace_quota", {
+async function callReserveRpc(meta) {
+  var res = await fetch(meta.supabaseUrl + "/rest/v1/rpc/reserve_ai_workspace_quota", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: "Bearer " + serviceRoleKey,
-      apikey: serviceRoleKey,
+      Authorization: "Bearer " + meta.serviceRoleKey,
+      apikey: meta.serviceRoleKey,
     },
     body: JSON.stringify({
-      p_user_id: userId,
-      p_date_jst: dateJst,
-      p_feature: feature,
+      p_user_id: meta.userId,
+      p_date_jst: meta.dateJst,
+      p_feature: meta.feature,
+      p_surface: meta.surface || "",
+      p_limit: meta.limit,
     }),
   });
   if (!res.ok) {
@@ -239,38 +241,77 @@ async function callQuotaReleaseRpc(userId, dateJst, feature, supabaseUrl, servic
   return await res.json();
 }
 
-/** 連番禁止 — 予約 ID は推測不可能な乱数のみ（相関ログ用途 · DB キーではない） */
-function newReservationId() {
-  try {
-    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
-      return crypto.randomUUID();
-    }
-    if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
-      var buf = new Uint8Array(16);
-      crypto.getRandomValues(buf);
-      return Array.prototype.map.call(buf, function (b) {
-        return b.toString(16).padStart(2, "0");
-      }).join("");
-    }
-  } catch (_e) {
-    /* fall through */
+async function callCommitReservationRpc(reservationId, userId, supabaseUrl, serviceRoleKey) {
+  var res = await fetch(supabaseUrl + "/rest/v1/rpc/commit_ai_workspace_quota_reservation", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + serviceRoleKey,
+      apikey: serviceRoleKey,
+    },
+    body: JSON.stringify({
+      p_reservation_id: reservationId,
+      p_user_id: userId,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(QUOTA_BACKEND_ERROR);
   }
-  return String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+  return await res.json();
+}
+
+async function callReleaseReservationRpc(reservationId, userId, supabaseUrl, serviceRoleKey) {
+  var res = await fetch(supabaseUrl + "/rest/v1/rpc/release_ai_workspace_quota_reservation", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + serviceRoleKey,
+      apikey: serviceRoleKey,
+    },
+    body: JSON.stringify({
+      p_reservation_id: reservationId,
+      p_user_id: userId,
+    }),
+  });
+  if (!res.ok) {
+    throw new Error(QUOTA_BACKEND_ERROR);
+  }
+  return await res.json();
+}
+
+/** ログ用 · reservation ID 全文は出さない（短い不可逆 hash） */
+function reservationCorrelation(reservationId) {
+  var s = String(reservationId || "");
+  if (!s) return "";
+  var h = 2166136261;
+  for (var i = 0; i < s.length; i += 1) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ("00000000" + (h >>> 0).toString(16)).slice(-8);
+}
+
+function isUuidLike(value) {
+  return (
+    typeof value === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)
+  );
 }
 
 /**
- * 予約状態遷移: reserved → committed | releasing → released | release_failed
- * 状態遷移は await 前に同期的に行い、同一 invocation での二重 commit / 二重 release を封じる。
+ * DB が返した reservation_id を保持する。
+ * ローカル state は最適化のみ · 権威は DB の条件付き遷移。
  */
-function createOcrReservation(meta, used) {
+function createOcrReservation(meta, reservedRow) {
   return {
-    id: newReservationId(),
+    id: String(reservedRow.reservation_id),
     state: RESERVATION_RESERVED,
     userId: meta.userId,
     dateJst: meta.dateJst,
     feature: meta.feature,
+    surface: meta.surface,
     limit: meta.limit,
-    used: used,
+    used: Number(reservedRow.used),
     supabaseUrl: meta.supabaseUrl,
     serviceRoleKey: meta.serviceRoleKey,
   };
@@ -278,6 +319,10 @@ function createOcrReservation(meta, used) {
 
 export function getOcrReservationState(reservation) {
   return reservation && reservation.state ? reservation.state : "missing";
+}
+
+export function getOcrReservationCorrelation(reservation) {
+  return reservationCorrelation(reservation && reservation.id);
 }
 
 /**
@@ -408,8 +453,8 @@ export async function enforceCfOcrGuard(request, body, env) {
       };
     }
 
-    // 予約は upstream 実行前 · 単一の条件付き UPDATE（consume RPC）で atomic に確保する。
-    // 上の check は残枠表示用の事前判定にすぎず、権威は本予約側にある。
+    // 予約は upstream 実行前 · DB reserve RPC（counter++ + reservation row）が権威。
+    // check は残枠表示用の事前判定にすぎない。client の reservation_id は無視する。
     var reserveMeta = {
       userId: userId,
       feature: quotaFeature,
@@ -420,14 +465,7 @@ export async function enforceCfOcrGuard(request, body, env) {
       serviceRoleKey: config.serviceRoleKey,
     };
 
-    var reserved = await callQuotaRpc(
-      "consume_ai_workspace_quota",
-      reserveMeta.userId,
-      reserveMeta.feature,
-      reserveMeta.limit,
-      reserveMeta.supabaseUrl,
-      reserveMeta.serviceRoleKey
-    );
+    var reserved = await callReserveRpc(reserveMeta);
 
     if (!reserved || typeof reserved !== "object" || Array.isArray(reserved) || typeof reserved.ok !== "boolean") {
       return {
@@ -467,11 +505,26 @@ export async function enforceCfOcrGuard(request, body, env) {
       };
     }
 
+    if (!isUuidLike(reserved.reservation_id)) {
+      // 予約成立したが ID 欠落 — release 不能のため upstream に進まず fail-closed
+      // （expires_at 回収で将来解放。今回は over-count）
+      console.error("[ai-usage-guard] ocr quota reserve malformed", {
+        feature: FEATURE_OCR,
+        surface: surface,
+        code: QUOTA_BACKEND_ERROR,
+      });
+      return {
+        blocked: guardUnavailableResponse(FEATURE_OCR),
+        shouldConsume: false,
+        meta: null,
+        reservation: null,
+      };
+    }
+
     var reservedUsed = Number(reserved.used);
-    var reservation = createOcrReservation(reserveMeta, reservedUsed);
+    var reservation = createOcrReservation(reserveMeta, reserved);
 
     if (!Number.isFinite(reservedUsed) || reservedUsed < 1 || reservedUsed > plan.dailyLimit) {
-      // 予約は成立したがカウンタが不整合 — 保持せず解放して fail-closed。
       await releaseCfOcrReservation(reservation);
       return {
         blocked: guardUnavailableResponse(FEATURE_OCR),
@@ -503,29 +556,90 @@ export async function enforceCfOcrGuard(request, body, env) {
 }
 
 /**
- * 予約の確定。予約時点で DB 加算済みのため追加書き込みは行わない（二重加算防止）。
- * reserved 以外の状態では何もしない（release 後の commit を封じる）。
+ * 予約の確定（DB: reserved → committed）。
+ * 曖昧成功時は同じ reservation_id で retry 可。成功不明時は release しない。
  */
 export async function finalizeCfOcrConsume(meta, reservation) {
   var res = reservation || (meta && meta.reservation) || null;
-  if (!res || res.state !== RESERVATION_RESERVED) return null;
-  res.state = RESERVATION_COMMITTED;
-  return {
-    ok: true,
-    state: RESERVATION_COMMITTED,
+  if (!res || !isUuidLike(res.id)) return null;
+  if (res.state === RESERVATION_COMMITTED) {
+    return { ok: true, state: RESERVATION_COMMITTED, already_committed: true };
+  }
+  if (res.state === RESERVATION_RELEASED || res.state === RESERVATION_RELEASING) {
+    return null;
+  }
+  if (res.state !== RESERVATION_RESERVED && res.state !== "commit_unknown") {
+    return null;
+  }
+  if (!res.userId || !res.supabaseUrl || !res.serviceRoleKey) return null;
+
+  for (var attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      var row = await callCommitReservationRpc(
+        res.id,
+        res.userId,
+        res.supabaseUrl,
+        res.serviceRoleKey
+      );
+      if (row && typeof row === "object" && !Array.isArray(row) && row.ok === true) {
+        res.state = RESERVATION_COMMITTED;
+        return {
+          ok: true,
+          state: RESERVATION_COMMITTED,
+          already_committed: row.already_committed === true,
+          feature: res.feature,
+          used: res.used,
+          limit: res.limit,
+        };
+      }
+      // invalid_state / not_found — release へ落とさない
+      res.state = "commit_unknown";
+      console.error("[ai-usage-guard] ocr quota commit rejected", {
+        feature: res.feature,
+        rid: reservationCorrelation(res.id),
+        code: QUOTA_BACKEND_ERROR,
+      });
+      return null;
+    } catch (_err) {
+      // 応答消失 · 通信失敗 — 同じ ID で retry。release しない。
+      res.state = "commit_unknown";
+    }
+  }
+
+  console.error("[ai-usage-guard] ocr quota commit unknown", {
     feature: res.feature,
-    used: res.used,
-    limit: res.limit,
-  };
+    rid: reservationCorrelation(res.id),
+    code: QUOTA_BACKEND_ERROR,
+  });
+  return null;
 }
 
 /**
- * 予約の解放。upstream 失敗系すべてから呼ばれる。
- * reserved 以外（committed / releasing / released / release_failed）は no-op。
+ * 予約の解放（DB: reserved → released + counter−1）。
+ * 同じ reservation_id でのみ retry。already_released は成功扱い。
+ * committed は解放しない。
  */
 export async function releaseCfOcrReservation(reservation) {
   var res = reservation || null;
-  if (!res || res.state !== RESERVATION_RESERVED) {
+  if (!res || !isUuidLike(res.id)) {
+    return { ok: false, state: getOcrReservationState(res) };
+  }
+  if (res.state === RESERVATION_COMMITTED) {
+    return { ok: false, state: RESERVATION_COMMITTED };
+  }
+  if (res.state === RESERVATION_RELEASED) {
+    return { ok: true, state: RESERVATION_RELEASED, already_released: true };
+  }
+  // reserved / releasing / release_failed / commit_unknown 以外は拒否
+  // commit_unknown では release しない（要件: commit 結果不明時に安易に release しない）
+  if (res.state === "commit_unknown") {
+    return { ok: false, state: "commit_unknown" };
+  }
+  if (
+    res.state !== RESERVATION_RESERVED &&
+    res.state !== RESERVATION_RELEASING &&
+    res.state !== RESERVATION_RELEASE_FAILED
+  ) {
     return { ok: false, state: getOcrReservationState(res) };
   }
   if (!res.userId || !res.supabaseUrl || !res.serviceRoleKey) {
@@ -537,26 +651,32 @@ export async function releaseCfOcrReservation(reservation) {
 
   for (var attempt = 0; attempt < 2; attempt += 1) {
     try {
-      var row = await callQuotaReleaseRpc(
+      var row = await callReleaseReservationRpc(
+        res.id,
         res.userId,
-        res.dateJst,
-        res.feature || OCR_QUOTA_FEATURE,
         res.supabaseUrl,
         res.serviceRoleKey
       );
       if (row && typeof row === "object" && !Array.isArray(row) && row.ok === true) {
         res.state = RESERVATION_RELEASED;
-        return { ok: true, state: RESERVATION_RELEASED };
+        return {
+          ok: true,
+          state: RESERVATION_RELEASED,
+          already_released: row.already_released === true,
+        };
       }
+      // not_found / invalid_state — 追加減算なし
+      res.state = RESERVATION_RELEASE_FAILED;
+      return { ok: false, state: RESERVATION_RELEASE_FAILED };
     } catch (_err) {
-      /* retry once — 詳細は保持しない */
+      /* 同じ reservation_id で retry — 詳細は保持しない */
     }
   }
 
   res.state = RESERVATION_RELEASE_FAILED;
   console.error("[ai-usage-guard] ocr quota release failed", {
     feature: res.feature,
-    reservationId: res.id,
+    rid: reservationCorrelation(res.id),
     code: QUOTA_BACKEND_ERROR,
   });
   return { ok: false, state: RESERVATION_RELEASE_FAILED };

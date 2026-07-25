@@ -120,11 +120,23 @@ function installFetchMock(opts = {}) {
     }
     // guard / rest
     guardRestCalls.push({ url: u, init });
-    if (u.includes("/rest/v1/rpc/consume_ai_workspace_quota")) {
-      return { ok: true, status: 200, json: async () => ({ ok: true, used: 1, remaining: 4 }) };
+    if (u.includes("/rest/v1/rpc/reserve_ai_workspace_quota")) {
+      return {
+        ok: true,
+        status: 200,
+        json: async () => ({
+          ok: true,
+          reservation_id: "11111111-1111-4111-8111-111111111111",
+          used: 1,
+          remaining: 4,
+        }),
+      };
     }
-    if (u.includes("/rest/v1/rpc/release_ai_workspace_quota")) {
-      return { ok: true, status: 200, json: async () => ({ ok: true, used: 0 }) };
+    if (u.includes("/rest/v1/rpc/commit_ai_workspace_quota_reservation")) {
+      return { ok: true, status: 200, json: async () => ({ ok: true, state: "committed" }) };
+    }
+    if (u.includes("/rest/v1/rpc/release_ai_workspace_quota_reservation")) {
+      return { ok: true, status: 200, json: async () => ({ ok: true, state: "released" }) };
     }
     if (u.includes("/rest/v1/rpc/")) {
       return {
