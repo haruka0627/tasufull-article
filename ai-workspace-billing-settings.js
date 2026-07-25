@@ -256,6 +256,27 @@
     return setState({ [key]: value }, { changedKey: key });
   }
 
+  function getLiveUsageSnapshot() {
+    const Usage = global.TasuAiWorkspaceUsage;
+    const gauge = Usage?.getGaugeSnapshot?.();
+    if (gauge && gauge.periodLimit != null && gauge.periodUsed != null) {
+      return {
+        aiChat: {
+          used: gauge.periodUsed,
+          limit: Math.max(1, gauge.periodLimit || 1),
+          unit: "回",
+        },
+        imageGen: { used: 0, limit: 0, unit: "枚" },
+        videoGen: { used: 0, limit: 0, unit: "分" },
+        webSearch: { used: 0, limit: 0, unit: "回" },
+      };
+    }
+    const RT = catalogRuntime();
+    const plan = Usage?.readGenAiPlan?.()?.plan || cachedState?.currentPlan || "free";
+    if (RT?.buildGenAiUsageSnapshot) return RT.buildGenAiUsageSnapshot(plan === "free" ? "lite" : plan);
+    return buildUsageFromCatalog(plan);
+  }
+
   function getUsagePercent(item) {
     if (!item || !item.limit) return 0;
     return Math.min(100, Math.round((item.used / item.limit) * 100));
@@ -395,6 +416,7 @@
     setState,
     setSetting,
     getUsagePercent,
+    getLiveUsageSnapshot,
     formatUsageLine,
     formatRenewalDate,
     formatHistoryDate,

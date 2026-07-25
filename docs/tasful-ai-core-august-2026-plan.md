@@ -46,8 +46,8 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 | **1** | SAFE-05 | Usage Guard（Chat + OCR） | **完了** |
 | **2** | SAFE-06 | Usage Log（`ai_usage_events` + ingest） | **完了（コード）** · Staging DB 適用は別ゲート · [phase2 report](../reports/tasful-ai-core-phase2-safe06-report.md) |
 | **3** | — | Auto Mode 完成（Auto/Manual · Identity · Usage routing） | **完了（コード）** · [phase3 report](../reports/tasful-ai-core-phase3-auto-mode-report.md) |
-| **4** | — | 利用ゲージ | 未着手 |
-| **5** | — | manual SQL → migrations（Staging） | 未着手（`ai_usage_events` migration は追加済 · 適用は Staging 手動） |
+| **4** | — | 利用ゲージ | **完了（コード）** · [phase4 report](../reports/tasful-ai-core-phase4-usage-gauge-report.md) |
+| **5** | — | プラン制御 | 未着手 |
 | **6** | SAFE-07 | Cost Ledger | **完了（コード）** · Staging 適用は別ゲート · [cost ledger report](../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | **7** | SAFE-05 拡張 | 秘書 · Vision · TTS 等 | 未着手 |
 | **8** | SAFE-01〜03 | WAF · Turnstile · Rate Limit runbook | 未着手 |
@@ -161,20 +161,51 @@ Builder · Platform · Talk · Business Directory · TLV が共通利用する *
 
 ---
 
-## Phase 4〜10（概要）
+## Phase 4 — 利用ゲージ（ユーザー Phase 4）
+
+**ゴール:** 日次利用枠に対する消費率・残量目安・次回更新・状態ラベルを Workspace で把握できるようにする（原価・単価非公開）。
+
+| 項目 | 方針 |
+| --- | --- |
+| 数値正本 | `ai_workspace_usage_daily` + Edge `ai-workspace-quota`（SAFE-05 と同一） |
+| 計算 | `ai-usage-gauge`（Browser / Node / Edge 同契約）· 閾値は一箇所 |
+| 期間 | **日次 Asia/Tokyo**（「今月」デモは廃止 · 偽の月次精密値を出さない） |
+| API | 既存 quota `status`/`check` に `usage` オブジェクトを付与 |
+| UI | チャット直下の簡易メーター + 設定›請求の詳細 |
+| Auto/Manual | 同一ゲージ · Manual 高負荷チップ時のみ一般注意文 |
+| Cost Ledger | **境界厳守** · 単価・推定原価を返さない · ゲージに使わない |
+| anonymous | サーバー取得せず端末目安（`authoritative:false`）· 認証枠と混同しない |
+| 新 migration | **なし**（既存 daily テーブルを利用） |
+
+**表示する:** periodUsed/Limit · remaining · ratio · displayPercent · resetAt · status · canExecute · 一般注意文  
+**表示しない:** Provider 原価 · 単価 · 利益率 · 内部重み · 他ユーザー · prompt/response · service_role
+
+**完了条件（コード）**
+
+- [x] `scripts/lib/ai-usage-gauge.mjs` · `ai-workspace-usage-gauge.js` · Edge `ai-usage-gauge.ts`
+- [x] quota 応答に `usage` · JWT mismatch 拒否 · SQL 非露出
+- [x] 簡易 / 詳細 UI · Billing デモ4本棒をライブ日次へ寄せ替え
+- [x] `scripts/test-tasful-ai-usage-gauge-phase4.mjs` · `verify-ai-usage-gauge-phase4.mjs`
+- [x] [phase4 report](../reports/tasful-ai-core-phase4-usage-gauge-report.md)
+
+**Staging 未検証:** live quota 応答 · JWT 本番経路（paused 保留）
+
+---
+
+## Phase 5〜10（概要）
 
 | Phase | 主要成果物 | 状態 |
 | --- | --- | --- |
-| 3 | Auto Mode（上記） | **コード完了** |
-| 4 | 利用ゲージ | 未着手 |
-| 5 | `gen_ai_*` / `ai_workspace_usage_daily` migrations 昇格 | 未着手 |
-| 6 | Cost Ledger（SAFE-07） | **コード完了**（上記） |
+| 4 | 利用ゲージ（上記） | **コード完了** |
+| 5 | プラン制御 | 未着手 |
+| 5b | `gen_ai_*` / `ai_workspace_usage_daily` migrations 昇格 | 未着手（historical Billing Adapter 系） |
+| 6 | Cost Ledger（SAFE-07） | **コード完了** |
 | 7 | 秘書 CF · gemini-image-character · gemini-tts Guard 拡張 | 未着手 |
 | 8 | `docs/runbooks/cf-waf-turnstile-staging.md` | 未着手 |
 | 9 | CF Queue + async worker 設計 | 未着手（後回し可） |
 | 10 | Admin 画面（Usage/Cost/Events） | 未着手 |
 
-> **historical:** 旧「Phase 3 = Router→Gateway 配線のみ」は Phase 3 Auto Mode に吸収。配線単体の記述は本節を正本とする。
+> **historical:** 旧「Phase 4 = Billing UI→Stripe」は後続プラン制御 / Billing Adapter へ。本 Phase 4 は利用ゲージのみ。
 
 **Future（後回し）:** Queue · Redis · BYOK · 従量パック · OpenRouter 全面 · 高度分析 · PDF/PPT · 履歴 Supabase 同期 · 操作アシスタント · Site Assistant Phase 2+
 
@@ -190,6 +221,8 @@ node scripts/test-tasful-ai-safe-ops-guard-phase1.mjs   # Phase 1 SAFE-05
 node scripts/test-tasful-ai-safe-ops-usage-log-phase2.mjs  # Phase 2 SAFE-06
 node scripts/test-tasful-ai-safe-ops-cost-ledger-phase2.mjs  # SAFE-07 Cost Ledger
 node scripts/test-tasful-ai-auto-mode-phase3.mjs  # Phase 3 Auto Mode
+node scripts/test-tasful-ai-usage-gauge-phase4.mjs  # Phase 4 Usage Gauge
+node scripts/verify-ai-usage-gauge-phase4.mjs
 ```
 
 ---

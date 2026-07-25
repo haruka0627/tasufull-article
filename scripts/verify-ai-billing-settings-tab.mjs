@@ -38,8 +38,9 @@ await withPlaywrightBrowser(async (browser) => {
     if (!text.includes("現在のプラン")) errors.push(`${vp.n}: missing current plan`);
     if (!text.includes("TASFUL AI Pro")) errors.push(`${vp.n}: missing plan name`);
     if (!text.includes("年間プラン")) errors.push(`${vp.n}: missing billing cycle`);
-    if (!text.includes("今月の利用状況")) errors.push(`${vp.n}: missing usage section`);
+    if (!text.includes("本日の利用状況")) errors.push(`${vp.n}: missing usage section`);
     if (!text.includes("AIチャット")) errors.push(`${vp.n}: missing ai chat usage`);
+    if (!text.includes("高性能モデル")) errors.push(`${vp.n}: missing heavy model note`);
     if (!text.includes("プラン比較")) errors.push(`${vp.n}: missing plan compare`);
     if (!text.includes("Lite")) errors.push(`${vp.n}: missing Lite plan`);
     if (!text.includes("Max")) errors.push(`${vp.n}: missing Max plan`);
@@ -58,7 +59,9 @@ await withPlaywrightBrowser(async (browser) => {
     if (planCards !== 3) errors.push(`${vp.n}: expected 3 plan cards, got ${planCards}`);
 
     const usageBars = await panel.locator(".ai-ref-billing-usage-item__track").count();
-    if (usageBars !== 4) errors.push(`${vp.n}: expected 4 usage bars, got ${usageBars}`);
+    if (usageBars > 1) errors.push(`${vp.n}: expected at most 1 live usage bar, got ${usageBars}`);
+    const detail = await panel.locator("[data-ai-usage-gauge-detail]").count();
+    if (detail < 1) errors.push(`${vp.n}: missing usage gauge detail`);
 
     const historyRows = await panel.locator(".ai-ref-billing-history-row").count();
     if (historyRows !== 3) errors.push(`${vp.n}: expected 3 history rows, got ${historyRows}`);

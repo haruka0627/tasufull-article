@@ -343,16 +343,45 @@
   function renderBillingPanel(section) {
     const store = global.TasuAiWorkspaceBillingSettings;
     const state = store?.getSnapshot?.() || {};
-    const usage = state.usage || {};
+    const Usage = global.TasuAiWorkspaceUsage;
+    const gauge = Usage?.getGaugeSnapshot?.() || null;
+    const Gauge = global.TasuAiUsageGauge;
     const payment = store?.getDefaultPaymentMethod?.(state);
     const history = (state.billingHistory || []).slice(0, 3);
     const plans = state.availablePlans || [];
 
+    const pct = gauge?.displayPercent;
+    const tone =
+      gauge?.status === "stopped" || gauge?.status === "near_limit"
+        ? "orange"
+        : gauge?.status === "elevated" || gauge?.status === "low"
+          ? "blue"
+          : "green";
+    const gaugeBar =
+      pct == null
+        ? `<p class="ai-ref-billing-card__lead">${esc(gauge?.statusLabel || "利用状況を取得できません")}</p>`
+        : renderBillingUsageBar(
+            "aiChat",
+            "AIチャット（本日）",
+            "chat",
+            tone,
+            {
+              used: gauge.periodUsed ?? 0,
+              limit: gauge.periodLimit || 1,
+              unit: "回",
+            },
+            {
+              getUsagePercent: () => pct,
+              formatUsageLine: () =>
+                `${pct}% · 残り目安 ${Math.max(0, 100 - pct)}% · ${gauge.statusLabel || ""}`,
+            }
+          );
+
     const usageBody = [
-      renderBillingUsageBar("aiChat", "AIチャット", "chat", "green", usage.aiChat, store),
-      renderBillingUsageBar("imageGen", "画像生成", "image", "blue", usage.imageGen, store),
-      renderBillingUsageBar("videoGen", "動画生成", "movie", "purple", usage.videoGen, store),
-      renderBillingUsageBar("webSearch", "Web検索", "travel_explore", "orange", usage.webSearch, store),
+      `<div class="ai-usage-gauge-detail" data-ai-usage-gauge-detail data-ai-settings-usage-gauge></div>`,
+      gaugeBar,
+      `<p class="ai-ref-billing-usage-note">${esc(gauge?.heavyModelNote || Gauge?.HEAVY_MODEL_NOTE || "")}</p>`,
+      `<p class="ai-ref-billing-usage-note ai-ref-billing-usage-note--muted">画像・動画・Web検索の個別枠ゲージは、サーバー枠が接続され次第表示します（現在はデモ値を使いません）。</p>`,
     ].join("");
 
     const planCards = plans
@@ -404,8 +433,8 @@
           <div class="ai-ref-billing-grid">
             <section class="ai-ref-billing-card">
               <header class="ai-ref-billing-card__header">
-                <h4 class="ai-ref-billing-card__title">今月の利用状況</h4>
-                <p class="ai-ref-billing-card__lead">プランに含まれる利用枠の使用状況です。</p>
+                <h4 class="ai-ref-billing-card__title">本日の利用状況</h4>
+                <p class="ai-ref-billing-card__lead">日次利用枠（Asia/Tokyo）に対する消費の目安です。内部原価は表示しません。</p>
               </header>
               <div class="ai-ref-billing-card__body ai-ref-billing-card__body--usage">${usageBody}</div>
               <footer class="ai-ref-billing-card__footer">
@@ -3288,6 +3317,7 @@
     if (!section) return;
     panel.innerHTML = renderBillingPanel(section);
     bindSettingsControls(panel);
+    global.TasuAiWorkspaceUsage?.updateUsageUi?.();
   }
 
   function syncGeneralSettingsUi() {

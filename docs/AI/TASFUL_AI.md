@@ -79,6 +79,7 @@ TASFUL AI は **総合 AI Workspace**（`ai-workspace.html`）。Platform · TLV
 | SAFE | **SAFE-06 Usage Log** — コード完了（gemini/openai/claude-chat · OCR）· Staging 適用ゲート待ち — [august plan](../tasful-ai-core-august-2026-plan.md) · [phase2 report](../../reports/tasful-ai-core-phase2-safe06-report.md) |
 | SAFE | **SAFE-07 Cost Ledger** — コード完了（query 時推定原価）· Staging 適用ゲート待ち — [cost ledger report](../../reports/tasful-ai-core-phase2-cost-ledger-safe07-report.md) |
 | Core | **Phase 3 Auto Mode** — コード完了（Auto/Manual · Identity · routing metadata）— [phase3 report](../../reports/tasful-ai-core-phase3-auto-mode-report.md) |
+| Core | **Phase 4 Usage Gauge** — コード完了（日次消費率 · quota SSOT · 原価非公開）— [phase4 report](../../reports/tasful-ai-core-phase4-usage-gauge-report.md) |
 
 ---
 

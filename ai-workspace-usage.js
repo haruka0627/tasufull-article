@@ -17,8 +17,15 @@
     dailyTextLimit: 5,
   };
 
-  /** @type {{ remaining: number | null, dailyLimit: number | null, syncedAt: number }} */
-  const serverCache = { remaining: null, dailyLimit: null, syncedAt: 0 };
+  /** @type {{ remaining: number | null, dailyLimit: number | null, used: number | null, syncedAt: number, gauge: object | null, fetchError: boolean }} */
+  const serverCache = {
+    remaining: null,
+    dailyLimit: null,
+    used: null,
+    syncedAt: 0,
+    gauge: null,
+    fetchError: false,
+  };
 
   function isPhase2ServerEnabled() {
     if (global.__TASU_WORKSPACE_USAGE_PHASE2__ === false) return false;
@@ -193,7 +200,20 @@
     const used = Math.max(0, Number(status.used) ?? limit - remaining);
     serverCache.remaining = remaining;
     serverCache.dailyLimit = limit;
+    serverCache.used = used;
     serverCache.syncedAt = Date.now();
+    serverCache.fetchError = false;
+    if (status.usage && typeof status.usage === "object") {
+      serverCache.gauge = status.usage;
+    } else {
+      serverCache.gauge = buildLocalGauge({
+        used,
+        limit,
+        allowed: remaining > 0,
+        authoritative: status.authMode === "jwt",
+        source: "quota-derived",
+      });
+    }
     const today = getTokyoDateKey();
     saveUsage({ date: today, textTurnUsed: used });
     if (status.planCode || status.planLabel) {
@@ -203,6 +223,61 @@
         dailyTextLimit: limit,
       });
     }
+  }
+
+  function buildLocalGauge(overrides) {
+    const Gauge = global.TasuAiUsageGauge;
+    const plan = readGenAiPlan();
+    const limit = overrides?.limit != null ? overrides.limit : getDailyLimit();
+    const used =
+      overrides?.used != null
+        ? overrides.used
+        : serverCache.used != null
+          ? serverCache.used
+          : getUsage().textTurnUsed;
+    const remaining =
+      overrides?.remaining != null
+        ? overrides.remaining
+        : Math.max(0, limit - used);
+    if (!Gauge?.buildUsageGauge) {
+      return null;
+    }
+    return Gauge.buildUsageGauge({
+      used,
+      limit,
+      dateJst: getTokyoDateKey(),
+      allowed: overrides?.allowed != null ? overrides.allowed : remaining > 0,
+      planCode: plan.plan,
+      planLabel: plan.label,
+      feature: FEATURE_TEXT_TURN,
+      source: overrides?.source || (getUserId() === "anonymous" ? "local_estimate" : "local"),
+      authoritative: Boolean(overrides?.authoritative),
+      forceUnavailable: Boolean(overrides?.forceUnavailable),
+    });
+  }
+
+  function getGaugeSnapshot() {
+    if (serverCache.fetchError) {
+      return (
+        buildLocalGauge({ forceUnavailable: true, source: "fetch_error" }) || {
+          status: "unavailable",
+          statusLabel: "利用状況を取得できません",
+          canExecute: false,
+        }
+      );
+    }
+    if (serverCache.gauge) return serverCache.gauge;
+    const userId = getUserId();
+    if (userId === "anonymous") {
+      return buildLocalGauge({
+        authoritative: false,
+        source: "anonymous_local",
+      });
+    }
+    return buildLocalGauge({
+      authoritative: false,
+      source: "local_cache",
+    });
   }
 
   function getDailyLimit() {
@@ -308,11 +383,30 @@
     return `${base}/functions/v1/ai-workspace-quota`;
   }
 
+  async function resolveAccessToken() {
+    try {
+      const client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        const { data } = await client.auth.getSession();
+        const token = data?.session?.access_token;
+        if (token) return String(token);
+      }
+    } catch {
+      /* ignore */
+    }
+    return "";
+  }
+
   async function postQuotaAction(action, featureKey) {
     const url = getQuotaEdgeUrl();
-    const headers = stripeHeaders();
+    const baseHeaders = stripeHeaders();
     const userId = getUserId();
-    if (!url || !headers || !userId || userId === "anonymous") return null;
+    if (!url || !baseHeaders || !userId || userId === "anonymous") return null;
+    const accessToken = await resolveAccessToken();
+    const headers = { ...baseHeaders };
+    if (accessToken) {
+      headers.Authorization = `Bearer ${accessToken}`;
+    }
     try {
       const res = await fetch(url, {
         method: "POST",
@@ -334,8 +428,20 @@
 
   async function syncUsageFromServer() {
     if (!isPhase2ServerEnabled()) return false;
+    const userId = getUserId();
+    if (!userId || userId === "anonymous") {
+      serverCache.gauge = buildLocalGauge({
+        authoritative: false,
+        source: "anonymous_local",
+      });
+      return false;
+    }
     const out = await postQuotaAction("status", FEATURE_TEXT_TURN);
-    if (!out?.data?.ok) return false;
+    if (!out?.data?.ok) {
+      serverCache.fetchError = true;
+      serverCache.gauge = buildLocalGauge({ forceUnavailable: true, source: "fetch_error" });
+      return false;
+    }
     applyServerStatusToCache(out.data);
     return true;
   }
@@ -464,18 +570,127 @@
     const remaining = getRemaining(FEATURE_TEXT_TURN);
     const limit = getDailyLimit();
     const planLabel = plan.label || (plan.plan === "free" ? "無料枠" : plan.plan);
+    const gauge = getGaugeSnapshot();
+    const Gauge = global.TasuAiUsageGauge;
 
     const statusEl = global.document?.querySelector?.("[data-ai-workspace-usage-status]");
     if (statusEl) {
-      statusEl.textContent = `${planLabel} · 本日 残り ${remaining} / ${limit} 回`;
-      statusEl.classList.toggle("ai-workspace-usage--depleted", remaining <= 0);
+      const compact =
+        (Gauge?.formatCompactLine && Gauge.formatCompactLine(gauge)) ||
+        `${planLabel} · 本日 残り ${remaining} / ${limit} 回`;
+      const pct = gauge?.displayPercent;
+      const tone = gauge?.status || "unavailable";
+      statusEl.innerHTML =
+        `<div class="ai-workspace-usage__compact" data-ai-usage-gauge-compact data-gauge-status="${escapeAttr(tone)}">` +
+        `<span class="ai-workspace-usage__line">${escapeHtml(compact)}</span>` +
+        (pct != null
+          ? `<span class="ai-workspace-usage__meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${pct}" aria-label="本日の利用状況 ${pct}%">` +
+            `<span class="ai-workspace-usage__meter-fill" style="width:${pct}%"></span></span>`
+          : "") +
+        `</div>`;
+      statusEl.classList.toggle(
+        "ai-workspace-usage--depleted",
+        remaining <= 0 || tone === "stopped" || tone === "near_limit"
+      );
+      statusEl.classList.toggle("ai-workspace-usage--warn", tone === "elevated" || tone === "low");
+      statusEl.classList.toggle("ai-workspace-usage--error", tone === "unavailable");
     }
 
-    if (remaining > 0) hideUsageLimitBanner();
+    updateUsageDetailPanel(gauge);
+
+    const heavyHint = global.document?.querySelector?.("[data-ai-usage-heavy-hint]");
+    if (heavyHint) {
+      const note = getManualHeavyModelHint();
+      if (note) {
+        heavyHint.hidden = false;
+        heavyHint.textContent = note;
+      } else {
+        heavyHint.hidden = true;
+        heavyHint.textContent = "";
+      }
+    }
+
+    if (remaining > 0 && gauge?.status !== "stopped") hideUsageLimitBanner();
 
     if (isTlvSource()) {
       global.TasuAiWorkspaceTlvSource?.refreshFreeQuotaUi?.();
     }
+
+    try {
+      global.dispatchEvent(
+        new CustomEvent("tasu:ai-usage-gauge-updated", { detail: { gauge: getGaugeSnapshot() } })
+      );
+    } catch {
+      /* ignore */
+    }
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function escapeAttr(value) {
+    return escapeHtml(value).replace(/'/g, "&#39;");
+  }
+
+  function updateUsageDetailPanel(gauge) {
+    const detail = global.document?.querySelector?.("[data-ai-usage-gauge-detail]");
+    if (!detail) return;
+    const g = gauge || getGaugeSnapshot();
+    const Gauge = global.TasuAiUsageGauge;
+    const resetLabel = Gauge?.formatResetLabel?.(g.resetAt) || "—";
+    const pct = g.displayPercent;
+    const remPct = pct == null ? "—" : `${Math.max(0, 100 - pct)}%`;
+    const authNote =
+      getUserId() === "anonymous"
+        ? "未ログインのため端末上の目安です。ログイン後にサーバー利用枠を表示します。"
+        : g.authoritative
+          ? "サーバー上の本日の利用枠に基づきます。"
+          : "直近の同期結果または端末キャッシュに基づく目安です。";
+
+    detail.innerHTML =
+      `<p class="ai-usage-gauge-detail__status"><strong>${escapeHtml(g.statusLabel || "—")}</strong> — ${escapeHtml(g.statusHint || "")}</p>` +
+      `<ul class="ai-usage-gauge-detail__list">` +
+      `<li>利用期間: 本日（Asia/Tokyo）</li>` +
+      `<li>現在の利用状況: ${pct == null ? "—" : `${pct}%`}</li>` +
+      `<li>残り目安: ${escapeHtml(remPct)}</li>` +
+      `<li>次回更新: ${escapeHtml(resetLabel)}</li>` +
+      `<li>実行: ${g.canExecute ? "可能" : "停止または上限"}</li>` +
+      `</ul>` +
+      `<p class="ai-usage-gauge-detail__note">${escapeHtml(g.heavyModelNote || Gauge?.HEAVY_MODEL_NOTE || "")}</p>` +
+      `<p class="ai-usage-gauge-detail__auth">${escapeHtml(authNote)}</p>` +
+      `<button type="button" class="ai-usage-gauge-detail__retry" data-ai-usage-gauge-retry>利用状況を再取得</button>`;
+  }
+
+  function bindUsageDetailRetry() {
+    const doc = global.document;
+    if (!doc || doc.__tasuUsageGaugeRetryBound) return;
+    doc.__tasuUsageGaugeRetryBound = true;
+    doc.addEventListener("click", (ev) => {
+      const t = ev.target;
+      if (!t || !t.closest?.("[data-ai-usage-gauge-retry]")) return;
+      const detail = doc.querySelector("[data-ai-usage-gauge-detail]");
+      if (detail) detail.setAttribute("data-loading", "1");
+      void syncUsageFromServer().then(() => {
+        if (detail) detail.removeAttribute("data-loading");
+        updateUsageUi();
+      });
+    });
+  }
+
+  function getManualHeavyModelHint() {
+    const Router = global.TasuAiWorkspaceModelRouterSettings;
+    const Plans = global.TasuAiPlanModels;
+    if (Router?.isAutoMode?.()) return "";
+    const id = Plans?.getSelectedModelId?.() || "";
+    if (id === "claude" || id === "gpt") {
+      return global.TasuAiUsageGauge?.HEAVY_MODEL_NOTE || "";
+    }
+    return "";
   }
 
   function mountUsageBanner() {
@@ -486,13 +701,16 @@
 
   async function init() {
     installEdgePayloadHook();
+    bindUsageDetailRetry();
     mountUsageBanner();
     updateUsageUi();
     await syncPlanFromServer();
     await syncUsageFromServer();
+    updateUsageUi();
     global.addEventListener("focus", () => {
       void syncUsageFromServer().then(() => updateUsageUi());
     });
+    global.addEventListener("tasu:ai-model-router-settings-changed", () => updateUsageUi());
   }
 
   if (global.document?.readyState === "loading") {
@@ -526,6 +744,8 @@
     getDailyRemaining,
     resetDailyIfNeeded,
     getUsage,
+    getGaugeSnapshot,
+    getManualHeavyModelHint,
     isPhase2ServerEnabled,
     applyServerStatusToCache,
   };

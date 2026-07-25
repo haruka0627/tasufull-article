@@ -213,7 +213,9 @@
           data-ai-workspace-usage-status
           role="status"
           aria-live="polite"
+          aria-label="本日の利用状況"
         ></div>
+        <p class="ai-workspace-usage-hint" data-ai-usage-heavy-hint hidden></p>
         <div class="ai-workspace-usage-limit" data-ai-workspace-usage-limit hidden role="alert">
           <p class="ai-workspace-usage-limit__msg" data-ai-workspace-usage-limit-msg></p>
           <a class="ai-workspace-usage-limit__cta" href="gen-ai-workspace.html">プランを見る</a>
@@ -373,6 +375,7 @@
   <script src="shared/pricing/generated/tasful-pricing-config.js" defer></script>
   <script src="shared/pricing/pricing-catalog-runtime.js" defer></script>
   <script src="stripe-genai-config.js" defer></script>
+  <script src="ai-workspace-usage-gauge.js" defer></script>
   <script src="ai-workspace-usage.js" defer></script>
   <script src="tasful-popover-layer.js" defer></script>
   <script src="ai-workspace-general-settings.js" defer></script>

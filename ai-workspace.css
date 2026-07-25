@@ -2634,6 +2634,115 @@
   line-height: 1.4;
 }
 
+.ai-workspace-usage__compact {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ai-workspace-usage__meter {
+  display: block;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.35);
+  overflow: hidden;
+}
+
+.ai-workspace-usage__meter-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #67e8f9, #a78bfa);
+  transition: width 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-workspace-usage__meter-fill {
+    transition: none;
+  }
+}
+
+.ai-workspace-usage--warn .ai-workspace-usage__meter-fill {
+  background: linear-gradient(90deg, #fbbf24, #fb923c);
+}
+
+.ai-workspace-usage--depleted .ai-workspace-usage__meter-fill {
+  background: linear-gradient(90deg, #fb7185, #f43f5e);
+}
+
+.ai-workspace-usage--error {
+  color: #fda4af;
+}
+
+.ai-workspace-usage-hint {
+  margin: 0;
+  padding: 0 14px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(253, 230, 138, 0.95);
+  line-height: 1.4;
+}
+
+.ai-workspace-usage-hint[hidden] {
+  display: none !important;
+}
+
+.ai-usage-gauge-detail {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.ai-usage-gauge-detail[data-loading="1"] {
+  opacity: 0.65;
+}
+
+.ai-usage-gauge-detail__status {
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.ai-usage-gauge-detail__list {
+  margin: 0 0 8px;
+  padding-left: 1.1em;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #334155;
+}
+
+.ai-usage-gauge-detail__note,
+.ai-usage-gauge-detail__auth,
+.ai-ref-billing-usage-note {
+  margin: 0 0 8px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.ai-ref-billing-usage-note--muted {
+  opacity: 0.9;
+}
+
+.ai-usage-gauge-detail__retry {
+  appearance: none;
+  border: 1px solid #94a3b8;
+  border-radius: 8px;
+  background: #fff;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.ai-usage-gauge-detail__retry:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
 .ai-workspace-usage--depleted {
   color: #fda4af;
 }

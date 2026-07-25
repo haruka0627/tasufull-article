@@ -1,6 +1,8 @@
 import { getServiceSupabase } from "./apply-featured-listing.ts";
 import { getGenAiPlanForUser } from "./apply-genai-plan.ts";
 import { jsonResponse } from "./cors.ts";
+import { attachUsageGaugeToStatus } from "./ai-usage-gauge.ts";
+import { resolveUsageActor } from "./ai-usage-log.ts";
 
 export const WORKSPACE_SURFACE = "ai-workspace";
 
@@ -312,34 +314,108 @@ export async function finalizeWorkspaceQuotaConsume(
   }
 }
 
+function isUuidLike(value: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    String(value || "").trim()
+  );
+}
+
+/**
+ * JWT 検証済み user を優先。JWT ありで body が別 UUID を名乗ったら拒否。
+ * JWT なしの claimed id は既存 Workspace 互換のため許可（authMode=claimed）。
+ */
+async function resolveQuotaActor(
+  req: Request,
+  body: WorkspaceQuotaBody
+): Promise<
+  | { ok: true; userId: string; authMode: "jwt" | "claimed" }
+  | { ok: false; error: string; http: number }
+> {
+  const claimed = resolveWorkspaceUserId(body);
+  const actor = await resolveUsageActor({
+    req,
+    bodyUserId: body.user_id ?? body.userId,
+  });
+
+  if (actor.userId) {
+    if (
+      claimed &&
+      claimed !== "anonymous" &&
+      isUuidLike(claimed) &&
+      claimed !== actor.userId
+    ) {
+      return { ok: false, error: "user_mismatch", http: 403 };
+    }
+    return { ok: true, userId: actor.userId, authMode: "jwt" };
+  }
+
+  if (!claimed || claimed === "anonymous") {
+    return { ok: false, error: "missing_user_id", http: 400 };
+  }
+  return { ok: true, userId: claimed, authMode: "claimed" };
+}
+
+function publicQuotaError(code: string): string {
+  const allow = new Set([
+    "missing_user_id",
+    "user_mismatch",
+    "quota_exceeded",
+    "invalid_action",
+    "usage_unavailable",
+  ]);
+  return allow.has(code) ? code : "usage_unavailable";
+}
+
 export async function handleWorkspaceQuotaAction(
   req: Request,
   body: WorkspaceQuotaBody
 ): Promise<Response> {
   const action = String(body.action || "status").trim().toLowerCase();
-  const userId = resolveWorkspaceUserId(body);
   const feature = resolveWorkspaceFeature(body);
+  const actor = await resolveQuotaActor(req, body);
 
-  if (!userId || userId === "anonymous") {
-    return jsonResponse({ ok: false, error: "missing_user_id" }, 400, req);
+  if (!actor.ok) {
+    return jsonResponse(
+      { ok: false, error: publicQuotaError(actor.error) },
+      actor.http,
+      req
+    );
   }
+
+  const { userId, authMode } = actor;
 
   try {
     if (action === "check") {
       const status = await checkWorkspaceQuota({ userId, feature });
-      return jsonResponse({ ok: true, ...status }, 200, req);
+      const payload = attachUsageGaugeToStatus(status, {
+        authoritative: authMode === "jwt",
+        authMode,
+      });
+      return jsonResponse(payload, 200, req);
     }
 
     if (action === "consume") {
       const status = await consumeWorkspaceQuota({ userId, feature });
       const http = status.ok ? 200 : 402;
-      return jsonResponse({ ok: status.ok, ...status }, http, req);
+      const payload = attachUsageGaugeToStatus(status, {
+        authoritative: authMode === "jwt",
+        authMode,
+      });
+      return jsonResponse({ ...payload, ok: status.ok }, http, req);
+    }
+
+    if (action !== "status" && action !== "") {
+      return jsonResponse({ ok: false, error: "invalid_action" }, 400, req);
     }
 
     const status = await getWorkspaceQuotaStatus({ userId, feature });
-    return jsonResponse({ ok: true, ...status }, 200, req);
+    const payload = attachUsageGaugeToStatus(status, {
+      authoritative: authMode === "jwt",
+      authMode,
+    });
+    return jsonResponse(payload, 200, req);
   } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    return jsonResponse({ ok: false, error: message }, 500, req);
+    console.error("[ai-workspace-quota] action failed:", err);
+    return jsonResponse({ ok: false, error: "usage_unavailable" }, 500, req);
   }
 }
