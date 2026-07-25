@@ -1,0 +1,46 @@
+{
+  "timestamp": "2026-07-03T23:09:38.284Z",
+  "mode": "preflight",
+  "titlePrefix": "[BD-SAFE-SMOKE]",
+  "projectRef": "ddojquacsyqesrjhcvmn",
+  "checks": [
+    {
+      "step": "env SUPABASE_URL",
+      "ok": true,
+      "detail": "present"
+    },
+    {
+      "step": "env SUPABASE_ANON_KEY",
+      "ok": true,
+      "detail": "present"
+    },
+    {
+      "step": "env SUPABASE_SERVICE_ROLE_KEY",
+      "ok": false,
+      "detail": "missing"
+    },
+    {
+      "step": "env AUTH_HOOK_L2_ALLOWLIST_PASSWORD",
+      "ok": true,
+      "detail": "present"
+    },
+    {
+      "step": "L7 config",
+      "ok": false,
+      "detail": "SUPABASE_SERVICE_ROLE_KEY required"
+    }
+  ],
+  "trackedListings": [],
+  "cleanup": [],
+  "preflight": {
+    "envPresent": {
+      "SUPABASE_URL": true,
+      "SUPABASE_ANON_KEY": true,
+      "SUPABASE_SERVICE_ROLE_KEY": false,
+      "AUTH_HOOK_L2_ALLOWLIST_PASSWORD": true
+    },
+    "executeFlag": false
+  },
+  "pass": 3,
+  "fail": 2
+}
