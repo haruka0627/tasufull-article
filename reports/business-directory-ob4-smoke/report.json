@@ -1,0 +1,48 @@
+{
+  "baseUrl": "http://127.0.0.1:8788",
+  "timestamp": "2026-07-03T18:47:20.335Z",
+  "checks": [
+    {
+      "step": "Public list HTTP",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "Public list body",
+      "ok": true,
+      "detail": "page rendered"
+    },
+    {
+      "step": "Public detail HTTP",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "Public detail body",
+      "ok": true,
+      "detail": "page rendered"
+    },
+    {
+      "step": "Console Error: public list",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "Console Error: public detail",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "Owner dashboard HTTP",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "Admin reviews HTTP",
+      "ok": true,
+      "detail": "200"
+    }
+  ],
+  "pass": 8,
+  "fail": 0
+}
