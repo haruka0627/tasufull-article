@@ -29,13 +29,15 @@ TASFUL AI Workspace は **機能完成 ≠ 本番 Production Ready**（本番接
 
 ## 詳細ルール
 
-領域別は `.cursor/rules/pkg-*.mdc` · コミットは `git.mdc` · QA は `qa.mdc` · ドキュ更新は `docs.mdc`。
+領域別は `.cursor/rules/pkg-*.mdc` · コミットは `git.mdc` · QA は `qa.mdc` · ドキュ更新は `docs.mdc` · **Supabase MCP** は [AGENTS.md](../../AGENTS.md) §Supabase MCP（Staging 専用 · Production MCP 禁止）。
 
 ## 検証環境（全領域共通 · 必須）
 
 **`file://` · ローカル HTML 直開き · VSCode Preview 禁止。**
 
-検証・E2E・Playwright・スクリーンショット・UI 確認・完了報告はすべて **`http://127.0.0.1:8788`** のみ（Builder / TLV / Platform / AI 秘書 / TASFUL AI / 今後追加ページ含む）。
+検証・E2E・Playwright・スクリーンショット・UI 確認・完了報告はすべて **`http://127.0.0.1:8788`** のみ（Builder / TLV / Platform / Talk / AI 秘書 / TASFUL AI / 今後追加ページ含む）。
+
+開発サーバーは **`npm run dev`（Wrangler Pages Dev）** のみ。以下は **案内しない**: `localhost:5173` · Vite URL · `npm run dev:vite`（5173 は Vite 専用で通常未使用）。
 
 正本手順: `docs/local-dev.md` · 実装: `scripts/lib/dev-server-url.mjs`
 
