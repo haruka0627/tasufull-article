@@ -615,18 +615,53 @@
   /**
    * 将来: Edge Function / OpenAI / Claude 等へ差し替え（検索コンテキストは共通）
    */
-  async function requestAssistantReply({ modeId, userText, messages, systemPrompt, searchTarget, attachments }) {
+  async function requestAssistantReply({
+    modeId,
+    userText,
+    messages,
+    systemPrompt,
+    searchTarget,
+    attachments,
+    alreadyGated,
+  }) {
     if (window.TasuAiModes?.isConciergeMode?.(modeId)) {
       return null;
     }
 
     const target = window.TasuAiSearchTarget?.normalizeTarget?.(searchTarget) || "tasful";
-    const attachList = Array.isArray(attachments) ? attachments : [];
+    let attachList = Array.isArray(attachments) ? attachments : [];
+    let safeUserText = String(userText || "");
+
+    // 添付・本文は共通 Moderation 通過後の安全テキストのみ AI へ（二重 OCR 回避: alreadyGated）
+    if (!alreadyGated) {
+      if (window.TasuAttachmentAiGate?.gateAttachmentsForAi) {
+        const gate = await window.TasuAttachmentAiGate.gateAttachmentsForAi({
+          text: safeUserText,
+          attachments: attachList,
+          surface: "ai_workspace",
+        });
+        if (!gate.allowed) {
+          const msg = gate.message || "送信できません。";
+          return wrapAssistantPayload(
+            { html: `<p>${escapeHtml(msg)}</p>`, plain: msg },
+            { search_used: false, moderation_blocked: true },
+          );
+        }
+        safeUserText = gate.safeText;
+        attachList = gate.safeAttachments || [];
+      } else if (attachList.length) {
+        const msg = "添付審査モジュールが読み込まれていません。";
+        return wrapAssistantPayload(
+          { html: `<p>${escapeHtml(msg)}</p>`, plain: msg },
+          { search_used: false, moderation_blocked: true },
+        );
+      }
+    }
 
     if (attachList.length > 0 && window.TasuAiModelGateway?.completeTurn) {
       return requestGatewayWithAttachments({
         modeId,
-        userText,
+        userText: safeUserText,
         messages,
         systemPrompt,
         searchTarget: target,
@@ -636,7 +671,7 @@
 
     const apiWriting = await requestModelWritingReply({
       modeId,
-      userText,
+      userText: safeUserText,
       messages,
       systemPrompt,
       searchTarget: target,
@@ -644,7 +679,7 @@
     });
     if (apiWriting) return apiWriting;
 
-    const generated = window.TasuAiGenerateUi?.tryHandle?.(userText);
+    const generated = window.TasuAiGenerateUi?.tryHandle?.(safeUserText);
     if (generated?.html) {
       return wrapAssistantPayload(generated, { search_used: false });
     }
@@ -652,7 +687,7 @@
     if (modeId === "cross-matching") {
       return requestCrossMatchingReply({
         modeId,
-        userText,
+        userText: safeUserText,
         messages,
         systemPrompt,
         searchTarget: target,
@@ -662,7 +697,7 @@
     if (modeId === "faq" && target === "tasful" && window.TasuAiSearch?.searchFaqKnowledgeRich) {
       const rich = await window.TasuAiSearch.searchFaqKnowledgeRich({
         modeId,
-        userText,
+        userText: safeUserText,
         messages,
       });
       if (rich?.plain) {
@@ -673,7 +708,7 @@
     if (target === "web") {
       const webOnly = await runWebSearchTurn({
         modeId,
-        userText,
+        userText: safeUserText,
         messages,
         systemPrompt,
         siteContext: "",
@@ -681,7 +716,7 @@
       });
       if (webOnly) {
         const labeled = applySearchSourceLabel(webOnly, target);
-        return window.TasuAiSearchResultUx?.appendWebSummary?.(labeled, userText) || labeled;
+        return window.TasuAiSearchResultUx?.appendWebSummary?.(labeled, safeUserText) || labeled;
       }
     }
 
@@ -689,11 +724,11 @@
       let siteResult = null;
       const sitePromise =
         modeId !== "faq"
-          ? fetchSiteSearch(modeId, userText, messages)
+          ? fetchSiteSearch(modeId, safeUserText, messages)
           : window.TasuAiSearch?.searchFaqKnowledgeRich
             ? window.TasuAiSearch.searchFaqKnowledgeRich({
                 modeId,
-                userText,
+                userText: safeUserText,
                 messages,
               })
             : Promise.resolve(null);
@@ -701,7 +736,7 @@
         sitePromise,
         runWebSearchTurn({
           modeId,
-          userText,
+          userText: safeUserText,
           messages,
           systemPrompt,
           siteContext: "",
@@ -714,14 +749,14 @@
           ? wrapAssistantPayload(siteResult, { search_used: Boolean(siteResult.html) })
           : null,
         web,
-        userText
+        safeUserText
       );
       if (merged) return applySearchSourceLabel(merged, target);
     }
 
     let sitePlain = "";
     const runSite = target === "tasful";
-    const siteResult = runSite ? await fetchSiteSearch(modeId, userText, messages) : null;
+    const siteResult = runSite ? await fetchSiteSearch(modeId, safeUserText, messages) : null;
     if (siteResult?.plain) sitePlain = String(siteResult.plain);
     if (runSite && siteResult) {
       const wrapped = wrapAssistantPayload(siteResult, { search_used: false });
@@ -738,7 +773,7 @@
 
     if (window.TasuAiModelGateway?.completeTurn) {
       const turn = await window.TasuAiModelGateway.completeTurn({
-        userText,
+        userText: safeUserText,
         modeId,
         messages,
         systemPrompt,
@@ -746,7 +781,8 @@
         skipSearch: !needsWeb,
         surface: "ai-workspace",
         attachments: attachList.length ? attachList : undefined,
-        mockFallback: () => mockGenerateReply(modeId, userText, messages, window.TasuAiModes?.getMode(modeId)),
+        mockFallback: () =>
+          mockGenerateReply(modeId, safeUserText, messages, window.TasuAiModes?.getMode(modeId)),
       });
 
       const wrapped = withModelFromTurn(
@@ -765,7 +801,7 @@
 
     const replyText = await requestCoreReply({
       modeId,
-      userText,
+      userText: safeUserText,
       messages,
       systemPrompt,
       searchContext: null,
@@ -1539,6 +1575,32 @@
       }
     }
 
+    // OCR → 共通 Moderation（AI へはマスク済みテキストのみ）
+    let safeText = text;
+    let safeAttachments = attachments;
+    if (window.TasuAttachmentAiGate?.gateAttachmentsForAi) {
+      const gate = await window.TasuAttachmentAiGate.gateAttachmentsForAi({
+        text,
+        attachments,
+        surface: "ai_workspace",
+      });
+      if (!gate.allowed) {
+        window.TasuAiWorkspaceAttachments?.showComposerError?.(
+          root,
+          gate.message || "送信できません。",
+        );
+        return;
+      }
+      safeText = gate.safeText;
+      safeAttachments = gate.safeAttachments || [];
+    } else if (attachments.length) {
+      window.TasuAiWorkspaceAttachments?.showComposerError?.(
+        root,
+        "添付審査モジュールが読み込まれていません。",
+      );
+      return;
+    }
+
     root.dataset.aiChatSending = "1";
 
     window.TasuAiVoiceCore?.stopVoice?.();
@@ -1553,7 +1615,10 @@
 
     const saveEpoch = getChatEpoch(modeId);
     let messages = getStoredMessages(modeId);
-    messages.push({ role: "user", content: formatUserMessageWithAttachments(text, attachments) });
+    messages.push({
+      role: "user",
+      content: formatUserMessageWithAttachments(safeText, safeAttachments),
+    });
     renderMessages(list, messages);
     clearComposerInput(root);
     if (attachErrors.length) {
@@ -1562,7 +1627,7 @@
     if (sendBtn) sendBtn.disabled = true;
 
     try {
-      const urgentInfo = window.TasuAnpiNotifications?.checkAndRecordUrgent?.(text) || {
+      const urgentInfo = window.TasuAnpiNotifications?.checkAndRecordUrgent?.(safeText) || {
         logged: false,
         urgent: false,
         message: "",
@@ -1571,11 +1636,12 @@
       const systemPrompt = await window.TasuAiModes.buildSystemPrompt(modeId);
       const reply = await requestAssistantReply({
         modeId,
-        userText: text,
+        userText: safeText,
         messages,
         systemPrompt,
         searchTarget,
-        attachments,
+        attachments: safeAttachments,
+        alreadyGated: true,
       });
       if (reply && typeof reply === "object" && reply.plain != null) {
         let html = reply.html || "";
