@@ -1,0 +1,119 @@
+{
+  "baseUrl": "http://127.0.0.1:8788",
+  "page": "business-directory/new.html",
+  "timestamp": "2026-07-03T22:23:14.928Z",
+  "checks": [
+    {
+      "step": "HTTP 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "screenshot 1280",
+      "ok": true,
+      "detail": "reports\\business-directory-owner-new-ui\\owner-new-1280.png"
+    },
+    {
+      "step": "overflow 1280",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "form layout 1280",
+      "ok": true,
+      "detail": "formWidth=932"
+    },
+    {
+      "step": "button height 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "input height 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "structure 1280",
+      "ok": true,
+      "detail": "plan/addr/type present"
+    },
+    {
+      "step": "console 1280",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "screenshot 768",
+      "ok": true,
+      "detail": "reports\\business-directory-owner-new-ui\\owner-new-768.png"
+    },
+    {
+      "step": "overflow 768",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "form layout 768",
+      "ok": true,
+      "detail": "formWidth=736"
+    },
+    {
+      "step": "button height 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "input height 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "structure 768",
+      "ok": true,
+      "detail": "plan/addr/type present"
+    },
+    {
+      "step": "console 768",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "screenshot 390",
+      "ok": true,
+      "detail": "reports\\business-directory-owner-new-ui\\owner-new-390.png"
+    },
+    {
+      "step": "overflow 390",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "form layout 390",
+      "ok": true,
+      "detail": "formWidth=358"
+    },
+    {
+      "step": "button height 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "input height 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "structure 390",
+      "ok": true,
+      "detail": "plan/addr/type present"
+    },
+    {
+      "step": "console 390",
+      "ok": true,
+      "detail": "0 errors"
+    }
+  ],
+  "pass": 22,
+  "fail": 0
+}

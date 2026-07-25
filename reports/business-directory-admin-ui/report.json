@@ -1,0 +1,208 @@
+{
+  "baseUrl": "http://127.0.0.1:8788",
+  "timestamp": "2026-07-03T22:38:28.742Z",
+  "checks": [
+    {
+      "step": "reviews HTTP 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "reviews screenshot 1280",
+      "ok": true,
+      "detail": "reports\\business-directory-admin-ui\\admin-reviews-1280.png"
+    },
+    {
+      "step": "reviews overflow 1280",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "reviews layout 1280",
+      "ok": true,
+      "detail": "bd-admin-layout"
+    },
+    {
+      "step": "reviews button 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "reviews textarea 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "reviews console 1280",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "reviews screenshot 768",
+      "ok": true,
+      "detail": "reports\\business-directory-admin-ui\\admin-reviews-768.png"
+    },
+    {
+      "step": "reviews overflow 768",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "reviews layout 768",
+      "ok": true,
+      "detail": "bd-admin-layout"
+    },
+    {
+      "step": "reviews button 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "reviews textarea 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "reviews console 768",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "reviews screenshot 390",
+      "ok": true,
+      "detail": "reports\\business-directory-admin-ui\\admin-reviews-390.png"
+    },
+    {
+      "step": "reviews overflow 390",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "reviews layout 390",
+      "ok": true,
+      "detail": "bd-admin-layout"
+    },
+    {
+      "step": "reviews button 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "reviews textarea 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "reviews console 390",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "admin nav reviews→listing",
+      "ok": true,
+      "detail": "listing.html?id=admin-mock-1&bdAdminMock=1"
+    },
+    {
+      "step": "admin nav listing→reviews",
+      "ok": true,
+      "detail": "reviews.html?bdAdminMock=1"
+    },
+    {
+      "step": "listing HTTP 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "listing screenshot 1280",
+      "ok": true,
+      "detail": "reports\\business-directory-admin-ui\\admin-listing-1280.png"
+    },
+    {
+      "step": "listing overflow 1280",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "listing layout 1280",
+      "ok": true,
+      "detail": "bd-admin-layout"
+    },
+    {
+      "step": "listing button 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "listing textarea 1280",
+      "ok": true,
+      "detail": "min=88px"
+    },
+    {
+      "step": "listing console 1280",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "listing screenshot 768",
+      "ok": true,
+      "detail": "reports\\business-directory-admin-ui\\admin-listing-768.png"
+    },
+    {
+      "step": "listing overflow 768",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "listing layout 768",
+      "ok": true,
+      "detail": "bd-admin-layout"
+    },
+    {
+      "step": "listing button 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "listing textarea 768",
+      "ok": true,
+      "detail": "min=88px"
+    },
+    {
+      "step": "listing console 768",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "listing screenshot 390",
+      "ok": true,
+      "detail": "reports\\business-directory-admin-ui\\admin-listing-390.png"
+    },
+    {
+      "step": "listing overflow 390",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "listing layout 390",
+      "ok": true,
+      "detail": "bd-admin-layout"
+    },
+    {
+      "step": "listing button 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "listing textarea 390",
+      "ok": true,
+      "detail": "min=88px"
+    },
+    {
+      "step": "listing console 390",
+      "ok": true,
+      "detail": "0 errors"
+    }
+  ],
+  "pass": 40,
+  "fail": 0
+}

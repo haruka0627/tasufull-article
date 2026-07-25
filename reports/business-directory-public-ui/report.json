@@ -1,0 +1,248 @@
+{
+  "baseUrl": "http://127.0.0.1:8788",
+  "timestamp": "2026-07-03T22:46:05.382Z",
+  "checks": [
+    {
+      "step": "list HTTP 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "list screenshot 1280",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-list-1280.png"
+    },
+    {
+      "step": "list overflow 1280",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "list button 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "list content 1280",
+      "ok": true,
+      "detail": "list placeholder 画像未登録"
+    },
+    {
+      "step": "list console 1280",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "list screenshot 768",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-list-768.png"
+    },
+    {
+      "step": "list overflow 768",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "list button 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "list content 768",
+      "ok": true,
+      "detail": "list placeholder 画像未登録"
+    },
+    {
+      "step": "list console 768",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "list screenshot 390",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-list-390.png"
+    },
+    {
+      "step": "list overflow 390",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "list button 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "list content 390",
+      "ok": true,
+      "detail": "list placeholder 画像未登録"
+    },
+    {
+      "step": "list console 390",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "detail-photo HTTP 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "detail-photo screenshot 1280",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-detail-photo-1280.png"
+    },
+    {
+      "step": "detail-photo overflow 1280",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "detail-photo button 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "detail-photo content 1280",
+      "ok": true,
+      "detail": "hero+CTA+identity"
+    },
+    {
+      "step": "detail-photo console 1280",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "detail-photo screenshot 768",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-detail-photo-768.png"
+    },
+    {
+      "step": "detail-photo overflow 768",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "detail-photo button 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "detail-photo content 768",
+      "ok": true,
+      "detail": "hero+CTA+identity"
+    },
+    {
+      "step": "detail-photo console 768",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "detail-photo screenshot 390",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-detail-photo-390.png"
+    },
+    {
+      "step": "detail-photo overflow 390",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "detail-photo button 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "detail-photo content 390",
+      "ok": true,
+      "detail": "hero+CTA+identity"
+    },
+    {
+      "step": "detail-photo console 390",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "detail-empty HTTP 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "step": "detail-empty screenshot 1280",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-detail-empty-1280.png"
+    },
+    {
+      "step": "detail-empty overflow 1280",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "detail-empty button 1280",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "detail-empty content 1280",
+      "ok": true,
+      "detail": "画像未登録 + CTA"
+    },
+    {
+      "step": "detail-empty console 1280",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "detail-empty screenshot 768",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-detail-empty-768.png"
+    },
+    {
+      "step": "detail-empty overflow 768",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "detail-empty button 768",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "detail-empty content 768",
+      "ok": true,
+      "detail": "画像未登録 + CTA"
+    },
+    {
+      "step": "detail-empty console 768",
+      "ok": true,
+      "detail": "0 errors"
+    },
+    {
+      "step": "detail-empty screenshot 390",
+      "ok": true,
+      "detail": "reports\\business-directory-public-ui\\public-detail-empty-390.png"
+    },
+    {
+      "step": "detail-empty overflow 390",
+      "ok": true,
+      "detail": "overflowX=0"
+    },
+    {
+      "step": "detail-empty button 390",
+      "ok": true,
+      "detail": "min=44px"
+    },
+    {
+      "step": "detail-empty content 390",
+      "ok": true,
+      "detail": "画像未登録 + CTA"
+    },
+    {
+      "step": "detail-empty console 390",
+      "ok": true,
+      "detail": "0 errors"
+    }
+  ],
+  "pass": 48,
+  "fail": 0
+}
