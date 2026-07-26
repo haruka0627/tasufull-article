@@ -2,8 +2,8 @@
 
 **版:** 1.0 BUTTON-CHECK  
 **最終更新:** 2026-07-26  
-**種別:** 設計正本（**本ドキュメント作成時点では実装変更なし**）  
-**状態:** Canonical Design · 既存 v1 コードは **RELEASE FROZEN**（[`reports/anpi-release-status.md`](../reports/anpi-release-status.md)）  
+**種別:** 設計正本（Phase 2 Data Foundation は **Implemented locally / not deployed**）
+**状態:** Canonical Design · Phase 2 DB migration / RLS / tests はローカル実装済み・未適用 · 既存 v1 コードは **RELEASE FROZEN**（[`reports/anpi-release-status.md`](../reports/anpi-release-status.md)）
 **監査根拠:** [`reports/anpi-button-check-audit-and-design.md`](../reports/anpi-button-check-audit-and-design.md)
 
 > **本 PRD は「スケジュール通知 →『無事です』ボタン → 未確認時は本人再通知 → 猶予後に緊急連絡先」を正式仕様とする。**  
@@ -325,19 +325,21 @@ AI 表現は **「未確認です」** までに留める。専用 ANPI AI エ�
 
 ---
 
-## §11 データモデル案（設計のみ · migration しない）
+## §11 データモデル（Phase 2 ローカル実装済み · migration 未適用）
 
 既存を再利用し、重複作成を避ける。
 
-| 既存 / 案 | 責務 |
+| 既存 / Phase 2 | 責務 |
 | --- | --- |
-| `anpi_user_contexts` | 本人・契約者コンテキスト · LINE · 通知チャネル（拡張で schedule JSON 可） |
-| `anpi_notification_logs` | 既存通知ログ（段階的に deliveries へ寄せる or 併用） |
-| `anpi_check_sessions` | チェック 1 回 = 1 行（Phase2 SQL あり · **状態語彙を本 PRD に合わせて改訂が必要**） |
-| `anpi_no_response_audit_log` | 監査追記 |
-| **新設候補** `anpi_settings` | 時刻 · 曜日 · 再通知 · 猶予 · timezone · pause（contexts に載せるなら不要） |
-| **新設候補** `anpi_contacts` / `anpi_contact_invitations` | 緊急連絡先 · 招待承認 |
-| **新設候補** `anpi_notification_deliveries` | チャネル別配信状態 |
+| legacy `anpi_user_contexts` | 本人・契約者コンテキスト · LINE · 通知チャネル（FROZEN · 変更なし） |
+| legacy `anpi_notification_logs` | 既存通知履歴 + LINE 配信状態（変更なし） |
+| legacy `anpi_check_sessions` | 旧未応答フロー（旧 status / text ID のため自動移行しない） |
+| legacy `anpi_no_response_audit_log` | 旧 CTA 監査（変更なし） |
+| Phase 2 `anpi_settings` | 時刻 · 曜日 · 再通知 · 猶予 · timezone · pause |
+| Phase 2 `anpi_check_instances` | canonical status · 当日確認 · unique local date |
+| Phase 2 `anpi_contacts` / `anpi_contact_invitations` | 緊急連絡先 · hash-only 招待承認 |
+| Phase 2 `anpi_notification_deliveries` | チャネル別配信状態（実送信なし） |
+| Phase 2 `anpi_audit_logs` | PII / secret を除外した追記監査 |
 
 ### 推奨制約（概念）
 
@@ -348,7 +350,7 @@ AI 表現は **「未確認です」** までに留める。専用 ANPI AI エ�
 - PII: 氏名 · 連絡先 · LINE id（既存どおり暗号化列パターンを踏襲）  
 - encryption: トークン類は既存 `*_enc` 方針
 
-**注:** 現行 `anpi_check_sessions` の status 集合（`pending` / `sent_to_user` / …）は本 PRD 語彙と異なる。実装 Phase で **マッピング表を書いてから** ALTER または新テーブル移行する（本セッションでは SQL を書かない）。
+**注:** 現行 `anpi_check_sessions` の status 集合（`pending` / `sent_to_user` / …）は本 PRD 語彙と異なる。Phase 2 は非破壊の mapping view と新 `anpi_check_instances` を採用し、legacy 行を推測で UPDATE しない。
 
 ---
 
@@ -404,7 +406,7 @@ Scheduler は **サーバー側のみ**（クライアント `processDueTimeouts
 | Phase | 目的 | 完了条件 | STOP |
 | --- | --- | --- | --- |
 | **1 Canonical Design** | 本 PRD · 監査 · 非目標 | 正本マージ · FROZEN コード未変更 | 実装着手要求が Scope 外 |
-| **2 Data Foundation** | settings/contacts/check · RLS · audit · unique 日付 | Staging schema レビュー PASS | Production 直適用 |
+| **2 Data Foundation** | settings/contacts/check · RLS · audit · unique 日付 | **Implemented locally / not deployed** · Static verification passed · DB-backed SQL and real JWT runtime verification remain pending · migration 未適用 | Production 直適用 |
 | **3 Core Check-In** | 設定 · 今日 · 無事です · 履歴 | E2E 当日確認 PASS | FROZEN 無計画改変 |
 | **4 Scheduler & Reminder** | 初回 · 再通知 · 期限 · 冪等 cron | 二重 Cron でも 1 インスタンス | 着信型再導入 |
 | **5 Emergency Contact** | 招待承認 · 未確認/遅延通知 | 未承認へ送らない | 同意なし送信 |
@@ -416,7 +418,7 @@ Scheduler は **サーバー側のみ**（クライアント `processDueTimeouts
 
 **commit 分割案:** Phase ごと 1 コミット（docs / sql / client / talk-wiring を混ぜない）。
 
-**次に実装すべき Phase（1 つのみ）:** 人間承認後に **Phase 2 — Data Foundation**（本 PRD 語彙への schema 整合 · 連絡先同意 · unique 日付）。Phase 1 は本ドキュメントで完了扱い。
+**次に実装すべき Phase（1 つのみ）:** Phase 2 の DB-backed 検証・レビュー・選別コミット完了後に **Phase 3 — Core Check-In**。それまでは Phase 3 を開始しない。
 
 ---
 
@@ -464,3 +466,4 @@ E2E: 当日成功 · 連打 · 初回/再通知/緊急 · 遅延確認 · 曜日
 | 日付 | 版 | 内容 |
 | --- | --- | --- |
 | 2026-07-26 | 1.0 BUTTON-CHECK | 初版 · ボタン式を正式仕様化 · 監査レポート連携 |
+| 2026-07-26 | 1.1 DATA-FOUNDATION | Phase 2 migration / RLS / tests をローカル実装（未適用 · 未デプロイ）· static 50 PASS · DB-backed pending |
