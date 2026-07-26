@@ -96,6 +96,13 @@ node scripts/lib/create-env-staging.mjs --force --fetch-keys   # optional Stagin
 1. `sql/talk-voice-phase1-session-usage.sql`
 2. `sql/talk-voice-phase2-security-telemetry.sql`
 
+> **Mechanics note (important):** these two files live under `sql/`, **not** under
+> `supabase/migrations/`. They are therefore **not** part of the Supabase migration
+> history and are **not applied by `supabase db push`**. Apply them manually as
+> single-file SQL (Dashboard SQL editor, or `supabase db query`/psql against the
+> Staging-linked project). Use `db push --dry-run` only to inspect the *unrelated*
+> pending migration state; it will not include the talk-voice SQL.
+
 ### Dry-run / status (Staging only)
 
 ```bash
