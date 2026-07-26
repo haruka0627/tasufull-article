@@ -34,6 +34,7 @@
 | **TASFUL Talk** | **Production Ready · 連携 Review PASS** | RELEASE FROZEN · Platform 求人 / Builder 全 Talk フロー Review PASS（2026-07-03） |
 | **Platform Live Phase 5** | **Complete** | P5-1〜P5-9 · `798d4a5`〜`9006ead` |
 | **Platform AI** | **入口接続済** | 専用 AI エンジンなし · TASFUL AI 利用 |
+| **Platform AI ページ生成** | **RELEASE READY WITH FOLLOW-UP** | product/skill/job/worker · Phase 2-E · HEAD `57952cd` · Deploy 未 · [証跡](../reports/platform-ai-page-gen-phase2e-release-verification.md) |
 | **TLV** | **v1.0 FROZEN · Engine backend Go · Live UI 未接続（Production No-Go）· Staging Conditional Go** | Payment Step 0–5 prod 適用 · Edge v4 · [Live UI 接続前監査](../reports/tlv-payment-live-ui-connection-audit.md) · TLV 固有 Phase 2 禁止 |
 | **TLV AI** | **導線のみ** | TLV 専用 AI なし · `live/tlv-tasful-ai-entry.js` → Workspace |
 | **AI 秘書** | **Production Ready** | RELEASE FROZEN（`reports/ai-ops-secretary-release-status.md`） |
