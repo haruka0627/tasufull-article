@@ -18,7 +18,7 @@
 | **TLV Live SDK**（ZEGO Provider） | ⏸ 待機 · Phase 1/1.5 完了 | [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) |
 | **TASFUL AI Workspace** | **Production Ready Go**（2026-06-28）· P1 監視残（KI-014） | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) · [verification](../reports/tasful-ai-production-ready-verification.md) |
 | **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
-| **TALK / Connect / 安否（TASFUL Talk）** | Production Ready · Platform/Builder 連携 Review PASS · 凍結 | [review-mode.md](./review-mode.md) · [snapshot](./RELEASE_READINESS_SNAPSHOT.md) |
+| **TALK / Connect / 安否（TASFUL Talk）** | Production Ready · Platform/Builder 連携 Review PASS · 凍結 · **安否次世代方針: ボタン式** | [ANPI_PRD.md](./ANPI_PRD.md) · [audit](../reports/anpi-button-check-audit-and-design.md) · [review-mode.md](./review-mode.md) · [snapshot](./RELEASE_READINESS_SNAPSHOT.md) |
 | **TASFUL Materials（素材DL）** | 📋 Phase 0 のみ | [backlog](./free-download-service-backlog.md) · [readiness](../reports/free-download-service-implementation-readiness.md) |
 | **Live API（ZEGO）** | Phase 1 Go | [adapter](../docs/LIVE_PLATFORM_ZEGO_ADAPTER.md) · [phase1](../reports/live-platform-zego-adapter-phase1.md) |
 | **Business Directory** | ✅ **DB Production Ready Go** · Commercial Launch **Conditional** | [controlled apply result](../reports/business-directory-production-controlled-apply-result.md) · [DB SSOT](./architecture/business-directory-db-architecture.md) · [launch checklist](../reports/business-directory-commercial-launch-checklist.md) |
@@ -59,6 +59,7 @@
 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) | AI 運営秘書 |
 | [AI/TLV_AI.md](./AI/TLV_AI.md) | TLV → TASFUL AI 導線 · 支援範囲 |
 | [TLV_PRD.md](./TLV_PRD.md) | TLV PRD · **運営方針 §0** · Score OS · 還元 |
+| [ANPI_PRD.md](./ANPI_PRD.md) | **安否（ボタン式）正本** · 状態遷移 · TALK / AI 境界 |
 | [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) | TLV Live SDK（ZEGO PoC · Session Manager 設計 · Phase 2 計画） |
 
 ---
