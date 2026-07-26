@@ -116,6 +116,16 @@ function writeChatSupabaseConfig() {
     );
     process.exit(1);
   }
+  const productionBuild =
+    String(process.env.CF_PAGES_ENV || "").toLowerCase() === "production" ||
+    String(process.env.CF_PAGES_BRANCH || "") === "cf-pages-deploy";
+  const flag = (name) =>
+    !productionBuild && /^(1|true|yes|on)$/i.test(String(process.env[name] || ""));
+  const talkVoiceFlags = {
+    selfHostedTurnEnabled: flag("TALK_VOICE_SELF_HOSTED_TURN_ENABLED"),
+    turnForceRelayTest: flag("TALK_VOICE_TURN_FORCE_RELAY_TEST"),
+    connectionTelemetryEnabled: flag("TALK_VOICE_CONNECTION_TELEMETRY_ENABLED"),
+  };
   const body = `/**
  * Generated at deploy — do not commit. Source: deploy/cloudflare/stage-cloudflare-pages.mjs
  */
@@ -125,6 +135,7 @@ window.TASU_CHAT_SUPABASE_CONFIG = {
 };
 
 window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {};
+Object.assign(window.TASU_TALK_CALL_CONFIG, ${JSON.stringify(talkVoiceFlags)});
 `;
   fs.writeFileSync(path.join(OUT_DIR, "chat-supabase-config.js"), body, "utf8");
   return url.replace(/\/$/, "");

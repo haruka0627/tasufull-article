@@ -251,6 +251,7 @@
     } catch {
       /* ignore */
     }
+    global.TasuTalkCallTurnClient?.clear?.();
     currentSession = null;
     currentRole = null;
     peerDisplayName = "";
@@ -293,10 +294,22 @@
     };
   }
 
+  async function prepareTurnFallback(sessionId) {
+    const client = global.TasuTalkCallTurnClient;
+    if (!client?.isEnabled?.()) return { ok: true, enabled: false };
+    const result = await client.ensureForSession(sessionId);
+    if (!result?.ok) {
+      console.warn("[TasuTalkCallService] TURN fallback unavailable:", result?.error || "unknown");
+      Ui()?.showToast?.("中継接続を準備できませんでした。直接接続を試します。");
+    }
+    return result;
+  }
+
   async function beginCallerOffer(session) {
     if (offerStarted || !session?.id) return;
     offerStarted = true;
     machineGo("connecting");
+    await prepareTurnFallback(session.id);
     const res = await Provider().createOutgoingConnection(iceHandlers(session.id));
     if (!res?.ok) {
       const mapped = Core()?.errors?.()?.mapProviderError?.(res) || res;
@@ -660,6 +673,7 @@
     currentSession = updated;
     clearRingTimeout();
     machineGo("connecting");
+    await prepareTurnFallback(currentSession.id);
     const prep = await Provider().acceptIncomingConnection(iceHandlers(currentSession.id));
     if (!prep?.ok) {
       const mapped = prep || {};

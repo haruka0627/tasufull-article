@@ -43,7 +43,7 @@ function loadCore(extra = {}) {
   return sandbox;
 }
 
-const g = loadCore();
+const g = loadCore({ location: { search: "?talkDev=1" } });
 
 // state machine
 {
@@ -114,6 +114,12 @@ const g = loadCore();
   const E = g.TasuTalkVoiceEntitlement;
   const legacy = E.evaluateEntitlement({});
   assert("ent: legacy unmetered allowed", legacy.allowed && legacy.reason === "legacy_unmetered");
+  const productionLike = loadCore();
+  const productionDefault = productionLike.TasuTalkVoiceEntitlement.evaluateEntitlement({});
+  assert(
+    "ent: production-like missing config is disabled",
+    !productionDefault.allowed && productionDefault.reason === "feature_disabled"
+  );
 
   g.TASU_TALK_VOICE_CONFIG = { voice_feature_enabled: false };
   assert("ent: feature disabled", !E.evaluateEntitlement({}).allowed);

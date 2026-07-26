@@ -3,9 +3,8 @@
  *
  * Config via window.TASU_TALK_VOICE_CONFIG (or TASU_CHAT_SUPABASE_CONFIG.talkVoice).
  *
- * Defaults preserve existing 1:1 WebRTC calls:
- *   voice_feature_enabled = true
- *   voice_entitlement_enforced = false  → legacy_unmetered (no free-tier open while “unknown”)
+ * Production-like defaults are fail-closed. Local/Staging fixtures must opt in
+ * through talkDev=1 or explicit configuration.
  *
  * When voice_entitlement_enforced = true, missing numeric limits → configuration_unavailable (deny).
  */
@@ -13,8 +12,8 @@
   "use strict";
 
   const DEFAULTS = Object.freeze({
-    voice_feature_enabled: true,
-    voice_entitlement_enforced: false,
+    voice_feature_enabled: false,
+    voice_entitlement_enforced: true,
     benefit_purchase_threshold: null,
     daily_free_seconds: null,
     monthly_free_seconds: null,
@@ -35,17 +34,27 @@
 
   function getConfig() {
     const raw = readRawConfig();
+    let fixtureMode = false;
+    try {
+      fixtureMode = /[?&]talkDev=1(?:&|$)/i.test(String(global.location?.search || ""));
+    } catch {
+      fixtureMode = false;
+    }
+    const fixtureDefaults = fixtureMode
+      ? { voice_feature_enabled: true, voice_entitlement_enforced: false }
+      : {};
     return {
       ...DEFAULTS,
+      ...fixtureDefaults,
       ...raw,
       voice_feature_enabled:
         raw.voice_feature_enabled != null
           ? Boolean(raw.voice_feature_enabled)
-          : DEFAULTS.voice_feature_enabled,
+          : fixtureDefaults.voice_feature_enabled ?? DEFAULTS.voice_feature_enabled,
       voice_entitlement_enforced:
         raw.voice_entitlement_enforced != null
           ? Boolean(raw.voice_entitlement_enforced)
-          : DEFAULTS.voice_entitlement_enforced,
+          : fixtureDefaults.voice_entitlement_enforced ?? DEFAULTS.voice_entitlement_enforced,
     };
   }
 
