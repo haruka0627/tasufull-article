@@ -18,6 +18,8 @@
   let onRemoteStream = null;
   /** @type {((state: string) => void)|null} */
   let onConnectionState = null;
+  let connectionStartedAtMs = 0;
+  let connectedAtMs = 0;
 
   const iceCandidateCounts = { host: 0, srflx: 0, relay: 0, prflx: 0, unknown: 0 };
   /** @type {Set<string>} */
@@ -96,6 +98,9 @@
     };
     connection.onconnectionstatechange = () => {
       Ice()?.logIceDebug?.("connectionstate", { state: connection.connectionState });
+      if (connection.connectionState === "connected" && !connectedAtMs) {
+        connectedAtMs = Date.now();
+      }
       if (onConnectionState) {
         onConnectionState(connection.connectionState);
       }
@@ -106,6 +111,8 @@
     onIceCandidate = handlers?.onIceCandidate || null;
     onRemoteStream = handlers?.onRemoteStream || null;
     onConnectionState = handlers?.onConnectionState || null;
+    connectionStartedAtMs = Date.now();
+    connectedAtMs = 0;
     resetIceCandidateStats();
 
     const rtcConfig = Ice()?.buildTalkCallPeerConnectionConfig?.() || {
@@ -191,7 +198,27 @@
       connectionState: pc?.connectionState || null,
       iceConnectionState: pc?.iceConnectionState || null,
       iceGatheringState: pc?.iceGatheringState || null,
+      connectedAtMs: connectedAtMs || null,
     };
+  }
+
+  async function getConnectionStats() {
+    if (!pc?.getStats) return { route: "unknown", selectedCandidatePair: false };
+    const report = await pc.getStats();
+    return (
+      global.TasuTalkVoiceTelemetry?.normalizeStats?.(
+        report,
+        connectionStartedAtMs || connectedAtMs,
+      ) || { route: "unknown", selectedCandidatePair: false }
+    );
+  }
+
+  async function restartIce() {
+    if (!pc) throw new Error("PeerConnection が未初期化です");
+    if (typeof pc.restartIce === "function") pc.restartIce();
+    const offer = await pc.createOffer({ offerToReceiveAudio: true, iceRestart: true });
+    await pc.setLocalDescription(offer);
+    return pc.localDescription;
   }
 
   function close() {
@@ -213,6 +240,8 @@
     onIceCandidate = null;
     onRemoteStream = null;
     onConnectionState = null;
+    connectionStartedAtMs = 0;
+    connectedAtMs = 0;
   }
 
   global.TasuTalkCallWebRtc = {
@@ -228,5 +257,7 @@
     close,
     getPeerConnection: () => pc,
     getConnectionDiagnostics,
+    getConnectionStats,
+    restartIce,
   };
 })(typeof window !== "undefined" ? window : globalThis);

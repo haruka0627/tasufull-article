@@ -222,7 +222,7 @@
       .single();
     if (error) {
       // Drop optional usage columns if migration not applied yet
-      if (/duration_seconds|billable_seconds|end_reason|last_heartbeat|provider|session_limit/i.test(String(error.message || ""))) {
+      if (/duration_seconds|billable_seconds|end_reason|last_heartbeat|provider|session_limit|connection_route|relay_protocol|connect_time|packet_loss|jitter|audio_bytes/i.test(String(error.message || ""))) {
         const fallback = { status };
         if (status === "active") fallback.started_at = patch.started_at;
         if (["ended", "missed", "rejected"].includes(status)) fallback.ended_at = patch.ended_at;

@@ -153,6 +153,24 @@
         return WebRtc()?.getConnectionDiagnostics?.() || null;
       },
 
+      async getConnectionStats() {
+        return (
+          (await WebRtc()?.getConnectionStats?.()) || {
+            route: "unknown",
+            selectedCandidatePair: false,
+          }
+        );
+      },
+
+      async restartIce() {
+        const description = await WebRtc()?.restartIce?.();
+        if (!description) return { ok: false, error: "ice_restart_unavailable" };
+        return {
+          ok: true,
+          localDescription: { type: description.type, sdp: description.sdp },
+        };
+      },
+
       async disconnect() {
         WebRtc()?.close?.();
         fire("onDisconnected", { reason: "disconnect" });

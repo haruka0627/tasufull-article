@@ -777,6 +777,12 @@
         /* ignore */
       }
       try {
+        let stats = null;
+        try {
+          stats = await Provider()?.getConnectionStats?.();
+        } catch {
+          stats = null;
+        }
         const duration = Core()?.usage?.()?.computeDurationSeconds?.({
           startedAt: sessionSnap.started_at,
           connectedAt: sessionSnap.started_at,
@@ -786,6 +792,13 @@
           end_reason: String(reason || "hangup").slice(0, 64),
           duration_seconds: duration,
           billable_seconds: duration,
+          connection_route: stats?.route || "unknown",
+          relay_protocol: stats?.relayProtocol || stats?.protocol || null,
+          connect_time_ms: stats?.connectTimeMs ?? null,
+          packet_loss_summary: stats?.packetsLost ?? null,
+          jitter_summary: stats?.jitter ?? null,
+          audio_bytes_sent: stats?.bytesSent ?? 0,
+          audio_bytes_received: stats?.bytesReceived ?? 0,
         });
       } catch {
         try {

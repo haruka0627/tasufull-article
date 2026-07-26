@@ -27,6 +27,7 @@
     permissions: () => global.TasuTalkVoicePermissions,
     entitlement: () => global.TasuTalkVoiceEntitlement,
     usage: () => global.TasuTalkVoiceUsage,
+    telemetry: () => global.TasuTalkVoiceTelemetry,
     providerInterface: () => global.TasuTalkVoiceProviderInterface,
     getProvider,
     setProvider,
