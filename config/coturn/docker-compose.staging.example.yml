@@ -1,0 +1,34 @@
+services:
+  talk-turn:
+    image: "${COTURN_IMAGE:?Pin a reviewed coturn image digest}"
+    restart: unless-stopped
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:size=16m,mode=1770
+    ports:
+      - "3478:3478/udp"
+      - "3478:3478/tcp"
+      - "5349:5349/tcp"
+      - "443:443/tcp"
+      - "49160-49260:49160-49260/udp"
+      - "49160-49260:49160-49260/tcp"
+    volumes:
+      - type: bind
+        source: ./runtime/turnserver.conf
+        target: /etc/coturn/turnserver.conf
+        read_only: true
+      - type: bind
+        source: ./runtime/fullchain.pem
+        target: /run/secrets/talk_turn_fullchain.pem
+        read_only: true
+      - type: bind
+        source: ./runtime/privkey.pem
+        target: /run/secrets/talk_turn_privkey.pem
+        read_only: true
+    command:
+      - -c
+      - /etc/coturn/turnserver.conf
