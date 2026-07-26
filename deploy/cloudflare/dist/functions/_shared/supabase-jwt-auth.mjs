@@ -30,7 +30,7 @@ export function extractBearerToken(request) {
 
 /**
  * Verify access token via Supabase Auth /auth/v1/user (decode-only forbidden).
- * @returns {Promise<{ ok: true, userId: string } | { ok: false, error: string, http: number }>}
+ * @returns {Promise<{ ok: true, userId: string, talkUserId: string } | { ok: false, error: string, http: number }>}
  */
 export async function verifySupabaseAccessToken(bearerToken, supabaseUrl, anonKey, fetchImpl) {
   const doFetch = typeof fetchImpl === "function" ? fetchImpl : fetch;
@@ -61,7 +61,12 @@ export async function verifySupabaseAccessToken(bearerToken, supabaseUrl, anonKe
     if (!userId) {
       return { ok: false, error: "invalid_token", http: 401 };
     }
-    return { ok: true, userId };
+    const talkUserId = String(
+      data?.app_metadata?.talk_user_id ||
+        data?.app_metadata?.member_id ||
+        userId,
+    ).trim();
+    return { ok: true, userId, talkUserId };
   } catch {
     return { ok: false, error: "auth_unavailable", http: 503 };
   }
@@ -97,7 +102,11 @@ export async function requireSupabaseUser(request, env, opts = {}) {
     return { ok: false, error: "user_mismatch", http: 403 };
   }
 
-  return { ok: true, userId: verified.userId };
+  return {
+    ok: true,
+    userId: verified.userId,
+    talkUserId: verified.talkUserId || verified.userId,
+  };
 }
 
 export function authCorsHeaders(methods = "POST, OPTIONS") {
