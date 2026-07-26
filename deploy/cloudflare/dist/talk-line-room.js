@@ -609,6 +609,7 @@
     activeThread = enrichThread(thread);
     showActiveRoom();
     setPeerHeader(activeThread);
+    syncCallButtonForThread(activeThread);
     setListSelection(activeThread.id);
     updateUrlThread(activeThread.id);
 
@@ -703,6 +704,23 @@
     });
   }
 
+  function syncCallButtonForThread(thread) {
+    const btn = /** @type {HTMLButtonElement|null} */ ($('[data-talk-line-action="call"]'));
+    if (!btn) return;
+    const svc = global.TasuTalkCallService;
+    if (!svc?.canCallThread) {
+      btn.disabled = true;
+      btn.title = "通話（準備中）";
+      btn.classList.remove("talk-call-btn--enabled");
+      return;
+    }
+    const eligible = Boolean(thread && svc.canCallThread(thread));
+    btn.disabled = !eligible;
+    btn.title = eligible ? "音声通話" : "このルームでは通話できません";
+    btn.classList.toggle("talk-call-btn--enabled", eligible);
+    btn.removeAttribute("aria-disabled");
+  }
+
   function wireBack() {
     const btn = $("[data-talk-line-room-back]");
     if (!btn || btn.dataset.wired) return;
@@ -727,6 +745,19 @@
       if (action === "ai") {
         event.preventDefault();
         global.TasuTalkHomeUi?.setLineNav?.("ai");
+      }
+      if (action === "call") {
+        event.preventDefault();
+        const svc = global.TasuTalkCallService;
+        const thread = activeThread;
+        if (!svc?.initiateCall || !thread) return;
+        if (svc.getVoiceState?.() === "authorizing" || svc.getCurrentSession?.()) return;
+        svc
+          .initiateCall(thread)
+          .catch((err) => {
+            const msg = err?.message || "通話を開始できません";
+            global.TasuTalkCallUi?.showToast?.(msg);
+          });
       }
     });
   }
@@ -764,6 +795,11 @@
     wireBack();
     wireRoomActions();
     wireNotifyCardActions();
+    try {
+      global.TasuTalkCallService?.init?.();
+    } catch {
+      /* ignore */
+    }
 
     const threadId = pickStr(
       options?.threadIdFromUrl,
@@ -798,6 +834,7 @@
     openThreadById,
     showEmpty,
     getActiveThreadId: () => activeThread?.id || "",
+    getActiveThread: () => activeThread,
     _activeProfile: null,
     _activeThread: null,
   };
