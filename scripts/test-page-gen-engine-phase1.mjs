@@ -648,6 +648,33 @@ assert("user action label survives derived refresh", s.doc.actions.primary.label
 assert("CTA kind remains system-owned", s.doc.actions.primary.kind === "tasful_request");
 assert("regenerate reports skip", regen.skipped.some((x) => x.reason === "locked"));
 
+const faqIndex = s.doc.blocks.findIndex((block) => block.type === "faq");
+assert("faq block present for retention test", faqIndex >= 0);
+Engine.editField(s, `blocks.${faqIndex}.props.items.0.a`, "テスト用に手動編集した回答です。");
+const faqRegen = Engine.applyAiDraft(
+  s,
+  {
+    faq: [
+      { q: "対応エリアは？", a: "AIが上書きしようとした回答" },
+      { q: "追加Q", a: "追加Aは許可されてよい" },
+    ],
+  },
+  { model: "m3" },
+);
+assert(
+  "user FAQ answer preserved on regenerate",
+  s.doc.blocks[faqIndex].props.items[0].a === "テスト用に手動編集した回答です。",
+);
+assert(
+  "locked FAQ answer path skipped",
+  faqRegen.skipped.some((x) => x.path === `blocks.${faqIndex}.props.items.0.a` && x.reason === "locked"),
+);
+assert(
+  "unlocked FAQ item can still update",
+  s.doc.blocks[faqIndex].props.items[1]?.a === "追加Aは許可されてよい" ||
+    faqRegen.applied.some((p) => p === `blocks.${faqIndex}.props.items.1.a`),
+);
+
 const improved = Engine.applySelfReview(
   s,
   {

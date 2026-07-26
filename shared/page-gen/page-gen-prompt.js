@@ -246,7 +246,22 @@
     if (draft.about_heading != null) setBlock("about", "heading", schema.trimText(draft.about_heading, 80));
     if (draft.about_body != null) setBlock("about", "body", schema.trimText(draft.about_body, 8000));
     if (Array.isArray(draft.services)) setBlock("services", "items", draft.services);
-    if (Array.isArray(draft.faq)) setBlock("faq", "items", draft.faq);
+    if (Array.isArray(draft.faq)) {
+      const faqIndex = blockIndex("faq");
+      if (faqIndex >= 0) {
+        draft.faq.slice(0, schema.LIMITS.FAQ_ITEMS).forEach((it, j) => {
+          if (it == null) return;
+          const q = it.q ?? it.question;
+          const a = it.a ?? it.answer;
+          if (q != null) {
+            patch[`blocks.${faqIndex}.props.items.${j}.q`] = schema.trimText(q, schema.LIMITS.FAQ_Q);
+          }
+          if (a != null) {
+            patch[`blocks.${faqIndex}.props.items.${j}.a`] = schema.trimText(a, schema.LIMITS.FAQ_A);
+          }
+        });
+      }
+    }
     if (draft.cta_label != null) setBlock("cta", "label", schema.trimText(draft.cta_label, 40));
     if (draft.conversion_intent != null) {
       patch["conversion.outcome"] = schema.trimText(draft.conversion_intent, 40);

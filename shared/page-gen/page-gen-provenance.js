@@ -69,12 +69,27 @@
     return setLock(doc, path, false);
   }
 
-  /** A path is writable by AI unless the user locked or authored it. */
+  /** A path is writable by AI unless the user locked or authored it (or a descendant). */
+  function hasProtectedDescendant(doc, path) {
+    const prefix = `${String(path)}.`;
+    const store = ensureStore(doc);
+    const user = S().SOURCE.USER;
+    return Object.keys(store).some((key) => {
+      if (!key.startsWith(prefix)) return false;
+      const entry = store[key];
+      return Boolean(entry?.locked) || entry?.source === user;
+    });
+  }
+
   function canAiWrite(doc, path) {
     const entry = entryFor(doc, path);
-    if (!entry) return true;
-    if (entry.locked) return false;
-    return entry.source !== S().SOURCE.USER;
+    if (entry) {
+      if (entry.locked) return false;
+      if (entry.source === S().SOURCE.USER) return false;
+    }
+    // Parent array/object writes must not wipe locked nested user edits (e.g. faq items.0.a).
+    if (hasProtectedDescendant(doc, path)) return false;
+    return true;
   }
 
   /**
