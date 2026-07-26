@@ -12,10 +12,9 @@ stable
 security definer
 set search_path = public
 as $$
+  -- Keep precedence aligned with Pages JWT helper (app_metadata only, then sub).
   select nullif(trim(coalesce(
-    auth.jwt() ->> 'talk_user_id',
     auth.jwt() -> 'app_metadata' ->> 'talk_user_id',
-    auth.jwt() ->> 'member_id',
     auth.jwt() -> 'app_metadata' ->> 'member_id',
     auth.jwt() ->> 'sub',
     auth.uid()::text
@@ -245,6 +244,11 @@ comment on column public.talk_call_sessions.audio_bytes_sent is
   'Browser WebRTC audio bytes sent snapshot; client-observed telemetry, not billing authority.';
 comment on column public.talk_call_signals.expires_at is
   'Signal retention boundary. Operations must purge expired rows.';
+
+revoke all on function public.talk_current_user_id() from public;
+revoke all on function public.talk_voice_guard_session() from public;
+revoke all on function public.talk_voice_guard_signal() from public;
+grant execute on function public.talk_current_user_id() to authenticated;
 
 commit;
 

@@ -299,6 +299,7 @@
     if (!client?.isEnabled?.()) return { ok: true, enabled: false };
     const result = await client.ensureForSession(sessionId);
     if (!result?.ok) {
+      client.clear?.();
       console.warn("[TasuTalkCallService] TURN fallback unavailable:", result?.error || "unknown");
       Ui()?.showToast?.("中継接続を準備できませんでした。直接接続を試します。");
     }

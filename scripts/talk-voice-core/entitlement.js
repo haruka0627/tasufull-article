@@ -32,14 +32,23 @@
     return root && typeof root === "object" ? root : {};
   }
 
+  function talkDevFixtureAllowed() {
+    const callCfg =
+      global.TASU_TALK_CALL_CONFIG && typeof global.TASU_TALK_CALL_CONFIG === "object"
+        ? global.TASU_TALK_CALL_CONFIG
+        : {};
+    // Production builds set allowTalkDevFixture=false via stage-cloudflare-pages.mjs.
+    if (callCfg.allowTalkDevFixture === false) return false;
+    try {
+      return /[?&]talkDev=1(?:&|$)/i.test(String(global.location?.search || ""));
+    } catch {
+      return false;
+    }
+  }
+
   function getConfig() {
     const raw = readRawConfig();
-    let fixtureMode = false;
-    try {
-      fixtureMode = /[?&]talkDev=1(?:&|$)/i.test(String(global.location?.search || ""));
-    } catch {
-      fixtureMode = false;
-    }
+    const fixtureMode = talkDevFixtureAllowed();
     const fixtureDefaults = fixtureMode
       ? { voice_feature_enabled: true, voice_entitlement_enforced: false }
       : {};

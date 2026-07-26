@@ -50,6 +50,8 @@ function mockFetch({ authStatus = 200, talkUserId = "u-a", session, room, blocke
                 caller_id: "u-a",
                 callee_id: "u-b",
                 status: "active",
+                started_at: new Date().toISOString(),
+                session_limit_seconds: 1800,
               },
             ],
       );
@@ -64,6 +66,7 @@ function mockFetch({ authStatus = 200, talkUserId = "u-a", session, room, blocke
                 buyer_id: "u-a",
                 seller_id: "u-b",
                 status: "active",
+                expires_at: new Date(Date.now() + 3_600_000).toISOString(),
               },
             ],
       );
@@ -136,6 +139,38 @@ async function invoke({ token = "valid-token", body = { sessionId: SESSION_ID },
   const result = await invoke({ mock });
   assert.equal(result.status, 403);
   assert.equal(result.json.error, "participant_blocked");
+}
+
+{
+  const mock = mockFetch({
+    session: {
+      id: SESSION_ID,
+      room_id: ROOM_ID,
+      caller_id: "u-a",
+      callee_id: "u-b",
+      status: "active",
+      started_at: new Date(Date.now() - 120_000).toISOString(),
+      session_limit_seconds: 60,
+    },
+  });
+  const result = await invoke({ mock });
+  assert.equal(result.status, 409);
+  assert.equal(result.json.error, "session_limit_exceeded");
+}
+
+{
+  const mock = mockFetch({
+    room: {
+      id: ROOM_ID,
+      buyer_id: "u-a",
+      seller_id: "u-b",
+      status: "active",
+      expires_at: new Date(Date.now() - 1_000).toISOString(),
+    },
+  });
+  const result = await invoke({ mock });
+  assert.equal(result.status, 410);
+  assert.equal(result.json.error, "thread_expired");
 }
 
 {

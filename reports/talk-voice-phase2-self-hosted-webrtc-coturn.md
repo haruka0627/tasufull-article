@@ -236,10 +236,26 @@ No real TURN bytes or approved price inputs exist, so estimates for 1,000 /
 98. Git diff stat: see final handoff
 99. Next phase: provision controlled Staging TURN/DB and rerun strict matrix
 
-## Production switch conditions
+## Security follow-up (post Phase 2 audit)
 
-Apply both migrations through an allowlisted Staging path; verify RLS and
-trigger behavior with two real users; deploy a pinned coturn version and valid
-certificate; pass anonymous/private/open-relay probes; pass UDP/TCP/TLS 443
-forced relay with selected relay pairs; validate distributed rate limiting,
-network switching, Safari/iOS, monitoring, and rollback. Production remains OFF.
+Addressed after readonly audits from database, signaling, coturn, security, and
+release reviewers:
+
+- Coturn example now denies IPv4-mapped IPv6 private/link-local peers.
+- Prometheus remains commented/opt-in in the example conf.
+- Production builds set `allowTalkDevFixture=false`; `?talkDev=1` no longer
+  reopens entitlement or static TURN on Production assets.
+- TURN credential checks enforce `session_limit_seconds` and room `expires_at`.
+- ICE credential cache is session-bound and cleared on ensure failure.
+- Phase 2 SQL identity precedence matches Pages JWT helper (`app_metadata` then
+  `sub`) and REVOKE EXECUTE FROM PUBLIC on definer helpers.
+- Selective dist mirrors for Phase 2 client scripts are required before 8788 can
+  load the new modules; full `build:pages` remains blocked by unrelated dirty.
+
+Still open before controlled Staging TURN enablement:
+
+- Durable / distributed credential rate limit
+- Real coturn UDP/TCP/TLS 443 runtime probes
+- Staging migration apply without unrelated `--include-all`
+- Narrow participant UPDATE for telemetry columns / server telemetry RPC
+

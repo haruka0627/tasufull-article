@@ -125,6 +125,8 @@ function writeChatSupabaseConfig() {
     selfHostedTurnEnabled: flag("TALK_VOICE_SELF_HOSTED_TURN_ENABLED"),
     turnForceRelayTest: flag("TALK_VOICE_TURN_FORCE_RELAY_TEST"),
     connectionTelemetryEnabled: flag("TALK_VOICE_CONNECTION_TELEMETRY_ENABLED"),
+    // Production assets must ignore ?talkDev=1 entitlement / static-TURN bypass.
+    allowTalkDevFixture: !productionBuild,
   };
   const body = `/**
  * Generated at deploy — do not commit. Source: deploy/cloudflare/stage-cloudflare-pages.mjs

@@ -3,6 +3,7 @@
 
   const ENDPOINT = "/api/talk-voice-turn-credentials";
   let cached = null;
+  let boundSessionId = null;
 
   function config() {
     const value = global.TASU_TALK_CALL_CONFIG;
@@ -25,8 +26,10 @@
     });
   }
 
-  function getIceServers() {
-    if (!cached || Date.parse(cached.expiresAt) - Date.now() < 30_000) return [];
+  function getIceServers(sessionId) {
+    const want = sessionId != null ? String(sessionId) : boundSessionId;
+    if (!want || !cached || String(cached.sessionId) !== want) return [];
+    if (Date.parse(cached.expiresAt) - Date.now() < 30_000) return [];
     return cached.iceServers.map((item) => ({ ...item }));
   }
 
@@ -38,14 +41,23 @@
 
   async function ensureForSession(sessionId) {
     if (!isEnabled()) return { ok: true, enabled: false, iceServers: [] };
+    const sid = String(sessionId || "");
+    if (!sid) {
+      clear();
+      return { ok: false, error: "invalid_session" };
+    }
     if (
-      cached?.sessionId === String(sessionId) &&
+      cached?.sessionId === sid &&
       Date.parse(cached.expiresAt) - Date.now() >= 30_000
     ) {
-      return { ok: true, enabled: true, iceServers: getIceServers(), expiresAt: cached.expiresAt };
+      boundSessionId = sid;
+      return { ok: true, enabled: true, iceServers: getIceServers(sid), expiresAt: cached.expiresAt };
     }
     const token = await getAccessToken();
-    if (!token) return { ok: false, error: "auth_required" };
+    if (!token) {
+      clear();
+      return { ok: false, error: "auth_required" };
+    }
     let response;
     try {
       response = await fetch(ENDPOINT, {
@@ -54,20 +66,23 @@
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ sessionId: String(sessionId || "") }),
+        body: JSON.stringify({ sessionId: sid }),
         cache: "no-store",
         credentials: "same-origin",
       });
     } catch {
+      clear();
       return { ok: false, error: "voice_relay_unavailable" };
     }
     let body = {};
     try {
       body = await response.json();
     } catch {
+      clear();
       return { ok: false, error: "voice_relay_unavailable" };
     }
     if (!response.ok || !body?.ok || !validIceServers(body.iceServers)) {
+      clear();
       return {
         ok: false,
         error:
@@ -77,15 +92,17 @@
       };
     }
     cached = {
-      sessionId: String(body.sessionId),
+      sessionId: String(body.sessionId || sid),
       iceServers: body.iceServers.map((item) => ({ ...item })),
       expiresAt: String(body.expiresAt),
     };
-    return { ok: true, enabled: true, iceServers: getIceServers(), expiresAt: cached.expiresAt };
+    boundSessionId = sid;
+    return { ok: true, enabled: true, iceServers: getIceServers(sid), expiresAt: cached.expiresAt };
   }
 
   function clear() {
     cached = null;
+    boundSessionId = null;
   }
 
   global.TasuTalkCallTurnClient = {

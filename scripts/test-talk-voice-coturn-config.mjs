@@ -37,8 +37,19 @@ assert.ok(
   conf.match(/denied-peer-ip=192\.168\.0\.0-192\.168\.255\.255/),
   "RFC1918 192.168/16 must be denied",
 );
+assert.ok(
+  conf.includes("denied-peer-ip=::ffff:10.0.0.0-::ffff:10.255.255.255"),
+  "IPv4-mapped IPv6 private ranges must be denied",
+);
+assert.ok(
+  conf.includes("denied-peer-ip=::ffff:169.254.0.0-::ffff:169.254.255.255"),
+  "IPv4-mapped link-local must be denied",
+);
+assert.ok(!/^prometheus$/m.test(conf), "prometheus must stay commented/opt-in");
 assert.ok(!/static-auth-secret=(?!INJECT_AT_RUNTIME_DO_NOT_COMMIT)\S+/.test(conf));
 assert.ok(!/BEGIN (RSA |EC )?PRIVATE KEY/.test(conf));
 assert.ok(!/\.pem[\s\S]*BEGIN CERTIFICATE/.test(conf));
 
-console.log("TALK Voice coturn config tests: PASS (protocols, auth, private peer deny, quotas, no secrets)");
+console.log(
+  "TALK Voice coturn config tests: PASS (protocols, auth, private peer deny, IPv6-mapped deny, quotas, no secrets)",
+);

@@ -120,6 +120,15 @@ const g = loadCore({ location: { search: "?talkDev=1" } });
     "ent: production-like missing config is disabled",
     !productionDefault.allowed && productionDefault.reason === "feature_disabled"
   );
+  const hardened = loadCore({
+    location: { search: "?talkDev=1" },
+    TASU_TALK_CALL_CONFIG: { allowTalkDevFixture: false },
+  });
+  const hardenedDefault = hardened.TasuTalkVoiceEntitlement.evaluateEntitlement({});
+  assert(
+    "ent: production assets ignore talkDev fixture bypass",
+    !hardenedDefault.allowed && hardenedDefault.reason === "feature_disabled"
+  );
 
   g.TASU_TALK_VOICE_CONFIG = { voice_feature_enabled: false };
   assert("ent: feature disabled", !E.evaluateEntitlement({}).allowed);

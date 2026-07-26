@@ -60,6 +60,8 @@
     }
     const cfg = readTalkCallConfigObject();
     if (optionsTruthy(cfg.internalTest)) return true;
+    // Production builds force allowTalkDevFixture=false; URL alone must not reopen static TURN.
+    if (cfg.allowTalkDevFixture === false) return false;
     try {
       const search = String(global.location?.search || "");
       if (/[?&]talkDev=1(?:&|$)/i.test(search)) return true;

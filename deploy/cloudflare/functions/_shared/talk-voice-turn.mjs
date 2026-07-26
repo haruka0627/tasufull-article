@@ -138,7 +138,7 @@ export async function assertTurnSessionAccess({
     table: "talk_call_sessions",
     query:
       `id=eq.${encodeURIComponent(sessionId)}` +
-      "&select=id,room_id,caller_id,callee_id,status,expires_at,session_limit_seconds&limit=1",
+      "&select=id,room_id,caller_id,callee_id,status,expires_at,session_limit_seconds,started_at&limit=1",
     fetchImpl,
   });
   if (!sessionResult.ok) return sessionResult;
@@ -149,6 +149,16 @@ export async function assertTurnSessionAccess({
   }
   if (String(session.status) !== "active") {
     return { ok: false, error: "session_inactive", http: 409 };
+  }
+  const sessionLimit = Number(session.session_limit_seconds);
+  const startedAtMs = Date.parse(session.started_at || "");
+  if (
+    Number.isFinite(sessionLimit) &&
+    sessionLimit >= 0 &&
+    Number.isFinite(startedAtMs) &&
+    nowMs - startedAtMs > sessionLimit * 1000
+  ) {
+    return { ok: false, error: "session_limit_exceeded", http: 409 };
   }
 
   const roomResult = await restRows({
@@ -173,6 +183,10 @@ export async function assertTurnSessionAccess({
   }
   if (["blocked", "closed", "cancelled"].includes(String(room.status))) {
     return { ok: false, error: "thread_inactive", http: 409 };
+  }
+  const roomExpiresAtMs = Date.parse(room.expires_at || "");
+  if (Number.isFinite(roomExpiresAtMs) && roomExpiresAtMs <= nowMs) {
+    return { ok: false, error: "thread_expired", http: 410 };
   }
   const peerId =
     String(talkUserId) === String(session.caller_id)

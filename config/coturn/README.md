@@ -22,10 +22,12 @@ browser receives only session-bound, short-lived TURN REST credentials.
 4. Run a browser with `iceTransportPolicy=relay` separately for TURN UDP,
    TURN TCP, and TURN TLS 443.
 5. Inspect `RTCPeerConnection.getStats()` and require a selected relay candidate.
-6. Attempt anonymous, expired, modified-username, private-peer, loopback, and
-   multicast allocations; every attempt must fail.
+6. Attempt anonymous, expired, modified-username, private-peer, loopback,
+   multicast, and IPv4-mapped IPv6 private allocations; every attempt must fail.
 7. Confirm metrics and logs contain no credential, SDP, ICE candidate, or IP
-   payload beyond short-lived operational data.
+   payload beyond short-lived operational data. Prometheus remains commented
+   in the example conf and must stay firewalled to localhost/private networks
+   if enabled.
 
 Do not mark TURN TLS PASS from config review or a mocked peer connection.
 
