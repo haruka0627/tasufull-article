@@ -251,6 +251,7 @@
     } catch {
       /* ignore */
     }
+    global.TasuTalkCallTurnClient?.clear?.();
     currentSession = null;
     currentRole = null;
     peerDisplayName = "";
@@ -293,10 +294,23 @@
     };
   }
 
+  async function prepareTurnFallback(sessionId) {
+    const client = global.TasuTalkCallTurnClient;
+    if (!client?.isEnabled?.()) return { ok: true, enabled: false };
+    const result = await client.ensureForSession(sessionId);
+    if (!result?.ok) {
+      client.clear?.();
+      console.warn("[TasuTalkCallService] TURN fallback unavailable:", result?.error || "unknown");
+      Ui()?.showToast?.("中継接続を準備できませんでした。直接接続を試します。");
+    }
+    return result;
+  }
+
   async function beginCallerOffer(session) {
     if (offerStarted || !session?.id) return;
     offerStarted = true;
     machineGo("connecting");
+    await prepareTurnFallback(session.id);
     const res = await Provider().createOutgoingConnection(iceHandlers(session.id));
     if (!res?.ok) {
       const mapped = Core()?.errors?.()?.mapProviderError?.(res) || res;
@@ -660,6 +674,7 @@
     currentSession = updated;
     clearRingTimeout();
     machineGo("connecting");
+    await prepareTurnFallback(currentSession.id);
     const prep = await Provider().acceptIncomingConnection(iceHandlers(currentSession.id));
     if (!prep?.ok) {
       const mapped = prep || {};
@@ -763,6 +778,12 @@
         /* ignore */
       }
       try {
+        let stats = null;
+        try {
+          stats = await Provider()?.getConnectionStats?.();
+        } catch {
+          stats = null;
+        }
         const duration = Core()?.usage?.()?.computeDurationSeconds?.({
           startedAt: sessionSnap.started_at,
           connectedAt: sessionSnap.started_at,
@@ -772,6 +793,13 @@
           end_reason: String(reason || "hangup").slice(0, 64),
           duration_seconds: duration,
           billable_seconds: duration,
+          connection_route: stats?.route || "unknown",
+          relay_protocol: stats?.relayProtocol || stats?.protocol || null,
+          connect_time_ms: stats?.connectTimeMs ?? null,
+          packet_loss_summary: stats?.packetsLost ?? null,
+          jitter_summary: stats?.jitter ?? null,
+          audio_bytes_sent: stats?.bytesSent ?? 0,
+          audio_bytes_received: stats?.bytesReceived ?? 0,
         });
       } catch {
         try {

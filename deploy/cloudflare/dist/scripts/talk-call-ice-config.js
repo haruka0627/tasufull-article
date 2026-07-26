@@ -60,6 +60,8 @@
     }
     const cfg = readTalkCallConfigObject();
     if (optionsTruthy(cfg.internalTest)) return true;
+    // Production builds force allowTalkDevFixture=false; URL alone must not reopen static TURN.
+    if (cfg.allowTalkDevFixture === false) return false;
     try {
       const search = String(global.location?.search || "");
       if (/[?&]talkDev=1(?:&|$)/i.test(search)) return true;
@@ -127,11 +129,22 @@
   }
 
   function getTalkCallIceServers(options) {
+    const issuedServers = global.TasuTalkCallTurnClient?.getIceServers?.() || [];
+    if (issuedServers.length) {
+      return issuedServers.map((server) => ({ ...server }));
+    }
     const { urlRaw, username, credential } = resolveTurnSettings(options);
     const servers = [{ urls: DEFAULT_STUN_URL }];
     const turnUrls = parseTurnUrls(urlRaw).map(normalizeTurnUrl).filter(Boolean);
 
     if (!turnUrls.length) {
+      return servers;
+    }
+
+    if (!isInternalDiagnosticsAllowed()) {
+      console.warn(
+        "[TasuTalkCallIce] Static TURN credentials are disabled; use the authenticated credential endpoint."
+      );
       return servers;
     }
 
@@ -149,8 +162,14 @@
   }
 
   function buildTalkCallPeerConnectionConfig(options) {
+    const cfg = readTalkCallConfigObject();
+    const relayOnly =
+      isInternalDiagnosticsAllowed() &&
+      optionsTruthy(cfg.turnForceRelayTest) &&
+      (global.TasuTalkCallTurnClient?.getIceServers?.() || []).length > 0;
     return {
       iceServers: getTalkCallIceServers(options),
+      iceTransportPolicy: relayOnly ? "relay" : "all",
     };
   }
 
@@ -205,6 +224,8 @@
       turnConfigured: turnUrls.length > 0,
       turnEnabled,
       turnUrlCount: turnEnabled ? turnUrls.length : 0,
+      selfHostedTurnEnabled: Boolean(global.TasuTalkCallTurnClient?.isEnabled?.()),
+      issuedTurnCredential: (global.TasuTalkCallTurnClient?.getIceServers?.() || []).length > 0,
       debug: isTalkCallDebugEnabled(),
       allowDebug: readTalkCallConfigObject().allowDebug !== false,
     };
