@@ -110,19 +110,88 @@ function syncCfMeta() {
   return synced;
 }
 
+/**
+ * Local Wrangler only: write Staging url/anon into dist/chat-supabase-config.js.
+ * Never writes service_role. Never mutates repo-root chat-supabase-config.js
+ * (Production build continues to use root / build:pages injection).
+ */
 function syncChatSupabaseConfigForDev() {
-  const src = path.join(ROOT, "chat-supabase-config.js");
   const dest = path.join(DIST, "chat-supabase-config.js");
+  const stagingPath = path.join(ROOT, ".env.staging");
+  const STAGING_REF = "ahlxuyvhzqdqaojiywmu";
+  const PRODUCTION_REF = "ddojquacsyqesrjhcvmn";
+
+  function parseEnvFile(file) {
+    const map = new Map();
+    if (!fs.existsSync(file)) return map;
+    for (const line of fs.readFileSync(file, "utf8").split(/\r?\n/)) {
+      if (!line || line.trim().startsWith("#")) continue;
+      const i = line.indexOf("=");
+      if (i < 0) continue;
+      map.set(line.slice(0, i).trim(), line.slice(i + 1).trim());
+    }
+    return map;
+  }
+
+  const staging = parseEnvFile(stagingPath);
+  const url = String(
+    staging.get("TASFUL_SUPABASE_URL") || staging.get("SUPABASE_URL") || "",
+  )
+    .trim()
+    .replace(/\/$/, "");
+  const anonKey = String(
+    staging.get("TASFUL_SUPABASE_ANON_KEY") || staging.get("SUPABASE_ANON_KEY") || "",
+  ).trim();
+
+  if (url.includes(STAGING_REF) && anonKey && !/service_role|sb_secret/i.test(anonKey)) {
+    const js =
+      `/**\n` +
+      ` * AUTO-GENERATED for local Wrangler (npm run dev) — Staging only.\n` +
+      ` * Source: .env.staging · Do not commit dist copy · No service_role.\n` +
+      ` * Production builds use repo chat-supabase-config.js / build injection.\n` +
+      ` */\n` +
+      `window.TASU_CHAT_SUPABASE_CONFIG = {\n` +
+      `  url: ${JSON.stringify(url)},\n` +
+      `  anonKey: ${JSON.stringify(anonKey)},\n` +
+      `  currentUserId: "u_me",\n` +
+      `  me: {\n` +
+      `    id: "u_me",\n` +
+      `    displayName: "あなた",\n` +
+      `    avatarUrl: "https://placehold.co/64x64/f3ead4/967622?text=ME",\n` +
+      `  },\n` +
+      `};\n\n` +
+      `window.__MATCH_FUNCTIONS_BASE__ =\n` +
+      `  window.__MATCH_FUNCTIONS_BASE__ ||\n` +
+      `  ${JSON.stringify(`${url}/functions/v1`)};\n\n` +
+      `window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {\n` +
+      `  webPushVapidPublicKey: "",\n` +
+      `  pushIncomingEnabled: false,\n` +
+      `  pushSubscribeEnabled: false,\n` +
+      `};\n`;
+    fs.writeFileSync(dest, js, "utf8");
+    console.log(
+      `[ensure-pages-dist] wrote dist/chat-supabase-config.js from .env.staging (${STAGING_REF})`,
+    );
+    return true;
+  }
+
+  // Fallback: copy root config only if dist lacks a usable anon key.
+  const src = path.join(ROOT, "chat-supabase-config.js");
   if (!fs.existsSync(src)) return false;
-  const js = fs.readFileSync(src, "utf8");
-  const anonKey = js.match(/anonKey:\s*"(eyJ[^"]+)"/)?.[1] || "";
-  if (!anonKey) return false;
+  const rootJs = fs.readFileSync(src, "utf8");
+  const rootAnon = rootJs.match(/anonKey:\s*"(eyJ[^"]+|sb_[^"]+)"/)?.[1] || "";
+  if (!rootAnon) return false;
   if (fs.existsSync(dest)) {
     const distAnon = fs.readFileSync(dest, "utf8").match(/anonKey:\s*"([^"]+)"/)?.[1] || "";
     if (distAnon.startsWith("eyJ") && distAnon.length > 80) return false;
   }
+  if (rootJs.includes(PRODUCTION_REF)) {
+    console.warn(
+      "[ensure-pages-dist] .env.staging incomplete — dist chat config may stay Production; set Staging vars",
+    );
+  }
   fs.copyFileSync(src, dest);
-  console.log("[ensure-pages-dist] synced chat-supabase-config.js from repo root (dev staging)");
+  console.log("[ensure-pages-dist] synced chat-supabase-config.js from repo root (fallback)");
   return true;
 }
 

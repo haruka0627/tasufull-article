@@ -313,6 +313,23 @@ assert(
     !apiDraft.includes("ai-model-gateway.js"),
 );
 
+const uiSrc = fs.readFileSync(path.join(root, "platform-page-gen-ui.js"), "utf8");
+assert(
+  "UI maps entitlement_unavailable distinctly",
+  uiSrc.includes("entitlement_unavailable") &&
+    uiSrc.includes("現在プラン情報を確認できません"),
+);
+assert(
+  "UI does not treat unavailable as unpaid-only message",
+  !uiSrc.match(/entitlement_unavailable[\s\S]{0,120}有料プラン加入後に利用できます/),
+);
+assert(
+  "ensure-pages-dist writes Staging chat config for local dev",
+  fs.readFileSync(path.join(root, "scripts/ensure-pages-dist.mjs"), "utf8").includes(
+    "wrote dist/chat-supabase-config.js from .env.staging",
+  ),
+);
+
 console.log(`\n${pass}/${pass + fail} PASS`);
 if (fail > 0) {
   console.error(`${fail} FAILED`);

@@ -175,13 +175,17 @@
       const access = await Adapter().checkEntitlement();
       renderPaidGate(panel, access.ok);
       if (!access.ok) {
-        setStatus(
-          panel,
-          access.error === "auth_required"
-            ? "ログインが必要です。"
-            : "有料プラン加入後に利用できます。",
-          "error",
-        );
+        const err = String(access.error || "");
+        let message = "AIページ生成を利用できませんでした。";
+        if (err === "auth_required") message = "ログインが必要です。";
+        else if (err === "paid_entitlement_required") {
+          message = "AIページ生成は有料プランで利用できます。";
+        } else if (err === "entitlement_unavailable") {
+          message = "現在プラン情報を確認できません。時間をおいて再試行してください。";
+        } else if (err === "user_mismatch") {
+          message = "権限を確認できませんでした。";
+        }
+        setStatus(panel, message, "error");
         return;
       }
 
