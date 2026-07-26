@@ -22,12 +22,12 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| **状態** | **RELEASE BLOCKED** |
-| **正本** | [tasful-phase3-release-candidate-audit.md](../reports/tasful-phase3-release-candidate-audit.md) |
+| **状態** | **RELEASE BLOCKED**（既存 REL-P0 · application security P1 は 3-A で解消） |
+| **正本** | [tasful-phase3-release-candidate-audit.md](../reports/tasful-phase3-release-candidate-audit.md) · [tasful-phase3a-security-unblock.md](../reports/tasful-phase3a-security-unblock.md) |
 | **P0** | REL-P0-01 tree · REL-P0-04 prod alias · REL-P0-03 secretary secrets · REL-P0-02（TLV scope時） |
-| **P1** | Unauth Pages APIs（secretary-deepseek · tlv-zego-token · gemini-live-proxy）· AI Workspace final 29/31（categories HTML） |
+| **P1** | **Cleared in Phase 3-A** — secretary / tlv-zego JWT · Pages gemini-live-proxy 410 · AI Workspace **31/31** |
 | **非阻害** | Platform AI ページ生成は 2-E READY WITH FOLLOW-UP（単独では RC 全体を通せない） |
-| **対応** | 監査 §10 Unblock plan → Phase 3 再判定 |
+| **対応** | REL-P0 解除後に October RC 再判定 · TALK voice 切替は [talk-voice-server-migration-readiness.md](../reports/talk-voice-server-migration-readiness.md) |
 
 ---
 
