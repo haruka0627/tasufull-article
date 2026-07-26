@@ -18,6 +18,15 @@ const ENV = {
   TALK_VOICE_TURN_HOST: "turn.staging.tasful.example",
   TALK_VOICE_TURN_SHARED_SECRET: "test-shared-secret-at-least-thirty-two-characters",
   TALK_VOICE_TURN_CREDENTIAL_TTL_SEC: "1200",
+  TALK_VOICE_RATE_LIMIT_ENABLED: "true",
+  TALK_VOICE_RATE_LIMIT_FAIL_CLOSED: "true",
+  TALK_VOICE_RATE_LIMIT_NAMESPACE: "staging",
+  TALK_VOICE_RATE_LIMIT_USE_MOCK: "true",
+  TALK_VOICE_RATE_LIMIT_HASH_KEY: "test-rate-limit-hash-key-32chars-min!",
+  TALK_VOICE_RATE_LIMIT_USER_MAX: "100",
+  TALK_VOICE_RATE_LIMIT_SESSION_MAX: "100",
+  TALK_VOICE_RATE_LIMIT_IP_MAX: "100",
+  TALK_VOICE_RATE_LIMIT_GLOBAL_MAX: "1000",
 };
 
 function response(data, status = 200) {
@@ -175,6 +184,7 @@ async function invoke({ token = "valid-token", body = { sessionId: SESSION_ID },
 
 {
   endpoint._test.resetRateLimits();
+  if (ENV.__talkVoiceRateLimitMock?._testReset) ENV.__talkVoiceRateLimitMock._testReset();
   const mock = mockFetch();
   const result = await invoke({ mock });
   assert.equal(result.status, 200);
@@ -198,12 +208,16 @@ async function invoke({ token = "valid-token", body = { sessionId: SESSION_ID },
 
 {
   endpoint._test.resetRateLimits();
+  if (ENV.__talkVoiceRateLimitMock?._testReset) ENV.__talkVoiceRateLimitMock._testReset();
   let last;
   for (let i = 0; i < 7; i += 1) {
     last = await invoke({ mock: mockFetch() });
   }
   assert.equal(last.status, 429);
   assert.equal(last.json.error, "rate_limited");
+  assert.ok(Number(last.json.retry_after_seconds) >= 1);
+  assert.ok(!("reason" in last.json));
+  assert.ok(!JSON.stringify(last.json).includes("user_limited"));
 }
 
 {

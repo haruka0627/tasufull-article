@@ -69,6 +69,10 @@ function baseValidEnv(overrides = {}) {
     TALK_VOICE_TURN_TLS_KEY_PATH: "/run/secrets/talk_turn_privkey.pem",
     TALK_VOICE_TURN_CREDENTIAL_API_URL: "http://127.0.0.1:8788/api/talk-voice-turn-credentials",
     TALK_VOICE_TELEMETRY_SINK: "session_columns",
+    TALK_VOICE_RATE_LIMIT_ENABLED: "true",
+    TALK_VOICE_RATE_LIMIT_FAIL_CLOSED: "true",
+    TALK_VOICE_RATE_LIMIT_NAMESPACE: "staging",
+    TALK_VOICE_RATE_LIMIT_HASH_KEY: "staging-rate-limit-hash-key-32chars-min!",
     ...overrides,
   };
 }
@@ -205,6 +209,10 @@ check("dist parity for TURN function mirrors", () => {
     [
       "deploy/cloudflare/functions/_shared/talk-voice-turn.mjs",
       "deploy/cloudflare/dist/functions/_shared/talk-voice-turn.mjs",
+    ],
+    [
+      "deploy/cloudflare/functions/_shared/talk-voice-rate-limit.mjs",
+      "deploy/cloudflare/dist/functions/_shared/talk-voice-rate-limit.mjs",
     ],
   ];
   for (const [a, b] of pairs) {

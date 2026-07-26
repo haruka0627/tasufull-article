@@ -1,0 +1,22 @@
+# EXAMPLE ONLY — do not apply to Production Pages without explicit approval.
+# Shows how Cloudflare Pages can bind the TalkVoiceTurnRateLimiter Durable Object.
+#
+# Copy relevant sections into the Pages project's wrangler.toml / Dashboard bindings
+# for Staging/Preview only. Keep Production bindings unchanged until release gate.
+#
+# name / pages_build_output_dir must match the existing Pages project.
+
+# name = "tasufull-article"
+# pages_build_output_dir = "deploy/cloudflare/dist"
+# compatibility_date = "2026-07-02"
+
+# [[durable_objects.bindings]]
+# name = "TALK_VOICE_RATE_LIMITER"
+# class_name = "TalkVoiceTurnRateLimiter"
+# script_name = "talk-voice-rate-limiter"
+
+# Required secrets / vars (set in Dashboard · never commit values):
+#   TALK_VOICE_RATE_LIMIT_ENABLED=true
+#   TALK_VOICE_RATE_LIMIT_FAIL_CLOSED=true
+#   TALK_VOICE_RATE_LIMIT_NAMESPACE=staging   # production → production (never share)
+#   TALK_VOICE_RATE_LIMIT_HASH_KEY=<32+ char secret from secret manager>

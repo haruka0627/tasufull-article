@@ -27,6 +27,7 @@ export const SECRET_KEYS = new Set([
   "TASFUL_SUPABASE_ANON_KEY",
   "AUTH_HOOK_L2_ALLOWLIST_PASSWORD",
   "TALK_VOICE_TURN_SHARED_SECRET",
+  "TALK_VOICE_RATE_LIMIT_HASH_KEY",
   "STRIPE_SECRET_KEY",
   "STRIPE_WEBHOOK_SECRET",
 ]);
@@ -185,6 +186,31 @@ export const TALK_VOICE_STAGING_ENV_FIELDS = [
     required: true,
     section: "api",
     description: "Telemetry sink id (session_columns|noop) — no Production URL",
+  },
+  {
+    key: "TALK_VOICE_RATE_LIMIT_ENABLED",
+    required: true,
+    section: "rate-limit",
+    description: "Distributed rate limit enabled (true required before Staging credential exposure)",
+  },
+  {
+    key: "TALK_VOICE_RATE_LIMIT_FAIL_CLOSED",
+    required: true,
+    section: "rate-limit",
+    description: "Fail-closed on DO errors (must be true)",
+  },
+  {
+    key: "TALK_VOICE_RATE_LIMIT_NAMESPACE",
+    required: true,
+    section: "rate-limit",
+    description: "staging | production | development — never share across envs",
+  },
+  {
+    key: "TALK_VOICE_RATE_LIMIT_HASH_KEY",
+    required: true,
+    secret: true,
+    section: "rate-limit",
+    description: "HMAC key ≥32 chars for identifier hashing (secret manager only)",
   },
   {
     key: "AUTH_HOOK_L2_ALLOWLIST_PASSWORD",
@@ -547,6 +573,33 @@ export function validateTalkVoiceStagingEnv(env, opts = {}) {
       code: "bad_feature_flag",
       key: "TALK_VOICE_SELF_HOSTED_TURN_ENABLED",
       message: "feature flag must be boolean-like",
+    });
+  }
+
+  const rlNs = String(env?.TALK_VOICE_RATE_LIMIT_NAMESPACE || "").trim().toLowerCase();
+  if (rlNs && rlNs !== "staging" && rlNs !== "development") {
+    issues.push({
+      level: "error",
+      code: "bad_rate_limit_namespace",
+      key: "TALK_VOICE_RATE_LIMIT_NAMESPACE",
+      message: "Staging env must use namespace staging (or development for local) — never production",
+    });
+  }
+  if (String(env?.TALK_VOICE_RATE_LIMIT_FAIL_CLOSED || "").trim() && !isTruthyFlag(env.TALK_VOICE_RATE_LIMIT_FAIL_CLOSED)) {
+    issues.push({
+      level: "error",
+      code: "rate_limit_fail_open",
+      key: "TALK_VOICE_RATE_LIMIT_FAIL_CLOSED",
+      message: "TALK_VOICE_RATE_LIMIT_FAIL_CLOSED must be true",
+    });
+  }
+  const hashKey = String(env?.TALK_VOICE_RATE_LIMIT_HASH_KEY || "");
+  if (requireSecretsFilled && hashKey && !isPlaceholder(hashKey) && hashKey.length < 32) {
+    issues.push({
+      level: "error",
+      code: "short_rate_limit_hash_key",
+      key: "TALK_VOICE_RATE_LIMIT_HASH_KEY",
+      message: "TALK_VOICE_RATE_LIMIT_HASH_KEY must be at least 32 characters (value not shown)",
     });
   }
 

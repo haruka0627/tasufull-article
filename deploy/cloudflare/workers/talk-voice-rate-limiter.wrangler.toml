@@ -1,0 +1,21 @@
+# Talk Voice TURN credential rate limiter — Durable Object Worker
+# Staging / preview deploy only. Do NOT apply to Production Pages without approval.
+#
+# Deploy (NOT executed in Phase 2 implementation):
+#   cd deploy/cloudflare/workers
+#   npx wrangler deploy -c talk-voice-rate-limiter.wrangler.toml
+#
+# Pages binding example:
+#   deploy/cloudflare/wrangler.pages.talk-voice-rate-limit.example.toml
+
+name = "talk-voice-rate-limiter"
+main = "talk-voice-rate-limiter.js"
+compatibility_date = "2026-07-02"
+
+[[durable_objects.bindings]]
+name = "TALK_VOICE_RATE_LIMITER"
+class_name = "TalkVoiceTurnRateLimiter"
+
+[[migrations]]
+tag = "talk-voice-rl-v1"
+new_classes = ["TalkVoiceTurnRateLimiter"]
