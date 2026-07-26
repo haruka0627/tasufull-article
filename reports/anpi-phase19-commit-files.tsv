@@ -1,0 +1,156 @@
+commit_group	phase	status	path	category	include	reason	risk
+A	12	untracked	docs/anpi-phase12-talk-staging-schema-apply.md	runbook	YES	formal reproducibility / audit artifact	LOW
+A	15	untracked	docs/anpi-phase15-talk-identity-mapping-apply.md	runbook	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	docs/anpi-phase16-real-insert-enablement-checklist.md	runbook	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	docs/anpi-phase16-realtime-retention-enablement.md	runbook	YES	formal reproducibility / audit artifact	LOW
+B	17	untracked	docs/anpi-phase17-first-staging-insert-readiness.md	runbook	YES	formal reproducibility / audit artifact	LOW
+C	18	untracked	docs/anpi-phase18-first-staging-notification-insert-runbook.md	runbook	YES	formal reproducibility / audit artifact	LOW
+EXCLUDE	11	untracked	reports/_anpi-phase11-audit/_talk-tables.sql	temporary	NO	Phase11 evidence outside Phase12-18 commit scope	LOW
+EXCLUDE	11	untracked	reports/_anpi-phase11-audit/staging-parity-summary.json	raw_evidence	NO	Phase11 evidence outside Phase12-18 commit scope	LOW
+EXCLUDE	13	untracked	reports/_anpi-phase13-apply/apply-output.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	13	untracked	reports/_anpi-phase13-apply/apply-tx.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	13	untracked	reports/_anpi-phase13-apply/phase11-reaudit.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	13	untracked	reports/_anpi-phase13-apply/phase11-static.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	13	untracked	reports/_anpi-phase13-apply/postcheck-detail.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	13	untracked	reports/_anpi-phase13-apply/postcheck-detail.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	13	untracked	reports/_anpi-phase13-apply/preflight.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/apply-output.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/apply-tx.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/final-foundation-audit.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/identity-match-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/identity-match.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/identity-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/identity.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/provenance-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	14	untracked	reports/_anpi-phase14-hardening/provenance.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/apply-schema-output.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/apply-schema-tx.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/apply-seed-output.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/apply-seed-tx.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/candidates-readonly.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/candidates-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/dry-run-parity-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/dry-run-parity.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/phase11-reaudit.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/preflight-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	15	untracked	reports/_anpi-phase15-identity/preflight.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/_q-enablement.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/_q-purge-dry.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/_q-purge-priv.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/apply-purge-output.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/apply-purge-tx.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/enablement-run.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/enablement-summary.json	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/phase11-reaudit.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/postcheck-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/postcheck.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/realtime-retention-audit-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	16	untracked	reports/_anpi-phase16-enablement/realtime-retention-audit.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/_q-cleanup-dry.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/_q-emergency.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/_q-flag-after.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/_q-gate.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/_q-poll.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/_q-writer-dry.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/apply-foundation-output.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/apply-foundation-tx.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/emergency-disable.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/emergency-disable.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/polling-dry-run.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/polling-dry-run.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/postcheck-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/postcheck.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/readiness-run.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/readiness-summary.json	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/select-test-user-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/select-test-user.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/staging-dry-runs.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/writer-dry-run.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/writer-dry-run.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/writer-rpc-audit-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	17	untracked	reports/_anpi-phase17-readiness/writer-rpc-audit.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/01-enable-flag.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/01-enable-flag.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/02-dry-run.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/02-dry-run.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/02b-dry-run-result.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/02b-dry-run-result.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/03-real-insert.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/03-real-insert.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/03b-post-insert-counts.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/03b-post-insert-counts.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/04-row-verify.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/04-row-verify.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/05-polling.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/05a-polling-rpc.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/05a-polling-rpc.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/05b-polling-counts.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/05b-polling-counts.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/06-idempotency.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/06-idempotency.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/06b-idempotency-counts.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/06b-idempotency-counts.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/07-cleanup-dry-run.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/07-cleanup-dry-run.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/08-cleanup.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/08-cleanup.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/08b-cleanup-counts.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/08b-cleanup-counts.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/09-emergency-disable.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/09-emergency-disable.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/09b-gate-after-disable.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/09b-gate-after-disable.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/10-safe-probe-off.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/10-safe-probe-off.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/11-final-audit.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/11-final-audit.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/12-retention-priv.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/12-retention-priv.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/12b-retention-priv.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/12b-retention-priv.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/_v18-final.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/_v18-probe.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/preflight-extra.json.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/preflight-extra.sql	temporary	NO	regenerable step evidence; formal report summarizes	MEDIUM
+EXCLUDE	18	untracked	reports/_anpi-phase18-insert/preflight-phase17.txt	raw_evidence	NO	regenerable step evidence; formal report summarizes	MEDIUM
+A	12	untracked	reports/anpi-phase12-talk-staging-schema-sync.md	report	YES	formal reproducibility / audit artifact	LOW
+A	13	untracked	reports/anpi-phase13-talk-staging-manual-apply.md	report	YES	formal reproducibility / audit artifact	LOW
+A	14	untracked	reports/anpi-phase14-talk-staging-privilege-hardening.md	report	YES	formal reproducibility / audit artifact	LOW
+A	15	untracked	reports/anpi-phase15-talk-identity-mapping-foundation.md	report	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	reports/anpi-phase16-realtime-retention-enablement.md	report	YES	formal reproducibility / audit artifact	LOW
+B	17	untracked	reports/anpi-phase17-first-staging-insert-readiness.md	report	YES	formal reproducibility / audit artifact	LOW
+C	18	untracked	reports/anpi-phase18-first-staging-notification-insert.md	report	YES	formal reproducibility / audit artifact	LOW
+A	12	untracked	scripts/test-anpi-phase12-talk-staging-schema-sync.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+A	14	untracked	scripts/test-anpi-phase14-talk-staging-privilege-hardening.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+A	15	untracked	scripts/test-anpi-phase15-talk-identity-mapping.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	scripts/test-anpi-phase16-notification-retention.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+B	17	untracked	scripts/test-anpi-phase17-first-insert-readiness.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+A	12	untracked	scripts/verify-anpi-phase12-talk-staging-schema-local.mjs	test	YES	local static verifier companion	LOW
+A	14	untracked	scripts/verify-anpi-phase14-talk-staging-privilege-hardening-local.mjs	test	YES	local static verifier companion	LOW
+A	15	untracked	scripts/verify-anpi-phase15-talk-identity-mapping-local.mjs	test	YES	local static verifier companion	LOW
+B	16	untracked	scripts/verify-anpi-phase16-enablement.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	scripts/verify-anpi-phase16-notification-retention-local.mjs	test	YES	local static verifier companion	LOW
+B	17	untracked	scripts/verify-anpi-phase17-first-insert-readiness-local.mjs	test	YES	local static verifier companion	LOW
+B	17	untracked	scripts/verify-anpi-phase17-first-insert-readiness.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+C	18	untracked	scripts/verify-anpi-phase18-first-insert.mjs	verification	YES	formal reproducibility / audit artifact	LOW
+A	12	untracked	sql/anpi-phase12-talk-staging-schema-sync-rollback.sql	rollback	YES	formal reproducibility / audit artifact	LOW
+A	12	untracked	sql/anpi-phase12-talk-staging-schema-sync.sql	schema	YES	formal reproducibility / audit artifact	LOW
+A	14	untracked	sql/anpi-phase14-talk-staging-privilege-hardening-rollback.sql	rollback	YES	formal reproducibility / audit artifact	LOW
+A	14	untracked	sql/anpi-phase14-talk-staging-privilege-hardening.sql	schema	YES	formal reproducibility / audit artifact	LOW
+A	15	untracked	sql/anpi-phase15-talk-identity-mapping-foundation.sql	schema	YES	formal reproducibility / audit artifact	LOW
+A	15	untracked	sql/anpi-phase15-talk-identity-mapping-rollback.sql	rollback	YES	formal reproducibility / audit artifact	LOW
+A	15	untracked	sql/anpi-phase15-talk-identity-mapping-seed.sql	seed	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	sql/anpi-phase16-notification-retention-purge.sql	schema	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	sql/anpi-phase16-notification-retention-rollback.sql	rollback	YES	formal reproducibility / audit artifact	LOW
+B	16	untracked	sql/anpi-phase16-notification-retention-scheduler-disabled.sql	schema	YES	formal reproducibility / audit artifact	LOW
+B	17	untracked	sql/anpi-phase17-first-insert-cleanup.sql	schema	YES	formal reproducibility / audit artifact	LOW
+B	17	untracked	sql/anpi-phase17-first-insert-readiness-foundation.sql	schema	YES	formal reproducibility / audit artifact	LOW
+B	17	untracked	sql/anpi-phase17-first-insert-readiness-rollback.sql	rollback	YES	formal reproducibility / audit artifact	LOW
+D	19	untracked	reports/anpi-phase19-commit-isolation-audit.md	report	YES	Phase19 formal audit	LOW
+D	19	untracked	reports/anpi-phase19-commit-files.tsv	report	YES	Phase19 commit file list	LOW
+D	19	untracked	docs/anpi-phase19-commit-plan.md	runbook	YES	Phase19 commit plan	LOW
+EXCLUDE	19	untracked	scripts/_anpi-phase19-inventory-scan.mjs	temporary	NO	local scan helper	LOW
+EXCLUDE	19	untracked	scripts/_anpi-phase19-final-yes-scan.mjs	temporary	NO	local final scan helper	LOW
+EXCLUDE	19	untracked	reports/_anpi-phase19-scan-draft.tsv	temporary	NO	draft superseded	LOW
+EXCLUDE	19	untracked	reports/_anpi-phase19-scan-meta.json	temporary	NO	scan meta local	LOW
+EXCLUDE	19	untracked	reports/_anpi-phase19-verify-static.txt	temporary	NO	verify console capture	LOW
