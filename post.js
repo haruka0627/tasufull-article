@@ -4851,6 +4851,10 @@
       console.log("WORKER FINAL PAYLOAD", payload);
     }
 
+    if (window.TasuPlatformPageGenUi?.mergeIntoSavePayload) {
+      payload = window.TasuPlatformPageGenUi.mergeIntoSavePayload(payload, form);
+    }
+
     return store.insertListing(payload);
   }
 
@@ -5082,7 +5086,10 @@
                 : listingType === "product"
                   ? collectGeneralListingPayload(form, "product")
                   : collectGeneralListingPayload(form, listingType);
-          const payload = { ...base, publish_status: "draft", user_id: getUserId() };
+          let payload = { ...base, publish_status: "draft", user_id: getUserId() };
+          if (window.TasuPlatformPageGenUi?.mergeIntoSavePayload) {
+            payload = window.TasuPlatformPageGenUi.mergeIntoSavePayload(payload, form);
+          }
           result = await window.TasuListingStore?.insertListing?.(payload);
         }
 

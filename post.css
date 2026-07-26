@@ -2871,6 +2871,47 @@ body[data-post-scope="business"] [data-business-whitelist-hidden="true"] button 
   object-fit: cover;
 }
 
+.post-page-gen {
+  margin-top: 1rem;
+}
+
+.post-page-gen-quality {
+  margin: 0.75rem 0;
+  padding: 0.75rem 0.875rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  background: #f8fafc;
+}
+
+.post-page-gen-quality__head {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.post-page-gen-quality__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: 0.35rem 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post-page-gen-quality__list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.post-page-gen-preview {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.5rem;
+  background: #fff;
+}
+
 .post-edit-banner {
   margin: 0.75rem 0 0;
   padding: 0.625rem 0.875rem;
