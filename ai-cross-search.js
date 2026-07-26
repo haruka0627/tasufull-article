@@ -818,7 +818,9 @@
             return r.items || [];
           }
           if (key === "worker") {
-            const r = await search.queryWorkerItems(ctx);
+            // Phase 5 wave 2: worker branch of any plan is Edge-eligible
+            // (connectOnly gate applied inside queryWorkerItems).
+            const r = await search.queryWorkerItems(ctx, { workerPlanBranch: true });
             return r.items || [];
           }
         } catch (err) {

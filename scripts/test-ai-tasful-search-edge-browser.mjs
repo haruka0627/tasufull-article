@@ -272,28 +272,50 @@ async function main() {
       const standaloneEdgeCalls = edgeCalls;
       const standaloneClientCalls = clientCalls;
 
-      await window.TasuAiSearch.queryWorkerItems({
-        userText: "動画編集できる人探して",
-        messages: [],
-        intentHints: {},
-        searchIntentSchema: {
-          action: "search",
-          vertical: "platform",
-          type: "skill",
-          query: "動画編集できる人探して",
-          sort: "relevance",
+      // Phase 5 wave 2: compound-plan worker branches (skill/repair/delivery)
+      // are invoked with { workerPlanBranch: true }, mirroring runSearchPlan.
+      const skillWorker = await window.TasuAiSearch.queryWorkerItems(
+        {
+          userText: "動画編集できる人探して",
+          messages: [],
+          intentHints: {},
+          searchIntentSchema: {
+            action: "search",
+            vertical: "platform",
+            type: "skill",
+            query: "動画編集できる人探して",
+            sort: "relevance",
+          },
         },
-      });
-      await window.TasuAiSearch.queryWorkerItems({
-        userText: "水漏れを直せる人を探して",
-        messages: [],
-        intentHints: { categoryId: "repair_maintenance" },
-      });
-      await window.TasuAiSearch.queryWorkerItems({
-        userText: "荷物を配達できる人を探して",
-        messages: [],
-        intentHints: { delivery: true },
-      });
+        { workerPlanBranch: true }
+      );
+      const repairWorker = await window.TasuAiSearch.queryWorkerItems(
+        {
+          userText: "水漏れを直せる人を探して",
+          messages: [],
+          intentHints: { categoryId: "repair_maintenance" },
+        },
+        { workerPlanBranch: true }
+      );
+      const deliveryWorker = await window.TasuAiSearch.queryWorkerItems(
+        {
+          userText: "荷物を配達できる人を探して",
+          messages: [],
+          intentHints: { delivery: true },
+        },
+        { workerPlanBranch: true }
+      );
+      const compoundEdgeCalls = edgeCalls - standaloneEdgeCalls;
+
+      // connectOnly must stay client even when invoked as a plan branch.
+      const connectPlanBranch = await window.TasuAiSearch.queryWorkerItems(
+        {
+          userText: "Connect対応ワーカーを探して",
+          messages: [],
+          intentHints: { connectOnly: true },
+        },
+        { workerPlanBranch: true }
+      );
       const connectOnly = await window.TasuAiSearch.queryWorkerItems({
         userText: "Connect対応ワーカーを探して",
         messages: [],
@@ -323,7 +345,18 @@ async function main() {
         standaloneCount: (standalone?.items || []).length,
         standaloneUrl: standalone?.items?.[0]?.detailUrl || "",
         standaloneCta: standalone?.items?.[0]?.primaryActionLabel || "",
+        compoundEdgeCalls,
+        skillWorkerSource: skillWorker?.source || "",
+        skillWorkerUrl: skillWorker?.items?.[0]?.detailUrl || "",
+        skillWorkerCta: skillWorker?.items?.[0]?.primaryActionLabel || "",
+        skillWorkerType: skillWorker?.items?.[0]?.type || "",
+        skillWorkerKind: skillWorker?.items?.[0]?.kind || "",
+        repairWorkerSource: repairWorker?.source || "",
+        deliveryWorkerSource: deliveryWorker?.source || "",
+        connectPlanBranchSource: connectPlanBranch?.source || "",
+        connectPlanBranchCount: (connectPlanBranch?.items || []).length,
         connectCount: (connectOnly?.items || []).length,
+        connectSource: connectOnly?.source || "",
         demoCalls,
       };
     });
@@ -338,13 +371,14 @@ async function main() {
       fail("standalone worker_request uses Edge only", JSON.stringify(workerRouting));
     }
     if (
-      workerRouting.payloads.length === 1 &&
-      workerRouting.payloads[0].vertical === "platform" &&
-      workerRouting.payloads[0].type === "worker"
+      workerRouting.payloads.length === 4 &&
+      workerRouting.payloads.every(
+        (p) => p.vertical === "platform" && p.type === "worker"
+      )
     ) {
-      pass("worker Edge payload type");
+      pass("worker Edge payload type (standalone + compound)");
     } else {
-      fail("worker Edge payload type", JSON.stringify(workerRouting.payloads));
+      fail("worker Edge payload type (standalone + compound)", JSON.stringify(workerRouting.payloads));
     }
     if (
       /^detail-worker\.html\?id=[^&]+&from=ai$/.test(workerRouting.standaloneUrl) &&
@@ -354,10 +388,45 @@ async function main() {
     } else {
       fail("worker Edge detail URL and CTA", JSON.stringify(workerRouting));
     }
-    if (workerRouting.edgeCalls === 1 && workerRouting.clientCalls === 4) {
-      pass("skill repair delivery connectOnly stay client");
+    // Phase 5 wave 2: compound-plan worker branches route to Edge.
+    if (
+      workerRouting.skillWorkerSource === "edge" &&
+      /^detail-worker\.html\?id=[^&]+&from=ai$/.test(workerRouting.skillWorkerUrl) &&
+      workerRouting.skillWorkerCta === "プロフィールを見る" &&
+      workerRouting.skillWorkerType === "worker" &&
+      workerRouting.skillWorkerKind === "worker"
+    ) {
+      pass("skill_request worker branch → Edge (detail-worker + CTA)");
     } else {
-      fail("skill repair delivery connectOnly stay client", JSON.stringify(workerRouting));
+      fail("skill_request worker branch → Edge (detail-worker + CTA)", JSON.stringify(workerRouting));
+    }
+    if (workerRouting.repairWorkerSource === "edge") {
+      pass("repair_request worker branch → Edge");
+    } else {
+      fail("repair_request worker branch → Edge", JSON.stringify(workerRouting));
+    }
+    if (workerRouting.deliveryWorkerSource === "edge") {
+      pass("delivery_request worker branch → Edge");
+    } else {
+      fail("delivery_request worker branch → Edge", JSON.stringify(workerRouting));
+    }
+    // 3 compound worker branches (skill/repair/delivery) each hit Edge once.
+    if (workerRouting.compoundEdgeCalls === 3) {
+      pass("compound worker branches use Edge (x3)");
+    } else {
+      fail("compound worker branches use Edge (x3)", JSON.stringify(workerRouting));
+    }
+    // connectOnly=true stays client even when invoked as a plan branch.
+    if (workerRouting.connectPlanBranchSource !== "edge") {
+      pass("connectOnly plan branch stays client");
+    } else {
+      fail("connectOnly plan branch stays client", JSON.stringify(workerRouting));
+    }
+    // Total Edge calls: 1 standalone + 3 compound = 4; connect (x2) stay client.
+    if (workerRouting.edgeCalls === 4 && workerRouting.clientCalls === 2) {
+      pass("connectOnly (standalone + plan branch) stay client");
+    } else {
+      fail("connectOnly (standalone + plan branch) stay client", JSON.stringify(workerRouting));
     }
     if (workerRouting.connectCount > 0 && workerRouting.demoCalls >= 2) {
       pass("Connect demo merge preserved");

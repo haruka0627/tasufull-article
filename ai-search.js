@@ -4676,6 +4676,7 @@
     }
   }
 
+  // Phase 5 wave 1: standalone worker_request (top-level schema type=worker).
   function shouldUseStandaloneWorkerEdge(ctx, criteria) {
     const schemaIntent = ctx.searchIntentSchema || ctx.validatedIntent || null;
     return (
@@ -4684,6 +4685,17 @@
       typeof schemaIntent === "object" &&
       schemaIntent.vertical === "platform" &&
       schemaIntent.type === "worker"
+    );
+  }
+
+  // Phase 5 wave 2: worker branch inside a compound plan
+  // (skill_request / repair_request / delivery_request). Decided per plan item,
+  // NOT by top-level schema type. connectOnly=true always stays on client.
+  function shouldUseWorkerPlanBranchEdge(criteria, options) {
+    return (
+      options != null &&
+      options.workerPlanBranch === true &&
+      criteria.connectOnly !== true
     );
   }
 
@@ -4706,7 +4718,7 @@
     };
   }
 
-  async function queryWorkerItems(ctx) {
+  async function queryWorkerItems(ctx, options) {
     const crossCtx = makeCrossCtx(ctx);
     const criteria = extractWorkerCriteria(crossCtx);
     ensureRelaxedCriteria(criteria);
@@ -4714,7 +4726,12 @@
       return { items: [], criteria, insufficient: true };
     }
 
-    if (!shouldUseStandaloneWorkerEdge(ctx, criteria)) {
+    // Edge only for: standalone worker_request OR compound-plan worker branch.
+    // Both require connectOnly !== true; connectOnly + Connect demo stay client.
+    const useWorkerEdge =
+      shouldUseStandaloneWorkerEdge(ctx, criteria) ||
+      shouldUseWorkerPlanBranchEdge(criteria, options);
+    if (!useWorkerEdge) {
       return queryWorkerItemsClient(crossCtx, criteria);
     }
 
