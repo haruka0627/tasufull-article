@@ -171,6 +171,199 @@ async function main() {
     if (hasSkillFetch) pass("fetchSkillsViaEdge exported");
     else fail("fetchSkillsViaEdge exported");
 
+    const hasWorkerFetch = await page.evaluate(
+      () => typeof window.TasuAiSearch?.fetchWorkersViaEdge === "function"
+    );
+    if (hasWorkerFetch) pass("fetchWorkersViaEdge exported");
+    else fail("fetchWorkersViaEdge exported");
+
+    const workerRouting = await page.evaluate(async () => {
+      const originalFetch = window.fetch.bind(window);
+      const gateway = window.TasuAiModelGateway;
+      const originalEndpoint = gateway.getSupabaseEndpoint.bind(gateway);
+      const store = window.TasuListingStore;
+      const originalPublished = store.fetchPublishedListings.bind(store);
+      const originalCatalog = window.TasuListingDemoCatalog;
+      let edgeCalls = 0;
+      let clientCalls = 0;
+      let demoCalls = 0;
+      const payloads = [];
+
+      gateway.getSupabaseEndpoint = (name) =>
+        name === "ai-tasful-search"
+          ? {
+              url: "https://phase5-worker.test/functions/v1/ai-tasful-search",
+              anonKey: "test-anon-key",
+            }
+          : originalEndpoint(name);
+      window.fetch = async (input, init) => {
+        const url = String(typeof input === "string" ? input : input?.url || "");
+        if (url.includes("/functions/v1/ai-tasful-search")) {
+          edgeCalls += 1;
+          payloads.push(JSON.parse(String(init?.body || "{}")));
+          return new Response(
+            JSON.stringify({
+              ok: true,
+              results: [
+                {
+                  id: "worker-edge-001",
+                  vertical: "platform",
+                  type: "worker",
+                  kind: "worker",
+                  title: "清掃サポート",
+                  summary: "清掃と軽作業に対応",
+                  priceLabel: "時給 ¥2,000",
+                  locationLabel: "東京都",
+                  availabilityLabel: "平日",
+                  detailUrl: "detail-worker.html?id=worker-edge-001&from=ai",
+                  primaryActionLabel: "プロフィールを見る",
+                  badges: ["清掃"],
+                },
+              ],
+              meta: { count: 1, truncated: false },
+            }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+          );
+        }
+        return originalFetch(input, init);
+      };
+      store.fetchPublishedListings = async () => {
+        clientCalls += 1;
+        return [];
+      };
+      window.TasuListingDemoCatalog = {
+        ...(originalCatalog || {}),
+        getStoreListing: (id) => {
+            demoCalls += 1;
+            if (!["demo-worker-connect-001", "demo-worker-connect-002"].includes(id)) {
+              return originalCatalog?.getStoreListing?.(id) || null;
+          }
+          return {
+            id,
+            listing_type: "worker",
+            publish_status: "public",
+            title: `Connect demo ${id}`,
+            description: "Connect対応ワーカー",
+            tags: ["Connect", "軽作業"],
+            worker_display_name: "Connectワーカー",
+            worker_services: "軽作業",
+            worker_area: "東京都",
+            worker_price_type: "時給",
+            worker_price_amount: 2000,
+            form_data: { connect_enabled: true },
+          };
+        },
+      };
+
+      const standalone = await window.TasuAiSearch.queryWorkerItems({
+        userText: "東京で清掃を頼めるワーカー探して",
+        messages: [],
+        intentHints: {},
+        searchIntentSchema: {
+          action: "search",
+          vertical: "platform",
+          type: "worker",
+          query: "東京で清掃を頼めるワーカー探して",
+          location: "東京",
+          category: "cleaning",
+          sort: "relevance",
+        },
+      });
+      const standaloneEdgeCalls = edgeCalls;
+      const standaloneClientCalls = clientCalls;
+
+      await window.TasuAiSearch.queryWorkerItems({
+        userText: "動画編集できる人探して",
+        messages: [],
+        intentHints: {},
+        searchIntentSchema: {
+          action: "search",
+          vertical: "platform",
+          type: "skill",
+          query: "動画編集できる人探して",
+          sort: "relevance",
+        },
+      });
+      await window.TasuAiSearch.queryWorkerItems({
+        userText: "水漏れを直せる人を探して",
+        messages: [],
+        intentHints: { categoryId: "repair_maintenance" },
+      });
+      await window.TasuAiSearch.queryWorkerItems({
+        userText: "荷物を配達できる人を探して",
+        messages: [],
+        intentHints: { delivery: true },
+      });
+      const connectOnly = await window.TasuAiSearch.queryWorkerItems({
+        userText: "Connect対応ワーカーを探して",
+        messages: [],
+        intentHints: { connectOnly: true },
+        searchIntentSchema: {
+          action: "search",
+          vertical: "platform",
+          type: "worker",
+          query: "Connect対応ワーカーを探して",
+          sort: "relevance",
+        },
+      });
+
+      window.fetch = originalFetch;
+      gateway.getSupabaseEndpoint = originalEndpoint;
+      store.fetchPublishedListings = originalPublished;
+      if (originalCatalog) window.TasuListingDemoCatalog = originalCatalog;
+      else delete window.TasuListingDemoCatalog;
+
+      return {
+        edgeCalls,
+        clientCalls,
+        payloads,
+        standaloneEdgeCalls,
+        standaloneClientCalls,
+        standaloneSource: standalone?.source || "",
+        standaloneCount: (standalone?.items || []).length,
+        standaloneUrl: standalone?.items?.[0]?.detailUrl || "",
+        standaloneCta: standalone?.items?.[0]?.primaryActionLabel || "",
+        connectCount: (connectOnly?.items || []).length,
+        demoCalls,
+      };
+    });
+    if (
+      workerRouting.standaloneEdgeCalls === 1 &&
+      workerRouting.standaloneClientCalls === 0 &&
+      workerRouting.standaloneSource === "edge" &&
+      workerRouting.standaloneCount === 1
+    ) {
+      pass("standalone worker_request uses Edge only");
+    } else {
+      fail("standalone worker_request uses Edge only", JSON.stringify(workerRouting));
+    }
+    if (
+      workerRouting.payloads.length === 1 &&
+      workerRouting.payloads[0].vertical === "platform" &&
+      workerRouting.payloads[0].type === "worker"
+    ) {
+      pass("worker Edge payload type");
+    } else {
+      fail("worker Edge payload type", JSON.stringify(workerRouting.payloads));
+    }
+    if (
+      /^detail-worker\.html\?id=[^&]+&from=ai$/.test(workerRouting.standaloneUrl) &&
+      workerRouting.standaloneCta === "プロフィールを見る"
+    ) {
+      pass("worker Edge detail URL and CTA");
+    } else {
+      fail("worker Edge detail URL and CTA", JSON.stringify(workerRouting));
+    }
+    if (workerRouting.edgeCalls === 1 && workerRouting.clientCalls === 4) {
+      pass("skill repair delivery connectOnly stay client");
+    } else {
+      fail("skill repair delivery connectOnly stay client", JSON.stringify(workerRouting));
+    }
+    if (workerRouting.connectCount > 0 && workerRouting.demoCalls >= 2) {
+      pass("Connect demo merge preserved");
+    }
+    else fail("Connect demo merge preserved", JSON.stringify(workerRouting));
+
     // Phase 2 job + Phase 3 business_service + Phase 4 skill smoke (fallback off)
     const platformSmoke = await page.evaluate(async () => {
       window.__TASU_AI_TASFUL_SEARCH_CLIENT_FALLBACK__ = false;

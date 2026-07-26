@@ -157,7 +157,7 @@ function main() {
   );
   assert("intentToType repair_request stays unmapped", Schema.intentToType("repair_request") == null);
   assert("intentToType delivery_request stays unmapped", Schema.intentToType("delivery_request") == null);
-  assert("intentToType worker_request stays unmapped", Schema.intentToType("worker_request") == null);
+  assert("intentToType worker_request", Schema.intentToType("worker_request") === "worker");
   assert("intentToType job_search", Schema.intentToType("job_search") === "job");
   assert("intentToType skill_request", Schema.intentToType("skill_request") === "skill");
   assert("intentToType product_search", Schema.intentToType("product_search") == null);
@@ -215,6 +215,37 @@ function main() {
   assert(
     "skill vs worker: ワーカー探して → worker",
     Intent.classifyIntent("明日手伝ってくれるワーカー探して").intent === "worker_request"
+  );
+  const workerSchema = Schema.fromUserText("東京で清掃を頼めるワーカー探して", {
+    intent: "worker_request",
+    hints: { location: "東京", category: "cleaning" },
+  });
+  assert(
+    "fromUserText platform worker",
+    workerSchema.ok &&
+      workerSchema.value.vertical === "platform" &&
+      workerSchema.value.type === "worker" &&
+      workerSchema.value.category === "cleaning" &&
+      workerSchema.value.action === "search",
+    JSON.stringify(workerSchema.value)
+  );
+  const workerValidate = Schema.validate({
+    action: "search",
+    vertical: "platform",
+    type: "worker",
+    query: "清掃ワーカー",
+    location: "東京",
+    category: "cleaning",
+    priceMax: 12000,
+    sort: "relevance",
+  });
+  assert(
+    "schema platform worker",
+    workerValidate.ok &&
+      workerValidate.value.type === "worker" &&
+      workerValidate.value.category === "cleaning" &&
+      workerValidate.value.priceMax === 12000,
+    JSON.stringify(workerValidate.value)
   );
   assert(
     "skill vs worker: 動画編集探して → skill",

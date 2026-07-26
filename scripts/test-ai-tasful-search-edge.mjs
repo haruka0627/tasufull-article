@@ -8,6 +8,7 @@
  * Production URLs are refused.
  */
 import { join, dirname } from "node:path";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   MAX_BODY_BYTES,
@@ -248,14 +249,27 @@ function runSchemaTests() {
       }).value.type === "skill"
   );
   assert(
-    "schema platform worker unsupported",
+    "schema platform worker ok",
     validateSearchBody({
       action: "search",
       vertical: "platform",
       type: "worker",
-      query: "x",
+      query: "清掃ワーカー",
+      category: "cleaning",
+      location: "東京",
+      priceMax: 12000,
       sort: "relevance",
-    }).ok === false
+    }).ok === true &&
+      validateSearchBody({
+        action: "search",
+        vertical: "platform",
+        type: "worker",
+        query: "清掃ワーカー",
+        category: "cleaning",
+        location: "東京",
+        priceMax: 12000,
+        sort: "relevance",
+      }).value.type === "worker"
   );
   assert(
     "schema history_lookup unsupported",
@@ -347,8 +361,8 @@ function runSchemaTests() {
     assertSafeDetailUrl("detail-skill.html?id=abc&from=ai") === true
   );
   assert(
-    "detail url reject worker detail",
-    assertSafeDetailUrl("detail-worker.html?id=abc") === false
+    "detail url allow worker",
+    assertSafeDetailUrl("detail-worker.html?id=abc&from=ai") === true
   );
   assert(
     "detail url reject shop_store detail",
@@ -364,12 +378,87 @@ function runSchemaTests() {
   );
 }
 
+function runWorkerSourceContractTests() {
+  const source = readFileSync(
+    join(root, "supabase", "functions", "ai-tasful-search", "index.ts"),
+    "utf8"
+  );
+  const select = source.match(/const WORKER_SELECT\s*=\s*\n\s*"([^"]+)"/)?.[1] || "";
+  assert("worker SELECT declared", Boolean(select));
+  assert(
+    "worker SELECT dedicated fields",
+    [
+      "worker_display_name",
+      "worker_services",
+      "worker_area",
+      "worker_availability",
+      "worker_experience",
+      "worker_certifications",
+      "worker_price_type",
+      "worker_price_amount",
+      "worker_support_tags",
+    ].every((field) => select.split(",").includes(field))
+  );
+  assert(
+    "worker SELECT excludes forbidden fields",
+    !/(^|,)(phone|email|contact_email|user_id|owner_id|form_data|payment_url|worker_payment_url|worker_bank_info|age|gender|address|resume|cv|internal_notes|moderation[^,]*)(,|$)/i.test(
+      select
+    ),
+    select
+  );
+
+  const mapperStart = source.indexOf("function workerToResult(");
+  const mapperEnd = source.indexOf("async function searchPlatformWorkers(");
+  const mapper =
+    mapperStart >= 0 && mapperEnd > mapperStart ? source.slice(mapperStart, mapperEnd) : "";
+  assert("worker mapper rejects non-public", /publish_status[^]*!==\s*"public"/.test(mapper));
+  assert("worker mapper rejects non-worker", /listing_type[^]*!==\s*"worker"/.test(mapper));
+  assert("worker mapper does not parse form_data", !/row\.form_data|parseFormData/.test(mapper));
+  assert(
+    "worker mapper exact detail and CTA",
+    /buildDetailUrl\("detail-worker\.html",\s*\{\s*id\s*}\)/.test(mapper) &&
+      /primaryActionLabel:\s*"プロフィールを見る"/.test(mapper)
+  );
+
+  const queryStart = source.indexOf("async function searchPlatformWorkers(");
+  const queryEnd = source.indexOf("function statusAvailabilityLabel(");
+  const query =
+    queryStart >= 0 && queryEnd > queryStart ? source.slice(queryStart, queryEnd) : "";
+  assert("worker query uses public.listings", /\.from\("listings"\)/.test(query));
+  assert(
+    "worker query filters type and public status",
+    /\.eq\("listing_type",\s*"worker"\)/.test(query) &&
+      /\.eq\("publish_status",\s*"public"\)/.test(query)
+  );
+  assert(
+    "worker query does not hard-eq category",
+    !/\.eq\("category"/.test(query),
+    "English task ids must not exact-match DB category"
+  );
+  assert(
+    "worker mapper soft-matches category synonyms",
+    /WORKER_CATEGORY_SYNONYMS/.test(source) &&
+      /workerCategorySoftMatch/.test(mapper) &&
+      !/if\s*\(intent\.category\)\s*\{[^}]*return null/.test(mapper)
+  );
+}
+
 function assertSafePublicPayload(data, label) {
   const json = JSON.stringify(data);
   assert(`${label} no phone`, !/"phone"\s*:/i.test(json) && !/電話/.test(json.slice(0, 50)));
   assert(
+    `${label} no identity/contact fields`,
+    !/"(email|contact_email|user_id|owner_id|age|gender|address|resume|cv|internal_notes)"\s*:/i.test(
+      json
+    )
+  );
+  assert(`${label} no form_data`, !/"form_data"\s*:/i.test(json));
+  assert(`${label} no moderation fields`, !/"moderation[^"]*"\s*:/i.test(json));
+  assert(
     `${label} no payment secrets`,
     !/"payment[_-]?url"/i.test(json) &&
+      !/"worker_payment_url"/i.test(json) &&
+      !/"worker_bank_info"/i.test(json) &&
       !/"bank[_-]?account"/i.test(json) &&
       !/"transfer"/i.test(json) &&
       !/"service_role"/i.test(json)
@@ -396,11 +485,12 @@ function assertSafePublicPayload(data, label) {
           u.startsWith("detail-shop-product.html") ||
           u.startsWith("detail-job.html") ||
           u.startsWith("detail-business-service.html") ||
-          u.startsWith("detail-skill.html")
+          u.startsWith("detail-skill.html") ||
+          u.startsWith("detail-worker.html")
       );
       assert(
-        `${label} not shop_store or worker detail`,
-        !u.startsWith("detail-shop-store.html") && !u.startsWith("detail-worker.html")
+        `${label} not shop_store detail`,
+        !u.startsWith("detail-shop-store.html")
       );
     }
   }
@@ -593,10 +683,35 @@ async function runLiveTests(cfg) {
     action: "search",
     vertical: "platform",
     type: "worker",
-    query: "x",
+    query: "清掃ワーカー",
+    category: "cleaning",
+    location: "東京",
     sort: "relevance",
+    limit: 5,
   });
-  assert("platform worker → 400", platformWorker.status === 400);
+  assert(
+    "POST platform worker shape",
+    platformWorker.status === 200 &&
+      platformWorker.data?.ok === true &&
+      Array.isArray(platformWorker.data.results),
+    `status=${platformWorker.status}`
+  );
+  if (platformWorker.data?.ok) {
+    assert("platform worker count ≤ 5", platformWorker.data.results.length <= 5);
+    assertSafePublicPayload(platformWorker.data, "worker");
+    const typesOk = platformWorker.data.results.every(
+      (r) =>
+        r.type === "worker" &&
+        r.kind === "worker" &&
+        r.vertical === "platform" &&
+        r.primaryActionLabel === "プロフィールを見る" &&
+        /^detail-worker\.html\?id=[^&]+&from=ai$/.test(String(r.detailUrl || ""))
+    );
+    assert("platform worker types", typesOk || platformWorker.data.results.length === 0);
+    if (platformWorker.data.results.length === 0) {
+      pass("0-result worker", "no public worker listings in Staging (acceptable)");
+    }
+  }
 
   const history = await postEdge(base, anonKey, {
     action: "history_lookup",
@@ -730,6 +845,7 @@ async function runLiveTests(cfg) {
 async function main() {
   console.log("\n=== schema (offline) ===");
   runSchemaTests();
+  runWorkerSourceContractTests();
 
   const wantLive =
     process.env.AI_TASFUL_SEARCH_LIVE === "1" ||

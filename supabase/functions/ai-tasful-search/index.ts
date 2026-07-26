@@ -4,6 +4,7 @@
  * Phase 2: Platform jobs (listings.listing_type=job)
  * Phase 3: Platform business_service (non-shop_store business_listings)
  * Phase 4: Platform skill (listings.listing_type=skill)
+ * Phase 5: Platform worker (standalone worker_request only)
  * - No AI Provider / no service role / no Talk / no fee-pay
  */
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.49.1";
@@ -26,6 +27,9 @@ const JOB_SELECT =
 /** Public skill fields only — never phone / contact_email / form_data / user_id / payment */
 const SKILL_SELECT =
   "id,title,description,tags,image_url,thumbnail_url,category,subcategory,publish_status,listing_type,price_amount,created_at";
+/** Public worker fields only — never form_data / contact / user_id / owner_id / payment / moderation */
+const WORKER_SELECT =
+  "id,title,description,tags,image_url,thumbnail_url,category,subcategory,publish_status,listing_type,worker_display_name,worker_services,worker_area,worker_availability,worker_experience,worker_certifications,worker_price_type,worker_price_amount,worker_support_tags,created_at";
 /** Public business service fields — never phone / form_data / user_id / payment */
 const BUSINESS_SERVICE_SELECT =
   "id,company_name,title,description,business_category,business_subcategory,service_area,tags,publish_status,rating,review_count,status,created_at";
@@ -38,6 +42,7 @@ const DETAIL_ALLOW = new Set([
   "detail-job.html",
   "detail-business-service.html",
   "detail-skill.html",
+  "detail-worker.html",
 ]);
 
 type CatalogResult = {
@@ -582,6 +587,154 @@ async function searchPlatformSkills(
   };
 }
 
+function formatWorkerPriceLabel(row: Record<string, unknown>): string {
+  const amount = row.worker_price_amount;
+  const priceType = String(row.worker_price_type || "").trim();
+  if (amount != null && Number.isFinite(Number(amount)) && Number(amount) > 0) {
+    const yen = `¥${Number(amount).toLocaleString("ja-JP")}`;
+    return priceType ? `${priceType} ${yen}`.slice(0, 80) : yen;
+  }
+  return priceType.slice(0, 80);
+}
+
+/** English task ids from client → Japanese labels / synonyms (soft match only). */
+const WORKER_CATEGORY_SYNONYMS: Record<string, RegExp> = {
+  shopping: /買い物代行|買い物|ショッピング|shopping/i,
+  delivery: /配送|配達|デリバリー|宅配|delivery/i,
+  cleaning: /清掃|掃除|ハウスクリーニング|cleaning/i,
+  light_work: /軽作業|単純作業|力仕事|搬入|搬出|light[_\s-]?work/i,
+  companion: /話し相手|付き添い|見守り|companion/i,
+  onsite: /出張|現場作業|現場対応|onsite/i,
+  office: /事務|データ入力|オフィス|office/i,
+};
+
+function workerCategorySoftMatch(hay: string, category: string): boolean {
+  const want = String(category || "").trim().toLowerCase();
+  if (!want) return false;
+  if (hay.toLowerCase().includes(want)) return true;
+  const pattern = WORKER_CATEGORY_SYNONYMS[want];
+  if (pattern && pattern.test(hay)) return true;
+  return false;
+}
+
+function workerToResult(
+  row: Record<string, unknown>,
+  intent: SearchIntent,
+): CatalogResult | null {
+  if (String(row.publish_status || "") !== "public") return null;
+  if (String(row.listing_type || "") !== "worker") return null;
+
+  const id = String(row.id || "").trim();
+  const listingTitle = String(row.title || "").trim();
+  const displayName = String(row.worker_display_name || "").trim();
+  const title = displayName || listingTitle;
+  if (!id || !title) return null;
+
+  const category = String(row.category || "").trim();
+  const subcategory = String(row.subcategory || "").trim();
+  // Do not hard-filter by intent.category: client sends English task ids
+  // (e.g. cleaning) while listings often store Japanese labels. Match soft
+  // via query scoring + optional category boost (same spirit as client).
+
+  const services = String(row.worker_services || "").trim();
+  const description = String(row.description || "").trim();
+  const summary = (services || description).slice(0, 200);
+  const imageUrl = String(row.image_url || row.thumbnail_url || "").trim();
+  const locationLabel = String(row.worker_area || "").trim();
+  const availabilityLabel = String(row.worker_availability || "").trim();
+  const priceLabel = formatWorkerPriceLabel(row);
+  const detailUrl = buildDetailUrl("detail-worker.html", { id });
+  if (!detailUrl) return null;
+
+  const hay = [
+    title,
+    listingTitle,
+    summary,
+    row.tags,
+    category,
+    subcategory,
+    locationLabel,
+    availabilityLabel,
+    row.worker_experience,
+    row.worker_certifications,
+    row.worker_support_tags,
+    priceLabel,
+  ]
+    .join(" ")
+    .toLowerCase();
+  let score = scoreHay(hay, intent);
+  if (intent.category && workerCategorySoftMatch(hay, intent.category)) {
+    score += 4;
+  } else if (intent.category) {
+    score += 1;
+  }
+  if (tokens(intent.query).length && score <= 0) return null;
+
+  const badges = [
+    category || subcategory,
+    ...String(row.worker_support_tags || "")
+      .split(/[,、]/)
+      .map((value) => value.trim()),
+  ]
+    .filter(Boolean)
+    .map((value) => value.slice(0, 24))
+    .slice(0, 3);
+
+  return omitEmpty({
+    id,
+    vertical: "platform" as const,
+    type: "worker",
+    kind: "worker",
+    title: title.slice(0, 120),
+    summary: summary || undefined,
+    imageUrl: imageUrl || undefined,
+    priceLabel: priceLabel || undefined,
+    locationLabel: locationLabel || undefined,
+    availabilityLabel: availabilityLabel || undefined,
+    detailUrl,
+    primaryActionLabel: "プロフィールを見る",
+    badges: badges.length ? badges : undefined,
+    _priceYen:
+      row.worker_price_amount != null && Number.isFinite(Number(row.worker_price_amount))
+        ? Number(row.worker_price_amount)
+        : null,
+    _score: score,
+  }) as CatalogResult;
+}
+
+async function searchPlatformWorkers(
+  client: SupabaseClient,
+  intent: SearchIntent,
+): Promise<{ results: CatalogResult[]; truncated: boolean }> {
+  const fetchLimit = 40;
+  const results: CatalogResult[] = [];
+
+  // No DB-level category eq: client category is often an English task id
+  // (cleaning) while public.listings.category may be a Japanese label.
+  const listingsRes = await client
+    .from("listings")
+    .select(WORKER_SELECT)
+    .eq("listing_type", "worker")
+    .eq("publish_status", "public")
+    .order("created_at", { ascending: false })
+    .limit(fetchLimit);
+
+  if (!listingsRes.error && Array.isArray(listingsRes.data)) {
+    for (const row of listingsRes.data) {
+      const item = workerToResult(row as Record<string, unknown>, intent);
+      if (item) results.push(item);
+    }
+  }
+
+  const filtered = applyPriceFilter(results, intent);
+  const sorted = sortResults(filtered, intent);
+  const truncated = sorted.length > intent.limit;
+  return {
+    results: sorted.slice(0, intent.limit),
+    truncated,
+  };
+}
+
 function statusAvailabilityLabel(status: unknown): string {
   const s = String(status || "").toLowerCase();
   if (s === "available") return "受付中";
@@ -710,6 +863,9 @@ async function searchPlatform(
   }
   if (intent.type === "skill") {
     return searchPlatformSkills(client, intent);
+  }
+  if (intent.type === "worker") {
+    return searchPlatformWorkers(client, intent);
   }
   return searchPlatformJobs(client, intent);
 }

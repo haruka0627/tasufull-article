@@ -15,7 +15,7 @@
     "availability",
     "recent",
   ]);
-  const PLATFORM_TYPES = new Set(["job", "business_service", "skill"]);
+  const PLATFORM_TYPES = new Set(["job", "business_service", "skill", "worker"]);
   const MAX_EMPLOYMENT = 40;
   const MAX_WORK_STYLE = 40;
   const MAX_CATEGORY = 64;
@@ -137,6 +137,7 @@
     if (v === "job") return "job";
     if (v === "business_service") return "business_service";
     if (v === "skill") return "skill";
+    if (v === "worker") return "worker";
     return null;
   }
 
@@ -147,6 +148,8 @@
     if (i === "service_request") return "business_service";
     // Phase 4 wave 1: skill_request only (not worker)
     if (i === "skill_request") return "skill";
+    // Phase 5 wave 1: standalone worker_request only (not repair/delivery)
+    if (i === "worker_request") return "worker";
     return null;
   }
 
@@ -183,7 +186,12 @@
       type = null;
     }
     if (vertical === "platform") {
-      if (type !== "job" && type !== "business_service" && type !== "skill") {
+      if (
+        type !== "job" &&
+        type !== "business_service" &&
+        type !== "skill" &&
+        type !== "worker"
+      ) {
         if (src.type != null && String(src.type).trim()) {
           vertical = null;
           type = null;
@@ -204,7 +212,8 @@
         return loc || null;
       })(),
       category:
-        vertical === "platform" && (type === "business_service" || type === "skill")
+        vertical === "platform" &&
+        (type === "business_service" || type === "skill" || type === "worker")
           ? trimStr(src.category, MAX_CATEGORY) || null
           : null,
       dateFrom: normalizeDate(src.dateFrom),
@@ -221,7 +230,11 @@
       value.employmentType = null;
       value.workStyle = null;
     }
-    if (value.type !== "business_service" && value.type !== "skill") {
+    if (
+      value.type !== "business_service" &&
+      value.type !== "skill" &&
+      value.type !== "worker"
+    ) {
       value.category = null;
     }
 
@@ -299,7 +312,8 @@
       intentToType(intent) ||
       (intent === "job_search" ? "job" : null) ||
       (intent === "service_request" ? "business_service" : null) ||
-      (intent === "skill_request" ? "skill" : null);
+      (intent === "skill_request" ? "skill" : null) ||
+      (intent === "worker_request" ? "worker" : null);
 
     const action = intentToAction(intent, {
       ...hints,

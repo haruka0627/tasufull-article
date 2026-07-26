@@ -109,6 +109,7 @@ function normalizePlatformType(raw) {
   if (v === "job") return "job";
   if (v === "business_service") return "business_service";
   if (v === "skill") return "skill";
+  if (v === "worker") return "worker";
   return "invalid";
 }
 
@@ -233,11 +234,16 @@ export function validateSearchBody(input) {
   if (typeRaw === "invalid") {
     return { ok: false, code: "invalid_type", message: "Unsupported platform type" };
   }
-  if (typeRaw !== "job" && typeRaw !== "business_service" && typeRaw !== "skill") {
+  if (
+    typeRaw !== "job" &&
+    typeRaw !== "business_service" &&
+    typeRaw !== "skill" &&
+    typeRaw !== "worker"
+  ) {
     return {
       ok: false,
       code: "unsupported_type",
-      message: "Only type=job|business_service|skill is supported for platform",
+      message: "Only type=job|business_service|skill|worker is supported for platform",
     };
   }
 
@@ -250,7 +256,9 @@ export function validateSearchBody(input) {
       query,
       location,
       category:
-        typeRaw === "business_service" || typeRaw === "skill" ? category : null,
+        typeRaw === "business_service" || typeRaw === "skill" || typeRaw === "worker"
+          ? category
+          : null,
       dateFrom,
       dateTo,
       priceMin,
@@ -268,7 +276,7 @@ export function assertSafeDetailUrl(url) {
   if (!u) return false;
   if (/^https?:/i.test(u) || u.startsWith("//") || /^javascript:/i.test(u)) return false;
   if (u.includes("..")) return false;
-  return /^(detail-product\.html|detail-shop-product\.html|detail-job\.html|detail-business-service\.html|detail-skill\.html)(\?|$)/i.test(
+  return /^(detail-product\.html|detail-shop-product\.html|detail-job\.html|detail-business-service\.html|detail-skill\.html|detail-worker\.html)(\?|$)/i.test(
     u
   );
 }
