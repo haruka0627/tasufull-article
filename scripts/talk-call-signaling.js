@@ -92,7 +92,7 @@
     );
   }
 
-  async function createSession({ roomId, callerId, calleeId }) {
+  async function createSession({ roomId, callerId, calleeId, provider, sessionLimitSeconds }) {
     const sb = getClient();
     if (!sb) throw new Error("Supabase が未設定です");
     const row = {
@@ -102,15 +102,114 @@
       status: "ringing",
       expires_at: expiresAtIso(),
     };
+    if (provider) row.provider = String(provider).slice(0, 32);
+    if (sessionLimitSeconds != null && Number.isFinite(Number(sessionLimitSeconds))) {
+      row.session_limit_seconds = Math.max(0, Math.floor(Number(sessionLimitSeconds)));
+    }
     const { data, error } = await sb.from(SESSIONS_TABLE).insert(row).select("*").single();
-    if (error) throw new Error(error.message || "セッション作成に失敗しました");
+    if (error) {
+      // Optional columns may be absent pre-migration — retry minimal row
+      if (/provider|session_limit/i.test(String(error.message || ""))) {
+        const minimal = {
+          room_id: row.room_id,
+          caller_id: row.caller_id,
+          callee_id: row.callee_id,
+          status: "ringing",
+          expires_at: row.expires_at,
+        };
+        const retry = await sb.from(SESSIONS_TABLE).insert(minimal).select("*").single();
+        if (retry.error) throw new Error(retry.error.message || "セッション作成に失敗しました");
+        return retry.data;
+      }
+      throw new Error(error.message || "セッション作成に失敗しました");
+    }
     return data;
+  }
+
+  async function heartbeatSession(sessionId) {
+    const sb = getClient();
+    if (!sb || !sessionId) return null;
+    const uid = getMeId();
+    const { data: session } = await sb
+      .from(SESSIONS_TABLE)
+      .select("id,caller_id,callee_id,status")
+      .eq("id", sessionId)
+      .maybeSingle();
+    if (!session || !isParticipant(session, uid) || String(session.status) !== "active") {
+      return null;
+    }
+    const patch = { last_heartbeat_at: nowIso() };
+    const { data, error } = await sb
+      .from(SESSIONS_TABLE)
+      .update(patch)
+      .eq("id", sessionId)
+      .eq("status", "active")
+      .select("*")
+      .maybeSingle();
+    if (error) {
+      // Column may not exist yet — ignore quietly
+      return null;
+    }
+    return data;
+  }
+
+  /**
+   * Testable reconciliation: end active sessions with stale heartbeat.
+   * No cron registration — call from tests / ops tooling only.
+   */
+  async function reconcileStaleSessions({ graceSec, now, limit } = {}) {
+    const sb = getClient();
+    if (!sb) return { ok: false, ended: 0 };
+    const Usage = global.TasuTalkVoiceUsage;
+    const grace =
+      graceSec ??
+      global.TasuTalkVoiceEntitlement?.getConfig?.()?.heartbeat_grace_sec ??
+      120;
+    const { data, error } = await sb
+      .from(SESSIONS_TABLE)
+      .select("*")
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .limit(Math.min(50, Math.max(1, Number(limit) || 20)));
+    if (error) return { ok: false, ended: 0, error: error.message };
+    const rows = Array.isArray(data) ? data : [];
+    let ended = 0;
+    for (const row of rows) {
+      const decision = Usage?.shouldReconcileDisconnect?.({
+        status: row.status,
+        lastHeartbeatAt: row.last_heartbeat_at,
+        startedAt: row.started_at,
+        now: now || nowIso(),
+        graceSec: grace,
+      });
+      if (!decision?.ok) continue;
+      const duration = Usage?.computeDurationSeconds?.({
+        startedAt: row.started_at,
+        endedAt: decision.endAtIso,
+      });
+      try {
+        await updateSessionStatus(row.id, "ended", {
+          ended_at: decision.endAtIso,
+          end_reason: "heartbeat_stale",
+          duration_seconds: duration,
+          billable_seconds: duration,
+        });
+        ended += 1;
+      } catch {
+        /* ignore */
+      }
+    }
+    return { ok: true, ended };
   }
 
   async function updateSessionStatus(sessionId, status, extra) {
     const sb = getClient();
     if (!sb) throw new Error("Supabase が未設定です");
-    const patch = { status, ...(extra || {}) };
+    const patch = { ...(extra || {}), status };
+    // Never trust client-provided duration as sole source — only accept when server computes
+    if (Object.prototype.hasOwnProperty.call(patch, "client_duration_seconds")) {
+      delete patch.client_duration_seconds;
+    }
     if (status === "active" && !patch.started_at) patch.started_at = nowIso();
     if (["ended", "missed", "rejected"].includes(status) && !patch.ended_at) {
       patch.ended_at = nowIso();
@@ -121,7 +220,18 @@
       .eq("id", sessionId)
       .select("*")
       .single();
-    if (error) throw new Error(error.message || "セッション更新に失敗しました");
+    if (error) {
+      // Drop optional usage columns if migration not applied yet
+      if (/duration_seconds|billable_seconds|end_reason|last_heartbeat|provider|session_limit/i.test(String(error.message || ""))) {
+        const fallback = { status };
+        if (status === "active") fallback.started_at = patch.started_at;
+        if (["ended", "missed", "rejected"].includes(status)) fallback.ended_at = patch.ended_at;
+        const retry = await sb.from(SESSIONS_TABLE).update(fallback).eq("id", sessionId).select("*").single();
+        if (retry.error) throw new Error(retry.error.message || "セッション更新に失敗しました");
+        return retry.data;
+      }
+      throw new Error(error.message || "セッション更新に失敗しました");
+    }
     return data;
   }
 
@@ -257,6 +367,8 @@
     findBusyUser,
     createSession,
     updateSessionStatus,
+    heartbeatSession,
+    reconcileStaleSessions,
     fetchSession,
     fetchSessionsByRoom,
     insertSignal,

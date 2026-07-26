@@ -1,12 +1,13 @@
 /**
- * TASFUL TALK — 1対1音声通話サービス（Phase1 MVP）
+ * TASFUL TALK — 1対1音声通話サービス（talk-voice-core 経由 · WebRTC adapter）
  */
 (function (global) {
   "use strict";
 
   const Signaling = () => global.TasuTalkCallSignaling;
-  const WebRtc = () => global.TasuTalkCallWebRtc;
   const Ui = () => global.TasuTalkCallUi;
+  const Core = () => global.TasuTalkVoiceCore;
+  const Provider = () => Core()?.getProvider?.() || global.TasuTalkVoiceWebRtcAdapter?.getDefault?.();
 
   /** @type {object|null} */
   let currentSession = null;
@@ -26,6 +27,46 @@
   let initUserId = "";
   /** @type {boolean} */
   let offerStarted = false;
+  /** @type {number|null} */
+  let heartbeatTimerId = null;
+  /** @type {ReturnType<typeof Core> extends never ? any : any} */
+  let voiceMachine = null;
+
+  function ensureMachine() {
+    if (!voiceMachine) {
+      voiceMachine = Core()?.stateMachine?.()?.createMachine?.("idle") || null;
+    }
+    return voiceMachine;
+  }
+
+  function machineGo(to) {
+    const m = ensureMachine();
+    if (!m) return { ok: true, state: to };
+    return m.go(to);
+  }
+
+  function stopHeartbeat() {
+    if (heartbeatTimerId) {
+      clearInterval(heartbeatTimerId);
+      heartbeatTimerId = null;
+    }
+  }
+
+  function startHeartbeat(sessionId) {
+    stopHeartbeat();
+    const cfg = Core()?.entitlement?.()?.getConfig?.() || {};
+    const intervalSec = Math.max(30, Number(cfg.heartbeat_interval_sec) || 45);
+    heartbeatTimerId = global.setInterval(() => {
+      if (!currentSession || currentSession.id !== sessionId) {
+        stopHeartbeat();
+        return;
+      }
+      if (String(currentSession.status || "") !== "active") return;
+      Signaling()
+        ?.heartbeatSession?.(sessionId)
+        .catch(() => {});
+    }, intervalSec * 1000);
+  }
 
   function getMeId() {
     return Signaling()?.getMeId?.() || "u_me";
@@ -151,12 +192,25 @@
 
   function canCallThread(thread) {
     if (!isAvailable()) return false;
-    if (!thread?.id || thread._staticCard) return false;
-    if (isOfficialThread(thread)) return false;
-    if (isSystemThread(thread)) return false;
-    if (isGroupThread(thread)) return false;
-    const partnerId = resolvePartnerId(thread);
-    if (!partnerId || partnerId === getMeId()) return false;
+    const perm = Core()?.permissions?.()?.assertCanStartCall?.({
+      thread,
+      authUserId: getMeId(),
+      helpers: {
+        isOfficialRoomId: (id) => global.TasuTalkOfficialRooms?.isOfficialRoomId?.(id),
+        resolvePartnerUserId: (t) => global.TasuTalkChatThreadModel?.resolvePartnerUserId?.(t),
+      },
+    });
+    if (perm && !perm.ok) return false;
+    if (!perm) {
+      if (!thread?.id || thread._staticCard) return false;
+      if (isOfficialThread(thread) || isSystemThread(thread) || isGroupThread(thread)) return false;
+      const partnerId = resolvePartnerId(thread);
+      if (!partnerId || partnerId === getMeId()) return false;
+    }
+    const ent = Core()?.entitlement?.()?.evaluateEntitlement?.({
+      activeSessionExists: Boolean(currentSession),
+    });
+    if (ent && !ent.allowed && ent.reason !== "active_session_exists") return false;
     return true;
   }
 
@@ -188,21 +242,28 @@
   async function cleanup(reason) {
     clearRingTimeout();
     stopSessionSyncPoll();
+    stopHeartbeat();
     seenSignalIds.clear();
     offerStarted = false;
     muted = false;
-    WebRtc()?.close?.();
+    try {
+      await Provider()?.dispose?.();
+    } catch {
+      /* ignore */
+    }
     currentSession = null;
     currentRole = null;
     peerDisplayName = "";
+    machineGo("ended");
+    machineGo("idle");
     Ui()?.hide?.();
     if (reason && reason !== "silent") {
       /* toast handled by caller */
     }
   }
 
-  async function attachWebRtcHandlers(sessionId) {
-    WebRtc().createPeerConnection({
+  function iceHandlers(sessionId) {
+    return {
       onIceCandidate: async (candidate) => {
         if (!currentSession || currentSession.id !== sessionId) return;
         try {
@@ -217,52 +278,84 @@
         }
       },
       onConnectionState: (state) => {
-        if (state === "failed") {
+        if (state === "connected" || state === "completed") {
+          machineGo("connected");
+          startHeartbeat(sessionId);
+        } else if (state === "connecting") {
+          machineGo("connecting");
+        } else if (state === "disconnected") {
+          machineGo("reconnecting");
+        } else if (state === "failed") {
           Ui()?.showToast?.("通話接続に失敗しました。通信環境を確認してください。");
           hangup("failed").catch(() => {});
         }
       },
-    });
-    await WebRtc().attachLocalTracks();
+    };
   }
 
   async function beginCallerOffer(session) {
     if (offerStarted || !session?.id) return;
     offerStarted = true;
-    await attachWebRtcHandlers(session.id);
-    const localDesc = await WebRtc().createOffer();
-    await Signaling().insertSignal({
-      sessionId: session.id,
-      senderId: getMeId(),
-      signalType: "offer",
-      payload: { type: localDesc.type, sdp: localDesc.sdp },
-    });
+    machineGo("connecting");
+    const res = await Provider().createOutgoingConnection(iceHandlers(session.id));
+    if (!res?.ok) {
+      const mapped = Core()?.errors?.()?.mapProviderError?.(res) || res;
+      if (mapped?.code === "media_permission_denied") {
+        Ui()?.showToast?.(mapped.message || "マイクが許可されていません");
+        await hangup("media_denied");
+        return;
+      }
+      Ui()?.showToast?.(mapped?.message || "発信に失敗しました");
+      await hangup("failed");
+      return;
+    }
+    if (res.localDescription) {
+      await Signaling().insertSignal({
+        sessionId: session.id,
+        senderId: getMeId(),
+        signalType: "offer",
+        payload: res.localDescription,
+      });
+    }
   }
 
   async function handleOfferSignal(signal) {
     if (!currentSession || signal.session_id !== currentSession.id) return;
     if (currentRole !== "callee" || currentSession.status !== "active") return;
     if (!signal.payload?.sdp) return;
-    if (!WebRtc().getPeerConnection()) {
-      await attachWebRtcHandlers(currentSession.id);
+    const gate = Core()?.permissions?.()?.assertSignalAllowed?.(
+      currentSession,
+      getMeId(),
+      "offer"
+    );
+    if (gate && !gate.ok) return;
+    if (!Provider().getPeerConnection?.()) {
+      const prep = await Provider().acceptIncomingConnection(iceHandlers(currentSession.id));
+      if (!prep?.ok) {
+        Ui()?.showToast?.(prep?.message || "応答に失敗しました");
+        await hangup("failed");
+        return;
+      }
     }
-    const answerDesc = await WebRtc().acceptOffer({
+    const answer = await Provider().applyRemoteDescription({
       type: signal.payload.type || "offer",
       sdp: signal.payload.sdp,
     });
-    await Signaling().insertSignal({
-      sessionId: currentSession.id,
-      senderId: getMeId(),
-      signalType: "answer",
-      payload: { type: answerDesc.type, sdp: answerDesc.sdp },
-    });
+    if (answer?.localDescription) {
+      await Signaling().insertSignal({
+        sessionId: currentSession.id,
+        senderId: getMeId(),
+        signalType: "answer",
+        payload: answer.localDescription,
+      });
+    }
   }
 
   async function handleAnswerSignal(signal) {
     if (!currentSession || signal.session_id !== currentSession.id) return;
     if (currentRole !== "caller") return;
     if (!signal.payload?.sdp) return;
-    await WebRtc().acceptAnswer({
+    await Provider().applyRemoteDescription({
       type: signal.payload.type || "answer",
       sdp: signal.payload.sdp,
     });
@@ -271,7 +364,7 @@
   async function handleCandidateSignal(signal) {
     if (!currentSession || signal.session_id !== currentSession.id) return;
     if (String(signal.sender_id) === getMeId()) return;
-    await WebRtc().addIceCandidate(signal.payload);
+    await Provider().addIceCandidate({ candidate: signal.payload });
   }
 
   async function handleHangupSignal(signal) {
@@ -308,6 +401,7 @@
     currentSession = session;
     currentRole = "callee";
     peerDisplayName = resolvePeerNameFromContext(session);
+    machineGo("ringing_incoming");
     Ui()?.showIncoming?.(peerDisplayName);
     scheduleRingTimeout(session.id);
     startSessionSyncPoll(session.id);
@@ -346,11 +440,13 @@
 
     if (session.status === "active") {
       clearRingTimeout();
+      machineGo("connecting");
       if (currentRole === "caller") {
         Ui()?.showActive?.(peerDisplayName, muted);
         await beginCallerOffer(session);
       } else if (currentRole === "callee") {
         Ui()?.showActive?.(peerDisplayName, muted);
+        startHeartbeat(session.id);
       }
       return;
     }
@@ -412,11 +508,14 @@
         hangup("user").catch((err) => Ui()?.showToast?.(err.message || "終了に失敗しました"));
       },
       onToggleMute: () => {
-        muted = !WebRtc().isMuted();
-        WebRtc().setMuted(muted);
+        muted = !Provider().isMuted?.();
+        Provider().setMuted(muted);
         Ui()?.showActive?.(peerDisplayName, muted);
       },
     });
+
+    ensureMachine();
+    Provider()?.initialize?.().catch(() => {});
 
     Signaling()?.subscribeRealtime?.({
       onSessionChange,
@@ -431,32 +530,77 @@
   async function initiateCall(thread) {
     init();
     const callThread = buildCallThreadFromAny(thread);
-    if (!canCallThread(callThread)) {
+    const authorizing = machineGo("authorizing");
+    if (!authorizing.ok && ensureMachine()?.getState?.() !== "idle") {
+      throw new Error("通話処理中です");
+    }
+
+    const perm = Core()?.permissions?.()?.assertCanStartCall?.({
+      thread: callThread,
+      authUserId: getMeId(),
+      helpers: {
+        isOfficialRoomId: (id) => global.TasuTalkOfficialRooms?.isOfficialRoomId?.(id),
+        resolvePartnerUserId: (t) => global.TasuTalkChatThreadModel?.resolvePartnerUserId?.(t),
+      },
+    });
+    if (perm && !perm.ok) {
+      machineGo("failed");
+      machineGo("idle");
+      throw new Error("このルームでは通話できません");
+    }
+    if (!perm && !canCallThread(callThread)) {
+      machineGo("failed");
+      machineGo("idle");
       throw new Error("このルームでは通話できません");
     }
     if (currentSession) {
+      machineGo("failed");
+      machineGo("idle");
       throw new Error("通話中です");
     }
 
+    const ent = Core()?.entitlement?.()?.evaluateEntitlement?.({
+      activeSessionExists: false,
+    });
+    if (ent && !ent.allowed) {
+      machineGo("failed");
+      machineGo("idle");
+      const msg =
+        ent.reason === "feature_disabled"
+          ? "音声通話は現在利用できません"
+          : ent.reason === "daily_limit_reached" || ent.reason === "monthly_limit_reached"
+            ? "通話の利用上限に達しています"
+            : "通話を開始できません";
+      Ui()?.showToast?.(msg);
+      return { ok: false, reason: ent.reason };
+    }
+
     const callerId = getMeId();
-    const calleeId = resolvePartnerId(callThread);
+    const calleeId = perm?.calleeUserId || resolvePartnerId(callThread);
     peerDisplayName = resolvePeerName(callThread);
 
     const busyCallee = await Signaling().findBusyUser(calleeId);
     if (busyCallee) {
+      machineGo("failed");
+      machineGo("idle");
       Ui()?.showToast?.("相手は通話中です");
       return { ok: false, reason: "busy" };
     }
     const busySelf = await Signaling().findBusyUser(callerId);
     if (busySelf) {
+      machineGo("failed");
+      machineGo("idle");
       Ui()?.showToast?.("通話中のため発信できません");
       return { ok: false, reason: "busy_self" };
     }
 
+    const sessionLimit = Core()?.entitlement?.()?.computeSessionLimit?.(ent);
     const session = await Signaling().createSession({
       roomId: callThread.id,
       callerId,
       calleeId,
+      provider: "webrtc",
+      sessionLimitSeconds: sessionLimit,
     });
 
     global.TasuTalkCallPushEvents?.enqueueForRingingSession?.(session, {
@@ -468,6 +612,7 @@
     currentRole = "caller";
     seenSignalIds.clear();
     offerStarted = false;
+    machineGo("ringing_outgoing");
 
     Ui()?.showOutgoing?.(peerDisplayName);
     scheduleRingTimeout(session.id);
@@ -507,13 +652,24 @@
   async function acceptIncoming() {
     if (!currentSession || currentRole !== "callee") return;
     if (currentSession.status !== "ringing") return;
+    if (!ensureMachine()?.can?.("connecting") && ensureMachine()?.getState?.() === "connecting") {
+      return;
+    }
 
     const updated = await Signaling().updateSessionStatus(currentSession.id, "active");
     currentSession = updated;
     clearRingTimeout();
-    await attachWebRtcHandlers(currentSession.id);
+    machineGo("connecting");
+    const prep = await Provider().acceptIncomingConnection(iceHandlers(currentSession.id));
+    if (!prep?.ok) {
+      const mapped = prep || {};
+      Ui()?.showToast?.(mapped.message || "マイクを利用できません");
+      await hangup(mapped.code === "media_permission_denied" ? "media_denied" : "failed");
+      return;
+    }
     Ui()?.showActive?.(peerDisplayName, muted);
     startSessionSyncPoll(currentSession.id);
+    startHeartbeat(currentSession.id);
 
     const prior = await Signaling().fetchSignalsSince(currentSession.id, "");
     for (const sig of prior) {
@@ -592,7 +748,9 @@
 
   async function hangup(reason) {
     if (!currentSession) return;
+    machineGo("ending");
     const sessionId = currentSession.id;
+    const sessionSnap = currentSession;
     if (currentSession.status === "active" || currentSession.status === "ringing") {
       try {
         await Signaling().insertSignal({
@@ -605,9 +763,22 @@
         /* ignore */
       }
       try {
-        await Signaling().updateSessionStatus(sessionId, "ended");
+        const duration = Core()?.usage?.()?.computeDurationSeconds?.({
+          startedAt: sessionSnap.started_at,
+          connectedAt: sessionSnap.started_at,
+          endedAt: new Date().toISOString(),
+        });
+        await Signaling().updateSessionStatus(sessionId, "ended", {
+          end_reason: String(reason || "hangup").slice(0, 64),
+          duration_seconds: duration,
+          billable_seconds: duration,
+        });
       } catch {
-        /* ignore */
+        try {
+          await Signaling().updateSessionStatus(sessionId, "ended");
+        } catch {
+          /* ignore */
+        }
       }
     }
     await cleanup("ended");
@@ -629,5 +800,7 @@
     hangup,
     refreshIncomingForActiveRoom: pollRingingSessions,
     getCurrentSession: () => currentSession,
+    getVoiceState: () => ensureMachine()?.getState?.() || "idle",
+    getProvider: () => Provider(),
   };
 })(typeof window !== "undefined" ? window : globalThis);
