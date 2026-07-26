@@ -1,6 +1,7 @@
 /**
  * AI 運営秘書 — DeepSeek プロキシ（Cloudflare Pages Function）
  * Secret: DEEPSEEK_API_KEY · クライアントへキーは渡さない
+ * Auth: Authorization Bearer <Supabase access_token> 必須（Provider 呼出前に fail-closed）
  */
 import {
   buildSecretaryMessages,
@@ -8,25 +9,55 @@ import {
   jsonResponse,
   resolveDeepSeekModel,
 } from "../_shared/secretary-deepseek.mjs";
+import {
+  authCorsHeaders,
+  requireSupabaseUser,
+} from "../_shared/supabase-jwt-auth.mjs";
 
 const SURFACE = "ops_secretary";
+const MAX_BODY_BYTES = 64 * 1024;
 
 function handleOptions() {
   return new Response(null, {
     status: 204,
-    headers: {
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Max-Age": "86400",
-    },
+    headers: authCorsHeaders("POST, OPTIONS"),
   });
+}
+
+function readContentLength(request) {
+  const raw = request.headers.get("Content-Length");
+  if (raw == null || raw === "") return null;
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
 }
 
 export async function onRequest(context) {
   const { request, env } = context;
   if (request.method === "OPTIONS") return handleOptions();
   if (request.method !== "POST") {
-    return jsonResponse({ error: "Method not allowed", reply: "" }, 405);
+    return jsonResponse({ error: "Method not allowed", reply: "", code: "method_not_allowed" }, 405);
+  }
+
+  // Auth before reading secrets / calling DeepSeek
+  const auth = await requireSupabaseUser(request, env, {});
+  if (!auth.ok) {
+    return jsonResponse(
+      {
+        error: auth.error,
+        code: auth.error,
+        reply: "",
+        usedDeepSeek: false,
+      },
+      auth.http || 401,
+    );
+  }
+
+  const contentLength = readContentLength(request);
+  if (contentLength != null && contentLength > MAX_BODY_BYTES) {
+    return jsonResponse(
+      { error: "payload_too_large", code: "payload_too_large", reply: "", usedDeepSeek: false },
+      413,
+    );
   }
 
   const apiKey = String(env.DEEPSEEK_API_KEY || "").trim();
@@ -34,26 +65,61 @@ export async function onRequest(context) {
     return jsonResponse(
       {
         error: "DEEPSEEK_API_KEY not configured",
+        code: "provider_not_configured",
         reply: "",
         usedDeepSeek: false,
         configured: false,
       },
-      503
+      503,
     );
   }
 
   let body;
   try {
-    body = await request.json();
+    const text = await request.text();
+    if (text.length > MAX_BODY_BYTES) {
+      return jsonResponse(
+        { error: "payload_too_large", code: "payload_too_large", reply: "", usedDeepSeek: false },
+        413,
+      );
+    }
+    body = text ? JSON.parse(text) : {};
   } catch {
-    return jsonResponse({ error: "Invalid JSON body", reply: "" }, 400);
+    return jsonResponse({ error: "Invalid JSON body", code: "invalid_json", reply: "" }, 400);
+  }
+
+  // Client-claimed user id is never trusted; mismatch → 403
+  const claimed = String(body.user_id ?? body.userId ?? "").trim();
+  if (claimed && claimed !== auth.userId) {
+    return jsonResponse(
+      {
+        error: "user_mismatch",
+        code: "user_mismatch",
+        reply: "",
+        usedDeepSeek: false,
+      },
+      403,
+    );
+  }
+
+  // Client must not override model (server env only)
+  if (body.model != null && String(body.model).trim()) {
+    return jsonResponse(
+      {
+        error: "model_not_allowed",
+        code: "model_not_allowed",
+        reply: "",
+        usedDeepSeek: false,
+      },
+      400,
+    );
   }
 
   const surface = String(body.surface || body.mode || "").trim();
   if (surface && surface !== SURFACE) {
     return jsonResponse(
       { error: `surface must be ${SURFACE}`, reply: "", usedDeepSeek: false },
-      400
+      400,
     );
   }
 
@@ -79,7 +145,7 @@ export async function onRequest(context) {
         error: result.error,
         model,
       },
-      status
+      status,
     );
   }
 

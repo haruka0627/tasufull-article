@@ -158,7 +158,10 @@
 
       let id = `bc-${Date.now()}`;
       let title = "";
-      let roomId = `room-${Date.now()}`;
+      const hostHint = String(options.hostUserId || options.userId || "")
+        .replace(/[^a-zA-Z0-9_-]/g, "_")
+        .slice(0, 32);
+      let roomId = hostHint ? `room-${hostHint}-${Date.now()}` : `room-${Date.now()}`;
 
       if (V()) {
         if (options.broadcastId != null && String(options.broadcastId).trim()) {

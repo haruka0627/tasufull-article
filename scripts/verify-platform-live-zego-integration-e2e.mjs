@@ -190,41 +190,28 @@ async function verifyDistConfig(env) {
 }
 
 async function verifyTokenApi(base) {
-  console.log("\n=== 3–4. Token API ===\n");
+  console.log("\n=== 3–4. Token API (auth guard) ===\n");
   const roomId = `platform-e2e-${Date.now()}`;
-  for (const c of [
-    { id: "token:host", userId: "e2e_platform_host", role: "host" },
-    { id: "token:audience", userId: "e2e_platform_viewer", role: "audience" },
-  ]) {
-    try {
-      const res = await fetch(`${base}/api/tlv-zego-token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomId, userId: c.userId, role: c.role }),
-      });
-      const body = await res.json().catch(() => ({}));
-      if (res.status === 200 && body.token) {
-        pass(c.id, `len=${body.token.length}`);
-      } else {
-        const diag = [
-          `status=${res.status}`,
-          body.error ? `error=${body.error}` : "",
-          body.configured === false ? "configured=false" : "",
-          body.hint ? `hint=${String(body.hint).slice(0, 80)}` : "",
-        ]
-          .filter(Boolean)
-          .join(" · ");
-        fail(c.id, diag);
-        if (res.status === 503 && body.error === "ZEGO credentials not configured") {
-          console.log(
-            "  hint: Pages Functions は dist/.dev.vars が必要 — npm run dev 前に ensure-pages-dist が .env を同期します",
-          );
-        }
-      }
-    } catch (err) {
-      fail(c.id, err?.message || String(err));
+  try {
+    const res = await fetch(`${base}/api/tlv-zego-token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ roomId, userId: "e2e_platform_host", role: "host" }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (res.status === 401 && (body.error === "auth_required" || body.code === "auth_required")) {
+      pass("token:unauth-rejected", "401 auth_required");
+    } else {
+      fail(
+        "token:unauth-rejected",
+        `status=${res.status} · error=${body.error || ""}`,
+      );
     }
+  } catch (err) {
+    fail("token:unauth-rejected", err?.message || String(err));
   }
+  skip("token:host", "requires Staging JWT — see test-phase3a-api-auth-guards");
+  skip("token:audience", "requires Staging JWT — see test-phase3a-api-auth-guards");
   return roomId;
 }
 

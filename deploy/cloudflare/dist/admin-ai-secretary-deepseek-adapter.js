@@ -29,6 +29,29 @@
       .filter((m) => m.content);
   }
 
+  async function readAccessToken(hint) {
+    const fromHint = String(hint || "").trim();
+    if (fromHint) return fromHint;
+    try {
+      const client = global.TasuSupabaseClient?.getClient?.();
+      if (client?.auth?.getSession) {
+        const { data } = await client.auth.getSession();
+        return String(data?.session?.access_token || "").trim();
+      }
+    } catch {
+      /* ignore */
+    }
+    try {
+      if (global.supabase?.auth?.getSession) {
+        const { data } = await global.supabase.auth.getSession();
+        return String(data?.session?.access_token || "").trim();
+      }
+    } catch {
+      /* ignore */
+    }
+    return "";
+  }
+
   async function postSecretaryEdge(payload, options = {}) {
     const url = getSecretaryApiUrl();
     if (!url) {
@@ -41,12 +64,25 @@
       };
     }
     try {
+      const accessToken = await readAccessToken(options.accessToken);
+      if (!accessToken) {
+        return {
+          ok: false,
+          httpStatus: 401,
+          error: "auth_required",
+          data: null,
+          configured: true,
+        };
+      }
       const controller = new AbortController();
       const timeoutMs = Number(options.timeoutMs) || DEFAULT_TIMEOUT_MS;
       const timer = setTimeout(() => controller.abort(), timeoutMs);
       const res = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
         body: JSON.stringify({
           ...payload,
           surface: SURFACE,

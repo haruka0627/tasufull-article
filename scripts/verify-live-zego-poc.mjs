@@ -98,6 +98,13 @@ function verifyStatic() {
   if (tokenApi.includes("ZEGO_SERVER_SECRET") && !tokenApi.includes('serverSecret = "')) {
     pass("secret:token-api-env-only");
   } else fail("secret:token-api-env-only");
+  if (
+    tokenApi.includes("requireSupabaseUser") &&
+    tokenApi.includes("room_forbidden") &&
+    tokenApi.includes("claimedUserId")
+  ) {
+    pass("auth:token-api-jwt-required");
+  } else fail("auth:token-api-jwt-required");
 }
 
 async function verifyHttp() {

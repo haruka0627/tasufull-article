@@ -100,19 +100,21 @@ async function main() {
   record("page:poc", pageRes.status === 200 ? "PASS" : "FAIL", `HTTP ${pageRes.status}`);
 
   const roomId = `browser-play-${Date.now()}`;
-  for (const c of [
-    { id: "token:host", userId: "browser_host", role: "host" },
-    { id: "token:audience", userId: "browser_viewer", role: "audience" },
-  ]) {
+  {
     const res = await fetch(`${base}/api/tlv-zego-token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ roomId, userId: c.userId, role: c.role }),
+      body: JSON.stringify({ roomId, userId: "browser_host", role: "host" }),
     });
     const body = await res.json().catch(() => ({}));
-    if (res.status === 200 && body.token) record(c.id, "PASS", `len=${body.token.length}`);
-    else record(c.id, "FAIL", `status=${res.status} ${body.error || ""}`);
+    if (res.status === 401 && (body.error === "auth_required" || body.code === "auth_required")) {
+      record("token:unauth-rejected", "PASS", "401 auth_required");
+    } else {
+      record("token:unauth-rejected", "FAIL", `status=${res.status} ${body.error || ""}`);
+    }
   }
+  record("token:host", "SKIP", "requires Staging JWT (unit guards cover mint)");
+  record("token:audience", "SKIP", "requires Staging JWT (unit guards cover mint)");
 
   fs.mkdirSync(SHOT_DIR, { recursive: true });
 

@@ -96,30 +96,26 @@ async function verifyDistConfig(env) {
 }
 
 async function verifyTokenApi(base, env) {
-  console.log("\n=== C. Token API ===\n");
+  console.log("\n=== C. Token API (auth guard) ===\n");
   const roomId = `tlv-e2e-${Date.now()}`;
-  const cases = [
-    { id: "token:host", userId: "e2e_host", role: "host" },
-    { id: "token:audience", userId: "e2e_viewer", role: "audience" },
-  ];
-
-  for (const c of cases) {
-    try {
-      const res = await fetch(`${base}/api/tlv-zego-token`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ roomId, userId: c.userId, role: c.role }),
-      });
-      const body = await res.json().catch(() => ({}));
-      if (res.status === 200 && body.token) {
-        pass(c.id, `len=${body.token.length}`);
-      } else {
-        fail(c.id, `status=${res.status} ${body.error || ""}`);
-      }
-    } catch (err) {
-      fail(c.id, err?.message || String(err));
+  try {
+    const res = await fetch(`${base}/api/tlv-zego-token`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ roomId, userId: "e2e_host", role: "host" }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (res.status === 401 && (body.error === "auth_required" || body.code === "auth_required")) {
+      pass("token:unauth-rejected", "401 auth_required");
+    } else {
+      fail("token:unauth-rejected", `status=${res.status} ${body.error || ""}`);
     }
+  } catch (err) {
+    fail("token:unauth-rejected", err?.message || String(err));
   }
+  // Authenticated mint requires Staging JWT — covered by unit guards; skip live mint here.
+  skip("token:host", "requires Staging JWT (see test-phase3a-api-auth-guards)");
+  skip("token:audience", "requires Staging JWT (see test-phase3a-api-auth-guards)");
   return roomId;
 }
 

@@ -412,11 +412,30 @@
       }
 
       const cfg = this._readConfig();
+      let accessToken = String(params?.accessToken || "").trim();
+      if (!accessToken) {
+        try {
+          const client = globalThis.TasuSupabaseClient?.getClient?.();
+          if (client?.auth?.getSession) {
+            const { data } = await client.auth.getSession();
+            accessToken = String(data?.session?.access_token || "").trim();
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      if (!accessToken) {
+        return { ok: false, error: "auth_required", code: "auth_required" };
+      }
+
       let res;
       try {
         res = await this._fetch(cfg.tokenApiPath, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
           body: JSON.stringify({ roomId, userId, role }),
         });
       } catch (err) {

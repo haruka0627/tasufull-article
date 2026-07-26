@@ -105,6 +105,17 @@ function loadRuntime(extra = {}) {
   };
   context.window = context;
   context.globalThis = context;
+  context.TasuSupabaseClient = {
+    getClient() {
+      return {
+        auth: {
+          async getSession() {
+            return { data: { session: { access_token: "test-jwt-token" } } };
+          },
+        },
+      };
+    },
+  };
 
   class MockTlvZegoLiveProvider {
     constructor() {
