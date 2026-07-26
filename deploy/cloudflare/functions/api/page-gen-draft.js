@@ -17,7 +17,7 @@ import {
 } from "../_shared/page-gen-entitlement.mjs";
 
 const MAX_FACTS_CHARS = 6000;
-const GEMINI_MODEL = "gemini-2.0-flash";
+const GEMINI_MODEL = "gemini-2.5-flash";
 
 function sanitizeFacts(facts) {
   if (!facts || typeof facts !== "object" || Array.isArray(facts)) return {};

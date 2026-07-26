@@ -118,6 +118,8 @@ const apiDraft = fs.readFileSync(
 assert("entitlement API uses resolvePageGenEntitlement", apiEntitlement.includes("resolvePageGenEntitlement"));
 assert("draft API re-checks entitlement before generation", /resolvePageGenEntitlement[\s\S]*callGeminiDraft/.test(apiDraft));
 assert("draft API never trusts body plan flags only", !/body\.isPaid|body\.entitled|body\.plan\b/.test(apiDraft));
+assert("draft API uses available Gemini model", apiDraft.includes('GEMINI_MODEL = "gemini-2.5-flash"'));
+assert("draft API does not use retired gemini-2.0-flash", !apiDraft.includes("gemini-2.0-flash"));
 assert("draft prompt bans external conversion", apiDraft.includes("外部決済") && apiDraft.includes("LINE"));
 
 console.log("\n--- platform adapter ---");
