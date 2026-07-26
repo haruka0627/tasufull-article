@@ -89,6 +89,11 @@ area into `deploy/cloudflare/dist`. Running it would overwrite unrelated dirty
 dist paths, contrary to this phase's allowlist. A clean worktree is required for
 the canonical source+dist build verification.
 
+The existing 8788 server returned the TALK page successfully at 768px with no
+horizontal overflow, but it served the pre-Phase-2 dist mirror:
+`TasuTalkVoiceTelemetry=false` and `TasuTalkCallTurnClient=false`. Therefore
+8788 verification of the new modules is BLOCKED until a clean canonical build.
+
 ## Route, quality, reconnect, and cost telemetry
 
 `getStats()` normalization records only route class, candidate types, protocol,
