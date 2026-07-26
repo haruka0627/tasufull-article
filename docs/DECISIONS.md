@@ -51,7 +51,8 @@
 | --- | --- |
 | **決定** | TLV は `live/tlv-tasful-ai-entry.js` → `ai-workspace.html?source=tlv` の **導線のみ** |
 | **テンプレ** | `ai-workspace-tlv-source.js`（8 テンプレ · 無料枠 UI） |
-| **根拠** | `reports/tlv-tasful-ai-entry.md` · 16/16 PASS |
+| **支援範囲（設計）** | 配信 / 配信者 / ショート検索 · おすすめ提案 · 配信予約の下書き — **検索・要約・提案まで**。ランキング操作 · 露出保証 · 課金確定は禁止 — [TLV_PRD.md](./TLV_PRD.md) §0.4 · [AI/TLV_AI.md](./AI/TLV_AI.md) |
+| **根拠** | `reports/tlv-tasful-ai-entry.md` · 16/16 PASS · 運営方針 2026-07-26 |
 
 ---
 
@@ -302,7 +303,8 @@ TASFUL市場
 
 | ドキュメント | 役割 |
 | --- | --- |
-| [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) | ミッション · コアバリュー · 三本柱 |
+| [TLV_PRD.md](./TLV_PRD.md) §0 | **TLV 運営方針 · プロダクト範囲**（ショート + ライブ特化） |
+| [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) | ミッション · コアバリュー · 流入概念（通常ロングは TLV コア外） |
 | [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) | Creator Program 詳細 |
 | [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) | Viewer Program 詳細 |
 | [MONETIZATION.md](./MONETIZATION.md) | 収益 · 再投資 · 条件還元 |

@@ -1,9 +1,9 @@
 # Live Platform — サービスコンセプト（正本）
 
-**最終更新:** 2026-06-28  
+**最終更新:** 2026-07-26  
 **種別:** 制度設計 · 構想正本（**実装なし**）  
-**適用:** TLV / 動画共有 / ライブ配信の将来世代  
-**関連:** [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) · [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) · [MONETIZATION.md](./MONETIZATION.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) · [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md)
+**適用:** TLV / ショート / ライブ配信の将来世代（通常ロング VOD は TLV コア外 — [TLV_PRD.md](./TLV_PRD.md) §0）  
+**関連:** [TLV_PRD.md](./TLV_PRD.md) · [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) · [VIEWER_PROGRAM.md](./VIEWER_PROGRAM.md) · [MONETIZATION.md](./MONETIZATION.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) · [PLATFORM_IDEAS.md](./PLATFORM_IDEAS.md)
 
 **TLV v1.0 は FEATURE FROZEN（[AI/TLV_AI.md](./AI/TLV_AI.md)）。本ドキュメントは v2 以降の制度設計正本。**
 
@@ -45,23 +45,28 @@
 
 ---
 
-## 3. プロダクト三本柱
+## 3. プロダクト柱と TLV 運営焦点
+
+**経済・流入の概念（Platform Vision · AD-014）は維持する。** TLV プロダクトの**運営焦点**は [TLV_PRD.md](./TLV_PRD.md) **§0** を正本とする。
 
 ```
-通常動画（ロング）
-    ↓
-ショート動画
-    ↓
-ライブ配信
+（概念上の流入）
+  通常動画（ロング）— TLV コア対象外 · 総合 VOD 非目標
+       ↓（将来・任意の資産蓄積は別途検討し得るが優先しない）
+  ショート動画 — 新規流入 · 拡散 · **ライブ配信への導線**
+       ↓
+  ライブ配信 — リアルタイム体験 · コミュニティ · 条件達成型収益
 ```
 
-| 柱 | 役割 | 収益 |
-| --- | --- | --- |
-| **通常動画** | 資産蓄積 · 検索 · チャンネルブランド | 広告 · メンバーシップ · スーパーコメント（将来） |
-| **ショート** | 新規流入 · 拡散 · ライブ/ロングへの導線 | 同上 · 流入効率重視 |
-| **ライブ** | リアルタイム収益 · コミュニティ · イベント | **赤字にならない設計** · 条件達成型還元 |
+| 柱 | TLV での扱い | 役割 | 収益 |
+| --- | --- | --- | --- |
+| **通常動画（ロング）** | **コア対象外** | 総合動画サービスは目指さない（[TLV_PRD.md](./TLV_PRD.md) §0.1） | — |
+| **ショート** | **コア** | 集客 · 視聴 · **ライブ誘導** | 広告等は将来 · 流入効率重視 |
+| **ライブ** | **コア** | リアルタイム収益 · コミュニティ · イベント | **赤字にならない設計** · 条件達成型還元 |
 
-詳細: [MONETIZATION.md](./MONETIZATION.md)
+**TLV が目指す一文:** 「配信者は配信しやすく、視聴者は見つけやすく、応援しやすいサービス」（[TLV_PRD.md](./TLV_PRD.md) §0.1）
+
+詳細収益: [MONETIZATION.md](./MONETIZATION.md) · ライブ制度: [LIVE_SYSTEM.md](./LIVE_SYSTEM.md) · TLV 範囲: [TLV_PRD.md](./TLV_PRD.md) §0
 
 ---
 

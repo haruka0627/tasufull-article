@@ -14,7 +14,7 @@
 | --- | --- | --- |
 | **Builder** | Production Ready · 凍結 · Calendar Hub Primary **完了** | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) · [hub-primary-completion](./builder-calendar-hub-primary-completion.md) |
 | **Platform** | Production Ready · **→Talk Review PASS** · 凍結 | [AI/PLATFORM_AI.md](./AI/PLATFORM_AI.md) |
-| **TLV** | v1.0 **FROZEN** · Engine backend **Go** · Live UI **未接続 / Production No-Go** · Staging **Conditional Go** | [接続前監査](../reports/tlv-payment-live-ui-connection-audit.md) · [AI/TLV_AI.md](./AI/TLV_AI.md) |
+| **TLV** | v1.0 **FROZEN** · Engine backend **Go** · Live UI **未接続 / Production No-Go** · Staging **Conditional Go** · **運営方針: ショート+ライブ特化** | [TLV_PRD.md](./TLV_PRD.md) §0 · [接続前監査](../reports/tlv-payment-live-ui-connection-audit.md) · [AI/TLV_AI.md](./AI/TLV_AI.md) |
 | **TLV Live SDK**（ZEGO Provider） | ⏸ 待機 · Phase 1/1.5 完了 | [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) |
 | **TASFUL AI Workspace** | **Production Ready Go**（2026-06-28）· P1 監視残（KI-014） | [AI/TASFUL_AI.md](./AI/TASFUL_AI.md) · [verification](../reports/tasful-ai-production-ready-verification.md) |
 | **AI 運営秘書** | Production Ready · 凍結 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) |
@@ -57,7 +57,8 @@
 | [AI/BUILDER_AI.md](./AI/BUILDER_AI.md) | Builder 専用 AI |
 | [AI/PLATFORM_AI.md](./AI/PLATFORM_AI.md) | Platform → TASFUL AI 入口 |
 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) | AI 運営秘書 |
-| [AI/TLV_AI.md](./AI/TLV_AI.md) | TLV → TASFUL AI 導線 |
+| [AI/TLV_AI.md](./AI/TLV_AI.md) | TLV → TASFUL AI 導線 · 支援範囲 |
+| [TLV_PRD.md](./TLV_PRD.md) | TLV PRD · **運営方針 §0** · Score OS · 還元 |
 | [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) | TLV Live SDK（ZEGO PoC · Session Manager 設計 · Phase 2 計画） |
 
 ---

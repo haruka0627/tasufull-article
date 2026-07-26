@@ -134,12 +134,12 @@ B3 全体: [builder-b3-production-roadmap.md](./builder-b3-production-roadmap.md
 | --- | --- | --- |
 | **ミッション** | ✅ 設計確定 | 「頑張ったクリエイターが一番報われるサービス」 |
 | **還元思想** | ✅ 設計確定 | 条件達成型 · 利益が先 · 還元率先行禁止 |
-| **三本柱** | ✅ 設計確定 | 通常動画 → ショート → ライブ |
+| **三本柱（概念）** | ✅ 設計確定 · **TLV 焦点を明確化** | 流入概念はショート → ライブ。**通常ロングは TLV コア外** — [TLV_PRD.md](./TLV_PRD.md) §0 · [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) §3 |
 | **コアバリュー 6 項** | ✅ 設計確定 | 利益最優先 · 再投資 · 長期 · 配信者ファースト · 視聴者 · infra |
 | **TLV v1.0 コード** | 🔒 FROZEN | 本 Vision は **次世代** · v1 変更なし |
 | **実装** | 📋 未着手 | [TODO.md](./TODO.md) § Live Platform Vision |
 
-**非目標:** 全員常時最高還元 · 赤字ライブ無制限延長 · TLV 専用 AI · AI 自動送信
+**非目標:** 全員常時最高還元 · 赤字ライブ無制限延長 · TLV 専用 AI · AI 自動送信 · **総合動画サービス化 · TLV 内チャット重複実装**（[TLV_PRD.md](./TLV_PRD.md) §0）
 
 ---
 
