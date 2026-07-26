@@ -8,6 +8,7 @@
 
 ### Added
 
+- Phase 3 TASFUL October RC 総合監査 — **RELEASE BLOCKED** — [tasful-phase3-release-candidate-audit.md](../reports/tasful-phase3-release-candidate-audit.md) · HEAD `c6a4f03`
 - Platform AI ページ生成（product/skill/job/worker）— Phase 1〜2-E · **RELEASE READY WITH FOLLOW-UP** — [platform-ai-page-gen-phase2e-release-verification.md](../reports/platform-ai-page-gen-phase2e-release-verification.md) · HEAD `57952cd`
 - `docs/` 正本ドキュメントセット（PROJECT_STATUS · TODO · ROADMAP · DECISIONS · AI/* 等）
 - 商用前整理棚卸し — [commercial-prep-inventory-2026-07.md](./commercial-prep-inventory-2026-07.md)
@@ -21,6 +22,7 @@
 
 ### Pending
 
+- Phase 3 RC 解除: REL-P0-01/04 · API JWT（secretary / zego / live-proxy）· AI Workspace categories · その後 prod alias
 - Platform AI ページ生成の Production Deploy（Functions → Pages · schema 手動確認）
 - 投稿画面「下書き生成」と「AIでページを作成」の文言整理（P3）
 - working tree の領域別分割コミット（大量差分 · 分類済）

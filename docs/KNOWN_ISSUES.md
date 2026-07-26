@@ -18,6 +18,19 @@
 
 ---
 
+## KI-017 — October RC Phase 3 BLOCKED（2026-07-26）
+
+| 項目 | 内容 |
+| --- | --- |
+| **状態** | **RELEASE BLOCKED** |
+| **正本** | [tasful-phase3-release-candidate-audit.md](../reports/tasful-phase3-release-candidate-audit.md) |
+| **P0** | REL-P0-01 tree · REL-P0-04 prod alias · REL-P0-03 secretary secrets · REL-P0-02（TLV scope時） |
+| **P1** | Unauth Pages APIs（secretary-deepseek · tlv-zego-token · gemini-live-proxy）· AI Workspace final 29/31（categories HTML） |
+| **非阻害** | Platform AI ページ生成は 2-E READY WITH FOLLOW-UP（単独では RC 全体を通せない） |
+| **対応** | 監査 §10 Unblock plan → Phase 3 再判定 |
+
+---
+
 ## KI-014 — TASFUL AI Media Edge smoke · Gemini 503 flake
 
 | 項目 | 内容 |
