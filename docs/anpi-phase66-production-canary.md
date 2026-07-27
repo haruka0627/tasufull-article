@@ -80,7 +80,8 @@ Stop conditions:
 | Phase 65 `anpi_prod_*` | N/A | **Absent** · **do not apply until 2–10** |
 | Staging sha8 `0411f04d` | Allowed in staging gate | Must **never** enter Prod allowlist |
 
-**Apply candidates (NOT APPLIED):** [`docs/anpi-phase66-production-missing-migrations.md`](./anpi-phase66-production-missing-migrations.md)
+**Apply candidates (NOT APPLIED):** [`docs/anpi-phase66-production-missing-migrations.md`](./anpi-phase66-production-missing-migrations.md)  
+**Phase 2–10 apply runbook (NOT EXECUTED):** [`docs/anpi-phase66-production-phase2-10-apply-runbook.md`](./anpi-phase66-production-phase2-10-apply-runbook.md)
 
 ---
 
