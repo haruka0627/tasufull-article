@@ -65,5 +65,12 @@ Each run emits one JSON line (`service=anpi-scheduler`). Lease rows also land in
 ## Tests
 
 ```bash
-node scripts/test-anpi-phase56-cloudflare-scheduler.mjs
+npm run test:anpi-cf-scheduler
+npm run verify:anpi-cf-cron
 ```
+
+## Ops / readiness
+
+- Ops: [`docs/anpi-cloudflare-scheduler-ops.md`](../../../../docs/anpi-cloudflare-scheduler-ops.md)
+- Gate: [`reports/anpi-phase57-staging-scheduler-readiness-gate.md`](../../../../reports/anpi-phase57-staging-scheduler-readiness-gate.md)
+- `preview_urls = false` in `wrangler.toml`

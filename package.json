@@ -65,7 +65,9 @@
     "verify:live-p7": "node scripts/verify-live-p7-notify-counts.mjs",
     "smoke:pages": "node scripts/smoke-cloudflare-pages.mjs --base http://127.0.0.1:8788",
     "smoke:match:p15-l5": "node scripts/smoke-match-p15-l5-dist-sync.mjs --skip-edge",
-    "deploy:pages": "node scripts/deploy-cloudflare-pages.mjs"
+    "deploy:pages": "node scripts/deploy-cloudflare-pages.mjs",
+    "test:anpi-cf-scheduler": "node scripts/test-anpi-phase56-cloudflare-scheduler.mjs",
+    "verify:anpi-cf-cron": "node scripts/verify-anpi-phase57-cf-cron-continuity.mjs"
   },
   "devDependencies": {
     "ffmpeg-static": "^5.3.0",
