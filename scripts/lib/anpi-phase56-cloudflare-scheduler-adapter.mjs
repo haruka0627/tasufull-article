@@ -64,6 +64,9 @@ export function resolveCfSchedulerConfig(env = {}) {
     env.ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY || env.SUPABASE_SERVICE_ROLE_KEY || ""
   ).trim();
 
+  const scopedCronPath = String(env.ANPI_P62_SCOPED_CRON_PATH || "false").trim().toLowerCase();
+  const scopedWriter = String(env.ANPI_P61_SCOPED_WRITER_ENABLED || "false").trim().toLowerCase();
+
   return {
     environment,
     projectRef,
@@ -71,6 +74,8 @@ export function resolveCfSchedulerConfig(env = {}) {
     provider,
     apiUrl,
     serviceKey,
+    scopedCronPath,
+    scopedWriter,
   };
 }
 
@@ -138,6 +143,8 @@ export function buildCfSchedulerLog({
     failed_count: Number(summary?.jobsFailed ?? 0),
     provider_validation: summary?.provider_validation || null,
     overall_status: summary?.overall_status || status || null,
+    scoped_cron_path: Boolean(summary?.scoped_cron_path),
+    mode: summary?.mode || null,
     error_code: errorCode || null,
   };
 }
@@ -191,6 +198,14 @@ export async function runAnpiCfScheduledTick({
       holderId,
       stubMode: "success",
       failIfDisabled: true,
+      env: {
+        ANPI_ENVIRONMENT: cfg.environment,
+        ANPI_STAGING_PROJECT_REF: cfg.projectRef,
+        ANPI_PROJECT_REF: cfg.projectRef,
+        ANPI_NOTIFICATION_PROVIDER: cfg.provider,
+        ANPI_P62_SCOPED_CRON_PATH: cfg.scopedCronPath,
+        ANPI_P61_SCOPED_WRITER_ENABLED: cfg.scopedWriter,
+      },
     });
   } catch (err) {
     if (err?.summary) summary = err.summary;
