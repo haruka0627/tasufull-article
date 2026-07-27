@@ -18,7 +18,7 @@ on:
   schedule:
     # every 5 minutes 窶・due pickup only; 09:00/+2h/+4h/+6h live in DB settings
     # Schedule registration refresh: 2026-07-27
-    - cron: "*/5 * * * *"
+    - cron: "1-59/5 * * * *"
   workflow_dispatch:
 
 concurrency:
