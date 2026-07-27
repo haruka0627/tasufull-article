@@ -2761,3 +2761,14 @@ body.anpi-dashboard-page--notify-focus #family.anpi-notify-anchor--active {
   .anpi-settings-summary__dl { grid-template-columns: 1fr; }
   .anpi-today-panel__confirm { width: 100%; }
 }
+
+/* Phase 46 ? product UI polish */
+.anpi-dash-env-note {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}

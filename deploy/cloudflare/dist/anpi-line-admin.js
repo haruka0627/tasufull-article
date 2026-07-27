@@ -1,5 +1,5 @@
 /**
- * LINE安否通知 — 管理者向けモード表示・設定カード・運用画面
+ * LINE安否通知  E管琁E��E��けモード表示・設定カード�E運用画面
  */
 (function (global) {
   "use strict";
@@ -13,7 +13,7 @@
   }
 
   function formatDt(iso) {
-    if (!iso) return "—";
+    if (!iso) return " E;
     try {
       return new Intl.DateTimeFormat("ja-JP", {
         year: "numeric",
@@ -34,7 +34,7 @@
 
   function getModeLabel() {
     const mode = global.TasuAnpiNotifications?.getLineSendMode?.() || "mock";
-    return mode === "production" ? "本番モード" : "モックモード";
+    return mode === "production" ? "本番モーチE : "モチE��モーチE;
   }
 
   function getModeClass() {
@@ -44,10 +44,10 @@
 
   function formatStorageSourceLabel(storage) {
     const src = String(storage?.source || "none");
-    if (src === "restored") return "Supabase（復元）";
+    if (src === "restored") return "Supabase�E�復允E��E;
     if (src === "supabase") return "Supabase";
     if (src === "localStorage") return "localStorage";
-    return "なし";
+    return "なぁE;
   }
 
   function getHolderOptions() {
@@ -61,11 +61,11 @@
   }
 
   function formatPrimaryContextLabel(ctx) {
-    if (!ctx) return "—";
+    if (!ctx) return " E;
     const meta = ctx.metadata && typeof ctx.metadata === "object" ? ctx.metadata : {};
-    if (meta.primary === true || ctx.primary === true) return "primary（metadata）";
-    if (String(ctx.account_scope || "") === "self") return "primary（account_scope=self）";
-    return "非 primary";
+    if (meta.primary === true || ctx.primary === true) return "primary�E�Eetadata�E�E;
+    if (String(ctx.account_scope || "") === "self") return "primary�E�Eccount_scope=self�E�E;
+    return "靁Eprimary";
   }
 
   function renderProductionReadinessHtml(readiness) {
@@ -75,19 +75,19 @@
       `<section class="anpi-line-admin-page__prod-ready" aria-label="Supabase Production Readiness">` +
       `<h2>Supabase Production Readiness</h2>` +
       `<p class="anpi-line-admin-page__prod-lead">` +
-      `<a href="${esc(r.production_checklist_link || "docs/anpi-supabase-production-checklist.md")}">本番移行チェックリスト</a>を参照してください。` +
+      `<a href="${esc(r.production_checklist_link || "docs/anpi-supabase-production-checklist.md")}">本番移行チェチE��リスチE/a>を参照してください。` +
       `</p>` +
       `<dl class="anpi-line-admin__dl anpi-line-admin__dl--stats">` +
-      `<dt>RLS mode</dt><dd>${esc(r.rls_enabled || "—")}</dd>` +
-      `<dt>dev policy (DB)</dt><dd>${esc(r.dev_policy_detected || "—")} <span class="anpi-line-admin__warn">${esc(r.dev_policy_note || "")}</span></dd>` +
-      `<dt>current member_id</dt><dd><code>${esc(r.current_member_id || "—")}</code></dd>` +
-      `<dt>authenticated</dt><dd>${esc(r.authenticated_label || (r.authenticated ? "はい" : "いいえ"))}</dd>` +
-      `<dt>admin UI flag</dt><dd>${r.admin_ui_flag ? "はい（UIのみ）" : "いいえ"}</dd>` +
-      `<dt>admin DB role</dt><dd>${esc(r.admin_db_role || "—")} <span class="anpi-line-admin__warn">${esc(r.admin_db_role_note || "")}</span></dd>` +
-      `<dt>context save mode</dt><dd><code>${esc(r.context_save_mode || "—")}</code></dd>` +
-      `<dt>logs save mode</dt><dd><code>${esc(r.logs_save_mode || "—")}</code></dd>` +
+      `<dt>RLS mode</dt><dd>${esc(r.rls_enabled || " E)}</dd>` +
+      `<dt>dev policy (DB)</dt><dd>${esc(r.dev_policy_detected || " E)} <span class="anpi-line-admin__warn">${esc(r.dev_policy_note || "")}</span></dd>` +
+      `<dt>current member_id</dt><dd><code>${esc(r.current_member_id || " E)}</code></dd>` +
+      `<dt>authenticated</dt><dd>${esc(r.authenticated_label || (r.authenticated ? "はぁE : "ぁE��ぁE))}</dd>` +
+      `<dt>admin UI flag</dt><dd>${r.admin_ui_flag ? "はぁE��EIのみ�E�E : "ぁE��ぁE}</dd>` +
+      `<dt>admin DB role</dt><dd>${esc(r.admin_db_role || " E)} <span class="anpi-line-admin__warn">${esc(r.admin_db_role_note || "")}</span></dd>` +
+      `<dt>context save mode</dt><dd><code>${esc(r.context_save_mode || " E)}</code></dd>` +
+      `<dt>logs save mode</dt><dd><code>${esc(r.logs_save_mode || " E)}</code></dd>` +
       `<dt>DB sync</dt><dd>${r.supabase_sync_paused ? esc(r.supabase_sync_paused_message || "停止") : "有効"}</dd>` +
-      `<dt>last unauthorized</dt><dd>${last ? esc(`${last.scope} @ ${formatDt(last.at)}`) : "—"}</dd>` +
+      `<dt>last unauthorized</dt><dd>${last ? esc(`${last.scope} @ ${formatDt(last.at)}`) : " E}</dd>` +
       `<dt>mock RLS enforce</dt><dd>${r.mock_enforced ? "on" : "off"}</dd>` +
       `</dl>` +
       `</section>`
@@ -101,13 +101,13 @@
       `<section class="anpi-line-admin-page__rls" aria-label="RLS アクセス">` +
       `<h2>RLS / 権限制御</h2>` +
       `<dl class="anpi-line-admin__dl anpi-line-admin__dl--stats">` +
-      `<dt>アクセス範囲</dt><dd>${esc(st.scope === "admin" ? "管理者（全件）" : "会員（自分の行のみ）")}</dd>` +
-      `<dt>member_id</dt><dd><code>${esc(s.member_id || "—")}</code></dd>` +
-      `<dt>管理者</dt><dd>${s.admin ? "はい" : "いいえ"}</dd>` +
-      `<dt>LINE運用管理者</dt><dd>${s.line_admin ? "はい" : "いいえ"}</dd>` +
+      `<dt>アクセス篁E��</dt><dd>${esc(st.scope === "admin" ? "管琁E��E���E件�E�E : "会員�E��E刁E�E行�Eみ�E�E)}</dd>` +
+      `<dt>member_id</dt><dd><code>${esc(s.member_id || " E)}</code></dd>` +
+      `<dt>管琁E��E/dt><dd>${s.admin ? "はぁE : "ぁE��ぁE}</dd>` +
+      `<dt>LINE運用管琁E��E/dt><dd>${s.line_admin ? "はぁE : "ぁE��ぁE}</dd>` +
       `<dt>mock RLS</dt><dd>${s.mock_enforced ? "enforce" : "off"}</dd>` +
-      `<dt>参照可能 context</dt><dd>${esc(String(st.context_count ?? "—"))}</dd>` +
-      `<dt>参照可能 logs</dt><dd>${esc(String(st.logs_count ?? "—"))}</dd>` +
+      `<dt>参�E可能 context</dt><dd>${esc(String(st.context_count ?? " E))}</dd>` +
+      `<dt>参�E可能 logs</dt><dd>${esc(String(st.logs_count ?? " E))}</dd>` +
       `</dl>` +
       `</section>`
     );
@@ -119,19 +119,19 @@
       `<section class="anpi-line-admin-page__identity" aria-label="Identity Linking">` +
       `<h2>Identity Linking</h2>` +
       `<dl class="anpi-line-admin__dl anpi-line-admin__dl--stats">` +
-      `<dt>member_id</dt><dd><code>${esc(identity.member_id || "—")}</code></dd>` +
-      `<dt>contract_holder_id</dt><dd><code>${esc(identity.contract_holder_id || "—")}</code></dd>` +
-      `<dt>anpi_user_id</dt><dd><code>${esc(identity.anpi_user_id || identity.user_id || "—")}</code></dd>` +
-      `<dt>user_id（後方互換）</dt><dd><code>${esc(identity.user_id || "—")}</code></dd>` +
-      `<dt>relationship</dt><dd>${esc(identity.relationship || "—")}</dd>` +
-      `<dt>account_scope</dt><dd>${esc(identity.account_scope || "—")}</dd>` +
-      `<dt>primary 判定</dt><dd>${esc(formatPrimaryContextLabel(identity))}</dd>` +
+      `<dt>member_id</dt><dd><code>${esc(identity.member_id || " E)}</code></dd>` +
+      `<dt>contract_holder_id</dt><dd><code>${esc(identity.contract_holder_id || " E)}</code></dd>` +
+      `<dt>anpi_user_id</dt><dd><code>${esc(identity.anpi_user_id || identity.user_id || " E)}</code></dd>` +
+      `<dt>user_id�E�後方互換�E�E/dt><dd><code>${esc(identity.user_id || " E)}</code></dd>` +
+      `<dt>relationship</dt><dd>${esc(identity.relationship || " E)}</dd>` +
+      `<dt>account_scope</dt><dd>${esc(identity.account_scope || " E)}</dd>` +
+      `<dt>primary 判宁E/dt><dd>${esc(formatPrimaryContextLabel(identity))}</dd>` +
       `</dl>` +
       `<h3>Notification Logs identity filter</h3>` +
       `<dl class="anpi-line-admin__dl anpi-line-admin__dl--stats">` +
-      `<dt>contract_holder_id</dt><dd><code>${esc(logsFilter.contractHolderId || "—")}</code></dd>` +
-      `<dt>member_id</dt><dd><code>${esc(logsFilter.memberId || "—")}</code></dd>` +
-      `<dt>anpi_user_id</dt><dd><code>${esc(logsFilter.anpiUserId || logsFilter.userId || "—")}</code></dd>` +
+      `<dt>contract_holder_id</dt><dd><code>${esc(logsFilter.contractHolderId || " E)}</code></dd>` +
+      `<dt>member_id</dt><dd><code>${esc(logsFilter.memberId || " E)}</code></dd>` +
+      `<dt>anpi_user_id</dt><dd><code>${esc(logsFilter.anpiUserId || logsFilter.userId || " E)}</code></dd>` +
       `</dl>` +
       `</section>`
     );
@@ -139,10 +139,10 @@
 
   function hcItemStatus(hc, id) {
     const item = hc?.items?.find((i) => i.id === id);
-    if (!item) return "未確認";
+    if (!item) return "未確誁E;
     if (item.status === "ok") return "OK";
     if (item.status === "error") return "エラー";
-    return "要確認";
+    return "要確誁E;
   }
 
   function renderModeBadgeHtml() {
@@ -151,7 +151,7 @@
     const mod = getModeClass();
     return (
       `<p class="anpi-line-mode-badge anpi-line-mode-badge--${mod}" data-anpi-line-mode-badge>` +
-      `<span class="anpi-line-mode-badge__label">LINE送信モード</span> ` +
+      `<span class="anpi-line-mode-badge__label">LINE送信モーチE/span> ` +
       `<strong>${esc(label)}</strong>` +
       `</p>`
     );
@@ -159,7 +159,7 @@
 
   function renderHealthcheckListHtml(items, { compact = false } = {}) {
     if (!items?.length) {
-      return `<p class="anpi-line-admin__empty">チェック結果がありません</p>`;
+      return `<p class="anpi-line-admin__empty">チェチE��結果がありません</p>`;
     }
     const cls = compact ? "anpi-line-admin__checks anpi-line-admin__checks--compact" : "anpi-line-admin__checks";
     return (
@@ -181,7 +181,7 @@
     );
   }
 
-  function renderLogListHtml(logs, { emptyLabel = "なし" } = {}) {
+  function renderLogListHtml(logs, { emptyLabel = "なぁE } = {}) {
     if (!logs?.length) {
       return `<p class="anpi-line-admin__empty">${esc(emptyLabel)}</p>`;
     }
@@ -212,35 +212,35 @@
     const stats = s.stats || {};
 
     return (
-      `<section class="anpi-line-admin" data-anpi-line-admin-card aria-label="LINE設定状態（管理者）">` +
-      `<h2 class="anpi-line-admin__title">LINE設定状態</h2>` +
-      `<p class="anpi-line-admin__link"><a href="anpi-line-admin.html">LINE運用画面を開く</a></p>` +
+      `<section class="anpi-line-admin" data-anpi-line-admin-card aria-label="LINE設定状態（管琁E��E��E>` +
+      `<h2 class="anpi-line-admin__title">LINE設定状慁E/h2>` +
+      `<p class="anpi-line-admin__link"><a href="anpi-line-admin.html">LINE運用画面を開ぁE/a></p>` +
       `<dl class="anpi-line-admin__dl">` +
-      `<dt>送信モード</dt><dd>${esc(getModeLabel())}</dd>` +
-      `<dt>LINE Login</dt><dd>${esc(s.line_login_state || "—")}</dd>` +
-      `<dt>Messaging API</dt><dd>${esc(s.messaging_api_state || "—")}</dd>` +
-      `<dt>Token Exchange</dt><dd>${esc(s.token_exchange_state || "—")}</dd>` +
-      `<dt>Push API</dt><dd>${esc(s.push_api_state || "—")}</dd>` +
+      `<dt>送信モーチE/dt><dd>${esc(getModeLabel())}</dd>` +
+      `<dt>LINE Login</dt><dd>${esc(s.line_login_state || " E)}</dd>` +
+      `<dt>Messaging API</dt><dd>${esc(s.messaging_api_state || " E)}</dd>` +
+      `<dt>Token Exchange</dt><dd>${esc(s.token_exchange_state || " E)}</dd>` +
+      `<dt>Push API</dt><dd>${esc(s.push_api_state || " E)}</dd>` +
       `<dt>連携ユーザー</dt><dd>${esc(String(stats.linked_user_count ?? 0))} 件</dd>` +
       `<dt>送信済み</dt><dd>${esc(String(stats.sent_count ?? 0))} 件</dd>` +
-      `<dt>送信失敗</dt><dd>${esc(String(stats.failed_count ?? 0))} 件</dd>` +
-      `<dt>最終成功</dt><dd>${esc(formatDt(stats.last_success_at))}</dd>` +
-      `<dt>最終失敗</dt><dd>${esc(formatDt(stats.last_failure_at))}</dd>` +
+      `<dt>送信失敁E/dt><dd>${esc(String(stats.failed_count ?? 0))} 件</dd>` +
+      `<dt>最終�E劁E/dt><dd>${esc(formatDt(stats.last_success_at))}</dd>` +
+      `<dt>最終失敁E/dt><dd>${esc(formatDt(stats.last_failure_at))}</dd>` +
       `<dt>Anpi Context</dt><dd>${esc(s.context_storage?.source || "none")}</dd>` +
       `<dt>Storage Source</dt><dd>${esc(formatStorageSourceLabel(s.context_storage))}</dd>` +
-      `<dt>Restored</dt><dd>${s.context_storage?.restored ? "はい" : "いいえ"}</dd>` +
-      `<dt>member_id</dt><dd><code>${esc(s.identity?.member_id || "—")}</code></dd>` +
-      `<dt>anpi_user_id</dt><dd><code>${esc(s.identity?.anpi_user_id || "—")}</code></dd>` +
-      `<dt>relationship</dt><dd>${esc(s.identity?.relationship || "—")}</dd>` +
+      `<dt>Restored</dt><dd>${s.context_storage?.restored ? "はぁE : "ぁE��ぁE}</dd>` +
+      `<dt>member_id</dt><dd><code>${esc(s.identity?.member_id || " E)}</code></dd>` +
+      `<dt>anpi_user_id</dt><dd><code>${esc(s.identity?.anpi_user_id || " E)}</code></dd>` +
+      `<dt>relationship</dt><dd>${esc(s.identity?.relationship || " E)}</dd>` +
       `<dt>RLS scope</dt><dd>${esc(s.rls_stats?.scope === "admin" ? "全件" : "会員")}</dd>` +
-      `<dt>context save</dt><dd><code>${esc(s.production_readiness?.context_save_mode || "—")}</code></dd>` +
+      `<dt>context save</dt><dd><code>${esc(s.production_readiness?.context_save_mode || " E)}</code></dd>` +
       `<dt>Notification Logs Storage</dt><dd>${esc(s.logs_storage?.last_sync_status || "idle")}</dd>` +
       `<dt>localStorage count</dt><dd>${esc(String(s.logs_storage?.local_count ?? 0))}</dd>` +
       `<dt>Supabase count</dt><dd>${esc(String(s.logs_storage?.supabase_count ?? 0))}</dd>` +
       `<dt>Merged count</dt><dd>${esc(String(s.logs_storage?.merged_count ?? 0))}</dd>` +
-      `<dt>Logs restored</dt><dd>${s.logs_storage?.restored ? "はい" : "いいえ"}</dd>` +
+      `<dt>Logs restored</dt><dd>${s.logs_storage?.restored ? "はぁE : "ぁE��ぁE}</dd>` +
       `</dl>` +
-      `<p class="anpi-line-admin__hc-summary">Healthcheck: OK ${sum.ok} / 注意 ${sum.warning} / エラー ${sum.error}</p>` +
+      `<p class="anpi-line-admin__hc-summary">Healthcheck: OK ${sum.ok} / 注愁E${sum.warning} / エラー ${sum.error}</p>` +
       renderHealthcheckListHtml(hc.items, { compact: true }) +
       `</section>`
     );
@@ -251,9 +251,9 @@
       return (
         `<section class="anpi-line-admin-page__denied" data-anpi-line-admin-denied>` +
         `<h1>アクセスできません</h1>` +
-        `<p>この画面は管理者のみ利用できます。</p>` +
-        `<p><code>localStorage.setItem('tasu_anpi_line_admin_v1','1')</code> または <code>?anpi_admin=1</code></p>` +
-        `<p><a href="dashboard.html">ダッシュボードへ戻る</a></p>` +
+        `<p>こ�E画面は管琁E��E�Eみ利用できます、E/p>` +
+        `<p><code>localStorage.setItem('tasu_anpi_line_admin_v1','1')</code> また�E <code>?anpi_admin=1</code></p>` +
+        `<p><a href="dashboard.html">ダチE��ュボ�Eドへ戻めE/a></p>` +
         `</section>`
       );
     }
@@ -269,38 +269,38 @@
       const mod = testResult.ok ? "success" : "error";
       testFeedback =
         `<p class="anpi-line-admin-page__test-result anpi-line-admin-page__test-result--${mod}" data-anpi-line-test-result role="status">` +
-        esc(testResult.ok ? "テストPush送信に成功しました。" : `送信失敗: ${testResult.error_message || ""}`) +
-        (testResult.error_code ? `（${esc(testResult.error_code)}）` : "") +
+        esc(testResult.ok ? "チE��チEush送信に成功しました、E : `送信失敁E ${testResult.error_message || ""}`) +
+        (testResult.error_code ? `�E�E{esc(testResult.error_code)}�E�` : "") +
         `</p>`;
     }
 
     return (
       `<div class="anpi-line-admin-page__inner" data-anpi-line-admin-page>` +
       `<header class="anpi-line-admin-page__header">` +
-      `<h1 class="anpi-line-admin-page__title">LINE運用（管理者）</h1>` +
+      `<h1 class="anpi-line-admin-page__title">LINE運用�E�管琁E��E��E/h1>` +
       renderModeBadgeHtml() +
       `<nav class="anpi-line-admin-page__nav" aria-label="関連画面">` +
-      `<a href="dashboard.html">ダッシュボード</a>` +
-      `<a href="anpi-dashboard.html">安否ダッシュボード</a>` +
-      `<a href="anpi-notifications.html">安否通知センター</a>` +
+      `<a href="dashboard.html">ダチE��ュボ�EチE/a>` +
+      `<a href="anpi-dashboard.html">安否ダチE��ュボ�EチE/a>` +
+      `<a href="anpi-notifications.html">安否確認履歴</a>` +
       `<a href="anpi-register.html">安否サービス登録</a>` +
       `</nav>` +
       `</header>` +
-      `<section class="anpi-line-admin-page__stats" aria-label="送信統計">` +
-      `<h2>Push送信統計</h2>` +
+      `<section class="anpi-line-admin-page__stats" aria-label="送信統訁E>` +
+      `<h2>Push送信統訁E/h2>` +
       `<dl class="anpi-line-admin__dl anpi-line-admin__dl--stats">` +
-      `<dt>LINE Login</dt><dd>${esc(s.line_login_state || "—")}</dd>` +
-      `<dt>Messaging API</dt><dd>${esc(s.messaging_api_state || "—")}</dd>` +
-      `<dt>Token Exchange</dt><dd>${esc(s.token_exchange_state || "—")}</dd>` +
-      `<dt>Push API</dt><dd>${esc(s.push_api_state || "—")}</dd>` +
+      `<dt>LINE Login</dt><dd>${esc(s.line_login_state || " E)}</dd>` +
+      `<dt>Messaging API</dt><dd>${esc(s.messaging_api_state || " E)}</dd>` +
+      `<dt>Token Exchange</dt><dd>${esc(s.token_exchange_state || " E)}</dd>` +
+      `<dt>Push API</dt><dd>${esc(s.push_api_state || " E)}</dd>` +
       `<dt>連携ユーザー数</dt><dd>${esc(String(stats.linked_user_count ?? 0))}</dd>` +
       `<dt>送信済み件数</dt><dd>${esc(String(stats.sent_count ?? 0))}</dd>` +
       `<dt>送信失敗件数</dt><dd>${esc(String(stats.failed_count ?? 0))}</dd>` +
-      `<dt>最終成功送信</dt><dd>${esc(formatDt(stats.last_success_at))}</dd>` +
+      `<dt>最終�E功送信</dt><dd>${esc(formatDt(stats.last_success_at))}</dd>` +
       `<dt>最終失敗送信</dt><dd>${esc(formatDt(stats.last_failure_at))}</dd>` +
       `<dt>Anpi Context</dt><dd>${esc(s.context_storage?.source || "none")}</dd>` +
       `<dt>Storage Source</dt><dd>${esc(formatStorageSourceLabel(s.context_storage))}</dd>` +
-      `<dt>Restored</dt><dd>${s.context_storage?.restored ? "はい" : "いいえ"}</dd>` +
+      `<dt>Restored</dt><dd>${s.context_storage?.restored ? "はぁE : "ぁE��ぁE}</dd>` +
       `</dl>` +
       `</section>` +
       renderIdentityLinkingHtml(s.identity_context, s.logs_identity_filter) +
@@ -314,28 +314,28 @@
       `<dt>Supabase count</dt><dd>${esc(String(s.logs_storage?.supabase_count ?? 0))}</dd>` +
       `<dt>Merged count</dt><dd>${esc(String(s.logs_storage?.merged_count ?? 0))}</dd>` +
       `<dt>Last restored at</dt><dd>${esc(formatDt(s.logs_storage?.last_restored_at))}</dd>` +
-      `<dt>Logs restored</dt><dd>${s.logs_storage?.restored ? "はい" : "いいえ"}</dd>` +
+      `<dt>Logs restored</dt><dd>${s.logs_storage?.restored ? "はぁE : "ぁE��ぁE}</dd>` +
       `</dl>` +
       `</section>` +
-      `<section class="anpi-line-admin-page__test" aria-label="テストPush">` +
-      `<h2>テストPush送信</h2>` +
-      `<p class="anpi-line-admin-page__test-lead">現在連携中のLINEアカウントへ固定文を送信します（管理者のみ）。</p>` +
-      `<pre class="anpi-line-admin-page__test-msg">TASFUL安否サービス\nLINE通知テストです。</pre>` +
-      `<button type="button" class="anpi-line-admin-page__test-btn" data-anpi-line-test-push>テストPush送信</button>` +
+      `<section class="anpi-line-admin-page__test" aria-label="チE��チEush">` +
+      `<h2>チE��チEush送信</h2>` +
+      `<p class="anpi-line-admin-page__test-lead">現在連携中のLINEアカウントへ固定文を送信します（管琁E��E�Eみ�E�、E/p>` +
+      `<pre class="anpi-line-admin-page__test-msg">TASFUL安否サービス\nLINE通知チE��トです、E/pre>` +
+      `<button type="button" class="anpi-line-admin-page__test-btn" data-anpi-line-test-push>チE��チEush送信</button>` +
       testFeedback +
       `</section>` +
       `<section class="anpi-line-admin-page__hc" aria-label="Healthcheck">` +
       `<h2>Healthcheck</h2>` +
-      `<p class="anpi-line-admin__hc-summary">OK ${sum.ok} / 注意 ${sum.warning} / エラー ${sum.error}</p>` +
+      `<p class="anpi-line-admin__hc-summary">OK ${sum.ok} / 注愁E${sum.warning} / エラー ${sum.error}</p>` +
       renderHealthcheckListHtml(hc.items) +
       `</section>` +
       `<div class="anpi-line-admin-page__logs">` +
-      `<section aria-label="最近の送信ログ">` +
-      `<h2>最近の送信ログ</h2>` +
+      `<section aria-label="最近�E送信ログ">` +
+      `<h2>最近�E送信ログ</h2>` +
       renderLogListHtml(stats.recent_sent_logs, { emptyLabel: "送信済みログはありません" }) +
       `</section>` +
-      `<section aria-label="最近の失敗ログ">` +
-      `<h2>最近の失敗ログ</h2>` +
+      `<section aria-label="最近�E失敗ログ">` +
+      `<h2>最近�E失敗ログ</h2>` +
       renderLogListHtml(stats.recent_failed_logs, { emptyLabel: "失敗ログはありません" }) +
       `</section>` +
       `</div>` +
@@ -436,7 +436,7 @@
       rls_state: rlsState,
       rls_stats: rlsStats,
       production_readiness: productionReadiness,
-      line_login_state: loginOk ? "構成済み" : "要設定",
+      line_login_state: loginOk ? "構�E済み" : "要設宁E,
       messaging_api_state: hcItemStatus(hc, "line_channel_access_token"),
       token_exchange_state: hcItemStatus(hc, "edge_anpi_line_token_exchange"),
       push_api_state: hcItemStatus(hc, "edge_anpi_line_send"),
@@ -528,3 +528,4 @@
     bindRefresh,
   };
 })(typeof window !== "undefined" ? window : globalThis);
+

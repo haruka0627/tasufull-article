@@ -18,7 +18,6 @@
   const confirmBtn = root.querySelector("[data-anpi-confirm-btn]");
   const confirmFeedback = root.querySelector("[data-anpi-confirm-feedback]");
   const settingsSummary = root.querySelector("[data-anpi-settings-summary]");
-  const lineFail = root.querySelector("[data-anpi-line-fail-panel]");
 
   /** Ensure today check at most once per page load. */
   let ensuredThisLoad = false;
@@ -39,23 +38,6 @@
     }
     errorsEl.hidden = false;
     errorsEl.textContent = msg;
-  }
-
-  function hideLegacyPanels() {
-    [
-      "[data-anpi-mobile-home-summary]",
-      "[data-anpi-summary-grid]",
-      ".anpi-urgent-panel",
-      "[data-anpi-recent-section], .anpi-recent-section",
-      "[data-anpi-mobile-detail-summary]",
-      "[data-anpi-action-required-section]",
-      "[data-anpi-line-mode]",
-      "[data-anpi-line-admin]",
-    ].forEach((sel) => {
-      root.querySelectorAll(sel).forEach((el) => {
-        el.hidden = true;
-      });
-    });
   }
 
   function renderSettingsSummary(row) {
@@ -79,7 +61,9 @@
     if (todayBadge) todayBadge.textContent = mapped.label;
     if (todayMeta) {
       const date = check?.local_check_date || "—";
-      const confirmed = check?.confirmed_at ? ` / 確認時刻 ${check.confirmed_at}` : "";
+      const confirmed = check?.confirmed_at
+        ? ` / 確認 ${window.TasuAnpiRpc.formatTokyoDateTime(check.confirmed_at)}`
+        : "";
       todayMeta.textContent = `日付 ${date}${confirmed}`;
     }
     if (!confirmBtn) return;
@@ -107,7 +91,7 @@
       if (ensured.ok && !ensured.stale) {
         if (ensured.data?.skipped_reason) {
           if (todayBadge) todayBadge.textContent = "本日対象外";
-          if (todayMeta) todayMeta.textContent = `理由コードは管理者向けログのみ`;
+          if (todayMeta) todayMeta.textContent = "本日は確認対象外です。";
           if (confirmBtn) confirmBtn.disabled = true;
           return;
         }
@@ -127,9 +111,7 @@
   }
 
   async function bootstrap() {
-    hideLegacyPanels();
     if (shell) shell.hidden = false;
-    if (lineFail) lineFail.hidden = false;
     setStatus("読み込み中…");
     showError("");
 

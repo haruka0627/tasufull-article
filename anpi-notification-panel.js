@@ -43,13 +43,13 @@
     if (!logs.length) {
       container.innerHTML =
         '<p class="ai-anpi-panel__empty">通知ログはまだありません。</p>' +
-        '<p class="ai-anpi-panel__empty"><a href="anpi-notifications.html">安否通知センター</a>で契約者向け一覧を開けます。</p>';
+        '<p class="ai-anpi-panel__empty"><a href="anpi-notifications.html">安否確認履歴</a>で確認履歴を開けます。</p>';
       return;
     }
 
     let html =
       `<p class="ai-anpi-panel__summary">未読 ${summary.unread} / 全 ${summary.total}（緊急 ${summary.urgent}） · ` +
-      `<a href="anpi-notifications.html">安否通知センター →</a></p>`;
+      `<a href="anpi-notifications.html">安否確認履歴 →</a></p>`;
     html += '<ul class="ai-anpi-panel__list">';
     logs.slice(0, 8).forEach((log) => {
       const typeLabel = EVENT_TYPE_LABELS[log.event_type] || log.event_type;

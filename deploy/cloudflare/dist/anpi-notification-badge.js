@@ -106,10 +106,10 @@
     return (
       `<section class="dash-anpi-urgent" data-dash-anpi-urgent role="alert">` +
       `<div class="dash-anpi-urgent__body">` +
-      `<h2 class="dash-anpi-urgent__title">緊急の安否通知があります</h2>` +
-      `<p class="dash-anpi-urgent__text">至急、安否通知センターを確認してください。</p>` +
-      `<p class="dash-anpi-urgent__count">緊急通知 <strong>${urgentLabel}</strong> 件</p>` +
-      `<a class="dash-anpi-urgent__cta" href="anpi-notifications.html">安否通知センターを開く</a>` +
+      `<h2 class="dash-anpi-urgent__title">緊急の安否確認があります</h2>` +
+      `<p class="dash-anpi-urgent__text">至急、安否確認履歴を確認してください。</p>` +
+      `<p class="dash-anpi-urgent__count">緊急 <strong>${urgentLabel}</strong> 件</p>` +
+      `<a class="dash-anpi-urgent__cta" href="anpi-notifications.html">安否確認履歴を開く</a>` +
       `</div>` +
       `</section>`
     );
@@ -138,7 +138,7 @@
       `<h2 class="dash-anpi-line-fail__title">LINE通知の送信に失敗しています</h2>` +
       `<p class="dash-anpi-line-fail__text">TASFUL内通知は記録されています。LINE連携状態を確認してください。</p>` +
       `<p class="dash-anpi-line-fail__count">送信失敗 <strong>${n}</strong> 件</p>` +
-      `<a class="dash-anpi-line-fail__cta" href="anpi-notifications.html">安否通知センターを開く</a>` +
+      `<a class="dash-anpi-line-fail__cta" href="anpi-notifications.html">安否確認履歴を開く</a>` +
       `</div>` +
       `</section>`
     );
