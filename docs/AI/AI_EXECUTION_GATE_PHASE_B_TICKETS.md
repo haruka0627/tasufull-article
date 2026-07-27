@@ -317,6 +317,15 @@ executor + collector/report adapters + repository/policy + B4 テスト/notes。
 
 ## B5 — Dashboard 読取表示
 
+### 状態
+
+**B5 PASS（dashboard read · create→get · no page-load execute · 2026-07-28）** · Staging/Production deploy 未実施 · commit は別途明示指示  
+**UI:** `admin-operations-dashboard.html` `#ops-ai-exec-gate-panel`  
+**Client:** `admin-ai-exec-gate-client.js`  
+**GET:** `mapGetResponse` + `result`（sanitized summary / pending_total）  
+**Test:** `node scripts/test-ai-exec-gate-phase-b5-dashboard.mjs`  
+**Notes:** `reports/ai-exec-gate-phase-b5-dashboard-notes.md`
+
 ### 目的
 
 運営ダッシュボードに当日 pipeline 結果の読取表示を最小追加する。
@@ -326,28 +335,36 @@ executor + collector/report adapters + repository/policy + B4 テスト/notes。
 **新規**
 
 - `admin-ai-exec-gate-client.js`
+- `scripts/test-ai-exec-gate-phase-b5-dashboard.mjs`
+- `reports/ai-exec-gate-phase-b5-dashboard-notes.md`
 
 **変更**
 
 - `admin-operations-dashboard.html`（最小枠）
-- （必要なら）関連 CSS 最小
+- `admin-operations-dashboard.css`（関連 CSS 最小）
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-service.mjs`（GET に sanitized result を載せる · PLAN §15）
+- 本チケット B5 節
 
 ### allowlist
 
 - get API のサニタイズ結果のみ表示
 - 承認 UI・送信 UI を追加しない
 - cap / secret 非表示
+- 当日 resolve は冪等 **create → get** のみ（PLAN §15 表示項目 · list-today API なし）
+- **ページ表示時の自動 execute は正本未記載のため実施しない**（execute は B3/B4 API · B6 証跡）
 
 ### 依存関係
 
-B3 必須 · B4 で E2E 完成
+B3 必須 · B4 で E2E 表示完成（結果が存在すれば表示）
 
 ### テスト
 
 - 8788 で HTTP 200
-- Console Error 0
-- viewport 1280 / 768 / 390
+- Console Error 0（未認証 panel）
+- viewport 1280 / 390（証跡）
 - blocked/failed 時の汎用メッセージ
+- idempotency / single-flight / XSS / no execute
+- `node scripts/test-ai-exec-gate-phase-b5-dashboard.mjs`
 
 ### 完了条件
 
@@ -356,7 +373,7 @@ B3 必須 · B4 で E2E 完成
 
 ### NO-GO
 
-承認キュー本実装 · 音声 · レイアウト大改修（秘書 FROZEN 尊重）
+承認キュー本実装 · 音声 · レイアウト大改修（秘書 FROZEN 尊重）· provider 接続 · live inbox · migration
 
 ### rollback
 
@@ -364,7 +381,7 @@ HTML 枠と client を除去 · 旧 Morning Report 表示に戻す
 
 ### commit 境界
 
-client + dashboard 最小差分 + 表示確認メモ。migration を混ぜない。
+client + dashboard 最小差分 + GET result スライス + 表示確認メモ。migration を混ぜない。
 
 ---
 

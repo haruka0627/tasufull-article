@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI運営司令塔 | TASFUL 運営</title>
@@ -122,6 +121,19 @@
           <h3 class="ops-p7-desk-section-title" id="ops-p7-morning-summary-heading">本日の運営サマリー</h3>
           <p class="ops-p7-desk-block__sub">朝3分 — タップで各パネルへ</p>
           <div class="ops-ai-morning-summary__chips" data-ops-morning-summary-chips role="list"></div>
+        </section>
+
+        <section
+          class="ops-p7-desk-block ops-ai-exec-gate ops-light-card"
+          id="ops-ai-exec-gate-panel"
+          data-ops-ai-exec-gate-panel
+          aria-labelledby="ops-ai-exec-gate-heading"
+        >
+          <h3 class="ops-p7-desk-section-title" id="ops-ai-exec-gate-heading">Execution Gate（日次レポート）</h3>
+          <p class="ops-p7-desk-block__sub">Staging · 読取表示 · 承認/送信なし · 自動executeなし</p>
+          <div class="ops-ai-exec-gate__body" data-ops-ai-exec-gate-body>
+            <p class="ops-ai-exec-gate__msg">読み込み待機中…</p>
+          </div>
         </section>
 
         <section class="ops-p7-desk-block ops-p7-desk-inbox ops-light-card" id="ops-p7-daily-inbox" data-ops-daily-inbox aria-labelledby="ops-p7-daily-inbox-heading">
@@ -813,7 +825,10 @@
   <script src="ai-ops-command-parser.js"></script>
   <script src="ai-ops-notify.js"></script>
   <script src="builder/builder-partner-evaluation-store.js"></script>
-  <script src="shop-market-event-store.js"></script>
+  <script src="shop-market-event-store.js"></script>  <script src="shared/pricing/generated/tasful-pricing-snapshot.js"></script>
+  <script src="shared/pricing/generated/tasful-pricing-config.js"></script>
+  <script src="shared/pricing/pricing-catalog-runtime.js"></script>
+
   <script src="platform-chat-fee.js"></script>
   <script src="search-intent-detector.js"></script>
   <script src="serper-search-service.js"></script>
@@ -873,6 +888,7 @@
   <script src="admin-ai-secretary-deepseek-classifier.js"></script>
   <script src="admin-ai-secretary-orchestrator.js"></script>
   <script src="admin-ai-secretary-morning-report.js"></script>
+  <script src="admin-ai-exec-gate-client.js"></script>
   <script src="admin-ai-secretary-command-center-ui.js"></script>
   <script src="admin-ai-secretary-google-oauth-client.js"></script>
   <script src="admin-ai-secretary-google-readonly-coordinator.js"></script>

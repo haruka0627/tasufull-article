@@ -7653,3 +7653,45 @@ a.ops-p2-tile:hover {
 .ops-cc-hint { font-size: 0.75rem; color: #64748b; margin: 0 0 0.5rem; }
 .ops-cc-count { font-weight: 400; color: #64748b; }
 .ops-cc-muted { color: #64748b; font-size: 0.75rem; }
+
+/* Phase B5 ? AI Execution Gate read panel (minimal) */
+.ops-ai-exec-gate__body {
+  margin: 0.25rem 0 0.45rem;
+  font-size: 0.8125rem;
+}
+.ops-ai-exec-gate__row {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0.2rem 0;
+}
+.ops-ai-exec-gate__k {
+  flex: 0 0 5.5rem;
+  color: var(--od-muted, #64748b);
+  font-weight: 600;
+}
+.ops-ai-exec-gate__v {
+  flex: 1 1 auto;
+  color: var(--od-text, #0f172a);
+}
+.ops-ai-exec-gate__summary {
+  margin: 0.35rem 0 0;
+  line-height: 1.45;
+  color: var(--od-text, #0f172a);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.ops-ai-exec-gate__msg {
+  margin: 0.2rem 0;
+  color: var(--od-muted, #64748b);
+}
+.ops-ai-exec-gate__msg--warn {
+  color: #92400e;
+}
+.ops-ai-exec-gate__meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.75rem;
+  color: var(--od-muted, #64748b);
+}
+.ops-ai-exec-gate__refresh {
+  margin-top: 0.25rem;
+}
