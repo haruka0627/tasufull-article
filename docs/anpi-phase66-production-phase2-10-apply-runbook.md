@@ -75,7 +75,9 @@ Phase2 → Phase3 → Phase4 → Phase5 → Phase6 → Phase8 → Phase9 → Pha
 3. Index pointer (not a substitute): `00-preflight-readonly.sql`  
 4. Confirm collision: Phase 2 names **`already_exists=false`** before Step 1  
 5. Confirm `gen_random_uuid_callable=true`  
-6. Capture backup / PITR window note (human ops)  
+6. **Backup gate PASS** — see [`anpi-phase66-production-backup-gate.md`](./anpi-phase66-production-backup-gate.md)  
+   (daily/physical ≥1 **or** PITR window **or** attested off-site logical dump + restore smoke test).  
+   `walg_enabled=true` alone with `backups: []` is **FAIL**. PITR is **optional**.  
 7. **Human GO for Step N only** (not blanket approval for all 8)
 
 ### Expected preflight (current Prod audit)
@@ -108,7 +110,7 @@ Phase2 → Phase3 → Phase4 → Phase5 → Phase6 → Phase8 → Phase9 → Pha
 | Wrong project ref | any | **STOP immediately** |
 | Legacy table missing / column regression | any | **STOP** · investigate before next step |
 | Name collision (`already_exists=true`) before Step 1 | preflight | **STOP** · do not re-apply blindly |
-| Apply error mid-file | any Phase | **STOP** · no next Phase · consider PITR |
+| Apply error mid-file | any Phase | **STOP** · no next Phase · restore from backup gate artifact (daily/PITR/logical) |
 | Unexpected data in new tables | after apply | Investigate · do not enable Cron |
 | Desire to “fix forward” by editing live | — | **Forbidden** · fix in repo, new reviewed package |
 | Phase 65 / Worker / Cron / Canary creep | — | **Out of scope** · refuse |
