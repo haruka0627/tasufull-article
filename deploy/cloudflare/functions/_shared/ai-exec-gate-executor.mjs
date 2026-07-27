@@ -38,6 +38,11 @@ import {
   sanitizeExecutionBoundaryMetadata,
 } from "./ai-exec-gate-c5-execution-boundary.mjs";
 import {
+  buildInvocationContext,
+  evaluateInvocationGate,
+  sanitizeInvocationAuditMetadata,
+} from "./ai-exec-gate-c6-invocation-gate.mjs";
+import {
   appendExecutionEvent,
   claimQueuedExecution,
   findExecutionResult,
@@ -489,6 +494,7 @@ export async function executeGatePipeline(input) {
 
     // Phase C4 — provider-neutral prepare/validate (NoOp · never execute)
     let c5DispatchMeta = null;
+    let c6InvocationMeta = null;
     if (collected.c1_snapshot && typeof collected.c1_snapshot === "object") {
       const prepared = prepareProviderNeutralRequest(
         /** @type {Record<string, unknown>} */ (collected.c1_snapshot),
@@ -558,6 +564,43 @@ export async function executeGatePipeline(input) {
         capability_key: "generate_ops_report",
         executor_port: "secretary_deepseek",
         sanitized_metadata: c5DispatchMeta,
+      });
+
+      // Phase C6 — Controlled Provider Invocation Gate (always deny · never execute)
+      const invCtx = buildInvocationContext({
+        provider_id: prepared.provider_id,
+        plan: dispatched.plan,
+        envelope: dispatched.envelope,
+        executed: dispatched.result?.executed === true,
+        provider_called: dispatched.provider_called === true,
+        recorded_api_cost: dispatched.recorded_api_cost ?? 0,
+        execution_id: id,
+        request_id: id,
+      });
+      if (!invCtx.ok) {
+        const err = new Error("invocation_context_failed");
+        err.code = "report";
+        err.gateError = invCtx.reason || invCtx.error;
+        throw err;
+      }
+      const invocation = evaluateInvocationGate({ context: invCtx.value });
+      if (
+        invocation.decision !== "denied" ||
+        invocation.invoke === true ||
+        invocation.provider_called === true ||
+        invocation.recorded_api_cost !== 0
+      ) {
+        const err = new Error("invocation_gate_violation");
+        err.code = "report";
+        err.gateError = "INVOCATION_GATE_MUST_DENY";
+        throw err;
+      }
+      c6InvocationMeta = sanitizeInvocationAuditMetadata(invocation);
+      await emit(cfg, id, seq++, {
+        event_type: GATE_EVENT_TYPES.PROVIDER_INVOCATION_DENIED,
+        capability_key: "generate_ops_report",
+        executor_port: "secretary_deepseek",
+        sanitized_metadata: c6InvocationMeta,
       });
     }
 
@@ -743,6 +786,7 @@ export async function executeGatePipeline(input) {
         budget: budgetPublic,
         provider: providerMeta,
         execution_boundary: c5DispatchMeta,
+        provider_invocation: c6InvocationMeta,
       },
     };
   } catch (e) {

@@ -1,9 +1,10 @@
 # AI 実行ゲート — Phase C チケット（First Real Use Case）
 
-**Status:** C0–C5 first-use-case slice · **C5 execution boundary DONE (NoOp · no execute)**
-**Baseline:** C4 `ccc0b53`
+**Status:** C0–C6 first-use-case slice · **C6 Controlled Provider Invocation Gate DONE (always deny · no execute)**
+**Baseline:** C5 `689b188`
 **C4 evidence:** [ai-exec-gate-phase-c4-provider-adapter.md](../../reports/ai-exec-gate-phase-c4-provider-adapter.md)
 **C5 evidence:** [ai-exec-gate-phase-c5-execution-boundary.md](../../reports/ai-exec-gate-phase-c5-execution-boundary.md)
+**C6 evidence:** [ai-exec-gate-phase-c6-invocation-gate.md](../../reports/ai-exec-gate-phase-c6-invocation-gate.md)
 **Freeze parent:** [AI_EXECUTION_GATE.md](./AI_EXECUTION_GATE.md)
 
 ---
@@ -61,6 +62,7 @@ Action: `ops_secretary.daily_pending.report_pipeline`
 | C3 | Cost Controls · hard cap · Budget Guard（SAFE-06/07 write なし · provider なし） | C2 | **DONE** |
 | C4 | Provider-Neutral Adapter Integration（NoOp · execute 未接続） | C3 | **DONE**（evidence 参照） |
 | C5 | Execution Boundary（Plan · Envelope · Dispatcher · execute 未接続） | C4 | **DONE**（evidence 参照） |
+| C6 | Controlled Provider Invocation Gate（常時 deny · execute 未接続） | C5 | **DONE**（evidence 参照） |
 
 各チケットは人間の明示指示後のみ着手。
 

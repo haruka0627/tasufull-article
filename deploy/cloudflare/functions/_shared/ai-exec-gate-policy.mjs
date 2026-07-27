@@ -77,6 +77,7 @@ export const GATE_EVENT_TYPES = Object.freeze({
   PROVIDER_RESOLVED: "provider_resolved",
   PROVIDER_PREPARE_DONE: "provider_prepare_done",
   EXECUTION_BOUNDARY_DISPATCHED: "execution_boundary_dispatched",
+  PROVIDER_INVOCATION_DENIED: "provider_invocation_denied",
 });
 
 /** B4 executor failure codes — separate from B1 Gate blocked reasons. */
