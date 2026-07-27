@@ -28,6 +28,7 @@ ANPI scheduler job (Phase 6 claim/process)
 | Staging controlled INSERT proof | **Phase 59 PASS** via existing Phase 17 gate (manual probe only · Cron unchanged) |
 | Staging Cron → real write cutover | **Phase 60 NOT READY (NO-GO)** — see [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md) |
 | Staging scoped job-writer (manual) | **Phase 61 PASS** — see [`docs/anpi-phase61-scoped-job-writer.md`](./anpi-phase61-scoped-job-writer.md) · Cron still `talk_local*` |
+| Staging claim allowlist SQL | **Phase 62 APPLIED** · gate **OFF** — soak waiting approval · [`docs/anpi-phase62-cron-soak-readiness.md`](./anpi-phase62-cron-soak-readiness.md) |
 
 ## Roles of `talk_local*`
 

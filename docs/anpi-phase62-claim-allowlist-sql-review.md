@@ -162,9 +162,9 @@ Confirm after rollback:
 | Decision | Status |
 |----------|--------|
 | Apply Phase 61 stub as-is | **NO-GO** |
-| Apply Phase 62 complete draft after human approval | **GO (staging only)** |
-| Proceed to Cron soak immediately after apply | **NO-GO** (wiring + enable gate + soak plan still required) |
-| This session apply | **STOPPED — waiting** |
+| Apply Phase 62 complete draft after human approval | **DONE (staging 2026-07-27)** · gate remains OFF |
+| Proceed to Cron soak immediately after apply | **NO-GO** — see [`docs/anpi-phase62-cron-soak-readiness.md`](./anpi-phase62-cron-soak-readiness.md) |
+| Gate enable / soak | **WAITING_EXPLICIT_APPROVAL** |
 
 ---
 
