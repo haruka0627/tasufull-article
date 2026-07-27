@@ -167,26 +167,40 @@ migration SQL + test + notes + tickets B2 のみ。Functions/UI / B1 を混ぜ�
 
 ## B3 — Gate API と Policy 評価
 
+### 状態
+
+**B3 PASS（create / execute-stub / get · unit+mock+local DB · 2026-07-28）** · Staging/Production deploy 未実施 · commit は別途明示指示  
+**Routes (PLAN):** `POST /api/ai-exec-gate/create` · `POST /api/ai-exec-gate/execute` · `GET /api/ai-exec-gate/:id`  
+**Test:** `node scripts/test-ai-exec-gate-phase-b3-api.mjs`  
+**Notes:** `reports/ai-exec-gate-phase-b3-api-notes.md`
+
 ### 目的
 
-`create` / `execute`（骨格）/ `get` の Cloudflare Pages Functions と Policy 評価順を実装する。execute の executor 本体は stub または B4 接続点まで。
+`create` / `execute`（stub）/ `get` の Cloudflare Pages Functions と Policy 評価順を実装する。execute の executor 本体は B4 接続点（本フェーズは状態遷移 stub のみ）。
 
 ### 対象ファイル
 
 **新規**
 
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-ops-auth.mjs`（JWT `is_ops` / `tasu_admin` · 既存 claim 正本の CF 移植）
 - `deploy/cloudflare/functions/_shared/ai-exec-gate-policy.mjs`
-- `deploy/cloudflare/functions/api/ai-exec-gate-create.js`
-- `deploy/cloudflare/functions/api/ai-exec-gate-execute.js`
-- `deploy/cloudflare/functions/api/ai-exec-gate-get.js`
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-repository.mjs`
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-service.mjs`
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-http.mjs`
+- `deploy/cloudflare/functions/api/ai-exec-gate/create.js`
+- `deploy/cloudflare/functions/api/ai-exec-gate/execute.js`
+- `deploy/cloudflare/functions/api/ai-exec-gate/[id].js`
 - `scripts/test-ai-exec-gate-phase-b3-api.mjs`
+- `reports/ai-exec-gate-phase-b3-api-notes.md`
 
-**参照:** JWT shared · B1 modules · B2 表
+**参照:** `supabase-jwt-auth.mjs` · B1 modules · B2 表（設定2表なし）
 
 ### allowlist
 
-- action_type / capability / service の固定セットのみ受付
-- ops JWT のみ
+- action / capability / service / ports の固定 pipeline のみ
+- ops JWT のみ（`app_metadata.is_ops` または `role=tasu_admin`）
+- Feature Flag / Emergency Stop / Hard cap = B1 env 正本
+- estimated cost = server 固定 `0.01` USD（client 指定禁止）
 
 ### 依存関係
 
@@ -195,21 +209,24 @@ B1 · B2
 ### テスト
 
 - 非 ops → 401/403
-- allowlist 外 → blocked/4xx
-- flag disabled / stop / hard cap → `blocked` + event
-- 冪等キーで二重 create が同一 id
-- 不正状態遷移拒否
+- allowlist 外 → 4xx
+- flag disabled / stop / hard cap → `blocked` + audit row/event
+- 冪等キーで二重 create が同一 id · payload mismatch → 409
+- execute stub 状態遷移 · results 未使用
 - レスポンスに cap 生値なし
+- B1/B2 regression PASS
 
 ### 完了条件
 
-- Policy 10 段のうち B サブセットがサーバ側で強制
-- create/get が Staging で動作（execute は stub 可だが状態遷移は記録）
-- prompt をログに残さない
+- Policy B サブセットがサーバ側で強制
+- create/get 実装 · execute は stub（`queued` 維持 · provider なし · B4 で本接続）
+- event 失敗時は 500 `event_persist_failed`（clean allowed にしない）
+- prompt をログ/metadata に残さない
+- migration 追加なし · FREEZE/PLAN 未変更
 
 ### NO-GO
 
-DeepSeek 本接続（B4）· Dashboard（B5）· MEDIUM 承認 API · Production
+DeepSeek 本接続（B4）· Dashboard（B5）· MEDIUM 承認 API · Production · migration · 設定2表復活
 
 ### rollback
 
@@ -217,7 +234,7 @@ Flag disabled · ルート削除 · 関数ファイル削除
 
 ### commit 境界
 
-gate API + policy + B3 テスト。秘書 UI / DeepSeek 変更を混ぜない。
+gate API + policy/service/repository + B3 テスト + tickets/notes。秘書 UI / DeepSeek / FREEZE / PLAN を混ぜない。
 
 ---
 
