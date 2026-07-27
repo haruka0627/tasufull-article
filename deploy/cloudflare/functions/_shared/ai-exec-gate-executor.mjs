@@ -17,8 +17,10 @@ import {
   detectGateEnvironment,
 } from "./ai-exec-gate-policy.mjs";
 import { GATE_ENVIRONMENTS } from "./ai-exec-gate-types.mjs";
-import { collectDailyOps } from "./ai-exec-gate-ops-collector.mjs";
-import { generateOpsReport } from "./ai-exec-gate-report-generator.mjs";
+import {
+  collectDailyOpsC1,
+  generateOpsReportC1,
+} from "./ai-exec-gate-c1-pipeline.mjs";
 import {
   appendExecutionEvent,
   claimQueuedExecution,
@@ -203,15 +205,17 @@ async function failRunning(cfg, row, code, seqStart) {
  *   userId: string,
  *   fetchImpl?: typeof fetch,
  *   now?: Date,
- *   collectFn?: typeof collectDailyOps,
- *   reportFn?: typeof generateOpsReport,
+ *   collectFn?: Function,
+ *   reportFn?: Function,
  * }} input
  */
 export async function executeGatePipeline(input) {
+  // Phase C1: official purpose routes to sanitized collector + deterministic adapter.
+  // Inject collectFn/reportFn to force B4 fixtures or test doubles. B4 modules remain.
   const collectFn =
-    typeof input.collectFn === "function" ? input.collectFn : collectDailyOps;
+    typeof input.collectFn === "function" ? input.collectFn : collectDailyOpsC1;
   const reportFn =
-    typeof input.reportFn === "function" ? input.reportFn : generateOpsReport;
+    typeof input.reportFn === "function" ? input.reportFn : generateOpsReportC1;
   const id = String(input.executionId || "").trim();
   if (!UUID_RE.test(id)) {
     return fail(400, "invalid_request");
