@@ -74,10 +74,13 @@ Stop conditions:
 
 | Item | Staging (known) | Production (live) |
 |------|-----------------|-------------------|
-| Phase 4–10 `anpi_scheduler_jobs` | Present | **MISSING** (Section 9) |
-| Phase 62 gate | Present | Expected **absent** |
-| Phase 65 `anpi_prod_*` | N/A | Expected **absent** · **do not apply yet** |
+| Legacy v1 (`check_sessions` / `notification_logs` / `user_contexts` / `no_response_audit_log`) | May coexist | **Present** (Section 1 · 4 tables only) |
+| Phase 2–10 button-check / scheduler | Present | **MISSING** (Section 1–2 · all false) |
+| Phase 62 gate | Present | **Absent** |
+| Phase 65 `anpi_prod_*` | N/A | **Absent** · **do not apply until 2–10** |
 | Staging sha8 `0411f04d` | Allowed in staging gate | Must **never** enter Prod allowlist |
+
+**Apply candidates (NOT APPLIED):** [`docs/anpi-phase66-production-missing-migrations.md`](./anpi-phase66-production-missing-migrations.md)
 
 ---
 
