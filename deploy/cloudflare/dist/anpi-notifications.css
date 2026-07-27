@@ -456,3 +456,33 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Phase 45 ? check history */
+.anpi-notif-status { margin: 0 0 0.75rem; color: #475569; font-size: 0.9rem; }
+.anpi-notif-errors { margin: 0 0 1rem; padding: 0.75rem 1rem; border-radius: 10px; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; white-space: pre-wrap; }
+.anpi-notif-auth { margin-bottom: 1rem; padding: 1.25rem; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0; }
+.anpi-notif-auth__cta { display: inline-block; margin-top: 0.75rem; font-weight: 700; }
+.anpi-notif-env-note { margin: 0 0 1rem; padding: 0.75rem 1rem; border-radius: 10px; background: #f1f5f9; color: #334155; font-size: 0.88rem; line-height: 1.5; }
+.anpi-today-card { margin-bottom: 1rem; padding: 1.1rem 1.25rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; }
+.anpi-today-card__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+.anpi-today-card__title { margin: 0; font-size: 1.05rem; }
+.anpi-today-card__badge { display: inline-flex; min-height: 28px; align-items: center; padding: 0.15rem 0.65rem; border-radius: 999px; background: #eef2ff; color: #3730a3; font-size: 0.8rem; font-weight: 700; }
+.anpi-today-card__meta { margin: 0 0 0.75rem; color: #475569; font-size: 0.9rem; }
+.anpi-today-card__links { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; }
+.anpi-today-card__links a { font-weight: 600; }
+.anpi-notif-loading { color: #64748b; }
+.anpi-history-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; }
+.anpi-history-item { padding: 0.9rem 1rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; }
+.anpi-history-item__main { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.55rem; }
+.anpi-history-item__status { font-size: 0.82rem; font-weight: 700; padding: 0.15rem 0.55rem; border-radius: 999px; background: #f1f5f9; color: #334155; }
+.anpi-history-item__status--confirmed { background: #ecfdf5; color: #047857; }
+.anpi-history-item__status--pending { background: #eef2ff; color: #3730a3; }
+.anpi-history-item__status--attention { background: #fff7ed; color: #c2410c; }
+.anpi-history-item__status--inactive { background: #f8fafc; color: #64748b; }
+.anpi-history-item__meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem 0.75rem; margin: 0; }
+.anpi-history-item__meta dt { margin: 0; font-size: 0.72rem; color: #64748b; }
+.anpi-history-item__meta dd { margin: 0.1rem 0 0; font-size: 0.86rem; font-weight: 600; }
+@media (max-width: 390px) {
+  .anpi-history-item__meta { grid-template-columns: 1fr; }
+  .anpi-today-card__links { flex-direction: column; }
+}

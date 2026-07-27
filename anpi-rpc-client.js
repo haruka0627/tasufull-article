@@ -205,6 +205,13 @@
     try {
       const mock = global.__ANPI_RPC_MOCK__;
       if (mock && typeof mock.rpc === "function") {
+        if (mock.unauthenticated) {
+          return {
+            ok: false,
+            stale: false,
+            error: normalizeError({ message: "anpi_auth_required", status: 401 }),
+          };
+        }
         const mocked = await mock.rpc(name, args || {});
         if (seqByKey.get(guardKey) !== seq) {
           return { ok: false, stale: true, error: normalizeError({ message: "stale" }) };
@@ -349,35 +356,88 @@
   async function listCheckHistory(limit) {
     const res = await rpc(
       "anpi_list_my_check_history",
-      { p_limit: Math.min(50, Math.max(1, Number(limit) || 10)) },
+      { p_limit: Math.min(90, Math.max(1, Number(limit) || 30)) },
       { guardKey: "history" }
     );
     if (!res.ok) return res;
-    return { ok: true, stale: res.stale, data: Array.isArray(res.data) ? res.data : [] };
+    const rows = Array.isArray(res.data) ? res.data : [];
+    return {
+      ok: true,
+      stale: res.stale,
+      data: rows.map(normalizeHistoryRow),
+    };
+  }
+
+  const CHECK_STATUS_LABELS = Object.freeze({
+    scheduled: "確認予定",
+    notified: "確認通知済み",
+    reminded: "再通知済み",
+    overdue: "確認待ち期限超過",
+    contact_notified: "緊急連絡先へ未確認通知済み",
+    confirmed: "確認済み",
+    confirmed_late: "遅れて確認済み",
+    paused: "一時停止",
+    cancelled: "中止",
+  });
+
+  function normalizeHistoryRow(row) {
+    if (!row || typeof row !== "object") return null;
+    const status = String(row.status || "");
+    return {
+      check_id: row.check_id || row.id || null,
+      local_check_date: row.local_check_date || null,
+      status,
+      status_label: CHECK_STATUS_LABELS[status] || "不明な状態",
+      scheduled_at: row.scheduled_at || null,
+      confirmed_at: row.confirmed_at || null,
+      confirmation_source: row.confirmation_source || null,
+    };
   }
 
   function mapCheckStatus(row) {
-    if (!row) return { key: "none", label: "本日の確認は未作成" };
+    if (!row) return { key: "none", label: "本日の確認は未作成", status: null };
     const status = String(row.status || "");
-    if (status === "confirmed" || status === "confirmed_late") {
-      return { key: "confirmed", label: status === "confirmed_late" ? "確認済み（遅延）" : "確認済み" };
+    const label = CHECK_STATUS_LABELS[status] || status || "不明";
+    let key = "other";
+    if (status === "confirmed" || status === "confirmed_late") key = "confirmed";
+    else if (status === "scheduled" || status === "notified" || status === "reminded") key = "pending";
+    else if (status === "overdue" || status === "contact_notified") key = "attention";
+    else if (status === "paused" || status === "cancelled") key = "inactive";
+    return { key, label, status };
+  }
+
+  function formatTokyoDateTime(value) {
+    if (value == null || value === "") return "—";
+    const d = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(d.getTime())) return "—";
+    try {
+      return new Intl.DateTimeFormat("ja-JP", {
+        timeZone: "Asia/Tokyo",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(d);
+    } catch {
+      return "—";
     }
-    if (status === "scheduled" || status === "notified" || status === "reminded") {
-      return { key: "pending", label: "未応答" };
+  }
+
+  function formatTokyoDate(value) {
+    if (value == null || value === "") return "—";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
+      const [y, m, day] = String(value).split("-");
+      return `${y}/${m}/${day}`;
     }
-    if (status === "contact_notified") {
-      return { key: "escalated", label: "連絡先通知済み（サーバー状態）" };
-    }
-    if (status === "paused" || status === "cancelled") {
-      return { key: "inactive", label: "一時停止または取消" };
-    }
-    return { key: "other", label: status || "不明" };
+    return formatTokyoDateTime(value).split(" ")[0] || "—";
   }
 
   global.TasuAnpiRpc = {
     RELATIONSHIPS,
     SCHEDULE_TYPES,
     CONFIRM_SOURCE,
+    CHECK_STATUS_LABELS,
     classifyError,
     normalizeError,
     userMessage,
@@ -385,6 +445,9 @@
     hoursToInterval,
     intervalToHours,
     normalizeTime,
+    normalizeHistoryRow,
+    formatTokyoDateTime,
+    formatTokyoDate,
     requireSession,
     getMySettings,
     upsertMySettings,
