@@ -26,6 +26,7 @@ ANPI scheduler job (Phase 6 claim/process)
 | Periodic staging runtime today | `talk_local*` via Cloudflare Cron (Phase 56/57) |
 | Real inbox write today | **HARD-DISABLED** on Phase 10 job writer (`anpi_talk_real_write_disabled`) |
 | Staging controlled INSERT proof | **Phase 59 PASS** via existing Phase 17 gate (manual probe only · Cron unchanged) |
+| Staging Cron → real write cutover | **Phase 60 NOT READY (NO-GO)** — see [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md) |
 
 ## Roles of `talk_local*`
 
@@ -76,9 +77,11 @@ npm run test:anpi-talk-provider
 npm run verify:anpi-talk-provider   # staging health + real-mode disable probe
 npm run test:anpi-controlled-write
 npm run verify:anpi-controlled-write  # staging controlled INSERT (Phase 59)
+npm run test:anpi-cron-cutover
+npm run verify:anpi-cron-cutover      # Phase 60 cutover readiness (expect NOT READY)
 ```
 
-See also: [`docs/anpi-phase59-staging-controlled-write.md`](./anpi-phase59-staging-controlled-write.md).
+See also: [`docs/anpi-phase59-staging-controlled-write.md`](./anpi-phase59-staging-controlled-write.md) · [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md).
 
 ## Production human steps (when authorized)
 

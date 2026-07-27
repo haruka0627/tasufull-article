@@ -1,0 +1,143 @@
+{
+  "phase": 60,
+  "verdict": "NOT_READY_NO_GO",
+  "cutover_performed": false,
+  "cron_real_write_executions": 0,
+  "real_insert_count_via_cron": 0,
+  "duplicates_via_cron": "n/a_cutover_not_performed",
+  "lease_with_real_write": "n/a_cutover_not_performed",
+  "retry_failure_behavior": "n/a_cutover_not_performed",
+  "owner_visibility_via_cron": "n/a_cutover_not_performed",
+  "cleanup_via_cron": "n/a_cutover_not_performed",
+  "rollback_to_stub": "not_required_still_on_talk_local",
+  "current_cron_provider": "talk_local",
+  "phase59_controlled_insert": "PASS_reuse",
+  "phase10_real_mode": "still_hard_disabled",
+  "blockers": [
+    "cron_hardwired_talk_local_stub",
+    "no_test_identity_filter_on_claim",
+    "cf_and_phase48_reject_non_talk_local",
+    "phase17_probe_path_separate_from_cron",
+    "attempt_scoped_idempotency_duplicate_risk",
+    "phase10_real_write_still_hard_disabled"
+  ],
+  "guard_matrix_ok": true,
+  "guard_matrix": [
+    {
+      "name": "staging_talk_local_ok",
+      "ok": true,
+      "code": null,
+      "pass": true,
+      "expectOk": true,
+      "expectCode": null
+    },
+    {
+      "name": "talk_write_rejected",
+      "ok": false,
+      "code": "anpi_cf_provider_not_talk_local",
+      "pass": true,
+      "expectOk": false,
+      "expectCode": "anpi_cf_provider_not_talk_local"
+    },
+    {
+      "name": "production_ref_rejected",
+      "ok": false,
+      "code": "anpi_cf_project_ref_not_staging",
+      "pass": true,
+      "expectOk": false,
+      "expectCode": "anpi_cf_project_ref_not_staging"
+    },
+    {
+      "name": "production_url_rejected",
+      "ok": false,
+      "code": "anpi_cf_refusing_production_endpoint",
+      "pass": true,
+      "expectOk": false,
+      "expectCode": "anpi_cf_refusing_production_endpoint"
+    },
+    {
+      "name": "disabled_runtime",
+      "ok": false,
+      "code": "anpi_cf_scheduler_disabled",
+      "pass": true,
+      "expectOk": false,
+      "expectCode": "anpi_cf_scheduler_disabled"
+    }
+  ],
+  "talk_local_eval": {
+    "provider": "talk_local",
+    "passes_cf_talk_local_prefix": true,
+    "allowed_as_periodic_runtime_today": true,
+    "would_need_allowWriteProvider_flag": false,
+    "flip_alone_enables_inbox_write": false,
+    "cutover_ready": false
+  },
+  "talk_write_eval": {
+    "provider": "talk_write",
+    "passes_cf_talk_local_prefix": false,
+    "allowed_as_periodic_runtime_today": false,
+    "would_need_allowWriteProvider_flag": true,
+    "flip_alone_enables_inbox_write": false,
+    "cutover_ready": false
+  },
+  "recommended_next": "Phase 61: staging-only Phase 10 job-writer enablement + claim identity allowlist + attempt-stable idempotency — still without Production / without full Cron blast",
+  "assessed_at": "2026-07-27T12:55:56.912Z",
+  "live": {
+    "project_ref": "ahlxuyvhzqdqaojiywmu",
+    "env_ref": "ahlxuyvhzqdqaojiywmu",
+    "staging_ref_match": true,
+    "production_refused": true,
+    "phase10_health": {
+      "ok": true,
+      "real_mode_enabled": false,
+      "production_send": false,
+      "staging_send": false,
+      "user_facing_inbox_write": false
+    },
+    "phase17_flag_off": true,
+    "recent_lease_rows": {
+      "ok": true,
+      "count": 5,
+      "sample": [
+        {
+          "worker_id_prefix": "anpi-p48-lease:cf-staging-1785156926000-",
+          "error_safe": null,
+          "created_at": "2026-07-27T12:55:27.219083+00:00"
+        },
+        {
+          "worker_id_prefix": "anpi-p48-lease:cf-staging-1785156626000-",
+          "error_safe": null,
+          "created_at": "2026-07-27T12:50:27.105319+00:00"
+        },
+        {
+          "worker_id_prefix": "anpi-p48-lease:cf-staging-1785156326000-",
+          "error_safe": null,
+          "created_at": "2026-07-27T12:45:27.669297+00:00"
+        },
+        {
+          "worker_id_prefix": "anpi-p48-lease:cf-staging-1785156026000-",
+          "error_safe": null,
+          "created_at": "2026-07-27T12:40:27.203219+00:00"
+        },
+        {
+          "worker_id_prefix": "anpi-p48-lease:cf-staging-1785155726000-",
+          "error_safe": null,
+          "created_at": "2026-07-27T12:35:27.237216+00:00"
+        }
+      ]
+    },
+    "recent_delivery_providers": {
+      "ok": true,
+      "providers": [],
+      "non_talk_local": [],
+      "talk_local_only": true
+    },
+    "provider_validation_talk_local_only": true,
+    "anpi_phase17_test_markers": {
+      "count": 0,
+      "clean": true
+    }
+  },
+  "assessment_pass": true,
+  "finished_at": "2026-07-27T12:55:57.263Z"
+}
