@@ -1,0 +1,97 @@
+# ANPI Phase 48 窶・Staging Notification Runtime (scheduled)
+#
+# Staging only. Production deploy / Production DB / external providers: forbidden.
+# Secrets must be repository Actions secrets (never committed, never browser-exposed).
+#
+# Required secrets / vars:
+#   ANPI_STAGING_RUNTIME_ENABLED          = true
+#   ANPI_STAGING_PROJECT_REF              = ahlxuyvhzqdqaojiywmu
+#   ANPI_STAGING_SUPABASE_URL             = https://ahlxuyvhzqdqaojiywmu.supabase.co
+#   ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY
+#
+# Cadence: every 5 minutes (GitHub Actions schedule may drift by up to ~several minutes).
+# Manual: Actions 竊・this workflow 竊・Run workflow
+
+name: anpi-phase48-staging-runtime
+
+on:
+  schedule:
+    # every 5 minutes 窶・due pickup only; 09:00/+2h/+4h/+6h live in DB settings
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: anpi-phase48-staging-runtime
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  staging-runtime:
+    name: Staging ANPI runtime tick
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      # Enable flag may be a repo Variable (preferred) or Secret.
+      ANPI_STAGING_RUNTIME_ENABLED: ${{ vars.ANPI_STAGING_RUNTIME_ENABLED }}
+      ANPI_STAGING_PROJECT_REF: ${{ vars.ANPI_STAGING_PROJECT_REF }}
+      ANPI_STAGING_SUPABASE_URL: ${{ secrets.ANPI_STAGING_SUPABASE_URL }}
+      ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Guard required staging secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -z "${ANPI_STAGING_PROJECT_REF:-}" ]]; then
+            export ANPI_STAGING_PROJECT_REF="ahlxuyvhzqdqaojiywmu"
+            echo "ANPI_STAGING_PROJECT_REF defaulted to staging"
+          fi
+          if [[ "${ANPI_STAGING_RUNTIME_ENABLED:-}" != "true" ]]; then
+            echo "ANPI_STAGING_RUNTIME_ENABLED must be exactly true (set repo Variable)"
+            exit 1
+          fi
+          if [[ -z "${ANPI_STAGING_SUPABASE_URL:-}" ]]; then
+            echo "missing ANPI_STAGING_SUPABASE_URL secret"
+            exit 1
+          fi
+          if [[ -z "${ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY:-}" ]]; then
+            echo "missing ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY secret"
+            exit 1
+          fi
+          if [[ "${ANPI_STAGING_PROJECT_REF}" == "ddojquacsyqesrjhcvmn" ]]; then
+            echo "refusing Production project ref"
+            exit 1
+          fi
+          if [[ "${ANPI_STAGING_SUPABASE_URL}" == *"ddojquacsyqesrjhcvmn"* ]]; then
+            echo "refusing Production endpoint URL"
+            exit 1
+          fi
+          echo "staging guards OK (secrets not printed)"
+          echo "ANPI_STAGING_PROJECT_REF=${ANPI_STAGING_PROJECT_REF}" >> "$GITHUB_ENV"
+
+      - name: Run Phase 48 scheduled runtime
+        id: runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p reports
+          node scripts/run-anpi-phase48-scheduled-runtime.mjs \
+            --summary-out reports/anpi-phase48-runtime-summary.json
+
+      - name: Upload runtime summary artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: anpi-phase48-runtime-summary
+          path: reports/anpi-phase48-runtime-summary.json
+          if-no-files-found: warn
+          retention-days: 14
