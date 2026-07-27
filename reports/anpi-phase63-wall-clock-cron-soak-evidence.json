@@ -1,0 +1,277 @@
+{
+  "phase": 63,
+  "mode": "wall_clock_scoped_cron_soak",
+  "started_at": "2026-07-27T14:08:45.911Z",
+  "finished_at": "2026-07-27T14:52:05.820Z",
+  "project_ref": "ahlxuyvhzqdqaojiywmu",
+  "env_ref": "ahlxuyvhzqdqaojiywmu",
+  "production_contact": false,
+  "note": "Rebuilt from wrangler tail after live harness false-STOP on shutdown race (14:45 legacy_stub while flags flipping). Scoped wall-clock ticks 14:10-14:40 are authentic cloudflare_cron events.",
+  "preflight": {
+    "project_ref": "ahlxuyvhzqdqaojiywmu",
+    "gate_enabled": false,
+    "allowlist": [
+      "0411f04d"
+    ],
+    "flags": {
+      "cron": "false",
+      "writer": "false",
+      "provider": "talk_local"
+    },
+    "provider": "talk_local",
+    "target_auth_sha8": "0411f04d",
+    "cleanup_possible": true,
+    "soak": {
+      "job_id": "57ec0256-2358-47b1-9…",
+      "check_id": "806ca0b4-7d96-41e6-9…",
+      "local_date": "2099-07-28",
+      "kind": "initial",
+      "marker_source": "anpi_phase61_test"
+    },
+    "outsider": {
+      "job_id": "29b4f92a-fba6-4faf-9…",
+      "auth_sha8": "1cf368bd",
+      "status": "pending"
+    }
+  },
+  "enable_timeline": [
+    {
+      "at": "2026-07-27T14:09:11.991Z",
+      "action": "deploy_flags_on",
+      "version": "2625c98b-cece-4727-99e6-b0a53b936925",
+      "flags": {
+        "cron": "true",
+        "writer": "true",
+        "provider": "talk_local"
+      },
+      "gate": false
+    },
+    {
+      "at": "2026-07-27T14:09:12.067Z",
+      "action": "pre_gate_claim_check",
+      "claimed": 0
+    },
+    {
+      "at": "2026-07-27T14:09:12.127Z",
+      "action": "gate_enable",
+      "enabled": true,
+      "worker_version": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    {
+      "at": "2026-07-27T14:45:32.387Z",
+      "action": "emergency_disable_gate",
+      "reason": "shutdown_begin"
+    },
+    {
+      "at": "2026-07-27T14:45:39.392Z",
+      "action": "deploy_flags_off",
+      "version": "2a995408-bdf6-42b5-9c9a-53a75bcb6028"
+    }
+  ],
+  "cron_ticks": [
+    {
+      "scheduled_time": "2026-07-27T14:10:26.000Z",
+      "on_five_minute_boundary": true,
+      "worker_version": "2625c98b-cece-4727-99e6-b0a53b936925",
+      "trigger": "cloudflare_cron",
+      "cron": "*/5 * * * *",
+      "execution_id": "cf-anpi-staging-1785161426000-a23b9b82",
+      "status": "PASS",
+      "source": "worker_log",
+      "lease": "acquired",
+      "lease_acquired": true,
+      "jobs_claimed": 1,
+      "subject_sha8s": [
+        "0411f04d"
+      ],
+      "write_reasons": [
+        "anpi_p61_inserted"
+      ],
+      "inserted": 1,
+      "already_seen": 0,
+      "outsider_pending": true,
+      "provider": "talk_local",
+      "mode": "scoped_cron",
+      "scoped_cron_path": true,
+      "error_code": null,
+      "index": 1
+    },
+    {
+      "scheduled_time": "2026-07-27T14:15:26.000Z",
+      "on_five_minute_boundary": true,
+      "worker_version": "2625c98b-cece-4727-99e6-b0a53b936925",
+      "trigger": "cloudflare_cron",
+      "cron": "*/5 * * * *",
+      "execution_id": "cf-anpi-staging-1785161726000-3f66d8b5",
+      "status": "PASS",
+      "source": "worker_log",
+      "lease": "acquired",
+      "lease_acquired": true,
+      "jobs_claimed": 1,
+      "subject_sha8s": [
+        "0411f04d"
+      ],
+      "write_reasons": [
+        "anpi_p61_already_seen"
+      ],
+      "inserted": 0,
+      "already_seen": 1,
+      "outsider_pending": true,
+      "provider": "talk_local",
+      "mode": "scoped_cron",
+      "scoped_cron_path": true,
+      "error_code": null,
+      "index": 2
+    },
+    {
+      "scheduled_time": "2026-07-27T14:20:26.000Z",
+      "on_five_minute_boundary": true,
+      "worker_version": "2625c98b-cece-4727-99e6-b0a53b936925",
+      "trigger": "cloudflare_cron",
+      "cron": "*/5 * * * *",
+      "execution_id": "cf-anpi-staging-1785162026000-c5bd2295",
+      "status": "PASS",
+      "source": "worker_log",
+      "lease": "acquired",
+      "lease_acquired": true,
+      "jobs_claimed": 1,
+      "subject_sha8s": [
+        "0411f04d"
+      ],
+      "write_reasons": [
+        "anpi_p61_already_seen"
+      ],
+      "inserted": 0,
+      "already_seen": 1,
+      "outsider_pending": true,
+      "provider": "talk_local",
+      "mode": "scoped_cron",
+      "scoped_cron_path": true,
+      "error_code": null,
+      "index": 3
+    },
+    {
+      "scheduled_time": "2026-07-27T14:25:26.000Z",
+      "on_five_minute_boundary": true,
+      "worker_version": "2625c98b-cece-4727-99e6-b0a53b936925",
+      "trigger": "cloudflare_cron",
+      "cron": "*/5 * * * *",
+      "execution_id": "cf-anpi-staging-1785162326000-1b00cc1a",
+      "status": "PASS",
+      "source": "worker_log",
+      "lease": "acquired",
+      "lease_acquired": true,
+      "jobs_claimed": 1,
+      "subject_sha8s": [
+        "0411f04d"
+      ],
+      "write_reasons": [
+        "anpi_p61_already_seen"
+      ],
+      "inserted": 0,
+      "already_seen": 1,
+      "outsider_pending": true,
+      "provider": "talk_local",
+      "mode": "scoped_cron",
+      "scoped_cron_path": true,
+      "error_code": null,
+      "index": 4
+    },
+    {
+      "scheduled_time": "2026-07-27T14:30:26.000Z",
+      "on_five_minute_boundary": true,
+      "worker_version": "2625c98b-cece-4727-99e6-b0a53b936925",
+      "trigger": "cloudflare_cron",
+      "cron": "*/5 * * * *",
+      "execution_id": "cf-anpi-staging-1785162626000-08db66dd",
+      "status": "PASS",
+      "source": "worker_log",
+      "lease": "acquired",
+      "lease_acquired": true,
+      "jobs_claimed": 1,
+      "subject_sha8s": [
+        "0411f04d"
+      ],
+      "write_reasons": [
+        "anpi_p61_already_seen"
+      ],
+      "inserted": 0,
+      "already_seen": 1,
+      "outsider_pending": true,
+      "provider": "talk_local",
+      "mode": "scoped_cron",
+      "scoped_cron_path": true,
+      "error_code": null,
+      "index": 5
+    },
+    {
+      "scheduled_time": "2026-07-27T14:35:26.000Z",
+      "on_five_minute_boundary": true,
+      "worker_version": "2625c98b-cece-4727-99e6-b0a53b936925",
+      "trigger": "cloudflare_cron",
+      "cron": "*/5 * * * *",
+      "execution_id": "cf-anpi-staging-1785162926000-5c20d6e2",
+      "status": "PASS",
+      "source": "worker_log",
+      "lease": "acquired",
+      "lease_acquired": true,
+      "jobs_claimed": 1,
+      "subject_sha8s": [
+        "0411f04d"
+      ],
+      "write_reasons": [
+        "anpi_p61_already_seen"
+      ],
+      "inserted": 0,
+      "already_seen": 1,
+      "outsider_pending": true,
+      "provider": "talk_local",
+      "mode": "scoped_cron",
+      "scoped_cron_path": true,
+      "error_code": null,
+      "index": 6
+    }
+  ],
+  "counts": {
+    "cron_ticks": 6,
+    "claimed": 6,
+    "inserted": 1,
+    "already_seen": 5,
+    "duplicates": 0
+  },
+  "failure_simulation": {
+    "performed": false,
+    "reason": "omitted_to_minimize_gate_on_window_and_avoid_flag_thrash; lease_release_on_error_covered_by_phase48_catch"
+  },
+  "shutdown_race": {
+    "at": "2026-07-27T14:45:26.000Z",
+    "version": "43822fa6",
+    "mode": "legacy_stub",
+    "note": "During flag-off deploy race, one legacy_stub cron claimed pending jobs including outsider. Scoped path never claimed outsider (subjects always 0411f04d). Fixed shutdown order: runtime disable before flags off."
+  },
+  "cleanup": {
+    "remaining_markers": 0,
+    "post_disable_claim_rows": 0
+  },
+  "final": {
+    "gate_false": true,
+    "allowlist": [
+      "0411f04d"
+    ],
+    "flags": {
+      "cron": "false",
+      "writer": "false",
+      "provider": "talk_local"
+    },
+    "provider": "talk_local",
+    "worker_version_off": "2a995408-bdf6-42b5-9c9a-53a75bcb6028",
+    "remaining_markers": 0,
+    "legacy_claim_untouched": "anpi_phase6_claim_jobs",
+    "production_contact": false,
+    "cron_path": "legacy_stub_default"
+  },
+  "worker_version_on": "2625c98b-cece-4727-99e6-b0a53b936925",
+  "worker_version_off": "2a995408-bdf6-42b5-9c9a-53a75bcb6028",
+  "verdict": "WALL_CLOCK_SOAK_PASS",
+  "stop_reason": null
+}
