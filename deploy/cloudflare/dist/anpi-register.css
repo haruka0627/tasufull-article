@@ -588,3 +588,22 @@
     box-sizing: border-box;
   }
 }
+
+/* Phase 43 ? settings / contacts */
+.anpi-register-status { margin: 0 0 12px; color: #475569; font-size: 0.9rem; }
+.anpi-register-auth { padding: 1.25rem; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0; margin-bottom: 1rem; }
+.anpi-register-auth__cta { display: inline-block; margin-top: 0.75rem; font-weight: 600; }
+.anpi-register-toggle { display: inline-flex; align-items: center; gap: 0.5rem; }
+.anpi-register-weekdays { display: flex; flex-wrap: wrap; gap: 0.5rem 0.85rem; }
+.anpi-contacts-list { list-style: none; margin: 0 0 1rem; padding: 0; display: grid; gap: 0.75rem; }
+.anpi-contacts-item { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; padding: 0.85rem 1rem; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; }
+.anpi-contacts-item__body { display: flex; flex-wrap: wrap; gap: 0.35rem 0.75rem; align-items: center; font-size: 0.86rem; }
+.anpi-contacts-item__actions { display: flex; gap: 0.5rem; }
+.anpi-contacts-item__actions button { min-height: 44px; padding: 0.4rem 0.75rem; }
+.anpi-contacts-empty { color: #64748b; font-size: 0.9rem; }
+.anpi-contacts-form { display: grid; gap: 0.75rem; margin-top: 0.5rem; }
+@media (max-width: 390px) {
+  .anpi-contacts-item { flex-direction: column; }
+  .anpi-contacts-item__actions { width: 100%; }
+  .anpi-contacts-item__actions button { flex: 1; }
+}

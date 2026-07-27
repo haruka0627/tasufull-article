@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>安否ダッシュボード | TASFUL</title>
@@ -107,16 +106,54 @@
           <div data-anpi-line-mode hidden aria-live="polite"></div>
           <div data-anpi-line-admin hidden aria-live="polite"></div>
 
-          <div class="anpi-dash-register-banner" data-anpi-empty-unregistered>
+          <div class="anpi-dash-register-banner" data-anpi-empty-unregistered hidden>
             <div class="anpi-dash-register-banner__icon" aria-hidden="true">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
             </div>
             <div class="anpi-dash-register-banner__body">
               <h2 class="anpi-dashboard-empty__title">安否サービスが登録されていません</h2>
-              <p class="anpi-dashboard-empty__text">利用者を登録すると、通知や確認状況のサマリーが表示されます。</p>
+              <p class="anpi-dashboard-empty__text">設定を登録すると、本日の安否確認と連絡先管理が利用できます。</p>
             </div>
-            <a class="anpi-dashboard-empty__cta" href="anpi-register.html">安否サービス登録へ</a>
+            <a class="anpi-dashboard-empty__cta" href="anpi-register.html">安否サービス設定へ</a>
           </div>
+
+          <div class="anpi-dash-auth-banner" data-anpi-auth-required hidden role="status">
+            <h2 class="anpi-dashboard-empty__title">ログインが必要です</h2>
+            <p class="anpi-dashboard-empty__text">安否ダッシュボードを表示するにはログインしてください。</p>
+            <a class="anpi-dashboard-empty__cta" href="login.html">ログインへ</a>
+          </div>
+
+          <p class="anpi-dash-page-status" data-anpi-dash-status aria-live="polite"></p>
+          <div class="anpi-dash-errors" data-anpi-dash-errors hidden role="alert"></div>
+
+          <section class="anpi-today-panel anpi-panel-card" data-anpi-today-panel hidden aria-labelledby="anpiTodayTitle">
+            <div class="anpi-today-panel__head">
+              <h2 id="anpiTodayTitle" class="anpi-today-panel__title">本日の安否確認</h2>
+              <span class="anpi-today-panel__badge" data-anpi-today-badge>—</span>
+            </div>
+            <p class="anpi-today-panel__meta" data-anpi-today-meta></p>
+            <p class="anpi-today-panel__note">未応答の自動判定・実通知はサーバー側ランタイムが無効のため実行されません。表示はサーバー状態のみです。</p>
+            <button type="button" class="anpi-today-panel__confirm" data-anpi-confirm-btn disabled>
+              安否確認する
+            </button>
+            <p class="anpi-today-panel__feedback" data-anpi-confirm-feedback role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="anpi-settings-summary anpi-panel-card" data-anpi-settings-summary hidden aria-labelledby="anpiSettingsSummaryTitle">
+            <h2 id="anpiSettingsSummaryTitle" class="anpi-settings-summary__title">登録サマリー</h2>
+            <dl class="anpi-settings-summary__dl">
+              <div><dt>状態</dt><dd data-anpi-summary-enabled>—</dd></div>
+              <div><dt>確認時刻</dt><dd data-anpi-summary-time>—</dd></div>
+              <div><dt>スケジュール</dt><dd data-anpi-summary-schedule>—</dd></div>
+              <div><dt>タイムゾーン</dt><dd>Asia/Tokyo</dd></div>
+            </dl>
+            <a class="anpi-settings-summary__link" href="anpi-register.html">設定を編集する</a>
+          </section>
+
+          <section class="anpi-line-fail-panel anpi-panel-card" data-anpi-line-fail-panel hidden aria-labelledby="anpiDashLineFailTitle">
+            <h2 id="anpiDashLineFailTitle" class="anpi-line-fail-panel__title">外部通知</h2>
+            <p class="anpi-line-fail-panel__meta">外部メッセージ連携（LINE等）は現在準備中です。実配送は行われません。</p>
+          </section>
 
           <div class="anpi-dashboard-meta-sr" aria-hidden="true">
             <span data-anpi-summary-level>—</span>
@@ -346,21 +383,11 @@
   <script src="anpi-identity.js" defer></script>
   <script src="auth-current-user.js" defer></script>
   <script src="platform-actor-resolver.js" defer></script>
-  <script src="anpi-rls.js" defer></script>
-  <script src="anpi-user-context-supabase.js" defer></script>
-  <script src="anpi-user-context.js" defer></script>
-  <script src="anpi-notification-log-supabase.js" defer></script>
-  <script src="talk-category-normalize.js"></script>
-  <script src="talk-notifications-store.js" defer></script>
-  <script src="talk-platform-notify.js" defer></script>
-  <script src="anpi-notification-log.js" defer></script>
   <script src="member-profile.js" defer></script>
   <script src="member-auth.js" defer></script>
   <script src="dashboard-data.js" defer></script>
-  <script src="anpi-line-healthcheck.js" defer></script>
-  <script src="anpi-line-admin.js" defer></script>
+  <script src="anpi-rpc-client.js" defer></script>
   <script src="anpi-dashboard.js" defer></script>
-  <script src="anpi-notify-cards.js" defer></script>
   <script src="tasful-app-mobile.js" defer></script>
   <script src="tasful-mobile-detail-template.js" defer></script>
   <script>
@@ -460,8 +487,5 @@
       }
     })();
   </script>
-  <link rel="stylesheet" href="tasful-site-assistant.css">
-  <script src="tasful-site-assistant-adapter.js" defer></script>
-  <script src="tasful-site-assistant.js" defer></script>
 </body>
 </html>

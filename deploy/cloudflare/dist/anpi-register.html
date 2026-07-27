@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>安否サービス登録 | TASFUL</title>
@@ -73,198 +72,120 @@
       <main class="dash-content dash-shell anpi-register-main" data-anpi-register-root>
         <section class="dash-member-page-head">
           <p class="dash-member-page-head__eyebrow">安否設定</p>
-          <h1 class="dash-member-page-head__title">安否サービス登録</h1>
-          <p class="dash-member-page-head__sub">利用者のAI相談・電話応答・緊急キーワードを契約者へ通知するための設定です。電話番号はマスク形式でのみ保存されます。</p>
+          <h1 class="dash-member-page-head__title">安否サービス設定</h1>
+          <p class="dash-member-page-head__sub">毎日の安否確認スケジュールと緊急連絡先を設定します。通知の実配送は現在オフです（ローカル準備モード）。</p>
         </section>
 
-        <p class="anpi-register-edit-note" data-anpi-edit-note hidden></p>
+        <div class="anpi-register-auth" data-anpi-auth-gate hidden role="status">
+          <p class="anpi-register-auth__text">安否設定を利用するにはログインが必要です。</p>
+          <a class="anpi-register-auth__cta" data-anpi-login-link href="login.html">ログインへ</a>
+        </div>
 
+        <p class="anpi-register-status" data-anpi-page-status aria-live="polite"></p>
         <div class="anpi-register-errors" data-anpi-form-errors hidden role="alert"></div>
 
-        <form class="anpi-register-form" data-anpi-register-form novalidate>
+        <form class="anpi-register-form" data-anpi-register-form novalidate hidden>
           <fieldset class="anpi-register-section register-card-container">
-            <legend class="anpi-register-section__title">契約者情報</legend>
+            <legend class="anpi-register-section__title">安否確認スケジュール</legend>
             <div class="anpi-register-grid">
-              <label class="anpi-register-field">
-                <span class="anpi-register-label">契約者名 <em>必須</em></span>
-                <input type="text" name="contract_holder_name" required maxlength="60" autocomplete="name">
-              </label>
-              <label class="anpi-register-field">
-                <span class="anpi-register-label">契約者との続柄 <em>必須</em></span>
-                <input type="text" name="contract_holder_relation" required maxlength="40" placeholder="例：娘、息子、後見人">
-              </label>
-              <label class="anpi-register-field">
-                <span class="anpi-register-label">契約者電話 <em>必須</em></span>
-                <input type="tel" name="contract_holder_phone" inputmode="tel" autocomplete="tel">
-                <span class="anpi-register-hint" data-hint-contract-holder-phone></span>
-              </label>
-              <label class="anpi-register-field">
-                <span class="anpi-register-label">契約者メール <em>必須</em></span>
-                <input type="email" name="contract_holder_email" required maxlength="120" autocomplete="email">
-              </label>
               <label class="anpi-register-field anpi-register-field--full">
-                <span class="anpi-register-label">主な連絡方法 <em>必須</em></span>
-                <select name="contract_holder_contact_method" required>
-                  <option value="tasful_chat">TASFUL内通知（tasful_chat）</option>
+                <span class="anpi-register-label">安否サービス</span>
+                <span class="anpi-register-toggle">
+                  <input type="checkbox" name="enabled" value="1" checked data-anpi-enabled>
+                  <span>有効にする</span>
+                </span>
+              </label>
+              <label class="anpi-register-field">
+                <span class="anpi-register-label" for="anpiScheduleType">スケジュール種別 <em>必須</em></span>
+                <select id="anpiScheduleType" name="schedule_type" required>
+                  <option value="daily">毎日</option>
+                  <option value="weekdays">曜日指定</option>
                 </select>
               </label>
+              <label class="anpi-register-field">
+                <span class="anpi-register-label" for="anpiNotifyTime">初回確認時刻 <em>必須</em></span>
+                <input id="anpiNotifyTime" type="time" name="initial_notification_time" required value="08:00">
+              </label>
+              <label class="anpi-register-field">
+                <span class="anpi-register-label" for="anpiReminderCount">リマインド回数</span>
+                <select id="anpiReminderCount" name="reminder_count">
+                  <option value="0">0回</option>
+                  <option value="1">1回</option>
+                  <option value="2" selected>2回</option>
+                </select>
+              </label>
+              <label class="anpi-register-field">
+                <span class="anpi-register-label" for="anpiGraceHours">連絡先通知までの猶予（時間）</span>
+                <input id="anpiGraceHours" type="number" name="contact_notify_after_hours" min="0.5" max="24" step="0.5" value="2">
+              </label>
+              <label class="anpi-register-field">
+                <span class="anpi-register-label">タイムゾーン</span>
+                <input type="text" value="Asia/Tokyo" disabled aria-describedby="anpiTzHint">
+                <span id="anpiTzHint" class="anpi-register-hint">サーバー固定（変更不可）</span>
+              </label>
+              <fieldset class="anpi-register-field anpi-register-field--full" data-anpi-weekdays-wrap>
+                <legend class="anpi-register-label">確認する曜日</legend>
+                <div class="anpi-register-weekdays" role="group" aria-label="曜日">
+                  <label class="anpi-register-check"><input type="checkbox" name="weekday" value="1" checked> 月</label>
+                  <label class="anpi-register-check"><input type="checkbox" name="weekday" value="2" checked> 火</label>
+                  <label class="anpi-register-check"><input type="checkbox" name="weekday" value="3" checked> 水</label>
+                  <label class="anpi-register-check"><input type="checkbox" name="weekday" value="4" checked> 木</label>
+                  <label class="anpi-register-check"><input type="checkbox" name="weekday" value="5" checked> 金</label>
+                  <label class="anpi-register-check"><input type="checkbox" name="weekday" value="6" checked> 土</label>
+                  <label class="anpi-register-check"><input type="checkbox" name="weekday" value="7" checked> 日</label>
+                </div>
+              </fieldset>
             </div>
           </fieldset>
 
-          <fieldset class="anpi-register-section register-card-container">
-            <legend class="anpi-register-section__title">利用者情報</legend>
-            <div class="anpi-register-grid">
+          <fieldset class="anpi-register-section register-card-container" data-anpi-contacts-section>
+            <legend class="anpi-register-section__title">緊急連絡先（Talk会員）</legend>
+            <p class="anpi-register-hint">外部の電話・メール・LINEへの実送信は行いません。Talk連携済みの会員IDのみ登録できます。</p>
+            <ul class="anpi-contacts-list" data-anpi-contacts-list aria-live="polite"></ul>
+            <p class="anpi-contacts-empty" data-anpi-contacts-empty>連絡先はまだありません。</p>
+            <div class="anpi-contacts-form" data-anpi-contact-form>
               <label class="anpi-register-field">
-                <span class="anpi-register-label">利用者名 <em>必須</em></span>
-                <input type="text" name="user_name" required maxlength="60" autocomplete="name">
-              </label>
-              <label class="anpi-register-field">
-                <span class="anpi-register-label">利用者電話 <em>必須</em></span>
-                <input type="tel" name="user_phone" inputmode="tel" autocomplete="tel">
-                <span class="anpi-register-hint" data-hint-user-phone></span>
+                <span class="anpi-register-label" for="anpiContactUserId">連絡先会員ID（UUID）</span>
+                <input id="anpiContactUserId" type="text" name="contact_user_id" maxlength="36" autocomplete="off" spellcheck="false" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
               </label>
               <label class="anpi-register-field">
-                <span class="anpi-register-label">年齢（任意）</span>
-                <input type="text" name="user_age_optional" maxlength="10" placeholder="例：78">
+                <span class="anpi-register-label" for="anpiContactRelation">続柄</span>
+                <select id="anpiContactRelation" name="relationship">
+                  <option value="relative">親族</option>
+                  <option value="parent">親</option>
+                  <option value="child">子</option>
+                  <option value="spouse">配偶者</option>
+                  <option value="friend">友人</option>
+                  <option value="caregiver">介護者</option>
+                  <option value="other">その他</option>
+                </select>
               </label>
-              <label class="anpi-register-field anpi-register-field--full">
-                <span class="anpi-register-label">利用者メモ（任意）</span>
-                <input type="text" name="user_relation_note" maxlength="120" placeholder="例：一人暮らし・要介護2">
+              <label class="anpi-register-field">
+                <span class="anpi-register-label" for="anpiContactPriority">優先度（1–10）</span>
+                <input id="anpiContactPriority" type="number" name="priority" min="1" max="10" value="1">
               </label>
-              <label class="anpi-register-field anpi-register-field--full">
-                <span class="anpi-register-label">緊急時メモ（任意）</span>
-                <textarea name="emergency_note" rows="2" maxlength="300" placeholder="例：かかりつけ病院、玄関ドア暗証"></textarea>
-              </label>
-            </div>
-          </fieldset>
-
-          <fieldset class="anpi-register-section register-card-container">
-            <legend class="anpi-register-section__title">通知設定</legend>
-            <div class="anpi-register-channels">
-              <span class="anpi-register-label">通知チャネル <em>必須</em>（1つ以上）</span>
-              <label class="anpi-register-check"><input type="checkbox" name="notify_tasful_chat" value="1" checked> TASFUL内通知（tasful_chat）</label>
-            </div>
-            <div class="anpi-register-levels" role="radiogroup" aria-label="通知レベル">
-              <span class="anpi-register-label">通知レベル <em>必須</em></span>
-              <label class="anpi-register-radio">
-                <input type="radio" name="notification_level" value="call_only" checked>
-                <span><strong>call_only</strong> — 電話操作・緊急時のみ通知</span>
-              </label>
-              <label class="anpi-register-radio">
-                <input type="radio" name="notification_level" value="important_only">
-                <span><strong>important_only</strong> — 電話操作・緊急時・重要操作を通知</span>
-              </label>
-              <label class="anpi-register-radio">
-                <input type="radio" name="notification_level" value="all_ai_actions">
-                <span><strong>all_ai_actions</strong> — AI相談内容も含めて通知</span>
-              </label>
+              <button type="button" class="anpi-register-submit" data-anpi-contact-add>連絡先を追加</button>
             </div>
           </fieldset>
 
           <fieldset class="anpi-register-section anpi-register-section--line register-card-container" data-anpi-line-section>
-            <legend class="anpi-register-section__title">TASFUL TALK通知設定</legend>
-            <p class="anpi-register-line-prod-lead">
-              TASFUL TALK連携を行うと、安否通知をTASFUL TALKでも受け取れます。
+            <legend class="anpi-register-section__title">外部メッセージ連携</legend>
+            <p class="anpi-register-line-prod-lead" data-anpi-line-disabled-note>
+              LINE / 外部メッセージ連携は現在準備中です。実通知・実配送は行われません。
             </p>
-
-            <div class="anpi-register-line-prod" data-anpi-line-prod-block>
-              <div class="anpi-register-line-status" data-anpi-line-status aria-live="polite">
-                <span class="anpi-register-line-status__label">TASFUL TALK連携</span>
-                <span class="anpi-register-line-status__value" data-anpi-line-status-text>未連携</span>
-              </div>
-              <p class="anpi-register-line-linked-meta" data-anpi-line-linked-at-row hidden>
-                <span class="anpi-register-line-linked-meta__label">連携日時</span>
-                <time data-anpi-line-linked-at></time>
-              </p>
-              <p class="anpi-register-line-id" data-anpi-line-id-row hidden>
-                <span class="anpi-register-line-id__label">連携ID（マスク）</span>
-                <code class="anpi-register-line-id__value" data-anpi-line-user-id-mask></code>
-              </p>
-              <p class="anpi-register-line-hint" data-anpi-line-unlinked-hint>
-                未連携です。下のボタンからTASFUL TALKアカウントを連携してください。
-              </p>
-              <p class="anpi-register-line-auth-pending" data-anpi-line-auth-pending hidden role="status">
-                TASFUL TALK認可コードを取得しました。連携を完了しています…
-              </p>
-              <p class="anpi-register-line-exchange-loading" data-anpi-line-exchange-loading hidden role="status">
-                TASFUL TALK連携を確認しています…
-              </p>
-              <p class="anpi-register-line-config-warn" data-anpi-line-config-warn hidden>
-                TASFUL TALK Login Channel ID が未設定です（管理者向け）
-              </p>
-              <button
-                type="button"
-                class="anpi-register-line-login"
-                data-anpi-line-login-link
-                disabled
-              >
-                TASFUL TALKアカウントを連携する
-              </button>
-              <button
-                type="button"
-                class="anpi-register-line-unlink"
-                data-anpi-line-unlink
-                hidden
-              >
-                TASFUL TALK連携を解除
-              </button>
-            </div>
-
-            <div class="anpi-register-line-options" role="radiogroup" aria-label="TASFUL TALK通知の利用">
-              <label class="anpi-register-radio anpi-register-line-radio">
-                <input type="radio" name="line_notification_enabled" value="1" data-anpi-line-enable>
-                <span>TASFUL TALK通知を利用する</span>
-              </label>
-              <label class="anpi-register-radio anpi-register-line-radio">
-                <input type="radio" name="line_notification_enabled" value="0" checked data-anpi-line-disable>
-                <span>TASFUL TALK通知を利用しない</span>
-              </label>
-            </div>
-            <div class="anpi-register-line-actions">
-              <button type="button" class="anpi-register-line-test" data-anpi-line-test disabled>
-                テスト通知
-              </button>
-            </div>
-            <p class="anpi-register-line-dev" data-anpi-line-dev-wrap>
-              <button type="button" class="anpi-register-line-demo" data-anpi-line-demo-link>
-                デモ用TASFUL TALK連携
-              </button>
-            </p>
-            <p class="anpi-register-line-feedback" data-anpi-line-test-feedback hidden role="status"></p>
-          </fieldset>
-
-          <fieldset class="anpi-register-section anpi-register-section--consent register-card-container terms-agreement-box">
-            <legend class="anpi-register-section__title">同意事項 <em>必須</em></legend>
-            <label class="anpi-register-check">
-              <input type="checkbox" name="consent_no_auto_execution" value="1">
-              AIは依頼・購入・応募・決済を自動実行しないことに同意します。
-            </label>
-            <label class="anpi-register-check">
-              <input type="checkbox" name="consent_self_confirm_required" value="1">
-              電話・契約・料金・作業内容は、本人または契約者が確認することに同意します。
-            </label>
-            <label class="anpi-register-check">
-              <input type="checkbox" name="consent_tasful_no_guarantee" value="1">
-              TASFULは電話内容・外部契約・支払いトラブルを保証しないことに同意します。
-            </label>
-            <label class="anpi-register-check">
-              <input type="checkbox" name="consent_emergency_contact_required" value="1">
-              緊急時は119番・警察・家族・管理会社等へ直接連絡する必要があることに同意します。
-            </label>
           </fieldset>
 
           <div class="anpi-register-actions">
-            <button type="submit" class="anpi-register-submit" data-anpi-submit>登録を保存する</button>
+            <button type="submit" class="anpi-register-submit" data-anpi-submit>設定を保存する</button>
           </div>
         </form>
 
         <section class="anpi-register-success" data-anpi-register-success hidden aria-live="polite">
-          <h2 class="anpi-register-success__title">登録を保存しました</h2>
+          <h2 class="anpi-register-success__title">設定を保存しました</h2>
           <p class="anpi-register-success__meta" data-anpi-success-meta></p>
           <div class="anpi-register-success__links">
-            <a class="anpi-register-success__link" href="anpi-notifications.html">安否通知センターを見る</a>
-            <a class="anpi-register-success__link" href="ai-workspace.html">AI相談を開く</a>
-            <a class="anpi-register-success__link anpi-register-success__link--ghost" href="dashboard.html">ダッシュボードへ戻る</a>
+            <a class="anpi-register-success__link" href="anpi-dashboard.html">安否ダッシュボードへ</a>
+            <a class="anpi-register-success__link anpi-register-success__link--ghost" href="dashboard.html">会員ダッシュボードへ</a>
           </div>
         </section>
       </main>
@@ -278,18 +199,8 @@
   <script src="anpi-identity.js" defer></script>
   <script src="auth-current-user.js" defer></script>
   <script src="platform-actor-resolver.js" defer></script>
-  <script src="anpi-rls.js" defer></script>
-  <script src="anpi-user-context-supabase.js" defer></script>
-  <script src="anpi-user-context.js" defer></script>
-  <script src="anpi-notification-log-supabase.js" defer></script>
-  <script src="anpi-notification-log.js" defer></script>
-  <script src="anpi-line-login-config.js" defer></script>
-  <script src="anpi-line-oauth-crypto.js" defer></script>
-  <script src="anpi-line-token-client.js" defer></script>
+  <script src="anpi-rpc-client.js" defer></script>
   <script src="anpi-register.js" defer></script>
   <script src="tasful-app-mobile.js" defer></script>
-  <link rel="stylesheet" href="tasful-site-assistant.css">
-  <script src="tasful-site-assistant-adapter.js" defer></script>
-  <script src="tasful-site-assistant.js" defer></script>
 </body>
 </html>

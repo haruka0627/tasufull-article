@@ -1,537 +1,264 @@
 /**
- * 安否サービス登録フォーム
+ * ANPI register / settings page — Phase 2–10 RPC path.
  */
 (function () {
   "use strict";
 
-  function $(sel, root) {
-    return (root || document).querySelector(sel);
+  const root = document.querySelector("[data-anpi-register-root]");
+  if (!root) return;
+
+  const form = root.querySelector("[data-anpi-register-form]");
+  const authGate = root.querySelector("[data-anpi-auth-gate]");
+  const statusEl = root.querySelector("[data-anpi-page-status]");
+  const errorsEl = root.querySelector("[data-anpi-form-errors]");
+  const successEl = root.querySelector("[data-anpi-register-success]");
+  const successMeta = root.querySelector("[data-anpi-success-meta]");
+  const submitBtn = root.querySelector("[data-anpi-submit]");
+  const contactsList = root.querySelector("[data-anpi-contacts-list]");
+  const contactsEmpty = root.querySelector("[data-anpi-contacts-empty]");
+  const contactAddBtn = root.querySelector("[data-anpi-contact-add]");
+
+  let saving = false;
+  let contactBusy = false;
+  /** @type {any[]} */
+  let contacts = [];
+  let registered = false;
+
+  function setStatus(text) {
+    if (statusEl) statusEl.textContent = text || "";
   }
 
-  function collectFormData(form) {
-    const fd = new FormData(form);
-    const data = Object.fromEntries(fd.entries());
-    data.notify_tasful_chat = form.querySelector('[name="notify_tasful_chat"]')?.checked === true;
-    data.notify_line = form.querySelector('[name="notify_line"]')?.checked === true;
-    data.notify_email = form.querySelector('[name="notify_email"]')?.checked === true;
-    data.consent_no_auto_execution =
-      form.querySelector('[name="consent_no_auto_execution"]')?.checked === true;
-    data.consent_self_confirm_required =
-      form.querySelector('[name="consent_self_confirm_required"]')?.checked === true;
-    data.consent_tasful_no_guarantee =
-      form.querySelector('[name="consent_tasful_no_guarantee"]')?.checked === true;
-    data.consent_emergency_contact_required =
-      form.querySelector('[name="consent_emergency_contact_required"]')?.checked === true;
-    const lineRadio = form.querySelector('[name="line_notification_enabled"]:checked');
-    data.line_notification_enabled = lineRadio?.value === "1";
-    return data;
-  }
-
-  function showErrors(errors) {
-    const box = $("[data-anpi-form-errors]");
-    if (!box) return;
-    if (!errors?.length) {
-      box.hidden = true;
-      box.innerHTML = "";
+  function showErrors(messages) {
+    if (!errorsEl) return;
+    const list = (messages || []).filter(Boolean);
+    if (!list.length) {
+      errorsEl.hidden = true;
+      errorsEl.textContent = "";
       return;
     }
-    box.hidden = false;
-    box.innerHTML = `<ul>${errors.map((e) => `<li>${escapeHtml(e)}</li>`).join("")}</ul>`;
+    errorsEl.hidden = false;
+    errorsEl.textContent = list.join("\n");
   }
 
   function escapeHtml(s) {
-    return String(s ?? "")
+    return String(s || "")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
-  function showLineFeedback(message, tone = "info") {
-    const el = $("[data-anpi-line-test-feedback]");
-    if (!el) return;
-    el.hidden = false;
-    el.textContent = message;
-    el.className = `anpi-register-line-feedback is-${tone}`;
-  }
-
-  function hideLineFeedback() {
-    const el = $("[data-anpi-line-test-feedback]");
-    if (!el) return;
-    el.hidden = true;
-    el.textContent = "";
-    el.className = "anpi-register-line-feedback";
-  }
-
-  function formatLinkedAt(iso) {
-    if (!iso) return "";
-    try {
-      return new Intl.DateTimeFormat("ja-JP", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        timeZone: "Asia/Tokyo",
-      }).format(new Date(iso));
-    } catch {
-      return String(iso);
-    }
-  }
-
-  let lineTokenExchangeInFlight = false;
-
-  function setExchangeLoading(visible) {
-    const el = $("[data-anpi-line-exchange-loading]");
-    if (!el) return;
-    el.hidden = !visible;
-  }
-
-  function shouldSkipLineTokenExchange() {
-    try {
-      return new URLSearchParams(location.search).get("anpi_skip_line_token_exchange") === "1";
-    } catch {
-      return false;
-    }
-  }
-
-  function isDevEnvironment() {
-    try {
-      const host = location.hostname;
-      if (host === "127.0.0.1" || host === "localhost") return true;
-      if (new URLSearchParams(location.search).get("anpi_dev") === "1") return true;
-    } catch {
-      /* ignore */
-    }
-    return false;
-  }
-
-  function updateLineUi(form) {
-    const state = window.TasuAnpiUserContext?.getLineLinkState?.() || {
-      linked: false,
-      line_user_id: "",
-      line_notification_enabled: false,
-      line_linked_at: "",
+  function collectSettings() {
+    const weekdays = Array.from(form.querySelectorAll('input[name="weekday"]:checked')).map((el) =>
+      Number(el.value)
+    );
+    return {
+      enabled: !!form.querySelector("[data-anpi-enabled]")?.checked,
+      schedule_type: form.schedule_type.value,
+      weekdays: weekdays.length ? weekdays : [1, 2, 3, 4, 5, 6, 7],
+      initial_notification_time: form.initial_notification_time.value,
+      reminder_count: Number(form.reminder_count.value),
+      contact_notify_after_hours: Number(form.contact_notify_after_hours.value),
     };
-
-    const loginCfg = window.TasuAnpiLineLoginConfig;
-    const config = loginCfg?.getConfig?.() || { isConfigured: false };
-    const authPending = loginCfg?.hasAuthCodePending?.() === true && !state.linked;
-
-    const statusText = $("[data-anpi-line-status-text]");
-    const idRow = $("[data-anpi-line-id-row]");
-    const idMask = $("[data-anpi-line-user-id-mask]");
-    const linkedAtRow = $("[data-anpi-line-linked-at-row]");
-    const linkedAtTime = $("[data-anpi-line-linked-at]");
-    const unlinkedHint = $("[data-anpi-line-unlinked-hint]");
-    const pendingEl = $("[data-anpi-line-auth-pending]");
-    const exchangeLoadingEl = $("[data-anpi-line-exchange-loading]");
-    const warnEl = $("[data-anpi-line-config-warn]");
-    const loginBtn = $("[data-anpi-line-login-link]");
-    const unlinkBtn = $("[data-anpi-line-unlink]");
-    const devWrap = $("[data-anpi-line-dev-wrap]");
-    const enableRadio = form.querySelector("[data-anpi-line-enable]");
-    const disableRadio = form.querySelector("[data-anpi-line-disable]");
-    const enableLabel = enableRadio?.closest(".anpi-register-line-radio");
-    const testBtn = $("[data-anpi-line-test]");
-    const demoBtn = $("[data-anpi-line-demo-link]");
-
-    if (statusText) {
-      statusText.textContent = state.linked ? "TASFUL TALK連携済み" : "未連携";
-      statusText.className = `anpi-register-line-status__value ${
-        state.linked ? "is-linked" : "is-unlinked"
-      }`;
-    }
-
-    if (linkedAtRow && linkedAtTime) {
-      const at = state.line_linked_at;
-      if (state.linked && at) {
-        linkedAtRow.hidden = false;
-        linkedAtTime.textContent = formatLinkedAt(at);
-        linkedAtTime.setAttribute("datetime", at);
-      } else {
-        linkedAtRow.hidden = true;
-        linkedAtTime.textContent = "";
-      }
-    }
-
-    if (idRow && idMask) {
-      if (state.linked && state.line_user_id) {
-        idRow.hidden = false;
-        idMask.textContent =
-          loginCfg?.maskLineUserId?.(state.line_user_id) || "****";
-      } else {
-        idRow.hidden = true;
-        idMask.textContent = "";
-      }
-    }
-
-    if (pendingEl) {
-      pendingEl.hidden = !authPending || lineTokenExchangeInFlight;
-    }
-
-    if (exchangeLoadingEl) {
-      exchangeLoadingEl.hidden = !lineTokenExchangeInFlight;
-    }
-
-    if (unlinkedHint) {
-      unlinkedHint.hidden = state.linked || authPending || lineTokenExchangeInFlight;
-    }
-
-    if (warnEl) {
-      warnEl.hidden = config.isConfigured;
-    }
-
-    if (loginBtn) {
-      loginBtn.hidden = state.linked;
-      loginBtn.disabled = !config.isConfigured || state.linked;
-    }
-
-    if (unlinkBtn) {
-      unlinkBtn.hidden = !state.linked;
-      unlinkBtn.disabled = !state.linked || lineTokenExchangeInFlight;
-    }
-
-    if (devWrap) {
-      devWrap.hidden = !isDevEnvironment();
-    }
-
-    if (demoBtn) {
-      demoBtn.hidden = state.linked;
-      demoBtn.disabled = state.linked;
-    }
-
-    if (enableRadio && disableRadio) {
-      if (state.linked) {
-        enableRadio.disabled = false;
-        if (enableLabel) enableLabel.classList.remove("is-disabled");
-      } else {
-        enableRadio.disabled = true;
-        if (enableLabel) enableLabel.classList.add("is-disabled");
-        if (enableRadio.checked) {
-          disableRadio.checked = true;
-        }
-      }
-    }
-
-    if (testBtn) {
-      const lineOn = form.querySelector('[name="line_notification_enabled"]:checked')?.value === "1";
-      testBtn.disabled = !state.linked || !lineOn;
-    }
   }
 
-  function restoreForm(form) {
-    const defaults = window.TasuAnpiUserContext?.getRegisterFormDefaults?.();
-    const editNote = $("[data-anpi-edit-note]");
-    if (!defaults) {
-      if (editNote) editNote.hidden = true;
-      updateLineUi(form);
+  function applySettings(row) {
+    if (!row) return;
+    const enabled = form.querySelector("[data-anpi-enabled]");
+    if (enabled) enabled.checked = row.enabled !== false;
+    if (row.schedule_type) form.schedule_type.value = row.schedule_type;
+    const time = String(row.initial_notification_time || "08:00:00").slice(0, 5);
+    form.initial_notification_time.value = time;
+    if (row.reminder_count != null) form.reminder_count.value = String(row.reminder_count);
+    form.contact_notify_after_hours.value = String(
+      window.TasuAnpiRpc.intervalToHours(row.contact_notify_after)
+    );
+    const set = new Set((row.weekdays || []).map(Number));
+    form.querySelectorAll('input[name="weekday"]').forEach((el) => {
+      el.checked = set.size ? set.has(Number(el.value)) : true;
+    });
+  }
+
+  function renderContacts() {
+    if (!contactsList) return;
+    const active = contacts.filter((c) => c.status !== "revoked" && !c.deleted_at);
+    contactsList.innerHTML = "";
+    if (contactsEmpty) contactsEmpty.hidden = active.length > 0;
+    active.forEach((c) => {
+      const id = c.contact_id || c.id;
+      const li = document.createElement("li");
+      li.className = "anpi-contacts-item";
+      li.innerHTML = `
+        <div class="anpi-contacts-item__body">
+          <strong>${escapeHtml(c.relationship || "other")}</strong>
+          <span>優先度 ${escapeHtml(c.priority)}</span>
+          <span>状態 ${escapeHtml(c.status || "—")}</span>
+          <span>同意 ${escapeHtml(c.consent_status || "—")}</span>
+          <code class="anpi-contacts-item__id">${escapeHtml(String(c.contact_user_id || "").slice(0, 8))}…</code>
+          ${c.paused_at ? "<span class=\"anpi-contacts-item__paused\">一時停止中</span>" : ""}
+        </div>
+        <div class="anpi-contacts-item__actions">
+          <button type="button" data-anpi-contact-pause data-id="${escapeHtml(id)}" data-paused="${c.paused_at ? "1" : "0"}">
+            ${c.paused_at ? "再開" : "一時停止"}
+          </button>
+          <button type="button" data-anpi-contact-revoke data-id="${escapeHtml(id)}">削除</button>
+        </div>
+      `;
+      contactsList.appendChild(li);
+    });
+  }
+
+  async function loadContacts() {
+    const res = await window.TasuAnpiRpc.listContacts();
+    if (res.stale) return;
+    if (!res.ok) {
+      showErrors([res.error?.userMessage || "連絡先を取得できませんでした"]);
       return;
     }
-
-    if (editNote) {
-      editNote.hidden = false;
-      editNote.textContent = `登録済みの設定を編集しています（最終更新: ${defaults.updated_at || "—"}）。電話番号を変更する場合のみ再入力してください。`;
-    }
-
-    const setVal = (name, value) => {
-      const el = form.elements.namedItem(name);
-      if (el && "value" in el && value != null) el.value = String(value);
-    };
-
-    setVal("contract_holder_name", defaults.contract_holder_name);
-    setVal("contract_holder_relation", defaults.contract_holder_relation);
-    setVal("contract_holder_email", defaults.contract_holder_email);
-    setVal("contract_holder_contact_method", defaults.contract_holder_contact_method);
-    setVal("user_name", defaults.user_name);
-    setVal("user_age_optional", defaults.user_age_optional);
-    setVal("user_relation_note", defaults.user_relation_note);
-    setVal("emergency_note", defaults.emergency_note);
-
-    const hintUser = $("[data-hint-user-phone]");
-    const hintHolder = $("[data-hint-contract-holder-phone]");
-    if (hintUser && defaults.user_phone_masked_hint) {
-      hintUser.textContent = `登録済み: ${defaults.user_phone_masked_hint}`;
-    }
-    if (hintHolder && defaults.contract_holder_phone_masked_hint) {
-      hintHolder.textContent = `登録済み: ${defaults.contract_holder_phone_masked_hint}`;
-    }
-
-    const notifyTasful = form.querySelector('[name="notify_tasful_chat"]');
-    const notifyLine = form.querySelector('[name="notify_line"]');
-    const notifyEmail = form.querySelector('[name="notify_email"]');
-    if (notifyTasful) notifyTasful.checked = defaults.notify_tasful_chat;
-    if (notifyLine) notifyLine.checked = defaults.notify_line;
-    if (notifyEmail) notifyEmail.checked = defaults.notify_email;
-
-    const level = form.querySelector(`[name="notification_level"][value="${defaults.notification_level}"]`);
-    if (level) level.checked = true;
-
-    const lineEnable = form.querySelector('[name="line_notification_enabled"][value="1"]');
-    const lineDisable = form.querySelector('[name="line_notification_enabled"][value="0"]');
-    if (defaults.line_notification_enabled && defaults.line_linked && lineEnable) {
-      lineEnable.checked = true;
-    } else if (lineDisable) {
-      lineDisable.checked = true;
-    }
-
-    form.querySelector('[name="consent_no_auto_execution"]').checked =
-      defaults.consent_no_auto_execution;
-    form.querySelector('[name="consent_self_confirm_required"]').checked =
-      defaults.consent_self_confirm_required;
-    form.querySelector('[name="consent_tasful_no_guarantee"]').checked =
-      defaults.consent_tasful_no_guarantee;
-    form.querySelector('[name="consent_emergency_contact_required"]').checked =
-      defaults.consent_emergency_contact_required;
-
-    const submit = $("[data-anpi-submit]");
-    if (submit) submit.textContent = "変更を保存する";
-
-    updateLineUi(form);
+    contacts = res.data || [];
+    renderContacts();
   }
 
-  function showSuccess(context) {
-    const form = $("[data-anpi-register-form]");
-    const success = $("[data-anpi-register-success]");
-    const meta = $("[data-anpi-success-meta]");
-    if (form) form.hidden = true;
-    if (success) success.hidden = false;
-    if (meta && context) {
-      const lineNote = context.line_notification_enabled ? " / TASFUL TALK通知: 利用" : "";
-      meta.textContent = `利用者: ${context.user_name} / 契約者: ${context.contract_holder_name}${lineNote} / 更新: ${context.updated_at}`;
-    }
+  async function bootstrap() {
+    setStatus("読み込み中…");
     showErrors([]);
-  }
-
-  async function attemptLineTokenExchange(form) {
-    const loginCfg = window.TasuAnpiLineLoginConfig;
-    const tokenClient = window.TasuAnpiLineTokenClient;
-    const code = loginCfg?.getAuthCode?.() || "";
-    if (!code) return;
-
-    const linkState = window.TasuAnpiUserContext?.getLineLinkState?.() || {};
-    if (linkState.linked) {
-      loginCfg?.clearAuthCode?.();
-      return;
-    }
-
-    if (lineTokenExchangeInFlight) return;
-    lineTokenExchangeInFlight = true;
-    setExchangeLoading(true);
-    updateLineUi(form);
-    hideLineFeedback();
-
-    const redirectUri = loginCfg?.getRedirectUri?.() || "";
-    const nonce = loginCfg?.getSavedNonce?.() || "";
-
-    let result;
     try {
-      result = await tokenClient?.exchangeAuthCode?.({
-        code,
-        redirectUri,
-        nonce,
-      });
-    } catch {
-      result = {
-        success: false,
-        error_message: "TASFUL TALK連携の通信に失敗しました。",
-      };
-    }
-
-    lineTokenExchangeInFlight = false;
-    setExchangeLoading(false);
-
-    if (result?.success && result?.userId) {
-      const applyResult = await window.TasuAnpiUserContext?.applyLineOAuthLink?.({
-        userId: result.userId,
-        access_token: result.access_token,
-        expires_at: result.expires_at,
-      });
-
-      if (applyResult?.ok) {
-        loginCfg?.clearAuthCode?.();
-        loginCfg?.clearNonce?.();
-        showLineFeedback(
-          "TASFUL TALK連携が完了しました。内容を確認して登録を保存してください。",
-          "success"
-        );
-        restoreForm(form);
-      } else {
-        showLineFeedback(
-          applyResult?.errors?.[0] || "TASFUL TALK連携の保存に失敗しました。",
-          "error"
-        );
-        updateLineUi(form);
-      }
+      await window.TasuAnpiRpc.requireSession();
+    } catch (e) {
+      if (authGate) authGate.hidden = false;
+      if (form) form.hidden = true;
+      setStatus("");
       return;
     }
 
-    const errMsg =
-      result?.error_message ||
-      (result?.error_code === "NONCE_MISMATCH"
-        ? "TASFUL TALK連携の検証（nonce）に失敗しました。"
-        : "TASFUL TALK連携に失敗しました。もう一度お試しください。");
-    showLineFeedback(errMsg, "error");
-    updateLineUi(form);
-  }
+    if (authGate) authGate.hidden = true;
+    if (form) form.hidden = false;
 
-  function bindLineControls(form) {
-    form.querySelectorAll('[name="line_notification_enabled"]').forEach((el) => {
-      el.addEventListener("change", () => {
-        hideLineFeedback();
-        updateLineUi(form);
-      });
-    });
-
-    $("[data-anpi-line-login-link]")?.addEventListener("click", () => {
-      const url = window.TasuAnpiLineLoginConfig?.createAuthUrl?.();
-      if (!url) {
-        showLineFeedback("TASFUL TALK Login Channel ID が未設定です。", "info");
-        return;
+    const settingsRes = await window.TasuAnpiRpc.getMySettings();
+    if (settingsRes.stale) return;
+    if (!settingsRes.ok) {
+      if (settingsRes.error?.kind === "UNAUTHENTICATED") {
+        if (authGate) authGate.hidden = false;
+        if (form) form.hidden = true;
+      } else {
+        showErrors([settingsRes.error?.userMessage || "設定を取得できませんでした"]);
       }
-      hideLineFeedback();
-      location.href = url;
-    });
-
-    $("[data-anpi-line-test]")?.addEventListener("click", () => {
-      const state = window.TasuAnpiUserContext?.getLineLinkState?.();
-      const lineOn = form.querySelector('[name="line_notification_enabled"]:checked')?.value === "1";
-      if (!state?.linked || !lineOn) {
-        showLineFeedback("TASFUL TALK連携と「利用する」の選択が必要です。", "info");
-        return;
-      }
-      const result = window.TasuAnpiNotifications?.recordLinePreviewNotification?.({
-        line_notification_enabled: true,
-        line_user_id: state.line_user_id,
-      });
-      if (!result?.ok) {
-        showLineFeedback(result?.errors?.[0] || "テスト通知の記録に失敗しました。", "info");
-        return;
-      }
-      const btn = $("[data-anpi-line-test]");
-      if (btn) btn.classList.add("is-ok");
-      showLineFeedback(
-        "テスト通知を記録しました（プレビュー）。TASFUL TALK API送信は通知ログから別途実行されます。",
-        "success"
-      );
-      window.setTimeout(() => btn?.classList.remove("is-ok"), 2000);
-    });
-
-    $("[data-anpi-line-demo-link]")?.addEventListener("click", () => {
-      window.TasuAnpiUserContext?.setLineLinkDemo?.();
-      hideLineFeedback();
-      restoreForm(form);
-      showLineFeedback("デモ用のTASFUL TALK連携を登録しました。保存するまで設定は下書き状態です。", "info");
-    });
-
-    $("[data-anpi-line-unlink]")?.addEventListener("click", () => {
-      const confirmed = window.confirm(
-        "TASFUL TALK連携を解除すると、TASFUL TALKで安否通知を受け取れなくなります。解除しますか？"
-      );
-      if (!confirmed) return;
-
-      hideLineFeedback();
-      const unlinkResult = window.TasuAnpiUserContext?.unlinkLineOAuth?.();
-      if (!unlinkResult?.success) {
-        showLineFeedback("TASFUL TALK連携の解除に失敗しました。", "error");
-        return;
-      }
-
-      window.TasuAnpiNotifications?.recordLineOAuthUnlinked?.();
-
-      const notifyLine = form.querySelector('[name="notify_line"]');
-      if (notifyLine) notifyLine.checked = false;
-      const lineDisable = form.querySelector('[name="line_notification_enabled"][value="0"]');
-      const lineEnable = form.querySelector('[name="line_notification_enabled"][value="1"]');
-      if (lineDisable) lineDisable.checked = true;
-      if (lineEnable) lineEnable.checked = false;
-
-      restoreForm(form);
-      showLineFeedback("TASFUL TALK連携を解除しました。", "success");
-    });
-  }
-
-  function bindLineOAuthUnlinkRefresh(form) {
-    const refresh = () => updateLineUi(form);
-    [
-      "tasu:anpi-line-oauth-unlinked",
-      "tasful:anpi-line-oauth-unlinked",
-      "tasful:anpi-notification-updated",
-    ].forEach((name) => {
-      document.addEventListener(name, refresh);
-      window.addEventListener(name, refresh);
-    });
-  }
-
-  function bindMenu() {
-    const sidebar = document.getElementById("dashSidebar");
-    const overlay = document.querySelector("[data-dash-overlay]");
-    const menuBtn = document.querySelector("[data-dash-menu]");
-    menuBtn?.addEventListener("click", () => {
-      sidebar?.classList.toggle("is-open");
-      overlay?.setAttribute(
-        "aria-hidden",
-        sidebar?.classList.contains("is-open") ? "false" : "true"
-      );
-    });
-    overlay?.addEventListener("click", () => {
-      sidebar?.classList.remove("is-open");
-      overlay?.setAttribute("aria-hidden", "true");
-    });
-  }
-
-  function bindFormSubmit(form) {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      hideLineFeedback();
-      const data = collectFormData(form);
-      const result = window.TasuAnpiUserContext?.saveFromRegisterForm?.(data);
-      if (!result?.ok) {
-        showErrors(result?.errors || ["保存に失敗しました。"]);
-        return;
-      }
-      showSuccess(result.context);
-    });
-  }
-
-  function bindContextRestoredRefresh(form) {
-    const refresh = () => {
-      if (form.hidden) return;
-      restoreForm(form);
-      updateLineUi(form);
-    };
-    ["tasu:anpi-context-restored", "tasful:anpi-context-restored"].forEach((name) => {
-      document.addEventListener(name, refresh);
-      window.addEventListener(name, refresh);
-    });
-  }
-
-  async function syncContextAndRefreshForm(form) {
-    await window.TasuAnpiUserContext?.initAnpiUserContext?.();
-    updateLineUi(form);
-    if (!shouldSkipLineTokenExchange()) {
-      void attemptLineTokenExchange(form);
+      setStatus("");
+      return;
     }
+
+    registered = !!settingsRes.data;
+    if (settingsRes.data) {
+      applySettings(settingsRes.data);
+      setStatus("登録済みの設定を表示しています。変更後に保存してください。");
+      if (submitBtn) submitBtn.textContent = "設定を保存する";
+    } else {
+      setStatus("まだ登録がありません。内容を確認して初回登録してください。");
+      if (submitBtn) submitBtn.textContent = "初回登録する";
+    }
+
+    await loadContacts();
   }
 
-  function init() {
-    const root = $("[data-anpi-register-root]");
-    const form = $("[data-anpi-register-form]");
-    if (!root || !form || root.dataset.anpiRegisterBound === "1") return;
-    root.dataset.anpiRegisterBound = "1";
+  form?.addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    if (saving) return;
+    saving = true;
+    if (submitBtn) submitBtn.disabled = true;
+    showErrors([]);
+    setStatus("保存中…");
+    successEl && (successEl.hidden = true);
 
-    bindMenu();
-    bindLineControls(form);
-    bindLineOAuthUnlinkRefresh(form);
-    bindFormSubmit(form);
-    bindContextRestoredRefresh(form);
-    restoreForm(form);
-    updateLineUi(form);
-    void syncContextAndRefreshForm(form);
-  }
+    const payload = collectSettings();
+    if (!payload.weekdays.length) {
+      showErrors(["確認する曜日を1つ以上選択してください。"]);
+      saving = false;
+      if (submitBtn) submitBtn.disabled = false;
+      setStatus("");
+      return;
+    }
+
+    const res = await window.TasuAnpiRpc.upsertMySettings(payload);
+    saving = false;
+    if (submitBtn) submitBtn.disabled = false;
+    if (res.stale) return;
+    if (!res.ok) {
+      showErrors([res.error?.userMessage || "保存に失敗しました"]);
+      setStatus(res.error?.retryable ? "再試行できます。" : "");
+      return;
+    }
+
+    registered = true;
+    applySettings(res.data);
+    setStatus("保存しました。");
+    if (successEl) successEl.hidden = false;
+    if (successMeta) {
+      const t = String(res.data?.initial_notification_time || "").slice(0, 5);
+      successMeta.textContent = `確認時刻 ${t || "—"} / タイムゾーン Asia/Tokyo`;
+    }
+    if (submitBtn) submitBtn.textContent = "設定を保存する";
+  });
+
+  contactAddBtn?.addEventListener("click", async () => {
+    if (contactBusy) return;
+    if (!registered) {
+      showErrors(["先に安否設定を保存（初回登録）してください。"]);
+      return;
+    }
+    const userId = String(form.contact_user_id?.value || "").trim();
+    const uuidRe = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (!uuidRe.test(userId)) {
+      showErrors(["連絡先会員IDはUUID形式で入力してください。"]);
+      return;
+    }
+    contactBusy = true;
+    contactAddBtn.disabled = true;
+    showErrors([]);
+    const res = await window.TasuAnpiRpc.upsertContact({
+      contact_user_id: userId,
+      relationship: form.relationship.value,
+      priority: Number(form.priority.value || 1),
+    });
+    contactBusy = false;
+    contactAddBtn.disabled = false;
+    if (res.stale) return;
+    if (!res.ok) {
+      showErrors([res.error?.userMessage || "連絡先を追加できませんでした"]);
+      return;
+    }
+    form.contact_user_id.value = "";
+    await loadContacts();
+    setStatus("連絡先を追加しました。");
+  });
+
+  contactsList?.addEventListener("click", async (ev) => {
+    const pauseBtn = ev.target.closest("[data-anpi-contact-pause]");
+    const revokeBtn = ev.target.closest("[data-anpi-contact-revoke]");
+    if (contactBusy) return;
+    if (pauseBtn) {
+      const id = pauseBtn.getAttribute("data-id");
+      const paused = pauseBtn.getAttribute("data-paused") === "1";
+      contactBusy = true;
+      const res = await window.TasuAnpiRpc.setContactPaused(id, !paused);
+      contactBusy = false;
+      if (!res.ok && !res.stale) showErrors([res.error?.userMessage || "更新に失敗しました"]);
+      else await loadContacts();
+      return;
+    }
+    if (revokeBtn) {
+      const id = revokeBtn.getAttribute("data-id");
+      if (!window.confirm("この連絡先を削除（取り消す）しますか？")) return;
+      contactBusy = true;
+      const res = await window.TasuAnpiRpc.revokeContact(id);
+      contactBusy = false;
+      if (!res.ok && !res.stale) showErrors([res.error?.userMessage || "削除に失敗しました"]);
+      else await loadContacts();
+    }
+  });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", bootstrap);
   } else {
-    init();
+    bootstrap();
   }
 })();
