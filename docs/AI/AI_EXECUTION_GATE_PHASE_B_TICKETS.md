@@ -1,11 +1,11 @@
 # AI 実行ゲート — Phase B 実装チケット（B1–B6）
 
-**Status:** B1 **実装済（コード）** · B2以降は着手指示待ち · commit 未実施  
+**Status:** B1 PASS · **B2 PASS（local schema · 未 commit）** · B3 以降は着手指示待ち  
 **最終更新:** 2026-07-28  
 **計画正本:** [AI_EXECUTION_GATE_PHASE_B_PLAN.md](./AI_EXECUTION_GATE_PHASE_B_PLAN.md)  
 **設計正本:** [AI_EXECUTION_GATE.md](./AI_EXECUTION_GATE.md)（FREEZE APPROVED 2026-07-28）
 
-> B1 は `_shared/ai-exec-gate-*.mjs` + `scripts/test-ai-exec-gate-phase-b1-constants.mjs` まで。各後続チケットは **明示的な着手指示**があるまで実装しない。Production 非接触 · Staging only · ops only。
+> B1: `_shared/ai-exec-gate-*.mjs` + B1 test（`6b92cad`）。B2: `20260728120000_ai_exec_gate_phase_b2.sql` + B2 test。各後続チケットは **明示的な着手指示**があるまで実装しない。Production 非接触 · Staging only · ops only。
 
 ---
 
@@ -98,45 +98,62 @@ Phase B のコード定数・列挙・Flag/Stop/Budget hard cap・redaction の�
 
 ---
 
-## B2 — 最小 DB migration と RLS / RPC 設計
+## B2 — 最小 DB migration と RLS（監査スキーマ）
+
+### 状態
+
+**B2 PASS（3表 schema · local apply · B1/B2 テスト · 最終レビュー 2026-07-28）** · Staging/Production apply 未実施  
+**Migration:** `supabase/migrations/20260728120000_ai_exec_gate_phase_b2.sql`  
+**Test:** `node scripts/test-ai-exec-gate-phase-b2-db.mjs`  
+**Notes:** `reports/ai-exec-gate-phase-b2-migration-notes.md`
 
 ### 目的
 
-Staging 向けに `ai_execution_requests` / `events` / `results` / `feature_flags` / `emergency_controls` の最小スキーマと RLS（deny-all + service_role）を追加する。
+Staging 向けに execution 監査の最小スキーマと RLS（deny-all + service_role）を追加する。
+
+**最終テーブル（3）:** `ai_execution_requests` · `ai_execution_events` · `ai_execution_results`
+
+### 設定2表を採用しなかった理由（最終レビュー）
+
+PLAN は `ai_feature_flags` / `ai_emergency_controls` を概念オブジェクトとして列挙するが、B1 で Feature Flag / Emergency Stop の **制御正本は env** である。B2 で mutable な DB 制御表を置くと二重正本になり、DB 変更だけで許可・stop 解除に見える経路ができる。よって B2 では **削除**し、request 上の flag/stop **snapshot 列のみ**で監査する。制御の DB 化は後続フェーズで明示決定するまで行わない。
 
 ### 対象ファイル
 
-**新規**
+**新規 / 変更（B2 コミット対象）**
 
-- `supabase/migrations/YYYYMMDDHHMMSS_ai_exec_gate_phase_b.sql`
-- （任意）`reports/ai-exec-gate-phase-b2-migration-notes.md` 設計メモのみ可
+- `supabase/migrations/20260728120000_ai_exec_gate_phase_b2.sql`
+- `scripts/test-ai-exec-gate-phase-b2-db.mjs`
+- `reports/ai-exec-gate-phase-b2-migration-notes.md`
+- 本チケット B2 節
 
-**変更:** なし（既存 SAFE migration 非破壊）
+**変更禁止:** FREEZE · PLAN · B1 modules
 
 ### allowlist
 
-- 上記 5 表のみ（Capability テーブルシードなし）
+- 上記 3 表のみ（Capability テーブルシードなし · 設定2表なし · Gate API/RPC なし）
 - Production apply スクリプトを作らない
 
 ### 依存関係
 
-B1（列・列挙・flag key 名の一致）
+B1（列・列挙 · env 制御正本）
 
 ### テスト
 
-- migration SQL の静的レビュー（CHECK · unique idempotency · append-only 方針）
-- Staging apply は **別途人間承認後**（本チケット定義時点では「設計+SQL 作成」まででも可。apply は明示サブ指示）
+- `node scripts/test-ai-exec-gate-phase-b1-constants.mjs`
+- `node scripts/test-ai-exec-gate-phase-b2-db.mjs`
+- local constraint / RLS probes（notes 参照）
+- Staging apply は **別途人間承認後**
 
 ### 完了条件
 
-- SQL が計画 §4 と一致
-- RLS deny-all + service_role
+- 3 表 · B1/FREEZE 契約整合 · RLS deny-all + 最小 service_role
 - SAFE-06/07 に ALTER 破壊なし
 - Production 向け apply 手順を文書に **書かない / No-Go 明記**
+- Feature Flag / Emergency Stop が B1 env 正本のまま（DB で上書き不可）
 
 ### NO-GO
 
-Production migration · Capability DB シード · proposals/approvals 本運用表 · データ backfill
+Production migration · Capability DB シード · proposals/approvals 本運用表 · データ backfill · B3 API/RPC · Staging/Production apply without approval
 
 ### rollback
 
@@ -144,7 +161,7 @@ Staging で Flag disabled · 必要なら table drop（人間判断）· migrati
 
 ### commit 境界
 
-migration SQL + メモのみ。Functions/UI を混ぜない。
+migration SQL + test + notes + tickets B2 のみ。Functions/UI / B1 を混ぜない。
 
 ---
 
