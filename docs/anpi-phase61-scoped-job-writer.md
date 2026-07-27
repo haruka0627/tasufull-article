@@ -64,4 +64,7 @@ $env:ANPI_P61_SCOPED_WRITER_ENABLED='true'; npm run verify:anpi-scoped-writer
 
 ## Phase 62 gate
 
-Cron soak is **NO-GO** until DB claim allowlist + Cron wiring exist (requires approved staging SQL — see report).
+Cron soak is **NO-GO** until DB claim allowlist + Cron wiring exist.
+
+**SQL review (no apply):** [`docs/anpi-phase62-claim-allowlist-sql-review.md`](./anpi-phase62-claim-allowlist-sql-review.md)  
+**Draft awaiting staging apply approval:** [`sql/anpi-phase62-claim-allowlist-draft.sql`](../sql/anpi-phase62-claim-allowlist-draft.sql)
