@@ -77,6 +77,8 @@ Evidence: [`reports/anpi-phase58-staging-probe.json`](./anpi-phase58-staging-pro
 | `docs/anpi-talk-notification-provider.md` | Design / ops SSOT |
 | `package.json` | `test:anpi-talk-provider` · `verify:anpi-talk-provider` |
 
+**Commit:** `51def26` · branch `anpi/phase58-talk-provider-readiness`
+
 ---
 
 ## Test results
