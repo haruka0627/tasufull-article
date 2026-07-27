@@ -24,7 +24,8 @@ ANPI scheduler job (Phase 6 claim/process)
 | Dedicated ANPI chat | Forbidden — use `official_anpi` |
 | `target_url` | Always `#` (`fixed_hash_no_url`) |
 | Periodic staging runtime today | `talk_local*` via Cloudflare Cron (Phase 56/57) |
-| Real inbox write today | **HARD-DISABLED** (`anpi_talk_real_write_disabled`) |
+| Real inbox write today | **HARD-DISABLED** on Phase 10 job writer (`anpi_talk_real_write_disabled`) |
+| Staging controlled INSERT proof | **Phase 59 PASS** via existing Phase 17 gate (manual probe only · Cron unchanged) |
 
 ## Roles of `talk_local*`
 
@@ -73,7 +74,11 @@ No new dedicated ANPI chat.
 ```bash
 npm run test:anpi-talk-provider
 npm run verify:anpi-talk-provider   # staging health + real-mode disable probe
+npm run test:anpi-controlled-write
+npm run verify:anpi-controlled-write  # staging controlled INSERT (Phase 59)
 ```
+
+See also: [`docs/anpi-phase59-staging-controlled-write.md`](./anpi-phase59-staging-controlled-write.md).
 
 ## Production human steps (when authorized)
 
