@@ -5,36 +5,57 @@
 **Canary identity selected:** **false**
 
 ```text
-ANPI_PHASE66_STATUS: STOPPED_WAITING_HUMAN
-ANPI_PHASE66A_READONLY_AUDIT: PASS (human Dashboard · no SQL errors)
-ANPI_PRODUCTION_CANARY: NOT_STARTED
+ANPI_PHASE66_STATUS: HOLD · RESUME_AFTER_PRO_AND_BACKUP_GATE
+ANPI_PHASE66A_READONLY_AUDIT: PASS
+ANPI_PRODUCTION_SUPABASE_PLAN: FREE (human-confirmed)
+ANPI_P66_BACKUP_GATE: NOT_SATISFIED
+ANPI_PRODUCTION_CANARY: NOT_STARTED · NO-GO
 ANPI_PRODUCTION_CUTOVER: NO-GO
-STOP_REASON: production_missing_anpi_scheduler_jobs · phase4_10_prereq_required · phase65_draft_blocked · canary_identity_unspecified · secrets_unregistered · explicit_approval_missing
+STOP_REASON: formal_hold · free_plan · backup_gate_not_satisfied
+SSOT_HOLD: docs/anpi-production-migration-hold.md
 ```
 
 ---
 
 ## Executive verdict
 
-Phase 66 **cannot** proceed to 66-B (Phase 65 allowlist apply) or Canary PASS.
+**ANPI Production migration is formally ON HOLD.**
 
-Human Production read-only audit **completed** and confirmed a **blocking schema gap**:
+Human-confirmed Production plan is **Free**. Until **Pro (or higher)** and backup gate PASS, do **not** run Phase 2–10 APPLY, Phase 65, Worker, Cron, or Canary on Production. Prefer normal development; resume from the Phase 2–10 apply runbook at pre-launch Pro timing.
+
+| Item | State |
+|------|--------|
+| Phase 66 audit | **PASS** |
+| Missing migrations | Identified (2→10) |
+| Runbook | Ready |
+| Preflight | **PASS** |
+| Phase 2 review | GO_WITH_CONDITIONS |
+| Backup gate | **NOT SATISFIED** (Free) |
+| Production changes | **None** |
+
+Formal hold: [`anpi-production-migration-hold.md`](./anpi-production-migration-hold.md) · backup gate: [`anpi-phase66-production-backup-gate.md`](./anpi-phase66-production-backup-gate.md).
+
+Phase 66 **cannot** proceed to 66-B or Canary PASS while ON HOLD.
+
+Human Production read-only audit **completed** and confirmed a **blocking schema gap** (plus Free-plan backup gate):
 
 | Finding | Evidence |
 |---------|----------|
 | `public.anpi_scheduler_jobs` | **does not exist** (`relation_exists=false`) |
 | pending / processing / leased_active | **NULL** (Section 9) |
 | SQL errors | **none** |
+| Backup / PITR | empty backups · PITR off · Free plan |
 
-Phase 65 Prod allowlist draft **must not** be applied until Phase 4–10 scheduler foundations exist on Production (draft `RETURNS SETOF public.anpi_scheduler_jobs`).
+Phase 65 Prod allowlist draft **must not** be applied until Phase 4–10 scheduler foundations exist on Production (draft `RETURNS SETOF public.anpi_scheduler_jobs`) **and** hold is lifted.
 
 Stop conditions:
 
 | Stop condition | Hit? |
 |----------------|------|
+| Formal HOLD (Free + backup gate) | **YES** |
 | Unexpected Production delta | **YES** — scheduler jobs relation missing |
 | Phase 65 draft apply | **BLOCKED** |
-| Secret / canary / cutover approval | Still required later |
+| Secret / canary / cutover approval | Later (after resume) |
 
 **No** Production migration, Worker deploy, Secrets put, Cron enable, gate enable, notification, or canary registration was performed.
 

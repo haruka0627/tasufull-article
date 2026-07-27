@@ -1,14 +1,18 @@
 # ANPI Phase 66 — Production backup gate (resume conditions)
 
-**Status:** INVESTIGATION / RUNBOOK SUPPLEMENT · **Phase 2 APPLY still FORBIDDEN**  
+**Status:** HOLD supplement · **Phase 2 APPLY FORBIDDEN**  
 **Target:** `ddojquacsyqesrjhcvmn`  
-**Recorded:** 2026-07-27 (CLI evidence from APPLY stop)  
-**Production change SQL:** none in this document’s session
+**Recorded:** 2026-07-27 (CLI) · plan confirmed Free 2026-07-28  
+**Production change SQL:** none
 
 ```text
-ANPI_P66_BACKUP_GATE: NOT_SATISFIED (as of last CLI check)
-ANPI_P66_PHASE2_APPLY: FORBIDDEN until gate PASS + fresh human GO
+ANPI_P66_BACKUP_GATE: NOT_SATISFIED · PRODUCTION_PLAN_FREE
+ANPI_P66_PHASE2_APPLY: FORBIDDEN · SEE docs/anpi-production-migration-hold.md
+ANPI_PRODUCTION_MIGRATION: HOLD until Pro + gate PASS + human GO
 ```
+
+**Human-confirmed:** Production Supabase plan is **Free** (2026-07-28).  
+Formal hold: [`anpi-production-migration-hold.md`](./anpi-production-migration-hold.md).
 
 ---
 
@@ -32,12 +36,13 @@ ANPI_P66_PHASE2_APPLY: FORBIDDEN until gate PASS + fresh human GO
 | `pitr_enabled: false` | PITR add-on **off** |
 | `walg_enabled: true` | WAL-G plumbing may exist, but **empty list ≠ usable restore point** |
 
-### Plan (human Dashboard confirmation required)
+### Plan (human-confirmed 2026-07-28)
 
-CLI `projects list` does **not** expose billing plan. Human must open:
+**Production is on the Free plan.** Automatic daily backups are **not** included on Free. This is why `backups: []` and the APPLY stop are expected until Pro.
+
+Human must still verify Billing in Dashboard when resuming:
 
 `https://supabase.com/dashboard/project/ddojquacsyqesrjhcvmn/settings/billing`  
-and  
 `https://supabase.com/dashboard/project/ddojquacsyqesrjhcvmn/database/backups/scheduled`
 
 | Plan (docs) | Automatic daily backups | PITR |
@@ -47,7 +52,7 @@ and
 | **Team** | Yes · 14 days | Add-on |
 | **Enterprise** | Yes · up to 30 days | Add-on / custom |
 
-**Inference (not a substitute for Dashboard):** empty `backups` + no PITR is consistent with **Free** (or Pro before first completed backup appears). Human must confirm actual plan.
+**Inference superseded:** plan is **confirmed Free**, not merely inferred.
 
 ---
 
