@@ -54,11 +54,12 @@ Stop conditions:
 | `anpi_prod_*` / `anpi_phase62_*` | **404** |
 | OpenAPI | **401** |
 
-### 1.2 Human Dashboard audit — **COMPLETED**
+### 1.2 Human Dashboard audit — **COMPLETED** (Section 9) · Section 1–2 pending paste
 
-- Script: [`sql/anpi-phase66-production-readonly-audit.sql`](../sql/anpi-phase66-production-readonly-audit.sql) (dynamic Section 3/9 · `ccd623d`)
-- Result: **PASS** (no SQL errors)
-- Section 9 final row (reported):
+- Full script: [`sql/anpi-phase66-production-readonly-audit.sql`](../sql/anpi-phase66-production-readonly-audit.sql) (Editor may show only last result)
+- Section 1 only: [`sql/anpi-phase66-production-readonly-audit-section1-tables.sql`](../sql/anpi-phase66-production-readonly-audit-section1-tables.sql)
+- Section 2 only: [`sql/anpi-phase66-production-readonly-audit-section2-matrix.sql`](../sql/anpi-phase66-production-readonly-audit-section2-matrix.sql)
+- Section 9 final row (reported · PASS · no SQL errors):
 
 | Column | Value |
 |--------|-------|

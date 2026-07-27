@@ -8,6 +8,10 @@
 -- PATH IN REPO: sql/anpi-phase66-production-readonly-audit.sql
 -- BRANCH: anpi/phase66-production-canary (PR #24) — not yet on main
 --
+-- TIP: Supabase SQL Editor shows only the last result set. For Section 1 / 2 alone:
+--   sql/anpi-phase66-production-readonly-audit-section1-tables.sql
+--   sql/anpi-phase66-production-readonly-audit-section2-matrix.sql
+--
 -- NOTE: Sections 3 and 9 use dynamic SQL (EXECUTE) + session GUC so missing
 -- relations do NOT fail at parse/plan time (avoids ERROR 42P01).
 -- =============================================================================
