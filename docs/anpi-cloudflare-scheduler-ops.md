@@ -69,3 +69,6 @@ node scripts/verify-anpi-phase57-cf-cron-continuity.mjs
 - Provider must start with `talk_local`
 - Do not log secrets / PII / notification bodies
 - Production Worker / Cron / Secrets: **human gate only**
+- Config switches: **runtime pause before** scoped flag / secret / gate changes (Phase 63 race · Phase 64 runbook)
+
+Production cutover plan (not executed here): [`docs/anpi-phase64-production-cutover-plan.md`](./anpi-phase64-production-cutover-plan.md)
