@@ -8,8 +8,11 @@
 
 | Kind | Files |
 |------|-------|
-| Preflight | `00-preflight-readonly.sql`, `00-legacy-guard-readonly.sql` |
-| Apply (full SQL) | `01`…`08`-phase*-APPLY-*.sql |
-| Verify | `verify-after-phase{2,3,4,5,6,8,9,10}.sql` |
+| Preflight splits | `preflight/01`…`05` + `00-legacy-guard-readonly.sql` |
+| Preflight index | `00-preflight-readonly.sql` |
+| Apply (full SQL) | `01`…`08`-phase*-APPLY-*.sql (**DO NOT RUN without GO**) |
+| Phase 2 verify splits | `verify-phase2/01`…`12` |
+| Phase 2 verify index | `verify-after-phase2.sql` |
+| Later phase verifies | `verify-after-phase{3,4,5,6,8,9,10}.sql` |
 
 Out of scope: Phase 65 · Worker · Cron · Canary.

@@ -1,5 +1,4 @@
--- SELECT only · legacy v1 four tables (single result)
--- Record column_count baseline before any APPLY
+-- SELECT only · after Phase 2 APPLY · legacy v1 four tables still present
 
 select
   t.table_name,
@@ -19,4 +18,4 @@ from (
 ) as t(table_name)
 order by 1;
 
--- Pass: 4 rows · exists=true for all · column_count stable vs prior capture
+-- Pass: exists=true for all 4 · column_count unchanged vs pre-APPLY baseline

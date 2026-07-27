@@ -65,10 +65,16 @@ Phase2 → Phase3 → Phase4 → Phase5 → Phase6 → Phase8 → Phase9 → Pha
 ## 事前監査（全ステップ共通 · apply 前）
 
 1. Dashboard: Reference ID = **`ddojquacsyqesrjhcvmn`**（Staging なら即停止）  
-2. Run `sql/anpi-phase66-prod-apply/00-preflight-readonly.sql`  
-3. Run `sql/anpi-phase66-prod-apply/00-legacy-guard-readonly.sql` · 記録 column_count  
-4. Confirm collision query: Phase 2–10 object names **`already_exists=false`** before Step 1  
-5. Extensions: note whether `pgcrypto` already exists (Phase 6 will `CREATE EXTENSION IF NOT EXISTS`)  
+2. Run **one file at a time** (Editor shows last Result only):  
+   - `sql/anpi-phase66-prod-apply/preflight/01-ref-confirm-readonly.sql`  
+   - `…/preflight/02-phase2-collision-readonly.sql`  
+   - `…/preflight/03-gen-random-uuid-readonly.sql`  
+   - `…/preflight/04-extensions-readonly.sql`  
+   - `…/preflight/05-anpi-inventory-readonly.sql`  
+   - `sql/anpi-phase66-prod-apply/00-legacy-guard-readonly.sql`  
+3. Index pointer (not a substitute): `00-preflight-readonly.sql`  
+4. Confirm collision: Phase 2 names **`already_exists=false`** before Step 1  
+5. Confirm `gen_random_uuid_callable=true`  
 6. Capture backup / PITR window note (human ops)  
 7. **Human GO for Step N only** (not blanket approval for all 8)
 
@@ -131,7 +137,7 @@ Phase2 → Phase3 → Phase4 → Phase5 → Phase6 → Phase8 → Phase9 → Pha
 | **Human GO required** | YES — before paste |
 | Pre-checks | preflight PASS · collisions all false · legacy 4 OK |
 | Apply SQL (full) | [`01-phase2-APPLY-20260727020000_anpi_phase2_data_foundation.sql`](../sql/anpi-phase66-prod-apply/01-phase2-APPLY-20260727020000_anpi_phase2_data_foundation.sql) |
-| Post verify | [`verify-after-phase2.sql`](../sql/anpi-phase66-prod-apply/verify-after-phase2.sql) + legacy guard |
+| Post verify | Split files under [`verify-phase2/`](../sql/anpi-phase66-prod-apply/verify-phase2/) (01–12 · one Result each); index [`verify-after-phase2.sql`](../sql/anpi-phase66-prod-apply/verify-after-phase2.sql) |
 | Pass criteria | `anpi_settings` / checks / contacts / invitations / deliveries / audit_logs exist · RLS on · grants match design · legacy intact |
 | Danger | Large DDL surface · SECURITY DEFINER RPCs · must not touch legacy tables (by design) |
 
@@ -218,8 +224,8 @@ Phase2 → Phase3 → Phase4 → Phase5 → Phase6 → Phase8 → Phase9 → Pha
 
 | After | File |
 |-------|------|
-| Always | `00-legacy-guard-readonly.sql` |
-| Phase 2 | `verify-after-phase2.sql` |
+| Always | `00-legacy-guard-readonly.sql` · preflight splits under `preflight/` |
+| Phase 2 | `verify-phase2/01`…`12` (index: `verify-after-phase2.sql`) |
 | Phase 3 | `verify-after-phase3.sql` |
 | Phase 4 | `verify-after-phase4.sql` |
 | Phase 5 | `verify-after-phase5.sql` |
