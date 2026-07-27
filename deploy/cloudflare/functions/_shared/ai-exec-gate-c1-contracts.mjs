@@ -43,6 +43,8 @@ export const PHASE_C1_COUNT_KEYS = Object.freeze([
 export const PHASE_C1_SOURCE_STATUSES = Object.freeze([
   "available",
   "unavailable",
+  "unsupported",
+  "disabled",
 ]);
 
 export const PHASE_C1_PRIORITIES = Object.freeze([
@@ -63,6 +65,14 @@ export const PHASE_C1_ERROR_CODES = Object.freeze({
   INVALID_ADAPTER_OUTPUT: "INVALID_ADAPTER_OUTPUT",
   OUTPUT_VALIDATION_FAILED: "OUTPUT_VALIDATION_FAILED",
   INTERNAL_EXECUTION_ERROR: "INTERNAL_EXECUTION_ERROR",
+  INVALID_REQUEST: "INVALID_REQUEST",
+  INVALID_WARNING: "INVALID_WARNING",
+  INVALID_LIMIT: "INVALID_LIMIT",
+  UNKNOWN_SOURCE: "UNKNOWN_SOURCE",
+  PROTOTYPE_POLLUTION: "PROTOTYPE_POLLUTION",
+  REDACTION_REJECTED: "REDACTION_REJECTED",
+  UNICODE_REJECTED: "UNICODE_REJECTED",
+  PAYLOAD_TOO_LARGE: "PAYLOAD_TOO_LARGE",
 });
 
 /** Keys never accepted on collector / request / output surfaces. */
@@ -70,16 +80,28 @@ export const PHASE_C1_PROHIBITED_KEYS = Object.freeze([
   "email",
   "phone",
   "name",
+  "address",
   "raw_message",
   "chat_body",
   "message_body",
+  "user_content",
   "payment",
+  "card",
+  "cvv",
+  "iban",
   "token",
+  "access_token",
+  "refresh_token",
   "password",
+  "passwd",
   "authorization",
+  "cookie",
   "api_key",
   "apikey",
   "secret",
+  "session",
+  "credential",
+  "private_key",
   "stack",
   "stack_trace",
   "prompt",
@@ -88,11 +110,14 @@ export const PHASE_C1_PROHIBITED_KEYS = Object.freeze([
   "user_id",
   "email_body",
   "anpi_answer_body",
+  "bearer",
 ]);
 
 const PROHIBITED_SET = new Set(
   PHASE_C1_PROHIBITED_KEYS.map((k) => k.toLowerCase())
 );
+
+const POLLUTION_KEYS = new Set(["__proto__", "prototype", "constructor"]);
 
 /**
  * @param {unknown} key
@@ -100,6 +125,14 @@ const PROHIBITED_SET = new Set(
 export function isPhaseC1ProhibitedKey(key) {
   if (typeof key !== "string") return true;
   return PROHIBITED_SET.has(key.toLowerCase());
+}
+
+/**
+ * @param {unknown} key
+ */
+export function isPhaseC1PollutionKey(key) {
+  if (typeof key !== "string") return true;
+  return POLLUTION_KEYS.has(key) || POLLUTION_KEYS.has(key.toLowerCase());
 }
 
 /**
@@ -217,6 +250,9 @@ export function validateSourceErrorList(list) {
 export function rejectUnknownKeys(obj, allowKeys) {
   const allow = allowKeys instanceof Set ? allowKeys : new Set(allowKeys);
   for (const key of Object.keys(obj)) {
+    if (isPhaseC1PollutionKey(key)) {
+      return { ok: false, error: PHASE_C1_ERROR_CODES.PROTOTYPE_POLLUTION };
+    }
     if (isPhaseC1ProhibitedKey(key)) {
       return { ok: false, error: PHASE_C1_ERROR_CODES.INVALID_COLLECTOR_INPUT };
     }

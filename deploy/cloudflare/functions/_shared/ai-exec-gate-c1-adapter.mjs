@@ -11,6 +11,13 @@ import {
   validateOpsReportProviderRequest,
   validateOpsReportValidatedResult,
 } from "./ai-exec-gate-c1-contracts.mjs";
+import {
+  deterministicComparePayload,
+  hardenUnicodeString,
+  hardenValidatedResult,
+} from "./ai-exec-gate-c2-hardening.mjs";
+
+export { deterministicComparePayload };
 
 /**
  * @typedef {{
@@ -162,12 +169,30 @@ export function generateDeterministicOpsReport(args) {
   if (warningCodes.length > 0) {
     summary += ` システム警告コード数:${warningCodes.length}。`;
   }
-  const unavailableKeys = Object.entries(availability)
-    .filter(([, st]) => st === "unavailable")
-    .map(([k]) => k);
-  if (unavailableKeys.length > 0) {
-    summary += ` 取得不可ソース数:${unavailableKeys.length}。`;
+  const unavailableN = Object.values(availability).filter(
+    (st) => st === "unavailable"
+  ).length;
+  const unsupportedN = Object.values(availability).filter(
+    (st) => st === "unsupported"
+  ).length;
+  const disabledN = Object.values(availability).filter(
+    (st) => st === "disabled"
+  ).length;
+  if (unavailableN > 0) {
+    summary += ` 取得失敗ソース数:${unavailableN}。`;
   }
+  if (unsupportedN > 0) {
+    summary += ` 未対応ソース数:${unsupportedN}。`;
+  }
+  if (disabledN > 0) {
+    summary += ` 無効化ソース数:${disabledN}。`;
+  }
+
+  const summaryHard = hardenUnicodeString(summary, { rejectOnDanger: true });
+  if (!summaryHard.ok) {
+    return { ok: false, error: PHASE_C1_ERROR_CODES.UNICODE_REJECTED };
+  }
+  summary = summaryHard.value;
 
   /** @type {Record<string, number>} */
   const warning_counts = {};
@@ -195,7 +220,11 @@ export function generateDeterministicOpsReport(args) {
   if (!validated.ok) {
     return { ok: false, error: PHASE_C1_ERROR_CODES.OUTPUT_VALIDATION_FAILED };
   }
-  return { ok: true, result: Object.freeze({ ...validated.value }) };
+  const hardenedOut = hardenValidatedResult(validated.value);
+  if (!hardenedOut.ok) {
+    return { ok: false, error: PHASE_C1_ERROR_CODES.OUTPUT_VALIDATION_FAILED };
+  }
+  return { ok: true, result: Object.freeze({ ...hardenedOut.value }) };
 }
 
 /**

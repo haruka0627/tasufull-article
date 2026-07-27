@@ -17,6 +17,13 @@ import {
   validateDailyOpsCollectorInput,
   validateDailyOpsSanitizedSnapshot,
 } from "./ai-exec-gate-c1-contracts.mjs";
+import {
+  hardenIncomingPayload,
+  normalizeExternalError,
+  normalizeSourceAvailability,
+  normalizeWarningCodeList,
+  PHASE_C2_ERROR_CODES,
+} from "./ai-exec-gate-c2-hardening.mjs";
 
 /**
  * @typedef {{
@@ -24,7 +31,7 @@ import {
  *   count_key: string,
  *   read: (ctx: { business_date_jst: string }) =>
  *     | { status: "available", count: number, warning_codes?: string[] }
- *     | { status: "unavailable", error_code?: string, warning_codes?: string[] }
+ *     | { status: "unavailable"|"unsupported"|"disabled", error_code?: string, warning_codes?: string[] }
  * }} DailyOpsSourceAdapter
  */
 
@@ -48,31 +55,12 @@ export function createDefaultDailyOpsSources() {
 }
 
 /**
- * Normalize / dedupe / cap opaque warning codes.
+ * Normalize / dedupe / cap opaque warning codes (C2 allowlist).
  * @param {unknown[]} codes
  * @returns {string[]}
  */
 export function normalizeWarningCodes(codes) {
-  const out = [];
-  const seen = new Set();
-  if (!Array.isArray(codes)) return out;
-  for (const raw of codes) {
-    if (typeof raw !== "string") continue;
-    const code = raw.trim();
-    if (
-      !code ||
-      code.length > PHASE_C1_LIMITS.MAX_WARNING_CODE_LENGTH ||
-      !/^[a-z0-9_.:-]+$/i.test(code)
-    ) {
-      continue;
-    }
-    const key = code.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(code);
-    if (out.length >= PHASE_C1_LIMITS.MAX_WARNING_CODES) break;
-  }
-  return out;
+  return normalizeWarningCodeList(codes);
 }
 
 /**
@@ -92,7 +80,19 @@ export function normalizeWarningCodes(codes) {
  * }}
  */
 export function collectDailyOperationsSnapshot(args = {}) {
-  const validated = validateDailyOpsCollectorInput(args.input || {});
+  const incoming = args.input || {};
+  const hardened = hardenIncomingPayload(incoming);
+  if (!hardened.ok) {
+    return {
+      ok: false,
+      error: normalizeExternalError(
+        hardened.error,
+        PHASE_C2_ERROR_CODES.INVALID_REQUEST
+      ),
+    };
+  }
+
+  const validated = validateDailyOpsCollectorInput(incoming);
   if (!validated.ok) return validated;
 
   const input = validated.value;
@@ -102,7 +102,7 @@ export function collectDailyOperationsSnapshot(args = {}) {
       : createDefaultDailyOpsSources();
 
   if (sources.length > PHASE_C1_LIMITS.MAX_COUNT_FIELDS) {
-    return { ok: false, error: PHASE_C1_ERROR_CODES.INVALID_COLLECTOR_INPUT };
+    return { ok: false, error: PHASE_C1_ERROR_CODES.INVALID_LIMIT };
   }
 
   /** @type {Record<string, number|null>} */
@@ -114,6 +114,11 @@ export function collectDailyOperationsSnapshot(args = {}) {
   /** @type {string[]} */
   const warningAccum = [];
 
+  const pushError = (code) => {
+    const n = normalizeExternalError(code, PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
+    if (!source_errors.includes(n)) source_errors.push(n);
+  };
+
   for (const src of sources) {
     if (!src || typeof src !== "object") {
       return { ok: false, error: PHASE_C1_ERROR_CODES.INVALID_COLLECTOR_INPUT };
@@ -123,7 +128,7 @@ export function collectDailyOperationsSnapshot(args = {}) {
       typeof countKey !== "string" ||
       !PHASE_C1_COUNT_KEYS.includes(countKey)
     ) {
-      return { ok: false, error: PHASE_C1_ERROR_CODES.INVALID_COLLECTOR_INPUT };
+      return { ok: false, error: PHASE_C1_ERROR_CODES.UNKNOWN_SOURCE };
     }
     if (typeof src.read !== "function") {
       return { ok: false, error: PHASE_C1_ERROR_CODES.INVALID_COLLECTOR_INPUT };
@@ -135,60 +140,59 @@ export function collectDailyOperationsSnapshot(args = {}) {
     } catch {
       counts[countKey] = null;
       count_availability[countKey] = "unavailable";
-      if (!source_errors.includes(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE)) {
-        source_errors.push(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
-      }
+      pushError(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
       continue;
     }
 
     if (!result || typeof result !== "object" || Array.isArray(result)) {
       counts[countKey] = null;
       count_availability[countKey] = "unavailable";
-      if (!source_errors.includes(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE)) {
-        source_errors.push(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
-      }
+      pushError(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
       continue;
     }
 
-    const status = result.status;
+    const status = normalizeSourceAvailability(result.status);
     if (status === "available") {
       const cv = validateCountInteger(result.count, { allowNull: false });
       if (!cv.ok) {
         counts[countKey] = null;
         count_availability[countKey] = "unavailable";
-        if (!source_errors.includes(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE)) {
-          source_errors.push(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
-        }
+        pushError(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
         continue;
       }
-      // Prefer first successful read for a key; do not invent merges.
-      if (!(countKey in counts) || count_availability[countKey] === "unavailable") {
+      // Prefer first successful available read; do not invent merges.
+      if (count_availability[countKey] !== "available") {
         counts[countKey] = cv.value;
         count_availability[countKey] = "available";
       }
       if (Array.isArray(result.warning_codes)) {
         warningAccum.push(...result.warning_codes);
       }
-    } else if (status === "unavailable") {
-      if (!(countKey in counts)) {
+    } else if (
+      status === "unavailable" ||
+      status === "unsupported" ||
+      status === "disabled"
+    ) {
+      // Never coerce failure/unsupported/disabled into 0.
+      if (count_availability[countKey] !== "available") {
         counts[countKey] = null;
-        count_availability[countKey] = "unavailable";
+        count_availability[countKey] = status;
       }
       const code =
         typeof result.error_code === "string" &&
         Object.values(PHASE_C1_ERROR_CODES).includes(result.error_code)
           ? result.error_code
-          : PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE;
-      if (!source_errors.includes(code)) source_errors.push(code);
+          : status === "unavailable"
+            ? PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE
+            : PHASE_C1_ERROR_CODES.UNKNOWN_SOURCE;
+      pushError(code);
       if (Array.isArray(result.warning_codes)) {
         warningAccum.push(...result.warning_codes);
       }
     } else {
       counts[countKey] = null;
       count_availability[countKey] = "unavailable";
-      if (!source_errors.includes(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE)) {
-        source_errors.push(PHASE_C1_ERROR_CODES.SOURCE_UNAVAILABLE);
-      }
+      pushError(PHASE_C1_ERROR_CODES.UNKNOWN_SOURCE);
     }
   }
 
@@ -215,9 +219,10 @@ export function collectDailyOperationsSnapshot(args = {}) {
     source_errors: Object.freeze([...source_errors]),
     limitations: Object.freeze([
       "Phase C1 sanitized count collector",
+      "Phase C2 availability: available|unavailable|unsupported|disabled",
       "No live DB tables invented",
       "No provider invocation",
-      "0 available !== unavailable",
+      "zero available is not failure",
     ]),
   });
 

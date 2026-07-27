@@ -337,8 +337,17 @@ console.log("\nC1 — collector");
   });
   assert("duplicate warning collapsed", warn.ok);
   assert(
-    "unknown/invalid warning dropped",
+    "invalid warning format dropped",
     !warn.snapshot.system_warning_codes.includes("BAD CODE!!")
+  );
+  assert(
+    "unknown warning normalized",
+    warn.snapshot.system_warning_codes.includes("UNKNOWN_WARNING_CODE") ||
+      warn.snapshot.system_warning_codes.includes("gate.lease")
+  );
+  assert(
+    "allowlisted warning kept",
+    warn.snapshot.system_warning_codes.includes("gate.lease")
   );
   assert(
     "warning cap",
