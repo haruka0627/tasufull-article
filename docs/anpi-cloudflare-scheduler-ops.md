@@ -14,6 +14,9 @@ Cloudflare Cron / diagnostic POST
   → Phase 47 notification runtime core
 ```
 
+**Provider today:** `talk_local*` only (stub · no user inbox).  
+**Canonical Production design path:** Phase 10 `talk_notifications` writer — see [`docs/anpi-talk-notification-provider.md`](./anpi-talk-notification-provider.md). Real inbox write remains hard-disabled until a human enablement gate.
+
 ## Secrets (never commit)
 
 ```bash
