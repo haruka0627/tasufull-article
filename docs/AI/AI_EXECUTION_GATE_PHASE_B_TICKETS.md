@@ -387,18 +387,30 @@ client + dashboard 最小差分 + GET result スライス + 表示確認メモ�
 
 ## B6 — テスト・Staging 検証・証跡
 
+### 状態
+
+**PASS_WITH_KNOWN_RISKS（local integration · 2026-07-28）** · Production/Staging deploy 未実施 · push 未実施  
+**Suite:** `node scripts/test-ai-exec-gate-phase-b-suite.mjs`  
+**Integration:** `node scripts/test-ai-exec-gate-phase-b6-integration.mjs`  
+**Evidence:** `reports/ai-exec-gate-phase-b6-integration-evidence.md`  
+**Pointer:** `reports/ai-exec-gate-phase-b-verification.md`
+
 ### 目的
 
-B1–B5 の統合回帰・Staging 検証・証跡レポートを完了し Phase B 縦スライスを閉じる。
+B1–B5 の統合回帰・ローカル検証・証跡レポートを完了し Phase B 縦スライスを閉じる。
 
 ### 対象ファイル
 
 **新規**
 
-- `scripts/test-ai-exec-gate-phase-b-suite.mjs`（または分割の統合ランナー）
+- `scripts/test-ai-exec-gate-phase-b-suite.mjs`
+- `scripts/test-ai-exec-gate-phase-b6-integration.mjs`
+- `reports/ai-exec-gate-phase-b6-integration-evidence.md`
 - `reports/ai-exec-gate-phase-b-verification.md`
+- `reports/ai-exec-gate-phase-b6-*.png`（viewport 証跡 · token なし）
+- `reports/ai-exec-gate-phase-b6-run-meta.json`
 
-**変更:** テストの足りない assert のみ
+**変更:** 本チケット B6 節のみ（機能コード変更なし）
 
 ### allowlist
 
@@ -410,21 +422,28 @@ B1–B5
 
 ### テスト
 
-- 計画 §16 の全項目
-- Negative: 非 ops · flag · stop · cap · 二重実行 · allowlist 外
-- 秘書既存回帰
-- Staging only であることの記録
+- `node scripts/test-ai-exec-gate-phase-b-suite.mjs` → PASS
+- Negative: 非 ops claims · no/invalid token · cross-actor get · allowlist 外 key length
+- Dashboard execute なし · provider なし
+- Playwright: injected session + routed Gate create/get（実 ops JWT 未 mint）
+- Staging only / Production 非接触を証跡に記録
 
 ### 完了条件
 
 - 統合テスト PASS
-- 8788 証跡（HTTP Status · Console Error · Viewport）
-- Phase B NO-GO 再確認チェックリスト完了
-- Production 非接触の証明（変更環境の記述）
+- 8788 証跡（HTTP Status · Viewport · Gate network）
+- Phase B NO-GO 再確認チェックリスト完了（evidence §18）
+- Production 非接触の証明
+
+### Known risks（証跡に残置）
+
+- B4 rare running orphan
+- 実 ops JWT browser E2E 未実施（injected session で代替）
+- Production runtime 未実施
 
 ### NO-GO
 
-新機能 · Production deploy · 追加 Capability
+新機能 · Production deploy · 追加 Capability · provider · MCP · Cron · Worker · Queue
 
 ### rollback
 
