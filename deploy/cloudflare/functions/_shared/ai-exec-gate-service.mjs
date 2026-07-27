@@ -82,9 +82,10 @@ export function mapGetResponse(row, events = []) {
     correlation_id: row.correlation_id || null,
     parent_execution_id: row.parent_execution_id,
     created_at: row.created_at,
-    /** Phase B3 stub only — no executor / provider / external side effect */
+    /** Phase B4 pipeline flag when stub events exist (legacy B3) or succeeded with result */
     stub: stubTouched,
-    pipeline_invoked: false,
+    pipeline_invoked: !stubTouched && row.execution_status === "succeeded",
+    provider_called: false,
     events: (events || []).map((e) => ({
       sequence_number: e.sequence_number,
       event_type: e.event_type,

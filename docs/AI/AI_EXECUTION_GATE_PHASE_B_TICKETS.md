@@ -238,33 +238,48 @@ gate API + policy/service/repository + B3 テスト + tickets/notes。秘書 UI 
 
 ---
 
-## B4 — Secretary executor 接続
+## B4 — Secretary executor 接続（deterministic pipeline）
+
+### 状態
+
+**B4 PASS（executor · atomic claim · deterministic collect/report · results · 2026-07-28）** · Staging/Production deploy 未実施 · commit は別途明示指示  
+**Route:** `POST /api/ai-exec-gate/execute` → `executeGatePipeline`  
+**Test:** `node scripts/test-ai-exec-gate-phase-b4-executor.mjs`  
+**Notes:** `reports/ai-exec-gate-phase-b4-executor-notes.md`
 
 ### 目的
 
-単一 pipeline 内で `ops_collector` → `secretary_deepseek` → `gate_audit_writer` を接続し、日次未対応レポートを完成させる。
+単一 pipeline 内で `ops_collector` → `secretary_deepseek`（**port 境界 · 外部 DeepSeek 非接続**）→ `gate_audit_writer` を接続し、日次未対応レポートを **deterministic** に完成させる。
 
 ### 対象ファイル
 
-**変更（最小）**
+**新規**
 
-- `admin-ai-daily-inbox.js`（読取再利用）
-- `admin-ai-secretary-morning-report.js` / `admin-ai-secretary-ops-context.js`（材料再利用）
-- `admin-ai-secretary-deepseek-adapter.js`（既存契約で呼出）
-- `deploy/cloudflare/functions/api/ai-exec-gate-execute.js`（pipeline 実装）
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-executor.mjs`
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-ops-collector.mjs`
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-report-generator.mjs`
+- `scripts/test-ai-exec-gate-phase-b4-executor.mjs`
+- `reports/ai-exec-gate-phase-b4-executor-notes.md`
+
+**変更**
+
+- `deploy/cloudflare/functions/api/ai-exec-gate/execute.js`
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-repository.mjs`（atomic claim · insert-only result）
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-policy.mjs`（B4 event / failure codes）
+- `deploy/cloudflare/functions/_shared/ai-exec-gate-service.mjs`（GET flags）
+- 本チケット B4 節
 
 **原則非変更**
 
 - `deploy/cloudflare/functions/api/secretary-deepseek-chat.js`
-
-**新規（任意）**
-
-- `deploy/cloudflare/functions/_shared/ai-exec-gate-executor-secretary.mjs`
+- FREEZE / PLAN · B2 migration · admin-ai browser modules（B4 では edge fixture collector）
 
 ### allowlist
 
 - Capability 2 つの内部 step のみ
 - 外部送信・Gmail・業務テーブル UPDATE/DELETE なし
+- **外部 AI provider call なし**（DeepSeek/OpenAI/Gemini/Claude）
+- empty-safe deterministic collector + template report
 
 ### 依存関係
 
@@ -273,20 +288,22 @@ B3
 ### テスト
 
 - collect が LLM を呼ばない
-- report が既存 Adapter 経路
+- report が deterministic（provider なし）
 - events に step_* が並ぶ
-- 失敗時 failed + サニタイズ error
-- 既存秘書回帰スクリプト維持
+- atomic claim · concurrent 拒否 · success replay · result overwrite 拒否
+- timeout · collector/generator/result/event failure paths
+- 失敗時 failed + サニタイズ error · running orphan log
+- B1/B2/B3 regression
 
 ### 完了条件
 
 - 1 execution で取得→要約→結果保存まで成功パス
 - 子 execution なし
-- AD-010 維持（Gateway 非混在）
+- AD-010 維持（Gateway 非混在 · DeepSeek Function 非接続）
 
 ### NO-GO
 
-Orchestrator 大規模改修 · Human Send Gate 送信 · 問い合わせ送信 · max_attempts>1
+Orchestrator 大規模改修 · Human Send Gate 送信 · 問い合わせ送信 · max_attempts>1 · 外部 provider · migration
 
 ### rollback
 
@@ -294,7 +311,7 @@ execute を stub に戻す · Flag disabled
 
 ### commit 境界
 
-executor 接続 + 最小秘書再利用差分 + B4 テスト。Dashboard HTML は B5。
+executor + collector/report adapters + repository/policy + B4 テスト/notes。Dashboard HTML は B5。
 
 ---
 

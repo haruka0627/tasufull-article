@@ -1,7 +1,7 @@
 /**
- * AI Execution Gate — Phase B3 DB repository (service_role REST only).
- * Tables: ai_execution_requests · ai_execution_events
- * Does not touch ai_execution_results.
+ * AI Execution Gate — Phase B2–B4 DB repository (service_role REST only).
+ * Tables: ai_execution_requests · ai_execution_events · ai_execution_results
+ * Results: insert-only (never overwrite).
  */
 
 /**
@@ -149,14 +149,19 @@ export async function insertExecutionRequest(cfg, row) {
  * @param {Record<string, unknown>} eventRow
  */
 export async function insertExecutionEvent(cfg, eventRow) {
-  const { res, json } = await rest(cfg, "/rest/v1/ai_execution_events", {
+  const { res, json, text } = await rest(cfg, "/rest/v1/ai_execution_events", {
     method: "POST",
     prefer: "return=representation",
     body: JSON.stringify(eventRow),
   });
   if (!res.ok) {
+    const code = json?.code || "";
     const err = new Error("db_event_insert_failed");
-    err.code = "db_unavailable";
+    if (String(code) === "23505" || /duplicate|unique/i.test(text || "")) {
+      err.code = "unique_violation";
+    } else {
+      err.code = "db_unavailable";
+    }
     throw err;
   }
   const inserted = Array.isArray(json) ? json[0] : json;
@@ -203,8 +208,158 @@ export async function listEventsForExecution(cfg, executionId) {
 }
 
 /**
+ * Atomic claim: queued + allowed → running (PostgREST conditional PATCH).
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
+ * @param {string} id
+ * @param {{ startedAt?: string, attempts?: number }} [opts]
+ * @returns {Promise<{ ok: true, row: Record<string, unknown> } | { ok: false, reason: string }>}
+ */
+export async function claimQueuedExecution(cfg, id, opts = {}) {
+  const path =
+    `/rest/v1/ai_execution_requests?id=eq.${encodeURIComponent(id)}` +
+    `&execution_status=eq.queued` +
+    `&preflight_decision=eq.allowed` +
+    `&parent_execution_id=is.null`;
+  const patch = {
+    execution_status: "running",
+    started_at: opts.startedAt || new Date().toISOString(),
+    execution_attempts:
+      typeof opts.attempts === "number" ? opts.attempts : 1,
+    executor_name: "ops_collector",
+  };
+  const { res, json } = await rest(cfg, path, {
+    method: "PATCH",
+    prefer: "return=representation",
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) {
+    const err = new Error("db_claim_failed");
+    err.code = "db_unavailable";
+    throw err;
+  }
+  const row = Array.isArray(json) ? json[0] : null;
+  if (!row) {
+    return { ok: false, reason: "not_claimed" };
+  }
+  return { ok: true, row };
+}
+
+/**
+ * Conditional status transition.
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
+ * @param {string} id
+ * @param {string} fromStatus
+ * @param {Record<string, unknown>} patch
+ */
+export async function transitionExecutionStatus(cfg, id, fromStatus, patch) {
+  const path =
+    `/rest/v1/ai_execution_requests?id=eq.${encodeURIComponent(id)}` +
+    `&execution_status=eq.${encodeURIComponent(fromStatus)}`;
+  const { res, json } = await rest(cfg, path, {
+    method: "PATCH",
+    prefer: "return=representation",
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) {
+    const err = new Error("db_transition_failed");
+    err.code = "db_unavailable";
+    throw err;
+  }
+  const row = Array.isArray(json) ? json[0] : null;
+  if (!row) {
+    return { ok: false, reason: "status_mismatch" };
+  }
+  return { ok: true, row };
+}
+
+/**
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
+ * @param {string} executionId
+ */
+export async function nextEventSequence(cfg, executionId) {
+  const events = await listEventsForExecution(cfg, executionId);
+  return (
+    events.reduce((m, e) => Math.max(m, Number(e.sequence_number) || 0), 0) + 1
+  );
+}
+
+/**
+ * Insert event; on sequence unique collision, bump sequence once and retry.
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
+ * @param {Record<string, unknown>} eventRow
+ */
+export async function appendExecutionEvent(cfg, eventRow) {
+  try {
+    return await insertExecutionEvent(cfg, eventRow);
+  } catch (e) {
+    if (e?.code !== "unique_violation") throw e;
+    const next = await nextEventSequence(cfg, String(eventRow.execution_id));
+    return insertExecutionEvent(cfg, { ...eventRow, sequence_number: next });
+  }
+}
+
+/**
+ * Insert-only result (1:1). Never PATCH/overwrite an existing row.
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
+ * @param {Record<string, unknown>} resultRow
+ * @returns {Promise<{ ok: true, row: Record<string, unknown> } | { ok: false, reason: "exists"|"conflict"|"db" }>}
+ */
+export async function insertExecutionResult(cfg, resultRow) {
+  const existing = await findExecutionResult(
+    cfg,
+    String(resultRow.execution_id)
+  );
+  if (existing) {
+    return { ok: false, reason: "exists", row: existing };
+  }
+  const { res, json, text } = await rest(cfg, "/rest/v1/ai_execution_results", {
+    method: "POST",
+    prefer: "return=representation",
+    body: JSON.stringify(resultRow),
+  });
+  if (!res.ok) {
+    const code = json?.code || "";
+    if (String(code) === "23505" || /duplicate|unique/i.test(text || "")) {
+      const raced = await findExecutionResult(
+        cfg,
+        String(resultRow.execution_id)
+      );
+      return { ok: false, reason: "conflict", row: raced || null };
+    }
+    return { ok: false, reason: "db" };
+  }
+  const row = Array.isArray(json) ? json[0] : json;
+  return { ok: true, row };
+}
+
+/**
+ * @deprecated Use insertExecutionResult — kept name alias for clarity in callers.
+ */
+export async function upsertExecutionResult(cfg, resultRow) {
+  return insertExecutionResult(cfg, resultRow);
+}
+
+/**
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
+ * @param {string} executionId
+ */
+export async function findExecutionResult(cfg, executionId) {
+  const path =
+    `/rest/v1/ai_execution_results?select=*` +
+    `&execution_id=eq.${encodeURIComponent(executionId)}` +
+    `&limit=1`;
+  const { res, json } = await rest(cfg, path, { method: "GET" });
+  if (!res.ok) {
+    const err = new Error("db_result_lookup_failed");
+    err.code = "db_unavailable";
+    throw err;
+  }
+  return Array.isArray(json) && json[0] ? json[0] : null;
+}
+
+/**
  * Defense: ensure results table unused by B3 create path.
- * @param {{ url: string, serviceRoleKey: string }} cfg
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
  * @param {string} executionId
  */
 export async function countResultsForExecution(cfg, executionId) {

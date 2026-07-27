@@ -1,7 +1,6 @@
 /**
- * POST /api/ai-exec-gate/execute — Phase B3 stub only.
- * No executor invocation · No provider call · No external side effect.
- * Real pipeline (collector / DeepSeek / audit writer) is B4.
+ * POST /api/ai-exec-gate/execute — Phase B4 pipeline executor.
+ * Deterministic collect → report → result. No external AI provider.
  */
 import {
   gateOptionsResponse,
@@ -10,7 +9,7 @@ import {
   requireGateRequestAuth,
   serviceResultToResponse,
 } from "../../_shared/ai-exec-gate-http.mjs";
-import { executeGateStub } from "../../_shared/ai-exec-gate-service.mjs";
+import { executeGatePipeline } from "../../_shared/ai-exec-gate-executor.mjs";
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -46,7 +45,7 @@ export async function onRequest(context) {
   ).trim();
 
   try {
-    const result = await executeGateStub({
+    const result = await executeGatePipeline({
       env,
       executionId,
       userId: auth.userId,

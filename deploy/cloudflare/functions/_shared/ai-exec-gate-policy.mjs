@@ -56,9 +56,45 @@ export const GATE_EVENT_TYPES = Object.freeze({
   GATE_EVALUATED: "gate_evaluated",
   REQUEST_ALLOWED: "request_allowed",
   REQUEST_BLOCKED: "request_blocked",
+  /** @deprecated B3 stub — retained for historical rows */
   EXECUTE_STUB_ACCEPTED: "execute_stub_accepted",
+  /** @deprecated B3 stub — retained for historical rows */
   EXECUTE_STUB_COMPLETED: "execute_stub_completed",
+  EXECUTOR_CLAIMED: "executor_claimed",
+  EXECUTION_STARTED: "execution_started",
+  STEP_COLLECT_START: "step_collect_start",
+  STEP_COLLECT_DONE: "step_collect_done",
+  STEP_COLLECT_FAILED: "step_collect_failed",
+  STEP_REPORT_START: "step_report_start",
+  STEP_REPORT_DONE: "step_report_done",
+  STEP_REPORT_FAILED: "step_report_failed",
+  STEP_AUDIT_DONE: "step_audit_done",
+  RESULT_PERSISTED: "result_persisted",
+  EXECUTION_SUCCEEDED: "execution_succeeded",
+  EXECUTION_FAILED: "execution_failed",
 });
+
+/** B4 executor failure codes — separate from B1 Gate blocked reasons. */
+export const EXECUTOR_FAILURE_CODES = Object.freeze({
+  EXECUTION_NOT_FOUND: "execution_not_found",
+  EXECUTION_NOT_ALLOWED: "execution_not_allowed",
+  EXECUTION_NOT_QUEUED: "execution_not_queued",
+  EXECUTION_ALREADY_CLAIMED: "execution_already_claimed",
+  EXECUTION_ALREADY_COMPLETED: "execution_already_completed",
+  EXECUTION_FAILED_TERMINAL: "execution_failed_terminal",
+  CLAIM_FAILED: "claim_failed",
+  COLLECTOR_FAILED: "collector_failed",
+  REPORT_GENERATION_FAILED: "report_generation_failed",
+  RESULT_PERSIST_FAILED: "result_persist_failed",
+  EVENT_PERSIST_FAILED: "event_persist_failed",
+  EXECUTION_TIMEOUT: "execution_timeout",
+  INVALID_EXECUTION_CONTRACT: "invalid_execution_contract",
+  FORBIDDEN: "forbidden",
+  INTERNAL_ERROR: "internal_error",
+});
+
+/** B4 overall timeout (ms) — deterministic pipeline must finish inside Pages request. */
+export const PHASE_B4_EXECUTOR_TIMEOUT_MS = 10_000;
 
 /**
  * JST calendar day key YYYY-MM-DD.
