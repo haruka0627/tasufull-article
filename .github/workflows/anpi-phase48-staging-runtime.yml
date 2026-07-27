@@ -1,24 +1,23 @@
-# ANPI Phase 48 窶・Staging Notification Runtime (scheduled)
+# ANPI Phase 48 — Staging Notification Runtime (manual diagnostic only)
 #
 # Staging only. Production deploy / Production DB / external providers: forbidden.
 # Secrets must be repository Actions secrets (never committed, never browser-exposed).
 #
-# Required secrets / vars:
+# Periodic scheduler: Cloudflare Workers Cron (`anpi-staging-scheduler`).
+# GitHub Actions `schedule` is NOT used (Phases 49–55: GITHUB_SCHEDULE_NOT_VIABLE).
+# This workflow remains for workflow_dispatch / emergency re-run only.
+#
+# Required secrets / vars (dispatch):
 #   ANPI_STAGING_RUNTIME_ENABLED          = true
 #   ANPI_STAGING_PROJECT_REF              = ahlxuyvhzqdqaojiywmu
 #   ANPI_STAGING_SUPABASE_URL             = https://ahlxuyvhzqdqaojiywmu.supabase.co
 #   ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY
 #
-# Cadence: every 5 minutes (GitHub Actions schedule may drift by up to ~several minutes).
-# Manual: Actions 竊・this workflow 竊・Run workflow
+# Manual: Actions → this workflow → Run workflow
 
 name: anpi-phase48-staging-runtime
 
 on:
-  schedule:
-    # every 5 minutes 窶・due pickup only; 09:00/+2h/+4h/+6h live in DB settings
-    # Schedule registration refresh: 2026-07-27
-    - cron: "1-59/5 * * * *"
   workflow_dispatch:
 
 concurrency:
