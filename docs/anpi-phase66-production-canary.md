@@ -6,27 +6,35 @@
 
 ```text
 ANPI_PHASE66_STATUS: STOPPED_WAITING_HUMAN
+ANPI_PHASE66A_READONLY_AUDIT: PASS (human Dashboard · no SQL errors)
 ANPI_PRODUCTION_CANARY: NOT_STARTED
 ANPI_PRODUCTION_CUTOVER: NO-GO
-STOP_REASON: production_service_role_missing · canary_identity_unspecified · explicit_approval_missing · full_db_audit_incomplete
+STOP_REASON: production_missing_anpi_scheduler_jobs · phase4_10_prereq_required · phase65_draft_blocked · canary_identity_unspecified · secrets_unregistered · explicit_approval_missing
 ```
 
 ---
 
 ## Executive verdict
 
-Phase 66 **cannot** reach Production Canary PASS in this agent session.
+Phase 66 **cannot** proceed to 66-B (Phase 65 allowlist apply) or Canary PASS.
 
-Stop conditions hit at **66-A → 66-B gate**:
+Human Production read-only audit **completed** and confirmed a **blocking schema gap**:
+
+| Finding | Evidence |
+|---------|----------|
+| `public.anpi_scheduler_jobs` | **does not exist** (`relation_exists=false`) |
+| pending / processing / leased_active | **NULL** (Section 9) |
+| SQL errors | **none** |
+
+Phase 65 Prod allowlist draft **must not** be applied until Phase 4–10 scheduler foundations exist on Production (draft `RETURNS SETOF public.anpi_scheduler_jobs`).
+
+Stop conditions:
 
 | Stop condition | Hit? |
 |----------------|------|
-| Production authentication / service_role required | **YES** |
-| Secret input required (Worker) | **YES** |
-| Canary identity human selection required | **YES** |
-| Explicit Production approval required | **YES** |
-| Unexpected / unverified Production delta | **PARTIAL** (anon probe; service_role SQL pending) |
-| Destructive migration needed | **UNKNOWN** until human audit |
+| Unexpected Production delta | **YES** — scheduler jobs relation missing |
+| Phase 65 draft apply | **BLOCKED** |
+| Secret / canary / cutover approval | Still required later |
 
 **No** Production migration, Worker deploy, Secrets put, Cron enable, gate enable, notification, or canary registration was performed.
 
@@ -46,37 +54,44 @@ Stop conditions hit at **66-A → 66-B gate**:
 | `anpi_prod_*` / `anpi_phase62_*` | **404** |
 | OpenAPI | **401** |
 
-**Interpretation:** Older ANPI surfaces are present. Phase 4–10 scheduler / claim objects are **not visible to anon**. This may mean **missing** or **service_role-only** — **cannot decide without human SQL**.
+### 1.2 Human Dashboard audit — **COMPLETED**
 
-### 1.2 Human-required full inventory
+- Script: [`sql/anpi-phase66-production-readonly-audit.sql`](../sql/anpi-phase66-production-readonly-audit.sql) (dynamic Section 3/9 · `ccd623d`)
+- Result: **PASS** (no SQL errors)
+- Section 9 final row (reported):
 
-Run on Production Dashboard SQL Editor only:
+| Column | Value |
+|--------|-------|
+| `relation_exists` | **false** |
+| `pending` | NULL |
+| `processing` | NULL |
+| `leased_active` | NULL |
 
-- [`sql/anpi-phase66-production-readonly-audit.sql`](../sql/anpi-phase66-production-readonly-audit.sql)
+**Interpretation (locked):** Production is missing `public.anpi_scheduler_jobs`. This is a real absence (not merely anon/RLS hide). Older ANPI tables may still exist; Phase 4–10 scheduler path is **not** Production-ready.
 
-Paste results back before any Phase 65 draft apply.
-
-### 1.3 Expected vs Production (planning)
+### 1.3 Staging vs Production (live)
 
 | Item | Staging (known) | Production (live) |
 |------|-----------------|-------------------|
-| Phase 4–10 scheduler | Present | **UNVERIFIED** (anon inconclusive) |
+| Phase 4–10 `anpi_scheduler_jobs` | Present | **MISSING** (Section 9) |
 | Phase 62 gate | Present | Expected **absent** |
-| Phase 65 `anpi_prod_*` | N/A | Expected **absent** until apply |
+| Phase 65 `anpi_prod_*` | N/A | Expected **absent** · **do not apply yet** |
 | Staging sha8 `0411f04d` | Allowed in staging gate | Must **never** enter Prod allowlist |
 
 ---
 
-## 2. Migration (66-B) — NOT APPLIED
+## 2. Migration (66-B) — NOT APPLIED · **BLOCKED**
 
-Blocked until human audit proves `anpi_scheduler_jobs` (+ Phase 6 claim) exist.
+**Do not apply** [`sql/anpi-phase65-production-claim-allowlist-draft.sql`](../sql/anpi-phase65-production-claim-allowlist-draft.sql) on Production until prerequisites exist.
 
-Draft remains:
+Required before 66-B:
 
-- [`sql/anpi-phase65-production-claim-allowlist-draft.sql`](../sql/anpi-phase65-production-claim-allowlist-draft.sql)
-- Rollback: [`sql/anpi-phase65-production-claim-allowlist-rollback.sql`](../sql/anpi-phase65-production-claim-allowlist-rollback.sql)
+1. Human-approved **Phase 4–10** (or equivalent) Production prerequisite apply plan  
+2. Re-run read-only audit → Section 9 `relation_exists=true`  
+3. Confirm legacy claim RPC / related objects present  
+4. Explicit approval to apply Phase 65 Prod allowlist draft  
 
-**If Phase 4–10 missing on Prod:** do **not** apply Phase 65 draft alone — prerequisite migrations required (separate human-approved work; may be out of Phase 66 scope).
+Rollback draft (unchanged): [`sql/anpi-phase65-production-claim-allowlist-rollback.sql`](../sql/anpi-phase65-production-claim-allowlist-rollback.sql)
 
 ---
 
@@ -136,14 +151,15 @@ Template (do not apply with placeholder):
 
 ## 11. Remaining blockers (human)
 
-1. Run read-only audit SQL on Prod · paste results  
-2. If Phase 4–10 missing: approve prerequisite apply plan (separate)  
-3. If Phase 4–10 present: approve Phase 65 draft apply  
-4. Register Cloudflare Secrets (names above)  
-5. Explicit approve Worker deploy (paused)  
-6. Select **one** canary sha8  
-7. Explicit approve 66-F order (pause → … → limited resume → observe)  
-8. Wall-clock observe + emergency drill + Canary PASS sign-off  
+1. **DONE:** Production read-only audit (66-A PASS)  
+2. **NEXT:** Approve & apply Phase 4–10 Production prerequisites (separate controlled plan)  
+3. Re-run audit until Section 9 `relation_exists=true`  
+4. Then approve Phase 65 Prod allowlist draft apply (66-B)  
+5. Register Cloudflare Secrets (names above)  
+6. Explicit approve Worker deploy (paused)  
+7. Select **one** canary sha8  
+8. Explicit approve 66-F order (pause → … → limited resume → observe)  
+9. Wall-clock observe + emergency drill + Canary PASS sign-off  
 
 ---
 
@@ -152,11 +168,12 @@ Template (do not apply with placeholder):
 | Gate | Status |
 |------|--------|
 | Plan (Phase 64) | READY |
-| DB readiness | **NOT READY** |
+| 66-A read-only audit | **PASS** |
+| DB readiness | **NOT READY** (`anpi_scheduler_jobs` missing) |
 | Worker readiness | PARTIAL (code wired · not deployed) |
 | Notification readiness | PARTIAL (`anpi:prod:v1` unit · no Prod write) |
 | Ops readiness | PARTIAL |
-| **Production Canary** | **NO-GO / WAITING_HUMAN** |
+| **Production Canary** | **NO-GO / WAITING_PREREQ** |
 | Full Production launch | **FORBIDDEN** this phase |
 
 ---

@@ -1,9 +1,21 @@
 {
   "phase": 66,
-  "recorded_at": "2026-07-27T15:45:00.000Z",
+  "recorded_at": "2026-07-27T16:08:00.000Z",
   "status": "STOPPED_WAITING_HUMAN",
   "production_operations_executed": false,
   "canary_identity_selected": false,
+  "phase66a_readonly_audit": {
+    "status": "PASS",
+    "sql_errors": false,
+    "project_ref": "ddojquacsyqesrjhcvmn",
+    "section9": {
+      "relation_exists": false,
+      "pending": null,
+      "processing": null,
+      "leased_active": null,
+      "interpretation": "public.anpi_scheduler_jobs missing on Production"
+    }
+  },
   "anon_readonly_probe": {
     "project_ref": "ddojquacsyqesrjhcvmn",
     "present_to_anon": [
@@ -18,10 +30,9 @@
       "anpi_prod_claim_allowlist_gate",
       "anpi_phase62_claim_allowlist_gate"
     ],
-    "note": "404 may mean missing OR service_role-only; human SQL required"
+    "superseded_by": "human_dashboard_audit_section9"
   },
   "not_executed": [
-    "production_service_role_audit",
     "migration_apply",
     "rollback_verify",
     "worker_deploy",
@@ -31,6 +42,11 @@
     "runtime_cutover",
     "wall_clock_soak",
     "emergency_verify"
+  ],
+  "blocked": [
+    "phase66b_phase65_allowlist_apply",
+    "reason_missing_anpi_scheduler_jobs",
+    "phase4_10_prerequisites_required"
   ],
   "artifacts": {
     "ssot": "docs/anpi-phase66-production-canary.md",
@@ -45,14 +61,16 @@
     "ANPI_DIAGNOSTIC_TOKEN"
   ],
   "judgments": {
+    "ANPI_PHASE66A_READONLY_AUDIT": "PASS",
+    "ANPI_PRODUCTION_DB_READINESS": "NOT_READY",
     "ANPI_PRODUCTION_CANARY": "NO_GO",
     "ANPI_PRODUCTION_CUTOVER": "NO_GO",
-    "ANPI_PHASE66": "WAITING_HUMAN"
+    "ANPI_PHASE66": "WAITING_HUMAN_PREREQ_MIGRATIONS"
   },
   "human_inputs_required": [
-    "readonly_audit_sql_results",
-    "explicit_migration_approval_if_prereqs_met",
-    "production_service_role_for_ops_or_dashboard_apply",
+    "approve_phase4_10_production_prereq_plan",
+    "apply_phase4_10_then_rerun_audit",
+    "explicit_phase65_draft_approval_after_prereqs",
     "cloudflare_secrets_registration",
     "explicit_worker_deploy_approval",
     "single_canary_auth_sha8",
