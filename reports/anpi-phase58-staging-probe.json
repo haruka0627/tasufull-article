@@ -1,0 +1,20 @@
+{
+  "phase": 58,
+  "probed_at": "2026-07-27T12:22:25.072Z",
+  "project_ref": "ahlxuyvhzqdqaojiywmu",
+  "expected_ref": "ahlxuyvhzqdqaojiywmu",
+  "foundation_ok": true,
+  "design_ready": true,
+  "staging_real_send_ready": false,
+  "production_real_send_ready": false,
+  "canonical_path": "anpi_phase6_claim/process → anpi_phase10 talk_notifications writer (type=anpi, target_url='#')",
+  "official_room_id": "official_anpi",
+  "target_url_policy": "fixed_hash_no_url",
+  "periodic_runtime_provider": "talk_local*",
+  "real_mode_probe": {
+    "blocked": true,
+    "error": "anpi_p58_rpc_anpi_phase10_write_for_job:22023"
+  },
+  "command": "npm run verify:anpi-talk-provider",
+  "notes": "No user-facing inbox write. No Production calls. Secrets not logged."
+}
