@@ -139,12 +139,20 @@ export function buildCfSchedulerLog({
     lease_acquired: lease === "acquired",
     lease: lease || null,
     processed_count: Number(summary?.jobsProcessed ?? summary?.processed_count ?? 0),
+    jobs_claimed: Number(summary?.jobsClaimed ?? summary?.jobsProcessed ?? 0),
+    jobs_delivered: Number(summary?.jobsDelivered ?? 0),
     skipped_count: status === "SKIPPED" ? 1 : 0,
     failed_count: Number(summary?.jobsFailed ?? 0),
     provider_validation: summary?.provider_validation || null,
     overall_status: summary?.overall_status || status || null,
     scoped_cron_path: Boolean(summary?.scoped_cron_path),
     mode: summary?.mode || null,
+    subject_sha8s: Array.isArray(summary?.processed)
+      ? summary.processed.map((p) => p.subject_sha8).filter(Boolean).slice(0, 5)
+      : [],
+    write_reasons: Array.isArray(summary?.processed)
+      ? summary.processed.map((p) => p.write_reason).filter(Boolean).slice(0, 5)
+      : [],
     error_code: errorCode || null,
   };
 }
