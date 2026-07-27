@@ -28,7 +28,10 @@ ANPI scheduler job (Phase 6 claim/process)
 | Staging controlled INSERT proof | **Phase 59 PASS** via existing Phase 17 gate (manual probe only · Cron unchanged) |
 | Staging Cron → real write cutover | **Phase 60 NOT READY (NO-GO)** — see [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md) |
 | Staging scoped job-writer (manual) | **Phase 61 PASS** — see [`docs/anpi-phase61-scoped-job-writer.md`](./anpi-phase61-scoped-job-writer.md) · Cron still `talk_local*` |
-| Staging claim allowlist SQL | **Phase 62 APPLIED** · gate **OFF** — soak waiting approval · [`docs/anpi-phase62-cron-soak-readiness.md`](./anpi-phase62-cron-soak-readiness.md) |
+| Staging claim allowlist SQL | **Phase 62 APPLIED** · gate **OFF** — soak complete |
+| Staging scoped Cron soak | **Phase 62 SOAK PASS** · [`docs/anpi-phase62-scoped-cron-soak.md`](./anpi-phase62-scoped-cron-soak.md) |
+| Staging wall-clock Cron soak | **Phase 63 WALL_CLOCK_SOAK PASS** · [`docs/anpi-phase63-wall-clock-scoped-cron-soak.md`](./anpi-phase63-wall-clock-scoped-cron-soak.md) |
+| Production cutover plan | **Phase 64 PLAN READY · CUTOVER NO-GO** · [`docs/anpi-phase64-production-cutover-plan.md`](./anpi-phase64-production-cutover-plan.md) |
 
 ## Roles of `talk_local*`
 
@@ -85,15 +88,17 @@ npm run test:anpi-scoped-writer
 npm run verify:anpi-scoped-writer     # Phase 61 scoped job-writer (manual)
 ```
 
-See also: [`docs/anpi-phase59-staging-controlled-write.md`](./anpi-phase59-staging-controlled-write.md) · [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md) · [`docs/anpi-phase61-scoped-job-writer.md`](./anpi-phase61-scoped-job-writer.md).
+See also: [`docs/anpi-phase59-staging-controlled-write.md`](./anpi-phase59-staging-controlled-write.md) · [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md) · [`docs/anpi-phase61-scoped-job-writer.md`](./anpi-phase61-scoped-job-writer.md) · [`docs/anpi-phase64-production-cutover-plan.md`](./anpi-phase64-production-cutover-plan.md).
 
 ## Production human steps (when authorized)
 
-1. Confirm Production migrations / RLS for ANPI Phase 6–10 already applied (separate checklist).
-2. Decide staged enablement flag for real writer (replace hard-disable) — **human + security review**.
-3. Controlled staging real insert (single mapped test user) before any Production enablement.
-4. Flip periodic provider from `talk_local*` → write path only after health shows intentional send flags.
-5. Separate Production Cloudflare Worker / secrets / cron (Phase 57 NO-GO items) — never reuse staging secrets.
+Follow **Phase 64** runbook only ([`docs/anpi-phase64-production-cutover-plan.md`](./anpi-phase64-production-cutover-plan.md)):
+
+1. Confirm Production migrations / RLS / parallel allowlisted claim package applied (separate checklist).
+2. **Runtime pause first** (legacy + scoped both stopped) · confirm in-flight = 0.
+3. Deploy Production Worker / secrets / cron (never reuse Staging secrets).
+4. Canary allowlist (sha8 only · not Staging `{0411f04d}`) · gate enable · limited resume · wall-clock observe.
+5. Do **not** use `ANPI_NOTIFICATION_PROVIDER=talk_write` as the cutover switch.
 6. Do **not** register SMS/phone/email paid providers for core ANPI notify.
 
-Until those steps: **Production real notification = NO-GO**.
+Until Phase 64 Go checklist passes and a human records explicit approval: **Production real notification = NO-GO**.
