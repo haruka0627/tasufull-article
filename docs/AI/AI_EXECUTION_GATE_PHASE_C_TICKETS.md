@@ -1,11 +1,12 @@
 # AI 実行ゲート — Phase C チケット（First Real Use Case）
 
-**Status:** C0 Design Freeze Candidate · C1 DONE · **C2 hardening DONE (no provider)**
-**Baseline:** Phase B6 `0af6968` · Design Freeze `8e1fedc` · C1 `fddd54f`
+**Status:** C0 Design Freeze Candidate · C1 DONE · C2 DONE · **C3 budget controls DONE (no provider · no SAFE DB write)**
+**Baseline:** Phase B6 `0af6968` · Design Freeze `8e1fedc` · C1 `fddd54f` · C2 `b3e3091`
 **Design:** [AI_EXECUTION_GATE_PHASE_C_FIRST_USE_CASE_DESIGN.md](./AI_EXECUTION_GATE_PHASE_C_FIRST_USE_CASE_DESIGN.md)
 **Audit:** [ai-exec-gate-phase-c-design-audit.md](../../reports/ai-exec-gate-phase-c-design-audit.md)
 **C1 evidence:** [ai-exec-gate-phase-c1-contracts-collector.md](../../reports/ai-exec-gate-phase-c1-contracts-collector.md)
 **C2 evidence:** [ai-exec-gate-phase-c2-hardening.md](../../reports/ai-exec-gate-phase-c2-hardening.md)
+**C3 evidence:** [ai-exec-gate-phase-c3-cost-controls.md](../../reports/ai-exec-gate-phase-c3-cost-controls.md)
 **Freeze parent:** [AI_EXECUTION_GATE.md](./AI_EXECUTION_GATE.md)
 
 ---
@@ -59,9 +60,9 @@ Action: `ops_secretary.daily_pending.report_pipeline`
 | ID | 概要 | 前提 | 状態 |
 | --- | --- | --- | --- |
 | C1 | Provider-neutral contracts · sanitized collector · deterministic adapter（provider なし） | C0 | **DONE** |
-| C2 | Redaction / Validation Hardening（provider なし） | C1 | **DONE**（evidence 参照） |
-| C3 | Cost Controls · SAFE-06/07 Gate 連携 · hard cap 検証 | C2 | 未着手 |
-| C4 | Ops dogfood · evidence | C3 | 未着手 |
+| C2 | Redaction / Validation Hardening（provider なし） | C1 | **DONE** |
+| C3 | Cost Controls · hard cap · Budget Guard（SAFE-06/07 write なし · provider なし） | C2 | **DONE**（evidence 参照） |
+| C4 | Provider-Neutral Adapter Integration | C3 | 未着手 |
 
 各チケットは人間の明示指示後のみ着手。
 

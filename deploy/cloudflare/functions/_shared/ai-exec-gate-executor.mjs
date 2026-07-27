@@ -22,6 +22,10 @@ import {
   generateOpsReportC1,
 } from "./ai-exec-gate-c1-pipeline.mjs";
 import {
+  evaluatePhaseC3BudgetGuard,
+  sanitizeBudgetDecisionForResponse,
+} from "./ai-exec-gate-c3-budget.mjs";
+import {
   appendExecutionEvent,
   claimQueuedExecution,
   findExecutionResult,
@@ -207,6 +211,7 @@ async function failRunning(cfg, row, code, seqStart) {
  *   now?: Date,
  *   collectFn?: Function,
  *   reportFn?: Function,
+ *   budgetUsage?: { current_usage?: number, budget_limit?: number },
  * }} input
  */
 export async function executeGatePipeline(input) {
@@ -285,6 +290,31 @@ export async function executeGatePipeline(input) {
     });
   }
 
+  // Phase C3 — Budget Guard (code-constant hard cap · no provider · before claim)
+  const budgetEval = evaluatePhaseC3BudgetGuard(
+    input.budgetUsage && typeof input.budgetUsage === "object"
+      ? input.budgetUsage
+      : { current_usage: 0 }
+  );
+  if (!budgetEval.ok) {
+    return fail(400, EXECUTOR_FAILURE_CODES.INVALID_EXECUTION_CONTRACT, {
+      execution_id: id,
+      budget_error: budgetEval.error,
+    });
+  }
+  const budgetDecision = budgetEval.decision;
+  const budgetPublic = sanitizeBudgetDecisionForResponse(budgetDecision);
+  if (budgetDecision.blocked) {
+    return fail(403, EXECUTOR_FAILURE_CODES.BUDGET_HARD_CAP, {
+      execution_id: id,
+      decision: "blocked",
+      status: row.execution_status,
+      provider_called: false,
+      recorded_api_cost: 0,
+      budget: budgetPublic,
+    });
+  }
+
   try {
     const existingResult = await findExecutionResult(cfg, id);
     if (existingResult) {
@@ -344,6 +374,18 @@ export async function executeGatePipeline(input) {
       previous_status: "queued",
       next_status: "running",
       capability_key: "collect_daily_ops",
+    });
+    await emit(cfg, id, seq++, {
+      event_type: GATE_EVENT_TYPES.BUDGET_GUARD_EVALUATED,
+      capability_key: "generate_ops_report",
+      sanitized_metadata: {
+        decision: budgetDecision.decision,
+        reason: budgetDecision.reason,
+        blocked: false,
+        provider_called: false,
+        recorded_api_cost: 0,
+        warning: Boolean(budgetDecision.warning),
+      },
     });
 
     if (timedOut()) {
@@ -569,6 +611,7 @@ export async function executeGatePipeline(input) {
         recorded_api_cost: generated.recorded_api_cost,
         correlation_id: row.correlation_id || null,
         summary: generated.sanitized_summary.slice(0, 500),
+        budget: budgetPublic,
       },
     };
   } catch (e) {

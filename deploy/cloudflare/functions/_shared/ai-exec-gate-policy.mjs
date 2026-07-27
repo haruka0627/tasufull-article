@@ -72,6 +72,8 @@ export const GATE_EVENT_TYPES = Object.freeze({
   RESULT_PERSISTED: "result_persisted",
   EXECUTION_SUCCEEDED: "execution_succeeded",
   EXECUTION_FAILED: "execution_failed",
+  BUDGET_GUARD_EVALUATED: "budget_guard_evaluated",
+  BUDGET_GUARD_BLOCKED: "budget_guard_blocked",
 });
 
 /** B4 executor failure codes — separate from B1 Gate blocked reasons. */
@@ -91,6 +93,7 @@ export const EXECUTOR_FAILURE_CODES = Object.freeze({
   INVALID_EXECUTION_CONTRACT: "invalid_execution_contract",
   FORBIDDEN: "forbidden",
   INTERNAL_ERROR: "internal_error",
+  BUDGET_HARD_CAP: "budget_hard_cap",
 });
 
 /** B4 overall timeout (ms) — deterministic pipeline must finish inside Pages request. */
