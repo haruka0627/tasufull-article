@@ -465,3 +465,17 @@ tests + reports のみ。機能コードのついで直しは禁止（別チケ�
 6. B6  
 
 各チケット開始前に人間の明示指示を要する。
+
+---
+
+## Phase C への引き継ぎ
+
+Phase B ローカル証跡: **PASS_WITH_KNOWN_RISKS**（`0af6968`）。
+
+次の設計正本（実装禁止 · Design Freeze Candidate）:
+
+- [AI_EXECUTION_GATE_PHASE_C_FIRST_USE_CASE_DESIGN.md](./AI_EXECUTION_GATE_PHASE_C_FIRST_USE_CASE_DESIGN.md)
+- [AI_EXECUTION_GATE_PHASE_C_TICKETS.md](./AI_EXECUTION_GATE_PHASE_C_TICKETS.md)
+- [reports/ai-exec-gate-phase-c-design-audit.md](../../reports/ai-exec-gate-phase-c-design-audit.md)
+
+採択ユースケース（設計のみ）: **AI Secretary Daily Operations Summary**（既存 B allowlist 上の最初の実実行）。
