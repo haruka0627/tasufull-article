@@ -1,0 +1,103 @@
+{
+  "phase": 61,
+  "started_at": "2026-07-27T13:07:02.891Z",
+  "project_ref": "ahlxuyvhzqdqaojiywmu",
+  "cron_provider_unchanged": "talk_local*",
+  "job_writer": "js_scoped_talk_notifications_phase10_contract",
+  "stable_key_sem": {
+    "ok": true,
+    "sample": "anpi:p61:v1:initial:00000000-0000-4000-8000-0000000000bb:87d96e07:2026-07-27",
+    "same_due_bucket": true,
+    "different_kind": true
+  },
+  "negatives": {
+    "flag_off": {
+      "pass": true,
+      "reason_code": "anpi_p61_flag_off"
+    },
+    "production_ref": {
+      "pass": true
+    },
+    "non_allowlisted": {
+      "pass": true,
+      "reason_code": "anpi_p61_identity_not_allowlisted"
+    },
+    "anon_insert": {
+      "pass": true,
+      "status": 401
+    },
+    "malformed_due": {
+      "pass": true
+    }
+  },
+  "steps": {
+    "gate": {
+      "target_auth_sha8": "0411f04d",
+      "phase17_flag": false
+    },
+    "dry_run": {
+      "reason_code": "anpi_p61_dry_run_would_insert",
+      "notification_id": "anpi-p61-6526ca53b6a…",
+      "idempotency_key_suffix": "40b4:0411f04d:2026-07-27"
+    },
+    "live_insert": {
+      "reason_code": "anpi_p61_inserted",
+      "inserted": 1,
+      "notification_id": "anpi-p61-6526ca53b6a…",
+      "talk_user_sha16": "88d3dbfacf62520b",
+      "official_room_id": "official_anpi"
+    },
+    "retry_same_logical": {
+      "reason_code": "anpi_p61_already_seen",
+      "inserted": 0,
+      "already_seen": true,
+      "same_notification_id": true
+    },
+    "reclaim_due_bucket": {
+      "reason_code": "anpi_p61_already_seen",
+      "already_seen": true,
+      "same_notification_id": true
+    },
+    "row_shape": {
+      "type": "anpi",
+      "target_url": "#",
+      "source": "anpi_phase61_test",
+      "title_len": 8,
+      "pass": true
+    },
+    "cleanup_dry": {
+      "matched_count": 1,
+      "deleted_count": 0,
+      "dry_run": true,
+      "reason_code": "anpi_p61_cleanup_dry_run",
+      "ids": [
+        "anpi-p61-6526ca53b6a"
+      ]
+    },
+    "cleanup_live": {
+      "reason_code": "anpi_p61_cleanup_deleted",
+      "deleted_count": 1,
+      "matched_count": 1
+    },
+    "cleanup_verify": {
+      "remaining": 0,
+      "pass": true
+    },
+    "rollback_disable": {
+      "flag_env": "ANPI_P61_SCOPED_WRITER_ENABLED",
+      "disabled_means": "unset or not true → anpi_p61_flag_off",
+      "cron_still": "talk_local*",
+      "pass": true
+    }
+  },
+  "counts": {
+    "inserted": 1,
+    "duplicates": 0,
+    "marker_rows_after_writes": 1
+  },
+  "verdict": "PASS_SCOPED_JOB_WRITER",
+  "owner_visibility": "reuse_phase59_PASS",
+  "phase62_cron_soak": "NO_GO_until_sql_claim_allowlist_and_cron_wiring",
+  "note": "Phase 61 JS scoped writer uses Phase 10 contract + talk_notifications. Cron cutover still requires claim allowlist wiring (Phase 62 gate).",
+  "finished_at": "2026-07-27T13:07:03.706Z"
+}

@@ -27,6 +27,7 @@ ANPI scheduler job (Phase 6 claim/process)
 | Real inbox write today | **HARD-DISABLED** on Phase 10 job writer (`anpi_talk_real_write_disabled`) |
 | Staging controlled INSERT proof | **Phase 59 PASS** via existing Phase 17 gate (manual probe only · Cron unchanged) |
 | Staging Cron → real write cutover | **Phase 60 NOT READY (NO-GO)** — see [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md) |
+| Staging scoped job-writer (manual) | **Phase 61 PASS** — see [`docs/anpi-phase61-scoped-job-writer.md`](./anpi-phase61-scoped-job-writer.md) · Cron still `talk_local*` |
 
 ## Roles of `talk_local*`
 
@@ -79,9 +80,11 @@ npm run test:anpi-controlled-write
 npm run verify:anpi-controlled-write  # staging controlled INSERT (Phase 59)
 npm run test:anpi-cron-cutover
 npm run verify:anpi-cron-cutover      # Phase 60 cutover readiness (expect NOT READY)
+npm run test:anpi-scoped-writer
+npm run verify:anpi-scoped-writer     # Phase 61 scoped job-writer (manual)
 ```
 
-See also: [`docs/anpi-phase59-staging-controlled-write.md`](./anpi-phase59-staging-controlled-write.md) · [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md).
+See also: [`docs/anpi-phase59-staging-controlled-write.md`](./anpi-phase59-staging-controlled-write.md) · [`docs/anpi-phase60-scheduled-real-write-cutover.md`](./anpi-phase60-scheduled-real-write-cutover.md) · [`docs/anpi-phase61-scoped-job-writer.md`](./anpi-phase61-scoped-job-writer.md).
 
 ## Production human steps (when authorized)
 

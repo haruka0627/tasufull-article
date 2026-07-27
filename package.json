@@ -73,7 +73,9 @@
     "test:anpi-controlled-write": "node scripts/test-anpi-phase59-staging-controlled-write.mjs",
     "verify:anpi-controlled-write": "node scripts/verify-anpi-phase59-staging-controlled-write.mjs",
     "test:anpi-cron-cutover": "node scripts/test-anpi-phase60-scheduled-real-write-cutover.mjs",
-    "verify:anpi-cron-cutover": "node scripts/verify-anpi-phase60-scheduled-real-write-cutover.mjs"
+    "verify:anpi-cron-cutover": "node scripts/verify-anpi-phase60-scheduled-real-write-cutover.mjs",
+    "test:anpi-scoped-writer": "node scripts/test-anpi-phase61-scoped-job-writer.mjs",
+    "verify:anpi-scoped-writer": "node scripts/verify-anpi-phase61-scoped-job-writer.mjs"
   },
   "devDependencies": {
     "ffmpeg-static": "^5.3.0",
