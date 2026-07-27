@@ -1,0 +1,5 @@
+# ANPI staging scheduler — local secrets template (DO NOT COMMIT .dev.vars)
+
+ANPI_STAGING_SUPABASE_URL=https://ahlxuyvhzqdqaojiywmu.supabase.co
+ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY=
+ANPI_DIAGNOSTIC_TOKEN=

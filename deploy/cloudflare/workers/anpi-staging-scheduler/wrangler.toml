@@ -1,0 +1,37 @@
+# ANPI Phase 56 — Staging scheduler Worker (Cloudflare Cron Triggers)
+#
+# Staging ONLY. Do not deploy to production routes or production Supabase.
+#
+# Secrets (wrangler secret put — never commit values):
+#   ANPI_STAGING_SUPABASE_URL
+#   ANPI_STAGING_SUPABASE_SERVICE_ROLE_KEY
+#   ANPI_DIAGNOSTIC_TOKEN
+#
+# Deploy:
+#   cd deploy/cloudflare/workers/anpi-staging-scheduler
+#   npx wrangler deploy
+#
+# Rollback:
+#   npx wrangler deployments list
+#   npx wrangler rollback <version-id>
+#   # or: remove triggers.crons / set ANPI_STAGING_RUNTIME_ENABLED=false
+
+name = "anpi-staging-scheduler"
+main = "src/index.mjs"
+compatibility_date = "2026-07-02"
+workers_dev = true
+
+[triggers]
+# UTC. Minutes: 00,05,10,15,20,25,30,35,40,45,50,55
+crons = ["*/5 * * * *"]
+
+[vars]
+ANPI_ENVIRONMENT = "staging"
+ANPI_STAGING_PROJECT_REF = "ahlxuyvhzqdqaojiywmu"
+ANPI_STAGING_RUNTIME_ENABLED = "true"
+ANPI_NOTIFICATION_PROVIDER = "talk_local"
+ANPI_CRON_EXPRESSION = "*/5 * * * *"
+
+# Optional: version metadata for lease holder identity
+[version_metadata]
+binding = "CF_VERSION_METADATA"
