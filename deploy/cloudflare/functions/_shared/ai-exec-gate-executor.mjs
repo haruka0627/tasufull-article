@@ -26,6 +26,13 @@ import {
   sanitizeBudgetDecisionForResponse,
 } from "./ai-exec-gate-c3-budget.mjs";
 import {
+  PHASE_C4_DEFAULT_PROVIDER_ID,
+  prepareProviderNeutralRequest,
+  resolveProviderAdapter,
+  sanitizeProviderResolveMetadata,
+  validateProviderIdentifier,
+} from "./ai-exec-gate-c4-provider.mjs";
+import {
   appendExecutionEvent,
   claimQueuedExecution,
   findExecutionResult,
@@ -212,6 +219,7 @@ async function failRunning(cfg, row, code, seqStart) {
  *   collectFn?: Function,
  *   reportFn?: Function,
  *   budgetUsage?: { current_usage?: number, budget_limit?: number },
+ *   providerId?: string,
  * }} input
  */
 export async function executeGatePipeline(input) {
@@ -315,6 +323,42 @@ export async function executeGatePipeline(input) {
     });
   }
 
+  // Phase C4 — Provider identifier + resolve (NoOp only · before claim · no execute)
+  // Code-constant default; optional inject for tests must still be allowlisted (no silent alias).
+  const providerIdRaw =
+    input.providerId === undefined
+      ? PHASE_C4_DEFAULT_PROVIDER_ID
+      : input.providerId;
+  const providerIdCheck = validateProviderIdentifier(providerIdRaw);
+  if (!providerIdCheck.ok) {
+    return fail(400, EXECUTOR_FAILURE_CODES.UNKNOWN_PROVIDER, {
+      execution_id: id,
+      decision: "blocked",
+      status: row.execution_status,
+      provider_called: false,
+      recorded_api_cost: 0,
+      budget: budgetPublic,
+      provider_error: providerIdCheck.error,
+    });
+  }
+  const providerResolved = resolveProviderAdapter(providerIdCheck.value);
+  if (!providerResolved.ok) {
+    return fail(400, EXECUTOR_FAILURE_CODES.PROVIDER_RESOLVE_FAILED, {
+      execution_id: id,
+      decision: "blocked",
+      status: row.execution_status,
+      provider_called: false,
+      recorded_api_cost: 0,
+      budget: budgetPublic,
+      provider_error: providerResolved.error,
+    });
+  }
+  const providerMeta = sanitizeProviderResolveMetadata({
+    provider_id: providerResolved.adapter.provider_id,
+    adapter_status: providerResolved.adapter.status,
+  });
+  // C4: adapter.execute exists as contract stub only — never invoke.
+
   try {
     const existingResult = await findExecutionResult(cfg, id);
     if (existingResult) {
@@ -387,6 +431,12 @@ export async function executeGatePipeline(input) {
         warning: Boolean(budgetDecision.warning),
       },
     });
+    await emit(cfg, id, seq++, {
+      event_type: GATE_EVENT_TYPES.PROVIDER_RESOLVED,
+      capability_key: "generate_ops_report",
+      executor_port: "secretary_deepseek",
+      sanitized_metadata: providerMeta,
+    });
 
     if (timedOut()) {
       const fr = await failRunning(
@@ -431,6 +481,31 @@ export async function executeGatePipeline(input) {
         source: collected.source,
       },
     });
+
+    // Phase C4 — provider-neutral prepare/validate (NoOp · never execute)
+    if (collected.c1_snapshot && typeof collected.c1_snapshot === "object") {
+      const prepared = prepareProviderNeutralRequest(
+        /** @type {Record<string, unknown>} */ (collected.c1_snapshot),
+        providerResolved.adapter.provider_id
+      );
+      if (!prepared.ok) {
+        const err = new Error("provider_prepare_failed");
+        err.code = "report";
+        err.gateError = prepared.error;
+        throw err;
+      }
+      await emit(cfg, id, seq++, {
+        event_type: GATE_EVENT_TYPES.PROVIDER_PREPARE_DONE,
+        capability_key: "generate_ops_report",
+        executor_port: "secretary_deepseek",
+        sanitized_metadata: {
+          provider_id: prepared.provider_id,
+          adapter_status: prepared.adapter_status,
+          provider_called: false,
+          recorded_api_cost: 0,
+        },
+      });
+    }
 
     if (timedOut()) {
       const fr = await failRunning(
@@ -612,6 +687,7 @@ export async function executeGatePipeline(input) {
         correlation_id: row.correlation_id || null,
         summary: generated.sanitized_summary.slice(0, 500),
         budget: budgetPublic,
+        provider: providerMeta,
       },
     };
   } catch (e) {
