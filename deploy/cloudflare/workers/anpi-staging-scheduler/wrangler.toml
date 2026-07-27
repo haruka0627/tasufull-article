@@ -39,6 +39,10 @@ ANPI_CRON_EXPRESSION = "*/5 * * * *"
 # Does not flip provider to talk_write. Does not alter anpi_phase6_claim_jobs.
 ANPI_P62_SCOPED_CRON_PATH = "false"
 ANPI_P61_SCOPED_WRITER_ENABLED = "false"
+# Phase 65: when scoped flags flip OFF while runtime stays ON, legacy stub can
+# claim pending jobs (Phase 63 race). Staging keeps legacy ON for stub continuity.
+# Production Worker draft sets this false.
+ANPI_ALLOW_LEGACY_CLAIM = "true"
 
 # Optional: version metadata for lease holder identity
 [version_metadata]

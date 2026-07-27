@@ -1,0 +1,43 @@
+{
+  "phase": 65,
+  "recorded_at": "2026-07-27T15:20:00.000Z",
+  "production_operations_executed": false,
+  "canary_identity_selected": false,
+  "prs": {
+    "20": "MERGED",
+    "21": "MERGED",
+    "22": "MERGED",
+    "main_head_at_start": "925a9e8"
+  },
+  "production_db_live_audit": "NOT_PERFORMED_REQUIRES_HUMAN_READONLY",
+  "staging_gate": { "enabled": false, "allowlist": ["0411f04d"] },
+  "artifacts": {
+    "prod_idempotency": "scripts/lib/anpi-prod-stable-idempotency.mjs",
+    "runtime_pause": "scripts/lib/anpi-runtime-pause.mjs",
+    "migration_draft": "sql/anpi-phase65-production-claim-allowlist-draft.sql",
+    "rollback_draft": "sql/anpi-phase65-production-claim-allowlist-rollback.sql",
+    "worker_draft": "deploy/cloudflare/workers/anpi-production-scheduler/"
+  },
+  "secrets_names_only": [
+    "ANPI_PRODUCTION_SUPABASE_URL",
+    "ANPI_PRODUCTION_SUPABASE_SERVICE_ROLE_KEY",
+    "ANPI_DIAGNOSTIC_TOKEN"
+  ],
+  "judgments": {
+    "ANPI_PRODUCTION_CUTOVER_PLAN": "READY",
+    "ANPI_PRODUCTION_DB_READINESS": "NOT_READY",
+    "ANPI_PRODUCTION_WORKER_READINESS": "PARTIAL",
+    "ANPI_PRODUCTION_NOTIFICATION_READINESS": "PARTIAL",
+    "ANPI_PRODUCTION_OPS_READINESS": "PARTIAL",
+    "ANPI_PRODUCTION_CUTOVER": "NO_GO"
+  },
+  "blockers_remaining": [
+    "human_readonly_production_db_inventory",
+    "human_apply_prod_allowlist_draft_after_review",
+    "canary_identity_human_selection",
+    "production_cf_adapter_wiring",
+    "wire_anpi_prod_v1_writer_into_cron",
+    "ops_tabletop_human_signoff",
+    "explicit_production_cutover_approval"
+  ]
+}
