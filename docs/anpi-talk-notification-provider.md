@@ -32,6 +32,9 @@ ANPI scheduler job (Phase 6 claim/process)
 | Staging scoped Cron soak | **Phase 62 SOAK PASS** · [`docs/anpi-phase62-scoped-cron-soak.md`](./anpi-phase62-scoped-cron-soak.md) |
 | Staging wall-clock Cron soak | **Phase 63 WALL_CLOCK_SOAK PASS** · [`docs/anpi-phase63-wall-clock-scoped-cron-soak.md`](./anpi-phase63-wall-clock-scoped-cron-soak.md) |
 | Production cutover plan | **Phase 64 PLAN READY · CUTOVER NO-GO** · [`docs/anpi-phase64-production-cutover-plan.md`](./anpi-phase64-production-cutover-plan.md) |
+| Production blocker resolution | **Phase 65 PARTIAL · CUTOVER still NO-GO** · [`docs/anpi-phase65-production-readiness-blockers.md`](./anpi-phase65-production-readiness-blockers.md) |
+| Production canary | **Phase 66 HOLD · CANARY NO-GO** · [`docs/anpi-phase66-production-canary.md`](./anpi-phase66-production-canary.md) |
+| Production migration hold | **ON HOLD (Free plan · backup gate)** · [`docs/anpi-production-migration-hold.md`](./anpi-production-migration-hold.md) |
 
 ## Roles of `talk_local*`
 

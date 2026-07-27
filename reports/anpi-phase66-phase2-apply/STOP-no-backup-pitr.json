@@ -1,0 +1,25 @@
+﻿{
+  "status": "STOPPED_NO_APPLY",
+  "reason": "backup_or_pitr_not_available",
+  "project_ref": "ddojquacsyqesrjhcvmn",
+  "backups_list": {
+    "pitr_enabled": false,
+    "walg_enabled": true,
+    "backups": [],
+    "physical_backup_data": {},
+    "region": "ap-northeast-1"
+  },
+  "prechecks_that_passed": {
+    "apply_matches_canon": true,
+    "collision_all_false": true,
+    "legacy_column_counts": {
+      "anpi_check_sessions": 18,
+      "anpi_no_response_audit_log": 6,
+      "anpi_notification_logs": 26,
+      "anpi_user_contexts": 21
+    },
+    "prior_preflight": "PASS"
+  },
+  "phase2_apply": "NOT_EXECUTED",
+  "verify": "NOT_RUN"
+}

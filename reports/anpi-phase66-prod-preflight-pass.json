@@ -1,0 +1,56 @@
+{
+  "phase": "66-preflight-readonly",
+  "executed_at": "2026-07-27T16:40:00.000Z",
+  "project_ref_linked": "ddojquacsyqesrjhcvmn",
+  "method": "supabase db query --linked (SELECT only)",
+  "phase2_apply": "NOT_EXECUTED",
+  "production_ddl_dml": "NONE",
+  "conclusion": "PASS",
+  "results": {
+    "01_ref": {
+      "expected_production_ref": "ddojquacsyqesrjhcvmn",
+      "forbidden_staging_ref": "ahlxuyvhzqdqaojiywmu",
+      "database_name": "postgres",
+      "session_user_name": "postgres",
+      "cli_link_confirmation": "linked to ddojquacsyqesrjhcvmn before queries; restored ahlxuyvhzqdqaojiywmu after"
+    },
+    "02_collision": {
+      "all_already_exists_false": true,
+      "objects": [
+        "anpi_audit_logs",
+        "anpi_check_instances",
+        "anpi_contact_invitations",
+        "anpi_contacts",
+        "anpi_legacy_check_status_mapping",
+        "anpi_notification_deliveries",
+        "anpi_settings"
+      ]
+    },
+    "03_gen_random_uuid": {
+      "gen_random_uuid_callable": true,
+      "return_type": "uuid"
+    },
+    "04_extensions": [
+      { "extname": "pgcrypto", "extversion": "1.3", "schema_name": "extensions" },
+      { "extname": "uuid-ossp", "extversion": "1.1", "schema_name": "extensions" }
+    ],
+    "05_inventory": [
+      { "table_name": "anpi_check_sessions", "rls_enabled": true },
+      { "table_name": "anpi_no_response_audit_log", "rls_enabled": true },
+      { "table_name": "anpi_notification_logs", "rls_enabled": true },
+      { "table_name": "anpi_user_contexts", "rls_enabled": true }
+    ],
+    "06_legacy_guard": [
+      { "table_name": "anpi_check_sessions", "exists": true, "column_count": 18 },
+      { "table_name": "anpi_no_response_audit_log", "exists": true, "column_count": 6 },
+      { "table_name": "anpi_notification_logs", "exists": true, "column_count": 26 },
+      { "table_name": "anpi_user_contexts", "exists": true, "column_count": 21 }
+    ]
+  },
+  "judgments": {
+    "phase2_preflight": "PASS",
+    "phase2_apply": "NOT_EXECUTED",
+    "production_change": "NONE",
+    "next": "explicit_human_GO_required_before_phase2_apply"
+  }
+}

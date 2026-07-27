@@ -17,6 +17,7 @@ import {
   runAnpiPhase62ScopedCronPath,
   ANPI_P62_SCOPED_CRON_ENV,
 } from "./anpi-phase62-scoped-cron-path.mjs";
+import { resolveClaimMode } from "./anpi-runtime-pause.mjs";
 
 export const PRODUCTION_SUPABASE_REF = "ddojquacsyqesrjhcvmn";
 export const STAGING_SUPABASE_REF = "ahlxuyvhzqdqaojiywmu";
@@ -321,6 +322,16 @@ export async function runAnpiPhase48ScheduledRuntime({
   const pNowIso = new Date(pNow).toISOString();
   const derivedRef = extractProjectRef(apiUrl) || String(projectRef || "");
   const scopedCron = isScopedCronPathEnabled(env);
+  // Runtime is already gated by Phase 56 / validatePhase48StagingGuards (enabled).
+  // Inject enabled into env so claim-mode resolver sees runtime ON for this tick.
+  const claimEnv = {
+    ...env,
+    ANPI_STAGING_RUNTIME_ENABLED: String(enabled || env.ANPI_STAGING_RUNTIME_ENABLED || ""),
+    ANPI_PRODUCTION_RUNTIME_ENABLED: String(
+      env.ANPI_PRODUCTION_RUNTIME_ENABLED || enabled || ""
+    ),
+  };
+  const claimMode = resolveClaimMode(claimEnv);
 
   const baseSummary = {
     phase: 48,
@@ -341,6 +352,7 @@ export async function runAnpiPhase48ScheduledRuntime({
     lease: null,
     scoped_cron_path: scopedCron,
     scoped_cron_flag: String(env[ANPI_P62_SCOPED_CRON_ENV] || "false"),
+    claim_mode: claimMode,
     status: "FAIL",
     overall_status: "FAIL",
   };
@@ -385,15 +397,17 @@ export async function runAnpiPhase48ScheduledRuntime({
   }
 
   try {
-    // Flag OFF (default): legacy Phase 47 → anpi_phase6_claim_jobs → talk_local* stubs.
-    // Flag ON: Parallel Phase 62 allowlisted claim → Phase 61 scoped writer (no Phase 4 tick).
+    // claim_mode:
+    //   scoped → Phase 62 allowlisted claim + Phase 61 writer
+    //   legacy → Phase 47 → anpi_phase6_claim_jobs → talk_local* stubs
+    //   none   → no claims (safe idle; prevents Phase 63 flag-off legacy race)
     let core;
     let providerCheck;
-    if (scopedCron) {
+    if (claimMode === "scoped") {
       core = await runAnpiPhase62ScopedCronPath({
         apiUrl,
         serviceKey,
-        env,
+        env: claimEnv,
         workerId: String(workerId).slice(0, 64),
         pNow: pNowIso,
         claimLimit: 5,
@@ -404,7 +418,7 @@ export async function runAnpiPhase48ScheduledRuntime({
         skipped: true,
         reason: "anpi_p62_scoped_path_skip_stub_provider_check",
       };
-    } else {
+    } else if (claimMode === "legacy") {
       core = await runAnpiPhase47NotificationRuntimeCore({
         apiUrl,
         serviceKey,
@@ -421,6 +435,14 @@ export async function runAnpiPhase48ScheduledRuntime({
         checkIds,
         sinceIso: runStartedAt,
       });
+    } else {
+      core = { processed: [], lateConfirmationCreatedCount: 0 };
+      providerCheck = {
+        ok: true,
+        providers: ["talk_local_paused_no_claim"],
+        skipped: true,
+        reason: "anpi_p65_claim_mode_none",
+      };
     }
 
     const stats = summarizeProcessed(core.processed);
@@ -467,7 +489,13 @@ export async function runAnpiPhase48ScheduledRuntime({
       providers: providerCheck.providers,
       provider_validation: providerCheck.skipped ? "SCOPED_SKIP" : "PASS",
       processed: scopedCron ? core.processed : undefined,
-      mode: scopedCron ? "scoped_cron" : "legacy_stub",
+      mode:
+        claimMode === "scoped"
+          ? "scoped_cron"
+          : claimMode === "legacy"
+            ? "legacy_stub"
+            : "paused_no_claim",
+      claim_mode: claimMode,
       run_finished_at: new Date().toISOString(),
       status: "PASS",
       overall_status: "PASS",

@@ -79,7 +79,9 @@
     "test:anpi-scoped-cron": "node scripts/test-anpi-phase62-scoped-cron-path.mjs",
     "verify:anpi-scoped-cron-soak": "node scripts/verify-anpi-phase62-scoped-cron-soak.mjs",
     "verify:anpi-wall-clock-cron-soak": "node scripts/verify-anpi-phase63-wall-clock-cron-soak.mjs",
-    "test:anpi-prod-cutover-plan": "node scripts/test-anpi-phase64-production-cutover-plan.mjs"
+    "test:anpi-prod-cutover-plan": "node scripts/test-anpi-phase64-production-cutover-plan.mjs",
+    "test:anpi-prod-readiness": "node scripts/test-anpi-phase65-prod-readiness.mjs",
+    "test:anpi-phase66-canary-prep": "node scripts/test-anpi-phase66-production-canary-prep.mjs"
   },
   "devDependencies": {
     "ffmpeg-static": "^5.3.0",

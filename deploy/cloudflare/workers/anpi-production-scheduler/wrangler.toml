@@ -1,0 +1,40 @@
+# ANPI Phase 66 — Production scheduler Worker (code prep · NOT DEPLOYED)
+#
+# STATUS: Wired to Production adapter · DO NOT DEPLOY without Phase 66 human unlock
+# TARGET: Production Supabase ddojquacsyqesrjhcvmn ONLY
+# FORBIDDEN: Staging secrets · Staging project ref · enabling runtime without pause runbook
+#
+# Secrets to prepare (names only — never commit values):
+#   ANPI_PRODUCTION_SUPABASE_URL
+#   ANPI_PRODUCTION_SUPABASE_SERVICE_ROLE_KEY
+#   ANPI_DIAGNOSTIC_TOKEN
+#
+# Deploy (WHEN AUTHORIZED — not this agent session):
+#   cd deploy/cloudflare/workers/anpi-production-scheduler
+#   npx wrangler deploy
+
+name = "anpi-production-scheduler"
+main = "src/index.mjs"
+compatibility_date = "2026-07-02"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+preview_urls = false
+
+[triggers]
+# UTC every 5 minutes — register only after runtime-pause cutover runbook
+crons = ["*/5 * * * *"]
+
+[vars]
+ANPI_ENVIRONMENT = "production"
+ANPI_PRODUCTION_PROJECT_REF = "ddojquacsyqesrjhcvmn"
+# Hard refuse staging ref in application code (to be enforced by Production adapter)
+ANPI_PRODUCTION_RUNTIME_ENABLED = "false"
+ANPI_NOTIFICATION_PROVIDER = "talk_local"
+ANPI_CRON_EXPRESSION = "*/5 * * * *"
+ANPI_P62_SCOPED_CRON_PATH = "false"
+ANPI_P61_SCOPED_WRITER_ENABLED = "false"
+# Critical: disable legacy Phase 47 claim so flag-off cannot mutate pending jobs
+ANPI_ALLOW_LEGACY_CLAIM = "false"
+
+[version_metadata]
+binding = "CF_VERSION_METADATA"

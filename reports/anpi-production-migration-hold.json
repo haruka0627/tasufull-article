@@ -1,0 +1,30 @@
+{
+  "recorded_at": "2026-07-28T01:57:00+09:00",
+  "status": "HOLD",
+  "production_project_ref": "ddojquacsyqesrjhcvmn",
+  "production_supabase_plan": "free",
+  "forbidden_until_resume": [
+    "phase2_through_10_apply",
+    "phase65",
+    "production_worker",
+    "production_cron",
+    "production_canary"
+  ],
+  "snapshot": {
+    "phase66_audit": "PASS",
+    "missing_migrations": "IDENTIFIED",
+    "runbook": "READY",
+    "preflight": "PASS",
+    "phase2_review": "GO_WITH_CONDITIONS",
+    "backup_gate": "NOT_SATISFIED",
+    "production_changes": "NONE"
+  },
+  "resume_when": {
+    "plan": "Pro_or_higher",
+    "backup_gate": "daily_backup_ge_1_OR_pitr_OR_logical_dump_smoke_pass",
+    "fresh_human_go": true,
+    "entry": "docs/anpi-phase66-production-phase2-10-apply-runbook.md"
+  },
+  "priority_until_resume": "normal_development",
+  "ssot": "docs/anpi-production-migration-hold.md"
+}

@@ -1,0 +1,79 @@
+{
+  "phase": 66,
+  "recorded_at": "2026-07-27T16:08:00.000Z",
+  "status": "STOPPED_WAITING_HUMAN",
+  "production_operations_executed": false,
+  "canary_identity_selected": false,
+  "phase66a_readonly_audit": {
+    "status": "PASS",
+    "sql_errors": false,
+    "project_ref": "ddojquacsyqesrjhcvmn",
+    "section9": {
+      "relation_exists": false,
+      "pending": null,
+      "processing": null,
+      "leased_active": null,
+      "interpretation": "public.anpi_scheduler_jobs missing on Production"
+    }
+  },
+  "anon_readonly_probe": {
+    "project_ref": "ddojquacsyqesrjhcvmn",
+    "present_to_anon": [
+      "anpi_check_sessions",
+      "anpi_notification_logs",
+      "anpi_user_contexts"
+    ],
+    "not_visible_to_anon": [
+      "anpi_scheduler_jobs",
+      "anpi_scheduler_runs",
+      "anpi_phase6_claim_jobs",
+      "anpi_prod_claim_allowlist_gate",
+      "anpi_phase62_claim_allowlist_gate"
+    ],
+    "superseded_by": "human_dashboard_audit_section9"
+  },
+  "not_executed": [
+    "migration_apply",
+    "rollback_verify",
+    "worker_deploy",
+    "secrets_put",
+    "cron_enable",
+    "canary_registration",
+    "runtime_cutover",
+    "wall_clock_soak",
+    "emergency_verify"
+  ],
+  "blocked": [
+    "phase66b_phase65_allowlist_apply",
+    "reason_missing_anpi_scheduler_jobs",
+    "phase4_10_prerequisites_required"
+  ],
+  "artifacts": {
+    "ssot": "docs/anpi-phase66-production-canary.md",
+    "readonly_audit_sql": "sql/anpi-phase66-production-readonly-audit.sql",
+    "canary_template_sql": "sql/anpi-phase66-canary-allowlist-template.sql",
+    "prod_adapter": "scripts/lib/anpi-phase66-production-cloudflare-scheduler-adapter.mjs",
+    "worker": "deploy/cloudflare/workers/anpi-production-scheduler/"
+  },
+  "secrets_names_only": [
+    "ANPI_PRODUCTION_SUPABASE_URL",
+    "ANPI_PRODUCTION_SUPABASE_SERVICE_ROLE_KEY",
+    "ANPI_DIAGNOSTIC_TOKEN"
+  ],
+  "judgments": {
+    "ANPI_PHASE66A_READONLY_AUDIT": "PASS",
+    "ANPI_PRODUCTION_DB_READINESS": "NOT_READY",
+    "ANPI_PRODUCTION_CANARY": "NO_GO",
+    "ANPI_PRODUCTION_CUTOVER": "NO_GO",
+    "ANPI_PHASE66": "WAITING_HUMAN_PREREQ_MIGRATIONS"
+  },
+  "human_inputs_required": [
+    "approve_phase4_10_production_prereq_plan",
+    "apply_phase4_10_then_rerun_audit",
+    "explicit_phase65_draft_approval_after_prereqs",
+    "cloudflare_secrets_registration",
+    "explicit_worker_deploy_approval",
+    "single_canary_auth_sha8",
+    "explicit_66F_cutover_approval"
+  ]
+}
