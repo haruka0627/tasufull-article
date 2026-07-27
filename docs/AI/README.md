@@ -1,6 +1,6 @@
 # AI 領域ドキュメント
 
-**最終更新:** 2026-06-27（Voice Phase 5-D）
+**最終更新:** 2026-07-28（AI 実行ゲート Phase A 正本候補追加）
 
 各製品の AI 詳細は個別ファイルが正本。サービス全体の **国内/海外展開方針** は [DECISIONS.md](../DECISIONS.md) **AD-011**（要約: [ROADMAP.md](../ROADMAP.md) §サービス展開方針）。**UI/UX 設計原則** は **AD-012**（要約: [ROADMAP.md](../ROADMAP.md) §UI/UX 設計原則）。
 
@@ -25,10 +25,15 @@
 | [TLV_AI.md](./TLV_AI.md) | TLV → TASFUL AI 導線 |
 | [AI_TEAM_CONSTITUTION.md](./AI_TEAM_CONSTITUTION.md) | AI チーム憲章 |
 | [TASFUL_AI_SAFE_OPS_FOUNDATION.md](./TASFUL_AI_SAFE_OPS_FOUNDATION.md) | **TASFUL AI 安全運用基盤**（2026-08 予定 · WAF/Turnstile/Usage Guard） |
+| [AI_EXECUTION_GATE.md](./AI_EXECUTION_GATE.md) | **AI 実行ゲート包括設計**（Phase A **FREEZE** · 2026-07-28 · 音声対象外） |
+| [AI_EXECUTION_GATE_PHASE_B_PLAN.md](./AI_EXECUTION_GATE_PHASE_B_PLAN.md) | **AI 実行ゲート Phase B 実装計画**（確定 · B1 完了 · B2 以降未着手） |
+| [AI_EXECUTION_GATE_PHASE_B_TICKETS.md](./AI_EXECUTION_GATE_PHASE_B_TICKETS.md) | **Phase B 実装チケット B1–B6**（B1 PASS · B2 明示指示待ち） |
 
 ---
 
 ## Voice Core — Realtime Live 対応（Phase 5-D · 2026-06-27）
+
+> **AI 実行ゲートとの関係:** [AI_EXECUTION_GATE.md](./AI_EXECUTION_GATE.md) の制御プレーン設計・ロードマップには **音声を含めない**（音声専用ポート / API / Phase なし）。既存 Voice Core は製品オプトイン機能の記録であり、ゲート正本の将来拡張対象外。将来クライアントが必要なら一般ダッシュボード API 参照で足りる。
 
 OpenAI Realtime **Live opt-in**（flags default OFF · mock fallback）。正本: `reports/voice-phase5d-complete.md`
 

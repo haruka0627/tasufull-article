@@ -58,6 +58,9 @@
 | [AI/PLATFORM_AI.md](./AI/PLATFORM_AI.md) | Platform → TASFUL AI 入口 |
 | [AI/SECRETARY_AI.md](./AI/SECRETARY_AI.md) | AI 運営秘書 |
 | [AI/TLV_AI.md](./AI/TLV_AI.md) | TLV → TASFUL AI 導線 · 支援範囲 |
+| [AI/AI_EXECUTION_GATE.md](./AI/AI_EXECUTION_GATE.md) | **AI 実行ゲート包括設計**（Phase A **FREEZE** · 2026-07-28 · 音声対象外） |
+| [AI/AI_EXECUTION_GATE_PHASE_B_PLAN.md](./AI/AI_EXECUTION_GATE_PHASE_B_PLAN.md) | AI 実行ゲート Phase B 実装計画（確定 · B1 完了 · B2 以降未着手） |
+| [AI/AI_EXECUTION_GATE_PHASE_B_TICKETS.md](./AI/AI_EXECUTION_GATE_PHASE_B_TICKETS.md) | Phase B 実装チケット B1–B6（B1 PASS · B2 明示指示待ち） |
 | [TLV_PRD.md](./TLV_PRD.md) | TLV PRD · **運営方針 §0** · Score OS · 還元 |
 | [ANPI_PRD.md](./ANPI_PRD.md) | **安否（ボタン式）正本** · 状態遷移 · TALK / AI 境界 |
 | [TLV_LIVE_PROVIDER.md](./TLV_LIVE_PROVIDER.md) | TLV Live SDK（ZEGO PoC · Session Manager 設計 · Phase 2 計画） |
