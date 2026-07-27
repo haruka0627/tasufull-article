@@ -66,6 +66,7 @@ export function resolveCfSchedulerConfig(env = {}) {
 
   const scopedCronPath = String(env.ANPI_P62_SCOPED_CRON_PATH || "false").trim().toLowerCase();
   const scopedWriter = String(env.ANPI_P61_SCOPED_WRITER_ENABLED || "false").trim().toLowerCase();
+  const allowLegacyClaim = String(env.ANPI_ALLOW_LEGACY_CLAIM || "").trim().toLowerCase();
 
   return {
     environment,
@@ -76,6 +77,7 @@ export function resolveCfSchedulerConfig(env = {}) {
     serviceKey,
     scopedCronPath,
     scopedWriter,
+    allowLegacyClaim,
   };
 }
 
@@ -211,8 +213,10 @@ export async function runAnpiCfScheduledTick({
         ANPI_STAGING_PROJECT_REF: cfg.projectRef,
         ANPI_PROJECT_REF: cfg.projectRef,
         ANPI_NOTIFICATION_PROVIDER: cfg.provider,
+        ANPI_STAGING_RUNTIME_ENABLED: cfg.enabled,
         ANPI_P62_SCOPED_CRON_PATH: cfg.scopedCronPath,
         ANPI_P61_SCOPED_WRITER_ENABLED: cfg.scopedWriter,
+        ANPI_ALLOW_LEGACY_CLAIM: cfg.allowLegacyClaim || "",
       },
     });
   } catch (err) {
