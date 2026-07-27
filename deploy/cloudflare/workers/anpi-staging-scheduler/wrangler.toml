@@ -19,6 +19,7 @@
 name = "anpi-staging-scheduler"
 main = "src/index.mjs"
 compatibility_date = "2026-07-02"
+compatibility_flags = ["nodejs_compat"]
 workers_dev = true
 # Keep preview URLs off — diagnostic endpoint is token-gated; avoid extra public surfaces.
 preview_urls = false
@@ -33,6 +34,11 @@ ANPI_STAGING_PROJECT_REF = "ahlxuyvhzqdqaojiywmu"
 ANPI_STAGING_RUNTIME_ENABLED = "true"
 ANPI_NOTIFICATION_PROVIDER = "talk_local"
 ANPI_CRON_EXPRESSION = "*/5 * * * *"
+# Phase 62 scoped Cron soak — keep FALSE outside approved soak windows.
+# When true: claim via anpi_phase62_claim_jobs_allowlisted + Phase 61 writer.
+# Does not flip provider to talk_write. Does not alter anpi_phase6_claim_jobs.
+ANPI_P62_SCOPED_CRON_PATH = "false"
+ANPI_P61_SCOPED_WRITER_ENABLED = "false"
 
 # Optional: version metadata for lease holder identity
 [version_metadata]

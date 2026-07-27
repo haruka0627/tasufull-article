@@ -21,8 +21,14 @@ Periodic execution moves here. GitHub Actions remains for manual diagnostic / te
 Cloudflare Cron / diagnostic POST
   → anpi-phase56 adapter
   → Phase 48 scheduled runtime (lease + guards)
-  → Phase 47 notification runtime core
+  → default: Phase 47 → anpi_phase6_claim_jobs → talk_local* stubs
+  → when ANPI_P62_SCOPED_CRON_PATH=true (staging soak only):
+       anpi_phase62_claim_jobs_allowlisted → Phase 61 scoped writer
 ```
+
+Scoped soak flags default **false** in `wrangler.toml`. Keep `ANPI_NOTIFICATION_PROVIDER=talk_local`.
+Do not leave gate enabled or scoped flags ON outside an approved soak window.
+See [`docs/anpi-phase62-scoped-cron-soak.md`](../../../../docs/anpi-phase62-scoped-cron-soak.md).
 
 ## Secrets (never commit)
 
