@@ -1,16 +1,15 @@
-# ANPI Phase 65 — Production scheduler Worker DRAFT
+# ANPI Phase 66 — Production scheduler Worker (code prep · NOT DEPLOYED)
 #
-# STATUS: DRAFT ONLY · DO NOT DEPLOY without explicit human approval
+# STATUS: Wired to Production adapter · DO NOT DEPLOY without Phase 66 human unlock
 # TARGET: Production Supabase ddojquacsyqesrjhcvmn ONLY
-# FORBIDDEN: Staging secrets · Staging project ref · deploying this draft as-is
-#            without a Production-capable adapter (Phase 56 today is staging-only).
+# FORBIDDEN: Staging secrets · Staging project ref · enabling runtime without pause runbook
 #
 # Secrets to prepare (names only — never commit values):
 #   ANPI_PRODUCTION_SUPABASE_URL
 #   ANPI_PRODUCTION_SUPABASE_SERVICE_ROLE_KEY
 #   ANPI_DIAGNOSTIC_TOKEN
 #
-# Deploy (WHEN AUTHORIZED — not Phase 65):
+# Deploy (WHEN AUTHORIZED — not this agent session):
 #   cd deploy/cloudflare/workers/anpi-production-scheduler
 #   npx wrangler deploy
 

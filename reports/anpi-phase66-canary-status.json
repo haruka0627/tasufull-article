@@ -1,0 +1,61 @@
+{
+  "phase": 66,
+  "recorded_at": "2026-07-27T15:45:00.000Z",
+  "status": "STOPPED_WAITING_HUMAN",
+  "production_operations_executed": false,
+  "canary_identity_selected": false,
+  "anon_readonly_probe": {
+    "project_ref": "ddojquacsyqesrjhcvmn",
+    "present_to_anon": [
+      "anpi_check_sessions",
+      "anpi_notification_logs",
+      "anpi_user_contexts"
+    ],
+    "not_visible_to_anon": [
+      "anpi_scheduler_jobs",
+      "anpi_scheduler_runs",
+      "anpi_phase6_claim_jobs",
+      "anpi_prod_claim_allowlist_gate",
+      "anpi_phase62_claim_allowlist_gate"
+    ],
+    "note": "404 may mean missing OR service_role-only; human SQL required"
+  },
+  "not_executed": [
+    "production_service_role_audit",
+    "migration_apply",
+    "rollback_verify",
+    "worker_deploy",
+    "secrets_put",
+    "cron_enable",
+    "canary_registration",
+    "runtime_cutover",
+    "wall_clock_soak",
+    "emergency_verify"
+  ],
+  "artifacts": {
+    "ssot": "docs/anpi-phase66-production-canary.md",
+    "readonly_audit_sql": "sql/anpi-phase66-production-readonly-audit.sql",
+    "canary_template_sql": "sql/anpi-phase66-canary-allowlist-template.sql",
+    "prod_adapter": "scripts/lib/anpi-phase66-production-cloudflare-scheduler-adapter.mjs",
+    "worker": "deploy/cloudflare/workers/anpi-production-scheduler/"
+  },
+  "secrets_names_only": [
+    "ANPI_PRODUCTION_SUPABASE_URL",
+    "ANPI_PRODUCTION_SUPABASE_SERVICE_ROLE_KEY",
+    "ANPI_DIAGNOSTIC_TOKEN"
+  ],
+  "judgments": {
+    "ANPI_PRODUCTION_CANARY": "NO_GO",
+    "ANPI_PRODUCTION_CUTOVER": "NO_GO",
+    "ANPI_PHASE66": "WAITING_HUMAN"
+  },
+  "human_inputs_required": [
+    "readonly_audit_sql_results",
+    "explicit_migration_approval_if_prereqs_met",
+    "production_service_role_for_ops_or_dashboard_apply",
+    "cloudflare_secrets_registration",
+    "explicit_worker_deploy_approval",
+    "single_canary_auth_sha8",
+    "explicit_66F_cutover_approval"
+  ]
+}

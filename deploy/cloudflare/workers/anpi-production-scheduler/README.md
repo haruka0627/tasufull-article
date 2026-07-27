@@ -1,6 +1,6 @@
-# ANPI Production Scheduler — Configuration Draft (Phase 65)
+# ANPI Production Scheduler — Phase 66 prep
 
-**STATUS:** DRAFT · **DO NOT DEPLOY** without Phase 64 Go checklist + explicit approval  
+**STATUS:** Code wired · **DO NOT DEPLOY** until Phase 66 human unlocks (audit + Secrets + canary sha8 + explicit approval)  
 **Separation:** Completely separate from `anpi-staging-scheduler`
 
 ## Identity
@@ -10,12 +10,13 @@
 | Worker name | `anpi-production-scheduler` |
 | Environment | `production` |
 | Project ref | `ddojquacsyqesrjhcvmn` |
-| Provider | `talk_local` (always during canary; never `talk_write` as switch) |
+| Provider | `talk_local` (canary; never `talk_write` as switch) |
 | Legacy claim | `ANPI_ALLOW_LEGACY_CLAIM=false` (**required**) |
 | Runtime default | `ANPI_PRODUCTION_RUNTIME_ENABLED=false` |
 | Scoped flags default | `false` |
+| Adapter | `scripts/lib/anpi-phase66-production-cloudflare-scheduler-adapter.mjs` |
 
-## Secrets (names only — prepare in Cloudflare; never paste values into git)
+## Secrets (names only — never paste values into git)
 
 | Secret name | Purpose |
 |-------------|---------|
@@ -25,11 +26,11 @@
 
 Do **not** reuse Staging `ANPI_STAGING_*` values.
 
-## Health / diagnostic (future wired Worker)
+## Health / diagnostic
 
-- `GET /health` → environment + ok
+- `GET /health` → paused-by-default metadata
 - `POST /internal/anpi-scheduler/run` + `x-anpi-diagnostic-token`
-- Cron: `*/5 * * * *` UTC
+- Cron: `*/5 * * * *` UTC (register only after pause runbook)
 
 ## Rollback
 
@@ -39,8 +40,14 @@ Do **not** reuse Staging `ANPI_STAGING_*` values.
 4. Clear crons if needed
 5. `npx wrangler rollback`
 
-## Code gap (remaining blocker)
+## Deploy (WHEN AUTHORIZED)
 
-Current `anpi-phase56-cloudflare-scheduler-adapter.mjs` **rejects** non-staging environments.  
-Production Worker requires a Production adapter (or guarded dual-env) before real wiring.  
-This draft ships a fail-closed stub `src/index.mjs` so accidental deploy cannot claim jobs.
+```bash
+cd deploy/cloudflare/workers/anpi-production-scheduler
+npx wrangler secret put ANPI_PRODUCTION_SUPABASE_URL
+npx wrangler secret put ANPI_PRODUCTION_SUPABASE_SERVICE_ROLE_KEY
+npx wrangler secret put ANPI_DIAGNOSTIC_TOKEN
+npx wrangler deploy
+```
+
+Follow `docs/anpi-phase66-production-canary.md` forced order.
