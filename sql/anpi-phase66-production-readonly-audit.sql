@@ -5,6 +5,8 @@
 -- FORBIDDEN: Staging ahlxuyvhzqdqaojiywmu · any DML/DDL · MCP apply
 -- USAGE: Paste into Supabase Dashboard → SQL → Production project only.
 --        Confirm Settings → General → Reference ID == ddojquacsyqesrjhcvmn FIRST.
+-- PATH IN REPO: sql/anpi-phase66-production-readonly-audit.sql
+-- BRANCH: anpi/phase66-production-canary (PR #24) — not yet on main
 -- =============================================================================
 
 -- Guard: abort if somehow connected to wrong DB name pattern (best-effort)
@@ -39,15 +41,29 @@ select
   to_regprocedure('public.anpi_resolve_talk_user_id(uuid)') is not null
     or to_regprocedure('public.anpi_resolve_talk_user_id(text)') is not null as has_talk_resolve;
 
--- 3) Gate state (safe if table missing)
-select 'anpi_prod_claim_allowlist_gate' as gate,
-       g.enabled,
-       cardinality(g.allowed_auth_sha8) as allowlist_count,
-       g.notes,
-       g.updated_at
-from public.anpi_prod_claim_allowlist_gate g
-where to_regclass('public.anpi_prod_claim_allowlist_gate') is not null
-  and g.id = 1;
+-- 3) Gate state (null-safe when table missing)
+select
+  'anpi_prod_claim_allowlist_gate' as gate,
+  case
+    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
+    else (select g.enabled from public.anpi_prod_claim_allowlist_gate g where g.id = 1)
+  end as enabled,
+  case
+    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
+    else (
+      select cardinality(g.allowed_auth_sha8)
+      from public.anpi_prod_claim_allowlist_gate g
+      where g.id = 1
+    )
+  end as allowlist_count,
+  case
+    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
+    else (select g.notes from public.anpi_prod_claim_allowlist_gate g where g.id = 1)
+  end as notes,
+  case
+    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
+    else (select g.updated_at from public.anpi_prod_claim_allowlist_gate g where g.id = 1)
+  end as updated_at;
 
 -- 4) RPCs / functions matching anpi
 select p.proname, pg_get_function_identity_arguments(p.oid) as args
@@ -85,13 +101,33 @@ from pg_extension
 where extname in ('pgcrypto', 'uuid-ossp')
 order by 1;
 
--- 9) In-flight / pending counts (read-only · no PII)
+-- 9) In-flight / pending counts (read-only · no PII · null-safe)
 select
-  count(*) filter (where status = 'pending') as pending,
-  count(*) filter (where status = 'processing') as processing,
-  count(*) filter (where status = 'processing' and lease_expires_at is not null and lease_expires_at > now()) as leased_active
-from public.anpi_scheduler_jobs
-where to_regclass('public.anpi_scheduler_jobs') is not null;
+  case
+    when to_regclass('public.anpi_scheduler_jobs') is null then null
+    else (
+      select count(*) filter (where status = 'pending')
+      from public.anpi_scheduler_jobs
+    )
+  end as pending,
+  case
+    when to_regclass('public.anpi_scheduler_jobs') is null then null
+    else (
+      select count(*) filter (where status = 'processing')
+      from public.anpi_scheduler_jobs
+    )
+  end as processing,
+  case
+    when to_regclass('public.anpi_scheduler_jobs') is null then null
+    else (
+      select count(*) filter (
+        where status = 'processing'
+          and lease_expires_at is not null
+          and lease_expires_at > now()
+      )
+      from public.anpi_scheduler_jobs
+    )
+  end as leased_active;
 
 -- END READ-ONLY — do not paste Phase 65 apply SQL in the same session without
 -- explicit human approval after reviewing this audit output.
