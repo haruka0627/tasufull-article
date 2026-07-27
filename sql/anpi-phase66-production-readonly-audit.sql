@@ -7,6 +7,9 @@
 --        Confirm Settings → General → Reference ID == ddojquacsyqesrjhcvmn FIRST.
 -- PATH IN REPO: sql/anpi-phase66-production-readonly-audit.sql
 -- BRANCH: anpi/phase66-production-canary (PR #24) — not yet on main
+--
+-- NOTE: Sections 3 and 9 use dynamic SQL (EXECUTE) + session GUC so missing
+-- relations do NOT fail at parse/plan time (avoids ERROR 42P01).
 -- =============================================================================
 
 -- Guard: abort if somehow connected to wrong DB name pattern (best-effort)
@@ -41,29 +44,65 @@ select
   to_regprocedure('public.anpi_resolve_talk_user_id(uuid)') is not null
     or to_regprocedure('public.anpi_resolve_talk_user_id(text)') is not null as has_talk_resolve;
 
--- 3) Gate state (null-safe when table missing)
-select
-  'anpi_prod_claim_allowlist_gate' as gate,
-  case
-    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
-    else (select g.enabled from public.anpi_prod_claim_allowlist_gate g where g.id = 1)
-  end as enabled,
-  case
-    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
-    else (
-      select cardinality(g.allowed_auth_sha8)
+-- 3) Gate state — dynamic SQL only (safe when relation missing)
+do $$
+declare
+  payload jsonb;
+begin
+  if to_regclass('public.anpi_prod_claim_allowlist_gate') is null then
+    payload := jsonb_build_object(
+      'gate', 'anpi_prod_claim_allowlist_gate',
+      'relation_exists', false,
+      'enabled', null,
+      'allowlist_count', null,
+      'notes', null,
+      'updated_at', null
+    );
+  else
+    execute $q$
+      select jsonb_build_object(
+        'gate', 'anpi_prod_claim_allowlist_gate',
+        'relation_exists', true,
+        'enabled', g.enabled,
+        'allowlist_count', cardinality(g.allowed_auth_sha8),
+        'notes', g.notes,
+        'updated_at', g.updated_at
+      )
       from public.anpi_prod_claim_allowlist_gate g
       where g.id = 1
-    )
-  end as allowlist_count,
-  case
-    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
-    else (select g.notes from public.anpi_prod_claim_allowlist_gate g where g.id = 1)
-  end as notes,
-  case
-    when to_regclass('public.anpi_prod_claim_allowlist_gate') is null then null
-    else (select g.updated_at from public.anpi_prod_claim_allowlist_gate g where g.id = 1)
-  end as updated_at;
+    $q$ into payload;
+
+    if payload is null then
+      payload := jsonb_build_object(
+        'gate', 'anpi_prod_claim_allowlist_gate',
+        'relation_exists', true,
+        'enabled', null,
+        'allowlist_count', null,
+        'notes', 'row_id_1_missing',
+        'updated_at', null
+      );
+    end if;
+  end if;
+
+  -- is_local=false: survive autocommit between DO and following SELECT
+  perform set_config('anpi.p66_section3', payload::text, false);
+end $$;
+
+select
+  x.gate,
+  x.relation_exists,
+  x.enabled,
+  x.allowlist_count,
+  x.notes,
+  x.updated_at
+from jsonb_to_record(current_setting('anpi.p66_section3', true)::jsonb) as x(
+  gate text,
+  relation_exists boolean,
+  enabled boolean,
+  allowlist_count integer,
+  notes text,
+  updated_at timestamptz
+);
 
 -- 4) RPCs / functions matching anpi
 select p.proname, pg_get_function_identity_arguments(p.oid) as args
@@ -101,33 +140,48 @@ from pg_extension
 where extname in ('pgcrypto', 'uuid-ossp')
 order by 1;
 
--- 9) In-flight / pending counts (read-only · no PII · null-safe)
-select
-  case
-    when to_regclass('public.anpi_scheduler_jobs') is null then null
-    else (
-      select count(*) filter (where status = 'pending')
-      from public.anpi_scheduler_jobs
-    )
-  end as pending,
-  case
-    when to_regclass('public.anpi_scheduler_jobs') is null then null
-    else (
-      select count(*) filter (where status = 'processing')
-      from public.anpi_scheduler_jobs
-    )
-  end as processing,
-  case
-    when to_regclass('public.anpi_scheduler_jobs') is null then null
-    else (
-      select count(*) filter (
-        where status = 'processing'
-          and lease_expires_at is not null
-          and lease_expires_at > now()
+-- 9) In-flight / pending counts — dynamic SQL only (safe when relation missing)
+do $$
+declare
+  payload jsonb;
+begin
+  if to_regclass('public.anpi_scheduler_jobs') is null then
+    payload := jsonb_build_object(
+      'relation_exists', false,
+      'pending', null,
+      'processing', null,
+      'leased_active', null
+    );
+  else
+    execute $q$
+      select jsonb_build_object(
+        'relation_exists', true,
+        'pending', count(*) filter (where status = 'pending'),
+        'processing', count(*) filter (where status = 'processing'),
+        'leased_active', count(*) filter (
+          where status = 'processing'
+            and lease_expires_at is not null
+            and lease_expires_at > now()
+        )
       )
       from public.anpi_scheduler_jobs
-    )
-  end as leased_active;
+    $q$ into payload;
+  end if;
+
+  perform set_config('anpi.p66_section9', payload::text, false);
+end $$;
+
+select
+  x.relation_exists,
+  x.pending,
+  x.processing,
+  x.leased_active
+from jsonb_to_record(current_setting('anpi.p66_section9', true)::jsonb) as x(
+  relation_exists boolean,
+  pending bigint,
+  processing bigint,
+  leased_active bigint
+);
 
 -- END READ-ONLY — do not paste Phase 65 apply SQL in the same session without
 -- explicit human approval after reviewing this audit output.
