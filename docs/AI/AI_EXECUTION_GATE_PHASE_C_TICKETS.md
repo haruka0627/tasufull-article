@@ -1,8 +1,9 @@
 # AI 実行ゲート — Phase C チケット（First Real Use Case）
 
-**Status:** C0–C4 first-use-case slice · **C4 provider-neutral adapter boundary DONE (NoOp · no execute)**
-**Baseline:** C3 `9b1438f`
+**Status:** C0–C5 first-use-case slice · **C5 execution boundary DONE (NoOp · no execute)**
+**Baseline:** C4 `ccc0b53`
 **C4 evidence:** [ai-exec-gate-phase-c4-provider-adapter.md](../../reports/ai-exec-gate-phase-c4-provider-adapter.md)
+**C5 evidence:** [ai-exec-gate-phase-c5-execution-boundary.md](../../reports/ai-exec-gate-phase-c5-execution-boundary.md)
 **Freeze parent:** [AI_EXECUTION_GATE.md](./AI_EXECUTION_GATE.md)
 
 ---
@@ -59,6 +60,7 @@ Action: `ops_secretary.daily_pending.report_pipeline`
 | C2 | Redaction / Validation Hardening（provider なし） | C1 | **DONE** |
 | C3 | Cost Controls · hard cap · Budget Guard（SAFE-06/07 write なし · provider なし） | C2 | **DONE** |
 | C4 | Provider-Neutral Adapter Integration（NoOp · execute 未接続） | C3 | **DONE**（evidence 参照） |
+| C5 | Execution Boundary（Plan · Envelope · Dispatcher · execute 未接続） | C4 | **DONE**（evidence 参照） |
 
 各チケットは人間の明示指示後のみ着手。
 

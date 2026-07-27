@@ -33,6 +33,11 @@ import {
   validateProviderIdentifier,
 } from "./ai-exec-gate-c4-provider.mjs";
 import {
+  buildExecutionPlan,
+  dispatchExecutionPlan,
+  sanitizeExecutionBoundaryMetadata,
+} from "./ai-exec-gate-c5-execution-boundary.mjs";
+import {
   appendExecutionEvent,
   claimQueuedExecution,
   findExecutionResult,
@@ -483,6 +488,7 @@ export async function executeGatePipeline(input) {
     });
 
     // Phase C4 — provider-neutral prepare/validate (NoOp · never execute)
+    let c5DispatchMeta = null;
     if (collected.c1_snapshot && typeof collected.c1_snapshot === "object") {
       const prepared = prepareProviderNeutralRequest(
         /** @type {Record<string, unknown>} */ (collected.c1_snapshot),
@@ -504,6 +510,54 @@ export async function executeGatePipeline(input) {
           provider_called: false,
           recorded_api_cost: 0,
         },
+      });
+
+      // Phase C5 — Execution Plan + Dispatcher (NoOp stop · never adapter.execute)
+      const planBuilt = buildExecutionPlan({
+        context: {
+          execution_id: id,
+          request_id: id,
+          correlation_id: row.correlation_id,
+          actor_id: row.actor_id,
+          budget_day_key: row.budget_day_key,
+        },
+        provider_id: prepared.provider_id,
+        prepared_request: prepared.prepared,
+        budget_decision: budgetDecision,
+        metadata: {
+          port: "secretary_deepseek",
+          provider_id: prepared.provider_id,
+          adapter_status: prepared.adapter_status,
+          provider_called: false,
+          recorded_api_cost: 0,
+          schema_version: prepared.prepared?.schema_version,
+        },
+      });
+      if (!planBuilt.ok) {
+        const err = new Error("execution_plan_failed");
+        err.code = "report";
+        err.gateError = planBuilt.error;
+        throw err;
+      }
+      const dispatched = dispatchExecutionPlan({ plan: planBuilt.value });
+      if (!dispatched.ok) {
+        const err = new Error("execution_dispatch_failed");
+        err.code = "report";
+        err.gateError = dispatched.error;
+        throw err;
+      }
+      if (dispatched.result?.executed === true || dispatched.provider_called === true) {
+        const err = new Error("execution_boundary_violation");
+        err.code = "report";
+        err.gateError = "DISPATCH_FORBIDDEN_EXECUTE";
+        throw err;
+      }
+      c5DispatchMeta = sanitizeExecutionBoundaryMetadata(dispatched);
+      await emit(cfg, id, seq++, {
+        event_type: GATE_EVENT_TYPES.EXECUTION_BOUNDARY_DISPATCHED,
+        capability_key: "generate_ops_report",
+        executor_port: "secretary_deepseek",
+        sanitized_metadata: c5DispatchMeta,
       });
     }
 
@@ -688,6 +742,7 @@ export async function executeGatePipeline(input) {
         summary: generated.sanitized_summary.slice(0, 500),
         budget: budgetPublic,
         provider: providerMeta,
+        execution_boundary: c5DispatchMeta,
       },
     };
   } catch (e) {
