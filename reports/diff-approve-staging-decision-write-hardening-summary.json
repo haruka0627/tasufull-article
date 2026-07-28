@@ -1,0 +1,12 @@
+{
+  "verdict": "PASS_STAGING_DECISION_WRITE_HARDENING",
+  "pass": 41,
+  "fail": 0,
+  "failures": [],
+  "staging_ref": "ahlxuyvhzqdqaojiywmu",
+  "migration_history": "DRIFT_160000_DOCUMENTED_NO_REPAIR",
+  "production": "NOT_TOUCHED",
+  "apply": "NOT_EXECUTED",
+  "provider": "NOT_EXECUTED",
+  "repair": "NOT_PERFORMED"
+}

@@ -4,6 +4,7 @@
 
 ```text
 PASS_STAGING_DECISION_WRITE_FOUNDATION
+PASS_STAGING_DECISION_WRITE_HARDENING
 ```
 
 ```text
@@ -12,6 +13,7 @@ Apply: NOT EXECUTED
 Provider execute: NOT EXECUTED
 Automatic execution: NOT CONNECTED
 Production: NOT TOUCHED
+Migration repair: NOT PERFORMED
 ```
 
 ## 2. Scope
@@ -245,11 +247,86 @@ cf-pages-deploy push: NOT PERFORMED
 
 ## 25. Remaining Risks
 
-- Migration history drift (pre-existing local-only versions + 160000 not repaired)
-- Preview deploy of Decision UI not performed in this commit (dist mirrored; Preview optional)
-- Full Playwright operator login E2E against Preview not re-executed here
+- Migration history drift for `20260728160000` (SQL applied; schema_migrations unrepaired — **repair intentionally NOT performed**)
+- Pre-existing unrelated local-only migrations remain in `migration list`
+- Local 8788 may lack `DIFF_APPROVE_READ_ENABLED` so Playwright list/detail soft-paths fixtures
 - Ops-global model (no per-tenant RLS); Edge + service_role remain trust boundary
 
 ## 26. Final Conclusion
 
 Staging Operator Decision Write Foundation is complete: decisions and audit events persist safely; Apply remains disconnected; Production untouched; no push.
+
+---
+
+## 27. Operational Hardening
+
+```text
+PASS_STAGING_DECISION_WRITE_HARDENING
+PASS_STAGING_DECISION_WRITE_PLAYWRIGHT
+```
+
+Completed in follow-up hardening pass (no Apply / Provider / Production / repair):
+
+| Area | Result |
+| --- | --- |
+| Migration history audit | DRIFT documented · repair NOT performed · SQL re-exec NOT performed |
+| Duplicate propose/approve/reject/cancel | PASS |
+| Invalid version matrix | PASS |
+| Timeline / audit ordering + chain | PASS |
+| Replay adds no audit | PASS |
+| Filter / pagination after writes | PASS |
+| Read-only after approve (`applied=false`) | PASS |
+| Minimal UX (disable-while-submit · data attrs) | PASS |
+| Playwright desktop/mobile badges + no Apply net | PASS |
+
+Evidence:
+
+- `reports/diff-approve-staging-decision-write-hardening-summary.json`
+- `reports/diff-approve-staging-decision-write-playwright-summary.json`
+
+Scripts:
+
+- `scripts/test-diff-approve-staging-decision-write-hardening.mjs`
+- `scripts/test-diff-approve-staging-decision-write-playwright.mjs`
+
+### Migration History Audit
+
+| Version | Local | Remote history | Schema |
+| --- | --- | --- | --- |
+| `20260728140000` | yes | yes | present |
+| `20260728160000` | yes | **missing** | present (applied via `db query`) |
+
+```text
+history_alignment: DRIFT
+repair_needed: YES (history-only)
+repair_performed: NO
+sql_reexec_needed: NO
+recommendation: document_drift_only (stop condition: do not repair in this task)
+```
+
+### Regression Expansion
+
+Added: duplicate matrices, invalid version variants, timeline/audit ordering, filter/pagination after writes, operator UX attrs, Apply isolation static.
+
+### Timeline Integrity
+
+Verified contiguous `sequence_number`, `previous_event_hash` chain, non-decreasing `created_at`, event type order `proposal_submitted → approval_granted`, replay does not append.
+
+### Idempotency Audit
+
+Same-key replay for approve/reject/cancel; payload mismatch → `IDEMPOTENCY_CONFLICT`; new-key after terminal → `ALREADY_DECIDED|INVALID_STATE_TRANSITION`.
+
+### Security Review Update
+
+```text
+service_role_browser: SAFE
+origin_csrf: PASS
+json_allowlist: PASS
+actor_spoofing: PASS
+audit_spoofing: PASS
+tenant_isolation: N_A_OPS_GLOBAL
+must_fix_now: NONE
+repair: NOT_PERFORMED
+Production: NOT_TOUCHED
+Apply: NOT_EXECUTED
+```

@@ -282,11 +282,17 @@
 
     const meta = document.createElement("p");
     meta.className = "dda-muted";
+    meta.setAttribute("data-dda-status", status || "");
+    meta.setAttribute(
+      "data-dda-version",
+      Number.isFinite(version) ? String(version) : ""
+    );
     meta.textContent = `status=${status || "—"} · version=${Number.isFinite(version) ? version : "—"}`;
     box.appendChild(meta);
 
     const reason = document.createElement("textarea");
     reason.id = "dda-decision-reason";
+    reason.setAttribute("data-dda-reason", "1");
     reason.maxLength = 500;
     reason.placeholder = "reason（任意 · 最大500文字 · HTML不可）";
     box.appendChild(reason);
@@ -294,12 +300,14 @@
     const feedback = document.createElement("div");
     feedback.className = "dda-decision-feedback";
     feedback.id = "dda-decision-feedback";
+    feedback.setAttribute("data-dda-feedback", "1");
     box.appendChild(feedback);
 
     const actions = actionsForStatus(status);
     if (!actions.length) {
       const p = document.createElement("p");
       p.className = "dda-muted";
+      p.setAttribute("data-dda-terminal", "1");
       p.textContent =
         "この状態では Decision 操作できません（approved 以降は Apply 未接続のまま停止）。";
       box.appendChild(p);
@@ -309,10 +317,12 @@
 
     const row = document.createElement("div");
     row.className = "dda-decision-actions";
+    row.setAttribute("data-dda-actions", "1");
     actions.forEach((action) => {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = `dda-btn dda-btn--${action}`;
+      btn.setAttribute("data-dda-action", action);
       btn.textContent =
         action === "propose"
           ? "Propose"
@@ -322,7 +332,7 @@
               ? "Reject"
               : "Cancel";
       btn.addEventListener("click", () =>
-        submitDecision(proposalId, action, version, reason.value, feedback)
+        submitDecision(proposalId, action, version, reason.value, feedback, row)
       );
       row.appendChild(btn);
     });
@@ -330,8 +340,14 @@
     root.appendChild(box);
   }
 
-  async function submitDecision(proposalId, action, expectedVersion, reason, feedback) {
+  async function submitDecision(proposalId, action, expectedVersion, reason, feedback, actionRow) {
     if (!proposalId) return;
+    const buttons = actionRow
+      ? Array.from(actionRow.querySelectorAll("button[data-dda-action]"))
+      : [];
+    buttons.forEach((b) => {
+      b.disabled = true;
+    });
     text(feedback, "送信中…");
     feedback.className = "dda-decision-feedback";
     const idem = newIdempotencyKey(action);
@@ -375,7 +391,11 @@
       setState(msg, "error");
       if (err === "VERSION_CONFLICT") {
         await loadDetail(proposalId);
+        return;
       }
+      buttons.forEach((b) => {
+        b.disabled = false;
+      });
     } catch (err) {
       const code = err && err.code ? String(err.code) : "";
       text(
@@ -383,6 +403,9 @@
         code === "auth_required" ? "認証が必要です。" : "送信に失敗しました。"
       );
       feedback.className = "dda-decision-feedback is-err";
+      buttons.forEach((b) => {
+        b.disabled = false;
+      });
     }
   }
 
