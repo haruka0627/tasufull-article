@@ -1,0 +1,15 @@
+{
+  "base": "https://341246f1.tasufull-article.pages.dev",
+  "pass": 35,
+  "fail": 0,
+  "notes": [],
+  "perf": {
+    "list_ms": 106,
+    "summary_ms": 47,
+    "ui_desktop_ms": 232,
+    "ui_mobile_ms": 184,
+    "timeline_ms": 177
+  },
+  "staging_ref": "ahlxuyvhzqdqaojiywmu",
+  "production_unchanged": true
+}
