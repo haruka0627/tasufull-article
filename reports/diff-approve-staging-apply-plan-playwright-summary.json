@@ -1,0 +1,8 @@
+{
+  "verdict": "PASS_STAGING_APPLY_PLAN_PLAYWRIGHT",
+  "pass": 9,
+  "fail": 0,
+  "base": "http://127.0.0.1:8788",
+  "apply": "NOT_EXECUTED",
+  "provider": "NOT_EXECUTED"
+}

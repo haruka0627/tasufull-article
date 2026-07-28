@@ -237,7 +237,7 @@
   function appendBadges(root) {
     const labels = document.createElement("div");
     labels.className = "dda-badges";
-    ["STAGING", "DECISION WRITE", "NO APPLY"].forEach((t) => {
+    ["STAGING", "DECISION WRITE", "DRY RUN", "NO APPLY"].forEach((t) => {
       const s = document.createElement("span");
       s.className =
         "dda-badge " +
@@ -245,7 +245,9 @@
           ? "dda-badge--staging"
           : t === "NO APPLY"
             ? "dda-badge--noapply"
-            : "dda-badge--write");
+            : t === "DRY RUN"
+              ? "dda-badge--dryrun"
+              : "dda-badge--write");
       s.textContent = t;
       labels.appendChild(s);
     });
@@ -256,6 +258,188 @@
     if (status === "draft") return ["propose"];
     if (status === "pending_approval") return ["approve", "reject", "cancel"];
     return [];
+  }
+
+  async function apiPostPlan(proposalId, payload) {
+    const token = await readSession();
+    if (!token) {
+      const err = new Error("auth_required");
+      err.code = "auth_required";
+      throw err;
+    }
+    const res = await fetch(
+      `${apiBase()}${DETAIL_PREFIX}${encodeURIComponent(proposalId)}/apply-plan`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Idempotency-Key": String(payload.idempotencyKey || ""),
+        },
+        cache: "no-store",
+        body: JSON.stringify(payload),
+      }
+    );
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    return { res, body };
+  }
+
+  async function apiGetPlans(proposalId) {
+    const token = await readSession();
+    if (!token) return { res: { status: 401 }, body: null };
+    const res = await fetch(
+      `${apiBase()}${DETAIL_PREFIX}${encodeURIComponent(proposalId)}/apply-plan`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    return { res, body };
+  }
+
+  function renderPlanPanel(root, prop) {
+    if (!isOpsWriter) return;
+    const status = String(prop.status || "");
+    const version = Number(prop.record_version || 0);
+    const proposalId = String(prop.proposal_id || "");
+    const box = document.createElement("div");
+    box.className = "dda-plan";
+    box.setAttribute("data-dda-plan", "1");
+    const h = document.createElement("h3");
+    h.textContent = "Dry-run Apply Plan（NO APPLY）";
+    box.appendChild(h);
+    const meta = document.createElement("p");
+    meta.className = "dda-plan-meta";
+    meta.textContent =
+      status === "approved"
+        ? `approved · version=${version} · Generate Dry-run Plan のみ（実行ボタンなし）`
+        : "approved のみ Plan 生成可能です。";
+    box.appendChild(meta);
+    const out = document.createElement("div");
+    out.id = "dda-plan-output";
+    out.setAttribute("data-dda-plan-output", "1");
+    box.appendChild(out);
+    if (status === "approved") {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "dda-btn dda-btn--plan";
+      btn.setAttribute("data-dda-action", "generate-plan");
+      btn.textContent = "Generate Dry-run Plan";
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        out.textContent = "生成中…";
+        try {
+          const idem =
+            "ui-plan-" +
+            ((global.crypto &&
+              global.crypto.randomUUID &&
+              global.crypto.randomUUID()) ||
+              Date.now().toString(36));
+          const { res, body } = await apiPostPlan(proposalId, {
+            requestId: proposalId,
+            expectedVersion: version,
+            idempotencyKey: idem,
+            mode: "dry_run",
+          });
+          if (res.ok && body?.ok) {
+            renderPlanResult(out, body);
+            setState("Dry-run Plan を生成しました（Apply なし）。", "ok");
+            await loadDetail(proposalId);
+          } else {
+            out.textContent = `失敗: ${body?.error || res.status}`;
+            out.className = "dda-decision-feedback is-err";
+            btn.disabled = false;
+          }
+        } catch (e) {
+          out.textContent = "送信に失敗しました。";
+          btn.disabled = false;
+        }
+      });
+      box.appendChild(btn);
+    }
+    root.appendChild(box);
+    apiGetPlans(proposalId).then(({ res, body }) => {
+      if (res.ok && body?.ok && Array.isArray(body.items) && body.items[0]) {
+        const latest = body.items[0];
+        renderPlanResult(out, {
+          ...latest,
+          status: latest.status,
+          fingerprint: latest.fingerprint,
+          operations: latest.normalizedPlan?.operations,
+          preconditions: latest.normalizedPlan?.preconditions,
+          warnings: latest.normalizedPlan?.warnings,
+          blockers: latest.normalizedPlan?.blockers,
+          estimatedImpact: latest.normalizedPlan?.estimatedImpact,
+          sourceVersion: latest.sourceVersion,
+          planId: latest.planId,
+          replayed: false,
+          createdAt: latest.createdAt,
+        });
+      }
+    });
+  }
+
+  function renderPlanResult(node, body) {
+    if (!node) return;
+    node.textContent = "";
+    node.className = "";
+    const lines = [
+      `status=${body.status || "—"}`,
+      `sourceVersion=${body.sourceVersion ?? "—"}`,
+      `fingerprint=${String(body.fingerprint || "").slice(0, 24)}…`,
+      `planId=${body.planId || "—"}`,
+      body.replayed ? "replayed=true" : "replayed=false",
+      `createdAt=${body.createdAt || "—"}`,
+      "applyExecuted=false",
+      "providerExecuted=false",
+    ];
+    const p = document.createElement("p");
+    p.className = "dda-plan-meta";
+    p.textContent = lines.join(" · ");
+    node.appendChild(p);
+    function list(title, arr) {
+      const h = document.createElement("strong");
+      h.textContent = title;
+      node.appendChild(h);
+      const ul = document.createElement("ul");
+      (Array.isArray(arr) ? arr : []).forEach((x) => {
+        const li = document.createElement("li");
+        li.textContent =
+          typeof x === "string" ? x : JSON.stringify(x).slice(0, 200);
+        ul.appendChild(li);
+      });
+      if (!ul.children.length) {
+        const li = document.createElement("li");
+        li.className = "dda-muted";
+        li.textContent = "なし";
+        ul.appendChild(li);
+      }
+      node.appendChild(ul);
+    }
+    list("operations", body.operations);
+    list("preconditions", body.preconditions);
+    list("warnings", body.warnings);
+    list("blockers", body.blockers);
+    const impact = document.createElement("p");
+    impact.className = "dda-plan-meta";
+    impact.textContent = `estimatedImpact: ${JSON.stringify(body.estimatedImpact || {})}`;
+    node.appendChild(impact);
   }
 
   function renderDecisionPanel(root, prop) {
@@ -449,6 +633,7 @@
     root.appendChild(dl);
 
     renderDecisionPanel(root, prop);
+    renderPlanPanel(root, prop);
 
     const secTitle = document.createElement("h3");
     secTitle.textContent = "Security invariants";

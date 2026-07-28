@@ -50,6 +50,7 @@ assert(
   "UI STAGING badge",
   /STAGING/.test(html) &&
     /DECISION WRITE/.test(html) &&
+    /DRY RUN/.test(html) &&
     /NO APPLY/.test(html)
 );
 assert(

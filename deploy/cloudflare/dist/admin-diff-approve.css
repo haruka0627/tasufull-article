@@ -38,7 +38,20 @@ body {
 .dda-badge--staging { background: #0ea5e9; color: #082f49; }
 .dda-badge--ro { background: #334155; color: #e2e8f0; }
 .dda-badge--write { background: #14532d; color: #bbf7d0; }
+.dda-badge--dryrun { background: #713f12; color: #fde68a; }
 .dda-badge--noapply { background: #7f1d1d; color: #fecaca; }
+
+.dda-plan {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border: 1px solid var(--dda-border);
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.45);
+}
+.dda-plan h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+.dda-plan-meta { color: var(--dda-muted); font-size: 0.85rem; margin: 0.35rem 0; }
+.dda-plan ul { margin: 0.35rem 0 0.75rem; padding-left: 1.1rem; }
+.dda-btn--plan { border-color: #fbbf24; }
 
 .dda-decision {
   margin: 1rem 0;
