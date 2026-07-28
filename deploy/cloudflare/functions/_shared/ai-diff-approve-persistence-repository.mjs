@@ -675,6 +675,147 @@ export function createPersistentRepository(options = {}) {
       return api.put(record, { ...opts, event });
     },
 
+    /**
+     * Operator decision write (propose|approve|reject|cancel).
+     * Uses ai_diff_approve_record_decision RPC — never Apply/Provider.
+     * @param {{
+     *   proposalId: string,
+     *   action: string,
+     *   expectedVersion: number,
+     *   idempotencyKey: string,
+     *   payloadHash: string,
+     *   reason?: string | null,
+     *   actorId: string,
+     *   actorRole?: string,
+     *   environment?: string,
+     *   fromStatus: string,
+     *   toStatus: string,
+     *   eventType: string,
+     * }} input
+     */
+    async recordOperatorDecision(input) {
+      const g = gate();
+      if (!g.ok) return g;
+      if (cfg.applyEnabled) {
+        return {
+          ok: false,
+          error: "apply_forbidden",
+          reason: "apply_forbidden",
+        };
+      }
+
+      const proposalId = nfc(input.proposalId);
+      const timeline = await api.getAuditTimeline(proposalId);
+      let previous_event_hash = "genesis";
+      if (Array.isArray(timeline) && timeline.length) {
+        const first = /** @type {{ ok?: boolean, reason?: string }} */ (
+          timeline[0]
+        );
+        if (first && first.ok === false) {
+          return {
+            ok: false,
+            error: "invalid_context",
+            reason: first.reason || "audit_chain_mismatch",
+          };
+        }
+        const last = timeline[timeline.length - 1];
+        if (last && typeof last.event_hash === "string") {
+          previous_event_hash = last.event_hash;
+        }
+      }
+
+      const sequence_number =
+        Array.isArray(timeline) && timeline.length
+          ? Number(timeline[timeline.length - 1].sequence_number || 0) + 1
+          : 1;
+
+      const event_payload = {
+        actor_id: input.actorId,
+        actor_role: input.actorRole || "operator",
+        action: input.action,
+        from_status: input.fromStatus,
+        to_status: input.toStatus,
+        request_version: input.expectedVersion,
+        reason: input.reason || null,
+        payload_hash: input.payloadHash,
+        applied: false,
+        provider_called: false,
+        executed: false,
+      };
+      const hashes = buildAuditEventHashes({
+        previous_event_hash,
+        event_type: input.eventType,
+        sequence_number,
+        event_payload,
+      });
+      if (!hashes) {
+        return {
+          ok: false,
+          error: PHASE_A7_REASONS.SERIALIZE_FAILED,
+          reason: PHASE_A7_REASONS.SERIALIZE_FAILED,
+        };
+      }
+
+      const rpcInput = {
+        proposal_id: proposalId,
+        action: nfc(input.action),
+        expected_version: Number(input.expectedVersion),
+        idempotency_key: nfc(input.idempotencyKey),
+        payload_hash: nfc(input.payloadHash),
+        actor_id: nfc(input.actorId),
+        actor_role: nfc(input.actorRole || "operator"),
+        reason: input.reason == null ? null : nfc(String(input.reason)),
+        environment: nfc(input.environment || "staging"),
+        event_type: nfc(input.eventType),
+        from_status: nfc(input.fromStatus),
+        to_status: nfc(input.toStatus),
+        previous_event_hash: hashes.previous_event_hash,
+        event_hash: hashes.event_hash,
+        event_payload,
+        sequence_number,
+      };
+
+      const { res, json } = await rest(
+        cfg,
+        "/rest/v1/rpc/ai_diff_approve_record_decision",
+        {
+          method: "POST",
+          body: JSON.stringify({ p_input: rpcInput }),
+        }
+      );
+      if (!res.ok) {
+        return {
+          ok: false,
+          error: "db_unavailable",
+          reason: "db_unavailable",
+        };
+      }
+      const body = isPlainObject(json) ? json : {};
+      if (body.ok !== true) {
+        return {
+          ok: false,
+          error: String(body.error || body.code || "invalid_context"),
+          code: String(body.code || body.error || "invalid_context"),
+          current_status: body.current_status,
+          current_version: body.current_version,
+        };
+      }
+      return {
+        ok: true,
+        requestId: String(body.proposal_id || proposalId),
+        previousStatus: String(body.previous_status || input.fromStatus),
+        currentStatus: String(body.current_status || input.toStatus),
+        version: Number(body.version || input.expectedVersion + 1),
+        decision: String(body.decision || input.action),
+        auditEventId: body.audit_event_id ? String(body.audit_event_id) : null,
+        replayed: Boolean(body.replayed),
+        createdAt: body.created_at ? String(body.created_at) : null,
+        applied: false,
+        provider_called: false,
+        executed: false,
+      };
+    },
+
     size() {
       return -1;
     },

@@ -1,6 +1,6 @@
 /**
- * Diff & Approve — Staging read-only Operations client.
- * No Approve / Apply / Provider / write actions.
+ * Diff & Approve — Staging Decision Write Operations client.
+ * Decision writes only · No Apply / Provider / Execute UI.
  */
 (function (global) {
   "use strict";
@@ -16,6 +16,7 @@
   let total = 0;
   let selectedId = "";
   let bootDone = false;
+  let isOpsWriter = false;
 
   function apiBase() {
     if (global.location?.origin && !/^file:/i.test(global.location.protocol)) {
@@ -37,6 +38,13 @@
 
   function text(node, value) {
     if (node) node.textContent = value == null ? "" : String(value);
+  }
+
+  function newIdempotencyKey(action) {
+    const rnd =
+      (global.crypto && global.crypto.randomUUID && global.crypto.randomUUID()) ||
+      `${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
+    return `ui-${String(action || "x").slice(0, 12)}-${rnd}`.slice(0, 128);
   }
 
   function redact(value, depth) {
@@ -125,6 +133,36 @@
     return { res, body };
   }
 
+  async function apiPostDecision(proposalId, payload) {
+    const token = await readSession();
+    if (!token) {
+      const err = new Error("auth_required");
+      err.code = "auth_required";
+      throw err;
+    }
+    const res = await fetch(
+      `${apiBase()}${DETAIL_PREFIX}${encodeURIComponent(proposalId)}/decision`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Idempotency-Key": String(payload.idempotencyKey || ""),
+        },
+        cache: "no-store",
+        body: JSON.stringify(payload),
+      }
+    );
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    return { res, body };
+  }
+
   function queryString() {
     const params = new URLSearchParams();
     params.set("page", String(page));
@@ -196,6 +234,158 @@
     });
   }
 
+  function appendBadges(root) {
+    const labels = document.createElement("div");
+    labels.className = "dda-badges";
+    ["STAGING", "DECISION WRITE", "NO APPLY"].forEach((t) => {
+      const s = document.createElement("span");
+      s.className =
+        "dda-badge " +
+        (t === "STAGING"
+          ? "dda-badge--staging"
+          : t === "NO APPLY"
+            ? "dda-badge--noapply"
+            : "dda-badge--write");
+      s.textContent = t;
+      labels.appendChild(s);
+    });
+    root.appendChild(labels);
+  }
+
+  function actionsForStatus(status) {
+    if (status === "draft") return ["propose"];
+    if (status === "pending_approval") return ["approve", "reject", "cancel"];
+    return [];
+  }
+
+  function renderDecisionPanel(root, prop) {
+    const status = String(prop.status || "");
+    const version = Number(prop.record_version || 0);
+    const proposalId = String(prop.proposal_id || "");
+
+    if (!isOpsWriter) {
+      const note = document.createElement("p");
+      note.className = "dda-viewer-note";
+      note.textContent =
+        "閲覧のみ（Operator 権限がないため Decision 操作は表示されません）。";
+      root.appendChild(note);
+      return;
+    }
+
+    const box = document.createElement("div");
+    box.className = "dda-decision";
+    box.setAttribute("data-dda-decision", "1");
+
+    const h = document.createElement("h3");
+    h.textContent = "Operator Decision（NO APPLY）";
+    box.appendChild(h);
+
+    const meta = document.createElement("p");
+    meta.className = "dda-muted";
+    meta.textContent = `status=${status || "—"} · version=${Number.isFinite(version) ? version : "—"}`;
+    box.appendChild(meta);
+
+    const reason = document.createElement("textarea");
+    reason.id = "dda-decision-reason";
+    reason.maxLength = 500;
+    reason.placeholder = "reason（任意 · 最大500文字 · HTML不可）";
+    box.appendChild(reason);
+
+    const feedback = document.createElement("div");
+    feedback.className = "dda-decision-feedback";
+    feedback.id = "dda-decision-feedback";
+    box.appendChild(feedback);
+
+    const actions = actionsForStatus(status);
+    if (!actions.length) {
+      const p = document.createElement("p");
+      p.className = "dda-muted";
+      p.textContent =
+        "この状態では Decision 操作できません（approved 以降は Apply 未接続のまま停止）。";
+      box.appendChild(p);
+      root.appendChild(box);
+      return;
+    }
+
+    const row = document.createElement("div");
+    row.className = "dda-decision-actions";
+    actions.forEach((action) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = `dda-btn dda-btn--${action}`;
+      btn.textContent =
+        action === "propose"
+          ? "Propose"
+          : action === "approve"
+            ? "Approve"
+            : action === "reject"
+              ? "Reject"
+              : "Cancel";
+      btn.addEventListener("click", () =>
+        submitDecision(proposalId, action, version, reason.value, feedback)
+      );
+      row.appendChild(btn);
+    });
+    box.appendChild(row);
+    root.appendChild(box);
+  }
+
+  async function submitDecision(proposalId, action, expectedVersion, reason, feedback) {
+    if (!proposalId) return;
+    text(feedback, "送信中…");
+    feedback.className = "dda-decision-feedback";
+    const idem = newIdempotencyKey(action);
+    const payload = {
+      requestId: proposalId,
+      action,
+      expectedVersion,
+      idempotencyKey: idem,
+    };
+    if (reason && String(reason).trim()) {
+      payload.reason = String(reason).trim().slice(0, 500);
+    }
+    try {
+      const { res, body } = await apiPostDecision(proposalId, payload);
+      if (res.ok && body?.ok) {
+        const replay = body.replayed ? "（replay）" : "";
+        text(
+          feedback,
+          `成功${replay}: ${body.previousStatus} → ${body.currentStatus} · v${body.version}`
+        );
+        feedback.className = "dda-decision-feedback is-ok";
+        setState("Decision を保存しました（Apply なし）。", "ok");
+        await loadDetail(proposalId);
+        await loadList();
+        await loadSummary();
+        return;
+      }
+      const err = body?.error || String(res.status);
+      let msg = `失敗: ${err}`;
+      if (err === "VERSION_CONFLICT") {
+        msg = "失敗: VERSION_CONFLICT（stale version · 再読込してください）";
+      } else if (err === "IDEMPOTENCY_CONFLICT") {
+        msg = "失敗: IDEMPOTENCY_CONFLICT（同一キーで異なる内容）";
+      } else if (err === "ALREADY_DECIDED") {
+        msg = "失敗: ALREADY_DECIDED";
+      } else if (err === "INVALID_STATE_TRANSITION") {
+        msg = "失敗: INVALID_STATE_TRANSITION";
+      }
+      text(feedback, msg);
+      feedback.className = "dda-decision-feedback is-err";
+      setState(msg, "error");
+      if (err === "VERSION_CONFLICT") {
+        await loadDetail(proposalId);
+      }
+    } catch (err) {
+      const code = err && err.code ? String(err.code) : "";
+      text(
+        feedback,
+        code === "auth_required" ? "認証が必要です。" : "送信に失敗しました。"
+      );
+      feedback.className = "dda-decision-feedback is-err";
+    }
+  }
+
   function renderDetail(body) {
     const root = el("dda-detail");
     if (!root) return;
@@ -208,21 +398,7 @@
       return;
     }
 
-    const labels = document.createElement("div");
-    labels.className = "dda-badges";
-    ["STAGING", "READ ONLY", "NO APPLY"].forEach((t) => {
-      const s = document.createElement("span");
-      s.className =
-        "dda-badge " +
-        (t === "STAGING"
-          ? "dda-badge--staging"
-          : t === "NO APPLY"
-            ? "dda-badge--noapply"
-            : "dda-badge--ro");
-      s.textContent = t;
-      labels.appendChild(s);
-    });
-    root.appendChild(labels);
+    appendBadges(root);
 
     const prop = body.proposal || {};
     const dl = document.createElement("dl");
@@ -248,6 +424,8 @@
       dl.appendChild(dd);
     });
     root.appendChild(dl);
+
+    renderDecisionPanel(root, prop);
 
     const secTitle = document.createElement("h3");
     secTitle.textContent = "Security invariants";
@@ -309,12 +487,15 @@
     rawTitle.textContent = "Safe payload snapshot";
     root.appendChild(rawTitle);
     const pre = document.createElement("pre");
-    text(pre, safeJson({
-      approval: body.approval,
-      impact: body.impact,
-      apply_state: body.apply_state,
-      display: body.display,
-    }));
+    text(
+      pre,
+      safeJson({
+        approval: body.approval,
+        impact: body.impact,
+        apply_state: body.apply_state,
+        display: body.display,
+      })
+    );
     root.appendChild(pre);
   }
 
@@ -434,9 +615,14 @@
     if (bootDone) return;
     bootDone = true;
     const guard = global.TasuAuthOpsGuard;
-    if (guard && !guard.canAccessOps()) {
-      setState("権限がありません。", "error");
-      return;
+    if (guard && typeof guard.canAccessOps === "function") {
+      isOpsWriter = Boolean(guard.canAccessOps());
+      if (!isOpsWriter) {
+        setState("権限がありません。", "error");
+        return;
+      }
+    } else {
+      isOpsWriter = true;
     }
     bind();
     await refresh();

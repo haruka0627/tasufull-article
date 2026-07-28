@@ -37,7 +37,52 @@ body {
 }
 .dda-badge--staging { background: #0ea5e9; color: #082f49; }
 .dda-badge--ro { background: #334155; color: #e2e8f0; }
+.dda-badge--write { background: #14532d; color: #bbf7d0; }
 .dda-badge--noapply { background: #7f1d1d; color: #fecaca; }
+
+.dda-decision {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border: 1px solid var(--dda-border);
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.55);
+}
+.dda-decision h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+.dda-decision-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+.dda-decision textarea {
+  width: 100%;
+  min-height: 3.5rem;
+  resize: vertical;
+  background: var(--dda-panel);
+  color: var(--dda-text);
+  border: 1px solid var(--dda-border);
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.55rem;
+  font: inherit;
+}
+.dda-btn--propose { border-color: #38bdf8; }
+.dda-btn--approve { border-color: #4ade80; }
+.dda-btn--reject { border-color: #fbbf24; }
+.dda-btn--cancel { border-color: #94a3b8; }
+.dda-decision-feedback {
+  margin-top: 0.55rem;
+  font-size: 0.85rem;
+  color: var(--dda-muted);
+}
+.dda-decision-feedback.is-ok { color: var(--dda-ok); }
+.dda-decision-feedback.is-err { color: var(--dda-danger); }
+.dda-viewer-note {
+  margin: 0.75rem 0;
+  padding: 0.6rem 0.75rem;
+  border-left: 3px solid var(--dda-border);
+  color: var(--dda-muted);
+  font-size: 0.85rem;
+}
 
 .dda-main { padding: 1rem 1.5rem 2rem; }
 .dda-toolbar {

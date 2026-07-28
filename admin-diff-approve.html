@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Diff &amp; Approve（Staging · Read Only）| TASFUL</title>
+  <title>Diff &amp; Approve（Staging · Decision Write）| TASFUL</title>
   <meta name="robots" content="noindex,nofollow" />
   <link rel="stylesheet" href="admin-diff-approve.css" />
 </head>
@@ -11,11 +11,11 @@
   <header class="dda-header">
     <div class="dda-badges" aria-label="Environment">
       <span class="dda-badge dda-badge--staging">STAGING</span>
-      <span class="dda-badge dda-badge--ro">READ ONLY</span>
+      <span class="dda-badge dda-badge--write">DECISION WRITE</span>
       <span class="dda-badge dda-badge--noapply">NO APPLY</span>
     </div>
     <h1>Diff &amp; Approve Operations</h1>
-    <p class="dda-sub">Staging 限定の参照専用ビューです。承認・適用・Provider 操作はありません。</p>
+    <p class="dda-sub">Staging 限定。Operator は proposal / approve / reject / cancel の意思決定のみ永続化できます。Apply · Provider · 実行はありません。</p>
   </header>
 
   <main class="dda-main">
@@ -28,6 +28,7 @@
           <option value="pending_approval">pending_approval</option>
           <option value="approved">approved</option>
           <option value="rejected">rejected</option>
+          <option value="cancelled">cancelled</option>
         </select>
       </label>
       <label>

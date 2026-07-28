@@ -46,11 +46,26 @@ const proposalsApi = read(
   "deploy/cloudflare/functions/api/ai-diff-approve/proposals.js"
 );
 
-assert("UI STAGING badge", /STAGING/.test(html) && /READ ONLY/.test(html) && /NO APPLY/.test(html));
-assert("no Approve button", !/>\s*Approve\s*</i.test(html) && !/Approve</.test(html));
+assert(
+  "UI STAGING badge",
+  /STAGING/.test(html) &&
+    /DECISION WRITE/.test(html) &&
+    /NO APPLY/.test(html)
+);
+assert(
+  "no static Approve markup",
+  !/>\s*Approve\s*</i.test(html)
+);
 assert("no Apply button", !/>\s*Apply\s*</i.test(html));
-assert("client GET only fetch", /method:\s*"GET"/.test(client));
-assert("client no POST write", !/method:\s*"POST"/.test(client));
+assert("client GET fetch retained", /method:\s*"GET"/.test(client));
+assert(
+  "client decision POST scoped",
+  /\/decision/.test(client) && /method:\s*"POST"/.test(client)
+);
+assert(
+  "client no Apply execute path",
+  !/performApply|executeProvider|\/apply["']/.test(client)
+);
 assert("client redaction", /SECRET_RE|service[_-]?role/.test(client));
 assert("client textContent path", /textContent/.test(client));
 assert("no service_role in client", !/SERVICE_ROLE_KEY|service_role_key\s*=/.test(client));
