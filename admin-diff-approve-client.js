@@ -77,7 +77,23 @@
       if (client?.auth?.getSession) {
         const { data } = await client.auth.getSession();
         const session = data?.session || null;
-        return String(session?.access_token || "").trim();
+        const token = String(session?.access_token || "").trim();
+        if (token) return token;
+      }
+    } catch {
+      /* ignore */
+    }
+    try {
+      for (let i = 0; i < global.localStorage.length; i += 1) {
+        const key = global.localStorage.key(i) || "";
+        if (!/auth-token|supabase\.auth/i.test(key)) continue;
+        const raw = global.localStorage.getItem(key);
+        if (!raw) continue;
+        const parsed = JSON.parse(raw);
+        const token = String(
+          parsed?.access_token || parsed?.currentSession?.access_token || ""
+        ).trim();
+        if (token) return token;
       }
     } catch {
       /* ignore */
@@ -376,8 +392,17 @@
   }
 
   async function refresh() {
-    await loadSummary();
-    await loadList();
+    try {
+      await loadSummary();
+      await loadList();
+    } catch (err) {
+      const code = err && err.code ? String(err.code) : "";
+      if (code === "auth_required") {
+        setState("認証が必要です。運営アカウントでサインインしてください。", "error");
+        return;
+      }
+      setState(`再読込に失敗しました: ${err && err.message ? err.message : "error"}`, "error");
+    }
   }
 
   function bind() {
