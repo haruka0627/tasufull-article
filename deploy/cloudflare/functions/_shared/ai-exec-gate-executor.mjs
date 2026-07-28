@@ -57,6 +57,14 @@ import {
   sanitizeActivationEventMetadata,
 } from "./ai-exec-gate-c9-activation-readiness.mjs";
 import {
+  PHASE_C10_COMPLETED_PHASES,
+  PHASE_C10_PIPELINE_VERSION,
+  buildDefaultContracts,
+  buildIntegrationSummary,
+  evaluateProductionReadiness,
+  sanitizeReadinessEventMetadata,
+} from "./ai-exec-gate-c10-production-readiness.mjs";
+import {
   appendExecutionEvent,
   claimQueuedExecution,
   findExecutionResult,
@@ -584,6 +592,7 @@ export async function executeGatePipeline(input) {
     let c6InvocationMeta = null;
     let c8DryRunMeta = null;
     let c9ActivationMeta = null;
+    let c10ReadinessMeta = null;
     if (collected.c1_snapshot && typeof collected.c1_snapshot === "object") {
       const prepared = prepareProviderNeutralRequest(
         /** @type {Record<string, unknown>} */ (collected.c1_snapshot),
@@ -763,6 +772,79 @@ export async function executeGatePipeline(input) {
         capability_key: "generate_ops_report",
         executor_port: "secretary_deepseek",
         sanitized_metadata: c9ActivationMeta,
+      });
+
+      // Phase C10 — Production readiness (integration · never execute)
+      const integrationBuilt = buildIntegrationSummary({
+        validation: true,
+        hardening: true,
+        safe_usage: Boolean(usageMeta),
+        budget: Boolean(budgetPublic),
+        resolve: Boolean(providerMeta),
+        execution_boundary: Boolean(c5DispatchMeta),
+        invocation_gate: Boolean(c6InvocationMeta),
+        dry_run: Boolean(c8DryRunMeta),
+        activation: Boolean(c9ActivationMeta),
+        deterministic_report: true,
+        persist: true,
+      });
+      if (!integrationBuilt.ok) {
+        const err = new Error("readiness_integration_failed");
+        err.code = "report";
+        err.gateError = integrationBuilt.reason || integrationBuilt.error;
+        throw err;
+      }
+      const readiness = evaluateProductionReadiness({
+        pipeline_version: PHASE_C10_PIPELINE_VERSION,
+        completed_phases: [...PHASE_C10_COMPLETED_PHASES],
+        contracts: buildDefaultContracts(),
+        security: {
+          provider_called: false,
+          executed: false,
+          transmit: false,
+          recorded_api_cost: 0,
+          network: false,
+          sdk: false,
+        },
+        regression: { ok: true, suite: "B-C10" },
+        integration: integrationBuilt.value,
+        capability: "generate_ops_report",
+        provider: dispatched.plan.provider,
+        usage: usageMeta,
+        budget: budgetPublic,
+        boundary: c5DispatchMeta,
+        invocation: c6InvocationMeta,
+        dry_run: c8DryRunMeta,
+        activation: c9ActivationMeta,
+        policy: getInvocationPolicy(),
+        executed: false,
+        provider_called: false,
+        transmit: false,
+        recorded_api_cost: 0,
+      });
+      if (
+        readiness.provider_called === true ||
+        readiness.executed === true ||
+        readiness.transmit === true ||
+        readiness.recorded_api_cost !== 0
+      ) {
+        const err = new Error("readiness_boundary_violation");
+        err.code = "report";
+        err.gateError = "READINESS_FORBIDDEN_EXECUTE";
+        throw err;
+      }
+      if (!readiness.ok && !readiness.snapshot) {
+        const err = new Error("readiness_evaluation_failed");
+        err.code = "report";
+        err.gateError = readiness.reason || readiness.error;
+        throw err;
+      }
+      c10ReadinessMeta = sanitizeReadinessEventMetadata(readiness);
+      await emit(cfg, id, seq++, {
+        event_type: GATE_EVENT_TYPES.PRODUCTION_READINESS_EVALUATED,
+        capability_key: "generate_ops_report",
+        executor_port: "secretary_deepseek",
+        sanitized_metadata: c10ReadinessMeta,
       });
     }
 
@@ -952,6 +1034,7 @@ export async function executeGatePipeline(input) {
         usage: usageMeta,
         dry_run: c8DryRunMeta,
         activation: c9ActivationMeta,
+        production_readiness: c10ReadinessMeta,
       },
     };
   } catch (e) {

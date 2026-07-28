@@ -82,6 +82,7 @@ export const GATE_EVENT_TYPES = Object.freeze({
   USAGE_SNAPSHOT_UNAVAILABLE: "usage_snapshot_unavailable",
   PROVIDER_INVOCATION_DRY_RUN: "provider_invocation_dry_run",
   ACTIVATION_READINESS_EVALUATED: "activation_readiness_evaluated",
+  PRODUCTION_READINESS_EVALUATED: "production_readiness_evaluated",
 });
 
 /** B4 executor failure codes — separate from B1 Gate blocked reasons. */
