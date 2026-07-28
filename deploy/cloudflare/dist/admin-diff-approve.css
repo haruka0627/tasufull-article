@@ -40,6 +40,30 @@ body {
 .dda-badge--write { background: #14532d; color: #bbf7d0; }
 .dda-badge--dryrun { background: #713f12; color: #fde68a; }
 .dda-badge--noapply { background: #7f1d1d; color: #fecaca; }
+.dda-badge--ready { background: #164e63; color: #a5f3fc; }
+
+.dda-gate {
+  margin: 1rem 0;
+  padding: 0.85rem;
+  border: 1px solid var(--dda-border);
+  border-radius: 0.5rem;
+  background: rgba(15, 23, 42, 0.45);
+}
+.dda-gate h3 { margin: 0 0 0.5rem; font-size: 0.95rem; }
+.dda-gate input[type="text"] {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  margin: 0.35rem 0 0.65rem;
+  background: var(--dda-panel);
+  color: var(--dda-text);
+  border: 1px solid var(--dda-border);
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.55rem;
+  font: inherit;
+}
+.dda-btn--gate { border-color: #22d3ee; margin-right: 0.4rem; }
+.dda-btn--sim { border-color: #a78bfa; }
 
 .dda-plan {
   margin: 1rem 0;

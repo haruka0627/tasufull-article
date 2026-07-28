@@ -1064,6 +1064,434 @@ export function createPersistentRepository(options = {}) {
       return { ok: true, value: row };
     },
 
+    /**
+     * @param {string} proposalId
+     */
+    async hasActiveExecutionAttempt(proposalId) {
+      const g = gateRead();
+      if (!g.ok) return false;
+      const path =
+        `/rest/v1/ai_diff_approve_execution_attempts?select=id` +
+        `&proposal_id=eq.${encodeURIComponent(nfc(proposalId))}` +
+        `&status=eq.prepared&limit=1`;
+      const { res, json } = await rest(cfg, path, { method: "GET" });
+      if (!res.ok || !Array.isArray(json)) return false;
+      return json.length > 0;
+    },
+
+    /**
+     * @param {Record<string, unknown>} input
+     */
+    async persistApplyGate(input) {
+      const g = gate();
+      if (!g.ok) return g;
+      if (cfg.applyEnabled) {
+        return {
+          ok: false,
+          error: "apply_forbidden",
+          reason: "apply_forbidden",
+        };
+      }
+
+      const proposalId = nfc(input.proposalId);
+      const timeline = await api.getAuditTimeline(proposalId);
+      let previous_event_hash = "genesis";
+      if (Array.isArray(timeline) && timeline.length) {
+        const first = /** @type {{ ok?: boolean, reason?: string }} */ (
+          timeline[0]
+        );
+        if (first && first.ok === false) {
+          return {
+            ok: false,
+            error: "AUDIT_INVALID",
+            reason: first.reason || "audit_chain_mismatch",
+          };
+        }
+        const last = timeline[timeline.length - 1];
+        if (last && typeof last.event_hash === "string") {
+          previous_event_hash = last.event_hash;
+        }
+      }
+      const sequence_number =
+        Array.isArray(timeline) && timeline.length
+          ? Number(timeline[timeline.length - 1].sequence_number || 0) + 1
+          : 1;
+
+      const event_payload = {
+        gate_status: input.status,
+        plan_id: input.planId,
+        plan_fingerprint: input.planFingerprint,
+        source_version: input.expectedVersion,
+        blocker_count: Array.isArray(input.blockers) ? input.blockers.length : 0,
+        apply_executed: false,
+        provider_executed: false,
+        real_execution_available: false,
+        actor_id: input.actorId,
+      };
+      const hashes = buildAuditEventHashes({
+        previous_event_hash,
+        event_type: input.eventType,
+        sequence_number,
+        event_payload,
+      });
+      if (!hashes) {
+        return {
+          ok: false,
+          error: PHASE_A7_REASONS.SERIALIZE_FAILED,
+          reason: PHASE_A7_REASONS.SERIALIZE_FAILED,
+        };
+      }
+
+      const rpcInput = {
+        proposal_id: proposalId,
+        plan_id: nfc(input.planId),
+        expected_version: Number(input.expectedVersion),
+        idempotency_key: nfc(input.idempotencyKey),
+        payload_hash: nfc(input.payloadHash),
+        actor_id: nfc(input.actorId),
+        status: nfc(input.status),
+        plan_fingerprint: nfc(input.planFingerprint),
+        proposal_hash: nfc(input.proposalHash),
+        approval_hash: nfc(input.approvalHash),
+        blockers: Array.isArray(input.blockers) ? input.blockers : [],
+        preconditions: Array.isArray(input.preconditions)
+          ? input.preconditions
+          : [],
+        confirmation_phrase: nfc(input.confirmationPhrase),
+        event_type: nfc(input.eventType),
+        previous_event_hash: hashes.previous_event_hash,
+        event_hash: hashes.event_hash,
+        event_payload,
+        sequence_number,
+      };
+
+      const { res, json } = await rest(
+        cfg,
+        "/rest/v1/rpc/ai_diff_approve_confirm_apply_gate",
+        {
+          method: "POST",
+          body: JSON.stringify({ p_input: rpcInput }),
+        }
+      );
+      if (!res.ok) {
+        return {
+          ok: false,
+          error: "db_unavailable",
+          reason: "db_unavailable",
+        };
+      }
+      const body = isPlainObject(json) ? json : {};
+      if (body.ok !== true) {
+        return {
+          ok: false,
+          error: String(body.error || body.code || "invalid_context"),
+          code: String(body.code || body.error || "invalid_context"),
+          current_version: body.current_version,
+        };
+      }
+      return {
+        ok: true,
+        gateId: String(body.gate_id || ""),
+        requestId: String(body.proposal_id || proposalId),
+        sourceVersion: Number(body.source_version || input.expectedVersion),
+        status: String(body.status || input.status),
+        planFingerprint: String(body.plan_fingerprint || input.planFingerprint),
+        blockers: Array.isArray(body.blockers) ? body.blockers : input.blockers,
+        preconditions: Array.isArray(body.preconditions)
+          ? body.preconditions
+          : input.preconditions,
+        replayed: Boolean(body.replayed),
+        createdAt: body.created_at ? String(body.created_at) : null,
+        requestStatus: "approved",
+        applyExecuted: false,
+        providerExecuted: false,
+      };
+    },
+
+    /**
+     * @param {string} proposalId
+     */
+    async listApplyGates(proposalId) {
+      const g = gateRead();
+      if (!g.ok) return Object.freeze([]);
+      const path =
+        `/rest/v1/ai_diff_approve_apply_gates?select=id,proposal_id,plan_id,source_version,status,plan_fingerprint,blockers,preconditions,created_at` +
+        `&proposal_id=eq.${encodeURIComponent(nfc(proposalId))}` +
+        `&order=created_at.desc&limit=50`;
+      const { res, json } = await rest(cfg, path, { method: "GET" });
+      if (!res.ok || !Array.isArray(json)) return Object.freeze([]);
+      return Object.freeze(
+        json.map((row) =>
+          deepFreeze({
+            gateId: row.id,
+            requestId: row.proposal_id,
+            planId: row.plan_id,
+            sourceVersion: row.source_version,
+            status: row.status,
+            planFingerprint: row.plan_fingerprint,
+            blockers: row.blockers,
+            preconditions: row.preconditions,
+            createdAt: row.created_at,
+            applyExecuted: false,
+            providerExecuted: false,
+          })
+        )
+      );
+    },
+
+    /**
+     * @param {string} proposalId
+     * @param {string} gateId
+     */
+    async getApplyGate(proposalId, gateId) {
+      const g = gateRead();
+      if (!g.ok) return g;
+      const path =
+        `/rest/v1/ai_diff_approve_apply_gates?select=*` +
+        `&proposal_id=eq.${encodeURIComponent(nfc(proposalId))}` +
+        `&id=eq.${encodeURIComponent(nfc(gateId))}` +
+        `&limit=1`;
+      const { res, json } = await rest(cfg, path, { method: "GET" });
+      if (!res.ok) {
+        return { ok: false, error: "db_unavailable", reason: "db_unavailable" };
+      }
+      const row = Array.isArray(json) && json[0] ? json[0] : null;
+      if (!row) {
+        return { ok: false, error: "not_found", reason: "not_found" };
+      }
+      return {
+        ok: true,
+        value: deepFreeze({
+          gateId: row.id,
+          requestId: row.proposal_id,
+          planId: row.plan_id,
+          sourceVersion: row.source_version,
+          status: row.status,
+          planFingerprint: row.plan_fingerprint,
+          blockers: row.blockers,
+          preconditions: row.preconditions,
+          createdAt: row.created_at,
+          applyExecuted: false,
+          providerExecuted: false,
+        }),
+      };
+    },
+
+    /**
+     * @param {Record<string, unknown>} input
+     */
+    async persistExecutionAttempt(input) {
+      const g = gate();
+      if (!g.ok) return g;
+      if (cfg.applyEnabled) {
+        return {
+          ok: false,
+          error: "apply_forbidden",
+          reason: "apply_forbidden",
+        };
+      }
+
+      const proposalId = nfc(input.proposalId);
+      const timeline = await api.getAuditTimeline(proposalId);
+      let previous_event_hash = "genesis";
+      if (Array.isArray(timeline) && timeline.length) {
+        const first = /** @type {{ ok?: boolean, reason?: string }} */ (
+          timeline[0]
+        );
+        if (first && first.ok === false) {
+          return {
+            ok: false,
+            error: "AUDIT_INVALID",
+            reason: first.reason || "audit_chain_mismatch",
+          };
+        }
+        const last = timeline[timeline.length - 1];
+        if (last && typeof last.event_hash === "string") {
+          previous_event_hash = last.event_hash;
+        }
+      }
+      const sequence_number =
+        Array.isArray(timeline) && timeline.length
+          ? Number(timeline[timeline.length - 1].sequence_number || 0) + 1
+          : 1;
+
+      const event_payload = {
+        attempt_status: input.status,
+        gate_id: input.gateId,
+        plan_id: input.planId,
+        plan_fingerprint: input.planFingerprint,
+        mode: "staging_simulation",
+        retryable: Boolean(input.retryable),
+        retry_reason: input.retryReason || "not_needed",
+        next_attempt_not_scheduled: true,
+        rollback_available: false,
+        rollback_not_executed: true,
+        apply_executed: false,
+        provider_executed: false,
+        actor_id: input.actorId,
+      };
+      const hashes = buildAuditEventHashes({
+        previous_event_hash,
+        event_type: input.eventType,
+        sequence_number,
+        event_payload,
+      });
+      if (!hashes) {
+        return {
+          ok: false,
+          error: PHASE_A7_REASONS.SERIALIZE_FAILED,
+          reason: PHASE_A7_REASONS.SERIALIZE_FAILED,
+        };
+      }
+
+      const rpcInput = {
+        proposal_id: proposalId,
+        plan_id: nfc(input.planId),
+        gate_id: nfc(input.gateId),
+        expected_version: Number(input.expectedVersion),
+        idempotency_key: nfc(input.idempotencyKey),
+        payload_hash: nfc(input.payloadHash),
+        actor_id: nfc(input.actorId),
+        status: nfc(input.status),
+        plan_fingerprint: nfc(input.planFingerprint),
+        error_code: input.errorCode || null,
+        error_message: input.errorMessage || null,
+        retryable: Boolean(input.retryable),
+        retry_reason: nfc(input.retryReason || "not_needed"),
+        max_attempts: Number(input.maxAttempts || 1),
+        result_summary: input.resultSummary || {},
+        event_type: nfc(input.eventType),
+        previous_event_hash: hashes.previous_event_hash,
+        event_hash: hashes.event_hash,
+        event_payload,
+        sequence_number,
+      };
+
+      const { res, json } = await rest(
+        cfg,
+        "/rest/v1/rpc/ai_diff_approve_simulate_execution",
+        {
+          method: "POST",
+          body: JSON.stringify({ p_input: rpcInput }),
+        }
+      );
+      if (!res.ok) {
+        return {
+          ok: false,
+          error: "db_unavailable",
+          reason: "db_unavailable",
+        };
+      }
+      const body = isPlainObject(json) ? json : {};
+      if (body.ok !== true) {
+        return {
+          ok: false,
+          error: String(body.error || body.code || "invalid_context"),
+          code: String(body.code || body.error || "invalid_context"),
+          current_version: body.current_version,
+        };
+      }
+      return {
+        ok: true,
+        attemptId: String(body.attempt_id || ""),
+        requestId: String(body.proposal_id || proposalId),
+        status: String(body.status || input.status),
+        resultSummary: isPlainObject(body.result_summary)
+          ? body.result_summary
+          : input.resultSummary,
+        retryable: Boolean(body.retryable),
+        retryReason: String(body.retry_reason || input.retryReason || ""),
+        maxAttempts: Number(body.max_attempts || input.maxAttempts || 1),
+        replayed: Boolean(body.replayed),
+        createdAt: body.created_at ? String(body.created_at) : null,
+        requestStatus: "approved",
+        applyExecuted: false,
+        providerExecuted: false,
+      };
+    },
+
+    /**
+     * @param {string} proposalId
+     */
+    async listExecutionAttempts(proposalId) {
+      const g = gateRead();
+      if (!g.ok) return Object.freeze([]);
+      const path =
+        `/rest/v1/ai_diff_approve_execution_attempts?select=id,proposal_id,apply_plan_id,apply_gate_id,attempt_number,mode,status,provider,plan_fingerprint,error_code,retryable,retry_reason,rollback_available,result_summary,created_at` +
+        `&proposal_id=eq.${encodeURIComponent(nfc(proposalId))}` +
+        `&order=created_at.desc&limit=50`;
+      const { res, json } = await rest(cfg, path, { method: "GET" });
+      if (!res.ok || !Array.isArray(json)) return Object.freeze([]);
+      return Object.freeze(
+        json.map((row) =>
+          deepFreeze({
+            attemptId: row.id,
+            requestId: row.proposal_id,
+            planId: row.apply_plan_id,
+            gateId: row.apply_gate_id,
+            attemptNumber: row.attempt_number,
+            mode: row.mode,
+            status: row.status,
+            provider: row.provider,
+            planFingerprint: row.plan_fingerprint,
+            errorCode: row.error_code,
+            retryable: row.retryable,
+            retryReason: row.retry_reason,
+            rollbackAvailable: false,
+            resultSummary: row.result_summary,
+            createdAt: row.created_at,
+            applyExecuted: false,
+            providerExecuted: false,
+          })
+        )
+      );
+    },
+
+    /**
+     * @param {string} proposalId
+     * @param {string} attemptId
+     */
+    async getExecutionAttempt(proposalId, attemptId) {
+      const g = gateRead();
+      if (!g.ok) return g;
+      const path =
+        `/rest/v1/ai_diff_approve_execution_attempts?select=*` +
+        `&proposal_id=eq.${encodeURIComponent(nfc(proposalId))}` +
+        `&id=eq.${encodeURIComponent(nfc(attemptId))}` +
+        `&limit=1`;
+      const { res, json } = await rest(cfg, path, { method: "GET" });
+      if (!res.ok) {
+        return { ok: false, error: "db_unavailable", reason: "db_unavailable" };
+      }
+      const row = Array.isArray(json) && json[0] ? json[0] : null;
+      if (!row) {
+        return { ok: false, error: "not_found", reason: "not_found" };
+      }
+      return {
+        ok: true,
+        value: deepFreeze({
+          attemptId: row.id,
+          requestId: row.proposal_id,
+          planId: row.apply_plan_id,
+          gateId: row.apply_gate_id,
+          attemptNumber: row.attempt_number,
+          mode: row.mode,
+          status: row.status,
+          provider: row.provider,
+          planFingerprint: row.plan_fingerprint,
+          errorCode: row.error_code,
+          errorMessage: row.error_message,
+          retryable: row.retryable,
+          retryReason: row.retry_reason,
+          rollbackAvailable: false,
+          resultSummary: row.result_summary,
+          createdAt: row.created_at,
+          applyExecuted: false,
+          providerExecuted: false,
+        }),
+      };
+    },
+
     size() {
       return -1;
     },

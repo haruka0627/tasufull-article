@@ -237,17 +237,28 @@
   function appendBadges(root) {
     const labels = document.createElement("div");
     labels.className = "dda-badges";
-    ["STAGING", "DECISION WRITE", "DRY RUN", "NO APPLY"].forEach((t) => {
+    [
+      "STAGING",
+      "APPROVED",
+      "DECISION WRITE",
+      "DRY RUN",
+      "APPLY READY",
+      "SIMULATION ONLY",
+      "NO PROVIDER EXECUTION",
+      "NO APPLY",
+    ].forEach((t) => {
       const s = document.createElement("span");
       s.className =
         "dda-badge " +
         (t === "STAGING"
           ? "dda-badge--staging"
-          : t === "NO APPLY"
+          : t === "NO APPLY" || t === "NO PROVIDER EXECUTION"
             ? "dda-badge--noapply"
-            : t === "DRY RUN"
+            : t === "DRY RUN" || t === "SIMULATION ONLY"
               ? "dda-badge--dryrun"
-              : "dda-badge--write");
+              : t === "APPLY READY"
+                ? "dda-badge--ready"
+                : "dda-badge--write");
       s.textContent = t;
       labels.appendChild(s);
     });
@@ -442,6 +453,293 @@
     node.appendChild(impact);
   }
 
+  async function apiPostGate(proposalId, payload) {
+    const token = await readSession();
+    if (!token) {
+      const err = new Error("auth_required");
+      err.code = "auth_required";
+      throw err;
+    }
+    const res = await fetch(
+      `${apiBase()}${DETAIL_PREFIX}${encodeURIComponent(proposalId)}/apply-gate`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Idempotency-Key": String(payload.idempotencyKey || ""),
+        },
+        cache: "no-store",
+        body: JSON.stringify(payload),
+      }
+    );
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    return { res, body };
+  }
+
+  async function apiPostSim(proposalId, payload) {
+    const token = await readSession();
+    if (!token) {
+      const err = new Error("auth_required");
+      err.code = "auth_required";
+      throw err;
+    }
+    const res = await fetch(
+      `${apiBase()}${DETAIL_PREFIX}${encodeURIComponent(proposalId)}/simulate-execution`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Idempotency-Key": String(payload.idempotencyKey || ""),
+        },
+        cache: "no-store",
+        body: JSON.stringify(payload),
+      }
+    );
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    return { res, body };
+  }
+
+  async function apiGetGate(proposalId) {
+    const token = await readSession();
+    if (!token) return { res: { status: 401 }, body: null };
+    const res = await fetch(
+      `${apiBase()}${DETAIL_PREFIX}${encodeURIComponent(proposalId)}/apply-gate`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    return { res, body };
+  }
+
+  async function apiGetSim(proposalId) {
+    const token = await readSession();
+    if (!token) return { res: { status: 401 }, body: null };
+    const res = await fetch(
+      `${apiBase()}${DETAIL_PREFIX}${encodeURIComponent(proposalId)}/simulate-execution`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+        cache: "no-store",
+      }
+    );
+    let body = null;
+    try {
+      body = await res.json();
+    } catch {
+      body = null;
+    }
+    return { res, body };
+  }
+
+  function renderGateSimPanel(root, prop) {
+    if (!isOpsWriter) return;
+    const status = String(prop.status || "");
+    const version = Number(prop.record_version || 0);
+    const proposalId = String(prop.proposal_id || "");
+    const box = document.createElement("div");
+    box.className = "dda-gate";
+    box.setAttribute("data-dda-gate", "1");
+    const h = document.createElement("h3");
+    h.textContent = "Final Apply Gate / Staging Simulation（NO PROVIDER）";
+    box.appendChild(h);
+    const meta = document.createElement("p");
+    meta.className = "dda-plan-meta";
+    meta.textContent =
+      status === "approved"
+        ? "SIMULATION ONLY · 実適用なし · Provider未実行 · Production 非対象"
+        : "approved + dry-run plan が必要です。";
+    box.appendChild(meta);
+    const out = document.createElement("div");
+    out.id = "dda-gate-output";
+    out.setAttribute("data-dda-gate-output", "1");
+    box.appendChild(out);
+    const simOut = document.createElement("div");
+    simOut.id = "dda-sim-output";
+    simOut.setAttribute("data-dda-sim-output", "1");
+    box.appendChild(simOut);
+
+    if (status === "approved") {
+      const confirmLabel = document.createElement("label");
+      confirmLabel.className = "dda-muted";
+      confirmLabel.textContent =
+        "確認フレーズ（必須）: CONFIRM_STAGING_APPLY_GATE";
+      box.appendChild(confirmLabel);
+      const confirmInput = document.createElement("input");
+      confirmInput.type = "text";
+      confirmInput.id = "dda-gate-confirm";
+      confirmInput.setAttribute("data-dda-gate-confirm", "1");
+      confirmInput.placeholder = "CONFIRM_STAGING_APPLY_GATE";
+      confirmInput.autocomplete = "off";
+      box.appendChild(confirmInput);
+
+      const gateBtn = document.createElement("button");
+      gateBtn.type = "button";
+      gateBtn.className = "dda-btn dda-btn--gate";
+      gateBtn.setAttribute("data-dda-action", "confirm-gate");
+      gateBtn.textContent = "Confirm Final Apply Gate";
+      gateBtn.addEventListener("click", async () => {
+        gateBtn.disabled = true;
+        out.textContent = "Gate 確認中…";
+        try {
+          const plans = await apiGetPlans(proposalId);
+          const latest =
+            plans.res.ok && plans.body?.items && plans.body.items[0]
+              ? plans.body.items[0]
+              : null;
+          if (!latest || !latest.planId || !latest.fingerprint) {
+            out.textContent = "失敗: latest dry-run plan がありません";
+            out.className = "dda-decision-feedback is-err";
+            gateBtn.disabled = false;
+            return;
+          }
+          const phrase = String(confirmInput.value || "").trim();
+          const idem =
+            "ui-gate-" +
+            ((global.crypto &&
+              global.crypto.randomUUID &&
+              global.crypto.randomUUID()) ||
+              Date.now().toString(36));
+          const { res, body } = await apiPostGate(proposalId, {
+            requestId: proposalId,
+            expectedVersion: version,
+            idempotencyKey: idem,
+            planId: latest.planId,
+            planFingerprint: latest.fingerprint,
+            confirmationPhrase: phrase,
+          });
+          if (res.ok && body?.ok) {
+            out.textContent = [
+              `gateStatus=${body.status}`,
+              `gateId=${body.gateId}`,
+              `fingerprint=${String(body.planFingerprint || "").slice(0, 24)}…`,
+              `requestStatus=${body.requestStatus}`,
+              "applyExecuted=false",
+              "providerExecuted=false",
+              "realExecutionAvailable=false",
+            ].join(" · ");
+            setState("Final Apply Gate を記録しました（Apply なし）。", "ok");
+            await loadDetail(proposalId);
+          } else {
+            out.textContent = `失敗: ${body?.error || res.status}`;
+            out.className = "dda-decision-feedback is-err";
+            gateBtn.disabled = false;
+          }
+        } catch (e) {
+          out.textContent = "送信に失敗しました。";
+          gateBtn.disabled = false;
+        }
+      });
+      box.appendChild(gateBtn);
+
+      const simBtn = document.createElement("button");
+      simBtn.type = "button";
+      simBtn.className = "dda-btn dda-btn--sim";
+      simBtn.setAttribute("data-dda-action", "run-simulation");
+      simBtn.textContent = "Run Staging Simulation";
+      simBtn.addEventListener("click", async () => {
+        simBtn.disabled = true;
+        simOut.textContent = "Simulation 実行中（noop）…";
+        try {
+          const gates = await apiGetGate(proposalId);
+          const latestGate =
+            gates.res.ok && gates.body?.items && gates.body.items[0]
+              ? gates.body.items[0]
+              : null;
+          if (!latestGate || latestGate.status !== "apply_ready") {
+            simOut.textContent =
+              "失敗: apply_ready の Gate が必要です（Confirm Final Apply Gate を先に実行）";
+            simOut.className = "dda-decision-feedback is-err";
+            simBtn.disabled = false;
+            return;
+          }
+          const idem =
+            "ui-sim-" +
+            ((global.crypto &&
+              global.crypto.randomUUID &&
+              global.crypto.randomUUID()) ||
+              Date.now().toString(36));
+          const { res, body } = await apiPostSim(proposalId, {
+            requestId: proposalId,
+            expectedVersion: version,
+            idempotencyKey: idem,
+            gateId: latestGate.gateId,
+            planId: latestGate.planId,
+            outcomeHint: "ok",
+          });
+          if (res.ok && body?.ok) {
+            simOut.textContent = [
+              `simStatus=${body.status}`,
+              `mode=${body.mode}`,
+              `attemptId=${body.attemptId}`,
+              `retryable=${body.retryable}`,
+              `rollbackAvailable=${body.rollbackAvailable}`,
+              "provider=noop",
+              "SIMULATION ONLY",
+            ].join(" · ");
+            setState("Staging Simulation 完了（Provider 未実行）。", "ok");
+            await loadDetail(proposalId);
+          } else {
+            simOut.textContent = `失敗: ${body?.error || res.status}`;
+            simOut.className = "dda-decision-feedback is-err";
+            simBtn.disabled = false;
+          }
+        } catch (e) {
+          simOut.textContent = "送信に失敗しました。";
+          simBtn.disabled = false;
+        }
+      });
+      box.appendChild(simBtn);
+    }
+
+    const note = document.createElement("p");
+    note.className = "dda-muted";
+    note.textContent =
+      "禁止: 本番適用 · Provider実行 · 自動リトライ · 自動ロールバック（本画面は Staging Simulation のみ）";
+    box.appendChild(note);
+    root.appendChild(box);
+
+    apiGetGate(proposalId).then(({ res, body }) => {
+      if (res.ok && body?.ok && Array.isArray(body.items) && body.items[0]) {
+        const g = body.items[0];
+        out.textContent = `latestGate=${g.status} · gateId=${g.gateId} · planId=${g.planId}`;
+      }
+    });
+    apiGetSim(proposalId).then(({ res, body }) => {
+      if (res.ok && body?.ok && Array.isArray(body.items) && body.items[0]) {
+        const a = body.items[0];
+        simOut.textContent = `latestAttempt=${a.status} · mode=${a.mode} · attemptId=${a.attemptId} · provider=${a.provider}`;
+      }
+    });
+  }
+
   function renderDecisionPanel(root, prop) {
     const status = String(prop.status || "");
     const version = Number(prop.record_version || 0);
@@ -634,6 +932,7 @@
 
     renderDecisionPanel(root, prop);
     renderPlanPanel(root, prop);
+    renderGateSimPanel(root, prop);
 
     const secTitle = document.createElement("h3");
     secTitle.textContent = "Security invariants";
