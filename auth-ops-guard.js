@@ -11,6 +11,7 @@
   const OPS_GUARDED_PAGES = Object.freeze({
     "admin-operations-dashboard": { label: "AI運営司令塔" },
     "admin-ai-operations-center": { label: "AI運営センター" },
+    "admin-diff-approve": { label: "Diff & Approve（Staging参照）" },
     "support-trouble-center": { label: "重要問い合わせセンター" },
     "talk-ops-room": { label: "運営TALK（レガシー）" },
     "anpi-line-admin": { label: "LINE安否運用（管理者）" },

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diff &amp; Approve（Staging · Read Only）| TASFUL</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="stylesheet" href="admin-diff-approve.css" />
+</head>
+<body data-page="admin-diff-approve">
+  <header class="dda-header">
+    <div class="dda-badges" aria-label="Environment">
+      <span class="dda-badge dda-badge--staging">STAGING</span>
+      <span class="dda-badge dda-badge--ro">READ ONLY</span>
+      <span class="dda-badge dda-badge--noapply">NO APPLY</span>
+    </div>
+    <h1>Diff &amp; Approve Operations</h1>
+    <p class="dda-sub">Staging 限定の参照専用ビューです。承認・適用・Provider 操作はありません。</p>
+  </header>
+
+  <main class="dda-main">
+    <section class="dda-toolbar" aria-label="Filters">
+      <label>
+        Status
+        <select id="dda-filter-status" data-dda-filter="status">
+          <option value="">すべて</option>
+          <option value="draft">draft</option>
+          <option value="pending_approval">pending_approval</option>
+          <option value="approved">approved</option>
+          <option value="rejected">rejected</option>
+        </select>
+      </label>
+      <label>
+        Risk
+        <select id="dda-filter-risk" data-dda-filter="risk">
+          <option value="">すべて</option>
+          <option value="low">low</option>
+          <option value="medium">medium</option>
+          <option value="high">high</option>
+          <option value="unknown">unknown</option>
+        </select>
+      </label>
+      <label>
+        Capability
+        <input id="dda-filter-capability" type="text" maxlength="64" placeholder="capability" data-dda-filter="capability" />
+      </label>
+      <label>
+        Sort
+        <select id="dda-sort" data-dda-sort>
+          <option value="created_at:desc">created_at ↓</option>
+          <option value="created_at:asc">created_at ↑</option>
+          <option value="status:asc">status ↑</option>
+          <option value="capability:asc">capability ↑</option>
+        </select>
+      </label>
+      <button type="button" id="dda-refresh" class="dda-btn">再読込</button>
+    </section>
+
+    <section id="dda-summary" class="dda-summary" aria-live="polite"></section>
+    <section id="dda-state" class="dda-state" role="status" aria-live="polite">読み込み中…</section>
+
+    <div class="dda-layout">
+      <section class="dda-list-panel" aria-label="Proposal list">
+        <h2>一覧</h2>
+        <ul id="dda-list" class="dda-list"></ul>
+        <div class="dda-pager">
+          <button type="button" id="dda-prev" class="dda-btn" disabled>前へ</button>
+          <span id="dda-page-label">1</span>
+          <button type="button" id="dda-next" class="dda-btn" disabled>次へ</button>
+        </div>
+      </section>
+
+      <section class="dda-detail-panel" aria-label="Proposal detail">
+        <h2>詳細</h2>
+        <div id="dda-detail" class="dda-detail">
+          <p class="dda-muted">左の一覧から選択してください。</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="chat-supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth-current-user.js"></script>
+  <script src="auth-ops-guard.js"></script>
+  <script src="admin-diff-approve-client.js"></script>
+</body>
+</html>

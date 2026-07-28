@@ -1,0 +1,172 @@
+/* Diff & Approve Staging read-only ops view */
+:root {
+  --dda-bg: #0f1419;
+  --dda-panel: #1a2332;
+  --dda-border: #334155;
+  --dda-text: #e7ecf2;
+  --dda-muted: #94a3b8;
+  --dda-accent: #38bdf8;
+  --dda-warn: #fbbf24;
+  --dda-danger: #f87171;
+  --dda-ok: #4ade80;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Segoe UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  background: radial-gradient(1200px 600px at 10% -10%, #1e293b 0%, var(--dda-bg) 55%);
+  color: var(--dda-text);
+}
+
+.dda-header {
+  padding: 1.25rem 1.5rem 0.5rem;
+  border-bottom: 1px solid var(--dda-border);
+}
+.dda-header h1 { margin: 0.5rem 0 0.25rem; font-size: 1.35rem; }
+.dda-sub { margin: 0; color: var(--dda-muted); max-width: 42rem; }
+.dda-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.dda-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.dda-badge--staging { background: #0ea5e9; color: #082f49; }
+.dda-badge--ro { background: #334155; color: #e2e8f0; }
+.dda-badge--noapply { background: #7f1d1d; color: #fecaca; }
+
+.dda-main { padding: 1rem 1.5rem 2rem; }
+.dda-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  align-items: end;
+  margin-bottom: 1rem;
+}
+.dda-toolbar label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--dda-muted);
+}
+.dda-toolbar select,
+.dda-toolbar input {
+  min-width: 9rem;
+  background: var(--dda-panel);
+  color: var(--dda-text);
+  border: 1px solid var(--dda-border);
+  border-radius: 0.4rem;
+  padding: 0.4rem 0.5rem;
+}
+.dda-btn {
+  background: #243044;
+  color: var(--dda-text);
+  border: 1px solid var(--dda-border);
+  border-radius: 0.4rem;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+.dda-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.dda-btn:hover:not(:disabled) { border-color: var(--dda-accent); }
+
+.dda-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+.dda-chip {
+  background: var(--dda-panel);
+  border: 1px solid var(--dda-border);
+  border-radius: 0.45rem;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.85rem;
+}
+.dda-state {
+  min-height: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--dda-muted);
+}
+.dda-state--error { color: var(--dda-danger); }
+.dda-state--ok { color: var(--dda-ok); }
+
+.dda-layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 360px) 1fr;
+  gap: 1rem;
+}
+@media (max-width: 768px) {
+  .dda-layout { grid-template-columns: 1fr; }
+}
+
+.dda-list-panel,
+.dda-detail-panel {
+  background: var(--dda-panel);
+  border: 1px solid var(--dda-border);
+  border-radius: 0.6rem;
+  padding: 0.85rem 1rem 1rem;
+  min-height: 20rem;
+}
+.dda-list-panel h2,
+.dda-detail-panel h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+.dda-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 28rem;
+  overflow: auto;
+}
+.dda-list li button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 0.4rem;
+  color: inherit;
+  padding: 0.55rem 0.5rem;
+  cursor: pointer;
+}
+.dda-list li button:hover,
+.dda-list li button[aria-current="true"] {
+  border-color: var(--dda-accent);
+  background: #132033;
+}
+.dda-item-id { font-family: ui-monospace, monospace; font-size: 0.78rem; }
+.dda-item-meta { color: var(--dda-muted); font-size: 0.78rem; margin-top: 0.15rem; }
+.dda-pager {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.dda-detail pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: #0b1220;
+  border: 1px solid var(--dda-border);
+  border-radius: 0.4rem;
+  padding: 0.75rem;
+  font-size: 0.78rem;
+  max-height: 22rem;
+  overflow: auto;
+}
+.dda-muted { color: var(--dda-muted); }
+.dda-kv { display: grid; grid-template-columns: 10rem 1fr; gap: 0.35rem 0.75rem; margin: 0.5rem 0 1rem; font-size: 0.9rem; }
+.dda-kv dt { color: var(--dda-muted); }
+.dda-timeline { list-style: none; margin: 0; padding: 0; }
+.dda-timeline li {
+  border-left: 2px solid var(--dda-border);
+  padding: 0.35rem 0 0.35rem 0.75rem;
+  margin-left: 0.25rem;
+  font-size: 0.85rem;
+}
+.dda-sec-ok { color: var(--dda-ok); }
+.dda-sec-bad { color: var(--dda-danger); }
