@@ -48,6 +48,10 @@ import {
   usageSnapshotToBudgetInput,
 } from "./ai-exec-gate-c7-usage-snapshot.mjs";
 import {
+  executeDryRun,
+  sanitizeDryRunEventMetadata,
+} from "./ai-exec-gate-c8-dry-run.mjs";
+import {
   appendExecutionEvent,
   claimQueuedExecution,
   findExecutionResult,
@@ -573,6 +577,7 @@ export async function executeGatePipeline(input) {
     // Phase C4 — provider-neutral prepare/validate (NoOp · never execute)
     let c5DispatchMeta = null;
     let c6InvocationMeta = null;
+    let c8DryRunMeta = null;
     if (collected.c1_snapshot && typeof collected.c1_snapshot === "object") {
       const prepared = prepareProviderNeutralRequest(
         /** @type {Record<string, unknown>} */ (collected.c1_snapshot),
@@ -679,6 +684,39 @@ export async function executeGatePipeline(input) {
         capability_key: "generate_ops_report",
         executor_port: "secretary_deepseek",
         sanitized_metadata: c6InvocationMeta,
+      });
+
+      // Phase C8 — Provider Execute Dry-Run (simulation only · never execute)
+      const dryRun = executeDryRun({
+        plan: dispatched.plan,
+        envelope: dispatched.envelope,
+        invocation,
+      });
+      if (!dryRun.ok) {
+        const err = new Error("dry_run_failed");
+        err.code = "report";
+        err.gateError = dryRun.reason || dryRun.error;
+        throw err;
+      }
+      if (
+        dryRun.executed === true ||
+        dryRun.provider_called === true ||
+        dryRun.transmit === true ||
+        dryRun.recorded_api_cost !== 0 ||
+        dryRun.result?.executed === true ||
+        dryRun.result?.would_call_adapter_execute === true
+      ) {
+        const err = new Error("dry_run_boundary_violation");
+        err.code = "report";
+        err.gateError = "DRY_RUN_FORBIDDEN_EXECUTE";
+        throw err;
+      }
+      c8DryRunMeta = sanitizeDryRunEventMetadata(dryRun);
+      await emit(cfg, id, seq++, {
+        event_type: GATE_EVENT_TYPES.PROVIDER_INVOCATION_DRY_RUN,
+        capability_key: "generate_ops_report",
+        executor_port: "secretary_deepseek",
+        sanitized_metadata: c8DryRunMeta,
       });
     }
 
@@ -866,6 +904,7 @@ export async function executeGatePipeline(input) {
         execution_boundary: c5DispatchMeta,
         provider_invocation: c6InvocationMeta,
         usage: usageMeta,
+        dry_run: c8DryRunMeta,
       },
     };
   } catch (e) {
