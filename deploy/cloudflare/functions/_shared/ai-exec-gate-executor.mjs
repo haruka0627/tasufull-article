@@ -40,6 +40,7 @@ import {
 import {
   buildInvocationContext,
   evaluateInvocationGate,
+  getInvocationPolicy,
   sanitizeInvocationAuditMetadata,
 } from "./ai-exec-gate-c6-invocation-gate.mjs";
 import {
@@ -51,6 +52,10 @@ import {
   executeDryRun,
   sanitizeDryRunEventMetadata,
 } from "./ai-exec-gate-c8-dry-run.mjs";
+import {
+  evaluateActivation,
+  sanitizeActivationEventMetadata,
+} from "./ai-exec-gate-c9-activation-readiness.mjs";
 import {
   appendExecutionEvent,
   claimQueuedExecution,
@@ -578,6 +583,7 @@ export async function executeGatePipeline(input) {
     let c5DispatchMeta = null;
     let c6InvocationMeta = null;
     let c8DryRunMeta = null;
+    let c9ActivationMeta = null;
     if (collected.c1_snapshot && typeof collected.c1_snapshot === "object") {
       const prepared = prepareProviderNeutralRequest(
         /** @type {Record<string, unknown>} */ (collected.c1_snapshot),
@@ -717,6 +723,46 @@ export async function executeGatePipeline(input) {
         capability_key: "generate_ops_report",
         executor_port: "secretary_deepseek",
         sanitized_metadata: c8DryRunMeta,
+      });
+
+      // Phase C9 — Activation readiness (evaluation only · never execute)
+      const activation = evaluateActivation({
+        capability: "generate_ops_report",
+        provider: dispatched.plan.provider,
+        plan: dispatched.plan,
+        envelope: dispatched.envelope,
+        budget_decision: dispatched.plan.budget_decision,
+        invocation,
+        dry_run: dryRun,
+        policy: getInvocationPolicy(),
+        executed: false,
+        provider_called: false,
+        transmit: false,
+        recorded_api_cost: 0,
+      });
+      if (
+        activation.provider_called === true ||
+        activation.executed === true ||
+        activation.transmit === true ||
+        activation.recorded_api_cost !== 0
+      ) {
+        const err = new Error("activation_boundary_violation");
+        err.code = "report";
+        err.gateError = "ACTIVATION_FORBIDDEN_EXECUTE";
+        throw err;
+      }
+      if (!activation.ok && !activation.snapshot) {
+        const err = new Error("activation_evaluation_failed");
+        err.code = "report";
+        err.gateError = activation.reason || activation.error;
+        throw err;
+      }
+      c9ActivationMeta = sanitizeActivationEventMetadata(activation);
+      await emit(cfg, id, seq++, {
+        event_type: GATE_EVENT_TYPES.ACTIVATION_READINESS_EVALUATED,
+        capability_key: "generate_ops_report",
+        executor_port: "secretary_deepseek",
+        sanitized_metadata: c9ActivationMeta,
       });
     }
 
@@ -905,6 +951,7 @@ export async function executeGatePipeline(input) {
         provider_invocation: c6InvocationMeta,
         usage: usageMeta,
         dry_run: c8DryRunMeta,
+        activation: c9ActivationMeta,
       },
     };
   } catch (e) {

@@ -1,9 +1,9 @@
 # AI 実行ゲート — Phase C チケット（First Real Use Case）
 
-**Status:** C0–C8 first-use-case slice · **C8 Provider Execute Dry-Run DONE (simulation · no execute)**
-**Baseline:** C7 `82a00cf`
-**C7 evidence:** [ai-exec-gate-phase-c7-usage-snapshot-read.md](../../reports/ai-exec-gate-phase-c7-usage-snapshot-read.md)
+**Status:** C0–C9 first-use-case slice · **C9 Provider Activation Readiness DONE (evaluation only · no execute)**
+**Baseline:** C8 `a0b1958`
 **C8 evidence:** [ai-exec-gate-phase-c8-dry-run.md](../../reports/ai-exec-gate-phase-c8-dry-run.md)
+**C9 evidence:** [ai-exec-gate-phase-c9-activation-readiness.md](../../reports/ai-exec-gate-phase-c9-activation-readiness.md)
 **Freeze parent:** [AI_EXECUTION_GATE.md](./AI_EXECUTION_GATE.md)
 
 ---
@@ -64,6 +64,7 @@ Action: `ops_secretary.daily_pending.report_pipeline`
 | C6 | Controlled Provider Invocation Gate（常時 deny · execute 未接続） | C5 | **DONE**（evidence 参照） |
 | C7 | Authoritative Usage Snapshot Read（SAFE-07 RO · write なし） | C6 | **DONE**（evidence 参照） |
 | C8 | Provider Execute Dry-Run（simulation · execute 未接続） | C7 | **DONE**（evidence 参照） |
+| C9 | Provider Activation Readiness（eligible/not_eligible · execute 未接続） | C8 | **DONE**（evidence 参照） |
 
 各チケットは人間の明示指示後のみ着手。
 
