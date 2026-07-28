@@ -48,6 +48,7 @@ export const PHASE_A1_STATUSES = Object.freeze({
   PENDING_APPROVAL: "pending_approval",
   APPROVED: "approved",
   REJECTED: "rejected",
+  REVISION_REQUESTED: "revision_requested",
   EXPIRED: "expired",
 });
 
@@ -541,6 +542,7 @@ export function validateDiffProposal(proposal) {
     if (
       o.status === PHASE_A1_STATUSES.APPROVED ||
       o.status === PHASE_A1_STATUSES.REJECTED ||
+      o.status === PHASE_A1_STATUSES.REVISION_REQUESTED ||
       o.status === PHASE_A1_STATUSES.EXPIRED
     ) {
       return {
