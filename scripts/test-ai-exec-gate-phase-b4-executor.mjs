@@ -54,7 +54,7 @@ const stagingEnv = {
 
 const baseRow = () => ({
   id: "66666666-6666-4666-8666-666666666666",
-  actor_id: "user-ops-1",
+  actor_id: "11111111-1111-4111-8111-111111111111",
   parent_execution_id: null,
   preflight_decision: "allowed",
   execution_status: "queued",
@@ -245,6 +245,17 @@ function makePipelineDb(state) {
       state.result = { ...state.result, ...JSON.parse(init.body) };
       return jsonRes(200, [state.result]);
     }
+    if (u.includes("rpc/ai_cost_ledger_aggregate") && method === "POST") {
+      return jsonRes(200, {
+        ok: true,
+        group_by: "user",
+        currency: "USD",
+        from: "2026-07-27T15:00:00.000Z",
+        to: "2026-07-28T15:00:00.000Z",
+        tz: "Asia/Tokyo",
+        rows: [],
+      });
+    }
     return jsonRes(500, {});
   };
 }
@@ -254,7 +265,7 @@ function makePipelineDb(state) {
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert("pipeline succeeded", r.ok && r.body?.status === "succeeded");
@@ -282,7 +293,7 @@ function makePipelineDb(state) {
   const replay = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert("success replay", replay.body?.idempotent_replay === true);
@@ -298,13 +309,13 @@ function makePipelineDb(state) {
     executor.executeGatePipeline({
       env: stagingEnv,
       executionId: state.row.id,
-      userId: "user-ops-1",
+      userId: "11111111-1111-4111-8111-111111111111",
       fetchImpl,
     }),
     executor.executeGatePipeline({
       env: stagingEnv,
       executionId: state.row.id,
-      userId: "user-ops-1",
+      userId: "11111111-1111-4111-8111-111111111111",
       fetchImpl,
     }),
   ]);
@@ -330,7 +341,7 @@ function makePipelineDb(state) {
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert(
@@ -354,7 +365,7 @@ function makePipelineDb(state) {
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert(
@@ -375,7 +386,7 @@ function makePipelineDb(state) {
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert("completed cannot rerun", r.body?.idempotent_replay === true);
@@ -389,7 +400,7 @@ function makePipelineDb(state) {
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert(
@@ -406,7 +417,7 @@ function makePipelineDb(state) {
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert(
@@ -427,7 +438,7 @@ function makePipelineDb(state) {
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert(
@@ -443,7 +454,7 @@ console.log("\nB4 — failure paths");
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
     collectFn: () => {
       const e = new Error("boom");
@@ -465,7 +476,7 @@ console.log("\nB4 — failure paths");
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
     reportFn: () => {
       const e = new Error("report-boom");
@@ -486,7 +497,7 @@ console.log("\nB4 — failure paths");
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert(
@@ -501,7 +512,7 @@ console.log("\nB4 — failure paths");
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert(
@@ -517,7 +528,7 @@ console.log("\nB4 — failure paths");
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
     collectFn: () => {
       throw Object.assign(new Error("x"), { code: "collector" });
@@ -538,7 +549,7 @@ console.log("\nB4 — failure paths");
     const r = await executor.executeGatePipeline({
       env: stagingEnv,
       executionId: state.row.id,
-      userId: "user-ops-1",
+      userId: "11111111-1111-4111-8111-111111111111",
       fetchImpl: makePipelineDb(state),
       collectFn: (input) => {
         jumped = true;
@@ -560,18 +571,18 @@ console.log("\nB4 — failure paths");
   const bad = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: "bad-id",
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: async () => jsonRes(500, {}),
   });
   assert("bad uuid", bad.error === "invalid_request");
 }
 
 {
-  const state = { row: { ...baseRow(), actor_id: "other" }, events: [] };
+  const state = { row: { ...baseRow(), actor_id: "22222222-2222-4222-8222-222222222222" }, events: [] };
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
   });
   assert("owner mismatch forbidden", r.error === policy.EXECUTOR_FAILURE_CODES.FORBIDDEN);
@@ -622,7 +633,7 @@ if (!liveKey) {
       capabilities: [...policy.PHASE_B_PIPELINE_CAPABILITIES],
       requested_ports: [...policy.PHASE_B_PIPELINE_PORTS],
     },
-    userId: "user-ops-live-b4",
+    userId: "33333333-3333-4333-8333-333333333333",
   });
   if (!created.body?.execution_id || created.body?.decision !== "allowed") {
     console.log("  · live create not allowed (flag/env) — skip execute");
@@ -630,13 +641,13 @@ if (!liveKey) {
     const exec = await executor.executeGatePipeline({
       env: liveEnv,
       executionId: created.body.execution_id,
-      userId: "user-ops-live-b4",
+      userId: "33333333-3333-4333-8333-333333333333",
     });
     assert("live execute succeeded", exec.body?.status === "succeeded");
     const again = await executor.executeGatePipeline({
       env: liveEnv,
       executionId: created.body.execution_id,
-      userId: "user-ops-live-b4",
+      userId: "33333333-3333-4333-8333-333333333333",
     });
     assert("live replay", again.body?.idempotent_replay === true);
   }

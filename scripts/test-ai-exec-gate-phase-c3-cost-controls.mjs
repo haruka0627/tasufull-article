@@ -40,6 +40,9 @@ function jsonRes(status, body) {
 const budget = await import(
   relUrl("deploy/cloudflare/functions/_shared/ai-exec-gate-c3-budget.mjs")
 );
+const { createAvailableUsageReader } = await import(
+  relUrl("scripts/lib/ai-exec-gate-c7-test-fixtures.mjs")
+);
 const b1Budget = await import(
   relUrl("deploy/cloudflare/functions/_shared/ai-exec-gate-budget.mjs")
 );
@@ -203,7 +206,7 @@ console.log("\nC3 — pipeline budget guard");
   };
   const baseRow = () => ({
     id: "66666666-6666-4666-8666-666666666666",
-    actor_id: "user-ops-1",
+    actor_id: "11111111-1111-4111-8111-111111111111",
     parent_execution_id: null,
     preflight_decision: "allowed",
     execution_status: "queued",
@@ -259,6 +262,17 @@ console.log("\nC3 — pipeline budget guard");
         state.result = JSON.parse(init.body);
         return jsonRes(201, [state.result]);
       }
+      if (u.includes("rpc/ai_cost_ledger_aggregate") && method === "POST") {
+        return jsonRes(200, {
+          ok: true,
+          group_by: "user",
+          currency: "USD",
+          from: "2026-07-27T15:00:00.000Z",
+          to: "2026-07-28T15:00:00.000Z",
+          tz: "Asia/Tokyo",
+          rows: [],
+        });
+      }
       return jsonRes(500, {});
     };
   }
@@ -267,9 +281,8 @@ console.log("\nC3 — pipeline budget guard");
   const ok = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: okState.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(okState),
-    budgetUsage: { current_usage: 0 },
   });
   assert("pipeline under budget succeeds", ok.ok && ok.body?.status === "succeeded");
   assert("provider_called false", ok.body?.provider_called === false);
@@ -285,9 +298,9 @@ console.log("\nC3 — pipeline budget guard");
   const blocked = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: blockedState.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(blockedState),
-    budgetUsage: { current_usage: budget.PHASE_C3_HARD_CAP_USD + 1 },
+    usageSnapshotReader: createAvailableUsageReader(budget.PHASE_C3_HARD_CAP_USD + 1),
   });
   assert("pipeline over budget blocked", blocked.ok === false);
   assert(

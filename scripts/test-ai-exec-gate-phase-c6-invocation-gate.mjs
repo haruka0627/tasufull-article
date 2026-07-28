@@ -51,6 +51,9 @@ const c4 = await import(
 const c3 = await import(
   relUrl("deploy/cloudflare/functions/_shared/ai-exec-gate-c3-budget.mjs")
 );
+const { createAvailableUsageReader } = await import(
+  relUrl("scripts/lib/ai-exec-gate-c7-test-fixtures.mjs")
+);
 const caps = await import(
   relUrl("deploy/cloudflare/functions/_shared/ai-exec-gate-capabilities.mjs")
 );
@@ -587,7 +590,7 @@ console.log("\nC6 — pipeline integration");
   };
   const baseRow = () => ({
     id: "88888888-8888-4888-8888-888888888888",
-    actor_id: "user-ops-1",
+    actor_id: "11111111-1111-4111-8111-111111111111",
     parent_execution_id: null,
     preflight_decision: "allowed",
     execution_status: "queued",
@@ -643,6 +646,17 @@ console.log("\nC6 — pipeline integration");
         state.result = JSON.parse(init.body);
         return jsonRes(201, [state.result]);
       }
+      if (u.includes("rpc/ai_cost_ledger_aggregate") && method === "POST") {
+        return jsonRes(200, {
+          ok: true,
+          group_by: "user",
+          currency: "USD",
+          from: "2026-07-27T15:00:00.000Z",
+          to: "2026-07-28T15:00:00.000Z",
+          tz: "Asia/Tokyo",
+          rows: [],
+        });
+      }
       return jsonRes(500, {});
     };
   }
@@ -651,9 +665,8 @@ console.log("\nC6 — pipeline integration");
   const r1 = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: allowed.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(allowed),
-    budgetUsage: { current_usage: 0 },
   });
   assert("pipeline succeeds with deterministic report", r1.ok && r1.body?.status === "succeeded");
   assert("provider_called false", r1.body?.provider_called === false);
@@ -686,9 +699,9 @@ console.log("\nC6 — pipeline integration");
   const rBlock = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: blocked.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(blocked),
-    budgetUsage: { current_usage: c3.PHASE_C3_HARD_CAP_USD + 1 },
+    usageSnapshotReader: createAvailableUsageReader(c3.PHASE_C3_HARD_CAP_USD + 1),
   });
   assert("budget blocked", rBlock.ok === false);
   assert(
@@ -709,9 +722,8 @@ console.log("\nC6 — pipeline integration");
   const rUnk = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: unk.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(unk),
-    budgetUsage: { current_usage: 0 },
     providerId: "claude",
   });
   assert("unknown provider rejected", rUnk.ok === false);

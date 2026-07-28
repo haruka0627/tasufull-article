@@ -387,7 +387,7 @@ const executor = await import(
   const state = {
     row: {
       id: "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
-      actor_id: "ops-actor-a",
+      actor_id: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
       parent_execution_id: null,
       preflight_decision: "allowed",
       execution_status: "queued",
@@ -439,6 +439,17 @@ const executor = await import(
       state.result = JSON.parse(init.body);
       return jsonRes(201, [state.result]);
     }
+    if (u.includes("rpc/ai_cost_ledger_aggregate") && method === "POST") {
+      return jsonRes(200, {
+        ok: true,
+        group_by: "user",
+        currency: "USD",
+        from: "2026-07-27T15:00:00.000Z",
+        to: "2026-07-28T15:00:00.000Z",
+        tz: "Asia/Tokyo",
+        rows: [],
+      });
+    }
     return jsonRes(500, {});
   };
   assert("pre-dashboard status queued", state.row.execution_status === "queued");
@@ -453,7 +464,7 @@ const executor = await import(
       SUPABASE_SERVICE_ROLE_KEY: "service-role-test",
     },
     executionId: state.row.id,
-    userId: "ops-actor-a",
+    userId: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
     fetchImpl,
   });
   assert("B4 execute succeeds", ran.ok && ran.body?.status === "succeeded");

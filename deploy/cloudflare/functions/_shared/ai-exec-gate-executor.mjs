@@ -43,6 +43,11 @@ import {
   sanitizeInvocationAuditMetadata,
 } from "./ai-exec-gate-c6-invocation-gate.mjs";
 import {
+  createSafe07UsageSnapshotReader,
+  sanitizeUsageSnapshotEventMetadata,
+  usageSnapshotToBudgetInput,
+} from "./ai-exec-gate-c7-usage-snapshot.mjs";
+import {
   appendExecutionEvent,
   claimQueuedExecution,
   findExecutionResult,
@@ -50,6 +55,7 @@ import {
   insertExecutionResult,
   nextEventSequence,
   pickGateDbEnv,
+  rpcAiCostLedgerAggregate,
   transitionExecutionStatus,
 } from "./ai-exec-gate-repository.mjs";
 
@@ -229,8 +235,13 @@ async function failRunning(cfg, row, code, seqStart) {
  *   collectFn?: Function,
  *   reportFn?: Function,
  *   budgetUsage?: { current_usage?: number, budget_limit?: number },
+ *   usageSnapshotReader?: { readUsageSnapshot: Function },
  *   providerId?: string,
  * }} input
+ *
+ * Note (C7): `budgetUsage` is ignored on the execute path (no request override /
+ * silent default 0). Tests must inject `usageSnapshotReader`. Runtime uses
+ * SAFE-07 `ai_cost_ledger_aggregate` via `rpcAiCostLedgerAggregate`.
  */
 export async function executeGatePipeline(input) {
   // Phase C1: official purpose routes to sanitized collector + deterministic adapter.
@@ -308,16 +319,77 @@ export async function executeGatePipeline(input) {
     });
   }
 
-  // Phase C3 — Budget Guard (code-constant hard cap · no provider · before claim)
-  const budgetEval = evaluatePhaseC3BudgetGuard(
-    input.budgetUsage && typeof input.budgetUsage === "object"
-      ? input.budgetUsage
-      : { current_usage: 0 }
-  );
+  // Phase C7 — Authoritative SAFE-07 usage snapshot (before C3 budget · before claim)
+  // No request/env/dashboard override. No silent default 0.
+  // Test-only: inject usageSnapshotReader. Runtime: SAFE-07 RPC via repository.
+  const usageReader =
+    input.usageSnapshotReader &&
+    typeof input.usageSnapshotReader.readUsageSnapshot === "function"
+      ? input.usageSnapshotReader
+      : createSafe07UsageSnapshotReader({
+          rpcAggregate: (params) =>
+            rpcAiCostLedgerAggregate(
+              { ...cfg, fetchImpl: input.fetchImpl },
+              params
+            ),
+        });
+
+  let usageOutcome;
+  try {
+    usageOutcome = await usageReader.readUsageSnapshot({
+      actor_id: row.actor_id,
+      environment: row.environment,
+      budget_day_key: row.budget_day_key,
+      snapshot_at: new Date().toISOString(),
+    });
+  } catch {
+    usageOutcome = {
+      ok: false,
+      availability: "read_failure",
+      reason: "usage_read_failed",
+      provider_called: false,
+      recorded_api_cost: 0,
+    };
+  }
+
+  const usageMeta = sanitizeUsageSnapshotEventMetadata(usageOutcome);
+  if (
+    !usageOutcome ||
+    usageOutcome.ok !== true ||
+    usageOutcome.availability !== "available" ||
+    !usageOutcome.snapshot
+  ) {
+    return fail(403, EXECUTOR_FAILURE_CODES.USAGE_SNAPSHOT_UNAVAILABLE, {
+      execution_id: id,
+      decision: "blocked",
+      status: row.execution_status,
+      provider_called: false,
+      recorded_api_cost: 0,
+      usage: usageMeta,
+    });
+  }
+
+  const budgetInput = usageSnapshotToBudgetInput(usageOutcome.snapshot);
+  if (!budgetInput.ok) {
+    return fail(403, EXECUTOR_FAILURE_CODES.USAGE_SNAPSHOT_UNAVAILABLE, {
+      execution_id: id,
+      decision: "blocked",
+      status: row.execution_status,
+      provider_called: false,
+      recorded_api_cost: 0,
+      usage: usageMeta,
+    });
+  }
+
+  // Phase C3 — Budget Guard (code-constant hard cap · reuse C3 decision · before claim)
+  const budgetEval = evaluatePhaseC3BudgetGuard({
+    current_usage: budgetInput.current_usage,
+  });
   if (!budgetEval.ok) {
     return fail(400, EXECUTOR_FAILURE_CODES.INVALID_EXECUTION_CONTRACT, {
       execution_id: id,
       budget_error: budgetEval.error,
+      usage: usageMeta,
     });
   }
   const budgetDecision = budgetEval.decision;
@@ -330,6 +402,7 @@ export async function executeGatePipeline(input) {
       provider_called: false,
       recorded_api_cost: 0,
       budget: budgetPublic,
+      usage: usageMeta,
     });
   }
 
@@ -428,6 +501,11 @@ export async function executeGatePipeline(input) {
       previous_status: "queued",
       next_status: "running",
       capability_key: "collect_daily_ops",
+    });
+    await emit(cfg, id, seq++, {
+      event_type: GATE_EVENT_TYPES.USAGE_SNAPSHOT_LOADED,
+      capability_key: "generate_ops_report",
+      sanitized_metadata: usageMeta,
     });
     await emit(cfg, id, seq++, {
       event_type: GATE_EVENT_TYPES.BUDGET_GUARD_EVALUATED,
@@ -787,6 +865,7 @@ export async function executeGatePipeline(input) {
         provider: providerMeta,
         execution_boundary: c5DispatchMeta,
         provider_invocation: c6InvocationMeta,
+        usage: usageMeta,
       },
     };
   } catch (e) {

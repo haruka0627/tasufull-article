@@ -373,3 +373,40 @@ export async function countResultsForExecution(cfg, executionId) {
   if (!res.ok) return -1;
   return Array.isArray(json) ? json.length : 0;
 }
+
+/**
+ * SAFE-07 read-only RPC — `ai_cost_ledger_aggregate` (no writes).
+ * Parameterized JSON body only (no string-concat SQL).
+ * Uses service_role Bearer for Supabase REST (not a Provider credential).
+ *
+ * @param {{ url: string, serviceRoleKey: string, fetchImpl?: typeof fetch }} cfg
+ * @param {{
+ *   from: string,
+ *   to: string,
+ *   group_by?: string,
+ *   currency?: string,
+ *   tz?: string,
+ * }} params
+ * @returns {Promise<unknown>}
+ */
+export async function rpcAiCostLedgerAggregate(cfg, params) {
+  const body = {
+    p_from: params.from,
+    p_to: params.to,
+    p_group_by: params.group_by || "user",
+    p_currency: params.currency || "USD",
+    p_tz: params.tz || "Asia/Tokyo",
+  };
+  const { res, json } = await rest(
+    cfg,
+    "/rest/v1/rpc/ai_cost_ledger_aggregate",
+    {
+      method: "POST",
+      body: JSON.stringify(body),
+    }
+  );
+  if (!res.ok) {
+    return { ok: false, error: "rpc_http_error", status: res.status };
+  }
+  return json;
+}

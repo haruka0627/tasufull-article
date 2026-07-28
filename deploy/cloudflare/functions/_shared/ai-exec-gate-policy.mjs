@@ -78,6 +78,8 @@ export const GATE_EVENT_TYPES = Object.freeze({
   PROVIDER_PREPARE_DONE: "provider_prepare_done",
   EXECUTION_BOUNDARY_DISPATCHED: "execution_boundary_dispatched",
   PROVIDER_INVOCATION_DENIED: "provider_invocation_denied",
+  USAGE_SNAPSHOT_LOADED: "usage_snapshot_loaded",
+  USAGE_SNAPSHOT_UNAVAILABLE: "usage_snapshot_unavailable",
 });
 
 /** B4 executor failure codes — separate from B1 Gate blocked reasons. */
@@ -98,6 +100,7 @@ export const EXECUTOR_FAILURE_CODES = Object.freeze({
   FORBIDDEN: "forbidden",
   INTERNAL_ERROR: "internal_error",
   BUDGET_HARD_CAP: "budget_hard_cap",
+  USAGE_SNAPSHOT_UNAVAILABLE: "usage_snapshot_unavailable",
   UNKNOWN_PROVIDER: "unknown_provider",
   PROVIDER_RESOLVE_FAILED: "provider_resolve_failed",
 });

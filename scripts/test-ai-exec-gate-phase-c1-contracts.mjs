@@ -496,7 +496,7 @@ console.log("\nC1 — pipeline integration");
   };
   const baseRow = () => ({
     id: "66666666-6666-4666-8666-666666666666",
-    actor_id: "user-ops-1",
+    actor_id: "11111111-1111-4111-8111-111111111111",
     parent_execution_id: null,
     preflight_decision: "allowed",
     execution_status: "queued",
@@ -557,6 +557,17 @@ console.log("\nC1 — pipeline integration");
         state.resultPatched = true;
         return jsonRes(200, [state.result]);
       }
+      if (u.includes("rpc/ai_cost_ledger_aggregate") && method === "POST") {
+        return jsonRes(200, {
+          ok: true,
+          group_by: "user",
+          currency: "USD",
+          from: "2026-07-27T15:00:00.000Z",
+          to: "2026-07-28T15:00:00.000Z",
+          tz: "Asia/Tokyo",
+          rows: [],
+        });
+      }
       return jsonRes(500, {});
     };
   }
@@ -565,7 +576,7 @@ console.log("\nC1 — pipeline integration");
   const r = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: state.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(state),
     now: new Date("2026-07-28T03:00:00.000Z"),
   });
@@ -589,7 +600,7 @@ console.log("\nC1 — pipeline integration");
   const rB4 = await executor.executeGatePipeline({
     env: stagingEnv,
     executionId: stateB4.row.id,
-    userId: "user-ops-1",
+    userId: "11111111-1111-4111-8111-111111111111",
     fetchImpl: makePipelineDb(stateB4),
     collectFn: b4Collector.collectDailyOps,
     reportFn: b4Report.generateOpsReport,

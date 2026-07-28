@@ -137,7 +137,10 @@ export function buildUsageSnapshot(input = {}) {
   const limit = validateBudgetLimit(limitRaw);
   if (!limit.ok) return limit;
 
-  const usageRaw = input.current_usage === undefined ? 0 : input.current_usage;
+  const usageRaw = input.current_usage;
+  if (usageRaw === undefined) {
+    return { ok: false, error: PHASE_C3_ERROR_CODES.INVALID_USAGE };
+  }
   const usage = validateBudgetNumber(usageRaw);
   if (!usage.ok) return usage;
 
