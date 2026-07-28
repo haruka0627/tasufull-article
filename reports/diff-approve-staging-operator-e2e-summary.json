@@ -4,11 +4,11 @@
   "fail": 0,
   "notes": [],
   "perf": {
-    "list_ms": 106,
-    "summary_ms": 47,
-    "ui_desktop_ms": 232,
-    "ui_mobile_ms": 184,
-    "timeline_ms": 177
+    "list_ms": 118,
+    "summary_ms": 105,
+    "ui_desktop_ms": 187,
+    "ui_mobile_ms": 189,
+    "timeline_ms": 182
   },
   "staging_ref": "ahlxuyvhzqdqaojiywmu",
   "production_unchanged": true

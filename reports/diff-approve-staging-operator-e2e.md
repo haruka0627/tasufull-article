@@ -1,132 +1,221 @@
-# Diff & Approve — Staging Read-Only Operator E2E
+# Diff & Approve — Staging Read-only Operator E2E
 
-**Date:** 2026-07-28  
-**Start HEAD:** `e76a3cea00a38e222346c0b81c6779e060b93406`  
-**Verdict:** `PASS_STAGING_READONLY_OPERATOR_E2E`
+## 1. Verdict
 
-## Starting State
+`PASS_STAGING_READ_ONLY_OPERATOR_E2E`
+
+```text
+Operator Read-only E2E: 35/35 PASS
+Local 8788: LISTEN
+Environment: Staging Preview
+Production: NOT TOUCHED
+Apply: NOT EXECUTED
+Provider execute: NOT EXECUTED
+Write operations: NOT EXECUTED
+```
+
+## 2. Scope
+
+Staging Preview 上の Diff & Approve **Read-only** Operator 経路の最終証跡確定。
+
+含む:
+
+- Operator Login（Staging 一時ユーザー）
+- Read-only API / UI
+- Timeline · Filter · Pagination
+- Desktop / Mobile
+- Authorization · 405
+- Regression
+- Security boundary 再確認
+
+含まない:
+
+- Apply · Provider · Production · Write · Cron/Worker/Queue · Billing · Migration
+
+## 3. Starting State
 
 | Item | Value |
 | --- | --- |
 | branch | `cf-pages-deploy` |
-| HEAD | `e76a3cea00a38e222346c0b81c6779e060b93406` (match) |
-| dirty | large unrelated tree (untouched) |
-| linked Staging | `ahlxuyvhzqdqaojiywmu` |
-| upstream | `origin/cf-pages-deploy` ahead 199 / behind 9 |
-| Production risk | **Push to `cf-pages-deploy` = Production Pages** → avoided |
+| baseline HEAD (task start) | `e76a3cea00a38e222346c0b81c6779e060b93406` |
+| HEAD at finalization start | `f6f29d5e8f307e49bdb04a6f1062727ae01b2b45` |
+| staged | 0 |
+| dirty tree | large unrelated dirty（未改変・未 stage） |
+| E2E related (already committed earlier) | deploy helper · operator e2e script · client session fallback · prior report |
+| This completion commit | report refresh · final-run log · summary refresh |
 
-## Deploy
+## 4. Staging Preview
 
 | Item | Value |
 | --- | --- |
-| Method | Cloudflare Pages **Direct Upload Preview** |
-| Project | `tasufull-article` |
-| Branch | `diff-approve-staging-readonly` (≠ production_branch) |
 | Deployment | `https://341246f1.tasufull-article.pages.dev` |
 | Alias | `https://diff-approve-staging-readonl.tasufull-article.pages.dev` |
-| Script | `scripts/deploy-diff-approve-staging-preview.mjs` |
-| Production deploy | **not performed** |
-| `cf-pages-deploy` git push | **not performed** (would be Production) |
+| Supabase | Staging `ahlxuyvhzqdqaojiywmu` |
+| Production domain | not used |
 
-## Environment
+Flags (Preview):
 
-- Build/API data: Staging Supabase `ahlxuyvhzqdqaojiywmu` only
-- `.env` Production URL intentionally ignored for this deploy
-- Preview env flags upserted (then rate-limit; flags retained from first successful patch)
+- `DIFF_APPROVE_READ_ENABLED=true`
+- `DIFF_APPROVE_APPLY_ENABLED=false`
+- `DIFF_APPROVE_PERSISTENCE_ENABLED=true`
+- `AI_EXEC_GATE_ENVIRONMENT=staging`
 
-## Feature Flags
+## 5. Operator Authentication
 
-| Flag | Preview value |
+- Ephemeral Staging ops user (`is_ops` / `tasu_admin`) and member user
+- Password login against Staging Auth
+- Users deleted after run
+- No credentials / tokens recorded in this report
+
+## 6. Read-only API
+
+| Check | Result |
 | --- | --- |
-| `DIFF_APPROVE_READ_ENABLED` | `true` |
-| `DIFF_APPROVE_APPLY_ENABLED` | `false` |
-| `DIFF_APPROVE_PERSISTENCE_ENABLED` | `true` |
-| `AI_EXEC_GATE_ENVIRONMENT` | `staging` |
+| Unauthenticated GET | 401 |
+| Member GET | 403 |
+| Operator list/summary | 200 |
+| invalid filter/sort/limit | 400 |
+| unknown proposal | 404 |
+| Cache-Control | no-store |
+| secret literals in body | none |
 
-## Authentication
+Perf (final run): list ~118ms · summary ~105ms · timeline ~182ms
 
-Ephemeral Staging users created via Admin API for E2E, then deleted:
+## 7. Read-only UI
 
-- ops: `app_metadata.is_ops=true` / `role=tasu_admin`
-- member: non-ops
+- `/admin-diff-approve` shows STAGING / READ ONLY / NO APPLY
+- No Approve / Apply / Execute / Rollback buttons
+- Operator browser summary fetch 200
+- Empty state interactive (`データがありません。`)
+- Local 8788: HTML 200 · CSS/JS 200 · badges present
 
-## Authorization
+## 8. Timeline
+
+`GET /api/ai-diff-approve/:id?view=timeline` responds fail-closed for unknown id (404)
+
+## 9. Filter
+
+Status / risk / capability / sort controls exercised; XSS-like capability string kept as text (no HTML exec)
+
+## 10. Pagination
+
+Prev/Next controls present on desktop and mobile
+
+## 11. Authorization
 
 | Actor | Result |
 | --- | --- |
-| Unauthenticated GET | **401** `auth_required` |
-| Member JWT GET | **403** `ops_required` |
-| Operator JWT GET | **200** |
-| Production host | non-JSON / not usable as Diff Approve read API |
+| Anonymous | 401 |
+| Authenticated non-ops | 403 |
+| Operator | 200 |
+| Production host probe | non-JSON / not usable as read API |
 
-## API
+## 12. Method Protection
 
-| Check | Result |
-| --- | --- |
-| GET list/summary | PASS (~47–120ms typical) |
-| POST/PUT/PATCH/DELETE | **405** |
-| OPTIONS | **204** |
-| HEAD | handled (405) |
-| invalid filter/sort/limit | **400** |
-| unknown proposal | **404** |
-| `Cache-Control: no-store` | PASS |
-| no secret literals | PASS |
+POST / PUT / PATCH / DELETE → **405**  
+OPTIONS → 204  
+HEAD handled (405)
 
-## UI
+## 13. Desktop / Mobile
 
-| Check | Result |
+| Viewport | Result |
 | --- | --- |
 | Desktop 1280 | PASS |
 | Mobile 390 | PASS |
-| STAGING / READ ONLY / NO APPLY | PASS |
-| Browser operator summary fetch | PASS |
-| Empty list state | PASS (`データがありません。`) |
-| Filter / sort / refresh / pagination chrome | PASS |
-| No Approve/Apply buttons | PASS |
-| XSS filter remains text | PASS |
 
-## Timeline
+## 14. Playwright E2E
 
-`GET /api/ai-diff-approve/:id?view=timeline` responds (404 for unknown id) — PASS fail-closed.
+Authoritative final run:
 
-## Performance
+```text
+node scripts/test-diff-approve-staging-operator-e2e.mjs --base https://341246f1.tasufull-article.pages.dev
+RESULT pass=35 fail=0
+PASS operator read-only E2E
+```
 
-| Endpoint | Observed |
+Evidence files:
+
+- `reports/diff-approve-staging-operator-e2e-final-run.log`
+- `reports/diff-approve-staging-operator-e2e-summary.json`
+
+## 15. Regression
+
+| Suite | Result |
 | --- | --- |
-| list | ~100ms (≪ 500ms) |
-| summary | ~50ms |
-| timeline | ~177ms |
+| `test-diff-approve-staging-readonly-ops.mjs` | PASS |
+| `test-diff-approve-safe-batch-integration.mjs` | PASS |
+| `test-diff-approve-staging-persistence.mjs` | PASS |
+| `test-ai-exec-gate-phase-c10-production-readiness.mjs` | PASS |
 
-## Security
+## 16. Security Boundaries
 
-- service_role not in browser
-- Apply disabled
-- Production branch not deployed
-- Write methods denied
-- Payload redaction covered by prior unit suite + XSS filter text path
+| Boundary | Status |
+| --- | --- |
+| Apply path | absent / not executed |
+| Provider execute | absent / not executed |
+| Browser service_role | not exposed |
+| Staging-only guard | present |
+| Proposal / Approval / Dashboard write | not in this surface |
+| Cron / Worker / Queue / Billing | not introduced |
+| Report secret scan | clean |
 
-## Regression
+Auditor agents:
 
-- `test-diff-approve-staging-readonly-ops.mjs` PASS
-- safe-batch A1–A11 PASS
-- C10 PASS
+- E2E auditor: PASS_WITH_FINDINGS（再実行で console log 補完）
+- Security auditor: PASS
 
-## Known Risks
+## 17. Transient Failure Classification
 
-1. Cloudflare Preview alias truncates branch name (`…readonl`)
-2. Pages API rate limits / token mishandling if `CLOUDFLARE_API_TOKEN` pre-set wrongly in shell
-3. Local `cf-pages-deploy` remains diverged from origin (ahead/behind) — do not force-reconcile without explicit approval
-4. Client list requires valid Staging session; E2E injects ops JWT / getSession override
+```text
+Transient failures occurred during E2E adjustment.
+They were superseded by the final successful run.
+Final authoritative result: 35/35 PASS.
+```
 
-## Scope
+Examples of superseded runs (not authoritative):
 
-**In:** Preview deploy, flags, operator read E2E, evidence, selective commits, preview-branch push  
-**Out:** Apply, Provider, Production, Cron/Worker/Queue, Billing, Migration DDL
+- early Preview warm 404 / incomplete UI wait
+- intermediate `pass=18 fail=5` / `pass=22 fail=1` during client session stabilization
 
-## Commits
+Final authoritative artifacts overwrite/supersede those outcomes.
 
-See final report after selective commits + preview-branch push.
+## 18. Evidence
 
-## Final Verdict
+| Artifact | Role |
+| --- | --- |
+| `reports/diff-approve-staging-operator-e2e-final-run.log` | console RESULT pass=35 fail=0 |
+| `reports/diff-approve-staging-operator-e2e-summary.json` | machine summary |
+| `reports/diff-approve-staging-preview-url.txt` | Preview URL |
+| this report | human SSOT |
 
-Staging Read-only Operator E2E **PASS**. Apply / Provider / Production untouched.
+## 19. Files Changed
+
+Completion commit allowlist (this step):
+
+- `reports/diff-approve-staging-operator-e2e.md`
+- `reports/diff-approve-staging-operator-e2e-summary.json`
+- `reports/diff-approve-staging-operator-e2e-final-run.log`
+
+## 20. Production Status
+
+```text
+Production: NOT TOUCHED
+cf-pages-deploy production push: NOT PERFORMED
+Production Supabase: NOT USED for E2E
+```
+
+## 21. Final Conclusion
+
+Staging Read-only Operator E2E is complete and evidenced.
+
+```text
+Operator Read-only E2E: 35/35 PASS
+Local 8788: LISTEN
+Environment: Staging Preview
+Production: NOT TOUCHED
+Apply: NOT EXECUTED
+Provider execute: NOT EXECUTED
+Write operations: NOT EXECUTED
+```
+
+Next critical boundaries (Apply / Provider / Production) remain stopped until explicit approval.
