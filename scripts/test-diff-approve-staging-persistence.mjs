@@ -318,6 +318,7 @@ const repo = persist.createPersistentRepository({
   url: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
   serviceRoleKey: "test-service-role",
   persistenceEnabled: true,
+  readEnabled: true,
   applyEnabled: false,
   fetchImpl: createMockDb(),
   ownerUserId: "22222222-2222-4222-8222-222222222222",
@@ -417,6 +418,7 @@ const baseRecord = {
     url: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
     serviceRoleKey: "x",
     persistenceEnabled: true,
+    readEnabled: true,
     applyEnabled: false,
     fetchImpl: async () => jsonRes([]),
   });
