@@ -1,0 +1,68 @@
+{
+  "verdict": "PASS_WITH_FINDINGS",
+  "findings": [
+    "V0 Next UI retained as SSOT (no component/CSS edits in this pass unless mapped via bridge)",
+    "Test input: 30坪の外壁塗装の見積を作って",
+    "Evidence: final_desktop_1280_after_ai.png / final_mobile_390_after_ai.png"
+  ],
+  "failed": [],
+  "checks": {
+    "modules": {
+      "router": true,
+      "foundation": true,
+      "empty": true
+    },
+    "afterAi": {
+      "hasUserBubble": true,
+      "hasAiReply": true,
+      "intentChip": true,
+      "cards": {
+        "estimateDraft": true,
+        "cost": true,
+        "quote": true
+      },
+      "nextActionsInline": true,
+      "nextActionsItems": true,
+      "inspectorIntent": true,
+      "inspectorMissing": true,
+      "relatedProjects": true,
+      "attachments": true,
+      "intentAttr": "estimate_create",
+      "routeAttr": "resolved",
+      "draft": {
+        "title": "外壁塗装",
+        "projectType": "外壁塗装",
+        "workItemCount": 7,
+        "workItemNames": [
+          "足場",
+          "高圧洗浄",
+          "養生",
+          "下塗り",
+          "中塗り",
+          "上塗り",
+          "諸経費"
+        ],
+        "createdAt": "2026-08-03T12:50:44.348Z",
+        "costState": "cost_idle"
+      },
+      "visibleTitle": true,
+      "visibleLineCountHint": true,
+      "watermarkDraft": true,
+      "overflowX": false
+    },
+    "mobile": {
+      "overflowX": false,
+      "hasDraftCard": true,
+      "hasCostCard": true,
+      "hasQuote": true,
+      "menuBtn": true,
+      "inspectorBtn": true
+    },
+    "mobileInspector": {
+      "open": true,
+      "missing": true
+    },
+    "consoleErrors": []
+  },
+  "changedFiles": []
+}

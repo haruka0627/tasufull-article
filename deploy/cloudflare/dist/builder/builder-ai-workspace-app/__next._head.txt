@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[76904,["/builder/builder-ai-workspace-app/_next/static/chunks/0_cy9amjl.8mj.js","/builder/builder-ai-workspace-app/_next/static/chunks/0-9s9vu1m9_e~.js"],"ViewportBoundary"]
+3:I[76904,["/builder/builder-ai-workspace-app/_next/static/chunks/0_cy9amjl.8mj.js","/builder/builder-ai-workspace-app/_next/static/chunks/0-9s9vu1m9_e~.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","h",{"children":[null,["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#1a1f35"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Builder AI | 建設現場専用AIワークスペース"}],["$","meta","1",{"name":"description","content":"自然文で入力するだけで見積・原価計算・見積書・工程表・請求書などをAIが自動で作成する、建設業向けAIワークスペース。"}]]}]}]}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"ttYDsbD4W93Ea4RUv2Hop"}
