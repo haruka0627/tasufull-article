@@ -28,7 +28,10 @@
   }
 
   function getClientUserId() {
+    // P0-3: prefer auth.uid for deal ownership; display fallback only when no session.
     return (
+      window.TasuChatUserIdentity?.getAuthUidForDbWrite?.() ||
+      window.TasuTalkRuntime?.getAuthUidSync?.() ||
       window.TasuChatUserIdentity?.getEffectiveUserId?.() ||
       window.TASU_CHAT_SUPABASE_CONFIG?.currentUserId ||
       "u_me"
@@ -114,17 +117,14 @@
       });
     }
 
+    // P0-2 / D5: ViaEnsure only — no createBusinessConsultRoom Browser INSERT fallback.
     const room = await window.TasuChatSupabase?.createBusinessConsultRoomViaEnsure?.({
-      listing,
-      deal,
-      intent,
-    }) || await window.TasuChatSupabase?.createBusinessConsultRoom?.({
       listing,
       deal,
       intent,
     });
 
-    if (!room?.id) throw new Error("チャットルームを作成できませんでした");
+    if (!room?.id) throw new Error("チャットルームを作成できませんでした（ensure-talk-room required / P0-2）");
 
     if (deal.id && deal.chat_id !== room.id) {
       deal = await window.TasuServiceDealsDb.updateDeal(deal.id, {
