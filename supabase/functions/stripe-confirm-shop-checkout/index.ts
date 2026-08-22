@@ -3,6 +3,27 @@ import { handleOptions, jsonResponse } from "../_shared/cors.ts";
 import { upsertShopOrderFromCheckout } from "../_shared/apply-shop-order.ts";
 import { calcPlatformFees } from "../_shared/resolve-shop-payout.ts";
 
+/** P0-3: optional buyer_user_id from Authorization JWT sub (auth.uid). */
+function readBuyerUidFromAuthHeader(req: Request): string | null {
+  const auth = String(req.headers.get("Authorization") || "").trim();
+  if (!auth.toLowerCase().startsWith("bearer ")) return null;
+  const token = auth.slice(7).trim();
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+  try {
+    const padded = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+    const json = atob(padded.padEnd(padded.length + ((4 - (padded.length % 4)) % 4), "="));
+    const claims = JSON.parse(json);
+    const sub = String(claims?.sub || "").trim();
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(sub)) {
+      return sub;
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
 Deno.serve(async (req) => {
   const options = handleOptions(req);
   if (options) return options;
