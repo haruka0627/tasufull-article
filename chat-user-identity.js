@@ -84,6 +84,33 @@
     return getConfigUserId();
   }
 
+  /**
+   * P0-3 / D1 — DB ownership write identity ONLY.
+   * Returns JWT sub / session.user.id (auth.uid). Never talk_user_id / demo u_*.
+   */
+  function getAuthUidForDbWrite() {
+    try {
+      const claims = window.TasuAuthCurrentUser?.getCurrentUserClaims?.();
+      const sub = String(claims?.sub || "").trim();
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(sub)) {
+        return sub;
+      }
+    } catch {
+      /* ignore */
+    }
+    try {
+      if (window.TasuTalkRuntime?.getAuthUidSync) {
+        const uid = String(window.TasuTalkRuntime.getAuthUidSync() || "").trim();
+        if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(uid)) {
+          return uid;
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+    return "";
+  }
+
   function memberAvatarOverride(userId) {
     return window.TasuMemberProfile?.getAvatarUrlForUser?.(userId) || "";
   }
@@ -167,6 +194,7 @@
   window.TasuChatUserIdentity = {
     getUserIdFromUrl,
     getEffectiveUserId,
+    getAuthUidForDbWrite,
     getEffectiveMeProfile,
     getProfileForUserId,
     applyToConfig,

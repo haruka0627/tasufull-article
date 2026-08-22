@@ -244,10 +244,21 @@
   }
 
   function getCurrentUserId() {
+    // Display / unread heuristics may still use effective (talk/demo) id.
     if (window.TasuChatUserIdentity?.getEffectiveUserId) {
       return window.TasuChatUserIdentity.getEffectiveUserId();
     }
     return getConfig().currentUserId || getConfig().me?.id || "u_me";
+  }
+
+  /** P0-3 / D1 — ownership column writes must use auth.uid / JWT sub. */
+  function getDbWriteUserId() {
+    const authUid =
+      window.TasuChatUserIdentity?.getAuthUidForDbWrite?.() ||
+      window.TasuTalkRuntime?.getAuthUidSync?.() ||
+      "";
+    if (authUid) return String(authUid).trim();
+    return "";
   }
 
   function getMeProfile() {
@@ -743,7 +754,8 @@
     const serviceId = String(
       listing?.id || listing?.demo_id || listing?.form_data?.demo_id || ""
     ).trim();
-    const clientId = getCurrentUserId();
+    // P0-3: buyer_id must be auth.uid (not talk_user_id / demo).
+    const clientId = getDbWriteUserId() || getCurrentUserId();
     const providerId = String(
       listing?.user_id || listing?.seller_user_id || `provider_${serviceId}`
     ).trim();
@@ -773,16 +785,12 @@
       payload.service_deal_id = dealId;
     }
 
+    // P0-2 / D5: Browser-direct transaction_rooms INSERT abolished.
+    // Remote create must use createBusinessConsultRoomViaEnsure → Edge ensure-talk-room (service_role).
     if (sb && window.location.protocol !== "file:") {
-      const { data, error } = await sb
-        .from("transaction_rooms")
-        .insert(payload)
-        .select("*")
-        .single();
-      if (!error && data) {
-        return { id: String(data.id), row: data };
-      }
-      if (error) logSupabaseError("createBusinessConsultRoom", error);
+      throw new Error(
+        "P0-2/D5: browser transaction_rooms INSERT abolished; use createBusinessConsultRoomViaEnsure / ensure-talk-room"
+      );
     }
 
     const localId = `local-room-${Date.now()}`;
@@ -803,7 +811,7 @@
       unreadCount: 0,
       serviceDealId: dealId,
     };
-    registerLocalConsultRoom(seed);
+    registerLocalConsultRoom(thread, []);
     return { id: localId, row: thread, local: true };
   }
 
@@ -850,14 +858,22 @@
   }
 
   /**
-   * 汎用 listing TALK ルーム ensure（クライアント fallback · RLS 許可時）
+   * 汎用 listing TALK ルーム ensure（P0-2/D5: Edge ensure-talk-room only · no Browser INSERT）
    */
   async function createListingTalkRoom(input) {
     const payload = input && typeof input === "object" ? input : {};
     const listingId = String(payload.listing_id || "").trim();
     const listingType = String(payload.listing_type || "").trim();
-    const buyerId = String(payload.buyer_id || "").trim();
+    // P0-3: prefer auth uid for buyer_id when caller is self / demo / talk id.
+    const authUid = getDbWriteUserId();
+    let buyerId = String(payload.buyer_id || "").trim();
     const sellerId = String(payload.seller_id || "").trim();
+    if (authUid) {
+      const effective = getCurrentUserId();
+      if (!buyerId || buyerId === effective || /^u_[a-z0-9_]+$/i.test(buyerId)) {
+        buyerId = authUid;
+      }
+    }
     const title = String(payload.title || "やりとり").trim();
     if (!listingId || !listingType || !buyerId || !sellerId) {
       throw new Error("createListingTalkRoom: missing required fields");
@@ -880,52 +896,36 @@
       }
     }
 
-    const expiresAt =
-      String(payload.expires_at || "").trim() ||
-      new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString();
-    const status = String(payload.status || "fee_pending").trim() || "fee_pending";
-
-    const basePayload = {
-      listing_id: listingId,
-      listing_type: listingType,
-      buyer_id: buyerId,
-      seller_id: sellerId,
-      expires_at: expiresAt,
-      status,
-    };
-    const metaPayload = { ...basePayload };
-    const cid = String(payload.contact_id || "").trim();
-    if (cid) metaPayload.contact_id = cid;
-    const source = String(payload.source || "").trim();
-    if (source) metaPayload.source = source;
-    if (serviceType) metaPayload.service_type = serviceType;
-    if (serviceRefId) metaPayload.service_ref_id = serviceRefId;
-    const dealId = String(payload.service_deal_id || "").trim();
-    if (dealId && !dealId.startsWith("local-")) metaPayload.service_deal_id = dealId;
-
-    const richPayload = { ...metaPayload, title, partner_id: sellerId };
-    const candidates = [richPayload, metaPayload, basePayload];
-
-    if (isConfigured() && window.location.protocol !== "file:") {
-      const sb = getClient();
-      for (const row of candidates) {
-        const { data, error } = await sb
-          .from("transaction_rooms")
-          .insert(row)
-          .select("*")
-          .single();
-        if (!error && data?.id) {
-          return { id: String(data.id), row: data, created: true, reused: false };
-        }
-        if (error && !/could not find|column|schema cache/i.test(error.message)) {
-          logSupabaseError("createListingTalkRoom", error);
-          break;
-        }
-        if (error) logSupabaseError("createListingTalkRoom", error);
+    // P0-2 / D5: sole remote write path = Edge ensure-talk-room (service_role).
+    // Fail closed — never Browser PostgREST INSERT into transaction_rooms.
+    const Ensure = window.TasuTalkRoomEnsure;
+    if (Ensure?.ensureTalkRoom) {
+      const ensured = await Ensure.ensureTalkRoom({
+        ...payload,
+        listing_id: listingId,
+        listing_type: listingType,
+        title,
+        buyer_id: buyerId,
+        seller_id: sellerId,
+      });
+      if (ensured?.ok && ensured.room_id) {
+        const row = await fetchRoomById(ensured.room_id).catch(() => null);
+        return {
+          id: String(ensured.room_id),
+          row,
+          created: Boolean(ensured.created),
+          reused: Boolean(ensured.reused),
+          mode: ensured.mode,
+        };
       }
+      return {
+        ok: false,
+        reason: ensured?.reason || "ensure_talk_room_failed",
+        edge: ensured || null,
+      };
     }
 
-    return { ok: false, reason: "insert_failed" };
+    return { ok: false, reason: "browser_room_insert_abolished_ensure_required" };
   }
 
   /**
@@ -956,7 +956,8 @@
     const serviceId = String(
       listing?.id || listing?.demo_id || listing?.form_data?.demo_id || ""
     ).trim();
-    const clientId = getCurrentUserId();
+    // P0-3: buyer_id must be auth.uid (not talk_user_id / demo).
+    const clientId = getDbWriteUserId() || getCurrentUserId();
     const providerId = String(
       listing?.user_id || listing?.seller_user_id || `provider_${serviceId}`
     ).trim();
@@ -969,26 +970,30 @@
     const title = String(listing?.title || company || "業務サービス相談").trim();
     const dealId = String(deal?.id || "").trim();
 
+    // P0-2 / D5: Edge ensure only — fail closed (NO browser insert fallback).
     const Ensure = window.TasuTalkRoomEnsure;
-    if (Ensure?.ensureTalkRoom) {
-      const ensured = await Ensure.ensureTalkRoom({
-        listing_type: "business",
-        listing_id: serviceId,
-        title: `【業務】${title}`,
-        buyer_id: clientId,
-        seller_id: providerId,
-        service_deal_id: dealId && !dealId.startsWith("local-") ? dealId : undefined,
-        source: "business-consult",
-        status: "active",
-        from: "business",
-      });
-      if (ensured?.ok && ensured.room_id) {
-        const row = await fetchRoomById(ensured.room_id).catch(() => null);
-        return { id: ensured.room_id, row, created: ensured.created, reused: ensured.reused };
-      }
+    if (!Ensure?.ensureTalkRoom) {
+      throw new Error(
+        "P0-2/D5: TasuTalkRoomEnsure.ensureTalkRoom required; browser transaction_rooms INSERT abolished"
+      );
     }
-
-    return createBusinessConsultRoom({ listing, deal });
+    const ensured = await Ensure.ensureTalkRoom({
+      listing_type: "business",
+      listing_id: serviceId,
+      title: `【業務】${title}`,
+      buyer_id: clientId,
+      seller_id: providerId,
+      service_deal_id: dealId && !dealId.startsWith("local-") ? dealId : undefined,
+      source: "business-consult",
+      status: "active",
+      from: "business",
+    });
+    if (ensured?.ok && ensured.room_id) {
+      const row = await fetchRoomById(ensured.room_id).catch(() => null);
+      return { id: ensured.room_id, row, created: ensured.created, reused: ensured.reused };
+    }
+    const reason = ensured?.reason || "ensure_talk_room_failed";
+    throw new Error(`P0-2/D5: ensure-talk-room failed (${reason}); browser insert fallback removed`);
   }
 
   async function fetchRoomById(roomId) {
@@ -1179,9 +1184,21 @@
       throw new Error("message is empty");
     }
 
+    // P0-5 / D1+D4 ROOM_SENDER_CONTRACT: remote sender_id MUST = auth.uid()::text (UUID).
+    // Compose with P0-3 getDbWriteUserId / getAuthUidForDbWrite — never trust messageInput.senderId.
+    // __system__ is NOT an authenticated bypass; use Edge service_role post-system-message.
+    const AUTH_UID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const authUid = String(getDbWriteUserId() || "").trim();
+    const proposedSender = String(messageInput.senderId || "").trim();
+    if (proposedSender === "__system__" || messageInput?.kind === "system") {
+      throw new Error("system messages require service_role Edge path (P0-5/D4)");
+    }
+    if (!authUid || !AUTH_UID_RE.test(authUid)) {
+      throw new Error("auth.uid UUID required for transaction_messages.sender_id write (P0-5/D1)");
+    }
     const payload = {
       room_id: id,
-      sender_id: messageInput.senderId,
+      sender_id: authUid,
       message: rawText,
       image_url: hasAttachment ? attachment.dataUrl : null,
     };
@@ -1608,6 +1625,7 @@
     mapRoomRowToThread,
     normalizeRoomId,
     getCurrentUserId,
+    getDbWriteUserId,
     getMeProfile,
     logSupabaseError,
     fetchReadAtByRoomAndUser,
