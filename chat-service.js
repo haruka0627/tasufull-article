@@ -1117,13 +1117,29 @@
       }
     }
 
-    if (supabaseReady && isLikelySupabaseRoomId(id) && window.TasuChatSupabase?.insertMessage) {
-      try {
-        const message = await window.TasuChatSupabase.insertMessage(id, messageInput);
-        return { ok: true, message };
-      } catch (err) {
-        console.warn("[TasuChat] saveDealSystemMessage supabase failed:", err);
+    // P0-5 / D4: authenticated Browser must NOT INSERT __system__ into transaction_messages.
+    // Local/demo rooms remain OK; remote Supabase rooms require Edge service_role (stub).
+    if (supabaseReady && isLikelySupabaseRoomId(id)) {
+      if (typeof window.TasuChatSystemMessageEdge?.postSystemMessage === "function") {
+        try {
+          const message = await window.TasuChatSystemMessageEdge.postSystemMessage(id, body, roomContext);
+          return { ok: true, message };
+        } catch (err) {
+          console.warn("[TasuChat] saveDealSystemMessage Edge failed:", err);
+          return {
+            ok: false,
+            reason: "system messages require service_role Edge (P0-5/D4)",
+            error: err,
+          };
+        }
       }
+      console.warn("[TasuChat] saveDealSystemMessage blocked: no Edge system path (P0-5/D4)", {
+        roomId: id,
+      });
+      return {
+        ok: false,
+        reason: "system messages require service_role Edge (P0-5/D4)",
+      };
     }
 
     return saveMessageDummy(id, messageInput);
@@ -1430,6 +1446,13 @@
           return { ok: false, reason: expiredMsg };
         }
 
+        // P0-5: fail-closed if client attempts __system__ on authenticated remote path.
+        if (isSystemMessageInput(messageInput)) {
+          return {
+            ok: false,
+            reason: "system messages require service_role Edge (P0-5/D4)",
+          };
+        }
         const message = await window.TasuChatSupabase.insertMessage(id, messageInput);
         await window.TasuChatSupabase.markRoomReadNow(id);
         if (isThreadStoreRoomId(id) || window.TasuPlatformChatDualWindowDemo?.isDemoThread?.(id)) {
@@ -1447,6 +1470,12 @@
             if (isExpired(roomContext)) {
               console.warn("[TasuChat] saveMessage blocked: room expired (retry)", { roomId: id });
               return { ok: false, reason: expiredMsg };
+            }
+            if (isSystemMessageInput(messageInput)) {
+              return {
+                ok: false,
+                reason: "system messages require service_role Edge (P0-5/D4)",
+              };
             }
             const message = await window.TasuChatSupabase.insertMessage(id, messageInput);
             await window.TasuChatSupabase.markRoomReadNow(id);
