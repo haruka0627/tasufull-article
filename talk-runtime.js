@@ -114,7 +114,24 @@
     ).trim();
   }
 
-  /** 認証済み talk user id（同期） */
+  /** P0-3 / D1 — auth.uid / JWT sub only (UUID). Never talk_user_id. */
+  function getAuthUidSync() {
+    const session = readSupabaseAuthSession();
+    const fromUser = String(session?.user?.id || "").trim();
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(fromUser)) {
+      return fromUser;
+    }
+    if (session?.access_token) {
+      const payload = decodeJwtPayload(session.access_token);
+      const sub = String(payload.sub || "").trim();
+      if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(sub)) {
+        return sub;
+      }
+    }
+    return "";
+  }
+
+    /** 認証済み talk user id（同期） */
   function getAuthTalkUserIdSync() {
     const session = readSupabaseAuthSession();
     if (session?.access_token) {
@@ -290,6 +307,7 @@
   global.TasuTalkRuntime = {
     isTalkDevMode,
     isTalkProductionMode,
+    getAuthUidSync,
     getAuthTalkUserIdSync,
     hasAuthenticatedTalkSession,
     isAdminFromAuth,
