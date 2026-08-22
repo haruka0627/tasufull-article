@@ -19,6 +19,8 @@ export class TalkRoomFunctionError extends Error {
 
 export type TalkAuthUser = {
   talkUserId: string;
+  /** P0-3 / D1 — JWT sub / auth.uid for ownership writes + participant assert */
+  sub: string;
   tokenMode: "stub" | "decoded" | "anon";
   claims: Record<string, unknown>;
 };
@@ -76,6 +78,7 @@ export function requireTalkUser(req: Request): TalkAuthUser {
   if (token === STUB_TALK_TOKEN) {
     return {
       talkUserId: STUB_TALK_USER_ID,
+      sub: "",
       tokenMode: "stub",
       claims: { sub: STUB_TALK_USER_ID },
     };
@@ -84,14 +87,16 @@ export function requireTalkUser(req: Request): TalkAuthUser {
   const claims = decodeJwtPayload(token);
   if (claims) {
     const talkUserId = readTalkUserIdFromClaims(claims);
-    if (talkUserId) {
-      return { talkUserId, tokenMode: "decoded", claims };
+    const sub = pickString(claims.sub);
+    if (talkUserId || sub) {
+      return { talkUserId: talkUserId || sub, sub, tokenMode: "decoded", claims };
     }
   }
 
   // anon key as bearer — dev fallback (caller must pass buyer_id/seller_id in body)
   return {
     talkUserId: "",
+    sub: "",
     tokenMode: "anon",
     claims: {},
   };
