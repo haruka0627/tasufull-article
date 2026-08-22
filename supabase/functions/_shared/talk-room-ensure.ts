@@ -75,13 +75,37 @@ function normalizeParticipants(input: EnsureListingTalkRoomInput): string[] {
 
 function assertCallerIsParticipant(user: TalkAuthUser, participants: string[]): void {
   if (user.tokenMode === "stub" || user.tokenMode === "anon") return;
-  const caller = pickString(user.talkUserId);
+  // P0-3 / D1: compare JWT sub (auth.uid), not talk_user_id.
+  const caller = pickString(user.sub);
   if (!caller) {
-    throw new TalkRoomFunctionError("unauthorized", "talk_user_id missing in token", 401);
+    throw new TalkRoomFunctionError("unauthorized", "JWT sub (auth.uid) missing in token", 401);
   }
   if (!participants.includes(caller)) {
     throw new TalkRoomFunctionError("forbidden", "Not a participant of this room", 403);
   }
+}
+
+/** Rewrite caller-side talk/demo ids in ownership fields to JWT sub. */
+function rewriteOwnershipToAuthUid(
+  input: EnsureListingTalkRoomInput,
+  user: TalkAuthUser,
+): EnsureListingTalkRoomInput {
+  const sub = pickString(user.sub);
+  const talk = pickString(user.talkUserId);
+  if (!sub) return input;
+  const rewrite = (val: string): string => {
+    const v = pickString(val);
+    if (!v) return v;
+    if (talk && v === talk) return sub;
+    if (v === "u_me") return sub;
+    if (/^u_[a-z0-9_]+$/i.test(v) && (!talk || v === talk)) return sub;
+    return v;
+  };
+  const buyer_id = rewrite(input.buyer_id);
+  const seller_id = rewrite(input.seller_id);
+  const participants = normalizeParticipants({ ...input, buyer_id, seller_id });
+  if (!participants.includes(sub)) participants.push(sub);
+  return { ...input, buyer_id, seller_id, participants };
 }
 
 async function findExistingRoom(
@@ -145,9 +169,9 @@ async function findExistingRoom(
       .select("id")
       .eq("listing_type", listingType)
       .eq("listing_id", listingId)
+      .in("status", ["active", "fee_pending", "open"])
       .eq("buyer_id", buyerId)
       .eq("seller_id", sellerId)
-      .in("status", ["active", "fee_pending", "open"])
       .order("created_at", { ascending: true })
       .limit(1)
       .maybeSingle();
@@ -160,6 +184,7 @@ async function findExistingRoom(
   return null;
 }
 
+/** P0-2 / D5: sole transaction_rooms INSERT path (service_role). Browser PostgREST INSERT abolished. */
 async function insertTransactionRoom(
   client: SupabaseClient,
   input: EnsureListingTalkRoomInput,
@@ -214,7 +239,7 @@ async function insertTransactionRoom(
       continue;
     }
     if (error) {
-      throw new TalkRoomFunctionError("internal_error", error.message, 500);
+      throw new TalkRoomFunctionError("internal_error", lastMsg, 500);
     }
   }
 
@@ -239,18 +264,32 @@ export async function ensureListingTalkRoom(
     );
   }
 
-  const participants = normalizeParticipants(input);
+  // P0-3: coerce ownership ids to auth uid before assert/find/insert.
+  // P0-2: this Edge path is the ONLY writer of transaction_rooms rows for Browser flows.
+  const rewritten = rewriteOwnershipToAuthUid(input, user);
+  const participants = normalizeParticipants(rewritten);
   assertCallerIsParticipant(user, participants);
+  // D1 align: authenticated inserts must persist JWT sub into buyer_id or seller_id.
+  if (user.tokenMode !== "stub" && user.tokenMode !== "anon") {
+    const sub = pickString(user.sub);
+    if (sub && rewritten.buyer_id !== sub && rewritten.seller_id !== sub) {
+      throw new TalkRoomFunctionError(
+        "invalid_request",
+        "buyer_id/seller_id must include auth.uid (sub) after P0-3 rewrite",
+        400,
+      );
+    }
+  }
 
   const client = createTalkRoomServiceClient();
-  let roomId = await findExistingRoom(client, input);
+  let roomId = await findExistingRoom(client, rewritten);
   let created = false;
   let reused = false;
 
   if (roomId) {
     reused = true;
   } else {
-    roomId = await insertTransactionRoom(client, input);
+    roomId = await insertTransactionRoom(client, rewritten);
     created = true;
   }
 
