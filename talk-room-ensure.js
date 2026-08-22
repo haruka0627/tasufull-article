@@ -1,5 +1,5 @@
 /**
- * TALK room ensure — Edge primary · Supabase insert fallback · LS は呼び出し元へ委譲
+ * TALK room ensure — Edge sole write path (P0-2/D5) · Browser INSERT abolished · LS は呼び出し元へ委譲
  * Ref: supabase/functions/ensure-talk-room · reports/talk-chat-unify-p0-p1-plan.md P1
  */
 (function (global) {
@@ -50,6 +50,16 @@
   }
 
   function getAuthToken() {
+    // P0-3: prefer user JWT so Edge can read sub for ownership writes.
+    try {
+      const session =
+        global.TasuAuthCurrentUser?.readSupabaseAuthSession?.() ||
+        null;
+      const access = pickStr(session?.access_token);
+      if (access) return access;
+    } catch {
+      /* ignore */
+    }
     const cfg = global.TASU_CHAT_SUPABASE_CONFIG || global.TASU_SUPABASE_CONFIG || {};
     return pickStr(cfg.anonKey, cfg.anon_key);
   }
@@ -180,27 +190,12 @@
     };
   }
 
-  async function fallbackClientInsert(payload) {
-    const Supabase = global.TasuChatSupabase;
-    if (!Supabase?.createListingTalkRoom) {
-      return { ok: false, reason: "supabase_helper_missing" };
-    }
-    try {
-      const result = await Supabase.createListingTalkRoom(payload);
-      if (!result?.id) return { ok: false, reason: "supabase_insert_failed" };
-      return {
-        ok: true,
-        mode: result.local ? "local_fallback" : "client_insert",
-        room_id: String(result.id),
-        redirect_url: buildRedirectUrl(result.id, payload.from),
-        created: Boolean(result.created),
-        reused: Boolean(result.reused),
-        row: result.row || null,
-      };
-    } catch (err) {
-      console.warn("[TasuTalkRoomEnsure] client insert fallback failed:", err);
-      return { ok: false, reason: "supabase_insert_exception" };
-    }
+  /**
+   * P0-2 / D5: Browser client INSERT fallback HARD-DISABLED.
+   * Sole remote write path = Edge ensure-talk-room (service_role).
+   */
+  async function fallbackClientInsert(_payload) {
+    return { ok: false, reason: "browser_room_insert_abolished" };
   }
 
   /**
@@ -224,18 +219,22 @@
       };
     }
 
+    // P0-2 / D5: Edge only — fail closed if Edge fails (NO browser insert fallback).
     if (shouldPreferEdgeEnsure()) {
       const edge = await callEnsureEdge(payload);
       if (edge.ok && edge.room_id) return edge;
-      console.warn("[TasuTalkRoomEnsure] edge failed, trying client insert:", edge.reason);
-      const inserted = await fallbackClientInsert(payload);
-      if (inserted.ok) return inserted;
-      return edge.ok === false ? edge : inserted;
+      console.warn("[TasuTalkRoomEnsure] edge failed; fail closed (P0-2/D5):", edge.reason);
+      return {
+        ok: false,
+        reason: edge.reason || "edge_ensure_failed",
+        status: edge.status,
+        json: edge.json,
+      };
     }
 
-    const inserted = await fallbackClientInsert(payload);
-    if (inserted.ok) return inserted;
-    return { ok: false, reason: "ensure_unavailable" };
+    // Not configured / file: — do not fall back to Browser PostgREST INSERT.
+    console.warn("[TasuTalkRoomEnsure] edge unavailable; fail closed (P0-2/D5)");
+    return { ok: false, reason: "edge_required_browser_insert_abolished" };
   }
 
   global.TasuTalkRoomEnsure = {
