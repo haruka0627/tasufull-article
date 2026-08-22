@@ -169,9 +169,9 @@ async function findExistingRoom(
       .select("id")
       .eq("listing_type", listingType)
       .eq("listing_id", listingId)
-      .in("status", ["active", "fee_pending", "open"])
       .eq("buyer_id", buyerId)
       .eq("seller_id", sellerId)
+      .in("status", ["active", "fee_pending", "open"])
       .order("created_at", { ascending: true })
       .limit(1)
       .maybeSingle();
@@ -239,7 +239,7 @@ async function insertTransactionRoom(
       continue;
     }
     if (error) {
-      throw new TalkRoomFunctionError("internal_error", lastMsg, 500);
+      throw new TalkRoomFunctionError("internal_error", error.message, 500);
     }
   }
 
