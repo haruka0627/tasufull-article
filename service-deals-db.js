@@ -26,6 +26,15 @@
     );
   }
 
+  /** P0-3 / D1 — ownership writes use auth.uid only. */
+  function getDbWriteUserId() {
+    return (
+      window.TasuChatUserIdentity?.getAuthUidForDbWrite?.() ||
+      window.TasuTalkRuntime?.getAuthUidSync?.() ||
+      ""
+    );
+  }
+
   function loadLocal() {
     try {
       const raw = localStorage.getItem(LOCAL_KEY);
@@ -219,8 +228,17 @@
 
   async function insertDeal(row) {
     const sb = getClient();
-    if (sb && window.location.protocol !== "file:") {
-      const { data, error } = await sb.from("service_deals").insert(row).select("*").single();
+    // P0-3: coerce client_user_id to auth.uid when writing to Supabase.
+    const authUid = getDbWriteUserId();
+    const writeRow = { ...(row || {}) };
+    if (authUid) {
+      writeRow.client_user_id = authUid;
+    } else if (sb && window.location.protocol !== "file:") {
+      console.warn("[ServiceDeals] insertDeal blocked: auth.uid required for client_user_id (P0-3)");
+      // fall through to local only
+    }
+    if (sb && window.location.protocol !== "file:" && authUid) {
+      const { data, error } = await sb.from("service_deals").insert(writeRow).select("*").single();
       if (!error && data) return mapRow({ ...data, _source: "supabase" });
       if (error) console.warn("[ServiceDeals] insert failed:", error);
     }
@@ -228,7 +246,7 @@
     const id = `local-deal-${Date.now()}`;
     const record = {
       id,
-      ...row,
+      ...writeRow,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       _source: "local",
