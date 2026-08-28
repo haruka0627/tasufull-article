@@ -1,0 +1,12 @@
+# TLV Gate 04 operational control package SHA-256 (raw file bytes)
+# The manifest excludes itself.
+2511e92580583b9bfa502579c3cce526831c4d750dbaa128e1ef937d1cc60ded  docs/TLV_PRODUCTION_OPERATIONAL_CONTROL_RECORD.md
+1befda88791384b3960968d32b251529afa4faf1f048efe63146c6cd923dc568  reports/tlv-step5l-prod-gate-04-writer-inventory.md
+65c4ba07df357cc2d85e9a8aeda85d7e73cd76c862e27f54a0e493d3cb90eed3  reports/sql/tlv-step5l-prod-gate-04-writer-freeze-control.sql
+2abd28ae85ad8895ed6dc9786a3c708fec860a759b589d9b63da77008030705a  scripts/sql/tlv-step5l-gate04-freeze-fixture.sql
+973f2910041a6fe0c1cd7bda6242bb92311535764ca981c1557d1695757e735b  scripts/test-tlv-step5l-prod-gate-04-operational-control-isolated.ps1
+9a04ee09f65b2b8727bfa77c3664639c37a7e4a9d327352a13f3d96b43f3a8cc  scripts/test-tlv-step5l-prod-gate-04-operational-control.mjs
+e07910ff6409afedf7a080be64a39ba2185ad85c8ec29c2055b8ea0b12968e24  scripts/red-team-tlv-step5l-prod-gate-04-operational-control.mjs
+a8fff9d9780bb1151f411b747cd2e21a782ad993763bbf2392b1488c929e7571  scripts/judge-tlv-step5l-prod-gate-04-operational-control.mjs
+f8b5bca96ae3c2f6dad8a8f2d5aeae2a468b28018c25a64b8693193a4b177368  scripts/test-tlv-step5e-history-vs-current-step5l.mjs
+81ff59be949fe6c22816b2b9bb7d9edaf937ba6ff0e39b451969fee008d17a71  reports/tlv-step5l-prod-gate-04-operational-control-closeout.md
