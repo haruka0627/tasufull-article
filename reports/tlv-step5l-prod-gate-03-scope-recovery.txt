@@ -1,0 +1,26 @@
+TLV STEP5L PROD GATE 03 — Scope recovery evidence
+Captured: 2026-08-28 JST
+Hash semantics: SHA-256 of UTF-8 text normalized to LF.
+
+SOURCE 1
+Path: reports/tlv-step5l-prod-gate-02-technical-preflight-closeout.md
+SHA-256: 43c8d4b2bd1019732c904bb81d38e74af360222c01085fbb525d32c7cac3f647
+Relevant frozen statements:
+- Shared Staging authorization must approve the four-migration apply in order and hosted JWT/PostgREST/RLS parity.
+- Production PostgreSQL is 17.6; hosted Staging parity is mandatory before Production consideration.
+- The next safe phase after source-control anchoring is a separate Shared Staging parity phase.
+
+SOURCE 2
+Path: reports/tlv-production-readiness-step5j-final-implementation-plan.md
+SHA-256: f10342ea4dda4aa048340877a7c7c7e0e8a4c1a0cb701dfb859ac4eb6a627273
+Relevant frozen statement:
+- Remaining gate 3 is separate Shared Staging mutation/apply approval and hosted RLS/JWT parity verification.
+
+COMMITTED SSOT CORROBORATION
+- docs/TLV_FINANCIAL_CONTRACT_SCOPE_FREEZE.md keeps Production financial RLS/privilege, provider and tax gates separate.
+- docs/TLV_SETTLEMENT_ENGINE.md states Production and Shared Staging are not applied and keeps provider execution fail closed.
+- reports/tlv-step5l-prod-gate-02-revenue-share-progressive-update.md fixes Gate 02 release state and confirms Gate 03 had not started.
+
+RECOVERED_SCOPE: SHARED_STAGING_FOUR_MIGRATION_APPLY_AND_HOSTED_JWT_POSTGREST_RLS_PARITY
+PRODUCTION_ROLLOUT_SCOPE: NO
+GATE_04_SCOPE: NO
