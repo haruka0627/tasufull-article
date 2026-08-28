@@ -211,6 +211,8 @@ export function buildCreatorRankExplanationReport(payoutDecision, conditionLines
     : `v${ENGINE_VERSION.replace(/\.0$/, "")}`;
 
   return {
+    financial_authority: "HISTORICAL_SUPERSEDED",
+    settlement_eligible: false,
     engine_version: engineVersion,
     baseline_file: PRODUCTION_BASELINE_RELATIVE_PATH,
     generated_at: new Date().toISOString(),

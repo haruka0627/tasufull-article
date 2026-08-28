@@ -1,9 +1,16 @@
 # TLV Creator Program — 実装仕様 v1
 
-**最終更新:** 2026-06-28（v1.2 · Score OS — [TLV_PRD.md](./TLV_PRD.md) §5 同期 · Membership 追加設計 §2.7）  
-**種別:** 実装可能仕様（Platform Vision v2+ · TLV v1.0 FROZEN 対象外）  
-**AD:** [DECISIONS.md](./DECISIONS.md) **AD-014**  
-**関連:** [PRICING.md](./PRICING.md) · [FINANCIAL_MODEL.md](./FINANCIAL_MODEL.md) · [ADMIN_SYSTEM.md](./ADMIN_SYSTEM.md) · [EVENT_SYSTEM.md](./EVENT_SYSTEM.md) · [TLV_DB_SCHEMA.md](./TLV_DB_SCHEMA.md) · [TLV_PAYMENT_ENGINE.md](./TLV_PAYMENT_ENGINE.md)
+> **2026-08-28 PROGRESSIVE SSOT UPDATE:** TLV cash revenue share is `TLV_PROGRESSIVE_V1` on monthly Eligible Net: 80/20 for the first JPY 5m, 90/10 for the next JPY 5m, 95/5 for the next JPY 20m, and 99/1 above JPY 30m. All older one-shot 80/90/95 tier and Rank/Score payout passages below are `HISTORICAL_SUPERSEDED` for financial decisions. AD-040 §6.1 controls.
+
+**最終更新:** 2026-08-12（**AD-040 整合** · Rank/Score は維持 · 投げ銭分配率は AD-040）  
+**種別:** 実装可能仕様草案（Platform Vision · **投げ銭分配の正本は AD-040**）  
+**AD:** [DECISIONS.md](./DECISIONS.md) **AD-040**（上位）· **AD-014**（Score/Rank 思想）  
+**関連:** [ADR-040](./adr/ADR-040-tasful-product-option-benefit-policy.md) · [PRICING.md](./PRICING.md) · [FINANCIAL_MODEL.md](./FINANCIAL_MODEL.md) · [ADR-019](./adr/ADR-019-tlv-pricing-v1.md) · [ADR-021](./adr/ADR-021-tlv-creator-economy-v1.md)
+
+> **SSOT ALIGNMENT:**  
+> - **TLV Revenue Share** = AD-040 `TLV_PROGRESSIVE_V1`。月間 Eligible Net の各部分へ 80/20 · 90/10 · 95/5 · 99/1 を累進適用する。  
+> - 本ファイルの Rank / Score / Override 90%/95% 節は **Rank・特典・Pool 草案** であり、**投げ銭分配率決定条件ではない**（LEGACY / 別軸）。  
+> - TLV LIVE Core はプラン型（Free/Basic/Premium LIVE）にしない（AD-040）。
 
 **通貨単位:** JPY（円）· 内部コイン（1 コイン = Web 基準 ¥1 相当 · [PRICING.md](./PRICING.md) §1）
 
@@ -128,7 +135,7 @@ FS      = FS_PPC + FS_WR + FS_SPC   // FS_SPC 追加は将来 · 現行式は不
 
 ### 3.1 ティア閾値（Score_MA30 ベース · 月次確定）
 
-| Rank | Score レンジ | 還元ベース率（Net） |
+| Rank | Score レンジ | Rank 特典草案レート（Net · 履歴） |
 | --- | --- | --- |
 | Bronze | 0 – 499 | 50% |
 | Silver | 500 – 649 | 60% |
@@ -136,6 +143,10 @@ FS      = FS_PPC + FS_WR + FS_SPC   // FS_SPC 追加は将来 · 現行式は不
 | Platinum | 750 – 849 | 80% |
 | Diamond | 850 – 929 | 85% |
 | Legend | 930 – 1000 | 88% |
+
+> **注（AD-040）:** 上表のレート列は **Rank/特典草案の履歴語**。**投げ銭分配率 SSOT ではない。**  
+> TLV Revenue Share = AD-040 `TLV_PROGRESSIVE_V1`（first 500万 80/20 · next 500万 90/10 · next 2000万 95/5 · 3000万超部分 99/1）。  
+> **Rank / Score ≠ 投げ銭分配率決定条件。**
 
 **Legend:** 定員 **100** · Score ≥ 930 かつ **PPR 降順** 選抜 · 待機リスト · 動的入替（TLV_PRD §6.4）
 
@@ -154,7 +165,11 @@ FS      = FS_PPC + FS_WR + FS_SPC   // FS_SPC 追加は将来 · 現行式は不
 
 ## 4. 還元率 — Override Layer（90% / 95%）
 
-**還元計算基準は常に Net Revenue（Gross 禁止 · AD-014）**
+> **AD-040:** 本節の Override は **Rank/特典/Pool 草案の履歴**。  
+> **投げ銭分配率の正式決定には使わない。** 分配SSOT = AD-040 `TLV_PROGRESSIVE_V1`。  
+> Rank / Score 制度自体は削除しない。
+
+**還元計算基準は常に Net Revenue（Gross 禁止 · AD-014）** — Pool/特典計算の草案前提。
 
 ### 4.1 Base Layer
 

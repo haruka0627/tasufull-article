@@ -1,5 +1,7 @@
 # TLV DB Schema — v1.2.5 + Membership 追加設計
 
+> **FINANCIAL SUPERSESSION (2026-08-28):** Revenue Share・Settlement・Payout金額の正本はAD-040 `TLV_PROGRESSIVE_V1`と`tlv.monthly_settlements`の保存済み累進snapshot。`creator_score_monthly`の旧`base_rate` / `effective_rate` / `override_tier`はanalytics／historical compatibility専用で、金融判断へ使用禁止。
+
 **最終更新:** 2026-06-28  
 **DDL 正本:** [`db/tlv_schema.sql`](../db/tlv_schema.sql)  
 **仕様正本:** [TLV_PRD.md](./TLV_PRD.md) §5 · §6 · [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md)  
@@ -117,9 +119,9 @@ FS: 0–400  |  ES: 0–300  |  GS: 0–200  |  TS: 0–100
 
 **Live キャッシュ:** `creators.fs_live` · `es_live` · `gs_daily` · `ts_live` · `total_live`
 
-### 4.2 月次正本（Rank / 還元）
+### 4.2 月次Rank分析（金融判断には使用禁止）
 
-`creator_score_monthly` 必須カラム:
+`creator_score_monthly` legacy analyticsカラム（Revenue Share / Settlement / Payout eligibility / amount calculationには使用しない）:
 
 | カラム | 用途 |
 | --- | --- |

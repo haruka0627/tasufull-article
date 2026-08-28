@@ -1,5 +1,7 @@
 # TLV Admin System — 実装仕様 v1
 
+> **REVENUE SHARE SUPERSESSION (2026-08-28):** 旧Rank／90%／95% payout監査UIはhistorical design。金融amountの監査・表示は`tlv.monthly_settlements`の`TLV_PROGRESSIVE_V1`保存済みsnapshotを参照し、率から再計算しない。
+
 **最終更新:** 2026-06-28  
 **種別:** 実装可能仕様  
 **AD:** [DECISIONS.md](./DECISIONS.md) **AD-014** · **AD-004**（AI は TASFUL AI 入口）  

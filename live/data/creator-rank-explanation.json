@@ -1,4 +1,6 @@
 {
+  "financial_authority": "HISTORICAL_SUPERSEDED",
+  "settlement_eligible": false,
   "engine_version": "v2",
   "baseline_file": "reports/tlv-business-simulator/payout-engine-v2-production-baseline.json",
   "generated_at": "2026-06-25T04:18:31.742Z",

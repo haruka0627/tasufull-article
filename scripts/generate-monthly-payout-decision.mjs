@@ -275,6 +275,8 @@ export function buildMonthlyPayoutDecision(input, sourceInputLabel = "monthly-re
   });
 
   return {
+    financial_authority: "HISTORICAL_SUPERSEDED",
+    settlement_eligible: false,
     engine_version: ENGINE_VERSION,
     baseline_file: PRODUCTION_BASELINE_RELATIVE_PATH,
     generated_at: new Date().toISOString(),

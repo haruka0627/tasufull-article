@@ -1,5 +1,7 @@
 # Live Platform — 収益モデル（MONETIZATION）
 
+> **REVENUE SHARE SUPERSESSION (2026-08-28):** 本文の条件達成型高還元Tierはhistorical conceptのみ。TLV cash Revenue Share、Settlement、Payout金額にはAD-040 `TLV_PROGRESSIVE_V1`だけを使用する。
+
 **最終更新:** 2026-07-26  
 **種別:** 制度設計正本（**実装なし**）  
 **親:** [LIVE_PLATFORM_CONCEPT.md](./LIVE_PLATFORM_CONCEPT.md) · プロダクト範囲: [TLV_PRD.md](./TLV_PRD.md) §0  

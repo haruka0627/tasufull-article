@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="TLV月次還元の仕組み。支払確定額は payout_amount_yen です。" />
+  <meta name="description" content="TLVの月間Eligible Netに対する累進Creator Revenue Shareの仕組み。" />
   <meta name="theme-color" content="#0b0814" />
   <title>TLV月次還元について | TASFUL LIVE</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,7 +26,7 @@
           Creatorの成果を最大限還元しながら、サービスを継続運営するための仕組みです。
         </p>
         <p class="tlv-payout-policy__hero-note">
-          TLVは<strong>固定還元率のプラットフォームではありません</strong>。月ごとの収支と安全判定のもと、還元可能な範囲で分配します。
+          TLVは月間Eligible Netの各部分へ<strong>80%・90%・95%・99%を累進適用</strong>します。最大99%は3,000万円超部分の限界率で、全額への一括適用ではありません。
         </p>
       </section>
 
@@ -35,16 +35,16 @@
         <h2 id="payout-policy-basics" class="tlv-payout-policy__section-title">TLV還元の基本方針</h2>
         <ul class="tlv-payout-policy__cards">
           <li class="tlv-payout-policy__card">
-            <h3>固定還元率ではない</h3>
-            <p>全員が同じ還元率になるわけではありません。成果・ランク・月次の還元可能原資に応じて決まります。</p>
+            <h3>月間Eligible Netが基準</h3>
+            <p>決済手数料・Refund・Chargeback等の既存Contract上の対象控除後を基準にします。</p>
           </li>
           <li class="tlv-payout-policy__card">
-            <h3>会社維持を先に確保</h3>
-            <p>決済手数料・運営費・予備費・サービス継続に必要な最低利益などを先に確保します。</p>
+            <h3>Bracketごとに累進計算</h3>
+            <p>最初の500万円部分は80%、次の500万円部分は90%、次の2,000万円部分は95%、3,000万円超部分は99%をCreatorへ配分します。</p>
           </li>
           <li class="tlv-payout-policy__card">
-            <h3>安全な範囲で分配</h3>
-            <p>残った還元可能原資（payout pool）の範囲内で、Creatorへ月次還元を行います。</p>
+            <h3>表示率では再計算しない</h3>
+            <p>限界率・実効率は表示／監査値です。支払額は保存済みの累進Bracket合計を参照し、単一率を全額へ掛けません。</p>
           </li>
         </ul>
       </section>
@@ -52,55 +52,53 @@
       <!-- 3. 支払確定額 -->
       <section class="tlv-payout-policy__section tlv-payout-policy__section--highlight" aria-labelledby="payout-policy-confirmed">
         <h2 id="payout-policy-confirmed" class="tlv-payout-policy__section-title">支払確定額について</h2>
-        <div class="tlv-payout-policy__callout" data-confirmed-payout-field="payout_amount_yen">
+        <div class="tlv-payout-policy__callout" data-confirmed-payout-field="payout_amount_jpy">
           <p class="tlv-payout-policy__callout-label">支払確定値（正式名称）</p>
-          <p class="tlv-payout-policy__callout-value"><code>payout_amount_yen</code></p>
+          <p class="tlv-payout-policy__callout-value"><code>monthly_settlements.payout_amount_jpy</code></p>
         </div>
         <ul class="tlv-payout-policy__list">
-          <li>Creator Dashboard に表示される<strong>「支払確定額」</strong>が、月次還元の正式な金額です。</li>
-          <li>内部データでは <code>payout_amount_yen</code>（整数円）として管理されます。</li>
-          <li>管理画面・CSV・月次レポートも、同じ <code>payout_amount_yen</code> を参照します。</li>
+          <li>正式な金額正本は、FINALIZEDされた<code>tlv.monthly_settlements</code>の保存済み累進snapshotです。</li>
+          <li>内部データでは <code>payout_amount_jpy</code>（整数円）として管理されます。</li>
+          <li>管理画面・CSV・月次レポート・payoutは、同じ保存済み金額を参照します。</li>
           <li>画面表示のために金額を再計算したり、丸め直したりしません。</li>
         </ul>
       </section>
 
       <!-- 4. 控除順序 -->
       <section class="tlv-payout-policy__section" aria-labelledby="payout-policy-flow">
-        <h2 id="payout-policy-flow" class="tlv-payout-policy__section-title">還元までの流れ（控除順序）</h2>
+        <h2 id="payout-policy-flow" class="tlv-payout-policy__section-title">累進Revenue Shareの流れ</h2>
         <p class="tlv-payout-policy__section-intro">
-          月次の総売上から、サービス継続に必要な項目を順に確保したあと、残りが還元可能原資（payout pool）になります。
+          Grossから既存SSOTで確定済みの対象控除を反映した月間Eligible Netを作り、その各部分へBracketを累進適用します。
         </p>
-        <ol class="tlv-payout-policy__flow" data-deduction-order="production-baseline">
-          <li><span class="tlv-payout-policy__flow-step">1</span><span class="tlv-payout-policy__flow-label">total_revenue</span><span class="tlv-payout-policy__flow-desc">月次の総売上</span></li>
-          <li><span class="tlv-payout-policy__flow-step">2</span><span class="tlv-payout-policy__flow-label">payment_fee</span><span class="tlv-payout-policy__flow-desc">決済手数料</span></li>
-          <li><span class="tlv-payout-policy__flow-step">3</span><span class="tlv-payout-policy__flow-label">platform_cost</span><span class="tlv-payout-policy__flow-desc">プラットフォーム運営コスト</span></li>
-          <li><span class="tlv-payout-policy__flow-step">4</span><span class="tlv-payout-policy__flow-label">cdn_storage_live_cost</span><span class="tlv-payout-policy__flow-desc">配信・保存・ライブ関連コスト</span></li>
-          <li><span class="tlv-payout-policy__flow-step">5</span><span class="tlv-payout-policy__flow-label">reserve_amount</span><span class="tlv-payout-policy__flow-desc">予備費</span></li>
-          <li><span class="tlv-payout-policy__flow-step">6</span><span class="tlv-payout-policy__flow-label">minimum_company_profit</span><span class="tlv-payout-policy__flow-desc">最低会社利益</span></li>
-          <li><span class="tlv-payout-policy__flow-step">7</span><span class="tlv-payout-policy__flow-label">operational_margin</span><span class="tlv-payout-policy__flow-desc">運営マージン</span></li>
-          <li class="tlv-payout-policy__flow--pool"><span class="tlv-payout-policy__flow-step">→</span><span class="tlv-payout-policy__flow-label">payout_pool</span><span class="tlv-payout-policy__flow-desc">還元可能原資</span></li>
-          <li class="tlv-payout-policy__flow--creator"><span class="tlv-payout-policy__flow-step">→</span><span class="tlv-payout-policy__flow-label">Creator</span><span class="tlv-payout-policy__flow-desc">月次還元（支払確定額 <code>payout_amount_yen</code>）</span></li>
+        <ol class="tlv-payout-policy__flow" data-revenue-share-model="TLV_PROGRESSIVE_V1">
+          <li><span class="tlv-payout-policy__flow-step">1</span><span class="tlv-payout-policy__flow-label">eligible_net_basis_jpy</span><span class="tlv-payout-policy__flow-desc">月間Eligible Net</span></li>
+          <li><span class="tlv-payout-policy__flow-step">2</span><span class="tlv-payout-policy__flow-label">first 5,000,000</span><span class="tlv-payout-policy__flow-desc">Creator 80% / TASFUL 20%</span></li>
+          <li><span class="tlv-payout-policy__flow-step">3</span><span class="tlv-payout-policy__flow-label">next 5,000,000</span><span class="tlv-payout-policy__flow-desc">Creator 90% / TASFUL 10%</span></li>
+          <li><span class="tlv-payout-policy__flow-step">4</span><span class="tlv-payout-policy__flow-label">next 20,000,000</span><span class="tlv-payout-policy__flow-desc">Creator 95% / TASFUL 5%</span></li>
+          <li><span class="tlv-payout-policy__flow-step">5</span><span class="tlv-payout-policy__flow-label">above 30,000,000</span><span class="tlv-payout-policy__flow-desc">Creator 99% / TASFUL 1%</span></li>
+          <li class="tlv-payout-policy__flow--pool"><span class="tlv-payout-policy__flow-step">→</span><span class="tlv-payout-policy__flow-label">revenue_share_brackets</span><span class="tlv-payout-policy__flow-desc">累進合計のみが金額計算SSOT</span></li>
+          <li class="tlv-payout-policy__flow--creator"><span class="tlv-payout-policy__flow-step">→</span><span class="tlv-payout-policy__flow-label">payout_amount_jpy</span><span class="tlv-payout-policy__flow-desc">保存済みCreator支払額</span></li>
         </ol>
         <p class="tlv-payout-policy__fineprint">
           ※ 上記は仕組みの概要です。個別の計算は scripts 側で月次確定し、UI は確定値の表示のみを行います。
         </p>
       </section>
 
-      <!-- 5. Rank / Guarantee / Adjustment -->
+      <!-- 5. Snapshot audit values -->
       <section class="tlv-payout-policy__section" aria-labelledby="payout-policy-rank">
-        <h2 id="payout-policy-rank" class="tlv-payout-policy__section-title">Rank・保証・調整について</h2>
+        <h2 id="payout-policy-rank" class="tlv-payout-policy__section-title">Bracket・限界率・実効率について</h2>
         <dl class="tlv-payout-policy__defs">
           <div>
-            <dt>Rank（ランク）</dt>
-            <dd>成果や条件に応じた分類です。Starter / Creator / Pro / Top / Elite など、段階的な還元設計になっています。</dd>
+            <dt>Progressive Bracket</dt>
+            <dd>月間Eligible Netの各部分にだけ適用される区間です。Bracket別金額の累進合計が支払額計算の正本です。</dd>
           </div>
           <div>
-            <dt>Guarantee（保証層）</dt>
-            <dd>Top Creator や Elite Creator など、条件を満たした場合に保証層が適用されることがあります。月次の安全判定と原資の範囲内で運用されます。</dd>
+            <dt>Marginal Rate（限界率）</dt>
+            <dd>到達した最後のBracketの率です。監査・表示専用であり、Eligible Net全額には適用しません。</dd>
           </div>
           <div>
-            <dt>Adjustment（調整）</dt>
-            <dd>還元プールの上限や月次の安全判定、条件ラインに基づき、変動層の還元が調整される場合があります。表示される適用率は参考情報であり、<strong>支払いは <code>payout_amount_yen</code> のみ</strong>が確定値です。</dd>
+            <dt>Effective Rate（実効率）</dt>
+            <dd>累進計算後の実績比率です。監査・表示専用であり、<strong>支払いは保存済みの<code>payout_amount_jpy</code></strong>を参照します。</dd>
           </div>
         </dl>
       </section>
@@ -109,9 +107,9 @@
       <section class="tlv-payout-policy__section" aria-labelledby="payout-policy-ai">
         <h2 id="payout-policy-ai" class="tlv-payout-policy__section-title">AIの役割</h2>
         <ul class="tlv-payout-policy__list">
-          <li>AIは<strong>条件ライン（Condition Lines）</strong>、<strong>Safety 判定</strong>、<strong>Creator 向けガイダンス</strong>の生成を支援します。</li>
-          <li>AIが独自の判断で還元率を書き換えることはありません。還元率の変更は Production Baseline のルールと月次確定処理に従います。</li>
-          <li>AIの出力は説明・ガイダンスが中心で、支払額の確定は <code>monthly-payout-decision.json</code> の <code>payout_amount_yen</code> です。</li>
+          <li>AIはsnapshotの説明・異常検知・レビュー支援だけを行います。</li>
+          <li>AIがBracket、対象控除、支払額を書き換えることはありません。</li>
+          <li>支払額はDeterministic Settlement Engineが作成し、Human review後にFINALIZEDされたsnapshotを参照します。</li>
         </ul>
       </section>
 
@@ -120,20 +118,20 @@
         <h2 id="payout-policy-faq" class="tlv-payout-policy__section-title">よくある質問</h2>
         <div class="tlv-payout-policy__faq">
           <details class="tlv-payout-policy__faq-item">
-            <summary>gross_revenue × applied_rate が支払額ですか？</summary>
-            <p>いいえ。<strong>支払確定額は <code>payout_amount_yen</code> です。</strong>対象収益と適用率は説明・参考表示であり、Dashboard や管理画面で支払額を再計算しません。</p>
+            <summary>Eligible Net × 限界率または実効率が支払額ですか？</summary>
+            <p>いいえ。<strong>支払確定額はBracket別金額の累進合計を保存した<code>payout_amount_jpy</code>です。</strong>表示率から再計算しません。</p>
           </details>
           <details class="tlv-payout-policy__faq-item">
-            <summary>還元率は毎月変わりますか？</summary>
-            <p>固定還元率ではありませんが、AIが勝手に変更するものでもありません。月次の収支・安全判定・条件ラインに基づき、Production Baseline のルールで確定します。</p>
+            <summary>「Creator還元 最大99%」は全額99%ですか？</summary>
+            <p>いいえ。99%は月間Eligible Netの3,000万円超部分だけに適用する限界率です。全額には各Bracketを累進適用します。</p>
           </details>
           <details class="tlv-payout-policy__faq-item">
-            <summary>会社が先に利益を取るのですか？</summary>
-            <p>サービス継続に必要な費用・予備費・最低利益・運営マージンを確保したうえで、残りの還元可能原資を Creator に分配します。会社利益の最大化が目的ではありません。</p>
+            <summary>Eligible Netの控除項目は何ですか？</summary>
+            <p>決済手数料・Refund・Chargeback等、既存Financial SSOTで確定した対象だけです。公開表示が未確定の税・認識時期等をこのページで新しく決めません。</p>
           </details>
           <details class="tlv-payout-policy__faq-item">
             <summary>Dashboardの金額と振込額は同じですか？</summary>
-            <p>原則として、Creator Dashboard に表示される<strong>支払確定額（<code>payout_amount_yen</code>）</strong>が月次支払の基準です。最終振込は運営確認後に確定します。</p>
+            <p>原則として、Creator Dashboardに表示する<strong>FINALIZED snapshotの<code>payout_amount_jpy</code></strong>が月次支払の基準です。最終振込は運営確認後に確定します。</p>
           </details>
         </div>
       </section>
@@ -141,7 +139,7 @@
       <!-- 8. 導線 -->
       <section class="tlv-payout-policy__section tlv-payout-policy__cta" aria-labelledby="payout-policy-cta">
         <h2 id="payout-policy-cta" class="tlv-payout-policy__section-title">あなたの月次還元を確認する</h2>
-        <p>今月のランク・還元説明・支払確定額は Creator Dashboard で確認できます。</p>
+        <p>今月のEligible Net・Bracket内訳・限界率・実効率・支払確定額はCreator Dashboardで確認できます。</p>
         <div class="tlv-payout-policy__cta-links">
           <a class="live-btn live-btn--primary" href="creator-dashboard.html">Creator Dashboard（収益・分析）</a>
           <a class="live-btn live-btn--ghost" href="videos.html">TLV 動画ホーム</a>
@@ -150,7 +148,7 @@
     </main>
 
     <footer class="tlv-payout-policy__footer">
-      <p>TLV AI 収益分配エンジン Ver2 — 公開説明ページ（表示専用・還元計算なし）</p>
+      <p>TLV Deterministic Settlement — TLV_PROGRESSIVE_V1 公開説明候補（表示専用・還元計算なし）</p>
     </footer>
   </div>
 </body>

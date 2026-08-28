@@ -1,5 +1,7 @@
 # TLV Product Requirements Document（完全設計書）
 
+> **FINANCIAL SUPERSESSION (2026-08-28):** This PRD's Rank/Score/Base/Override payout model is `HISTORICAL_SUPERSEDED`. TLV settlement uses AD-040 `TLV_PROGRESSIVE_V1` on monthly Eligible Net. This PRD must not be used to calculate revenue share, settlement eligibility, or payout amount.
+
 **版:** 1.3 PRODUCT-SCOPE  
 **最終更新:** 2026-07-26  
 **種別:** 実装可能 PRD · **Score OS 数式確定**（Platform Vision · AD-014） · **運営方針・プロダクト範囲正本**  

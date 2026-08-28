@@ -331,6 +331,15 @@
         }),
       ]);
 
+      if (
+        decision?.revenue_share_model !== "TLV_PROGRESSIVE_V1" ||
+        decision?.financial_authority !== "tlv.monthly_settlements"
+      ) {
+        throw new Error(
+          "legacy payout simulator output rejected: FINALIZED TLV_PROGRESSIVE_V1 snapshot required"
+        );
+      }
+
       const rows = mergePaymentHistoryRows(
         mergeAdminPayoutRows(decision, explanation),
         paymentHistory

@@ -5,55 +5,43 @@
 export const PAYOUT_POLICY_HTML_RELATIVE = "live/payout-policy.html";
 
 export const REQUIRED_PHRASES = [
-  "payout_amount_yen",
+  "TLV_PROGRESSIVE_V1",
+  "monthly_settlements.payout_amount_jpy",
+  "eligible_net_basis_jpy",
+  "revenue_share_brackets",
   "支払確定",
-  "固定還元率ではない",
-  "固定還元率のプラットフォームではありません",
-  "payment_fee",
-  "platform_cost",
-  "cdn_storage_live_cost",
-  "reserve_amount",
-  "minimum_company_profit",
-  "operational_margin",
-  "payout_pool",
-  "条件ライン",
-  "Safety",
-  "AIが勝手に",
+  "月間Eligible Net",
+  "最大99%は3,000万円超部分の限界率",
+  "Creator 80% / TASFUL 20%",
+  "Creator 90% / TASFUL 10%",
+  "Creator 95% / TASFUL 5%",
+  "Creator 99% / TASFUL 1%",
+  "累進合計のみが金額計算SSOT",
+  "限界率・実効率は表示／監査値",
+  "AIがBracket、対象控除、支払額を書き換えることはありません",
   "creator-dashboard.html",
 ];
 
-export const DEDUCTION_ORDER = [
-  "total_revenue",
-  "payment_fee",
-  "platform_cost",
-  "cdn_storage_live_cost",
-  "reserve_amount",
-  "minimum_company_profit",
-  "operational_margin",
-  "payout_pool",
+export const PROGRESSIVE_ORDER = [
+  "eligible_net_basis_jpy",
+  "first 5,000,000",
+  "next 5,000,000",
+  "next 20,000,000",
+  "above 30,000,000",
+  "revenue_share_brackets",
+  "payout_amount_jpy",
 ];
 
 export const FORBIDDEN_PHRASES = [
-  /売上から直接.{0,12}%還元/,
-  /売上の\d+%を還元/,
-  /常に\d+%還元/,
-  /固定還元率です/,
-  /全員同じ還元率です/,
-  /gross_revenue\s*×\s*applied_rate\s*が支払(?:額)?です(?!か)/,
-  /gross_revenue\s*×\s*applied_rate\s*で支払(?:額)?が決ま/,
-  /AIが還元率を変更します/,
-  /AIが自動的に還元率を変更/,
-  /AIが還元率を書き換えます/,
+  /5,?000,?000.{0,30}全額.{0,20}90%/,
+  /10,?000,?000.{0,30}全額.{0,20}95%/,
+  /Rank.{0,20}(支払|還元率|適用率)/,
+  /payout_pool/,
+  /payout_amount_yen/,
+  /gross_revenue\s*×\s*applied_rate/,
   /Math\.round\s*\(/,
   /Math\.floor\s*\(/,
   /Math\.ceil\s*\(/,
-];
-
-export const FORBIDDEN_PAYMENT_MISLEAD = [
-  {
-    pattern: /gross_revenue\s*×\s*applied_rate/,
-    allowIfAlsoMatches: /いいえ|再計算しません|参考表示|説明・参考/,
-  },
 ];
 
 /**
@@ -67,31 +55,25 @@ export function validatePayoutPolicyContent(html) {
     if (pattern.test(html)) forbiddenHits.push(pattern.toString());
   }
 
-  for (const rule of FORBIDDEN_PAYMENT_MISLEAD) {
-    if (rule.pattern.test(html) && !rule.allowIfAlsoMatches.test(html)) {
-      forbiddenHits.push(`misleading without disclaimer: ${rule.pattern}`);
-    }
-  }
-
-  const orderIndex = DEDUCTION_ORDER.map((label) => html.indexOf(label));
-  const deductionOrderCorrect =
+  const progressiveFlow = html.match(
+    /<ol[^>]+data-revenue-share-model="TLV_PROGRESSIVE_V1"[^>]*>[\s\S]*?<\/ol>/
+  )?.[0] ?? "";
+  const orderIndex = PROGRESSIVE_ORDER.map((label) => progressiveFlow.indexOf(label));
+  const progressiveOrderCorrect =
     orderIndex.every((i) => i >= 0) &&
     orderIndex.every((val, i) => i === 0 || val > orderIndex[i - 1]);
 
-  const payoutAmountYenIsFinal =
-    html.includes('data-confirmed-payout-field="payout_amount_yen"') &&
+  const persistedPayoutAmountIsFinal =
+    html.includes('data-confirmed-payout-field="payout_amount_jpy"') &&
     html.includes("支払確定値") &&
-    html.includes("payout_amount_yen");
+    html.includes("monthly_settlements.payout_amount_jpy");
 
-  const noPaymentFromGrossTimesRate =
-    html.includes("いいえ") &&
-    html.includes("gross_revenue × applied_rate") &&
-    html.includes("支払確定額は");
+  const noPaymentFromDisplayRate =
+    html.includes("Eligible Net × 限界率または実効率") &&
+    html.includes("表示率から再計算しません");
 
-  const aiDoesNotChangeRates =
-    html.includes("AIが勝手に") &&
-    (html.includes("還元率を書き換えることはありません") ||
-      html.includes("AIが勝手に変更するものでもありません"));
+  const aiDoesNotChangeFinancialContract =
+    html.includes("AIがBracket、対象控除、支払額を書き換えることはありません");
 
   const noRecalcJs =
     !/<script[^>]+src=/.test(html) || !/tlv-payout|payout-engine|generate-/.test(html);
@@ -105,10 +87,10 @@ export function validatePayoutPolicyContent(html) {
   const allPass =
     missingRequired.length === 0 &&
     forbiddenHits.length === 0 &&
-    deductionOrderCorrect &&
-    payoutAmountYenIsFinal &&
-    noPaymentFromGrossTimesRate &&
-    aiDoesNotChangeRates &&
+    progressiveOrderCorrect &&
+    persistedPayoutAmountIsFinal &&
+    noPaymentFromDisplayRate &&
+    aiDoesNotChangeFinancialContract &&
     noRecalcJs &&
     hasViewport &&
     hasResponsiveHooks &&
@@ -119,10 +101,10 @@ export function validatePayoutPolicyContent(html) {
     missing_required_phrases: missingRequired,
     no_forbidden_phrases: forbiddenHits.length === 0,
     forbidden_phrase_hits: forbiddenHits,
-    deduction_order_correct: deductionOrderCorrect,
-    payout_amount_yen_documented_as_final: payoutAmountYenIsFinal,
-    gross_times_rate_not_payment_explanation: noPaymentFromGrossTimesRate,
-    ai_does_not_change_rates_documented: aiDoesNotChangeRates,
+    progressive_order_correct: progressiveOrderCorrect,
+    persisted_payout_amount_documented_as_final: persistedPayoutAmountIsFinal,
+    display_rates_not_payment_calculation: noPaymentFromDisplayRate,
+    ai_does_not_change_financial_contract: aiDoesNotChangeFinancialContract,
     no_payout_calculation_js: noRecalcJs,
     viewport_meta_present: hasViewport,
     responsive_page_structure: hasResponsiveHooks,

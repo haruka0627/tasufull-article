@@ -1,5 +1,7 @@
 # TLV Payment / PL Engine — 実装仕様 v1.1
 
+> **FINANCIAL SUPERSESSION (2026-08-28):** Rank/Score/Base/Override payout calculations in this document are historical. The settlement Candidate uses AD-040 `TLV_PROGRESSIVE_V1` on monthly Eligible Net; canonical money path remains `tlv.revenue_ledger -> monthly settlement snapshot -> payout_log`.
+
 **版:** 1.6  
 **最終更新:** 2026-06-28  
 **種別:** 処理仕様（How）— **新制度追加なし**  

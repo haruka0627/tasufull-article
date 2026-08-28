@@ -1,5 +1,7 @@
 # Live Platform — サービスコンセプト（正本）
 
+> **REVENUE SHARE SUPERSESSION (2026-08-28):** 旧条件達成型／Rank連動の還元記述はhistorical concept。TLV cash Revenue Shareの唯一正本はAD-040 `TLV_PROGRESSIVE_V1`。
+
 **最終更新:** 2026-07-26  
 **種別:** 制度設計 · 構想正本（**実装なし**）  
 **適用:** TLV / ショート / ライブ配信の将来世代（通常ロング VOD は TLV コア外 — [TLV_PRD.md](./TLV_PRD.md) §0）  

@@ -1112,5 +1112,263 @@ create unique index if not exists tips_idempotency_key_uniq
   on tlv.tips (idempotency_key)
   where idempotency_key is not null;
 
+-- ===========================================================================
+-- STEP 4 — deterministic creator-month settlement snapshots (JST)
+-- Incremental apply, complete checks, immutable triggers and RLS:
+-- supabase/migrations/20260827210000_tlv_deterministic_monthly_settlement_v1.sql
+-- Canonical financial ledger remains tlv.revenue_ledger.
+-- ===========================================================================
+
+do $$ begin
+  create type tlv.settlement_status as enum (
+    'OPEN', 'CALCULATED', 'REVIEWABLE', 'FINALIZED', 'TRANSFER_PENDING',
+    'TRANSFERRED', 'TRANSFER_UNKNOWN', 'PAID', 'FAILED'
+  );
+exception when duplicate_object then null;
+end $$;
+
+alter type tlv.payout_status add value if not exists 'transferred';
+alter type tlv.payout_status add value if not exists 'transfer_unknown';
+
+create table if not exists tlv.monthly_settlements (
+  id                                  uuid primary key default gen_random_uuid(),
+  creator_id                          uuid not null references tlv.creators (id) on delete restrict,
+  settlement_period                   char(7) not null,
+  timezone                            text not null default 'Asia/Tokyo',
+  calculation_version                 text not null,
+  policy_version                      text not null,
+  version                             integer not null,
+  status                              tlv.settlement_status not null default 'OPEN',
+  currency                            char(3) not null default 'JPY',
+  source_ledger_ids                   jsonb not null default '[]'::jsonb,
+  source_correlations                 jsonb not null default '[]'::jsonb,
+  excluded_self_funding_ledger_ids    jsonb not null default '[]'::jsonb,
+  gross_jpy                           bigint not null default 0,
+  provider_payment_fee_jpy            bigint not null default 0,
+  refund_jpy                          bigint not null default 0,
+  chargeback_jpy                      bigint not null default 0,
+  creator_attributed_net_jpy          bigint not null default 0,
+  eligible_net_basis_jpy              bigint not null default 0,
+  revenue_share_model                 text not null default 'TLV_PROGRESSIVE_V1',
+  applied_marginal_bracket            text not null,
+  creator_marginal_share_rate_pct     integer not null,
+  tasful_marginal_retained_rate_pct   integer not null,
+  creator_effective_share_rate_pct    numeric(9, 6),
+  tasful_effective_share_rate_pct     numeric(9, 6),
+  revenue_share_brackets              jsonb not null default '[]'::jsonb,
+  creator_amount_before_rounding_jpy  numeric(24, 2) not null,
+  rounding_residual_jpy               numeric(4, 2) not null,
+  creator_payable_current_period_jpy  bigint not null default 0,
+  carry_forward_in_jpy                bigint not null default 0,
+  carry_forward_source_settlement_id  uuid references tlv.monthly_settlements (id) on delete restrict,
+  carry_forward_out_jpy               bigint not null default 0,
+  final_creator_payable_jpy           bigint not null default 0,
+  payout_amount_jpy                   bigint not null default 0,
+  minimum_payout_met                  boolean not null default false,
+  hold_state                          jsonb not null default '{"active":false,"auto_release":false}'::jsonb,
+  attributable_cost_status            text not null default 'UNAVAILABLE',
+  verified_attributable_cost_jpy      bigint,
+  verified_attributable_cost_evidence_ids jsonb not null default '[]'::jsonb,
+  tasful_retained_revenue_jpy         bigint not null default 0,
+  contribution_profit_jpy             bigint,
+  tax_policy_status                   text not null default 'NOT_CONFIGURED',
+  financial_snapshot_hash             char(64) not null,
+  reviewed_at                         timestamptz,
+  reviewed_by                         text,
+  finalized_at                        timestamptz,
+  finalized_by                        text,
+  finalization_key                    text,
+  finalized_snapshot_hash             char(64),
+  transfer_instruction                jsonb,
+  provider_transfer_id                text,
+  provider_correlation_id             text,
+  provider_payout_id                  text,
+  last_transition_key                 text,
+  last_transition_at                  timestamptz,
+  last_transition_actor               text,
+  last_transition_evidence            jsonb,
+  created_at                          timestamptz not null,
+  calculated_at                       timestamptz not null,
+  updated_at                          timestamptz not null default now(),
+  constraint monthly_settlements_period_chk check (settlement_period ~ '^\d{4}-(0[1-9]|1[0-2])$'),
+  constraint monthly_settlements_timezone_chk check (timezone = 'Asia/Tokyo'),
+  constraint monthly_settlements_currency_chk check (currency = 'JPY'),
+  constraint monthly_settlements_version_chk check (version > 0),
+  constraint monthly_settlements_source_arrays_chk check (
+    jsonb_typeof(source_ledger_ids) = 'array'
+    and jsonb_typeof(source_correlations) = 'array'
+    and jsonb_typeof(excluded_self_funding_ledger_ids) = 'array'
+    and jsonb_typeof(verified_attributable_cost_evidence_ids) = 'array'
+    and jsonb_typeof(revenue_share_brackets) = 'array'
+  ),
+  constraint monthly_settlements_nonnegative_chk check (
+    gross_jpy >= 0 and provider_payment_fee_jpy >= 0 and refund_jpy >= 0
+    and chargeback_jpy >= 0 and creator_attributed_net_jpy >= 0
+    and creator_payable_current_period_jpy >= 0 and carry_forward_in_jpy >= 0
+    and carry_forward_out_jpy >= 0 and final_creator_payable_jpy >= 0
+    and payout_amount_jpy >= 0 and tasful_retained_revenue_jpy >= 0
+    and (verified_attributable_cost_jpy is null or verified_attributable_cost_jpy >= 0)
+  ),
+  constraint monthly_settlements_net_formula_chk check (
+    creator_attributed_net_jpy = gross_jpy - provider_payment_fee_jpy - refund_jpy - chargeback_jpy
+    and eligible_net_basis_jpy = creator_attributed_net_jpy
+  ),
+  constraint monthly_settlements_progressive_bracket_chk check (
+    revenue_share_model = 'TLV_PROGRESSIVE_V1'
+    and jsonb_typeof(revenue_share_brackets) = 'array'
+    and (
+      (creator_attributed_net_jpy <= 5000000 and applied_marginal_bracket = 'JPY_0_TO_5M' and creator_marginal_share_rate_pct = 80 and tasful_marginal_retained_rate_pct = 20)
+      or (creator_attributed_net_jpy > 5000000 and creator_attributed_net_jpy <= 10000000 and applied_marginal_bracket = 'JPY_5M_TO_10M' and creator_marginal_share_rate_pct = 90 and tasful_marginal_retained_rate_pct = 10)
+      or (creator_attributed_net_jpy > 10000000 and creator_attributed_net_jpy <= 30000000 and applied_marginal_bracket = 'JPY_10M_TO_30M' and creator_marginal_share_rate_pct = 95 and tasful_marginal_retained_rate_pct = 5)
+      or (creator_attributed_net_jpy > 30000000 and applied_marginal_bracket = 'JPY_ABOVE_30M' and creator_marginal_share_rate_pct = 99 and tasful_marginal_retained_rate_pct = 1)
+    )
+  ),
+  constraint monthly_settlements_progressive_amount_chk check (
+    creator_amount_before_rounding_jpy = case
+      when creator_attributed_net_jpy <= 5000000 then creator_attributed_net_jpy::numeric * 0.80
+      when creator_attributed_net_jpy <= 10000000 then 4000000::numeric + (creator_attributed_net_jpy - 5000000)::numeric * 0.90
+      when creator_attributed_net_jpy <= 30000000 then 8500000::numeric + (creator_attributed_net_jpy - 10000000)::numeric * 0.95
+      else 27500000::numeric + (creator_attributed_net_jpy - 30000000)::numeric * 0.99
+    end
+    and (
+      (creator_attributed_net_jpy = 0 and creator_effective_share_rate_pct is null and tasful_effective_share_rate_pct is null)
+      or
+      (creator_attributed_net_jpy > 0
+        and creator_effective_share_rate_pct = round(creator_amount_before_rounding_jpy / creator_attributed_net_jpy::numeric * 100, 6)
+        and tasful_effective_share_rate_pct = round(100 - creator_effective_share_rate_pct, 6))
+    )
+  ),
+  constraint monthly_settlements_rounding_chk check (
+    creator_payable_current_period_jpy = floor(creator_amount_before_rounding_jpy)
+    and rounding_residual_jpy = creator_amount_before_rounding_jpy - floor(creator_amount_before_rounding_jpy)
+    and rounding_residual_jpy >= 0 and rounding_residual_jpy < 1
+  ),
+  constraint monthly_settlements_carry_chk check (
+    final_creator_payable_jpy = creator_payable_current_period_jpy + carry_forward_in_jpy
+    and ((minimum_payout_met and final_creator_payable_jpy >= 1000 and payout_amount_jpy = final_creator_payable_jpy and carry_forward_out_jpy = 0)
+      or (not minimum_payout_met and final_creator_payable_jpy < 1000 and payout_amount_jpy = 0 and carry_forward_out_jpy = final_creator_payable_jpy))
+  ),
+  constraint monthly_settlements_retained_chk check (
+    tasful_retained_revenue_jpy = creator_attributed_net_jpy - creator_payable_current_period_jpy
+  ),
+  constraint monthly_settlements_cost_chk check (
+    (attributable_cost_status = 'COMPLETE_ACTUAL'
+      and verified_attributable_cost_jpy is not null
+      and jsonb_array_length(verified_attributable_cost_evidence_ids) > 0
+      and contribution_profit_jpy = tasful_retained_revenue_jpy - verified_attributable_cost_jpy)
+    or
+    (attributable_cost_status <> 'COMPLETE_ACTUAL'
+      and verified_attributable_cost_jpy is null
+      and jsonb_array_length(verified_attributable_cost_evidence_ids) = 0
+      and contribution_profit_jpy is null)
+  ),
+  constraint monthly_settlements_tax_fail_closed_chk check (tax_policy_status = 'NOT_CONFIGURED'),
+  constraint monthly_settlements_creator_period_version_uniq unique (creator_id, settlement_period, version),
+  constraint monthly_settlements_finalization_key_uniq unique (finalization_key)
+);
+
+comment on table tlv.monthly_settlements is
+  'Creator x JST month deterministic immutable settlement snapshots; NOT a second financial ledger';
+
+create unique index if not exists monthly_settlements_one_locked_period_idx
+  on tlv.monthly_settlements (creator_id, settlement_period)
+  where status in ('FINALIZED', 'TRANSFER_PENDING', 'TRANSFERRED', 'TRANSFER_UNKNOWN', 'PAID', 'FAILED');
+
+alter table tlv.revenue_ledger
+  add column if not exists occurred_at timestamptz,
+  add column if not exists payment_provider_event_id uuid references tlv.payment_provider_events (id) on delete set null,
+  add column if not exists adjustment_kind text,
+  add column if not exists adjustment_of_settlement_id uuid references tlv.monthly_settlements (id) on delete restrict;
+
+-- Historical fee/Net reconciliation projection and the new-row JST/allocation
+-- normalization trigger are defined in the STEP 4 incremental migration.
+
+create table if not exists tlv.settlement_ledger_links (
+  settlement_id       uuid not null references tlv.monthly_settlements (id) on delete restrict,
+  revenue_ledger_id   uuid not null references tlv.revenue_ledger (id) on delete restrict,
+  correlation         jsonb not null default '{}'::jsonb,
+  economic_period     char(7) not null,
+  recognition_period  char(7) not null,
+  adjustment_of_settlement_id uuid references tlv.monthly_settlements (id) on delete restrict,
+  created_at          timestamptz not null default now(),
+  primary key (settlement_id, revenue_ledger_id),
+  constraint settlement_links_period_chk check (
+    economic_period ~ '^\d{4}-(0[1-9]|1[0-2])$'
+    and recognition_period ~ '^\d{4}-(0[1-9]|1[0-2])$'
+  ),
+  constraint settlement_links_correlation_chk check (
+    jsonb_typeof(correlation) = 'object' and correlation <> '{}'::jsonb
+  )
+);
+
+comment on table tlv.settlement_ledger_links is
+  'Trace links to canonical tlv.revenue_ledger; carries no independent financial amount.';
+
+create table if not exists tlv.settlement_state_events (
+  id                uuid primary key default gen_random_uuid(),
+  settlement_id     uuid not null references tlv.monthly_settlements (id) on delete restrict,
+  from_status       tlv.settlement_status,
+  to_status         tlv.settlement_status not null,
+  transition_key    text not null unique,
+  evidence          jsonb not null,
+  actor_id           text not null,
+  occurred_at        timestamptz not null,
+  created_at         timestamptz not null default now(),
+  constraint settlement_state_events_evidence_chk check (
+    jsonb_typeof(evidence) = 'object' and evidence <> '{}'::jsonb
+  )
+);
+
+create table if not exists tlv.settlement_hold_events (
+  id                uuid primary key default gen_random_uuid(),
+  settlement_id     uuid not null references tlv.monthly_settlements (id) on delete restrict,
+  action            text not null check (action in ('PLACED', 'RELEASED')),
+  reason_code       text not null,
+  evidence          jsonb not null,
+  actor_id           text not null,
+  approved_by        text,
+  idempotency_key   text not null unique,
+  occurred_at        timestamptz not null,
+  created_at         timestamptz not null default now(),
+  constraint settlement_hold_events_evidence_chk check (
+    jsonb_typeof(evidence) = 'object' and evidence <> '{}'::jsonb
+    and (action <> 'RELEASED' or approved_by is not null)
+  )
+);
+
+alter table tlv.payout_log
+  add column if not exists settlement_id uuid references tlv.monthly_settlements (id) on delete restrict,
+  add column if not exists correlation_id uuid,
+  add column if not exists transfer_idempotency_key text,
+  add column if not exists provider_transfer_id text,
+  add column if not exists provider_payout_id text,
+  add column if not exists transfer_evidence jsonb;
+
+alter table tlv.payout_log alter column base_rate drop not null;
+alter table tlv.payout_log alter column effective_rate drop not null;
+alter table tlv.payout_log alter column override_tier drop not null;
+alter table tlv.payout_log alter column override_tier drop default;
+
+create unique index if not exists payout_log_settlement_uniq
+  on tlv.payout_log (settlement_id) where settlement_id is not null;
+create unique index if not exists payout_log_transfer_idempotency_uniq
+  on tlv.payout_log (transfer_idempotency_key) where transfer_idempotency_key is not null;
+
+-- Complete CHECK constraints, RLS, immutable state/audit triggers, and the JST
+-- scheduler runtime gate are kept in the incremental migration above. Production
+-- apply, cron registration, tax, Membership, Ads and provider execution stay gated.
+
+-- STEP 5D OPTION_A zero-legacy payout cutover is defined by:
+-- supabase/migrations/20260827230000_tlv_option_a_zero_legacy_payout_cutover_v1.sql
+-- The migration locks payout_log and aborts unless it is empty, then removes the
+-- obsolete score FK. Every payout requires a canonical settlement and exact
+-- creator/JST-period/frozen-amount parity; no legacy compatibility branch or
+-- synthetic creator_score_monthly row is permitted. tlv.payout_log is the
+-- provider execution/correlation owner and monthly_settlements carries derived
+-- state references only. The incremental migration contains service-only
+-- writers, provider uniqueness, reversal hold bridge, grants, and RLS-safe
+-- fixed-search-path functions. tlv.revenue_ledger remains the sole financial
+-- ledger and creator_score_monthly remains analytics/ranking only.
+
 -- Full RPC body: supabase/migrations/20260628140000_tlv_create_tip_transaction_rpc.sql
 -- Functions: tlv.compute_gauge_pct · tlv.create_tip_transaction

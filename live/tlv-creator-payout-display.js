@@ -191,6 +191,15 @@
       })),
     ]);
 
+    if (
+      report?.revenue_share_model !== "TLV_PROGRESSIVE_V1" ||
+      report?.financial_authority !== "tlv.monthly_settlements"
+    ) {
+      return renderUnavailable(
+        "旧Rank／単一率の月次データは表示できません。FINALIZED済みTLV_PROGRESSIVE_V1 snapshotを待っています。",
+      );
+    }
+
     const creator = resolveCreatorRecord(report, {
       talkUserId: options.talkUserId,
       creatorId: options.creatorId,

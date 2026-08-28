@@ -1,6 +1,21 @@
 /**
  * TLV 収益分配 — 金融計算（1円単位整合性）
  * すべての支払額は整数円。端数・残余は audit に記録する。
+ *
+ * --- Economics Core / Financial Truth boundary (AD-040) ---
+ * This module implements a COMPANY-FIRST monthly payout_pool simulator
+ * (deduct payment_fee / platform_cost / reserve / min profit / margin, then pool).
+ *
+ * It is NOT the Formal Tip Distribution SSOT.
+ * Tip Creator/TASFUL progressive brackets on monthly Eligible Net are owned by AD-040:
+ *   first ¥5,000,000 → Creator 80% / TASFUL 20%
+ *   next ¥5,000,000 → 90% / 10%
+ *   next ¥20,000,000 → 95% / 5%
+ *   above ¥30,000,000 → 99% / 1%
+ * Rank/Score ≠ tip distribution.
+ *
+ * Economics Core MUST NOT treat this simulator as Actual Profit or tip % truth.
+ * Runtime formula changes are out of scope for doc/SSOT alignment passes.
  */
 
 /** @typedef {{ exact_yen: number, rounded_yen: number, rounding_delta_yen: number }} YenRounding */
@@ -75,16 +90,22 @@ export function computeLinePayoutYen(grossRevenue, ratePercent) {
 }
 
 export const FINANCIAL_INTEGRITY_POLICY = {
+  financial_authority: "HISTORICAL_SUPERSEDED",
+  settlement_eligible: false,
   currency: "JPY",
   unit: "yen",
   integer_only: true,
   canonical_source_file: "reports/tlv-business-simulator/output/monthly-payout-decision.json",
-  source_of_truth: "monthly-payout-decision.json",
-  confirmed_payout_field: "creators[].payout_amount_yen",
-  payout_amount_source: "monthly-payout-decision.json",
-  payout_amount_yen_is_final: true,
+  source_of_truth: "HISTORICAL_SIMULATOR_OUTPUT_ONLY",
+  confirmed_payout_field: null,
+  payout_amount_source: "HISTORICAL_SUPERSEDED",
+  payout_amount_yen_is_final: false,
   no_display_recalculation: true,
   gross_times_rate_reference_only: true,
+  /** Tip % SSOT is AD-040 — this simulator is company-first pool, not tip tiers. */
+  tip_distribution_ssot: "AD-040",
+  is_formal_tip_distribution_truth: false,
+  is_economics_core_actual_profit_truth: false,
   consumer_rule:
     "UI・Creator Dashboard・支払CSV・月次レポートは monthly-payout-decision.json の確定値のみを参照し、各画面で再計算しない",
   rounding_policy: "half_up_per_line_then_largest_remainder_for_variable_pool",

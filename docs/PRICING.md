@@ -1,9 +1,13 @@
 # TLV Pricing — 実装仕様 v1
 
+> **REVENUE SHARE SUPERSESSION (2026-08-28):** Coin価格・Provider fee資料は維持するが、旧WR／90%／95%条件は`HISTORICAL_SUPERSEDED`。TLV cash Revenue ShareはAD-040 `TLV_PROGRESSIVE_V1`を月間Eligible Netへ累進適用する。
+
 **最終更新:** 2026-06-28  
 **種別:** 実装可能仕様  
 **AD:** [DECISIONS.md](./DECISIONS.md) **AD-014**  
 **関連:** [FINANCIAL_MODEL.md](./FINANCIAL_MODEL.md) · [CREATOR_PROGRAM.md](./CREATOR_PROGRAM.md) · [LIVE_SYSTEM.md](./LIVE_SYSTEM.md)
+
+> **Short Video 月額は本ファイルの対象外。** 正本: [short-video/BILLING_POLICY_V1.md](./short-video/BILLING_POLICY_V1.md)（Basic ¥980/100 · Standard ¥1,980/300 · Pro ¥2,980/600）。TLV `viewer_vip` ¥980 等と混同しない。
 
 **通貨:** 内部 **コイン（coin）** · 表示は「コイン」· 決済は JPY
 

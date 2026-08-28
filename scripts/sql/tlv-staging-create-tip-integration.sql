@@ -1,7 +1,23 @@
 -- TLV create_tip_transaction staging integration tests (T-TIP-01..10)
--- Run: npx supabase db query --linked -f scripts/sql/tlv-staging-create-tip-integration.sql
+-- Required session guards (isolated/local or explicitly approved staging only):
+--   SET tlv.fixture_environment = 'isolated';
+--   SET tlv.fixture_run_id = '<unique run id>';
+-- The entire fixture is rolled back. It must never be run against Production.
 
 BEGIN;
+
+DO $$
+DECLARE
+  v_environment text := lower(coalesce(current_setting('tlv.fixture_environment', true), ''));
+  v_run_id text := coalesce(current_setting('tlv.fixture_run_id', true), '');
+BEGIN
+  IF v_environment NOT IN ('isolated', 'local', 'staging')
+     OR v_environment = 'production'
+     OR length(btrim(v_run_id)) < 8 THEN
+    RAISE EXCEPTION 'fixture_environment_and_unique_run_id_required';
+  END IF;
+END
+$$;
 
 CREATE TEMP TABLE IF NOT EXISTS _tip_test_results (
   test_id text PRIMARY KEY,
@@ -14,7 +30,7 @@ TRUNCATE _tip_test_results;
 -- Fixed fixture IDs
 -- creator: a0000000-0000-4000-8000-000000000001
 -- wallet:  a0000000-0000-4000-8000-000000000102 / user a0000000-0000-4000-8000-000000000101
--- lot:     a0000000-0000-4000-8000-000000000103
+-- lot:     a new physical UUID is generated for every seed generation
 
 INSERT INTO tlv.creators (id, user_id, display_name, channel_slug)
 VALUES ('a0000000-0000-4000-8000-000000000001', 'tlv-staging-tip-creator', 'Staging Tip Creator', 'tlv-staging-tip-ch')
@@ -93,7 +109,7 @@ BEGIN
       gross_amount_jpy, fee_amount_jpy, net_amount_jpy,
       coins_original, coins_remaining, extension_allowed
     ) VALUES (
-      'a0000000-0000-4000-8000-000000000103', 'a0000000-0000-4000-8000-000000000102',
+      gen_random_uuid(), 'a0000000-0000-4000-8000-000000000102',
       'a0000000-0000-4000-8000-000000000101', 'ops_adjustment', true,
       p_lot * 100, 0, p_lot * 100, p_lot, p_lot, true
     );
@@ -422,4 +438,4 @@ INSERT INTO _tip_test_results VALUES (
 
 SELECT test_id, passed, detail FROM _tip_test_results ORDER BY test_id;
 
-COMMIT;
+ROLLBACK;

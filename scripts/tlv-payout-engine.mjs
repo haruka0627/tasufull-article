@@ -1,6 +1,8 @@
 /**
- * TLV AI 収益分配エンジン Ver2 — Production Baseline
- * ランク・保証率・層構造は payout-engine-v2-production-baseline.json を唯一の基準とする。
+ * HISTORICAL_SUPERSEDED simulator only.
+ * AD-040 TLV_PROGRESSIVE_V1 + tlv.monthly_settlements are the financial SSOT.
+ * Rank/guarantee/payout-pool output from this module MUST NOT determine Revenue
+ * Share, settlement eligibility, payout amount, or provider transfer amount.
  * 本番送金なし・Stripe API 非使用。
  */
 

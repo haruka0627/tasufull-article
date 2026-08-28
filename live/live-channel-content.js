@@ -254,7 +254,7 @@
   const STUDIO_CONTRACT_STATUS = Object.freeze([
     { label: "利用規約", value: "同意済み" },
     { label: "クリエイター契約", value: "有効" },
-    { label: "収益分配率", value: "90%" },
+    { label: "収益分配", value: "月間 Eligible Net 累進（限界率 最大99%）" },
     { label: "支払方法", value: "銀行振込" },
     { label: "支払サイクル", value: "月末締め・翌月払い" },
     { label: "最終更新日", value: "2026/06/24" },

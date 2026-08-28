@@ -1,5 +1,7 @@
 # TLV Financial Model — 実装仕様 v1
 
+> **REVENUE SHARE SUPERSESSION (2026-08-28):** 本文のProfit-First payout pool、Rank、単一率90%／95%例は過去のsimulation設計であり金融判断へ使用禁止。現行正本はAD-040 `TLV_PROGRESSIVE_V1`と`docs/TLV_SETTLEMENT_ENGINE.md`。
+
 **最終更新:** 2026-06-28  
 **種別:** 実装可能仕様 · PL 正本  
 **AD:** [DECISIONS.md](./DECISIONS.md) **AD-014**  

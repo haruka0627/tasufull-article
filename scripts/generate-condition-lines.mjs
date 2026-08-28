@@ -237,6 +237,8 @@ export function buildConditionLinesReport(payoutDecision, sourceLabel) {
   );
 
   const report = {
+    financial_authority: "HISTORICAL_SUPERSEDED",
+    settlement_eligible: false,
     engine_version: ENGINE_VERSION.startsWith("v")
       ? ENGINE_VERSION
       : `v${ENGINE_VERSION.replace(/\.0$/, "")}`,
