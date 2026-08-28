@@ -91,4 +91,79 @@ where specific_schema = 'tlv'
   )
 order by routine_name, grantee, privilege_type;
 
+select jsonb_build_object(
+  'transaction_read_only', current_setting('transaction_read_only'),
+  'database_name', current_database(),
+  'operator_role', current_user,
+  'server_version', current_setting('server_version'),
+  'captured_at', clock_timestamp(),
+  'target_migrations', coalesce((
+    select jsonb_agg(version order by version)
+    from supabase_migrations.schema_migrations
+    where version in (
+      '20260813090000',
+      '20260827210000',
+      '20260827230000',
+      '20260828210000'
+    )
+  ), '[]'::jsonb),
+  'payout_rows', (select count(*) from tlv.payout_log),
+  'creator_score_monthly_rows', (select count(*) from tlv.creator_score_monthly),
+  'legacy_score_fk_present', exists (
+    select 1
+    from pg_constraint c
+    join pg_class t on t.oid = c.conrelid
+    join pg_namespace n on n.oid = t.relnamespace
+    where n.nspname = 'tlv'
+      and t.relname = 'payout_log'
+      and c.conname = 'payout_log_score_monthly_fk'
+  ),
+  'objects', coalesce((
+    select jsonb_agg(jsonb_build_object(
+      'name', c.relname,
+      'kind', c.relkind,
+      'rls_enabled', c.relrowsecurity,
+      'rls_forced', c.relforcerowsecurity
+    ) order by c.relname)
+    from pg_class c
+    join pg_namespace n on n.oid = c.relnamespace
+    where n.nspname = 'tlv'
+      and c.relname in (
+        'revenue_ledger',
+        'monthly_settlements',
+        'settlement_ledger_links',
+        'settlement_state_events',
+        'settlement_hold_events',
+        'payout_log',
+        'revenue_disposition_events'
+      )
+  ), '[]'::jsonb),
+  'policy_count', (
+    select count(*)
+    from pg_policies
+    where schemaname = 'tlv'
+      and tablename in (
+        'revenue_ledger',
+        'monthly_settlements',
+        'settlement_ledger_links',
+        'settlement_state_events',
+        'settlement_hold_events',
+        'payout_log',
+        'revenue_disposition_events'
+      )
+  ),
+  'target_routine_grant_count', (
+    select count(*)
+    from information_schema.routine_privileges
+    where specific_schema = 'tlv'
+      and routine_name in (
+        'insert_monthly_settlement',
+        'transition_monthly_settlement',
+        'create_canonical_settlement_payout',
+        'transition_canonical_settlement_payout',
+        'apply_synthetic_qa_disposition_v1'
+      )
+  )
+) as gate03_preflight;
+
 rollback;

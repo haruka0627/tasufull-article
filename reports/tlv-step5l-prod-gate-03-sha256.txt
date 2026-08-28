@@ -1,8 +1,10 @@
-# TLV STEP5L PROD Gate 03 preflight manifest
+# TLV STEP5L PROD Gate 03 closeout manifest
 # Report and Judge are excluded to avoid circular hashes.
 84b835b79443517f0e104ef9643855e13cd1918b8e63175ad1842bd1ac055fa3  reports/tlv-step5l-prod-gate-03-scope-recovery.txt
-9cf0f22666b6cba8ab580f27ead4fa9bb21a514fb8b7e3e36fb6a110cfaee258  reports/sql/tlv-step5l-prod-gate-03-shared-staging-readonly-preflight.sql
-b3639f0ea58f4c1227b3bb26f9ae029df03122b72d61b8a14b9f9b894f48277e  scripts/test-tlv-step5l-prod-gate-03-preflight.mjs
+28f912b62e5a4470004f0d3f94bacb7fecfa79250a5205293030b9bd16eb2f54  reports/sql/tlv-step5l-prod-gate-03-shared-staging-readonly-preflight.sql
+76cc988f7531113f4ccd3e4dcf2d39067753086d1e11604a4b475717051df711  reports/tlv-step5l-prod-gate-03-hosted-parity.json
+fbf1dca056956708f9b874f2f1ccd397f76b9b45f05e30b25a29255df6241598  scripts/test-tlv-step5l-prod-gate-03-preflight.mjs
+ae00525a428c8af6145015b4603c51601c2abc5e5d920dc23d7e6b5fc1a95d71  scripts/test-tlv-step5l-prod-gate-03-hosted-parity.mjs
 e1c04ebcfa6a34234689f36d5195084632f34891cd220b2bf691e4b9a27051bf  scripts/test-tlv-step5l-prod-gate-03-isolated.ps1
 6fe77b4a7941ea973a1771b80fbad6d060d9bfa74db8d55fb7a578b66dc7b92f  supabase/migrations/20260813090000_tlv_payment_rls_production_ready_gate.sql
 2099978eb9b584674a854789b6b5f5c1f628fef978457b3768d4e8d5ce93f883  supabase/migrations/20260827210000_tlv_deterministic_monthly_settlement_v1.sql

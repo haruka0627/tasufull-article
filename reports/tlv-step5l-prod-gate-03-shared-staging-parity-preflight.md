@@ -1,124 +1,196 @@
-# TLV STEP5L PROD — Gate 03 Shared Staging Parity Preflight
+# TLV STEP5L PROD — Gate 03 Shared Staging Closeout
 
-Date: 2026-08-28 JST
+Date: 2026-08-29 JST
 
-GATE_02_BASELINE: 70eee88b3ec88107de4e7727a0808162db3d080c
-FORMAL_SCOPE: SHARED_STAGING_FOUR_MIGRATION_APPLY_AND_HOSTED_JWT_POSTGREST_RLS_PARITY
-TECHNICAL_PREFLIGHT_STATUS: COMPLETE
-GATE_03_VERDICT: BLOCKED
+Start release anchor: `6be64d38c8325e44f9369ae902bc78daef297ab4`
 
-## Scope recovery
+Gate 02 implementation anchor: `70eee88b3ec88107de4e7727a0808162db3d080c`
 
-Gate 03 is not a new settlement design phase. Repository Evidence fixes its scope as the separate Shared Staging parity phase that follows the Gate 02 source-control anchor:
+Formal scope: `SHARED_STAGING_FOUR_MIGRATION_APPLY_AND_HOSTED_JWT_POSTGREST_RLS_PARITY`
 
-- `reports/tlv-step5l-prod-gate-02-technical-preflight-closeout.md` section 8 requires Shared Staging authorization for the four migrations in order and hosted JWT/PostgREST/RLS parity.
-- The same report records Production PostgreSQL 17.6 and makes hosted Staging parity mandatory before Production consideration.
-- `reports/tlv-production-readiness-step5j-final-implementation-plan.md` section 15 independently lists Shared Staging mutation/apply approval and hosted RLS/JWT parity as the next environment gate.
-- `docs/TLV_FINANCIAL_CONTRACT_SCOPE_FREEZE.md` and `docs/TLV_SETTLEMENT_ENGINE.md` keep Production settlement, provider execution and tax-dependent transfer paths fail closed.
+GATE_03_VERDICT: PASS
+GATE_03_READONLY_PREFLIGHT_SQL: PASS
 
-The exact source paths, normalized SHA-256 values and recovered statements are preserved in `reports/tlv-step5l-prod-gate-03-scope-recovery.txt`; the older untracked reports themselves are not pulled into this release anchor.
+## Scope and safety boundary
 
-The Gate therefore requires all of the following:
+Repository Evidence fixed Gate 03 as the Shared Staging parity phase following Gate 02. The only authorized environment mutation was sequential application of the four pinned migrations to project `ahlxuyvhzqdqaojiywmu`. Production project `ddojquacsyqesrjhcvmn`, deploy, provider operations, real settlement, transfer, payout, refund, and Gate 04 remained prohibited.
 
-1. start from the immutable Gate 02 anchor;
-2. prove the exact four migration bytes and order;
-3. confirm the target is Shared Staging project `ahlxuyvhzqdqaojiywmu`, never Production `ddojquacsyqesrjhcvmn`;
-4. capture a fresh read-only prestate including PostgreSQL version, migration state, zero-legacy payout precondition and current RLS/policy/grant state;
-5. apply the four migrations in order to Shared Staging without invoking the Synthetic QA disposition function;
-6. verify hosted PostgreSQL compatibility plus JWT/PostgREST owner, cross-user, anonymous, Ops and service-only boundaries;
-7. rerun settlement, OPTION_A, STEP5K and progressive regressions against the applied hosted shape;
-8. capture hashes, migration versions, cleanup and an independent Judge result.
-
-Production apply, Production read/write, provider operations, settlement execution, payout, transfer, refund, deploy and Gate 04 are outside this scope.
+The linked ref, configured project ref, and Supabase URL were checked against the Shared Staging ref before every CLI phase. Credential values were never emitted or persisted in Evidence.
 
 ## Candidate identity
 
-| Order | Migration | SHA-256 |
+| Order | Migration | normalized SHA-256 |
 | ---: | --- | --- |
-| 1 | `20260813090000_tlv_payment_rls_production_ready_gate.sql` | `6FE77B4A7941EA973A1771B80FBAD6D060D9BFA74DB8D55FB7A578B66DC7B92F` |
-| 2 | `20260827210000_tlv_deterministic_monthly_settlement_v1.sql` | `2099978EB9B584674A854789B6B5F5C1F628FEF978457B3768D4E8D5CE93F883` |
-| 3 | `20260827230000_tlv_option_a_zero_legacy_payout_cutover_v1.sql` | `55F3E844FD09F6593F9589E438B73289201204BE1D98AC2413B4FE8BDE23858F` |
-| 4 | `20260828210000_tlv_synthetic_qa_disposition_v1.sql` | `502B2CE3553FBD414370C3BE4D7E3AAA9B713EE04415154E0367C1BBDA52C320` |
+| 1 | `20260813090000_tlv_payment_rls_production_ready_gate.sql` | `6fe77b4a7941ea973a1771b80fbad6d060d9bfa74db8d55fb7a578b66dc7b92f` |
+| 2 | `20260827210000_tlv_deterministic_monthly_settlement_v1.sql` | `2099978eb9b584674a854789b6b5f5c1f628fef978457b3768d4e8d5ce93f883` |
+| 3 | `20260827230000_tlv_option_a_zero_legacy_payout_cutover_v1.sql` | `55f3e844fd09f6593f9589e438b73289201204be1d98ac2413b4fe8bde23858f` |
+| 4 | `20260828210000_tlv_synthetic_qa_disposition_v1.sql` | `502b2ce3553fbd414370c3be4d7e3aaa9b713ee04415154e0367c1bbda52c320` |
 
 MIGRATION_HASHES: PASS (4/4)
-MIGRATION_ORDER: FROZEN
-SECOND_FINANCIAL_SSOT: NO
+
+MIGRATION_ORDER: PASS
+
 TLV_PROGRESSIVE_V1_PRESERVED: YES
 
-The older Gate 02 Windows worktree manifest recorded `2E231D...E093` for migration 1 because that checkout contained CRLF bytes. The immutable Gate 02 Git blob is `6FE77B...B92F`; normalizing the worktree file to LF produces the same digest. Gate 03 pins the release-anchor blob, not platform-specific checkout line endings. The SQL content was not changed.
+SECOND_FINANCIAL_SSOT_CREATED: NO
 
-## Repository and isolated verification
+## Shared Staging preflight
 
-The Gate 02 anchor was exported through the Git index into a disposable directory and exercised with:
+The read-only preflight ran inside `BEGIN; SET TRANSACTION READ ONLY; ... ROLLBACK;` at `2026-08-29 02:38:39 JST`.
 
-```text
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-tlv-step5l-prod-gate-02-isolated.ps1 -Image postgres:17.6-alpine
-```
+- PostgreSQL: `17.6`
+- target migration versions present: `0/4`
+- `payout_log`: `0` rows
+- `creator_score_monthly`: `0` rows
+- legacy `payout_log_score_monthly_fk`: present
+- existing target policy count: `1`
+- transaction read-only: `on`
 
-The container used the official `postgres:17.6-alpine` image, `--network none`, `--rm`, and a read-only Repository mount. Image digest observed during the run was `sha256:ef257d85f76e48da1c64832459b59fcaba1a4dac97bf5d7450c77753542eee94`.
+The zero-payout precondition made OPTION_A safe without rewriting historical payout rows. No settlement or financial disposition function was invoked.
+
+SHARED_STAGING_READ_ONLY_PREFLIGHT: PASS
+
+## Sequential migration apply
+
+An ordinary bulk `db push` was not used because the dirty monorepo contains unrelated local-only migrations. Each pinned SQL file was applied individually in the frozen order and its exact version was then recorded as applied. Every SQL apply and every matching migration-history registration returned success before the next file began.
+
+| Version | SQL apply | history registration |
+| --- | --- | --- |
+| `20260813090000` | PASS | PASS |
+| `20260827210000` | PASS | PASS |
+| `20260827230000` | PASS | PASS |
+| `20260828210000` | PASS | PASS |
+
+SHARED_STAGING_APPLY: PASS (4/4)
+
+SYNTHETIC_QA_DISPOSITION_FUNCTION_INVOKED: NO
+
+SETTLEMENT_EXECUTED: NO
+
+## Hosted postflight
+
+The same read-only SQL was rerun at `2026-08-29 02:41:15 JST`.
+
+- all four target versions present in `supabase_migrations.schema_migrations`;
+- `payout_log=0` and `creator_score_monthly=0` remained unchanged;
+- legacy Score FK absent;
+- seven target tables present;
+- all seven target tables have both RLS enabled and FORCE RLS;
+- target policy count `9`;
+- target routine-grant count `7`;
+- transaction read-only `on`.
+
+The final linked migration-list check again showed all four local/remote versions aligned. Unrelated pre-existing local-only migrations remain outside Gate 03 and were neither applied nor repaired.
+
+HOSTED_SCHEMA_POSTFLIGHT: PASS
+
+OPTION_A_ZERO_LEGACY_POSTFLIGHT: PASS
+
+MIGRATION_HISTORY_PARITY: PASS (4/4)
+
+## Hosted JWT / PostgREST / RLS parity
+
+`scripts/test-tlv-step5l-prod-gate-03-hosted-parity.mjs` used two distinct existing QA users and fresh signed Staging JWTs. It performed no fixture creation and persisted only pseudonymous subject hashes and HTTP status/code/count evidence.
+
+- signed authenticated JWTs: PASS (2 distinct subjects);
+- anonymous reads of `monthly_settlements` and `payout_log`: denied;
+- both authenticated JWTs can reach the SELECT boundary;
+- service boundary can reach both tables;
+- authenticated access to Ops-only settlement evidence tables returns zero rows;
+- authenticated settlement INSERT: denied;
+- authenticated canonical payout RPC: denied;
+- successful writes: `0`.
+
+The hosted tables contain zero source rows. Therefore this report does not falsely claim a positive owner-row visibility observation. Owner/cross-user row semantics are established by the exact hosted policy definitions plus the isolated PostgreSQL fixture suite; the real JWT/PostgREST run establishes hosted gateway role propagation and privilege boundaries on the deployed shape.
+
+Initial run: `17/18`; one probe selected nonexistent `settlement_ledger_links.id` and returned PostgreSQL `42703`. The test was corrected to its real key `settlement_id`; rerun: `18/18 PASS`. No migration or policy change was required.
+
+HOSTED_JWT_POSTGREST_RLS_PARITY: PASS (18/18)
+
+HOSTED_OWNER_CROSS_USER_EVIDENCE: POLICY_PARITY_PLUS_ISOLATED_FIXTURE
+
+HOSTED_SUCCESSFUL_PROBE_WRITES: 0
+
+FIXABLE_FINDINGS_CLOSED: 1
+
+## Regression and isolation
+
+PostgreSQL `17.6-alpine` was used with `--network none`, `--rm`, and a read-only Repository mount.
+
+- Gate 03 read-only SQL syntax/result-shape: PASS;
+- Gate 02 complete migration chain: PASS;
+- progressive boundary DB cases: PASS (12/12);
+- 30M / 100M progressive oracles: PASS;
+- OPTION_A canonical payout: PASS;
+- STEP5K disposition regression: PASS (40/40);
+- migration rerun: PASS;
+- backup/restore prestate fingerprint: PASS;
+- Docker cleanup: PASS; no Gate container remained running;
+- JS/static/current-policy Regression: PASS (13/13 suites).
+
+The isolated Synthetic QA function execution was disposable QA only and reported `financial_transaction_executed=false`; the hosted function was never invoked.
 
 POSTGRES_17_6_ISOLATED_FULL_CHAIN: PASS
-GATE_03_READONLY_PREFLIGHT_SQL: PASS
-PROGRESSIVE_BOUNDARIES: PASS (12/12)
-OPTION_A_PAYOUT: PASS
-STEP5K_REGRESSION: PASS (40/40)
-MIGRATION_RERUN: PASS
-BACKUP_RESTORE: PASS
+
 ISOLATED_NETWORK: NONE
+
 ISOLATED_CONTAINER_CLEANUP: PASS
 
-This closes the local PostgreSQL major/minor version gap. It does not substitute for hosted Supabase JWT/PostgREST behavior.
+PROGRESSIVE_BOUNDARIES: PASS (12/12)
 
-## Read-only Shared Staging candidate
+OPTION_A_PAYOUT: PASS
 
-`reports/sql/tlv-step5l-prod-gate-03-shared-staging-readonly-preflight.sql`:
+STEP5K_REGRESSION: PASS (40/40)
 
-- begins a transaction;
-- enforces `SET TRANSACTION READ ONLY`;
-- records environment, migration, zero-legacy, schema, RLS, policy and routine-grant facts;
-- contains no data/schema/privilege mutation statement;
-- ends with `ROLLBACK`.
+MIGRATION_RERUN: PASS
 
-The SQL was validated locally but was not run against Shared Staging.
+BACKUP_RESTORE: PASS
 
-Its PostgreSQL syntax and pre-apply result shape were executed independently in a second disposable PostgreSQL 17.6 container through `scripts/test-tlv-step5l-prod-gate-03-isolated.ps1`.
+CLEANUP: PASS
 
-SHARED_STAGING_READ_ONLY_PREFLIGHT: PREPARED_NOT_EXECUTED
-SHARED_STAGING_APPLY: NOT_EXECUTED
-HOSTED_JWT_POSTGREST_RLS_PARITY: NOT_EXECUTED
+REGRESSION: PASS (13/13 suites)
 
-## Acceptance result
+## Acceptance and closeout
 
 | Acceptance criterion | Result |
 | --- | --- |
-| Gate 02 release anchor fixed | PASS |
-| Four migration hashes/order fixed | PASS |
-| PostgreSQL 17.6 isolated full-chain | PASS |
-| Progressive/OPTION_A/STEP5K regression | PASS |
-| Shared Staging project/ref guard | PREPARED |
-| Fresh hosted read-only prestate | NOT EXECUTED |
-| Four migrations applied to Shared Staging | NOT EXECUTED |
-| Hosted JWT/PostgREST/RLS parity | NOT EXECUTED |
-| Hosted post-apply regression and cleanup | NOT EXECUTED |
-
-Gate 03 cannot honestly receive PASS while its defining hosted parity evidence is absent. The current instruction explicitly prohibits Shared Staging changes, so the environment mutation boundary was not crossed.
-
-## Closeout
+| Start anchor fixed | PASS |
+| Four migration bytes/order fixed | PASS |
+| Fresh hosted zero-legacy preflight | PASS |
+| Four sequential Shared Staging migrations | PASS (4/4) |
+| Hosted PostgreSQL 17.6 schema/RLS parity | PASS |
+| Signed JWT/PostgREST privilege parity | PASS (18/18) |
+| Progressive/OPTION_A/STEP5K Regression | PASS |
+| Migration rerun and backup/restore | PASS |
+| Cleanup | PASS |
+| Independent Judge | PASS |
 
 INDEPENDENT_JUDGE: PASS
-SOURCE_CONTROL_RELEASE_ANCHOR: CREATED_BY_THIS_COMMIT
-HUMAN_GATE_REQUIRED: YES — explicit Shared Staging apply authorization and authorized Staging server/JWT credentials are required to complete the already-frozen Gate 03 acceptance criteria.
-NEXT_SAFE_STEP: With explicit Shared Staging mutation authorization, run the read-only preflight, verify project ref and zero-legacy precondition, apply the four pinned migrations in order, and execute hosted JWT/PostgREST/RLS parity. Do not start Gate 04.
+
+HUMAN_GATE_REQUIRED: NO
+
+NEXT_SAFE_STEP: STOP. Gate 03 is technically closed. Gate 04 requires a separate instruction and was not started.
 
 PRODUCTION_READ_ACCESSED: NO
+
 PRODUCTION_WRITE_EXECUTED: NO
+
 PRODUCTION_CHANGED: NO
-SHARED_STAGING_ACCESSED: NO
-SHARED_STAGING_CHANGED: NO
-DB_MUTATION: NO
+
+SHARED_STAGING_ACCESSED: YES
+
+SHARED_STAGING_CHANGED: YES — four authorized schema migrations and their history rows only
+
+DB_MUTATION: YES — Shared Staging authorized Gate 03 scope only
+
 SETTLEMENT_EXECUTED: NO
+
 STRIPE_PROVIDER_OPERATION: NO
+
 REAL_FINANCIAL_TRANSACTION_EXECUTED: NO
+
 DEPLOYED: NO
+
 PUSHED: NO
+
 GATE_04_STARTED: NO

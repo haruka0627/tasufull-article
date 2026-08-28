@@ -1,0 +1,191 @@
+{
+  "schema": "tasful.tlv.step5l_gate03_hosted_parity.v1",
+  "generated_at": "2026-08-28T17:45:26.691Z",
+  "environment": "shared_staging",
+  "project_ref": "ahlxuyvhzqdqaojiywmu",
+  "production_ref_denied": true,
+  "signed_jwt_users": 2,
+  "source_rows": {
+    "monthly_settlements": 0,
+    "payout_log": 0
+  },
+  "evidence_boundary": "Signed JWT/PostgREST role and privilege boundary on zero-row hosted tables; owner/cross-row fixture semantics are covered by isolated regression plus hosted policy catalog parity.",
+  "mutations": {
+    "attempted_denied_writes": 2,
+    "successful_writes": 0
+  },
+  "assertions": [
+    {
+      "name": "signed_jwt_sender",
+      "pass": true,
+      "evidence": {
+        "subject": "973cb17a667c",
+        "role": "authenticated"
+      }
+    },
+    {
+      "name": "signed_jwt_receiver",
+      "pass": true,
+      "evidence": {
+        "subject": "b31457854c73",
+        "role": "authenticated"
+      }
+    },
+    {
+      "name": "jwt_subjects_distinct",
+      "pass": true,
+      "evidence": {
+        "distinct": true
+      }
+    },
+    {
+      "name": "monthly_settlements_anon_denied",
+      "pass": true,
+      "evidence": {
+        "ok": false,
+        "status": 401,
+        "code": "42501",
+        "count": null
+      }
+    },
+    {
+      "name": "monthly_settlements_sender_authenticated",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "monthly_settlements_receiver_authenticated",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "monthly_settlements_service_boundary",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "monthly_settlements_zero_row_consistency",
+      "pass": true,
+      "evidence": {
+        "service": 0,
+        "sender": 0,
+        "receiver": 0
+      }
+    },
+    {
+      "name": "payout_log_anon_denied",
+      "pass": true,
+      "evidence": {
+        "ok": false,
+        "status": 401,
+        "code": "42501",
+        "count": null
+      }
+    },
+    {
+      "name": "payout_log_sender_authenticated",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "payout_log_receiver_authenticated",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "payout_log_service_boundary",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "payout_log_zero_row_consistency",
+      "pass": true,
+      "evidence": {
+        "service": 0,
+        "sender": 0,
+        "receiver": 0
+      }
+    },
+    {
+      "name": "settlement_ledger_links_non_ops_filtered",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "settlement_state_events_non_ops_filtered",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "settlement_hold_events_non_ops_filtered",
+      "pass": true,
+      "evidence": {
+        "ok": true,
+        "status": 200,
+        "code": null,
+        "count": 0
+      }
+    },
+    {
+      "name": "authenticated_settlement_insert_denied",
+      "pass": true,
+      "evidence": {
+        "ok": false,
+        "status": 403,
+        "code": "42501",
+        "count": null
+      }
+    },
+    {
+      "name": "authenticated_payout_rpc_denied",
+      "pass": true,
+      "evidence": {
+        "ok": false,
+        "status": 404,
+        "code": "PGRST202",
+        "count": null
+      }
+    }
+  ],
+  "verdict": "PASS"
+}

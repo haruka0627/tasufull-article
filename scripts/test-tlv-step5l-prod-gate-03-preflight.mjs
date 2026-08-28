@@ -13,7 +13,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(message);
 };
 
-const baseline = "70eee88b3ec88107de4e7727a0808162db3d080c";
+const startAnchor = "6be64d38c8325e44f9369ae902bc78daef297ab4";
 const migrations = Object.freeze([
   ["supabase/migrations/20260813090000_tlv_payment_rls_production_ready_gate.sql", "6fe77b4a7941ea973a1771b80fbad6d060d9bfa74db8d55fb7a578b66dc7b92f"],
   ["supabase/migrations/20260827210000_tlv_deterministic_monthly_settlement_v1.sql", "2099978eb9b584674a854789b6b5f5c1f628fef978457b3768d4e8d5ce93f883"],
@@ -54,17 +54,26 @@ assert(scopeRecovery.includes("RECOVERED_SCOPE: SHARED_STAGING_FOUR_MIGRATION_AP
 assert(scopeRecovery.includes("43c8d4b2bd1019732c904bb81d38e74af360222c01085fbb525d32c7cac3f647"), "Gate 02 source hash missing");
 assert(scopeRecovery.includes("f10342ea4dda4aa048340877a7c7c7e0e8a4c1a0cb701dfb859ac4eb6a627273"), "STEP5J source hash missing");
 for (const token of [
-  `GATE_02_BASELINE: ${baseline}`,
-  "FORMAL_SCOPE: SHARED_STAGING_FOUR_MIGRATION_APPLY_AND_HOSTED_JWT_POSTGREST_RLS_PARITY",
+  `Start release anchor: \`${startAnchor}\``,
+  "Formal scope: `SHARED_STAGING_FOUR_MIGRATION_APPLY_AND_HOSTED_JWT_POSTGREST_RLS_PARITY`",
   "POSTGRES_17_6_ISOLATED_FULL_CHAIN: PASS",
-  "SHARED_STAGING_APPLY: NOT_EXECUTED",
-  "HOSTED_JWT_POSTGREST_RLS_PARITY: NOT_EXECUTED",
-  "GATE_03_VERDICT: BLOCKED",
+  "SHARED_STAGING_APPLY: PASS (4/4)",
+  "HOSTED_JWT_POSTGREST_RLS_PARITY: PASS (18/18)",
+  "GATE_03_VERDICT: PASS",
   "PRODUCTION_CHANGED: NO",
-  "SHARED_STAGING_CHANGED: NO",
+  "SHARED_STAGING_CHANGED: YES",
   "GATE_04_STARTED: NO",
 ]) assert(report.includes(token), `report token missing: ${token}`);
 
-console.log("TLV_STEP5L_PROD_GATE_03_PREFLIGHT_TEST: PASS");
+const hosted = JSON.parse(read("reports/tlv-step5l-prod-gate-03-hosted-parity.json"));
+assert(hosted.environment === "shared_staging", "hosted evidence environment mismatch");
+assert(hosted.project_ref === "ahlxuyvhzqdqaojiywmu", "hosted evidence project mismatch");
+assert(hosted.production_ref_denied === true, "Production deny evidence missing");
+assert(hosted.verdict === "PASS", "hosted parity failed");
+assert(hosted.assertions.length === 18 && hosted.assertions.every((entry) => entry.pass), "hosted assertions mismatch");
+assert(hosted.mutations.successful_writes === 0, "hosted write unexpectedly succeeded");
+
+console.log("TLV_STEP5L_PROD_GATE_03_CLOSEOUT_TEST: PASS");
 console.log("MIGRATION_HASHES: PASS (4/4)");
-console.log("REMOTE_ENVIRONMENT_ACCESSED: NO");
+console.log("SHARED_STAGING_PARITY: PASS");
+console.log("PRODUCTION_ACCESSED: NO");

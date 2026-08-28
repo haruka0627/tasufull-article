@@ -34,11 +34,12 @@ check("scope_recovered_from_existing_evidence", () => {
   assert(scopeRecovery.includes("f10342ea4dda4aa048340877a7c7c7e0e8a4c1a0cb701dfb859ac4eb6a627273"), "STEP5J source hash missing");
   assert(/Production financial RLS\/privilege separation/.test(scopeFreeze), "scope-freeze Production gate missing");
   assert(/Production and Shared Staging are not applied/.test(settlement), "settlement environment boundary missing");
-  assert(report.includes("FORMAL_SCOPE: SHARED_STAGING_FOUR_MIGRATION_APPLY_AND_HOSTED_JWT_POSTGREST_RLS_PARITY"), "formal scope mismatch");
+  assert(report.includes("Formal scope: `SHARED_STAGING_FOUR_MIGRATION_APPLY_AND_HOSTED_JWT_POSTGREST_RLS_PARITY`"), "formal scope mismatch");
 });
 
 check("gate02_anchor_preserved", () => {
-  assert(report.includes("GATE_02_BASELINE: 70eee88b3ec88107de4e7727a0808162db3d080c"), "baseline missing");
+  assert(report.includes("Start release anchor: `6be64d38c8325e44f9369ae902bc78daef297ab4`"), "start anchor missing");
+  assert(report.includes("Gate 02 implementation anchor: `70eee88b3ec88107de4e7727a0808162db3d080c`"), "Gate 02 anchor missing");
 });
 
 check("four_migration_bytes_pinned", () => {
@@ -71,10 +72,17 @@ check("postgres_17_6_isolation_evidence", () => {
   assert(report.includes("ISOLATED_CONTAINER_CLEANUP: PASS"), "cleanup missing");
 });
 
-check("hosted_parity_not_fabricated", () => {
-  assert(report.includes("SHARED_STAGING_APPLY: NOT_EXECUTED"), "apply status missing");
-  assert(report.includes("HOSTED_JWT_POSTGREST_RLS_PARITY: NOT_EXECUTED"), "hosted status missing");
-  assert(report.includes("GATE_03_VERDICT: BLOCKED"), "fail-closed verdict missing");
+check("hosted_parity_complete", () => {
+  const hosted = JSON.parse(read("reports/tlv-step5l-prod-gate-03-hosted-parity.json"));
+  assert(hosted.schema === "tasful.tlv.step5l_gate03_hosted_parity.v1", "hosted schema mismatch");
+  assert(hosted.environment === "shared_staging" && hosted.project_ref === "ahlxuyvhzqdqaojiywmu", "hosted environment mismatch");
+  assert(hosted.production_ref_denied === true, "Production ref guard missing");
+  assert(hosted.signed_jwt_users === 2, "signed JWT count mismatch");
+  assert(hosted.assertions.length === 18 && hosted.assertions.every((entry) => entry.pass), "hosted assertions incomplete");
+  assert(hosted.mutations.successful_writes === 0, "hosted probe write succeeded");
+  assert(report.includes("SHARED_STAGING_APPLY: PASS (4/4)"), "apply result missing");
+  assert(report.includes("HOSTED_JWT_POSTGREST_RLS_PARITY: PASS (18/18)"), "hosted result missing");
+  assert(report.includes("GATE_03_VERDICT: PASS"), "Gate 03 verdict missing");
 });
 
 check("production_and_finance_safety", () => {
@@ -82,9 +90,9 @@ check("production_and_finance_safety", () => {
     "PRODUCTION_READ_ACCESSED: NO",
     "PRODUCTION_WRITE_EXECUTED: NO",
     "PRODUCTION_CHANGED: NO",
-    "SHARED_STAGING_ACCESSED: NO",
-    "SHARED_STAGING_CHANGED: NO",
-    "DB_MUTATION: NO",
+    "SHARED_STAGING_ACCESSED: YES",
+    "SHARED_STAGING_CHANGED: YES",
+    "DB_MUTATION: YES",
     "SETTLEMENT_EXECUTED: NO",
     "STRIPE_PROVIDER_OPERATION: NO",
     "REAL_FINANCIAL_TRANSACTION_EXECUTED: NO",
