@@ -1,0 +1,43 @@
+TLV STEP5L PROD GATE 04 — Scope recovery evidence
+Captured: 2026-08-29 JST
+Parent release anchor: 959436e8514f0eb22951cc3aa24f1293bf113486
+Hash semantics: SHA-256 of UTF-8 text normalized to LF.
+
+SOURCE 1
+Path: reports/tlv-production-readiness-step5j-final-implementation-plan.md
+SHA-256: f10342ea4dda4aa048340877a7c7c7e0e8a4c1a0cb701dfb859ac4eb6a627273
+Recovered rule: Remaining Human Gate 4 is backup/restore checkpoint acceptance and Production writer-freeze/runbook approval.
+
+SOURCE 2
+Path: reports/tlv-step5l-prod-gate-02-technical-preflight-closeout.md
+SHA-256: 43c8d4b2bd1019732c904bb81d38e74af360222c01085fbb525d32c7cac3f647
+Recovered rule: after Shared Staging parity, Gate 4 requires fresh Production read-only preflight, full logical/schema/source-seven backup, secure retention, checksums, operator/reviewer identities, and isolated restore verification.
+
+SOURCE 3
+Path: reports/tlv-production-readiness-step5l-backup-restore-pre-gate.md
+SHA-256: 61f35cdb3c30fc8734543a3a2935e9b319bda50bb25729fefa2c7d58e9dad867
+Recovered rule: backup/restore/writer-freeze is a checkpoint before migration; append-only financial history is never destructively rolled back.
+
+SOURCE 4
+Path: reports/tlv-step5l-prod-gate-03-shared-staging-parity-preflight.md
+SHA-256: a340a3ed0a6edca250029f530c11a8fdd85e4cf3f814f45bc13dad19c952fec6
+Recovered rule: Gate 03 closed Shared Staging migration/JWT parity only; Production read/write, financial execution, deploy, and Gate 04 were not started.
+
+CORROBORATING EVIDENCE
+- reports/tlv-production-readiness-step5c-production-readonly-preflight.md
+  SHA-256: e518abdffea2e38d7255ce2ab75956addca93f9d07751a7bc35e94896346e2cc
+  Saved Production state: PostgreSQL 17.6, payout_log=0, creator_score_monthly=0, four target migrations absent, exact-seven reconciliation gap.
+- reports/tlv-step5l-prod-gate-01-human-accounting-result.md
+  SHA-256: 384176da74d43f631c715b389bafdbe8080cabd428fd4e0bd4aa385f9ed3e9c7
+  Human Case A is resolved; the JPY 145,000 is test data and not booked real revenue.
+- docs/TLV_FINANCIAL_CONTRACT_SCOPE_FREEZE.md
+  SHA-256: 90bbd61da5299a80a9b508430ff5b15a4062e7ddafd84c847a831fefe303371c
+- docs/TLV_SETTLEMENT_ENGINE.md
+  SHA-256: 1cd824b458481a3487e8f1b6143b18f8348fae6df4fdc40dce9c910e6ab29bfa
+
+GATE_04_SCOPE: PRODUCTION_BACKUP_RESTORE_CHECKPOINT_AND_WRITER_FREEZE_RUNBOOK_APPROVAL
+GATE_04_PRODUCTION_MUTATION_SCOPE: NO
+GATE_04_DISPOSITION_INVOCATION_SCOPE: NO
+GATE_04_SETTLEMENT_PROVIDER_SCOPE: NO
+GATE_05_SCOPE: NO
+LOCAL_ONLY_MIGRATION_DRIFT_SCOPE: NO
