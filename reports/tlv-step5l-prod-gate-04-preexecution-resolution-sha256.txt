@@ -1,0 +1,10 @@
+# TLV STEP5L PROD Gate 04 Human approval pre-execution resolution
+# Normalized SHA-256: UTF-8 text, CRLF normalized to LF.
+
+b9347e43f760b6112a277f80db1e62e164981277e9bd0d521d3774d6734000d9  reports/tlv-step5l-prod-gate-04-human-approval-preexecution-resolution.md
+775cfc598a0d7454d8bf8563f1faa5097e329b0a974bda3adc21d4be5222d3d0  scripts/judge-tlv-step5l-prod-gate-04-preexecution-resolution.mjs
+25412115394a009b794f7c8d299233190fd2b2d5cdc17824d78dfeeab53d8cfd  reports/tlv-step5l-prod-gate-04-production-checkpoint-runbook.md
+f10342ea4dda4aa048340877a7c7c7e0e8a4c1a0cb701dfb859ac4eb6a627273  reports/tlv-production-readiness-step5j-final-implementation-plan.md
+15043e57fae1dcfff62febe710125ded8037262aabba5e62900d28702caa3fa3  docs/supabase-environments.md
+95a81d736c2683f94ddfb224870e019ac0a5d8ed959018843be5e08bb6bcf58d  reports/payment-production-dashboard-verification.md
+d7df08cedfbfc6ee201a396d023642527971d5e640387c552388586ecbf2738b  reports/tlv-payment-production-readiness.md
