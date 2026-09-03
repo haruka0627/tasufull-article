@@ -1,0 +1,18 @@
+{
+  "at": "2026-09-04",
+  "independent_judge": "PASS",
+  "checks": {
+    "A_important_source_preserved": true,
+    "runtime_gaps_after_commit": 0,
+    "B_remaining_dirty_classified": true,
+    "C_secret_scan": "PASS",
+    "D_source_recoverable_from_head": true
+  },
+  "formal_studio_clean_clone": "PARTIAL",
+  "notes": [
+    "REQUIRED_FOR_RUNTIME HTML+import graph is in git after 3697627 and cb195aa.",
+    "OPTIONAL_POC Snap/Tencent/LiveKit PoC remain untracked by design.",
+    "Remaining ~7500 untracked / ~1588 tracked dirty are other products, dist, reports, mixed docs — on disk; no pending Review rewrite session.",
+    "GET /api/tlv-livekit-token is 404 (POST issuer); token source is in git."
+  ]
+}

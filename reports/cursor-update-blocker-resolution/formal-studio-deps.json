@@ -1,0 +1,555 @@
+{
+  "head": "cb195aa3778a7c800b3ead04aa35a38e225b8fc2",
+  "htmlLocalScripts": [
+    {
+      "file": "one-tlv-go-live-route-bridge.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "chat-supabase-config.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M chat-supabase-config.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "talk-runtime.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "auth-current-user.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M auth-current-user.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "tasu-supabase-client.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "chat-user-identity.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-feature-flags.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M live/tlv-feature-flags.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/live-config.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M live/live-config.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/live-create.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M live/live-create.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/live-broadcasts.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M live/live-broadcasts.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-live-duration.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-live-viewer-count-contract.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-live-momentum-v1.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "short-video/short-video-i18n.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-go-live-labels-ja.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-platform-live-bridge.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M live/tlv-platform-live-bridge.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-go-live-media-controller.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "tasful-option-access-client.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-go-live-beauty.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-go-live-beauty-tencent-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-beauty-tencent-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-beauty-tencent-snow-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-beauty-tencent-snow-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "qa/tlv-snap-camera-kit/snap-geometry-contract.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? qa/tlv-snap-camera-kit/snap-geometry-contract.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "qa/tlv-snap-camera-kit/beauty-premium-entitlement-gate.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? qa/tlv-snap-camera-kit/beauty-premium-entitlement-gate.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "tlv-snap-effects.config.example.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? tlv-snap-effects.config.example.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-token-provider.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-token-provider.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-catalog.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-catalog.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-init-owner.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-init-owner.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-origin-contract.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-origin-contract.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-lens-lifecycle.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-lens-lifecycle.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "live/live-livekit-config.example.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-livekit-room.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/providers/livekit-live-provider.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/tlv-livekit-formal.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/livekit-poc-room.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? live/livekit-poc-room.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "live/providers/livekit-live-provider-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? live/providers/livekit-live-provider-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-livekit-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-livekit-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-snap-effects.mjs",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-snap-effects.mjs",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-vtuber-basic.mjs",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-vroid-hub-client.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-vroid-hub-chrome-e2e.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-vroid-hub-chrome-e2e.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-service.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-go-live-broadcaster-hud.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-scene-asset-store.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "live/live-comments.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "M live/live-comments.js",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-scene-comments-adapter.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-scene-templates.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-scene-editor.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-go-live-data-adapter.js",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME",
+      "gap": false
+    }
+  ],
+  "extraImports": [
+    {
+      "file": "one-tlv-vtuber-mediapipe-adapter.mjs",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME_IMPORT",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-vtuber-motion-mapper.mjs",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME_IMPORT",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-vtuber-tracking-contract.mjs",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME_IMPORT",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-vtuber-vrm-blob-lifecycle.mjs",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME_IMPORT",
+      "gap": false
+    },
+    {
+      "file": "one-tlv-vtuber-vrm-guard.mjs",
+      "exists": true,
+      "inGit": true,
+      "porcelain": "CLEAN_OR_MISSING",
+      "class": "REQUIRED_FOR_RUNTIME_IMPORT",
+      "gap": false
+    }
+  ],
+  "runtimeGaps": [],
+  "pocGaps": [
+    {
+      "file": "one-tlv-go-live-beauty-tencent-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-beauty-tencent-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-beauty-tencent-snow-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-beauty-tencent-snow-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "qa/tlv-snap-camera-kit/snap-geometry-contract.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? qa/tlv-snap-camera-kit/snap-geometry-contract.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "qa/tlv-snap-camera-kit/beauty-premium-entitlement-gate.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? qa/tlv-snap-camera-kit/beauty-premium-entitlement-gate.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "tlv-snap-effects.config.example.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? tlv-snap-effects.config.example.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-token-provider.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-token-provider.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-catalog.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-catalog.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-init-owner.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-init-owner.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-origin-contract.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-origin-contract.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-snap-effects-lens-lifecycle.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-snap-effects-lens-lifecycle.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "live/livekit-poc-room.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? live/livekit-poc-room.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "live/providers/livekit-live-provider-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? live/providers/livekit-live-provider-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-livekit-poc.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-livekit-poc.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-go-live-snap-effects.mjs",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-go-live-snap-effects.mjs",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    },
+    {
+      "file": "one-tlv-vroid-hub-chrome-e2e.js",
+      "exists": true,
+      "inGit": false,
+      "porcelain": "?? one-tlv-vroid-hub-chrome-e2e.js",
+      "class": "OPTIONAL_POC",
+      "gap": true
+    }
+  ],
+  "missingOnDisk": []
+}
