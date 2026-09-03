@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ja" data-ui-locale="ja-JP"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TASFUL TLV — ライブ・ショート</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Geist:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="/tlv-chrome-visual.css" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(18, 33, 49, 0.4);
+            backdrop-filter: blur(32px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .live-pulse {
+            animation: pulse-glow 2s infinite;
+        }
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        .ai-shimmer {
+            background: linear-gradient(90deg, #8B5CF6, #D0BCFF, #8B5CF6);
+            background-size: 200% auto;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #444173;
+            border-radius: 10px;
+        }
+        .premium-glow {
+            box-shadow: 0 0 40px -10px rgba(139, 92, 246, 0.3);
+        }
+        .hero-gradient {
+            background: linear-gradient(to top, #051424 0%, rgba(5, 20, 36, 0.2) 60%, transparent 100%);
+        }
+        .circuit-bg {
+            background-image: radial-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+            background-size: 32px 32px;
+        }
+        .data-bar {
+            height: 2px;
+            background: rgba(139, 92, 246, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        .data-bar-fill {
+            position: absolute;
+            height: 100%;
+            background: #8B5CF6;
+            animation: data-flow 2s infinite linear;
+        }
+        @keyframes data-flow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        /* Mobile 390 layout only — desktop 1280 Tailwind is unchanged (md/lg/xl). */
+        @media (max-width: 767px) {
+            html, body {
+                overflow-x: hidden;
+                max-width: 100%;
+            }
+            body {
+                writing-mode: horizontal-tb;
+            }
+            header.fixed.top-0 {
+                gap: 8px;
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+            [data-one-tlv-brand] {
+                font-size: 15px;
+                line-height: 20px;
+                letter-spacing: -0.03em;
+                white-space: nowrap;
+                gap: 4px;
+            }
+            [data-one-tlv-brand] .material-symbols-outlined {
+                font-size: 18px;
+            }
+            header [data-sv-ui-locale] {
+                width: 5.75rem;
+                min-width: 5.75rem;
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+            header button.flex.items-center {
+                padding-right: 6px;
+            }
+            main.md\\:ml-\\[280px\\],
+            main {
+                padding-left: 16px;
+                padding-right: 16px;
+                padding-bottom: 7.5rem;
+                padding-top: 5.25rem;
+            }
+            [data-one-tlv-hero] {
+                aspect-ratio: auto !important;
+                min-height: 0 !important;
+                height: auto !important;
+                display: flex !important;
+                flex-direction: column !important;
+                overflow: visible !important;
+                border-radius: 1.25rem !important;
+            }
+            [data-one-tlv-hero-media] {
+                position: relative !important;
+                inset: auto !important;
+                top: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                left: auto !important;
+                height: 210px !important;
+                width: 100% !important;
+                flex-shrink: 0;
+                overflow: hidden;
+                border-radius: 1.25rem 1.25rem 0 0;
+            }
+            [data-one-tlv-hero-copy] {
+                position: relative !important;
+                inset: auto !important;
+                top: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                left: auto !important;
+                padding: 14px 14px 16px !important;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch !important;
+                background: linear-gradient(to top, #051424 0%, #0d1c2d 100%);
+                border-radius: 0 0 1.25rem 1.25rem;
+            }
+            [data-one-tlv-hero-meta] {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 12px;
+            }
+            [data-one-tlv-hero-meta] button {
+                width: 100% !important;
+                justify-content: center;
+                padding: 12px 16px !important;
+                font-size: 14px !important;
+                white-space: nowrap;
+            }
+            [data-one-tlv-creator-row] {
+                display: grid !important;
+                grid-template-columns: 1.25rem 2.75rem minmax(0, 1fr);
+                grid-template-areas:
+                    "rank avatar info"
+                    "btn btn btn";
+                gap: 8px 10px;
+                padding: 12px;
+                align-items: center;
+            }
+            [data-one-tlv-analytics-actions] {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100%;
+                gap: 8px;
+                margin-top: 0 !important;
+            }
+            [data-one-tlv-analytics-actions] button {
+                width: 100% !important;
+                white-space: nowrap !important;
+                writing-mode: horizontal-tb !important;
+                text-orientation: mixed;
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+            }
+            [data-one-tlv-analytics-body] {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 12px !important;
+                width: 100%;
+            }
+            main {
+                padding-left: 16px !important;
+                padding-right: 16px !important;
+                padding-bottom: 7.5rem !important;
+                padding-top: 5.25rem !important;
+            }
+            [data-one-tlv-hero-telemetry] {
+                display: none;
+            }
+            [data-one-tlv-hero-copy] {
+                position: relative;
+                inset: auto;
+                padding: 14px 14px 16px;
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                background: linear-gradient(to top, #051424 0%, #0d1c2d 100%);
+                border-radius: 0 0 1.25rem 1.25rem;
+            }
+            [data-one-tlv-hero-badges] {
+                flex-wrap: wrap;
+                gap: 6px;
+                margin-bottom: 10px;
+            }
+            [data-one-tlv-hero-copy] h1 {
+                font-size: 1.35rem !important;
+                line-height: 1.3 !important;
+                margin-bottom: 12px !important;
+                max-width: 100%;
+            }
+            [data-one-tlv-hero-meta] {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            [data-one-tlv-hero-meta] > div {
+                width: 100%;
+                padding-right: 12px;
+                gap: 10px;
+            }
+            [data-one-tlv-hero-meta] img {
+                width: 40px;
+                height: 40px;
+            }
+            [data-one-tlv-hero-meta] p.font-bold {
+                font-size: 14px;
+            }
+            [data-one-tlv-hero-meta] button {
+                width: 100%;
+                justify-content: center;
+                padding: 12px 16px;
+                font-size: 14px;
+                white-space: nowrap;
+            }
+            [data-one-tlv-hero-ai] {
+                display: none;
+            }
+            [data-one-tlv-discovery-head] {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            [data-one-tlv-discovery-head] h2 {
+                font-size: 1.35rem;
+            }
+            [data-one-tlv-discovery-head] > div {
+                flex-wrap: wrap;
+            }
+            [data-one-tlv-live-discovery] > .grid {
+                gap: 16px;
+            }
+            [data-one-tlv-shorts] h2 {
+                font-size: 1.35rem;
+            }
+            [data-one-tlv-shorts] {
+                overflow: hidden;
+            }
+            [data-one-tlv-shorts-scroller] {
+                margin-left: -16px;
+                margin-right: -16px;
+                padding-left: 16px;
+                padding-right: 16px;
+                gap: 12px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                overscroll-behavior-x: contain;
+            }
+            [data-one-tlv-shorts-scroller] > div {
+                width: 168px;
+                scroll-snap-align: start;
+                scroll-snap-stop: always;
+            }
+            [data-one-tlv-creators] > .absolute {
+                display: none;
+            }
+            [data-one-tlv-creators] {
+                padding: 16px;
+                border-radius: 1.25rem;
+            }
+            button, [data-i18n] {
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+            }
+            [data-one-tlv-creators] h2 {
+                font-size: 1.2rem;
+            }
+            [data-one-tlv-creator-row] {
+                display: grid;
+                grid-template-columns: 1.25rem 2.75rem minmax(0, 1fr);
+                grid-template-areas:
+                    "rank avatar info"
+                    "btn btn btn";
+                gap: 8px 10px;
+                padding: 12px;
+                align-items: center;
+            }
+            [data-one-tlv-creator-row] > span:first-child {
+                grid-area: rank;
+                width: auto;
+                font-size: 1.25rem;
+            }
+            [data-one-tlv-creator-row] > img {
+                grid-area: avatar;
+                width: 2.75rem;
+                height: 2.75rem;
+            }
+            [data-one-tlv-creator-row] > .flex-grow {
+                grid-area: info;
+                min-width: 0;
+            }
+            [data-one-tlv-creator-row] > .flex-grow > p {
+                font-size: 14px;
+                line-height: 1.3;
+            }
+            [data-one-tlv-creator-row] > .flex-grow > div {
+                flex-wrap: wrap;
+                row-gap: 4px;
+            }
+            [data-one-tlv-creator-row] > button {
+                grid-area: btn;
+                width: 100%;
+                white-space: nowrap;
+                justify-self: stretch;
+            }
+            [data-one-tlv-categories] {
+                padding: 16px;
+                border-radius: 1.25rem;
+            }
+            [data-one-tlv-categories] h2 {
+                font-size: 1.2rem;
+            }
+            [data-one-tlv-cat-grid] {
+                gap: 10px;
+            }
+            [data-one-tlv-cat-grid] > div {
+                padding: 12px 8px;
+                border-radius: 1rem;
+                min-width: 0;
+            }
+            [data-one-tlv-cat-grid] p {
+                font-size: 11px;
+                letter-spacing: 0.04em;
+                line-height: 1.3;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            [data-one-tlv-analytics] {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px;
+                border-radius: 1.25rem;
+                gap: 14px;
+            }
+            [data-one-tlv-analytics-body] {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+                width: 100%;
+            }
+            [data-one-tlv-analytics-body] p {
+                font-size: 1.05rem;
+                writing-mode: horizontal-tb;
+                white-space: normal;
+                letter-spacing: 0.01em;
+            }
+            [data-one-tlv-analytics-body] .flex.flex-wrap {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            [data-one-tlv-analytics-body] .tracking-widest {
+                letter-spacing: 0.04em;
+                white-space: normal;
+                writing-mode: horizontal-tb;
+            }
+            [data-one-tlv-analytics-actions] {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                gap: 8px;
+                margin-top: 0;
+            }
+            [data-one-tlv-analytics-actions] button {
+                width: 100%;
+                white-space: nowrap;
+                writing-mode: horizontal-tb;
+                text-orientation: mixed;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+            nav.fixed.bottom-0 {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#273647",
+                        "surface-container-highest": "#273647",
+                        "on-background": "#d4e4fa",
+                        "on-secondary-fixed": "#181445",
+                        "surface-bright": "#2c3a4c",
+                        "on-secondary-fixed-variant": "#444173",
+                        "secondary-container": "#444173",
+                        "surface": "#051424",
+                        "tertiary-fixed-dim": "#bec6e0",
+                        "secondary": "#c4c1fb",
+                        "primary-fixed": "#e9ddff",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-container": "#b3afe9",
+                        "surface-container": "#122131",
+                        "background": "#051424",
+                        "error": "#ffb4ab",
+                        "secondary-fixed-dim": "#c4c1fb",
+                        "on-tertiary-container": "#22293d",
+                        "secondary-fixed": "#e3dfff",
+                        "tertiary-fixed": "#dae2fd",
+                        "surface-container-low": "#0d1c2d",
+                        "surface-tint": "#d0bcff",
+                        "inverse-primary": "#6d3bd7",
+                        "tertiary-container": "#8990a8",
+                        "on-primary-fixed-variant": "#5516be",
+                        "outline": "#958ea0",
+                        "on-secondary": "#2d2a5b",
+                        "on-primary": "#3c0091",
+                        "on-tertiary-fixed": "#131b2e",
+                        "on-primary-fixed": "#23005c",
+                        "primary": "#d0bcff",
+                        "on-tertiary-fixed-variant": "#3f465c",
+                        "surface-container-lowest": "#010f1f",
+                        "surface-dim": "#051424",
+                        "primary-container": "#a078ff",
+                        "inverse-surface": "#d4e4fa",
+                        "on-surface": "#d4e4fa",
+                        "error-container": "#93000a",
+                        "primary-fixed-dim": "#d0bcff",
+                        "on-tertiary": "#283044",
+                        "outline-variant": "#494454",
+                        "surface-container-high": "#1c2b3c",
+                        "on-error": "#690005",
+                        "on-primary-container": "#340080",
+                        "tertiary": "#bec6e0",
+                        "inverse-on-surface": "#233143",
+                        "on-surface-variant": "#cbc3d7"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "4px",
+                        "container-padding-desktop": "32px",
+                        "sidebar-width": "280px",
+                        "gutter": "16px",
+                        "container-padding-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Geist"],
+                        "label-sm": ["Geist"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "label-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary-container/30 custom-scrollbar circuit-bg" data-page="one-tlv">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface-dim/80 backdrop-blur-xl border-b border-white/5 flex justify-between items-center h-16 px-4 md:px-6">
+<div class="flex items-center gap-12">
+<span class="font-display-lg text-headline-md font-extrabold text-primary tracking-tighter flex items-center gap-2" data-one-tlv-brand>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bolt</span>
+    TASFUL TLV
+</span>
+<div class="hidden md:flex items-center gap-3">
+<a class="font-label-md text-label-md rounded-lg px-3 py-1.5 transition-colors tlv-chrome-nav-idle" data-tlv-nav="live" href="/live/discover/"><span data-i18n="tlv.nav.live">ライブ</span></a>
+<a class="font-label-md text-label-md rounded-lg px-3 py-1.5 transition-colors tlv-chrome-nav-idle" data-tlv-nav="shorts" href="/live/shorts/discover/"><span data-i18n="tlv.nav.shorts">ショート</span></a>
+<a class="font-label-md text-label-md rounded-lg px-3 py-1.5 transition-colors tlv-chrome-nav-idle" data-tlv-nav="following" href="#"><span data-i18n="tlv.nav.following">フォロー中</span></a>
+<a class="font-label-md text-label-md rounded-lg px-3 py-1.5 transition-colors tlv-chrome-nav-idle" data-tlv-nav="categories" href="#"><span data-i18n="tlv.nav.categories">カテゴリ</span></a>
+<a class="font-label-md text-label-md rounded-lg px-3 py-1.5 transition-colors tlv-chrome-nav-idle" data-tlv-nav="ranking" href="/live/ranking/"><span data-i18n="tlv.nav.ranking">ランキング</span></a>
+</div>
+</div>
+<div class="flex items-center gap-3 md:gap-6 min-w-0">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border border-outline-variant/30 rounded-full pl-10 pr-4 py-2 w-80 text-label-md focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all" data-i18n-placeholder="tlv.search.placeholder" placeholder="AIにコンテンツを探す" type="text"/>
+</div>
+<select data-sv-ui-locale data-one-tlv-locale-select class="bg-surface-container-low border border-outline-variant/30 rounded-full px-2 md:px-3 py-1.5 text-xs md:text-label-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/50 w-[6.75rem] md:w-auto md:max-w-[9.5rem] flex-shrink-0" aria-label="UI言語"></select>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full hover:bg-white/5 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-background"></span>
+</button>
+<button class="flex items-center gap-2 pl-2 pr-4 py-1.5 rounded-full bg-surface-container-high border border-white/5 hover:border-primary/30 transition-all">
+<img alt="User" class="w-6 h-6 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_UMUaxcr31_JmypVU8uRD-lxrW01Zm5B4pIA3I09BshGQs2jvFR7UJE0tuPrUlfvtAGqbgZon4m28NHRaTmogT0a1R8U36ac8g7AaGSwdmaTkhTvEwhR1nFS69iQApfHSzk71L1aA4L70CwUiUjduD8Z3vaVmBCxIyORDiSIxmyuH6X7SBzJ7w9J9Qtz7gP30IuuiO-Dyce2JVRFXi9AdrW6Wy3SUCOJHp2Gn_LJ_R_-RISr2x1CM"/>
+<span class="text-xs font-bold hidden sm:inline">NovaStream</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Sidebar Wrapper -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-sidebar-width z-40 bg-surface-container-lowest border-r border-white/5 overflow-y-auto custom-scrollbar md:flex flex-col py-6 gap-2 hidden">
+<nav class="flex flex-col gap-1 px-3">
+<a class="flex items-center gap-4 rounded-xl px-4 py-3 mx-1 transition-colors tlv-chrome-side-active" data-tlv-nav="home" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md font-bold" data-i18n="tlv.nav.home">ホーム</span>
+</a>
+<a class="flex items-center gap-4 rounded-xl px-4 py-3 mx-1 transition-colors tlv-chrome-side-idle" data-tlv-nav="live" href="/live/discover/">
+<span class="material-symbols-outlined">sensors</span>
+<span class="font-label-md text-label-md" data-i18n="tlv.nav.live">ライブ</span>
+</a>
+<a class="flex items-center gap-4 rounded-xl px-4 py-3 mx-1 transition-colors tlv-chrome-side-idle" data-tlv-nav="shorts" href="/live/shorts/discover/">
+<span class="material-symbols-outlined">movie</span>
+<span class="font-label-md text-label-md" data-i18n="tlv.nav.shorts">ショート</span>
+</a>
+<a class="flex items-center gap-4 rounded-xl px-4 py-3 mx-1 transition-colors tlv-chrome-side-idle" data-tlv-nav="following" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md" data-i18n="tlv.nav.following">フォロー中</span>
+</a>
+<div class="h-px bg-white/5 my-6 mx-4"></div>
+<p class="px-5 mb-2 text-[10px] font-bold text-on-surface-variant uppercase tracking-[0.2em]" data-i18n="tlv.nav.personal">パーソナル</p>
+<a class="flex items-center gap-4 rounded-xl px-4 py-3 mx-1 transition-colors tlv-chrome-side-idle" data-tlv-nav="profile" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md" data-i18n="tlv.nav.myPage">マイページ</span>
+</a>
+<a class="flex items-center gap-4 rounded-xl px-4 py-3 mx-1 transition-colors tlv-chrome-side-idle" data-tlv-nav="analytics" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md" data-i18n="tlv.nav.aiInsights">AIインサイト</span>
+</a>
+<a class="flex items-center gap-4 rounded-xl px-4 py-3 mx-1 transition-colors tlv-chrome-side-idle" data-tlv-nav="earnings" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-label-md text-label-md" data-i18n="tlv.nav.earnings">収益</span>
+</a>
+</nav>
+<div class="mt-auto px-6 pt-4 pb-8 border-t border-white/5 bg-surface-container-lowest/50 backdrop-blur-md">
+<button class="w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all mb-6 tlv-chrome-cta" data-tlv-action="go-live">
+<span class="material-symbols-outlined">videocam</span>
+            <span data-i18n="tlv.cta.goLive">配信を開始</span>
+        </button>
+<div class="flex flex-col gap-3">
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface text-sm transition-colors" data-tlv-nav="settings" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+                <span data-i18n="tlv.nav.settings">設定</span>
+            </a>
+<a class="flex items-center gap-3 text-on-surface-variant hover:text-on-surface text-sm transition-colors" data-tlv-nav="ai-preferences" href="#">
+<span class="material-symbols-outlined text-sm">psychology</span>
+                <span data-i18n="tlv.nav.aiPreferences">AI設定</span>
+            </a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="md:ml-[280px] pt-24 px-8 pb-32 max-w-[1600px] mx-auto">
+<!-- Premium Featured Hero -->
+<section class="mb-14">
+<div class="relative w-full aspect-[21/7] rounded-[2.5rem] overflow-hidden group premium-glow border border-white/5" data-one-tlv-hero>
+<div class="absolute inset-0" data-one-tlv-hero-media>
+<img alt="Feature stream" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU41CXufIq4H0KBUOQpiyLaTBPyCYskwspzHI3j-DIeBBBxaHi2KGaWcW8_NrwQwBMKXLiz3Eenc3X7xGnqJmGX-nbGIBt7KPzFuSiiSGyMTNvt_8pnHt6V0PL07fgI-uXtNWVK7XMkib5bQ87rpi25p29iWuzB5kbCDTCV7gfXqXidVyST9dxpNSSJ1KHmFe73FKoC3y9lLlQnQLbkOIRWBzsshA1XOMuHOrEG0UrPuV0KiXZZgZ-"/>
+<div class="absolute inset-0 hero-gradient"></div>
+<!-- AI Data Overlay Layer -->
+<div class="absolute inset-0 pointer-events-none opacity-40" data-one-tlv-hero-telemetry>
+<div class="absolute top-1/4 left-10 w-32 h-px bg-primary/50 blur-[1px]"></div>
+<div class="absolute top-1/4 left-[10rem] text-[8px] font-mono text-primary/70">LATENCY: 12ms</div>
+<div class="absolute bottom-1/3 right-20 text-[8px] font-mono text-primary/70 text-right">
+        UPLINK: 450Mbps<br/>DATA_SYNC: ACTIVE
+    </div>
+</div>
+</div>
+<div class="absolute inset-0 p-12 flex flex-col justify-end items-start" data-one-tlv-hero-copy>
+<div class="flex items-center gap-3 mb-6" data-one-tlv-hero-badges>
+<span class="bg-red-600 text-white text-xs font-black px-4 py-1.5 rounded-full flex items-center gap-2 live-pulse">
+<span class="w-2 h-2 bg-white rounded-full animate-ping"></span>
+                        <span data-i18n="tlv.badge.live">ライブ</span>
+                    </span>
+<span class="bg-black/40 backdrop-blur-xl border border-white/10 text-white text-xs font-bold px-4 py-1.5 rounded-full flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">visibility</span>
+                        42,500 <span data-i18n="tlv.badge.viewers">視聴</span>
+                    </span>
+<span class="bg-primary/20 backdrop-blur-xl border border-primary/20 text-primary text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wider" data-i18n="tlv.cat.architecture">建築</span>
+</div>
+<h1 class="text-[3.5rem] font-black text-white leading-[1.1] mb-8 max-w-4xl tracking-tight">Mega Projects 2024: The Future of Sustainable Urban Architecture</h1>
+<div class="flex items-center justify-between w-full" data-one-tlv-hero-meta>
+<div class="flex items-center gap-6 p-3 pr-8 rounded-2xl bg-black/30 backdrop-blur-xl border border-white/10">
+<img alt="Aether Gaming" class="w-14 h-14 rounded-full border-2 border-primary" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChYeE5mVR_DmBBiOI423gTzTEH-2-8jVAZXruGMzeEyuAEWSIL6srbtgGFwmpWEGPBSsuhqKhnGN8W8eBiwwnJ3cBBiyQQqR82DaysJSLpIsrtnv5FlOJPHCxcvI4A1A975b2GWWMfhbriv1QjyXgW79xlhci1vfc7O_fyV5CYnnXNzzfnK8AQpmohtO16gIl501axH6R0v1hhfyo-DvRmupsEdNahVfHWScVQpZMknmfUmcOxwRAM"/>
+<div class="relative">
+<p class="font-bold text-white text-lg flex items-center gap-1.5">
+                                Aether Gaming
+                                <span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">verified</span>
+</p>
+<!-- Sentiment Analysis Visual -->
+<div class="flex items-center gap-2 mt-1">
+<div class="flex gap-0.5">
+<div class="w-1 h-3 bg-primary rounded-full"></div>
+<div class="w-1 h-2 bg-primary/40 rounded-full mt-1"></div>
+<div class="w-1 h-4 bg-primary rounded-full -mt-1"></div>
+<div class="w-1 h-2 bg-primary/40 rounded-full mt-1"></div>
+</div>
+<p class="text-[10px] text-primary/80 font-bold uppercase tracking-widest" data-i18n="tlv.hero.sentiment">AI感情: 98% ポジティブ</p>
+</div>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-12 py-5 rounded-2xl font-black text-lg shadow-[0_20px_50px_rgba(139,92,246,0.3)] hover:scale-105 transition-all flex items-center gap-3" data-tlv-action="enter-live">
+                        <span data-i18n="tlv.cta.enterLive">ライブに入る</span>
+                        <span class="material-symbols-outlined">play_arrow</span>
+</button>
+</div>
+</div>
+<!-- AI Highlights Badge -->
+<div class="absolute top-10 right-10 group/ai" data-one-tlv-hero-ai>
+<div class="ai-shimmer rounded-2xl px-6 py-3 flex items-center gap-3 cursor-pointer shadow-2xl transition-transform hover:scale-105">
+<span class="material-symbols-outlined text-on-primary-container text-lg animate-pulse">auto_awesome</span>
+<div class="flex flex-col">
+<span class="text-[10px] font-black text-on-primary-container/80 tracking-widest uppercase leading-none" data-i18n="tlv.badge.liveAnalysis">ライブ分析</span>
+<span class="text-xs font-black text-on-primary-container uppercase tracking-wider" data-i18n="tlv.badge.aiHighlights">AIリアルタイムハイライト</span>
+</div>
+</div>
+<div class="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary-container overflow-hidden rounded-full">
+<div class="data-bar-fill"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Optimized Live Now Section -->
+<section class="mb-16" data-one-tlv-live-discovery>
+<div class="flex items-center justify-between mb-8" data-one-tlv-discovery-head>
+<div class="flex items-center gap-4">
+<h2 class="text-3xl font-black text-on-surface tracking-tight" data-i18n="tlv.section.liveDiscovery">ライブを見つける</h2>
+<div class="px-3 py-1 bg-primary/10 rounded-lg border border-primary/20 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary live-pulse shadow-[0_0_8px_#8b5cf6]"></span>
+<span class="text-xs font-bold text-primary" data-i18n="tlv.badge.aiCurated">AIがあなた向けに選定</span>
+</div>
+</div>
+<a class="group text-primary font-bold flex items-center gap-2 hover:opacity-80 transition-opacity" data-tlv-nav="explore-all" href="/live/discover/">
+                <span data-i18n="tlv.cta.exploreAll">すべて見る</span>
+                <span class="material-symbols-outlined text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Featured Large Cards (Rhythm) -->
+<div class="col-span-12 lg:col-span-4 group cursor-pointer">
+<div class="relative aspect-video rounded-3xl overflow-hidden mb-4 border border-white/10 premium-glow">
+<img alt="Education" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqesMNcqiAkiSRBDWIWgnK2E8hkMVQouXTP8iGcP6hFiHmoicTqCFO6A1NcLtaEKT1xg7oigC4PMWqQIY7UgVxrx61x5lQhTfR3rBHbStBQiHRlMp2_jlyYnvjXscznWjbU9oyM9453Q4jJWbVv2MLe7IvgXabHD35yVkhTL6o2aYNBSjLBwyw-SonoYCc7-uybG22icfkAwLD1rKYuf6WVutvIWDgAoV-xt8XGLiNuGq5RtlBGuTq"/>
+<div class="absolute top-4 left-4 flex gap-2">
+<div class="bg-red-600 text-white text-[10px] px-3 py-1 rounded-full font-black" data-i18n="tlv.badge.live">ライブ</div>
+<div class="bg-primary/80 backdrop-blur-md text-on-primary text-[10px] px-2 py-1 rounded-full font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">auto_awesome</span>
+        <span data-i18n="tlv.badge.recommended">おすすめ</span>
+    </div>
+</div>
+<div class="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white text-[10px] px-3 py-1 rounded-full flex items-center gap-1.5 font-bold">
+<span class="material-symbols-outlined text-xs">visibility</span> 4.2k
+                    </div>
+<div class="absolute bottom-4 left-4 flex flex-col gap-2">
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary/20 backdrop-blur-xl border border-primary/20 text-primary text-[10px] font-black rounded-full uppercase" data-i18n="tlv.cat.education">教育</span>
+<span class="px-3 py-1 bg-white/10 backdrop-blur-xl border border-white/10 text-white text-[10px] font-bold rounded-full uppercase" data-i18n="tlv.cat.physics">物理</span>
+</div>
+<!-- AI Summary Overlay -->
+<div class="bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 max-w-[90%] opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-300">
+<p class="text-[10px] text-white/90 leading-relaxed"><span class="text-primary font-black uppercase mr-1" data-i18n="tlv.prefix.aiSummary">AI要約:</span> Discussing recent breakthroughs in teleportation and string theory basics.</p>
+</div>
+</div>
+</div>
+<div class="flex gap-4">
+<img alt="Avatar" class="w-12 h-12 rounded-full border-2 border-primary-container object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2V21_t70AnfWQbWPM0DgEaokReRHmToZDwfXNQLCPZfHdzW-_YpPfKna6xfJFdixxrPnvp8J2ruD4pBgGwyOwR3A4bAjMtDw-5n8s1C7misVe7VUb5Ure6g7DGw45Z2mBdYxhq8YEA57wNBanS7k9lAyr5HsxOJtgj0LhG4iPtKPREuHd94r7pq6dGlmb_lZW2k8825D2JtgPBA7JuwYCbMSy3X90aGbOg80oajg8dDF3vYFyvPVR"/>
+<div class="min-w-0">
+<h3 class="text-on-surface font-black text-lg leading-tight truncate group-hover:text-primary transition-colors">Advanced Quantum Physics Seminar</h3>
+<div class="flex items-center gap-2 mt-1">
+<p class="text-sm text-on-surface-variant">Prof. Elena Vance</p>
+<span class="w-1 h-1 rounded-full bg-on-surface-variant/30"></span>
+<p class="text-[10px] font-bold text-primary uppercase" data-i18n="tlv.meta.trending1">急上昇 #1</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Standard Grid Cards -->
+<div class="col-span-12 lg:col-span-8">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 2 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-video rounded-2xl overflow-hidden mb-3 border border-white/5 transition-all">
+<img alt="Construction" class="w-full h-full object-cover group-hover:scale-110 transition-duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1kdclUFMY1ritKO5EDbh5nsYIYcUnrYMPhOKxI8ybNo0hvKQtBY4HN12k7-QHerRY-wadLURLlYiGZsNqcmix_tmEBUA4IYVDIZJAwj2ciO0gID5qrXNtbfGO3QQq72aYDScqTtVkAvUJj8c8R6lqrzuEP-xMkp4inVnR8O8MEKjvS1u47p0EMfSp5gfXHdP3E_1GLOFwdO_F35sINZjNKxEpAci0lb8q1sOxTT5yLDirNRcvdmIH"/>
+<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter" data-i18n="tlv.badge.live">ライブ</div>
+<div class="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-md p-2 rounded-lg border border-white/5">
+<div class="flex flex-wrap gap-1">
+<span class="text-[8px] bg-primary/20 text-primary px-1 rounded uppercase font-bold" data-i18n="tlv.tag.realtimeStats">リアルタイム統計</span>
+<span class="text-[8px] bg-white/10 text-white px-1 rounded uppercase" data-i18n="tlv.cat.civilEngineering">土木</span>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOlRr7FG4PKZFg59Tvuv7DTLyGUsaFflW_DwKMr53bgs8uIB_IZs7IX_b5ZVZEGyyxPLiL78eBQu0QjCiseIZpnLY9SBEISWbeetO4Ibu_bcgF35OfzRHCgUgYuwCbjv6nDndJ0vi0XVhQiMlL13H1PHy-kzTFsWomK__HdrgTOfySeDmFISepoBAmFNEVxIrAtuz6HQ9R-BuJAHmf6LokWBOYLpdCyLIuUPjYqF53Ua6aNrMT4KFo"/>
+<div class="min-w-0">
+<h3 class="text-on-surface font-bold text-sm truncate group-hover:text-primary transition-colors">Skyline Tower: Concrete Pouring</h3>
+<p class="text-xs text-on-surface-variant flex items-center gap-1.5">
+    BuildMaster Pro
+    <span class="material-symbols-outlined text-[10px] text-primary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-video rounded-2xl overflow-hidden mb-3 border border-white/5 transition-all">
+<img alt="Tech" class="w-full h-full object-cover group-hover:scale-110 transition-duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8dM-CdPWlc__xtaeh6SKMCyiM9JabuUtDyK7jQg0iWmQv6LlW5tw4ZetrjErZ6KUToUKJHXNzEb4iSWBDA2aED0kwx6vnPVPhhPPofLOtenG1pZMzSGSMacg6UO6IJMeCpGQm16teETTKWC2JqIPwXvGNCaFMENikIAB-__r6VQrGayEh_ndyeK62URXeBH7ED0EJwXkVPMUiupWQleVlBsSOOHlM1xyc3sL8PyUPy3ptejf9tQPz"/>
+<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter" data-i18n="tlv.badge.live">ライブ</div>
+<div class="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-md p-2 rounded-lg border border-white/5">
+<p class="text-[8px] text-white/90 font-medium">Topic: Apple M4 Chip Performance Analysis</p>
+</div>
+</div>
+<div class="flex gap-3">
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeQR9IFN9lmSIYAOw5MV90kFdB3-yz2A5KAuce0DsiCKJ9bgJ2TtXkyFkCUwRwfYOjuhNmmukJGHZNnKRFiQtod0ppEaNxV48ui9D421DhSqXk7IEzFJRFf9jGRrgQOcFdHJt3V7f9d9eNO4B5S2p8rMtP7hjXajWYRf8rsu0C9ab5Q9n_imM18ab7_3gcjcj-83EyurouhHHyysoQV5Z5DyWDvWDAnARZFeypXz9opAeMBzDrJKBV"/>
+<div class="min-w-0">
+<h3 class="text-on-surface font-bold text-sm truncate group-hover:text-primary transition-colors">Next-Gen Silicon Keynote</h3>
+<p class="text-xs text-on-surface-variant">TechRadar Live</p>
+</div>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group cursor-pointer">
+<div class="relative aspect-video rounded-2xl overflow-hidden mb-3 border border-white/5 transition-all">
+<img alt="Music" class="w-full h-full object-cover group-hover:scale-110 transition-duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkt8XbkNvXq2LRljkyx1mGZ-eP6KscrKlbkX-8SfqIEAmilkUA8QXUW7PY5t66snqJd3NXRbXG6dXrekFrwxfLsZUXXNyb-TTie51A7RO-h43yK5bAkvLU8ggBqjT5IHA0jcxqTFbmpDNH6VRLlafSa9pGTE5dj-7QlVzOzvTwSVlYPjpJEha7-X_cDQt5VAWu4wsMb5SxQvTmZJb4EXIcafZCNeqAVzBipY6-chV5VDKs5p-8jml1"/>
+<div class="absolute top-3 left-3 bg-red-600 text-white text-[10px] px-2 py-0.5 rounded-full font-black uppercase tracking-tighter" data-i18n="tlv.badge.live">ライブ</div>
+<div class="absolute bottom-3 left-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity bg-black/60 backdrop-blur-md p-2 rounded-lg border border-white/5">
+<p class="text-[8px] text-white/90 font-medium">Auto-tagging: Lo-fi, Chill, Melodic</p>
+</div>
+</div>
+<div class="flex gap-3">
+<img alt="Avatar" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6cfrQV9YDm_dVsUyweHlwOyqjgP20zej6w_XV2inqSwBYovryhjtVapw-Omkf8G2hyTsJ-xcN1JDzjGFqgtizavBvAeB-Ivr5bu_0qX_SieVDPc51oqAcQrNqoG7287_Whg_3qKvHCrFkqPsIV0SRuMLvri7CJ1eX0LjB2mBz4eCr_bS7SK-xVuD3ws_lJ9_0BGU3jVb8IiG4D9PlJZNAng4kvcA3T3AodW-kSFFUGu36atb96FPf"/>
+<div class="min-w-0">
+<h3 class="text-on-surface font-bold text-sm truncate group-hover:text-primary transition-colors">Sunset Rooftop DJ Set</h3>
+<p class="text-xs text-on-surface-variant">Luna Beats</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Shorts Discovery Section -->
+<section class="mb-16" data-one-tlv-shorts>
+<div class="flex items-center gap-3 mb-8">
+<h2 class="text-3xl font-black text-on-surface tracking-tight" data-i18n="tlv.section.trendingShorts">トレンドショート</h2>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">auto_awesome_motion</span>
+<span class="text-[10px] font-black text-primary/60 uppercase tracking-[0.2em]" data-i18n="tlv.badge.aiPoweredFeed">AIフィード</span>
+</div>
+</div>
+<div class="flex gap-6 overflow-x-auto pb-6 custom-scrollbar snap-x" data-one-tlv-shorts-scroller>
+<!-- Short 1 -->
+<div class="flex-shrink-0 w-60 aspect-[9/16] rounded-[1.5rem] overflow-hidden relative glass-card group cursor-pointer snap-start transition-all hover:-translate-y-2">
+<img alt="Short" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1LH9jm7knwYyyhHlovvlEYAfh3j9MiZB_81eheqUdCMO2pKEPOx4o5w2hPwSAmQMmk2_V7aLpklkZ12yG04aJKUGeF6dMlpgeuisucg-P7gFM2ozRzfrgPMjBPmjfqolXxxfMZ-uJZC4Pfk_5dR18zMNIQWV5UkATpK_zr9Z6Zph6m0EFESfiMXf9bekbgAdiwzgpaEvtpYBYtMQSQIlxsqqVQ-pmotLJtvJhAGud4L9MOG0Vev4T"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute top-4 left-4 flex items-center gap-2">
+<img alt="Creator" class="w-8 h-8 rounded-full border-2 border-primary shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9nxk_iT3oPbH9XD0tXJChRMruXNI8B_FS8I-ihl7ywO2OPcCxjk-ommnGS7cWt81gZ2pBrhfXCbavUMtwSTVqrcH1-tne2kEoUMjLhzTYHBTV1QoobJsQRz8c7xW7R55yuaG7ZS5JgUTwpk7QbIKDOXoby3R7zJueuVU8HGBA1FVSLL5ApfYZr36sbbg2LyA9DdMbZdpE0jDO-6CqLOT6GeyBBNjV1S0aWqFKf9Ue59W-msrG-LZh"/>
+<span class="text-xs text-white font-black drop-shadow-md">@AI_Wizard</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-5">
+<p class="text-white font-bold text-base leading-snug mb-3 line-clamp-2">Mastering AI Prompt Engineering: Level 1</p>
+<div class="flex items-center gap-4 text-[10px] text-white/90">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">visibility</span> 1.2M</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">favorite</span> 85k</span>
+</div>
+</div>
+</div>
+<!-- Short 2 -->
+<div class="flex-shrink-0 w-60 aspect-[9/16] rounded-[1.5rem] overflow-hidden relative glass-card group cursor-pointer snap-start transition-all hover:-translate-y-2">
+<img alt="Short" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq1hL0FKl2ceSw01iy5-38QjFHHI18tciZpVJ-ybouCtVTOqopPX2yI2rR0_9He8EtdD-JJttJcHsKCH7rBx7HL4vOY_SqsUg7BuylS-jWxZHxeldOJcy97e4oDdYuKavAAOxm30cchMUNKIOTBWShwk0uag5vWHbUKttm6hhoB0k1orLiVZxVVSiwxr7w2X8frEn658t3a7dw6f375XnS1PSBHnB5cEKdA_aBJJWCrMFpQ5V1W9l6"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute top-4 left-4 flex items-center gap-2">
+<img alt="Creator" class="w-8 h-8 rounded-full border-2 border-primary shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb-9BQNVX_VyZ1a50cIFsNNOO7kV0C4pT4N5vsvl6eKvwjnYpKJIO_1xZhEMQYXBPfR8r1kdpU7gPBv716wXQ_hqJ_A1W152vHzdfQFe9xihw1dhRaWbvrwrMbFyvORBTbVZ0tcn3_sV63ZYeFapTpd737fprjukY0KRIn6iLg-8rgpAI64_N4saCma3j8J5nRoUfo_y2xNvdEHLPZSl1VdQ8TDnl6PDbigHudxyPpb-8JQJxFryh-"/>
+<span class="text-xs text-white font-black drop-shadow-md">@CivilEdge</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-5">
+<p class="text-white font-bold text-base leading-snug mb-3 line-clamp-2">Skyline Tower: Full Foundation Timelapse</p>
+<div class="flex items-center gap-4 text-[10px] text-white/90">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">visibility</span> 450k</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">favorite</span> 12k</span>
+</div>
+</div>
+</div>
+<!-- Short 3 -->
+<div class="flex-shrink-0 w-60 aspect-[9/16] rounded-[1.5rem] overflow-hidden relative glass-card group cursor-pointer snap-start transition-all hover:-translate-y-2">
+<img alt="Short" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM9ny882R17wS_0W5LgsTFJSqYFBAXslL2cmTTxowR1AbdN2dg06Gcz-NYRxvvu1Fw9l9WmCBr4e5a2czxGewNWE-5NvJBVkCwqphvFPkfi9nbR-Xs1U_4GYveHxaitNU4Ae4CcGbRLXHQlQLK95s5AKqHgOSX-am8qYnVlrMaGuNlJCIlHh2ZLMWaV_H8HOlxddRVRhlzN7yeoOMBD0AWMUGO8MPbgcTFR_NuEz42hDs5KR4L3ubf"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute top-4 left-4 flex items-center gap-2">
+<img alt="Creator" class="w-8 h-8 rounded-full border-2 border-primary shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATfWH3nXJaF2FEqMRRNYl_bbY4ltnmgaHBg6N1XED-7HzQHz-b6MQzhHyRzdktgDL3uVVFVtT8WrtPObb0RyzjN0wtFP7qMuG7fkS7ZthfOHEX-p_iuXnmzR0Ps7KB4-Sn1mkjYTVfuSSI8kEMQ4NfMpcQECbrnB-LRjMn9U5TW0JgPwms5QSQcuJFdxShWbZU570fzAjCxdmlqSkG8HD8D8Z_zypYtxRdB7ScETNuezTsqjh8Qeg_"/>
+<span class="text-xs text-white font-black drop-shadow-md">@VocalVibe</span>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-5">
+<p class="text-white font-bold text-base leading-snug mb-3 line-clamp-2">Midnight Session: Acoustic Vocals</p>
+<div class="flex items-center gap-4 text-[10px] text-white/90">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">visibility</span> 890k</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">favorite</span> 102k</span>
+</div>
+</div>
+</div>
+<!-- Short 4 (More) -->
+<div class="flex-shrink-0 w-60 aspect-[9/16] rounded-[1.5rem] overflow-hidden relative glass-card group cursor-pointer snap-start transition-all hover:-translate-y-2">
+<img alt="Short" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB725MlN-v2RkGmNwwUPCc9pacKxRO60I9dTUxoIoXjRoL5OgkKXV0O8b_8TQygqn30MbFjsj8Rr0khZxUht5DgM3ibBTgfV3qrC-iRD6xGLqgTQQZKfhilVPEuWtfbt1HRYcP1IanMQyd2zjMNUK3fvZGhwl2lxjct56KRIlcu_86Rw93xvl620MzuDwQ_Uy47f3iE76txwPOo8elE6P-PShyuXBgG6NzaZwTLQeag0xPwggGDMTrH"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+<div class="absolute bottom-0 left-0 right-0 p-5">
+<p class="text-white font-bold text-base mb-3 line-clamp-2">Tech Talk: 2024 GPU Wars</p>
+<div class="flex items-center gap-4 text-[10px] text-white/90">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">visibility</span> 2.1M</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">favorite</span> 150k</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Creator & Ranking & Categories Section -->
+<section>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Top Creators -->
+<div class="xl:col-span-1 glass-card rounded-[2rem] p-8 border border-white/10 premium-glow relative overflow-hidden" data-one-tlv-creators>
+<div class="absolute top-0 right-0 p-6 opacity-10">
+<span class="material-symbols-outlined text-8xl">monitoring</span>
+</div>
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-black text-on-surface" data-i18n="tlv.section.elite">注目クリエイター</h2>
+<span class="bg-primary/10 text-primary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest border border-primary/20" data-i18n="tlv.badge.growthIndex">成長指数</span>
+</div>
+<div class="space-y-4">
+<!-- Creator 1 -->
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-primary/30 hover:border-primary transition-all group" data-one-tlv-creator-row>
+<span class="text-3xl font-black text-primary italic w-8 shrink-0">1</span>
+<img alt="NovaStream" class="w-16 h-16 rounded-full border-2 border-primary object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_UMUaxcr31_JmypVU8uRD-lxrW01Zm5B4pIA3I09BshGQs2jvFR7UJE0tuPrUlfvtAGqbgZon4m28NHRaTmogT0a1R8U36ac8g7AaGSwdmaTkhTvEwhR1nFS69iQApfHSzk71L1aA4L70CwUiUjduD8Z3vaVmBCxIyORDiSIxmyuH6X7SBzJ7w9J9Qtz7gP30IuuiO-Dyce2JVRFXi9AdrW6Wy3SUCOJHp2Gn_LJ_R_-RISr2x1CM"/>
+<div class="flex-grow">
+<p class="font-black text-on-surface text-lg">NovaStream</p>
+<div class="flex items-center gap-2 mt-0.5">
+<p class="text-xs text-on-surface-variant">1.2M <span data-i18n="tlv.meta.fans">ファン</span></p>
+<div class="px-1.5 py-0.5 bg-green-500/10 text-green-400 text-[10px] font-black rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">trending_up</span>
+        98.2 <span data-i18n="tlv.meta.aiScore">AIスコア</span>
+    </div>
+</div>
+</div>
+<button class="bg-primary text-on-primary px-5 py-2 rounded-xl text-xs font-black transition-all hover:brightness-110" data-i18n="tlv.cta.follow">
+                            フォロー
+                        </button>
+</div>
+<!-- Creator 2 -->
+<div class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all group" data-one-tlv-creator-row>
+<span class="text-3xl font-black text-on-surface-variant/30 italic w-8 shrink-0">2</span>
+<img alt="PixelPulse" class="w-16 h-16 rounded-full border border-white/10 object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGvWYOK7uvihpTTlTnRg5bPl2wgJaPgcrOTLjoR1d6HQCR7NS0Wa9AjPPHtRTXxe4saZqSrA0e7VdMmKaQiYaMfMDfALVCur4SRHoCVu2-3bcpx0OlUrRdFmfjFIM2CgbRKqXtFnzFbz8foWrrJ6dIJ8c0gln6XN3ZJhHpQDmZz26LQNcJ15wbv-STRvroIt9baZtyw7BKIFRhKhR6lGQXyraQPb04PK8JjfdquQsMSfi58fzyZ0Lw"/>
+<div class="flex-grow">
+<p class="font-bold text-on-surface text-lg">PixelPulse</p>
+<div class="flex items-center gap-2 mt-0.5">
+<p class="text-xs text-on-surface-variant">980k <span data-i18n="tlv.meta.fans">ファン</span></p>
+<div class="px-1.5 py-0.5 bg-primary/10 text-primary text-[10px] font-black rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">rocket_launch</span>
+        92.1 <span data-i18n="tlv.meta.aiScore">AIスコア</span>
+    </div>
+</div>
+</div>
+<button class="bg-white/5 hover:bg-primary hover:text-on-primary border border-white/10 text-on-surface px-5 py-2 rounded-xl text-xs font-bold transition-all" data-i18n="tlv.cta.follow">
+                            フォロー
+                        </button>
+</div>
+<!-- Creator 3 -->
+<div class="flex items-center gap-4 p-4 rounded-2xl hover:bg-white/5 border border-transparent hover:border-white/10 transition-all group" data-one-tlv-creator-row>
+<span class="text-3xl font-black text-on-surface-variant/30 italic w-8 shrink-0">3</span>
+<img alt="VividVibe" class="w-16 h-16 rounded-full border border-white/10 object-cover shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAruFaOTtTCjw-9H26NcqWHHylF2aIQnKypWiWPOQs0AS-ZXexxExL7s40sOfsXbNHRFy3pjwb_nxYbNQ_s6Beylh4CTC24wS-sPQ8mDR9xBfSHprO6Sg8oSZLnxAxQV6caWntoG8FblLpV_k8G5ov_k1O9MvgKn6mKJSRAML8gQlWMX7Irzvd56l3WJPD8Alw7dxfynaiXHrYZIM8pL-x_bfZJfhdELaqmhOnx_fHpnfo6Xioi1fYj"/>
+<div class="flex-grow">
+<p class="font-bold text-on-surface text-lg">VividVibe</p>
+<div class="flex items-center gap-2 mt-0.5">
+<p class="text-xs text-on-surface-variant">750k <span data-i18n="tlv.meta.fans">ファン</span></p>
+<div class="px-1.5 py-0.5 bg-orange-500/10 text-orange-400 text-[10px] font-black rounded flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">flare</span>
+        88.5 <span data-i18n="tlv.meta.aiScore">AIスコア</span>
+    </div>
+</div>
+</div>
+<button class="bg-primary/20 text-primary border border-primary/20 px-5 py-2 rounded-xl text-xs font-black transition-all" data-i18n="tlv.cta.following">
+                            フォロー中
+                        </button>
+</div>
+</div>
+</div>
+<!-- Categories -->
+<div class="xl:col-span-2 glass-card rounded-[2rem] p-8 border border-white/10 flex flex-col justify-between" data-one-tlv-categories>
+<div>
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-black text-on-surface" data-i18n="tlv.section.neuralCategories">フィードカテゴリ</h2>
+<button class="text-sm font-bold text-primary underline underline-offset-4" data-i18n="tlv.cta.trainAi">AIを学習させる</button>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" data-one-tlv-cat-grid>
+<div class="p-6 rounded-3xl bg-surface-container border border-white/5 hover:border-primary/50 transition-all cursor-pointer group premium-glow text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 block group-hover:scale-110 transition-transform">architecture</span>
+<p class="font-black text-sm uppercase tracking-wider" data-i18n="tlv.cat.construction">建設</p>
+</div>
+<div class="p-6 rounded-3xl bg-primary/10 border border-primary/40 hover:border-primary transition-all cursor-pointer group premium-glow text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 block group-hover:scale-110 transition-transform" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="font-black text-sm uppercase tracking-wider" data-i18n="tlv.cat.aiStudio">AIスタジオ</p>
+</div>
+<div class="p-6 rounded-3xl bg-surface-container border border-white/5 hover:border-primary/50 transition-all cursor-pointer group premium-glow text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 block group-hover:scale-110 transition-transform">music_note</span>
+<p class="font-black text-sm uppercase tracking-wider" data-i18n="tlv.cat.music">音楽</p>
+</div>
+<div class="p-6 rounded-3xl bg-surface-container border border-white/5 hover:border-primary/50 transition-all cursor-pointer group premium-glow text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 block group-hover:scale-110 transition-transform">school</span>
+<p class="font-black text-sm uppercase tracking-wider" data-i18n="tlv.cat.education">教育</p>
+</div>
+<div class="p-6 rounded-3xl bg-surface-container border border-white/5 hover:border-primary/50 transition-all cursor-pointer group premium-glow text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 block group-hover:scale-110 transition-transform">theater_comedy</span>
+<p class="font-black text-sm uppercase tracking-wider" data-i18n="tlv.cat.entertainment">エンタメ</p>
+</div>
+<div class="p-6 rounded-3xl bg-surface-container border border-white/5 hover:border-primary/50 transition-all cursor-pointer group premium-glow text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 block group-hover:scale-110 transition-transform">sports_esports</span>
+<p class="font-black text-sm uppercase tracking-wider" data-i18n="tlv.cat.gaming">ゲーム</p>
+</div>
+<div class="p-6 rounded-3xl bg-surface-container border border-white/5 hover:border-primary/50 transition-all cursor-pointer group premium-glow text-center">
+<span class="material-symbols-outlined text-primary text-4xl mb-3 block group-hover:scale-110 transition-transform">memory</span>
+<p class="font-black text-sm uppercase tracking-wider" data-i18n="tlv.cat.technology">テクノロジー</p>
+</div>
+<div class="p-6 rounded-3xl bg-surface-container border border-white/5 hover:border-primary/50 transition-all cursor-pointer group premium-glow text-center border-dashed border-primary/30">
+<span class="material-symbols-outlined text-on-surface-variant text-4xl mb-3 block group-hover:scale-110 transition-transform">add_circle</span>
+<p class="font-black text-sm uppercase tracking-wider text-on-surface-variant" data-i18n="tlv.cta.viewMore">もっと見る</p>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-white/5">
+<div class="ai-shimmer rounded-[2.5rem] p-8 flex flex-col md:flex-row items-center justify-between premium-glow relative overflow-hidden group" data-one-tlv-analytics>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+<div class="flex items-center gap-8 relative z-10" data-one-tlv-analytics-body>
+<div class="bg-white/20 p-5 rounded-3xl backdrop-blur-md border border-white/20">
+<span class="material-symbols-outlined text-white text-4xl animate-pulse">analytics</span>
+</div>
+<div>
+<p class="text-2xl font-black text-white mb-1" data-i18n="tlv.analytics.title">クリエイター分析AI</p>
+<div class="flex flex-wrap gap-4 mt-2">
+<div class="flex items-center gap-2 text-white/90">
+<span class="w-2 h-2 rounded-full bg-green-400"></span>
+<span class="text-xs font-bold uppercase tracking-widest" data-i18n="tlv.analytics.retention">視聴維持率: +14%</span>
+</div>
+<div class="flex items-center gap-2 text-white/90">
+<span class="w-2 h-2 rounded-full bg-blue-400"></span>
+<span class="text-xs font-bold uppercase tracking-widest" data-i18n="tlv.analytics.reach">海外リーチ: 高ポテンシャル</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex gap-4 mt-6 md:mt-0 relative z-10" data-one-tlv-analytics-actions>
+<button class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-3 rounded-2xl font-black text-sm hover:bg-white hover:text-primary transition-all" data-tlv-action="live-predictions" data-i18n="tlv.cta.livePredictions">
+        ライブ予測
+    </button>
+<button class="bg-white text-primary px-8 py-3 rounded-2xl font-black text-sm shadow-2xl hover:scale-105 active:scale-95 transition-all" data-tlv-action="open-ai-dashboard" data-i18n="tlv.cta.openAiDashboard">
+        AIダッシュボード
+    </button>
+</div>
+</div>
+</div>
+</div>
+</div></section>
+</main>
+<!-- Mobile Navigation Bar -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full bg-surface-container-low/95 backdrop-blur-2xl border-t border-white/5 px-8 py-4 z-50 flex justify-between items-center">
+<a class="flex flex-col items-center gap-1 rounded-lg px-2 py-1 tlv-chrome-mobile-active" data-tlv-nav="home" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] font-black uppercase" data-i18n="tlv.nav.home">ホーム</span>
+</a>
+<a class="flex flex-col items-center gap-1 rounded-lg px-2 py-1 tlv-chrome-mobile-idle" data-tlv-nav="live" href="/live/discover/">
+<span class="material-symbols-outlined">sensors</span>
+<span class="text-[10px] font-black uppercase" data-i18n="tlv.nav.live">ライブ</span>
+</a>
+<button class="w-14 h-14 rounded-2xl -translate-y-8 flex items-center justify-center border-4 border-background tlv-chrome-cta" data-tlv-action="go-live">
+<span class="material-symbols-outlined text-3xl font-black">auto_awesome</span>
+</button>
+<a class="flex flex-col items-center gap-1 rounded-lg px-2 py-1 tlv-chrome-mobile-idle" data-tlv-nav="shorts" href="/live/shorts/discover/">
+<span class="material-symbols-outlined">movie</span>
+<span class="text-[10px] font-black uppercase" data-i18n="tlv.nav.shorts">ショート</span>
+</a>
+<a class="flex flex-col items-center gap-1 rounded-lg px-2 py-1 tlv-chrome-mobile-idle" data-tlv-nav="profile" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-black uppercase" data-i18n="tlv.nav.me">マイ</span>
+</a>
+</nav>
+<script>
+    // Micro-interactions and data visualization
+    document.addEventListener('mousemove', (e) => {
+        const cards = document.querySelectorAll('.glass-card');
+        cards.forEach(card => {
+            const rect = card.getBoundingClientRect();
+            const cardX = (e.clientX - rect.left) / rect.width;
+            const cardY = (e.clientY - rect.top) / rect.height;
+            
+            if (cardX > 0 && cardX < 1 && cardY > 0 && cardY < 1) {
+                card.style.background = `radial-gradient(circle at ${cardX * 100}% ${cardY * 100}%, rgba(139, 92, 246, 0.15) 0%, rgba(18, 33, 49, 0.4) 100%)`;
+            } else {
+                card.style.background = `rgba(18, 33, 49, 0.4)`;
+            }
+        });
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 20) {
+            header.classList.add('shadow-2xl', 'bg-surface-dim/95', 'border-white/10');
+            header.classList.remove('bg-surface-dim/80');
+        } else {
+            header.classList.remove('shadow-2xl', 'bg-surface-dim/95', 'border-white/10');
+            header.classList.add('bg-surface-dim/80');
+        }
+    });
+</script>
+<script src="short-video/short-video-i18n.js"></script>
+<script src="one-tlv-i18n.js"></script>
+<!-- Data: existing TLV broadcasts → Stitch Live Discovery cards (no UI redesign). -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="chat-supabase-config.js"></script>
+<script src="talk-runtime.js"></script>
+<script src="auth-current-user.js"></script>
+<script src="tasu-supabase-client.js"></script>
+<script src="chat-user-identity.js"></script>
+<script src="live/live-config.js"></script>
+<script src="live/live-broadcasts.js"></script>
+<script src="one-tlv-data-adapter.js"></script>
+<!-- Route bridge only (UI SSOT = Stitch/V0 hub HTML; no redesign). -->
+<script src="one-tlv-route-bridge.js"></script>
+</body></html>
