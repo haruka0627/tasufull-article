@@ -1,0 +1,43 @@
+{
+  "at": "2026-09-03T21:54:03.311Z",
+  "judge": "INDEPENDENT",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "name": "basic_webgl_not_deleted",
+      "pass": true
+    },
+    {
+      "name": "launch_branding_camera_adjust",
+      "pass": true
+    },
+    {
+      "name": "face_specific_controls_not_public",
+      "pass": true
+    },
+    {
+      "name": "snap_tencent_deferred_not_launch",
+      "pass": true
+    },
+    {
+      "name": "dead_av_hidden_if_unwired",
+      "pass": true
+    },
+    {
+      "name": "avatar_only_skip_no_vtuber_rewrite",
+      "pass": true
+    },
+    {
+      "name": "no_new_sdk_no_livekit_arch_change",
+      "pass": true
+    },
+    {
+      "name": "virtual_camera_untouched",
+      "pass": true
+    },
+    {
+      "name": "qa_evidence_pass",
+      "pass": true
+    }
+  ]
+}

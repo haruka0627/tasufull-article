@@ -1,0 +1,172 @@
+{
+  "at": "2026-09-03T21:54:06.940Z",
+  "phase": "TLV_LIVE_JAPANESE_FIRST_I18N_V1",
+  "ok": true,
+  "failures": [],
+  "checks": [
+    {
+      "name": "dict_key_parity",
+      "ok": true,
+      "ja": 232,
+      "en": 232
+    },
+    {
+      "name": "no_browser_language_override_source",
+      "ok": true
+    },
+    {
+      "name": "reuses_tasful_locale_store",
+      "ok": true
+    },
+    {
+      "name": "default_japanese",
+      "ok": true
+    },
+    {
+      "name": "ja_watchingN",
+      "ok": true
+    },
+    {
+      "name": "ja_startLive",
+      "ok": true
+    },
+    {
+      "name": "user_message_hides_technical_code",
+      "ok": true
+    },
+    {
+      "name": "unknown_fail_closed_hidden",
+      "ok": true
+    },
+    {
+      "name": "stored_en_used",
+      "ok": true
+    },
+    {
+      "name": "ko_stored_displays_ja_without_overwrite",
+      "ok": true
+    },
+    {
+      "name": "html_ja_default_and_selector",
+      "ok": true
+    },
+    {
+      "name": "html_ja_visible_copy",
+      "ok": true
+    },
+    {
+      "name": "cta_data_attrs",
+      "ok": true
+    },
+    {
+      "name": "html_no_navigator_lang",
+      "ok": true
+    },
+    {
+      "name": "confirm_not_technical",
+      "ok": true
+    },
+    {
+      "name": "broadcaster_ux_contract_still_asserts_labels",
+      "ok": true
+    },
+    {
+      "name": "dev_server",
+      "ok": true,
+      "base": "http://127.0.0.1:8788"
+    },
+    {
+      "name": "http_200",
+      "ok": true,
+      "url": "http://127.0.0.1:8788/one-tlv-go-live.html"
+    },
+    {
+      "name": "runtime_default_japanese",
+      "ok": true,
+      "lang": "ja",
+      "h1": "配信スタジオ",
+      "selValue": "ja-JP",
+      "options": [
+        "ja-JP",
+        "en"
+      ],
+      "stored": null,
+      "codesVisible": false
+    },
+    {
+      "name": "selector_ja_en_only",
+      "ok": true,
+      "lang": "ja",
+      "h1": "配信スタジオ",
+      "selValue": "ja-JP",
+      "options": [
+        "ja-JP",
+        "en"
+      ],
+      "stored": null,
+      "codesVisible": false
+    },
+    {
+      "name": "no_technical_codes_in_body",
+      "ok": true
+    },
+    {
+      "name": "english_switch",
+      "ok": true,
+      "lang": "en",
+      "h1": "Go Live Studio",
+      "stored": "en",
+      "start": "Start Live"
+    },
+    {
+      "name": "reload_persists_en",
+      "ok": true,
+      "stored": "en",
+      "h1": "Go Live Studio"
+    },
+    {
+      "name": "switch_back_japanese",
+      "ok": true,
+      "stored": "ja-JP",
+      "h1": "配信スタジオ"
+    },
+    {
+      "name": "runtime_pageerror_0",
+      "ok": true
+    },
+    {
+      "name": "mobile_390_default_ja",
+      "ok": true,
+      "h1": "配信スタジオ",
+      "selOverflow": false,
+      "pageOverflowX": false,
+      "ctaHeight": 71.1875,
+      "ctaWidth": 358,
+      "lang": "ja"
+    },
+    {
+      "name": "mobile_390_no_overflow",
+      "ok": true,
+      "h1": "配信スタジオ",
+      "selOverflow": false,
+      "pageOverflowX": false,
+      "ctaHeight": 71.1875,
+      "ctaWidth": 358,
+      "lang": "ja"
+    },
+    {
+      "name": "mobile_390_cta_intact",
+      "ok": true,
+      "h1": "配信スタジオ",
+      "selOverflow": false,
+      "pageOverflowX": false,
+      "ctaHeight": 71.1875,
+      "ctaWidth": 358,
+      "lang": "ja"
+    }
+  ],
+  "findings": [
+    "console.error (non-tailwind): Failed to load resource: the server responded with a status of 404 (Not Found) | Refused to execute script from 'http://127.0.0.1:8788/tlv-snap-effects.config.local.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled. | Failed to load resource: the server responded with a status of 404 (Not Found) | Refused to execute script from 'http://127.0.0.1:8788/tlv-snap-effects.config.local.js' because its MIME type ('text/html') is not executable, and strict MIME type checking is enabled."
+  ],
+  "shots": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\tlv-live-japanese-first-i18n-v1"
+}

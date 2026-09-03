@@ -1,0 +1,187 @@
+{
+  "at": "2026-09-03T21:54:03.227Z",
+  "ok": true,
+  "passed": 31,
+  "failed": 0,
+  "total": 31,
+  "url": "http://127.0.0.1:8788/one-tlv-go-live.html",
+  "httpStatus": 200,
+  "checks": [
+    {
+      "name": "basic_webgl_file_preserved",
+      "ok": true
+    },
+    {
+      "name": "launch_camera_adjust_branding",
+      "ok": true
+    },
+    {
+      "name": "no_face_retouch_icon",
+      "ok": true
+    },
+    {
+      "name": "reset_control_present",
+      "ok": true
+    },
+    {
+      "name": "smoothing_kept_hidden_not_deleted",
+      "ok": true
+    },
+    {
+      "name": "snap_effects_panel_hidden_markup",
+      "ok": true
+    },
+    {
+      "name": "snap_poc_markup_retained",
+      "ok": true
+    },
+    {
+      "name": "dead_av_hidden_markup",
+      "ok": true
+    },
+    {
+      "name": "tencent_snow_remain_hidden",
+      "ok": true
+    },
+    {
+      "name": "no_new_beauty_sdk",
+      "ok": true
+    },
+    {
+      "name": "i18n_semantic_camera_adjust",
+      "ok": true
+    },
+    {
+      "name": "adapter_launch_gates",
+      "ok": true
+    },
+    {
+      "name": "avatar_only_gpu_skip",
+      "ok": true
+    },
+    {
+      "name": "virtual_camera_any_videoinput",
+      "ok": true
+    },
+    {
+      "name": "scene_livekit_contracts_intact",
+      "ok": true
+    },
+    {
+      "name": "vtuber_hub_controls_intact",
+      "ok": true
+    },
+    {
+      "name": "livekit_composited_publish_intact",
+      "ok": true
+    },
+    {
+      "name": "no_fake_unimplemented_adjust_ui",
+      "ok": true
+    },
+    {
+      "name": "http_200",
+      "ok": true,
+      "url": "http://127.0.0.1:8788/one-tlv-go-live.html"
+    },
+    {
+      "name": "ui_camera_adjust_visible",
+      "ok": true,
+      "labelText": "カメラ調整",
+      "labelVisible": true,
+      "adjustOff": true,
+      "slidersHidden": true,
+      "brightnessInDom": true,
+      "smoothingVisible": false,
+      "effectsVisible": false,
+      "deadVisible": false,
+      "tencentVisible": false,
+      "snowVisible": false,
+      "faceBeautyVisible": false,
+      "beautyWordVisible": false,
+      "videoOptions": [
+        "日本語",
+        "English",
+        "テクノロジー",
+        "アート・創作",
+        "ゲーム",
+        "公開",
+        "フォロワー",
+        "非公開",
+        "Logitech StreamCam 4K",
+        "Integrated Webcam",
+        "Shure MV7 USB Mic",
+        "Built-in Microphone",
+        "Headphones (External)",
+        "Monitor Speakers",
+        "自動（プロファイル）",
+        "1080p",
+        "720p",
+        "自動（≤30）",
+        "60 FPS",
+        "30 FPS"
+      ]
+    },
+    {
+      "name": "camera_adjust_default_off",
+      "ok": true
+    },
+    {
+      "name": "launch_hidden_surfaces",
+      "ok": true
+    },
+    {
+      "name": "face_beauty_user_visible_zero",
+      "ok": true
+    },
+    {
+      "name": "virtual_camera_listed_without_vendor_filter",
+      "ok": true,
+      "soft": true,
+      "options": [
+        "日本語",
+        "English",
+        "テクノロジー",
+        "アート・創作",
+        "ゲーム",
+        "公開",
+        "フォロワー",
+        "非公開"
+      ]
+    },
+    {
+      "name": "brightness_reset_visible_identity_grade",
+      "ok": true
+    },
+    {
+      "name": "brightness_applies",
+      "ok": true
+    },
+    {
+      "name": "reset_zeros_brightness",
+      "ok": true
+    },
+    {
+      "name": "avatar_only_skips_camera_gpu",
+      "ok": true
+    },
+    {
+      "name": "snap_poc_flag_still_opens",
+      "ok": true
+    },
+    {
+      "name": "mobile_390_overflow",
+      "ok": true
+    },
+    {
+      "name": "runtime_errors_zero",
+      "ok": true,
+      "ignored": 0
+    }
+  ],
+  "findings": [
+    "device list may still be filling; static media path remains any videoinput"
+  ],
+  "pageErrors": [],
+  "runtimeErrors": []
+}

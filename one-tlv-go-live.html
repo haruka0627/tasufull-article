@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ja" data-ui-locale="ja-JP"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TASFUL TLV | 配信スタジオ</title>
+<link href="/tlv-chrome-visual.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&amp;family=Hanken+Grotesk:wght@400;500&amp;family=Geist:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-panel {
+            background: rgba(11, 19, 38, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+        }
+        .glass-panel:hover {
+            border-color: rgba(208, 188, 255, 0.3);
+            background: rgba(23, 31, 51, 0.7);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #8B5CF6 0%, #D946EF 100%);
+        }
+        .glow-primary {
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.4);
+        }
+        .glow-ai {
+            box-shadow: inset 0 0 12px rgba(251, 171, 255, 0.2);
+            border: 1px solid rgba(251, 171, 255, 0.3) !important;
+        }
+        .pulse-live {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .7; transform: scale(1.1); }
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(208, 188, 255, 0.1); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(208, 188, 255, 0.3); }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        header select[data-sv-ui-locale] {
+            max-width: 7.25rem;
+            min-width: 5.75rem;
+            min-height: 2rem;
+            font-size: 12px;
+            line-height: 1.2;
+            padding: 0.35rem 0.5rem;
+            color-scheme: dark;
+        }
+        @media (max-width: 390px) {
+            header select[data-sv-ui-locale] {
+                max-width: 6.5rem;
+                min-width: 5.25rem;
+                font-size: 11px;
+            }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "primary-fixed": "#e9ddff",
+                "on-primary-container": "#340080",
+                "secondary-container": "#ae05c6",
+                "on-tertiary-fixed": "#001e2f",
+                "surface-container-lowest": "#060e20",
+                "error": "#ffb4ab",
+                "on-tertiary-container": "#002d43",
+                "on-secondary-container": "#ffd8fd",
+                "primary-container": "#a078ff",
+                "on-background": "#dae2fd",
+                "secondary-fixed": "#ffd6fd",
+                "surface-container-high": "#222a3d",
+                "surface-container": "#171f33",
+                "surface-variant": "#2d3449",
+                "surface-container-low": "#131b2e",
+                "secondary-fixed-dim": "#fbabff",
+                "primary-fixed-dim": "#d0bcff",
+                "on-surface": "#dae2fd",
+                "error-container": "#93000a",
+                "surface": "#0b1326",
+                "on-primary-fixed-variant": "#5516be",
+                "on-error": "#690005",
+                "secondary": "#fbabff",
+                "on-primary": "#3c0091",
+                "surface-tint": "#d0bcff",
+                "tertiary-fixed-dim": "#89ceff",
+                "surface-container-highest": "#2d3449",
+                "on-tertiary": "#00344d",
+                "primary": "#d0bcff",
+                "inverse-on-surface": "#283044",
+                "tertiary": "#89ceff",
+                "outline-variant": "#494454",
+                "tertiary-fixed": "#c9e6ff",
+                "surface-dim": "#0b1326",
+                "on-secondary-fixed": "#36003e",
+                "inverse-surface": "#dae2fd",
+                "tertiary-container": "#009ada",
+                "surface-bright": "#31394d",
+                "background": "#0b1326",
+                "on-tertiary-fixed-variant": "#004c6e",
+                "on-primary-fixed": "#23005c",
+                "on-secondary": "#580065",
+                "on-surface-variant": "#cbc3d7",
+                "on-error-container": "#ffdad6",
+                "outline": "#958ea0",
+                "inverse-primary": "#6d3bd7",
+                "on-secondary-fixed-variant": "#7c008e"
+              },
+              "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+              },
+              "spacing": {
+                "gutter": "24px",
+                "lg": "24px",
+                "sm": "8px",
+                "xs": "4px",
+                "container-max": "1440px",
+                "xl": "40px",
+                "2xl": "64px",
+                "unit": "4px",
+                "md": "16px"
+              },
+              "fontFamily": {
+                "headline-lg": ["Sora"],
+                "body-lg": ["Hanken Grotesk"],
+                "display-lg": ["Sora"],
+                "headline-md": ["Sora"],
+                "label-md": ["Geist"],
+                "label-sm": ["Geist"],
+                "body-md": ["Hanken Grotesk"],
+                "headline-lg-mobile": ["Sora"]
+              },
+              "fontSize": {
+                "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                "headline-lg-mobile": ["28px", {"lineHeight": "1.2", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary/30" data-page="one-tlv-go-live">
+<!-- SideNavBar (Desktop Only) -->
+<nav class="hidden md:flex bg-surface-container-low/60 backdrop-blur-2xl fixed left-0 top-0 h-full z-40 flex flex-col border-r border-white/10 shadow-2xl w-[80px] hover:w-[240px] transition-all duration-300 group">
+<div class="flex flex-col items-center group-hover:items-start px-6 py-8 space-y-8 h-full">
+<div class="flex items-center space-x-4">
+<div class="w-8 h-8 rounded-lg primary-gradient flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-[20px]">auto_awesome</span>
+</div>
+<span class="font-headline-md text-headline-md text-primary font-bold tracking-tighter opacity-0 group-hover:opacity-100 transition-opacity">TASFUL TLV</span>
+</div>
+<div class="flex flex-col space-y-2 w-full">
+<a class="flex items-center p-3 rounded-xl bg-primary-container/20 text-primary shadow-[0_0_15px_rgba(208,188,255,0.3)] transition-all duration-300" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="sensors">sensors</span>
+<span class="ml-4 font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap" data-i18n="golive.navStudio">スタジオ</span>
+</a>
+<a class="flex items-center p-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/30 transition-all" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="leaderboard">leaderboard</span>
+<span class="ml-4 font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap" data-i18n="golive.navAnalytics">分析</span>
+</a>
+<a class="flex items-center p-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/30 transition-all" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="group">group</span>
+<span class="ml-4 font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap" data-i18n="golive.navAudience">視聴者</span>
+</a>
+<a class="flex items-center p-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/30 transition-all" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="folder_special">folder_special</span>
+<span class="ml-4 font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap" data-i18n="golive.navAssets">素材</span>
+</a>
+<a class="flex items-center p-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/30 transition-all" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="settings">settings</span>
+<span class="ml-4 font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap" data-i18n="golive.navSettings">設定</span>
+</a>
+</div>
+<div class="mt-auto w-full pt-8 border-t border-white/5 space-y-4">
+<button type="button" data-tlv-go-live-cta="start" class="w-full py-4 rounded-xl primary-gradient text-white font-bold text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center glow-primary shadow-lg">配信開始</button>
+<div class="flex flex-col space-y-2">
+<a class="flex items-center p-3 rounded-xl text-on-surface-variant hover:bg-surface-variant/30 transition-all" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="help">help</span>
+<span class="ml-4 font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap" data-i18n="golive.navSupport">サポート</span>
+</a>
+<a class="flex items-center p-3 rounded-xl text-error/80 hover:bg-error/10 transition-all" href="#">
+<span class="material-symbols-outlined shrink-0" data-icon="logout">logout</span>
+<span class="ml-4 font-label-md text-label-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap" data-i18n="golive.navLogout">ログアウト</span>
+</a>
+</div>
+</div>
+</div>
+</nav>
+<!-- TopAppBar -->
+<header class="bg-surface/60 backdrop-blur-xl border-b border-white/10 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)] fixed top-0 w-full z-30 md:pl-[80px]">
+<div class="flex justify-between items-center w-full px-gutter h-16">
+<div class="flex items-center space-x-6">
+<span class="md:hidden font-headline-md text-headline-md font-bold tracking-tighter text-primary">TASFUL TLV</span>
+<div class="hidden md:flex items-center bg-white/5 px-4 py-2 rounded-full border border-white/10">
+<span class="material-symbols-outlined text-on-surface-variant mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-label-md w-64 placeholder:text-on-surface-variant/40" placeholder="スタジオ内を検索" type="text" data-i18n-placeholder="golive.searchPlaceholder"/>
+</div>
+</div>
+<div class="flex items-center space-x-3 sm:space-x-4">
+<select data-sv-ui-locale data-tlv-golive-locale class="bg-surface-container-highest border border-white/15 rounded-full text-on-surface shrink-0" data-i18n-aria="golive.localeAria" aria-label="UI言語">
+<option value="ja-JP" selected>日本語</option>
+<option value="en">English</option>
+</select>
+<div class="hidden lg:flex flex-col items-end mr-1">
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest leading-none mb-1" data-i18n="golive.currentLocalTime">現在時刻</span>
+<span class="text-label-md font-bold text-white leading-none">23:45:02 JST</span>
+</div>
+<div class="hidden sm:flex items-center bg-surface-container-highest px-3 py-1.5 rounded-full">
+<div class="w-2 h-2 rounded-full bg-primary pulse-live mr-2"></div>
+<span class="text-label-sm font-label-sm text-primary" data-i18n="golive.studioReady">準備完了</span>
+</div>
+<button class="p-2 rounded-full hover:bg-white/5 text-on-surface-variant cursor-pointer transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-cover bg-center border border-primary/40 cursor-pointer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCHHgy8-T4i3CO8WayDveRbJStPcWNkFuqlk2mekj6VpDfFGjsfhhEP4T7zP09JXnx1Utf1e4jXEyeUbaFtwyrd-EIZiIFWxo5dGBPEHHdLGEWn7JP9bcAlKwaQYoSgkv8ULAPEGADDZq0hXWoMw_0Y8_UrFADqAjQ30aBzc74_BPBPgPvTDVdMmSlvJcokSs8H2O3sq66L9jRPHSGIMAlgMvnM00CGfWB7CJYr9Atu4qqnSNhFkdaL')"></div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="relative z-10 pt-20 pb-32 md:pb-12 md:pl-[104px] px-4 md:pr-gutter min-h-screen">
+<div class="max-w-container-max mx-auto space-y-6">
+<!-- Bento Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-white" data-i18n="golive.goLiveStudio">配信スタジオ</h1>
+<p class="text-on-surface-variant font-body-md" data-i18n="golive.goLiveSubtitle">配信設定を整えて、TASFULの視聴者とリアルタイムでつながります。</p>
+</div>
+<div class="flex space-x-4 w-full md:w-auto">
+<button type="button" class="flex-1 md:flex-none px-6 py-4 rounded-xl border border-white/10 hover:bg-white/5 text-on-surface transition-all font-label-md" data-i18n="golive.scheduleLive">配信を予約</button>
+<button type="button" data-tlv-go-live-cta="start" class="flex-1 md:flex-none px-6 md:px-10 py-4 rounded-xl primary-gradient text-white font-bold text-md glow-primary hover:scale-105 active:scale-95 transition-all font-label-md tracking-wider">配信開始</button>
+</div>
+</div>
+<!-- Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Left Column: Live Preview & Health (Order: 1 on mobile, 5 on mobile) -->
+<div class="md:col-span-4 lg:col-span-5 space-y-6 order-1 md:order-none">
+<div class="glass-panel rounded-2xl overflow-hidden p-0 relative transition-all duration-300">
+<div class="relative aspect-video bg-black group">
+<div class="absolute inset-0 bg-cover bg-center opacity-80" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDPTGCqtxfkBxzs73JIZ76NL7MIdwugt4Qmd06VqW8dL4LZW_4TTYD4I06YsBnST2iico4V0f1E94pjjlTG0mpYqn1mPyXmaajQCxPLMq4bmCpBsyJvU0kmqDh6wzXdCb5qIhMH-4TBb5qNGG21KnPSSfAZMwctQsAlLGtV0jlBM41RdN9Et2RjsSDffbcw8Vhu-jrPkPAm48CPgp9l8eILaf8uD5j5rCgKFt6ZaL1UjRla8rjf8PuO')"></div>
+<div class="absolute top-4 left-4 flex space-x-2" data-tlv-preview-chips>
+<div class="px-3 py-1 bg-error rounded-md text-white font-bold text-[10px] tracking-widest flex items-center shadow-lg">
+<span class="w-1.5 h-1.5 rounded-full bg-white mr-2 pulse-live"></span>
+                                <span data-i18n="golive.livePreview">プレビュー</span>
+                            </div>
+<div class="px-3 py-1 bg-black/40 backdrop-blur-md rounded-md text-white/80 font-label-sm text-[10px] flex items-center" data-i18n="golive.camUltra">
+                                カメラ
+                            </div>
+</div>
+<div class="absolute top-4 left-4 z-[6] flex flex-wrap items-center gap-2 max-w-[calc(100%-5rem)] pointer-events-none" data-tlv-broadcaster-hud="1" aria-live="polite" hidden style="pointer-events:none">
+<div class="px-2.5 py-1 bg-error rounded-md text-white font-bold text-[10px] tracking-widest flex items-center shadow-lg gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-white pulse-live" aria-hidden="true"></span>
+<span data-tlv-hud-live>LIVE</span>
+<span data-tlv-hud-duration class="font-mono tabular-nums tracking-normal font-semibold">00:00</span>
+</div>
+<div class="px-2.5 py-1 bg-black/50 backdrop-blur-md rounded-md text-white/90 text-[10px] font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="visibility" aria-hidden="true">visibility</span>
+<span data-tlv-hud-viewers>視聴中 0人</span>
+</div>
+<div class="px-2.5 py-1 bg-black/50 backdrop-blur-md rounded-md text-white/80 text-[10px] font-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]" data-icon="wifi" aria-hidden="true">wifi</span>
+<span data-tlv-hud-connection>接続良好</span>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="space-y-1">
+<div class="flex items-center space-x-2 text-white">
+<span class="material-symbols-outlined text-[18px]" data-icon="wifi">wifi</span>
+<span class="text-label-sm" data-i18n="golive.stableConnection">接続良好</span>
+</div>
+<div class="text-[10px] text-white/60 font-label-sm uppercase tracking-wider" data-i18n="golive.sceneOutputCap">シーン出力 / 端末上限</div>
+</div>
+<button type="button" class="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md flex items-center justify-center text-white border border-white/10 z-[5]" data-go-live-preview-fullscreen data-i18n-aria="golive.previewExpand" data-i18n-title="golive.previewExpand" aria-label="プレビューを拡大" title="プレビューを拡大">
+<span class="material-symbols-outlined" data-icon="fullscreen" data-go-live-preview-fullscreen-icon>fullscreen</span>
+</button>
+</div>
+</div>
+<!-- Stream Health (Mobile order 5) -->
+<div class="p-6 border-t border-white/5 order-5 md:order-none">
+<div class="flex justify-between items-center mb-6">
+<div class="flex flex-col">
+<h3 class="font-headline-md text-primary text-md" data-i18n="golive.streamHealth">配信状態</h3>
+<span class="text-[10px] text-on-surface-variant uppercase tracking-widest" data-i18n="golive.telemetry">リアルタイム計測</span>
+</div>
+<div class="flex items-center bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/20">
+<div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+<span class="text-label-sm font-bold text-green-500" data-i18n="golive.healthExcellent">良好</span>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+<div class="bg-surface-container-high/50 p-3 rounded-xl border border-white/5">
+<div class="text-[10px] text-on-surface-variant mb-1">LATENCY</div>
+<div class="text-headline-md text-white text-lg">12ms</div>
+</div>
+<div class="bg-surface-container-high/50 p-3 rounded-xl border border-white/5">
+<div class="text-[10px] text-on-surface-variant mb-1">BITRATE</div>
+<div class="text-headline-md text-white text-lg">6.8k</div>
+</div>
+<div class="bg-surface-container-high/50 p-3 rounded-xl border border-white/5">
+<div class="text-[10px] text-on-surface-variant mb-1">FPS</div>
+<div class="text-headline-md text-white text-lg">60</div>
+</div>
+<div class="bg-surface-container-high/50 p-3 rounded-xl border border-white/5">
+<div class="text-[10px] text-on-surface-variant mb-1">NET LOAD</div>
+<div class="text-headline-md text-primary text-lg">22%</div>
+</div>
+<div class="bg-surface-container-high/50 p-3 rounded-xl border border-white/5">
+<div class="text-[10px] text-on-surface-variant mb-1">DROPPED</div>
+<div class="text-headline-md text-error text-lg">0%</div>
+</div>
+<div class="bg-surface-container-high/50 p-3 rounded-xl border border-white/5">
+<div class="text-[10px] text-on-surface-variant mb-1">CPU LOAD</div>
+<div class="text-headline-md text-white text-lg">14%</div>
+</div>
+</div>
+</div>
+</div>
+<!-- AI Stream Assistant Card (Mobile Order 4) -->
+<div class="glass-panel rounded-2xl p-6 glow-ai relative overflow-hidden transition-all duration-300 order-4 md:order-none">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl" data-icon="neurology">neurology</span>
+</div>
+<div class="flex items-center space-x-3 mb-6">
+<div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[20px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<h3 class="font-headline-md text-secondary text-md" data-i18n="golive.aiAssistant">配信アシスタント</h3>
+</div>
+<div class="space-y-4">
+<div class="p-3 bg-secondary/10 border border-secondary/20 rounded-xl">
+<p class="text-label-sm text-white" data-i18n="golive.aiRecommend">おすすめ: カテゴリを「クリエイティブ」にするとリーチが伸びやすいです。</p>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2.5 px-3 bg-white/5 border border-white/10 hover:border-secondary/40 hover:bg-secondary/10 rounded-lg text-[10px] font-bold text-on-surface-variant hover:text-white transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-sm mr-1.5" data-icon="edit">edit</span> <span data-i18n="golive.improveTitle">タイトルを整える</span>
+                            </button>
+<button class="py-2.5 px-3 bg-white/5 border border-white/10 hover:border-secondary/40 hover:bg-secondary/10 rounded-lg text-[10px] font-bold text-on-surface-variant hover:text-white transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-sm mr-1.5" data-icon="description">description</span> <span data-i18n="golive.generateDescription">説明を作る</span>
+                            </button>
+<button class="py-2.5 px-3 bg-white/5 border border-white/10 hover:border-secondary/40 hover:bg-secondary/10 rounded-lg text-[10px] font-bold text-on-surface-variant hover:text-white transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-sm mr-1.5" data-icon="category">category</span> <span data-i18n="golive.recommendCategory">カテゴリ提案</span>
+                            </button>
+<button class="py-2.5 px-3 bg-white/5 border border-white/10 hover:border-secondary/40 hover:bg-secondary/10 rounded-lg text-[10px] font-bold text-on-surface-variant hover:text-white transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-sm mr-1.5" data-icon="tag">tag</span> <span data-i18n="golive.generateTags">タグを作る</span>
+                            </button>
+</div>
+<button class="w-full py-3 bg-secondary/20 border border-secondary/30 rounded-xl text-xs font-bold text-white hover:bg-secondary/30 transition-all flex items-center justify-center">
+<span class="material-symbols-outlined text-lg mr-2" data-icon="verified">verified</span> <span data-i18n="golive.checkQuality">品質を確認</span>
+                        </button>
+</div>
+</div>
+</div>
+<!-- Center Column: Stream Details (Mobile Order 2) -->
+<div class="md:col-span-8 lg:col-span-4 space-y-6 order-2 md:order-none">
+<div class="glass-panel rounded-2xl p-6 transition-all duration-300">
+<h3 class="font-headline-md text-primary mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2" data-icon="edit_note">edit_note</span>
+                        <span data-i18n="golive.streamDetails">配信詳細</span>
+                    </h3>
+<div class="space-y-5">
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant uppercase tracking-wider" data-i18n="golive.streamTitle">配信タイトル</label>
+<input class="w-full bg-surface-container-highest border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-primary focus:border-primary transition-all" type="text" value="深夜 Coding Session | TASFUL PRO Studio"/>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant uppercase tracking-wider" data-i18n="golive.description">説明</label>
+<textarea class="w-full bg-surface-container-highest border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-primary focus:border-primary transition-all" rows="3">TASFUL のツールで UI を組み立てる配信です。リアルタイムで一緒に進めます。</textarea>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant uppercase tracking-wider" data-i18n="golive.category">カテゴリ</label>
+<select class="w-full bg-surface-container-highest border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-primary">
+<option data-i18n="golive.catTechnology">テクノロジー</option>
+<option data-i18n="golive.catArt">アート・創作</option>
+<option data-i18n="golive.catGaming">ゲーム</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant uppercase tracking-wider" data-i18n="golive.visibility">公開範囲</label>
+<select class="w-full bg-surface-container-highest border border-white/10 rounded-xl px-4 py-3 text-white focus:ring-primary">
+<option data-i18n="golive.visPublic">公開</option>
+<option data-i18n="golive.visFollowers">フォロワー</option>
+<option data-i18n="golive.visPrivate">非公開</option>
+</select>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant uppercase tracking-wider" data-i18n="golive.thumbnail">サムネイル</label>
+<div class="relative w-full aspect-video rounded-xl border-2 border-dashed border-white/10 hover:border-primary/40 flex flex-col items-center justify-center bg-white/5 cursor-pointer transition-all">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-2" data-icon="add_photo_alternate">add_photo_alternate</span>
+<span class="text-label-sm text-on-surface-variant" data-i18n="golive.uploadThumbnail">サムネイルを追加（1920×1080）</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-label-sm text-on-surface-variant uppercase tracking-wider" data-i18n="golive.tags">タグ</label>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary/20 text-primary border border-primary/40 rounded-full text-[10px] font-bold">#PROSTREAM</span>
+<span class="px-3 py-1 bg-white/5 text-on-surface-variant border border-white/10 rounded-full text-[10px] font-bold" data-i18n="golive.addTag">+ タグを追加</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Duration Info Widget -->
+<div class="glass-panel rounded-2xl p-6 transition-all duration-300">
+<h3 class="font-headline-md text-md text-on-surface mb-4" data-i18n="golive.streamTimeline">配信スケジュール</h3>
+<div class="space-y-4">
+<div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/5">
+<span class="text-label-sm text-on-surface-variant" data-i18n="golive.estimatedDuration">予定時間</span>
+<span class="text-label-md font-bold text-white">2h 30m</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border border-white/5">
+<span class="text-label-sm text-on-surface-variant" data-i18n="golive.scheduledStart">開始予定</span>
+<span class="text-label-md font-bold text-secondary">Today, 23:30</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Controls & Reach (Mobile Order 3) -->
+<div class="md:col-span-12 lg:col-span-3 space-y-6 order-3 md:order-none">
+<div class="glass-panel rounded-2xl p-6 transition-all duration-300">
+<h3 class="font-headline-md text-primary mb-6 flex items-center">
+<span class="material-symbols-outlined mr-2" data-icon="tune">tune</span>
+                        <span data-i18n="golive.liveControls">配信操作</span>
+                    </h3>
+<!-- Dev/PoC only: LiveKit Cloud Formal compositedStream (?tlvLiveKitPoc=1) — top of Live Controls for Mobile QA -->
+<div class="border border-sky-500/30 rounded-xl mb-4 pt-3 pb-3 space-y-2 hidden max-md:scroll-mt-24 bg-sky-950/30" data-tlv-livekit-poc-panel>
+<div class="px-2 text-[10px] uppercase tracking-widest text-sky-300/90">LiveKit Cloud P0 PoC (Dev)</div>
+<div class="px-2 flex flex-col gap-2">
+<div class="text-[11px] text-on-surface leading-snug">Room (auto): <code class="text-sky-300" data-tlv-livekit-poc-room-label>tlv-livekit-poc-qa</code></div>
+<div class="flex flex-wrap items-center gap-2 px-0">
+<span class="text-[11px] text-amber-200" data-tlv-livekit-poc-auth-badge>Auth: checking…</span>
+<a href="/login.html" class="min-h-11 inline-flex items-center text-xs px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-sky-200 underline" data-tlv-livekit-poc-sign-in hidden>Sign in</a>
+</div>
+<div class="text-[10px] text-on-surface-variant leading-snug break-all">Viewer: <a class="text-sky-400 underline" data-tlv-livekit-poc-viewer-url href="/live/livekit-poc-viewer.html?tlvLiveKitPoc=1&amp;tlvLiveKitRoom=tlv-livekit-poc-qa">/live/livekit-poc-viewer.html?tlvLiveKitPoc=1&amp;tlvLiveKitRoom=tlv-livekit-poc-qa</a></div>
+<div class="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+<button type="button" data-tlv-livekit-poc-start class="min-h-11 w-full sm:w-auto text-xs px-3 py-2.5 rounded-lg bg-sky-600/80 border border-sky-400/30 hover:bg-sky-600" disabled>Publish Formal → LiveKit</button>
+<button type="button" data-tlv-livekit-poc-replace class="min-h-11 w-full sm:w-auto text-xs px-3 py-2.5 rounded-lg bg-white/5 border border-white/10">Replace after 16:9↔9:16</button>
+<button type="button" data-tlv-livekit-poc-stats class="min-h-11 w-full sm:w-auto text-xs px-3 py-2.5 rounded-lg bg-white/5 border border-white/10">Stats</button>
+<button type="button" data-tlv-livekit-poc-stop class="min-h-11 w-full sm:w-auto text-xs px-3 py-2.5 rounded-lg bg-white/5 border border-white/10">Stop LiveKit PoC</button>
+</div>
+<div class="text-[10px] text-on-surface-variant leading-snug" data-tlv-livekit-poc-status>PoC idle — requires LIVEKIT_* in .dev.vars</div>
+<div class="rounded-lg overflow-hidden bg-black/40 border border-white/10 aspect-video" data-tlv-livekit-poc-video></div>
+</div>
+</div>
+<div class="space-y-4">
+<!-- Devices Selection -->
+<div class="space-y-3 pt-2">
+<div class="space-y-1">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="videocam">videocam</span> <span data-i18n="golive.cameraDevice">カメラ</span>
+                                </label>
+<select class="w-full bg-surface-container-highest border border-white/5 rounded-lg px-3 py-2 text-[11px] text-white">
+<option>Logitech StreamCam 4K</option>
+<option>Integrated Webcam</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="mic">mic</span> <span data-i18n="golive.microphoneDevice">マイク</span>
+                                </label>
+<select class="w-full bg-surface-container-highest border border-white/5 rounded-lg px-3 py-2 text-[11px] text-white">
+<option>Shure MV7 USB Mic</option>
+<option>Built-in Microphone</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest flex items-center">
+<span class="material-symbols-outlined text-[14px] mr-1" data-icon="speaker">speaker</span> <span data-i18n="golive.audioOutput">音声出力</span>
+                                </label>
+<select class="w-full bg-surface-container-highest border border-white/5 rounded-lg px-3 py-2 text-[11px] text-white">
+<option>Headphones (External)</option>
+<option>Monitor Speakers</option>
+</select>
+</div>
+</div>
+<div class="border-t border-white/5 my-4 pt-4 space-y-3">
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 transition-all">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant text-lg mr-3" data-icon="videocam">videocam</span>
+<span class="text-label-md" data-i18n="golive.cameraFeed">カメラ</span>
+</div>
+<div class="w-10 h-5 bg-primary/80 rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-lg"></div>
+</div>
+</div>
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 transition-all">
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant text-lg mr-3" data-icon="mic">mic</span>
+<span class="text-label-md" data-i18n="golive.micFeed">マイク</span>
+</div>
+<div class="w-10 h-5 bg-primary/80 rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-lg"></div>
+</div>
+</div>
+</div>
+<!-- Snap Beauty Lens / Effects: Launch hidden. PoC via ?tlvEffectsQa=1 or ?tlvEffectsDebug=1. Keep markup. Beauty Candidates -->
+<div class="border-t border-white/5 my-4 pt-4 space-y-3 overflow-x-hidden max-w-full hidden" data-tlv-effects-panel hidden>
+<div class="flex items-center justify-between px-2">
+<span class="text-label-md" data-i18n="golive.effects">エフェクト</span>
+<span class="text-[10px] text-on-surface-variant" data-tlv-effects-status>OFF</span>
+</div>
+<button type="button" data-tlv-effects-off class="min-h-11 w-full text-xs px-3 py-2.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left" data-i18n="golive.effectOff">エフェクトOFF</button>
+<div class="px-2 space-y-2 hidden" data-tlv-effects-candidates>
+<div class="text-[10px] uppercase tracking-widest text-on-surface-variant" data-i18n="golive.beautyCandidates">Beauty候補</div>
+<div class="grid grid-cols-3 md:grid-cols-4 gap-2 overflow-x-hidden" data-tlv-effects-candidates-grid></div>
+</div>
+<div class="px-2 text-[10px] text-on-surface-variant leading-snug hidden" data-tlv-effects-empty>公開 Effect は Human Visual QA 後に追加されます。</div>
+<div class="px-2 text-[10px] uppercase tracking-widest text-on-surface-variant hidden" data-tlv-effects-qa-label>QA Catalog</div>
+<div class="px-2 grid grid-cols-3 md:grid-cols-4 gap-2 max-h-56 overflow-y-auto overflow-x-hidden" data-tlv-effects-grid></div>
+<div class="px-2 text-[10px] text-on-surface-variant leading-snug" data-tlv-effects-error hidden></div>
+<div class="px-2 space-y-2 hidden" data-tlv-effects-debug>
+<div class="text-[10px] uppercase tracking-widest text-amber-400/90">Effects debug</div>
+<label class="block text-[10px] text-on-surface-variant">Lens ID (debug only)</label>
+<input type="text" data-tlv-effects-debug-lens autocomplete="off" class="w-full min-h-11 text-xs px-2 rounded-lg bg-white/5 border border-white/10"/>
+<label class="block text-[10px] text-on-surface-variant">Group ID (allowlist only)</label>
+<input type="text" data-tlv-effects-debug-group autocomplete="off" class="w-full min-h-11 text-xs px-2 rounded-lg bg-white/5 border border-white/10"/>
+<button type="button" data-tlv-effects-debug-apply class="min-h-11 w-full text-xs px-3 py-2 rounded-lg bg-white/5 border border-amber-500/30">Apply debug Lens</button>
+</div>
+</div>
+<div class="border-t border-white/5 my-4 pt-4 space-y-3" data-tlv-beauty-panel data-tlv-camera-adjust="1">
+<div class="flex items-center justify-between p-2 rounded-xl hover:bg-white/5 transition-all" data-tlv-beauty-toggle-row>
+<div class="flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant text-lg mr-3" data-icon="tune">tune</span>
+<span class="text-label-md" data-i18n="golive.beauty">カメラ調整</span>
+</div>
+<div class="w-10 h-5 bg-white/10 rounded-full relative cursor-pointer" data-tlv-beauty-toggle>
+<div class="absolute left-0.5 top-0.5 w-4 h-4 bg-white/40 rounded-full shadow-lg" data-tlv-beauty-toggle-knob></div>
+</div>
+</div>
+<div class="space-y-3 px-2 pb-1 hidden" data-tlv-beauty-sliders>
+<div class="space-y-1">
+<div class="flex justify-between text-[10px] text-on-surface-variant uppercase tracking-widest"><span data-i18n="golive.brightness">明るさ</span><span data-tlv-beauty-val="brightness">0</span></div>
+<input data-tlv-beauty-param="brightness" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary" type="range" min="-20" max="20" value="0"/>
+</div>
+<button type="button" data-tlv-camera-adjust-reset class="min-h-11 w-full text-xs px-3 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left" data-i18n="golive.cameraAdjustReset">リセット</button>
+<div class="space-y-1 hidden" data-tlv-camera-adjust-advanced hidden>
+<div class="flex justify-between text-[10px] text-on-surface-variant uppercase tracking-widest"><span data-i18n="golive.smoothing">なめらかさ</span><span data-tlv-beauty-val="smoothing">0</span></div>
+<input data-tlv-beauty-param="smoothing" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary" type="range" min="0" max="100" value="0"/>
+</div>
+<div class="space-y-1 hidden" data-tlv-camera-adjust-advanced hidden>
+<div class="flex justify-between text-[10px] text-on-surface-variant uppercase tracking-widest"><span data-i18n="golive.skinTone">色味</span><span data-tlv-beauty-val="skinTone">0</span></div>
+<input data-tlv-beauty-param="skinTone" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary" type="range" min="-20" max="20" value="0"/>
+</div>
+<div class="space-y-1 hidden" data-tlv-camera-adjust-advanced hidden>
+<div class="flex justify-between text-[10px] text-on-surface-variant uppercase tracking-widest"><span data-i18n="golive.intensity">強さ</span><span data-tlv-beauty-val="intensity">100</span></div>
+<input data-tlv-beauty-param="intensity" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary" type="range" min="0" max="100" value="100"/>
+</div>
+</div>
+</div>
+<!-- Dev/PoC only: shown when ?tlvBeautyPoc=1 on QA hosts — not Production Premium UI -->
+<div class="border-t border-amber-500/20 my-3 pt-3 space-y-2 hidden max-md:scroll-mt-24" data-tlv-beauty-poc-panel>
+<div class="px-2 text-[10px] uppercase tracking-widest text-amber-400/90">Beauty PoC (Dev)</div>
+<div class="flex flex-col gap-2 px-2 sm:flex-row sm:flex-wrap" data-tlv-beauty-poc-modes>
+<button type="button" data-tlv-beauty-poc-mode="off" class="min-h-11 w-full sm:w-auto sm:min-h-0 text-xs sm:text-[10px] px-3 py-2.5 sm:px-2 sm:py-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left sm:text-center">OFF</button>
+<button type="button" data-tlv-beauty-poc-mode="basic" class="min-h-11 w-full sm:w-auto sm:min-h-0 text-xs sm:text-[10px] px-3 py-2.5 sm:px-2 sm:py-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left sm:text-center">Basic</button>
+<button type="button" data-tlv-beauty-poc-mode="premium_tencent" class="min-h-11 w-full sm:w-auto sm:min-h-0 text-xs sm:text-[10px] px-3 py-2.5 sm:px-2 sm:py-1 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-left sm:text-center leading-snug">Premium PoC · Tencent</button>
+</div>
+<div class="px-2 text-[10px] text-on-surface-variant leading-snug" data-tlv-beauty-poc-status>PoC idle</div>
+</div>
+<!-- Dev/PoC only: SNOW-style Capability QA (?tlvBeautyPoc=1) — not Production -->
+<div class="border-t border-cyan-500/20 my-3 pt-3 space-y-2 hidden" data-tlv-beauty-snow-panel>
+<div class="px-2 text-[10px] uppercase tracking-widest text-cyan-300/90">SNOW Mode PoC (Dev)</div>
+<div class="flex flex-wrap gap-1.5 px-2" data-tlv-beauty-snow-tabs>
+<button type="button" data-tlv-beauty-snow-tab="OFF" class="min-h-10 text-[10px] px-2.5 py-2 rounded-lg bg-white/5 border border-white/10">OFF</button>
+<button type="button" data-tlv-beauty-snow-tab="FACE" class="min-h-10 text-[10px] px-2.5 py-2 rounded-lg bg-white/5 border border-white/10">FACE</button>
+<button type="button" data-tlv-beauty-snow-tab="MAKEUP" class="min-h-10 text-[10px] px-2.5 py-2 rounded-lg bg-white/5 border border-white/10">MAKEUP</button>
+<button type="button" data-tlv-beauty-snow-tab="AR" class="min-h-10 text-[10px] px-2.5 py-2 rounded-lg bg-white/5 border border-white/10">AR</button>
+<button type="button" data-tlv-beauty-snow-tab="FILTER" class="min-h-10 text-[10px] px-2.5 py-2 rounded-lg bg-white/5 border border-white/10">FILTER</button>
+<button type="button" data-tlv-beauty-snow-tab="ADVANCED" class="min-h-10 text-[10px] px-2.5 py-2 rounded-lg bg-white/5 border border-white/10">ADVANCED</button>
+</div>
+<div class="px-2 text-[10px] font-mono text-cyan-100/80 leading-snug whitespace-pre-wrap" data-tlv-beauty-snow-status>Snow idle</div>
+<div class="px-2 space-y-2 hidden" data-tlv-beauty-snow-pane="FACE">
+<div class="flex flex-wrap gap-1.5">
+<button type="button" data-tlv-beauty-snow-face="off" class="min-h-10 text-[10px] px-2 py-1.5 rounded-lg bg-white/5 border border-white/10">OFF</button>
+<button type="button" data-tlv-beauty-snow-face="natural" class="min-h-10 text-[10px] px-2 py-1.5 rounded-lg bg-white/5 border border-white/10">Natural</button>
+<button type="button" data-tlv-beauty-snow-face="strong" class="min-h-10 text-[10px] px-2 py-1.5 rounded-lg bg-white/5 border border-white/10">Strong</button>
+<button type="button" data-tlv-beauty-snow-face="max_qa" class="min-h-10 text-[10px] px-2 py-1.5 rounded-lg bg-white/5 border border-white/10">Max QA</button>
+</div>
+<div class="space-y-1.5" data-tlv-beauty-snow-face-sliders></div>
+</div>
+<div class="px-2 space-y-2 hidden max-h-48 overflow-y-auto" data-tlv-beauty-snow-pane="MAKEUP">
+<div class="text-[10px] text-on-surface-variant" data-tlv-beauty-snow-makeup-empty>Probe after Premium ready…</div>
+<div class="flex flex-col gap-1.5" data-tlv-beauty-snow-makeup-list></div>
+</div>
+<div class="px-2 space-y-2 hidden max-h-48 overflow-y-auto" data-tlv-beauty-snow-pane="AR">
+<div class="text-[10px] text-on-surface-variant" data-tlv-beauty-snow-ar-empty>Probe after Premium ready…</div>
+<div class="flex flex-col gap-1.5" data-tlv-beauty-snow-ar-list></div>
+</div>
+<div class="px-2 space-y-2 hidden" data-tlv-beauty-snow-pane="FILTER">
+<div class="flex flex-col gap-1.5 max-h-40 overflow-y-auto" data-tlv-beauty-snow-filter-list></div>
+<div class="space-y-1">
+<div class="flex justify-between text-[10px] text-on-surface-variant"><span>Filter intensity</span><span data-tlv-beauty-snow-filter-val>0.50</span></div>
+<input data-tlv-beauty-snow-filter-intensity type="range" min="0" max="100" value="50" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400"/>
+</div>
+</div>
+<div class="px-2 space-y-2 hidden" data-tlv-beauty-snow-pane="ADVANCED">
+<button type="button" data-tlv-beauty-snow-adv="animoji" class="min-h-10 w-full text-[10px] px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-left">Try Animoji · Advanced edition</button>
+<button type="button" data-tlv-beauty-snow-adv="avatar" class="min-h-10 w-full text-[10px] px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-left">Try Virtual Avatar · Advanced edition</button>
+<button type="button" data-tlv-beauty-snow-adv="virtual_background" class="min-h-10 w-full text-[10px] px-2 py-2 rounded-lg bg-white/5 border border-white/10 text-left">Try VB blur · needs segmentation module</button>
+<div class="text-[10px] text-on-surface-variant" data-tlv-beauty-snow-adv-note>REQUIRES_HIGHER_EDITION when Trial/Standard blocks Advanced APIs.</div>
+</div>
+</div>
+<!-- VTuber Basic V1 (AD-038) -->
+<div class="border-t border-white/5 my-3 pt-3 space-y-2" data-tlv-vtuber-panel>
+<div class="px-2 flex items-center justify-between">
+<span class="text-label-md" data-i18n="golive.vtuber">VTuber</span>
+<span class="text-[10px] text-on-surface-variant" data-tlv-vtuber-status>OFF</span>
+</div>
+<div class="flex flex-wrap gap-1.5 px-2">
+<button type="button" data-tlv-vtuber-mode="off" class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.vtuberOff">OFF</button>
+<button type="button" data-tlv-vtuber-mode="basic" class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.vtuberBasic">Basic</button>
+</div>
+<div class="px-2 space-y-1.5">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest" data-i18n="golive.userVrm">自分のVRM</label>
+<input type="file" accept=".vrm,model/gltf-binary" data-tlv-vtuber-file class="block w-full text-[10px] text-on-surface-variant file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-white/10 file:text-white"/>
+<button type="button" data-tlv-vtuber-preset class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10 w-full text-left" data-i18n="golive.loadPresetVrm">TLVプリセットVRMを読み込む</button>
+<p class="text-[10px] text-on-surface-variant leading-snug" data-tlv-vtuber-license>利用条件 / 作者: —</p>
+</div>
+<div class="px-2 space-y-1.5" data-tlv-vroid-hub data-tlv-vroid-state="disconnected">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest" data-i18n="golive.vroidHub">VRoid Hub</label>
+<div class="flex items-center justify-between gap-2">
+<span class="text-[10px] text-on-surface-variant" data-tlv-vroid-state-label>未連携</span>
+<button type="button" data-tlv-vroid-disconnect class="hidden text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.disconnect">連携を解除</button>
+</div>
+<button type="button" data-tlv-vroid-connect class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10 w-full text-left">VRoid Hubと連携</button>
+<p class="text-[10px] text-on-surface-variant leading-snug" data-tlv-vroid-msg></p>
+<div class="hidden space-y-1.5" data-tlv-vroid-connected-ui>
+<div class="flex flex-wrap gap-1.5">
+<button type="button" data-tlv-vroid-tab="mine" class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.myModels">マイモデル</button>
+<button type="button" data-tlv-vroid-tab="favorites" class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.favorites">お気に入り</button>
+</div>
+<div class="grid grid-cols-1 gap-2" data-tlv-vroid-list></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-1.5 px-2">
+<button type="button" data-tlv-vtuber-tracking class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10">トラッキング ON</button>
+<button type="button" data-tlv-vtuber-mirror class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10">ミラー ON</button>
+</div>
+<div class="flex flex-wrap gap-1.5 px-2">
+<button type="button" data-tlv-vtuber-camvis="both" class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.camPlusAvatar">カメラ+アバター</button>
+<button type="button" data-tlv-vtuber-camvis="avatar_only" class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.avatarOnly">アバターのみ</button>
+<button type="button" data-tlv-vtuber-camvis="camera_only" class="text-[10px] px-2 py-1 rounded-lg bg-white/5 border border-white/10" data-i18n="golive.cameraOnly">カメラのみ</button>
+</div>
+</div>
+<div class="pt-2 border-t border-white/5 space-y-4" data-tlv-stream-quality-decorative="1">
+<p class="text-[10px] text-on-surface-variant/80 leading-relaxed" data-i18n="golive.qualityNote">解像度 / FPS / ビットレートは未配線のため操作できません（シーン出力は端末プロファイルで自動制御）。</p>
+<div class="grid grid-cols-2 gap-3 opacity-50 pointer-events-none" aria-disabled="true">
+<div class="space-y-1">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest" data-i18n="golive.resolution">解像度</label>
+<select disabled class="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-[10px] text-white" data-i18n-aria="golive.resolutionDisabled" aria-label="解像度（未配線）">
+<option selected data-i18n="golive.autoProfile">自動（プロファイル）</option>
+<option>1080p</option>
+<option>720p</option>
+</select>
+</div>
+<div class="space-y-1">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest" data-i18n="golive.fps">FPS</label>
+<select disabled class="w-full bg-white/5 border border-white/10 rounded-lg px-2 py-1.5 text-[10px] text-white" data-i18n-aria="golive.fpsDisabled" aria-label="FPS（未配線）">
+<option selected>自動（≤30）</option>
+<option>60 FPS</option>
+<option>30 FPS</option>
+</select>
+</div>
+</div>
+<div class="space-y-2 opacity-50 pointer-events-none" aria-disabled="true">
+<div class="flex justify-between items-center">
+<label class="text-[10px] text-on-surface-variant uppercase tracking-widest" data-i18n="golive.bitrateNotWired">ビットレート（未配線）</label>
+</div>
+<input disabled class="w-full h-1 bg-white/10 rounded-lg appearance-none accent-primary" type="range" value="50" data-i18n-aria="golive.bitrateNotWired" aria-label="ビットレート（未配線）"/>
+</div>
+<div class="space-y-3 pt-2 hidden" data-tlv-dead-av-controls hidden>
+<div class="flex items-center justify-between opacity-50" aria-disabled="true">
+<span class="text-[11px] text-on-surface-variant" data-i18n="golive.autoQuality">自動画質</span>
+<div class="w-8 h-4 bg-white/10 rounded-full relative" title="V1 not wired">
+<div class="absolute left-0.5 top-0.5 w-3 h-3 bg-white/40 rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-[11px] text-on-surface-variant" data-i18n="golive.noiseCancel">ノイズ抑制</span>
+<div class="w-8 h-4 bg-white/10 rounded-full relative cursor-pointer">
+<div class="absolute left-0.5 top-0.5 w-3 h-3 bg-white/40 rounded-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-[11px] text-on-surface-variant" data-i18n="golive.echoCancel">エコー抑制</span>
+<div class="w-8 h-4 bg-primary/60 rounded-full relative cursor-pointer">
+<div class="absolute right-0.5 top-0.5 w-3 h-3 bg-white rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-panel rounded-2xl p-6 transition-all duration-300">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-md" data-i18n="golive.estimatedReach">想定リーチ</h3>
+<span class="material-symbols-outlined text-secondary" data-icon="trending_up">trending_up</span>
+</div>
+<div class="text-display-lg text-white font-bold leading-none mb-1">12.4K</div>
+<div class="text-[10px] text-on-surface-variant uppercase tracking-widest" data-i18n="golive.potentialViewers">想定視聴者</div>
+<div class="mt-4 h-16 w-full flex items-end space-x-1">
+<div class="flex-1 bg-primary/40 h-[40%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary/60 h-[60%] rounded-t-sm"></div>
+<div class="flex-1 bg-primary/80 h-[85%] rounded-t-sm"></div>
+<div class="flex-1 bg-secondary h-[100%] rounded-t-sm glow-primary"></div>
+<div class="flex-1 bg-primary/80 h-[70%] rounded-t-sm"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile LiveKit PoC dock (DEV ?tlvLiveKitPoc=1 only) — above START LIVE / SNOW; Production stays hidden -->
+<div class="fixed bottom-[9.75rem] left-3 right-3 z-[46] md:hidden hidden" data-tlv-livekit-poc-mobile-dock aria-label="LiveKit PoC Dev">
+<div class="mb-1.5 flex items-center justify-between gap-2 rounded-xl bg-black/55 border border-sky-400/30 px-3 py-2">
+<span class="text-[11px] text-amber-200" data-tlv-livekit-poc-auth-badge>Auth: checking…</span>
+<a href="/login.html" class="min-h-10 inline-flex items-center text-xs px-3 py-2 rounded-lg bg-white/15 border border-white/25 text-sky-100 underline" data-tlv-livekit-poc-sign-in hidden>Sign in</a>
+</div>
+<button type="button" data-tlv-livekit-poc-start class="w-full min-h-12 text-sm font-semibold px-4 py-3 rounded-2xl bg-sky-600 border border-sky-300/40 text-white shadow-2xl" disabled>Publish Formal → LiveKit</button>
+<div class="mt-1.5 text-[10px] text-center text-sky-100/90 leading-snug px-1" data-tlv-livekit-poc-status-mobile>LiveKit PoC · Sign in on this origin, then publish</div>
+</div>
+<!-- Mobile sticky Beauty / SNOW PoC dock (QA only) — above START LIVE NOW; Fullscreen QA also uses this sheet -->
+<div class="fixed bottom-[5.75rem] left-2 right-2 z-[45] md:hidden hidden rounded-2xl border border-cyan-500/40 bg-surface-container-highest/95 backdrop-blur-md shadow-2xl max-h-[42vh] overflow-y-auto" data-tlv-beauty-poc-mobile-dock data-tlv-beauty-snow-sheet aria-label="SNOW Beauty PoC Dev">
+<div class="sticky top-0 z-10 bg-surface-container-highest/95 backdrop-blur-md px-3 pt-3 pb-2 border-b border-white/10">
+<div class="text-[10px] uppercase tracking-widest text-cyan-300/90">SNOW Mode PoC (Dev)</div>
+<div class="mt-2 flex flex-wrap gap-1.5" data-tlv-beauty-snow-tabs>
+<button type="button" data-tlv-beauty-snow-tab="OFF" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">OFF</button>
+<button type="button" data-tlv-beauty-snow-tab="FACE" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">FACE</button>
+<button type="button" data-tlv-beauty-snow-tab="MAKEUP" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">MAKEUP</button>
+<button type="button" data-tlv-beauty-snow-tab="AR" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">AR</button>
+<button type="button" data-tlv-beauty-snow-tab="FILTER" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">FILTER</button>
+<button type="button" data-tlv-beauty-snow-tab="ADVANCED" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">ADV</button>
+</div>
+<div class="mt-2 text-[10px] font-mono text-cyan-100/80 leading-snug" data-tlv-beauty-snow-status>Snow idle</div>
+</div>
+<div class="px-3 pb-3 pt-2 space-y-2">
+<div class="grid grid-cols-1 gap-2" data-tlv-beauty-poc-modes>
+<button type="button" data-tlv-beauty-poc-mode="off" class="min-h-11 w-full text-xs px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-left">Core OFF</button>
+<button type="button" data-tlv-beauty-poc-mode="basic" class="min-h-11 w-full text-xs px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-left">Core Basic</button>
+<button type="button" data-tlv-beauty-poc-mode="premium_tencent" class="min-h-11 w-full text-xs px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-left leading-snug">Core Premium · Tencent</button>
+</div>
+<div class="space-y-2 hidden" data-tlv-beauty-snow-pane="FACE">
+<div class="flex flex-wrap gap-1.5">
+<button type="button" data-tlv-beauty-snow-face="off" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">OFF</button>
+<button type="button" data-tlv-beauty-snow-face="natural" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">Natural</button>
+<button type="button" data-tlv-beauty-snow-face="strong" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">Strong</button>
+<button type="button" data-tlv-beauty-snow-face="max_qa" class="min-h-11 text-xs px-2.5 py-2 rounded-xl bg-white/5 border border-white/10">Max QA</button>
+</div>
+<div class="space-y-1.5" data-tlv-beauty-snow-face-sliders></div>
+</div>
+<div class="space-y-2 hidden max-h-36 overflow-y-auto" data-tlv-beauty-snow-pane="MAKEUP">
+<div class="text-[10px] text-on-surface-variant" data-tlv-beauty-snow-makeup-empty>MATERIAL_REQUIRED if empty</div>
+<div class="flex flex-col gap-1.5" data-tlv-beauty-snow-makeup-list></div>
+</div>
+<div class="space-y-2 hidden max-h-36 overflow-y-auto" data-tlv-beauty-snow-pane="AR">
+<div class="text-[10px] text-on-surface-variant" data-tlv-beauty-snow-ar-empty>CUSTOM_MATERIAL_REQUIRED if no cat/animal</div>
+<div class="flex flex-col gap-1.5" data-tlv-beauty-snow-ar-list></div>
+</div>
+<div class="space-y-2 hidden" data-tlv-beauty-snow-pane="FILTER">
+<div class="flex flex-col gap-1.5 max-h-32 overflow-y-auto" data-tlv-beauty-snow-filter-list></div>
+<div class="space-y-1">
+<div class="flex justify-between text-[10px] text-on-surface-variant"><span>Intensity</span><span data-tlv-beauty-snow-filter-val>0.50</span></div>
+<input data-tlv-beauty-snow-filter-intensity type="range" min="0" max="100" value="50" class="w-full h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-cyan-400"/>
+</div>
+</div>
+<div class="space-y-2 hidden" data-tlv-beauty-snow-pane="ADVANCED">
+<button type="button" data-tlv-beauty-snow-adv="animoji" class="min-h-11 w-full text-xs px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-left">Animoji</button>
+<button type="button" data-tlv-beauty-snow-adv="avatar" class="min-h-11 w-full text-xs px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-left">Virtual Avatar</button>
+<button type="button" data-tlv-beauty-snow-adv="virtual_background" class="min-h-11 w-full text-xs px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-left">VB blur</button>
+</div>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 md:hidden px-4 bg-surface-container-highest/80 backdrop-blur-lg border-t border-white/10 shadow-[0_-4px_20px_rgba(0,0,0,0.5)] rounded-t-xl">
+<a class="flex flex-col items-center justify-center text-secondary drop-shadow-[0_0_8px_rgba(251,171,255,0.6)] active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="videocam" style="font-variation-settings: 'FILL' 1;">videocam</span>
+<span class="text-label-sm font-label-sm" data-i18n="golive.liveNav">配信</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-on-surface active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="layers">layers</span>
+<span class="text-label-sm font-label-sm" data-i18n="golive.scenes">シーン</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-on-surface active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="graphic_eq">graphic_eq</span>
+<span class="text-label-sm font-label-sm" data-i18n="golive.audio">音声</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-on-surface active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="text-label-sm font-label-sm" data-i18n="golive.chat">チャット</span>
+</a>
+</nav>
+<!-- Mobile Sticky Start Live Button -->
+<div class="fixed bottom-20 left-4 right-4 z-40 md:hidden">
+<button type="button" data-tlv-go-live-cta="start-now" class="w-full py-5 rounded-2xl primary-gradient text-white font-bold text-headline-md glow-primary shadow-2xl transition-transform active:scale-95 flex items-center justify-center tracking-wider">今すぐ配信開始</button>
+</div>
+<script>
+    // Simple micro-interaction for cards
+    document.querySelectorAll('.glass-panel').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.classList.add('scale-[1.01]');
+        });
+        card.addEventListener('mouseleave', () => {
+            card.classList.remove('scale-[1.01]');
+        });
+    });
+    
+    // Clock update simulation
+    setInterval(() => {
+        const clocks = document.querySelectorAll('.text-label-md.font-bold.text-white.leading-none');
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('ja-JP', { hour12: false }) + ' JST';
+        clocks.forEach(c => {
+            if(c.innerText.includes('JST')) c.innerText = timeStr;
+        });
+    }, 1000);
+
+    // Dynamic stats update simulation
+    setInterval(() => {
+        const items = document.querySelectorAll('.text-headline-md.text-white.text-lg');
+        items.forEach(item => {
+            if(item.innerText.includes('ms')) {
+                const newVal = 10 + Math.floor(Math.random() * 5);
+                item.innerText = newVal + 'ms';
+            }
+        });
+    }, 3000);
+</script>
+<!-- Routes only -->
+<script src="one-tlv-go-live-route-bridge.js"></script>
+<!-- Phase1: media + existing broadcast service (no new SDK) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="chat-supabase-config.js"></script>
+<script src="talk-runtime.js"></script>
+<script src="auth-current-user.js"></script>
+<script src="tasu-supabase-client.js"></script>
+<script src="chat-user-identity.js"></script>
+<script src="live/tlv-feature-flags.js"></script>
+<script src="live/live-config.js"></script>
+<script src="live/live-create.js"></script>
+<script src="live/live-broadcasts.js"></script>
+<script src="live/tlv-live-duration.js"></script>
+<script src="live/tlv-live-viewer-count-contract.js"></script>
+<script src="live/tlv-live-momentum-v1.js"></script>
+<script src="short-video/short-video-i18n.js"></script>
+<script src="live/tlv-go-live-labels-ja.js"></script>
+<script src="live/tlv-platform-live-bridge.js"></script>
+<script src="one-tlv-go-live-media-controller.js"></script>
+<script src="tasful-option-access-client.js"></script>
+<script src="one-tlv-go-live-beauty.js"></script>
+<script src="one-tlv-go-live-beauty-tencent-poc.js"></script>
+<script src="one-tlv-go-live-beauty-tencent-snow-poc.js"></script>
+<script src="qa/tlv-snap-camera-kit/snap-geometry-contract.js"></script>
+<script src="qa/tlv-snap-camera-kit/beauty-premium-entitlement-gate.js"></script>
+<script src="tlv-snap-effects.config.example.js"></script>
+<script src="one-tlv-snap-effects-token-provider.js"></script>
+<script src="one-tlv-snap-effects-catalog.js"></script>
+<script src="one-tlv-snap-effects-init-owner.js"></script>
+<script src="one-tlv-snap-effects-origin-contract.js"></script>
+<script src="one-tlv-snap-effects-lens-lifecycle.js"></script>
+<script src="live/live-livekit-config.example.js"></script>
+<script src="live/tlv-livekit-room.js"></script>
+<script src="live/providers/livekit-live-provider.js"></script>
+<script src="live/tlv-livekit-formal.js"></script>
+<script src="live/livekit-poc-room.js"></script>
+<script src="live/providers/livekit-live-provider-poc.js"></script>
+<script src="one-tlv-go-live-livekit-poc.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/",
+    "@pixiv/three-vrm": "https://cdn.jsdelivr.net/npm/@pixiv/three-vrm@3.5.3/lib/three-vrm.module.js",
+    "@mediapipe/tasks-vision": "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/+esm",
+    "@snap/camera-kit": "/qa/tlv-snap-camera-kit/vendor/camera-kit.bundle.mjs"
+  }
+}
+</script>
+<script type="module" src="one-tlv-go-live-snap-effects.mjs"></script>
+<script type="module" src="one-tlv-go-live-vtuber-basic.mjs"></script>
+<script src="one-tlv-vroid-hub-client.js"></script>
+<script src="one-tlv-vroid-hub-chrome-e2e.js?v=8"></script>
+<script src="one-tlv-go-live-service.js"></script>
+<script src="one-tlv-go-live-broadcaster-hud.js"></script>
+<script src="one-tlv-scene-asset-store.js"></script>
+<script src="live/live-comments.js"></script>
+<script src="one-tlv-scene-comments-adapter.js"></script>
+<script src="one-tlv-scene-templates.js"></script>
+<script src="one-tlv-scene-editor.js"></script>
+<script src="one-tlv-go-live-data-adapter.js"></script>
+</body></html>

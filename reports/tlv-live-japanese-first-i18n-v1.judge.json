@@ -1,0 +1,35 @@
+{
+  "at": "2026-09-03T21:54:07.011Z",
+  "judge": "INDEPENDENT",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "name": "reuse_existing_i18n_engine",
+      "pass": true
+    },
+    {
+      "name": "default_japanese_not_browser_en",
+      "pass": true
+    },
+    {
+      "name": "ja_en_dict_complete",
+      "pass": true
+    },
+    {
+      "name": "user_codes_separated",
+      "pass": true
+    },
+    {
+      "name": "cta_and_persistence_wired",
+      "pass": true
+    },
+    {
+      "name": "no_pipeline_or_beauty_rewrite",
+      "pass": true
+    },
+    {
+      "name": "qa_evidence_present",
+      "pass": true
+    }
+  ]
+}
