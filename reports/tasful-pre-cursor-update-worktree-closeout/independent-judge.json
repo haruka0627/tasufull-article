@@ -1,0 +1,23 @@
+{
+  "independent_judge": "PASS",
+  "failures": [],
+  "commit_eligible_a12": [
+    "one-tlv-go-live.html",
+    "one-tlv-go-live-beauty.js",
+    "one-tlv-go-live-data-adapter.js",
+    "one-tlv-go-live-service.js",
+    "one-tlv-vroid-hub-client.js",
+    "live/tlv-go-live-labels-ja.js"
+  ],
+  "commit_eligible_a3": [
+    "one-tlv-route-bridge.js",
+    "live/create.html",
+    "live/go-live-canonical-redirect.html"
+  ],
+  "excluded_mixed": [
+    "live/live-config.js",
+    "docs/CHANGELOG.md",
+    "docs/PROJECT_STATUS.md",
+    "docs/TODO.md"
+  ]
+}
