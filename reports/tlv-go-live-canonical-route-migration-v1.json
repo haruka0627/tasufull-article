@@ -1,0 +1,244 @@
+{
+  "ok": true,
+  "generatedAt": "2026-09-03T21:54:21.480Z",
+  "base": "http://127.0.0.1:8788",
+  "canonical": "/one-tlv-go-live",
+  "legacy": "/live/create/",
+  "checks": [
+    {
+      "name": "source_bridge_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_bridge_no_legacy_create",
+      "ok": true
+    },
+    {
+      "name": "source_chrome_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_settings_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_live_config_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_create_page_redirect_only",
+      "ok": true
+    },
+    {
+      "name": "source_create_page_not_dual_studio",
+      "ok": true
+    },
+    {
+      "name": "source_redirects_no_splat",
+      "ok": true
+    },
+    {
+      "name": "source_redirects_exact_legacy",
+      "ok": true
+    },
+    {
+      "name": "source_no_canonical_to_legacy",
+      "ok": true
+    },
+    {
+      "name": "source_live_create_js_not_redirected",
+      "ok": true
+    },
+    {
+      "name": "source_html_stub",
+      "ok": true
+    },
+    {
+      "name": "source_entrypoint_discover_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_entrypoint_shorts_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_entrypoint_left-nav_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_entrypoint_sidebar_canonical",
+      "ok": true
+    },
+    {
+      "name": "source_entrypoint_studio-sidebar_canonical",
+      "ok": true
+    },
+    {
+      "name": "formal_start_live_markup",
+      "ok": true
+    },
+    {
+      "name": "formal_vrm_hub_markup",
+      "ok": true
+    },
+    {
+      "name": "formal_scene_preview_markup",
+      "ok": true
+    },
+    {
+      "name": "formal_camera_mic_markup",
+      "ok": true
+    },
+    {
+      "name": "pipeline_startHost_composited_untouched",
+      "ok": true
+    },
+    {
+      "name": "pipeline_livekit_publish_untouched",
+      "ok": true
+    },
+    {
+      "name": "pipeline_media_vrm_scene_untouched",
+      "ok": true
+    },
+    {
+      "name": "pipeline_start_stop_cleanup_present",
+      "ok": true
+    },
+    {
+      "name": "resource_live_create_js_not_redirected",
+      "ok": true,
+      "status": 200,
+      "type": "application/javascript",
+      "bytes": 6558
+    },
+    {
+      "name": "legacy_http_stub_200",
+      "ok": true,
+      "status": 200,
+      "note": "static stub; client replace to canonical"
+    },
+    {
+      "name": "desktop_home_http_200",
+      "ok": true
+    },
+    {
+      "name": "desktop_sidebar_go_live",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live",
+      "bound": "/one-tlv-go-live"
+    },
+    {
+      "name": "desktop_sidebar_not_legacy",
+      "ok": true
+    },
+    {
+      "name": "desktop_home_go_live",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live"
+    },
+    {
+      "name": "direct_canonical_http_200",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live"
+    },
+    {
+      "name": "formal_start_present",
+      "ok": true
+    },
+    {
+      "name": "formal_vroid_present",
+      "ok": true
+    },
+    {
+      "name": "formal_vrm_present",
+      "ok": true
+    },
+    {
+      "name": "formal_preview_present",
+      "ok": true
+    },
+    {
+      "name": "formal_camera_present",
+      "ok": true
+    },
+    {
+      "name": "formal_mic_present",
+      "ok": true
+    },
+    {
+      "name": "desktop_canonical_no_overflow",
+      "ok": true
+    },
+    {
+      "name": "canonical_reload_no_loop",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live",
+      "before": "http://127.0.0.1:8788/one-tlv-go-live"
+    },
+    {
+      "name": "legacy_lands_canonical",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live",
+      "hops": [
+        "http://127.0.0.1:8788/live/create/",
+        "http://127.0.0.1:8788/one-tlv-go-live"
+      ]
+    },
+    {
+      "name": "redirect_loop_zero",
+      "ok": true,
+      "hops": [
+        "http://127.0.0.1:8788/live/create/",
+        "http://127.0.0.1:8788/one-tlv-go-live"
+      ]
+    },
+    {
+      "name": "legacy_query_preserved",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live?talkDev=1",
+      "status": 200
+    },
+    {
+      "name": "legacy_create_html_canonical",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live",
+      "status": 200
+    },
+    {
+      "name": "mobile_fab_go_live",
+      "ok": true,
+      "href": "http://127.0.0.1:8788/one-tlv-go-live"
+    },
+    {
+      "name": "mobile_no_overflow",
+      "ok": true
+    },
+    {
+      "name": "mobile_start_cta",
+      "ok": true
+    },
+    {
+      "name": "desktop_runtime_errors_zero",
+      "ok": true
+    },
+    {
+      "name": "mobile_runtime_errors_zero",
+      "ok": true
+    },
+    {
+      "name": "broken_js_css_404_zero",
+      "ok": true
+    },
+    {
+      "name": "prior_real_live_e2e_closeout_cited",
+      "ok": true
+    }
+  ],
+  "failures": [],
+  "findings": [
+    "dev http://127.0.0.1:8788"
+  ],
+  "shots": "C:\\Users\\rubih\\tasufull-article\\reports\\ui-review\\tlv-go-live-canonical-route-migration-v1",
+  "productionChanged": "NO"
+}

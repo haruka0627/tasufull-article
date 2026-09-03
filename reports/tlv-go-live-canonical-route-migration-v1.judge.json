@@ -1,0 +1,31 @@
+{
+  "at": "2026-09-03T21:54:21.551Z",
+  "judge": "INDEPENDENT",
+  "verdict": "PASS",
+  "checks": [
+    {
+      "name": "canonical_route_is_formal_studio",
+      "pass": true
+    },
+    {
+      "name": "legacy_create_is_redirect_not_dual_studio",
+      "pass": true
+    },
+    {
+      "name": "redirects_exact_no_splat_no_loop",
+      "pass": true
+    },
+    {
+      "name": "user_entrypoints_not_legacy",
+      "pass": true
+    },
+    {
+      "name": "live_pipeline_not_rewritten",
+      "pass": true
+    },
+    {
+      "name": "qa_evidence_pass",
+      "pass": true
+    }
+  ]
+}

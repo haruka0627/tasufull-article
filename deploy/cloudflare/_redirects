@@ -17,3 +17,9 @@
 
 # Platform contact (legacy /contact links on index-top etc.)
 /contact            /iwasho/contact.html  301
+
+# TLV Formal Go Live Studio. Exact page paths only — never splat /live/create/*
+# (live/live-create.js and /live/create/_next/* must keep serving as files).
+/live/create            /one-tlv-go-live  302
+/live/create/           /one-tlv-go-live  302
+/live/create.html       /one-tlv-go-live  302
