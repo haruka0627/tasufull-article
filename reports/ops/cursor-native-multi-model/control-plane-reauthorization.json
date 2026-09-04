@@ -1,0 +1,65 @@
+{
+  "auth": {
+    "ok": true,
+    "status": "FIXABLE",
+    "parsed": {
+      "STATUS": "FIXABLE",
+      "ROLE": "REVIEWER",
+      "ACTIVE_TASK_ID": "TASFUL_CURSOR_NATIVE_MULTI_MODEL_CLOSED_LOOP_V1",
+      "SCOPE_VALID": "YES",
+      "NEXT_TASK_SELECTED": "NO",
+      "NEW_PHASE_SELECTED": "NO",
+      "HUMAN_GATE": "NO",
+      "PRODUCTION_GATE_BYPASS": "NO",
+      "CRITICAL_HIGH_ACCEPTANCE": "NO",
+      "NEXT_INSTRUCTION": "Set ack=true only in probe-state.json; make no production changes and do not select or start another task.",
+      "FINDINGS": [
+        {
+          "severity": "FIXABLE",
+          "file": "reports/ops/cursor-native-multi-model/probe-state.json",
+          "finding": "ack is false; requiredAck is true."
+        }
+      ]
+    }
+  },
+  "route": {
+    "next": "EXECUTOR",
+    "toRole": "EXECUTOR",
+    "reason": "FIXABLE_AUTO_RETURN",
+    "autoFix": true,
+    "failClosed": false,
+    "retryCount": 1,
+    "loopSafety": {
+      "retryCount": 1,
+      "sameCauseRetryMax": 1,
+      "lastFailureFingerprint": "ack-false",
+      "checkpointId": "probe",
+      "resumeFrom": "reviewer",
+      "stopReason": null,
+      "autoFixEnabled": true
+    }
+  },
+  "appliedOk": false,
+  "verify": {
+    "ok": false,
+    "reason": "ACK_MISSING"
+  },
+  "secondApply": {
+    "appliedOk": true,
+    "verify": {
+      "ok": true,
+      "state": {
+        "activeTaskId": "TASFUL_CURSOR_NATIVE_MULTI_MODEL_CLOSED_LOOP_V1",
+        "probeId": "harmless-local-handoff-v1",
+        "requiredAck": true,
+        "ack": true,
+        "productionChanged": "NO",
+        "cloudAgentUsed": false,
+        "chatgptWebRelayUsed": false,
+        "directPaidApiCalls": 0,
+        "at": "2026-09-04T01:14:05.162Z",
+        "lastFix": "SET_ACK_TRUE"
+      }
+    }
+  }
+}

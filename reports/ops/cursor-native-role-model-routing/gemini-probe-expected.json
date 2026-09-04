@@ -1,0 +1,14 @@
+{
+  "activeTaskId": "TASFUL_CURSOR_NATIVE_ROLE_MODEL_ROUTING_SSOT_V1",
+  "probeId": "second-opinion-red-team-gemini-v1",
+  "required": {
+    "SOFTWARE_BUILDER": "cursor-grok-4.6-high",
+    "PLANNER_REVIEWER": "gpt-5.6-sol-medium",
+    "INDEPENDENT_JUDGE": "claude-sonnet-5-thinking-high",
+    "SECOND_OPINION_RED_TEAM": "gemini-3.1-pro",
+    "RESEARCHER": "cursor-grok-4.6-high",
+    "DETERMINISTIC_VERIFIER": "TASFUL_LOCAL_TOOLING"
+  },
+  "productionChanged": "NO",
+  "sourceMutationAllowed": false
+}

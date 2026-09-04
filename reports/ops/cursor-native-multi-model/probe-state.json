@@ -1,0 +1,12 @@
+{
+  "activeTaskId": "TASFUL_CURSOR_NATIVE_MULTI_MODEL_CLOSED_LOOP_V1",
+  "probeId": "harmless-local-handoff-v1",
+  "requiredAck": true,
+  "ack": true,
+  "productionChanged": "NO",
+  "cloudAgentUsed": false,
+  "chatgptWebRelayUsed": false,
+  "directPaidApiCalls": 0,
+  "at": "2026-09-04T01:14:05.162Z",
+  "lastFix": "SET_ACK_TRUE"
+}

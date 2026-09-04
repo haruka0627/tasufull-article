@@ -1,0 +1,174 @@
+{
+  "activeTask": "TASFUL_CURSOR_NATIVE_ROLE_MODEL_ROUTING_SSOT_V1",
+  "at": "2026-09-04T01:24:49.271Z",
+  "passed": 33,
+  "failed": 0,
+  "total": 33,
+  "checks": [
+    {
+      "name": "SOFTWARE_BUILDER_GROK",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "PLANNER_REVIEWER_GPT",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "INDEPENDENT_JUDGE_CLAUDE",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SECOND_OPINION_GEMINI_31",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "RESEARCHER_GROK",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DETERMINISTIC_NO_LLM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "LOOP_LIB_IMPORTS_ROUTING",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "GEMINI_SLUG_DISCOVERED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DO_NOT_BIND_GEMINI_37_TO_RED_TEAM",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "AUTOMATIC_FALLBACK_DENY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NO_PREAUTHORIZED_FALLBACKS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CHATGPT_WEB_SUPERSEDED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CHATGPT_WEB_STILL_BLOCKED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CLOUD_AGENT_STILL_BLOCKED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "BUILDER_CANNOT_SELF_PASS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "JUDGE_NO_EDIT",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "RED_TEAM_NOT_MANDATORY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "BUILDER_DISPATCH_OK",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ROLE_MODEL_MISMATCH_REJECTED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "UNAUTHORIZED_SUBSTITUTION_REJECTED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CLOUD_AGENT_DENY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WEB_RELAY_DENY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DIRECT_API_DENY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NEW_TASK_ESCAPE_DENY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "UNAUTHORIZED_ROLE_START_DENY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DETERMINISTIC_LLM_AUTHORITY_DENIED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DETERMINISTIC_TOOLING_OK",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SECOND_OPINION_DEFAULT_OFF",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "SECOND_OPINION_ON_DISAGREEMENT",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "MODEL_UNAVAILABLE_HUMAN_GATE",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NO_CLOUD_AGENT_LAUNCH",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NO_CURSOR_API_KEY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ALL_ROLES_COVERED",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

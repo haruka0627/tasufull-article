@@ -1,0 +1,28 @@
+{
+  "semantic": {
+    "ok": true,
+    "status": "PASS",
+    "parsed": {
+      "STATUS": "PASS",
+      "ROLE": "SECOND_OPINION_RED_TEAM",
+      "ACTIVE_TASK_ID": "TASFUL_CURSOR_NATIVE_ROLE_MODEL_ROUTING_SSOT_V1",
+      "SCOPE_VALID": "YES",
+      "NEXT_TASK_SELECTED": "NO",
+      "NEW_PHASE_SELECTED": "NO",
+      "HUMAN_GATE": "NO",
+      "PRODUCTION_GATE_BYPASS": "NO",
+      "CRITICAL_HIGH_ACCEPTANCE": "NO",
+      "ASSIGNED_MODEL": "gemini-3.1-pro",
+      "SOURCE_MUTATED": "NO",
+      "NEXT_INSTRUCTION": "",
+      "FINDINGS": []
+    }
+  },
+  "dispatch": {
+    "ok": true,
+    "role": "SECOND_OPINION_RED_TEAM",
+    "model": "gemini-3.1-pro",
+    "fallbackUsed": false,
+    "automaticFallback": "DENY"
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "activeTask": "TASFUL_CURSOR_NATIVE_MULTI_MODEL_CLOSED_LOOP_V1",
+  "at": "2026-09-04T01:22:04.899Z",
+  "passed": 23,
+  "failed": 0,
+  "total": 23,
+  "checks": [
+    {
+      "name": "NO_.tasful_DIR",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CONTROL_PLANE_REUSED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "THREE_BOT_ROUTE_REUSED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CHATGPT_WEB_STILL_BLOCKED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CLOUD_AGENT_STILL_BLOCKED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "REVIEWER_MODEL_GPT_FAMILY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "JUDGE_MODEL_CLAUDE_FAMILY",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "BUILDER_NOT_SAME_AS_JUDGE",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "RETRY_MAX_REUSED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DENY_CHATGPT_WEB",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DENY_CHATGPT_WEB_LOCAL_UI",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DENY_CLOUD_AGENT",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DENY_PAID_API_URL",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "INITIAL_PROBE_ACK_FALSE",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "REVIEWER_FIXABLE_AUTHORIZED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "FIXABLE_AUTO_LOOP_ROUTE",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "HARMLESS_FIX_APPLIED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "DETERMINISTIC_PROBE_PASS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "INJECT_NEXT_TASK_DENIED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "WRONG_TASK_DENIED",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CIRCUIT_BREAKER_STOP",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NO_CLOUD_AGENT_LAUNCH",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "NO_CURSOR_API_KEY",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
