@@ -5,7 +5,7 @@
 **Date:** 2026-09-04
 
 CURRENT_HEAD_BEFORE: `b1dbe803d067689c37851c5d475aae0b0ff3ec42`  
-FINAL_HEAD: (set after scoped commit)  
+FINAL_HEAD: `95b6459`  
 BRANCH: `cf-pages-deploy`
 
 SOFTWARE_BUILDER_MODEL: `cursor-grok-4.6-high`  
