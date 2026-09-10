@@ -1,9 +1,58 @@
 /**
- * Generated at deploy — do not commit. Source: deploy/cloudflare/stage-cloudflare-pages.mjs
+ * Supabase 接続設定（全ページ共通・tasu-supabase-client.js が参照）
+ *
+ * ローカル開発（127.0.0.1 / localhost）時は Staging プロジェクトを自動選択。
+ * 本番（tasful.jp / *.pages.dev）では必ず Production プロジェクトを使用。
+ *
+ * anon キーは公開鍵のため commit 可（service_role / sb_secret_... は絶対に入れない）。
  */
-window.TASU_CHAT_SUPABASE_CONFIG = {
-  url: "https://ddojquacsyqesrjhcvmn.supabase.co",
-  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkb2pxdWFjc3lxZXNyamhjdm1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NjgzOTAsImV4cCI6MjA5NDM0NDM5MH0.PtcRSCEDVBg5SCnQ9AMEWD2onkpPB7B6R8POQuDIzOA",
-};
+(function () {
+  var _isLocal = (function () {
+    try {
+      var h = String(window.location.hostname || "").toLowerCase();
+      if (h === "127.0.0.1" || h === "localhost") return true;
+    } catch {
+      /* ignore */
+    }
+    return false;
+  })();
 
-window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {};
+  var _me = {
+    id: "u_me",
+    displayName: "あなた",
+    avatarUrl: "https://placehold.co/64x64/f3ead4/967622?text=ME",
+  };
+
+  if (_isLocal) {
+    /* ローカル QA: Staging プロジェクト（ahlxuyvhzqdqaojiywmu）
+       Creator Content Registration API が Staging JWT を受け付ける環境と一致させる。 */
+    window.TASU_CHAT_SUPABASE_CONFIG = {
+      url: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
+      anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobHh1eXZoenFkcWFvaml5d211Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NTIxMDEsImV4cCI6MjA5ODQyODEwMX0.48PLkHjakY4ZivY7gC57JmoUwmOSA3PzrQeO2T-VWGg",
+      currentUserId: "u_me",
+      me: _me,
+    };
+    window.__MATCH_FUNCTIONS_BASE__ =
+      window.__MATCH_FUNCTIONS_BASE__ ||
+      "https://ahlxuyvhzqdqaojiywmu.supabase.co/functions/v1";
+  } else {
+    /* Production / pages.dev */
+    window.TASU_CHAT_SUPABASE_CONFIG = {
+      url: "https://ddojquacsyqesrjhcvmn.supabase.co",
+      anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkb2pxdWFjc3lxZXNyamhjdm1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NjgzOTAsImV4cCI6MjA5NDM0NDM5MH0.PtcRSCEDVBg5SCnQ9AMEWD2onkpPB7B6R8POQuDIzOA",
+      currentUserId: "u_me",
+      me: _me,
+    };
+    window.__MATCH_FUNCTIONS_BASE__ =
+      window.__MATCH_FUNCTIONS_BASE__ ||
+      "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1";
+  }
+})();
+
+window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {
+  webPushVapidPublicKey: "BJb_vSGMXgVdjzk8LQJMnCVxb5nO6zsn857RDTBq3iT00n7R4dde1nON0LkQ2fTX5I9VYg_0NSq3B3iMzXwSjWA",
+  pushIncomingEnabled: true,
+  pushSubscribeEnabled: true,
+};

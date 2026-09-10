@@ -6,23 +6,56 @@
  *   - anon public   → anonKey
  *
  * members が null のときは URL / anonKey が別プロジェクトになっていないか確認。
+ *
+ * ローカル開発（127.0.0.1 / localhost）時は Staging プロジェクトを自動選択。
+ * 本番（tasful.jp / *.pages.dev）では必ず Production プロジェクトを使用。
  */
-window.TASU_CHAT_SUPABASE_CONFIG = {
-  url: "https://ddojquacsyqesrjhcvmn.supabase.co",
-  /** Dashboard → API → anon public（sb_publishable_...）。service_role（sb_secret_...）は入れない */
-  anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkb2pxdWFjc3lxZXNyamhjdm1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NjgzOTAsImV4cCI6MjA5NDM0NDM5MH0.PtcRSCEDVBg5SCnQ9AMEWD2onkpPB7B6R8POQuDIzOA",
-  currentUserId: "u_me",
-  me: {
+(function () {
+  var _isLocal = (function () {
+    try {
+      var h = String(window.location.hostname || "").toLowerCase();
+      if (h === "127.0.0.1" || h === "localhost") return true;
+    } catch {
+      /* ignore */
+    }
+    return false;
+  })();
+
+  var _me = {
     id: "u_me",
     displayName: "あなた",
     avatarUrl: "https://placehold.co/64x64/f3ead4/967622?text=ME",
-  },
-};
+  };
 
-/** MATCH Edge Functions base — override per environment if needed */
-window.__MATCH_FUNCTIONS_BASE__ =
-  window.__MATCH_FUNCTIONS_BASE__ ||
-  "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1";
+  if (_isLocal) {
+    /* ローカル QA: Staging プロジェクト（ahlxuyvhzqdqaojiywmu）
+       Creator Content Registration API が Staging JWT を受け付ける環境と一致させる。
+       anon キーは公開鍵のため commit 可。 */
+    window.TASU_CHAT_SUPABASE_CONFIG = {
+      url: "https://ahlxuyvhzqdqaojiywmu.supabase.co",
+      anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFobHh1eXZoenFkcWFvaml5d211Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4NTIxMDEsImV4cCI6MjA5ODQyODEwMX0.48PLkHjakY4ZivY7gC57JmoUwmOSA3PzrQeO2T-VWGg",
+      currentUserId: "u_me",
+      me: _me,
+    };
+    window.__MATCH_FUNCTIONS_BASE__ =
+      window.__MATCH_FUNCTIONS_BASE__ ||
+      "https://ahlxuyvhzqdqaojiywmu.supabase.co/functions/v1";
+  } else {
+    /* Production / pages.dev */
+    window.TASU_CHAT_SUPABASE_CONFIG = {
+      url: "https://ddojquacsyqesrjhcvmn.supabase.co",
+      /** Dashboard → API → anon public（sb_publishable_...）。service_role（sb_secret_...）は入れない */
+      anonKey:
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkb2pxdWFjc3lxZXNyamhjdm1uIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg3NjgzOTAsImV4cCI6MjA5NDM0NDM5MH0.PtcRSCEDVBg5SCnQ9AMEWD2onkpPB7B6R8POQuDIzOA",
+      currentUserId: "u_me",
+      me: _me,
+    };
+    window.__MATCH_FUNCTIONS_BASE__ =
+      window.__MATCH_FUNCTIONS_BASE__ ||
+      "https://ddojquacsyqesrjhcvmn.supabase.co/functions/v1";
+  }
+})();
 
 /** TALK 音声通話 — Web Push / ICE（公開鍵のみ · 秘密鍵は Supabase secrets） */
 window.TASU_TALK_CALL_CONFIG = window.TASU_TALK_CALL_CONFIG || {

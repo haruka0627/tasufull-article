@@ -1,0 +1,77 @@
+{
+  "timestamp": "2026-09-10T00:22:45.920Z",
+  "scope": "login.js + chat-supabase-config.js alignment only",
+  "localBase": "http://127.0.0.1:8788",
+  "stagingRef": "ahlxuyvhzqdqaojiywmu",
+  "prodRef": "ddojquacsyqesrjhcvmn",
+  "passed": 12,
+  "failed": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "id": "T0.server_reachable",
+      "status": "PASS",
+      "detail": "http://127.0.0.1:8788/login.html → 200"
+    },
+    {
+      "id": "T1a.root_has_staging_ref",
+      "status": "PASS",
+      "detail": "ahlxuyvhzqdqaojiywmu present"
+    },
+    {
+      "id": "T1b.root_has_local_guard",
+      "status": "PASS",
+      "detail": "_isLocal guard present"
+    },
+    {
+      "id": "T1c.root_preserves_prod_ref",
+      "status": "PASS",
+      "detail": "ddojquacsyqesrjhcvmn preserved in else branch"
+    },
+    {
+      "id": "T2a.dist_has_staging_ref",
+      "status": "PASS",
+      "detail": "ahlxuyvhzqdqaojiywmu present"
+    },
+    {
+      "id": "T2b.dist_has_local_guard",
+      "status": "PASS",
+      "detail": "_isLocal guard present"
+    },
+    {
+      "id": "T2c.dist_preserves_prod_ref",
+      "status": "PASS",
+      "detail": "ddojquacsyqesrjhcvmn preserved in else branch"
+    },
+    {
+      "id": "T3.root_login_cc_path",
+      "status": "PASS",
+      "detail": "returnNeedsSupabaseAuth includes creator-content pattern"
+    },
+    {
+      "id": "T4.dist_login_cc_path",
+      "status": "PASS",
+      "detail": "returnNeedsSupabaseAuth includes creator-content pattern"
+    },
+    {
+      "id": "T5.no_secret_leak",
+      "status": "PASS",
+      "detail": "No sb_secret_ / service_role claim / password in alignment files"
+    },
+    {
+      "id": "T6.prod_ref_in_else",
+      "status": "PASS",
+      "detail": "Production ref is in else branch (non-local path)"
+    },
+    {
+      "id": "T7.no_greenfield",
+      "status": "PASS",
+      "detail": "No greenfield CC files in dist/root"
+    }
+  ],
+  "PRODUCTION_CHANGED": "NO",
+  "SECRET_LEAK": "NO",
+  "INVALID_TOKEN": 0,
+  "status": "PARTIAL_SLIMMED",
+  "note": "Full registered Creator E2E requires existing cc-auth.js/cc-auth-boot.js on user local tree (out-of-band)."
+}
