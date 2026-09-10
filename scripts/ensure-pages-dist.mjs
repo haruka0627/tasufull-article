@@ -11,11 +11,6 @@ import { writeLiveZegoConfigToDist } from "./lib/write-live-zego-config.mjs";
 import { writePlatformZegoConfigToDist } from "./lib/write-platform-zego-config.mjs";
 import { syncPagesDevVars } from "./lib/sync-pages-dev-vars.mjs";
 
-/** Root → dist の直接同期が必要な JS モジュール一覧（ビルドをバイパスして最新を確実に反映） */
-const ROOT_TO_DIST_MODULES = Object.freeze([
-  "tasu-cc-auth.js",
-]);
-
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CF_DIR = path.join(ROOT, "deploy/cloudflare");
 const DIST = path.join(CF_DIR, "dist");
@@ -127,20 +122,6 @@ if (stillMissing.length) {
 const liveSynced = syncLiveDir();
 if (liveSynced > 0) {
   console.log(`[ensure-pages-dist] synced live/ → dist/live/ (${liveSynced} file(s))`);
-}
-
-let moduleSynced = 0;
-for (const modName of ROOT_TO_DIST_MODULES) {
-  const src = path.join(ROOT, modName);
-  const dest = path.join(DIST, modName);
-  if (!fs.existsSync(src)) continue;
-  if (copyFileIfChanged(src, dest)) {
-    moduleSynced += 1;
-    console.log(`[ensure-pages-dist] synced ${modName} → dist/${modName}`);
-  }
-}
-if (moduleSynced > 0) {
-  console.log(`[ensure-pages-dist] synced ${moduleSynced} root module(s) to dist/`);
 }
 
 const fnSynced = syncPagesFunctions();
