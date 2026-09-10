@@ -1,0 +1,150 @@
+{
+  "timestamp": "2026-09-10T00:14:08.944Z",
+  "localBase": "http://127.0.0.1:8788",
+  "stagingRef": "ahlxuyvhzqdqaojiywmu",
+  "qaEmail": "e2e-test@example.com",
+  "passed": 23,
+  "failed": 0,
+  "skipped": 4,
+  "results": [
+    {
+      "id": "T0.server_reachable",
+      "status": "PASS",
+      "detail": "http://127.0.0.1:8788/login.html → 200"
+    },
+    {
+      "id": "T1.config_has_staging_ref",
+      "status": "PASS",
+      "detail": "staging ref ahlxuyvhzqdqaojiywmu present"
+    },
+    {
+      "id": "T1.config_has_local_guard",
+      "status": "PASS",
+      "detail": "Local hostname guard (_isLocal) present"
+    },
+    {
+      "id": "T1.config_has_prod_ref",
+      "status": "PASS",
+      "detail": "Production ref preserved in else branch"
+    },
+    {
+      "id": "T2.login_cc_path",
+      "status": "PASS",
+      "detail": "returnNeedsSupabaseAuth includes creator-content pattern"
+    },
+    {
+      "id": "T3.cc_auth_module",
+      "status": "PASS",
+      "detail": "TasuCcAuth present"
+    },
+    {
+      "id": "T3.cc_auth_isJwt",
+      "status": "PASS",
+      "detail": "isJwtAuthenticated present"
+    },
+    {
+      "id": "T3.cc_auth_getMine",
+      "status": "PASS",
+      "detail": "getMine present"
+    },
+    {
+      "id": "T3.cc_auth_bootstrap",
+      "status": "PASS",
+      "detail": "bootstrap present"
+    },
+    {
+      "id": "T3.cc_auth_guard",
+      "status": "PASS",
+      "detail": "guardCcDashboard present"
+    },
+    {
+      "id": "T3.cc_auth_creatorMode",
+      "status": "PASS",
+      "detail": "creatorMode present"
+    },
+    {
+      "id": "T4.func_project_guard",
+      "status": "PASS",
+      "detail": "project_mismatch guard present"
+    },
+    {
+      "id": "T4.func_staging_ref",
+      "status": "PASS",
+      "detail": "staging ref ahlxuyvhzqdqaojiywmu present"
+    },
+    {
+      "id": "T5.loads_cc_auth",
+      "status": "PASS",
+      "detail": "\"tasu-cc-auth.js\" present"
+    },
+    {
+      "id": "T5.has_guard",
+      "status": "PASS",
+      "detail": "\"guardCcDashboard\" present"
+    },
+    {
+      "id": "T5.has_registered_nav",
+      "status": "PASS",
+      "detail": "\"cc-nav-registered\" present"
+    },
+    {
+      "id": "T5.has_guest_nav",
+      "status": "PASS",
+      "detail": "\"cc-nav-guest\" present"
+    },
+    {
+      "id": "T5.has_content_mgmt_nav",
+      "status": "PASS",
+      "detail": "\"コンテンツ管理\" present"
+    },
+    {
+      "id": "T5.has_dashboard_nav",
+      "status": "PASS",
+      "detail": "\"ダッシュボード\" present"
+    },
+    {
+      "id": "T6.staging_login",
+      "status": "SKIP",
+      "detail": "QA_PASSWORD / PAYMENT_RECEIPT_QA_PRIMARY_PASSWORD not set — set in .env.staging"
+    },
+    {
+      "id": "T6.jwt_ref_staging",
+      "status": "SKIP",
+      "detail": "Login skipped"
+    },
+    {
+      "id": "T7.api_ok",
+      "status": "SKIP",
+      "detail": "No access token (login skipped or failed)"
+    },
+    {
+      "id": "T7.api_registered",
+      "status": "SKIP",
+      "detail": "No access token"
+    },
+    {
+      "id": "T8.prod_jwt_rejected",
+      "status": "PASS",
+      "detail": "401 invalid_token — project_mismatch guard OK"
+    },
+    {
+      "id": "T9.no_secret_leak",
+      "status": "PASS",
+      "detail": "No sb_secret_ keys / password assignments in committed files"
+    },
+    {
+      "id": "T10.prod_ref_preserved",
+      "status": "PASS",
+      "detail": "Production ref ddojquacsyqesrjhcvmn preserved"
+    },
+    {
+      "id": "T10.local_guard_present",
+      "status": "PASS",
+      "detail": "_isLocal guard ensures production is unaffected"
+    }
+  ],
+  "PRODUCTION_CHANGED": "NO",
+  "SECRET_LEAK": "NO",
+  "INVALID_TOKEN": 0,
+  "status": "COMPLETE_CANDIDATE"
+}

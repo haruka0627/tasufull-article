@@ -19,6 +19,8 @@ export const PAGES_FUNCTION_ENV_KEYS = Object.freeze([
   "ZEGO_SERVER",
   "ZEGO_SERVER_SECRET",
   "DEEPSEEK_API_KEY",
+  "CC_SUPABASE_URL",
+  "CC_ANON_KEY",
 ]);
 
 /** @param {string} content */

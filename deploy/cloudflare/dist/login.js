@@ -217,7 +217,7 @@
       const params = new URLSearchParams(window.location.search);
       const raw = String(params.get("return") || params.get("next") || "").trim();
       const safe = raw.split("#")[0].split("?")[0].replace(/^\.\//, "");
-      return /partner-management\.html|partner-detail\.html/.test(safe);
+      return /partner-management\.html|partner-detail\.html|creator-content\//.test(safe);
     } catch {
       return false;
     }
