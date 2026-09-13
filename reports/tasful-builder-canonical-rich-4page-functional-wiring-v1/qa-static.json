@@ -1,7 +1,7 @@
 {
   "ok": true,
   "failed": 0,
-  "passed": 25,
+  "passed": 27,
   "skipped": 1,
   "results": [
     {
@@ -82,7 +82,17 @@
     {
       "id": "new-project-wire",
       "status": "PASS",
-      "detail": "repo stack + general-jobs persist"
+      "detail": "repo stack + supabase client + persist"
+    },
+    {
+      "id": "mvp-post-stack-order",
+      "status": "PASS",
+      "detail": "same order as new-project repo stack"
+    },
+    {
+      "id": "no-orphan-provider-detail-js",
+      "status": "PASS",
+      "detail": "not attached"
     },
     {
       "id": "no-publish-on-insert",

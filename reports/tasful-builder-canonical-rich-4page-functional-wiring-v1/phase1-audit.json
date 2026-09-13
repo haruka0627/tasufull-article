@@ -1,0 +1,51 @@
+{
+  "task": "tasful-builder-canonical-rich-4page-functional-wiring-v1",
+  "phase": 1,
+  "mode": "READ_ONLY_THEN_WIRE",
+  "base": "cf-pages-deploy",
+  "READY_FOR_PRODUCTION": "NO",
+  "productionMigrationsApplied": false,
+  "findings": {
+    "originHadTransplantedRichHtml": false,
+    "originHadGeneralJobsWire": false,
+    "originHadTopRouteBridge": false,
+    "isRepositoryActiveWasAlwaysFalse": "scripts missing on origin; stack now loaded on new-project / mvp-post",
+    "richSpecKeysDroppedOnInsert": "fixed in toGeneralProjectRow",
+    "publishedInsertRlsRisk": "42501 if publication_state=published; persist uses private_draft only",
+    "providerAutoPublish": false,
+    "providerDetailGate": "publicationStatus===published AND profileCompletionStatus===complete",
+    "richProviderStatus": "submitProviderForReview → review_pending",
+    "metadataLocalOnly": ["furigana", "image", "quals", "years", "radius"]
+  },
+  "implemented": {
+    "A_new_project_repo_stack": [
+      "builder-general-jobs-staging-flags.js",
+      "builder-session.js",
+      "builder-repositories-local.js",
+      "builder-repositories-supabase.js",
+      "builder-repository.js",
+      "builder-general-mapper.js",
+      "builder-project-repository.js"
+    ],
+    "A_persist": "builder-new-project-general-jobs-wire.js:persist DualWrite private_draft",
+    "A_mapper_kept_keys": [
+      "prefecture",
+      "city",
+      "address",
+      "postal_code",
+      "scale",
+      "desired_timing_note"
+    ],
+    "B_provider_save": "builder-provider-profile-stc-wire.js:save → upsertFromMvpPartner",
+    "C_project_detail": "getGeneralProjectById on local miss",
+    "D_provider_detail": "loadPublished + optional hydrate; no builder-provider-detail.js",
+    "E_top": {
+      "dispatchTopAction_mvp_post": "new-project.html",
+      "dispatchTopAction_mvp_partner_register": "provider-profile.html",
+      "LEGACY_URLS.partnerRegister": "/builder/provider-profile.html",
+      "operator_partner_contractor_register": "provider-profile.html",
+      "iwasho_kept": "/partner-register.html?source=builder",
+      "mvp_routes_deleted": false
+    }
+  }
+}

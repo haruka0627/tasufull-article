@@ -15,6 +15,15 @@
     return String(val || "").trim() || "—";
   }
 
+  function loadPublished(row) {
+    if (!row) return null;
+    const pub = String(row.publicationStatus || row.publication_status || "").toLowerCase();
+    const complete = String(row.profileCompletionStatus || row.profile_completion_status || "").toLowerCase();
+    if (pub && pub !== "published") return { gated: true, row, reason: "NOT_PUBLISHED" };
+    if (complete && complete !== "complete") return { gated: true, row, reason: "INCOMPLETE" };
+    return { gated: false, row };
+  }
+
   function showDemo(reason) {
     const banner = document.querySelector("[data-canonical-provider-demo]");
     if (banner) {
@@ -38,15 +47,6 @@
       global.TasuBuilderCtaBind?.bind(root, {});
       return;
     }
-    function loadPublished(row) {
-      if (!row) return null;
-      const pub = String(row.publicationStatus || row.publication_status || "").toLowerCase();
-      const complete = String(row.profileCompletionStatus || row.profile_completion_status || "").toLowerCase();
-      if (pub && pub !== "published") return { gated: true, row, reason: "NOT_PUBLISHED" };
-      if (complete && complete !== "complete") return { gated: true, row, reason: "INCOMPLETE" };
-      return { gated: false, row };
-    }
-
     let rec = global.TasuBuilderProviderStore?.get(id) || null;
     if (!rec) {
       try {
@@ -99,4 +99,6 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
+
+  global.TasuBuilderProviderDetailWire = { loadPublished };
 })(typeof window !== "undefined" ? window : globalThis);

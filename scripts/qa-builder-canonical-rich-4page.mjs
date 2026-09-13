@@ -64,10 +64,28 @@ if (
   np.includes("builder-new-project-general-jobs-wire.js") &&
   np.includes("builder-general-jobs-staging-flags.js") &&
   np.includes("builder-general-mapper.js") &&
-  np.includes("builder-project-repository.js")
+  np.includes("builder-project-repository.js") &&
+  np.includes("tasu-supabase-client.js")
 ) {
-  pass("new-project-wire", "repo stack + general-jobs persist");
+  pass("new-project-wire", "repo stack + supabase client + persist");
 } else fail("new-project-wire", "repo stack missing");
+const mvpPost = read("builder/mvp-post.html");
+const stack = [
+  "builder-general-jobs-staging-flags.js",
+  "builder-session.js",
+  "builder-repositories-local.js",
+  "builder-repositories-supabase.js",
+  "builder-repository.js",
+  "builder-general-mapper.js",
+  "builder-project-repository.js",
+];
+const idxs = stack.map((s) => mvpPost.indexOf(s));
+if (idxs.every((n, i) => n >= 0 && (i === 0 || n > idxs[i - 1]))) {
+  pass("mvp-post-stack-order", "same order as new-project repo stack");
+} else fail("mvp-post-stack-order", "order mismatch");
+if (!read("builder/provider-detail.html").includes("builder-provider-detail.js")) {
+  pass("no-orphan-provider-detail-js", "not attached");
+} else fail("no-orphan-provider-detail-js", "orphan attached");
 if (!/publication_state.*published/.test(read("builder/builder-new-project-general-jobs-wire.js"))) {
   pass("no-publish-on-insert", "persist does not set published");
 } else fail("no-publish-on-insert", "published on insert");

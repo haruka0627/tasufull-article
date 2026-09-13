@@ -25,7 +25,7 @@ node scripts/qa-builder-canonical-rich-4page.mjs
 node scripts/qa-builder-canonical-rich-4page-core-smoke.mjs
 ```
 
-静的判定 21 PASS / 0 FAIL / 1 SKIP（Staging シークレット無し）。  
+静的判定は `qa-static.json` を正とする。Staging シークレット無しのとき live write は SKIP。  
 コア smoke: job/provider COMPAT_CACHE 作成と canonical redirect を確認。flag OFF では Supabase を叩かない。  
 Staging シークレットが CI/env にある場合のみ live write を試みる（値は出力しない）。
 
@@ -41,6 +41,8 @@ Staging シークレットが CI/env にある場合のみ live write を試み�
 8. CTA: Talk は thread 無しなら NOT_BOUND。正式依頼 / 質問は NOT_BOUND。応募は job id があるときのみ。
 
 Visual QA は人間が外部 Chrome で行う（本エージェントは Browser Automation を使わない）。
+
+Phase1 JSON: `phase1-audit.json`
 
 ## Files
 
@@ -61,6 +63,14 @@ Wire / repo:
 - `builder/builder-search-detail-bridge.js`
 - `builder/builder-cta-bind.js`
 - `builder/builder-canonical-rich.css`
+- `builder/builder-general-jobs-staging-flags.js`
+- `builder/builder-general-mapper.js`
+- `builder/builder-project-repository.js`
+- `builder/builder-application-repository.js`
+- `builder/builder-new-project-general-jobs-wire.js`
+- `builder/builder-provider-profile-stc-wire.js`
+- `builder/builder-nav-foundation.js`
+- `builder/builder-ai-operator-launch.js`
 
 Hosts: `new-project.html` / `provider-profile.html` / `provider-detail.html`  
 既存: `project-detail.html`（bind パネル追加） / `builder-top.html` / `find-workers.html` / `partners.html` / `mvp-post.html` / `mvp-partner-register.html` / `mvp-project-new.html` / `builder.js`（submit を core 経由）
