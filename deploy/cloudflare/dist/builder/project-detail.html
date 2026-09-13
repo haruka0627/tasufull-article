@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f97316" />
@@ -35,6 +34,37 @@
     </header>
 
     <nav data-breadcrumb aria-label="パンくず"></nav>
+
+    <section class="builder-shell builder-main" data-canonical-job-detail hidden>
+      <p class="builder-ph-empty" data-canonical-job-demo hidden></p>
+      <section class="builder-panel" aria-label="案件（canonical）">
+        <div class="builder-panel__head">
+          <h2 class="builder-section-title" data-canonical-job-title>案件詳細</h2>
+          <span class="builder-kpi" data-canonical-job-source-label>—</span>
+        </div>
+        <p data-canonical-job-description>—</p>
+        <dl class="builder-meta">
+          <div><dt>カテゴリ</dt><dd data-canonical-job-category>—</dd></div>
+          <div><dt>公開範囲</dt><dd data-canonical-job-visibility>—</dd></div>
+          <div><dt>kind</dt><dd data-canonical-job-kind>—</dd></div>
+          <div><dt>工種</dt><dd data-canonical-job-trades>—</dd></div>
+          <div><dt>エリア</dt><dd data-canonical-job-areas>—</dd></div>
+          <div><dt>都道府県</dt><dd data-canonical-job-prefecture>—</dd></div>
+          <div><dt>市区町村</dt><dd data-canonical-job-city>—</dd></div>
+          <div><dt>希望時期</dt><dd data-canonical-job-timing>—</dd></div>
+          <div><dt>期間</dt><dd data-canonical-job-period>—</dd></div>
+          <div><dt>ID</dt><dd data-canonical-job-id>—</dd></div>
+        </dl>
+        <div class="builder-ph-actions">
+          <button type="button" class="builder-btn builder-btn--primary" data-cta-talk>Talk</button>
+          <button type="button" class="builder-btn" data-cta-official-request>正式依頼</button>
+          <button type="button" class="builder-btn builder-btn--secondary" data-cta-apply>応募</button>
+          <button type="button" class="builder-btn" data-cta-question>質問</button>
+          <button type="button" class="builder-btn" data-cta-favorite>お気に入り</button>
+        </div>
+        <p class="builder-kpi" data-canonical-cta-status hidden></p>
+      </section>
+    </section>
 
     <main class="builder-shell builder-main" data-builder-pd-root hidden>
       <div class="builder-ph-detail-grid">
@@ -472,8 +502,22 @@
   <script src="../common-breadcrumb.js"></script>
   <script src="builder-project-store.js"></script>
   <script src="builder-project-detail.js"></script>
-  <link rel="stylesheet" href="../tasful-site-assistant.css">
-  <script src="../tasful-site-assistant-adapter.js" defer></script>
-  <script src="../tasful-site-assistant.js" defer></script>
+  <script src="../chat-supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-public-key.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../supabase-client.js"></script>
+  <script src="builder-config.js"></script>
+  <script src="builder-general-jobs-staging-flags.js"></script>
+  <script src="builder-session.js"></script>
+  <script src="builder-repositories-supabase.js"></script>
+  <script src="builder-canonical-routes.js"></script>
+  <script src="builder-compat-cache.js"></script>
+  <script src="builder-general-mapper.js"></script>
+  <script src="builder-project-repository.js"></script>
+  <script src="builder-application-repository.js"></script>
+  <script src="builder-general-jobs-repo.js"></script>
+  <script src="builder-cta-bind.js"></script>
+  <script src="builder-project-detail-canonical-wire.js"></script>
 </body>
 </html>

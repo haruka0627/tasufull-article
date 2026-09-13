@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>案件を投稿する | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder-canonical-rich.css" />
+</head>
+<body class="cr-body" data-page="builder-new-project">
+  <header class="cr-top">
+    <a class="cr-brand" href="builder-top.html">
+      <span class="cr-brand__mark">B</span>
+      <span>
+        <span class="cr-brand__name">TASFUL</span>
+        <span class="cr-brand__sub">Builder</span>
+      </span>
+    </a>
+    <nav class="cr-nav" aria-label="グローバル">
+      <a href="user-dashboard.html">ダッシュボード</a>
+      <a href="find-workers.html">職人・業者を探す</a>
+      <a href="../public-board.html">案件を探す</a>
+      <a class="is-active" href="new-project.html">案件を投稿</a>
+      <a href="mvp-talk.html">メッセージ</a>
+      <a href="index.html">取引管理</a>
+    </nav>
+    <input class="cr-search" type="search" placeholder="キーワードで検索..." aria-label="検索" />
+  </header>
+
+  <div class="cr-layout">
+    <aside class="cr-side" aria-label="サイド">
+      <a class="cr-side-cta" href="new-project.html">＋ 案件を投稿する</a>
+      <a href="user-dashboard.html">マイページ</a>
+      <a href="mvp-projects.html">案件管理</a>
+      <a href="mvp-talk.html">メッセージ</a>
+      <a href="favorites.html">お気に入り</a>
+      <a href="mvp-projects.html">見積もり履歴</a>
+      <a href="index.html">取引管理</a>
+      <a href="settings.html">アカウント設定</a>
+    </aside>
+
+    <main class="cr-main">
+      <div class="cr-toolbar">
+        <button type="button" class="cr-btn" data-canonical-job-draft>下書きとして保存</button>
+      </div>
+      <h1>案件を投稿する</h1>
+      <p class="cr-lead">工事・修理・リフォームなど、依頼したい内容を入力して、最適な職人・業者からの提案を受けましょう。</p>
+      <p class="cr-status" data-canonical-job-status hidden></p>
+
+      <form class="cr-form" data-canonical-job-form>
+        <section class="cr-card">
+          <h2>1 基本情報</h2>
+          <p class="cr-kicker">まずは案件の基本的な情報を入力してください。</p>
+          <div class="cr-field">
+            <label>案件タイトル <span class="cr-req">必須</span></label>
+            <input class="cr-input" name="title" maxlength="100" placeholder="例）自宅のトイレリフォームをお願いしたい" data-canonical-job-title />
+            <div class="cr-count" data-canonical-job-title-count>0/100</div>
+          </div>
+          <div class="cr-grid">
+            <div class="cr-field">
+              <label>カテゴリー <span class="cr-req">必須</span></label>
+              <select class="cr-select" name="category" data-canonical-job-category>
+                <option value="">選択してください</option>
+                <option value="見積依頼">見積依頼</option>
+                <option value="協力会社募集">協力会社募集</option>
+                <option value="応援募集">応援募集</option>
+                <option value="職人募集">職人募集</option>
+                <option value="リフォーム">リフォーム</option>
+              </select>
+            </div>
+            <div class="cr-field">
+              <label>詳細カテゴリー <span class="cr-req">必須</span></label>
+              <select class="cr-select" name="detail_category" data-canonical-job-detail-category>
+                <option value="">選択してください</option>
+                <option value="トイレ">トイレ</option>
+                <option value="内装">内装</option>
+                <option value="外装">外装</option>
+                <option value="電気">電気</option>
+                <option value="設備">設備</option>
+                <option value="大工">大工</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section class="cr-card">
+          <h2>2 依頼内容</h2>
+          <p class="cr-kicker">どのような作業をしたいか、詳しくご記入ください。</p>
+          <div class="cr-field">
+            <label>依頼の詳細 <span class="cr-req">必須</span></label>
+            <textarea class="cr-textarea" name="description" placeholder="工事内容・現状・ご希望のイメージなど、できるだけ詳しくご記入ください" data-canonical-job-description></textarea>
+          </div>
+          <div class="cr-grid">
+            <div class="cr-field">
+              <label>都道府県</label>
+              <input class="cr-input" name="prefecture" data-canonical-job-prefecture placeholder="例: 東京都" />
+            </div>
+            <div class="cr-field">
+              <label>市区町村</label>
+              <input class="cr-input" name="city" data-canonical-job-city placeholder="例: 新宿区" />
+            </div>
+          </div>
+          <div class="cr-field">
+            <label>住所</label>
+            <input class="cr-input" name="address" data-canonical-job-address />
+          </div>
+          <div class="cr-grid">
+            <div class="cr-field">
+              <label>郵便番号</label>
+              <input class="cr-input" name="postal_code" data-canonical-job-postal-code />
+            </div>
+            <div class="cr-field">
+              <label>規模</label>
+              <input class="cr-input" name="scale" data-canonical-job-scale />
+            </div>
+          </div>
+          <div class="cr-field">
+            <label>希望時期メモ</label>
+            <input class="cr-input" name="desired_timing_note" data-canonical-job-timing />
+          </div>
+        </section>
+
+        <div class="cr-hidden-fields">
+          <input name="kind" value="builder_board" data-canonical-job-kind />
+          <input name="visibility" value="partner_only" data-canonical-job-visibility />
+          <input name="contact_policy" value="tasful_talk_only" data-canonical-job-contact-policy />
+          <input name="source" value="company" data-canonical-job-source />
+          <input name="areas" value="" data-canonical-job-areas placeholder="例: 東京" />
+        </div>
+
+        <button type="submit" class="cr-btn cr-btn--primary" data-canonical-job-submit>案件を投稿する</button>
+      </form>
+    </main>
+
+    <aside class="cr-aside">
+      <section class="cr-card">
+        <h3>投稿のポイント</h3>
+        <ul class="cr-tips">
+          <li>具体的な内容で記載しましょう</li>
+          <li>写真を添付すると、より正確な提案が集まります</li>
+          <li>希望時期や予算の目安を設定しましょう</li>
+          <li>対象エリアを正確に入力しましょう</li>
+          <li>個人情報（電話番号・メールアドレスなど）は入力しないでください</li>
+        </ul>
+      </section>
+      <section class="cr-card">
+        <h3>投稿プレビュー</h3>
+        <p class="cr-preview-title" data-canonical-job-preview-title>案件タイトルが入ります</p>
+        <p class="cr-preview-body" data-canonical-job-preview-body>カテゴリと依頼内容のプレビューです。</p>
+      </section>
+    </aside>
+  </div>
+
+  <script src="../chat-supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-public-key.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../supabase-client.js"></script>
+  <script src="builder-config.js"></script>
+  <script src="builder-canonical-routes.js"></script>
+  <script src="builder-compat-cache.js"></script>
+  <!-- repo stack: SAME ORDER as mvp-post.html -->
+  <script src="builder-general-jobs-staging-flags.js"></script>
+  <script src="builder-session.js"></script>
+  <script src="builder-repositories-local.js"></script>
+  <script src="builder-repositories-supabase.js"></script>
+  <script src="builder-repository.js"></script>
+  <script src="builder-general-mapper.js"></script>
+  <script src="builder-project-repository.js"></script>
+  <script src="builder-general-jobs-repo.js"></script>
+  <script src="builder-job-create-core.js"></script>
+  <script src="builder-new-project-wire.js"></script>
+  <script src="builder-new-project-general-jobs-wire.js"></script>
+</body>
+</html>

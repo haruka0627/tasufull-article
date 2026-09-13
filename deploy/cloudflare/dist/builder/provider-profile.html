@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>プロフィール登録・編集 | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder-canonical-rich.css" />
+</head>
+<body class="cr-body" data-page="builder-provider-profile">
+  <header class="cr-top">
+    <a class="cr-brand" href="builder-top.html">
+      <span class="cr-brand__mark">B</span>
+      <span>
+        <span class="cr-brand__name">TASFUL</span>
+        <span class="cr-brand__sub">Builder</span>
+      </span>
+    </a>
+    <nav class="cr-nav" aria-label="グローバル">
+      <a href="user-dashboard.html">ダッシュボード</a>
+      <a href="find-workers.html">職人・業者を探す</a>
+      <a href="../public-board.html">案件を探す</a>
+      <a href="new-project.html">案件を投稿</a>
+      <a href="mvp-talk.html">メッセージ</a>
+      <a href="index.html">取引管理</a>
+    </nav>
+    <input class="cr-search" type="search" placeholder="キーワードで検索..." aria-label="検索" />
+  </header>
+
+  <div class="cr-layout">
+    <aside class="cr-side" aria-label="サイド">
+      <a href="user-dashboard.html">マイページ</a>
+      <a href="provider-profile.html" class="is-active">職人プロフィール</a>
+      <a href="find-workers.html">対応エリア</a>
+      <a href="provider-detail.html">実績・施工例</a>
+      <a href="favorites.html">評価・口コミ</a>
+      <a href="settings.html">通知設定</a>
+      <a href="settings.html">アカウント設定</a>
+    </aside>
+
+    <main class="cr-main">
+      <h1>プロフィール登録・編集</h1>
+      <p class="cr-lead">あなたのスキルや経験を登録して、仕事の依頼につながるプロフィールを作成しましょう。</p>
+      <p class="cr-status" data-canonical-provider-status hidden></p>
+
+      <form class="cr-form" data-canonical-provider-form>
+        <section class="cr-card">
+          <h2>1 基本情報</h2>
+          <p class="cr-kicker">あなたの基本的な情報を入力してください。</p>
+          <div class="cr-field">
+            <label>登録種別 <span class="cr-req">必須</span></label>
+            <select class="cr-select" name="entity" data-canonical-provider-entity>
+              <option value="individual">個人</option>
+              <option value="company">法人</option>
+            </select>
+          </div>
+          <div class="cr-photo-row">
+            <img class="cr-avatar" alt="" data-canonical-provider-photo-preview src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect fill='%23e5e7eb' width='96' height='96'/%3E%3C/svg%3E" />
+            <div>
+              <label class="cr-btn" for="cr-photo">画像を変更</label>
+              <input id="cr-photo" type="file" accept="image/*" hidden data-canonical-provider-photo />
+              <p class="cr-kicker">推奨サイズ 400×400px（JPG / PNG）</p>
+            </div>
+          </div>
+          <div class="cr-grid">
+            <div class="cr-field">
+              <label>お名前 <span class="cr-req">必須</span></label>
+              <input class="cr-input" name="name" data-canonical-provider-name />
+            </div>
+            <div class="cr-field">
+              <label>ふりがな <span class="cr-req">必須</span></label>
+              <input class="cr-input" name="furigana" data-canonical-provider-furigana />
+            </div>
+          </div>
+          <div class="cr-field">
+            <label>屋号（任意）</label>
+            <input class="cr-input" name="trade_name" data-canonical-provider-trade-name placeholder="個人で屋号がある場合" />
+          </div>
+        </section>
+
+        <section class="cr-card">
+          <h2>2 対応情報</h2>
+          <p class="cr-kicker">検索・詳細表示に使う対応条件です（MVP 登録フィールドと同一 mapper）。</p>
+          <div class="cr-grid">
+            <div class="cr-field">
+              <label>対応工種</label>
+              <input class="cr-input" name="trades" data-canonical-provider-trades placeholder="例: 内装, 大工" />
+            </div>
+            <div class="cr-field">
+              <label>対応エリア</label>
+              <input class="cr-input" name="areas" data-canonical-provider-areas placeholder="例: 東京, 神奈川" />
+            </div>
+          </div>
+          <div class="cr-field">
+            <label>稼働</label>
+            <select class="cr-select" name="availability" data-canonical-provider-availability>
+              <option value="available">空きあり</option>
+              <option value="limited">一部可</option>
+              <option value="busy">満枠</option>
+            </select>
+          </div>
+          <div class="cr-field">
+            <label>一言</label>
+            <textarea class="cr-textarea" name="headline" data-canonical-provider-headline placeholder="例: 夜間対応可。短工期得意。"></textarea>
+          </div>
+        </section>
+
+        <button type="submit" class="cr-btn cr-btn--primary" data-canonical-provider-submit>登録する</button>
+      </form>
+    </main>
+
+    <aside class="cr-aside">
+      <section class="cr-card">
+        <h3>登録のポイント</h3>
+        <ul class="cr-tips">
+          <li>プロフィール画像はあなたの顔が分かる写真を設定しましょう</li>
+          <li>対応できる業種を、できるだけ詳しく記載しましょう</li>
+          <li>実績写真を登録すると、依頼につながりやすくなります</li>
+          <li>資格や経験年数を正確に入力しましょう</li>
+          <li>定期的に情報を更新すると、より多くの人に見つかりやすくなります</li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+
+  <script src="../chat-supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../supabase-public-key.js"></script>
+  <script src="../tasu-supabase-client.js"></script>
+  <script src="../supabase-client.js"></script>
+  <script src="builder-config.js"></script>
+  <script src="builder-general-jobs-staging-flags.js"></script>
+  <script src="builder-session.js"></script>
+  <script src="builder-canonical-routes.js"></script>
+  <script src="builder-compat-cache.js"></script>
+  <script src="builder-partner-supabase-sync.js"></script>
+  <script src="builder-provider-store.js"></script>
+  <script src="builder-partner-register-core.js"></script>
+  <script src="builder-provider-profile-wire.js"></script>
+  <script src="builder-provider-profile-stc-wire.js"></script>
+</body>
+</html>

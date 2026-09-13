@@ -10871,6 +10871,105 @@
     }
   }
 
+  async function mergePublicProjectionIntoBoard(state, rows) {
+    const repo = global.TasuBuilderGeneralJobsRepo;
+    if (!repo?.listPublicProjects || !repo.isEnabled?.()) return null;
+    try {
+      const pub = await repo.listPublicProjects({ limit: 40, kind: "builder_board" });
+      if (!pub?.ok || !Array.isArray(pub.rows) || !pub.rows.length) return null;
+      const have = new Set((rows || []).map((p) => String(p.project_id || "")));
+      let added = 0;
+      pub.rows.forEach((row) => {
+        const project_id = String(row.project_key || row.id || "");
+        if (!project_id || have.has(project_id)) return;
+        const project = {
+          project_id,
+          title: row.title || "無題案件",
+          kind: row.kind || "builder_board",
+          status: row.status || "open",
+          created_at: row.created_at || "",
+          publication_state: row.publication_state || "published",
+          required_partners: 1,
+          selected_partner_ids: [],
+          board_type: "job",
+          visibility: row.visibility,
+        };
+        rows.push(project);
+        if (state && !state.specs) state.specs = {};
+        if (state?.specs && row.spec) state.specs[project_id] = row.spec;
+        have.add(project_id);
+        added += 1;
+      });
+      if (!added) return null;
+      rows.sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+      return rows;
+    } catch {
+      return null;
+    }
+  }
+
+  function paintBoardProjectRows(state, rows) {
+    const api = mvp();
+    const list = document.querySelector("[data-builder-board-project-list]");
+    const kpi = document.querySelector("[data-builder-board-project-count]");
+    const topKpi = document.querySelector("[data-builder-board-kpi]");
+    if (!list || !kpi || !topKpi) return;
+    topKpi.textContent = `role: ${getRole()}`;
+    let viewRows = rows.slice();
+
+    if (boardFeedTypeFilter && boardFeedTypeFilter !== "all") {
+      const matchesTab =
+        window.TasuBuilderBoardFeed?.matchesBoardTabFilter ||
+        ((project, key) => resolveBoardItemType(project) === key);
+      viewRows = viewRows.filter((p) => matchesTab(p, boardFeedTypeFilter));
+    }
+    const repo = global.TasuBuilderSearchRepository;
+    const ui = global.TasuBuilderSearchUiAdapter;
+    if (
+      repo?.filterSourceRows &&
+      ui?.mapBoardProjectRow &&
+      boardFeedTypeFilter &&
+      boardFeedTypeFilter !== "all"
+    ) {
+      try {
+        const mapped = viewRows.map((p) => ui.mapBoardProjectRow(p, state.specs?.[p.project_id]));
+        const filter = ui.filterFromBoardTab(boardFeedTypeFilter);
+        const res = repo.filterSourceRows(mapped, filter, "job");
+        const idSet = new Set((res.items || []).map((r) => r.project_id || r.id));
+        if (idSet.size) viewRows = viewRows.filter((p) => idSet.has(p.project_id));
+      } catch {
+        /* keep tab-filtered rows */
+      }
+    }
+    kpi.textContent = `${viewRows.length} 件`;
+    list.innerHTML = viewRows.length
+      ? viewRows.map((p) => buildBoardProjectCard(p, state.specs?.[p.project_id], state)).join("")
+      : `<p class="talk-empty">表示できる投稿はありません。</p>`;
+
+    if (!list.dataset.detailNavBound) {
+      list.dataset.detailNavBound = "1";
+      list.addEventListener("click", (ev) => {
+        if (ev.target?.closest?.("a, button, input, label")) return;
+        const card = ev.target?.closest?.("[data-project-id]");
+        const projectId = card?.getAttribute("data-project-id");
+        const boardType = card?.getAttribute("data-board-type") || "project";
+        if (!projectId) return;
+        window.location.href = boardDetailHref(projectId, boardType);
+      });
+    }
+
+    if (!list.dataset.applyBound) {
+      list.dataset.applyBound = "1";
+      list.addEventListener("click", (ev) => {
+        const btn = ev.target?.closest?.("[data-builder-board-apply]");
+        if (!btn) return;
+        const projectId = btn.getAttribute("data-project-id");
+        if (!projectId || getRole() !== "partner") return;
+        if (boardApplyToProject(api, projectId)) renderBoardProjectsPage();
+      });
+    }
+  }
+
   function renderBoardProjectsPage() {
     applyBoardPageBackLinks();
     const threadsShortcut = document.querySelector("[data-builder-board-threads-link]");
@@ -10897,59 +10996,9 @@
         .slice()
         .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
     }
-    const list = document.querySelector("[data-builder-board-project-list]");
-    const kpi = document.querySelector("[data-builder-board-project-count]");
-    const topKpi = document.querySelector("[data-builder-board-kpi]");
-    if (!list || !kpi || !topKpi) return;
-    topKpi.textContent = `role: ${getRole()}`;
-
-    if (boardFeedTypeFilter && boardFeedTypeFilter !== "all") {
-      const matchesTab =
-        window.TasuBuilderBoardFeed?.matchesBoardTabFilter ||
-        ((project, key) => resolveBoardItemType(project) === key);
-      rows = rows.filter((p) => matchesTab(p, boardFeedTypeFilter));
-    }
-    const repo = global.TasuBuilderSearchRepository;
-    const ui = global.TasuBuilderSearchUiAdapter;
-    if (
-      repo?.filterSourceRows &&
-      ui?.mapBoardProjectRow &&
-      boardFeedTypeFilter &&
-      boardFeedTypeFilter !== "all"
-    ) {
-      try {
-        const mapped = rows.map((p) => ui.mapBoardProjectRow(p, state.specs?.[p.project_id]));
-        const filter = ui.filterFromBoardTab(boardFeedTypeFilter);
-        const res = repo.filterSourceRows(mapped, filter, "job");
-        const idSet = new Set((res.items || []).map((r) => r.project_id || r.id));
-        if (idSet.size) rows = rows.filter((p) => idSet.has(p.project_id));
-      } catch {
-        /* keep tab-filtered rows */
-      }
-    }
-    kpi.textContent = `${rows.length} 件`;
-    list.innerHTML = rows.length
-      ? rows.map((p) => buildBoardProjectCard(p, state.specs?.[p.project_id], state)).join("")
-      : `<p class="talk-empty">表示できる投稿はありません。</p>`;
-
-    if (!list.dataset.detailNavBound) {
-      list.dataset.detailNavBound = "1";
-      list.addEventListener("click", (ev) => {
-        if (ev.target?.closest?.("a, button, input, label")) return;
-        const card = ev.target?.closest?.("[data-project-id]");
-        const projectId = card?.getAttribute("data-project-id");
-        const boardType = card?.getAttribute("data-board-type") || "project";
-        if (!projectId) return;
-        window.location.href = boardDetailHref(projectId, boardType);
-      });
-    }
-
-    list.addEventListener("click", (ev) => {
-      const btn = ev.target?.closest?.("[data-builder-board-apply]");
-      if (!btn) return;
-      const projectId = btn.getAttribute("data-project-id");
-      if (!projectId || getRole() !== "partner") return;
-      if (boardApplyToProject(api, projectId)) renderBoardProjectsPage();
+    paintBoardProjectRows(state, rows);
+    void mergePublicProjectionIntoBoard(state, rows).then((merged) => {
+      if (merged) paintBoardProjectRows(state, merged);
     });
   }
 
@@ -12286,51 +12335,79 @@
         alert("demo: オーナー表示に切り替えて投稿してください");
         return;
       }
-      const project_id = uid("proj");
-      const project = {
-        project_id,
+      const fields = {
         owner_id: state.owner_id,
         title: String(titleEl?.value || "").trim() || "無題案件",
         project_category: String(categoryEl?.value || "").trim() || "協力会社募集",
         kind: kindEl?.value || "builder_board",
-        status: "open",
-        required_partners: 1,
-        selected_partner_ids: [],
         visibility: visEl?.value || "partner_only",
         contact_policy: cpEl?.value || "tasful_talk_only",
-        main_thread_id: null,
         source: srcEl?.value || "company",
         source_template_id: form.dataset.sourceTemplateId || null,
         source_project_id: form.dataset.sourceProjectId || null,
         source_re_request_id: form.dataset.sourceReRequestId || null,
+        start: startEl?.value || "",
+        end: endEl?.value || "",
+        trade_tags: String(tradesEl?.value || ""),
+        areas: String(areasEl?.value || ""),
+        description: String(descEl?.value || "").trim(),
+        budget_note: String(form.dataset.sourceReRequestBudget || form.dataset.sourceTemplateBudget || "").trim(),
+      };
+      const afterCreate = (project, project_id) => {
+        try {
+          global.TasuTalkFollowNotify?.onProjectChanged?.(project, "create");
+        } catch (err) {
+          console.warn("[Builder] follow notify skipped:", err);
+        }
+        api.pushNotification({
+          type: "admin",
+          body: `${project.title} を投稿しました。`,
+          project_id,
+          thread_id: null,
+        });
+        const href =
+          global.TasuBuilderCanonicalRoutes?.projectDetailHref(project_id) ||
+          `project-detail.html?id=${encodeURIComponent(project_id)}`;
+        window.location.href = href;
+      };
+      if (global.TasuBuilderJobCreateCore?.create) {
+        global.TasuBuilderJobCreateCore.create(fields).then((res) => {
+          if (!res?.ok) return;
+          afterCreate(res.project, res.id);
+        });
+        return;
+      }
+      const project_id = uid("proj");
+      const project = {
+        project_id,
+        owner_id: state.owner_id,
+        title: fields.title,
+        project_category: fields.project_category,
+        kind: fields.kind,
+        status: "open",
+        required_partners: 1,
+        selected_partner_ids: [],
+        visibility: fields.visibility,
+        contact_policy: fields.contact_policy,
+        main_thread_id: null,
+        source: fields.source,
+        source_template_id: fields.source_template_id,
+        source_project_id: fields.source_project_id,
+        source_re_request_id: fields.source_re_request_id,
         created_at: nowIso(),
       };
-      const budgetNote = String(
-        form.dataset.sourceReRequestBudget || form.dataset.sourceTemplateBudget || ""
-      ).trim();
       const spec = {
         trade_tags: String(tradesEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
         area_codes: String(areasEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
         period: { start: startEl?.value || "", end: endEl?.value || "" },
-        description: String(descEl?.value || "").trim(),
+        description: fields.description,
       };
-      if (budgetNote && budgetNote !== "—") spec.budget_note = budgetNote;
+      if (fields.budget_note && fields.budget_note !== "—") spec.budget_note = fields.budget_note;
       const next = api.reload();
       next.projects = [project, ...(next.projects || [])];
       next.specs = { ...(next.specs || {}), [project_id]: spec };
       api.commit(next, { project, mode: "create" });
-      try {
-        global.TasuTalkFollowNotify?.onProjectChanged?.(project, "create");
-      } catch (err) {
-        console.warn("[Builder] follow notify skipped:", err);
-      }
-      api.pushNotification({
-        type: "admin",
-        body: `${project.title} を投稿しました。`,
-        project_id,
-        thread_id: null,
-      });
-      window.location.href = `board-project-detail.html?id=${encodeURIComponent(project_id)}`;
+      afterCreate(project, project_id);
     });
   }
 
@@ -12396,28 +12473,50 @@
       const areasEl = form.querySelector("[data-builder-mvp-partner-areas]");
       const availEl = form.querySelector("[data-builder-mvp-partner-availability]");
       const headEl = form.querySelector("[data-builder-mvp-partner-headline]");
+      const fields = {
+        display_name: String(nameEl?.value || "").trim() || "無題パートナー",
+        partner_type: "company",
+        trades: String(tradesEl?.value || ""),
+        areas: String(areasEl?.value || ""),
+        headline: String(headEl?.value || "").trim(),
+        availability: availEl?.value || "available",
+        contact_policy: "tasful_talk_only",
+      };
+      const afterSave = (p) => {
+        api.pushNotification({
+          type: "admin",
+          body: `${p.display_name} を登録しました。`,
+          href: "index.html",
+        });
+        const id = p.partner_id || p.id;
+        window.location.href =
+          global.TasuBuilderCanonicalRoutes?.providerDetailHref(id) ||
+          `provider-detail.html?id=${encodeURIComponent(id)}`;
+      };
+      if (global.TasuBuilderPartnerRegisterCore?.save) {
+        global.TasuBuilderPartnerRegisterCore.save(fields, { requireName: false }).then((res) => {
+          if (!res?.ok) return;
+          afterSave(res.record);
+        });
+        return;
+      }
       const p = {
         partner_id: uid("partner"),
-        display_name: String(nameEl?.value || "").trim() || "無題パートナー",
+        display_name: fields.display_name,
         partner_type: "company",
         trades: String(tradesEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
         areas: String(areasEl?.value || "").split(",").map((s) => s.trim()).filter(Boolean),
-        headline: String(headEl?.value || "").trim(),
+        headline: fields.headline,
         profile: "",
         contact_policy: "tasful_talk_only",
-        availability: availEl?.value || "available",
+        availability: fields.availability,
         status: "active",
         updated_at: nowIso(),
       };
       const next = api.reload();
       next.partners = [p, ...(next.partners || [])];
       api.commit(next);
-      api.pushNotification({
-        type: "admin",
-        body: `${p.display_name} を登録しました。`,
-        href: "index.html",
-      });
-      window.location.href = "mvp-partner-register.html";
+      afterSave(p);
     });
   }
 
