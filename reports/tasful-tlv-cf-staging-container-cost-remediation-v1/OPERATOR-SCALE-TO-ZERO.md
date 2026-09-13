@@ -2,63 +2,46 @@
 
 ## Forbidden
 
-These destroy the Container **application** (definition), not just live instances:
-
 - Cloudflare Dashboard → **Delete Container**
 - `wrangler containers delete <CONTAINER_ID>`
+- Any Production deploy / stop / wrangler mutation
+- Enabling `TLV_CF_LLHLS_ADMIN_STOP_GO` on Production
 
-Do not use them. This task requires `STAGING_CONTAINER_DELETED=NO`.
+Wrangler has **no** instance stop command (`containers list` / `instances` only).
 
-## Why Dashboard has no “scale to 0”
+## SAFE_SHUTDOWN (existing, preferred)
 
-Cloudflare Containers are Durable-Object-backed. Live instances are started by
-Worker code (`getContainer` / `getRandom` / `fetch` / `containerFetch`) and
-stopped by `Container.stop()` or the `sleepAfter` → `onActivityExpired()` path.
-Wrangler can **list** instances (`wrangler containers instances`) but has no
-instance stop command. There is no supported “set capacity = 0” API that leaves
-the application in place.
+`POST /v1/stop` on the Staging Worker, **ingest JWT** required.
 
-## Safe shutdown methods (Staging only)
+This is already implemented in unpublished `worker.js`. It calls
+`destroy`/`stop` on that Durable Object / Container instance. The Container
+**application** (`a03deec3-…` / `tlv-cf-llhls-ingest-staging-tlvcfllhlsingestcontainer`)
+stays defined.
 
-### A. Preferred after this PR is applied to the unpublished Worker source
-
-1. Merge `workers/tlv-cf-llhls-ingest/src/idle-lifecycle.mjs` into
-   `TlvCfLlhlsIngestContainer` (see `applyNotes()`).
-2. Set `TLV_CF_LLHLS_ENV=staging` on the Staging Worker only.
-3. `wrangler deploy` **Staging Worker name `tlv-cf-llhls-ingest-staging` only**.
-4. Confirm no publisher / no leftover playlist clients.
-5. Wait `sleepAfter` (`2m`). Instances should go to 0 without deleting the app.
-
-Active ingest is uninterrupted: `hasActiveIngest=true` renews the timer.
-
-### B. Immediate operator stop (Human + Staging token)
-
-After the Staging Worker exposes `POST /internal/lifecycle/stop`:
-
-1. `wrangler containers list` — copy the **Staging** application id only.
+1. `wrangler containers list` — Staging app only (`a03deec3-…`).
 2. `wrangler containers instances <STAGING_APPLICATION_ID> --json`
-3. For each stale Durable Object / stream id, `POST` the lifecycle path with
-   `TLV_CF_LLHLS_LIFECYCLE_TOKEN`.
-4. Handler calls `container.stop()` (SIGTERM). Definition remains.
+3. For each stale DO / stream id (including dummy `aaaa…`):
+   `POST https://<staging-worker>/v1/stop` with ingest JWT for that stream.
+4. Re-list instances. Definition remains. Production is not touched.
 
-If the unpublished source is not available, Human must add the stop route
-before this path works. This environment cannot deploy it.
+## After this PR is merged into Staging worker.js
 
-### C. Read-only confirmation
+Idle playlist GETs and dummy ids are **not** forwarded to `Container.fetch`
+(so they no longer renew `sleepAfter`). An ingest-idle watchdog stops the
+instance after 2 minutes without publisher activity, even if platform
+`inflightRequests` would have blocked `onActivityExpired`.
 
-```bash
-wrangler containers list
-wrangler containers instances <STAGING_APPLICATION_ID> --json
-node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs --env=staging --no-wrangler
-```
+Active ingest is uninterrupted.
 
-Production observe-only (no mutate flags):
+## Optional Staging admin-stop (Human GO)
 
-```bash
-node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs --env=production --no-wrangler
-```
+`/v1/admin-destroy` stays **hard 404** (ops).
+
+`POST /v1/admin-stop` is **404** unless Staging var `TLV_CF_LLHLS_ADMIN_STOP_GO=1`.
+Default in `wrangler.toml` is `"0"`. Operator may set `"1"` on Staging only
+after an explicit GO, then POST with token, then set it back to `"0"`.
 
 ## Production
 
-Do not deploy, stop, or change `tlv-cf-llhls-ingest-production`.
-Dashboard already showed Production **Ready / Live Instances = 0**.
+Ops listed Production **LIVE=7**. Observe only. Do not deploy, stop, or
+change `tlv-cf-llhls-ingest-production`.

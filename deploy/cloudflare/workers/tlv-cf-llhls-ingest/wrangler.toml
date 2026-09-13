@@ -1,0 +1,20 @@
+# Staging LL-HLS ingest — lifecycle vars only.
+# Image + unpublished worker.js are NOT in this commit.
+# Do not `wrangler deploy` from here (incomplete; would not replace image safely).
+# Do not copy to Production. Do not `wrangler containers delete`.
+
+name = "tlv-cf-llhls-ingest-staging"
+
+[vars]
+TLV_CF_LLHLS_ENV = "staging"
+# Human GO for optional POST /v1/admin-stop. Keep "0" until an operator enables it.
+TLV_CF_LLHLS_ADMIN_STOP_GO = "0"
+
+[[containers]]
+class_name = "TlvCfLlhlsIngestContainer"
+instance_type = "standard-3"
+max_instances = 8
+
+[[durable_objects.bindings]]
+name = "TLV_CF_LLHLS_INGEST"
+class_name = "TlvCfLlhlsIngestContainer"

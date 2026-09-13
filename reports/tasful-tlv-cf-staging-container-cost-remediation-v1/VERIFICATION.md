@@ -2,47 +2,36 @@
 
 ## Constraints
 
-- No Production Cloudflare mutation.
+- No Production Cloudflare mutation / deploy.
 - No `wrangler containers delete` / Dashboard Delete Container.
-- Browser Automation is isolated for this workspace; verify with unit tests +
-  optional Human Dashboard / wrangler list.
+- Browser Automation isolated; use unit tests + Human Dashboard / wrangler list.
 
 ## Automated (this PR)
 
 ```bash
 node scripts/test-tlv-cf-llhls-ingest-idle-lifecycle.mjs
 node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs --env=staging --fixture=reports/tasful-tlv-cf-staging-container-cost-remediation-v1/evidence/guardrail-fixture-stale-staging.json
+node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs --env=production --fixture=reports/tasful-tlv-cf-staging-container-cost-remediation-v1/evidence/guardrail-fixture-production-observe.json --no-wrangler
 ```
 
 Expect:
 
-- Lifecycle tests PASS (Staging stop/sleep, Production fail-closed, no delete).
-- Guardrail CLI prints `FINDING NO_ACTIVE_STREAMS_AND_LIVE_INSTANCES` for the
-  fixture (5 live / 0 streams / idle past timeout).
-- `autoDelete=false productionMutation=NO STAGING_CONTAINER_DELETED=NO`.
+- Lifecycle tests PASS.
+- Staging fixture FINDING live=7 / streams=0 / HIGH / `autoDelete=false`.
+- Production fixture FINDING live=7 CRITICAL **observe-only** / `productionMutation=NO`.
 
-## Human Staging (after mixin is copied into unpublished Worker source)
+## Human Staging (after fetch-guard is merged into unpublished worker.js)
 
-1. Record Dashboard: Staging live instances **before**.
-2. Confirm Production live instances remain **0** (do not open Production deploy).
-3. Deploy Staging Worker only.
-4. With **no** publisher: leftover playlist GETs must not renew activity.
-5. After 2 minutes: Staging live instances → 0. Definition still listed.
-6. Start one test ingest: instance becomes 1; keep publishing > 2 minutes;
-   instance stays up.
-7. Stop publisher and players; after 2 minutes instance returns to 0.
-8. Re-run the guardrail (with wrangler creds if available). Expect `OK` when
-   live=0.
-9. Confirm Production still 0.
+1. Record Staging LIVE before (ops: 7).
+2. Confirm Production LIVE (ops: 7) — do not change it.
+3. SAFE_SHUTDOWN: `POST /v1/stop` + ingest JWT per stale DO (incl. `aaaa…`).
+4. Deploy **Staging Worker only** with fetch-guard + watchdog.
+5. Leftover playlist GET must 410 and must not renew the DO.
+6. One real ingest stays up past 2 minutes.
+7. After publisher+players stop, watchdog stops the instance; app remains.
+8. Optional: Human GO `TLV_CF_LLHLS_ADMIN_STOP_GO=1` then `/v1/admin-stop`; revert to `0`.
+9. `/v1/admin-destroy` still 404.
 
 ## TLV regression
 
-This PR does not change `live/**` UI, Pages Functions, or Production Workers.
-Optional freeze check: `node scripts/test-tlv-tasful-ai-entry.mjs` (unchanged).
-
-## After (may remain operator-documented)
-
-If Cloudflare API credentials are absent in CI / this agent:
-
-- `STAGING_LIVE_INSTANCES_AFTER=operator step documented`
-- `HUMAN_GATE_REQUIRED=YES`
+No `live/**` UI or Pages Function changes.

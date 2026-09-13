@@ -1,36 +1,51 @@
-PASS: repo has no unpublished-unrelated wrangler worker config for ingest
-PASS: repo has no TlvCfLlhlsIngestContainer implementation outside overlay
-PASS: overlay + DO_NOT_DEPLOY present
+PASS: ops wrangler path exists
+PASS: wrangler max_instances=8
+PASS: wrangler instance_type=standard-3
+PASS: wrangler admin-stop GO default 0
+PASS: wrangler is staging name
 PASS: container class name matches dashboard suffix
-PASS: 5 live × standard-3 correlates 10 vCPU / 40 GiB / 80 GB — {"instanceType":"standard-3","liveInstances":5,"vcpu":10,"memoryGiB":40,"diskGB":80}
+PASS: 5 running named DOs × standard-3 = 10/40/80
+PASS: ops LIVE=7 × standard-3 = 14 vCPU / 56 GiB / 112 GB
+PASS: ops staging live=7 max=8 sleepAfter already 2m
+PASS: ops production live=7 observe-only
 PASS: standard-3 is 2 vCPU / 8 GiB / 16 GB
-PASS: staging sleepAfter apply 2m
+PASS: staging does not re-apply sleepAfter (already 2m)
 PASS: production sleepAfter fail-closed
-PASS: unknown env fail-closed
-PASS: platform default remains 10m constant
-PASS: bind staging overwrites sleepAfter
-PASS: bind production is no-op
+PASS: platform default constant unused for this deploy
+PASS: bind staging is no-op (activity-renew is the bug)
 PASS: GET playlist is playback
-PASS: POST publish is ingest
-PASS: staging playback without ingest does not renew
-PASS: staging playback with ingest does renew (stream uninterrupted)
-PASS: production playback still renews (fail-closed)
-PASS: staging idle expired → stop
-PASS: staging active ingest expired → keep
-PASS: production expired → platform-default
-PASS: runActivityExpired staging idle calls stop once
-PASS: runActivityExpired staging ingest renews not stops
-PASS: runActivityExpired production defers (no stop)
-PASS: operator stop refuses production
-PASS: operator stop refuses missing token
-PASS: operator stop staging calls Container.stop only
+PASS: POST /v1/stop is v1-stop not ingest
+PASS: POST whip is ingest
+PASS: dummy aaaa detected
+PASS: staging playback without ingest does not renew or forward
+PASS: staging playback with ingest still forwards (stream uninterrupted)
+PASS: staging dummy DO is not forwarded
+PASS: production always forwards (fail-closed)
+PASS: watchdog staging no ingest → stop
+PASS: watchdog staging ingest idle > 2m → stop
+PASS: watchdog staging within 2m → keep
+PASS: watchdog staging open session → keep
+PASS: watchdog production skip
+PASS: activityExpired staging idle → stop (does not rely on platform timer)
+PASS: runActivityExpired staging idle destroy/stop
+PASS: runActivityExpired staging ingest does not stop
+PASS: runActivityExpired production defers
+PASS: watchdog runner stops stale DO
+PASS: POST /v1/stop refuses production
+PASS: POST /v1/stop refuses missing ingest JWT
+PASS: POST /v1/stop is SAFE_SHUTDOWN
+PASS: /v1/admin-destroy stays hard 404
+PASS: /v1/admin-stop without Human GO is 404
+PASS: /v1/admin-stop production forbidden
+PASS: /v1/admin-stop Staging + Human GO stops instance only
+PASS: fetch-guard returns 410 for idle playback (no Container.fetch)
 PASS: countActiveStreams ignores ended
-PASS: guardrail FINDING for 5 live / 0 streams past idle
+PASS: guardrail FINDING for 7 live / 0 streams past idle
 PASS: guardrail never auto-deletes
-PASS: guardrail does not recommend definition delete
+PASS: guardrail recommends /v1/stop not delete
 PASS: no FINDING while a stream is active
 PASS: no FINDING when live=0
-PASS: production FINDING is CRITICAL observe-only
+PASS: production LIVE=7 FINDING is CRITICAL observe-only
 PASS: collectIdleCostEvidence marks FINDING without secrets
 
-34/34 PASS
+49/49 PASS

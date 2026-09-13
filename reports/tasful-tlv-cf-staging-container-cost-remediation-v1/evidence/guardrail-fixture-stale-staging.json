@@ -1,6 +1,6 @@
 {
-  "liveInstances": 5,
+  "liveInstances": 7,
   "activeStreamCount": 0,
-  "idleSeconds": 7200,
-  "note": "Dashboard-observed Staging stale-instance fixture. No secrets."
+  "idleSeconds": 172800,
+  "note": "Ops-status Staging LIVE=7, created ~2026-09-11, no active streams. No secrets."
 }

@@ -1,14 +1,13 @@
-# TLV CF LL-HLS ingest — Staging idle lifecycle overlay
+# TLV CF LL-HLS ingest — Staging idle lifecycle
 
-Not a deployable Worker. The live Container Worker source is **not** in this
-monorepo. See `DO_NOT_DEPLOY.md`.
+Canonical files: `deploy/cloudflare/workers/tlv-cf-llhls-ingest/`
 
-| Piece | Role |
-| --- | --- |
-| `src/idle-lifecycle.mjs` | Staging-only sleep/stop policy (Production fail-closed) |
-| `wrangler.staging.overlay.jsonc` | Fields to merge into existing Staging wrangler config |
-| `scripts/lib/tlv-cf-llhls-ingest-cost-guardrail.mjs` | FINDING detector, no deletes |
-| `scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs` | Read-only CLI |
+Ops already set `sleepAfter="2m"` and `onActivityExpired → destroy/stop`.
+Those hooks never fire while Container.fetch / in-flight WS renews activity.
+This patch refuses idle playback forward and adds an ingest-idle watchdog.
 
-Human applies the mixin to the unpublished `TlvCfLlhlsIngestContainer` source,
-then deploys **Staging only**.
+SAFE_SHUTDOWN: `POST /v1/stop` with ingest JWT.
+Optional: `POST /v1/admin-stop` only if Staging `TLV_CF_LLHLS_ADMIN_STOP_GO=1`.
+`/v1/admin-destroy` stays 404.
+
+Do not deploy Production. Do not delete the Container app.

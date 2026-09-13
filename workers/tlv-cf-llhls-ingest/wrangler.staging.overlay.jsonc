@@ -1,33 +1,18 @@
 /**
- * OVERLAY ONLY — merge into the existing Staging Worker wrangler config.
- * Not a standalone deployable wrangler file. See DO_NOT_DEPLOY.md.
- *
- * Instance type is inferred from Dashboard live totals (5 × 2 vCPU / 8 GiB / 16 GB).
- * Do not raise instance_type. Do not apply this overlay to Production.
+ * OVERLAY ONLY — merge into existing Staging wrangler (ops: max_instances=8).
+ * Not a standalone deploy. See deploy/cloudflare/workers/tlv-cf-llhls-ingest/DO_NOT_DEPLOY.md
  */
 {
   "name": "tlv-cf-llhls-ingest-staging",
   "vars": {
-    "TLV_CF_LLHLS_ENV": "staging"
+    "TLV_CF_LLHLS_ENV": "staging",
+    "TLV_CF_LLHLS_ADMIN_STOP_GO": "0"
   },
   "containers": [
     {
       "class_name": "TlvCfLlhlsIngestContainer",
       "instance_type": "standard-3",
-      "max_instances": 5
+      "max_instances": 8
     }
-  ],
-  "durable_objects": {
-    "bindings": [
-      {
-        "name": "TLV_CF_LLHLS_INGEST",
-        "class_name": "TlvCfLlhlsIngestContainer"
-      }
-    ]
-  },
-  "_notes": {
-    "sleepAfter": "Not a wrangler field — set on the Container class (staging: 2m).",
-    "min_instances": "Cloudflare Containers have no min_instances keep-warm. Scale is on-demand.",
-    "production": "Do not copy this overlay to tlv-cf-llhls-ingest-production."
-  }
+  ]
 }

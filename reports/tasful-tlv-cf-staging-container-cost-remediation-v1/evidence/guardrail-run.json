@@ -1,31 +1,35 @@
 {
-  "collectedAt": "2026-09-13T15:20:47.658Z",
+  "collectedAt": "2026-09-13T15:26:37.728Z",
   "envName": "staging",
-  "liveInstances": 5,
+  "liveInstances": 7,
   "liveInstancesSource": "adapter",
   "activeStreamCount": 0,
   "activeStreamSource": "adapter",
   "attribution": {
     "instanceType": "standard-3",
-    "stagingMatchesStandard3x5": true,
-    "staging": {
+    "maxInstances": 8,
+    "stagingLiveInstances": 7,
+    "stagingRunningNamedDos": 5,
+    "staging7xStandard3": {
       "instanceType": "standard-3",
-      "liveInstances": 5,
-      "vcpu": 10,
-      "memoryGiB": 40,
-      "diskGB": 80
+      "liveInstances": 7,
+      "vcpu": 14,
+      "memoryGiB": 56,
+      "diskGB": 112
     },
-    "productionLiveInstances": 0,
-    "productionCapacityMatchesZero": true
+    "staging5RunningMatches10_40_80": true,
+    "productionLiveInstances": 7,
+    "productionObserveOnly": true,
+    "productionMutation": false
   },
   "evaluation": {
     "finding": true,
     "code": "NO_ACTIVE_STREAMS_AND_LIVE_INSTANCES",
     "severity": "HIGH",
     "envName": "staging",
-    "liveInstances": 5,
+    "liveInstances": 7,
     "activeStreamCount": 0,
-    "idleSeconds": 7200,
+    "idleSeconds": 172800,
     "idleTimeoutSeconds": 120,
     "idleKnown": true,
     "autoDelete": false,
@@ -34,8 +38,9 @@
       "dashboard Delete Container"
     ],
     "recommendedActions": [
-      "Container.stop() via Staging POST /internal/lifecycle/stop (token required)",
-      "Deploy Staging idle mixin then wait for sleepAfter / onActivityExpired"
+      "POST /v1/stop with ingest JWT (Container.stop/destroy; app remains)",
+      "Staging /v1/stop per running DO id (ingest JWT). Wrangler has no instance stop.",
+      "After Staging fetch-guard deploy: idle playback is not forwarded; ingest-idle watchdog calls stop/destroy"
     ],
     "productionMutation": false
   },

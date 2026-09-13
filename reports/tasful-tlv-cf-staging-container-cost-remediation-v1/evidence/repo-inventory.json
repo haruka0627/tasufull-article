@@ -2,14 +2,11 @@
   "repo": "haruka0627/tasufull-article",
   "base": "cf-pages-deploy",
   "scannedAt": "2026-09-13",
-  "wranglerToml": [],
-  "containerClassImplementations": [],
-  "cloudflarePagesFunctions": [
-    "deploy/cloudflare/functions/api/secretary-deepseek-chat.js",
-    "deploy/cloudflare/functions/api/tlv-zego-token.js"
-  ],
-  "llhlsIngestHits": [],
+  "opsStatus": "reports/tasful-tlv-cf-staging-container-cost-remediation-v1/ops-status.md",
+  "stagingWranglerPath": "deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.toml",
+  "fullWorkerJsInGit": false,
+  "ingestImageInGit": false,
   "cloudflareApiCredentialsInAgentEnv": false,
   "wranglerCliPresent": false,
-  "conclusion": "LL-HLS ingest Worker/Container source is not in this repository. Dashboard objects were deployed from an unpublished tree."
+  "conclusion": "Lifecycle patch + wrangler vars are in-repo. Unpublished worker.js/image stay on the operator box. Human merges fetch-guard then Staging-only deploy. Production not mutated."
 }

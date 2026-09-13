@@ -22,14 +22,20 @@ Dashboard names:
 
 ## Idle / sleep
 
-- `sleepAfter` default `"10m"`.
-- Incoming requests reset the timer (`renewActivityTimeout()`).
-- Default `onActivityExpired()` calls `stop()` (SIGTERM, then SIGKILL after
-  up to 15 minutes). This does **not** delete the Container application.
-- If `onActivityExpired()` is overridden and does not `stop()` / `destroy()`,
-  the instance stays up and the hook repeats.
-- HLS playlist polling is an incoming request: it renews activity unless the
-  Worker ignores playback-only GETs when ingest is down.
+- `sleepAfter` default `"10m"`. Ops Staging worker already sets `"2m"`.
+- Incoming **proxied** requests reset the timer (`renewActivityTimeout()`).
+- Each WebSocket message also renews (container.ts).
+- `isActivityExpired()`: if `inflightRequests > 0`, renew and return false.
+  A hung WHIP/WS/containerFetch means `onActivityExpired` never runs.
+- Default / ops `onActivityExpired()` calls `stop()`/`destroy()`. Does **not**
+  delete the Container application.
+- HLS playlist polling that is forwarded to `Container.fetch` renews activity.
+
+## This incident
+
+Ops: sleepAfter already 2m + onActivityExpired destroy/stop, but LIVE
+instances created ~2026-09-11 never cleared (“stuck/activity renew”).
+Fix: do not forward idle playback; ingest-idle watchdog ignores inflight.
 
 ## Scale to zero without deleting the definition
 

@@ -2,122 +2,104 @@
 
 **Date:** 2026-09-13  
 **Branch:** `cursor/tlv-staging-container-cost-2872`  
-**Production mutation:** NO  
-**Staging Container definition deleted:** NO  
+**Ops evidence:** `ops-status.md` (incorporated; not re-guessed)
 
-## SUCCESS fields
+## FINAL fields
 
 | Field | Value |
 | --- | --- |
-| **ROOT_CAUSE** | Staging Worker `tlv-cf-llhls-ingest-staging` created **5 Durable Object / Container identities** (one per stream key or `getRandom` slot). After test publishers stopped, instances stayed **Running** because this repo has **no idle policy**, and Cloudflare only stops instances via `sleepAfter` → `onActivityExpired()` → `stop()`, or an explicit `stop()`. Leftover LL-HLS playlist GETs, a missing `stop()` override, or a keep-alive `renewActivityTimeout()` would all prevent the default 10m sleep. Source is **not in git**, so the exact keep-alive cannot be re-read; the capacity math and platform lifecycle are confirmed. |
-| **CURRENT_5_INSTANCE_ATTRIBUTION** | 5 × Cloudflare `standard-3` (2 vCPU / 8 GiB / 16 GB) = **10 vCPU / 40 GiB / 80 GB**. Matches Dashboard live totals exactly. Application name suffix `tlvcfllhlsingestcontainer` = class `TlvCfLlhlsIngestContainer`. |
-| **STALE_INSTANCES_CONFIRMED** | **YES (operator Dashboard + contrast + idle window).** Production Ready / live=0. Staging Active / live=5 after streams ended. Default sleep is 10m; persistence beyond that is stale-or-kept-alive. This agent could not re-query Cloudflare (no API token / wrangler). |
+| **ROOT_CAUSE** | Staging `worker.js` already has `sleepAfter="2m"` and `onActivityExpired → destroy/stop`. Those hooks **never run** for the stuck DOs. `@cloudflare/containers` treats every proxied `fetch` / WebSocket message as activity (`renewActivityTimeout`) and `isActivityExpired()` is **false while `inflightRequests > 0`** (then it renews). Leftover LL-HLS playlist polls, hung WHIP/WS, or dummy `aaaa…` traffic keep inflight/renew going. Ops: “sleepAfter NOT clearing — stuck/activity renew.” Instances created ~2026-09-11. Adding another `sleepAfter` would not fix this. |
+| **CURRENT_5_INSTANCE_ATTRIBUTION** | Ops: Staging **LIVE=7**, **5 running DO names** including dummy `aaaa…`, `max_instances=8`, `instance_type=standard-3`. Five running × (2 vCPU / 8 GiB / 16 GB) = **10 vCPU / 40 GiB / 80 GB** (matches earlier Dashboard totals). App `a03deec3-…` / `tlv-cf-llhls-ingest-staging-tlvcfllhlsingestcontainer`. |
+| **STALE_INSTANCES_CONFIRMED** | **YES** (ops). Created ~2026-09-11; `sleepAfter=2m` not clearing. |
 | **STAGING_CONTAINER_DELETED** | **NO** |
-| **SAFE_SHUTDOWN_METHOD** | `Container.stop()` (Staging lifecycle POST) or Staging `sleepAfter=2m` + `onActivityExpired` → `stop()` after mixin deploy. **Never** Dashboard Delete Container / `wrangler containers delete`. See `OPERATOR-SCALE-TO-ZERO.md`. |
-| **STAGING_LIVE_INSTANCES_BEFORE** | **5** (operator Dashboard) |
-| **STAGING_LIVE_INSTANCES_AFTER** | **operator step documented** (no CF credentials in this environment; stop requires Human Staging deploy or tokenized stop route) |
-| **PRODUCTION_LIVE** | **before=0 / after=0** (not mutated) |
-| **INSTANCE_MEMORY_CONFIGURATION** | **standard-3 · 8 GiB RAM · 16 GB disk · 2 vCPU** per instance; 5 live ⇒ 40 GiB billable memory (dominant ~$22.58 line) |
-| **IDLE_TIMEOUT_BEFORE** | **unknown in source** (platform default **10m** if unoverridden) |
-| **IDLE_TIMEOUT_AFTER** | Staging policy **2m** (in repo, not yet deployed). Production **unchanged** (fail-closed). |
-| **LIFECYCLE_FIX_IMPLEMENTED** | **YES (Staging-only module + overlay).** Production code path never applies sleep/stop. Not deployed (source of the live Worker is unpublished). |
-| **COST_GUARDRAIL** | **YES.** `NO_ACTIVE_STREAMS AND LIVE>0` past idle timeout → FINDING. `autoDelete=false`. CLI: `node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs`. |
-| **TLV_REGRESSION** | **NONE expected.** No `live/**` UI, Pages Functions, or Production Worker changes. |
+| **SAFE_SHUTDOWN_METHOD** | **`POST /v1/stop` + ingest JWT** → instance `destroy`/`stop`. App definition remains. Wrangler has no stop. See `OPERATOR-SCALE-TO-ZERO.md`. Optional Staging `/v1/admin-stop` behind Human GO (`TLV_CF_LLHLS_ADMIN_STOP_GO=1`). `/v1/admin-destroy` stays 404. |
+| **STAGING_LIVE_INSTANCES_BEFORE** | **7** (ops) |
+| **STAGING_LIVE_INSTANCES_AFTER** | **operator step documented** (`POST /v1/stop` / Human Staging deploy of fetch-guard). This agent did not call Cloudflare. |
+| **PRODUCTION_LIVE** | **before=7 / after=7 (observed only, not mutated)** |
+| **INSTANCE_MEMORY_CONFIGURATION** | **standard-3 · 8 GiB · 16 GB disk · 2 vCPU**; `max_instances=8` |
+| **IDLE_TIMEOUT_BEFORE** | **2m already in worker.js** (not effective because of activity renew) |
+| **IDLE_TIMEOUT_AFTER** | Staging still **2m**, plus **ingest-idle watchdog** and **do-not-forward idle playback**. Production **unchanged**. |
+| **LIFECYCLE_FIX_IMPLEMENTED** | **YES (Staging-only fetch-guard + ingest-idle watchdog).** Production fail-closed. Not deployed from this agent. |
+| **COST_GUARDRAIL** | **YES.** `NO_ACTIVE_STREAMS AND LIVE>0` past idle → FINDING. `autoDelete=false`. |
+| **TLV_REGRESSION** | **NONE expected.** No `live/**` UI / Pages Function / Production Worker changes. |
 | **PRODUCTION_MUTATION** | **NO** |
-| **HIGH_CRITICAL_FINDINGS** | **HIGH:** Staging 5 × standard-3 still live / billable. **HIGH:** ingest Worker source absent from repo — runtime cannot be patched without Human. **No CRITICAL** Production live leak (live=0). |
-| **HUMAN_GATE_REQUIRED** | **YES** — apply mixin to unpublished Staging Worker, Staging-only deploy, confirm Dashboard live→0. |
-| **VERDICT** | **PARTIAL_REMEDIATE / COST_GUARD_READY.** Policy + guardrail + runbook shipped. Live instance count will drop only after Human Staging apply. |
+| **HIGH_CRITICAL_FINDINGS** | **HIGH:** Staging LIVE=7 stale / billable. **CRITICAL (observe-only):** Production LIVE=7 listed — not mutated. **HIGH:** full `worker.js` image still unpublished in git; Human must merge fetch-guard then Staging-deploy. |
+| **HUMAN_GATE_REQUIRED** | **YES** — `POST /v1/stop` now; merge+Staging deploy; optional admin-stop GO. No Prod deploy. |
+| **VERDICT** | **PARTIAL_REMEDIATE / COST_GUARD_READY.** Root cause corrected from “missing sleepAfter” to **activity renew / inflight**. Live counts drop only after Human `/v1/stop` or Staging apply. |
 | **EVIDENCE** | `reports/tasful-tlv-cf-staging-container-cost-remediation-v1/` |
 
 ## 1. What creates each instance
 
-Cloudflare Containers are **Durable Objects**. Official pattern:
+Worker `tlv-cf-llhls-ingest-staging`, class `TlvCfLlhlsIngestContainer`,
+`getContainer(env.BINDING, streamId).fetch(request)`. Each stream id is one
+DO / Container. Ops listed 5 running names including dummy `aaaa…`.
 
-```js
-getContainer(env.TLV_CF_LLHLS_INGEST, streamId).fetch(request)
-```
+Wrangler (ops / this PR path):
 
-Each distinct `streamId` (or each of `N` `getRandom` slots) is one instance
-identity. The first `fetch` / `containerFetch` / `start*` starts the VM.
+`deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.toml`
 
-This monorepo does **not** contain that Worker. Inventory:
+`max_instances=8`, `instance_type=standard-3`.
 
-- No `wrangler.toml` / Worker `wrangler.jsonc`
-- No `@cloudflare/containers` / `TlvCfLlhlsIngestContainer` implementation
-- Pages Functions: DeepSeek secretary + ZEGO token only
-- Docs still say TLV-P0-02 ingest is stub / Cloudflare Stream unconnected
+## 2. Why sleepAfter / onActivityExpired fails
 
-The Staging/Production Container applications therefore come from an
-**unpublished deploy**, not from `deploy/cloudflare` Pages.
+Ops already set both. Platform source (`@cloudflare/containers` `container.ts`):
 
-## 2. Why five, and why they stayed up
+- Proxied fetch increments `inflightRequests` and calls `renewActivityTimeout()`.
+- Each WebSocket message renews again.
+- `isActivityExpired()`: if `inflightRequests > 0`, **renew and return false**.
 
-Confirmed:
+So `onActivityExpired → destroy/stop` is never reached while leftover HLS,
+hung ingest, or dummy traffic exists. That matches ops “stuck/activity renew”
+and ~2-day-old instances.
 
-- Five live instances, not a single oversized VM.
-- Capacity equals five `standard-3` replicas.
-- Production control is zero live — cost is Staging.
-- Cloudflare does not keep `min_instances` warm.
+Discarded: missing `sleepAfter`, `min_instances`, Delete Container as shutdown.
 
-Best-supported leftover mechanism (platform docs, ingest shape):
+## 3. Lifecycle fix (Staging-only)
 
-1. Five test stream identities were addressed → five DOs started.
-2. After publishers ended, **something still counted as activity** (playlist
-   polling, health ping, alarm `renewActivityTimeout`) **or**
-   `onActivityExpired` does not `stop()`.
-3. Default 10m sleep should have fired if there was truly zero activity.
-   Persistence ⇒ not a “Dashboard ghost”; instances are running.
+`deploy/cloudflare/workers/tlv-cf-llhls-ingest/src/idle-lifecycle.mjs`
++ `src/fetch-guard.mjs`:
 
-Discarded guesses: see `evidence/discarded-hypotheses.json`.
+| Path | Staging | Production |
+| --- | --- | --- |
+| Idle playback / dummy forward to `Container.fetch` | **no** (410) | unchanged (forward) |
+| Ingest-idle watchdog (2m, ignores inflight) | **stop/destroy** | skip |
+| `POST /v1/stop` + ingest JWT | SAFE_SHUTDOWN | refused |
+| `POST /v1/admin-stop` | 404 unless Human GO=`1` | 404 |
+| `/v1/admin-destroy` | **404** | 404 |
+| `sleepAfter` field | leave **2m** | unchanged |
 
-## 3. Lifecycle fix (smallest, Staging-only)
-
-`workers/tlv-cf-llhls-ingest/src/idle-lifecycle.mjs`:
-
-| Env | `sleepAfter` | `onActivityExpired` | Playback GET without ingest |
-| --- | --- | --- | --- |
-| Staging | **2m** (apply) | **stop** if no active ingest; **keep** if ingest live | does **not** renew |
-| Production / unknown | **no-op** | platform default (unchanged) | still renews (fail-closed) |
-
-Operator stop: Staging `POST /internal/lifecycle/stop` + token → `stop()`.
-Rejects Production. Never deletes the application.
-
-Overlay `wrangler.staging.overlay.jsonc` records `instance_type=standard-3`
-and `max_instances=5` for the existing Staging Worker. **Do not deploy this
-directory as a new Worker** (`DO_NOT_DEPLOY.md`).
+Do not `wrangler deploy` this directory as a standalone Worker (no image).
 
 ## 4. Cost guardrail
 
-`evaluateIdleCostFinding`:
-
-- `LIVE_INSTANCES > 0` AND `activeStreamCount === 0` AND idle past timeout
-  → `FINDING NO_ACTIVE_STREAMS_AND_LIVE_INSTANCES`
-- Staging severity HIGH; Production observe-only CRITICAL
-- `autoDelete=false`; recommended actions are `stop()` / sleepAfter only
+`NO_ACTIVE_STREAMS AND LIVE>0` past idle → FINDING. Never auto-delete.
+Production LIVE=7 is CRITICAL observe-only.
 
 ## 5. Verification
 
-See `VERIFICATION.md`. Automated (this agent, no Cloudflare mutation):
+See `VERIFICATION.md`. This agent (no Cloudflare mutation):
 
-- `node scripts/test-tlv-cf-llhls-ingest-idle-lifecycle.mjs` → **34/34 PASS**
-- Staging fixture guardrail → **FINDING** `NO_ACTIVE_STREAMS_AND_LIVE_INSTANCES` live=5 streams=0 HIGH; `autoDelete=false`
-- Production fixture observe → **OK** live=0; `productionMutation=NO`
+- `node scripts/test-tlv-cf-llhls-ingest-idle-lifecycle.mjs` → **49/49 PASS**
+- Staging fixture → FINDING live=7 / streams=0 / HIGH / `autoDelete=false`
+- Production fixture → FINDING live=7 CRITICAL observe-only / `productionMutation=NO`
 
 ## 6. Human gate
 
-1. Copy mixin into unpublished Staging Worker source.
-2. Deploy Staging only.
-3. Confirm Staging live instances → 0; Production stays 0.
-4. Do not delete the Container definition.
+1. `POST /v1/stop` + ingest JWT for each stale Staging DO (incl. `aaaa…`).
+2. Merge fetch-guard into unpublished Staging `worker.js`.
+3. Deploy **Staging only**.
+4. Confirm Staging live drops. Production stays as observed (do not touch).
+5. Do not delete the Container application.
 
 ## Evidence index
 
 | File | Contents |
 | --- | --- |
-| `evidence/repo-inventory.json` | No Worker source / no CF creds in agent env |
-| `evidence/instance-type-correlation.json` | 5 × standard-3 math |
-| `evidence/cloudflare-docs-notes.md` | Public lifecycle / stop vs delete |
+| `ops-status.md` | Operator-collected wrangler + LIVE counts |
 | `evidence/discarded-hypotheses.json` | Rejected guesses |
-| `evidence/guardrail-fixture-stale-staging.json` | 5 live / 0 streams fixture |
-| `evidence/guardrail-run.json` | CLI output (generated) |
-| `evidence/lifecycle-test-run.json` | Unit test output (generated) |
+| `evidence/instance-type-correlation.json` | standard-3 math |
+| `evidence/cloudflare-docs-notes.md` | Platform renew / inflight |
+| `evidence/guardrail-fixture-stale-staging.json` | live=7 / 0 streams |
+| `evidence/guardrail-fixture-production-observe.json` | Prod live=7 observe |
+| `evidence/guardrail-run.json` | CLI (generated) |
+| `evidence/lifecycle-test-run.json` | Unit tests (generated) |

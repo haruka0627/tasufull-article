@@ -9,31 +9,37 @@ import {
   DASHBOARD_OBSERVED_LIVE,
   FORBIDDEN_SHUTDOWN_ACTIONS,
   INSTANCE_TYPE_STANDARD_3,
+  OPS_OBSERVED_LIVE,
   PLATFORM_DEFAULT_SLEEP_AFTER_SECONDS,
   PRODUCTION_CONTAINER_APP,
   PRODUCTION_WORKER_NAME,
+  SAFE_SHUTDOWN_METHOD,
   STAGING_CONTAINER_APP,
   STAGING_SLEEP_AFTER_SECONDS,
   STAGING_WORKER_NAME,
+  V1_STOP_PATH,
   correlateInstanceCapacity,
   normalizeEnvName,
-} from "../../workers/tlv-cf-llhls-ingest/src/idle-lifecycle.mjs";
+} from "../../deploy/cloudflare/workers/tlv-cf-llhls-ingest/src/idle-lifecycle.mjs";
 
 export {
   DASHBOARD_OBSERVED_LIVE,
   FORBIDDEN_SHUTDOWN_ACTIONS,
   INSTANCE_TYPE_STANDARD_3,
+  OPS_OBSERVED_LIVE,
   PRODUCTION_CONTAINER_APP,
   PRODUCTION_WORKER_NAME,
   STAGING_CONTAINER_APP,
   STAGING_WORKER_NAME,
+  V1_STOP_PATH,
 };
 
 export const FINDING_CODE = "NO_ACTIVE_STREAMS_AND_LIVE_INSTANCES";
 
 export const SAFE_SHUTDOWN_METHODS = Object.freeze([
-  "Container.stop() via Staging POST /internal/lifecycle/stop (token required)",
-  "Deploy Staging idle mixin then wait for sleepAfter / onActivityExpired",
+  SAFE_SHUTDOWN_METHOD,
+  `Staging ${V1_STOP_PATH} per running DO id (ingest JWT). Wrangler has no instance stop.`,
+  "After Staging fetch-guard deploy: idle playback is not forwarded; ingest-idle watchdog calls stop/destroy",
 ]);
 
 const ACTIVE_BROADCAST_STATUSES = new Set(["live", "preparing"]);
@@ -100,17 +106,25 @@ export function evaluateIdleCostFinding(input = {}) {
 }
 
 export function buildDashboardAttribution() {
-  const staging = correlateInstanceCapacity(DASHBOARD_OBSERVED_LIVE.staging);
-  const production = correlateInstanceCapacity(
-    { ...DASHBOARD_OBSERVED_LIVE.production, liveInstances: 0, vcpu: 0, memoryGiB: 0, diskGB: 0 },
-    INSTANCE_TYPE_STANDARD_3,
-  );
+  const staging = correlateInstanceCapacity({
+    liveInstances: OPS_OBSERVED_LIVE.staging.liveInstances,
+  });
+  const running5 = correlateInstanceCapacity({
+    liveInstances: OPS_OBSERVED_LIVE.staging.runningNamedDos,
+    vcpu: 10,
+    memoryGiB: 40,
+    diskGB: 80,
+  });
   return {
     instanceType: INSTANCE_TYPE_STANDARD_3.id,
-    stagingMatchesStandard3x5: staging.matches,
-    staging: staging.expected,
-    productionLiveInstances: DASHBOARD_OBSERVED_LIVE.production.liveInstances,
-    productionCapacityMatchesZero: production.expected.vcpu === 0,
+    maxInstances: OPS_OBSERVED_LIVE.staging.maxInstances,
+    stagingLiveInstances: OPS_OBSERVED_LIVE.staging.liveInstances,
+    stagingRunningNamedDos: OPS_OBSERVED_LIVE.staging.runningNamedDos,
+    staging7xStandard3: staging.expected,
+    staging5RunningMatches10_40_80: running5.matches,
+    productionLiveInstances: OPS_OBSERVED_LIVE.production.liveInstances,
+    productionObserveOnly: true,
+    productionMutation: false,
   };
 }
 
@@ -160,12 +174,12 @@ export async function collectIdleCostEvidence(adapters = {}) {
     }
   }
   if (liveInstances == null && envName === "staging") {
-    liveInstances = DASHBOARD_OBSERVED_LIVE.staging.liveInstances;
-    liveInstancesSource = "dashboard_observed_fallback";
+    liveInstances = OPS_OBSERVED_LIVE.staging.liveInstances;
+    liveInstancesSource = "ops_status_fallback";
   }
   if (liveInstances == null && envName === "production") {
-    liveInstances = DASHBOARD_OBSERVED_LIVE.production.liveInstances;
-    liveInstancesSource = "dashboard_observed_fallback";
+    liveInstances = OPS_OBSERVED_LIVE.production.liveInstances;
+    liveInstancesSource = "ops_status_fallback_observe_only";
   }
 
   if (typeof adapters.listBroadcastRows === "function") {
