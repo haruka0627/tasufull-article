@@ -1,0 +1,35 @@
+{
+  "discarded": [
+    {
+      "hypothesis": "min_instances=5 keeps five warm replicas",
+      "verdict": "DISCARDED",
+      "why": "Cloudflare Containers wrangler config documents max_instances only. Instances start on demand via Durable Object getContainer/getRandom/fetch. No min_instances keep-warm API."
+    },
+    {
+      "hypothesis": "Dashboard Delete Container is the way to scale to zero",
+      "verdict": "DISCARDED",
+      "why": "That control deletes the Container application definition. wrangler containers delete is the same class of action. Forbidden by this task."
+    },
+    {
+      "hypothesis": "Production is the billable source of the 40 GiB / $22 memory line",
+      "verdict": "DISCARDED",
+      "why": "Operator Dashboard: Production Ready, Live Instances = 0. Totals 5 / 10 vCPU / 40 GiB / 80 GB match Staging 5 × standard-3 only."
+    },
+    {
+      "hypothesis": "This monorepo Pages deploy or live/*.js starts the five instances",
+      "verdict": "DISCARDED",
+      "why": "No wrangler Container worker, no @cloudflare/containers import, no TlvCfLlhlsIngestContainer class in repo source. Pages Functions are secretary + zego token only."
+    },
+    {
+      "hypothesis": "Custom instance type other than standard-3",
+      "verdict": "DISCARDED",
+      "why": "5 × 2 vCPU / 8 GiB / 16 GB is the exact standard-3 table. Other predefined types do not multiply to 10 / 40 / 80."
+    }
+  ],
+  "unconfirmed_without_runtime_source": [
+    "Whether sleepAfter was overridden to a long duration or onActivityExpired omitted stop()",
+    "Whether leftover HLS players / health checks kept renewing activity",
+    "Whether five stream keys vs getRandom(N=5) created the five DO identities",
+    "Whether an alarm/keep-alive called renewActivityTimeout()"
+  ]
+}

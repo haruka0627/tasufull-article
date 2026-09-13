@@ -1,0 +1,22 @@
+{
+  "source": "https://developers.cloudflare.com/containers/platform/limits/",
+  "predefined": {
+    "lite": { "vcpu": 0.0625, "memoryGiB": 0.25, "diskGB": 2 },
+    "basic": { "vcpu": 0.25, "memoryGiB": 1, "diskGB": 4 },
+    "standard-1": { "vcpu": 0.5, "memoryGiB": 4, "diskGB": 8 },
+    "standard-2": { "vcpu": 1, "memoryGiB": 6, "diskGB": 12 },
+    "standard-3": { "vcpu": 2, "memoryGiB": 8, "diskGB": 16 },
+    "standard-4": { "vcpu": 4, "memoryGiB": 12, "diskGB": 20 }
+  },
+  "dashboard_observed": {
+    "staging_live_instances": 5,
+    "vcpu": 10,
+    "memoryGiB": 40,
+    "diskGB": 80
+  },
+  "correlation": {
+    "instance_type": "standard-3",
+    "formula": "5 × (2 vCPU, 8 GiB, 16 GB) = 10 vCPU, 40 GiB, 80 GB",
+    "matches": true
+  }
+}

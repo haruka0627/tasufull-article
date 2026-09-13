@@ -112,7 +112,9 @@
     "smoke:match:p15-l5": "node scripts/smoke-match-p15-l5-dist-sync.mjs --skip-edge",
     "smoke:business-directory": "node scripts/smoke-business-directory-ob4.mjs",
     "smoke:business-directory:prod": "node scripts/smoke-business-directory-ob4.mjs --prod",
-    "deploy:pages": "node scripts/deploy-cloudflare-pages.mjs"
+    "deploy:pages": "node scripts/deploy-cloudflare-pages.mjs",
+    "test:tlv-cf-llhls-ingest-idle-lifecycle": "node scripts/test-tlv-cf-llhls-ingest-idle-lifecycle.mjs",
+    "check:tlv-cf-llhls-ingest-idle-cost": "node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs"
   },
   "devDependencies": {
     "ffmpeg-static": "^5.3.0",

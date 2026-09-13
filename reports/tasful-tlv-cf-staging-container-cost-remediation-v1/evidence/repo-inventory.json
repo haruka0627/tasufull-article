@@ -1,0 +1,15 @@
+{
+  "repo": "haruka0627/tasufull-article",
+  "base": "cf-pages-deploy",
+  "scannedAt": "2026-09-13",
+  "wranglerToml": [],
+  "containerClassImplementations": [],
+  "cloudflarePagesFunctions": [
+    "deploy/cloudflare/functions/api/secretary-deepseek-chat.js",
+    "deploy/cloudflare/functions/api/tlv-zego-token.js"
+  ],
+  "llhlsIngestHits": [],
+  "cloudflareApiCredentialsInAgentEnv": false,
+  "wranglerCliPresent": false,
+  "conclusion": "LL-HLS ingest Worker/Container source is not in this repository. Dashboard objects were deployed from an unpublished tree."
+}
