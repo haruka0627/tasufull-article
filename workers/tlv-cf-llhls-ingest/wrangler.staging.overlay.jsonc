@@ -1,0 +1,18 @@
+/**
+ * OVERLAY ONLY — merge into existing Staging wrangler (ops: max_instances=8).
+ * Not a standalone deploy. See deploy/cloudflare/workers/tlv-cf-llhls-ingest/DO_NOT_DEPLOY.md
+ */
+{
+  "name": "tlv-cf-llhls-ingest-staging",
+  "vars": {
+    "TLV_CF_LLHLS_ENV": "staging",
+    "TLV_CF_LLHLS_ADMIN_STOP_GO": "0"
+  },
+  "containers": [
+    {
+      "class_name": "TlvCfLlhlsIngestContainer",
+      "instance_type": "standard-3",
+      "max_instances": 8
+    }
+  ]
+}

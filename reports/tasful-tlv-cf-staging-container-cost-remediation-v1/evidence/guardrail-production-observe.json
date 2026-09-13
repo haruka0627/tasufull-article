@@ -1,0 +1,66 @@
+{
+  "collectedAt": "2026-09-13T15:26:37.756Z",
+  "envName": "production",
+  "liveInstances": 7,
+  "liveInstancesSource": "adapter",
+  "activeStreamCount": 0,
+  "activeStreamSource": "adapter",
+  "attribution": {
+    "instanceType": "standard-3",
+    "maxInstances": 8,
+    "stagingLiveInstances": 7,
+    "stagingRunningNamedDos": 5,
+    "staging7xStandard3": {
+      "instanceType": "standard-3",
+      "liveInstances": 7,
+      "vcpu": 14,
+      "memoryGiB": 56,
+      "diskGB": 112
+    },
+    "staging5RunningMatches10_40_80": true,
+    "productionLiveInstances": 7,
+    "productionObserveOnly": true,
+    "productionMutation": false
+  },
+  "evaluation": {
+    "finding": true,
+    "code": "NO_ACTIVE_STREAMS_AND_LIVE_INSTANCES",
+    "severity": "CRITICAL",
+    "envName": "production",
+    "liveInstances": 7,
+    "activeStreamCount": 0,
+    "idleSeconds": 172800,
+    "idleTimeoutSeconds": 600,
+    "idleKnown": true,
+    "autoDelete": false,
+    "forbiddenActions": [
+      "wrangler containers delete",
+      "dashboard Delete Container"
+    ],
+    "recommendedActions": [
+      "POST /v1/stop with ingest JWT (Container.stop/destroy; app remains)",
+      "Staging /v1/stop per running DO id (ingest JWT). Wrangler has no instance stop.",
+      "After Staging fetch-guard deploy: idle playback is not forwarded; ingest-idle watchdog calls stop/destroy"
+    ],
+    "productionMutation": false
+  },
+  "errors": [],
+  "autoDelete": false,
+  "productionMutation": false,
+  "check": {
+    "command": "node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs",
+    "wranglerReadOnly": {
+      "listApplications": "wrangler containers list",
+      "listStagingInstances": "wrangler containers instances <STAGING_APPLICATION_ID> --json",
+      "forbidden": [
+        "wrangler containers delete",
+        "dashboard Delete Container"
+      ]
+    },
+    "stagingContainerApp": "tlv-cf-llhls-ingest-staging-tlvcfllhlsingestcontainer",
+    "productionContainerApp": "tlv-cf-llhls-ingest-production-tlvcfllhlsingestcontainer",
+    "productionWorker": "tlv-cf-llhls-ingest-production",
+    "productionMutation": "NO",
+    "containerDefinitionDeleted": "NO"
+  }
+}

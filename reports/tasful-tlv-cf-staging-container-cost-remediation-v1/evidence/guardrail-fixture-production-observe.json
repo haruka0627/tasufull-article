@@ -1,0 +1,6 @@
+{
+  "liveInstances": 7,
+  "activeStreamCount": 0,
+  "idleSeconds": 172800,
+  "note": "Ops-status Production LIVE=7 observed only. Do not mutate. No secrets."
+}

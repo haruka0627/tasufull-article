@@ -1,0 +1,13 @@
+{
+  "repo": "haruka0627/tasufull-article",
+  "base": "cf-pages-deploy",
+  "scannedAt": "2026-09-13",
+  "opsStatus": "reports/tasful-tlv-cf-staging-container-cost-remediation-v1/ops-status.md",
+  "stagingWranglerPath": "deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.toml",
+  "fullWorkerJsInGit": true,
+  "ssot": "deploy/cloudflare/workers/tlv-cf-llhls-ingest/worker.js",
+  "ingestImageInGit": false,
+  "cloudflareApiCredentialsInAgentEnv": false,
+  "wranglerCliPresent": false,
+  "conclusion": "Worker SSOT is deploy/cloudflare/workers/tlv-cf-llhls-ingest/worker.js. Human Staging wrangler deploy only. Production not mutated."
+}

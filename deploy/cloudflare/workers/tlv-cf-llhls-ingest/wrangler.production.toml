@@ -1,0 +1,20 @@
+# Production Worker config — OBSERVE ONLY.
+# Do not `wrangler deploy -c wrangler.production.toml` from this PR.
+# Staging idle watchdog / admin-stop GO must not be copied here.
+
+name = "tlv-cf-llhls-ingest-production"
+main = "worker.js"
+compatibility_date = "2026-06-01"
+
+[vars]
+TLV_CF_LLHLS_ENV = "production"
+TLV_CF_LLHLS_ADMIN_STOP_GO = "0"
+
+[[containers]]
+class_name = "TlvCfLlhlsIngestContainer"
+instance_type = "standard-3"
+max_instances = 8
+
+[[durable_objects.bindings]]
+name = "TLV_CF_LLHLS_INGEST"
+class_name = "TlvCfLlhlsIngestContainer"

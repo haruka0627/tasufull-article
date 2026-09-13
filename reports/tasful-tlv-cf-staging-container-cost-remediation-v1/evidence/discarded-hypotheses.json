@@ -1,0 +1,38 @@
+{
+  "discarded": [
+    {
+      "hypothesis": "sleepAfter is missing so instances never stop",
+      "verdict": "DISCARDED",
+      "why": "Ops: worker.js already has sleepAfter=\"2m\" and onActivityExpired → destroy/stop. Instances created ~2026-09-11 are still live. The timer is not the missing piece."
+    },
+    {
+      "hypothesis": "min_instances=5 or 7 keeps replicas warm",
+      "verdict": "DISCARDED",
+      "why": "Ops wrangler has max_instances=8 only. Cloudflare Containers start on demand."
+    },
+    {
+      "hypothesis": "Dashboard Delete Container is the way to scale to zero",
+      "verdict": "DISCARDED",
+      "why": "Deletes the application definition. wrangler containers delete is the same class. Wrangler has no instance stop. Use POST /v1/stop."
+    },
+    {
+      "hypothesis": "This Pages monorepo starts the VMs via live/*.js",
+      "verdict": "DISCARDED",
+      "why": "Instances are created by Worker getContainer/fetch on tlv-cf-llhls-ingest-staging."
+    },
+    {
+      "hypothesis": "Custom instance type other than standard-3",
+      "verdict": "DISCARDED",
+      "why": "Ops wrangler instance_type=standard-3. 5 running named DOs × 8 GiB matches earlier 40 GiB Dashboard memory."
+    }
+  ],
+  "confirmed_by_ops_and_platform_source": [
+    "sleepAfter NOT clearing — stuck/activity renew",
+    "@cloudflare/containers renews on every proxied fetch and WS message",
+    "isActivityExpired() is false while inflightRequests > 0 and then renews",
+    "5 running DO names including dummy aaaa…; Staging LIVE=7; max_instances=8",
+    "POST /v1/stop + ingest JWT is the existing SAFE_SHUTDOWN",
+    "/v1/admin-destroy is hard 404",
+    "Production LIVE=7 observed only — do not mutate"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "source": "ops-status.md + https://developers.cloudflare.com/containers/platform/limits/",
+  "wrangler": {
+    "path": "deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.toml",
+    "instance_type": "standard-3",
+    "max_instances": 8,
+    "sleepAfter_already": "2m"
+  },
+  "standard-3": { "vcpu": 2, "memoryGiB": 8, "diskGB": 16 },
+  "ops": {
+    "staging_live": 7,
+    "staging_running_named_dos": 5,
+    "dummy_included": true,
+    "production_live_observe_only": 7
+  },
+  "five_running_named": {
+    "formula": "5 × (2 vCPU, 8 GiB, 16 GB) = 10 vCPU, 40 GiB, 80 GB",
+    "matches_earlier_dashboard_totals": true
+  },
+  "seven_live_if_all_standard_3": {
+    "formula": "7 × standard-3 = 14 vCPU, 56 GiB, 112 GB",
+    "note": "Use wrangler instances JSON to confirm how many of LIVE=7 are running vs starting"
+  }
+}
