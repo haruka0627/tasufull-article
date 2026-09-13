@@ -1,0 +1,84 @@
+{
+  "ok": true,
+  "failed": 0,
+  "passed": 14,
+  "skipped": 1,
+  "stagingRef": "ahlxuyvhzqdqaojiywmu",
+  "results": [
+    {
+      "id": "wrangler-output-dir",
+      "status": "PASS",
+      "detail": "pages_build_output_dir=deploy/cloudflare/dist"
+    },
+    {
+      "id": "insert-private-draft",
+      "status": "PASS",
+      "detail": "persist forces private_draft before publish"
+    },
+    {
+      "id": "publish-on-submit",
+      "status": "PASS",
+      "detail": "submit calls existing publishGeneralProject"
+    },
+    {
+      "id": "repo-gates",
+      "status": "PASS",
+      "detail": "insert rejects published; publish is UPDATE only"
+    },
+    {
+      "id": "list-public",
+      "status": "PASS",
+      "detail": "repository reads builder_public_projects_v1"
+    },
+    {
+      "id": "search-public-view",
+      "status": "PASS",
+      "detail": "searchJobs prefers public projection"
+    },
+    {
+      "id": "board-repo-stack",
+      "status": "PASS",
+      "detail": "board-projects loads Staging repo stack"
+    },
+    {
+      "id": "board-detail-bridge",
+      "status": "PASS",
+      "detail": "Search cards can route to project-detail"
+    },
+    {
+      "id": "board-href",
+      "status": "PASS",
+      "detail": "job/project board detail uses canonical project-detail"
+    },
+    {
+      "id": "board-merge",
+      "status": "PASS",
+      "detail": "board list hydrates published public projection"
+    },
+    {
+      "id": "provider-untouched-present",
+      "status": "PASS",
+      "detail": "provider files still present (not redesigned here)"
+    },
+    {
+      "id": "no-prod-migration:20260914120000",
+      "status": "PASS",
+      "detail": "absent"
+    },
+    {
+      "id": "no-prod-migration:20260914130000",
+      "status": "PASS",
+      "detail": "absent"
+    },
+    {
+      "id": "no-global-prod-retarget",
+      "status": "PASS",
+      "detail": "committed chat-supabase-config.js left as-is; QA uses isolated Staging client"
+    },
+    {
+      "id": "staging-live-e2e",
+      "status": "SKIP",
+      "detail": "Staging anon+JWT not in env. Static only. Human: login on Staging client (ahlxuyvhzqdqaojiywmu), flag TASU_BUILDER_GENERAL_JOBS_REPO=true, submit 案件を投稿する."
+    }
+  ]
+}

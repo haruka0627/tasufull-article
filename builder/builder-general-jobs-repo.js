@@ -133,6 +133,25 @@
     return null;
   }
 
+  async function listPublicProjects(opts) {
+    const enabled = readFlag();
+    const client = getClient();
+    if (!enabled || !client) return { ok: false, rows: [], reason: enabled ? "NO_CLIENT" : "FLAG_OFF" };
+    if (global.TasuBuilderProjectRepository?.listPublicProjects) {
+      return global.TasuBuilderProjectRepository.listPublicProjects(opts);
+    }
+    try {
+      let q = client.from("builder_public_projects_v1").select("*");
+      if (opts?.kind) q = q.eq("kind", opts.kind);
+      q = q.limit(Math.max(1, Number(opts?.limit) || 40));
+      const { data, error } = await q;
+      if (error) return { ok: false, rows: [], reason: "LIST_FAILED", code: error.code || "" };
+      return { ok: true, rows: Array.isArray(data) ? data : [] };
+    } catch {
+      return { ok: false, rows: [], reason: "LIST_THREW" };
+    }
+  }
+
   global.TasuBuilderGeneralJobsRepo = {
     FLAG,
     KIND,
@@ -142,5 +161,6 @@
     validateJobInput,
     insertJob,
     getJob,
+    listPublicProjects,
   };
 })(typeof window !== "undefined" ? window : globalThis);

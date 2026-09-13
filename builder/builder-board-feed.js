@@ -302,9 +302,12 @@
   function boardDetailHref(projectId, boardType) {
     const id = pickStr(projectId);
     if (!id) return "board-projects.html";
+    const t = pickStr(boardType);
+    if ((t === "job" || t === "project" || !t) && global.TasuBuilderCanonicalRoutes?.projectDetailHref) {
+      return global.TasuBuilderCanonicalRoutes.projectDetailHref(id);
+    }
     const sp = new URLSearchParams();
     sp.set("id", id);
-    const t = pickStr(boardType);
     if (t && t !== "project") sp.set("type", t);
     if (global.location && String(global.location.search).includes("from=talk")) {
       sp.set("from", "talk");

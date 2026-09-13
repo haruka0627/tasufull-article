@@ -106,15 +106,33 @@
     form.dataset.wired = "1";
     bindPreview(form);
     /* submit は builder-new-project-general-jobs-wire.js:persist が DualWrite する */
-    document.querySelector("[data-canonical-job-draft]")?.addEventListener("click", (ev) => {
+    document.querySelector("[data-canonical-job-draft]")?.addEventListener("click", async (ev) => {
       ev.preventDefault();
       const status = document.querySelector("[data-canonical-job-status]");
+      const fields = collect(form);
       try {
-        sessionStorage.setItem("tasful:builder:new-project-draft", JSON.stringify(collect(form)));
-        setStatus(status, "下書きをこの端末の sessionStorage に保存しました（SSOT ではありません）。", "ok");
+        sessionStorage.setItem("tasful:builder:new-project-draft", JSON.stringify(fields));
       } catch {
         setStatus(status, "下書きを保存できませんでした。", "error");
+        return;
       }
+      const persist = global.TasuBuilderNewProjectGeneralJobsWire?.persist;
+      if (persist) {
+        try {
+          const res = await persist(fields, { intent: "draft" });
+          if (res.supabase.attempted && !res.supabase.ok) {
+            setStatus(status, `下書きは sessionStorage のみ。Staging private_draft は失敗（${res.supabase.reason || "ERROR"}）。`, "warn");
+          } else if (res.supabase.ok) {
+            setStatus(status, "private_draft で保存しました（公開遷移はしていません）。", "ok");
+          } else {
+            setStatus(status, "下書きをこの端末の sessionStorage に保存しました（SSOT ではありません）。", "ok");
+          }
+        } catch {
+          setStatus(status, "下書き persist 例外。公開はしていません。", "error");
+        }
+        return;
+      }
+      setStatus(status, "下書きをこの端末の sessionStorage に保存しました（SSOT ではありません）。", "ok");
     });
   }
 

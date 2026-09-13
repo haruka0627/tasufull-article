@@ -10871,6 +10871,105 @@
     }
   }
 
+  async function mergePublicProjectionIntoBoard(state, rows) {
+    const repo = global.TasuBuilderGeneralJobsRepo;
+    if (!repo?.listPublicProjects || !repo.isEnabled?.()) return null;
+    try {
+      const pub = await repo.listPublicProjects({ limit: 40, kind: "builder_board" });
+      if (!pub?.ok || !Array.isArray(pub.rows) || !pub.rows.length) return null;
+      const have = new Set((rows || []).map((p) => String(p.project_id || "")));
+      let added = 0;
+      pub.rows.forEach((row) => {
+        const project_id = String(row.project_key || row.id || "");
+        if (!project_id || have.has(project_id)) return;
+        const project = {
+          project_id,
+          title: row.title || "無題案件",
+          kind: row.kind || "builder_board",
+          status: row.status || "open",
+          created_at: row.created_at || "",
+          publication_state: row.publication_state || "published",
+          required_partners: 1,
+          selected_partner_ids: [],
+          board_type: "job",
+          visibility: row.visibility,
+        };
+        rows.push(project);
+        if (state && !state.specs) state.specs = {};
+        if (state?.specs && row.spec) state.specs[project_id] = row.spec;
+        have.add(project_id);
+        added += 1;
+      });
+      if (!added) return null;
+      rows.sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+      return rows;
+    } catch {
+      return null;
+    }
+  }
+
+  function paintBoardProjectRows(state, rows) {
+    const api = mvp();
+    const list = document.querySelector("[data-builder-board-project-list]");
+    const kpi = document.querySelector("[data-builder-board-project-count]");
+    const topKpi = document.querySelector("[data-builder-board-kpi]");
+    if (!list || !kpi || !topKpi) return;
+    topKpi.textContent = `role: ${getRole()}`;
+    let viewRows = rows.slice();
+
+    if (boardFeedTypeFilter && boardFeedTypeFilter !== "all") {
+      const matchesTab =
+        window.TasuBuilderBoardFeed?.matchesBoardTabFilter ||
+        ((project, key) => resolveBoardItemType(project) === key);
+      viewRows = viewRows.filter((p) => matchesTab(p, boardFeedTypeFilter));
+    }
+    const repo = global.TasuBuilderSearchRepository;
+    const ui = global.TasuBuilderSearchUiAdapter;
+    if (
+      repo?.filterSourceRows &&
+      ui?.mapBoardProjectRow &&
+      boardFeedTypeFilter &&
+      boardFeedTypeFilter !== "all"
+    ) {
+      try {
+        const mapped = viewRows.map((p) => ui.mapBoardProjectRow(p, state.specs?.[p.project_id]));
+        const filter = ui.filterFromBoardTab(boardFeedTypeFilter);
+        const res = repo.filterSourceRows(mapped, filter, "job");
+        const idSet = new Set((res.items || []).map((r) => r.project_id || r.id));
+        if (idSet.size) viewRows = viewRows.filter((p) => idSet.has(p.project_id));
+      } catch {
+        /* keep tab-filtered rows */
+      }
+    }
+    kpi.textContent = `${viewRows.length} 件`;
+    list.innerHTML = viewRows.length
+      ? viewRows.map((p) => buildBoardProjectCard(p, state.specs?.[p.project_id], state)).join("")
+      : `<p class="talk-empty">表示できる投稿はありません。</p>`;
+
+    if (!list.dataset.detailNavBound) {
+      list.dataset.detailNavBound = "1";
+      list.addEventListener("click", (ev) => {
+        if (ev.target?.closest?.("a, button, input, label")) return;
+        const card = ev.target?.closest?.("[data-project-id]");
+        const projectId = card?.getAttribute("data-project-id");
+        const boardType = card?.getAttribute("data-board-type") || "project";
+        if (!projectId) return;
+        window.location.href = boardDetailHref(projectId, boardType);
+      });
+    }
+
+    if (!list.dataset.applyBound) {
+      list.dataset.applyBound = "1";
+      list.addEventListener("click", (ev) => {
+        const btn = ev.target?.closest?.("[data-builder-board-apply]");
+        if (!btn) return;
+        const projectId = btn.getAttribute("data-project-id");
+        if (!projectId || getRole() !== "partner") return;
+        if (boardApplyToProject(api, projectId)) renderBoardProjectsPage();
+      });
+    }
+  }
+
   function renderBoardProjectsPage() {
     applyBoardPageBackLinks();
     const threadsShortcut = document.querySelector("[data-builder-board-threads-link]");
@@ -10897,59 +10996,9 @@
         .slice()
         .sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
     }
-    const list = document.querySelector("[data-builder-board-project-list]");
-    const kpi = document.querySelector("[data-builder-board-project-count]");
-    const topKpi = document.querySelector("[data-builder-board-kpi]");
-    if (!list || !kpi || !topKpi) return;
-    topKpi.textContent = `role: ${getRole()}`;
-
-    if (boardFeedTypeFilter && boardFeedTypeFilter !== "all") {
-      const matchesTab =
-        window.TasuBuilderBoardFeed?.matchesBoardTabFilter ||
-        ((project, key) => resolveBoardItemType(project) === key);
-      rows = rows.filter((p) => matchesTab(p, boardFeedTypeFilter));
-    }
-    const repo = global.TasuBuilderSearchRepository;
-    const ui = global.TasuBuilderSearchUiAdapter;
-    if (
-      repo?.filterSourceRows &&
-      ui?.mapBoardProjectRow &&
-      boardFeedTypeFilter &&
-      boardFeedTypeFilter !== "all"
-    ) {
-      try {
-        const mapped = rows.map((p) => ui.mapBoardProjectRow(p, state.specs?.[p.project_id]));
-        const filter = ui.filterFromBoardTab(boardFeedTypeFilter);
-        const res = repo.filterSourceRows(mapped, filter, "job");
-        const idSet = new Set((res.items || []).map((r) => r.project_id || r.id));
-        if (idSet.size) rows = rows.filter((p) => idSet.has(p.project_id));
-      } catch {
-        /* keep tab-filtered rows */
-      }
-    }
-    kpi.textContent = `${rows.length} 件`;
-    list.innerHTML = rows.length
-      ? rows.map((p) => buildBoardProjectCard(p, state.specs?.[p.project_id], state)).join("")
-      : `<p class="talk-empty">表示できる投稿はありません。</p>`;
-
-    if (!list.dataset.detailNavBound) {
-      list.dataset.detailNavBound = "1";
-      list.addEventListener("click", (ev) => {
-        if (ev.target?.closest?.("a, button, input, label")) return;
-        const card = ev.target?.closest?.("[data-project-id]");
-        const projectId = card?.getAttribute("data-project-id");
-        const boardType = card?.getAttribute("data-board-type") || "project";
-        if (!projectId) return;
-        window.location.href = boardDetailHref(projectId, boardType);
-      });
-    }
-
-    list.addEventListener("click", (ev) => {
-      const btn = ev.target?.closest?.("[data-builder-board-apply]");
-      if (!btn) return;
-      const projectId = btn.getAttribute("data-project-id");
-      if (!projectId || getRole() !== "partner") return;
-      if (boardApplyToProject(api, projectId)) renderBoardProjectsPage();
+    paintBoardProjectRows(state, rows);
+    void mergePublicProjectionIntoBoard(state, rows).then((merged) => {
+      if (merged) paintBoardProjectRows(state, merged);
     });
   }
 

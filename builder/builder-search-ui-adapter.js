@@ -116,6 +116,23 @@
    * @param {object} project
    * @param {object} [spec]
    */
+  function mapPublicProjectRow(row) {
+    const spec = row?.spec && typeof row.spec === "object" ? row.spec : {};
+    return mapBoardProjectRow(
+      {
+        project_id: row?.project_key || row?.id,
+        id: row?.project_key || row?.id,
+        title: row?.title || "",
+        status: row?.status || "open",
+        created_at: row?.created_at || "",
+        kind: row?.kind || "builder_board",
+        publication_state: row?.publication_state || "published",
+        board_type: "job",
+      },
+      spec
+    );
+  }
+
   function mapBoardProjectRow(project, spec) {
     const boardType =
       global.TasuBuilderBoardFeed?.resolveBoardItemType?.(project) ||
@@ -166,6 +183,7 @@
     filterFromPartnerQuery,
     filterFromBoardTab,
     mapBoardProjectRow,
+    mapPublicProjectRow,
     filterFromRequirements,
   };
 })(typeof window !== "undefined" ? window : globalThis);

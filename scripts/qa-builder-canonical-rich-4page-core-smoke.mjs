@@ -18,6 +18,7 @@ const files = [
   "builder/builder-partner-register-core.js",
   "builder/builder-top-route-bridge.js",
   "builder/builder-nav-foundation.js",
+  "builder/builder-new-project-general-jobs-wire.js",
 ];
 
 const store = new Map();
@@ -102,6 +103,40 @@ if (typeof ctx.TasuBuilderPartnerSupabaseSync.upsertFromMvpPartner !== "function
 }
 if (ctx.TasuBuilderNavFoundation.LEGACY_URLS.partnerRegister !== "/builder/provider-profile.html") {
   throw new Error("nav partnerRegister not remapped");
+}
+
+const calls = { insert: 0, update: 0, publish: 0 };
+ctx.TasuBuilderGeneralJobsStagingFlags.isRepositoryActive = () => true;
+ctx.TasuBuilderProjectRepository.insertPrivateDraft = async (row) => {
+  calls.insert += 1;
+  if (String(row.publication_state || "") === "published") throw new Error("insert must stay private_draft");
+  return { ok: true, project_key: row.project_key, id: "uuid-smoke", publication_state: "private_draft" };
+};
+ctx.TasuBuilderProjectRepository.updatePrivateDraft = async () => {
+  calls.update += 1;
+  return { ok: false, reason: "NO_EXISTING" };
+};
+ctx.TasuBuilderProjectRepository.publishGeneralProject = async () => {
+  calls.publish += 1;
+  return { ok: true, publication_state: "published" };
+};
+
+const draftRes = await ctx.TasuBuilderNewProjectGeneralJobsWire.persist(
+  { title: "下書き案件", category: "リフォーム", description: "draft" },
+  { intent: "draft" }
+);
+if (calls.publish !== 0) throw new Error("draft must skip publishGeneralProject");
+if (draftRes.mapped.project.publication_state !== "private_draft") throw new Error("draft must stay private_draft");
+if (draftRes.published) throw new Error("draft must not claim published");
+
+const pubRes = await ctx.TasuBuilderNewProjectGeneralJobsWire.persist(
+  { title: "公開案件", category: "リフォーム", description: "publish" },
+  { intent: "publish" }
+);
+if (calls.insert < 2) throw new Error("publish persist must insert private_draft first");
+if (calls.publish !== 1) throw new Error("publish intent must call publishGeneralProject once");
+if (!pubRes.published || pubRes.mapped.project.publication_state !== "published") {
+  throw new Error("publish persist must mark published only after transition");
 }
 
 console.log(

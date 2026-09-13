@@ -1,7 +1,8 @@
 /**
  * TASFUL Builder — new-project persist → DualWrite
  * isRepositoryActive() が false なら Supabase は叩かず COMPAT_CACHE のみ。
- * publication_state は private_draft。publishGeneralProject は呼ばない。
+ * insert/update は必ず private_draft。publish は既存 publishGeneralProject のみ。
+ * 案件を投稿する → intent=publish。下書きとして保存 → intent=draft（publish しない）。
  */
 (function (global) {
   "use strict";
@@ -31,6 +32,8 @@
       end: g("end", "[data-canonical-job-end]"),
       trade_tags: g("detail_category", "[data-canonical-job-detail-category]"),
       areas: g("areas", "[data-canonical-job-areas]"),
+      project_key: g("project_key", "[data-canonical-job-project-key]"),
+      project_id: g("project_id", "[data-canonical-job-project-id]"),
     };
   }
 
@@ -38,17 +41,57 @@
     return Boolean(global.TasuBuilderGeneralJobsStagingFlags?.isRepositoryActive?.());
   }
 
-  async function persist(fields) {
+  function readUrlId() {
+    try {
+      return String(new URLSearchParams(global.location?.search || "").get("id") || "").trim();
+    } catch {
+      return "";
+    }
+  }
+
+  async function resolveOwnerId(fields) {
+    const fromFields = String(fields?.owner_id || "").trim();
+    try {
+      const c = global.TasuBuilderGeneralJobsStagingFlags?.getClient?.();
+      if (c?.auth?.getUser) {
+        const { data } = await c.auth.getUser();
+        const uid = String(data?.user?.id || "").trim();
+        if (uid) return uid;
+      }
+    } catch {
+      /* ignore */
+    }
+    return fromFields || "owner-demo";
+  }
+
+  async function persist(fields, options) {
+    const intent = options?.intent === "publish" ? "publish" : "draft";
     const mapper = global.TasuBuilderGeneralMapper;
-    const row = mapper?.toGeneralProjectRow ? mapper.toGeneralProjectRow(fields) : fields;
+    const repo = global.TasuBuilderProjectRepository;
+    const ownerId = await resolveOwnerId(fields);
+    const existingKey = String(fields?.project_key || fields?.project_id || readUrlId() || "").trim();
+    const row = mapper?.toGeneralProjectRow
+      ? mapper.toGeneralProjectRow(Object.assign({}, fields, { owner_id: ownerId, project_key: existingKey || fields?.project_key }))
+      : Object.assign({}, fields, { owner_id: ownerId });
     row.publication_state = "private_draft";
-    let supabase = { attempted: false, ok: false, skipped: true, reason: "REPO_INACTIVE" };
-    if (isRepositoryActive() && global.TasuBuilderProjectRepository?.insertPrivateDraft) {
-      const inserted = await global.TasuBuilderProjectRepository.insertPrivateDraft(row);
-      supabase = Object.assign({ attempted: true, skipped: false }, inserted);
-      if (inserted.ok) {
-        row.project_key = inserted.project_key || row.project_key;
-        row.supabase_id = inserted.id;
+    let supabase = { attempted: false, ok: false, skipped: true, reason: "REPO_INACTIVE", intent };
+    if (isRepositoryActive() && repo?.insertPrivateDraft) {
+      let saved;
+      if (existingKey && repo.updatePrivateDraft) {
+        saved = await repo.updatePrivateDraft(existingKey, row);
+        if (!saved.ok) saved = await repo.insertPrivateDraft(row);
+      } else {
+        saved = await repo.insertPrivateDraft(row);
+      }
+      supabase = Object.assign({ attempted: true, skipped: false, intent }, saved);
+      if (saved.ok) {
+        row.project_key = saved.project_key || row.project_key;
+        row.supabase_id = saved.id;
+        if (intent === "publish" && repo.publishGeneralProject) {
+          const pub = await repo.publishGeneralProject(row.project_key || saved.project_key || saved.id);
+          supabase.publish = pub;
+          if (pub.ok) row.publication_state = "published";
+        }
       }
     }
     const mapped = mapper?.fromGeneralProjectRow
@@ -56,7 +99,7 @@
       : { project: { project_id: row.project_key, title: row.title }, spec: row.spec || {} };
     if (mapped.project) {
       mapped.project.project_id = row.project_key || mapped.project.project_id;
-      mapped.project.publication_state = "private_draft";
+      mapped.project.publication_state = row.publication_state || "private_draft";
     }
     const cache = global.TasuBuilderCompatCache?.upsertJobCache(mapped.project, mapped.spec);
     const id = mapped.project?.project_id || row.project_key;
@@ -64,12 +107,14 @@
     return {
       ok: true,
       id,
+      intent,
       row,
       mapped,
       supabase,
       compatCache: cache,
       redirect: href,
       dualWrite: true,
+      published: Boolean(supabase.publish?.ok),
     };
   }
 
@@ -78,6 +123,23 @@
     el.hidden = false;
     el.textContent = text;
     el.dataset.kind = kind || "info";
+  }
+
+  function publishStatusText(res) {
+    if (res.supabase.attempted && !res.supabase.ok) {
+      return `Staging insert は失敗（${res.supabase.reason || "ERROR"}）。COMPAT_CACHE のみ。published 直 insert はしていません。`;
+    }
+    if (res.supabase.ok && res.published) {
+      return "公開しました（published）。詳細へ移動します。";
+    }
+    if (res.supabase.ok && res.intent === "publish") {
+      const why = res.supabase.publish?.reason || res.supabase.publish?.code || "PUBLISH_FAILED";
+      return `private_draft まで保存。公開遷移は失敗（${why}）。published 直 insert はしていません。`;
+    }
+    if (res.supabase.ok) {
+      return "private_draft で Staging に保存しました。";
+    }
+    return "Repository inactive。COMPAT_CACHE のみ保存（isRepositoryActive=false）。";
   }
 
   function init() {
@@ -96,14 +158,9 @@
       const btn = form.querySelector("[data-canonical-job-submit], button[type='submit']");
       if (btn) btn.disabled = true;
       try {
-        const res = await persist(fields);
-        if (res.supabase.attempted && !res.supabase.ok) {
-          setStatus(status, `Staging insert は失敗（${res.supabase.reason || "ERROR"}）。COMPAT_CACHE のみ。published 直 insert はしていません。`, "warn");
-        } else if (res.supabase.ok) {
-          setStatus(status, "private_draft で Staging に保存しました。詳細へ移動します。", "ok");
-        } else {
-          setStatus(status, "Repository inactive。COMPAT_CACHE のみ保存（isRepositoryActive=false）。", "ok");
-        }
+        const res = await persist(fields, { intent: "publish" });
+        const kind = res.supabase.attempted && !res.supabase.ok ? "warn" : res.published || res.supabase.ok ? "ok" : "ok";
+        setStatus(status, publishStatusText(res), kind);
         window.location.href = res.redirect;
       } catch {
         setStatus(status, "persist 例外。成功扱いにしません。", "error");
@@ -120,5 +177,6 @@
     persist,
     isRepositoryActive,
     collect,
+    resolveOwnerId,
   };
 })(typeof window !== "undefined" ? window : globalThis);

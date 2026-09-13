@@ -447,13 +447,35 @@
     }
   }
 
+  function mapJobSearchRows(rows) {
+    const ui = global.TasuBuilderSearchUiAdapter;
+    if (!ui?.mapPublicProjectRow) return rows;
+    return rows.map((row) => ui.mapPublicProjectRow(row));
+  }
+
+  async function tryPublicProjectsSearch(query) {
+    const repo = global.TasuBuilderGeneralJobsRepo;
+    if (!repo?.listPublicProjects || !repo.isEnabled?.()) return null;
+    try {
+      const listed = await repo.listPublicProjects({ limit: Number(query.limit) || 20, kind: "builder_board" });
+      if (!listed?.ok || !Array.isArray(listed.rows)) return null;
+      return mapJobSearchRows(listed.rows);
+    } catch {
+      return null;
+    }
+  }
+
   async function trySupabaseSearch(target, query) {
+    if (target === "job") {
+      const fromView = await tryPublicProjectsSearch(query);
+      if (fromView) return fromView;
+    }
     const client = getSupabaseClient();
     if (!client) return null;
     const tableByTarget = {
       worker: "builder_workers",
       partner: "builder_partners",
-      job: "builder_jobs",
+      job: "builder_public_projects_v1",
     };
     const table = tableByTarget[target];
     if (!table) return null;

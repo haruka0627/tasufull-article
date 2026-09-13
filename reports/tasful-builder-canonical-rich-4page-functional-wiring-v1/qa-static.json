@@ -1,7 +1,7 @@
 {
   "ok": true,
   "failed": 0,
-  "passed": 27,
+  "passed": 29,
   "skipped": 1,
   "results": [
     {
@@ -97,7 +97,17 @@
     {
       "id": "no-publish-on-insert",
       "status": "PASS",
-      "detail": "persist does not set published"
+      "detail": "persist insert/update stays private_draft"
+    },
+    {
+      "id": "publish-after-draft",
+      "status": "PASS",
+      "detail": "submit intent calls existing publishGeneralProject"
+    },
+    {
+      "id": "draft-skips-publish",
+      "status": "PASS",
+      "detail": "draft intent does not force publish"
     },
     {
       "id": "provider-profile-sync",

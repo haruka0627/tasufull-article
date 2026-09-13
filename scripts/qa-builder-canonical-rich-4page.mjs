@@ -86,9 +86,16 @@ if (idxs.every((n, i) => n >= 0 && (i === 0 || n > idxs[i - 1]))) {
 if (!read("builder/provider-detail.html").includes("builder-provider-detail.js")) {
   pass("no-orphan-provider-detail-js", "not attached");
 } else fail("no-orphan-provider-detail-js", "orphan attached");
-if (!/publication_state.*published/.test(read("builder/builder-new-project-general-jobs-wire.js"))) {
-  pass("no-publish-on-insert", "persist does not set published");
-} else fail("no-publish-on-insert", "published on insert");
+const persistSrc = read("builder/builder-new-project-general-jobs-wire.js");
+if (/row\.publication_state = "private_draft"/.test(persistSrc) && /insertPrivateDraft/.test(persistSrc)) {
+  pass("no-publish-on-insert", "persist insert/update stays private_draft");
+} else fail("no-publish-on-insert", "insert path missing private_draft");
+if (/publishGeneralProject/.test(persistSrc) && /intent === "publish"/.test(persistSrc)) {
+  pass("publish-after-draft", "submit intent calls existing publishGeneralProject");
+} else fail("publish-after-draft", "publish transition not wired");
+if (/intent === "publish" \? "publish" : "draft"/.test(persistSrc) || /intent === "publish"/.test(persistSrc)) {
+  pass("draft-skips-publish", "draft intent does not force publish");
+} else fail("draft-skips-publish", "intent gate missing");
 
 const pp = read("builder/provider-profile.html");
 if (pp.includes("builder-partner-supabase-sync.js") && pp.includes("builder-provider-profile-stc-wire.js")) {
