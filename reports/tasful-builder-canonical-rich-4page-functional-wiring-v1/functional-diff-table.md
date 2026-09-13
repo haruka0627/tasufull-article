@@ -6,7 +6,7 @@
 
 | Surface | Rich（canonical・視覚 SSOT） | MVP（機能ソース・LEGACY_COMPAT） | 差分（配線後） |
 |---|---|---|---|
-| Job create | `new-project.html` ライト UI。タイトル / カテゴリ / 詳細カテゴリ / 依頼詳細。kind・visibility・contact_policy・source は hidden デフォルト（mvp-post と同一 mapper） | `mvp-post.html` 暗色。全ポリシーフィールドを露出。localStorage `tasful:builder:mvp:v1` へ直接 commit。遷移先は旧 `board-project-detail.html` | Rich は `TasuBuilderJobCreateCore` → flag ON なら `builder_projects` kind=`builder_board`、常に COMPAT_CACHE ミラー。遷移は `project-detail.html?id=` |
+| Job create | `new-project.html` ライト UI。タイトル / カテゴリ / 詳細カテゴリ / 依頼詳細 + 住所・規模・時期キー。kind 等は hidden | `mvp-post.html` 暗色。全ポリシー露出。localStorage 直 commit | `persist` DualWrite。insert は `private_draft`。mapper が prefecture/city/address/postal_code/scale/desired_timing_note を保持。遷移 `project-detail.html?id=` |
 | Job create (alt) | 同上 | `mvp-project-new.html` は mvp-post と同ハンドラ | 残置。コア未ロード時も redirect を canonical に変更 |
 | Provider register | `provider-profile.html` ライト UI。種別 / 氏名 / ふりがな / 屋号 / 対応情報 | `mvp-partner-register.html` 暗色。display_name / trades / areas / availability / headline。自己ページへリロード | `TasuBuilderPartnerRegisterCore` → `TasuBuilderPartnerSupabaseSync` + `ProviderStore`。遷移は `provider-detail.html?id=` |
 | Provider detail | `provider-detail.html` canonical id bind。id なしはデモプレースホルダ | なし（`partner.html` / `partner-detail.html` は別表面） | 実レコード bind。demo は本番扱いにしない |

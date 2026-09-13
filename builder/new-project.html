@@ -92,6 +92,34 @@
             <label>依頼の詳細 <span class="cr-req">必須</span></label>
             <textarea class="cr-textarea" name="description" placeholder="工事内容・現状・ご希望のイメージなど、できるだけ詳しくご記入ください" data-canonical-job-description></textarea>
           </div>
+          <div class="cr-grid">
+            <div class="cr-field">
+              <label>都道府県</label>
+              <input class="cr-input" name="prefecture" data-canonical-job-prefecture placeholder="例: 東京都" />
+            </div>
+            <div class="cr-field">
+              <label>市区町村</label>
+              <input class="cr-input" name="city" data-canonical-job-city placeholder="例: 新宿区" />
+            </div>
+          </div>
+          <div class="cr-field">
+            <label>住所</label>
+            <input class="cr-input" name="address" data-canonical-job-address />
+          </div>
+          <div class="cr-grid">
+            <div class="cr-field">
+              <label>郵便番号</label>
+              <input class="cr-input" name="postal_code" data-canonical-job-postal-code />
+            </div>
+            <div class="cr-field">
+              <label>規模</label>
+              <input class="cr-input" name="scale" data-canonical-job-scale />
+            </div>
+          </div>
+          <div class="cr-field">
+            <label>希望時期メモ</label>
+            <input class="cr-input" name="desired_timing_note" data-canonical-job-timing />
+          </div>
         </section>
 
         <div class="cr-hidden-fields">
@@ -129,8 +157,16 @@
   <script src="builder-config.js"></script>
   <script src="builder-canonical-routes.js"></script>
   <script src="builder-compat-cache.js"></script>
+  <script src="builder-general-jobs-staging-flags.js"></script>
+  <script src="builder-session.js"></script>
+  <script src="builder-repositories-local.js"></script>
+  <script src="builder-repositories-supabase.js"></script>
+  <script src="builder-repository.js"></script>
+  <script src="builder-general-mapper.js"></script>
+  <script src="builder-project-repository.js"></script>
   <script src="builder-general-jobs-repo.js"></script>
   <script src="builder-job-create-core.js"></script>
   <script src="builder-new-project-wire.js"></script>
+  <script src="builder-new-project-general-jobs-wire.js"></script>
 </body>
 </html>

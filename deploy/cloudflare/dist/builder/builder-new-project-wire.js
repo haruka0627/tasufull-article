@@ -105,7 +105,7 @@
     if (!form || form.dataset.wired === "1") return;
     form.dataset.wired = "1";
     bindPreview(form);
-    form.addEventListener("submit", (ev) => onSubmit(form, ev));
+    /* submit は builder-new-project-general-jobs-wire.js:persist が DualWrite する */
     document.querySelector("[data-canonical-job-draft]")?.addEventListener("click", (ev) => {
       ev.preventDefault();
       const status = document.querySelector("[data-canonical-job-status]");

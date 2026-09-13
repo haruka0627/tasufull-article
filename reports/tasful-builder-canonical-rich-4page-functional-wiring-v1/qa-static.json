@@ -1,7 +1,7 @@
 {
   "ok": true,
   "failed": 0,
-  "passed": 21,
+  "passed": 25,
   "skipped": 1,
   "results": [
     {
@@ -82,12 +82,32 @@
     {
       "id": "new-project-wire",
       "status": "PASS",
-      "detail": "create core + wire"
+      "detail": "repo stack + general-jobs persist"
+    },
+    {
+      "id": "no-publish-on-insert",
+      "status": "PASS",
+      "detail": "persist does not set published"
     },
     {
       "id": "provider-profile-sync",
       "status": "PASS",
-      "detail": "PartnerSupabaseSync + ProviderStore"
+      "detail": "STC save + PartnerSupabaseSync"
+    },
+    {
+      "id": "upsert-from-mvp",
+      "status": "PASS",
+      "detail": "named API present"
+    },
+    {
+      "id": "dispatch-top-action",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "id": "nav-foundation",
+      "status": "PASS",
+      "detail": "partnerRegister remapped"
     },
     {
       "id": "search-bridge-fw",

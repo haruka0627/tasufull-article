@@ -60,14 +60,31 @@ if (top.includes("find-workers.html") && top.includes("../public-board.html")) {
 } else fail("top-find", "find routes missing");
 
 const np = read("builder/new-project.html");
-if (np.includes("builder-new-project-wire.js") && np.includes("builder-job-create-core.js")) {
-  pass("new-project-wire", "create core + wire");
-} else fail("new-project-wire", "wire missing");
+if (
+  np.includes("builder-new-project-general-jobs-wire.js") &&
+  np.includes("builder-general-jobs-staging-flags.js") &&
+  np.includes("builder-general-mapper.js") &&
+  np.includes("builder-project-repository.js")
+) {
+  pass("new-project-wire", "repo stack + general-jobs persist");
+} else fail("new-project-wire", "repo stack missing");
+if (!/publication_state.*published/.test(read("builder/builder-new-project-general-jobs-wire.js"))) {
+  pass("no-publish-on-insert", "persist does not set published");
+} else fail("no-publish-on-insert", "published on insert");
 
 const pp = read("builder/provider-profile.html");
-if (pp.includes("builder-partner-supabase-sync.js") && pp.includes("builder-provider-store.js")) {
-  pass("provider-profile-sync", "PartnerSupabaseSync + ProviderStore");
-} else fail("provider-profile-sync", "sync missing");
+if (pp.includes("builder-partner-supabase-sync.js") && pp.includes("builder-provider-profile-stc-wire.js")) {
+  pass("provider-profile-sync", "STC save + PartnerSupabaseSync");
+} else fail("provider-profile-sync", "stc/sync missing");
+if (read("builder/builder-partner-supabase-sync.js").includes("upsertFromMvpPartner")) {
+  pass("upsert-from-mvp", "named API present");
+} else fail("upsert-from-mvp", "missing upsertFromMvpPartner");
+if (read("builder/builder-top-route-bridge.js").includes("dispatchTopAction")) {
+  pass("dispatch-top-action", "present");
+} else fail("dispatch-top-action", "missing");
+if (read("builder/builder-nav-foundation.js").includes("/builder/provider-profile.html")) {
+  pass("nav-foundation", "partnerRegister remapped");
+} else fail("nav-foundation", "missing remap");
 
 const fw = read("builder/find-workers.html");
 if (fw.includes("builder-search-detail-bridge.js")) pass("search-bridge-fw", "loaded");

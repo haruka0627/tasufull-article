@@ -38,13 +38,39 @@
       global.TasuBuilderCtaBind?.bind(root, {});
       return;
     }
-    let rec = null;
-    try {
-      rec = (await global.TasuBuilderPartnerRegisterCore?.load(id)) || null;
-    } catch {
-      rec = null;
+    function loadPublished(row) {
+      if (!row) return null;
+      const pub = String(row.publicationStatus || row.publication_status || "").toLowerCase();
+      const complete = String(row.profileCompletionStatus || row.profile_completion_status || "").toLowerCase();
+      if (pub && pub !== "published") return { gated: true, row, reason: "NOT_PUBLISHED" };
+      if (complete && complete !== "complete") return { gated: true, row, reason: "INCOMPLETE" };
+      return { gated: false, row };
     }
-    if (!rec) rec = global.TasuBuilderProviderStore?.get(id) || null;
+
+    let rec = global.TasuBuilderProviderStore?.get(id) || null;
+    if (!rec) {
+      try {
+        rec = (await global.TasuBuilderPartnerRegisterCore?.load(id)) || null;
+      } catch {
+        rec = null;
+      }
+    }
+    if (!rec && global.TasuBuilderPartnerSupabaseSync?.getProvider) {
+      try {
+        rec = await global.TasuBuilderPartnerSupabaseSync.getProvider(id);
+      } catch {
+        rec = null;
+      }
+    }
+    const published = loadPublished(rec);
+    if (published?.gated) {
+      const banner = document.querySelector("[data-canonical-provider-demo]");
+      if (banner) {
+        banner.hidden = false;
+        banner.textContent = `公開ゲート未通過（${published.reason}）。Rich 登録は review_pending のため、auto-publish しません。`;
+      }
+      rec = published.row;
+    }
     if (!rec) {
       showDemo(`id=${id} のレコードが見つかりません。デモには差し替えず、未検出を表示します。`);
       text("[data-canonical-provider-name]", "提供者レコードが見つかりません");
@@ -53,7 +79,7 @@
       return;
     }
     const demo = document.querySelector("[data-canonical-provider-demo]");
-    if (demo) demo.hidden = true;
+    if (demo && !published?.gated) demo.hidden = true;
     text("[data-canonical-provider-name]", rec.display_name || rec.name);
     text("[data-canonical-provider-entity]", rec.partner_type === "company" || rec.entity === "法人" ? "法人" : "個人");
     text("[data-canonical-provider-headline]", rec.headline || rec.trade_name || rec.profile);

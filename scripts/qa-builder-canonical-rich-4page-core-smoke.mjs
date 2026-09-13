@@ -8,11 +8,16 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const files = [
   "builder/builder-canonical-routes.js",
   "builder/builder-compat-cache.js",
+  "builder/builder-general-jobs-staging-flags.js",
+  "builder/builder-general-mapper.js",
+  "builder/builder-project-repository.js",
   "builder/builder-general-jobs-repo.js",
   "builder/builder-partner-supabase-sync.js",
   "builder/builder-provider-store.js",
   "builder/builder-job-create-core.js",
   "builder/builder-partner-register-core.js",
+  "builder/builder-top-route-bridge.js",
+  "builder/builder-nav-foundation.js",
 ];
 
 const store = new Map();
@@ -25,7 +30,13 @@ const window = {
     setItem: (k, v) => store.set(k, String(v)),
     removeItem: (k) => store.delete(k),
   },
-  document: { dispatchEvent() {}, addEventListener() {} },
+  document: {
+    readyState: "complete",
+    dispatchEvent() {},
+    addEventListener() {},
+    querySelector() { return null; },
+    querySelectorAll() { return []; },
+  },
 };
 window.window = window;
 const ctx = vm.createContext(window);
@@ -71,6 +82,26 @@ if (!cached?.project?.title) throw new Error("job cache miss");
 
 if (ctx.TasuBuilderCanonicalRoutes.isIwashoPartnerRegister("/partner-register.html?source=builder") !== true) {
   throw new Error("iwasho detect failed");
+}
+
+const mapped = ctx.TasuBuilderGeneralMapper.toGeneralProjectRow({
+  title: "Rich keys",
+  prefecture: "東京都",
+  city: "新宿区",
+  address: "1-1-1",
+  postal_code: "160-0001",
+  scale: "小規模",
+  desired_timing_note: "来月",
+});
+if (mapped.publication_state !== "private_draft") throw new Error("must insert private_draft");
+if (mapped.prefecture !== "東京都" || mapped.spec.city !== "新宿区" || !mapped.spec.desired_timing_note) {
+  throw new Error("rich spec keys dropped");
+}
+if (typeof ctx.TasuBuilderPartnerSupabaseSync.upsertFromMvpPartner !== "function") {
+  throw new Error("upsertFromMvpPartner missing");
+}
+if (ctx.TasuBuilderNavFoundation.LEGACY_URLS.partnerRegister !== "/builder/provider-profile.html") {
+  throw new Error("nav partnerRegister not remapped");
 }
 
 console.log(

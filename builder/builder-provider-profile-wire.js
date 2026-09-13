@@ -71,6 +71,8 @@
       reader.readAsDataURL(file);
     });
 
+    /* submit は builder-provider-profile-stc-wire.js:save */
+    return;
     form.addEventListener("submit", async (ev) => {
       ev.preventDefault();
       const core = global.TasuBuilderPartnerRegisterCore;

@@ -64,6 +64,14 @@
     }
     const cached = global.TasuBuilderCompatCache?.getJobCache(id);
     if (cached) return Object.assign({ source: "compat-cache" }, cached);
+    if (global.TasuBuilderProjectRepository?.getGeneralProjectById) {
+      try {
+        const remote = await global.TasuBuilderProjectRepository.getGeneralProjectById(id);
+        if (remote?.project) return Object.assign({ source: "project-repository" }, remote);
+      } catch {
+        /* ignore */
+      }
+    }
     return null;
   }
 
@@ -94,6 +102,9 @@
     text("[data-canonical-job-kind]", p.kind || "builder_board");
     text("[data-canonical-job-trades]", join(spec.trade_tags));
     text("[data-canonical-job-areas]", join(spec.area_codes || spec.areas));
+    text("[data-canonical-job-prefecture]", spec.prefecture || p.prefecture || "—");
+    text("[data-canonical-job-city]", spec.city || p.city || "—");
+    text("[data-canonical-job-timing]", spec.desired_timing_note || "—");
     text("[data-canonical-job-period]", spec.period ? `${spec.period.start || "—"} 〜 ${spec.period.end || "—"}` : "—");
     text("[data-canonical-job-id]", p.project_id || id);
     text("[data-canonical-job-source-label]", rec.source === "supabase" ? "Staging / builder_projects" : "COMPAT_CACHE");

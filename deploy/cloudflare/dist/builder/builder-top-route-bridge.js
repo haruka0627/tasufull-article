@@ -45,17 +45,28 @@
     el.dataset.routeBridge = "rewritten";
   }
 
+  function dispatchTopAction(action, href) {
+    const routes = R();
+    const a = String(action || "");
+    const h = String(href || "");
+    if (a === "post_job" || /mvp-post\.html/i.test(h)) return routes?.CANONICAL.NEW_PROJECT || "new-project.html";
+    if (a === "register_worker" || a === "partner_register" || /mvp-partner-register\.html/i.test(h)) {
+      return routes?.CANONICAL.PROVIDER_PROFILE || "provider-profile.html";
+    }
+    return h;
+  }
+
   function apply(root) {
     const routes = R();
     if (!routes) return;
     const scope = root || document;
     scope.querySelectorAll("a[href]").forEach((a) => {
       if (shouldRemapPostJob(a)) {
-        rewrite(a, routes.CANONICAL.NEW_PROJECT);
+        rewrite(a, dispatchTopAction("post_job", a.getAttribute("href") || "mvp-post.html"));
         return;
       }
       if (shouldRemapProviderRegister(a)) {
-        rewrite(a, routes.CANONICAL.PROVIDER_PROFILE);
+        rewrite(a, dispatchTopAction("partner_register", a.getAttribute("href") || "mvp-partner-register.html"));
         return;
       }
       if (shouldRemapJobDetail(a) && a.closest("[data-builder-top-projects], [data-builder-top-project-card]")) {
@@ -78,5 +89,5 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  global.TasuBuilderTopRouteBridge = { apply };
+  global.TasuBuilderTopRouteBridge = { apply, dispatchTopAction };
 })(typeof window !== "undefined" ? window : globalThis);

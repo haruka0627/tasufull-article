@@ -65,12 +65,38 @@ Wire / repo:
 Hosts: `new-project.html` / `provider-profile.html` / `provider-detail.html`  
 既存: `project-detail.html`（bind パネル追加） / `builder-top.html` / `find-workers.html` / `partners.html` / `mvp-post.html` / `mvp-partner-register.html` / `mvp-project-new.html` / `builder.js`（submit を core 経由）
 
+## Follow-up wiring (user local APIs)
+
+`origin/cf-pages-deploy` には Phase1 が指す既存ファイルが無いため、同名 API をこの PR で新設して接続した。
+
+- `new-project.html` に mvp-post と同じ repo stack 順: staging-flags → session → repositories-local → repositories-supabase → repository → general-mapper → project-repository → `builder-new-project-general-jobs-wire.js:persist`
+- `toGeneralProjectRow` は prefecture / city / address / postal_code / scale / desired_timing_note を保持
+- insert は `publication_state=private_draft`。`publishGeneralProject` は Rich 投稿から呼ばない（42501 回避）
+- provider-profile: `builder-provider-profile-stc-wire.js:save` 成功後 `upsertFromMvpPartner`。`publishProvider` なし。`submitProviderForReview` → `review_pending`
+- provider-detail: `publicationStatus===published` AND `profileCompletionStatus===complete` ゲート。未通過はバナー。`builder-provider-detail.js` は未接続
+- project-detail: local miss 時 `getGeneralProjectById`
+- TOP: `dispatchTopAction` が mvp-post → new-project、mvp-partner-register → provider-profile。`LEGACY_URLS.partnerRegister` → `/builder/provider-profile.html`。operator `partner` / `contractor_register` → provider-profile
+
+## Schema risks
+
+| Risk | Note |
+|---|---|
+| `publication_state` / Rich 住所カラムが Staging `builder_projects` に無い | insert は slim カラムへ retry。Rich keys は mapper + COMPAT_CACHE に保持 |
+| 公開 insert → RLS 42501 | 本 PR は published 直 insert しない |
+| `builder_workers` 未作成 | worker upsert 失敗は skip。partner は継続 |
+| furigana / image / quals / years / radius | `builder_partners` に無い。ProviderStore metadata のみ |
+| provider-detail 公開ゲート | review_pending のままでは published 扱いにしない |
+
+**READY_FOR_PRODUCTION = NO**
+
 ## Safety
 
 | Item | Status |
 |---|---|
 | PRODUCTION_MIGRATION | NO |
+| READY_FOR_PRODUCTION | **NO** |
 | SECRET_LEAK | NO |
 | Dark MVP CSS on Rich hosts | NO |
 | MVP routes deleted | NO |
 | Fake CTA success | NO |
+| Auto-publish provider | NO |

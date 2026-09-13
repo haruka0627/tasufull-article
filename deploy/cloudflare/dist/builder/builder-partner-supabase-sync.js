@@ -54,6 +54,20 @@
     };
   }
 
+  function upsertFromMvpPartner(partner) {
+    const src = partner || {};
+    return upsertPartner({
+      partner_id: src.partner_id || src.id,
+      display_name: src.display_name || src.name,
+      partner_type: src.partner_type || src.entity,
+      trades: src.trades,
+      areas: src.areas,
+      headline: src.headline || src.trade_name,
+      profile: src.profile || "",
+      availability: src.availability,
+    });
+  }
+
   async function upsertPartner(input) {
     const client = getClient();
     const row = mapPartnerRow(input);
@@ -133,6 +147,7 @@
     getClient,
     mapPartnerRow,
     upsertPartner,
+    upsertFromMvpPartner,
     upsertWorker,
     getProvider,
   };
