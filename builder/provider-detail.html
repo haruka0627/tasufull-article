@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>提供者詳細 | TASFUL Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="builder-canonical-rich.css" />
+</head>
+<body class="cr-body" data-page="builder-provider-detail">
+  <header class="cr-top">
+    <a class="cr-brand" href="builder-top.html">
+      <span class="cr-brand__mark">B</span>
+      <span>
+        <span class="cr-brand__name">TASFUL</span>
+        <span class="cr-brand__sub">Builder</span>
+      </span>
+    </a>
+    <nav class="cr-nav" aria-label="グローバル">
+      <a href="user-dashboard.html">ダッシュボード</a>
+      <a class="is-active" href="find-workers.html">職人・業者を探す</a>
+      <a href="../public-board.html">案件を探す</a>
+      <a href="new-project.html">案件を投稿</a>
+      <a href="mvp-talk.html">メッセージ</a>
+      <a href="index.html">取引管理</a>
+    </nav>
+  </header>
+
+  <div class="cr-layout">
+    <aside class="cr-side">
+      <a href="find-workers.html">検索に戻る</a>
+      <a href="provider-profile.html" data-canonical-provider-edit>プロフィール編集</a>
+    </aside>
+
+    <main class="cr-main" data-canonical-provider-detail>
+      <p class="cr-banner" data-canonical-provider-demo hidden></p>
+      <section class="cr-card">
+        <div class="cr-photo-row">
+          <img class="cr-avatar" alt="" data-canonical-provider-photo-preview src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Crect fill='%23e5e7eb' width='96' height='96'/%3E%3C/svg%3E" />
+          <div>
+            <h1 data-canonical-provider-name>—</h1>
+            <p class="cr-lead" data-canonical-provider-headline>—</p>
+          </div>
+        </div>
+        <dl class="cr-dl">
+          <dt>種別</dt><dd data-canonical-provider-entity>—</dd>
+          <dt>工種</dt><dd data-canonical-provider-trades>—</dd>
+          <dt>エリア</dt><dd data-canonical-provider-areas>—</dd>
+          <dt>稼働</dt><dd data-canonical-provider-availability>—</dd>
+          <dt>ID</dt><dd data-canonical-provider-id>—</dd>
+        </dl>
+        <div class="cr-cta-row">
+          <button type="button" class="cr-btn cr-btn--primary" data-cta-talk>Talk</button>
+          <button type="button" class="cr-btn" data-cta-official-request>正式依頼</button>
+          <button type="button" class="cr-btn" data-cta-question>質問</button>
+          <button type="button" class="cr-btn" data-cta-favorite>お気に入り</button>
+        </div>
+        <p class="cr-status" data-canonical-cta-status hidden></p>
+      </section>
+    </main>
+
+    <aside class="cr-aside">
+      <section class="cr-card">
+        <h3>操作について</h3>
+        <p class="cr-preview-body">実ハンドラがある操作だけが有効です。未接続 CTA は NOT_BOUND で、成功したようには表示しません。</p>
+      </section>
+    </aside>
+  </div>
+
+  <script src="../supabase-client.js"></script>
+  <script src="builder-config.js"></script>
+  <script src="builder-canonical-routes.js"></script>
+  <script src="builder-compat-cache.js"></script>
+  <script src="builder-partner-supabase-sync.js"></script>
+  <script src="builder-provider-store.js"></script>
+  <script src="builder-partner-register-core.js"></script>
+  <script src="builder-cta-bind.js"></script>
+  <script src="builder-provider-detail-wire.js"></script>
+</body>
+</html>

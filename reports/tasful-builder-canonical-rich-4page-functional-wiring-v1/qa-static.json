@@ -1,0 +1,118 @@
+{
+  "ok": true,
+  "failed": 0,
+  "passed": 21,
+  "skipped": 1,
+  "results": [
+    {
+      "id": "exists:builder/new-project.html",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "id": "exists:builder/provider-profile.html",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "id": "exists:builder/provider-detail.html",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "id": "exists:builder/project-detail.html",
+      "status": "PASS",
+      "detail": "present"
+    },
+    {
+      "id": "legacy:builder/mvp-post.html",
+      "status": "PASS",
+      "detail": "kept"
+    },
+    {
+      "id": "legacy:builder/mvp-partner-register.html",
+      "status": "PASS",
+      "detail": "kept"
+    },
+    {
+      "id": "legacy:builder/mvp-project-detail.html",
+      "status": "PASS",
+      "detail": "kept"
+    },
+    {
+      "id": "legacy:builder/mvp-project-new.html",
+      "status": "PASS",
+      "detail": "kept"
+    },
+    {
+      "id": "no-dark-css:builder/new-project.html",
+      "status": "PASS",
+      "detail": "isolated light host"
+    },
+    {
+      "id": "no-dark-css:builder/provider-profile.html",
+      "status": "PASS",
+      "detail": "isolated light host"
+    },
+    {
+      "id": "no-dark-css:builder/provider-detail.html",
+      "status": "PASS",
+      "detail": "isolated light host"
+    },
+    {
+      "id": "top-post-job",
+      "status": "PASS",
+      "detail": "post_job → new-project.html"
+    },
+    {
+      "id": "top-iwasho",
+      "status": "PASS",
+      "detail": "IWASHO partner-register kept"
+    },
+    {
+      "id": "top-bridge",
+      "status": "PASS",
+      "detail": "bridge script loaded"
+    },
+    {
+      "id": "top-find",
+      "status": "PASS",
+      "detail": "find_jobs / find_workers kept"
+    },
+    {
+      "id": "new-project-wire",
+      "status": "PASS",
+      "detail": "create core + wire"
+    },
+    {
+      "id": "provider-profile-sync",
+      "status": "PASS",
+      "detail": "PartnerSupabaseSync + ProviderStore"
+    },
+    {
+      "id": "search-bridge-fw",
+      "status": "PASS",
+      "detail": "loaded"
+    },
+    {
+      "id": "project-detail-bind",
+      "status": "PASS",
+      "detail": "canonical bind host"
+    },
+    {
+      "id": "no-prod-migration:supabase/migrations/20260914120000",
+      "status": "PASS",
+      "detail": "absent"
+    },
+    {
+      "id": "no-prod-migration:supabase/migrations/20260914130000",
+      "status": "PASS",
+      "detail": "absent"
+    },
+    {
+      "id": "staging-live-write",
+      "status": "SKIP",
+      "detail": "Staging secrets not available in this environment. Static QA only."
+    }
+  ]
+}

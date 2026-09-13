@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0c0f1d" />
@@ -32,9 +31,9 @@
         </a>
 
         <nav class="builder-top-nav" aria-label="グローバルナビ">
-          <a class="builder-top-nav__link" href="../public-board.html">案件を探す</a>
-          <a class="builder-top-nav__link" href="mvp-project-new.html">案件を投稿する</a>
-          <a class="builder-top-nav__link" href="/partner-register.html?source=builder">協力パートナー登録</a>
+          <a class="builder-top-nav__link" href="../public-board.html" data-builder-top-action="find_jobs">案件を探す</a>
+          <a class="builder-top-nav__link" href="new-project.html" data-builder-top-action="post_job">案件を投稿する</a>
+          <a class="builder-top-nav__link" href="/partner-register.html?source=builder" data-builder-top-action="iwasho">協力パートナー登録</a>
           <a class="builder-top-nav__btn" href="../login.html">ログイン</a>
         </nav>
 
@@ -65,9 +64,9 @@
           </div>
           <nav class="builder-top-drawer__nav" aria-label="メニューリンク">
             <a class="builder-top-drawer__link builder-top-drawer__link--accent" href="../login.html">ログイン</a>
-            <a class="builder-top-drawer__link" href="../public-board.html">案件を探す</a>
-            <a class="builder-top-drawer__link" href="mvp-project-new.html">案件を投稿する</a>
-            <a class="builder-top-drawer__link" href="/partner-register.html?source=builder">協力パートナー登録</a>
+            <a class="builder-top-drawer__link" href="../public-board.html" data-builder-top-action="find_jobs">案件を探す</a>
+            <a class="builder-top-drawer__link" href="new-project.html" data-builder-top-action="post_job">案件を投稿する</a>
+            <a class="builder-top-drawer__link" href="/partner-register.html?source=builder" data-builder-top-action="iwasho">協力パートナー登録</a>
           </nav>
         </aside>
       </div>
@@ -100,9 +99,9 @@
           </div>
 
           <div class="builder-top-hero__cta" aria-label="主要導線">
-            <a class="builder-top-btn builder-top-btn--primary" href="../public-board.html">案件を探す</a>
-            <a class="builder-top-btn builder-top-btn--dark" href="mvp-project-new.html">案件を投稿する</a>
-            <a class="builder-top-btn builder-top-btn--outline" href="/partner-register.html?source=builder">協力パートナー登録</a>
+            <a class="builder-top-btn builder-top-btn--primary" href="../public-board.html" data-builder-top-action="find_jobs">案件を探す</a>
+            <a class="builder-top-btn builder-top-btn--dark" href="new-project.html" data-builder-top-action="post_job">案件を投稿する</a>
+            <a class="builder-top-btn builder-top-btn--outline" href="/partner-register.html?source=builder" data-builder-top-action="iwasho">協力パートナー登録</a>
           </div>
 
           <div class="builder-top-stats" aria-label="統計">
@@ -185,12 +184,12 @@
           </div>
         </div>
         <div class="builder-top-feature-grid builder-top-feature-grid--major">
-          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="../public-board.html">
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="../public-board.html" data-builder-top-action="find_jobs">
             <div class="builder-top-card__icon" aria-hidden="true">🔍</div>
             <h3 class="builder-top-h3">案件を探す</h3>
             <p class="builder-top-p">公開案件から協力会社・職人を募集。</p>
           </a>
-          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="mvp-project-new.html">
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="new-project.html" data-builder-top-action="post_job">
             <div class="builder-top-card__icon" aria-hidden="true">📝</div>
             <h3 class="builder-top-h3">案件を掲載する</h3>
             <p class="builder-top-p">新規案件を投稿して応募を受け付け。</p>
@@ -200,7 +199,7 @@
             <h3 class="builder-top-h3">建設ツール</h3>
             <p class="builder-top-p">人工・材料・見積・Builder AI。</p>
           </a>
-          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="find-workers.html">
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="find-workers.html" data-builder-top-action="find_workers">
             <div class="builder-top-card__icon" aria-hidden="true">🧑‍🔧</div>
             <h3 class="builder-top-h3">職人を探す</h3>
             <p class="builder-top-p">職種・エリア・資格から職人を検索。</p>
@@ -266,7 +265,7 @@
             <h3 class="builder-top-h3">建設ツール</h3>
             <p class="builder-top-p">人工・材料・見積・粗利計算を Builder 上で確認。</p>
           </a>
-          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="find-workers.html">
+          <a class="builder-top-card builder-top-card--hover builder-top-card--link" href="find-workers.html" data-builder-top-action="find_workers">
             <div class="builder-top-card__icon" aria-hidden="true">🧑‍🔧</div>
             <h3 class="builder-top-h3">職人を探す</h3>
             <p class="builder-top-p">職種・エリア・資格から職人を検索。</p>
@@ -347,9 +346,10 @@
 
           <div class="builder-top-footer__col">
             <p class="builder-top-footer__title builder-top-footer__title--bar">サービス</p>
-            <a class="builder-top-footer__link" href="../public-board.html">案件一覧</a>
-            <a class="builder-top-footer__link" href="mvp-project-new.html">案件を投稿する</a>
-            <a class="builder-top-footer__link" href="/partner-register.html?source=builder">協力パートナー登録</a>
+            <a class="builder-top-footer__link" href="../public-board.html" data-builder-top-action="find_jobs">案件一覧</a>
+            <a class="builder-top-footer__link" href="new-project.html" data-builder-top-action="post_job">案件を投稿する</a>
+            <a class="builder-top-footer__link" href="/partner-register.html?source=builder" data-builder-top-action="iwasho">協力パートナー登録</a>
+            <a class="builder-top-footer__link" href="provider-profile.html" data-builder-top-action="register_worker">職人・協力会社プロフィール登録</a>
             <a class="builder-top-footer__link" href="user-dashboard.html">一般ダッシュボード</a>
             <a class="builder-top-footer__link" href="index.html">パートナーダッシュボード</a>
           </div>
@@ -450,11 +450,11 @@
   <script src="builder-ai-core.js"></script>
   <script src="builder-b3-init.js"></script>
   <script src="builder-general-flow.js"></script>
+  <script src="builder-canonical-routes.js"></script>
+  <script src="builder-top-route-bridge.js"></script>
+  <script src="builder-search-detail-bridge.js"></script>
   <script src="../breadcrumb-config.js"></script>
   <script src="../common-breadcrumb.js"></script>
   <script src="builder.js" defer></script>
-  <link rel="stylesheet" href="../tasful-site-assistant.css">
-  <script src="../tasful-site-assistant-adapter.js" defer></script>
-  <script src="../tasful-site-assistant.js" defer></script>
 </body>
 </html>
