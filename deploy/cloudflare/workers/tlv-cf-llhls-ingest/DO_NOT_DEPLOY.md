@@ -1,12 +1,12 @@
-# Do not deploy this directory as-is
+# Deploy rules
 
-This tree holds the Staging lifecycle patch and wrangler **vars** that match
-ops (`max_instances=8`, `standard-3`). It does **not** include the ingest
-image or the full unpublished `worker.js`.
+SSOT: this directory (`worker.js`, `wrangler.toml`, `occupancy-release.mjs`).
 
-- `wrangler deploy` from here is forbidden (incomplete Worker).
-- Production deploy is forbidden.
-- `wrangler containers delete` / Dashboard Delete Container are forbidden.
+Allowed after Human review: `wrangler deploy` using **`wrangler.toml` (Staging)** only.
 
-Human: merge `src/idle-lifecycle.mjs` + `src/fetch-guard.mjs` into the
-existing Staging `worker.js`, then deploy **Staging only**.
+Forbidden:
+
+- `wrangler deploy -c wrangler.production.toml`
+- `wrangler containers delete`
+- Dashboard **Delete Container**
+- Setting `TLV_CF_LLHLS_ADMIN_STOP_GO=1` on Production

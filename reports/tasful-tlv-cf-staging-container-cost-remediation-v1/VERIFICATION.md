@@ -20,7 +20,7 @@ Expect:
 - Staging fixture FINDING live=7 / streams=0 / HIGH / `autoDelete=false`.
 - Production fixture FINDING live=7 CRITICAL **observe-only** / `productionMutation=NO`.
 
-## Human Staging (after fetch-guard is merged into unpublished worker.js)
+## Human Staging (`wrangler.toml` + `worker.js` in repo)
 
 1. Record Staging LIVE before (ops: 7).
 2. Confirm Production LIVE (ops: 7) — do not change it.

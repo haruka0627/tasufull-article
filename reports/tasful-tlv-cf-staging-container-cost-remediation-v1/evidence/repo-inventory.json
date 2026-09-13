@@ -4,9 +4,10 @@
   "scannedAt": "2026-09-13",
   "opsStatus": "reports/tasful-tlv-cf-staging-container-cost-remediation-v1/ops-status.md",
   "stagingWranglerPath": "deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.toml",
-  "fullWorkerJsInGit": false,
+  "fullWorkerJsInGit": true,
+  "ssot": "deploy/cloudflare/workers/tlv-cf-llhls-ingest/worker.js",
   "ingestImageInGit": false,
   "cloudflareApiCredentialsInAgentEnv": false,
   "wranglerCliPresent": false,
-  "conclusion": "Lifecycle patch + wrangler vars are in-repo. Unpublished worker.js/image stay on the operator box. Human merges fetch-guard then Staging-only deploy. Production not mutated."
+  "conclusion": "Worker SSOT is deploy/cloudflare/workers/tlv-cf-llhls-ingest/worker.js. Human Staging wrangler deploy only. Production not mutated."
 }

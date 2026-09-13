@@ -24,7 +24,9 @@ stays defined.
    `POST https://<staging-worker>/v1/stop` with ingest JWT for that stream.
 4. Re-list instances. Definition remains. Production is not touched.
 
-## After this PR is merged into Staging worker.js
+SSOT: `deploy/cloudflare/workers/tlv-cf-llhls-ingest/worker.js` (in repo).
+
+## After Staging deploy of that worker.js
 
 Idle playlist GETs and dummy ids are **not** forwarded to `Container.fetch`
 (so they no longer renew `sleepAfter`). An ingest-idle watchdog stops the

@@ -34,6 +34,12 @@ import {
 } from "../deploy/cloudflare/workers/tlv-cf-llhls-ingest/src/idle-lifecycle.mjs";
 import { handleStagingContainerRequest } from "../deploy/cloudflare/workers/tlv-cf-llhls-ingest/src/fetch-guard.mjs";
 import {
+  markIngestRecord,
+  occupancyIsActive,
+  releaseOccupancyIfIdle,
+  shouldReleaseOccupancy,
+} from "../deploy/cloudflare/workers/tlv-cf-llhls-ingest/occupancy-release.mjs";
+import {
   FINDING_CODE,
   SAFE_SHUTDOWN_METHODS,
   collectIdleCostEvidence,
@@ -51,11 +57,27 @@ function check(name, ok, detail = "") {
 
 const wranglerPath = join(ROOT, "deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.toml");
 const wrangler = existsSync(wranglerPath) ? readFileSync(wranglerPath, "utf8") : "";
+const workerPath = join(ROOT, "deploy/cloudflare/workers/tlv-cf-llhls-ingest/worker.js");
+const prodWranglerPath = join(ROOT, "deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.production.toml");
+const occupancyPath = join(ROOT, "deploy/cloudflare/workers/tlv-cf-llhls-ingest/occupancy-release.mjs");
+const workerJs = existsSync(workerPath) ? readFileSync(workerPath, "utf8") : "";
+const prodWrangler = existsSync(prodWranglerPath) ? readFileSync(prodWranglerPath, "utf8") : "";
+
+check("SSOT worker.js exists", existsSync(workerPath));
+check("occupancy-release.mjs exists", existsSync(occupancyPath));
+check("wrangler.production.toml exists (observe/fail-closed)", existsSync(prodWranglerPath));
+check("worker.js sleepAfter is 2m", /sleepAfter\s*=\s*"2m"/.test(workerJs));
+check("worker.js onActivityExpired releases occupancy then watchdog", /onActivityExpired[\s\S]*releaseOccupancyIfIdle[\s\S]*runIngestIdleWatchdog/.test(workerJs));
+check("worker.js POST /v1/stop path wired", /v1-stop/.test(workerJs) && /runV1Stop/.test(workerJs));
+check("worker.js admin-destroy stays 404", /admin-destroy/.test(workerJs) && /404/.test(workerJs));
+check("worker.js does not deploy production", !/wrangler deploy -c wrangler.production/.test(workerJs));
+check("production wrangler env is production and GO=0", /TLV_CF_LLHLS_ENV\s*=\s*"production"/.test(prodWrangler) && /TLV_CF_LLHLS_ADMIN_STOP_GO\s*=\s*"0"/.test(prodWrangler));
 check("ops wrangler path exists", existsSync(wranglerPath));
 check("wrangler max_instances=8", /max_instances\s*=\s*8/.test(wrangler));
 check("wrangler instance_type=standard-3", /instance_type\s*=\s*"standard-3"/.test(wrangler));
 check("wrangler admin-stop GO default 0", /TLV_CF_LLHLS_ADMIN_STOP_GO\s*=\s*"0"/.test(wrangler));
 check("wrangler is staging name", /tlv-cf-llhls-ingest-staging/.test(wrangler));
+check("wrangler main is worker.js", /main\s*=\s*"worker.js"/.test(wrangler));
 check("container class name matches dashboard suffix", CONTAINER_CLASS_NAME === "TlvCfLlhlsIngestContainer");
 
 const running5 = correlateInstanceCapacity({
@@ -80,6 +102,20 @@ check("platform default constant unused for this deploy", PLATFORM_DEFAULT_SLEEP
 const stagingTarget = { sleepAfter: "2m" };
 check("bind staging is no-op (activity-renew is the bug)", !bindStagingSleepAfter(stagingTarget, { envName: "staging" }).applied && stagingTarget.sleepAfter === "2m");
 
+check("GET /health is occupancy-keepalive", classifyRequestActivity({ method: "GET", pathname: "/health" }) === "occupancy-keepalive");
+check(
+  "staging occupancy keepalive does not renew or forward",
+  shouldRenewActivityTimeout({
+    envName: "staging",
+    hasActiveIngest: false,
+    requestLike: { method: "GET", pathname: "/occupancy" },
+  }) === false &&
+    shouldForwardToContainer({
+      envName: "staging",
+      hasActiveIngest: false,
+      requestLike: { method: "GET", pathname: "/occupancy" },
+    }) === false,
+);
 check("GET playlist is playback", classifyRequestActivity({ method: "GET", pathname: "/live/a.m3u8" }) === "playback");
 check("POST /v1/stop is v1-stop not ingest", classifyRequestActivity({ method: "POST", pathname: V1_STOP_PATH }) === "v1-stop");
 check("POST whip is ingest", classifyRequestActivity({ method: "POST", pathname: "/ingest/whip" }) === "ingest");
@@ -292,6 +328,17 @@ const collected = await collectIdleCostEvidence({
   listContainerLiveInstances: async () => 7,
   listBroadcastRows: async () => [{ status: "ended" }, { status: "failed" }],
 });
+const nowOcc = 5_000_000;
+check("held dummy occupancy should release", shouldReleaseOccupancy({ held: true, dummy: true, streamId: "aaaa", openIngestSession: false }, nowOcc).release);
+check("open ingest occupancy is active", occupancyIsActive(markIngestRecord("s1", nowOcc), nowOcc));
+const mem = new Map();
+const storage = {
+  get: async (k) => mem.get(k),
+  put: async (k, v) => mem.set(k, v),
+};
+const released = await releaseOccupancyIfIdle(storage, "aaaa", nowOcc);
+check("releaseOccupancyIfIdle writes released record", released.released && released.record.held === false);
+
 check(
   "collectIdleCostEvidence marks FINDING without secrets",
   collected.evaluation.finding &&

@@ -1,8 +1,18 @@
+PASS: SSOT worker.js exists
+PASS: occupancy-release.mjs exists
+PASS: wrangler.production.toml exists (observe/fail-closed)
+PASS: worker.js sleepAfter is 2m
+PASS: worker.js onActivityExpired releases occupancy then watchdog
+PASS: worker.js POST /v1/stop path wired
+PASS: worker.js admin-destroy stays 404
+PASS: worker.js does not deploy production
+PASS: production wrangler env is production and GO=0
 PASS: ops wrangler path exists
 PASS: wrangler max_instances=8
 PASS: wrangler instance_type=standard-3
 PASS: wrangler admin-stop GO default 0
 PASS: wrangler is staging name
+PASS: wrangler main is worker.js
 PASS: container class name matches dashboard suffix
 PASS: 5 running named DOs × standard-3 = 10/40/80
 PASS: ops LIVE=7 × standard-3 = 14 vCPU / 56 GiB / 112 GB
@@ -13,6 +23,8 @@ PASS: staging does not re-apply sleepAfter (already 2m)
 PASS: production sleepAfter fail-closed
 PASS: platform default constant unused for this deploy
 PASS: bind staging is no-op (activity-renew is the bug)
+PASS: GET /health is occupancy-keepalive
+PASS: staging occupancy keepalive does not renew or forward
 PASS: GET playlist is playback
 PASS: POST /v1/stop is v1-stop not ingest
 PASS: POST whip is ingest
@@ -46,6 +58,9 @@ PASS: guardrail recommends /v1/stop not delete
 PASS: no FINDING while a stream is active
 PASS: no FINDING when live=0
 PASS: production LIVE=7 FINDING is CRITICAL observe-only
+PASS: held dummy occupancy should release
+PASS: open ingest occupancy is active
+PASS: releaseOccupancyIfIdle writes released record
 PASS: collectIdleCostEvidence marks FINDING without secrets
 
-49/49 PASS
+64/64 PASS

@@ -1,13 +1,22 @@
 # Ops status (collected; do not re-guess)
 
-Incorporated 2026-09-13 from operator wrangler/dashboard collection.
-No secrets.
+Incorporated 2026-09-13. No secrets.
 
-## Staging wrangler
+## SSOT (in repo)
 
-Path (operator box / intended repo path):
+`deploy/cloudflare/workers/tlv-cf-llhls-ingest/`
 
-`deploy/cloudflare/workers/tlv-cf-llhls-ingest/wrangler.toml`
+| File | Role |
+| --- | --- |
+| `worker.js` | Staging/Production Worker source |
+| `wrangler.toml` | Staging (`tlv-cf-llhls-ingest-staging`) |
+| `wrangler.production.toml` | Production observe / fail-closed — **do not deploy** |
+| `occupancy-release.mjs` | Occupancy hold/release |
+
+Do **not** describe this Worker as absent from the repo.
+`workers/tlv-cf-llhls-ingest/` is a superseded overlay (`MIGRATION.md`).
+
+## Staging wrangler / worker.js (ops)
 
 | Field | Value |
 | --- | --- |
@@ -32,9 +41,6 @@ Path (operator box / intended repo path):
 
 ## Operator conclusion
 
-`sleepAfter` is **not** clearing these DOs. Instances remain live days after
-creation (`2m` timeout). Cause class: **stuck / activity renew** — not a
-missing `sleepAfter` field, not a missing `onActivityExpired` hook, not
-`min_instances`.
-
-This agent did not re-query Cloudflare and did not deploy.
+`sleepAfter` is **not** clearing these DOs. Cause class: **stuck / activity
+renew** (Container inflight/WS + occupancy keep-alive / unreleased occupancy),
+not a missing `sleepAfter` field.

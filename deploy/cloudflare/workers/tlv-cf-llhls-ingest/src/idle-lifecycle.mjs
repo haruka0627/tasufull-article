@@ -62,6 +62,7 @@ export const STAGING_SLEEP_AFTER_SECONDS = 120;
 
 export const PLAYBACK_PATH_RE = /(\.m3u8|\.ts|\.m4s|\.mp4|\.m4a|\/hls\/|\/llhls\/|\/playlist)/i;
 export const INGEST_PATH_RE = /(\/ingest|\/publish|\/whip|\/whep|\/rtmp|\/srt|\/stream\/in)/i;
+export const OCCUPANCY_KEEPALIVE_RE = /(\/occupancy|\/keep-?alive|\/health|\/ping|\/ready)/i;
 export const V1_STOP_PATH = "/v1/stop";
 export const V1_ADMIN_STOP_PATH = "/v1/admin-stop";
 export const V1_ADMIN_DESTROY_PATH = "/v1/admin-destroy";
@@ -163,6 +164,9 @@ export function classifyRequestActivity(requestLike = {}) {
   if (method === "POST" && !pathname.startsWith("/v1/")) {
     return "ingest";
   }
+  if (OCCUPANCY_KEEPALIVE_RE.test(pathname)) {
+    return "occupancy-keepalive";
+  }
   if (method === "GET" && PLAYBACK_PATH_RE.test(pathname)) {
     return "playback";
   }
@@ -183,7 +187,7 @@ export function shouldForwardToContainer(input = {}) {
   }
   if (input.hasActiveIngest) return true;
   if (isDummyStreamId(input.streamId)) return false;
-  if (kind === "playback") return false;
+  if (kind === "playback" || kind === "occupancy-keepalive") return false;
   if (kind === "unknown" && input.lastIngestAtMs == null) return false;
   return true;
 }
@@ -194,7 +198,7 @@ export function shouldRenewActivityTimeout(input = {}) {
   if (input.hasActiveIngest) return true;
   if (isDummyStreamId(input.streamId)) return false;
   const kind = classifyRequestActivity(input.requestLike);
-  if (kind === "playback" || kind === "unknown") return false;
+  if (kind === "playback" || kind === "unknown" || kind === "occupancy-keepalive") return false;
   if (kind === "v1-stop" || kind === "admin-stop" || kind === "admin-destroy") return false;
   return true;
 }
