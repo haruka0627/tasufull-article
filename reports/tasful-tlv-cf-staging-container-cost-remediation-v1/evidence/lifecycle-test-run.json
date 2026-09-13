@@ -1,0 +1,9 @@
+{
+  "command": "node scripts/test-tlv-cf-llhls-ingest-idle-lifecycle.mjs",
+  "exitCode": 0,
+  "passed": 34,
+  "failed": 0,
+  "productionMutation": "NO",
+  "stagingContainerDeleted": "NO",
+  "autoDelete": false
+}

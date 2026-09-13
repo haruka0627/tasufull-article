@@ -1,0 +1,58 @@
+{
+  "collectedAt": "2026-09-13T15:21:08.787Z",
+  "envName": "production",
+  "liveInstances": 0,
+  "liveInstancesSource": "adapter",
+  "activeStreamCount": 0,
+  "activeStreamSource": "adapter",
+  "attribution": {
+    "instanceType": "standard-3",
+    "stagingMatchesStandard3x5": true,
+    "staging": {
+      "instanceType": "standard-3",
+      "liveInstances": 5,
+      "vcpu": 10,
+      "memoryGiB": 40,
+      "diskGB": 80
+    },
+    "productionLiveInstances": 0,
+    "productionCapacityMatchesZero": true
+  },
+  "evaluation": {
+    "finding": false,
+    "code": null,
+    "severity": "NONE",
+    "envName": "production",
+    "liveInstances": 0,
+    "activeStreamCount": 0,
+    "idleSeconds": 7200,
+    "idleTimeoutSeconds": 600,
+    "idleKnown": true,
+    "autoDelete": false,
+    "forbiddenActions": [
+      "wrangler containers delete",
+      "dashboard Delete Container"
+    ],
+    "recommendedActions": [],
+    "productionMutation": false
+  },
+  "errors": [],
+  "autoDelete": false,
+  "productionMutation": false,
+  "check": {
+    "command": "node scripts/check-tlv-cf-llhls-ingest-idle-cost.mjs",
+    "wranglerReadOnly": {
+      "listApplications": "wrangler containers list",
+      "listStagingInstances": "wrangler containers instances <STAGING_APPLICATION_ID> --json",
+      "forbidden": [
+        "wrangler containers delete",
+        "dashboard Delete Container"
+      ]
+    },
+    "stagingContainerApp": "tlv-cf-llhls-ingest-staging-tlvcfllhlsingestcontainer",
+    "productionContainerApp": "tlv-cf-llhls-ingest-production-tlvcfllhlsingestcontainer",
+    "productionWorker": "tlv-cf-llhls-ingest-production",
+    "productionMutation": "NO",
+    "containerDefinitionDeleted": "NO"
+  }
+}

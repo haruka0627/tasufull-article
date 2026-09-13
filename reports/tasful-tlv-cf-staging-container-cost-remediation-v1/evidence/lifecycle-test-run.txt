@@ -1,0 +1,36 @@
+PASS: repo has no unpublished-unrelated wrangler worker config for ingest
+PASS: repo has no TlvCfLlhlsIngestContainer implementation outside overlay
+PASS: overlay + DO_NOT_DEPLOY present
+PASS: container class name matches dashboard suffix
+PASS: 5 live × standard-3 correlates 10 vCPU / 40 GiB / 80 GB — {"instanceType":"standard-3","liveInstances":5,"vcpu":10,"memoryGiB":40,"diskGB":80}
+PASS: standard-3 is 2 vCPU / 8 GiB / 16 GB
+PASS: staging sleepAfter apply 2m
+PASS: production sleepAfter fail-closed
+PASS: unknown env fail-closed
+PASS: platform default remains 10m constant
+PASS: bind staging overwrites sleepAfter
+PASS: bind production is no-op
+PASS: GET playlist is playback
+PASS: POST publish is ingest
+PASS: staging playback without ingest does not renew
+PASS: staging playback with ingest does renew (stream uninterrupted)
+PASS: production playback still renews (fail-closed)
+PASS: staging idle expired → stop
+PASS: staging active ingest expired → keep
+PASS: production expired → platform-default
+PASS: runActivityExpired staging idle calls stop once
+PASS: runActivityExpired staging ingest renews not stops
+PASS: runActivityExpired production defers (no stop)
+PASS: operator stop refuses production
+PASS: operator stop refuses missing token
+PASS: operator stop staging calls Container.stop only
+PASS: countActiveStreams ignores ended
+PASS: guardrail FINDING for 5 live / 0 streams past idle
+PASS: guardrail never auto-deletes
+PASS: guardrail does not recommend definition delete
+PASS: no FINDING while a stream is active
+PASS: no FINDING when live=0
+PASS: production FINDING is CRITICAL observe-only
+PASS: collectIdleCostEvidence marks FINDING without secrets
+
+34/34 PASS

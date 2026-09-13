@@ -97,9 +97,11 @@ directory as a new Worker** (`DO_NOT_DEPLOY.md`).
 
 ## 5. Verification
 
-See `VERIFICATION.md`. Automated tests:
+See `VERIFICATION.md`. Automated (this agent, no Cloudflare mutation):
 
-`node scripts/test-tlv-cf-llhls-ingest-idle-lifecycle.mjs`
+- `node scripts/test-tlv-cf-llhls-ingest-idle-lifecycle.mjs` → **34/34 PASS**
+- Staging fixture guardrail → **FINDING** `NO_ACTIVE_STREAMS_AND_LIVE_INSTANCES` live=5 streams=0 HIGH; `autoDelete=false`
+- Production fixture observe → **OK** live=0; `productionMutation=NO`
 
 ## 6. Human gate
 
