@@ -1,0 +1,11 @@
+PHOTO_PREVIEW PROOF
+PREVIEW_URL=https://410b34df.tasufull-article.pages.dev
+HEAD=46cb8a787fac848a34faea63ecd78aaee083ad09
+sample=/materials/generated/previews/image/sns-biz-q09-20260816-001.jpg
+magic=FF D8 FF (JPEG)
+size_bytes=8649 (homepage=72267)
+missing_download=/materials/generated/downloads/image/nope.png -> HTTP 404 (not SPA 200)
+preview_files_committed=260
+approx_size_MB=3.88
+_redirects_in_dist=yes (downloads splat -> 404.html; previews NOT splat-404'd)
+PHOTO_PREVIEW=PASS
