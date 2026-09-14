@@ -12,6 +12,76 @@
       .replace(/"/g, "&quot;");
   }
 
+  function pickStr(...vals) {
+    for (let i = 0; i < vals.length; i += 1) {
+      const s = String(vals[i] ?? "").trim();
+      if (s) return s;
+    }
+    return "";
+  }
+
+  function isImageUrl(url) {
+    return /\.(png|jpe?g|gif|webp|svg)(\?|#|$)/i.test(String(url || ""));
+  }
+
+
+  function preferCommittedPreviewPath(src) {
+    const s = String(src || "").trim();
+    if (!s) return "";
+    // Map slim-tree downloads URLs to committed preview thumbs when possible.
+    const m = s.match(/\/materials\/generated\/downloads\/image\/([^/?#]+)\.(png|jpe?g|webp)$/i);
+    if (m) {
+      const base = m[1];
+      return "/materials/generated/previews/image/" + base + ".jpg";
+    }
+    return s;
+  }
+
+  function isServedPreviewPath(src) {
+    const s = String(src || "");
+    return /\/materials\/images\/previews\//i.test(s) || /\/materials\/generated\/previews\//i.test(s);
+  }
+
+  function resolveThumbSrc(item) {
+    const images = Array.isArray(item?.preview_images) ? item.preview_images : [];
+    const first = images[0];
+    const fromPreview = pickStr(
+      first && (first.src || first.url || first),
+      typeof first === "string" ? first : ""
+    );
+    const candidates = [
+      fromPreview,
+      item && item.preview_url,
+      item && item.thumbnail_url,
+      item && item.preview_image,
+      item && item.image_url,
+      item && item.image,
+      item && item.cover_url,
+      item && item.download_url,
+    ];
+    for (let i = 0; i < candidates.length; i += 1) {
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      if (src && isImageUrl(src) && isServedPreviewPath(src)) return src;
+    }
+    for (let i = 0; i < candidates.length; i += 1) {
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      // Never use downloads/image for card thumbs — slim Pages tree omits those bytes.
+      if (/\/materials\/generated\/downloads\//i.test(src)) continue;
+      if (src && isImageUrl(src)) return src;
+    }
+    return "";
+  }
+
+  function renderThumbMedia(item) {
+    const src = resolveThumbSrc(item);
+    const icon = renderThumbIcon(item.category_id);
+    if (!src) return icon;
+    return (
+      icon +
+      `<img class="materials-card__thumb-img" src="${escapeHtml(src)}" alt="" loading="lazy" decoding="async" data-mat-thumb-img onload="if(!this.naturalWidth){this.onerror&&this.onerror();}" onerror="this.hidden=true;this.removeAttribute('src');this.removeAttribute('onload');">`
+    );
+  }
+
   function formatCount(n) {
     const num = Number(n) || 0;
     if (num >= 10000) return `${(num / 10000).toFixed(1).replace(/\.0$/, "")}万`;
@@ -104,7 +174,7 @@
       `<article class="materials-card materials-card--list" data-materials-card data-item-id="${escapeHtml(item.id)}">` +
       `<a class="materials-card__thumb-link" href="${href}" tabindex="-1" aria-hidden="true">` +
       `<div class="materials-card__thumb materials-card__thumb--${escapeHtml(item.thumbnail_style || "default")}">` +
-      renderThumbIcon(item.category_id) +
+      renderThumbMedia(item) +
       `<span class="materials-card__category-badge" style="--cat-color:${catColor}">${escapeHtml(item.category_name || "")}</span>` +
       freeBadge +
       adMark +
@@ -156,6 +226,7 @@
       `<article class="materials-card" data-materials-card data-item-id="${escapeHtml(item.id)}">` +
       `<a class="materials-card__thumb-link" href="${href}" tabindex="-1" aria-hidden="true">` +
       `<div class="materials-card__thumb materials-card__thumb--${escapeHtml(item.thumbnail_style || "default")}">` +
+      renderThumbMedia(item) +
       `<span class="materials-card__category-badge" style="--cat-color:${catColor}">${escapeHtml(item.category_name || "")}</span>` +
       freeBadge +
       `</div>` +
@@ -186,7 +257,7 @@
       `<li class="materials-ranking__item">` +
       `<span class="materials-ranking__num">${rank}</span>` +
       `<a class="materials-ranking__link" href="${href}">` +
-      `<span class="materials-ranking__thumb materials-card__thumb materials-card__thumb--${escapeHtml(item.thumbnail_style || "default")} materials-card__thumb--xs" aria-hidden="true"></span>` +
+      `<span class="materials-ranking__thumb materials-card__thumb materials-card__thumb--${escapeHtml(item.thumbnail_style || "default")} materials-card__thumb--xs" aria-hidden="true">${renderThumbMedia(item)}</span>` +
       `<span class="materials-ranking__title">${escapeHtml(item.title)}</span>` +
       `</a>` +
       `</li>`
@@ -206,6 +277,7 @@
   global.TasuMaterialsDownloadCard = {
     renderDownloadCard,
     renderCardGrid,
+    resolveThumbSrc,
     formatCount,
     formatDate,
   };

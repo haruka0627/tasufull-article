@@ -21,6 +21,7 @@
     presentation: "プレゼンテンプレート",
     code: "コード素材",
     icon: "アイコン素材",
+    image: "写真",
   });
 
   const CATEGORY_ICON_CLASS = Object.freeze({
@@ -36,6 +37,10 @@
     presentation: "orange",
     document: "cyan",
     tool: "green",
+    overlay: "violet",
+    frame: "pink",
+    telop: "orange",
+    transition: "cyan",
   });
 
   const CATEGORY_FA_ICON = Object.freeze({
@@ -51,6 +56,10 @@
     presentation: "fas fa-desktop",
     document: "far fa-file-alt",
     tool: "fas fa-wrench",
+    overlay: "fas fa-layer-group",
+    frame: "far fa-square",
+    telop: "fas fa-closed-captioning",
+    transition: "fas fa-play",
   });
 
   function escapeHtml(str) {
@@ -89,23 +98,42 @@
     return /\.(png|jpe?g|gif|webp|svg)(\?|#|$)/i.test(String(url || ""));
   }
 
+
+  function preferCommittedPreviewPath(src) {
+    const s = String(src || "").trim();
+    if (!s) return "";
+    const m = s.match(/\/materials\/generated\/downloads\/image\/([^/?#]+)\.(png|jpe?g|webp)$/i);
+    if (m) return "/materials/generated/previews/image/" + m[1] + ".jpg";
+    return s;
+  }
+
+  function isServedPreviewPath(src) {
+    const s = String(src || "");
+    return /\/materials\/images\/previews\//i.test(s) || /\/materials\/generated\/previews\//i.test(s);
+  }
+
   function resolveThumbSrc(item) {
     const images = Array.isArray(item.preview_images) ? item.preview_images : [];
+    const candidates = [];
     for (let i = 0; i < images.length; i += 1) {
       const img = images[i];
-      const src = pickStr(img && (img.src || img.url || img));
-      if (src && isImageUrl(src)) return src;
+      candidates.push(pickStr(img && (img.src || img.url || img)));
     }
-    const candidates = [
+    candidates.push(
       item.thumbnail_url,
       item.preview_image,
       item.preview_url,
       item.image_url,
       item.image,
-      item.cover_url,
-    ];
+      item.cover_url
+    );
     for (let i = 0; i < candidates.length; i += 1) {
-      const src = pickStr(candidates[i]);
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      if (src && isImageUrl(src) && isServedPreviewPath(src)) return src;
+    }
+    for (let i = 0; i < candidates.length; i += 1) {
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      if (/\/materials\/generated\/downloads\//i.test(src)) continue;
       if (src && isImageUrl(src)) return src;
     }
     return "";
@@ -124,7 +152,7 @@
     const favOn = !!Fav()?.isFavorited?.(item.id);
     const dlLabel = Download()?.primaryButtonLabel?.(item) || item.button_label || "無料ダウンロード";
     const media = thumb
-      ? `<a href="${href}" tabindex="-1" aria-hidden="true"><img class="card-image" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async"></a>`
+      ? `<a href="${href}" tabindex="-1" aria-hidden="true"><img class="card-image" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async" onerror="this.hidden=true;this.removeAttribute('src');"></a>`
       : `<a class="card-ph" href="${href}" tabindex="-1" aria-hidden="true"><i class="${escapeHtml(CATEGORY_FA_ICON[item.category_id] || "far fa-file")}" aria-hidden="true"></i></a>`;
 
     return (
@@ -152,7 +180,7 @@
     const thumb = resolveThumbSrc(item);
     const label = categoryLabel(item);
     const thumbHtml = thumb
-      ? `<img class="rank-thumb" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async">`
+      ? `<img class="rank-thumb" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async" onerror="this.hidden=true;this.removeAttribute('src');">`
       : `<span class="rank-thumb rank-thumb--ph" aria-hidden="true"><i class="${escapeHtml(CATEGORY_FA_ICON[item.category_id] || "far fa-file")}"></i></span>`;
     return (
       `<a class="ranking-item" href="${href}">` +

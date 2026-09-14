@@ -41,10 +41,50 @@
     return raw;
   }
 
+  function preferCommittedPreviewPath(src) {
+    const s = String(src || "").trim();
+    if (!s) return "";
+    const m = s.match(/\/materials\/generated\/downloads\/image\/([^/?#]+)\.(png|jpe?g|webp)$/i);
+    if (m) return "/materials/generated/previews/image/" + m[1] + ".jpg";
+    return s;
+  }
+
+  function isServedPreviewPath(src) {
+    const s = String(src || "");
+    return /\/materials\/images\/previews\//i.test(s) || /\/materials\/generated\/previews\//i.test(s);
+  }
+
   function resolveThumbSrc(item) {
     const images = Array.isArray(item.preview_images) ? item.preview_images : [];
-    if (images[0]?.src) return String(images[0].src);
-    return pickStr(item.thumbnail_url, item.preview_image, item.image, item.download_url);
+    const first = images[0];
+    const fromPreview = pickStr(
+      first && (first.src || first.url || first),
+      typeof first === "string" ? first : ""
+    );
+    const candidates = [
+      fromPreview,
+      item.preview_url,
+      item.thumbnail_url,
+      item.preview_image,
+      item.image_url,
+      item.image,
+      item.cover_url,
+      item.download_url,
+    ];
+    for (let i = 0; i < candidates.length; i += 1) {
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      if (src && isServedPreviewPath(src)) return src;
+    }
+    for (let i = 0; i < candidates.length; i += 1) {
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      if (/\/materials\/generated\/downloads\//i.test(src)) continue;
+      if (src) return src;
+    }
+    return "";
+  }
+
+  function thumbStyleClass(item) {
+    return `materials-card__thumb--${pickStr(item.thumbnail_style, "photo-wall")}`;
   }
 
   function resolveSizeLabel(item) {
@@ -130,13 +170,16 @@
     const favOn = Fav?.isFavorited?.(item.id);
     const thumb = resolveThumbSrc(item);
     const sizeLabel = resolveSizeLabel(item);
+    const fallbackHtml =
+      `<span class="mat-img-card__img mat-img-card__img--fallback ${escapeHtml(thumbStyleClass(item))}" aria-hidden="true"></span>`;
 
     return (
       `<article class="mat-img-card" data-img-card data-item-id="${escapeHtml(item.id)}" data-slug="${escapeHtml(item.slug || "")}">` +
       `<a class="mat-img-card__media" href="${href}" aria-label="${escapeHtml(item.title)}">` +
+      fallbackHtml +
       (thumb
-        ? `<img class="mat-img-card__img" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async">`
-        : `<span class="mat-img-card__img mat-img-card__img--fallback" aria-hidden="true"></span>`) +
+        ? `<img class="mat-img-card__img" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async" data-mat-img-thumb onload="if(!this.naturalWidth){this.onerror&&this.onerror();}" onerror="this.hidden=true;this.removeAttribute('src');this.removeAttribute('onload');">`
+        : "") +
       (item.is_free !== false ? `<span class="mat-img-card__free">無料</span>` : "") +
       (sizeLabel
         ? `<span class="mat-img-card__size"><span class="mat-img-card__size-ico" aria-hidden="true"></span>${escapeHtml(sizeLabel)}</span>`
@@ -280,11 +323,17 @@
     return Array.isArray(chips) ? chips : [];
   }
 
+  function primaryNavImageLabel() {
+    const hit = listCategoryChips().find((c) => c.id === "image");
+    const labels = global.TasuMaterialsData && global.TasuMaterialsData.LIST_UI_LABELS;
+    return (hit && hit.label) || (labels && labels.image) || "写真";
+  }
+
   function renderShell(opts) {
     const { q, sort, filters, options, resultCount, page, totalPages, cardsHtml, tagEntries } =
       opts;
     const activeFilters = [];
-    activeFilters.push(`<span class="mat-img-chip-active">画像素材</span>`);
+    activeFilters.push(`<span class="mat-img-chip-active">${escapeHtml(primaryNavImageLabel())}</span>`);
     if (sort === "newest") activeFilters.push(`<span class="mat-img-chip-active mat-img-chip-active--muted">新着順</span>`);
     else activeFilters.push(`<span class="mat-img-chip-active mat-img-chip-active--accent">人気順</span>`);
     if (filters.genre) {
@@ -458,10 +507,33 @@
     return (items || []).map((raw) => enrichItem(raw));
   }
 
+  function bindThumbFallback(root) {
+    if (!root) return;
+    root.querySelectorAll("img[data-mat-img-thumb]").forEach((img) => {
+      if (img.dataset.thumbFallbackBound === "1") return;
+      img.dataset.thumbFallbackBound = "1";
+      const hideBroken = () => {
+        img.hidden = true;
+        img.removeAttribute("src");
+      };
+      img.addEventListener("error", hideBroken);
+      if (img.complete && img.naturalWidth === 0 && img.getAttribute("src")) hideBroken();
+    });
+  }
+
+  function wireCard(card, item) {
+    bindThumbFallback(card);
+    const Download = global.TasuMaterialsDownload;
+    const Fav = global.TasuMaterialsFavorites;
+    Download?.wireDownloadAndFavorite?.(card, item);
+    Fav?.updateButton?.(card.querySelector("[data-mat-favorite-btn]"), item);
+  }
+
   function wireInteractions(root, allItems, urlState) {
     const Download = global.TasuMaterialsDownload;
     const Fav = global.TasuMaterialsFavorites;
     const itemById = new Map(allItems.map((i) => [i.id, i]));
+    bindThumbFallback(root);
 
     root.querySelector("[data-img-search]")?.addEventListener("submit", (ev) => {
       ev.preventDefault();
@@ -689,7 +761,8 @@
 
   global.TasuMaterialsImageList = {
     renderCard,
-    
+    wireCard,
+    resolveThumbSrc,
     mount,
     refresh,
     hide,

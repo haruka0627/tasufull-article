@@ -1,0 +1,257 @@
+{
+  "ok": true,
+  "passed": 50,
+  "failed": 0,
+  "results": [
+    {
+      "name": "materials modules loaded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "primary chip ids match video-first SSOT",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "primary chips exclude label: テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "primary chips exclude label: Web素材",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "primary chips exclude label: コード",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "primary chips exclude label: 文例・文章テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "primary chips exclude label: ツール",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "primary chips exclude label: プレゼン",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar ids match LIST_PRIMARY_CATEGORY_IDS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar excludes label: テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar excludes label: Web素材",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar excludes label: コード",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar excludes label: 文例・文章テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar excludes label: ツール",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar excludes label: プレゼン",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation uses listCategoryChips helper",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation binds LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation sidebar uses TasuMaterialsListSidebar",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation-list.js has no hardcoded primary chip: テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation-list.js has no hardcoded primary chip: Web素材",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation-list.js has no hardcoded primary chip: コード",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation-list.js has no hardcoded primary chip: 文例・文章テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation-list.js has no hardcoded primary chip: ツール",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation-list.js has no hardcoded primary chip: プレゼン",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list-page hides classic for specialty routes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list-page includes presentation in specialty set",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-sfx-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-bgm-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-image-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-illustration-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-background-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-icon-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-web-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-code-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-document-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-presentation-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "materials-template-list.js uses LIST_CATEGORY_CHIPS",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav HTML excludes テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav HTML excludes Web素材",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav HTML excludes コード",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav HTML excludes 文例・文章テンプレート",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav HTML excludes ツール",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav HTML excludes プレゼン",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav includes オーバーレイ",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "renderNav includes トランジション",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL presentation still valid",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation inventory accessible",
+      "ok": true,
+      "detail": "8"
+    },
+    {
+      "name": "image list primary nav label helper",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image list active filter not 画像素材",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "background list primary nav label helper",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}

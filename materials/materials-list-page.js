@@ -1,17 +1,23 @@
 /**
  * TASFUL Materials — 素材一覧ページ
+ * Video-first chips / URL SSOT: TasuMaterialsData.LIST_CATEGORY_CHIPS + LIST_VALID_QUERY_IDS.
+ * 透過 filter is DEFERRED (public index has no transparency metadata).
  */
 (function (global) {
   "use strict";
 
-  const VALID_CATEGORIES = new Set([
-    "template",
+  const FALLBACK_VALID_CATEGORIES = Object.freeze([
     "bgm",
     "sfx",
     "image",
     "illustration",
     "background",
     "icon",
+    "overlay",
+    "frame",
+    "telop",
+    "transition",
+    "template",
     "web",
     "code",
     "text",
@@ -24,9 +30,57 @@
     text: "document",
   });
 
+  function validCategorySet() {
+    const ids = global.TasuMaterialsData && global.TasuMaterialsData.LIST_VALID_QUERY_IDS;
+    return new Set(Array.isArray(ids) && ids.length ? ids : FALLBACK_VALID_CATEGORIES);
+  }
+
   function normalizeCategory(raw) {
     const category = String(raw || "").trim();
-    return VALID_CATEGORIES.has(category) ? category : "";
+    return validCategorySet().has(category) ? category : "";
+  }
+
+  function isClassicListCategory(category) {
+    return category === "tool";
+  }
+
+  function isVfPrimaryCategory(category) {
+    const Vf = global.TasuMaterialsVfCategoryList;
+    if (Vf && typeof Vf.isPrimaryCategory === "function") {
+      return Vf.isPrimaryCategory(category);
+    }
+    const ids = global.TasuMaterialsData && global.TasuMaterialsData.LIST_PRIMARY_CATEGORY_IDS;
+    return Array.isArray(ids) && ids.includes(category);
+  }
+
+  /** Specialty Option 4 list mounts (legacy query ids included). Classic shell must stay hidden. */
+  const SPECIALTY_LIST_QUERY_IDS = new Set(["web", "code", "text", "presentation", "template"]);
+
+  function setClassicListMountVisible(visible) {
+    const classic = document.querySelector("[data-materials-list-classic]");
+    if (!classic) return;
+    classic.hidden = !visible;
+    if (visible) {
+      classic.removeAttribute("aria-hidden");
+      if ("inert" in classic) classic.inert = false;
+    } else {
+      classic.setAttribute("aria-hidden", "true");
+      if ("inert" in classic) classic.inert = true;
+    }
+  }
+
+  function listChipLabel(queryId) {
+    const chips = global.TasuMaterialsData && global.TasuMaterialsData.LIST_CATEGORY_CHIPS;
+    if (Array.isArray(chips)) {
+      const hit = chips.find((c) => (c.id || "") === (queryId || ""));
+      if (hit && hit.label) return hit.label;
+    }
+    const labels = global.TasuMaterialsData && global.TasuMaterialsData.LIST_UI_LABELS;
+    if (labels && queryId && labels[queryId]) return labels[queryId];
+    const cat = global.TasuMaterialsData && global.TasuMaterialsData.categoryById
+      ? global.TasuMaterialsData.categoryById(CATEGORY_FILTER_MAP[queryId] || queryId)
+      : null;
+    return (cat && cat.name) || queryId || "このカテゴリ";
   }
 
   function categoryToFilterId(chipCategory) {
@@ -201,6 +255,18 @@
     }
   }
 
+  function restrictAllDiscovery(items) {
+    const data = global.TasuMaterialsData;
+    if (typeof data?.filterPrimaryDiscoveryItems === "function") {
+      return data.filterPrimaryDiscoveryItems(items);
+    }
+    const allowed = new Set(data && data.LIST_PRIMARY_CATEGORY_IDS);
+    if (!allowed.size) return items || [];
+    return (items || []).filter(function (item) {
+      return allowed.has(item && item.category_id);
+    });
+  }
+
   async function fetchListItems(repo, params) {
     const { q, sort, category } = params;
     const filterId = categoryToFilterId(category);
@@ -213,13 +279,16 @@
         items = items.filter(function (item) {
           return item.category_id === filterId;
         });
+      } else {
+        // すべて + search: primary discovery only. Legacy stays on ?category=template etc.
+        items = restrictAllDiscovery(items);
       }
       items = sortItems(items, sortKey);
     } else if (filterId) {
       items = await repo.fetchItemsByCategory(filterId);
       items = sortItems(items, sortKey);
     } else {
-      items = await repo.fetchAllItems(sortKey);
+      items = restrictAllDiscovery(await repo.fetchAllItems(sortKey));
     }
 
     const options = collectCommonFilterOptions(items || []);
@@ -345,10 +414,22 @@
     });
   }
 
-  function renderGrid(root, items) {
+  function renderEmptyState(kind, label) {
+    if (kind === "catalog") {
+      return (
+        `<div class="materials-list-empty materials-list-empty--catalog" data-materials-empty="catalog">` +
+        `<p class="materials-list-empty__title">${escapeHtml(label)}の公開素材はまだありません。</p>` +
+        `<p class="materials-list-empty__text">在庫は0件です。仮の素材は表示しません。</p>` +
+        `</div>`
+      );
+    }
+    return '<p class="materials-list-empty" data-materials-empty="filter">該当する素材がありません。</p>';
+  }
+
+  function renderGrid(root, items, emptyKind, emptyLabel) {
     if (!root) return;
     if (!items.length) {
-      root.innerHTML = '<p class="materials-list-empty">該当する素材がありません。</p>';
+      root.innerHTML = renderEmptyState(emptyKind, emptyLabel);
       return;
     }
     root.innerHTML =
@@ -491,8 +572,8 @@
     classic.dataset.allToolsWired = "1";
 
     function classicOnlyCategory(current) {
-      // tool のみ classic ルート。それ以外の specialty は別 mount。
-      return current.category === "tool" ? "tool" : "";
+      // tool + video-first empty categories share the classic list mount.
+      return isClassicListCategory(current.category) ? current.category : "";
     }
 
     classic.querySelector("[data-materials-all-search]")?.addEventListener("submit", function (ev) {
@@ -581,6 +662,10 @@
     const TemplateList = global.TasuMaterialsTemplateList;
     const params = readListParams();
 
+    if (SPECIALTY_LIST_QUERY_IDS.has(params.category) || isVfPrimaryCategory(params.category)) {
+      setClassicListMountVisible(false);
+    }
+
     function hideAllSpecialtyExcept(keep) {
       if (keep !== "sfx") SfxList?.hide?.();
       if (keep !== "bgm") BgmList?.hide?.();
@@ -593,41 +678,12 @@
       if (keep !== "document") DocumentList?.hide?.();
       if (keep !== "presentation") PresentationList?.hide?.();
       if (keep !== "template") TemplateList?.hide?.();
+      if (keep !== "vf") global.TasuMaterialsVfCategoryList?.hide?.();
     }
 
-    if (params.category === "sfx" && SfxList?.mount) {
-      hideAllSpecialtyExcept("sfx");
-      await SfxList.mount();
-      return;
-    }
-
-    if (params.category === "bgm" && BgmList?.mount) {
-      hideAllSpecialtyExcept("bgm");
-      await BgmList.mount();
-      return;
-    }
-
-    if (params.category === "image" && ImageList?.mount) {
-      hideAllSpecialtyExcept("image");
-      await ImageList.mount();
-      return;
-    }
-
-    if (params.category === "illustration" && IllustrationList?.mount) {
-      hideAllSpecialtyExcept("illustration");
-      await IllustrationList.mount();
-      return;
-    }
-
-    if (params.category === "background" && BackgroundList?.mount) {
-      hideAllSpecialtyExcept("background");
-      await BackgroundList.mount();
-      return;
-    }
-
-    if (params.category === "icon" && IconList?.mount) {
-      hideAllSpecialtyExcept("icon");
-      await IconList.mount();
+    if (isVfPrimaryCategory(params.category) && global.TasuMaterialsVfCategoryList?.mount) {
+      hideAllSpecialtyExcept("vf");
+      await global.TasuMaterialsVfCategoryList.mount(params.category);
       return;
     }
 
@@ -662,13 +718,9 @@
     }
 
     hideAllSpecialtyExcept(null);
+    global.TasuMaterialsVfCategoryList?.hide?.();
 
-    const classic = document.querySelector("[data-materials-list-classic]");
-    if (classic) {
-      classic.hidden = false;
-      classic.removeAttribute("aria-hidden");
-      if ("inert" in classic) classic.inert = false;
-    }
+    setClassicListMountVisible(true);
 
     const data = global.TasuMaterialsData;
     const root = document.querySelector("[data-materials-list-grid]");
@@ -693,7 +745,16 @@
     const page = Math.min(Math.max(1, params.page || 1), totalPages);
     const start = (page - 1) * pageSize;
     const pageItems = items.slice(start, start + pageSize);
-    renderGrid(root, pageItems);
+    const filterId = categoryToFilterId(params.category);
+    const inventory = typeof data.countPublishedInventoryByCategory === "function"
+      ? data.countPublishedInventoryByCategory()
+      : {};
+    const inventoryCount = filterId ? Number(inventory[filterId] || 0) : -1;
+    const hasExtraFilters = Boolean(
+      params.q || params.usage || params.format || params.style || params.color
+    );
+    const emptyKind = filterId && inventoryCount === 0 && !hasExtraFilters ? "catalog" : "filter";
+    renderGrid(root, pageItems, emptyKind, listChipLabel(params.category));
     renderClassicPager(page, items.length ? totalPages : 1);
 
     // Confirmed text search execution (covers keyword links / shared URLs)
@@ -726,6 +787,8 @@
     mountListPage,
     readListParams,
     normalizeCategory,
+    isClassicListCategory,
+    listChipLabel,
     resolveCategoryRenderer,
     renderCategoryCard,
     wireMixedListContracts,

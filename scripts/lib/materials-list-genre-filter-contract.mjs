@@ -207,7 +207,7 @@ export const TYPE_FILTER_LAYOUT = Object.freeze({
   code: Object.freeze(["ジャンル", "言語", "Runtime / FW", "用途", "形式", "ライセンス"]),
   template: Object.freeze(["ジャンル", "用途", "業種", "スタイル", "カラー", "形式"]),
   icon: Object.freeze(["ジャンル", "用途", "スタイル", "線", "塗り", "色", "形式"]),
-  presentation: Object.freeze(["ジャンル", "スライド種類", "デザイン", "業種", "カラー", "形式"]),
+  presentation: Object.freeze(["ジャンル", "デザイン", "カラー", "形式"]),
   document: Object.freeze(["ジャンル", "用途", "文体・トーン", "長さ", "言語"]),
 });
 

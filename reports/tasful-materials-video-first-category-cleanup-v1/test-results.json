@@ -1,0 +1,612 @@
+{
+  "ok": true,
+  "passed": 109,
+  "failed": 0,
+  "results": [
+    {
+      "name": "SSOT loaded",
+      "ok": true,
+      "detail": "TasuMaterialsData + TasuMaterialsListPage"
+    },
+    {
+      "name": "primary chip count",
+      "ok": true,
+      "detail": "11 === 11"
+    },
+    {
+      "name": "primary chip order + labels",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy hidden from primary chips: template",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL still valid: template",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy hidden from primary chips: web",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL still valid: web",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy hidden from primary chips: code",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL still valid: code",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy hidden from primary chips: text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL still valid: text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy hidden from primary chips: tool",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL still valid: tool",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy hidden from primary chips: presentation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL still valid: presentation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "video-first URL valid: overlay",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "classic mount keeps overlay",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "video-first URL valid: frame",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "classic mount keeps frame",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "video-first URL valid: telop",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "classic mount keeps telop",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "video-first URL valid: transition",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "classic mount keeps transition",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "unknown category clears",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image chip label is 写真",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image CATEGORIES.name stays 画像素材",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image label map only",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "empty inventory overlay is 0",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "empty inventory frame is 0",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "empty inventory telop is 0",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "empty inventory transition is 0",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "no index reclassify: image still present",
+      "ok": true,
+      "detail": "260"
+    },
+    {
+      "name": "no overlay assets invented",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no frame assets invented",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no telop assets invented",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no transition assets invented",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "透過 metadata absent on public index",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "canonical route list.html",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html has no 透過 filter",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html classic keeps カラー",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html classic keeps 形式",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html static chip すべて",
+      "ok": true,
+      "detail": "data-category=\"\""
+    },
+    {
+      "name": "list.html static chip BGM",
+      "ok": true,
+      "detail": "data-category=\"bgm\""
+    },
+    {
+      "name": "list.html static chip 効果音/SFX",
+      "ok": true,
+      "detail": "data-category=\"sfx\""
+    },
+    {
+      "name": "list.html static chip 写真",
+      "ok": true,
+      "detail": "data-category=\"image\""
+    },
+    {
+      "name": "list.html static chip イラスト",
+      "ok": true,
+      "detail": "data-category=\"illustration\""
+    },
+    {
+      "name": "list.html static chip 背景",
+      "ok": true,
+      "detail": "data-category=\"background\""
+    },
+    {
+      "name": "list.html static chip アイコン",
+      "ok": true,
+      "detail": "data-category=\"icon\""
+    },
+    {
+      "name": "list.html static chip オーバーレイ",
+      "ok": true,
+      "detail": "data-category=\"overlay\""
+    },
+    {
+      "name": "list.html static chip フレーム・装飾",
+      "ok": true,
+      "detail": "data-category=\"frame\""
+    },
+    {
+      "name": "list.html static chip テロップ素材",
+      "ok": true,
+      "detail": "data-category=\"telop\""
+    },
+    {
+      "name": "list.html static chip トランジション",
+      "ok": true,
+      "detail": "data-category=\"transition\""
+    },
+    {
+      "name": "list.html primary markup hides template",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html primary markup hides web",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html primary markup hides code",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html primary markup hides text",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html primary markup hides tool",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list.html primary markup hides presentation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation UI removed スライド種類",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation UI removed 業種 select",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation keeps カラー",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation keeps 形式",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "presentation filter layout dropped presentation-only axes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar is video-first primary only",
+      "ok": true,
+      "detail": "bgm,sfx,image,illustration,background,icon,overlay,frame,telop,transition"
+    },
+    {
+      "name": "sidebar hides legacy",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sidebar image label 写真",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "CATEGORIES keeps old primary ids",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "TOP fetchCategories excludes empty video-first ids",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "normal nav fetchCategories is video-first subset",
+      "ok": true,
+      "detail": "bgm,sfx,image,illustration,background,icon"
+    },
+    {
+      "name": "normal nav hides legacy ids",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "すべて discovery excludes legacy categories",
+      "ok": true,
+      "detail": "2083"
+    },
+    {
+      "name": "すべて discovery keeps image stock",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "すべて discovery keeps illustration/background/icon/sfx",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "legacy URL inventory still present: template",
+      "ok": true,
+      "detail": "33"
+    },
+    {
+      "name": "legacy URL inventory still present: web",
+      "ok": true,
+      "detail": "12"
+    },
+    {
+      "name": "legacy URL inventory still present: code",
+      "ok": true,
+      "detail": "12"
+    },
+    {
+      "name": "legacy URL inventory still present: document",
+      "ok": true,
+      "detail": "3"
+    },
+    {
+      "name": "legacy URL inventory still present: tool",
+      "ok": true,
+      "detail": "0"
+    },
+    {
+      "name": "legacy URL inventory still present: presentation",
+      "ok": true,
+      "detail": "8"
+    },
+    {
+      "name": "すべて search hides template/web/code/document/presentation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "footer uses primaryFooterCategories",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "footer excludes empty video-first ids",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "footer still maps image label 写真",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image list resolver loaded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image list binds preview_url",
+      "ok": true,
+      "detail": "/materials/generated/previews/image/automation-001.jpg"
+    },
+    {
+      "name": "image list prefers served /images/previews",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image list prefers generated/previews over downloads",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image card keeps existing preview_url src",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image card keeps photo-wall fallback",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image card wires thumb onerror hook",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "image list exports wireCard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card resolver loaded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card binds preview_url",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card list renders <img>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card list keeps photo-wall fallback",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card list img uses preview_url",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "generated downloads missing pngs 404",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "previews splat is not a blanket 404",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no SPA /* /index.html 200",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "404.html exists for downloads 404 destination",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "committed image preview jpg exists",
+      "ok": true,
+      "detail": "automation-001"
+    },
+    {
+      "name": "generated image preview headers keep nosniff",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "list すべて uses restrictAllDiscovery",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "index item count unchanged",
+      "ok": true,
+      "detail": "2151"
+    },
+    {
+      "name": "wrangler.toml present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "pages_build_output_dir is staged dist",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": ".cfignore excludes reports/",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": ".cfignore excludes **/*.zip",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download/auth files untouched by this test",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "indexCategoryCounts": {
+    "background": 66,
+    "illustration": 1082,
+    "image": 260,
+    "icon": 633,
+    "sfx": 42,
+    "template": 33,
+    "presentation": 8,
+    "web": 12,
+    "code": 12,
+    "document": 3
+  },
+  "chipLabels": [
+    {
+      "id": "",
+      "label": "すべて"
+    },
+    {
+      "id": "bgm",
+      "label": "BGM"
+    },
+    {
+      "id": "sfx",
+      "label": "効果音/SFX"
+    },
+    {
+      "id": "image",
+      "label": "写真"
+    },
+    {
+      "id": "illustration",
+      "label": "イラスト"
+    },
+    {
+      "id": "background",
+      "label": "背景"
+    },
+    {
+      "id": "icon",
+      "label": "アイコン"
+    },
+    {
+      "id": "overlay",
+      "label": "オーバーレイ"
+    },
+    {
+      "id": "frame",
+      "label": "フレーム・装飾"
+    },
+    {
+      "id": "telop",
+      "label": "テロップ素材"
+    },
+    {
+      "id": "transition",
+      "label": "トランジション"
+    }
+  ],
+  "transparentHits": 0,
+  "wranglerToml": true
+}

@@ -14,6 +14,7 @@
     presentation: "プレゼンテンプレート",
     code: "コード素材",
     icon: "アイコン素材",
+    image: "写真",
   });
 
   function escapeHtml(str) {
@@ -44,6 +45,20 @@
     return `/materials/list.html?category=${encodeURIComponent(q)}`;
   }
 
+  function primaryFooterCategories(data, fallback) {
+    const sidebar = data && data.LIST_SIDEBAR_CATEGORIES;
+    if (Array.isArray(sidebar) && sidebar.length) {
+      return sidebar
+        .filter((c) => c && c.id && !(data.VIDEO_FIRST_EMPTY_CATEGORY_IDS || []).includes(c.id))
+        .map((c) => ({
+          id: c.id,
+          code: c.queryId || c.id,
+          name: c.label || c.name,
+        }));
+    }
+    return (fallback || []).filter((c) => data?.isPrimaryDiscoveryCategory?.(c.id));
+  }
+
   function renderFooterCategoryLinks(categories) {
     return (categories || [])
       .slice(0, 6)
@@ -69,8 +84,10 @@
     if (footerKeywords && keywords) {
       footerKeywords.innerHTML = renderKeywords(keywords, "keyword-pill");
     }
-    if (footerCats && categories) {
-      footerCats.innerHTML = renderFooterCategoryLinks(categories);
+    if (footerCats) {
+      const data = global.TasuMaterialsData;
+      const navCats = primaryFooterCategories(data, categories);
+      footerCats.innerHTML = renderFooterCategoryLinks(navCats);
     }
   }
 
@@ -87,7 +104,7 @@
       categories = [];
     }
     fill({
-      categories,
+      categories: primaryFooterCategories(data, categories),
       keywords: data.POPULAR_KEYWORDS,
     });
   }

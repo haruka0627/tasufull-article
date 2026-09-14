@@ -46,6 +46,16 @@
 /images/*
   Cache-Control: public, max-age=86400, immutable
 
+# Generated Materials image bytes - do NOT force Content-Type (forced image/png over SPA HTML caused false thumbs).
+# Existing files are sniffed; missing paths must 404 via _redirects (not index.html).
+/materials/generated/downloads/image/*
+  X-Content-Type-Options: nosniff
+  Cache-Control: public, max-age=86400
+
+/materials/generated/previews/image/*
+  X-Content-Type-Options: nosniff
+  Cache-Control: public, max-age=86400
+
 # その他静的アセット（初回は控えめ）
 /*.css
   Cache-Control: public, max-age=3600

@@ -1,6 +1,6 @@
 /**
  * TASFUL Materials — 一覧左Sidebar 共通カテゴリ Navigation
- * SSOT: TasuMaterialsData.LIST_SIDEBAR_CATEGORIES（CATEGORIES 順 · document query = text）
+ * SSOT: TasuMaterialsData.LIST_SIDEBAR_CATEGORIES（video-first primary 順 · legacy hidden）
  * 件数: materials-index の実在 Inventory のみ（qa_fixture / dummy を混ぜない）
  */
 (function (global) {
@@ -25,6 +25,14 @@
     document:
       '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 2h9l5 5v15H6zm8 1.5V8h4.5zM8 12h8v1.5H8zm0 3h8v1.5H8z"/></svg>',
     tool: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6l-3 3-4.3-4.3C.6 7.1 1 10.1 3 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.4-.4.4-1 0-1.4z"/></svg>',
+    overlay:
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6h12v10H4V6zm14 2h2v12H8v-2h10V8z"/></svg>',
+    frame:
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v10H7V7z"/></svg>',
+    telop:
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 17h16v3H4v-3zM6 4h12v10H6V4zm2 2v6h8V6H8z"/></svg>',
+    transition:
+      '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 6h8v12H4V6zm10 3 6 3-6 3V9z"/></svg>',
   });
 
   function escapeHtml(str) {

@@ -1,0 +1,49 @@
+{
+  "sourceBranch": "cursor/materials-video-first-category",
+  "sourceSha": "5ca5bb7f56cb860aee05f9a814360a0fa4e77af7",
+  "canonicalRoute": "/materials/list.html",
+  "indexItemCount": 2151,
+  "indexCategoryCounts": {
+    "illustration": 1082,
+    "icon": 633,
+    "image": 260,
+    "background": 66,
+    "sfx": 42,
+    "template": 33,
+    "web": 12,
+    "code": 12,
+    "presentation": 8,
+    "document": 3
+  },
+  "missingFromPublicIndex": ["bgm", "tool", "overlay", "frame", "telop", "transition"],
+  "transparencyMetadataHits": 0,
+  "transparencyDecision": "DEFERRED",
+  "imageRelabel": {
+    "safe": true,
+    "method": "label_map_only",
+    "chipLabel": "写真",
+    "categoriesNameUnchanged": "画像素材",
+    "bulkReclassify": false,
+    "reason": "Public image stock is mixed (not photography-only). Example title: 自動化の画像 / genre technology."
+  },
+  "oldPrimary": ["sfx", "bgm", "image", "illustration", "background", "web", "code", "template", "icon", "presentation", "document", "tool"],
+  "legacyKeepHiddenFromPrimaryChips": ["template", "web", "code", "document/text", "tool", "presentation"],
+  "newPrimaryChipOrder": [
+    "すべて",
+    "BGM",
+    "効果音/SFX",
+    "写真",
+    "イラスト",
+    "背景",
+    "アイコン",
+    "オーバーレイ",
+    "フレーム・装飾",
+    "テロップ素材",
+    "トランジション"
+  ],
+  "presentationOnlyFiltersRemoved": ["スライド種類", "業種"],
+  "filtersKept": ["カラー", "形式"],
+  "wranglerToml": true,
+  "pagesBuildOutputDir": "deploy/cloudflare/dist",
+  "cfignore": ["reports/", "**/*.zip"]
+}
