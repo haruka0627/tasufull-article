@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>素材 | TASFUL Materials</title>
+  <meta name="description" content="TASFUL Materials — 動画制作向け素材のカテゴリ検索">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/index-home.css">
+  <link rel="stylesheet" href="/tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="/materials/materials.css">
+</head>
+<body class="home-page materials-page" data-materials-page>
+  <header class="home-header top-portal-header" aria-label="TASFUL ヘッダー">
+    <div class="home-header__inner">
+      <a class="tasful-ai-logo home-header__logo" href="/" aria-label="TASFUL プラットフォームTOP">
+        <img src="/images/tasful-ai-globe.png?v=4" alt="" class="tasful-ai-logo-icon">
+        <div class="tasful-ai-logo-text">
+          <span class="main">TASFUL</span>
+          <span class="sub">Materials</span>
+        </div>
+      </a>
+    </div>
+  </header>
+
+  <main class="materials-main">
+    <header class="section__head">
+      <p class="section__badge">素材</p>
+      <h1 class="section__title">動画制作向け素材</h1>
+      <p class="section__desc">カテゴリとキーワードで探します。件数は実カタログのみを表示します。</p>
+    </header>
+
+    <form class="materials-search" role="search" data-materials-search>
+      <input type="search" name="q" data-materials-q placeholder="キーワードで探す" aria-label="キーワード検索" autocomplete="off">
+      <button type="submit">検索</button>
+    </form>
+
+    <nav class="materials-chips" data-materials-chips aria-label="素材カテゴリ"></nav>
+    <div class="materials-filters" data-materials-filters hidden aria-label="絞り込み"></div>
+
+    <div class="materials-toolbar">
+      <p class="materials-count">表示件数 <strong data-materials-count>0件</strong></p>
+    </div>
+
+    <ul class="materials-list" data-materials-list></ul>
+
+    <div class="materials-empty" data-materials-empty>
+      <p class="materials-empty__title" data-materials-empty-title>素材はまだありません</p>
+      <p class="materials-empty__text" data-materials-empty-text>このカテゴリに公開素材はありません（件数は実カタログの 0 件です）。</p>
+    </div>
+
+    <section class="materials-finding" data-materials-finding hidden aria-label="Finding"></section>
+  </main>
+
+  <script src="/materials/materials-categories.js"></script>
+  <script src="/materials/materials-repository.js"></script>
+  <script src="/materials/materials-ui.js"></script>
+</body>
+</html>

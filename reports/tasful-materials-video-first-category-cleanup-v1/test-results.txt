@@ -1,0 +1,44 @@
+TASFUL Materials video-first category cleanup V1
+  ✓ SSOT / repository / UI globals exist
+  ✓ primary order: すべて / BGM / 効果音/SFX / 写真 / イラスト / 背景 / アイコン / オーバーレイ / フレーム・装飾 / テロップ素材 / トランジション
+  ✓ primary hides テンプレート
+  ✓ primary hides Web素材
+  ✓ primary hides コード
+  ✓ primary hides 文例・文章テンプレート
+  ✓ primary hides ツール
+  ✓ primary hides プレゼン
+  ✓ template is legacy
+  ✓ テンプレート alias → legacy
+  ✓ presentation is legacy
+  ✓ image stays legacy / URL-compat
+  ✓ 画像素材 does not become photo
+  ✓ no speculative image→photo remap
+  ✓ 透過素材 is not a category
+  ✓ transparency filter DEFERRED
+  ✓ thumbnail is finding-only
+  ✓ thumbnail is not a primary chip
+  ✓ presentation filters on when category=presentation
+  ✓ presentation filters off for 写真
+  ✓ 写真 keeps カラー/形式 only
+  ✓ プレゼン shows presentation-only filters
+  ✓ BGM has no presentation or image-only filters
+  ✓ empty overlay = real 0, no fake count
+  ✓ empty photo count is 0
+  ✓ chip filter uses repository
+  ✓ keyword search kept
+  ✓ legacy template URL still filters (empty here)
+  ✓ legacy web URL-compat
+  ✓ legacy image stays image, not photo
+  ✓ 写真 does not swallow image
+  ✓ presentation filter works on presentation
+  ✓ Finding thumbnail only when no 用途 tags
+  ✓ index hosts chips
+  ✓ index has real empty state
+  ✓ index does not hardcode legacy chips
+  ✓ wrangler pages_build_output_dir kept
+  ✓ rendered chips match primary set only
+  ✓ illustration filters = color/format
+  ✓ bgm hides extra filters
+  ✓ legacy presentation URL still shows presentation filters
+
+PASS

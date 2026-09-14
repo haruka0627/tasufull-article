@@ -1,0 +1,5 @@
+# wrangler.toml — Pages build output only; do not change Production secrets
+name = "tasufull-article"
+pages_build_output_dir = "deploy/cloudflare/dist"
+compatibility_date = "2026-06-24"
+compatibility_flags = [ "nodejs_compat" ]

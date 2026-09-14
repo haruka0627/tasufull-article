@@ -1,0 +1,47 @@
+{
+  "task": "TASFUL Materials Video-First Category Cleanup V1",
+  "checkout": "cf-pages-deploy",
+  "hypothesis": {
+    "statement": "categories live in a JS constant driving chips + filter; presentation filters gated on category===presentation",
+    "in_this_github_checkout": "DISCARDED_MISSING_SURFACE",
+    "as_target_architecture": "CONFIRMED_AND_IMPLEMENTED",
+    "notes": [
+      "No materials/ UI, category constant, or repository existed on cf-pages-deploy.",
+      "docs/TODO.md still says Materials Phase 0 / Phase 1 forbidden.",
+      "Staging telemetry already uses English slugs: template, sfx, code, web, image, bgm, presentation, icon, background, illustration, document.",
+      "presentation exists as a real category_id (3 searches, 8 downloads).",
+      "image is mixed (自然 / automation / river) — not remapped to photo."
+    ]
+  },
+  "staging_project": "ahlxuyvhzqdqaojiywmu",
+  "production_project": "ddojquacsyqesrjhcvmn",
+  "production_materials_tables": "ABSENT",
+  "staging_tables": [
+    "materials_search_events",
+    "materials_search_category_metrics",
+    "materials_search_term_metrics",
+    "materials_download_events",
+    "materials_download_metrics"
+  ],
+  "staging_category_ids_observed": [
+    "template",
+    "sfx",
+    "code",
+    "web",
+    "image",
+    "bgm",
+    "presentation",
+    "icon",
+    "background",
+    "document",
+    "illustration"
+  ],
+  "image_to_photo": "UNKNOWN_NOT_REMAPPED",
+  "transparency_metadata": "NOT_FOUND_DEFERRED",
+  "thumbnail_as_primary": "NO",
+  "catalog_table": "NOT_FOUND",
+  "wrangler_on_base": false,
+  "wrangler_added": {
+    "pages_build_output_dir": "deploy/cloudflare/dist"
+  }
+}

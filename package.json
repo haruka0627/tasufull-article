@@ -90,6 +90,7 @@
     "verify:platform-live-zego-integration-phase5-p5-6-smoke": "node scripts/verify-platform-live-zego-integration-phase5-p5-6-smoke.mjs",
     "test:platform-live-zego-integration-phase5-p5-9": "node scripts/test-platform-live-zego-integration-phase5-p5-9.mjs",
     "verify:platform-live-zego-integration-phase5-p5-9-smoke": "node scripts/verify-platform-live-zego-integration-phase5-p5-9-smoke.mjs",
+    "test:materials-video-first-categories": "node scripts/test-materials-video-first-categories.mjs",
     "test:platform-live-zego-integration-phase5-p5-8": "node scripts/test-platform-live-zego-integration-phase5-p5-8.mjs",
     "verify:platform-live-zego-integration-phase5-p5-8-smoke": "node scripts/verify-platform-live-zego-integration-phase5-p5-8-smoke.mjs",
     "verify:tlv-finish-main-flow-smoke": "node scripts/verify-tlv-finish-main-flow-smoke.mjs",

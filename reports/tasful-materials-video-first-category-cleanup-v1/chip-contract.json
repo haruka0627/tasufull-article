@@ -1,0 +1,26 @@
+{
+  "primary": [
+    { "id": "all", "label": "すべて" },
+    { "id": "bgm", "label": "BGM" },
+    { "id": "sfx", "label": "効果音/SFX" },
+    { "id": "photo", "label": "写真" },
+    { "id": "illustration", "label": "イラスト" },
+    { "id": "background", "label": "背景" },
+    { "id": "icon", "label": "アイコン" },
+    { "id": "overlay", "label": "オーバーレイ" },
+    { "id": "frame", "label": "フレーム・装飾" },
+    { "id": "telop", "label": "テロップ素材" },
+    { "id": "transition", "label": "トランジション" }
+  ],
+  "legacy_hidden_from_primary": [
+    { "id": "template", "label": "テンプレート" },
+    { "id": "web", "label": "Web素材" },
+    { "id": "code", "label": "コード" },
+    { "id": "document", "label": "文例・文章テンプレート" },
+    { "id": "tool", "label": "ツール" },
+    { "id": "presentation", "label": "プレゼン" },
+    { "id": "image", "label": "画像素材", "mapping": "UNKNOWN" }
+  ],
+  "finding_only": [{ "id": "thumbnail", "label": "サムネイル" }],
+  "deferred": [{ "id": "transparent", "label": "透過素材", "status": "DEFERRED" }]
+}
