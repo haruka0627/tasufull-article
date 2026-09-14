@@ -77,7 +77,7 @@ Deferred. Public index has no transparency metadata. Classic filters remain 用�
 See [findings-fix-v1.md](./findings-fix-v1.md).
 
 - すべて results = video-first primary only (legacy hidden; legacy URLs still work)
-- 写真 cards bind `preview_url` and keep the existing `photo-wall` layer so slim/CF is not a blank `<img>` 404
+- 写真: download-card and image-list bind `preview_url` to `<img>`; missing generated `*.png` 404 instead of HTML 200. Real photo bytes are not in this slim tree — CF must ship `generated/previews/image` or `generated/downloads/image` for Human Visual photo PASS
 - Footer / normal category nav = `bgm, sfx, 写真, イラスト, 背景, アイコン` (no Web素材)
 
 ## Human Visual Gate (do not merge)

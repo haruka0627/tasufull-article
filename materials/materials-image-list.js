@@ -42,7 +42,8 @@
   }
 
   function isServedPreviewPath(src) {
-    return /\/materials\/images\/previews\//i.test(String(src || ""));
+    const s = String(src || "");
+    return /\/materials\/images\/previews\//i.test(s) || /\/materials\/generated\/previews\//i.test(s);
   }
 
   function resolveThumbSrc(item) {

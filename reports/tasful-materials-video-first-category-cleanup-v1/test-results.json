@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "passed": 97,
+  "passed": 107,
   "failed": 0,
   "results": [
     {
@@ -434,6 +434,11 @@
       "detail": ""
     },
     {
+      "name": "image list prefers generated/previews over downloads",
+      "ok": true,
+      "detail": ""
+    },
+    {
       "name": "image card keeps existing preview_url src",
       "ok": true,
       "detail": ""
@@ -450,6 +455,51 @@
     },
     {
       "name": "image list exports wireCard",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card resolver loaded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card binds preview_url",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card list renders <img>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card list keeps photo-wall fallback",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "download-card list img uses preview_url",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "generated downloads missing pngs 404",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "generated previews missing files 404",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "no SPA /* /index.html 200",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "generated image downloads force image/png",
       "ok": true,
       "detail": ""
     },

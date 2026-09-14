@@ -80,6 +80,8 @@ function loadMaterialsData(indexItems) {
   vm.runInContext(listSrc, sandbox, { filename: "materials-list-page.js" });
   const imageListSrc = fs.readFileSync(path.join(root, "materials", "materials-image-list.js"), "utf8");
   vm.runInContext(imageListSrc, sandbox, { filename: "materials-image-list.js" });
+  const cardSrc = fs.readFileSync(path.join(root, "materials", "materials-download-card.js"), "utf8");
+  vm.runInContext(cardSrc, sandbox, { filename: "materials-download-card.js" });
   return sandbox;
 }
 
@@ -91,6 +93,7 @@ const sandbox = loadMaterialsData(items);
 const Data = sandbox.TasuMaterialsData;
 const List = sandbox.TasuMaterialsListPage;
 const ImageList = sandbox.TasuMaterialsImageList;
+const DownloadCard = sandbox.TasuMaterialsDownloadCard;
 
 assert("SSOT loaded", Boolean(Data && List), "TasuMaterialsData + TasuMaterialsListPage");
 
@@ -263,6 +266,14 @@ assert(
     preview_images: [{ src: "/materials/images/previews/image-cute-cat-3d.svg" }],
   }) === "/materials/images/previews/image-cute-cat-3d.svg"
 );
+assert(
+  "image list prefers generated/previews over downloads",
+  ImageList.resolveThumbSrc({
+    preview_url: "/materials/generated/downloads/image/automation-001.png",
+    download_url: "/materials/generated/downloads/image/automation-001.png",
+    preview_images: [{ src: "/materials/generated/previews/image/automation-001.png" }],
+  }) === "/materials/generated/previews/image/automation-001.png"
+);
 const imageCard = ImageList.renderCard({
   ...publicImage,
   title: publicImage.title,
@@ -272,6 +283,32 @@ assert("image card keeps existing preview_url src", imageCard.includes(publicIma
 assert("image card keeps photo-wall fallback", imageCard.includes("materials-card__thumb--photo-wall"));
 assert("image card wires thumb onerror hook", imageCard.includes("data-mat-img-thumb"));
 assert("image list exports wireCard", typeof ImageList.wireCard === "function");
+assert("download-card resolver loaded", Boolean(DownloadCard && DownloadCard.resolveThumbSrc));
+assert(
+  "download-card binds preview_url",
+  DownloadCard.resolveThumbSrc(publicImage) === publicImage.preview_url
+);
+const downloadCardHtml = DownloadCard.renderDownloadCard(publicImage, { variant: "list" });
+assert("download-card list renders <img>", /<img class="materials-card__thumb-img"/.test(downloadCardHtml));
+assert("download-card list keeps photo-wall fallback", downloadCardHtml.includes("materials-card__thumb--photo-wall"));
+assert("download-card list img uses preview_url", downloadCardHtml.includes(publicImage.preview_url));
+
+const redirects = fs.readFileSync(path.join(root, "deploy", "cloudflare", "_redirects"), "utf8");
+assert(
+  "generated downloads missing pngs 404",
+  /\/materials\/generated\/downloads\/\*\s+\/404\.html\s+404/.test(redirects)
+);
+assert(
+  "generated previews missing files 404",
+  /\/materials\/generated\/previews\/\*\s+\/404\.html\s+404/.test(redirects)
+);
+assert("no SPA /* /index.html 200", !/\/\*\s+\/index\.html\s+200/.test(redirects));
+
+const headers = fs.readFileSync(path.join(root, "deploy", "cloudflare", "_headers"), "utf8");
+assert(
+  "generated image downloads force image/png",
+  headers.includes("/materials/generated/downloads/image/*") && headers.includes("Content-Type: image/png")
+);
 
 const listPageJs = fs.readFileSync(path.join(root, "materials", "materials-list-page.js"), "utf8");
 assert("list すべて uses restrictAllDiscovery", listPageJs.includes("restrictAllDiscovery"));

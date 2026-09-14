@@ -46,6 +46,17 @@
 /images/*
   Cache-Control: public, max-age=86400, immutable
 
+# Generated Materials image bytes — never sniff SPA HTML as a photo
+/materials/generated/downloads/image/*
+  Content-Type: image/png
+  X-Content-Type-Options: nosniff
+  Cache-Control: public, max-age=86400
+
+/materials/generated/previews/image/*
+  Content-Type: image/png
+  X-Content-Type-Options: nosniff
+  Cache-Control: public, max-age=86400
+
 # その他静的アセット（初回は控えめ）
 /*.css
   Cache-Control: public, max-age=3600

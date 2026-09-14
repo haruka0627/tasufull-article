@@ -1064,6 +1064,20 @@
   margin: 0;
 }
 
+.materials-card__thumb-img {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.materials-card__thumb:has(.materials-card__thumb-img:not([hidden])) .materials-card__thumb-icon {
+  opacity: 0;
+}
+
 .materials-card__thumb-icon {
   position: absolute;
   inset: 0;
