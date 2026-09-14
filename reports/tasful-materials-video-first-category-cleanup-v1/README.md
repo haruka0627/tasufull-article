@@ -52,7 +52,7 @@ Transparency fields (`meta_transparent` / `image_transparent` / `transparent` / 
 | Genre contract | `scripts/lib/materials-list-genre-filter-contract.mjs` | presentation layout: ジャンル / デザイン / カラー / 形式 |
 | Presentation UI | `materials/materials-presentation-list.js` | Removed スライド種類 / 業種. Kept カラー / 形式 |
 
-`wrangler.toml` is **absent** on this tree. `pages_build_output_dir` was not created or removed.
+`wrangler.toml` sets `pages_build_output_dir = "deploy/cloudflare/dist"` (same as PR29 `ee6b015`). `.cfignore` excludes `reports/` and `**/*.zip` so Pages does not validate the 40.9 MiB repo-root zip.
 
 ## Empty categories
 

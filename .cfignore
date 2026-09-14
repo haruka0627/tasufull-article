@@ -1,0 +1,14 @@
+# Defense in depth: never upload repo-root review artifacts to Pages.
+# Stage script already excludes these from deploy/cloudflare/dist.
+reports/
+**/*.zip
+backups/
+screenshots/
+node_modules/
+.git/
+supabase/
+.tmp.driveupload/
+*.log
+.env
+.env.local
+chat-supabase-config.local.js

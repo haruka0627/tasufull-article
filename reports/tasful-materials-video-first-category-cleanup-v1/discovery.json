@@ -43,6 +43,7 @@
   ],
   "presentationOnlyFiltersRemoved": ["スライド種類", "業種"],
   "filtersKept": ["カラー", "形式"],
-  "wranglerToml": false,
-  "pagesBuildOutputDir": "not_applicable"
+  "wranglerToml": true,
+  "pagesBuildOutputDir": "deploy/cloudflare/dist",
+  "cfignore": ["reports/", "**/*.zip"]
 }

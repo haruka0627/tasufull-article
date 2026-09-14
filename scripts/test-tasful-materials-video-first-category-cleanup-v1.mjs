@@ -195,10 +195,17 @@ assert(
 );
 
 const wranglerExists = fs.existsSync(path.join(root, "wrangler.toml"));
+const wranglerToml = wranglerExists ? fs.readFileSync(path.join(root, "wrangler.toml"), "utf8") : "";
+const cfignore = fs.existsSync(path.join(root, ".cfignore"))
+  ? fs.readFileSync(path.join(root, ".cfignore"), "utf8")
+  : "";
+assert("wrangler.toml present", wranglerExists);
 assert(
-  "wrangler.toml absent — pages_build_output_dir not applicable",
-  wranglerExists === false
+  "pages_build_output_dir is staged dist",
+  /pages_build_output_dir\s*=\s*"deploy\/cloudflare\/dist"/.test(wranglerToml)
 );
+assert(".cfignore excludes reports/", cfignore.includes("reports/"));
+assert(".cfignore excludes **/*.zip", cfignore.includes("**/*.zip"));
 
 const noAuthTouch = [
   "materials/materials-member-access.js",

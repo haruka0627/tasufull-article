@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "passed": 70,
+  "passed": 73,
   "failed": 0,
   "results": [
     {
@@ -344,7 +344,22 @@
       "detail": ""
     },
     {
-      "name": "wrangler.toml absent — pages_build_output_dir not applicable",
+      "name": "wrangler.toml present",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "pages_build_output_dir is staged dist",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": ".cfignore excludes reports/",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": ".cfignore excludes **/*.zip",
       "ok": true,
       "detail": ""
     },
@@ -413,5 +428,5 @@
     }
   ],
   "transparentHits": 0,
-  "wranglerToml": false
+  "wranglerToml": true
 }
