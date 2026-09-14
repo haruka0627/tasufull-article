@@ -232,6 +232,18 @@
     }
   }
 
+  function restrictAllDiscovery(items) {
+    const data = global.TasuMaterialsData;
+    if (typeof data?.filterPrimaryDiscoveryItems === "function") {
+      return data.filterPrimaryDiscoveryItems(items);
+    }
+    const allowed = new Set(data && data.LIST_PRIMARY_CATEGORY_IDS);
+    if (!allowed.size) return items || [];
+    return (items || []).filter(function (item) {
+      return allowed.has(item && item.category_id);
+    });
+  }
+
   async function fetchListItems(repo, params) {
     const { q, sort, category } = params;
     const filterId = categoryToFilterId(category);
@@ -244,13 +256,16 @@
         items = items.filter(function (item) {
           return item.category_id === filterId;
         });
+      } else {
+        // すべて + search: primary discovery only. Legacy stays on ?category=template etc.
+        items = restrictAllDiscovery(items);
       }
       items = sortItems(items, sortKey);
     } else if (filterId) {
       items = await repo.fetchItemsByCategory(filterId);
       items = sortItems(items, sortKey);
     } else {
-      items = await repo.fetchAllItems(sortKey);
+      items = restrictAllDiscovery(await repo.fetchAllItems(sortKey));
     }
 
     const options = collectCommonFilterOptions(items || []);

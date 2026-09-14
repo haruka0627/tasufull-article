@@ -2701,8 +2701,11 @@
   /** 将来 Supabase 接続時はここを差し替え */
   const repository = {
     async fetchCategories() {
-      // TOP / footer: keep existing catalog cards. Video-first empty ids are list chips + URL only.
-      return CATEGORIES.filter((c) => !VIDEO_FIRST_EMPTY_CATEGORY_IDS.includes(c.id)).slice();
+      // Normal nav (TOP / footer): video-first primary only. Empty overlay/frame/telop/transition stay chip+URL.
+      // Legacy ids remain in CATEGORIES for direct ?category= URLs and upload.
+      return LIST_PRIMARY_CATEGORY_IDS.filter((id) => !VIDEO_FIRST_EMPTY_CATEGORY_IDS.includes(id))
+        .map((id) => CATEGORIES.find((c) => c.id === id))
+        .filter(Boolean);
     },
 
     async fetchPopularItems(limit = 5) {
@@ -2819,6 +2822,12 @@
     LIST_UI_LABELS,
     LIST_SIDEBAR_LABELS,
     LIST_SIDEBAR_CATEGORIES,
+    isPrimaryDiscoveryCategory(id) {
+      return LIST_PRIMARY_CATEGORY_IDS.includes(String(id || ""));
+    },
+    filterPrimaryDiscoveryItems(items) {
+      return (items || []).filter((item) => LIST_PRIMARY_CATEGORY_IDS.includes(item && item.category_id));
+    },
     countPublishedInventoryByCategory,
     POPULAR_KEYWORDS,
     ITEMS,

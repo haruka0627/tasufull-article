@@ -243,8 +243,25 @@
   display: block;
 }
 
+.mat-img-card__img:not(.mat-img-card__img--fallback) {
+  position: relative;
+  z-index: 1;
+}
+
 .mat-img-card__img--fallback {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+}
+
+.mat-img-card__img--fallback.materials-card__thumb--photo-wall {
+  background: linear-gradient(145deg, #fecdd3 0%, #fda4af 100%);
+}
+
+.mat-img-card__img--fallback.materials-card__thumb--image-cat {
+  background: linear-gradient(145deg, #a7f3d0 0%, #6ee7b7 100%);
 }
 
 .mat-img-card__free {

@@ -78,6 +78,8 @@ function loadMaterialsData(indexItems) {
   vm.runInContext(src, sandbox, { filename: "materials-data.js" });
   const listSrc = fs.readFileSync(path.join(root, "materials", "materials-list-page.js"), "utf8");
   vm.runInContext(listSrc, sandbox, { filename: "materials-list-page.js" });
+  const imageListSrc = fs.readFileSync(path.join(root, "materials", "materials-image-list.js"), "utf8");
+  vm.runInContext(imageListSrc, sandbox, { filename: "materials-image-list.js" });
   return sandbox;
 }
 
@@ -88,6 +90,7 @@ const items = Array.isArray(index.items) ? index.items : [];
 const sandbox = loadMaterialsData(items);
 const Data = sandbox.TasuMaterialsData;
 const List = sandbox.TasuMaterialsListPage;
+const ImageList = sandbox.TasuMaterialsImageList;
 
 assert("SSOT loaded", Boolean(Data && List), "TasuMaterialsData + TasuMaterialsListPage");
 
@@ -193,6 +196,86 @@ assert(
   "TOP fetchCategories excludes empty video-first ids",
   EMPTY_VIDEO_FIRST.every((id) => !topCats.some((c) => c.id === id))
 );
+
+const PRIMARY_NAV_IDS = ["bgm", "sfx", "image", "illustration", "background", "icon"];
+const LEGACY_CATEGORY_IDS = ["template", "web", "code", "document", "tool", "presentation"];
+assert(
+  "normal nav fetchCategories is video-first subset",
+  topCats.map((c) => c.id).join(",") === PRIMARY_NAV_IDS.join(","),
+  topCats.map((c) => c.id).join(",")
+);
+assert(
+  "normal nav hides legacy ids",
+  LEGACY_CATEGORY_IDS.every((id) => !topCats.some((c) => c.id === id))
+);
+
+const allItems = await Data.repository.fetchAllItems("popular");
+const allDiscovery = Data.filterPrimaryDiscoveryItems(allItems);
+assert(
+  "すべて discovery excludes legacy categories",
+  allDiscovery.every((item) => !LEGACY_CATEGORY_IDS.includes(item.category_id)),
+  String(allDiscovery.length)
+);
+assert(
+  "すべて discovery keeps image stock",
+  allDiscovery.some((item) => item.category_id === "image")
+);
+assert(
+  "すべて discovery keeps illustration/background/icon/sfx",
+  ["illustration", "background", "icon", "sfx"].every((id) =>
+    allDiscovery.some((item) => item.category_id === id)
+  )
+);
+for (const legacy of LEGACY_CATEGORY_IDS) {
+  const legacyItems = await Data.repository.fetchItemsByCategory(legacy);
+  assert(
+    `legacy URL inventory still present: ${legacy}`,
+    legacy === "tool" ? legacyItems.length === 0 : legacyItems.length > 0,
+    String(legacyItems.length)
+  );
+}
+
+const searchHits = await Data.repository.searchItems("テンプレート");
+const searchDiscovery = Data.filterPrimaryDiscoveryItems(searchHits);
+assert(
+  "すべて search hides template/web/code/document/presentation",
+  searchDiscovery.every((item) => !LEGACY_CATEGORY_IDS.includes(item.category_id))
+);
+
+const footerJs = fs.readFileSync(path.join(root, "materials", "materials-site-footer.js"), "utf8");
+assert("footer uses primaryFooterCategories", footerJs.includes("function primaryFooterCategories"));
+assert("footer excludes empty video-first ids", footerJs.includes("VIDEO_FIRST_EMPTY_CATEGORY_IDS"));
+assert("footer still maps image label 写真", footerJs.includes('image: "写真"'));
+
+assert("image list resolver loaded", Boolean(ImageList && ImageList.resolveThumbSrc));
+const publicImage = items.find((item) => item.category_id === "image");
+const resolvedPublic = ImageList.resolveThumbSrc(publicImage);
+assert(
+  "image list binds preview_url",
+  resolvedPublic === publicImage.preview_url,
+  resolvedPublic
+);
+assert(
+  "image list prefers served /images/previews",
+  ImageList.resolveThumbSrc({
+    preview_url: "/materials/generated/downloads/image/automation-001.png",
+    download_url: "/materials/generated/downloads/image/automation-001.png",
+    preview_images: [{ src: "/materials/images/previews/image-cute-cat-3d.svg" }],
+  }) === "/materials/images/previews/image-cute-cat-3d.svg"
+);
+const imageCard = ImageList.renderCard({
+  ...publicImage,
+  title: publicImage.title,
+  thumbnail_style: "photo-wall",
+});
+assert("image card keeps existing preview_url src", imageCard.includes(publicImage.preview_url));
+assert("image card keeps photo-wall fallback", imageCard.includes("materials-card__thumb--photo-wall"));
+assert("image card wires thumb onerror hook", imageCard.includes("data-mat-img-thumb"));
+assert("image list exports wireCard", typeof ImageList.wireCard === "function");
+
+const listPageJs = fs.readFileSync(path.join(root, "materials", "materials-list-page.js"), "utf8");
+assert("list すべて uses restrictAllDiscovery", listPageJs.includes("restrictAllDiscovery"));
+assert("index item count unchanged", items.length === 2151, String(items.length));
 
 const wranglerExists = fs.existsSync(path.join(root, "wrangler.toml"));
 const wranglerToml = wranglerExists ? fs.readFileSync(path.join(root, "wrangler.toml"), "utf8") : "";

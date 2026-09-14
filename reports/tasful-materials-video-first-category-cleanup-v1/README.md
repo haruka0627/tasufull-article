@@ -72,18 +72,28 @@ Search / sort on those URLs keeps `?category=` (classic mount).
 
 Deferred. Public index has no transparency metadata. Classic filters remain 用途 / 形式 / スタイル / カラー.
 
+## Human Visual Findings Fix V1
+
+See [findings-fix-v1.md](./findings-fix-v1.md).
+
+- すべて results = video-first primary only (legacy hidden; legacy URLs still work)
+- 写真 cards bind `preview_url` and keep the existing `photo-wall` layer so slim/CF is not a blank `<img>` 404
+- Footer / normal category nav = `bgm, sfx, 写真, イラスト, 背景, アイコン` (no Web素材)
+
 ## Human Visual Gate (do not merge)
 
 Visual QA is human-only. Open local Chrome (do not use in-agent Browser Automation):
 
-1. http://127.0.0.1:8788/materials/list.html — primary chips only; no template/web/code/text/tool/presentation
-2. http://127.0.0.1:8788/materials/list.html?category=image — chip label 写真; inventory is existing image stock (not reclassified)
+1. http://127.0.0.1:8788/materials/list.html — すべて is primary only; no template/web/code/text/tool/presentation cards; footer has no Web素材
+2. http://127.0.0.1:8788/materials/list.html?category=image — chip label 写真; thumbs visible (real PNG if downloads exist, else existing photo-wall style — not blank)
 3. http://127.0.0.1:8788/materials/list.html?category=overlay — real empty state, no fake cards
 4. http://127.0.0.1:8788/materials/list.html?category=frame
 5. http://127.0.0.1:8788/materials/list.html?category=telop
 6. http://127.0.0.1:8788/materials/list.html?category=transition
 7. http://127.0.0.1:8788/materials/list.html?category=template — legacy URL still mounts specialty list
 8. http://127.0.0.1:8788/materials/list.html?category=presentation — no スライド種類 / 業種; カラー / 形式 remain
+
+After the next Pages deploy, the same paths on the PR preview host.
 
 **STOP** after this PR. Do not merge until Human Visual Gate passes.
 
