@@ -1,0 +1,1468 @@
+{
+  "updated_at": "2026-09-13T19:15:07.857Z",
+  "jobs": [
+    {
+      "job_id": "4469737d-e1cc-41be-aff0-94761d55e8ab",
+      "priority_id": "sfx::quota::2026-08-30",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "completed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-08-30",
+      "publication_status": "OK",
+      "created_at": "2026-08-30T10:44:31.489Z",
+      "approved_at": "2026-08-30T10:44:31.493Z",
+      "started_at": "2026-08-30T10:44:31.496Z",
+      "finished_at": "2026-08-30T10:44:34.183Z",
+      "result_ok": true,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-08-30T10:44:31.489Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-08-30T10:44:31.493Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-08-30T10:44:31.496Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-08-30T10:44:34.183Z",
+          "action": "completed",
+          "operator": "auto-supply",
+          "detail": {
+            "exit_code": 0,
+            "dry_run": false,
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-08-30T194434.json",
+              "generated": 30,
+              "completed": 30,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 0,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "034c8872-d902-42af-8d6a-e25a0c919261",
+      "priority_id": "sfx::quota::2026-08-31",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "completed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-08-31",
+      "publication_status": "OK",
+      "created_at": "2026-08-30T19:00:04.164Z",
+      "approved_at": "2026-08-30T19:00:04.167Z",
+      "started_at": "2026-08-30T19:00:04.172Z",
+      "finished_at": "2026-08-30T19:00:06.813Z",
+      "result_ok": true,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-08-30T19:00:04.164Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-08-30T19:00:04.167Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-08-30T19:00:04.172Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-08-30T19:00:06.813Z",
+          "action": "completed",
+          "operator": "auto-supply",
+          "detail": {
+            "exit_code": 0,
+            "dry_run": false,
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-08-31T040006.json",
+              "generated": 30,
+              "completed": 30,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 0,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "47c2c3b6-192f-49a3-b485-f9590bc6feae",
+      "priority_id": "sfx::quota::2026-09-01",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "completed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-01",
+      "publication_status": "OK",
+      "created_at": "2026-08-31T19:00:02.473Z",
+      "approved_at": "2026-08-31T19:00:02.476Z",
+      "started_at": "2026-08-31T19:00:02.479Z",
+      "finished_at": "2026-08-31T19:00:05.630Z",
+      "result_ok": true,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-08-31T19:00:02.473Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-08-31T19:00:02.476Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-08-31T19:00:02.479Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-08-31T19:00:05.630Z",
+          "action": "completed",
+          "operator": "auto-supply",
+          "detail": {
+            "exit_code": 0,
+            "dry_run": false,
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-01T040005.json",
+              "generated": 30,
+              "completed": 30,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 0,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "a02939ee-79b8-4c6f-8876-663445de12f6",
+      "priority_id": "sfx::quota::2026-09-02",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "completed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-02",
+      "publication_status": "OK",
+      "created_at": "2026-09-01T19:00:03.157Z",
+      "approved_at": "2026-09-01T19:00:03.159Z",
+      "started_at": "2026-09-01T19:00:03.163Z",
+      "finished_at": "2026-09-01T19:00:06.055Z",
+      "result_ok": true,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-01T19:00:03.157Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-01T19:00:03.160Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-01T19:00:03.163Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-01T19:00:06.055Z",
+          "action": "completed",
+          "operator": "auto-supply",
+          "detail": {
+            "exit_code": 0,
+            "dry_run": false,
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-02T040005.json",
+              "generated": 30,
+              "completed": 30,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 0,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "173d3073-513e-411f-b4d0-3fa1d4bcb5aa",
+      "priority_id": "sfx::quota::2026-09-03",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "completed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-03",
+      "publication_status": "FAILED",
+      "created_at": "2026-09-02T19:00:03.713Z",
+      "approved_at": "2026-09-02T19:00:03.716Z",
+      "started_at": "2026-09-02T19:00:03.719Z",
+      "finished_at": "2026-09-02T19:00:07.145Z",
+      "result_ok": true,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-02T19:00:03.713Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-02T19:00:03.716Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-02T19:00:03.719Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-02T19:00:07.145Z",
+          "action": "completed",
+          "operator": "auto-supply",
+          "detail": {
+            "exit_code": 0,
+            "dry_run": false,
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-03T040007.json",
+              "generated": 30,
+              "completed": 30,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 0,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "42a3b3ca-58d1-4009-8cbf-d50797d9e157",
+      "priority_id": "sfx::quota::2026-09-04",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-04",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-03T19:00:02.693Z",
+      "approved_at": "2026-09-03T19:00:02.698Z",
+      "started_at": "2026-09-03T19:00:02.701Z",
+      "finished_at": "2026-09-03T19:15:02.777Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-03T19:00:02.693Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-03T19:00:02.698Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-03T19:00:02.701Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-03T19:15:02.777Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260904.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "-NNN.wav ---\n[19:00:04]   notification-click-bright-micro-soft-q02-20260904-production-001.wav · 0.0775s · peak -1 dBFS · seed=1731975907\n[19:00:04] package 完了: 効果音・SFX/notification/click/notification-click-bright-micro-soft-q02-20260904-production\n[19:00:04] --- [23/30] 効果音・SFX/transition/soft-whoosh/transition-soft-whoosh-airy-medium-soft-q07-20260904-production · preset=whoosh · 1 sounds · files=transition-soft-whoosh-airy-medium-soft-q07-20260904-production-NNN.wav ---\n[19:00:04]   transition-soft-whoosh-airy-medium-soft-q07-20260904-production-001.wav · 0.9945s · peak -1 dBFS · seed=2697996735\n[19:00:04] package 完了: 効果音・SFX/transition/soft-whoosh/transition-soft-whoosh-airy-medium-soft-q07-20260904-production\n[19:00:04] --- [24/30] 効果音・SFX/impact/punch/impact-punch-cinematic-micro-soft-q07-20260904-production · preset=impact · 1 sounds · files=impact-punch-cinematic-micro-soft-q07-20260904-production-NNN.wav ---\n[19:00:04] FAILED: 効果音・SFX/impact/punch/impact-punch-cinematic-micro-soft-q07-20260904-production · audio QA failed: duration_below_family 0.06589583333333333\n[19:00:04] --- [25/30] 効果音・SFX/text/text-appear/text-text-appear-clean-short-soft-q05-20260904-production · preset=pop · 1 sounds · files=text-text-appear-clean-short-soft-q05-20260904-production-NNN.wav ---\n[19:00:04]   text-text-appear-clean-short-soft-q05-20260904-production-001.wav · 0.1545s · peak -1 dBFS · seed=4078096226\n[19:00:04] package 完了: 効果音・SFX/text/text-appear/text-text-appear-clean-short-soft-q05-20260904-production\n[19:00:04] --- [26/30] 効果音・SFX/foley/cloth-movement/foley-cloth-movement-clean-short-soft-q01-20260904-production · preset=whoosh · 1 sounds · files=foley-cloth-movement-clean-short-soft-q01-20260904-production-NNN.wav ---\n[19:00:04]   foley-cloth-movement-clean-short-soft-q01-20260904-production-001.wav · 0.2736s · peak -1 dBFS · seed=233312729\n[19:00:04] package 完了: 効果音・SFX/foley/cloth-movement/foley-cloth-movement-clean-short-soft-q01-20260904-production\n[19:00:05] --- [27/30] 効果音・SFX/cinematic/braam/cinematic-braam-cinematic-long-soft-q01-20260904-production · preset=impact · 1 sounds · files=cinematic-braam-cinematic-long-soft-q01-20260904-production-NNN.wav ---\n[19:00:05]   cinematic-braam-cinematic-long-soft-q01-20260904-production-001.wav · 1.6282s · peak -1 dBFS · seed=2846415758\n[19:00:05] package 完了: 効果音・SFX/cinematic/braam/cinematic-braam-cinematic-long-soft-q01-20260904-production\n[19:00:05] --- [28/30] 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260904-production · preset=impact · 1 sounds · files=foley-door-close-clean-short-soft-q02-20260904-production-NNN.wav ---\n[19:00:05]   foley-door-close-clean-short-soft-q02-20260904-production-001.wav · 0.3739s · peak -1 dBFS · seed=2467236305\n[19:00:05] package 完了: 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260904-production\n[19:00:05] --- [29/30] 効果音・SFX/environment/cafe/environment-cafe-airy-long-soft-q01-20260904-production · preset=whoosh · 1 sounds · files=environment-cafe-airy-long-soft-q01-20260904-production-NNN.wav ---\n[19:00:05] FAILED: 効果音・SFX/environment/cafe/environment-cafe-airy-long-soft-q01-20260904-production · audio QA failed: duration_above_family 2.937666666666667\n[19:00:05] --- [30/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260904-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260904-production-NNN.wav ---\n[19:00:05]   foley-door-open-clean-medium-soft-q03-20260904-production-001.wav · 1.1277s · peak -1 dBFS · seed=3322570619\n[19:00:05] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260904-production\n[19:00:05] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-04T040005.json\n[19:00:05] done · completed=25 failed=5 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-04T040005.json",
+              "generated": 25,
+              "completed": 25,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 5,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "8ba16ce8-adb2-4953-89cb-cc941376b55a",
+      "priority_id": "sfx::quota::2026-09-05",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-05",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-04T19:00:03.621Z",
+      "approved_at": "2026-09-04T19:00:03.625Z",
+      "started_at": "2026-09-04T19:00:03.629Z",
+      "finished_at": "2026-09-04T19:15:03.698Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-04T19:00:03.621Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-04T19:00:03.625Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-04T19:00:03.629Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-04T19:15:03.698Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260905.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": " crowd-cheer-bright-medium-soft-q02-20260905-production-001.wav · 0.6201s · peak -1 dBFS · seed=4117479886\n[19:00:05] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260905-production\n[19:00:05] --- [23/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260905-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260905-production-NNN.wav ---\n[19:00:05]   game-coin-bright-micro-soft-q02-20260905-production-001.wav · 0.0859s · peak -1 dBFS · seed=1413868866\n[19:00:05] package 完了: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260905-production\n[19:00:05] --- [24/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260905-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260905-production-NNN.wav ---\n[19:00:05]   physical-glass-airy-short-soft-q02-20260905-production-001.wav · 0.4887s · peak -1 dBFS · seed=196289615\n[19:00:06] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260905-production\n[19:00:06] --- [25/30] 効果音・SFX/notification/cancel/notification-cancel-bright-short-soft-q01-20260905-production · preset=error · 1 sounds · files=notification-cancel-bright-short-soft-q01-20260905-production-NNN.wav ---\n[19:00:06]   notification-cancel-bright-short-soft-q01-20260905-production-001.wav · 0.2258s · peak -1 dBFS · seed=634197669\n[19:00:06] package 完了: 効果音・SFX/notification/cancel/notification-cancel-bright-short-soft-q01-20260905-production\n[19:00:06] --- [26/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260905-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260905-production-NNN.wav ---\n[19:00:06]   foley-door-open-clean-medium-soft-q03-20260905-production-001.wav · 0.5768s · peak -1 dBFS · seed=2343402830\n[19:00:06] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260905-production\n[19:00:06] --- [27/30] 効果音・SFX/environment/crowd-ambience/environment-crowd-ambience-airy-long-soft-q03-20260905-production · preset=whoosh · 1 sounds · files=environment-crowd-ambience-airy-long-soft-q03-20260905-production-NNN.wav ---\n[19:00:06] FAILED: 効果音・SFX/environment/crowd-ambience/environment-crowd-ambience-airy-long-soft-q03-20260905-production · audio QA failed: duration_above_family 3.1084375\n[19:00:06] --- [28/30] 効果音・SFX/foley/footsteps/foley-footsteps-clean-short-soft-q04-20260905-production · preset=click · 1 sounds · files=foley-footsteps-clean-short-soft-q04-20260905-production-NNN.wav ---\n[19:00:06]   foley-footsteps-clean-short-soft-q04-20260905-production-001.wav · 0.2629s · peak -1 dBFS · seed=3716004246\n[19:00:06] package 完了: 効果音・SFX/foley/footsteps/foley-footsteps-clean-short-soft-q04-20260905-production\n[19:00:06] --- [29/30] 効果音・SFX/cinematic/dark-impact/cinematic-dark-impact-cinematic-medium-soft-q03-20260905-production · preset=impact · 1 sounds · files=cinematic-dark-impact-cinematic-medium-soft-q03-20260905-production-NNN.wav ---\n[19:00:06]   cinematic-dark-impact-cinematic-medium-soft-q03-20260905-production-001.wav · 1.1153s · peak -1 dBFS · seed=982543802\n[19:00:06] package 完了: 効果音・SFX/cinematic/dark-impact/cinematic-dark-impact-cinematic-medium-soft-q03-20260905-production\n[19:00:06] --- [30/30] 効果音・SFX/foley/keyboard/foley-keyboard-clean-micro-soft-q05-20260905-production · preset=click · 1 sounds · files=foley-keyboard-clean-micro-soft-q05-20260905-production-NNN.wav ---\n[19:00:06]   foley-keyboard-clean-micro-soft-q05-20260905-production-001.wav · 0.118s · peak -1 dBFS · seed=4094166447\n[19:00:06] package 完了: 効果音・SFX/foley/keyboard/foley-keyboard-clean-micro-soft-q05-20260905-production\n[19:00:06] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-05T040006.json\n[19:00:06] done · completed=28 failed=2 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-05T040006.json",
+              "generated": 28,
+              "completed": 28,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 2,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "8b9cc5af-892e-49a6-af7a-4ca398c43bd3",
+      "priority_id": "sfx::quota::2026-09-06",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-06",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-05T19:00:03.011Z",
+      "approved_at": "2026-09-05T19:00:03.015Z",
+      "started_at": "2026-09-05T19:00:03.020Z",
+      "finished_at": "2026-09-05T19:15:03.103Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-05T19:00:03.011Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-05T19:00:03.015Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-05T19:00:03.020Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-05T19:15:03.103Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260906.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "heer-bright-medium-soft-q02-20260906-production-001.wav · 0.6219s · peak -1 dBFS · seed=1502094065\n[19:00:05] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260906-production\n[19:00:05] --- [23/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260906-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260906-production-NNN.wav ---\n[19:00:05]   game-coin-bright-micro-soft-q02-20260906-production-001.wav · 0.0852s · peak -1 dBFS · seed=84332997\n[19:00:05] package 完了: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260906-production\n[19:00:05] --- [24/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260906-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260906-production-NNN.wav ---\n[19:00:05]   physical-glass-airy-short-soft-q02-20260906-production-001.wav · 0.3495s · peak -1 dBFS · seed=3717687624\n[19:00:05] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260906-production\n[19:00:05] --- [25/30] 効果音・SFX/notification/cancel/notification-cancel-bright-short-soft-q01-20260906-production · preset=error · 1 sounds · files=notification-cancel-bright-short-soft-q01-20260906-production-NNN.wav ---\n[19:00:05]   notification-cancel-bright-short-soft-q01-20260906-production-001.wav · 0.4447s · peak -1 dBFS · seed=337804578\n[19:00:05] package 完了: 効果音・SFX/notification/cancel/notification-cancel-bright-short-soft-q01-20260906-production\n[19:00:05] --- [26/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260906-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260906-production-NNN.wav ---\n[19:00:05]   foley-door-open-clean-medium-soft-q03-20260906-production-001.wav · 0.567s · peak -1 dBFS · seed=4022984305\n[19:00:05] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260906-production\n[19:00:05] --- [27/30] 効果音・SFX/environment/crowd-ambience/environment-crowd-ambience-airy-long-soft-q03-20260906-production · preset=whoosh · 1 sounds · files=environment-crowd-ambience-airy-long-soft-q03-20260906-production-NNN.wav ---\n[19:00:05] FAILED: 効果音・SFX/environment/crowd-ambience/environment-crowd-ambience-airy-long-soft-q03-20260906-production · audio QA failed: duration_above_family 2.7014583333333335\n[19:00:05] --- [28/30] 効果音・SFX/foley/footsteps/foley-footsteps-clean-short-soft-q04-20260906-production · preset=click · 1 sounds · files=foley-footsteps-clean-short-soft-q04-20260906-production-NNN.wav ---\n[19:00:05]   foley-footsteps-clean-short-soft-q04-20260906-production-001.wav · 0.288s · peak -1 dBFS · seed=3789978329\n[19:00:05] package 完了: 効果音・SFX/foley/footsteps/foley-footsteps-clean-short-soft-q04-20260906-production\n[19:00:05] --- [29/30] 効果音・SFX/cinematic/dark-impact/cinematic-dark-impact-cinematic-medium-soft-q03-20260906-production · preset=impact · 1 sounds · files=cinematic-dark-impact-cinematic-medium-soft-q03-20260906-production-NNN.wav ---\n[19:00:05]   cinematic-dark-impact-cinematic-medium-soft-q03-20260906-production-001.wav · 0.8438s · peak -1 dBFS · seed=1724061533\n[19:00:05] package 完了: 効果音・SFX/cinematic/dark-impact/cinematic-dark-impact-cinematic-medium-soft-q03-20260906-production\n[19:00:05] --- [30/30] 効果音・SFX/foley/keyboard/foley-keyboard-clean-micro-soft-q05-20260906-production · preset=click · 1 sounds · files=foley-keyboard-clean-micro-soft-q05-20260906-production-NNN.wav ---\n[19:00:05]   foley-keyboard-clean-micro-soft-q05-20260906-production-001.wav · 0.1072s · peak -1 dBFS · seed=2391649448\n[19:00:05] package 完了: 効果音・SFX/foley/keyboard/foley-keyboard-clean-micro-soft-q05-20260906-production\n[19:00:05] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-06T040005.json\n[19:00:05] done · completed=27 failed=3 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-06T040005.json",
+              "generated": 27,
+              "completed": 27,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 3,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "f3a30d4f-557a-4781-93c0-d3dbdf19b6d6",
+      "priority_id": "sfx::quota::2026-09-07",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-07",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-06T19:00:03.997Z",
+      "approved_at": "2026-09-06T19:00:04.001Z",
+      "started_at": "2026-09-06T19:00:04.005Z",
+      "finished_at": "2026-09-06T19:15:04.074Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-06T19:00:03.997Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-06T19:00:04.001Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-06T19:00:04.005Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-06T19:15:04.074Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260907.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "rowd-cheer-bright-medium-soft-q02-20260907-production-001.wav · 0.5616s · peak -1 dBFS · seed=1361216532\n[19:00:06] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260907-production\n[19:00:06] --- [23/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260907-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260907-production-NNN.wav ---\n[19:00:06]   game-coin-bright-micro-soft-q02-20260907-production-001.wav · 0.1565s · peak -1 dBFS · seed=1398559624\n[19:00:06] package 完了: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260907-production\n[19:00:06] --- [24/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260907-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260907-production-NNN.wav ---\n[19:00:06]   physical-glass-airy-short-soft-q02-20260907-production-001.wav · 0.3095s · peak -1 dBFS · seed=589830277\n[19:00:06] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260907-production\n[19:00:06] --- [25/30] 効果音・SFX/notification/cancel/notification-cancel-bright-short-soft-q01-20260907-production · preset=error · 1 sounds · files=notification-cancel-bright-short-soft-q01-20260907-production-NNN.wav ---\n[19:00:06]   notification-cancel-bright-short-soft-q01-20260907-production-001.wav · 0.3499s · peak -1 dBFS · seed=3344969199\n[19:00:06] package 完了: 効果音・SFX/notification/cancel/notification-cancel-bright-short-soft-q01-20260907-production\n[19:00:06] --- [26/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260907-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260907-production-NNN.wav ---\n[19:00:06]   foley-door-open-clean-medium-soft-q03-20260907-production-001.wav · 0.9079s · peak -1 dBFS · seed=3882106772\n[19:00:06] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260907-production\n[19:00:06] --- [27/30] 効果音・SFX/environment/crowd-ambience/environment-crowd-ambience-airy-long-soft-q03-20260907-production · preset=whoosh · 1 sounds · files=environment-crowd-ambience-airy-long-soft-q03-20260907-production-NNN.wav ---\n[19:00:06] FAILED: 効果音・SFX/environment/crowd-ambience/environment-crowd-ambience-airy-long-soft-q03-20260907-production · audio QA failed: duration_above_family 3.306125\n[19:00:06] --- [28/30] 効果音・SFX/foley/footsteps/foley-footsteps-clean-short-soft-q04-20260907-production · preset=click · 1 sounds · files=foley-footsteps-clean-short-soft-q04-20260907-production-NNN.wav ---\n[19:00:06]   foley-footsteps-clean-short-soft-q04-20260907-production-001.wav · 0.1847s · peak -1 dBFS · seed=1420684444\n[19:00:06] package 完了: 効果音・SFX/foley/footsteps/foley-footsteps-clean-short-soft-q04-20260907-production\n[19:00:06] --- [29/30] 効果音・SFX/cinematic/dark-impact/cinematic-dark-impact-cinematic-medium-soft-q03-20260907-production · preset=impact · 1 sounds · files=cinematic-dark-impact-cinematic-medium-soft-q03-20260907-production-NNN.wav ---\n[19:00:06]   cinematic-dark-impact-cinematic-medium-soft-q03-20260907-production-001.wav · 1.0194s · peak -1 dBFS · seed=3935582848\n[19:00:06] package 完了: 効果音・SFX/cinematic/dark-impact/cinematic-dark-impact-cinematic-medium-soft-q03-20260907-production\n[19:00:06] --- [30/30] 効果音・SFX/foley/keyboard/foley-keyboard-clean-micro-soft-q05-20260907-production · preset=click · 1 sounds · files=foley-keyboard-clean-micro-soft-q05-20260907-production-NNN.wav ---\n[19:00:06]   foley-keyboard-clean-micro-soft-q05-20260907-production-001.wav · 0.0586s · peak -1 dBFS · seed=3655771493\n[19:00:06] package 完了: 効果音・SFX/foley/keyboard/foley-keyboard-clean-micro-soft-q05-20260907-production\n[19:00:06] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-07T040006.json\n[19:00:06] done · completed=28 failed=2 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-07T040006.json",
+              "generated": 28,
+              "completed": 28,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 2,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "7126829e-49a8-4514-96dc-e807aa6bf3b0",
+      "priority_id": "sfx::quota::2026-09-08",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-08",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-07T19:00:03.031Z",
+      "approved_at": "2026-09-07T19:00:03.035Z",
+      "started_at": "2026-09-07T19:00:03.041Z",
+      "finished_at": "2026-09-07T19:15:03.128Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-07T19:00:03.031Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-07T19:00:03.035Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-07T19:00:03.041Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-07T19:15:03.128Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260908.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "oduction-001.wav · 0.3417s · peak -1 dBFS · seed=1176632341\n[19:00:05] package 完了: 効果音・SFX/camera/focus/camera-focus-clean-short-soft-q03-20260908-production\n[19:00:05] --- [23/30] 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260908-production · preset=click · 1 sounds · files=digital-electronic-click-clean-micro-soft-q03-20260908-production-NNN.wav ---\n[19:00:05]   digital-electronic-click-clean-micro-soft-q03-20260908-production-001.wav · 0.1107s · peak -1 dBFS · seed=1272732573\n[19:00:05] package 完了: 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260908-production\n[19:00:05] --- [24/30] 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260908-production · preset=impact · 1 sounds · files=foley-door-close-clean-short-soft-q02-20260908-production-NNN.wav ---\n[19:00:05]   foley-door-close-clean-short-soft-q02-20260908-production-001.wav · 0.3234s · peak -1 dBFS · seed=2433480981\n[19:00:05] package 完了: 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260908-production\n[19:00:05] --- [25/30] 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260908-production · preset=whoosh · 1 sounds · files=cinematic-cinematic-transition-cinematic-medium-soft-q02-20260908-production-NNN.wav ---\n[19:00:05]   cinematic-cinematic-transition-cinematic-medium-soft-q02-20260908-production-001.wav · 0.6594s · peak -1 dBFS · seed=3887837396\n[19:00:05] package 完了: 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260908-production\n[19:00:05] --- [26/30] 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260908-production · preset=whoosh · 1 sounds · files=environment-city-airy-long-soft-q02-20260908-production-NNN.wav ---\n[19:00:05]   environment-city-airy-long-soft-q02-20260908-production-001.wav · 2.1827s · peak -1 dBFS · seed=2177827863\n[19:00:05] package 完了: 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260908-production\n[19:00:05] --- [27/30] 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260908-production · preset=sparkle · 1 sounds · files=crowd-cheer-bright-medium-soft-q02-20260908-production-NNN.wav ---\n[19:00:05]   crowd-cheer-bright-medium-soft-q02-20260908-production-001.wav · 0.7153s · peak -1 dBFS · seed=916109951\n[19:00:05] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260908-production\n[19:00:05] --- [28/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260908-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260908-production-NNN.wav ---\n[19:00:05] FAILED: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260908-production · audio QA failed: duration_below_family 0.058333333333333334\n[19:00:05] --- [29/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260908-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260908-production-NNN.wav ---\n[19:00:05]   physical-glass-airy-short-soft-q02-20260908-production-001.wav · 0.4077s · peak -1 dBFS · seed=1343359646\n[19:00:05] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260908-production\n[19:00:05] --- [30/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260908-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260908-production-NNN.wav ---\n[19:00:05]   foley-door-open-clean-medium-soft-q03-20260908-production-001.wav · 0.7458s · peak -1 dBFS · seed=3437000191\n[19:00:05] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260908-production\n[19:00:05] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-08T040005.json\n[19:00:05] done · completed=27 failed=3 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-08T040005.json",
+              "generated": 27,
+              "completed": 27,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 3,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "db035b14-13c3-4326-a3e1-d65f1c9b5f64",
+      "priority_id": "sfx::quota::2026-09-09",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-09",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-08T19:00:03.077Z",
+      "approved_at": "2026-09-08T19:00:03.081Z",
+      "started_at": "2026-09-08T19:00:03.087Z",
+      "finished_at": "2026-09-08T19:15:03.171Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-08T19:00:03.077Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-08T19:00:03.081Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-08T19:00:03.087Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-08T19:15:03.171Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260909.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "678296\n[19:00:05] package 完了: 効果音・SFX/camera/focus/camera-focus-clean-short-soft-q03-20260909-production\n[19:00:05] --- [23/30] 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260909-production · preset=click · 1 sounds · files=digital-electronic-click-clean-micro-soft-q03-20260909-production-NNN.wav ---\n[19:00:05]   digital-electronic-click-clean-micro-soft-q03-20260909-production-001.wav · 0.095s · peak -1 dBFS · seed=4179203264\n[19:00:05] package 完了: 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260909-production\n[19:00:05] --- [24/30] 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260909-production · preset=impact · 1 sounds · files=foley-door-close-clean-short-soft-q02-20260909-production-NNN.wav ---\n[19:00:05]   foley-door-close-clean-short-soft-q02-20260909-production-001.wav · 0.3437s · peak -1 dBFS · seed=1405526936\n[19:00:05] package 完了: 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260909-production\n[19:00:05] --- [25/30] 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260909-production · preset=whoosh · 1 sounds · files=cinematic-cinematic-transition-cinematic-medium-soft-q02-20260909-production-NNN.wav ---\n[19:00:05]   cinematic-cinematic-transition-cinematic-medium-soft-q02-20260909-production-001.wav · 1.2856s · peak -1 dBFS · seed=403630257\n[19:00:05] package 完了: 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260909-production\n[19:00:05] --- [26/30] 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260909-production · preset=whoosh · 1 sounds · files=environment-city-airy-long-soft-q02-20260909-production-NNN.wav ---\n[19:00:05]   environment-city-airy-long-soft-q02-20260909-production-001.wav · 2.2362s · peak -1 dBFS · seed=2757148842\n[19:00:05] package 完了: 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260909-production\n[19:00:05] --- [27/30] 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260909-production · preset=sparkle · 1 sounds · files=crowd-cheer-bright-medium-soft-q02-20260909-production-NNN.wav ---\n[19:00:05]   crowd-cheer-bright-medium-soft-q02-20260909-production-001.wav · 0.5287s · peak -1 dBFS · seed=2632993778\n[19:00:05] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260909-production\n[19:00:05] --- [28/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260909-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260909-production-NNN.wav ---\n[19:00:05]   game-coin-bright-micro-soft-q02-20260909-production-001.wav · 0.099s · peak -1 dBFS · seed=2864525022\n[19:00:05] package 完了: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260909-production\n[19:00:05] --- [29/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260909-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260909-production-NNN.wav ---\n[19:00:05]   physical-glass-airy-short-soft-q02-20260909-production-001.wav · 0.4154s · peak -1 dBFS · seed=45164427\n[19:00:05] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260909-production\n[19:00:05] --- [30/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260909-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260909-production-NNN.wav ---\n[19:00:06]   foley-door-open-clean-medium-soft-q03-20260909-production-001.wav · 1.0966s · peak -1 dBFS · seed=858916722\n[19:00:06] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260909-production\n[19:00:06] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-09T040006.json\n[19:00:06] done · completed=29 failed=1 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-09T040006.json",
+              "generated": 29,
+              "completed": 29,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 1,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "04d63f18-40a0-49d2-a821-0245a7bed6eb",
+      "priority_id": "sfx::quota::2026-09-10",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-10",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-09T19:00:02.730Z",
+      "approved_at": "2026-09-09T19:00:02.735Z",
+      "started_at": "2026-09-09T19:00:02.741Z",
+      "finished_at": "2026-09-09T19:15:02.825Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-09T19:00:02.730Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-09T19:00:02.735Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-09T19:00:02.741Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-09T19:15:02.825Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260910.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "-20260910-production-001.wav · 0.2087s · peak -1 dBFS · seed=3280230174\n[19:00:05] package 完了: 効果音・SFX/camera/focus/camera-focus-clean-short-soft-q03-20260910-production\n[19:00:05] --- [23/30] 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260910-production · preset=click · 1 sounds · files=digital-electronic-click-clean-micro-soft-q03-20260910-production-NNN.wav ---\n[19:00:05]   digital-electronic-click-clean-micro-soft-q03-20260910-production-001.wav · 0.0801s · peak -1 dBFS · seed=3037545398\n[19:00:05] package 完了: 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260910-production\n[19:00:05] --- [24/30] 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260910-production · preset=impact · 1 sounds · files=foley-door-close-clean-short-soft-q02-20260910-production-NNN.wav ---\n[19:00:05]   foley-door-close-clean-short-soft-q02-20260910-production-001.wav · 0.29s · peak -1 dBFS · seed=242111518\n[19:00:05] package 完了: 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260910-production\n[19:00:05] --- [25/30] 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260910-production · preset=whoosh · 1 sounds · files=cinematic-cinematic-transition-cinematic-medium-soft-q02-20260910-production-NNN.wav ---\n[19:00:05]   cinematic-cinematic-transition-cinematic-medium-soft-q02-20260910-production-001.wav · 0.6961s · peak -1 dBFS · seed=1615251923\n[19:00:05] package 完了: 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260910-production\n[19:00:05] --- [26/30] 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260910-production · preset=whoosh · 1 sounds · files=environment-city-airy-long-soft-q02-20260910-production-NNN.wav ---\n[19:00:05] FAILED: 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260910-production · audio QA failed: duration_above_family 2.774958333333333\n[19:00:05] --- [27/30] 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260910-production · preset=sparkle · 1 sounds · files=crowd-cheer-bright-medium-soft-q02-20260910-production-NNN.wav ---\n[19:00:05]   crowd-cheer-bright-medium-soft-q02-20260910-production-001.wav · 0.739s · peak -1 dBFS · seed=454480576\n[19:00:05] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260910-production\n[19:00:05] --- [28/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260910-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260910-production-NNN.wav ---\n[19:00:05]   game-coin-bright-micro-soft-q02-20260910-production-001.wav · 0.0915s · peak -1 dBFS · seed=2637992540\n[19:00:05] package 完了: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260910-production\n[19:00:05] --- [29/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260910-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260910-production-NNN.wav ---\n[19:00:05]   physical-glass-airy-short-soft-q02-20260910-production-001.wav · 0.3244s · peak -1 dBFS · seed=3534729109\n[19:00:05] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260910-production\n[19:00:05] --- [30/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260910-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260910-production-NNN.wav ---\n[19:00:05]   foley-door-open-clean-medium-soft-q03-20260910-production-001.wav · 1.104s · peak -1 dBFS · seed=2975370816\n[19:00:06] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260910-production\n[19:00:06] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-10T040006.json\n[19:00:06] done · completed=28 failed=2 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-10T040006.json",
+              "generated": 28,
+              "completed": 28,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 2,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "49b68b44-e33d-406c-a41c-d0d36d94a2a9",
+      "priority_id": "sfx::quota::2026-09-11",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-11",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-10T19:03:59.161Z",
+      "approved_at": "2026-09-10T19:04:04.294Z",
+      "started_at": "2026-09-10T19:04:04.469Z",
+      "finished_at": "2026-09-10T19:19:08.618Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-10T19:03:59.161Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-10T19:04:04.294Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-10T19:04:04.469Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-10T19:19:08.618Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260911.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "oft-q03-20260911-production-001.wav · 0.2066s · peak -1 dBFS · seed=1982034955\n[19:07:14] package 完了: 効果音・SFX/camera/focus/camera-focus-clean-short-soft-q03-20260911-production\n[19:07:17] --- [23/30] 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260911-production · preset=click · 1 sounds · files=digital-electronic-click-clean-micro-soft-q03-20260911-production-NNN.wav ---\n[19:07:18]   digital-electronic-click-clean-micro-soft-q03-20260911-production-001.wav · 0.0992s · peak -1 dBFS · seed=576297123\n[19:07:46] package 完了: 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260911-production\n[19:07:51] --- [24/30] 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260911-production · preset=impact · 1 sounds · files=foley-door-close-clean-short-soft-q02-20260911-production-NNN.wav ---\n[19:08:00]   foley-door-close-clean-short-soft-q02-20260911-production-001.wav · 0.2128s · peak -1 dBFS · seed=3238883595\n[19:08:44] package 完了: 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260911-production\n[19:08:48] --- [25/30] 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260911-production · preset=whoosh · 1 sounds · files=cinematic-cinematic-transition-cinematic-medium-soft-q02-20260911-production-NNN.wav ---\n[19:09:46]   cinematic-cinematic-transition-cinematic-medium-soft-q02-20260911-production-001.wav · 0.7289s · peak -1 dBFS · seed=271102310\n[19:10:01] package 完了: 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260911-production\n[19:10:08] --- [26/30] 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260911-production · preset=whoosh · 1 sounds · files=environment-city-airy-long-soft-q02-20260911-production-NNN.wav ---\n[19:10:25] FAILED: 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260911-production · audio QA failed: duration_above_family 3.0149375\n[19:10:26] --- [27/30] 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260911-production · preset=sparkle · 1 sounds · files=crowd-cheer-bright-medium-soft-q02-20260911-production-NNN.wav ---\n[19:10:26]   crowd-cheer-bright-medium-soft-q02-20260911-production-001.wav · 0.414s · peak -1 dBFS · seed=1842977181\n[19:10:31] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260911-production\n[19:10:31] --- [28/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260911-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260911-production-NNN.wav ---\n[19:10:32]   game-coin-bright-micro-soft-q02-20260911-production-001.wav · 0.1132s · peak -1 dBFS · seed=1660010137\n[19:10:35] package 完了: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260911-production\n[19:10:36] --- [29/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260911-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260911-production-NNN.wav ---\n[19:10:41]   physical-glass-airy-short-soft-q02-20260911-production-001.wav · 0.3129s · peak -1 dBFS · seed=2506775064\n[19:10:58] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260911-production\n[19:10:59] --- [30/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260911-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260911-production-NNN.wav ---\n[19:11:01]   foley-door-open-clean-medium-soft-q03-20260911-production-001.wav · 0.6015s · peak -1 dBFS · seed=68900125\n[19:11:19] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260911-production\n[19:11:21] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-11T041121.json\n[19:11:21] done · completed=28 failed=2 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-11T041121.json",
+              "generated": 28,
+              "completed": 28,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 2,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "9bc008c2-9b42-49d3-a24d-48dd14107019",
+      "priority_id": "sfx::quota::2026-09-12",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 0,
+      "status": "running",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-12",
+      "publication_status": null,
+      "created_at": "2026-09-11T19:00:06.246Z",
+      "approved_at": "2026-09-11T19:00:06.251Z",
+      "started_at": "2026-09-11T19:00:06.267Z",
+      "finished_at": null,
+      "result_ok": null,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-11T19:00:06.246Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-11T19:00:06.252Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-11T19:00:06.267Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        }
+      ]
+    },
+    {
+      "job_id": "a3834b32-97a4-4dcc-b2ca-76e744e4b7a0",
+      "priority_id": "sfx::quota::2026-09-13",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-13",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-12T19:00:02.515Z",
+      "approved_at": "2026-09-12T19:00:02.520Z",
+      "started_at": "2026-09-12T19:00:02.527Z",
+      "finished_at": "2026-09-12T19:15:02.648Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-12T19:00:02.515Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-12T19:00:02.520Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-12T19:00:02.527Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-12T19:15:02.648Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260913.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": " ---\n[19:00:04]   camera-focus-clean-short-soft-q03-20260913-production-001.wav · 0.1424s · peak -1 dBFS · seed=1322011649\n[19:00:04] package 完了: 効果音・SFX/camera/focus/camera-focus-clean-short-soft-q03-20260913-production\n[19:00:04] --- [23/30] 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260913-production · preset=click · 1 sounds · files=digital-electronic-click-clean-micro-soft-q03-20260913-production-NNN.wav ---\n[19:00:04]   digital-electronic-click-clean-micro-soft-q03-20260913-production-001.wav · 0.0602s · peak -1 dBFS · seed=2852726265\n[19:00:04] package 完了: 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260913-production\n[19:00:04] --- [24/30] 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260913-production · preset=impact · 1 sounds · files=foley-door-close-clean-short-soft-q02-20260913-production-NNN.wav ---\n[19:00:04]   foley-door-close-clean-short-soft-q02-20260913-production-001.wav · 0.4178s · peak -1 dBFS · seed=2578860289\n[19:00:04] package 完了: 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260913-production\n[19:00:04] --- [25/30] 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260913-production · preset=whoosh · 1 sounds · files=cinematic-cinematic-transition-cinematic-medium-soft-q02-20260913-production-NNN.wav ---\n[19:00:04]   cinematic-cinematic-transition-cinematic-medium-soft-q02-20260913-production-001.wav · 1.1782s · peak -1 dBFS · seed=1218071852\n[19:00:04] package 完了: 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260913-production\n[19:00:04] --- [26/30] 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260913-production · preset=whoosh · 1 sounds · files=environment-city-airy-long-soft-q02-20260913-production-NNN.wav ---\n[19:00:04] FAILED: 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260913-production · audio QA failed: duration_above_family 2.9733958333333335\n[19:00:05] --- [27/30] 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260913-production · preset=sparkle · 1 sounds · files=crowd-cheer-bright-medium-soft-q02-20260913-production-NNN.wav ---\n[19:00:05]   crowd-cheer-bright-medium-soft-q02-20260913-production-001.wav · 0.6849s · peak -1 dBFS · seed=4078702311\n[19:00:05] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260913-production\n[19:00:05] --- [28/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260913-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260913-production-NNN.wav ---\n[19:00:05] FAILED: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260913-production · audio QA failed: duration_below_family 0.051708333333333335\n[19:00:05] --- [29/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260913-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260913-production-NNN.wav ---\n[19:00:05]   physical-glass-airy-short-soft-q02-20260913-production-001.wav · 0.3592s · peak -1 dBFS · seed=2716244434\n[19:00:05] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260913-production\n[19:00:05] --- [30/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260913-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260913-production-NNN.wav ---\n[19:00:05]   foley-door-open-clean-medium-soft-q03-20260913-production-001.wav · 1.3353s · peak -1 dBFS · seed=2304625255\n[19:00:05] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260913-production\n[19:00:05] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-13T040005.json\n[19:00:05] done · completed=27 failed=3 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-13T040005.json",
+              "generated": 27,
+              "completed": 27,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 3,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "job_id": "cc15233c-08e4-45d3-bcd5-ebd9d6ef6fd4",
+      "priority_id": "sfx::quota::2026-09-14",
+      "asset_type": "sfx",
+      "category": "sfx",
+      "subcategory": "",
+      "generator": "SFX-AutoGenerator",
+      "search_count": 0,
+      "download_count": 0,
+      "published_inventory": 0,
+      "generated_inventory": 0,
+      "priority_score": 0,
+      "priority_rank": 0,
+      "requested_count": 30,
+      "approved_count": 30,
+      "progress_done": 30,
+      "status": "failed",
+      "block_reason": null,
+      "operator": "auto-supply",
+      "source": "AUTO_SUPPLY",
+      "approval_mode": "AUTO_SAFE_CATEGORY",
+      "auto_supply_day": "2026-09-14",
+      "publication_status": "GENERATION_FAILED",
+      "created_at": "2026-09-13T19:00:07.724Z",
+      "approved_at": "2026-09-13T19:00:07.734Z",
+      "started_at": "2026-09-13T19:00:07.746Z",
+      "finished_at": "2026-09-13T19:15:07.840Z",
+      "result_ok": false,
+      "result_error": null,
+      "audit_tail": [
+        {
+          "at": "2026-09-13T19:00:07.724Z",
+          "action": "created",
+          "operator": "auto-supply",
+          "detail": {
+            "status": "pending",
+            "requested_count": 30,
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-13T19:00:07.734Z",
+          "action": "approved",
+          "operator": "auto-supply",
+          "detail": {
+            "approved_count": 30,
+            "approval_mode": "AUTO_SAFE_CATEGORY",
+            "source": "AUTO_SUPPLY"
+          }
+        },
+        {
+          "at": "2026-09-13T19:00:07.746Z",
+          "action": "running",
+          "operator": "auto-supply",
+          "detail": null
+        },
+        {
+          "at": "2026-09-13T19:15:07.840Z",
+          "action": "failed",
+          "operator": "auto-supply",
+          "detail": {
+            "ok": false,
+            "exit_code": null,
+            "error": null,
+            "cwd": "C:\\Users\\rubih\\tasufull-article\\SFX-AutoGenerator",
+            "args": [
+              "--prompt-file",
+              "prompts-quota-sfx-20260914.txt",
+              "--config",
+              "config.sfx-auto-supply-v1.json"
+            ],
+            "stdout_tail": "042\n[19:00:10] package 完了: 効果音・SFX/camera/focus/camera-focus-clean-short-soft-q03-20260914-production\n[19:00:10] --- [23/30] 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260914-production · preset=click · 1 sounds · files=digital-electronic-click-clean-micro-soft-q03-20260914-production-NNN.wav ---\n[19:00:10]   digital-electronic-click-clean-micro-soft-q03-20260914-production-001.wav · 0.0947s · peak -1 dBFS · seed=1403006354\n[19:00:10] package 完了: 効果音・SFX/digital/electronic-click/digital-electronic-click-clean-micro-soft-q03-20260914-production\n[19:00:10] --- [24/30] 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260914-production · preset=impact · 1 sounds · files=foley-door-close-clean-short-soft-q02-20260914-production-NNN.wav ---\n[19:00:10]   foley-door-close-clean-short-soft-q02-20260914-production-001.wav · 0.2998s · peak -1 dBFS · seed=180103386\n[19:00:10] package 完了: 効果音・SFX/foley/door-close/foley-door-close-clean-short-soft-q02-20260914-production\n[19:00:10] --- [25/30] 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260914-production · preset=whoosh · 1 sounds · files=cinematic-cinematic-transition-cinematic-medium-soft-q02-20260914-production-NNN.wav ---\n[19:00:10]   cinematic-cinematic-transition-cinematic-medium-soft-q02-20260914-production-001.wav · 0.9387s · peak -1 dBFS · seed=999784975\n[19:00:10] package 完了: 効果音・SFX/cinematic/cinematic-transition/cinematic-cinematic-transition-cinematic-medium-soft-q02-20260914-production\n[19:00:10] --- [26/30] 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260914-production · preset=whoosh · 1 sounds · files=environment-city-airy-long-soft-q02-20260914-production-NNN.wav ---\n[19:00:10]   environment-city-airy-long-soft-q02-20260914-production-001.wav · 1.5787s · peak -1 dBFS · seed=3102299244\n[19:00:10] package 完了: 効果音・SFX/environment/city/environment-city-airy-long-soft-q02-20260914-production\n[19:00:10] --- [27/30] 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260914-production · preset=sparkle · 1 sounds · files=crowd-cheer-bright-medium-soft-q02-20260914-production-NNN.wav ---\n[19:00:10]   crowd-cheer-bright-medium-soft-q02-20260914-production-001.wav · 0.6969s · peak -1 dBFS · seed=1511431044\n[19:00:10] package 完了: 効果音・SFX/crowd/cheer/crowd-cheer-bright-medium-soft-q02-20260914-production\n[19:00:10] --- [28/30] 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260914-production · preset=coin · 1 sounds · files=game-coin-bright-micro-soft-q02-20260914-production-NNN.wav ---\n[19:00:10]   game-coin-bright-micro-soft-q02-20260914-production-001.wav · 0.1418s · peak -1 dBFS · seed=3700303992\n[19:00:10] package 完了: 効果音・SFX/game/coin/game-coin-bright-micro-soft-q02-20260914-production\n[19:00:10] --- [29/30] 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260914-production · preset=glitch · 1 sounds · files=physical-glass-airy-short-soft-q02-20260914-production-NNN.wav ---\n[19:00:10]   physical-glass-airy-short-soft-q02-20260914-production-001.wav · 0.2417s · peak -1 dBFS · seed=4013032249\n[19:00:10] package 完了: 効果音・SFX/physical/glass/physical-glass-airy-short-soft-q02-20260914-production\n[19:00:10] --- [30/30] 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260914-production · preset=whoosh · 1 sounds · files=foley-door-open-clean-medium-soft-q03-20260914-production-NNN.wav ---\n[19:00:10]   foley-door-open-clean-medium-soft-q03-20260914-production-001.wav · 0.706s · peak -1 dBFS · seed=4032321284\n[19:00:10] package 完了: 効果音・SFX/foley/door-open/foley-door-open-clean-medium-soft-q03-20260914-production\n[19:00:11] manifest: G:\\マイドライブ\\_manifests\\sfx-2026-09-14T040010.json\n[19:00:11] done · completed=28 failed=2 skipped=0\n\n==========================\nStatus: HAS_FAILURES\nSaved under: G:\\マイドライブ\\効果音・SFX\n==========================\n\r\n[ERROR] SFX-AutoGenerator が異常終亁E��ました�E�EEXIT_CODE�E�E\r\n\r\n���s����ɂ͉����L�[�������Ă������� . . . ",
+            "stderr_tail": "",
+            "manifest": {
+              "manifest_path": "G:\\マイドライブ\\_manifests\\sfx-2026-09-14T040010.json",
+              "generated": 28,
+              "completed": 28,
+              "requested": 30,
+              "skipped": 0,
+              "failed": 2,
+              "output_path": null,
+              "raw_keys": [
+                "generator",
+                "type",
+                "startedAt",
+                "finishedAt",
+                "requested",
+                "completed",
+                "failed",
+                "skipped",
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "driveRoots": {
+    "image": "G:/マイドライブ/画像素材",
+    "icon": "G:/マイドライブ/アイコン",
+    "sfx": "G:/マイドライブ/効果音・SFX",
+    "bgm": "G:/マイドライブ/BGM",
+    "template": "G:/マイドライブ/テンプレート",
+    "presentation": "G:/マイドライブ/プレゼン",
+    "web-material": "G:/マイドライブ/Web素材",
+    "code-material": "G:/マイドライブ/コード",
+    "document": "G:/マイドライブ/文例・文章テンプレート"
+  },
+  "typeToCategoryId": {
+    "image": "image",
+    "illustration": "illustration",
+    "background": "background",
+    "icon": "icon",
+    "sfx": "sfx",
+    "bgm": "bgm",
+    "template": "template",
+    "presentation": "presentation",
+    "web-material": "web",
+    "code-material": "code",
+    "document": "document"
+  },
+  "publishableDefaults": {
+    "image": true,
+    "illustration": true,
+    "background": true,
+    "icon": true,
+    "sfx": true,
+    "bgm": false,
+    "template": true,
+    "presentation": true,
+    "web-material": true,
+    "code-material": true,
+    "document": true
+  },
+  "thumbnailStyleByCategory": {
+    "image": "photo-wall",
+    "icon": "icon-grid",
+    "sfx": "audio-sfx",
+    "bgm": "audio-bgm",
+    "template": "template-card",
+    "presentation": "presentation",
+    "web": "web-hamburger",
+    "code": "code-typing",
+    "document": "document-invoice",
+    "illustration": "illustration-office",
+    "background": "background-cyber",
+    "tool": "tool-logo"
+  },
+  "buttonLabelByCategory": {
+    "sfx": "無料ダウンロード",
+    "bgm": "無料ダウンロード",
+    "default": "無料ダウンロード"
+  },
+  "isFree": true,
+  "isAdSupported": true,
+  "invalidAssetMode": "skip"
+}

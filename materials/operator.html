@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Materials Operator — Priority Approval</title>
+  <link rel="stylesheet" href="/materials/materials-operator.css" />
+</head>
+<body data-page="materials_operator">
+  <header class="mat-op-header">
+    <div class="mat-op-header__inner">
+      <p class="mat-op-eyebrow">TASFUL Materials</p>
+      <h1>Operator Approval</h1>
+      <p class="mat-op-lead">Priority は提案のみ。通常は人の Approve 後に Common Runner が実行します。安全カテゴリ（SFX/TEMPLATE/WEB/CODE）の日次 Auto Supply のみ Materials 限定の自動承認例外があります。BGM・Production 自動生成はしません。</p>
+      <div class="mat-op-actions">
+        <button type="button" data-op="refresh">再読込</button>
+        <button type="button" data-op="enqueue">Enqueue Top</button>
+        <button type="button" data-op="run-next" class="mat-op-btn--primary">Run Next (approved)</button>
+        <label class="mat-op-check"><input type="checkbox" data-op-dry checked /> dry-run</label>
+      </div>
+      <p class="mat-op-status" data-op-status>ready</p>
+    </div>
+  </header>
+
+  <main class="mat-op-main">
+    <section class="mat-op-panel">
+      <h2>Priority candidates</h2>
+      <div class="mat-op-table-wrap" data-op-priority></div>
+    </section>
+    <section class="mat-op-panel">
+      <h2>Jobs / Queue</h2>
+      <div class="mat-op-table-wrap" data-op-jobs></div>
+    </section>
+  </main>
+
+  <script src="/materials/materials-operator.js"></script>
+</body>
+</html>

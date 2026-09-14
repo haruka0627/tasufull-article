@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="illustration preview">
+  <rect width="800" height="500" fill="#eff6ff"/>
+  <rect x="0" y="360" width="800" height="140" fill="#dbeafe"/>
+  <rect x="480" y="120" width="220" height="160" rx="8" fill="#bfdbfe"/>
+  <rect x="500" y="140" width="180" height="110" rx="4" fill="#fff"/>
+  <rect x="520" y="160" width="80" height="8" rx="4" fill="#93c5fd"/>
+  <rect x="520" y="180" width="120" height="6" rx="3" fill="#e2e8f0"/>
+  <rect x="520" y="196" width="100" height="6" rx="3" fill="#e2e8f0"/>
+  <rect x="460" y="250" width="260" height="14" rx="4" fill="#64748b"/>
+  <rect x="500" y="264" width="40" height="96" rx="4" fill="#475569"/>
+  <circle cx="320" cy="170" r="42" fill="#fcd34d"/>
+  <rect x="275" y="210" width="90" height="110" rx="12" fill="#2563eb"/>
+  <rect x="250" y="250" width="40" height="70" rx="10" fill="#1d4ed8"/>
+  <rect x="350" y="250" width="40" height="70" rx="10" fill="#1d4ed8"/>
+  <rect x="290" y="320" width="30" height="40" rx="6" fill="#1e293b"/>
+  <rect x="330" y="320" width="30" height="40" rx="6" fill="#1e293b"/>
+  <ellipse cx="320" cy="395" rx="55" ry="12" fill="#0f172a" opacity="0.08"/>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc" data-asset-sha256="f99ab2d49b4548a40100c0a0817c3444f0f43afa1c0183d118c2935f14b37aa9">
+<title id="title">地域イベント向け 横型告知チラシ</title>
+<desc id="desc">既存TEMPLATEファイルから抽出した内容プレビュー</desc>
+<rect width="960" height="540" fill="#f8fafc"/>
+<rect x="32" y="28" width="896" height="484" rx="18" fill="#fff" stroke="#cbd5e1"/>
+<rect x="32" y="28" width="896" height="78" rx="18" fill="#7c3aed"/>
+<rect x="32" y="88" width="896" height="18" fill="#7c3aed"/>
+<text x="64" y="76" font-family="system-ui, 'Noto Sans JP', sans-serif" font-size="18" font-weight="700" fill="#fff">TEMPLATE · DOCX</text>
+<text x="64" y="142" font-family="system-ui, 'Noto Sans JP', sans-serif" font-size="24" font-weight="700" fill="#0f172a">地域イベント向け 横型告知チラシ</text>
+<g font-family="system-ui, 'Noto Sans JP', sans-serif"><text x="64" y="174" font-size="18" fill="#334155">みんなの地域イベント</text><text x="64" y="208" font-size="18" fill="#334155">見る・食べる・体験する一日</text><text x="64" y="242" font-size="18" fill="#334155">開催内容</text><text x="64" y="276" font-size="18" fill="#334155">プログラム、出店、参加費、雨天時対応を入力してください。</text><text x="64" y="310" font-size="18" fill="#334155">参加申込・最新情報はこちら</text><text x="64" y="344" font-size="18" fill="#334155">[写真を配置]</text><text x="64" y="378" font-size="18" fill="#334155">日時 / [開催日時]</text><text x="64" y="412" font-size="18" fill="#334155">場所 / [会場・住所]</text><text x="64" y="446" font-size="18" fill="#334155">対象 / [対象者]</text></g>
+<text x="64" y="488" font-family="ui-monospace, monospace" font-size="13" fill="#64748b">asset template:flyer-local-event-a4-landscape:001 · sha256 f99ab2d49b4548a4…</text>
+</svg>

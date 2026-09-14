@@ -1,0 +1,147 @@
+/* Materials site-footer — extracted from materials-top.css without restyle.
+ * List/Detail 用。TOP は引き続き materials-top.css の同ルールを正本とする。
+ */
+
+.site-footer {
+  --navy: #061431;
+  --blue: #3048f5;
+  min-height: 160px;
+  height: auto;
+  border-top: 1px solid #e7eaf1;
+  background: linear-gradient(180deg,#fbfcff,#f9faff);
+  overflow: visible;
+}
+.site-footer .brand {
+  width: 180px;
+  flex: 0 0 180px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+.site-footer .brand img { width: 28px; height: 28px; border-radius: 5px; }
+.site-footer .brand-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  display: inline-grid;
+  place-items: center;
+  background: linear-gradient(145deg, #5064fb, #4038ed);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  flex: 0 0 28px;
+}
+.site-footer .footer-brand .brand-mark { width: 22px; height: 22px; font-size: 11px; flex-basis: 22px; }
+.site-footer .footer-inner {
+  width: calc(100% - 156px);
+  max-width: 1380px;
+  height: auto;
+  min-height: 140px;
+  margin: 0 auto;
+  padding-top: 10px;
+  padding-bottom: 28px;
+  position: relative;
+}
+.site-footer .footer-grid {
+  display: grid;
+  grid-template-columns: 312px 144px 150px 135px 176px minmax(280px,1fr);
+  gap: 20px;
+}
+.site-footer .footer-brand .brand { width:auto; font-size:13px; gap:7px; }
+.site-footer .footer-brand .brand img { width:22px; height:22px; }
+.site-footer .footer-description {
+  width: 284px;
+  margin: 4px 0 5px;
+  color: #5b657b;
+  font-size: 10px;
+  line-height: 16px;
+  font-weight: 500;
+}
+.site-footer .social-links { display:flex; gap:18px; }
+.site-footer .social-links a { color:#6a748a; font-size:13px; text-decoration:none; }
+.site-footer .footer-column h3,
+.site-footer .footer-keywords h3 {
+  margin: 1px 0 4px;
+  font-size: 10.5px;
+  line-height: 15px;
+  font-weight: 800;
+}
+.site-footer .footer-column a {
+  display: block;
+  color: #5b657b;
+  text-decoration: none;
+  font-size: 10px;
+  line-height: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.site-footer .footer-column a:hover { color:var(--blue); }
+.site-footer .keyword-pills { display:flex; flex-wrap:wrap; gap:5px 7px; }
+.site-footer .keyword-pill {
+  padding: 4px 12px;
+  border-radius: 15px;
+  background: #f0f2f7;
+  color:#37415a;
+  text-decoration:none;
+  font-size:9.5px;
+  line-height:15px;
+  font-weight:500;
+  white-space:nowrap;
+}
+.site-footer .footer-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #687289;
+  font-size: 9.5px;
+  line-height: 14px;
+}
+.site-footer .footer-bottom-links { display:flex; align-items:center; gap:0; }
+.site-footer .footer-bottom-links a,
+.site-footer .language-button {
+  padding: 0 27px;
+  color:#687289;
+  border:0;
+  border-left:1px solid #e8eaf0;
+  background:transparent;
+  text-decoration:none;
+  font-size:9.5px;
+  cursor:pointer;
+}
+.site-footer .language-button { padding-left:0; border-left:0; color:#24304d; font-weight:600; }
+
+@media (max-width: 1320px) {
+  .site-footer .brand { width:150px; flex-basis:150px; }
+  .site-footer .footer-inner { width:calc(100% - 80px); }
+  .site-footer .footer-grid { grid-template-columns:270px 125px 130px 120px 160px minmax(250px,1fr); gap:14px; }
+}
+@media (max-width: 1080px) {
+  .site-footer { height:auto; min-height:260px; }
+  .site-footer .footer-inner { padding:20px 0 45px; }
+  .site-footer .footer-grid { grid-template-columns:1.6fr repeat(4,1fr); }
+  .site-footer .footer-keywords { grid-column:1/-1; }
+  .site-footer .footer-bottom { bottom:12px; }
+}
+@media (max-width: 760px) {
+  .site-footer .brand { width:auto; flex:0 0 auto; font-size:14px; }
+  .site-footer .brand img { width:27px; height:27px; }
+  .site-footer { min-height:0; }
+  .site-footer .footer-inner { width:100%; padding:24px 20px 70px; }
+  .site-footer .footer-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px 18px; }
+  .site-footer .footer-brand,
+  .site-footer .footer-keywords { grid-column:1/-1; }
+  .site-footer .footer-description { width:100%; }
+  .site-footer .footer-bottom { left:20px; right:20px; bottom:15px; display:block; }
+  .site-footer .footer-bottom-links { margin-top:9px; flex-wrap:wrap; gap:10px; }
+  .site-footer .footer-bottom-links a,
+  .site-footer .language-button { padding:0; border:0; }
+}

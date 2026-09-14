@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <script data-tasful-theme-boot="1">(function(){try{var R=[["one",/^\/(one-dashboard|one-top|dashboard\.html)(\/|$)/i],["ai_workspace",/^\/(ai-workspace|ai-workspace-home|ai-workspace-v0)(\/|$)/i],["talk",/^\/(talk-v0-workspace|talk-home|chat-detail)(\/|\.html|$)/i],["tlv",/^\/(one-tlv|one-tlv-go-live|live)(\/|$)/i],["builder",/^\/builder(\/|$)/i],["materials",/^\/materials(\/|$)/i],["marketplace",/^\/(market\/|marketplace\/|job-top|private-listings(?:-ai-discovery)?)(\/|$|\.html)/i],["short_video",/^\/short-video(\/|$)/i]];var C={one:{k:"tasful.theme.one",d:"system",m:1},ai_workspace:{k:"tasful.theme.ai_workspace",d:"system"},talk:{k:"tasful.theme.talk",d:"system"},tlv:{k:"tasful.theme.tlv",d:"system"},marketplace:{k:"tasful.theme.marketplace",d:"light"},builder:{k:"tasful.theme.builder",d:"system"},materials:{k:"tasful.theme.materials",d:"light"},short_video:{k:"tasful.theme.short_video",d:"dark"}};var p=location.pathname||"/";var s="one";for(var i=0;i<R.length;i++){if(R[i][1].test(p)){s=R[i][0];break}}var cfg=C[s]||C.one;var m="";try{if(cfg.m&&!localStorage.getItem(cfg.k)){var g=localStorage.getItem("tasful.appearance")||"";if(g)localStorage.setItem(cfg.k,g)}m=localStorage.getItem(cfg.k)||"";if(!m&&s==="short_video")m=localStorage.getItem("tasful.shortVideo.themeMode")||""}catch(e){}m=String(m||"").toLowerCase();if(m!=="dark"&&m!=="light"&&m!=="system")m=cfg.d||"system";var dark=false;try{dark=!!(window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches)}catch(e){}var a=m==="system"?(dark?"dark":"light"):m;var r=document.documentElement;r.setAttribute("data-tasful-theme-scope",s);r.setAttribute("data-theme-mode",m);r.setAttribute("data-theme",a);r.style.colorScheme=a;if(a==="dark")r.classList.add("dark");else r.classList.remove("dark");function b(){var el=document.body;if(!el)return false;if(a==="dark")el.classList.add("dark");else el.classList.remove("dark");return true}if(!b()&&window.MutationObserver){var o=new MutationObserver(function(){if(b())o.disconnect()});o.observe(r,{childList:true,subtree:true})}}catch(e){}})();</script>
+  <link rel="stylesheet" href="/tasful-theme.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materials - 高品質な素材・テンプレート・ツール</title>
+  <meta name="description" content="高品質な素材・テンプレート・ツールを無料でダウンロード。名刺・チラシ・プレゼン・アイコンなど。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" href="/materials/materials-top.css">
+</head>
+<body class="materials-top-page" data-page="materials_home">
+  <section class="hero" id="top">
+    <div class="layout-grid">
+      <div class="hero-primary">
+        <div class="hero-copy">
+          <p class="hero-kicker">すべて無料で使える</p>
+          <h1>高品質な素材・テンプレート・ツール</h1>
+          <p class="hero-description">名刺・チラシ・プレゼン資料・アイコンなど、<br>ビジネスや日常で使える素材を無料でダウンロードできます。</p>
+          <form class="hero-search search-form" role="search" data-materials-hero-search action="/materials/list.html" method="get">
+            <input type="search" name="q" aria-label="キーワードで検索" placeholder="キーワードで検索（例：名刺 テンプレート）">
+            <button type="submit" aria-label="検索"><i class="fas fa-search" aria-hidden="true"></i></button>
+          </form>
+          <div class="keyword-line">
+            <strong>人気キーワード：</strong>
+            <span data-materials-keywords></span>
+          </div>
+        </div>
+        <picture>
+          <source srcset="/materials/images/hero-illustration-transparent.webp" type="image/webp">
+          <img class="hero-art" src="/materials/images/hero-illustration-transparent.png" alt="テンプレートやファイルをダウンロードするフォルダーのイラスト" width="346" height="230" decoding="async">
+        </picture>
+      </div>
+
+      <aside class="ranking-panel" aria-labelledby="ranking-title">
+        <div class="ranking-header">
+          <h2 id="ranking-title">人気ランキング</h2>
+          <a href="/materials/list.html?sort=popular" class="more-link">もっと見る&nbsp;›</a>
+        </div>
+        <div class="ranking-list" data-materials-ranking aria-live="polite"></div>
+      </aside>
+    </div>
+  </section>
+
+  <main class="main-zone">
+    <div class="layout-grid">
+      <div class="left-content">
+        <section class="popular-section" id="popular">
+          <div class="section-heading">
+            <h2>人気の素材</h2>
+            <a class="more-link" href="/materials/list.html?sort=popular">もっと見る&nbsp;›</a>
+          </div>
+          <button class="carousel-arrow left" type="button" data-carousel="popularGrid" data-direction="prev" aria-label="前へ"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+          <button class="carousel-arrow right" type="button" data-carousel="popularGrid" data-direction="next" aria-label="次へ"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+          <div class="popular-grid" id="popularGrid" data-materials-popular aria-live="polite"></div>
+        </section>
+
+        <section class="category-section" id="categories">
+          <div class="section-heading"><h2>カテゴリから探す</h2></div>
+          <div class="category-grid" data-materials-categories></div>
+        </section>
+
+        <section class="new-section" id="new">
+          <div class="section-heading">
+            <h2>新着ダウンロード</h2>
+            <a class="more-link" href="/materials/list.html?sort=newest">もっと見る&nbsp;›</a>
+          </div>
+          <div class="new-grid" id="newGrid" data-materials-newest aria-live="polite"></div>
+        </section>
+
+        <div class="mobile-side-stack">
+          <aside class="ranking-panel ranking-panel--mobile" aria-labelledby="ranking-mobile-title">
+            <div class="ranking-header">
+              <h2 id="ranking-mobile-title">人気ランキング</h2>
+              <a href="/materials/list.html?sort=popular" class="more-link">もっと見る&nbsp;›</a>
+            </div>
+            <div class="ranking-list" data-materials-ranking-mobile></div>
+          </aside>
+          <section class="service-panel" aria-labelledby="service-mobile-title">
+            <h2 id="service-mobile-title">おすすめサービス</h2>
+            <div data-materials-services></div>
+          </section>
+          <div data-materials-ad-mount="rectangle"></div>
+        </div>
+      </div>
+
+      <aside class="side-stack">
+        <section class="service-panel" aria-labelledby="service-title">
+          <h2 id="service-title">おすすめサービス</h2>
+          <div data-materials-services></div>
+        </section>
+        <div class="ad-placeholder" data-materials-ad-mount="rectangle"></div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer" id="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="/materials/"><span class="brand-mark" aria-hidden="true">M</span><span>Materials</span></a>
+          <p class="footer-description">ビジネスや日常で使える高品質な<br>素材・テンプレート・ツールを<br>無料でダウンロードできるプラットフォームです。</p>
+          <div class="social-links">
+            <a href="/help/" aria-label="ヘルプ"><i class="far fa-envelope" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Materialsについて</h3>
+          <a href="/company/about.html">運営会社</a>
+          <a href="/company/vision.html">コンセプト</a>
+          <a href="/company/index.html">お知らせ</a>
+          <a href="/help/">ヘルプ</a>
+        </div>
+        <div class="footer-column">
+          <h3>カテゴリ</h3>
+          <div data-materials-footer-categories></div>
+          <a href="/materials/list.html">すべてのカテゴリ</a>
+        </div>
+        <div class="footer-column">
+          <h3>サポート</h3>
+          <a href="/help/">ヘルプセンター</a>
+          <a href="/company/faq.html">よくある質問</a>
+          <a href="/help/">使い方ガイド</a>
+        </div>
+        <div class="footer-column">
+          <h3>法的情報</h3>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/company/legal/materials.html">著作権について</a>
+          <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+          <a href="/company/legal/terms.html">免責事項</a>
+        </div>
+        <div class="footer-keywords">
+          <h3>人気キーワード</h3>
+          <div class="keyword-pills" data-materials-footer-keywords></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© Materials. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <span class="language-button">日本語</span>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/materials/list.html">サイトマップ</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div data-tasful-portal-tabbar-mount></div>
+  <script src="/platform-portal-tabbar.js"></script>
+
+  <script src="/materials/generated/materials-index.generated.js"></script>
+  <script src="/materials/materials-data.js"></script>
+  <script src="/materials/materials-metrics.js"></script>
+  <script src="/materials/materials-search-metrics.js"></script>
+  <script src="/materials/materials-ad-slot.js"></script>
+  <script src="/materials/materials-download-card.js"></script>
+  <script src="/materials/materials-member-access.js"></script>
+  <script src="/materials/materials-reward-ad.js"></script>
+  <script src="/materials/materials-favorites.js"></script>
+  <script src="/materials/materials-download.js"></script>
+  <script src="/materials/materials-site-footer.js"></script>
+  <script src="/materials/materials-page.js"></script>
+  <script src="/tasful-theme-scope.js"></script>
+  <script src="/tasful-theme.js"></script>
+</body>
+</html>

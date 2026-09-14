@@ -1,0 +1,323 @@
+/**
+ * Materials List — Mobile 390 layout overlay (Chips / Filters / Cards / Search+Sort)
+ * Visual / layout SSOT = SFX chips+filters; cards = 1 column; search row + sort row.
+ * Desktop 1280 is unchanged (this file is 390-only).
+ *
+ * Mobile List Simplification V1: hide Desktop-sidebar-derived promo + aside
+ * blocks that stack under the list at 390. DOM is kept for Desktop.
+ */
+@media (max-width: 390px) {
+  /* Contain nowrap chips inside the viewport. Chip row stays 1-line + horizontal scroll. */
+  .materials-shell--list,
+  .mat-icon-layout,
+  .mat-sfx-layout,
+  .mat-img-layout,
+  .mat-ill-layout,
+  .mat-bg-layout,
+  .mat-web-layout,
+  .mat-code-layout,
+  .mat-doc-layout,
+  .mat-pres-layout,
+  .mat-tpl-layout,
+  [data-bgm-list] {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+    box-sizing: border-box;
+  }
+
+  .mat-list-m-chips {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 4px;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  [data-bgm-list] .mat-list-m-chips {
+    flex-wrap: nowrap;
+    gap: 10px;
+    overflow-x: auto;
+  }
+
+  [data-bgm-list] .mat-list-m-chips > * {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 8px 18px;
+    font-size: 13px;
+    height: auto;
+    min-height: 0;
+  }
+
+  .mat-list-m-chips > * {
+    flex-shrink: 0;
+    white-space: nowrap;
+    box-sizing: border-box;
+    height: auto;
+    min-height: 0;
+    padding: 8px 18px;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+
+  .mat-list-m-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    max-width: 100%;
+  }
+
+  /* BGM: inner filter group unwraps so selects share the SFX 2-col with クリア */
+  .mat-list-m-filters > [data-bgm-filters],
+  [data-bgm-list] .mat-list-m-filters > [data-bgm-filters] {
+    display: contents;
+  }
+
+  .mat-list-m-filters > select,
+  .mat-list-m-filters .mat-list-m-filter-cell,
+  .mat-list-m-filters > .mat-tpl-filter,
+  .mat-list-m-filters > .mat-icon-filter,
+  .mat-list-m-filters > .mat-web-filter,
+  .mat-list-m-filters > .mat-code-filter,
+  .mat-list-m-filters > .mat-bg-filter,
+  .mat-list-m-filters > .mat-pres-filter,
+  .mat-list-m-filters > .mat-doc-filter {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mat-list-m-filters > select {
+    width: auto;
+  }
+
+  /* Duplicate outer label (label > span) — hide on mobile; select option / aria-label remain */
+  .mat-list-m-filters label {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .mat-list-m-filters label > span {
+    display: none;
+  }
+
+  .mat-list-m-filters .mat-tpl-filter select,
+  .mat-list-m-filters .mat-icon-filter select,
+  .mat-list-m-filters .mat-web-filter select,
+  .mat-list-m-filters .mat-code-filter select,
+  .mat-list-m-filters .mat-bg-filter select,
+  .mat-list-m-filters .mat-pres-filter select,
+  .mat-list-m-filters .mat-doc-filter select,
+  .mat-list-m-filters .mat-list-m-filter-cell select,
+  .mat-list-m-filters label > select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12.5px;
+  }
+
+  .mat-list-m-filters > select {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 12.5px;
+  }
+
+  .mat-list-m-filters > .mat-sfx-result-count,
+  .mat-list-m-filters > .mat-img-result-count,
+  .mat-list-m-filters > .mat-ill-result-count,
+  .mat-list-m-filters > .mat-bg-result-count,
+  .mat-list-m-filters > .mat-icon-result-count,
+  .mat-list-m-filters > .mat-web-result-count,
+  .mat-list-m-filters > .mat-code-result-count,
+  .mat-list-m-filters > .mat-doc-result-count,
+  .mat-list-m-filters > .mat-pres-result-count,
+  .mat-list-m-filters > .mat-tpl-count,
+  .mat-list-m-filters > .materials-all-result-count,
+  .mat-list-m-filters > [data-bgm-count] {
+    flex: 1 1 100%;
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* Card grid: 1 column (overrides category 2-col mobile rules; desktop file not used here) */
+  .materials-all-card-grid,
+  .mat-sfx-grid,
+  .mat-img-grid,
+  .mat-ill-grid,
+  .mat-bg-grid,
+  .mat-icon-grid,
+  .mat-web-grid,
+  .mat-code-grid,
+  .mat-doc-grid,
+  .mat-pres-grid,
+  .mat-tpl-grid,
+  [data-bgm-grid] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .materials-all-card-grid > *,
+  .mat-sfx-grid > *,
+  .mat-img-grid > *,
+  .mat-ill-grid > *,
+  .mat-bg-grid > *,
+  .mat-icon-grid > *,
+  .mat-web-grid > *,
+  .mat-code-grid > *,
+  .mat-doc-grid > *,
+  .mat-pres-grid > *,
+  .mat-tpl-grid > *,
+  [data-bgm-grid] > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Search row 1 = input + 検索; row 2 = sort (overrides category full-width button hacks) */
+  .materials-all-search,
+  .mat-sfx-search,
+  .mat-img-search,
+  .mat-ill-search,
+  .mat-bg-search,
+  .mat-icon-search,
+  .mat-web-search,
+  .mat-code-search,
+  .mat-doc-search,
+  .mat-pres-search,
+  .mat-tpl-search,
+  [data-bgm-search] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .materials-all-search > *:first-child,
+  .mat-sfx-search > *:first-child,
+  .mat-img-search > *:first-child,
+  .mat-ill-search > *:first-child,
+  .mat-bg-search > *:first-child,
+  .mat-icon-search > *:first-child,
+  .mat-web-search > *:first-child,
+  .mat-code-search > *:first-child,
+  .mat-doc-search > *:first-child,
+  .mat-pres-search > *:first-child,
+  .mat-tpl-search > *:first-child,
+  [data-bgm-search] > *:first-child {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: none;
+    width: auto;
+  }
+
+  .materials-all-search > button[type="submit"],
+  .mat-sfx-search > button[type="submit"],
+  .mat-img-search > button[type="submit"],
+  .mat-ill-search > button[type="submit"],
+  .mat-bg-search > button[type="submit"],
+  .mat-icon-search > button[type="submit"],
+  .mat-web-search > button[type="submit"],
+  .mat-code-search > button[type="submit"],
+  .mat-doc-search > button[type="submit"],
+  .mat-pres-search > button[type="submit"],
+  .mat-tpl-search > button[type="submit"],
+  [data-bgm-search] > button[type="submit"] {
+    flex: 0 0 auto;
+    width: auto;
+    max-width: none;
+    white-space: nowrap;
+    padding-left: 14px;
+    padding-right: 14px;
+    box-sizing: border-box;
+  }
+
+  .materials-all-search > :last-child,
+  .mat-sfx-search > :last-child,
+  .mat-img-search > :last-child,
+  .mat-ill-search > :last-child,
+  .mat-bg-search > :last-child,
+  .mat-icon-search > :last-child,
+  .mat-web-search > :last-child,
+  .mat-code-search > :last-child,
+  .mat-doc-search > :last-child,
+  .mat-pres-search > :last-child,
+  .mat-tpl-search > :last-child,
+  [data-bgm-search] > :last-child {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    box-sizing: border-box;
+  }
+
+  .materials-all-search > :last-child select,
+  .mat-sfx-search > :last-child select,
+  .mat-img-search > :last-child select,
+  .mat-ill-search > :last-child select,
+  .mat-bg-search > :last-child select,
+  .mat-icon-search > :last-child select,
+  .mat-web-search > :last-child select,
+  .mat-code-search > :last-child select,
+  .mat-doc-search > :last-child select,
+  .mat-pres-search > :last-child select,
+  .mat-tpl-search > :last-child select,
+  [data-bgm-search] > :last-child select {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Desktop sidebar / promo stacked under Mobile List — hide, do not delete DOM */
+  .mat-sfx-promo,
+  .mat-img-promo,
+  .mat-ill-promo,
+  .mat-tpl-cta,
+  .mat-pres-cta,
+  .mat-doc-cta,
+  .mat-code-cta,
+  .mat-bg-cta,
+  .mat-icon-cta,
+  .mat-web-cta,
+  [data-bgm-list] [data-bgm-promo],
+  .mat-sfx-sidebar,
+  .mat-img-sidebar,
+  .mat-ill-sidebar,
+  .mat-tpl-aside,
+  .mat-pres-aside,
+  .mat-doc-side,
+  .mat-code-side,
+  .mat-bg-side,
+  .mat-icon-side,
+  .mat-web-side,
+  [data-bgm-list] aside {
+    display: none;
+  }
+
+  /* BGM promo uses scoped Tailwind `.flex { display:flex }` — beat that specificity */
+  [data-bgm-list] [data-bgm-promo].flex {
+    display: none;
+  }
+}

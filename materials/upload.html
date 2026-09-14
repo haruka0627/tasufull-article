@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>素材を投稿する | TASFUL</title>
+  <meta name="description" content="TASFUL Materials に素材を投稿する">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/materials/materials-upload.css">
+</head>
+<body class="mat-upload-page" data-page="materials_upload">
+  <header class="mat-up-header">
+    <a class="mat-up-brand" href="/">
+      <img src="/images/tasful-ai-globe.png?v=4" alt="" width="24" height="24">
+      <span>TASFUL</span>
+    </a>
+    <nav class="mat-up-nav" aria-label="サイト">
+      <a href="/">ホーム</a>
+      <a href="/market/">マーケットプレイス</a>
+      <a href="/ai-workspace.html">AIワークスペース</a>
+      <a href="/materials/">クリエイター</a>
+      <a href="/materials/mypage.html">マイページ</a>
+    </nav>
+    <div class="mat-up-header-spacer"></div>
+    <form class="mat-up-search" role="search" action="/materials/list.html" method="get">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" name="q" placeholder="素材・ショップ・サービスを検索..." aria-label="検索">
+    </form>
+    <a class="mat-up-bell" href="/one-dashboard/#one-notices" aria-label="通知"><i class="fa-regular fa-bell"></i></a>
+    <div class="mat-up-account" data-upload-account>
+      <img src="https://placehold.co/64x64/fff6df/7a5710?text=H" alt="" width="32" height="32" data-upload-avatar>
+      <div class="mat-up-account-text">
+        <div class="mat-up-account-name" data-upload-display-name>TASFUL クリエイター</div>
+        <div class="mat-up-account-id" data-upload-user-id></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="mat-up-shell">
+    <aside class="mat-up-sidebar" aria-label="クリエイター">
+      <h2>クリエイター</h2>
+      <nav>
+        <a href="/materials/mypage.html"><i class="fa-regular fa-circle-user"></i>マイページ</a>
+        <a href="/materials/upload.html" aria-current="page" class="is-active"><i class="fa-solid fa-arrow-up-from-bracket"></i>素材を投稿する</a>
+        <a href="/materials/creator.html" data-upload-posted-link><i class="fa-regular fa-square-minus"></i>投稿した素材</a>
+        <a href="/materials/upload.html?view=drafts"><i class="fa-regular fa-pen-to-square"></i>下書き</a>
+        <a href="/materials/mypage.html#favorites"><i class="fa-regular fa-heart"></i>お気に入り</a>
+        <a href="/materials/creator.html" data-upload-creator-link><i class="fa-regular fa-address-card"></i>クリエイターページ</a>
+        <hr>
+        <a href="/one-dashboard/#one-account"><i class="fa-solid fa-gear"></i>アカウント設定</a>
+        <button type="button" data-upload-logout><i class="fa-solid fa-right-from-bracket"></i>ログアウト</button>
+      </nav>
+    </aside>
+
+    <main class="mat-up-main">
+      <div class="mat-up-auth-gate" data-auth-gate hidden>
+        <p>素材の投稿には TASFUL アカウントへのログインが必要です。</p>
+        <a class="mat-up-btn mat-up-btn--gold" href="/login.html">ログインする</a>
+      </div>
+
+      <div data-upload-form-wrap>
+        <div class="mat-up-title-row">
+          <div>
+            <div class="mat-up-title">
+              <i class="fa-solid fa-arrow-up-from-bracket" aria-hidden="true"></i>
+              <h1>素材を投稿する</h1>
+            </div>
+            <p class="mat-up-lead">あなたの作品を TASFUL Materials に公開しましょう。世界中のユーザーにあなたのクリエイティブを届けることができます。</p>
+          </div>
+          <a class="mat-up-guide" href="/help/"><i class="fa-regular fa-circle-question"></i>投稿ガイドを見る</a>
+        </div>
+
+        <p class="mat-up-status" data-upload-status hidden></p>
+        <div class="mat-up-success" data-success hidden>
+          <p>公開しました。既存の素材カード / 詳細 / クリエイターページで確認できます。</p>
+          <div class="mat-up-success-actions">
+            <a data-detail-handoff href="#">Material Detailを見る</a>
+            <a data-creator-handoff href="#">Creator Pageを見る</a>
+          </div>
+        </div>
+
+        <input type="hidden" data-slug value="">
+
+        <div class="mat-up-grid">
+          <div class="mat-up-col-main">
+            <section class="mat-up-card">
+              <h3>1. ファイルのアップロード <span>※必須</span></h3>
+              <p class="mat-up-hint">対応フォーマット・サイズはカテゴリによって異なります。詳細はガイドをご確認ください。</p>
+              <div class="mat-up-drop" data-upload-dropzone>
+                <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
+                <p class="mat-up-drop-title">ファイルをドラッグ＆ドロップ</p>
+                <p class="mat-up-or">または</p>
+                <button type="button" class="mat-up-btn mat-up-btn--outline" data-upload-pick>ファイルを選択</button>
+                <input type="file" data-upload-file hidden>
+              </div>
+              <p class="mat-up-file-name" data-upload-filename hidden></p>
+              <p class="mat-up-formats" data-upload-formats>対応形式はカテゴリ選択後に表示されます（最大 50MB）</p>
+            </section>
+
+            <section class="mat-up-card">
+              <h3>2. 基本情報 <span>※必須</span></h3>
+              <label for="mat-up-title">タイトル</label>
+              <input id="mat-up-title" type="text" maxlength="100" placeholder="例：高品質な和風背景イラストセット" data-title>
+              <div class="mat-up-count" data-title-count>0 / 100</div>
+              <label for="mat-up-desc">説明</label>
+              <textarea id="mat-up-desc" rows="4" maxlength="500" placeholder="この素材の特徴や利用シーン、含まれる内容などを詳しく説明してください。" data-description></textarea>
+              <div class="mat-up-count" data-desc-count>0 / 500</div>
+            </section>
+
+            <section class="mat-up-card">
+              <h3>3. カテゴリ <span>※必須</span></h3>
+              <p class="mat-up-hint">最も適切なカテゴリを選択してください。</p>
+              <div class="mat-up-select-wrap">
+                <select data-category aria-label="カテゴリ">
+                  <option value="">カテゴリを選択</option>
+                </select>
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+              </div>
+
+              <h3 class="mat-up-subhead">4. タグ</h3>
+              <p class="mat-up-hint">関連するキーワードを追加して、より見つけてもらいやすくなります。</p>
+              <input type="text" placeholder="タグを入力して追加（Enterキーで追加）" data-tag-input>
+              <div class="mat-up-chips" data-tag-chips></div>
+              <p class="mat-up-hint">例：イラスト　背景　和風　高解像度</p>
+            </section>
+          </div>
+
+          <div class="mat-up-col-side">
+            <section class="mat-up-card" data-preview-section>
+              <h3><i class="fa-regular fa-image"></i>プレビュー</h3>
+              <div class="mat-up-preview" data-preview>
+                <i class="fa-regular fa-image" aria-hidden="true"></i>
+                <p>ファイルをアップロードすると</p>
+                <p>プレビューが表示されます</p>
+              </div>
+            </section>
+
+            <section class="mat-up-card">
+              <h3>5. 公開設定 <span>※必須</span></h3>
+              <p class="mat-up-hint">公開範囲を選択してください。</p>
+              <label class="mat-up-choice is-selected">
+                <input type="radio" name="mat-up-vis" value="public" checked data-visibility-public>
+                <span>
+                  <span class="mat-up-choice-title">公開する</span>
+                  <span class="mat-up-choice-body">すべてのユーザーに公開され、Materials カタログに掲載されます。</span>
+                  <span class="mat-up-choice-body">多くの人にあなたの作品を届けることができます。</span>
+                </span>
+              </label>
+              <label class="mat-up-choice">
+                <input type="radio" name="mat-up-vis" value="draft" data-visibility-draft>
+                <span>
+                  <span class="mat-up-choice-title">下書きとして保存</span>
+                  <span class="mat-up-choice-body">非公開で保存されます。後から編集して公開できます。</span>
+                </span>
+              </label>
+            </section>
+
+            <section class="mat-up-card">
+              <h3>6. 権利の確認 <span>※必須</span></h3>
+              <p class="mat-up-hint">公開する時点で、TASFUL Materials 利用条件 第49条の6に従い、次を確認してください。下書き保存には本確認は不要です。</p>
+              <label class="mat-up-rights">
+                <input type="checkbox" data-rights>
+                <span>私は、この素材を公開するにあたり、次を確認します。（1）著作権その他必要な権利を有しているか、または正当な権限に基づいて投稿・公開できること。（2）第三者の権利対象を含む場合は必要な権利処理を行っていること。（3）肖像・プライバシー等が関係する場合は必要な権利処理を行っていること。（4）公開する権限のない秘密情報・個人情報・認証情報を含んでいないこと。（5）利用した第三者サービス等の条件に違反していないこと。（6）タイトル・説明その他の重要情報に、知る限り重大な虚偽または誤認を招く表示がないこと。あわせて、TASFUL Materials 利用条件および TASFUL 共通利用規約に同意します。</span>
+              </label>
+              <div class="mat-up-legal-links">
+                <a class="mat-up-legal" href="/company/legal/materials.html" target="_blank" rel="noopener">TASFUL Materials 利用条件を確認する <i class="fa-solid fa-up-right-from-square"></i></a>
+                <a class="mat-up-legal" href="/company/legal/terms.html" target="_blank" rel="noopener">TASFUL 共通利用規約を確認する <i class="fa-solid fa-up-right-from-square"></i></a>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="mat-up-bottom" data-upload-bottom>
+    <div class="mat-up-bottom-left">
+      <button type="button" class="mat-up-btn mat-up-btn--outline" data-save-draft><i class="fa-regular fa-file-lines"></i>下書き保存</button>
+      <button type="button" class="mat-up-btn mat-up-btn--outline" data-preview-btn><i class="fa-regular fa-eye"></i>プレビューで確認</button>
+    </div>
+    <button type="button" class="mat-up-btn mat-up-btn--primary" data-publish><i class="fa-solid fa-arrow-up-from-bracket"></i>公開する</button>
+  </div>
+
+  <script src="/member-auth.js"></script>
+  <script src="/materials/materials-data.js"></script>
+  <script src="/materials/materials-upload.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="illustration preview cat">
+  <rect width="800" height="600" fill="#fff7ed"/>
+  <ellipse cx="400" cy="480" rx="160" ry="28" fill="#9a3412" opacity="0.08"/>
+  <circle cx="400" cy="290" r="110" fill="#fdba74"/>
+  <polygon points="310,220 340,140 380,230" fill="#fb923c"/>
+  <polygon points="490,220 460,140 420,230" fill="#fb923c"/>
+  <circle cx="360" cy="280" r="14" fill="#1e293b"/>
+  <circle cx="440" cy="280" r="14" fill="#1e293b"/>
+  <ellipse cx="400" cy="320" rx="18" ry="12" fill="#ea580c"/>
+  <path d="M340 340 Q400 370 460 340" fill="none" stroke="#9a3412" stroke-width="6" stroke-linecap="round"/>
+  <rect x="560" y="200" width="120" height="80" rx="12" fill="#fed7aa"/>
+  <text x="620" y="250" text-anchor="middle" font-size="36" fill="#c2410c">j</text>
+</svg>

@@ -1,0 +1,70 @@
+/**
+ * Materials Detail — Mobile 390 related materials: 1 card per row.
+ * Desktop 1280 related grids are unchanged (this file is 390-only).
+ * Does not restyle cards or change List / TOP.
+ */
+@media (max-width: 390px) {
+  .mat-img-d-related__grid,
+  .mat-ill-d-related__grid,
+  .mat-icon-d-related__grid,
+  .mat-web-d-related__grid,
+  .mat-bg-d-related__grid,
+  .mat-code-d-related__grid,
+  .mat-doc-d-related__grid,
+  .mat-pres-d-related__grid,
+  [data-tpl-detail] .material-cards,
+  [data-bgm-d-related-section] .grid:has([data-bgm-d-related]),
+  [data-sfx-detail] .grid:has([data-sfx-d-related]),
+  .mat-detail-related .materials-card-grid:not(.materials-card-grid--carousel) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .mat-img-d-related__grid > *,
+  .mat-ill-d-related__grid > *,
+  .mat-icon-d-related__grid > *,
+  .mat-web-d-related__grid > *,
+  .mat-bg-d-related__grid > *,
+  .mat-code-d-related__grid > *,
+  .mat-doc-d-related__grid > *,
+  .mat-pres-d-related__grid > *,
+  [data-tpl-detail] .material-cards > *,
+  [data-bgm-d-related-section] .grid:has([data-bgm-d-related]) > *,
+  [data-sfx-detail] .grid:has([data-sfx-d-related]) > * {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .mat-img-d-related__grid img,
+  .mat-ill-d-related__grid img,
+  .mat-icon-d-related__grid img,
+  .mat-web-d-related__grid img,
+  .mat-bg-d-related__grid img,
+  .mat-code-d-related__grid img,
+  .mat-pres-d-related__grid img,
+  [data-tpl-detail] .material-cards img,
+  [data-bgm-d-related-section] .grid:has([data-bgm-d-related]) img,
+  [data-sfx-detail] .grid:has([data-sfx-d-related]) img {
+    max-width: 100%;
+  }
+
+  /* Generic fallback Detail related is a carousel below 768 — stack vertically at 390 */
+  .mat-detail-related .materials-card-grid--carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    overflow-x: hidden;
+    scroll-snap-type: none;
+    width: 100%;
+  }
+
+  .mat-detail-related .materials-card-grid--carousel .materials-card {
+    flex: none;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>素材一覧 | TASFUL Materials</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/top.css">
+  <link rel="stylesheet" href="/tasful-ai-logo.css?v=4">
+  <link rel="stylesheet" href="/materials/materials.css">
+  <link rel="stylesheet" href="/materials/materials-sfx-list.css">
+  <link rel="stylesheet" href="/materials/materials-bgm-list.css">
+  <link rel="stylesheet" href="/materials/materials-image-list.css">
+  <link rel="stylesheet" href="/materials/materials-illustration-list.css">
+  <link rel="stylesheet" href="/materials/materials-background-list.css">
+  <link rel="stylesheet" href="/materials/materials-icon-list.css">
+  <link rel="stylesheet" href="/materials/materials-web-list.css">
+  <link rel="stylesheet" href="/materials/materials-code-list.css">
+  <link rel="stylesheet" href="/materials/materials-document-list.css">
+  <link rel="stylesheet" href="/materials/materials-presentation-list.css">
+  <link rel="stylesheet" href="/materials/materials-template-list.css">
+  <link rel="stylesheet" href="/materials/materials-list-mobile-layout.css">
+  <link rel="stylesheet" href="/materials/materials-site-footer.css">
+</head>
+<body class="materials-page" data-page="materials_list">
+  <div class="materials-shell materials-shell--list">
+    <div data-materials-list-classic>
+      <header class="materials-list-head">
+        <nav class="mat-list-top-back" aria-label="サイトナビゲーション">
+          <a class="mat-list-top-back__link" href="/materials/"><span class="mat-list-top-back__arrow" aria-hidden="true">←</span> TOPへ戻る</a>
+        </nav>
+        <h1 class="materials-list-head__title">素材一覧</h1>
+        <form class="materials-all-search" data-materials-all-search role="search">
+          <div class="materials-all-search__field">
+            <input type="search" name="q" value="" placeholder="キーワードで検索" aria-label="キーワードで検索" data-materials-all-q>
+          </div>
+          <button type="submit" class="materials-all-search__btn">検索</button>
+          <label class="materials-all-sort">
+            <span class="visually-hidden">並び順</span>
+            <select data-materials-all-sort aria-label="並び順">
+              <option value="popular">人気順</option>
+              <option value="newest">新着順</option>
+            </select>
+          </label>
+        </form>
+        <nav class="materials-list-chips mat-list-m-chips" data-materials-list-chips aria-label="カテゴリ">
+          <button type="button" class="materials-list-chip is-active" data-materials-list-chip data-category="" aria-current="true">すべて</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="template">テンプレート</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="bgm">BGM</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="sfx">効果音 / SFX</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="image">画像素材</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="illustration">イラスト</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="background">背景素材</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="icon">アイコン</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="web">Web素材</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="code">コード</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="text">文例・文章テンプレート</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="tool">ツール</button>
+          <button type="button" class="materials-list-chip" data-materials-list-chip data-category="presentation">プレゼン</button>
+        </nav>
+        <div class="materials-all-filters mat-list-m-filters" data-materials-all-filters>
+          <select class="materials-all-filter" data-materials-all-filter="usage" aria-label="用途" disabled>
+            <option value="">用途</option>
+          </select>
+          <select class="materials-all-filter" data-materials-all-filter="format" aria-label="形式" disabled>
+            <option value="">形式</option>
+          </select>
+          <select class="materials-all-filter" data-materials-all-filter="style" aria-label="スタイル" disabled>
+            <option value="">スタイル</option>
+          </select>
+          <select class="materials-all-filter" data-materials-all-filter="color" aria-label="カラー" disabled>
+            <option value="">カラー</option>
+          </select>
+          <button type="button" class="materials-all-clear" data-materials-all-clear>すべてクリア</button>
+          <span class="materials-all-result-count" data-materials-all-count>検索結果：<strong>0</strong>件</span>
+        </div>
+      </header>
+      <div data-materials-list-grid aria-live="polite"></div>
+      <nav class="materials-all-pager" data-materials-all-pager aria-label="ページネーション" hidden></nav>
+    </div>
+    <div data-materials-list-sfx hidden aria-live="polite"></div>
+    <div data-materials-list-bgm hidden aria-live="polite"></div>
+    <div data-materials-list-image hidden aria-live="polite"></div>
+    <div data-materials-list-illustration hidden aria-live="polite"></div>
+    <div data-materials-list-background hidden aria-live="polite"></div>
+    <div data-materials-list-icon hidden aria-live="polite"></div>
+    <div data-materials-list-web hidden aria-live="polite"></div>
+    <div data-materials-list-code hidden aria-live="polite"></div>
+    <div data-materials-list-document hidden aria-live="polite"></div>
+    <div data-materials-list-presentation hidden aria-live="polite"></div>
+    <div data-materials-list-template hidden aria-live="polite"></div>
+  </div>
+
+  <footer class="site-footer" id="footer">
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a class="brand" href="/materials/"><span class="brand-mark" aria-hidden="true">M</span><span>Materials</span></a>
+          <p class="footer-description">ビジネスや日常で使える高品質な<br>素材・テンプレート・ツールを<br>無料でダウンロードできるプラットフォームです。</p>
+          <div class="social-links">
+            <a href="/help/" aria-label="ヘルプ"><i class="far fa-envelope" aria-hidden="true"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h3>Materialsについて</h3>
+          <a href="/company/about.html">運営会社</a>
+          <a href="/company/vision.html">コンセプト</a>
+          <a href="/company/index.html">お知らせ</a>
+          <a href="/help/">ヘルプ</a>
+        </div>
+        <div class="footer-column">
+          <h3>カテゴリ</h3>
+          <div data-materials-footer-categories></div>
+          <a href="/materials/list.html">すべてのカテゴリ</a>
+        </div>
+        <div class="footer-column">
+          <h3>サポート</h3>
+          <a href="/help/">ヘルプセンター</a>
+          <a href="/company/faq.html">よくある質問</a>
+          <a href="/help/">使い方ガイド</a>
+        </div>
+        <div class="footer-column">
+          <h3>法的情報</h3>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/company/legal/materials.html">著作権について</a>
+          <a href="/company/legal/tokushoho.html">特定商取引法に基づく表記</a>
+          <a href="/company/legal/terms.html">免責事項</a>
+        </div>
+        <div class="footer-keywords">
+          <h3>人気キーワード</h3>
+          <div class="keyword-pills" data-materials-footer-keywords></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© Materials. All rights reserved.</span>
+        <div class="footer-bottom-links">
+          <span class="language-button">日本語</span>
+          <a href="/company/legal/terms.html">利用規約</a>
+          <a href="/company/legal/privacy.html">プライバシーポリシー</a>
+          <a href="/materials/list.html">サイトマップ</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div data-tasful-portal-tabbar-mount></div>
+  <script src="/platform-portal-tabbar.js"></script>
+
+  <script src="/member-auth.js"></script>
+  <script src="/favorite-store.js"></script>
+  <script src="/materials/generated/materials-index.generated.js"></script>
+  <script src="/materials/materials-data.js"></script>
+  <script src="/materials/materials-list-sidebar.js"></script>
+  <script src="/materials/materials-genre-filter-ssot.js"></script>
+  <script src="/materials/materials-list-top-back.js"></script>
+  <script src="/materials/materials-metrics.js"></script>
+  <script src="/materials/materials-search-metrics.js"></script>
+  <script src="/materials/materials-download-card.js"></script>
+  <script src="/materials/materials-member-access.js"></script>
+  <script src="/materials/materials-reward-ad.js"></script>
+  <script src="/materials/materials-favorites.js"></script>
+  <script src="/materials/materials-download.js"></script>
+  <script src="/materials/materials-site-footer.js"></script>
+  <script src="/materials/materials-card-detail-nav.js"></script>
+  <script src="/materials/materials-sfx-list.js"></script>
+  <script src="/materials/materials-bgm-list.js"></script>
+  <script src="/materials/materials-image-list.js"></script>
+  <script src="/materials/materials-illustration-list.js"></script>
+  <script src="/materials/materials-background-list.js"></script>
+  <script src="/materials/materials-icon-list.js"></script>
+  <script src="/materials/materials-web-list.js"></script>
+  <script src="/materials/materials-code-list.js"></script>
+  <script src="/materials/materials-document-list.js"></script>
+  <script src="/materials/materials-presentation-list.js"></script>
+  <script src="/materials/materials-template-list.js"></script>
+  <script src="/materials/materials-list-page.js"></script>
+</body>
+</html>

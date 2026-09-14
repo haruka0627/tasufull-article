@@ -1,0 +1,779 @@
+/**
+ * TASFUL Materials — BGM一覧 STC正本（完全移植）
+ * Source: user STC HTML 2026-08-11 / reports/materials-stc-audit/canonical/bgm-list-stc-2026-08-11.html
+ * Tailwind utility を [data-bgm-list] にスコープ（他画面へ影響しない）
+ */
+
+[data-materials-list-classic][hidden],
+[data-materials-list-sfx][hidden],
+[data-materials-list-bgm][hidden],
+[data-materials-list-image][hidden],
+[data-materials-list-illustration][hidden],
+[data-materials-list-background][hidden],
+[data-materials-list-icon][hidden],
+[data-materials-list-code][hidden],
+[data-materials-list-web][hidden],
+[data-materials-list-document][hidden],
+[data-materials-list-presentation][hidden] {
+  display: none !important;
+}
+
+.materials-page:has([data-materials-list-bgm]:not([hidden])) .materials-shell--list {
+  max-width: none;
+  padding: 0;
+}
+
+[data-bgm-list] {
+  font-family: "Noto Sans JP", sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  box-sizing: border-box;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+[data-bgm-list] *,
+[data-bgm-list] *::before,
+[data-bgm-list] *::after {
+  box-sizing: border-box;
+}
+
+/* ---- STC wave ---- */
+[data-bgm-list] .wave {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 36px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+[data-bgm-list] .wave span {
+  flex: 0 0 auto;
+  width: 2px;
+  border-radius: 2px;
+  background: #a78bfa;
+  display: block;
+}
+
+[data-bgm-list] .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+[data-bgm-list] a.mat-bgm-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+[data-bgm-list] a.mat-bgm-title-link:hover {
+  color: #2563eb;
+}
+
+/* ---- Layout / display ---- */
+/* Root [data-bgm-list] 自身が STC outer container（max-w/mx-auto/px/py）を持つため self + descendant */
+[data-bgm-list].max-w-\[1500px\],
+[data-bgm-list] .max-w-\[1500px\] {
+  max-width: 1500px;
+}
+
+[data-bgm-list] .max-w-\[650px\] {
+  max-width: 650px;
+}
+
+[data-bgm-list].mx-auto,
+[data-bgm-list] .mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[data-bgm-list] .flex {
+  display: flex;
+}
+
+[data-bgm-list] .inline-flex {
+  display: inline-flex;
+}
+
+[data-bgm-list].grid,
+[data-bgm-list] .grid {
+  display: grid;
+}
+
+[data-bgm-list] .block {
+  display: block;
+}
+
+[data-bgm-list] .hidden {
+  display: none !important;
+}
+
+[data-bgm-list] .relative {
+  position: relative;
+}
+
+[data-bgm-list] .absolute {
+  position: absolute;
+}
+
+[data-bgm-list] .flex-1 {
+  flex: 1 1 0%;
+}
+
+[data-bgm-list] .flex-wrap {
+  flex-wrap: wrap;
+}
+
+[data-bgm-list] .shrink-0,
+[data-bgm-list] .flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+[data-bgm-list] .items-center {
+  align-items: center;
+}
+
+[data-bgm-list].items-start,
+[data-bgm-list] .items-start {
+  align-items: flex-start;
+}
+
+[data-bgm-list] .items-end {
+  align-items: flex-end;
+}
+
+[data-bgm-list] .justify-between {
+  justify-content: space-between;
+}
+
+[data-bgm-list] .justify-center {
+  justify-content: center;
+}
+
+[data-bgm-list] .gap-2 {
+  gap: 0.5rem;
+}
+
+[data-bgm-list] .gap-3 {
+  gap: 0.75rem;
+}
+
+[data-bgm-list] .gap-4 {
+  gap: 1rem;
+}
+
+[data-bgm-list] .gap-5 {
+  gap: 1.25rem;
+}
+
+[data-bgm-list] .gap-6 {
+  gap: 1.5rem;
+}
+
+[data-bgm-list].gap-8,
+[data-bgm-list] .gap-8 {
+  gap: 2rem;
+}
+
+[data-bgm-list] .space-y-5 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1.25rem;
+}
+
+[data-bgm-list].grid-cols-1,
+[data-bgm-list] .grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+/* STC: main column must shrink inside 1fr track */
+[data-bgm-list].grid > :first-child {
+  min-width: 0;
+}
+
+[data-bgm-list] .min-w-0 {
+  min-width: 0;
+}
+
+[data-bgm-list] .min-w-\[280px\] {
+  min-width: 280px;
+}
+
+[data-bgm-list] .w-full {
+  width: 100%;
+}
+
+[data-bgm-list] .w-4 {
+  width: 1rem;
+}
+
+[data-bgm-list] .w-9 {
+  width: 2.25rem;
+}
+
+[data-bgm-list] .w-11 {
+  width: 2.75rem;
+}
+
+[data-bgm-list] .w-14 {
+  width: 3.5rem;
+}
+
+[data-bgm-list] .h-9 {
+  height: 2.25rem;
+}
+
+[data-bgm-list] .h-11 {
+  height: 2.75rem;
+}
+
+[data-bgm-list] .h-14 {
+  height: 3.5rem;
+}
+
+[data-bgm-list] .h-\[42px\] {
+  height: 42px;
+}
+
+/* ---- Spacing ---- */
+[data-bgm-list] .px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+[data-bgm-list] .px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+[data-bgm-list] .px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+[data-bgm-list] .px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+[data-bgm-list].px-6,
+[data-bgm-list] .px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+[data-bgm-list] .px-7 {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
+
+[data-bgm-list] .px-8 {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+[data-bgm-list] .py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
+[data-bgm-list] .py-1\.5 {
+  padding-top: 0.375rem;
+  padding-bottom: 0.375rem;
+}
+
+[data-bgm-list] .py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+[data-bgm-list] .py-2\.5 {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+
+[data-bgm-list] .py-3\.5 {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+[data-bgm-list].py-8,
+[data-bgm-list] .py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+[data-bgm-list] .p-5 {
+  padding: 1.25rem;
+}
+
+[data-bgm-list] .p-7 {
+  padding: 1.75rem;
+}
+
+[data-bgm-list] .pl-4 {
+  padding-left: 1rem;
+}
+
+[data-bgm-list] .pl-6 {
+  padding-left: 1.5rem;
+}
+
+[data-bgm-list] .pl-10 {
+  padding-left: 2.5rem;
+}
+
+[data-bgm-list] .pr-4 {
+  padding-right: 1rem;
+}
+
+[data-bgm-list] .pr-9 {
+  padding-right: 2.25rem;
+}
+
+[data-bgm-list] .pr-12 {
+  padding-right: 3rem;
+}
+
+[data-bgm-list] .mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+[data-bgm-list] .mb-1\.5 {
+  margin-bottom: 0.375rem;
+}
+
+[data-bgm-list] .mb-3 {
+  margin-bottom: 0.75rem;
+}
+
+[data-bgm-list] .mb-4 {
+  margin-bottom: 1rem;
+}
+
+[data-bgm-list] .mb-5 {
+  margin-bottom: 1.25rem;
+}
+
+[data-bgm-list] .mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+[data-bgm-list] .mt-4 {
+  margin-top: 1rem;
+}
+
+[data-bgm-list] .mt-8 {
+  margin-top: 2rem;
+}
+
+[data-bgm-list] .ml-0\.5 {
+  margin-left: 0.125rem;
+}
+
+[data-bgm-list] .ml-2 {
+  margin-left: 0.5rem;
+}
+
+[data-bgm-list] .ml-auto {
+  margin-left: auto;
+}
+
+[data-bgm-list] .left-4 {
+  left: 1rem;
+}
+
+[data-bgm-list] .right-3 {
+  right: 0.75rem;
+}
+
+[data-bgm-list] .right-4 {
+  right: 1rem;
+}
+
+[data-bgm-list] .top-1\/2 {
+  top: 50%;
+}
+
+[data-bgm-list] .-translate-y-1\/2 {
+  transform: translateY(-50%);
+}
+
+/* ---- Typography ---- */
+[data-bgm-list] .text-left {
+  text-align: left;
+}
+
+[data-bgm-list] .text-right {
+  text-align: right;
+}
+
+[data-bgm-list] .text-\[9px\] {
+  font-size: 9px;
+  line-height: 1.25;
+}
+
+[data-bgm-list] .text-\[10px\] {
+  font-size: 10px;
+  line-height: 1.25;
+}
+
+[data-bgm-list] .text-\[11px\] {
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+[data-bgm-list] .text-\[12px\] {
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+[data-bgm-list] .text-\[13px\] {
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+[data-bgm-list] .text-\[15px\] {
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+[data-bgm-list] .text-\[17px\] {
+  font-size: 17px;
+  line-height: 1.4;
+}
+
+[data-bgm-list] .text-\[30px\] {
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+[data-bgm-list] .text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+[data-bgm-list] .text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+[data-bgm-list] .font-medium {
+  font-weight: 500;
+}
+
+[data-bgm-list] .font-bold {
+  font-weight: 700;
+}
+
+[data-bgm-list] .font-black {
+  font-weight: 900;
+}
+
+[data-bgm-list] .tracking-tight {
+  letter-spacing: -0.025em;
+}
+
+[data-bgm-list] .leading-5 {
+  line-height: 1.25rem;
+}
+
+[data-bgm-list] .leading-6 {
+  line-height: 1.5rem;
+}
+
+[data-bgm-list] .appearance-none {
+  appearance: none;
+}
+
+[data-bgm-list] .pointer-events-none {
+  pointer-events: none;
+}
+
+[data-bgm-list] .placeholder-slate-400::placeholder {
+  color: #94a3b8;
+}
+
+/* ---- Color / surface ---- */
+[data-bgm-list] .bg-white {
+  background-color: #fff;
+}
+
+[data-bgm-list] .bg-slate-50 {
+  background-color: #f8fafc;
+}
+
+[data-bgm-list] .bg-slate-100 {
+  background-color: #f1f5f9;
+}
+
+[data-bgm-list] .bg-blue-50 {
+  background-color: #eff6ff;
+}
+
+[data-bgm-list] .bg-blue-50\/60 {
+  background-color: rgba(239, 246, 255, 0.6);
+}
+
+[data-bgm-list] .bg-blue-50\/70 {
+  background-color: rgba(239, 246, 255, 0.7);
+}
+
+[data-bgm-list] .bg-blue-600 {
+  background-color: #2563eb;
+}
+
+[data-bgm-list] .bg-rose-50 {
+  background-color: #fff1f2;
+}
+
+[data-bgm-list] .bg-emerald-50 {
+  background-color: #ecfdf5;
+}
+
+[data-bgm-list] .bg-violet-100 {
+  background-color: #ede9fe;
+}
+
+[data-bgm-list] .hover\:bg-blue-700:hover {
+  background-color: #1d4ed8;
+}
+
+[data-bgm-list] .hover\:bg-slate-50:hover {
+  background-color: #f8fafc;
+}
+
+[data-bgm-list] .hover\:text-slate-700:hover {
+  color: #334155;
+}
+
+[data-bgm-list] .hover\:text-slate-900:hover {
+  color: #0f172a;
+}
+
+[data-bgm-list] .text-white {
+  color: #fff;
+}
+
+[data-bgm-list] .text-slate-400 {
+  color: #94a3b8;
+}
+
+[data-bgm-list] .text-slate-500 {
+  color: #64748b;
+}
+
+[data-bgm-list] .text-slate-600 {
+  color: #475569;
+}
+
+[data-bgm-list] .text-slate-700 {
+  color: #334155;
+}
+
+[data-bgm-list] .text-slate-800 {
+  color: #1e293b;
+}
+
+[data-bgm-list] .text-slate-900 {
+  color: #0f172a;
+}
+
+[data-bgm-list] .text-blue-400 {
+  color: #60a5fa;
+}
+
+[data-bgm-list] .text-blue-500 {
+  color: #3b82f6;
+}
+
+[data-bgm-list] .text-blue-600 {
+  color: #2563eb;
+}
+
+[data-bgm-list] .text-rose-500 {
+  color: #f43f5e;
+}
+
+[data-bgm-list] .text-emerald-500 {
+  color: #10b981;
+}
+
+[data-bgm-list] .text-emerald-600 {
+  color: #059669;
+}
+
+[data-bgm-list] .text-violet-500 {
+  color: #8b5cf6;
+}
+
+[data-bgm-list] .text-violet-600 {
+  color: #7c3aed;
+}
+
+[data-bgm-list] .text-amber-400 {
+  color: #fbbf24;
+}
+
+[data-bgm-list] .text-lime-500 {
+  color: #84cc16;
+}
+
+[data-bgm-list] .text-sky-500 {
+  color: #0ea5e9;
+}
+
+[data-bgm-list] .text-indigo-500 {
+  color: #6366f1;
+}
+
+[data-bgm-list] .text-purple-500 {
+  color: #a855f7;
+}
+
+[data-bgm-list] .text-cyan-600 {
+  color: #0891b2;
+}
+
+[data-bgm-list] .text-teal-500 {
+  color: #14b8a6;
+}
+
+[data-bgm-list] .text-red-500 {
+  color: #ef4444;
+}
+
+[data-bgm-list] .text-amber-600 {
+  color: #d97706;
+}
+
+[data-bgm-list] .border {
+  border-width: 1px;
+  border-style: solid;
+}
+
+[data-bgm-list] .border-slate-200 {
+  border-color: #e2e8f0;
+}
+
+[data-bgm-list] .border-blue-100 {
+  border-color: #dbeafe;
+}
+
+[data-bgm-list] .border-blue-500 {
+  border-color: #3b82f6;
+}
+
+[data-bgm-list] .rounded {
+  border-radius: 0.25rem;
+}
+
+[data-bgm-list] .rounded-md {
+  border-radius: 0.375rem;
+}
+
+[data-bgm-list] .rounded-lg {
+  border-radius: 0.5rem;
+}
+
+[data-bgm-list] .rounded-xl {
+  border-radius: 0.75rem;
+}
+
+[data-bgm-list] .rounded-full {
+  border-radius: 9999px;
+}
+
+[data-bgm-list] .shadow-sm {
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+[data-bgm-list] .focus\:outline-none:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+[data-bgm-list] .focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+[data-bgm-list] .focus\:ring-blue-500\/30:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+}
+
+[data-bgm-list] button,
+[data-bgm-list] select,
+[data-bgm-list] input {
+  font-family: inherit;
+}
+
+[data-bgm-list] button {
+  cursor: pointer;
+}
+
+[data-bgm-list] button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+[data-bgm-list] [data-bgm-card].is-playing .bg-violet-100 {
+  background-color: #7c3aed;
+  color: #fff;
+}
+
+[data-bgm-list] [data-mat-favorite-btn].is-favorited,
+[data-bgm-list] [data-mat-favorite-btn][aria-pressed="true"] {
+  color: #f43f5e;
+  border-color: #fecdd3;
+  background-color: #fff1f2;
+}
+
+[data-bgm-list] .mat-detail-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  z-index: 80;
+  margin: 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+}
+
+[data-bgm-list] .mat-detail-toast[hidden] {
+  display: none !important;
+}
+
+@media (min-width: 640px) {
+  [data-bgm-list] .sm\:flex {
+    display: flex;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-bgm-list].lg\:grid-cols-\[1fr_320px\],
+  [data-bgm-list] .lg\:grid-cols-\[1fr_320px\] {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+}
+
+@media (min-width: 1280px) {
+  [data-bgm-list] .xl\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1023px) {
+  /* STC は常に px-6。root への独自 padding 上書きはしない（self は .px-6 正本のまま） */
+  [data-bgm-list] .min-w-\[280px\] {
+    min-width: 0;
+  }
+}

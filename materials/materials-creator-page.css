@@ -1,0 +1,173 @@
+/**
+ * TASFUL Materials — Creator Page V1
+ * Reuses list chips / all-card-grid / empty copy. 1280=4 · 768=2 · 390=1.
+ */
+body.materials-page[data-page="materials_creator"] .materials-shell--creator {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 20px 48px;
+  min-width: 0;
+}
+
+.mat-creator-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin: 12px 0 22px;
+  min-width: 0;
+}
+
+.mat-creator-header__avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f1f5f9;
+  flex: 0 0 88px;
+  border: 1px solid #e2e8f0;
+}
+
+.mat-creator-header__body {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.mat-creator-header__name {
+  margin: 0 0 6px;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #0f172a;
+  overflow-wrap: anywhere;
+}
+
+.mat-creator-header__bio {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #475569;
+  overflow-wrap: anywhere;
+}
+
+.mat-creator-section-title {
+  margin: 8px 0 12px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.mat-creator-invalid,
+.mat-creator-empty {
+  margin: 28px 0;
+  padding: 28px 20px;
+  text-align: center;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  color: #475569;
+}
+
+.mat-creator-invalid a,
+.mat-creator-empty a {
+  color: #2563eb;
+}
+
+.mat-creator-more {
+  display: flex;
+  justify-content: center;
+  margin: 22px 0 8px;
+}
+
+.mat-creator-more__btn {
+  min-height: 44px;
+  padding: 10px 22px;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.mat-creator-more__btn:hover {
+  background: #f8fafc;
+}
+
+body.materials-page[data-page="materials_creator"] .materials-all-card-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+@media (max-width: 768px) {
+  body.materials-page[data-page="materials_creator"] .materials-shell--creator {
+    padding: 12px 14px 40px;
+  }
+
+  .mat-creator-header {
+    gap: 14px;
+  }
+
+  .mat-creator-header__avatar {
+    width: 72px;
+    height: 72px;
+    flex-basis: 72px;
+  }
+
+  .mat-creator-header__name {
+    font-size: 22px;
+  }
+
+  body.materials-page[data-page="materials_creator"] .materials-all-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 390px) {
+  .mat-creator-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mat-creator-header__avatar {
+    width: 72px;
+    height: 72px;
+  }
+
+  body.materials-page[data-page="materials_creator"] .materials-all-card-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.mat-detail-creator {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 8px 0 14px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  text-decoration: none;
+  color: inherit;
+  max-width: 100%;
+  border: 1px solid transparent;
+}
+
+.mat-detail-creator:hover {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+.mat-detail-creator__avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #f1f5f9;
+  flex: 0 0 36px;
+}
+
+.mat-detail-creator__name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+  overflow-wrap: anywhere;
+}

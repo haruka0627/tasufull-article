@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="3D�n�D+*T	">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdf2f8"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="fur" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+    <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <ellipse cx="420" cy="430" rx="170" ry="26" fill="url(#shadow)"/>
+  <ellipse cx="430" cy="310" rx="120" ry="105" fill="url(#fur)"/>
+  <ellipse cx="500" cy="195" r="82" fill="url(#fur)"/>
+  <polygon points="560,125 590,60 545,105" fill="url(#fur)"/>
+  <polygon points="555,120 575,75 548,108" fill="#ffedd5"/>
+  <ellipse cx="525" cy="188" rx="12" ry="16" fill="#0f172a"/>
+  <ellipse cx="528" cy="183" rx="4" ry="5" fill="#fff"/>
+  <path d="M545 210 Q555 220 548 228" stroke="#be123c" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <ellipse cx="390" cy="360" rx="26" ry="16" fill="url(#fur)"/>
+  <ellipse cx="470" cy="365" rx="24" ry="14" fill="url(#fur)"/>
+  <path d="M350 260 Q310 300 320 350" stroke="url(#fur)" stroke-width="20" fill="none" stroke-linecap="round"/>
+  <path d="M560 240 L590 210" stroke="url(#fur)" stroke-width="14" fill="none" stroke-linecap="round"/>
+</svg>

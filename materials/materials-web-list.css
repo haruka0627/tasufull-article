@@ -1,0 +1,740 @@
+/**
+ * TASFUL Materials — Web素材一覧 STC Full Retransplant
+ * Source: reports/materials-stc-audit/canonical/web-list.html
+ * 公開表示名「Web素材」。操作=青。
+ */
+
+.mat-web-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 28px 24px 20px;
+  color: #1e293b;
+}
+
+@media (min-width: 1280px) {
+  .mat-web-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
+.mat-web-main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.mat-web-head {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.mat-web-head__title {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.01em;
+  color: #0f172a;
+}
+
+.mat-web-head__lead {
+  font-size: 12px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ---------- Search ---------- */
+.mat-web-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.mat-web-search__field {
+  position: relative;
+  flex: 1 1 280px;
+  max-width: 600px;
+}
+
+.mat-web-search__ico {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.mat-web-search__field input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.mat-web-search__field input:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.mat-web-search__btn {
+  background: #2563eb;
+  color: #fff;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+}
+
+.mat-web-search__btn:hover {
+  background: #1d4ed8;
+}
+
+.mat-web-sort {
+  margin-left: auto;
+}
+
+.mat-web-sort select {
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #334155;
+}
+
+/* ---------- Category chips ---------- */
+.mat-web-cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.mat-web-cat-chip {
+  padding: 8px 20px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #334155;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mat-web-cat-chip:hover {
+  border-color: #93c5fd;
+}
+
+.mat-web-cat-chip.is-active {
+  background: #eff6ff;
+  border-color: #60a5fa;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* ---------- Filters ---------- */
+.mat-web-filters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.mat-web-filter select {
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #334155;
+  cursor: pointer;
+}
+
+.mat-web-filter select:disabled {
+  color: #94a3b8;
+  cursor: not-allowed;
+}
+
+.mat-web-clear {
+  border: none;
+  background: none;
+  font-size: 12.5px;
+  color: #64748b;
+  cursor: pointer;
+}
+
+.mat-web-clear:hover {
+  color: #2563eb;
+}
+
+.mat-web-result-count {
+  margin-left: auto;
+  font-size: 12.5px;
+  color: #475569;
+}
+
+/* ---------- Grid / cards ---------- */
+.mat-web-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .mat-web-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .mat-web-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.mat-web-empty {
+  padding: 48px 0;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+}
+
+.mat-web-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease;
+}
+
+.mat-web-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mat-web-card__preview {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.mat-web-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.mat-web-card__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mat-web-card__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #dbeafe, #eff6ff);
+}
+
+.mat-web-card__placeholder-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.mat-web-card__badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.mat-web-card__badge--free {
+  background: #059669;
+}
+
+.mat-web-card__type {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #dbeafe;
+  color: #2563eb;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.mat-web-card__type--cat {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.mat-web-card__body {
+  padding: 16px;
+}
+
+.mat-web-card__title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: #0f172a;
+}
+
+.mat-web-card__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mat-web-card__desc {
+  font-size: 11.5px;
+  color: #64748b;
+  margin: 0 0 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mat-web-card__formats {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.mat-web-card__fmt {
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 10.5px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.mat-web-card__foot {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+  font-size: 11.5px;
+}
+
+.mat-web-card__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #475569;
+  font-weight: 500;
+  margin-right: 16px;
+}
+
+.mat-web-card__star {
+  color: #facc15;
+}
+
+.mat-web-card__actions {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+}
+
+.mat-web-card__fav,
+.mat-web-card__dl {
+  border: none;
+  background: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+}
+
+.mat-web-card__fav:hover {
+  color: #f43f5e;
+}
+
+.mat-web-card__fav.is-favorited {
+  color: #f43f5e;
+}
+
+.mat-web-card__dl {
+  color: #3b82f6;
+}
+
+.mat-web-card__dl:hover {
+  color: #1d4ed8;
+}
+
+.mat-web-card__heart::before {
+  content: "♡";
+}
+
+.mat-web-card__fav.is-favorited .mat-web-card__heart::before {
+  content: "♥";
+}
+
+/* ---------- Pagination ---------- */
+.mat-web-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+
+.mat-web-pager__btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mat-web-pager__btn:hover:not(:disabled) {
+  border-color: #93c5fd;
+}
+
+.mat-web-pager__btn.is-active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+  font-weight: 700;
+}
+
+.mat-web-pager__btn:disabled {
+  color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.mat-web-pager__ellipsis {
+  color: #94a3b8;
+  padding: 0 4px;
+}
+
+/* ---------- CTA ---------- */
+.mat-web-cta {
+  margin-top: 32px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 12px;
+  padding: 28px 32px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+}
+
+.mat-web-cta__icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #3b82f6;
+  font-size: 24px;
+}
+
+.mat-web-cta__copy {
+  flex: 1 1 260px;
+  min-width: 260px;
+}
+
+.mat-web-cta__copy h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: #0f172a;
+}
+
+.mat-web-cta__copy p {
+  font-size: 12.5px;
+  color: #475569;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.mat-web-cta__btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  background: #2563eb;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mat-web-cta__btn:hover {
+  background: #1d4ed8;
+}
+
+/* ---------- Sidebar ---------- */
+.mat-web-side {
+  width: 100%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+@media (min-width: 1280px) {
+  .mat-web-side {
+    width: 330px;
+  }
+}
+
+.mat-web-side-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.mat-web-side-card__title {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  color: #0f172a;
+}
+
+.mat-web-side-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.mat-web-chip-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 6px 16px;
+}
+
+.mat-web-chip-active--rose {
+  background: #fff1f2;
+  color: #f43f5e;
+}
+
+.mat-web-chip-active--accent {
+  background: #fff1f2;
+  color: #f43f5e;
+}
+
+.mat-web-chip-active--muted {
+  background: #f1f5f9;
+  color: #475569;
+  font-weight: 500;
+}
+
+.mat-web-side-clear {
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #475569;
+  background: #fff;
+  cursor: pointer;
+}
+
+.mat-web-side-clear:hover {
+  background: #f8fafc;
+}
+
+.mat-web-side-cats {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12.5px;
+}
+
+.mat-web-side-cat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: none;
+  background: none;
+  padding: 7px 0;
+  font-size: 12.5px;
+  color: #334155;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mat-web-side-cat:hover:not(.is-disabled) {
+  color: #2563eb;
+}
+
+.mat-web-side-cat.is-active {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.mat-web-side-cat.is-disabled {
+  cursor: not-allowed;
+  color: #cbd5e1;
+}
+
+.mat-web-side-cat__name {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mat-web-side-cat__name span[aria-hidden] {
+  display: inline-flex;
+  width: 16px;
+  justify-content: center;
+  color: #60a5fa;
+}
+
+.mat-web-side-cat__count {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.mat-web-popular-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mat-web-popular-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 9999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.mat-web-popular-tag:hover {
+  border-color: #93c5fd;
+}
+
+.mat-web-popular-tag span:first-child {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.mat-web-popular-tag__n {
+  color: #94a3b8;
+}
+
+.mat-web-side-empty {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.mat-web-side-card--fav {
+  background: #fff;
+}
+
+.mat-web-side-fav {
+  display: flex;
+  gap: 16px;
+}
+
+.mat-web-side-fav__icon {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background: #fff1f2;
+  position: relative;
+}
+
+.mat-web-side-fav__icon::before {
+  content: "♡";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fb7185;
+  font-size: 18px;
+}
+
+.mat-web-side-fav p {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.mat-web-side-fav__link {
+  display: inline-block;
+  margin-top: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  text-decoration: none;
+}
+
+.mat-web-side-fav__link:hover {
+  border-color: #93c5fd;
+}
+
+@media (max-width: 767px) {
+  .mat-web-layout {
+    padding: 20px 12px;
+  }
+
+  .mat-web-cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mat-web-cta__btn {
+    width: 100%;
+    text-align: center;
+  }
+}

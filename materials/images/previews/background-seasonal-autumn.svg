@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="seasonal autumn background">
+  <defs>
+    <linearGradient id="autumn" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fed7aa"/>
+      <stop offset="50%" stop-color="#fdba74"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#autumn)"/>
+  <circle cx="120" cy="90" r="48" fill="#fef3c7" opacity="0.8"/>
+  <ellipse cx="180" cy="360" rx="28" ry="16" fill="#b45309" opacity="0.7" transform="rotate(-20 180 360)"/>
+  <ellipse cx="320" cy="300" rx="24" ry="14" fill="#c2410c" opacity="0.65" transform="rotate(15 320 300)"/>
+  <ellipse cx="460" cy="380" rx="26" ry="15" fill="#9a3412" opacity="0.7" transform="rotate(-10 460 380)"/>
+  <ellipse cx="600" cy="280" rx="22" ry="13" fill="#ea580c" opacity="0.75" transform="rotate(25 600 280)"/>
+  <ellipse cx="700" cy="400" rx="30" ry="16" fill="#b45309" opacity="0.6" transform="rotate(-30 700 400)"/>
+  <path d="M0 430 Q200 390 400 430 T800 430 V500 H0 Z" fill="#9a3412" opacity="0.25"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="starry sky background">
+  <defs>
+    <linearGradient id="night" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="55%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#night)"/>
+  <circle cx="120" cy="80" r="2" fill="#fff"/>
+  <circle cx="220" cy="140" r="1.5" fill="#e0e7ff"/>
+  <circle cx="340" cy="60" r="2.5" fill="#fff"/>
+  <circle cx="480" cy="110" r="1.8" fill="#c7d2fe"/>
+  <circle cx="610" cy="70" r="2" fill="#fff"/>
+  <circle cx="720" cy="150" r="1.5" fill="#e0e7ff"/>
+  <circle cx="180" cy="220" r="1.5" fill="#fff"/>
+  <circle cx="400" cy="180" r="2" fill="#c7d2fe"/>
+  <circle cx="560" cy="240" r="1.5" fill="#fff"/>
+  <circle cx="680" cy="300" r="2" fill="#e0e7ff"/>
+  <circle cx="90" cy="320" r="1.5" fill="#fff"/>
+  <circle cx="300" cy="280" r="1.8" fill="#c7d2fe"/>
+  <circle cx="650" cy="50" r="28" fill="#fde68a" opacity="0.9"/>
+  <circle cx="650" cy="50" r="36" fill="#fef3c7" opacity="0.2"/>
+  <ellipse cx="400" cy="470" rx="320" ry="40" fill="#1e1b4b" opacity="0.5"/>
+</svg>
