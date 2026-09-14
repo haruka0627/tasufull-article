@@ -21,6 +21,7 @@
     presentation: "プレゼンテンプレート",
     code: "コード素材",
     icon: "アイコン素材",
+    image: "写真",
   });
 
   const CATEGORY_ICON_CLASS = Object.freeze({
@@ -36,6 +37,10 @@
     presentation: "orange",
     document: "cyan",
     tool: "green",
+    overlay: "violet",
+    frame: "pink",
+    telop: "orange",
+    transition: "cyan",
   });
 
   const CATEGORY_FA_ICON = Object.freeze({
@@ -51,6 +56,10 @@
     presentation: "fas fa-desktop",
     document: "far fa-file-alt",
     tool: "fas fa-wrench",
+    overlay: "fas fa-layer-group",
+    frame: "far fa-square",
+    telop: "fas fa-closed-captioning",
+    transition: "fas fa-play",
   });
 
   function escapeHtml(str) {

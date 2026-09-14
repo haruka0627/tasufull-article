@@ -148,9 +148,7 @@
       q: params.get("q") || "",
       sort: params.get("sort") === "newest" ? "newest" : "popular",
       usage: params.get("usage") || "",
-      industry: params.get("industry") || "",
       style: params.get("style") || "",
-      slideType: params.get("slide_type") || "",
       format: params.get("format") || "",
       color: params.get("color") || "",
       genre: params.get("genre") || params.get("sub") || "",
@@ -168,13 +166,13 @@
     };
     setOrDel("q", next.q);
     setOrDel("sort", next.sort && next.sort !== "popular" ? next.sort : "");
-    setOrDel("industry", next.industry);
+    url.searchParams.delete("industry");
     setOrDel("style", next.style);
     url.searchParams.delete("usage");
     setOrDel("color", next.color);
     url.searchParams.delete("pages");
     url.searchParams.delete("ratio");
-    setOrDel("slide_type", next.slideType);
+    url.searchParams.delete("slide_type");
     setOrDel("format", next.format);
     setOrDel("genre", next.genre);
     setOrDel("sub", next.genre);
@@ -189,6 +187,7 @@
     const usages = new Map();
     const styles = new Map();
     const formats = new Map();
+    const colors = new Map();
     const tags = new Map();
 
     items.forEach((item) => {
@@ -196,6 +195,8 @@
       if (usage) usages.set(usage, (usages.get(usage) || 0) + 1);
       const layout = pickStr(item.layout);
       if (layout) styles.set(layout, (styles.get(layout) || 0) + 1);
+      const color = pickStr(item.color_family);
+      if (color) colors.set(color, (colors.get(color) || 0) + 1);
       (item.file_formats || []).forEach((f) => {
         const key = String(f).toUpperCase();
         if (key) formats.set(key, (formats.get(key) || 0) + 1);
@@ -205,7 +206,7 @@
 
     const GF = global.TasuMaterialsGenreFilter;
     const genreCounts = GF?.collectDemandCounts ? GF.collectDemandCounts(items, "presentation") : {};
-    return { usages, styles, formats, tags, genreCounts };
+    return { usages, styles, formats, colors, tags, genreCounts };
   }
 
   function applyFilters(items, filters) {
@@ -234,7 +235,9 @@
       if (filters.tag) {
         if (!itemTags(item).includes(filters.tag)) return false;
       }
-      if (filters.slideType || filters.industry || filters.color) return false;
+      if (filters.color) {
+        if (pickStr(item.color_family) !== filters.color) return false;
+      }
       return true;
     });
   }
@@ -431,10 +434,8 @@
         wrapClass: "mat-pres-filter",
         includeZero: true,
       }) || renderFilterSelect("genre", "ジャンル", new Map(), filters.genre, false)) +
-      renderFilterSelect("slide_type", "スライド種類", new Map(), filters.slideType, true) +
       renderFilterSelect("style", "デザイン", options.styles, filters.style, options.styles.size === 0) +
-      renderFilterSelect("industry", "業種", new Map(), filters.industry, true) +
-      renderFilterSelect("color", "カラー", new Map(), filters.color, true) +
+      renderFilterSelect("color", "カラー", options.colors || new Map(), filters.color, !(options.colors && options.colors.size)) +
       renderFilterSelect("format", "形式", options.formats, filters.format, false) +
       `<button type="button" class="mat-pres-clear" data-pres-clear>すべてクリア</button>` +
       `<span class="mat-pres-count">検索結果：<b data-pres-count>${formatCount(resultCount)}</b>件</span>` +
@@ -527,8 +528,6 @@
         const next = {
           ...urlState,
           genre: root.querySelector('[data-pres-filter="genre"]')?.value || "",
-          slideType: root.querySelector('[data-pres-filter="slide_type"]')?.value || "",
-          industry: root.querySelector('[data-pres-filter="industry"]')?.value || "",
           style: root.querySelector('[data-pres-filter="style"]')?.value || "",
           color: root.querySelector('[data-pres-filter="color"]')?.value || "",
           format: root.querySelector('[data-pres-filter="format"]')?.value || "",
@@ -546,9 +545,7 @@
             q: "",
             sort: "popular",
             genre: "",
-            industry: "",
             style: "",
-            slideType: "",
             color: "",
             format: "",
             tag: "",
@@ -643,9 +640,7 @@
     const urlState = readUrlState();
     const baseItems = await loadBaseItems(urlState);
     const filters = {
-      industry: urlState.industry,
       style: urlState.style,
-      slideType: urlState.slideType,
       color: urlState.color,
       format: urlState.format,
       genre: urlState.genre,

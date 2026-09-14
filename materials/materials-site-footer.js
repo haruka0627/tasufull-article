@@ -14,6 +14,7 @@
     presentation: "プレゼンテンプレート",
     code: "コード素材",
     icon: "アイコン素材",
+    image: "写真",
   });
 
   function escapeHtml(str) {

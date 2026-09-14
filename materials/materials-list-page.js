@@ -1,17 +1,23 @@
 /**
  * TASFUL Materials — 素材一覧ページ
+ * Video-first chips / URL SSOT: TasuMaterialsData.LIST_CATEGORY_CHIPS + LIST_VALID_QUERY_IDS.
+ * 透過 filter is DEFERRED (public index has no transparency metadata).
  */
 (function (global) {
   "use strict";
 
-  const VALID_CATEGORIES = new Set([
-    "template",
+  const FALLBACK_VALID_CATEGORIES = Object.freeze([
     "bgm",
     "sfx",
     "image",
     "illustration",
     "background",
     "icon",
+    "overlay",
+    "frame",
+    "telop",
+    "transition",
+    "template",
     "web",
     "code",
     "text",
@@ -24,9 +30,34 @@
     text: "document",
   });
 
+  function validCategorySet() {
+    const ids = global.TasuMaterialsData && global.TasuMaterialsData.LIST_VALID_QUERY_IDS;
+    return new Set(Array.isArray(ids) && ids.length ? ids : FALLBACK_VALID_CATEGORIES);
+  }
+
   function normalizeCategory(raw) {
     const category = String(raw || "").trim();
-    return VALID_CATEGORIES.has(category) ? category : "";
+    return validCategorySet().has(category) ? category : "";
+  }
+
+  function isClassicListCategory(category) {
+    if (category === "tool") return true;
+    const emptyIds = global.TasuMaterialsData && global.TasuMaterialsData.VIDEO_FIRST_EMPTY_CATEGORY_IDS;
+    return Array.isArray(emptyIds) && emptyIds.includes(category);
+  }
+
+  function listChipLabel(queryId) {
+    const chips = global.TasuMaterialsData && global.TasuMaterialsData.LIST_CATEGORY_CHIPS;
+    if (Array.isArray(chips)) {
+      const hit = chips.find((c) => (c.id || "") === (queryId || ""));
+      if (hit && hit.label) return hit.label;
+    }
+    const labels = global.TasuMaterialsData && global.TasuMaterialsData.LIST_UI_LABELS;
+    if (labels && queryId && labels[queryId]) return labels[queryId];
+    const cat = global.TasuMaterialsData && global.TasuMaterialsData.categoryById
+      ? global.TasuMaterialsData.categoryById(CATEGORY_FILTER_MAP[queryId] || queryId)
+      : null;
+    return (cat && cat.name) || queryId || "このカテゴリ";
   }
 
   function categoryToFilterId(chipCategory) {
@@ -345,10 +376,22 @@
     });
   }
 
-  function renderGrid(root, items) {
+  function renderEmptyState(kind, label) {
+    if (kind === "catalog") {
+      return (
+        `<div class="materials-list-empty materials-list-empty--catalog" data-materials-empty="catalog">` +
+        `<p class="materials-list-empty__title">${escapeHtml(label)}の公開素材はまだありません。</p>` +
+        `<p class="materials-list-empty__text">在庫は0件です。仮の素材は表示しません。</p>` +
+        `</div>`
+      );
+    }
+    return '<p class="materials-list-empty" data-materials-empty="filter">該当する素材がありません。</p>';
+  }
+
+  function renderGrid(root, items, emptyKind, emptyLabel) {
     if (!root) return;
     if (!items.length) {
-      root.innerHTML = '<p class="materials-list-empty">該当する素材がありません。</p>';
+      root.innerHTML = renderEmptyState(emptyKind, emptyLabel);
       return;
     }
     root.innerHTML =
@@ -491,8 +534,8 @@
     classic.dataset.allToolsWired = "1";
 
     function classicOnlyCategory(current) {
-      // tool のみ classic ルート。それ以外の specialty は別 mount。
-      return current.category === "tool" ? "tool" : "";
+      // tool + video-first empty categories share the classic list mount.
+      return isClassicListCategory(current.category) ? current.category : "";
     }
 
     classic.querySelector("[data-materials-all-search]")?.addEventListener("submit", function (ev) {
@@ -693,7 +736,16 @@
     const page = Math.min(Math.max(1, params.page || 1), totalPages);
     const start = (page - 1) * pageSize;
     const pageItems = items.slice(start, start + pageSize);
-    renderGrid(root, pageItems);
+    const filterId = categoryToFilterId(params.category);
+    const inventory = typeof data.countPublishedInventoryByCategory === "function"
+      ? data.countPublishedInventoryByCategory()
+      : {};
+    const inventoryCount = filterId ? Number(inventory[filterId] || 0) : -1;
+    const hasExtraFilters = Boolean(
+      params.q || params.usage || params.format || params.style || params.color
+    );
+    const emptyKind = filterId && inventoryCount === 0 && !hasExtraFilters ? "catalog" : "filter";
+    renderGrid(root, pageItems, emptyKind, listChipLabel(params.category));
     renderClassicPager(page, items.length ? totalPages : 1);
 
     // Confirmed text search execution (covers keyword links / shared URLs)
@@ -726,6 +778,8 @@
     mountListPage,
     readListParams,
     normalizeCategory,
+    isClassicListCategory,
+    listChipLabel,
     resolveCategoryRenderer,
     renderCategoryCard,
     wireMixedListContracts,

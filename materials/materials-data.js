@@ -11,7 +11,7 @@
   /** @typedef {object} MaterialsCategory */
   /** @typedef {object} MaterialsItem */
 
-  /** 無料ダウンロード正式カテゴリ（表示順） */
+  /** 無料ダウンロード正式カテゴリ（data 順。TOP カードはこれ。チップ順とは独立） */
   const CATEGORIES = Object.freeze([
     { id: "sfx", code: "sfx", name: "効果音 / SFX", icon: "sfx", color: "#dc2626" },
     { id: "bgm", code: "bgm", name: "BGM", icon: "bgm", color: "#9333ea" },
@@ -25,7 +25,58 @@
     { id: "presentation", code: "presentation", name: "プレゼン資料", icon: "presentation", color: "#ea580c" },
     { id: "document", code: "document", name: "文書テンプレート", icon: "document", color: "#0891b2" },
     { id: "tool", code: "tool", name: "ツール", icon: "tool", color: "#16a34a" },
+    { id: "overlay", code: "overlay", name: "オーバーレイ", icon: "overlay", color: "#7c3aed" },
+    { id: "frame", code: "frame", name: "フレーム・装飾", icon: "frame", color: "#c026d3" },
+    { id: "telop", code: "telop", name: "テロップ素材", icon: "telop", color: "#ea580c" },
+    { id: "transition", code: "transition", name: "トランジション", icon: "transition", color: "#0d9488" },
   ]);
+
+  /**
+   * Video-first primary chips (list.html). Hide legacy from primary; keep URL-valid.
+   * image → 表示「写真」はラベルマップのみ。category_id は image のまま（混在在庫を再分類しない）。
+   */
+  const LIST_PRIMARY_CATEGORY_IDS = Object.freeze([
+    "bgm",
+    "sfx",
+    "image",
+    "illustration",
+    "background",
+    "icon",
+    "overlay",
+    "frame",
+    "telop",
+    "transition",
+  ]);
+
+  const LIST_LEGACY_CATEGORY_IDS = Object.freeze([
+    "template",
+    "web",
+    "code",
+    "document",
+    "tool",
+    "presentation",
+  ]);
+
+  const VIDEO_FIRST_EMPTY_CATEGORY_IDS = Object.freeze([
+    "overlay",
+    "frame",
+    "telop",
+    "transition",
+  ]);
+
+  const LIST_PRIMARY_QUERY_IDS = LIST_PRIMARY_CATEGORY_IDS;
+  const LIST_LEGACY_QUERY_IDS = Object.freeze(
+    LIST_LEGACY_CATEGORY_IDS.map((id) => (id === "document" ? "text" : id))
+  );
+  const LIST_VALID_QUERY_IDS = Object.freeze([...LIST_PRIMARY_QUERY_IDS, ...LIST_LEGACY_QUERY_IDS]);
+
+  /**
+   * Chip / sidebar / footer 公開表示名。CATEGORIES.name は変更しない。
+   * image は混在在庫のため「写真」ラベルのみ（一括再分類しない）。
+   */
+  const LIST_UI_LABELS = Object.freeze({
+    image: "写真",
+  });
 
   /**
    * Materials 一覧 上部カテゴリチップ（表示順正本）。
@@ -36,49 +87,52 @@
 
   const LIST_CATEGORY_CHIPS = Object.freeze([
     { id: "", label: "すべて" },
-    { id: "template", label: "テンプレート" },
     { id: "bgm", label: "BGM" },
-    { id: "sfx", label: "効果音 / SFX" },
-    { id: "image", label: "画像素材" },
+    { id: "sfx", label: "効果音/SFX" },
+    { id: "image", label: LIST_UI_LABELS.image },
     { id: "illustration", label: "イラスト" },
-    { id: "background", label: "背景素材" },
+    { id: "background", label: "背景" },
     { id: "icon", label: "アイコン" },
-    { id: "web", label: "Web素材" },
-    { id: "code", label: "コード" },
-    { id: "text", label: "文例・文章テンプレート" },
-    { id: "tool", label: "ツール" },
-    { id: "presentation", label: "プレゼン" },
+    { id: "overlay", label: "オーバーレイ" },
+    { id: "frame", label: "フレーム・装飾" },
+    { id: "telop", label: "テロップ素材" },
+    { id: "transition", label: "トランジション" },
   ]);
 
   /**
    * Materials 一覧 左Sidebar カテゴリ Navigation（表示順・ラベル正本）。
-   * 順は CATEGORIES。内部 id は CATEGORIES を維持。query は list.html contract（document → text）。
-   * LIST_CATEGORY_CHIPS（上部チップ）とは独立。各ページへ複製しない。
+   * Video-first primary のみ。legacy はチップ非表示・URL は有効のまま。
+   * LIST_CATEGORY_CHIPS と同じ primary 順。各ページへ複製しない。
    */
   const LIST_SIDEBAR_LABELS = Object.freeze({
-    sfx: "効果音",
+    sfx: "効果音/SFX",
     bgm: "BGM",
-    image: "画像素材",
-    illustration: "イラスト素材",
-    background: "背景素材",
+    image: LIST_UI_LABELS.image,
+    illustration: "イラスト",
+    background: "背景",
+    icon: "アイコン",
+    overlay: "オーバーレイ",
+    frame: "フレーム・装飾",
+    telop: "テロップ素材",
+    transition: "トランジション",
     web: "Web素材",
     code: "コード",
     template: "テンプレート",
-    icon: "アイコン",
     presentation: "プレゼン",
     document: "文例・文章テンプレート",
     tool: "ツール",
   });
 
   const LIST_SIDEBAR_CATEGORIES = Object.freeze(
-    CATEGORIES.map((cat) =>
-      Object.freeze({
+    LIST_PRIMARY_CATEGORY_IDS.map((id) => {
+      const cat = CATEGORIES.find((c) => c.id === id) || { id, icon: id, name: id };
+      return Object.freeze({
         id: cat.id,
         queryId: cat.id === "document" ? "text" : cat.id,
-        label: LIST_SIDEBAR_LABELS[cat.id] || cat.name,
+        label: LIST_SIDEBAR_LABELS[cat.id] || LIST_UI_LABELS[cat.id] || cat.name,
         icon: cat.icon,
-      })
-    )
+      });
+    })
   );
 
   const POPULAR_KEYWORDS = Object.freeze([
@@ -2647,7 +2701,8 @@
   /** 将来 Supabase 接続時はここを差し替え */
   const repository = {
     async fetchCategories() {
-      return CATEGORIES.slice();
+      // TOP / footer: keep existing catalog cards. Video-first empty ids are list chips + URL only.
+      return CATEGORIES.filter((c) => !VIDEO_FIRST_EMPTY_CATEGORY_IDS.includes(c.id)).slice();
     },
 
     async fetchPopularItems(limit = 5) {
@@ -2755,6 +2810,13 @@
     CATEGORIES,
     LIST_PAGE_SIZE,
     LIST_CATEGORY_CHIPS,
+    LIST_PRIMARY_CATEGORY_IDS,
+    LIST_LEGACY_CATEGORY_IDS,
+    LIST_PRIMARY_QUERY_IDS,
+    LIST_LEGACY_QUERY_IDS,
+    LIST_VALID_QUERY_IDS,
+    VIDEO_FIRST_EMPTY_CATEGORY_IDS,
+    LIST_UI_LABELS,
     LIST_SIDEBAR_LABELS,
     LIST_SIDEBAR_CATEGORIES,
     countPublishedInventoryByCategory,
