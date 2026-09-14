@@ -225,9 +225,22 @@
     return (items || []).map(enrichItem);
   }
 
-  function hideLegacySpecialtyMounts() {
+  /** VF primary must not use specialty hide()'s return-to-classic side effect. */
+  function setClassicMountHidden(hidden) {
+    const classic = document.querySelector("[data-materials-list-classic]");
+    if (!classic) return;
+    classic.hidden = hidden;
+    if (hidden) {
+      classic.setAttribute("aria-hidden", "true");
+      if ("inert" in classic) classic.inert = true;
+    } else {
+      classic.removeAttribute("aria-hidden");
+      if ("inert" in classic) classic.inert = false;
+    }
+  }
+
+  function hideLegacySpecialtyMountNodes() {
     [
-      "classic",
       "sfx",
       "bgm",
       "image",
@@ -240,16 +253,21 @@
       "presentation",
       "template",
     ].forEach((key) => {
-      const el =
-        key === "classic"
-          ? document.querySelector("[data-materials-list-classic]")
-          : document.querySelector(`[data-materials-list-${key}]`);
+      const el = document.querySelector(`[data-materials-list-${key}]`);
       if (!el) return;
       el.hidden = true;
-      if (key !== "classic") el.innerHTML = "";
+      el.innerHTML = "";
       el.setAttribute("aria-hidden", "true");
       if ("inert" in el) el.inert = true;
     });
+    setClassicMountHidden(true);
+  }
+
+  function hideLegacySpecialtyMounts() {
+    hideLegacySpecialtyMountNodes();
+    // Specialty hide() may re-show classic when no other specialty mount is visible — undo that for VF.
+    global.TasuMaterialsSfxList?.stopAudio?.();
+    global.TasuMaterialsBgmList?.stopAudio?.();
     global.TasuMaterialsSfxList?.hide?.();
     global.TasuMaterialsBgmList?.hide?.();
     global.TasuMaterialsImageList?.hide?.();
@@ -261,10 +279,12 @@
     global.TasuMaterialsDocumentList?.hide?.();
     global.TasuMaterialsPresentationList?.hide?.();
     global.TasuMaterialsTemplateList?.hide?.();
+    setClassicMountHidden(true);
   }
 
   function showVfRoot(root) {
     hideLegacySpecialtyMounts();
+    setClassicMountHidden(true);
     root.hidden = false;
     root.removeAttribute("aria-hidden");
     if ("inert" in root) root.inert = false;

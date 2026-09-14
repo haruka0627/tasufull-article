@@ -5,6 +5,7 @@
 | **COMMON_CATEGORY_SHELL** | YES — `materials-vf-category-list.js` (`mat-img-*` layout): back/TOP, H1, lead, search, sort, VF chips, filters, result count, grid, sidebar, pagination, promo, footer unchanged sitewide |
 | **CATEGORY_CONFIG_DRIVEN** | YES — `materials-vf-category-config.js` per slug: title, lead, `cardVariant`, `filterProfile`, delegate `listGlobal`, promo |
 | **DUPLICATED_CATEGORY_PAGES_CREATED** | NO — single `list.html`; no new HTML pages |
+| **CLASSIC_SPECIALTY_DUPLICATION** | ABSENT — VF mount force-hides `[data-materials-list-classic]` after specialty `hide()` (no classic + VF double H1) |
 | **IMAGE_VARIANT** | YES — `image`, `illustration`, `background`, `frame`, `telop` use image-type delegates / image card |
 | **SVG_ICON_VARIANT** | YES — `icon` → `TasuMaterialsIconList.renderCard` |
 | **AUDIO_VARIANT** | YES — `bgm`, `sfx` → existing audio list cards + `data-bgm-list` host for BGM |
