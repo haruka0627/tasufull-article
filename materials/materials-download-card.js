@@ -24,6 +24,19 @@
     return /\.(png|jpe?g|gif|webp|svg)(\?|#|$)/i.test(String(url || ""));
   }
 
+
+  function preferCommittedPreviewPath(src) {
+    const s = String(src || "").trim();
+    if (!s) return "";
+    // Map slim-tree downloads URLs to committed preview thumbs when possible.
+    const m = s.match(/\/materials\/generated\/downloads\/image\/([^/?#]+)\.(png|jpe?g|webp)$/i);
+    if (m) {
+      const base = m[1];
+      return "/materials/generated/previews/image/" + base + ".jpg";
+    }
+    return s;
+  }
+
   function isServedPreviewPath(src) {
     const s = String(src || "");
     return /\/materials\/images\/previews\//i.test(s) || /\/materials\/generated\/previews\//i.test(s);
@@ -47,11 +60,13 @@
       item && item.download_url,
     ];
     for (let i = 0; i < candidates.length; i += 1) {
-      const src = pickStr(candidates[i]);
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
       if (src && isImageUrl(src) && isServedPreviewPath(src)) return src;
     }
     for (let i = 0; i < candidates.length; i += 1) {
-      const src = pickStr(candidates[i]);
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      // Never use downloads/image for card thumbs — slim Pages tree omits those bytes.
+      if (/\/materials\/generated\/downloads\//i.test(src)) continue;
       if (src && isImageUrl(src)) return src;
     }
     return "";
@@ -63,7 +78,7 @@
     if (!src) return icon;
     return (
       icon +
-      `<img class="materials-card__thumb-img" src="${escapeHtml(src)}" alt="" loading="lazy" decoding="async" data-mat-thumb-img onerror="this.hidden=true;this.removeAttribute('src');">`
+      `<img class="materials-card__thumb-img" src="${escapeHtml(src)}" alt="" loading="lazy" decoding="async" data-mat-thumb-img onload="if(!this.naturalWidth){this.onerror&&this.onerror();}" onerror="this.hidden=true;this.removeAttribute('src');this.removeAttribute('onload');">`
     );
   }
 

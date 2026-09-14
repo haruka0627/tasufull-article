@@ -1,14 +1,14 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 /**
- * NB-1A draft — Cloudflare Pages 用ステージングビルド
+ * NB-1A draft 窶・Cloudflare Pages 逕ｨ繧ｹ繝・・繧ｸ繝ｳ繧ｰ繝薙Ν繝・
  *
- * 使い方（ローカル検証）:
+ * 菴ｿ縺・婿・医Ο繝ｼ繧ｫ繝ｫ讀懆ｨｼ・・
  *   TASFUL_SUPABASE_URL=https://ddojquacsyqesrjhcvmn.supabase.co \
  *   TASFUL_SUPABASE_ANON_KEY=eyJ... \
  *   node deploy/cloudflare/stage-cloudflare-pages.mjs
  *
- * CF Pages 環境変数（Encrypted）に同名を設定し、build command で本スクリプトを実行する。
- * 本番では currentUserId / me を含めない（auth-current-user.js が JWT のみを正とする）。
+ * CF Pages 迺ｰ蠅・､画焚・・ncrypted・峨↓蜷悟錐繧定ｨｭ螳壹＠縲｜uild command 縺ｧ譛ｬ繧ｹ繧ｯ繝ｪ繝励ヨ繧貞ｮ溯｡後☆繧九・
+ * 譛ｬ逡ｪ縺ｧ縺ｯ currentUserId / me 繧貞性繧√↑縺・ｼ・uth-current-user.js 縺・JWT 縺ｮ縺ｿ繧呈ｭ｣縺ｨ縺吶ｋ・峨・
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -90,7 +90,7 @@ function writeChatSupabaseConfig() {
       anonKey = anonKey || js.match(/anonKey:\s*"([^"]+)"/)?.[1] || "";
       if (url && anonKey) {
         console.warn(
-          "[stage-cloudflare-pages] TASFUL_SUPABASE_* unset — using chat-supabase-config.js (local build only)",
+          "[stage-cloudflare-pages] TASFUL_SUPABASE_* unset 窶・using chat-supabase-config.js (local build only)",
         );
       }
     }
@@ -103,7 +103,7 @@ function writeChatSupabaseConfig() {
     process.exit(1);
   }
   const body = `/**
- * Generated at deploy — do not commit. Source: deploy/cloudflare/stage-cloudflare-pages.mjs
+ * Generated at deploy 窶・do not commit. Source: deploy/cloudflare/stage-cloudflare-pages.mjs
  */
 window.TASU_CHAT_SUPABASE_CONFIG = {
   url: ${JSON.stringify(url)},
@@ -124,7 +124,7 @@ function writeTlvFeatureFlags() {
     .filter(Boolean);
 
   const body = `/**
- * Generated at deploy — TLV Phase 14 private production test
+ * Generated at deploy 窶・TLV Phase 14 private production test
  * Do not commit dist copy. Source: deploy/cloudflare/stage-cloudflare-pages.mjs
  */
 (function (global) {
@@ -251,7 +251,7 @@ function applySiteAssistantToDist() {
 
 /**
  * Site root `/` must serve TASFUL platform TOP (index-top.html).
- * Repo root index.html is the legacy marketplace home → dist/market/index.html.
+ * Repo root index.html is the legacy marketplace home 竊・dist/market/index.html.
  */
 function applyRootTopRouting() {
   const distIndex = path.join(OUT_DIR, "index.html");
@@ -273,13 +273,13 @@ function applyRootTopRouting() {
   fs.copyFileSync(distIndexTop, distIndex);
 
   console.log(
-    "[stage-cloudflare-pages] root routing: index-top.html → dist/index.html, legacy market → market/index.html",
+    "[stage-cloudflare-pages] root routing: index-top.html 竊・dist/index.html, legacy market 竊・market/index.html",
   );
 }
 
 function copyCfMeta() {
-  const required = ["robots.txt", "_headers"];
-  const optional = ["_redirects"];
+  const required = ["robots.txt", "_headers", "_redirects"];
+  const optional = [];
 
   for (const name of [...required, ...optional]) {
     const src = path.join(__dirname, name);
@@ -292,7 +292,7 @@ function copyCfMeta() {
       continue;
     }
     fs.copyFileSync(src, dest);
-    console.log(`[stage-cloudflare-pages] copied ${name} → dist/${name}`);
+    console.log(`[stage-cloudflare-pages] copied ${name} 竊・dist/${name}`);
   }
 
   for (const name of required) {
@@ -302,18 +302,27 @@ function copyCfMeta() {
       process.exit(1);
     }
   }
+
+  const redirectsBody = fs.readFileSync(path.join(OUT_DIR, "_redirects"), "utf8");
+  if (
+    !redirectsBody.includes("/materials/generated/downloads/*") ||
+    !redirectsBody.includes("/materials/generated/previews/*")
+  ) {
+    console.error("[stage-cloudflare-pages] ERROR: dist/_redirects missing materials generated 404 rules");
+    process.exit(1);
+  }
 }
 
 function copyPagesFunctions() {
   const srcDir = path.join(__dirname, "functions");
   const destDir = path.join(OUT_DIR, "functions");
   if (!fs.existsSync(srcDir)) {
-    console.warn("[stage-cloudflare-pages] functions/ not found — skipping Pages Functions copy");
+    console.warn("[stage-cloudflare-pages] functions/ not found 窶・skipping Pages Functions copy");
     return;
   }
   fs.mkdirSync(destDir, { recursive: true });
   copyRecursive(srcDir, destDir, "functions");
-  console.log("[stage-cloudflare-pages] copied deploy/cloudflare/functions → dist/functions");
+  console.log("[stage-cloudflare-pages] copied deploy/cloudflare/functions 竊・dist/functions");
 }
 
 function main() {
@@ -325,7 +334,7 @@ function main() {
   for (const name of fs.readdirSync(REPO_ROOT)) {
     const src = path.join(REPO_ROOT, name);
     if (name === "deploy") {
-      // builder/ 等はルート直下のみコピー。deploy/ 自体は除外。
+      // builder/ 遲峨・繝ｫ繝ｼ繝育峩荳九・縺ｿ繧ｳ繝斐・縲Ｅeploy/ 閾ｪ菴薙・髯､螟悶・
       continue;
     }
     copyRecursive(src, path.join(OUT_DIR, name), name);
@@ -349,7 +358,7 @@ function main() {
   }
   console.log(`[stage-cloudflare-pages] TLV pages OK (${TLV_REQUIRED_DIST.length} files)`);
 
-  console.log(`[stage-cloudflare-pages] OK → ${OUT_DIR}`);
+  console.log(`[stage-cloudflare-pages] OK 竊・${OUT_DIR}`);
 }
 
 main();
