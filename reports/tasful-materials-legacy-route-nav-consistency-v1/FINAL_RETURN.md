@@ -2,7 +2,7 @@
 
 | Field | Value |
 |--------|--------|
-| **HEAD** | `e4e2045` → updated on push (photo preview baseline `46cb8a7`) |
+| **HEAD** | `a58fb1d` (photo preview baseline `46cb8a7` / docs `e4e2045`) |
 | **PREVIEW_URL** | `http://127.0.0.1:8788` (local wrangler pages dev; CF preview `https://410b34df.tasufull-article.pages.dev` was unreachable from agent network) |
 | **Branch / PR** | `cursor/materials-video-first-category-cleanup-6acc` · PR #30 (draft) |
 
