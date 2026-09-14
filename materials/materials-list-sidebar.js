@@ -1,6 +1,6 @@
 /**
  * TASFUL Materials — 一覧左Sidebar 共通カテゴリ Navigation
- * SSOT: TasuMaterialsData.LIST_SIDEBAR_CATEGORIES（CATEGORIES 順 · document query = text）
+ * SSOT: TasuMaterialsData.LIST_SIDEBAR_CATEGORIES（video-first primary 順 · legacy hidden）
  * 件数: materials-index の実在 Inventory のみ（qa_fixture / dummy を混ぜない）
  */
 (function (global) {
