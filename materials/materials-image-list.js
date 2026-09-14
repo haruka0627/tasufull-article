@@ -41,6 +41,14 @@
     return raw;
   }
 
+  function preferCommittedPreviewPath(src) {
+    const s = String(src || "").trim();
+    if (!s) return "";
+    const m = s.match(/\/materials\/generated\/downloads\/image\/([^/?#]+)\.(png|jpe?g|webp)$/i);
+    if (m) return "/materials/generated/previews/image/" + m[1] + ".jpg";
+    return s;
+  }
+
   function isServedPreviewPath(src) {
     const s = String(src || "");
     return /\/materials\/images\/previews\//i.test(s) || /\/materials\/generated\/previews\//i.test(s);
@@ -60,14 +68,16 @@
       item.preview_image,
       item.image_url,
       item.image,
+      item.cover_url,
       item.download_url,
     ];
     for (let i = 0; i < candidates.length; i += 1) {
-      const src = pickStr(candidates[i]);
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
       if (src && isServedPreviewPath(src)) return src;
     }
     for (let i = 0; i < candidates.length; i += 1) {
-      const src = pickStr(candidates[i]);
+      const src = preferCommittedPreviewPath(pickStr(candidates[i]));
+      if (/\/materials\/generated\/downloads\//i.test(src)) continue;
       if (src) return src;
     }
     return "";
@@ -168,7 +178,7 @@
       `<a class="mat-img-card__media" href="${href}" aria-label="${escapeHtml(item.title)}">` +
       fallbackHtml +
       (thumb
-        ? `<img class="mat-img-card__img" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async" data-mat-img-thumb>`
+        ? `<img class="mat-img-card__img" src="${escapeHtml(thumb)}" alt="" loading="lazy" decoding="async" data-mat-img-thumb onload="if(!this.naturalWidth){this.onerror&&this.onerror();}" onerror="this.hidden=true;this.removeAttribute('src');this.removeAttribute('onload');">`
         : "") +
       (item.is_free !== false ? `<span class="mat-img-card__free">無料</span>` : "") +
       (sizeLabel
