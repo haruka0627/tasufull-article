@@ -16,6 +16,12 @@
     return Array.isArray(chips) ? chips : [];
   }
 
+  function primaryNavBackgroundLabel() {
+    const hit = listCategoryChips().find((c) => c.id === "background");
+    const labels = global.TasuMaterialsData && global.TasuMaterialsData.LIST_UI_LABELS;
+    return (hit && hit.label) || (labels && labels.background) || "背景";
+  }
+
   const SIDE_CATS = [
     { key: "グラデーション", icon: "▦", color: "blue" },
     { key: "テクスチャ", icon: "▩", color: "purple" },
@@ -584,7 +590,7 @@
       return `<a class="mat-bg-cat-chip${active ? " is-active" : ""}" href="${href}" ${active ? 'aria-current="true"' : ""}>${escapeHtml(c.label)}</a>`;
     }).join("");
 
-    const activeFilters = [`<span class="mat-bg-chip-active">${DISPLAY_NAME}</span>`];
+    const activeFilters = [`<span class="mat-bg-chip-active">${escapeHtml(primaryNavBackgroundLabel())}</span>`];
     activeFilters.push(
       sort === "newest"
         ? `<span class="mat-bg-chip-active mat-bg-chip-active--muted">新着順</span>`

@@ -76,6 +76,7 @@
    */
   const LIST_UI_LABELS = Object.freeze({
     image: "写真",
+    background: "背景",
   });
 
   /**

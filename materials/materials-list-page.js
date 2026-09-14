@@ -46,6 +46,34 @@
     return Array.isArray(emptyIds) && emptyIds.includes(category);
   }
 
+  /** Specialty Option 4 list mounts (legacy query ids included). Classic shell must stay hidden. */
+  const SPECIALTY_LIST_QUERY_IDS = new Set([
+    "sfx",
+    "bgm",
+    "image",
+    "illustration",
+    "background",
+    "icon",
+    "web",
+    "code",
+    "text",
+    "presentation",
+    "template",
+  ]);
+
+  function setClassicListMountVisible(visible) {
+    const classic = document.querySelector("[data-materials-list-classic]");
+    if (!classic) return;
+    classic.hidden = !visible;
+    if (visible) {
+      classic.removeAttribute("aria-hidden");
+      if ("inert" in classic) classic.inert = false;
+    } else {
+      classic.setAttribute("aria-hidden", "true");
+      if ("inert" in classic) classic.inert = true;
+    }
+  }
+
   function listChipLabel(queryId) {
     const chips = global.TasuMaterialsData && global.TasuMaterialsData.LIST_CATEGORY_CHIPS;
     if (Array.isArray(chips)) {
@@ -639,6 +667,10 @@
     const TemplateList = global.TasuMaterialsTemplateList;
     const params = readListParams();
 
+    if (SPECIALTY_LIST_QUERY_IDS.has(params.category)) {
+      setClassicListMountVisible(false);
+    }
+
     function hideAllSpecialtyExcept(keep) {
       if (keep !== "sfx") SfxList?.hide?.();
       if (keep !== "bgm") BgmList?.hide?.();
@@ -721,12 +753,7 @@
 
     hideAllSpecialtyExcept(null);
 
-    const classic = document.querySelector("[data-materials-list-classic]");
-    if (classic) {
-      classic.hidden = false;
-      classic.removeAttribute("aria-hidden");
-      if ("inert" in classic) classic.inert = false;
-    }
+    setClassicListMountVisible(true);
 
     const data = global.TasuMaterialsData;
     const root = document.querySelector("[data-materials-list-grid]");

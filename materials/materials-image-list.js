@@ -323,11 +323,17 @@
     return Array.isArray(chips) ? chips : [];
   }
 
+  function primaryNavImageLabel() {
+    const hit = listCategoryChips().find((c) => c.id === "image");
+    const labels = global.TasuMaterialsData && global.TasuMaterialsData.LIST_UI_LABELS;
+    return (hit && hit.label) || (labels && labels.image) || "写真";
+  }
+
   function renderShell(opts) {
     const { q, sort, filters, options, resultCount, page, totalPages, cardsHtml, tagEntries } =
       opts;
     const activeFilters = [];
-    activeFilters.push(`<span class="mat-img-chip-active">画像素材</span>`);
+    activeFilters.push(`<span class="mat-img-chip-active">${escapeHtml(primaryNavImageLabel())}</span>`);
     if (sort === "newest") activeFilters.push(`<span class="mat-img-chip-active mat-img-chip-active--muted">新着順</span>`);
     else activeFilters.push(`<span class="mat-img-chip-active mat-img-chip-active--accent">人気順</span>`);
     if (filters.genre) {

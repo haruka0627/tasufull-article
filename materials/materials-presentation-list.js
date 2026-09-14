@@ -31,6 +31,11 @@
     file_size: "約 2.1 MB",
   });
 
+  function listCategoryChips() {
+    const chips = global.TasuMaterialsData && global.TasuMaterialsData.LIST_CATEGORY_CHIPS;
+    return Array.isArray(chips) ? chips : [];
+  }
+
   const SIDE_CATS = Object.freeze([
     { key: "提案書・企画書", tag: "提案", icon: "📄" },
     { key: "会社紹介・IR", tag: "会社紹介", icon: "🏢", uiOnly: true },
@@ -358,9 +363,7 @@
   function renderShell(ctx) {
     const { q, sort, filters, options, resultCount, page, totalPages, cardsHtml, baseItems } = ctx;
 
-    const chips = (global.TasuMaterialsData && global.TasuMaterialsData.LIST_CATEGORY_CHIPS
-      ? global.TasuMaterialsData.LIST_CATEGORY_CHIPS
-      : [])
+    const chips = listCategoryChips()
       .map((c) => {
         const active = c.id === QUERY_CATEGORY;
         return `<a class="mat-pres-cat-chip${active ? " is-active" : ""}" href="${listHref(c.id)}" ${active ? 'aria-current="page"' : ""}>${escapeHtml(c.label)}</a>`;
