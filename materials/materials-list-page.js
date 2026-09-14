@@ -41,25 +41,20 @@
   }
 
   function isClassicListCategory(category) {
-    if (category === "tool") return true;
-    const emptyIds = global.TasuMaterialsData && global.TasuMaterialsData.VIDEO_FIRST_EMPTY_CATEGORY_IDS;
-    return Array.isArray(emptyIds) && emptyIds.includes(category);
+    return category === "tool";
+  }
+
+  function isVfPrimaryCategory(category) {
+    const Vf = global.TasuMaterialsVfCategoryList;
+    if (Vf && typeof Vf.isPrimaryCategory === "function") {
+      return Vf.isPrimaryCategory(category);
+    }
+    const ids = global.TasuMaterialsData && global.TasuMaterialsData.LIST_PRIMARY_CATEGORY_IDS;
+    return Array.isArray(ids) && ids.includes(category);
   }
 
   /** Specialty Option 4 list mounts (legacy query ids included). Classic shell must stay hidden. */
-  const SPECIALTY_LIST_QUERY_IDS = new Set([
-    "sfx",
-    "bgm",
-    "image",
-    "illustration",
-    "background",
-    "icon",
-    "web",
-    "code",
-    "text",
-    "presentation",
-    "template",
-  ]);
+  const SPECIALTY_LIST_QUERY_IDS = new Set(["web", "code", "text", "presentation", "template"]);
 
   function setClassicListMountVisible(visible) {
     const classic = document.querySelector("[data-materials-list-classic]");
@@ -667,7 +662,7 @@
     const TemplateList = global.TasuMaterialsTemplateList;
     const params = readListParams();
 
-    if (SPECIALTY_LIST_QUERY_IDS.has(params.category)) {
+    if (SPECIALTY_LIST_QUERY_IDS.has(params.category) || isVfPrimaryCategory(params.category)) {
       setClassicListMountVisible(false);
     }
 
@@ -683,41 +678,12 @@
       if (keep !== "document") DocumentList?.hide?.();
       if (keep !== "presentation") PresentationList?.hide?.();
       if (keep !== "template") TemplateList?.hide?.();
+      if (keep !== "vf") global.TasuMaterialsVfCategoryList?.hide?.();
     }
 
-    if (params.category === "sfx" && SfxList?.mount) {
-      hideAllSpecialtyExcept("sfx");
-      await SfxList.mount();
-      return;
-    }
-
-    if (params.category === "bgm" && BgmList?.mount) {
-      hideAllSpecialtyExcept("bgm");
-      await BgmList.mount();
-      return;
-    }
-
-    if (params.category === "image" && ImageList?.mount) {
-      hideAllSpecialtyExcept("image");
-      await ImageList.mount();
-      return;
-    }
-
-    if (params.category === "illustration" && IllustrationList?.mount) {
-      hideAllSpecialtyExcept("illustration");
-      await IllustrationList.mount();
-      return;
-    }
-
-    if (params.category === "background" && BackgroundList?.mount) {
-      hideAllSpecialtyExcept("background");
-      await BackgroundList.mount();
-      return;
-    }
-
-    if (params.category === "icon" && IconList?.mount) {
-      hideAllSpecialtyExcept("icon");
-      await IconList.mount();
+    if (isVfPrimaryCategory(params.category) && global.TasuMaterialsVfCategoryList?.mount) {
+      hideAllSpecialtyExcept("vf");
+      await global.TasuMaterialsVfCategoryList.mount(params.category);
       return;
     }
 
@@ -752,6 +718,7 @@
     }
 
     hideAllSpecialtyExcept(null);
+    global.TasuMaterialsVfCategoryList?.hide?.();
 
     setClassicListMountVisible(true);
 
