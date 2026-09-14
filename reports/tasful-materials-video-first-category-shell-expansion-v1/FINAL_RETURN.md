@@ -22,7 +22,7 @@
 | **LOCAL_8788_VERIFIED** | NO — not verified on user PC `http://127.0.0.1:8788`. Agent smoke on `http://127.0.0.1:8799` static serve of workspace root |
 | **CONSOLE_PAGEERRORS** | Not instrumented in headless capture; manual check recommended on 8788 |
 | **VERDICT** | PASS (implementation + agent QA); pending human 8788 gate |
-| **HEAD** | `3e582c9` |
+| **HEAD** | `89be84e` |
 | **PREVIEW_URL** | none (no production deploy) |
 | **STOP** | no merge |
 
