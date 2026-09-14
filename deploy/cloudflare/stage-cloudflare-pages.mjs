@@ -278,7 +278,7 @@ function applyRootTopRouting() {
 }
 
 function copyCfMeta() {
-  const required = ["robots.txt", "_headers", "_redirects"];
+  const required = ["robots.txt", "_headers", "_redirects", "404.html"];
   const optional = [];
 
   for (const name of [...required, ...optional]) {
@@ -292,7 +292,7 @@ function copyCfMeta() {
       continue;
     }
     fs.copyFileSync(src, dest);
-    console.log(`[stage-cloudflare-pages] copied ${name} 竊・dist/${name}`);
+    console.log(`[stage-cloudflare-pages] copied ${name} → dist/${name}`);
   }
 
   for (const name of required) {
@@ -304,11 +304,14 @@ function copyCfMeta() {
   }
 
   const redirectsBody = fs.readFileSync(path.join(OUT_DIR, "_redirects"), "utf8");
-  if (
-    !redirectsBody.includes("/materials/generated/downloads/*") ||
-    !redirectsBody.includes("/materials/generated/previews/*")
-  ) {
-    console.error("[stage-cloudflare-pages] ERROR: dist/_redirects missing materials generated 404 rules");
+  if (!redirectsBody.includes("/materials/generated/downloads/*")) {
+    console.error("[stage-cloudflare-pages] ERROR: dist/_redirects missing materials downloads 404 rule");
+    process.exit(1);
+  }
+  if (/\/materials\/generated\/previews\/\*\s+\S+\s+404/.test(redirectsBody)) {
+    console.error(
+      "[stage-cloudflare-pages] ERROR: dist/_redirects must not 404 /materials/generated/previews/* (committed photo thumbs)"
+    );
     process.exit(1);
   }
 }

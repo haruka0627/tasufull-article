@@ -32,7 +32,7 @@ This slim branch has **no** `materials/generated/downloads/` binaries (~1.8GB, e
 
 - A) Download card (list / grid / ranking) now binds `preview_url` (and thumbnail fields) to `<img class="materials-card__thumb-img">`. CSS `thumbnail_style` + SVG icon stay as fallback when the URL is empty or the img errors.
 - Image specialty list already binds `preview_url`; it prefers `/materials/images/previews/` and `/materials/generated/previews/` when those paths are present.
-- B) `_redirects`: missing `/materials/generated/downloads/*` and `/materials/generated/previews/*` → `/404.html` **404** (existing files, e.g. template SVG previews, still served). No `/* /index.html 200`.
+- B) `_redirects`: missing `/materials/generated/downloads/*` → `/404.html` **404**. **Do not** splat-404 `/materials/generated/previews/*` — HEAD now has 260 committed `previews/image/*.jpg` plus template SVGs. `404.html` is required as the downloads-404 destination (Pages failed on `5a25edf` when `_redirects` pointed at a missing `/404.html` and/or 404'd the new thumbs).
 - `_headers`: `/materials/generated/downloads/image/*` and `/previews/image/*` send `Content-Type: image/png` + `nosniff` so a leftover HTML 200 cannot be sniffed as a photo.
 - **CF must include preview/download PNG bytes in Pages output for Human Visual photo PASS.** This branch does not add fake thumbs. When those files exist on a fuller tree, cards show them.
 

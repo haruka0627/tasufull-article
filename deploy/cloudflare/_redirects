@@ -18,7 +18,7 @@
 # Platform contact (legacy /contact links on index-top etc.)
 /contact            /iwasho/contact.html  301
 
-# Missing generated binaries must not SPA-fallthrough to dist/index.html
-# (text/html 200 · ~72KB). Existing files under these prefixes are still served.
+# Missing generated DOWNLOAD binaries must not SPA-fallthrough to dist/index.html
+# (text/html 200 · ~72KB). Do NOT splat-404 /materials/generated/previews/*
+# — committed photo thumbs (previews/image/*.jpg) and template SVGs live there.
 /materials/generated/downloads/*   /404.html  404
-/materials/generated/previews/*    /404.html  404

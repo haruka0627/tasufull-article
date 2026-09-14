@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "passed": 107,
+  "passed": 109,
   "failed": 0,
   "results": [
     {
@@ -426,7 +426,7 @@
     {
       "name": "image list binds preview_url",
       "ok": true,
-      "detail": "/materials/generated/downloads/image/automation-001.png"
+      "detail": "/materials/generated/previews/image/automation-001.jpg"
     },
     {
       "name": "image list prefers served /images/previews",
@@ -489,7 +489,7 @@
       "detail": ""
     },
     {
-      "name": "generated previews missing files 404",
+      "name": "previews splat is not a blanket 404",
       "ok": true,
       "detail": ""
     },
@@ -499,7 +499,17 @@
       "detail": ""
     },
     {
-      "name": "generated image downloads force image/png",
+      "name": "404.html exists for downloads 404 destination",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "committed image preview jpg exists",
+      "ok": true,
+      "detail": "automation-001"
+    },
+    {
+      "name": "generated image preview headers keep nosniff",
       "ok": true,
       "detail": ""
     },

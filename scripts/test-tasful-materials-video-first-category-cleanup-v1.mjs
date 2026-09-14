@@ -299,15 +299,24 @@ assert(
   /\/materials\/generated\/downloads\/\*\s+\/404\.html\s+404/.test(redirects)
 );
 assert(
-  "generated previews missing files 404",
-  /\/materials\/generated\/previews\/\*\s+\/404\.html\s+404/.test(redirects)
+  "previews splat is not a blanket 404",
+  !/\/materials\/generated\/previews\/\*\s+\S+\s+404/.test(redirects)
 );
 assert("no SPA /* /index.html 200", !/\/\*\s+\/index\.html\s+200/.test(redirects));
+assert(
+  "404.html exists for downloads 404 destination",
+  fs.existsSync(path.join(root, "deploy", "cloudflare", "404.html"))
+);
+assert(
+  "committed image preview jpg exists",
+  fs.existsSync(path.join(root, "materials", "generated", "previews", "image", `${publicImage.slug}.jpg`)),
+  publicImage.slug
+);
 
 const headers = fs.readFileSync(path.join(root, "deploy", "cloudflare", "_headers"), "utf8");
 assert(
-  "generated image downloads force image/png",
-  headers.includes("/materials/generated/downloads/image/*") && headers.includes("Content-Type: image/png")
+  "generated image preview headers keep nosniff",
+  headers.includes("/materials/generated/previews/image/*") && headers.includes("X-Content-Type-Options: nosniff")
 );
 
 const listPageJs = fs.readFileSync(path.join(root, "materials", "materials-list-page.js"), "utf8");
