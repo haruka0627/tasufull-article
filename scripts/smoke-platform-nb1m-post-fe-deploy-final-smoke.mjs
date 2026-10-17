@@ -52,7 +52,7 @@ const OPS_CANDIDATES = [
   },
   {
     email: process.env.AUTH_HOOK_T4_EMAIL || "auth-hook-t4-admin@tasful.invalid",
-    password: process.env.AUTH_HOOK_T4_PASSWORD || "AuthHookT4Admin1!",
+    password: process.env.AUTH_HOOK_T4_PASSWORD || "" /* set via env; not stored in the repository */,
     label: "AUTH_HOOK_T4",
   },
 ];
