@@ -7,6 +7,7 @@
  * 要: SUPABASE_SERVICE_ROLE_KEY
  * 任意: TALK_RLS_USER_A_JWT / _B_JWT / _ADMIN_JWT（未設定時はテストユーザー自動発行）
  */
+import { assertTestAuthTarget, assertAcceptablePassword, authAdminWriteGate } from "./lib/test-auth-guard-v1.mjs";
 import { readFileSync, existsSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -16,17 +17,17 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const TEST_USERS = {
   a: {
     email: "talk-rls-a@tasful-dev.test",
-    password: "TalkRlsA1!",
+    password: process.env.TALK_RLS_USER_A_PASSWORD || "", // never stored in the repository
     talkUserId: "u_me",
   },
   b: {
     email: "talk-rls-b@tasful-dev.test",
-    password: "TalkRlsB1!",
+    password: process.env.TALK_RLS_USER_B_PASSWORD || "", // never stored in the repository
     talkUserId: "u_store",
   },
   admin: {
     email: "talk-rls-admin@tasful-dev.test",
-    password: "TalkRlsAdmin1!",
+    password: process.env.TALK_RLS_USER_ADMIN_PASSWORD || "", // never stored in the repository
     talkUserId: "u_admin",
     role: "tasu_admin",
   },
@@ -117,15 +118,18 @@ async function findUserByEmail(cfg, email) {
 }
 
 async function ensureTalkJwt(cfg, spec) {
+  assertTestAuthTarget(cfg.url); // Staging host or loopback only
+  assertAcceptablePassword(spec.password);
   const envKey = spec.envJwtKey;
   if (process.env[envKey]) return process.env[envKey];
 
   const appMetadata = { talk_user_id: spec.talkUserId, member_id: spec.talkUserId };
   const userMetadata = { talk_user_id: spec.talkUserId };
-  if (spec.role) appMetadata.role = spec.role;
+  // admin roles are never assigned by test code (test-auth-guard-v1 rule 4)
 
   let user = await findUserByEmail(cfg, spec.email);
   if (!user) {
+    authAdminWriteGate({ url: cfg.url, serviceKey: cfg.serviceKey, op: "create_user", email: spec.email, password: spec.password });
     const created = await authFetch(cfg, {
       method: "POST",
       pathSuffix: "/admin/users",
@@ -140,12 +144,17 @@ async function ensureTalkJwt(cfg, spec) {
     });
     if (!created.ok) throw new Error(`create ${spec.email}: ${created.status}`);
     user = created.data?.user || created.data;
-  } else {
+  } else if (
+    String(process.env.TALK_ALLOW_AUTH_ADMIN_WRITE || "") === "1" &&
+    String(process.env.TALK_AUTH_WRITE_OPS || "").split(",").map((t) => t.trim()).includes("update_password") &&
+    String(process.env.TALK_AUTH_WRITE_ACCOUNTS || "").toLowerCase().split(",").map((t) => t.trim()).includes(String(spec.email).toLowerCase())
+  ) {
+    authAdminWriteGate({ url: cfg.url, serviceKey: cfg.serviceKey, op: "update_password", email: spec.email, password: spec.password });
     await authFetch(cfg, {
       method: "PUT",
       pathSuffix: `/admin/users/${encodeURIComponent(user.id)}`,
       useServiceRole: true,
-      body: { app_metadata: appMetadata, user_metadata: userMetadata, password: spec.password },
+      body: { password: spec.password },
     });
   }
 

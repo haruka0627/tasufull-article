@@ -191,9 +191,9 @@ node scripts/test-admin-ai-connectivity-p2.mjs
 
 | 変数 | 既定 |
 |------|------|
-| `ANPI_RLS_USER_A_EMAIL` / `_PASSWORD` / `_MEMBER_ID` | `anpi-rls-a@tasful-dev.test` / `AnpiRlsTestA1!` / `anpi_rls_member_a` |
-| `ANPI_RLS_USER_B_EMAIL` / `_PASSWORD` / `_MEMBER_ID` | `anpi-rls-b@tasful-dev.test` / `AnpiRlsTestB1!` / `anpi_rls_member_b` |
-| `ANPI_RLS_ADMIN_EMAIL` / `_PASSWORD` / `_MEMBER_ID` | `anpi-rls-admin@tasful-dev.test` / `AnpiRlsAdmin1!` / `anpi_rls_admin` |
+| `ANPI_RLS_USER_A_EMAIL` / `_PASSWORD` / `_MEMBER_ID` | `anpi-rls-a@tasful-dev.test` / `<redacted: stored only in the untracked .env>` / `anpi_rls_member_a` |
+| `ANPI_RLS_USER_B_EMAIL` / `_PASSWORD` / `_MEMBER_ID` | `anpi-rls-b@tasful-dev.test` / `<redacted: stored only in the untracked .env>` / `anpi_rls_member_b` |
+| `ANPI_RLS_ADMIN_EMAIL` / `_PASSWORD` / `_MEMBER_ID` | `anpi-rls-admin@tasful-dev.test` / `<redacted: stored only in the untracked .env>` / `anpi_rls_admin` |
 
 #### 実 DB 検証（`verify-anpi-rls-real-db.mjs`）
 
