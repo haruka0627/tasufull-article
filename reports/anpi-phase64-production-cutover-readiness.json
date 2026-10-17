@@ -1,0 +1,58 @@
+{
+  "phase": 64,
+  "title": "ANPI Production Cutover Plan and Ops Sign-off Readiness",
+  "recorded_at": "2026-07-27T15:00:00.000Z",
+  "production_operations_executed": false,
+  "staging_refs": {
+    "project_ref": "ahlxuyvhzqdqaojiywmu",
+    "phase62_soak": "PASS",
+    "phase63_wall_clock_soak": "PASS",
+    "phase63_cron_ticks": 6,
+    "phase63_claim": 6,
+    "phase63_insert": 1,
+    "phase63_already_seen": 5,
+    "phase63_duplicate": 0,
+    "gate": false,
+    "scoped_flags": "OFF",
+    "provider": "talk_local"
+  },
+  "phase63_shutdown_race": {
+    "classified_as": "config_switch_runtime_race",
+    "not_scoped_allowlist_violation": true,
+    "mandatory_order": [
+      "runtime_pause",
+      "inflight_zero",
+      "config_change",
+      "deploy",
+      "health",
+      "gate_enable",
+      "limited_resume",
+      "observe",
+      "repause_on_issue"
+    ]
+  },
+  "judgments": {
+    "ANPI_PRODUCTION_CUTOVER_PLAN": "READY",
+    "ANPI_PRODUCTION_DB_READINESS": "NOT_READY",
+    "ANPI_PRODUCTION_WORKER_READINESS": "NOT_READY",
+    "ANPI_PRODUCTION_NOTIFICATION_READINESS": "NOT_READY",
+    "ANPI_PRODUCTION_OPS_READINESS": "PARTIAL",
+    "ANPI_PRODUCTION_CUTOVER": "NO_GO"
+  },
+  "idempotency_prefix_proposal": "anpi:prod:v1",
+  "canary_source_marker_proposal": "anpi_prod_canary",
+  "staging_sha8_forbidden_in_prod": "0411f04d",
+  "blockers": [
+    "production_db_inventory_and_reviewed_migration_package",
+    "production_worker_secrets_cron_net_new",
+    "canary_identity_human_selection",
+    "implement_anpi_prod_v1_writer_path",
+    "merge_pr_20_and_21_or_equivalent",
+    "ops_tabletop_signoff",
+    "explicit_production_cutover_approval"
+  ],
+  "docs": [
+    "docs/anpi-phase64-production-cutover-plan.md",
+    "docs/anpi-phase64-go-nogo-checklist.md"
+  ]
+}

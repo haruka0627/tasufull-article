@@ -12,6 +12,11 @@
  */
 
 import { runAnpiPhase47NotificationRuntimeCore } from "./anpi-phase47-notification-runtime-core.mjs";
+import {
+  isScopedCronPathEnabled,
+  runAnpiPhase62ScopedCronPath,
+  ANPI_P62_SCOPED_CRON_ENV,
+} from "./anpi-phase62-scoped-cron-path.mjs";
 
 export const PRODUCTION_SUPABASE_REF = "ddojquacsyqesrjhcvmn";
 export const STAGING_SUPABASE_REF = "ahlxuyvhzqdqaojiywmu";
@@ -310,10 +315,12 @@ export async function runAnpiPhase48ScheduledRuntime({
   failIfDisabled = true,
   leaseTtlMs = DEFAULT_LEASE_TTL_MS,
   holderId = null,
+  env = {},
 }) {
   const runStartedAt = new Date().toISOString();
   const pNowIso = new Date(pNow).toISOString();
   const derivedRef = extractProjectRef(apiUrl) || String(projectRef || "");
+  const scopedCron = isScopedCronPathEnabled(env);
 
   const baseSummary = {
     phase: 48,
@@ -332,6 +339,8 @@ export async function runAnpiPhase48ScheduledRuntime({
     providers: [],
     provider_validation: "pending",
     lease: null,
+    scoped_cron_path: scopedCron,
+    scoped_cron_flag: String(env[ANPI_P62_SCOPED_CRON_ENV] || "false"),
     status: "FAIL",
     overall_status: "FAIL",
   };
@@ -376,25 +385,46 @@ export async function runAnpiPhase48ScheduledRuntime({
   }
 
   try {
-    const core = await runAnpiPhase47NotificationRuntimeCore({
-      apiUrl,
-      serviceKey,
-      pNow: pNowIso,
-      workerId: String(workerId).slice(0, 64),
-      stubMode,
-    });
+    // Flag OFF (default): legacy Phase 47 → anpi_phase6_claim_jobs → talk_local* stubs.
+    // Flag ON: Parallel Phase 62 allowlisted claim → Phase 61 scoped writer (no Phase 4 tick).
+    let core;
+    let providerCheck;
+    if (scopedCron) {
+      core = await runAnpiPhase62ScopedCronPath({
+        apiUrl,
+        serviceKey,
+        env,
+        workerId: String(workerId).slice(0, 64),
+        pNow: pNowIso,
+        claimLimit: 5,
+      });
+      providerCheck = {
+        ok: true,
+        providers: ["talk_local_scoped_cron"],
+        skipped: true,
+        reason: "anpi_p62_scoped_path_skip_stub_provider_check",
+      };
+    } else {
+      core = await runAnpiPhase47NotificationRuntimeCore({
+        apiUrl,
+        serviceKey,
+        pNow: pNowIso,
+        workerId: String(workerId).slice(0, 64),
+        stubMode,
+      });
+      const checkIds = Array.from(
+        new Set((core.processed || []).map((p) => p.checkId).filter(Boolean))
+      );
+      providerCheck = await validateTalkLocalProviders({
+        apiUrl,
+        serviceKey,
+        checkIds,
+        sinceIso: runStartedAt,
+      });
+    }
 
     const stats = summarizeProcessed(core.processed);
-    const checkIds = Array.from(
-      new Set((core.processed || []).map((p) => p.checkId).filter(Boolean))
-    );
     const reminderJobs = (core.processed || []).filter((p) => p.kind === "reminder");
-    const providerCheck = await validateTalkLocalProviders({
-      apiUrl,
-      serviceKey,
-      checkIds,
-      sinceIso: runStartedAt,
-    });
 
     if (!providerCheck.ok) {
       await releasePhase48Lease({
@@ -435,7 +465,9 @@ export async function runAnpiPhase48ScheduledRuntime({
       lateConfirmationCreatedCount: core.lateConfirmationCreatedCount || 0,
       contact_notifications_delivered: stats.contactNotificationsDelivered,
       providers: providerCheck.providers,
-      provider_validation: "PASS",
+      provider_validation: providerCheck.skipped ? "SCOPED_SKIP" : "PASS",
+      processed: scopedCron ? core.processed : undefined,
+      mode: scopedCron ? "scoped_cron" : "legacy_stub",
       run_finished_at: new Date().toISOString(),
       status: "PASS",
       overall_status: "PASS",

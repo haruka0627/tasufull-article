@@ -1,0 +1,187 @@
+{
+  "phase": 62,
+  "mode": "scoped_cron_soak",
+  "started_at": "2026-07-27T13:47:13.846Z",
+  "project_ref": "ahlxuyvhzqdqaojiywmu",
+  "env_ref": "ahlxuyvhzqdqaojiywmu",
+  "wiring": {
+    "claim_rpc": "anpi_phase62_claim_jobs_allowlisted",
+    "writer": "anpi-phase61-scoped-job-writer",
+    "flag": "ANPI_P62_SCOPED_CRON_PATH",
+    "writer_flag": "ANPI_P61_SCOPED_WRITER_ENABLED",
+    "provider_stays": "talk_local*",
+    "legacy_claim_untouched": "anpi_phase6_claim_jobs"
+  },
+  "negatives": {
+    "production_ref": {
+      "pass": true
+    },
+    "malformed_provider": {
+      "pass": true
+    },
+    "flag_off_is_false": {
+      "pass": true
+    },
+    "non_service_role_claim": {
+      "pass": true,
+      "status": 401
+    },
+    "gate_off_claim_0": {
+      "pass": true
+    },
+    "flag_off_real_writer_disconnected": {
+      "pass": true
+    },
+    "allowlist_out_insert_0": {
+      "pass": true,
+      "outsider_job_status": "pending"
+    },
+    "gate_off_after_soak_claim_0": {
+      "pass": true,
+      "n": 0
+    }
+  },
+  "dry": {
+    "target": {
+      "auth_sha8": "0411f04d",
+      "talk_sha16": "88d3dbfacf62520b"
+    },
+    "gate_before": {
+      "enabled": false,
+      "allowlist": [
+        "0411f04d"
+      ]
+    },
+    "soak_job": {
+      "job_id": "f872191a-710a-4a95-b…",
+      "check_id": "74c7a1e6-0703-40bf-b…"
+    },
+    "gate_off_scoped_run": {
+      "status": "PASS",
+      "mode": "scoped_cron",
+      "jobsClaimed": 0,
+      "scoped_cron_path": true
+    },
+    "flag_off_routing": {
+      "scoped_cron_enabled": false,
+      "writer_would_connect": false,
+      "note": "live legacy Phase47 skipped to avoid claiming non-allowlisted pending jobs"
+    },
+    "pre_enable_pending": {
+      "soak": "pending",
+      "outsider": "pending"
+    },
+    "gate_enabled": true,
+    "inbox_row": {
+      "id": "anpi-p61-c37a8424659…",
+      "source": "anpi_phase61_test",
+      "type": "anpi",
+      "target_url": "#",
+      "source_ok": true
+    }
+  },
+  "soak_runs": [
+    {
+      "run": 1,
+      "status": "PASS",
+      "lease": "acquired",
+      "mode": "scoped_cron",
+      "jobsClaimed": 1,
+      "jobsDelivered": 1,
+      "jobsFailed": 0,
+      "provider_validation": "SCOPED_SKIP",
+      "processed": [
+        {
+          "jobId": "f872191a-710a-4a95-b…",
+          "kind": "initial",
+          "subject_sha8": "0411f04d",
+          "write_reason": "anpi_p61_inserted",
+          "notification_id": "anpi-p61-c37a8424659…",
+          "inserted": 1,
+          "already_seen": false,
+          "delivery_status": "delivered"
+        }
+      ],
+      "outsider_still_pending": true
+    },
+    {
+      "run": 2,
+      "status": "PASS",
+      "lease": "acquired",
+      "mode": "scoped_cron",
+      "jobsClaimed": 1,
+      "jobsDelivered": 1,
+      "jobsFailed": 0,
+      "provider_validation": "SCOPED_SKIP",
+      "processed": [
+        {
+          "jobId": "f872191a-710a-4a95-b…",
+          "kind": "initial",
+          "subject_sha8": "0411f04d",
+          "write_reason": "anpi_p61_already_seen",
+          "notification_id": "anpi-p61-c37a8424659…",
+          "inserted": 0,
+          "already_seen": true,
+          "delivery_status": "delivered"
+        }
+      ],
+      "outsider_still_pending": true
+    },
+    {
+      "run": 3,
+      "status": "PASS",
+      "lease": "acquired",
+      "mode": "scoped_cron",
+      "jobsClaimed": 1,
+      "jobsDelivered": 1,
+      "jobsFailed": 0,
+      "provider_validation": "SCOPED_SKIP",
+      "processed": [
+        {
+          "jobId": "f872191a-710a-4a95-b…",
+          "kind": "initial",
+          "subject_sha8": "0411f04d",
+          "write_reason": "anpi_p61_already_seen",
+          "notification_id": "anpi-p61-c37a8424659…",
+          "inserted": 0,
+          "already_seen": true,
+          "delivery_status": "delivered"
+        }
+      ],
+      "outsider_still_pending": true
+    }
+  ],
+  "counts": {
+    "cron_path_runs": 3,
+    "claimed": 3,
+    "inserted": 1,
+    "duplicates": 0,
+    "already_seen": 2
+  },
+  "cleanup": {
+    "emergency_disable": {
+      "enabled": true,
+      "ok": true
+    },
+    "markers": {
+      "deleted_count": 1,
+      "matched_count": 1,
+      "reason_code": "anpi_p61_cleanup_deleted"
+    },
+    "remaining_markers": 0
+  },
+  "final": {
+    "gate_enabled": false,
+    "gate_false": true,
+    "allowlist": [
+      "0411f04d"
+    ],
+    "scoped_flag_off": true,
+    "writer_flag_off": true,
+    "provider": "talk_local",
+    "remaining_markers": 0
+  },
+  "verdict": "SOAK_PASS",
+  "stop_reason": null,
+  "finished_at": "2026-07-27T13:47:16.335Z"
+}

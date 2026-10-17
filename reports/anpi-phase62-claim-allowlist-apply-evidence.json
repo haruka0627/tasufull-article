@@ -1,0 +1,29 @@
+{
+  "phase": 62,
+  "action": "claim_allowlist_sql_apply",
+  "applied_at": "2026-07-27T13:25:00.000Z",
+  "project_ref": "ahlxuyvhzqdqaojiywmu",
+  "production_ref_touched": false,
+  "sql_file": "sql/anpi-phase62-claim-allowlist-draft.sql",
+  "apply_channel": "npx supabase db query --linked (after relink to staging)",
+  "gate_enabled": false,
+  "allowlist": ["0411f04d"],
+  "scoped_claim_exists": true,
+  "legacy_claim_exists": true,
+  "emergency_disable_exists": true,
+  "stable_key_exists": true,
+  "scoped_claim_rows_while_disabled": 0,
+  "anpi_test_inbox_markers": 0,
+  "inbox_insert_count": 0,
+  "cron": {
+    "wrangler_provider": "talk_local",
+    "real_write_enabled": false,
+    "recent_cf_lease_count": 3,
+    "recent_lease_error_safe": [null, null, null]
+  },
+  "rollback_sql": "sql/anpi-phase62-claim-allowlist-rollback.sql",
+  "rollback_ready": true,
+  "gate_enable_performed": false,
+  "cron_soak_started": false,
+  "status": "APPLIED_GATE_OFF_WAITING_SOAK_APPROVAL"
+}

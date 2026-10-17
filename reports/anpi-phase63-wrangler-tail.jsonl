@@ -1,0 +1,409 @@
+npm warn Unknown env config "devdir". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mTail connection lost. Reconnecting (attempt 1 of 5) in 1s...[0m
+
+
+{
+    "wallTime": 1194,
+    "cpuTime": 22,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785161426000-a23b9b82\",\"scheduled_time\":\"2026-07-27T14:10:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_inserted\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785161427922
+        }
+    ],
+    "eventTimestamp": 1785161426697,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785161426000
+    }
+}
+{
+    "wallTime": 1194,
+    "cpuTime": 22,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785161426000-a23b9b82\",\"scheduled_time\":\"2026-07-27T14:10:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_inserted\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785161427922
+        }
+    ],
+    "eventTimestamp": 1785161426697,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785161426000
+    }
+}
+{
+    "wallTime": 1032,
+    "cpuTime": 29,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785161726000-3f66d8b5\",\"scheduled_time\":\"2026-07-27T14:15:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785161727722
+        }
+    ],
+    "eventTimestamp": 1785161726662,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785161726000
+    }
+}
+{
+    "wallTime": 1032,
+    "cpuTime": 29,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785161726000-3f66d8b5\",\"scheduled_time\":\"2026-07-27T14:15:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785161727722
+        }
+    ],
+    "eventTimestamp": 1785161726662,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785161726000
+    }
+}
+{
+    "wallTime": 1005,
+    "cpuTime": 9,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162026000-c5bd2295\",\"scheduled_time\":\"2026-07-27T14:20:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162027653
+        }
+    ],
+    "eventTimestamp": 1785162026653,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162026000
+    }
+}
+{
+    "wallTime": 1005,
+    "cpuTime": 9,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162026000-c5bd2295\",\"scheduled_time\":\"2026-07-27T14:20:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162027653
+        }
+    ],
+    "eventTimestamp": 1785162026653,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162026000
+    }
+}
+{
+    "wallTime": 1141,
+    "cpuTime": 11,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162326000-1b00cc1a\",\"scheduled_time\":\"2026-07-27T14:25:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162327787
+        }
+    ],
+    "eventTimestamp": 1785162326653,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162326000
+    }
+}
+{
+    "wallTime": 1141,
+    "cpuTime": 11,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162326000-1b00cc1a\",\"scheduled_time\":\"2026-07-27T14:25:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162327787
+        }
+    ],
+    "eventTimestamp": 1785162326653,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162326000
+    }
+}
+{
+    "wallTime": 1096,
+    "cpuTime": 10,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162626000-08db66dd\",\"scheduled_time\":\"2026-07-27T14:30:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162627785
+        }
+    ],
+    "eventTimestamp": 1785162626695,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162626000
+    }
+}
+{
+    "wallTime": 1096,
+    "cpuTime": 10,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162626000-08db66dd\",\"scheduled_time\":\"2026-07-27T14:30:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162627785
+        }
+    ],
+    "eventTimestamp": 1785162626695,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162626000
+    }
+}
+{
+    "wallTime": 1113,
+    "cpuTime": 12,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162926000-5c20d6e2\",\"scheduled_time\":\"2026-07-27T14:35:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162927761
+        }
+    ],
+    "eventTimestamp": 1785162926655,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162926000
+    }
+}
+{
+    "wallTime": 1113,
+    "cpuTime": 12,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785162926000-5c20d6e2\",\"scheduled_time\":\"2026-07-27T14:35:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785162927761
+        }
+    ],
+    "eventTimestamp": 1785162926655,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785162926000
+    }
+}
+{
+    "wallTime": 1022,
+    "cpuTime": 9,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785163226000-4ea29db0\",\"scheduled_time\":\"2026-07-27T14:40:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785163227712
+        }
+    ],
+    "eventTimestamp": 1785163226695,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785163226000
+    }
+}
+{
+    "wallTime": 1022,
+    "cpuTime": 9,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "2625c98b-cece-4727-99e6-b0a53b936925"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785163226000-4ea29db0\",\"scheduled_time\":\"2026-07-27T14:40:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":1,\"jobs_claimed\":1,\"jobs_delivered\":1,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"SCOPED_SKIP\",\"overall_status\":\"PASS\",\"scoped_cron_path\":true,\"mode\":\"scoped_cron\",\"subject_sha8s\":[\"0411f04d\"],\"write_reasons\":[\"anpi_p61_already_seen\"],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785163227712
+        }
+    ],
+    "eventTimestamp": 1785163226695,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785163226000
+    }
+}
+{
+    "wallTime": 1896,
+    "cpuTime": 22,
+    "truncated": false,
+    "executionModel": "stateless",
+    "outcome": "ok",
+    "scriptVersion": {
+        "id": "43822fa6-1cf0-44b9-b6cb-ed6cdfe8a3b5"
+    },
+    "scriptName": "anpi-staging-scheduler",
+    "diagnosticsChannelEvents": [],
+    "exceptions": [],
+    "logs": [
+        {
+            "message": [
+                "{\"service\":\"anpi-scheduler\",\"platform\":\"cloudflare\",\"environment\":\"staging\",\"trigger\":\"cloudflare_cron\",\"execution_id\":\"cf-anpi-staging-1785163526000-ae0688b7\",\"scheduled_time\":\"2026-07-27T14:45:26.000Z\",\"cron\":\"*/5 * * * *\",\"project_ref\":\"ahlxuyvhzqdqaojiywmu\",\"provider\":\"talk_local\",\"status\":\"PASS\",\"lease_acquired\":true,\"lease\":\"acquired\",\"processed_count\":5,\"jobs_claimed\":5,\"jobs_delivered\":5,\"skipped_count\":0,\"failed_count\":0,\"provider_validation\":\"PASS\",\"overall_status\":\"PASS\",\"scoped_cron_path\":false,\"mode\":\"legacy_stub\",\"subject_sha8s\":[],\"write_reasons\":[],\"error_code\":null}"
+            ],
+            "level": "log",
+            "timestamp": 1785163528600
+        }
+    ],
+    "eventTimestamp": 1785163526658,
+    "event": {
+        "cron": "*/5 * * * *",
+        "scheduledTime": 1785163526000
+    }
+}

@@ -1,0 +1,188 @@
+{
+  "phase": 59,
+  "started_at": "2026-07-27T12:47:16.026Z",
+  "project_ref": "ahlxuyvhzqdqaojiywmu",
+  "env_ref": "ahlxuyvhzqdqaojiywmu",
+  "enablement": "phase17_staging_gate_reuse",
+  "cron_provider_unchanged": "talk_local*",
+  "phase10_real_mode_still_disabled": true,
+  "steps": {
+    "contract": {
+      "ok": true,
+      "error": null
+    },
+    "phase10_health": {
+      "ok": true,
+      "real_mode_enabled": false,
+      "production_send": false,
+      "staging_send": false,
+      "user_facing_inbox_write": false
+    },
+    "preflight_gate": {
+      "enabled": false,
+      "target_auth_sha8": "0411f04d",
+      "inserted_count": 0,
+      "max_inserts": 1,
+      "idempotency_key_before": "anpi-phase17-first-insert-v1"
+    },
+    "idempotency_key": "anpi-phase59-controlled-write-v1",
+    "enable": {
+      "enabled": true,
+      "target_bound": true
+    },
+    "dry_run": {
+      "reason_code": "anpi_phase17_dry_run_would_insert",
+      "inserted_count": 0,
+      "already_seen": false,
+      "notification_id": "anpi-p17-1ed4790…",
+      "talk_user_id_sha16": "88d3dbfacf62520b"
+    },
+    "live_insert": {
+      "reason_code": "anpi_phase17_inserted",
+      "inserted_count": 1,
+      "already_seen": false,
+      "notification_id": "anpi-p17-1ed4790…",
+      "talk_user_id_sha16": "88d3dbfacf62520b"
+    },
+    "row_shape": {
+      "ok": true,
+      "findings": [
+        {
+          "check": "type_anpi",
+          "pass": true
+        },
+        {
+          "check": "target_url_hash",
+          "pass": true
+        },
+        {
+          "check": "source_marker",
+          "pass": true
+        },
+        {
+          "check": "id_prefix",
+          "pass": true
+        },
+        {
+          "check": "no_http_in_body",
+          "pass": true
+        },
+        {
+          "check": "no_http_in_title",
+          "pass": true
+        }
+      ],
+      "type": "anpi",
+      "target_url": "#",
+      "source": "anpi_phase17_test",
+      "title_len": 25,
+      "body_len": 46,
+      "user_talk_sha16": "88d3dbfacf62520b",
+      "notification_id": "anpi-p17-1ed4790…"
+    },
+    "idempotent_rerun": {
+      "reason_code": "anpi_phase17_already_seen",
+      "inserted_count": 0,
+      "already_seen": true,
+      "notification_id": "anpi-p17-1ed4790…"
+    },
+    "cleanup_dry": {
+      "reason_code": "anpi_phase17_cleanup_dry_run",
+      "matched_count": 1,
+      "deleted_count": 0
+    },
+    "cleanup_live": {
+      "reason_code": "anpi_phase17_cleanup_deleted",
+      "matched_count": 1,
+      "deleted_count": 1,
+      "notification_id": "anpi-p17-1ed4790…"
+    },
+    "cleanup_verify": {
+      "remaining": 0,
+      "pass": true
+    },
+    "emergency_disable": {
+      "flag_off": true,
+      "pass": true
+    },
+    "post_disable_probe": {
+      "reason_code": "anpi_phase17_flag_off",
+      "pass": true
+    }
+  },
+  "negatives": {
+    "anon_writer_denied": {
+      "pass": true,
+      "status": 401,
+      "code": "42501"
+    },
+    "production_ref_refused": {
+      "pass": true
+    },
+    "malformed_idempotency_key": {
+      "pass": true,
+      "status": 400,
+      "code": "22023"
+    }
+  },
+  "rls": {
+    "target_auth_sha8": "0411f04d",
+    "target_talk_sha16": "88d3dbfacf62520b",
+    "anon_select_row": {
+      "status": 401,
+      "count": null,
+      "pass": true
+    },
+    "map_count": 4,
+    "owner_mint": {
+      "ok": true,
+      "reason": null
+    },
+    "owner_can_read": {
+      "status": 200,
+      "count": 1,
+      "pass": true
+    },
+    "other_mint": {
+      "ok": true,
+      "reason": null,
+      "other_auth_sha8": "925af994"
+    },
+    "other_cannot_read": {
+      "status": 200,
+      "count": 0,
+      "pass": true
+    },
+    "other_user_marker_rows": {
+      "count": 0,
+      "pass": true
+    },
+    "jwt_owner_other": "PASS"
+  },
+  "counts": {
+    "before": {
+      "inbox_for_target": 0,
+      "inbox_total": 0,
+      "anon_select": false,
+      "auth_insert": false,
+      "realtime_registered": false,
+      "writer_reader_parity": true
+    },
+    "after_insert": {
+      "inbox_for_target": 1,
+      "inbox_total": 1
+    },
+    "after_idempotent": {
+      "inbox_for_target": 1,
+      "inbox_total": 1
+    },
+    "after_cleanup": {
+      "inbox_for_target": 0,
+      "inbox_total": 0
+    }
+  },
+  "verdict": "PASS_STAGING_CONTROLLED_WRITE",
+  "finished_at": "2026-07-27T12:47:17.341Z",
+  "production_real_inbox_send": "NOT_READY",
+  "periodic_cron_real_write": "NOT_SWITCHED"
+}
