@@ -23,9 +23,18 @@ const G = await import(url("scripts/lib/test-auth-guard-v1.mjs"));
 const H = await import(url("scripts/lib/talk-rls-test-auth.mjs"));
 const STAGING = "https://ahlxuyvhzqdqaojiywmu.supabase.co", PROD = "https://ddojquacsyqesrjhcvmn.supabase.co", LOCAL = "http://127.0.0.1:54321";
 const GOOD_PW = "Zx9-test-value-not-public-0123456789";
-const NOW = Date.parse("2026-10-17T10:00:00Z");
-const scope = (o = {}) => ({ TALK_ALLOW_AUTH_ADMIN_WRITE: "1", TALK_AUTH_WRITE_ACCOUNTS: "talk-rls-a@tasful-dev.test", TALK_AUTH_WRITE_OPS: "update_password", TALK_AUTH_WRITE_EXPIRES: "2026-10-17T10:30:00Z", ...o });
-const gate = (o = {}, env = scope()) => G.authAdminWriteGate({ url: STAGING, op: "update_password", email: "talk-rls-a@tasful-dev.test", password: GOOD_PW, env, now: NOW, ...o });
+// the gate reads the scope only from process.env and the real clock, so the tests set process.env (restored after each call) and use times relative to now
+const rel = (min) => new Date(Date.now() + min * 60000).toISOString();
+const relJst = (min) => new Date(Date.now() + min * 60000 + 9 * 3600000).toISOString().slice(0, 19) + "+09:00";
+const SCOPE_KEYS = ["TALK_ALLOW_AUTH_ADMIN_WRITE", "TALK_AUTH_WRITE_ACCOUNTS", "TALK_AUTH_WRITE_OPS", "TALK_AUTH_WRITE_EXPIRES"];
+const scope = (o = {}) => ({ TALK_ALLOW_AUTH_ADMIN_WRITE: "1", TALK_AUTH_WRITE_ACCOUNTS: "talk-rls-a@tasful-dev.test", TALK_AUTH_WRITE_OPS: "update_password", TALK_AUTH_WRITE_EXPIRES: rel(30), ...o });
+const withScopeEnv = (env, fn) => {
+  const prev = Object.fromEntries(SCOPE_KEYS.map((k) => [k, process.env[k]]));
+  for (const k of SCOPE_KEYS) delete process.env[k];
+  for (const [k, v] of Object.entries(env || {})) process.env[k] = v;
+  try { return fn(); } finally { for (const k of SCOPE_KEYS) { if (prev[k] === undefined) delete process.env[k]; else process.env[k] = prev[k]; } }
+};
+const gate = (o = {}, env = scope()) => withScopeEnv(env, () => G.authAdminWriteGate({ url: STAGING, op: "update_password", email: "talk-rls-a@tasful-dev.test", password: GOOD_PW, ...o }));
 
 // a real published value, taken from git objects at run time (in memory only; never printed)
 const published = (() => {
@@ -45,7 +54,7 @@ add("A08_flag_alone_is_not_enough", code(() => gate({}, { TALK_ALLOW_AUTH_ADMIN_
 add("A09_missing_flag_blocks", code(() => gate({}, scope({ TALK_ALLOW_AUTH_ADMIN_WRITE: "" }))) === "AUTH_WRITE_NOT_ENABLED");
 add("A10_other_account_not_in_scope", code(() => gate({ email: "talk-rls-b@tasful-dev.test" })) === "ACCOUNT_NOT_IN_SCOPE");
 add("A11_other_operation_not_in_scope", code(() => gate({ op: "delete_user" })) === "OPERATION_NOT_IN_SCOPE" && code(() => gate({ op: "create_user" })) === "OPERATION_NOT_IN_SCOPE");
-add("A12_expired_missing_or_too_long_scope_blocks", code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: "2026-10-17T09:00:00Z" }))) === "SCOPE_EXPIRED_OR_MISSING" && code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: "" }))) === "SCOPE_EXPIRED_OR_MISSING" && code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: "2026-10-17T12:00:00Z" }))) === "SCOPE_TOO_LONG");
+add("A12_expired_missing_or_too_long_scope_blocks", code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: rel(-60) }))) === "SCOPE_EXPIRED_OR_MISSING" && code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: "" }))) === "SCOPE_EXPIRED_OR_MISSING" && code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: rel(120) }))) === "SCOPE_TOO_LONG");
 add("A13_non_test_account_refused_even_with_scope", code(() => gate({ email: "someone@example.com" }, scope({ TALK_AUTH_WRITE_ACCOUNTS: "someone@example.com" }))) === "NOT_A_TEST_ACCOUNT");
 add("A14_role_assignment_never_allowed", code(() => gate({ role: "tasu_admin" })) === "ROLE_ASSIGNMENT_NOT_ALLOWED");
 add("A15_published_password_refused_even_with_full_scope", code(() => gate({ password: published })) === "PUBLIC_PASSWORD_REFUSED");
@@ -178,7 +187,7 @@ add("E02_admin_equivalent_role_write_refused_on_staging_even_with_scope", code((
 add("E03_role_write_allowed_only_on_a_real_local_stack", code(() => gate({ url: LOCAL, op: "update_metadata", role: "partner_role" }, {})) === "OK");
 add("E04_loopback_with_a_hosted_service_key_refused (tunnel/proxy to a hosted project)", code(() => gate({ url: LOCAL, serviceKey: fakeJwt({ ref: "ddojquacsyqesrjhcvmn", role: "service_role" }) }, {})) === "LOOPBACK_WITH_HOSTED_KEY" && code(() => gate({ url: LOCAL, serviceKey: fakeJwt({ iss: "supabase-demo", role: "service_role" }) }, {})) === "OK");
 add("E05_derived_password_containing_a_published_value_refused", published !== null && ["Zz1-" + published, published + "-Zz1-extra", "pre" + published + "post-0123456789"].every((p) => code(() => G.assertAcceptablePassword(p)) === "PUBLIC_PASSWORD_REFUSED"));
-add("E06_strict_expiry_format_required", ["Oct 17 2026 10:30", "2026-10-17 10:30", "2026-10-17T10:30:00"].every((x) => code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: x }))) === "SCOPE_EXPIRED_OR_MISSING") && code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: "2026-10-17T19:30:00+09:00" }))) === "OK");
+add("E06_strict_expiry_format_required", ["Oct 17 2026 10:30", "2026-10-17 10:30", "2026-10-17T10:30:00"].every((x) => code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: x }))) === "SCOPE_EXPIRED_OR_MISSING") && code(() => gate({}, scope({ TALK_AUTH_WRITE_EXPIRES: relJst(30) }))) === "OK");
 add("E07_scope_matching_uses_unicode_normalisation_on_both_sides", code(() => gate({}, scope({ TALK_AUTH_WRITE_ACCOUNTS: "ｔalk-rls-a@tasful-dev.test" }))) === "OK" && G.scopedWriteRequested(scope(), "TALK-RLS-A@tasful-dev.test", "update_password") === true && G.scopedWriteRequested(scope(), "talk-rls-b@tasful-dev.test", "update_password") === false);
 // scanner: embedded values, per-value allowlist
 {
@@ -224,6 +233,31 @@ add("E07_scope_matching_uses_unicode_normalisation_on_both_sides", code(() => ga
   add("F06_loopback_opaque_key_allowed_only_with_explicit_opt_in", code(() => G.assertLoopbackIsLocal("sb_secret_abcdef")) === "OK");
   if (prevOpt === undefined) delete process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY; else process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY = prevOpt;
   add("F07_loopback_local_jwt_accepted_hosted_jwt_refused", code(() => G.assertLoopbackIsLocal(jwt({ role: "service_role", iss: "supabase-demo" }))) === "OK" && code(() => G.assertLoopbackIsLocal(jwt({ ref: "ahlxuyvhzqdqaojiywmu" }))) === "LOOPBACK_WITH_HOSTED_KEY");
+}
+
+// G. caller-injected scope (Gemini finding): the gate must take its Staging scope only from the operator's process environment and the real clock
+{
+  const base = { url: STAGING, op: "update_password", email: "talk-rls-a@tasful-dev.test", password: GOOD_PW };
+  const farExpiry = "2099-01-01T00:00:00Z";
+  add("G01_injected_env_refused_even_when_it_is_a_valid_30_minute_scope", withScopeEnv({}, () => code(() => G.authAdminWriteGate({ ...base, env: scope() }))) === "INJECTED_SCOPE_REFUSED");
+  add("G02_injected_env_plus_injected_clock_refused (2099 expiry variant)", withScopeEnv({}, () => code(() => G.authAdminWriteGate({ ...base, env: scope({ TALK_AUTH_WRITE_EXPIRES: farExpiry }), now: Date.parse(farExpiry) - 60000 }))) === "INJECTED_SCOPE_REFUSED");
+  add("G03_injected_clock_alone_refused_and_undefined_values_still_count", withScopeEnv(scope(), () => code(() => G.authAdminWriteGate({ ...base, now: Date.now() })) === "INJECTED_SCOPE_REFUSED" && code(() => G.authAdminWriteGate({ ...base, env: undefined })) === "INJECTED_SCOPE_REFUSED"));
+  add("G04_injection_refused_before_any_target_decision (also for loopback and Production)", withScopeEnv({}, () => code(() => G.authAdminWriteGate({ ...base, url: LOCAL, env: {} })) === "INJECTED_SCOPE_REFUSED" && code(() => G.authAdminWriteGate({ ...base, url: PROD, env: scope() })) === "INJECTED_SCOPE_REFUSED"));
+  add("G05_no_operator_scope_means_no_staging_write", withScopeEnv({}, () => code(() => G.authAdminWriteGate(base))) === "AUTH_WRITE_NOT_ENABLED");
+  add("G06_operator_scope_in_process_env_is_honoured_and_limited_to_60_minutes", withScopeEnv(scope(), () => code(() => G.authAdminWriteGate(base))) === "OK" && withScopeEnv(scope({ TALK_AUTH_WRITE_EXPIRES: farExpiry }), () => code(() => G.authAdminWriteGate(base))) === "SCOPE_TOO_LONG" && withScopeEnv(scope({ TALK_AUTH_WRITE_EXPIRES: rel(-1) }), () => code(() => G.authAdminWriteGate(base))) === "SCOPE_EXPIRED_OR_MISSING");
+  add("G07_production_still_refused_with_a_full_operator_scope", withScopeEnv(scope(), () => code(() => G.authAdminWriteGate({ ...base, url: PROD }))) === "BLOCKED_PRODUCTION_TARGET");
+  const { classify } = await import(url("scripts/check-auth-mutation-sites-v1.mjs"));
+  const imp = `import { authAdminWriteGate } from "./lib/test-auth-guard-v1.mjs";\n`;
+  const write = `await fetch(b + "/auth/v1/admin/users", { method: "POST", body });\n`;
+  const selfApproving = [
+    `${imp}authAdminWriteGate({ url, op, email, password, env: { TALK_ALLOW_AUTH_ADMIN_WRITE: "1" } });\n${write}`,
+    `${imp}authAdminWriteGate({ url, op, email, password, now: 0 });\n${write}`,
+    `${imp}process.env.TALK_ALLOW_AUTH_ADMIN_WRITE = "1";\nauthAdminWriteGate({ url, op, email, password });\n${write}`,
+    `${imp}process.env["TALK_AUTH_WRITE_EXPIRES"] = x;\nauthAdminWriteGate({ url, op, email, password });\n${write}`,
+    `${imp}Object.assign(process.env, scope);\nauthAdminWriteGate({ url, op, email, password });\n${write}`,
+  ];
+  add("G08_scanner_does_not_count_self_approving_writers_as_guarded", selfApproving.every((t) => classify(t, "s.mjs")?.guarded === false));
+  add("G09_scanner_still_counts_a_plain_gate_call_that_only_reads_the_scope_as_guarded", classify(`${imp}if (process.env.TALK_ALLOW_AUTH_ADMIN_WRITE === "1") authAdminWriteGate({ url, op, email, password });\n${write}`, "r.mjs")?.guarded === true);
 }
 
 console.log(`\n=== Summary: TEST_CASES=${pass + fail} PASS=${pass} FAIL=${fail} SKIP=0 ===`);

@@ -97,6 +97,12 @@
    "kind": "admin-api",
    "sha256": "7fddd7f3a765093fe6aaf8a387851aa9c75660e848f410dce083ce832cc3b60b",
    "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/test-talk-test-auth-hardening-v1.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "ba2340ed4e9e7afba74c7dc9824c329d147c2f9c0d1d307df0298836ada67172",
+   "reason": "offline regression suite for the guard itself, reviewed 2026-10-17: fetch is stubbed (no network), it sets the TALK_* scope in process.env on purpose to exercise the gate and contains self-approval fixtures for the scanner; the Production ref appears only as a must-refuse target"
   }
  }
 }

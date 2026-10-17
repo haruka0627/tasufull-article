@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Static inventory + gate for code that WRITES to Supabase Auth (admin create/update/delete of users, or SQL on auth.users).
- *   guarded : imports scripts/lib/test-auth-guard-v1.mjs AND calls authAdminWriteGate( or assertTestAuthTarget( (an import or a comment alone does not count)
+ *   guarded : imports scripts/lib/test-auth-guard-v1.mjs AND calls authAdminWriteGate( (an import, a comment or assertTestAuthTarget alone does not count)
+ *             AND does not approve itself (set TALK_ALLOW_AUTH_ADMIN_WRITE / TALK_AUTH_WRITE_* in code, Object.assign(process.env, ...), or pass env/now to the gate)
  *   legacy  : not guarded, but listed in scripts/auth-mutation-allowlist-v1.json together with the SHA-256 of the file as it was reviewed
  *   NEW / CHANGED_SINCE_REVIEW : not guarded and not listed, or listed but edited since the review  => FAIL
  *   --strict additionally fails when a legacy entry is Production-locked (production-ref-in-code).
@@ -34,13 +35,22 @@ const WRITE_VERB = [
 const SQL_WRITE = /\b(update\s+auth\.users|insert\s+into\s+auth\.users|delete\s+from\s+auth\.users|alter\s+table\s+auth\.users)\b/i;
 const TARGET_LOCK = (t) => (t.includes("ddojquacsyqesrjhcvmn") ? "production-ref-in-code" : t.includes("ahlxuyvhzqdqaojiywmu") ? "staging-ref-in-code" : "env-driven");
 
+const SCOPE_VAR = String.raw`(?:TALK_ALLOW_AUTH_ADMIN_WRITE|TALK_AUTH_WRITE_(?:ACCOUNTS|OPS|EXPIRES))`;
+const SELF_SCOPE = [
+  new RegExp(String.raw`process\.env(?:\.${SCOPE_VAR}|\[\s*["'\x60]${SCOPE_VAR}["'\x60]\s*\])\s*(?:=(?!=)|\|\|=|\?\?=)`),
+  /\b(?:Object\.(?:assign|defineProperty|defineProperties)|Reflect\.(?:set|defineProperty))\s*\(\s*process\.env\b/,
+  /\bauthAdminWriteGate\s*\(\s*\{[^}]*?(?:\benv\b|\bnow\b)\s*[:,}]/,
+];
+
 export function classify(text, file = "") {
   const sqlWriter = /\.sql$/i.test(file) ? SQL_WRITE.test(text) : SQL_WRITE.test(text) && /(\bquery\b|\bexecute\b|\.sql)/i.test(text);
   const apiWriter = ADMIN_REF.test(text) && WRITE_VERB.some((r) => r.test(text));
   if (!apiWriter && !sqlWriter) return null;
   // comments are ignored (a commented-out call must not count) and the WRITE gate is required: assertTestAuthTarget alone only checks the host, not account/password/scope
   const code = text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:\\])\/\/[^\n]*/g, "$1");
-  const guarded = /import[^;\n]*test-auth-guard-v1|require\([^)]*test-auth-guard-v1/.test(code) && /\bauthAdminWriteGate\s*\(/.test(code);
+  // self-approval: code that sets the operator's Staging write scope itself, or hands the gate its own env/now, does not count as guarded
+  const selfApproves = SELF_SCOPE.some((r) => r.test(code));
+  const guarded = /import[^;\n]*test-auth-guard-v1|require\([^)]*test-auth-guard-v1/.test(code) && /\bauthAdminWriteGate\s*\(/.test(code) && !selfApproves;
   return { guarded, lock: TARGET_LOCK(text), kind: apiWriter ? "admin-api" : "sql" };
 }
 

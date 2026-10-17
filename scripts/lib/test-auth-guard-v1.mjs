@@ -81,12 +81,17 @@ export function assertLoopbackIsLocal(serviceKey) {
   if (c.iss && !/supabase(-demo|-local)?$/i.test(String(c.iss))) fail("LOOPBACK_WITH_HOSTED_KEY", "unexpected token issuer for a local stack");
 }
 
-/** One place that decides whether the caller asked for a scoped Staging write of this operation on this account (used by every script). */
+/** Read-only hint: did the caller ask for a scoped Staging write of this operation on this account? It never authorises anything; authAdminWriteGate decides. */
 export function scopedWriteRequested(env, email, op) {
   return String(env?.TALK_ALLOW_AUTH_ADMIN_WRITE || "") === "1" && list(env?.TALK_AUTH_WRITE_OPS).includes(String(op).toLowerCase()) && list(env?.TALK_AUTH_WRITE_ACCOUNTS).includes(normEmail(email));
 }
 
-export function authAdminWriteGate({ url, op, email, password, role, serviceKey, env = process.env, now = Date.now() }) {
+export function authAdminWriteGate(args = {}) {
+  // The Staging scope is the OPERATOR's decision for this process: it is read only from the process environment and the real clock.
+  // A caller-supplied env/now would let code approve its own write while still looking "guarded", so passing either is refused outright.
+  if (Object.prototype.hasOwnProperty.call(args, "env") || Object.prototype.hasOwnProperty.call(args, "now")) fail("INJECTED_SCOPE_REFUSED", "authAdminWriteGate takes no env/now argument; the scope comes from the process environment set by the operator");
+  const { url, op, email, password, role, serviceKey } = args;
+  const env = process.env, now = Date.now();
   const kind = assertTestAuthTarget(url);
   if (!ALLOWED_OPS.includes(op)) fail("UNKNOWN_OPERATION", "operation not recognised: " + op);
   const mail = normEmail(email);
