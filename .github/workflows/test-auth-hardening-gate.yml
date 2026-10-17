@@ -1,0 +1,31 @@
+# Test-auth hardening gate (F-SP-15). Offline only: no secrets, no network calls, no Supabase access.
+# Runs the hardening suite and the two recontamination scanners on every PR/push that touches auth tooling or scripts.
+
+name: test-auth-hardening-gate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Hardening suite
+        run: node scripts/test-talk-test-auth-hardening-v1.mjs
+      - name: Credential literal scan
+        run: node scripts/check-no-credential-literals-v1.mjs
+      - name: Auth mutation site scan
+        run: node scripts/check-auth-mutation-sites-v1.mjs
