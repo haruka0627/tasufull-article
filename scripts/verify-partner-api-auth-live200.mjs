@@ -2,6 +2,7 @@
  * Live 200 verification: partner-management / partner-detail with session JWT.
  * No code changes — verification + report only.
  */
+import { assertTestAuthTarget, assertAcceptablePassword, authAdminWriteGate } from "./lib/test-auth-guard-v1.mjs";
 import { chromium } from "playwright";
 import { writeFile } from "node:fs/promises";
 import { readFileSync, existsSync } from "node:fs";
@@ -12,8 +13,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
 
 const BASE = process.env.PRT_UI_BASE || "http://127.0.0.1:8788";
-const SUPABASE_URL = (process.env.SUPABASE_URL || "https://ddojquacsyqesrjhcvmn.supabase.co").replace(/\/$/, "");
+const SUPABASE_URL = (process.env.SUPABASE_URL || "").replace(/\/$/, "");
 const ANON_KEY = process.env.SUPABASE_ANON_KEY || "";
+assertTestAuthTarget(SUPABASE_URL); // Staging host or loopback only; no implicit Production default
 
 function loadDotEnv() {
   const envPath = path.join(ROOT, ".env");
@@ -47,7 +49,7 @@ const OPS_PASSWORD =
   process.env.ANPI_RLS_ADMIN_PASSWORD ||
   process.env.TALK_RLS_ADMIN_PASSWORD ||
   process.env.AUTH_HOOK_L2_ALLOWLIST_PASSWORD ||
-  "AnpiRlsAdmin1!";
+  "" /* set via env; not stored in the repository */;
 
 function parseJwtPayload(token) {
   try {
@@ -79,6 +81,7 @@ async function findPartnerAdminUsers() {
 }
 
 async function ensurePasswordAndSignIn(email, password) {
+  assertAcceptablePassword(password);
   if (SERVICE_KEY) {
     const usersRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users?page=1&per_page=200`, {
       headers: { apikey: ANON_KEY, Authorization: `Bearer ${SERVICE_KEY}` },
@@ -87,7 +90,13 @@ async function ensurePasswordAndSignIn(email, password) {
     const user = (usersBody.users || []).find(
       (u) => String(u.email || "").toLowerCase() === String(email).toLowerCase(),
     );
-    if (user?.id) {
+    if (
+      user?.id &&
+      String(process.env.TALK_ALLOW_AUTH_ADMIN_WRITE || "") === "1" &&
+    String(process.env.TALK_AUTH_WRITE_OPS || "").split(",").map((t) => t.trim()).includes("update_password") &&
+    String(process.env.TALK_AUTH_WRITE_ACCOUNTS || "").toLowerCase().split(",").map((t) => t.trim()).includes(String(email).toLowerCase())
+    ) {
+      authAdminWriteGate({ url: SUPABASE_URL, serviceKey: SERVICE_KEY, op: "update_password", email, password });
       await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${encodeURIComponent(user.id)}`, {
         method: "PUT",
         headers: {
@@ -95,7 +104,7 @@ async function ensurePasswordAndSignIn(email, password) {
           Authorization: `Bearer ${SERVICE_KEY}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ password, email_confirm: true }),
+        body: JSON.stringify({ password }),
       });
     }
   }

@@ -4,28 +4,54 @@
 import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertTestAuthTarget, assertAcceptablePassword, authAdminWriteGate } from "./test-auth-guard-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+
+/**
+ * Test-account passwords are NEVER stored in the repository. Each account reads its password from an environment variable
+ * (process env or the untracked .env) at the moment it is used, and fails closed when it is missing.
+ * Accounts: TALK_RLS_USER_A_PASSWORD (u_me), TALK_RLS_USER_B_PASSWORD (u_store), TALK_RLS_USER_WORKER_PASSWORD (u_worker),
+ * TALK_RLS_USER_ADMIN_PASSWORD (u_admin).
+ */
+function requirePassword(key) {
+  loadDotEnv();
+  const v = String(process.env[key] || "").trim();
+  if (!v) throw new Error(`MISSING_${key}: set it in the environment or the untracked .env (credentials are not stored in the repository)`);
+  return v;
+}
 
 export const TALK_TEST_USERS = {
   u_me: {
     email: "talk-rls-a@tasful-dev.test",
-    password: "TalkRlsA1!",
+    passwordEnv: "TALK_RLS_USER_A_PASSWORD",
+    get password() {
+      return requirePassword("TALK_RLS_USER_A_PASSWORD");
+    },
     talkUserId: "u_me",
   },
   u_store: {
     email: "talk-rls-b@tasful-dev.test",
-    password: "TalkRlsB1!",
+    passwordEnv: "TALK_RLS_USER_B_PASSWORD",
+    get password() {
+      return requirePassword("TALK_RLS_USER_B_PASSWORD");
+    },
     talkUserId: "u_store",
   },
   u_worker: {
     email: "talk-rls-worker@tasful-dev.test",
-    password: "TalkRlsW1!",
+    passwordEnv: "TALK_RLS_USER_WORKER_PASSWORD",
+    get password() {
+      return requirePassword("TALK_RLS_USER_WORKER_PASSWORD");
+    },
     talkUserId: "u_worker",
   },
   u_admin: {
     email: "talk-rls-admin@tasful-dev.test",
-    password: "TalkRlsAdmin1!",
+    passwordEnv: "TALK_RLS_USER_ADMIN_PASSWORD",
+    get password() {
+      return requirePassword("TALK_RLS_USER_ADMIN_PASSWORD");
+    },
     talkUserId: "u_admin",
     role: "tasu_admin",
   },
@@ -61,7 +87,11 @@ export function loadTalkSupabaseConfig() {
   return { url, anonKey, serviceKey };
 }
 
+// The Staging-only target check and the scoped Auth-write gate live in one shared module (F-SP-14/F-SP-15).
+export { assertTestAuthTarget };
+
 async function authFetch(cfg, { method, pathSuffix, body, useServiceRole = false }) {
+  assertTestAuthTarget(cfg.url);
   const key = useServiceRole ? cfg.serviceKey : cfg.anonKey;
   const res = await fetch(`${cfg.url}/auth/v1${pathSuffix}`, {
     method,
@@ -94,42 +124,51 @@ async function findUserByEmail(cfg, email) {
 }
 
 export async function ensureTalkJwt(cfg, spec) {
-  const appMetadata = { talk_user_id: spec.talkUserId, member_id: spec.talkUserId };
-  const userMetadata = { talk_user_id: spec.talkUserId };
-  if (spec.role) appMetadata.role = spec.role;
+  assertTestAuthTarget(cfg.url);
+  const password = spec.password; // env only; throws MISSING_<KEY> when absent
+  assertAcceptablePassword(password); // never use (or set) a password value that was ever published
+  const listIncludes = (v, x) => String(v || "").split(",").map((t) => t.trim().toLowerCase()).includes(String(x).toLowerCase());
 
   let user = await findUserByEmail(cfg, spec.email);
   if (!user) {
+    // Creating a missing account is an Auth admin write: on Staging it needs the scoped permission (see test-auth-guard-v1.mjs). No role is ever assigned.
+    authAdminWriteGate({ url: cfg.url, serviceKey: cfg.serviceKey, op: "create_user", email: spec.email, password });
     const created = await authFetch(cfg, {
       method: "POST",
       pathSuffix: "/admin/users",
       useServiceRole: true,
       body: {
         email: spec.email,
-        password: spec.password,
+        password,
         email_confirm: true,
-        app_metadata: appMetadata,
-        user_metadata: userMetadata,
+        app_metadata: { talk_user_id: spec.talkUserId, member_id: spec.talkUserId },
+        user_metadata: { talk_user_id: spec.talkUserId },
       },
     });
     if (!created.ok) throw new Error(`create ${spec.email}: ${created.status}`);
     user = created.data?.user || created.data;
-  } else {
+  } else if (
+    String(process.env.TALK_ALLOW_AUTH_ADMIN_WRITE || "") === "1" &&
+    listIncludes(process.env.TALK_AUTH_WRITE_OPS, "update_password") &&
+    listIncludes(process.env.TALK_AUTH_WRITE_ACCOUNTS, spec.email)
+  ) {
+    // Explicit, scoped, time-boxed password update of ONE listed account; password only (no metadata, no role).
+    authAdminWriteGate({ url: cfg.url, serviceKey: cfg.serviceKey, op: "update_password", email: spec.email, password });
     await authFetch(cfg, {
       method: "PUT",
       pathSuffix: `/admin/users/${encodeURIComponent(user.id)}`,
       useServiceRole: true,
-      body: { app_metadata: appMetadata, user_metadata: userMetadata, password: spec.password },
+      body: { password },
     });
   }
 
   const login = await authFetch(cfg, {
     method: "POST",
     pathSuffix: "/token?grant_type=password",
-    body: { email: spec.email, password: spec.password },
+    body: { email: spec.email, password },
   });
   if (!login.ok || !login.data?.access_token) {
-    throw new Error(`signIn ${spec.email}: ${login.status}`);
+    throw new Error(`signIn ${spec.email}: ${login.status} (existing accounts are never reset implicitly: the env password must match the account; a deliberate password update needs the scoped TALK_AUTH_WRITE_* settings, see scripts/lib/test-auth-guard-v1.mjs)`);
   }
   return login.data.access_token;
 }

@@ -1,0 +1,108 @@
+{
+ "schema": "tasful-auth-mutation-allowlist/2",
+ "note": "Reviewed legacy Auth writers that do NOT use test-auth-guard-v1, keyed by the SHA-256 of the file as reviewed (an edit forces a re-review). New writers must use the guard.",
+ "files": {
+  "scripts/backfill-auth-hook-l3-t1.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "ab5083a5545018e9c7b8b2a88d5bf535131f62759c081553f8e8e71b90107234",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/backfill-auth-hook-l7-allowlist-expand.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "720a1e67173e5cca81f2203ca9070718b44c8005ed9f983445d7a317c9f0995d",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/seed-auth-hook-l2-allowlist.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "3040420a1cd7933afeb65ca8f4c226cd003c28599702173e1dc2c70e3a30b664",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/test-anpi-phase47-live-staging.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "4a22a7c7dbb890e39c0742c65cc66a9bb443a895d2ef2ce526a6d0d47be62abc",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/test-anpi-phase47-runtime-core.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "49793d344fb0af5e74201006c7d36d352237f43d570cd25dd8feb2aee9b6c0b1",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/test-anpi-phase48-live-staging.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "c5f2c2e286c8dc8833bac8c44c7de21d32efbfb6ddc8489fa26e2e53e3cc6e11",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/test-anpi-phase48-scheduled-runtime.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "41732662e0ad200bfc53ccd7adb9e466e85e33accd735099c2c50e37c42f0a9e",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-anpi-phase59-staging-controlled-write.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "0a7c0dbd4310e4990dc00509ba25a3b087dc29162df76a913f2c8aecdaef537b",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-anpi-phase62-scoped-cron-soak.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "837faed96a979b332c2c4d72b4eb25d30c7bb6096cad6dcdfcc347c172340e59",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-anpi-phase63-wall-clock-cron-soak.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "467fc401159ec667972c0116a1c5a6588305594fc7f878b30aacd70709314e50",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-auth-hook-l12-exception.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "41e8553c9629b688526085426f654491506432c88f53d6fc0857b8cda4d0867c",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-auth-hook-l4-jwt-refresh.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "6fc3aa1130948c58cfefa9646491f2055aeb4fffc4039898a355389c02ee89b0",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-auth-hook-l5-create-off.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "dfec6939a3fb59f8abf27248c5fa85bcbd97a03d0fe9b748610ed0a97b132525",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-match-admin-live.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "5f856afea62bd7a2688a0ee0a7c90ff768e6d07049f4e801fae549d3eb8d2646",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-match-post-auth-final-smoke.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "284fd128e843e812e0384413f314f06901552b758b4223900770e78678dc571c",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-partner-api-auth.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "7fddd7f3a765093fe6aaf8a387851aa9c75660e848f410dce083ce832cc3b60b",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/test-talk-test-auth-hardening-v1.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "ba2340ed4e9e7afba74c7dc9824c329d147c2f9c0d1d307df0298836ada67172",
+   "reason": "offline regression suite for the guard itself, reviewed 2026-10-17: fetch is stubbed (no network), it sets the TALK_* scope in process.env on purpose to exercise the gate and contains self-approval fixtures for the scanner; the Production ref appears only as a must-refuse target"
+  }
+ }
+}

@@ -20,23 +20,24 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
+import { assertTestAuthTarget, assertAcceptablePassword, authAdminWriteGate } from "./lib/test-auth-guard-v1.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const DEFAULTS = {
   userA: {
     email: "anpi-rls-a@tasful-dev.test",
-    password: "AnpiRlsTestA1!",
+    password: "", // supplied via ANPI_RLS_*_PASSWORD (never stored in the repository)
     memberId: "anpi_rls_member_a",
   },
   userB: {
     email: "anpi-rls-b@tasful-dev.test",
-    password: "AnpiRlsTestB1!",
+    password: "", // supplied via ANPI_RLS_*_PASSWORD (never stored in the repository)
     memberId: "anpi_rls_member_b",
   },
   admin: {
     email: "anpi-rls-admin@tasful-dev.test",
-    password: "AnpiRlsAdmin1!",
+    password: "", // supplied via ANPI_RLS_*_PASSWORD (never stored in the repository)
     memberId: "anpi_rls_admin",
     role: "tasu_admin",
   },
@@ -106,6 +107,7 @@ function adminRoleFromJwt(jwt) {
 }
 
 async function authFetch(cfg, { method, pathSuffix, body, useServiceRole = false }) {
+  assertTestAuthTarget(cfg.url); // Staging host or loopback only; Production/unknown hosts are rejected
   const key = useServiceRole ? cfg.serviceRoleKey : cfg.anonKey;
   const res = await fetch(`${cfg.url}/auth/v1${pathSuffix}`, {
     method,
@@ -180,16 +182,18 @@ async function signIn(cfg, email, password) {
 async function ensureAuthUser(cfg, spec) {
   const email = String(spec.email || "").trim();
   const password = String(spec.password || "");
+  if (!password) throw new Error(`MISSING_PASSWORD_ENV for ${email}: set ANPI_RLS_USER_A_PASSWORD / ANPI_RLS_USER_B_PASSWORD / ANPI_RLS_ADMIN_PASSWORD (credentials are not stored in the repository)`);
   const memberId = String(spec.memberId || "").trim();
-  const adminRole = spec.role ? String(spec.role).trim() : "";
+  assertAcceptablePassword(password); // never use a published or weak password value
+  const adminRole = ""; // admin roles are never assigned by test code (guard rule 4); an existing role is left untouched
 
   const appMetadata = { member_id: memberId };
   const userMetadata = { member_id: memberId };
-  if (adminRole) appMetadata.role = adminRole;
 
   let user = await findUserByEmail(cfg, email);
 
   if (!user) {
+    authAdminWriteGate({ url: cfg.url, serviceKey: cfg.serviceRoleKey, op: "create_user", email, password });
     const created = await createUser(cfg, {
       email,
       password,
@@ -203,12 +207,14 @@ async function ensureAuthUser(cfg, spec) {
     }
     user = created.data?.user || created.data;
     console.log(`  created  ${email} (id=${user?.id || "?"})`);
-  } else {
-    const updated = await updateUser(cfg, user.id, {
-      appMetadata,
-      userMetadata,
-      password,
-    });
+  } else if (
+    String(process.env.TALK_ALLOW_AUTH_ADMIN_WRITE || "") === "1" &&
+    String(process.env.TALK_AUTH_WRITE_OPS || "").split(",").map((t) => t.trim()).includes("update_password") &&
+    String(process.env.TALK_AUTH_WRITE_ACCOUNTS || "").toLowerCase().split(",").map((t) => t.trim()).includes(email.toLowerCase())
+  ) {
+    // explicit, scoped, time-boxed update of ONE listed account; password only
+    authAdminWriteGate({ url: cfg.url, serviceKey: cfg.serviceRoleKey, op: "update_password", email, password });
+    const updated = await updateUser(cfg, user.id, { password });
     if (!updated.ok) {
       throw new Error(
         `update user ${email}: HTTP ${updated.status} ${JSON.stringify(updated.data)}`
