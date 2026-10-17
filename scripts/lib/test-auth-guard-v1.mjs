@@ -72,7 +72,9 @@ const list = (v) => String(v || "").split(",").map(normEmail).filter(Boolean);
 function jwtClaims(t) { try { return JSON.parse(Buffer.from(String(t).split(".")[1], "base64url").toString("utf8")); } catch { return {}; } }
 /** A loopback URL may be a tunnel/proxy to a hosted project: refuse if the service key says it belongs to a hosted project. */
 export function assertLoopbackIsLocal(serviceKey) {
-  if (!serviceKey) return;
+  if (!serviceKey) return; // no key supplied: nothing hosted can leak through a tunnel (an admin write cannot succeed without one)
+  // an opaque key (e.g. sb_secret_...) carries no project claim, so it cannot be proven local; require an explicit opt-in for local stacks that issue them
+  if (String(serviceKey).split(".").length !== 3 && process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY !== "1") fail("LOOPBACK_OPAQUE_KEY", "the service key is not a JWT, so it cannot be shown to belong to a local stack (set TALK_ALLOW_LOOPBACK_OPAQUE_KEY=1 only for a verified local stack)");
   const c = jwtClaims(serviceKey);
   const ref = String(c.ref || "");
   if (ref === PRODUCTION_REF || ref === STAGING_REF || (ref && ref !== "local")) fail("LOOPBACK_WITH_HOSTED_KEY", "a hosted project's service key was supplied for a loopback URL (tunnel/proxy?)");

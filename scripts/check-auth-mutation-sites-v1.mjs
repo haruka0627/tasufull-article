@@ -38,7 +38,9 @@ export function classify(text, file = "") {
   const sqlWriter = /\.sql$/i.test(file) ? SQL_WRITE.test(text) : SQL_WRITE.test(text) && /(\bquery\b|\bexecute\b|\.sql)/i.test(text);
   const apiWriter = ADMIN_REF.test(text) && WRITE_VERB.some((r) => r.test(text));
   if (!apiWriter && !sqlWriter) return null;
-  const guarded = /import[^;\n]*test-auth-guard-v1|require\([^)]*test-auth-guard-v1/.test(text) && /\b(authAdminWriteGate|assertTestAuthTarget)\s*\(/.test(text);
+  // comments are ignored (a commented-out call must not count) and the WRITE gate is required: assertTestAuthTarget alone only checks the host, not account/password/scope
+  const code = text.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:\\])\/\/[^\n]*/g, "$1");
+  const guarded = /import[^;\n]*test-auth-guard-v1|require\([^)]*test-auth-guard-v1/.test(code) && /\bauthAdminWriteGate\s*\(/.test(code);
   return { guarded, lock: TARGET_LOCK(text), kind: apiWriter ? "admin-api" : "sql" };
 }
 

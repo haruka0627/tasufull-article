@@ -16,8 +16,9 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { PUBLIC_PASSWORD_SHA256, PUBLIC_PASSWORD_LENGTHS } from "./lib/test-auth-guard-v1.mjs";
 
 const sha = (s) => crypto.createHash("sha256").update(s).digest("hex");
-const LITERAL = /(?:password|passwd|pwd)[A-Za-z0-9_]*["']?\s*[:=]\s*["'`]([^"'`$\s{}]{8,})["'`]/gi;
-const SAFE_VALUE = /^([A-Z][A-Z0-9_]{5,}$|<|\*|x{4}|process|env|your|changeme|example|placeholder|redacted|stub-|env-test-value)/i;
+const LITERAL = /(?:password|passwd|pwd|pw|secret)[A-Za-z0-9_]*["']?\s*[:=]\s*["'`]([^"'`$\s{}]{8,})["'`]/gi;
+// Case-SENSITIVE on purpose: only an ENV_VAR_NAME (needs an underscore) or an explicit lower-case placeholder prefix is exempt; "EnvAdmin1234!" or "TalkRlsA1x" are values and must be reported.
+const SAFE_VALUE = /^([A-Z][A-Z0-9]*_[A-Z0-9_]+$|<|\*|x{4}|process\.env|env[-_.:]|your[-_ ]|changeme|example|placeholder|redacted|stub-|env-test-value)/;
 const TEXT_EXT = /\.(mjs|cjs|js|jsx|ts|tsx|json|jsonl|md|mdx|txt|ps1|psm1|sh|bash|cmd|bat|py|rb|sql|html|htm|css|yml|yaml|toml|ini|cfg|conf|csv|log|xml|ipynb|env|example|properties)$/i;
 const MAX_BYTES = 3e6, MAX_RUN = 400;
 const LENS = [...PUBLIC_PASSWORD_LENGTHS];
@@ -34,7 +35,7 @@ export function scanText(text) {
         if (PUBLIC_PASSWORD_SHA256.has(h)) findings.push({ line: i + 1, kind: "PUBLISHED_PASSWORD_VALUE", hash: h });
       }
     }
-    if (/passw|pwd/i.test(line)) {
+    if (/passw|pwd|\bpw\b|secret/i.test(line)) {
       for (const m of line.matchAll(LITERAL)) if (!SAFE_VALUE.test(m[1])) findings.push({ line: i + 1, kind: "PASSWORD_LITERAL", hash: sha(m[1]) });
     }
   });

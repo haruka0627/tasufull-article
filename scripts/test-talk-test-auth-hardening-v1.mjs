@@ -70,7 +70,7 @@ function stub({ users = [], loginOk = true } = {}) {
 }
 const writes = () => calls.filter((c) => c.m !== "GET" && !c.p.includes("/token"));
 const spec = H.TALK_TEST_USERS.u_me, specAdmin = H.TALK_TEST_USERS.u_admin;
-const cfg = (u) => ({ url: u, anonKey: "anon-stub", serviceKey: "service-stub" });
+const cfg = (u) => ({ url: u, anonKey: "anon-stub", serviceKey: ["e30", Buffer.from(JSON.stringify({ role: "service_role", iss: "supabase-demo" })).toString("base64url"), "sig"].join(".") });
 const saved = { ...process.env };
 const setEnv = (o) => { for (const k of ["TALK_ALLOW_AUTH_ADMIN_WRITE", "TALK_AUTH_WRITE_ACCOUNTS", "TALK_AUTH_WRITE_OPS", "TALK_AUTH_WRITE_EXPIRES"]) delete process.env[k]; Object.assign(process.env, o || {}); };
 const inFuture = (min) => new Date(Date.now() + min * 60000).toISOString();
@@ -205,6 +205,25 @@ add("E07_scope_matching_uses_unicode_normalisation_on_both_sides", code(() => ga
   add("E10_comment_or_unused_import_does_not_count_as_guarded", classify(unguardedWithComment, "x.mjs")?.guarded === false && classify(guardedReal, "y.mjs")?.guarded === true);
   add("E11_multiline_lowercase_methods_axios_curl_and_sql_are_detected", !!classify('await fetch(u + "/admin/users",\n { method: "post" })', "a.mjs") && !!classify("axios.put(base + '/auth/v1/admin/users/1', b)", "b.mjs") && !!classify("curl -X DELETE $URL/auth/v1/admin/users/$ID", "c.sh") && !!classify("update auth.users set encrypted_password = 'x'", "d.sql"));
   add("E12_read_only_admin_listing_is_not_a_writer", classify('fetch(u + "/auth/v1/admin/users?per_page=200", { headers })', "e.mjs") === null);
+  const hostOnly = `import { assertTestAuthTarget } from "./lib/test-auth-guard-v1.mjs";\nassertTestAuthTarget(url);\nawait fetch(base + "/auth/v1/admin/users", { method: "POST", body });\n`;
+  add("E13_host_check_alone_is_not_a_guarded_writer (authAdminWriteGate required)", classify(hostOnly, "h.mjs")?.guarded === false);
+  add("E14_commented_out_gate_call_does_not_count", classify(`import { authAdminWriteGate } from "./lib/test-auth-guard-v1.mjs";\n// authAdminWriteGate(x);\n/* authAdminWriteGate(y) */\nawait fetch(b + "/auth/v1/admin/users", { method: "POST", body });\n`, "c.mjs")?.guarded === false);
+}
+
+// FND-SH-07/08/11 regressions: scanner case-sensitivity / key coverage and loopback key shape
+{
+  const lit = (k, v) => scanText(`const o = { ${k}: "${v}" };`).some((h) => h.kind === "PASSWORD_LITERAL");
+  add("F01_letter_led_alphanumeric_value_is_reported_not_treated_as_placeholder", lit("password", "TalkRlsA1xyz") && lit("password", "Passw0rdAbcd"));
+  add("F02_env_prefix_lookalike_value_is_reported", lit("password", "EnvAdmin1234!") && lit("password", "ExampleReal9999"));
+  add("F03_env_var_name_and_lowercase_placeholders_stay_exempt", !lit("password", "TALK_RLS_USER_A_PASSWORD") && !lit("password", "changeme-placeholder") && !lit("password", "<your-password>"));
+  add("F04_secret_and_pw_keys_are_covered", lit("secret", "Zq8!vK2mPq9x") && lit("pw", "Zq8!vK2mPq9x") && lit("clientSecret", "Zq8!vK2mPq9x"));
+  const jwt = (o) => ["e30", Buffer.from(JSON.stringify(o)).toString("base64url"), "sig"].join(".");
+  const prevOpt = process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY; delete process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY;
+  add("F05_loopback_opaque_non_jwt_key_refused_without_opt_in", code(() => G.assertLoopbackIsLocal("sb_secret_abcdef")) === "LOOPBACK_OPAQUE_KEY");
+  process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY = "1";
+  add("F06_loopback_opaque_key_allowed_only_with_explicit_opt_in", code(() => G.assertLoopbackIsLocal("sb_secret_abcdef")) === "OK");
+  if (prevOpt === undefined) delete process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY; else process.env.TALK_ALLOW_LOOPBACK_OPAQUE_KEY = prevOpt;
+  add("F07_loopback_local_jwt_accepted_hosted_jwt_refused", code(() => G.assertLoopbackIsLocal(jwt({ role: "service_role", iss: "supabase-demo" }))) === "OK" && code(() => G.assertLoopbackIsLocal(jwt({ ref: "ahlxuyvhzqdqaojiywmu" }))) === "LOOPBACK_WITH_HOSTED_KEY");
 }
 
 console.log(`\n=== Summary: TEST_CASES=${pass + fail} PASS=${pass} FAIL=${fail} SKIP=0 ===`);
