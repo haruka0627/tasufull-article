@@ -44,6 +44,24 @@
    "sha256": "41732662e0ad200bfc53ccd7adb9e466e85e33accd735099c2c50e37c42f0a9e",
    "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
   },
+  "scripts/verify-anpi-phase59-staging-controlled-write.mjs": {
+   "lock": "production-ref-in-code",
+   "kind": "admin-api",
+   "sha256": "0a7c0dbd4310e4990dc00509ba25a3b087dc29162df76a913f2c8aecdaef537b",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-anpi-phase62-scoped-cron-soak.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "837faed96a979b332c2c4d72b4eb25d30c7bb6096cad6dcdfcc347c172340e59",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
+  "scripts/verify-anpi-phase63-wall-clock-cron-soak.mjs": {
+   "lock": "env-driven",
+   "kind": "admin-api",
+   "sha256": "467fc401159ec667972c0116a1c5a6588305594fc7f878b30aacd70709314e50",
+   "reason": "legacy owner/environment-specific tool; reviewed 2026-10-17; no published password literal (see check-no-credential-literals-v1)"
+  },
   "scripts/verify-auth-hook-l12-exception.mjs": {
    "lock": "production-ref-in-code",
    "kind": "admin-api",
