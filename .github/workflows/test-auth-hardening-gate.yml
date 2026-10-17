@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0 # the suite derives a published test value from git history (never printed)
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
